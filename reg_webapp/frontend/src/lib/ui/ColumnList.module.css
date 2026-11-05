@@ -147,9 +147,8 @@
   color: var(--text-muted);
   font-size: var(--text-micro);
   font-weight: var(--column-weight);
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  /* Wraps, as the names under it do: a long register name stays whole. */
+  overflow-wrap: anywhere;
 }
 
 .list > :first-child > .register {

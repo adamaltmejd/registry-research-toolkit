@@ -1,31 +1,7 @@
-// Public TS types for the shared visual primitives (#804). Consumers import
-// these alongside the components from the `../ui` barrel so the downstream
-// design-system children (#806–#809) get typed APIs (column defs, tones,
-// breadcrumb items, button variants) instead of re-declaring
-// them per call site.
+// Shared TS types for the visual primitives in `ui/`.
 
-/** Status `Tag` tones — paired with a glyph, never hue alone (DESIGN.md → Color).
- *  Tag's props REQUIRE a `glyph` when `tone` is one of these. */
+/** A `StatusRow` tone, always paired with its glyph, never hue alone (DESIGN.md → Colors). */
 export type StatusTone = "error" | "warn" | "info" | "ok";
-
-/** Non-status `Tag` tones: chrome (`neutral` default, `accent`) + the categorical
- *  TYPE palette (`reg`/`var`/`code`/`class`/`group` → `--cat-*`). `glyph` is
- *  optional for these. */
-export type PlainTone =
-  | "neutral"
-  | "accent"
-  | "reg"
-  | "var"
-  | "code"
-  | "class"
-  | "group";
-
-/** A `Tag` tone. Three disjoint sub-systems (DESIGN.md → Color):
- *  - chrome: `neutral` (default) | `accent` — brand chrome, never status.
- *  - categorical: tags result/node TYPE only (`--cat-*`); never reused for
- *    status/accent or "is a variable" collides with "is selected/an error".
- *  - status: `error`/`warn`/`info`/`ok` — paired with a glyph, never hue alone. */
-export type TagTone = PlainTone | StatusTone;
 
 /** A `Button` visual variant. `primary` is the single accent-filled CTA per
  *  view; `default`/`ghost` are the quiet chrome; `danger` is destructive. */

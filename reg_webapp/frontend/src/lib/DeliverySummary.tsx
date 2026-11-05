@@ -3,7 +3,8 @@ import { catalogHref } from "./catalog";
 import { catalogPeriodRuns, periodsLess } from "./catalog_period";
 import styles from "./DeliverySummary.module.css";
 import { ColumnChip } from "./ui/ColumnChip";
-import { useCatalogNames } from "./use_catalog_names";
+import { NameSkeleton } from "./ui/Skeleton";
+import { useCatalogNames, useCatalogNamesPending } from "./use_catalog_names";
 
 type Entry = LogicalOrder["entries"][number];
 
@@ -19,13 +20,32 @@ export function DeliverySummary({
   /** A newer check is in flight: this order is the previous one. */
   busy: boolean;
 }) {
-  const names = useCatalogNames([
+  const refs = [
     ...order.entries.flatMap((entry) => [entry.table, entry.variable]),
     ...order.clips.map((clip) => clip.variable),
     ...order.row_keys.flatMap((key) =>
       key.columns.map((column) => column.variable),
     ),
-  ]);
+  ];
+  const names = useCatalogNames(refs);
+  const pending = useCatalogNamesPending(refs);
+  // A name still loading is a placeholder, not a link; only a settled miss
+  // says the name is unavailable.
+  const loadingName = (ref: string) => pending.has(ref) && !names.has(ref);
+  const variableName = (ref: string) =>
+    loadingName(ref) ? (
+      <NameSkeleton label="Loading variable name" />
+    ) : (
+      (names.get(ref) ?? "Variable name unavailable")
+    );
+  const variableLink = (ref: string) =>
+    loadingName(ref) ? (
+      <span className={styles.pendingLink}>{variableName(ref)}</span>
+    ) : (
+      <a className="link" href={catalogHref(ref)}>
+        {variableName(ref)}
+      </a>
+    );
   const groups = new Map<
     string,
     { source: string; table: string; entries: Entry[] }
@@ -114,15 +134,26 @@ export function DeliverySummary({
               <h3
                 id={`delivery-${encodeURIComponent(key)}`}
                 className={styles.tableHeading}
+                aria-busy={loadingName(group.table) || undefined}
               >
-                <a className="link" href={catalogHref(group.table)}>
-                  {names.get(group.table) ?? "Table name unavailable"}
-                </a>{" "}
+                {/* As on the table's card: the file's join key stands in
+                    only where the catalog has no name. */}
+                {loadingName(group.table) ? (
+                  <NameSkeleton label="Loading table name" />
+                ) : (
+                  <a className="link" href={catalogHref(group.table)}>
+                    {names.get(group.table) ?? group.source}
+                  </a>
+                )}{" "}
                 <span className={styles.years}>{years}</span>
               </h3>
               <ul className={styles.columns} aria-label="Columns">
                 {[...columns].map(([id, column]) => (
-                  <li key={id} className={styles.column}>
+                  <li
+                    key={id}
+                    className={styles.column}
+                    aria-busy={loadingName(column.variable) || undefined}
+                  >
                     <ColumnChip
                       name={column.spelling}
                       years={
@@ -131,10 +162,7 @@ export function DeliverySummary({
                           : catalogPeriodRuns(column.periods)
                       }
                     />
-                    <a className="link" href={catalogHref(column.variable)}>
-                      {names.get(column.variable) ??
-                        "Variable name unavailable"}
-                    </a>
+                    {variableLink(column.variable)}
                   </li>
                 ))}
               </ul>
@@ -143,9 +171,11 @@ export function DeliverySummary({
                   <span className="micro-label">Years not available</span>
                   <ul className={styles.plainList}>
                     {clips.map((clip) => (
-                      <li key={JSON.stringify(clip)}>
-                        {names.get(clip.variable) ??
-                          "Variable name unavailable"}{" "}
+                      <li
+                        key={JSON.stringify(clip)}
+                        aria-busy={loadingName(clip.variable) || undefined}
+                      >
+                        {variableName(clip.variable)}{" "}
                         <span className={styles.years}>
                           {catalogPeriodRuns(
                             periodsLess(clip.requested, clip.ordered),
@@ -161,7 +191,11 @@ export function DeliverySummary({
                   <span className="micro-label">Row identifier</span>
                   <ul className={styles.plainList}>
                     {[...rowKeys].map(([id, column]) => (
-                      <li key={id} className={styles.column}>
+                      <li
+                        key={id}
+                        className={styles.column}
+                        aria-busy={loadingName(column.variable) || undefined}
+                      >
                         <ColumnChip
                           name={column.spelling}
                           years={
@@ -170,10 +204,7 @@ export function DeliverySummary({
                               : catalogPeriodRuns(column.periods)
                           }
                         />
-                        <a className="link" href={catalogHref(column.variable)}>
-                          {names.get(column.variable) ??
-                            "Variable name unavailable"}
-                        </a>
+                        {variableLink(column.variable)}
                       </li>
                     ))}
                   </ul>

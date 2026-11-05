@@ -3,7 +3,7 @@ import styles from "./Definitions.module.css";
 import { TypeTag } from "./TypeTag";
 
 /** A link in the member-of line: what the subject belongs to. */
-export interface MemberOf {
+interface MemberOf {
   /** What the link is to the subject, in sentence case: "Member of",
    * "Family". */
   relation: string;

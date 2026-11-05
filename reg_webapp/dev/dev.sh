@@ -389,7 +389,7 @@ capture() {
 		ab a11y >"$base.a11y.txt" || return 1
 	echo "shot: $base.png ($(grep -m 1 '^axe-core' "$base.a11y.txt"))"
 	ab console | grep '^\[error\]' || true
-	# --json: agent-browser 0.39.1's text output for `errors` prints a bare "✗"
+	# --json: agent-browser 0.39.2's text output for `errors` prints a bare "✗"
 	# whatever it holds; revisit on a bump.
 	ab errors --json | bun -e 'for (const e of (await Bun.stdin.json()).data?.errors ?? [])
 	console.log("[pageerror]", e.text.split("\n")[0])'

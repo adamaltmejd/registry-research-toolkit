@@ -93,10 +93,11 @@
   align-self: flex-start;
   max-width: 100%;
 }
+/* A variable's name wraps rather than truncates: many names share a long start
+   ("Antal bruttoveckor undervisning på distans, …") and differ only at the end. */
 .variableLabel {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 .period {
   color: var(--text-muted);

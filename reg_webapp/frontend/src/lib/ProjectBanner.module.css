@@ -133,6 +133,9 @@ a.verdict {
   border-left: 3px solid var(--border);
   border-radius: var(--radius);
 }
+.empty[data-hidden] {
+  visibility: hidden;
+}
 
 .window {
   display: flex;
@@ -185,6 +188,10 @@ a.verdict {
 @media (max-width: 60rem) {
   .banner {
     flex: 1 1 100%;
+  }
+  /* Here the banner has a row of its own: a hidden box would leave it empty. */
+  .empty[data-hidden] {
+    display: none;
   }
   .summary {
     max-width: none;

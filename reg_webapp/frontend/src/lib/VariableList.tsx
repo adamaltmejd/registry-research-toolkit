@@ -132,6 +132,58 @@ function variableItems(
   }));
 }
 
+/** The search-time label of a folded group: its one matching member by name, or
+ * the count (member names contain commas, so a list would misread). */
+function foldLabel(group: string, members: readonly string[] = []): string {
+  const names = [...new Set(members)];
+  return names.length === 1
+    ? `${group}: ${names[0]}`
+    : `${group}: ${names.length} matching`;
+}
+
+/** A register's rows with each concept group folded to one row (#303) that opens
+ * the group's page, at the place of its first member in `items`: under its own
+ * name in the name order, or at its best-ranked member while searching. While
+ * searching the row names the one member that matched ("person: Kommun"), or counts
+ * several ("Inkomstmått: 4 matching"): the group's own name may not contain the
+ * search text. */
+function foldGroups(
+  items: readonly ColumnItem[],
+  sets: RegisterShow["sets"],
+  searching: boolean,
+): ColumnItem[] {
+  const setOf = new Map(
+    sets.flatMap((set) => set.members.map((member) => [member, set])),
+  );
+  const matched = new Map<string, string[]>();
+  for (const item of items) {
+    const set = setOf.get(item.id);
+    if (set)
+      matched.set(set.fqid, [...(matched.get(set.fqid) ?? []), item.name]);
+  }
+  const folded = new Set<string>();
+  const rows = items.flatMap((item) => {
+    const set = setOf.get(item.id);
+    if (!set) return [item];
+    if (folded.has(set.fqid)) return [];
+    folded.add(set.fqid);
+    return [
+      {
+        ...item,
+        id: set.fqid,
+        name: set.name,
+        label: searching
+          ? foldLabel(set.name, matched.get(set.fqid))
+          : undefined,
+        href: catalogHref(set.fqid),
+      },
+    ];
+  });
+  return searching
+    ? rows
+    : rows.sort((a, b) => svCollator.compare(a.name, b.name));
+}
+
 /** ColumnList passes this renderer into RAC's Collection dependencies. A fresh
  * function rebuilds every row, so keep it stable until the search text changes. */
 function useRenderName(needle: string) {
@@ -207,11 +259,17 @@ function useRegisterColumn(
   if (registerFqid === null) return null;
   const node = resource.data?.kind === "register" ? resource.data : null;
   const variables = sortedVariables(node);
-  const items = variableItems(
+  const sets = node?.sets ?? [];
+  const listed = variableItems(
     variables,
     matchedVariables(variables, needle, matches),
   );
-  const seen = new Set(items.map((item) => item.id));
+  const items = foldGroups(listed, sets, !!needle.trim());
+  // A member's address shows its group's page, so its group's row is selected.
+  const selectedId =
+    sets.find((set) => set.members.includes(selectedFqid ?? ""))?.fqid ??
+    selectedFqid;
+  const seen = new Set(listed.map((item) => item.id));
   const others = [
     ...otherRegisterSections(
       otherMatches?.reference ?? null,
@@ -230,10 +288,10 @@ function useRegisterColumn(
       resource.loading || (otherMatches === null && items.length === 0)
         ? null
         : sections,
-    selectedId: items.some((item) => item.id === selectedFqid)
-      ? selectedFqid
+    selectedId: items.some((item) => item.id === selectedId)
+      ? selectedId
       : null,
-    selectedExact: items.some((item) => item.id === selectedFqid),
+    selectedExact: items.some((item) => item.id === selectedId),
     empty: needle.trim()
       ? `No variables match “${needle.trim()}”. Press Escape to clear the search.`
       : "This register lists no variables.",

@@ -10,7 +10,7 @@
  * that lane.
  */
 
-export interface LaneSegment {
+interface LaneSegment {
   /** The column name this part was delivered under; null repeats the span's. */
   name: string | null;
   from: number;
@@ -39,7 +39,7 @@ export interface LaneSpanGeometryInput {
 
 export type LaneEdgeKind = "succession" | "rename";
 
-export interface LaneEdgeInput {
+interface LaneEdgeInput {
   id: string;
   from: string;
   to: string;
@@ -49,7 +49,7 @@ export interface LaneEdgeInput {
   year?: number | null;
 }
 
-export interface LaneGeometryInput {
+interface LaneGeometryInput {
   lanes: readonly { id: string }[];
   spans: readonly LaneSpanGeometryInput[];
   edges: readonly LaneEdgeInput[];
@@ -70,7 +70,7 @@ export interface LaneGeometryInput {
   nameHeights?: ReadonlyMap<string, number>;
 }
 
-export interface PlacedSegment {
+interface PlacedSegment {
   name: string | null;
   /** Relative to the span's own left edge. */
   x: number;
@@ -93,7 +93,7 @@ export interface PlacedSpan {
   table: boolean;
 }
 
-export interface PlacedLane {
+interface PlacedLane {
   id: string;
   y: number;
   height: number;
@@ -136,7 +136,7 @@ export interface LaneGeometry {
 
 // The lane metrics of the mockup: a 58 px lane (`--lane-height`) holding one
 // 24 px span, and a further 32 px for each further row.
-export const LANE_HEIGHT = 58;
+const LANE_HEIGHT = 58;
 export const SPAN_HEIGHT = 24;
 const ROW_STEP = 32;
 const AXIS_HEIGHT = 28;

@@ -34,6 +34,7 @@ import { ColumnChip } from "./ui/ColumnChip";
 import { ConfirmDialog } from "./ui/ConfirmDialog";
 import { Panel } from "./ui/Panel";
 import { Select } from "./ui/Select";
+import { NameSkeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
 import { issueId, type ValidationIssue } from "./validation";
 
@@ -75,6 +76,14 @@ export function SourceCard({
   // as the page's findings do: the source's own name is the file's join key.
   const register = names.get(source.table.split("/").slice(0, 2).join("/"));
   const tableName = names.get(source.table) ?? source.name;
+  // While the card's reads are in flight a missing name is a placeholder, not
+  // the join key it would otherwise flash.
+  const naming = loading && !names.has(source.table);
+  const shownName = naming ? (
+    <NameSkeleton label="Loading table name" />
+  ) : (
+    tableName
+  );
   const heading = useRef<HTMLSpanElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [removing, setRemoving] = useState<{
@@ -182,6 +191,11 @@ export function SourceCard({
         accessibleName: `${column.spelling}, ${name}, ${years}, in project`,
       });
     }
+    const pinned =
+      !!binding.classification ||
+      findings.some(
+        (issue) => issue.code === "classification_version_ambiguous",
+      );
     return {
       id,
       name,
@@ -196,7 +210,9 @@ export function SourceCard({
           Remove
         </Button>
       ),
-      below: (
+      // Only a slot with something in it: an empty one still took a padded row
+      // under the lane, with a sliver of the study band.
+      below: (!graph || pinned || findings.length > 0) && (
         <div className={styles.below}>
           {!graph && (
             <div className={styles.columns}>
@@ -205,10 +221,7 @@ export function SourceCard({
               ))}
             </div>
           )}
-          {(binding.classification ||
-            findings.some(
-              (issue) => issue.code === "classification_version_ambiguous",
-            )) && (
+          {pinned && (
             <div className={styles.controls}>
               <Select
                 label="Classification"
@@ -237,16 +250,18 @@ export function SourceCard({
               />
             </div>
           )}
-          <ul className={styles.plainList}>
-            {findings.map((issue) => (
-              <LocatedIssue
-                key={issueId(issue)}
-                issue={issue}
-                raw={raw}
-                omitPlace={["variable", "table"]}
-              />
-            ))}
-          </ul>
+          {findings.length > 0 && (
+            <ul className={styles.plainList}>
+              {findings.map((issue) => (
+                <LocatedIssue
+                  key={issueId(issue)}
+                  issue={issue}
+                  raw={raw}
+                  omitPlace={["variable", "table"]}
+                />
+              ))}
+            </ul>
+          )}
         </div>
       ),
     };
@@ -257,8 +272,13 @@ export function SourceCard({
     <Panel
       headingLevel={3}
       title={
-        <span ref={heading} tabIndex={-1} className={styles.heading}>
-          {register ?? tableName}
+        <span
+          ref={heading}
+          tabIndex={-1}
+          className={styles.heading}
+          aria-busy={naming || undefined}
+        >
+          {register ?? shownName}
           {register && sharedHeading && (
             <span className={styles.headingTable}>{tableName}</span>
           )}
@@ -267,7 +287,7 @@ export function SourceCard({
       action={
         <Button
           variant="ghost"
-          aria-label={`Remove table ${tableName}`}
+          aria-label={naming ? "Remove table" : `Remove table ${tableName}`}
           onPress={() => setRemoving({ binding: null, label: tableName })}
         >
           Remove table
@@ -287,9 +307,13 @@ export function SourceCard({
         </ul>
       )}
       <p className={styles.meta}>
-        <a className="link" href={catalogHref(source.table)}>
-          {tableName}
-        </a>
+        {naming ? (
+          shownName
+        ) : (
+          <a className="link" href={catalogHref(source.table)}>
+            {tableName}
+          </a>
+        )}
         <span>
           Years:{" "}
           {unbounded ? (
@@ -369,7 +393,9 @@ export function SourceCard({
         }}
         title={
           removesSource
-            ? `Remove table ${tableName}?`
+            ? naming
+              ? "Remove this table?"
+              : `Remove table ${tableName}?`
             : `Remove ${removing?.label ?? "column"} from ${tableName}?`
         }
         actions={

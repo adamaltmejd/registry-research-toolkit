@@ -27,3 +27,17 @@ export function Skeleton({ variant = "line", width, count = 1 }: Props) {
     </div>
   );
 }
+
+/** A name still loading inside a line of text (a heading, a link): an inline
+ * placeholder, plus visually hidden text so the line keeps an accessible name
+ * (an empty heading fails axe). */
+export function NameSkeleton({ label }: { label: string }) {
+  return (
+    <>
+      <span className={styles.nameBox} aria-hidden="true">
+        <span className={`${styles.skeleton} ${styles.name}`} />
+      </span>
+      <span className="visually-hidden">{label}</span>
+    </>
+  );
+}

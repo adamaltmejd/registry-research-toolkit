@@ -1,8 +1,8 @@
 /** Safe inline emphasis and link tokenizer. Returns text, never HTML. */
 
-export type Emphasis = "strong" | "em";
+type Emphasis = "strong" | "em";
 
-export interface InlineSegment {
+interface InlineSegment {
   text: string;
   /** The emphasis to render, or `null` for plain text. */
   emphasis: Emphasis | null;

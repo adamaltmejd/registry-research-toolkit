@@ -5,13 +5,10 @@
  * `history.pushState`; back/forward is `popstate`; internal `<a>` clicks are
  * intercepted so they don't full-reload.
  *
- * Production SPA fallback (deep-linking to `/catalog/...` on a cold load) is a
- * DEPLOY concern: the backend is a pure JSON API (no StaticFiles mount), and the
- * SPA is served by Cloudflare. Cloudflare must rewrite unknown non-`/api` paths
- * to `index.html` (a `_redirects` / 404-rewrite rule) — a MAINTAINER task,
- * consistent with the existing "Cloudflare edge-cache gate is a maintainer task"
- * pattern (see reg_webapp/DESIGN.md → SPA routing + production fallback). The Vite dev server already does this
- * fallback by default (`appType: 'spa'`), so `bun run dev` deep-links work.
+ * A cold load of a deep link (`/catalog/...`) is the edge's job: the SWECOV edge
+ * worker serves `index.html` for any path that is not an asset or the API
+ * (`single-page-application` fallback, reg_webapp/DESIGN.md → Deployment). The Vite
+ * dev server does the same (`appType: 'spa'`), so `bun run dev` deep-links work.
  */
 
 /** The parsed current route. `home` is `/` (the landing page, #675); `root` is
@@ -78,7 +75,7 @@ class Router {
    * replacement invalidates every route-derived prop, which refetched the
    * query-independent catalog node and remounted the article around the leaf's
    * period card, dropping the researcher's keyboard focus to the document body
-   * mid-Apply (Y-65; see reg_webapp/DESIGN.md → SPA routing). */
+   * mid-Apply (Y-65). */
   #pathname = window.location.pathname;
   #route: Route = parseRoute(this.#pathname);
   /** The `?query` string (with leading `?`, or empty). DISTINCT from `route`,

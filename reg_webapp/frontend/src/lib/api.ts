@@ -65,7 +65,7 @@ export function errMessage(e: unknown): string {
  * signal so a superseded query aborts server-side); a `fetch` abort throws an
  * `AbortError`/`TimeoutError`, NOT an `ApiError` — callers map it as they see fit.
  */
-export async function apiGet<T>(
+async function apiGet<T>(
   path: string,
   options?: { signal?: AbortSignal },
 ): Promise<T> {
@@ -111,7 +111,7 @@ export function reportPicks(fqids: string[]): void {
  * typed as `T`. Throws `ApiError` on any NON-2xx response (parsing a JSON error
  * body when present); `checkProjectOrder` reads a blocked order out of it.
  */
-export async function apiPostJson<T>(
+async function apiPostJson<T>(
   path: string,
   body: unknown,
   options?: { signal?: AbortSignal },
@@ -170,7 +170,7 @@ export function stewardConfig(context: Context | null): StewardConfig | null {
 /** `show`'s `kind`-tagged summary of a ref. */
 export type ShowNode = RustSchemas["Show"];
 
-export type RootShow = Extract<ShowNode, { kind: "root" }>;
+type RootShow = Extract<ShowNode, { kind: "root" }>;
 
 export type ProviderShow = Extract<ShowNode, { kind: "provider" }>;
 

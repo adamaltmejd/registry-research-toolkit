@@ -60,8 +60,6 @@ export default defineConfig({
   // the `flows` driver (reg_webapp/dev/driver.mjs), not here.
   test: {
     environment: "jsdom",
-    // W1: unported page/project specs remain beside their orphaned modules.
-    // W2–W5 re-enable them with their owning surfaces; no legacy API shims.
     include: [
       "src/lib/router.test.ts",
       "src/lib/platform.test.ts",

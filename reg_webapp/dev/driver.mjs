@@ -320,7 +320,9 @@ async function browsePagesCase(page, shoot) {
     check(onOpened, `opening ${opened} from the provider's list left focus on ${await page.evaluate(() => document.activeElement === document.body ? "the body" : document.activeElement?.outerHTML.slice(0, 80))}`);
     // Fails if a grouped variable (Kommun opens its group's page) clicked in
     // the provider's list loses focus to its lane on that page: the lane takes
-    // focus only on a fresh load or a deep link.
+    // focus only on a fresh load or a deep link. The register's list folds the
+    // group (DESIGN.md → Layout), so focus lands on the group's row, the one
+    // webapp-dev's curation puts Kommun in ("person").
     await open(page, "/catalog/demo");
     await settled(page);
     await variables.getByRole("option", { name: "Kommun", exact: true }).click();
@@ -329,7 +331,7 @@ async function browsePagesCase(page, shoot) {
     const onMember = await page
       .waitForFunction(
         () => document.activeElement?.getAttribute("role") === "option" &&
-          document.activeElement.getAttribute("data-key") === "demo/bas/kommun",
+          document.activeElement.getAttribute("data-key") === "set/demo/bas/person",
         undefined,
         { timeout: 2_000, polling: 50 },
       )

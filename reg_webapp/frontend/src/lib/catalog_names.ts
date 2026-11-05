@@ -31,7 +31,7 @@ let reads: Record<string, Read<unknown>> = {};
 
 const listeners = new Set<() => void>();
 
-/** Call `listener` whenever a read settles or the cache is reset. */
+/** Call `listener` whenever a read settles. */
 export function subscribeCatalogNames(listener: () => void): () => void {
   listeners.add(listener);
   return () => {
@@ -49,23 +49,14 @@ const PENDING: Read<never> = { value: null, loading: true };
 
 /** The shared never-started entry — what a caller with nothing to ask about gets,
  * so it too holds a stable identity. */
-export const UNASKED: Read<never> = { value: null, loading: false };
+const UNASKED: Read<never> = { value: null, loading: false };
 
-/** Which CACHE the in-flight reads belong to — bumped by every reset, so a read
- * started before one cannot write into the cache that replaced it. */
-let generation = 0;
-
-function settleRead(key: string, value: unknown, startedIn: number): void {
-  settleReads([[key, value]], startedIn);
+function settleRead(key: string, value: unknown): void {
+  settleReads([[key, value]]);
 }
 
 /** Settle several reads that one request answered, with one notification. */
-function settleReads(
-  settled: readonly (readonly [string, unknown])[],
-  startedIn: number,
-): void {
-  // A reset abandons old requests.
-  if (startedIn !== generation) return;
+function settleReads(settled: readonly (readonly [string, unknown])[]): void {
   const next: Record<string, Read<unknown>> = {};
   for (const [key, value] of settled) {
     const current = reads[key];
@@ -87,21 +78,10 @@ function read<T>(key: string, fetcher: () => Promise<T>): Read<T> {
     return hit;
   }
   reads[key] = PENDING;
-  const startedIn = generation;
-  const settle = (value: T | null) => settleRead(key, value, startedIn);
+  const settle = (value: T | null) => settleRead(key, value);
   // A failed name read is not an error surface — see the module comment.
   fetcher().then(settle, () => settle(null));
   return PENDING;
-}
-
-/** Drop every cached read, in-flight ones included. The test seam: the cache is a
- * session singleton, so a case that stubs a DIFFERENT catalog response for the
- * same coordinate must start from an empty one. */
-export function resetCatalogNames(): void {
-  generation += 1;
-  reads = {};
-  showsInFlight.clear();
-  notify();
 }
 
 /** `getShow` reads in flight, by ref. The detail page and the browse column of
@@ -127,7 +107,7 @@ function abortError(): DOMException {
   return new DOMException("The catalog read was aborted.", "AbortError");
 }
 
-/** Drop `entry` from the map unless a reset has already put a newer read there. */
+/** Drop `entry` from the map unless a newer read has already taken its place. */
 function forget(ref: string, entry: InFlight): void {
   if (showsInFlight.get(ref) === entry) {
     showsInFlight.delete(ref);
@@ -235,7 +215,6 @@ export function tableSegmentsReads(
 ): Record<string, Read<CatalogSegment[]>> {
   const key = (variable: string) =>
     `table-segments:${JSON.stringify([table, variable])}`;
-  const startedIn = generation;
   const readBatch = (batch: readonly string[]) => {
     getSegments(table, { variables: batch }).then(
       (rows) =>
@@ -244,7 +223,6 @@ export function tableSegmentsReads(
             key(variable),
             rows.filter((row) => row.variable === variable),
           ]),
-          startedIn,
         ),
       (error: unknown) => {
         const refused = refusedVariable(error, batch);
@@ -254,12 +232,10 @@ export function tableSegmentsReads(
             key(variable),
             null,
           ]),
-          startedIn,
         );
         // Each retry drops one variable, so this ends within the batch.
         const rest = batch.filter((variable) => variable !== refused);
-        if (refused !== null && rest.length > 0 && startedIn === generation)
-          readBatch(rest);
+        if (refused !== null && rest.length > 0) readBatch(rest);
       },
     );
   };
@@ -291,10 +267,9 @@ export async function loadRegister(
   // Evict a settled failure on Retry or revisit, without notifying subscribers
   // into an automatic retry loop. sharedShow only retains in-flight requests.
   if (cached && !cached.loading) delete reads[key];
-  const startedIn = generation;
   const node = await sharedShow(ref, signal);
   if (node.kind !== "register") throw new Error(`${ref} is not a register`);
-  settleRead(key, node, startedIn);
+  settleRead(key, node);
   return node;
 }
 

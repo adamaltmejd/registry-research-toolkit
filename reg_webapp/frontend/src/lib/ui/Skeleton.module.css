@@ -39,3 +39,20 @@
     background-position: -200% 0;
   }
 }
+
+/* The bar sits in a box one line tall, so the row keeps the height it has once
+ * the name settles; the width is capped so a card header's action stays on its row. */
+.nameBox {
+  display: inline-block;
+  height: 1lh;
+  width: 8rem;
+  max-width: 100%;
+  vertical-align: bottom;
+}
+
+.name {
+  display: block;
+  width: 100%;
+  height: 0.85em;
+  margin-top: 0.15em;
+}

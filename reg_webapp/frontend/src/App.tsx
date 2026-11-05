@@ -108,8 +108,7 @@ export function App() {
               providerFqid={providerFqid}
               selectedFqid={
                 route.name === "catalog-node" &&
-                unqualifiedCatalogPath(route.fqidPath) === route.fqidPath &&
-                route.fqidPath.split("/").length > 2
+                unqualifiedCatalogPath(route.fqidPath).split("/").length > 2
                   ? route.fqidPath
                   : null
               }

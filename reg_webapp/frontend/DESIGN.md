@@ -425,20 +425,23 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   section lists the matches its register row counts, and drops a register with no match.
   Its rows open on a click, Enter or Space, not as the arrows pass (they re-root the
   list under the variable's register), and focus stays on the opened row. For a register
-  the second column is flat, a concept group folded to one item (#303), its identifier
-  and panel-key variables first and the rest in Swedish collation; on a group's page (or
-  a member's, which shows that page) the same list stays and the group's row is
-  selected. The members are lanes on that page, not rows in the column. A browse column
-  fills the viewport below the top bar and scrolls its own list. Every item and group
-  carries its in-project mark on the right when it has one. Below the single narrow
-  breakpoint (`breakpoint-narrow`, 60rem: narrower, the two columns leave the detail
-  pane under 400px, #2107) the columns stack, one at a time; the way back is the
-  breadcrumb's first crumb, "Browse registers", drawn as a `default` button on its own
-  line above the trail so it reads as an action, not a path segment (#1824). Every
-  page's trail leads with it below the breakpoint (and only there: beside the columns it
-  would repeat them), and it opens the register list; while the search holds text it
-  reads "Show matching registers", since the list the search filters is off screen. Do
-  not mint new breakpoints.
+  the second column is flat, a concept group folded to one item (#303) that opens the
+  group's page, sorted by name in Swedish collation with no special ordering, the group
+  by its own name; while searching, the group stands at its best-matching member's place
+  and its row names the one member that matched ("person: Kommun"), or counts several
+  ("Inkomstmått: 4 matching"), the visible text and the accessible name the same. A
+  provider's list does not fold. On a group's page (or a member's, which shows that
+  page) the same list stays and the group's row is selected. The members are lanes on
+  that page, not rows in the column. A browse column fills the viewport below the top
+  bar and scrolls its own list. Every item and group carries its in-project mark on the
+  right when it has one. Below the single narrow breakpoint (`breakpoint-narrow`, 60rem:
+  narrower, the two columns leave the detail pane under 400px, #2107) the columns stack,
+  one at a time; the way back is the breadcrumb's first crumb, "Browse registers", drawn
+  as a `default` button on its own line above the trail so it reads as an action, not a
+  path segment (#1824). Every page's trail leads with it below the breakpoint (and only
+  there: beside the columns it would repeat them), and it opens the register list; while
+  the search holds text it reads "Show matching registers", since the list the search
+  filters is off screen. Do not mint new breakpoints.
 - **Search filters in place.** Text in the search bar filters both browse columns rather
   than opening a results page, and only them: the open register, provider or variable
   page always shows its whole content (#1829). A provider with no matching register is
@@ -460,7 +463,12 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   palette (RAC `Autocomplete`) opens from Enter in the field or `⌘K`, for registers,
   variables (with their register) and the app's places ("Go to the project", "Browse the
   data", "Go to the start page"); classifications are reached through their variables
-  (Operator 2026-11-04). Its results are a mixed list and carry a `TypeTag`. It is a
+  (Operator 2026-11-04). Each kind is one request for its first four hits, and the
+  palette follows no cursor. On a steward site the answer holds two lists ranked apart,
+  the catalog's `items` and the steward's own `steward.items`: the palette lists the
+  catalog's hits, then the steward's, each in the server's order, a place listed once.
+  The two ranks never merge; a list that pages follows each list's own cursor (`cursor`,
+  `steward_cursor`) (#2110). Its results are a mixed list and carry a `TypeTag`. It is a
   list under the field with no field of its own: the top-bar field is its one input, so
   focus stays there, the arrow keys move through the rows, and typing goes on filtering
   the columns. A second field in the popover showed the same text twice (maintainer
@@ -866,11 +874,12 @@ grow new visual language meanwhile.
   structure check, whose problems are listed in full under it; a check that did not run
   is an `err` row with Retry. While a newer check runs, the verdict, its list and "What
   will be delivered" keep the previous check's answer (not a check that did not run)
-  with `aria-busy`; a `Skeleton` shows only when there is none, or when a table or
-  column was added, removed or moved since, so the earlier findings would sit on the
-  wrong card. "What will be delivered" is the order the catalog would serve, shown only
-  when the project can be ordered: per table its name and years, each column as a
-  `ColumnChip` (with its years only where they differ from the table's) beside the
+  with `aria-busy`; the banner's plain `text-muted` "Checking" shows in its place only
+  when there is none, or when a table or column was added, removed or moved since, so
+  the earlier findings would sit on the wrong card. A draft with no tables is "Empty"
+  and is not checked. "What will be delivered" is the order the catalog would serve,
+  shown only when the project can be ordered: per table its name and years, each column
+  as a `ColumnChip` (with its years only where they differ from the table's) beside the
   variable's name, "Years not available" per column the period asks more of than the
   table has, and the "Row identifier" columns. There is no order-file download: the
   steward's instructions say how to order. With no project the page is one `EmptyState`,
@@ -886,7 +895,15 @@ grow new visual language meanwhile.
   (`--focus-ring-inset`, the same accent line and halo) so the scroll box and a sticky
   row never clip it. An item or group with something in the project carries a 6 px
   `accent` dot and the count in `accent-ink` `mono` — the only numbers in the list.
-  While the search bar holds text, the list shows its filter state (see Layout).
+  While the search bar holds text, the list shows its filter state (see Layout). In the
+  variables column a name, and a section's register name, wraps rather than truncates:
+  many variable names share a long start and differ only at the end. A column renders
+  every row, with no virtualization, so find-in-page works. Measured on a production
+  build, an arrow key takes about 133 ms on /catalog/scb (4,378 rows in the provider
+  column), 54 ms on /catalog/scb/lisa (302) and 11 ms on /catalog/iaf; that is accepted
+  (Operator 2026-11-05). Revisit when a provider column passes about 5,000 rows or 150
+  ms a key in production. The fallback then is to virtualize only lists over about 1,500
+  rows, since RAC 1.22.1's `ListLayout` cannot keep the sticky section headers.
 - **ColumnChip:** the one treatment for a column name (see Typography). Three states:
   outlined, in project (`accent` fill), outside the study window (`viz-span-out`,
   `text-muted`: `text-faint` fails AA for chip text, so the faint stroke carries the
@@ -939,8 +956,12 @@ grow new visual language meanwhile.
   empty; the next step is the description and the button, never packed into the title.
   `Skeleton` is a `surface-sunken` line or a 3 rem block; content replaces it in place.
   It exposes `aria-busy="true"`, and respects reduced motion. A loading region carries
-  no "Loading…" line beside it. A source card's timeline region shows one info
-  `StatusRow`, "Loading years…", in place of the graph while it loads.
+  no "Loading…" line beside it. A name still loading inside a heading or link is a
+  `NameSkeleton`: the inline line plus visually hidden text ("Loading table name"), so
+  the heading keeps a name. Loading is not failure: only a settled miss shows the
+  fallback (a table's join key, "Variable name unavailable"). A source card's timeline
+  region shows one info `StatusRow`, "Loading years…", in place of the graph while it
+  loads.
 
 ## Do's and Don'ts
 
