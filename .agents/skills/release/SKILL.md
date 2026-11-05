@@ -158,9 +158,8 @@ build when the builder's inputs have not changed (8a, "Reusing an earlier build"
   rebuild of the base invalidates the holdings: repeat from 8d.
 - A holdings or pair failure stops the release. A global-only release (no
   `reg_meta_swecov.db.zst`) needs the maintainer's explicit choice, recorded in the
-  notes. Its consequence: with `SWECOV_DEPLOY=on`, `swecov-asset-guard` fails, SWECOV is
-  not rebuilt and stays on the previous pair, and the commit still counts as deployed
-  (step 10).
+  notes. Its consequence: `swecov-asset-guard` fails, SWECOV is not rebuilt and stays on
+  the previous pair, and the commit still counts as deployed (step 10).
 - The scope check (8h) is an automated gate: the holdings asset is public and carries
   only what the catalog serves.
 
@@ -469,12 +468,11 @@ gh release edit reg_meta/vX.Y.Z --draft=false
 `publish_reg_meta.yml` checks that `ci.yml` is green on the tagged commit (the bump's CI
 from step 4, not a re-run), then runs artifact conformance (`integration.yml`: the
 global asset, and the paired SWECOV asset when the release has one), and dispatches
-`container-build.yml`, which bakes and deploys the catalog (and the pair, when
-`SWECOV_DEPLOY` is `on`). Integration and deployment dispatch both depend on that check,
-not on each other. The deploy guard passes only when the released
-`CATALOG_SCHEMA_VERSION` and `HOLDINGS_SCHEMA_VERSION` both equal main's; a missing
-constant or a mismatch blocks deployment. Scope the run lookup to this release; an
-unfiltered `--limit 1` can match a stale run:
+`container-build.yml`, which bakes and deploys the catalog (and the pair). Integration
+and deployment dispatch both depend on that check, not on each other. The deploy guard
+passes only when the released `CATALOG_SCHEMA_VERSION` and `HOLDINGS_SCHEMA_VERSION`
+both equal main's; a missing constant or a mismatch blocks deployment. Scope the run
+lookup to this release; an unfiltered `--limit 1` can match a stale run:
 
 ```sh
 git fetch --tags origin
@@ -494,10 +492,7 @@ published release's assets are never re-uploaded (step 8i, publish ordering).
 Re-validate a transient failure with `gh workflow run integration.yml --ref main`. Do
 **not** re-release a working version over a stale check.
 
-**First SWECOV activation.** Only once, after the global deploy of the first paired
-release is green: `gh variable set SWECOV_DEPLOY --body on`, then
-`gh workflow run container-build.yml` (never wait for the next push). Every later
-release redeploys SWECOV with global while the variable stays `on`.
+Every release redeploys SWECOV with global.
 
 **Binaries.** The `binaries` job uploads, per target (`aarch64-apple-darwin` and
 `x86_64-unknown-linux-gnu`), `reg-meta-<target>` and
@@ -520,7 +515,7 @@ then `gh release upload reg_meta/vX.Y.Z <asset> <asset>.sha256`.
 The global catalog has no public `/api`. Over `https://reg-meta.vqv.uk/mcp`, call `show`
 with no `ref`: it must answer and its `meta.catalog_version` must equal the version
 passed in step 8a. Compare `meta.generation` with the build report's `generation_id`.
-Then SWECOV, once `SWECOV_DEPLOY` is `on` and its deploy jobs are green: the public
+Then SWECOV, once its deploy jobs are green: the public
 `GET https://data.swecov.se/api/context` must answer with `meta.catalog_version` equal
 to the version, `data.steward_config.presentation` present, and
 `meta.steward.catalog_generation` and `meta.steward.holdings_generation` equal to the

@@ -5,7 +5,7 @@
 // traffic through to the zone's DNS origin (the Fly app — the proxied A/AAAA
 // records for data.swecov.se). Same Worker code as the global catalog's MCP-only
 // worker (wrangler.jsonc), under its own name so each gets its own DEPLOY_VERSION
-// cache generation. It sets ROUTE_MCP: SWECOV's artifact is public, so its catalog
+// cache generation. SWECOV's artifact is public, so its catalog
 // is served over hosted MCP (crates/DESIGN.md, "Hosted MCP"). See
 // reg_webapp/DESIGN.md → "Deployment" for the topology and DESIGN.md → "SPA
 // routing + production fallback" for why the edge owns the deep-link →
@@ -27,7 +27,7 @@
   // (command above) — `wrangler deploy` REPLACES the var set, so deploying
   // with this literal default would reuse the "dev" generation and can
   // resurface stale entries from an earlier "dev" deploy.
-  "vars": { "DEPLOY_VERSION": "dev", "ROUTE_MCP": "true" },
+  "vars": { "DEPLOY_VERSION": "dev" },
   "assets": {
     // Relative to this config file.
     "directory": "../frontend/dist",
@@ -37,8 +37,7 @@
     // Origin-owned paths ALWAYS hit the worker (→ origin), never the SPA
     // fallback. Without this, single-page-application mode serves index.html
     // to browser navigation requests directly, shadowing /api deep-opens.
-    // LOCKSTEP: this glob list and ORIGIN_PATHS (plus MCP_PATH, which
-    // ROUTE_MCP enables) in src/index.ts encode the same set — edit
+    // LOCKSTEP: this glob list and ORIGIN_PATHS (plus MCP_PATH) in src/index.ts encode the same set — edit
     // them together; `reg-meta serve` owns which paths exist. `/assets/*` is
     // the worker's too (ASSETS_PATH in src/index.ts): a missing hashed asset is
     // a 404 there, never the SPA fallback.

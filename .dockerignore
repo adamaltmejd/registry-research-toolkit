@@ -1,12 +1,8 @@
 # Build context exclusions for reg_webapp/Dockerfile (context = repo root).
-# Keep the context lean + deterministic, and DEFEND #224 provenance confinement
-# at the context boundary (assertion #3, alongside the in-image RUN check):
-# a maintainer's local build-db writes reg_meta.provenance.db* next to the
-# catalog DB, and any reg_meta.db / *.db lying around the working tree must never
-# enter the image — the bake stage fetches the release DB pair at build time.
-
-# --- #224: maintainer-only provenance debug sibling (never ships) ---
-**/reg_meta.provenance.db*
+# CI builds from a sparse checkout that holds only what the Dockerfile COPYs; this
+# file matters for a local `fly deploy .`, which sends the working tree. Any DB or
+# archive lying around the tree must never enter the image: the bake stage fetches
+# the release DBs at build time.
 
 # --- Local DB artifacts (the image bakes its own from the release) ---
 **/*.db
@@ -14,15 +10,7 @@
 **/*.db-wal
 **/*.zst
 
-# --- VCS / agent / editor cruft ---
+# --- VCS / build cruft ---
 .git/
-.github/
-.claude/
-.agents/
 target/
 **/.DS_Store
-
-# --- Docs / specs not needed to build or run ---
-archive/
-ARCHITECTURE.md
-AGENTS.md
