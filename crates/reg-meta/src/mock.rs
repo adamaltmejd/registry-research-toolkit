@@ -119,11 +119,11 @@ fn run_generate(mut args: impl Iterator<Item = String>) -> ! {
     let seed = number(seed, "--seed", 1);
     let persons = number(persons, "--persons", generate::DEFAULT_PERSONS);
     let spec_path = PathBuf::from(spec);
-    let spec: Spec = serde_json::from_value(read_json(&spec_path)).unwrap_or_else(|e| {
+    let spec: Spec = reg_mock::from_json(&read_json(&spec_path)).unwrap_or_else(|e| {
         refuse(&[Refusal::new(
             "spec_invalid",
             spec_path.display().to_string(),
-            e.to_string(),
+            e,
         )])
     });
     if spec.version != SPEC_VERSION {
