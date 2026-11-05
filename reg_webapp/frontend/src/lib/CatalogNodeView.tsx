@@ -1,5 +1,6 @@
 import type { Context, OrderCheck } from "./api";
 import styles from "./CatalogNodeView.module.css";
+import { ClassificationView } from "./ClassificationView";
 import { sharedShow } from "./catalog_names";
 import { GroupView } from "./GroupView";
 import { ProviderView } from "./ProviderView";
@@ -21,8 +22,15 @@ export function CatalogNodeView({
 }) {
   // A grouped variable has no page of its own: its address shows its
   // group's page with its lane in focus (a variable is in at most one group).
+  // A classification version's address likewise shows its family's page with
+  // that version in focus (Operator Q4, #2252).
   const resource = useAsyncResource(fqidPath, async (signal) => {
     const node = await sharedShow(fqidPath, signal);
+    if (node.kind === "class_version")
+      return {
+        node: await sharedShow(node.family.fqid, signal),
+        focus: node.fqid,
+      };
     if (node.kind !== "variable" || !node.sets?.length)
       return { node, focus: null };
     return {
@@ -70,6 +78,15 @@ export function CatalogNodeView({
           node={node}
           context={context}
           validation={validation}
+        />
+      );
+    case "class_family":
+      return (
+        <ClassificationView
+          key={node.fqid}
+          node={node}
+          focus={focus}
+          context={context}
         />
       );
     case "set":

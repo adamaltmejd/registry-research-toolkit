@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import type { CatalogSegment } from "./api";
 import pageStyles from "./CatalogNodeView.module.css";
-import { catalogHref, humanizeClassificationSlug } from "./catalog";
+import { catalogHref } from "./catalog";
 import { yearWindowLabel } from "./period";
 import { columnYearRuns } from "./study_window";
 import type { Definition } from "./ui/Definitions";
@@ -32,28 +32,14 @@ const FACTS: readonly {
             key: row.classification,
             value: (
               <a className="link" href={catalogHref(row.classification)}>
-                {classificationName(row, row.classification)}
+                {row.classification_name ??
+                  row.classification.split("/").at(-1)}
               </a>
             ),
           }
         : null,
   },
 ];
-
-/** A classification's name: a vintage slug reads as its family and year
- * ("lkf1991" is "LKF 1991"); any other slug ("niva-oldv1") by the name its
- * value set gives it, as the value-set panel shows it. A value set's names
- * are shared across versions, so they never stand in for a vintage. */
-function classificationName(row: CatalogSegment, ref: string): string {
-  const slug = ref.split("/").at(-1) ?? "";
-  const vintage = humanizeClassificationSlug(slug);
-  if (vintage !== slug) return vintage;
-  return (
-    (row.value_set?.classification === ref
-      ? row.value_set.names[0]
-      : undefined) ?? slug
-  );
-}
 
 /** The segments grouped by one fact's value, in first-seen order, and
  * whether any segment leaves it unstated. */

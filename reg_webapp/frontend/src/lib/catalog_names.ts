@@ -9,7 +9,6 @@ import {
   type RootChild,
   type ShowNode,
 } from "./api";
-import { humanizeClassificationSlug } from "./catalog";
 
 /** One cached catalog read. `value` is null until it lands and STAYS null when it
  * failed; `loading` tells those two apart (the caller's `aria-busy`, and a settled
@@ -340,10 +339,12 @@ export function ancestorNameRead(ref: string | null): Read<string> {
   };
 }
 
-/** Use the classification page's version title, not content-shared value-set aliases. */
+/** A classification's name as `show` serves it: a version's or a family's,
+ * never a value set's names, which versions share. */
 function classificationNameRead(ref: string): Read<string> {
-  return {
-    value: humanizeClassificationSlug(ref.split("/").at(-1) ?? ""),
-    loading: false,
-  };
+  return read(`class:${ref}`, async () => {
+    const node = await sharedShow(ref);
+    if (!("name" in node)) throw new Error(`${ref} has no name`);
+    return node.name;
+  });
 }

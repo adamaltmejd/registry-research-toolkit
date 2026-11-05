@@ -206,9 +206,7 @@ function DocumentGroup({
               </span>
             </Button>
           </Heading>
-          <p className={styles.meta}>
-            Parsed text; {licences.join(", ")}
-          </p>
+          <p className={styles.meta}>Parsed text; {licences.join(", ")}</p>
           <a className={`link ${styles.source}`} href={url} title={url}>
             Source
           </a>
