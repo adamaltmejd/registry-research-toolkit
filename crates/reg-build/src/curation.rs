@@ -574,6 +574,30 @@ fn inventory(root: &Path, records: &[Record]) -> Result<Applied> {
             }
         }
     }
+    // A family's versions are grouped into parts on its page: a version with no part
+    // in a family that has them would belong to no line. Fails fast here, located;
+    // a register's inline version is checked against this list later.
+    let mut parted = BTreeMap::<&str, (bool, &reg_frame::Locator)>::new();
+    for class in &out.classifications {
+        let has = class.part.is_some();
+        match parted.get(class.family.as_str()) {
+            Some((first, at)) if *first != has => {
+                return Err(inventory_error(
+                    root,
+                    &class.locator,
+                    format!(
+                        "classification-part-partial: class/{} states part on some versions only (see {})",
+                        class.family, at.at
+                    ),
+                )
+                .into());
+            }
+            Some(_) => {}
+            None => {
+                parted.insert(&class.family, (has, &class.locator));
+            }
+        }
+    }
     let predecessors = out
         .classifications
         .iter()
@@ -1855,9 +1879,10 @@ fn run_selected(
             ),
         });
     }
-    // A family's versions are grouped into parts on its page: a version with no part
-    // in a family that has them would belong to no line. Checked on the combined
-    // list, since a register's inline `assert classification-version` states no part.
+    // A register's inline `assert classification-version` states no part, so it may
+    // break the part rule of a family classifications.toml gives parts. The inventory
+    // comes first in the list and already holds the rule (`inventory`), so the
+    // offending entry is always a register statement, which a rerun drops.
     let mut parted = BTreeMap::<&str, &reg_resolve::curation::apply::Classification>::new();
     for class in &result.classifications {
         let first = *parted.entry(class.family.as_str()).or_insert(class);
