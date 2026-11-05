@@ -53,7 +53,7 @@ pub struct SegmentPage {
 /// with one form and one provider wording. A fact the catalog does not state is left
 /// out, never `null`: no type, no value set, `coded` unknown, and `state` clear (the
 /// default).
-#[derive(Clone, Serialize, ToSchema)]
+#[derive(Clone, Default, Serialize, ToSchema)]
 pub struct Segment {
     /// The variable's fqid.
     variable: String,
@@ -448,30 +448,21 @@ fn segment_rows(
                 valueset_id: row.get(8)?,
                 start: row.get(2)?,
                 end: row.get(3)?,
+                // `variable` is set by `listed`, which has the pid; `table_name` per page
+                // in `segments`, after paging.
                 segment: Segment {
-                    // Set by `listed`, which has the pid.
-                    variable: String::new(),
                     table: row.get(1)?,
-                    // Named per page in `segments`, after paging.
-                    table_name: String::new(),
                     column: row.get(4)?,
-                    period: Period {
-                        start: None,
-                        end: None,
-                    },
-                    file: None,
-                    wording: None,
                     dtype: row.get(5)?,
                     length: row.get(6)?,
                     format: row.get(7)?,
-                    value_set: None,
                     classification: row.get(9)?,
                     coded: stated(row.get(10)?, "unknown"),
                     sensitive: row.get(11)?,
                     identifier: row.get(12)?,
                     role: row.get(13)?,
                     state: stated(row.get(14)?, "clear"),
-                    evidence: None,
+                    ..Segment::default()
                 },
             })
         },
@@ -567,27 +558,10 @@ fn bare(table: &str, column: &str, role: &str, start: i64, end: i64) -> Row {
         start,
         end,
         segment: Segment {
-            variable: String::new(),
             table: table.to_owned(),
-            table_name: String::new(),
             column: column.to_owned(),
-            period: Period {
-                start: None,
-                end: None,
-            },
-            file: None,
-            wording: None,
-            dtype: None,
-            length: None,
-            format: None,
-            value_set: None,
-            classification: None,
-            coded: None,
-            sensitive: None,
-            identifier: None,
             role: role.to_owned(),
-            state: None,
-            evidence: None,
+            ..Segment::default()
         },
     }
 }
