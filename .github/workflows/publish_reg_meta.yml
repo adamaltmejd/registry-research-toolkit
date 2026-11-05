@@ -96,9 +96,6 @@ jobs:
           test "$(rustc -vV | sed -n 's/^host: //p')" = "$TARGET"
       # `--locked` asserts Cargo.lock is current, as in the Dockerfile.
       - run: cargo build --release --locked -p reg-meta -p reg-export-gate
-      - name: TEMP windows mock tests
-        if: runner.os == 'Windows'
-        run: cargo test --locked -p reg-mock
       - name: Package with checksums
         run: |
           # Git Bash on Windows has sha256sum, not shasum; both print `<hash>  <name>`.
