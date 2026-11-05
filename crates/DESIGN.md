@@ -132,7 +132,8 @@ binaries for the same targets (named by the gate crate's own version,
 needs an Ubuntu 24.04-era distribution or newer on the data VM), `reg-build` binaries
 for the same targets and the SPA bundle `reg-webapp-spa-<version>.tar.zst` (the built
 `reg_webapp/frontend/dist`), which a steward repository downloads at its pinned tag to
-build, verify and deploy its holdings, and two DB assets, `reg_meta.db.zst` (documents
+build, verify and deploy its holdings, the MONA runner `extract.R` (one file, configured
+by the steward's `extract-config.json`), and two DB assets, `reg_meta.db.zst` (documents
 included) and the paired `reg_meta_swecov.db.zst`, built in the same run (the holdings
 pin the base's `catalog_sha256`). There is no separate docs asset. The `reg-meta`
 binaries serve local HTTP or MCP; the catalog is downloaded with `curl` and `zstd`.

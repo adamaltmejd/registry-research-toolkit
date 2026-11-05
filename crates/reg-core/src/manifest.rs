@@ -1,5 +1,5 @@
 //! The MONA order file (crates/DESIGN.md, "MONA order file"): the closed, versioned
-//! manifest `materialize_order` writes and `reg_mona_runner/swecov_extract.R` reads.
+//! manifest `materialize_order` writes and `reg_mona_runner/extract.R` reads.
 //! Every object refuses an unknown field; an absent optional field means none.
 
 use serde::{Deserialize, Serialize};

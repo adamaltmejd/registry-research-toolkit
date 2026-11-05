@@ -1,17 +1,17 @@
 options(echo = FALSE) # R CMD BATCH: keep the script out of the .Rout (non-interactive only)
 
-# swecov_extract.R: the SWECOV order extract runner, run by hand inside MONA.
+# extract.R: a steward's order extract runner, run by hand inside MONA.
 #
 # For every order manifest in <base>/orders/*.json (the order.json the catalog
-# writes, renamed to the project number), extract the ordered columns from
-# SWECOV's holdings into <base>/export_data/<nr>_<YYYY-MM-DD>/: one file per
+# writes, renamed to the project number), extract the ordered columns from the
+# steward's holdings into <base>/export_data/<nr>_<YYYY-MM-DD>/: one file per
 # manifest file, in the order's extract_format (Stata .dta, Parquet or CSV), plus
 # run_log.csv. A success moves the order to
 # orders/archive/<nr>_<YYYY-MM-DD>.json; a failure leaves it in orders/ with
 # error_log.csv in its export folder. A rerun overwrites.
 #
-# Run: source("swecov_extract.R") in R on MONA, `Rscript swecov_extract.R`, or
-# `R CMD BATCH swecov_extract.R` on the batch server.
+# Run: source("extract.R") in R on MONA, `Rscript extract.R`, or
+# `R CMD BATCH extract.R` on the batch server, beside extract-config.json.
 # The contract it reads is crates/DESIGN.md, "MONA order file"; the rationale and
 # the exit codes are reg_mona_runner/DESIGN.md.
 #
@@ -24,36 +24,63 @@ options(echo = FALSE) # R CMD BATCH: keep the script out of the .Rout (non-inter
 # This file is ASCII only: a non-ASCII name reaches SQL Server as NCHAR() code
 # points, never as R string bytes (non-ASCII identifiers sent as text fail on MONA).
 
-# ---- Steward configuration: everything SWECOV-specific is here ----------------
+# ---- Steward configuration ----------------------------------------------------------
 
-config <- list(
-  # The manifest's provenance.steward this deployment serves.
-  steward = "swecov",
-  # The export root holding orders/, orders/archive/ and export_data/.
-  base = "\\\\micro.intra\\projekt\\P1105$\\P1105_Gem\\subproject_export",
-  connect = function() {
-    DBI::dbConnect(
-      odbc::odbc(),
-      dsn = "P1105",
-      Driver = "ODBC Driver 17 for SQL Server",
-      Server = "MONASQL",
-      Database = "P1105",
-      encoding = "UTF-8",
-      bigint = "character"
+# Everything steward-specific is a small JSON file the steward repository keeps:
+# `extract-config.json` in R's working directory, or the file REG_EXTRACT_CONFIG
+# names. Closed keys: `steward` (the manifest's provenance.steward this deployment
+# serves), `base` (the export root holding orders/, orders/archive/ and
+# export_data/) and `odbc` (the DBI::dbConnect arguments for odbc::odbc(), all
+# strings, such as dsn, Driver, Server and Database). Read in main(), once the
+# packages are in place.
+config <- NULL
+
+read_config <- function() {
+  path <- Sys.getenv("REG_EXTRACT_CONFIG", "extract-config.json")
+  if (!file.exists(path)) {
+    return(paste0("no steward configuration: ", path))
+  }
+  cfg <- tryCatch(
+    jsonlite::read_json(path, simplifyVector = FALSE),
+    error = function(e) NULL
+  )
+  strings <- function(x) {
+    is_object(x) && all(nzchar(names(x))) && all(vapply(x, is_string, TRUE))
+  }
+  if (
+    !is_object(cfg) ||
+      !setequal(names(cfg), c("steward", "base", "odbc")) ||
+      length(cfg) != 3L ||
+      !is_string(cfg$steward) ||
+      !grepl("^[a-z0-9]+(-[a-z0-9]+)*$", cfg$steward) ||
+      !is_string(cfg$base) ||
+      !nzchar(cfg$base) ||
+      !strings(cfg$odbc)
+  ) {
+    return(paste0(
+      "steward configuration ",
+      path,
+      " is not {\"steward\": slug, \"base\": path, \"odbc\": {name: string}}"
+    ))
+  }
+  cfg$connect <- function() {
+    do.call(
+      DBI::dbConnect,
+      c(
+        list(odbc::odbc()),
+        cfg$odbc,
+        list(encoding = "UTF-8", bigint = "character")
+      )
     )
   }
-)
-
-# Test override (a process boundary): another export root. Unset on MONA.
-if (nzchar(Sys.getenv("SWECOV_EXTRACT_BASE"))) {
-  config$base <- Sys.getenv("SWECOV_EXTRACT_BASE")
+  cfg
 }
 
 # ---- Exit codes (stable; reg_mona_runner/DESIGN.md) ---------------------------
 
 EXIT <- c(
   ok = 0L,
-  setup = 2L, # export root, packages or database connection
+  setup = 2L, # steward configuration, export root, packages or database connection
   json = 3L, # the order is not JSON
   version = 4L, # manifest version is not 4
   mode = 5L, # not a steward_holdings order for this steward
@@ -1433,6 +1460,11 @@ main <- function() {
       )
       return(EXIT[["setup"]])
     }
+  }
+  config <<- read_config()
+  if (is.character(config)) {
+    say(config)
+    return(EXIT[["setup"]])
   }
   orders_dir <- file.path(config$base, "orders")
   if (!dir.exists(orders_dir)) {
