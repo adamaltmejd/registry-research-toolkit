@@ -11,9 +11,9 @@ import classStyles from "./ClassificationView.module.css";
 import { CodeTimeline } from "./CodeTimeline";
 import { catalogHref, svCollator } from "./catalog";
 import { catalogRootChildren } from "./catalog_names";
-import { catalogPeriodLabel } from "./catalog_period";
+import { catalogPeriodLabel, catalogPeriodRuns } from "./catalog_period";
 import { dataAxis } from "./period";
-import { columnYearRuns, datedYearRuns, studyWindow } from "./study_window";
+import { datedYearRuns, studyWindow } from "./study_window";
 import { Definitions } from "./ui/Definitions";
 import { Panel } from "./ui/Panel";
 import { NameSkeleton } from "./ui/Skeleton";
@@ -62,7 +62,7 @@ export function ClassificationView({
     svCollator.compare(a.name, b.name),
   );
   const axis = dataAxis(
-    columnYearRuns(
+    datedYearRuns(
       variables.flatMap((variable) => variable.segments),
       bounds,
     ).flatMap((run) => [run.from, run.to]),
@@ -310,15 +310,11 @@ function versionItems(
   return items;
 }
 
-/** A folded run, by its versions' names: all of them up to three, else the
- * first two and the last. */
+/** A folded run: its version count and years, the family name being the
+ * page's heading. A single version keeps its own name. */
 function unusedLine(versions: readonly Version[]): string {
-  const names = versions.map((version) => version.name);
-  if (names.length === 1)
-    return `${names[0]}: no variable here uses this version.`;
-  const listed =
-    names.length <= 3
-      ? names.join(", ")
-      : `${names[0]}, ${names[1]} … ${names.at(-1)}`;
-  return `${listed}: no variable here uses these versions.`;
+  if (versions.length === 1)
+    return `${versions[0].name}: no variable here uses this version.`;
+  const years = catalogPeriodRuns(versions.map((version) => version.period));
+  return `${versions.length} versions, ${years}: no variable here uses these versions.`;
 }
