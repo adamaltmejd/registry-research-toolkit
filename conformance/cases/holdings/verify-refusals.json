@@ -100,5 +100,10 @@
     "sql": "DELETE FROM holding_notice_candidate WHERE variable_pid='demo/owners/second'",
     "code": "holdings_contested_source_mismatch",
     "location": "census:row=2:column=1"
+  },
+  {
+    "sql": "UPDATE text SET body=body || ' Evidence: inventory-evidence.jsonl' WHERE id=(SELECT min(id) FROM text)",
+    "code": "holdings_content_working_file",
+    "location": "text:"
   }
 ]
