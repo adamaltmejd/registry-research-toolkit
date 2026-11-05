@@ -673,6 +673,7 @@ jobs:
         run: &public-mcp-smoke |
           rpc() {
             curl -sfS "https://$EDGE_HOST/mcp" \
+              -A 'reg-meta-ci-smoke' \
               -H 'accept: application/json, text/event-stream' \
               -H 'content-type: application/json' \
               -H 'mcp-protocol-version: 2025-11-25' \
@@ -812,7 +813,7 @@ jobs:
           # A MISS (the new cache key's first read warms it) or an old HIT (a PoP
           # still on the previous worker version) retries until the window ends.
           while :; do
-            IFS='|' read -r code status age < <(curl -m 15 -so /dev/null -w '%{http_code}|%header{cf-cache-status}|%header{age}\n' "$url")
+            IFS='|' read -r code status age < <(curl -m 15 -A reg-meta-ci-smoke -so /dev/null -w '%{http_code}|%header{cf-cache-status}|%header{age}\n' "$url")
             echo "$code cf-cache-status: $status, age: ${age:-0}s"
             [ "$status" = HIT ] && [ "${age:-0}" -le 600 ] && break
             if [ "$SECONDS" -ge "$deadline" ]; then
@@ -822,8 +823,8 @@ jobs:
             fi
             sleep "$interval"
           done
-          etag=$(curl -m 15 -sfo /dev/null -w '%header{etag}' "$url")
-          code=$(curl -m 15 -so /dev/null -w '%{http_code}' -H "If-None-Match: $etag" "$url")
+          etag=$(curl -m 15 -A reg-meta-ci-smoke -sfo /dev/null -w '%header{etag}' "$url")
+          code=$(curl -m 15 -A reg-meta-ci-smoke -so /dev/null -w '%{http_code}' -H "If-None-Match: $etag" "$url")
           echo "If-None-Match -> $code"
           [ "$code" = "304" ] || { echo "FATAL: edge 304 revalidation broken" >&2; exit 1; }
       # The SWECOV catalog's hosted MCP endpoint (crates/DESIGN.md, "Hosted MCP"),

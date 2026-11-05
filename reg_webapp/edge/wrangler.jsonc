@@ -13,7 +13,12 @@
   "name": "reg-webapp-global-edge",
   "main": "src/index.ts",
   "compatibility_date": "2026-06-01",
+  "vars": { "STEWARD": "global" },
   // `wrangler deploy` replaces the worker's routes with this list.
   "routes": [{ "pattern": "reg-meta.vqv.uk/*", "zone_name": "vqv.uk" }],
-  "observability": { "enabled": true }
+  // Usage statistics (src/usage.ts, reg_webapp/DESIGN.md → "Usage statistics"):
+  // Analytics Engine keeps data points 3 months. Invocation logs are off: they record
+  // each request's URL, search text included, outside the usage scrub.
+  "analytics_engine_datasets": [{ "binding": "USAGE", "dataset": "reg_meta_usage" }],
+  "observability": { "enabled": true, "logs": { "invocation_logs": false } }
 }
