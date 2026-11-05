@@ -22,10 +22,12 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     description: "The codes and labels of a value set, by `value_set` hash or `classification`. \
         `parent` steps through a hierarchy one level at a time; `q` searches it. Or give \
         `code` (and `label`) to find the value sets that contain it. The blank code is a code \
-        like any other.",
+        like any other. `compare` with `classification` lists the codes added, removed and \
+        relabelled from the `compare` version to the `classification` version.",
     params: &[
         Param::optional("value_set", Type::Hash),
         Param::optional("classification", Type::Ref),
+        Param::optional("compare", Type::Ref),
         Param::optional("code", Type::String),
         Param::optional("label", Type::String),
         Param::optional("level", Type::String),
@@ -43,9 +45,58 @@ pub const OPERATIONS: &[Operation] = &[Operation {
 fn result(components: &mut Components) -> RefOr<Schema> {
     let items = component::<ValueItemsPage>(components);
     let sets = component::<ValueSetsPage>(components);
+    let changes = component::<ValueChangesPage>(components);
     RefOr::T(Schema::OneOf(
-        OneOfBuilder::new().item(items).item(sets).build(),
+        OneOfBuilder::new()
+            .item(items)
+            .item(sets)
+            .item(changes)
+            .build(),
     ))
+}
+
+/// The code changes from the `compare` version to the `classification` version.
+#[derive(Serialize, ToSchema)]
+pub struct ValueChangesPage {
+    /// Added, then removed, then relabelled; by code within each.
+    items: Vec<ValueChange>,
+    #[schema(required = true)]
+    next_cursor: Option<String>,
+    /// Over the whole comparison.
+    counts: ValueChangeCounts,
+    /// The version compared to, the newer side.
+    classification: String,
+    /// The version compared from, the older side.
+    compare: String,
+}
+
+#[derive(Clone, Serialize, ToSchema)]
+pub struct ValueChange {
+    /// May be `""`: a real code.
+    code: String,
+    /// The label in `classification`; `null` for a removed code.
+    #[schema(required = true)]
+    label: Option<String>,
+    /// The label in `compare`; `null` for an added code.
+    #[schema(required = true)]
+    previous_label: Option<String>,
+    change: Change,
+}
+
+/// In page order.
+#[derive(Clone, Copy, Serialize, ToSchema)]
+#[serde(rename_all = "snake_case")]
+pub enum Change {
+    Added,
+    Removed,
+    Relabelled,
+}
+
+#[derive(Serialize, ToSchema)]
+pub struct ValueChangeCounts {
+    added: usize,
+    removed: usize,
+    relabelled: usize,
 }
 
 #[derive(Serialize, ToSchema)]
@@ -86,6 +137,15 @@ const MODES: [&str; 3] = ["value_set", "classification", "code"];
 
 fn values(server: &Server, params: &Params) -> Result<Value, Error> {
     let present = |name: &str| params.get(name).is_some();
+    // `compare` goes with `classification` alone, so it names itself first.
+    if present("compare")
+        && (!present("classification")
+            || ["value_set", "code", "label", "level", "parent", "q"]
+                .into_iter()
+                .any(present))
+    {
+        return Err(Error::invalid_parameter("compare"));
+    }
     let modes: Vec<&str> = MODES.into_iter().filter(|m| present(m)).collect();
     match modes.as_slice() {
         [] => return Err(Error::invalid_parameter("value_set")),
@@ -118,6 +178,8 @@ fn values(server: &Server, params: &Params) -> Result<Value, Error> {
     };
     let page = if let Some(&code) = params.get("code") {
         pair(server, &conn, params, code)?
+    } else if let Some(&from) = params.get("compare") {
+        changes(server, &conn, params, params["classification"], from)?
     } else {
         let valueset_id = match by_hash {
             Some(hash) => by_content(&conn, hash)?,
@@ -145,17 +207,102 @@ fn by_content(conn: &Connection, hash: &str) -> Result<i64, Error> {
 
 /// The id of the value set of the class version `given` names.
 fn classification_set(conn: &Connection, given: &str) -> Result<i64, Error> {
+    Ok(class_version(conn, given)?.1)
+}
+
+/// The pid of the class version `given` names, and its value set's id.
+fn class_version(conn: &Connection, given: &str) -> Result<(String, i64), Error> {
     let version = refs::expect(
         conn,
         given,
         &["class_version"],
         "not a classification version",
     )?;
-    Ok(conn.query_row(
+    let valueset = conn.query_row(
         "SELECT valueset_id FROM class_version WHERE id = ?",
         [version.id],
         |row| row.get(0),
-    )?)
+    )?;
+    Ok((version.pid, valueset))
+}
+
+/// The codes added, removed and relabelled from class version `from` to `to`, by exact
+/// code (the blank code is a code). Each version is read in its own origin.
+fn changes(
+    server: &Server,
+    conn: &Connection,
+    params: &Params,
+    to: &str,
+    from: &str,
+) -> Result<Value, Error> {
+    let limit = limit(params)?;
+    let after = position(server, params)?
+        .map(|p| {
+            p.parse::<usize>()
+                .map_err(|_| cursor::invalid("Cursor is malformed."))
+        })
+        .transpose()?;
+    let (to_pid, to_set) = class_version(conn, to)?;
+    let from_conn = server.catalog.connect_for_ref(from)?;
+    let (from_pid, from_set) = class_version(&from_conn, from)?;
+    // Codes are unique in a set and `ord` is their bytewise order, so the maps iterate
+    // in the order `values` lists a set's items.
+    let labels = |conn: &Connection, set: i64| -> Result<BTreeMap<String, Option<String>>, Error> {
+        Ok(load_items(conn, set, false)?
+            .into_iter()
+            .map(|(item, _)| (item.code, item.label))
+            .collect())
+    };
+    let new = labels(conn, to_set)?;
+    let mut old = labels(&from_conn, from_set)?;
+    let (mut added, mut relabelled) = (Vec::new(), Vec::new());
+    for (code, label) in new {
+        match old.remove(&code) {
+            None => added.push(ValueChange {
+                code,
+                label,
+                previous_label: None,
+                change: Change::Added,
+            }),
+            Some(previous) if previous != label => relabelled.push(ValueChange {
+                code,
+                label,
+                previous_label: previous,
+                change: Change::Relabelled,
+            }),
+            Some(_) => {}
+        }
+    }
+    let removed: Vec<ValueChange> = old
+        .into_iter()
+        .map(|(code, previous)| ValueChange {
+            code,
+            label: None,
+            previous_label: previous,
+            change: Change::Removed,
+        })
+        .collect();
+    let counts = ValueChangeCounts {
+        added: added.len(),
+        removed: removed.len(),
+        relabelled: relabelled.len(),
+    };
+    let all: Vec<ValueChange> = added.into_iter().chain(removed).chain(relabelled).collect();
+    let mut page: Vec<usize> = (0..all.len())
+        .filter(|&index| after.is_none_or(|after| index > after))
+        .take(limit + 1)
+        .collect();
+    let next_cursor = cursor::next(&mut page, limit, |last| {
+        Some(cursor::token(server, params, "", limit, &last.to_string()))
+    });
+    Ok(serde_json::to_value(ValueChangesPage {
+        items: page.into_iter().map(|index| all[index].clone()).collect(),
+        next_cursor,
+        counts,
+        classification: to_pid,
+        compare: from_pid,
+    })
+    .expect("a page serializes"))
 }
 
 /// One decoded keyset position, or `None` for the first page.

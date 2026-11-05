@@ -2367,6 +2367,20 @@ selects only compatible curated version windows, preserving coverage clipping an
 refusing an unrelated version at the binding's classification field. A pin never
 substitutes a version or reinterprets codes.
 
+`show` at `class` lists the classifications, each with its description, its versions
+(`fqid`, `name`, `period`, `part`, in start order), its version count and the span from
+the first version's start to the last one's end. On a data holder's catalog it lists
+only those the holder's variables use. `show` at `class/<family>` adds the publisher,
+and each version there, like `show` at `class/<family>/<version>`, carries its value
+set, its `part` and `succeeds`: the versions it directly succeeds by a curated edge, in
+id order. Both also list the variables that use the classification, with their rows.
+
+The catalog has no code correspondence tables between versions (#795). What a reader can
+see is the difference of two code lists: `values` with `classification` and `compare`
+lists the codes added in `classification`, removed from `compare`, and kept under
+another label, by exact code, the blank code included. The two versions may belong to
+different families.
+
 ## Sets and tags
 
 Variable membership is curated with `set sets` and `set tags` and emitted through the

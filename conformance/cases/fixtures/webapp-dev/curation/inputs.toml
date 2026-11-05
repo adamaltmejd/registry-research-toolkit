@@ -3,7 +3,8 @@
 # change, changing value sets and a gap; `demo/hush` named tables, a hierarchical value
 # set, an ambiguous and a preliminary window, a dated table succession and Antal
 # across two tables with provider wording, a notice and a Basregistret predecessor;
-# `demo2/reg` an undated table succession and a timeless table.
+# `demo2/reg` an undated table succession and a timeless table. `class/demo-utb` has two
+# parts and a succession in one (classifications.toml), bound by demo/bas Utbniva.
 repo = "fixture"
 commit = "fixture"
 
@@ -19,3 +20,8 @@ name = "Andra leverantören"
 name = "frame"
 reader = "frame"
 path = "frame"
+
+[[input]]
+name = "codes"
+reader = "classification-csv"
+path = "codes"
