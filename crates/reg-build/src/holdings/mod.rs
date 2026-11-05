@@ -27,7 +27,7 @@ pub(crate) fn run(args: impl Iterator<Item = String>) -> Result<()> {
             "--steward",
             "--steward-repo",
             "--out",
-            "--registry",
+            "--config",
             "--report",
         ]
         .contains(&k.as_str())
@@ -39,15 +39,10 @@ pub(crate) fn run(args: impl Iterator<Item = String>) -> Result<()> {
     let out = PathBuf::from(need("--out")?);
     let owner = need("--steward")?;
     let report = flags.get("--report").map(PathBuf::from);
-    let registry = PathBuf::from(
-        flags
-            .get("--registry")
-            .map_or("stewards.toml", String::as_str),
-    );
-    let pins: BTreeMap<String, input::Pin> =
-        crate::toml_file(&registry).map_err(|_| "holdings_registry_invalid".to_owned())?;
-    let pin = pins.get(&owner).ok_or("holdings_steward_unknown")?;
-    let config = input::admit(&root, pin, &owner)?;
+    // The pin is the checkout itself: its `origin`, `HEAD` and the config path, admitted
+    // only on a clean tree. Each steward repository pins the toolkit, not the reverse.
+    let pin = input::checkout(&root, &need("--config")?)?;
+    let config = input::admit(&root, &pin, &owner)?;
     crate::verify::catalog(&base, None)?;
     if std::iter::once(&out)
         .chain(report.iter())
@@ -72,7 +67,7 @@ pub(crate) fn run(args: impl Iterator<Item = String>) -> Result<()> {
             &scratch,
             &staged,
             &owner,
-            pin,
+            &pin,
             &config,
             report.as_deref(),
         )?;

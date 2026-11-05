@@ -1,4 +1,5 @@
-//! Closed, pinned steward input contract; no legacy inventory is read at runtime.
+//! Closed steward input contract, pinned by the clean checkout; no legacy inventory is
+//! read at runtime.
 use std::collections::BTreeMap;
 use std::fmt::Write as _;
 use std::path::{Component, Path, PathBuf};
@@ -7,8 +8,8 @@ use std::process::Command;
 use crate::error::Result;
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize)]
-#[serde(deny_unknown_fields)]
+/// A steward checkout's identity: its `origin` URL, `HEAD` commit and config path. A
+/// holdings build reads it from the checkout; `verify` reads it back from the artifact.
 pub(super) struct Pin {
     pub repo: String,
     pub commit: String,
@@ -161,6 +162,15 @@ fn git(root: &Path, args: &[&str]) -> Result<String> {
     String::from_utf8(output.stdout)
         .map(|s| s.trim().to_owned())
         .map_err(|_| "holdings_pin_invalid: invalid git output".into())
+}
+
+/// The pin of the checkout at `root` as it stands; `admit` then refuses a dirty tree.
+pub(super) fn checkout(root: &Path, config: &str) -> Result<Pin> {
+    Ok(Pin {
+        repo: git(root, &["remote", "get-url", "origin"])?,
+        commit: git(root, &["rev-parse", "HEAD"])?,
+        config: config.to_owned(),
+    })
 }
 
 #[allow(clippy::too_many_lines)]
