@@ -26,7 +26,7 @@ fi
 MAX_TIME=10
 
 # `/mcp` admits the public host's `Host` header only where the deployment names one
-# (fly.toml and fly.swecov.toml both do).
+# (reg_webapp/fly.toml and each steward repository's Fly config do).
 # `--mmap-size 0`: on Fly's throttled rootfs, mmap read-around inflates cold reads.
 # Measured 2026-10-09 (0.44.0, 15-request cold mix): 592 MB / 34 s with the default
 # mmap vs 320 MB / 21 s without; warm latency is unchanged (#1296).
@@ -37,7 +37,8 @@ if [ -n "${REG_META_PUBLIC_HOST:-}" ]; then
 fi
 # The served files' digest and the base catalog's, computed when the image was built
 # (Dockerfile), avoid hashing the DBs at boot on the throttled rootfs: the validators'
-# token and pair admission's check of the holdings pin (~80 s for SWECOV otherwise).
+# token and, on a steward image, pair admission's check of the holdings pin (~80 s
+# otherwise).
 REG_META_CONTENT_DIGEST=$(cat /opt/reg_webapp/content.sha256)
 REG_META_CATALOG_SHA256=$(cat /opt/reg_webapp/catalog.sha256)
 export REG_META_CONTENT_DIGEST REG_META_CATALOG_SHA256

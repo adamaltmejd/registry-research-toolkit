@@ -156,8 +156,9 @@ a real catalog, and only behaviour neither the fixture corpus nor the release's
 `REG_CATALOG=NAME` serves `reg_meta_NAME.db` beside `reg_meta.db` as `--catalog NAME`
 (`global` or unset: the reference catalog alone). Without `REG_ARTIFACT_DIR` it runs on
 the `base` fixture's artifact, as `gate.sh rust` does, so it stays runnable between
-releases. Release step 8f runs it once per catalog with a release-built server
-(`REG_META_BIN`); integration.yml does the same on the published assets.
+releases. Release step 8d runs it on the global catalog with a release-built server
+(`REG_META_BIN`); integration.yml does the same on the published asset, and a steward
+repository's `steward-build.yml` on its pair.
 
 - `order`: sampled whole-table projects agree with an independent SQL census of the
   artifact on `validate` and `order`, each entry carries the spelling the census holds

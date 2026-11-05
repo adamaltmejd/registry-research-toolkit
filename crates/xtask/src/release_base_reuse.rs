@@ -22,8 +22,8 @@
 //!
 //! A step's result carries over only when the evidence's `passed` file lists it against
 //! this base digest (each step appends `<step> <base sha>` once it passes); only 8b and
-//! 8c can. The holdings (8d-8g) build from a steward checkout that no toolkit file pins,
-//! so they and the 8i `base_sha` check always run at the release commit.
+//! 8c can. Conformance (8d) runs the release commit's server, so it and the 8e
+//! `base_sha` check always run at the release commit.
 //!
 //! The evidence directory must hold what step 8a records: `source-revision`,
 //! `rustc.txt`, `build-args.txt`, `base.sha256` and `catalog/reg_meta.db`. A missing or
@@ -391,10 +391,7 @@ fn run(evidence: &Path) -> Result<u8, String> {
             println!("{step}: run it (not passed in the evidence)");
         }
     }
-    // The holdings build from a steward checkout, not a toolkit pin, so nothing here
-    // can show an earlier pair is still current.
-    println!("8d-8g: run them at the release commit (the holdings are always rebuilt)");
-    println!("always: the 8i base_sha check at the release commit");
+    println!("always: 8d and the 8e base_sha check at the release commit");
     Ok(0)
 }
 

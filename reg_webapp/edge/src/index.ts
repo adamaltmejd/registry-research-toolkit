@@ -27,8 +27,9 @@ interface Env {
   EDGE_TOKEN?: string;
 }
 
-// LOCKSTEP: must match assets.run_worker_first in wrangler.swecov.jsonc (same set,
-// glob syntax there): the paths `reg-meta serve` answers. `/mcp` is MCP_PATH: a POST
+// LOCKSTEP: must match assets.run_worker_first in every steward repository's wrangler
+// config (swecov-steward `deploy/wrangler.jsonc`; same set, glob syntax there): the
+// paths `reg-meta serve` answers. `/mcp` is MCP_PATH: a POST
 // (never a navigation) reaches the worker even without run_worker_first.
 const ORIGIN_PATHS = [/^\/api(\/|$)/, /^\/openapi\.json$/];
 const MCP_PATH = /^\/mcp$/;

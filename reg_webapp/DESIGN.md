@@ -128,11 +128,11 @@ concern, layered on only if a steward ever needs private data.
 
 ```text
 reg_webapp/
-  Dockerfile              # catalog bake and Rust server image
+  Dockerfile              # catalog bake and Rust server image (global)
+  steward.Dockerfile      # a steward's image from released binaries
   docker-entrypoint.sh    # server startup and readiness probes
   fly.toml                # global origin deployment
-  fly.swecov.toml         # SWECOV steward deployment
-  edge/                   # global hosted MCP edge worker
+  edge/                   # edge worker: global hosted MCP, steward SPA
   frontend/               # the SPA
   dev/                    # local dev servers and browser driver
   DESIGN.md
@@ -231,31 +231,30 @@ open); it is null when every period served is timeless.
 `cargo test -p reg-meta --test openapi_snapshot` asserts that it equals the server's
 rendered document. `scripts/gate.sh regen` refreshes the snapshot.
 
-## Deployment (global and SWECOV on Fly.io, Cloudflare edges in front)
+## Deployment (global on Fly.io, a Cloudflare edge in front)
 
 The container runs on Fly.io behind Cloudflare. The immutable SQLite artifact and server
 binary are baked into a plain Docker image; `fly.toml` and the deploy job supply the
-platform-specific configuration.
+platform-specific configuration. This section is the toolkit's own deployment, the
+global catalog. Steward deployments are their repositories' (Steward repositories,
+below).
 
-The global catalog has no public website (maintainer ruling): it is not what SWECOV
-offers, so it is not published under swecov.se. Agents use its hosted MCP (no install,
-no 1.2 GB download), so `reg-webapp-global` serves `/mcp` alone at `reg-meta.vqv.uk`.
-vqv.uk is the maintainer's side-project zone, chosen to keep the personal altmejd.se
-zone out of it. `data.swecov.se` serves the SWECOV SPA, API and hosted MCP through its
-own origin and worker.
+The global catalog has no public website (maintainer ruling): it is not what a steward
+site offers. Agents use its hosted MCP (no install, no 1.2 GB download), so
+`reg-webapp-global` serves `/mcp` alone at `reg-meta.vqv.uk`. vqv.uk is the maintainer's
+side-project zone, chosen to keep the personal altmejd.se zone out of it.
 
 - **The image runs the Rust server alone**: `reg-meta serve --db /opt/reg_meta` with the
-  base catalog and, for SWECOV, its paired holdings DB. There is no Python at runtime.
-  The Dockerfile has three stages: the `regmeta-db` bake (Debian slim with `curl` and
-  `zstd`: download the catalog assets, verify them against the SHA-256 digests GitHub
-  records for them, unpack), a pinned Rust stage building `reg-meta`, and a Debian slim
-  runtime with `curl` for the smoke gate. The image serves the API and `/mcp` only; the
-  SWECOV edge worker serves the SPA. The global image serves `/api` too (the binary has
-  no per-route switch, and fly.toml's health check reads `/api/context`); its edge
-  worker forwards none of it.
+  base catalog. There is no Python at runtime. The Dockerfile has three stages: the
+  `regmeta-db` bake (Debian slim with `curl` and `zstd`: download the catalog asset,
+  verify it against the SHA-256 digest GitHub records for it, unpack), a pinned Rust
+  stage building `reg-meta`, and a Debian slim runtime with `curl` for the smoke gate.
+  The image serves the API and `/mcp` only; a steward's edge worker serves the SPA. The
+  global image serves `/api` too (the binary has no per-route switch, and fly.toml's
+  health check reads `/api/context`); its edge worker forwards none of it.
 - **Hosted MCP** (`crates/DESIGN.md`, "Agent and web interface"): `/mcp` on
-  `reg-meta.vqv.uk` (the global catalog) and on `data.swecov.se`, whose SWECOV artifact
-  is public. Both workers forward `/mcp`; the active `fly.toml` passes
+  `reg-meta.vqv.uk` (the global catalog) and on each public steward host
+  (`data.swecov.se`). Every worker forwards `/mcp`; the active Fly config passes
   `REG_META_PUBLIC_HOST`, which rmcp's allowed hosts admit beside the loopback names.
   `/mcp` and the project POSTs share one rate limit per client address (60 a minute;
   Cost protection, below). Behind Fly the peer is Fly's proxy, so the worker proves a
@@ -264,12 +263,12 @@ own origin and worker.
   keyed on its `CF-Connecting-IP`. Any other request, a direct-origin hit included, is
   keyed on its peer, so a forged `CF-Connecting-IP` buys nothing. A worker without the
   secret refuses every forward with a `no-store` 503, rather than put every edge client
-  in the proxy's one bucket. After each edge deploy, `container-build.yml` sends
-  `initialize`, `tools/list` and one `search` to each public `/mcp`. Those smoke
-  requests send `User-Agent: reg-meta-ci-smoke`, which usage statistics count as client
-  `ci` and the reports leave out.
-- **Usage recording** (#1323; the origin's label is "Usage statistics" below): both
-  workers write one Workers Analytics Engine data point (dataset `reg_meta_usage`,
+  in the proxy's one bucket. After each edge deploy, `container-build.yml` (and
+  `steward-deploy.yml` for a steward) sends `initialize`, `tools/list` and one `search`
+  to the public `/mcp`. Those smoke requests send `User-Agent: reg-meta-ci-smoke`, which
+  usage statistics count as client `ci` and the reports leave out.
+- **Usage recording** (#1323; the origin's label is "Usage statistics" below): each
+  worker writes one Workers Analytics Engine data point (dataset `reg_meta_usage`,
   binding `USAGE`, kept 3 months) per forwarded `/api` and `/mcp` request, from the
   origin's `x-reg-usage` label, which `edge/src/usage.ts` strips before answering. The
   blobs are steward (`STEWARD` var), surface, kind, op, fqids, q, err, cache status,
@@ -291,32 +290,27 @@ own origin and worker.
     request per add.
   - **Invocation logs are off** (`observability.logs.invocation_logs: false`). They
     record each request's URL, search text included, outside the scrub.
-- **Apps**: `reg-webapp-global` serves `reg-meta.vqv.uk`; `reg-webapp-swecov` serves
-  `data.swecov.se`. Each is a single always-on `shared-cpu-1x`/2GB machine in `arn`
-  (Stockholm, where the users are). Always-on is deliberate: Fly's ephemeral-rootfs I/O
-  is throttled (\~8 MiB/s), so a cold boot re-reads the SQLite database slowly — keep
-  the OS page cache warm rather than scale to zero (\~$6/mo per app). Configs:
-  `reg_webapp/fly.toml` and `reg_webapp/fly.swecov.toml`; `--ha=false` keeps the machine
-  count at one. Confirm that the base catalog plus holdings fit the 2 GB VM before the
-  first paired deploy: the catalog alone is about 1.35 GB.
+- **App**: `reg-webapp-global` serves `reg-meta.vqv.uk` from a single always-on
+  `shared-cpu-1x`/2GB machine in `arn` (Stockholm, where the users are). Always-on is
+  deliberate: Fly's ephemeral-rootfs I/O is throttled (\~8 MiB/s), so a cold boot
+  re-reads the SQLite database slowly — keep the OS page cache warm rather than scale to
+  zero (\~$6/mo per app). Config: `reg_webapp/fly.toml`; `--ha=false` keeps the machine
+  count at one.
 - **Read-only SQLite on the ephemeral rootfs is the right model** — the DB is baked into
   the image and replaced with it. No volume, no LiteFS, nothing persists.
-- **Deploys**: one workflow (`container-build.yml`) owns both origins and edge workers,
+- **Deploys**: one workflow (`container-build.yml`) owns the origin and the edge worker,
   scoped by a `changes` paths-filter job. Image-affecting main pushes (Dockerfile COPY
   surfaces + bake inputs) build, push to `registry.fly.io` (SHA-tagged), and
-  `flyctl deploy --image` the corresponding origin. The bake build-args are the RESOLVED
-  newest `reg_meta/v*` tag (never `latest` — a literal `latest` would make the bake
-  layer's buildx cache key insensitive to data-only releases and could even resurrect a
-  stale cached layer after a pinned dispatch) and the SHA-256 digest GitHub records for
+  `flyctl deploy --image` the origin. The bake build-args are the RESOLVED newest
+  `reg_meta/v*` tag (never `latest` — a literal `latest` would make the bake layer's
+  buildx cache key insensitive to data-only releases and could even resurrect a stale
+  cached layer after a pinned dispatch) and the SHA-256 digest GitHub records for
   `reg_meta.db.zst`, which the `schema-guard` job resolves with the tag; the bake has no
-  defaults and refuses an unverified download. The global Fly app uses `FLY_API_TOKEN`;
-  SWECOV uses `FLY_API_TOKEN_SWECOV`. The SWECOV bake also requires
-  `REG_META_HOLDINGS_SHA256` and downloads `reg_meta_swecov.db.zst` from the same tag.
-  Both digests are checked together; `content.sha256` covers the binary and every baked
-  DB in sorted order. The server admits the pair at boot. Nothing deploys without green
-  CI: a `wait-ci` job polls this commit's ci.yml run and the origin/edge deploy jobs
-  require its success — an image that builds but fails the CI gate never ships. Each
-  deploy job carries a HEAD-of-main guard (GHA concurrency serializes by
+  defaults and refuses an unverified download. The Fly app uses `FLY_API_TOKEN`.
+  `content.sha256` covers the binary and every baked DB in sorted order. Nothing deploys
+  without green CI: a `wait-ci` job polls this commit's ci.yml run and the origin/edge
+  deploy jobs require its success — an image that builds but fails the CI gate never
+  ships. Each deploy job carries a HEAD-of-main guard (GHA concurrency serializes by
   build-completion order, not commit order — without the guard an older commit's slow
   build could overwrite a newer deploy; it also makes non-main dispatches deploy-inert).
   Because a guarded commit skips, `changes` diffs a push against the last deployed
@@ -329,8 +323,7 @@ own origin and worker.
   search and `/mcp` with `curl`, and the container exits non-zero before ever serving
   when artifact admission or a probe fails) and fly.toml's `/api/context` HTTP check
   (flyctl reports failure if it never passes). The docs probe searches `lisa` and
-  requires a `doc` field in a hit. SWECOV also requires a non-null `steward_config`
-  object in context.
+  requires a `doc` field in a hit.
 - **Schema guard**: a standalone `schema-guard` job compares `CATALOG_SCHEMA_VERSION`
   (`crates/reg-core/src/lib.rs`) with the same constant at the newest `reg_meta/v*` tag
   (`git show <tag>:crates/reg-core/src/lib.rs`). Two outcomes: equal passes; different,
@@ -359,92 +352,28 @@ own origin and worker.
   the registry v2 DELETE (supported by Fly — verified live 2026-06-11; buildx pushes OCI
   indexes, so age is read from the image config's `.created`, and a digest shared with
   any kept tag is never deleted).
-- **Cloudflare zones**: `reg-meta.vqv.uk` (zone vqv.uk, global catalog MCP) and
-  `data.swecov.se` (zone swecov.se, SWECOV flavor), orange-cloud A/AAAA → each
-  hostname's matching Fly app shared IPv4 + dedicated IPv6, plus `_fly-ownership` TXT
-  records (prove ownership behind the proxy) and grey-cloud `_acme-challenge` CNAMEs
-  (DNS-01 cert issuance — the reliable path behind a proxy; never proxy a hostname
-  pointing at `*.fly.dev`: Fly's edge has no cert for the custom SNI → 525). SSL mode
-  Full (strict). No dedicated IPv4 — the free shared IPv4 works behind the proxy.
-- **SWECOV paired deploys**: origin and edge always deploy together. Image-affecting or
-  SWECOV edge changes trigger the image build, origin deploy and edge deploy in
-  sequence; the edge requires a successful origin deploy and cannot follow a skipped
-  origin. Frontend-only pushes therefore also rebuild and redeploy the SWECOV image,
-  paying the image-build cost and origin replacement even when server code is unchanged.
-- **SWECOV asset guard**: `schema-guard` resolves the optional paired asset digest,
-  warning when absent. The push/dispatch-only `swecov-asset-guard` emits an error naming
-  the tag and missing asset and sets no `ok` output on failure. It uses
-  `continue-on-error: true` because the deployed-commit resolver counts only successful
-  workflow runs: making the whole run fail would repeatedly rebuild the global image
-  from an old deployed base. All three SWECOV jobs require explicit `ok=true`; no global
-  job depends on them. On a global-only release (a maintainer option) the guard fails by
-  design and global deployment remains unaffected. There is no holdings schema guard in
-  CI; pair admission and the entrypoint smoke fail the SWECOV deploy if it is
-  incompatible. Frontend-only pushes also run the schema guard and the asset guard. A
-  failing `deploy-swecov` (refused pair, OOM or failed probe) still makes the whole run
-  fail; the resolver then rebuilds and redeploys global on later pushes until SWECOV is
-  fixed.
-- **Edge workers** (`reg_webapp/edge/`): `wrangler.jsonc` deploys
+- **Cloudflare zone**: `reg-meta.vqv.uk` (zone vqv.uk), orange-cloud A/AAAA → the Fly
+  app's shared IPv4 + dedicated IPv6, plus a `_fly-ownership` TXT record (proves
+  ownership behind the proxy) and a grey-cloud `_acme-challenge` CNAME (DNS-01 cert
+  issuance — the reliable path behind a proxy; never proxy a hostname pointing at
+  `*.fly.dev`: Fly's edge has no cert for the custom SNI → 525). SSL mode Full (strict).
+  No dedicated IPv4 — the free shared IPv4 works behind the proxy. The Cloudflare token
+  must see zone vqv.uk; the edge job checks that before deploying.
+- **Edge worker** (`reg_webapp/edge/`): `wrangler.jsonc` deploys
   `reg-webapp-global-edge` on `reg-meta.vqv.uk/*` without assets. It forwards `/mcp`
-  alone with the edge token and returns a `no-store` 404 elsewhere.
-  `wrangler.swecov.jsonc` deploys `reg-webapp-swecov-edge` on `data.swecov.se/*`,
-  serving `frontend/dist/` with `single-page-application` fallback. Its
-  `run_worker_first` paths and `ORIGIN_PATHS` (plus `MCP_PATH`) in `src/index.ts` must
-  stay in lockstep: `/api`, `/api/*`, `/openapi.json`, `/mcp` reach the origin,
-  including browser navigations. `/assets/*` also runs the worker first: an HTML
-  fallback becomes a `no-store` 404. Existing hashed assets receive the immutable
-  one-year policy from `frontend/public/_headers`, copied to `dist/`. The SPA HTML keeps
-  Workers' default revalidation policy.
-- **Cache generations**: only the assets-enabled worker's API/OpenAPI forwards stamp
-  `__edge_v=DEPLOY_VERSION`; `/mcp` is never stamped, and the global worker's forwards
-  stay unchanged. CI supplies the image tag (SHA, with a run-id suffix on dispatch). A
-  fresh generation makes previous `/api/*` zone-cache entries unreachable, including the
-  earlier payloads with a 24-hour shared TTL. The server ignores the parameter for
-  operation validation and ETags. Image-affecting pushes redeploy the SWECOV edge too,
-  after its origin, so changed payloads get a new generation. Manual deploys must pass a
-  fresh version rather than ship the config's `dev` default.
-- **Zone rules**: the Cloudflare token must see vqv.uk for the global worker and
-  swecov.se for SWECOV. Confirm the `/api/*` Cache Rule on `data.swecov.se`: these
-  extensionless paths need explicit cache eligibility, using the origin cache headers
-  and bypassing responses without them. The SWECOV edge job probes assets, a cacheable
-  `/api/search` for HIT, young Age and 304, then hosted MCP. The global edge job probes
-  MCP only. Cloudflare can weaken ETags during compression; GET revalidation permits
-  weak comparison.
+  alone with the edge token, returns a `no-store` 404 elsewhere and never stamps a cache
+  generation. The edge job probes hosted MCP only.
 
-Pair admission checks the holdings pin against the base catalog's SHA-256. The image
-computes that digest when it is built, in the bake step that verifies and unpacks the
-release assets, and the entrypoint passes it in as `REG_META_CATALOG_SHA256`. Hashing
-the 1.33 GB catalog at boot instead took about 80 s on Fly's rootfs (~17 MB/s), and
-data.swecov.se was down that long on every deploy or restart. A wrong digest refuses
-admission like a wrong file. Without the variable (local runs, CI, the conformance
-suite) the server hashes the file at boot.
-
-Paired boot allows 300 seconds (`REG_META_READY_DEADLINE` and the SWECOV Fly check's
-`grace_period`); the gate's first search reads cold pages and reuses that deadline.
-Global keeps its 60-second default. The check's five-second request timeout applies
-after binding; it is not the startup allowance. After the smoke gate passes, the
-entrypoint reads the served DBs into the page cache in the background (`nice cat`), so
-the site serves while the cache warms; the read ends with the container.
+After the smoke gate passes, the entrypoint reads the served DBs into the page cache in
+the background (`nice cat`), so the site serves while the cache warms; the read ends
+with the container. The global boot allows 60 seconds (`REG_META_READY_DEADLINE`).
 
 ### Rollback
 
-The image prune job's `KEEP=10` window retains only the newest ten tags; note the
-running SWECOV image tag and Workers version id before a risky deploy so the rollback
-image is not pruned.
-
-Inspect origin history with `flyctl releases --app reg-webapp-swecov`, then restore:
-
-```sh
-flyctl deploy --config reg_webapp/fly.swecov.toml --image registry.fly.io/reg-webapp-swecov:<tag> --ha=false
-```
-
-Inspect edge versions with
-`bunx wrangler versions list --config reg_webapp/edge/wrangler.swecov.jsonc`, then
-`bunx wrangler rollback <version-id> --config reg_webapp/edge/wrangler.swecov.jsonc`.
-Roll back both halves together: the origin image and SPA/worker are a paired release.
-Confirm `REG_META_EDGE_TOKEN` on Fly app `reg-webapp-swecov` equals `EDGE_TOKEN` on
-worker `reg-webapp-swecov-edge`; the repository secrets must include
-`FLY_API_TOKEN_SWECOV` and `CLOUDFLARE_API_TOKEN` scoped to zone swecov.se.
+The image prune job's `KEEP=10` window retains only the newest ten tags: note the
+running image tag before a risky deploy so the rollback image is not pruned. Steward
+deployments, their rollback and their secrets are documented in each steward repository
+(swecov-steward `docs/deploy.md`).
 
 ## Steward repositories (reusable workflows)
 
@@ -465,12 +394,11 @@ lists its inputs and an example call.
 - `steward-deploy.yml`: bakes `reg_webapp/steward.Dockerfile` (the runtime stage of the
   toolkit image, with the binary and both DBs from the build context, so the image needs
   no token), deploys it to the steward's Fly app, deploys the toolkit's edge worker with
-  the caller's wrangler config and the release's SPA, then probes the edge as the
-  toolkit's own deploys do (`.wasm`, cache, `/api/context`, hosted MCP). It deploys a
-  holdings release by tag, so rollback is a redeploy of an older tag.
-  `access: cloudflare-access` serves a host behind Cloudflare Access: the probes send a
-  service token, and the cache probe is skipped. `dry_run` builds and runs the image and
-  stops there.
+  the caller's wrangler config and the release's SPA, then probes the edge (`.wasm`,
+  cache, `/api/context`, hosted MCP). It deploys a holdings release by tag, so rollback
+  is a redeploy of an older tag. `access: cloudflare-access` serves a host behind
+  Cloudflare Access: the probes send a service token, and the cache probe is skipped.
+  `dry_run` builds and runs the image and stops there.
 - `steward-bump.yml`: when a newer `reg_meta/v*` release exists, re-locks the curation
   against its base, refreshes the config's `[pins]` digests (`reg-build pin`, which adds
   and drops no pin), moves `toolkit.toml` and every mention of the old tag in the
@@ -479,6 +407,36 @@ lists its inputs and an example call.
 
 The inputs of these workflows are a contract with every steward repository. A change to
 them breaks a steward only at its next bump, as a red PR; the release notes name it.
+
+A steward image boots as the global one does, through the same entrypoint, with three
+differences:
+
+- **Pair admission** checks the holdings pin against the base catalog's SHA-256. The
+  image computes that digest when it is built and the entrypoint passes it in as
+  `REG_META_CATALOG_SHA256`. Hashing the 1.33 GB catalog at boot instead took about 80 s
+  on Fly's rootfs (\~17 MB/s), and the steward site was down that long on every deploy
+  or restart. A wrong digest refuses admission like a wrong file. Without the variable
+  (local runs, CI, the conformance suite) the server hashes the file at boot.
+- **Boot allowance**: paired boot allows 300 seconds (`REG_META_READY_DEADLINE` and the
+  steward Fly check's `grace_period`); the gate's first search reads cold pages and
+  reuses that deadline. The check's five-second request timeout applies after binding;
+  it is not the startup allowance. The smoke gate also requires a non-null
+  `steward_config` object in context.
+- **The SPA worker**: the steward's wrangler config adds the assets binding, serving
+  `frontend/dist/` with `single-page-application` fallback. Its `run_worker_first` paths
+  and `ORIGIN_PATHS` (plus `MCP_PATH`) in `edge/src/index.ts` must stay in lockstep:
+  `/api`, `/api/*`, `/openapi.json`, `/mcp` reach the origin, including browser
+  navigations. `/assets/*` also runs the worker first: an HTML fallback becomes a
+  `no-store` 404. Existing hashed assets receive the immutable one-year policy from
+  `frontend/public/_headers`, copied to `dist/`. The SPA HTML keeps Workers' default
+  revalidation policy. Only this assets-enabled worker stamps its API/OpenAPI forwards
+  with `__edge_v=DEPLOY_VERSION` (`/mcp` is never stamped); `steward-deploy.yml`
+  supplies a fresh version per deploy, so earlier `/api/*` zone-cache entries, with
+  their 24-hour shared TTL, become unreachable. The server ignores the parameter for
+  operation validation and ETags. The steward's zone needs an `/api/*` Cache Rule: these
+  extensionless paths need explicit cache eligibility, using the origin cache headers
+  and bypassing responses without them. Cloudflare can weaken ETags during compression;
+  GET revalidation permits weak comparison.
 
 ## Why CI uses a fixture DB, not a real asset
 

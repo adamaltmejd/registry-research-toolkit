@@ -193,8 +193,8 @@ no git hooks: CI is the gate, so run the relevant step before pushing.
   Operator schedules them with the maintainer.
 - Narrow runs: `cargo test -p <crate>`.
 - Real-artifact conformance:
-  `REG_ARTIFACT_DIR=<dir> [REG_CATALOG=swecov] cargo test -p reg-conformance --test release`
-  (release step 8f).
+  `REG_ARTIFACT_DIR=<dir> [REG_CATALOG=<steward>] cargo test -p reg-conformance --test release`
+  (release step 8d; a steward pair in `steward-build.yml`).
 - Local prerequisites: `cargo install cargo-machete --locked`, panache at the
   `PANACHE_VERSION` in `scripts/gate.sh`
   (`cargo install panache --version <pin> --locked`), shellcheck and bun.

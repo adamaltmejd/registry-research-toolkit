@@ -48,8 +48,8 @@ bash reg_webapp/dev/dev.sh --fixture-db          # interactive, Ctrl-C stops
 bash reg_webapp/dev/dev.sh --paired-fixture ...  # the same modes on the synthetic pair
 ```
 
-`--paired-fixture` (instead of `--fixture-db`) builds the synthetic SWECOV holdings pair
-into a temp directory (`target/debug/reg-fixture --paired`) and exports
+`--paired-fixture` (instead of `--fixture-db`) builds the synthetic steward holdings
+pair into a temp directory (`target/debug/reg-fixture --paired`) and exports
 `REG_WEBAPP_FIXTURE=paired`. The SPA is steward-only, so the pair is the state to render
 for steward pages (e.g. `/catalog/demo/held`).
 

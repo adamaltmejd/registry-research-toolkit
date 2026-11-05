@@ -1,6 +1,6 @@
 //! The release tier (conformance/README.md, "Release checks"): black-box checks on a
 //! real catalog that neither the fixture corpus nor `reg-build verify`/`diff` reach.
-//! Release step 8f and integration.yml run it once per catalog.
+//! Release step 8d, integration.yml and steward-build.yml run it.
 //!
 //! `REG_ARTIFACT_DIR` names the artifact directory (`reg_meta.db`). `REG_CATALOG=NAME`
 //! also serves `reg_meta_NAME.db` beside it, as `--catalog NAME`. Without

@@ -1,16 +1,15 @@
 # syntax=docker/dockerfile:1.28.0@sha256:bb22d9815c728170f72750f4e5b0d672e06176142e1d602c7e66c050100b7e5b
 
-# reg_webapp deployment image: the Rust server (`reg-meta serve`) alone, with the
-# baked catalog and optional holdings partner (crates/DESIGN.md, "Distribution").
-# It serves the API and `/mcp`; the SWECOV edge also serves the SPA (reg_webapp/edge/).
+# reg_webapp deployment image for the global catalog: the Rust server (`reg-meta serve`)
+# alone, with the baked catalog (crates/DESIGN.md, "Distribution"). It serves the API
+# and `/mcp`. A steward's image is steward.Dockerfile.
 #
 # Build context is the REPO ROOT (not reg_webapp/): the server stage needs the
-# Cargo workspace. The DB bake needs the release tag and the SHA-256 digests GitHub
-# records for the assets (container-build.yml resolves them). Build with:
+# Cargo workspace. The DB bake needs the release tag and the SHA-256 digest GitHub
+# records for the asset (container-build.yml resolves both). Build with:
 #
 #   docker build -f reg_webapp/Dockerfile -t reg-webapp \
 #     --build-arg REG_META_TAG=reg_meta/vX.Y.Z --build-arg REG_META_DB_SHA256=<hex> .
-# For SWECOV, also pass REG_META_CATALOG=swecov and REG_META_HOLDINGS_SHA256=<hex>.
 #
 # (`gh release view reg_meta/vX.Y.Z --json assets` lists each asset's digest.)
 #
@@ -30,21 +29,19 @@
 # Stage 1 — regmeta-db: fetch + bake the reg_meta DB.
 # ---------------------------------------------------------------------------
 # Isolated from the server stage (#290): it copies nothing from the build context,
-# so its cache key is the base image plus the four ARGs below, and server edits
-# reuse the cached DB layer instead of re-fetching it. The digests are part of
+# so its cache key is the base image plus the two ARGs below, and server edits
+# reuse the cached DB layer instead of re-fetching it. The digest is part of
 # that key, so an asset re-uploaded under an existing tag rebakes on its own.
 #
-# The stage always downloads `reg_meta.db.zst` and, for a non-global catalog,
-# `reg_meta_<catalog>.db.zst` from the same release REG_META_TAG names. It verifies
-# both against GitHub's SHA-256 digests before unpacking them into /opt/reg_meta,
-# which the runtime serves with `reg-meta serve --db --catalog`. A missing
-# asset is a broken release: curl fails the build (#343). Schema admission is the
-# server's, at boot (the entrypoint smoke gate); container-build.yml's schema guard
-# keeps a mismatched global schema from being built at all. Holdings admission
-# stays in the entrypoint, so a refused pair cannot block the global deployment.
+# The stage downloads `reg_meta.db.zst` from the release REG_META_TAG names, verifies
+# it against GitHub's SHA-256 digest and unpacks it into /opt/reg_meta, which the
+# runtime serves with `reg-meta serve --db`. A missing asset is a broken release: curl
+# fails the build (#343). Schema admission is the server's, at boot (the entrypoint
+# smoke gate); container-build.yml's schema guard keeps a mismatched schema from being
+# built at all.
 #
-# The tag and required digests have no defaults: nothing resolves `latest`, and an
-# unverified download never enters the image. Each digest is bare lowercase hex
+# The tag and digest have no defaults: nothing resolves `latest`, and an unverified
+# download never enters the image. The digest is bare lowercase hex
 # (GitHub's `sha256:` prefix stripped). The tag's `/` is URL-encoded in the URL.
 FROM debian:trixie-20261020-slim@sha256:62bd423aeee912639ca8ee681c2b762cb3e25137e0a92b20be455898a9f034ad AS regmeta-db
 
@@ -54,34 +51,21 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 ARG REG_META_TAG
-ARG REG_META_CATALOG=global
 ARG REG_META_DB_SHA256
-ARG REG_META_HOLDINGS_SHA256
 WORKDIR /opt/reg_meta
 RUN : "${REG_META_TAG:?build arg REG_META_TAG (reg_meta/vX.Y.Z) is required}" \
     && : "${REG_META_DB_SHA256:?build arg REG_META_DB_SHA256 is required (the release has no such catalog asset?)}" \
     && base="https://github.com/adamaltmejd/registry-research-toolkit/releases/download/$(printf '%s' "$REG_META_TAG" | sed 's|/|%2F|g')" \
     && curl -fsSL --retry 3 -o db.zst "$base/reg_meta.db.zst" \
-    && printf '%s  db.zst\n' "$REG_META_DB_SHA256" > checksums \
-    && if [ "$REG_META_CATALOG" != global ]; then \
-        : "${REG_META_HOLDINGS_SHA256:?build arg REG_META_HOLDINGS_SHA256 is required for a non-global catalog}" \
-        && curl -fsSL --retry 3 -o holdings.zst "$base/reg_meta_${REG_META_CATALOG}.db.zst" \
-        && printf '%s  holdings.zst\n' "$REG_META_HOLDINGS_SHA256" >> checksums; \
-    fi \
-    && sha256sum --strict -c checksums \
-    && rm checksums \
+    && printf '%s  db.zst\n' "$REG_META_DB_SHA256" | sha256sum --strict -c - \
     && zstd -q -d --rm db.zst -o reg_meta.db \
-    && if [ "$REG_META_CATALOG" != global ]; then \
-        zstd -q -d --rm holdings.zst -o "reg_meta_${REG_META_CATALOG}.db"; \
-    fi \
     && mkdir -p /opt/reg_webapp \
     && sha256sum reg_meta.db | cut -d' ' -f1 > /opt/reg_webapp/catalog.sha256
 
-# The last step hashes the unpacked base catalog, which came from the verified asset,
-# for pair admission (crates/reg-catalog/src/holdings.rs): hashing the 1.33 GB
-# catalog at boot on Fly's rootfs (~17 MB/s) kept SWECOV down ~80 s per restart. It
-# lives outside /opt/reg_meta, the served --db directory. The entrypoint passes it to
-# the server as REG_META_CATALOG_SHA256.
+# The last step hashes the unpacked catalog, which came from the verified asset. The
+# entrypoint, shared with steward.Dockerfile, reads it and passes it to the server as
+# REG_META_CATALOG_SHA256, which only a steward's pair admission uses. It lives outside
+# /opt/reg_meta, the served --db directory.
 
 # Read-only confinement of the baked WAL-mode DB relies on the server opening it
 # `immutable=1` (#283) — no WAL checkpoint / sidecar cleanup needed here.
@@ -129,9 +113,8 @@ RUN mkdir -p /opt/reg_webapp \
         printf '%s\n' /opt/reg_meta/*.db | LC_ALL=C sort | xargs sha256sum; } \
     | sha256sum | cut -d' ' -f1 > /opt/reg_webapp/content.sha256
 
-# The selected holdings partner is admitted with the base catalog at boot.
-ARG REG_META_CATALOG=global
-ENV REG_META_CATALOG=$REG_META_CATALOG
+# The entrypoint's catalog selection: the global catalog, no holdings partner.
+ENV REG_META_CATALOG=global
 
 USER app
 EXPOSE 8000

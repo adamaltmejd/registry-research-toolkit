@@ -35,10 +35,12 @@ Access), a remote-desktop environment. Three consequences shape the whole toolki
 ### Data stewards
 
 Some research organizations re-license registry data from their own warehouses instead
-of each project going through SCB directly. SWECOV's hosted catalog is the paired
-`reg_meta_swecov.db.zst` served with the base (`--catalog swecov`). The global server,
-served over MCP only (#1709), has no holdings: its `order` returns the logical order of
-a project, and nothing receives it.
+of each project going through SCB directly. Each steward has its own repository, which
+builds its holdings against a pinned `reg_meta` release, publishes them and deploys its
+own site through the toolkit's reusable workflows. SWECOV's site, data.swecov.se, serves
+`reg_meta_swecov.db` beside the base (`--catalog swecov`). The global server, served
+over MCP only (#1709), has no holdings: its `order` returns the logical order of a
+project, and nothing receives it.
 
 ## What the toolkit is
 
@@ -267,7 +269,7 @@ This is the complete list of boundaries a test may assert at.
    6-minute timeout. A job that exceeds its budget fails.
 3. **Artifact (maintainer or release gate).** Run
    `REG_ARTIFACT_DIR=/path/to/catalog cargo test -p reg-conformance --test release`
-   (plus `REG_CATALOG=swecov` for the pair) against a release-built `reg-meta`
+   (plus `REG_CATALOG=<steward>` for a pair) against a release-built `reg-meta`
    (`REG_META_BIN`; see `conformance/README.md`). The reader admits the selected
    artifact before execution; incompatible or non-publishable artifacts fail, never
    silently skip. The checks cover what neither the fixture corpus nor
@@ -275,11 +277,11 @@ This is the complete list of boundaries a test may assert at.
    logical orders and validation against an artifact census (repeated orders
    byte-identical, MCP and HTTP orders the same document) and, on the pair, that every
    id the browse root, search and segments show is held. CI runs them against the
-   published catalog asset in `integration.yml` and, when the release has it, the paired
-   SWECOV asset; there is no separate docs asset. Published schema drift is a
-   release-drift failure. Pinned historical baseline acceptance, exhaustive
-   representative resolution, performance and rendered checks remain separate maintainer
-   work.
+   published catalog asset in `integration.yml`, and each steward repository's
+   `steward-build.yml` against its pair; there is no separate docs asset. Published
+   schema drift is a release-drift failure. Pinned historical baseline acceptance,
+   exhaustive representative resolution, performance and rendered checks remain separate
+   maintainer work.
 
 Budgets are what a lean suite for the package needs, derived from its boundaries, not
 from the suite's current size. Local is wall time with `cargo test` (or `bun run test`,
