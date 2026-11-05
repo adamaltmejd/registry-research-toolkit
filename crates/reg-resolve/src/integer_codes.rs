@@ -6,11 +6,12 @@
 //! state a type only under its published name, so an override to text is `text`, which
 //! this rule never reads. Provenance records each change as rule `integer-codes`.
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 
-use reg_frame::ValueSet;
+use reg_core::next_iso_day;
+use reg_frame::{ValueSet, widest_dtype};
 
-use crate::{ResolvedOccurrence, Variable};
+use crate::{ResolvedOccurrence, Variable, same_form};
 
 /// `0`, `7`, `-12`: no sign without digits, no leading zero, no `-0`. A zero-padded or
 /// alphanumeric code keeps the column text; so does a decimal point or a comma.
@@ -32,6 +33,7 @@ pub(crate) fn apply(
     resolved: &mut [ResolvedOccurrence],
     valuesets: &BTreeMap<&str, &ValueSet>,
 ) {
+    let mut flipped = BTreeSet::new();
     let mut covering = BTreeMap::<(usize, usize), Vec<usize>>::new();
     for (i, r) in resolved.iter().enumerate() {
         if let (Some(v), Some(s)) = (r.variable, r.segment) {
@@ -65,9 +67,58 @@ pub(crate) fn apply(
             continue;
         }
         variables[v].segments[s].dtype = Some("integer".to_owned());
+        flipped.insert((v, s));
         for i in members {
             let o = &mut resolved[i];
             o.stated_dtype = o.occurrence.dtype.replace("integer".to_owned());
+        }
+    }
+    rejoin(variables, resolved, &flipped);
+}
+
+/// A converted segment can now match its integer neighbour, which segment building kept
+/// apart only for the type: join them as segment building joins adjacent runs of one
+/// form, and point the occurrences at the joined segment. Only a pair with a converted
+/// member joins; any other boundary was drawn for another reason.
+fn rejoin(
+    variables: &mut [Variable],
+    resolved: &mut [ResolvedOccurrence],
+    flipped: &BTreeSet<(usize, usize)>,
+) {
+    for v in flipped.iter().map(|&(v, _)| v).collect::<BTreeSet<_>>() {
+        let old = std::mem::take(&mut variables[v].segments);
+        let mut index = Vec::with_capacity(old.len());
+        let mut kept: Vec<(crate::Segment, bool)> = Vec::new();
+        for (s, segment) in old.into_iter().enumerate() {
+            let converted = flipped.contains(&(v, s));
+            match kept.last_mut() {
+                Some((prev, prev_converted))
+                    if (converted || *prev_converted)
+                        && prev.table == segment.table
+                        && next_iso_day(&prev.period.1) == segment.period.0
+                        && same_form(prev, &segment) =>
+                {
+                    prev.period.1 = segment.period.1;
+                    prev.spelling = segment.spelling;
+                    prev.dtype = widest_dtype(
+                        prev.dtype
+                            .as_deref()
+                            .into_iter()
+                            .chain(segment.dtype.as_deref()),
+                    )
+                    .map(str::to_owned);
+                    prev.length = prev.length.max(segment.length);
+                    *prev_converted = converted;
+                }
+                _ => kept.push((segment, converted)),
+            }
+            index.push(kept.len() - 1);
+        }
+        variables[v].segments = kept.into_iter().map(|(segment, _)| segment).collect();
+        for r in resolved.iter_mut().filter(|r| r.variable == Some(v)) {
+            if let Some(s) = r.segment {
+                r.segment = Some(index[s]);
+            }
         }
     }
 }

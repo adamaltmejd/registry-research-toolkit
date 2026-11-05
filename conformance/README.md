@@ -8,36 +8,26 @@ product imports or internal patches are allowed.
 
 ```sh
 cargo build --workspace
-cargo test -p reg-conformance --test conformance   # the Rust harness (surfaces below)
-uv run --no-project scripts/gate.py rust           # it, then the pytest surfaces
+cargo test -p reg-conformance --test conformance   # the surfaces below
+cargo test -p reg-conformance --test release       # the release checks (below)
+uv run --no-project scripts/gate.py rust           # both, after the workspace build
 ```
 
-The Rust harness (`crates/reg-conformance`) is replacing the pytest one surface by
-surface; `api`, `api_spec`, `mcp`, `order`, `materialize` and the builder CLI (`lock`,
-`ids`, `build_report`, `holdings*`) have moved, and only the tier 3 checks remain in
-pytest. The builder surfaces run `target/debug/reg-build` on readable case sources and
-assert exit codes, located refusals and report files; the synthetic steward is locked
-once per run and copied for each case that edits it. It runs `$REG_META_BIN` (default
-`reg-meta` beside the test in its cargo target, so a per-worktree `CARGO_TARGET_DIR`
-works) as `serve --db D --port 0 --write-limit 100000`, plus `$REG_META_SERVE_ARGS`
-split on whitespace. The sampled projects and MCP calls all come from one address, so
-the raised write limit keeps the suite inside its rate bucket; the burst case
+The harness is `crates/reg-conformance`. The builder surfaces run
+`target/debug/reg-build` on readable case sources and assert exit codes, located
+refusals and report files; the synthetic steward is locked once per run and copied for
+each case that edits it. It runs `$REG_META_BIN` (default `reg-meta` beside the test in
+its cargo target, so a per-worktree `CARGO_TARGET_DIR` works) as
+`serve --db D --port 0 --write-limit 100000`, plus `$REG_META_SERVE_ARGS` split on
+whitespace. The sampled projects and MCP calls all come from one address, so the raised
+write limit keeps the suite inside its rate bucket; the burst case
 (`mcp::burst_is_rate_limited`) drops it and pins the default.
 `REG_CONFORMANCE_CASE=<substring>` narrows a surface's cases; libtest's own filter
 selects surfaces. A failing surface lists every failing case as
-`<case>: <first mismatch>`. The `conformance` test target is `test = false`:
-`cargo test --workspace` would not rebuild the binaries it runs, so it runs only by name
-after `cargo build --workspace`.
-
-Every pytest run needs `--server-cmd`: the suite's boundary is the Rust server, and a
-run without it is refused at startup. The template raises the server's write limit
-(`--write-limit`) for the same reason. `scripts/gate.py` holds the commands.
-
-The `rust` step runs the whole suite on the synthetic `base` artifact, then only the
-checks on exactly the selected artifact (`-m release --run-release --artifact-dir=…`),
-again on the `base` artifact. Both flags are required for tier 3. Use the equals form
-for `--artifact-dir`: pytest discovers roots before loading custom options, and a
-space-separated external directory can select that directory's checkout configuration.
+`<case>: <first mismatch>`. The `conformance` and `release` test targets are
+`test = false`: `cargo test --workspace` would not rebuild the binaries they run, so
+they run only by name after `cargo build --workspace`. `scripts/gate.py` holds the
+commands.
 
 ## Case contract
 
@@ -73,19 +63,16 @@ earlier) and requires no repeats and exactly the `equals` set.
 
 ## Out-of-process runner
 
-`--server-cmd` runs the HTTP surfaces above over a real socket. It is a command
-template: `{db}` (the artifact directory) and `{port}` are substituted in each word;
-`{port}` is 0, so the kernel picks a free port. The runner starts one server per cached
-artifact from the repository root, with `REG_META_DB` in its environment, reads the
-bound port from the `listening on ADDR:PORT` line `reg-meta serve` prints on stderr, and
-waits until `GET /openapi.json` answers on it (120 s at most). Two listeners cannot
-share a port, so parallel workers never reach each other's servers. It reuses the server
-for every case on that artifact and stops it at session end. A server that exits first
-fails with its log tail, and a start that fails is not retried for later cases on that
-artifact. Its output goes to `servers*/server-N.log` under the pytest base temp. The
-Rust harness does the same, logging to `conformance-<pid>/server-N.log` under
-`<target>/tmp`, and starts each server under a watchdog `sh` that kills it when the test
-process exits, however it exits.
+The HTTP surfaces run over a real socket. The harness starts one server per artifact
+(and served catalog) from the repository root, with `REG_META_DB` in its environment, on
+`--port 0`, so the kernel picks a free port. It reads the bound port from the
+`listening on ADDR:PORT` line `reg-meta serve` prints on stderr, and waits until
+`GET /openapi.json` answers on it (120 s at most). Two listeners cannot share a port, so
+parallel runs never reach each other's servers. It reuses the server for every case on
+that artifact. A server that exits first fails with its log tail, and a start that fails
+is not retried for later cases on that artifact. Its output goes to
+`conformance-<pid>/server-N.log` under `<target>/tmp`, and each server runs under a
+watchdog `sh` that kills it when the test process exits, however it exits.
 
 The `mcp` module (MCP equivalence) sends raw JSON-RPC to `/mcp` on the case servers:
 each step of the `api` cases it names, as a tool call, returns the HTTP body as
@@ -121,15 +108,15 @@ code) and a label that differs between the years. A fixture without
 
 Every artifact is built once into a cache: `$REG_FIXTURE_CACHE`, else
 `registry-research-toolkit-fixtures` in the system temp directory (writable inside agent
-sandboxes, cleared on reboot). Worktrees and pytest-xdist workers share it. The key
-hashes the fixture tree's file paths and bytes and the `reg-build` binary's bytes, so
-any edit or rebuild is a new entry. Entries live under `generations/<binary digest>/`,
-are read-only, and a mutating case copies its own. A miss builds into a staging
-directory and renames it into place. Creating a generation prunes generations idle for 6
-hours, and only those, so a returned path stays valid for 6 hours after its last lookup.
+sandboxes, cleared on reboot). Worktrees and parallel test runs share it. The key hashes
+the fixture tree's file paths and bytes and the `reg-build` binary's bytes, so any edit
+or rebuild is a new entry. Entries live under `generations/<binary digest>/`, are
+read-only, and a mutating case copies its own. A miss builds into a staging directory
+and renames it into place. Creating a generation prunes generations idle for 6 hours,
+and only those, so a returned path stays valid for 6 hours after its last lookup.
 Deleting the directory between runs is safe. CI sets no `REG_FIXTURE_CACHE`, so a fresh
 runner starts cold in its temp directory. `target/debug/reg-fixture base` builds one
-entry and prints its path for consumers outside the suite (`dev.sh`, the gate);
+entry and prints its path for consumers outside the suite (`dev.sh`);
 `reg-fixture --paired <out>` builds the synthetic holdings pair.
 
 ## API cases
@@ -161,16 +148,30 @@ served by the Rust server. They use the HTTP case shape above, with these additi
   parameters (by the operation's route) as arguments; download steps and a parameter
   sent in both the path and the query have no tool-call spelling and are skipped.
 
-## Artifact checks
+## Release checks
 
-`test_artifact.py` runs `reg-build verify` on the selected artifact (`--artifact-dir`),
-the one structural authority over a catalog file, and fails on a non-zero exit printing
-only the first line of its stderr. Synthetic artifacts are verified when they are built.
-The `rust` step's release admission runs it on the `base` fixture's artifact; a release
-runs it on the artifact it ships. The release search checks sample each indexed kind and
-traverse paging to the depth cap when the artifact has enough hits. The release order
-check compares sampled whole-table projects with an independent artifact census and
-checks HTTP/MCP agreement. Both compare repeated responses as raw bytes.
+The `release` target (`crates/reg-conformance/tests/release`) holds the checks that need
+a real catalog, and only behaviour neither the fixture corpus nor the release's
+`reg-build verify` and `diff` show. `REG_ARTIFACT_DIR` names the artifact directory;
+`REG_CATALOG=NAME` serves `reg_meta_NAME.db` beside `reg_meta.db` as `--catalog NAME`
+(`global` or unset: the reference catalog alone). Without `REG_ARTIFACT_DIR` it runs on
+the `base` fixture's artifact, as `gate.py rust` does, so it stays runnable between
+releases. Release step 8f runs it once per catalog with a release-built server
+(`REG_META_BIN`); integration.yml does the same on the published assets.
+
+- `order`: sampled whole-table projects agree with an independent SQL census of the
+  artifact on `validate` and `order`, each entry carries the spelling the census holds
+  at its start, repeated orders are byte-identical, and the first three also order
+  through the MCP `order` tool with the same document. On a pair the census samples the
+  reference tables the holdings place something in, binds the variables placed there and
+  reads the holdings file too. It prints how many tables it sampled and how many it
+  found blocked, and fails when every sampled table is blocked.
+- `search`: paging stops at depth 1000 without repeating a hit. The fixture never
+  reaches the depth, so the check skips there and fails on a real catalog that does not.
+- `held` (a pair only): the browse root, every register and table it lists, a search per
+  letter and every listed variable's segments name only ids the holdings place something
+  in, and each segments row's (variable, table) pair is placed. The filter lives in each
+  reader operation, so an operation that forgets it would leak.
 
 ## Verification gates
 

@@ -19,8 +19,9 @@ uv run --no-project scripts/gate.py rust  # the workspace build and conformance 
 cargo test --workspace                    # the crates
 ```
 
-Conformance checks on a real artifact run only with `--run-release --artifact-dir=...`
-(see `conformance/README.md`).
+Conformance checks on a real artifact run only with
+`REG_ARTIFACT_DIR=... cargo test -p reg-conformance --test release` (see
+`conformance/README.md`).
 
 There are no git hooks: CI (`ci.yml`) runs the gate on every PR to main, and merges
 require it green. Run the relevant steps locally before pushing.

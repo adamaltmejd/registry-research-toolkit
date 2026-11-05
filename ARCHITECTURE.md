@@ -254,10 +254,10 @@ This is the complete list of boundaries a test may assert at.
 2. **Push / CI.** Each job's `timeout-minutes` is its CI budget below. The `rust` job's
    9-minute timeout covers `crates/` and the gate's `rust` step (`scripts/gate.py`: the
    workspace build, the whole conformance suite against the Rust server, then the
-   `release`-marked admission checks on the synthetic catalog artifact), with room for a
-   cold rust-cache and its save. Each binary is built once, in `rust`. The `lint` job
-   runs `gate.py lint` (ruff, panache, ty and plugin schema drift); the repo-policy
-   lints are `crates/xtask` tests in `cargo test --workspace`. The OpenAPI snapshot is a
+   release checks on the synthetic catalog artifact), with room for a cold rust-cache
+   and its save. Each binary is built once, in `rust`. The `lint` job runs
+   `gate.py lint` (ruff, panache, ty and plugin schema drift); the repo-policy lints are
+   `crates/xtask` tests in `cargo test --workspace`. The OpenAPI snapshot is a
    `crates/reg-meta` test. The `reg-webapp-frontend` job runs install, WASM generation,
    type checks, lint, unit tests, build and codegen drift; `reg-webapp-flows` runs the
    production bootstrap and shell/search browser flows against a source-built synthetic
@@ -265,27 +265,28 @@ This is the complete list of boundaries a test may assert at.
    the design-review skill's. Each frontend job has a 6-minute timeout. A job that
    exceeds its budget fails.
 3. **Artifact (maintainer or release gate).** Run
-   `pytest conformance -m release --run-release --artifact-dir=/path/to/catalog --server-cmd=...`
-   after `cargo build --workspace` (the search traversal runs against the Rust server;
-   see `conformance/README.md` for the template). The reader admits the selected
+   `REG_ARTIFACT_DIR=/path/to/catalog cargo test -p reg-conformance --test release`
+   (plus `REG_CATALOG=swecov` for the pair) against a release-built `reg-meta`
+   (`REG_META_BIN`; see `conformance/README.md`). The reader admits the selected
    artifact before execution; incompatible or non-publishable artifacts fail, never
-   silently skip. The artifact checks run `reg-build verify`, check indexed search kinds
-   and paging depth, and compare sampled logical orders and validation against an
-   artifact census. Repeated search and successful order responses must have identical
-   raw bytes; HTTP and MCP orders must agree as JSON. CI runs these checks against the
+   silently skip. The checks cover what neither the fixture corpus nor
+   `reg-build verify` and `diff` reach: search paging to its depth bound, sampled
+   logical orders and validation against an artifact census (repeated orders
+   byte-identical, MCP and HTTP orders the same document) and, on the pair, that every
+   id the browse root, search and segments show is held. CI runs them against the
    published catalog asset in `integration.yml` and, when the release has it, the paired
-   SWECOV asset (`--catalog swecov`); there is no separate docs asset. Published schema
-   drift is a release-drift failure. Pinned historical baseline acceptance, exhaustive
+   SWECOV asset; there is no separate docs asset. Published schema drift is a
+   release-drift failure. Pinned historical baseline acceptance, exhaustive
    representative resolution, performance and rendered checks remain separate maintainer
    work.
 
 Budgets are what a lean suite for the package needs, derived from its boundaries, not
-from the suite's current size. Local is wall time with `pytest <tree> -n auto -q` (or
-`bun run test`, or the pytest line of `gate.py rust`) on a 10-core developer Mac; CI is
-the job's `timeout-minutes` in `ci.yml` on `ubuntu-latest`, including setup. A suite
-over budget is a finding for the `test-audit` skill, not a reason to raise the number.
-The R packages (`reg_mona_runner`, `reg_export_gate`) have no tier: their testthat
-suites are run by hand, not by the gate or CI.
+from the suite's current size. Local is wall time with `cargo test` (or `bun run test`,
+or the conformance lines of `gate.py rust`) on a 10-core developer Mac; CI is the job's
+`timeout-minutes` in `ci.yml` on `ubuntu-latest`, including setup. A suite over budget
+is a finding for the `test-audit` skill, not a reason to raise the number. The R
+packages (`reg_mona_runner`, `reg_export_gate`) have no tier: their testthat suites are
+run by hand, not by the gate or CI.
 
   | Suite                                | Local | CI job | Rationale                                                                                                                     |
   | ------------------------------------ | ----- | ------ | ----------------------------------------------------------------------------------------------------------------------------- |
@@ -326,19 +327,19 @@ cadences. These rules keep them coupled only through released artifacts.
 
 ### Conformance suite
 
-Every tier runs `conformance/` at the repository root, always against the Rust server
-(`--server-cmd` is required). Thin loaders run its readable cases against it: HTTP and
-MCP responses, logical orders, server startup and project validation. Cases assert
-domain outputs or located errors, not object internals or query implementation. Product
-adapters are not added solely for testing. Fixture-bound cases always use their named
-source-built synthetic artifacts, including in a tier 3 run. Artifact-parametrized
-checks default to session-built catalog artifacts and use exactly `--artifact-dir` under
-tier 3. They derive expectations from artifact content or artifact/HTTP agreement, never
-real-identifier goldens.
+Every tier runs the `conformance/` corpus at the repository root, always against the
+Rust server, through `crates/reg-conformance`. Thin loaders run its readable cases
+against it: HTTP and MCP responses, logical orders, server startup and project
+validation. Cases assert domain outputs or located errors, not object internals or query
+implementation. Product adapters are not added solely for testing. Fixture-bound cases
+always use their named source-built synthetic artifacts. The release checks
+(`--test release`) default to the `base` fixture's artifact and use exactly
+`REG_ARTIFACT_DIR` under tier 3. They derive expectations from artifact content or
+artifact/HTTP agreement, never real-identifier goldens.
 
 Repeated search and successful order comparisons use raw bytes; no fields are removed,
-and key/list order remains observable. HTTP/MCP order agreement compares JSON documents.
-The existing `crates/reg-core/tests/project/corpus/` serves its Rust consumers.
+and key/list order remains observable. HTTP/MCP agreement compares JSON documents. The
+existing `crates/reg-core/tests/project/corpus/` serves its Rust consumers.
 
 Oversized integration test files are gated by a repo lint
 (`crates/xtask/tests/test_size.rs`) with no exemptions or file allowlists. The Rust

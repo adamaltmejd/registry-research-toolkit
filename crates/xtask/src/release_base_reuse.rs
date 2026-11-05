@@ -26,8 +26,8 @@
 //! this base's `catalog_sha256`. It also says what the diff does touch:
 //!
 //! - `stewards.toml` changed: rebuild the holdings and redo their checks (8d-8g).
-//! - A reader-side path changed (a workspace crate outside the builder closure,
-//!   `conformance/`, `uv.lock`, `pyproject.toml`): rerun the 8f conformance.
+//! - A reader-side path changed (a workspace crate outside the builder closure, such
+//!   as `crates/reg-conformance`, or `conformance/`): rerun the 8f conformance.
 //!
 //! The scope check (8h) and the 8i `base_sha` check always run at the release commit.
 //!
@@ -58,9 +58,8 @@ const ALWAYS_BUILDER: [&str; 5] = [
     ".cargo",
     ":(glob)rust-toolchain*",
 ];
-// simplify: `uv.lock` and `pyproject.toml` stay while step 8f runs the Python
-// conformance suite; they go when the Python exit deletes them.
-const READER_EXTRA: [&str; 3] = ["conformance", "uv.lock", "pyproject.toml"];
+// The case corpus; the release checks themselves are a reader-side crate.
+const READER_EXTRA: [&str; 1] = ["conformance"];
 const HOLDINGS: [&str; 1] = ["stewards.toml"];
 
 /// Step 8a's `reg-build build` value options.
