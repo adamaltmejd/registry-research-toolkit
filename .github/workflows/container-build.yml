@@ -379,17 +379,11 @@ jobs:
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 
-  # Registry pruning (#290): keep the newest KEEP tags as rollback handles,
-  # delete older manifests so the registry doesn't grow unboundedly. Fly's
-  # registry supports standard v2 manifest DELETE (verified live
-  # 2026-06-11 — 202 Accepted, tag gone from tags/list). Ordering is by
-  # the image config's .created timestamp (buildx pushes OCI indexes; the
-  # real image manifest is the non-"unknown"-platform entry, the other is
-  # the provenance attestation). A digest shared with any kept tag is
-  # never deleted — deleting a manifest removes EVERY tag pointing at it.
-  # Its own job after the deploy, off the critical path (it needs no checkout, only
-  # the registry token). continue-on-error: a prune hiccup must not fail a successful
-  # deploy, and the run must stay green for the deployed-commit resolver in `changes`.
+  # Registry pruning (#290) with scripts/fly-prune.sh, the script steward-deploy.yml's
+  # prune job runs: keep the newest tags as rollback handles, delete older manifests.
+  # Its own job after the deploy, off the critical path. continue-on-error: a prune
+  # hiccup must not fail a successful deploy, and the run must stay green for the
+  # deployed-commit resolver in `changes`.
   prune-registry:
     needs: deploy
     if: >-
@@ -402,6 +396,11 @@ jobs:
       group: fly-prune-global
       cancel-in-progress: false
     steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: /scripts/fly-prune.sh
+          sparse-checkout-cone-mode: false
       - name: Prune old registry tags
         continue-on-error: true
         env:
@@ -414,49 +413,7 @@ jobs:
           # prod is actively running (review on #296).
           DEPLOYED_TAG: ${{ env.IMAGE_TAG }}
           FLY_APP: reg-webapp-global
-        run: |
-          set -euo pipefail
-          REPO_URL="https://registry.fly.io/v2/$FLY_APP"
-          ACCEPT='Accept: application/vnd.oci.image.index.v1+json, application/vnd.oci.image.manifest.v1+json, application/vnd.docker.distribution.manifest.v2+json'
-          KEEP=10
-          auth="x:$FLY_API_TOKEN"
-          listing=""
-          for t in $(curl -fsS -u "$auth" "$REPO_URL/tags/list" | jq -r '.tags[]'); do
-            top_digest=$(curl -fsSI -u "$auth" -H "$ACCEPT" "$REPO_URL/manifests/$t" \
-              | tr -d '\r' | awk -F': ' 'tolower($1)=="docker-content-digest" {print $2}')
-            manifest=$(curl -fsS -u "$auth" -H "$ACCEPT" "$REPO_URL/manifests/$t")
-            if echo "$manifest" | jq -e '.manifests' >/dev/null; then
-              img=$(echo "$manifest" | jq -r '[.manifests[] | select(.platform.architecture != "unknown")][0].digest')
-              cfg=$(curl -fsS -u "$auth" -H "$ACCEPT" "$REPO_URL/manifests/$img" | jq -r '.config.digest')
-            else
-              cfg=$(echo "$manifest" | jq -r '.config.digest')
-            fi
-            created=$(curl -fsSL -u "$auth" "$REPO_URL/blobs/$cfg" | jq -r '.created')
-            listing+="$created $t $top_digest"$'\n'
-          done
-          kept=$(printf '%s' "$listing" | sort -r | head -n "$KEEP")
-          echo "Keeping $(printf '%s\n' "$kept" | wc -l | tr -d ' ') tags:"
-          printf '%s\n' "$kept"
-          kept_digests=$(printf '%s\n' "$kept" | awk '{print $3}')
-          # An image newer than the one just deployed may belong to a run still on its
-          # way to deploy (this job no longer holds the deploy lock), so it is never
-          # pruned. If the deployed tag is not listed, every tag counts as newer and
-          # nothing is pruned.
-          deployed_created=$(printf '%s' "$listing" | awk -v t="$DEPLOYED_TAG" '$2 == t {print $1}')
-          printf '%s' "$listing" | sort -r | tail -n "+$((KEEP + 1))" \
-            | while read -r created tag digest; do
-              if [ "$tag" = "$DEPLOYED_TAG" ]; then
-                echo "skip $tag (just deployed)"
-              elif [ -z "$deployed_created" ] || [[ "$created" > "$deployed_created" ]]; then
-                echo "skip $tag (newer than the deployed image: may be deploying)"
-              elif printf '%s\n' "$kept_digests" | grep -qF "$digest"; then
-                echo "skip $tag (digest shared with a kept tag)"
-              else
-                echo "prune $tag"
-                curl -fsS -X DELETE -u "$auth" "$REPO_URL/manifests/$digest" \
-                  || echo "::warning::failed to delete $tag"
-              fi
-            done
+        run: bash scripts/fly-prune.sh
 
   # Edge worker for the global catalog's hosted MCP on reg-meta.vqv.uk: `/mcp` only,
   # no SPA and no `/api` (reg_webapp/DESIGN.md → "Deployment"). Runs AFTER the global

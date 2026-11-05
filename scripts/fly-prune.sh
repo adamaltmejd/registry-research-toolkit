@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
-# Fly registry prune (#290) for steward-deploy.yml: keep the newest KEEP tags of
+# Fly registry prune (#290), run by container-build.yml's `prune-registry` (the global
+# app) and steward-deploy.yml's `prune` (steward apps): keep the newest KEEP tags of
 # FLY_APP as rollback handles and delete older manifests. Never deletes DEPLOYED_TAG,
 # a tag newer than it (it may belong to a run still deploying) or a digest a kept tag
 # shares (deleting a manifest removes every tag pointing at it). Ordering is by the
-# image config's `.created`. Same logic as container-build.yml's `prune-registry`
-# (simplify: two copies until that job moves onto this script, with T6 or the O3
-# follow-up). Env: FLY_API_TOKEN, FLY_APP, DEPLOYED_TAG.
+# image config's `.created`: buildx pushes OCI indexes, whose real image manifest is
+# the entry with a known platform (the other is the provenance attestation). Fly's
+# registry accepts the standard v2 manifest DELETE. Env: FLY_API_TOKEN, FLY_APP,
+# DEPLOYED_TAG.
 set -euo pipefail
 : "${FLY_API_TOKEN:?}" "${FLY_APP:?}" "${DEPLOYED_TAG:?}"
 REPO_URL="https://registry.fly.io/v2/$FLY_APP"
@@ -30,6 +32,7 @@ kept=$(printf '%s' "$listing" | sort -r | head -n "$KEEP")
 echo "Keeping $(printf '%s\n' "$kept" | wc -l | tr -d ' ') tags:"
 printf '%s\n' "$kept"
 kept_digests=$(printf '%s\n' "$kept" | awk '{print $3}')
+# If the deployed tag is not listed, every tag counts as newer and nothing is pruned.
 deployed_created=$(printf '%s' "$listing" | awk -v t="$DEPLOYED_TAG" '$2 == t {print $1}')
 printf '%s' "$listing" | sort -r | tail -n "+$((KEEP + 1))" |
 	while read -r created tag digest; do
