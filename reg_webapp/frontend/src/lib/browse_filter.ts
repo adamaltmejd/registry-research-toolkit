@@ -1,4 +1,4 @@
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import {
   type RegisterFacet,
   type RegisterFacets,
@@ -131,14 +131,18 @@ export function useProviderMatches(
     (signal) =>
       searchFacets(query ?? "", { signal, provider: providerFqid ?? "" }),
   );
-  if (query === null || providerFqid === null || matches.data === null)
-    return null;
-  const byRegister = new Map<string, Set<string>>();
-  for (const facet of allRegisterFacets(matches.data)) {
-    const set = byRegister.get(facet.fqid) ?? new Set<string>();
-    for (const variable of facet.variables ?? []) set.add(variable.fqid);
-    byRegister.set(facet.fqid, set);
-  }
+  // One map per answer, not per render: the provider column memoizes on it.
+  const byRegister = useMemo(() => {
+    if (matches.data === null) return null;
+    const map = new Map<string, Set<string>>();
+    for (const facet of allRegisterFacets(matches.data)) {
+      const set = map.get(facet.fqid) ?? new Set<string>();
+      for (const variable of facet.variables ?? []) set.add(variable.fqid);
+      map.set(facet.fqid, set);
+    }
+    return map;
+  }, [matches.data]);
+  if (query === null || providerFqid === null) return null;
   return byRegister;
 }
 

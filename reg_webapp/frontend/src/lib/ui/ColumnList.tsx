@@ -13,7 +13,9 @@ import {
   ListBox,
   ListBoxItem,
   ListBoxSection,
+  ListLayout,
   type Selection,
+  Virtualizer,
 } from "react-aria-components";
 import { router } from "../router";
 import styles from "./ColumnList.module.css";
@@ -75,6 +77,17 @@ interface Props {
 /** The keys that open the focused row; any other key (the arrows, a
  * type-ahead letter) moves focus, and selection with it. */
 const OPEN_KEYS = new Set(["Enter", " "]);
+
+// Over this many rows the list renders only the rows in view: a provider's
+// page lists every variable of its registers (4,378 on /catalog/scb), which
+// took seconds to paint whole. Below it every row renders, so find-in-page
+// works and the selection bar can measure its row (DESIGN.md → ColumnList).
+// Only the provider column comes this high, and it has no selected row.
+const VIRTUALIZE_OVER = 1500;
+
+// Row and header heights the layout starts from, then measures: a header
+// wraps, so heights differ.
+const LAYOUT_OPTIONS = { estimatedRowHeight: 29, estimatedHeadingHeight: 31 };
 
 /**
  * The second browse column (DESIGN.md → ColumnList): a `label` header, then the
@@ -236,6 +249,47 @@ export function ColumnList({
     </ListBoxItem>
   );
 
+  const virtual = (items?.length ?? 0) > VIRTUALIZE_OVER;
+  const list = sections !== null && (
+    <ListBox
+      aria-labelledby={labelId}
+      className={virtual ? `${styles.list} ${styles.virtual}` : styles.list}
+      selectionMode="single"
+      selectionBehavior="replace"
+      disallowEmptySelection
+      selectedKeys={selectedId === null ? [] : [selectedId]}
+      onSelectionChange={onSelectionChange}
+    >
+      {/* A flat list is plain options; only labelled runs get a section
+      (an unnamed group would be noise to a screen reader). */}
+      {sections.map((section) =>
+        section.label === null ? (
+          <Collection
+            key={section.id}
+            items={section.items}
+            dependencies={[renderName, selectedId, selectedExact]}
+          >
+            {option}
+          </Collection>
+        ) : (
+          section.items.length > 0 && (
+            <ListBoxSection key={section.id} id={section.id}>
+              <Header className={styles.register} title={section.label}>
+                {section.label}
+              </Header>
+              <Collection
+                items={section.items}
+                dependencies={[renderName, selectedId, selectedExact]}
+              >
+                {option}
+              </Collection>
+            </ListBoxSection>
+          )
+        ),
+      )}
+    </ListBox>
+  );
+
   return (
     <nav
       className={`${styles.column} ${className ?? ""}`}
@@ -263,7 +317,10 @@ export function ColumnList({
         </span>
       </div>
       {/* The scroll box: the list and the column's one selection bar. */}
-      <div ref={boxRef} className={styles.scroller}>
+      <div
+        ref={boxRef}
+        className={`${styles.scroller} ${virtual ? styles.virtualScroller : ""}`}
+      >
         {error !== null ? (
           <StatusRow tone="error" live="alert" className={styles.error}>
             {error}
@@ -277,47 +334,12 @@ export function ColumnList({
             {notice !== null && <p className={styles.note}>{notice}</p>}
             {items?.length === 0 ? (
               <p className={styles.note}>{empty}</p>
+            ) : virtual ? (
+              <Virtualizer layout={ListLayout} layoutOptions={LAYOUT_OPTIONS}>
+                {list}
+              </Virtualizer>
             ) : (
-              <ListBox
-                aria-labelledby={labelId}
-                className={styles.list}
-                selectionMode="single"
-                selectionBehavior="replace"
-                disallowEmptySelection
-                selectedKeys={selectedId === null ? [] : [selectedId]}
-                onSelectionChange={onSelectionChange}
-              >
-                {/* A flat list is plain options; only labelled runs get a section
-              (an unnamed group would be noise to a screen reader). */}
-                {sections.map((section) =>
-                  section.label === null ? (
-                    <Collection
-                      key={section.id}
-                      items={section.items}
-                      dependencies={[renderName, selectedId, selectedExact]}
-                    >
-                      {option}
-                    </Collection>
-                  ) : (
-                    section.items.length > 0 && (
-                      <ListBoxSection key={section.id} id={section.id}>
-                        <Header
-                          className={styles.register}
-                          title={section.label}
-                        >
-                          {section.label}
-                        </Header>
-                        <Collection
-                          items={section.items}
-                          dependencies={[renderName, selectedId, selectedExact]}
-                        >
-                          {option}
-                        </Collection>
-                      </ListBoxSection>
-                    )
-                  ),
-                )}
-              </ListBox>
+              list
             )}
           </>
         )}

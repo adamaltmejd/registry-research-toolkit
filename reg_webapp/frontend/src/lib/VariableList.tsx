@@ -1,4 +1,4 @@
-import { type ComponentProps, useCallback } from "react";
+import { type ComponentProps, useCallback, useMemo } from "react";
 import type { RegisterFacet, RegisterShow } from "./api";
 import {
   useBrowseFilter,
@@ -325,31 +325,35 @@ function useProviderColumn(
   );
   const matches = useProviderMatches(providerFqid);
   const treeOrder = useBrowseOrder();
-  if (providerFqid === null) return null;
   const provider = resource.data?.kind === "provider" ? resource.data : null;
-  // While the search holds text the sections follow the register column,
-  // which puts name hits first (#1828); a stable sort keeps the name order
-  // otherwise.
-  const place = (fqid: string) => {
-    const at = treeOrder.indexOf(fqid);
-    return at === -1 ? treeOrder.length : at;
-  };
-  const registers = sortedRegisters(provider?.registers ?? []).sort(
-    (a, b) => place(a.fqid) - place(b.fqid),
-  );
-  const sections: ColumnSection[] = registers.map((node) => {
-    const variables = sortedVariables(node);
-    const items = variableItems(
-      variables,
-      matchedVariables(
-        variables,
-        needle,
-        matches && (matches.get(node.fqid) ?? new Set()),
-      ),
-      true,
+  // Memoized: fresh sections rebuild RAC's whole collection, and the
+  // virtualizer's layout cache, on every render (4,378 rows on /catalog/scb).
+  const sections = useMemo((): ColumnSection[] => {
+    // While the search holds text the sections follow the register column,
+    // which puts name hits first (#1828); a stable sort keeps the name order
+    // otherwise.
+    const place = (fqid: string) => {
+      const at = treeOrder.indexOf(fqid);
+      return at === -1 ? treeOrder.length : at;
+    };
+    const registers = sortedRegisters(provider?.registers ?? []).sort(
+      (a, b) => place(a.fqid) - place(b.fqid),
     );
-    return { id: `register:${node.fqid}`, label: node.name, items };
-  });
+    return registers.map((node) => {
+      const variables = sortedVariables(node);
+      const items = variableItems(
+        variables,
+        matchedVariables(
+          variables,
+          needle,
+          matches && (matches.get(node.fqid) ?? new Set()),
+        ),
+        true,
+      );
+      return { id: `register:${node.fqid}`, label: node.name, items };
+    });
+  }, [provider, needle, matches, treeOrder]);
+  if (providerFqid === null) return null;
   return {
     subject: provider?.name,
     root: providerFqid,

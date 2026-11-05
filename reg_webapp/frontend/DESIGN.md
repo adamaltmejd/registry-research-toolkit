@@ -897,13 +897,15 @@ grow new visual language meanwhile.
   `accent` dot and the count in `accent-ink` `mono` — the only numbers in the list.
   While the search bar holds text, the list shows its filter state (see Layout). In the
   variables column a name, and a section's register name, wraps rather than truncates:
-  many variable names share a long start and differ only at the end. A column renders
-  every row, with no virtualization, so find-in-page works. Measured on a production
-  build, an arrow key takes about 133 ms on /catalog/scb (4,378 rows in the provider
-  column), 54 ms on /catalog/scb/lisa (302) and 11 ms on /catalog/iaf; that is accepted
-  (Operator 2026-11-05). Revisit when a provider column passes about 5,000 rows or 150
-  ms a key in production. The fallback then is to virtualize only lists over about 1,500
-  rows, since RAC 1.22.1's `ListLayout` cannot keep the sticky section headers.
+  many variable names share a long start and differ only at the end. A list of up to
+  1,500 rows renders every row, so find-in-page works. A longer one (a provider's page:
+  4,378 rows on /catalog/scb) renders only the rows in view, with RAC's `Virtualizer`
+  and `ListLayout`: whole, it took about 3.2 s to paint and 820 ms an arrow key at 6×
+  CPU throttling on a production build; virtualized, 1.0 s and 22 ms. There its
+  register headers scroll with the rows (RAC 1.22.1's `ListLayout` cannot keep them
+  sticky) and find-in-page sees only the rows in view; the search bar covers it. Only a
+  provider's list comes this high, and it has no selected row, so the selection bar
+  never measures a row the layout placed.
 - **ColumnChip:** the one treatment for a column name (see Typography). Three states:
   outlined, in project (`accent` fill), outside the study window (`viz-span-out`,
   `text-muted`: `text-faint` fails AA for chip text, so the faint stroke carries the

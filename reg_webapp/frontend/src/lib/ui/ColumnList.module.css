@@ -59,6 +59,20 @@
   outline: none;
 }
 
+/* Over VIRTUALIZE_OVER rows RAC's Virtualizer renders only the rows in view and
+   the list itself scrolls (it measures its own box), so the scroll box becomes a
+   flex column that hands the list its height. */
+.virtualScroller {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.virtual {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
 .row {
   position: relative;
   display: flex;
@@ -151,7 +165,9 @@
   overflow-wrap: anywhere;
 }
 
-.list > :first-child > .register {
+/* The virtualized list wraps each section in a div of its own. */
+.list > :first-child > .register,
+.virtual > * > :first-child .register {
   border-top-color: transparent;
 }
 
