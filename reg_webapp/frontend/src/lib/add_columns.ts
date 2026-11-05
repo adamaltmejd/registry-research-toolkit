@@ -136,7 +136,8 @@ export function columnWindowPeriod(
 export function segmentType(segment: CatalogSegment): ProjectBinding["type"] {
   if (segment.identifier === true) return "id";
   if (segment.coded === "yes") return "categorical";
-  if (segment.type === "integer" || segment.type === "decimal") return "numeric";
+  if (segment.type === "integer" || segment.type === "decimal")
+    return "numeric";
   if (segment.type === "date" || segment.type === "datetime")
     return segment.type;
   return "opaque";
