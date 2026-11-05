@@ -93,8 +93,11 @@ simplification reads as intent and a deferral can't silently rot.
 # Testing policy
 
 Most changes need no new test. Verify by running the existing suite or the real
-pipeline; a check run once is not a permanent test. Add or extend a test only when you
-can name the behavior it pins, a credible regression that makes it fail, and why no
+pipeline; a check run once is not a permanent test. Tests in agentic development cost
+more than they look: each one is code a later agent must keep green. Add or extend a
+test only for a black-box behavior that is **not obvious from running the code** and
+that the release's `reg-build verify` and `reg-build diff` would not surface, and only
+when you can name the behavior it pins, a credible change that breaks it, and why no
 existing boundary case already catches that failure. Two kinds are defects on sight:
 **tautological** tests (the expected value comes from the code under test) and
 **change-detector** tests (they break on a refactor that changes no boundary).
@@ -142,9 +145,9 @@ and to a sweep.
 - **Structural validation has one authority.** `reg-build verify` owns the published
   catalog's invariants; tests run it on the synthetic artifact, they do not re-derive
   its checks.
-- **A bug fix adds a regression case to the owning corpus only when no existing case
-  fails on the pre-fix code**: extend or strengthen that behavior's case rather than a
-  helper test. The new or strengthened case must fail on the pre-fix code.
+- **A bug fix adds no regression test.** The fix is verified once, by the run that
+  shows it; a fixed bug is not a behavior. Add a case only when the fix establishes a
+  product rule that meets the bar above, and then at most one, in the owning corpus.
 - **Within budget.** Each package's suite stays inside its time budget in
   `ARCHITECTURE.md` → "Tiers". A check that costs more than its behavior is worth moves
   to a slower tier (real-seed or release gate) or goes.
