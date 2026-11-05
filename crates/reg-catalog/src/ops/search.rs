@@ -234,11 +234,7 @@ fn require_tag(server: &Server, conn: &Connection, value: &str) -> Result<(), Er
     {
         return Ok(());
     }
-    Err(Error::new(
-        Code::NotFound,
-        format!("Nothing is named {value:?}."),
-        vec![value.into()],
-    ))
+    Err(Error::not_found(value))
 }
 
 fn search_origin(
@@ -445,7 +441,7 @@ fn hit(
     kind: &str,
     entity: Option<i64>,
 ) -> Result<SearchHit, Error> {
-    let entity = || entity.ok_or_else(|| internal(format!("search row {id} has no entity")));
+    let entity = || entity.ok_or_else(|| Error::internal(format!("search row {id} has no entity")));
     Ok(match kind {
         "register" => conn.query_row(
             "SELECT r.pid, n.body, d.body, r.start, r.end
@@ -515,7 +511,11 @@ fn hit(
         "code" => code_hit(conn, id)?,
         "document" => document_hit(conn, expression, entity()?)?,
         // The schema admits no other kind; such a row is a defect of the artifact.
-        other => return Err(internal(format!("search row {id} has kind {other:?}"))),
+        other => {
+            return Err(Error::internal(format!(
+                "search row {id} has kind {other:?}"
+            )));
+        }
     })
 }
 
@@ -569,10 +569,6 @@ fn document_hit(conn: &Connection, expression: &str, doc: i64) -> rusqlite::Resu
         heading,
         page,
     })
-}
-
-fn internal(message: String) -> Error {
-    Error::new(Code::InternalError, message, vec![])
 }
 
 fn search_facets(server: &Server, params: &Params) -> Result<Value, Error> {

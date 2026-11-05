@@ -227,13 +227,7 @@ fn held(
             releases: vec![],
         });
     }
-    let (start, end) = hull.ok_or_else(|| {
-        Error::new(
-            crate::Code::NotFound,
-            format!("Nothing is named {:?}.", hit.pid),
-            vec![hit.pid.clone().into()],
-        )
-    })?;
+    let (start, end) = hull.ok_or_else(|| Error::not_found(&hit.pid))?;
     Ok(serde_json::to_value(Coverage {
         fqid: hit.pid,
         kind: hit.kind,

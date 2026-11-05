@@ -12,7 +12,7 @@ use super::segments::{self, Segment};
 use super::shape::{self, Release};
 use super::show_evidence::{self, VariableEvidence};
 use super::{Cache, HeldClip, Operation, Param, Params, Period, Server, Type, component, flag};
-use crate::{Code, Error, rows};
+use crate::{Error, rows};
 
 pub const OPERATIONS: &[Operation] = &[Operation {
     name: "show",
@@ -262,11 +262,9 @@ fn show(server: &Server, params: &Params) -> Result<Value, Error> {
                     ));
                 }
                 kind => {
-                    return Err(Error::new(
-                        Code::InternalError,
-                        format!("show has no summary for a {kind}."),
-                        vec![],
-                    ));
+                    return Err(Error::internal(format!(
+                        "show has no summary for a {kind}."
+                    )));
                 }
             }
         }
@@ -848,11 +846,7 @@ fn set_members(
     )?;
     members.retain(|(_, member)| server.catalog.serves("variable", &member.fqid));
     if server.catalog.steward().is_some() && members.is_empty() {
-        return Err(Error::new(
-            Code::NotFound,
-            format!("Nothing is named {:?}.", entity.pid),
-            vec![entity.pid.clone().into()],
-        ));
+        return Err(Error::not_found(&entity.pid));
     }
     let origins = segments::origins(server, server.catalog.connect()?)?;
     // simplify: one segments list per member; batch by variable id if a set reaches

@@ -63,11 +63,10 @@ impl Server {
     pub fn new(catalog: Catalog, version: &'static str) -> Result<Self, Error> {
         let day = |key: &str| {
             catalog.meta(key).parse::<i64>().map_err(|_| {
-                Error::new(
-                    Code::InternalError,
-                    format!("meta {key} is not a day number: {:?}", catalog.meta(key)),
-                    vec![],
-                )
+                Error::internal(format!(
+                    "meta {key} is not a day number: {:?}",
+                    catalog.meta(key)
+                ))
             })
         };
         let open = (day("open_start")?, day("open_end")?);

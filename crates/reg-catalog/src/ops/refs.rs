@@ -35,13 +35,8 @@ impl Names {
     ///
     /// `internal_error` when it has none.
     pub fn of(&self, kind: Named, fqid: &str) -> Result<String, Error> {
-        self.get(kind, fqid).ok_or_else(|| {
-            Error::new(
-                Code::InternalError,
-                format!("{fqid:?} has no name in the catalog."),
-                vec![],
-            )
-        })
+        self.get(kind, fqid)
+            .ok_or_else(|| Error::internal(format!("{fqid:?} has no name in the catalog.")))
     }
 }
 
@@ -190,11 +185,7 @@ pub fn resolve(conn: &Connection, value: &str) -> Result<Entity, Error> {
             vec![value.into(), kind.into(), retired_in.into(), reason.into()],
         ));
     }
-    Err(Error::new(
-        Code::NotFound,
-        format!("Nothing is named {value:?}."),
-        vec![value.into()],
-    ))
+    Err(Error::not_found(value))
 }
 
 /// An `ambiguous_ref` candidate `{fqid, kind, name}`. A variable's or class version's
