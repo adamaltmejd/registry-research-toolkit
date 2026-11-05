@@ -2141,8 +2141,9 @@ recasting a numeric storage type as a role.
 capability or part of E's build. A later skill on the researcher's machine reads
 `project_data.json` and calls catalog/MCP operations for metadata. E adds no mock
 endpoint, MCP mock tool, enable-mocks gate, CSV/ZIP writer dependencies or generator.
-Both hosted and stdio MCP expose metadata operations only. The skill itself, writer
-choices, synthetic generation rules and seed/size controls are later work.
+Both hosted and stdio MCP expose metadata operations only. The design is in
+[`reg-mock/DESIGN.md`](reg-mock/DESIGN.md) (#707): `reg-meta mock` runs offline on saved
+catalog answers and a reviewed rules file.
 
 E must expose enough metadata to support that skill. Existing operations already supply:
 

@@ -4,6 +4,7 @@
 //! reg-meta serve --db DIR --port N [--host ADDR] [--public-host HOST]
 //!                [--write-limit N] [--mmap-size BYTES] [--catalog NAME]
 //! reg-meta mcp --db DIR [--catalog NAME]
+//! reg-meta mock compile ...   (offline, `mock.rs`)
 //! ```
 //!
 //! Both admit `DIR/reg_meta.db`. `--catalog NAME` additionally admits its pinned
@@ -22,6 +23,7 @@
 
 mod limit;
 mod mcp;
+mod mock;
 mod validator;
 
 use std::convert::Infallible;
@@ -158,6 +160,9 @@ fn refuse(err: &Error) -> ! {
 
 #[tokio::main]
 async fn main() {
+    if std::env::args().nth(1).as_deref() == Some("mock") {
+        mock::main(std::env::args().skip(2));
+    }
     let args = parse_args(std::env::args().skip(1)).unwrap_or_else(|err| refuse(&err));
     let catalog_sha256 = catalog_sha256().unwrap_or_else(|err| refuse(&err));
     let catalog = Catalog::open_selected(
