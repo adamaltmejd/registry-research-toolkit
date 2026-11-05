@@ -318,6 +318,23 @@ async function browsePagesCase(page, shoot) {
       )
       .then(() => true, () => false);
     check(onOpened, `opening ${opened} from the provider's list left focus on ${await page.evaluate(() => document.activeElement === document.body ? "the body" : document.activeElement?.outerHTML.slice(0, 80))}`);
+    // Fails if a grouped variable (Kommun opens its group's page) clicked in
+    // the provider's list loses focus to its lane on that page: the lane takes
+    // focus only on a fresh load or a deep link.
+    await open(page, "/catalog/demo");
+    await settled(page);
+    await variables.getByRole("option", { name: "Kommun", exact: true }).click();
+    await page.waitForURL("**/catalog/demo/bas/kommun");
+    await settled(page);
+    const onMember = await page
+      .waitForFunction(
+        () => document.activeElement?.getAttribute("role") === "option" &&
+          document.activeElement.getAttribute("data-key") === "demo/bas/kommun",
+        undefined,
+        { timeout: 2_000, polling: 50 },
+      )
+      .then(() => true, () => false);
+    check(onMember, `opening demo/bas/kommun from the provider's list left focus on ${await page.evaluate(() => document.activeElement === document.body ? "the body" : document.activeElement?.outerHTML.slice(0, 80))}`);
     // Fails if, while the search holds text, the provider's sections stop
     // following the register column's order, which puts a name hit
     // (Hushållsregistret for "hush") before a variable-only one.

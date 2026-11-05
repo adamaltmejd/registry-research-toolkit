@@ -118,7 +118,8 @@ interface Props {
   isDisabled?: boolean;
   onToggle?: (spanId: string) => void;
   /** The lane whose name takes focus, scrolled into view, once it is first
-   * drawn: a group page opened at one member's address. */
+   * drawn: a group page opened at one member's address, when nothing else
+   * holds focus. */
   focus?: string | null;
 }
 
@@ -653,11 +654,15 @@ function LaneText({
   const subId = useId();
   // Focus once, when the lane is first drawn (the lanes mount only after the
   // graph is measured); keep it in view while the lanes above it grow to
-  // their measured names, until focus moves on.
+  // their measured names, until focus moves on. Only when nothing holds focus
+  // (a fresh load or a deep link): a member opened from a browse column keeps
+  // focus on that column's row, which owns it.
   const focused = useRef<HTMLElement | null>(null);
   const focusName = useCallback(
     (node: HTMLElement | null) => {
       if (!node || !focus) return;
+      const active = document.activeElement;
+      if (active && active !== document.body) return;
       focused.current = node;
       node.focus({ preventScroll: true });
     },
