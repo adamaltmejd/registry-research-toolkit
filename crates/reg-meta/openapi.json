@@ -4389,7 +4389,7 @@
               "registers": {
                 "type": "array",
                 "items": {
-                  "$ref": "#/components/schemas/ShowRegisterRef"
+                  "$ref": "#/components/schemas/ShowProviderRegister"
                 },
                 "description": "On a data holder's catalog, the holder's own registers too."
               }
@@ -4683,6 +4683,33 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ShowRegisterRef"
+            }
+          }
+        }
+      },
+      "ShowProviderRegister": {
+        "type": "object",
+        "description": "A provider's register with its variables as `show` on the register lists them, so\nthe provider alone lists every variable of its registers.",
+        "required": [
+          "fqid",
+          "name",
+          "period",
+          "variables"
+        ],
+        "properties": {
+          "fqid": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "period": {
+            "$ref": "#/components/schemas/Period"
+          },
+          "variables": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShowVariableRef"
             }
           }
         }

@@ -1138,7 +1138,7 @@ export interface components {
             kind: "provider";
             name: string;
             /** @description On a data holder's catalog, the holder's own registers too. */
-            registers: components["schemas"]["ShowRegisterRef"][];
+            registers: components["schemas"]["ShowProviderRegister"][];
         } | {
             description: string | null;
             fqid: string;
@@ -1215,6 +1215,16 @@ export interface components {
             fqid: string;
             name: string;
             registers: components["schemas"]["ShowRegisterRef"][];
+        };
+        /**
+         * @description A provider's register with its variables as `show` on the register lists them, so
+         *     the provider alone lists every variable of its registers.
+         */
+        ShowProviderRegister: {
+            fqid: string;
+            name: string;
+            period: components["schemas"]["Period"];
+            variables: components["schemas"]["ShowVariableRef"][];
         };
         ShowRegisterRef: {
             fqid: string;

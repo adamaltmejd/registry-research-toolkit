@@ -105,7 +105,9 @@ tool = "show"
 params = { ref = "ref?", evidence = "boolean?" }
 result = "Show"
 errors = ["invalid_ref", "not_found", "retired_ref", "ambiguous_ref"]
-note = """The summary for any ref; no ref is the catalog root. Sets require \
+note = """The summary for any ref; no ref is the catalog root. A provider lists its \
+registers each with its variables, as the register's own summary lists them, so the \
+provider alone lists every variable of its registers. Sets require \
 set/<provider>/<register>/<slug>; malformed set refs are invalid_ref. Heavy parts are other operations: a variable's segments \
 (`segments`), relations (`graph`), findings (`findings`), codes (`values`) and coverage \
 (`coverage`). Variable summaries show the curated description, the coverage hull, and \

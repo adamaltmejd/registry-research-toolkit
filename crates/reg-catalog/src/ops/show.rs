@@ -43,7 +43,7 @@ pub enum Show {
         fqid: String,
         name: String,
         /// On a data holder's catalog, the holder's own registers too.
-        registers: Vec<ShowRegisterRef>,
+        registers: Vec<ShowProviderRegister>,
     },
     Register {
         fqid: String,
@@ -129,6 +129,16 @@ pub struct ShowRegisterRef {
     fqid: String,
     name: String,
     period: Period,
+}
+
+/// A provider's register with its variables as `show` on the register lists them, so
+/// the provider alone lists every variable of its registers.
+#[derive(Serialize, ToSchema)]
+pub struct ShowProviderRegister {
+    fqid: String,
+    name: String,
+    period: Period,
+    variables: Vec<ShowVariableRef>,
 }
 
 #[derive(Serialize, ToSchema)]
@@ -353,7 +363,17 @@ fn provider(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
     let extra = server.catalog.connect_holdings()?;
     let registers = served_registers(server, conn, extra.as_ref(), Some(&entity.pid))?
         .remove(&entity.pid)
-        .unwrap_or_default();
+        .unwrap_or_default()
+        .into_iter()
+        .map(|register| {
+            Ok(ShowProviderRegister {
+                variables: served_variables(server, conn, extra.as_ref(), &register.fqid)?,
+                fqid: register.fqid,
+                name: register.name,
+                period: register.period,
+            })
+        })
+        .collect::<Result<_, Error>>()?;
     Ok(Show::Provider {
         fqid: entity.pid.clone(),
         name,
@@ -370,12 +390,14 @@ fn register(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
         [entity.id],
         |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?)),
     )?;
-    let (mut tables, mut variables) = contents(server, conn, &entity.pid)?;
+    let mut tables = register_tables(server, conn, &entity.pid)?;
+    let extra = server.catalog.connect_holdings()?;
+    let variables = served_variables(server, conn, extra.as_ref(), &entity.pid)?;
     let (mut sets, mut tags) = groupings(conn, &entity.pid)?;
-    // Steward mode: tables and variables the steward defines inside a reference
-    // register join it; a pid both origins define keeps the reference row.
-    if let Some(extra) = server.catalog.connect_holdings()? {
-        let (steward_tables, steward_variables) = contents(server, &extra, &entity.pid)?;
+    // Steward mode: tables the steward defines inside a reference register join it;
+    // a pid both origins define keeps the reference row.
+    if let Some(extra) = &extra {
+        let steward_tables = register_tables(server, extra, &entity.pid)?;
         let known: BTreeSet<_> = tables.iter().map(|t| t.fqid.clone()).collect();
         tables.extend(
             steward_tables
@@ -383,22 +405,7 @@ fn register(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
                 .filter(|t| !known.contains(&t.fqid)),
         );
         tables.sort_by(|a, b| a.fqid.cmp(&b.fqid));
-        // A shared variable keeps the reference row but gains the tables the steward
-        // attests it in (a membership the reference member list omits).
-        let mut steward_variables: BTreeMap<_, _> = steward_variables
-            .into_iter()
-            .map(|v| (v.fqid.clone(), v))
-            .collect();
-        for variable in &mut variables {
-            if let Some(steward) = steward_variables.remove(&variable.fqid) {
-                variable.tables.extend(steward.tables);
-                variable.tables.sort();
-                variable.tables.dedup();
-            }
-        }
-        variables.extend(steward_variables.into_values());
-        variables.sort_by(|a, b| a.fqid.cmp(&b.fqid));
-        let (steward_sets, steward_tags) = groupings(&extra, &entity.pid)?;
+        let (steward_sets, steward_tags) = groupings(extra, &entity.pid)?;
         let known: BTreeSet<_> = sets.iter().map(|s| s.fqid.clone()).collect();
         sets.extend(
             steward_sets
@@ -417,13 +424,6 @@ fn register(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
     // Steward mode lists only what the steward holds (`Catalog::serves`); a set
     // keeps its held members and goes when none is held.
     tables.retain(|t| server.catalog.serves("table", &t.fqid));
-    variables.retain(|v| server.catalog.serves("variable", &v.fqid));
-    for variable in &mut variables {
-        let fqid = &variable.fqid;
-        variable
-            .tables
-            .retain(|table| server.catalog.serves_in(fqid, table));
-    }
     for set in &mut sets {
         set.members
             .retain(|member| server.catalog.serves("variable", member));
@@ -506,13 +506,49 @@ fn groupings(
     Ok((sets, tags))
 }
 
-/// A register's tables and variables in one origin, by the register's public id.
-fn contents(
+/// A register's served variables, both origins merged: a pid both define keeps the
+/// reference row but gains the tables the steward attests it in (a membership the
+/// reference member list omits). Steward mode lists only what the steward holds
+/// (`Catalog::serves`).
+fn served_variables(
+    server: &Server,
+    conn: &Connection,
+    extra: Option<&Connection>,
+    register: &str,
+) -> Result<Vec<ShowVariableRef>, Error> {
+    let mut variables = register_variables(server, conn, register)?;
+    if let Some(extra) = extra {
+        let mut steward_variables: BTreeMap<_, _> = register_variables(server, extra, register)?
+            .into_iter()
+            .map(|v| (v.fqid.clone(), v))
+            .collect();
+        for variable in &mut variables {
+            if let Some(steward) = steward_variables.remove(&variable.fqid) {
+                variable.tables.extend(steward.tables);
+                variable.tables.sort();
+                variable.tables.dedup();
+            }
+        }
+        variables.extend(steward_variables.into_values());
+        variables.sort_by(|a, b| a.fqid.cmp(&b.fqid));
+    }
+    variables.retain(|v| server.catalog.serves("variable", &v.fqid));
+    for variable in &mut variables {
+        let fqid = &variable.fqid;
+        variable
+            .tables
+            .retain(|table| server.catalog.serves_in(fqid, table));
+    }
+    Ok(variables)
+}
+
+/// A register's tables in one origin, by the register's public id.
+fn register_tables(
     server: &Server,
     conn: &Connection,
     register: &str,
-) -> Result<(Vec<ShowTable>, Vec<ShowVariableRef>), Error> {
-    let tables = rows(
+) -> Result<Vec<ShowTable>, Error> {
+    Ok(rows(
         conn,
         "SELECT t.pid, n.body, t.role, t.implicit, t.timeless, t.cadence, t.start, t.end
              FROM tbl t JOIN register r ON r.id = t.register_id
@@ -531,7 +567,16 @@ fn contents(
                 cadence: row.get(5)?,
             })
         },
-    )?;
+    )?)
+}
+
+/// A register's variables in one origin, each with the tables it appears in, by the
+/// register's public id.
+fn register_variables(
+    server: &Server,
+    conn: &Connection,
+    register: &str,
+) -> Result<Vec<ShowVariableRef>, Error> {
     let mut members: BTreeMap<String, Vec<String>> = BTreeMap::new();
     for row in conn
         .prepare(
@@ -545,7 +590,7 @@ fn contents(
         let (variable, table) = row?;
         members.entry(variable).or_default().push(table);
     }
-    let variables = rows(
+    Ok(rows(
         conn,
         "SELECT v.pid, l.body, v.start, v.end
              FROM variable v JOIN register r ON r.id = v.register_id
@@ -561,8 +606,7 @@ fn contents(
                 name: row.get(1)?,
             })
         },
-    )?;
-    Ok((tables, variables))
+    )?)
 }
 
 fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Error> {
