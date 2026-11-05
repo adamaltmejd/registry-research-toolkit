@@ -177,15 +177,7 @@ fn links_of(kind: &str) -> &'static str {
     }
 }
 
-fn invalid_ref(value: &str, entity: &Entity) -> Error {
-    Error::invalid_ref(
-        value,
-        format!(
-            "{value:?} is a {}, which this operation does not take.",
-            entity.kind
-        ),
-    )
-}
+const NOT_TAKEN: &str = "which this operation does not take";
 
 fn search(server: &Server, params: &Params) -> Result<Value, Error> {
     let conn = match params.get("register") {
@@ -196,23 +188,11 @@ fn search(server: &Server, params: &Params) -> Result<Value, Error> {
     let q = params.get("q").copied().filter(|q| !q.is_empty());
     let expression = q.map(fts::query).transpose()?.flatten();
     let register = match params.get("register") {
-        Some(value) => {
-            let entity = refs::resolve(&conn, value)?;
-            if entity.kind != "register" {
-                return Err(invalid_ref(value, &entity));
-            }
-            Some(entity.id)
-        }
+        Some(value) => Some(refs::expect(&conn, value, &["register"], NOT_TAKEN)?.id),
         None => None,
     };
     let limit = limit(params)?;
-    let context = cursor::context(params);
-    let offset = match params.get("cursor") {
-        Some(cursor) => {
-            cursor::decode(cursor, server.catalog.generation(), &context, SEARCH_DEPTH)?.0
-        }
-        None => 0,
-    };
+    let offset = cursor::start(server, params, "cursor", "", SEARCH_DEPTH)?.map_or(0, |(o, _)| o);
 
     // A page never passes the SEARCH_DEPTH-th hit; one extra row tells whether more follow.
     let take = limit.min(SEARCH_DEPTH - offset);
@@ -224,14 +204,8 @@ fn search(server: &Server, params: &Params) -> Result<Value, Error> {
         offset,
     )?;
     let next_cursor = cursor::next(&mut items, take, |last| {
-        (offset + take < SEARCH_DEPTH).then(|| {
-            cursor::encode(
-                server.catalog.generation(),
-                &context,
-                offset + take,
-                &last.doc,
-            )
-        })
+        (offset + take < SEARCH_DEPTH)
+            .then(|| cursor::token(server, params, "", offset + take, &last.doc))
     });
     let register_ingested = register
         .map(|id| {
@@ -421,13 +395,12 @@ fn get(server: &Server, params: &Params) -> Result<Value, Error> {
 fn related(server: &Server, params: &Params) -> Result<Value, Error> {
     let conn = server.catalog.connect_for_ref(params["ref"])?;
     let value = params["ref"];
-    let entity = refs::resolve(&conn, value)?;
-    if !matches!(
-        entity.kind.as_str(),
-        "register" | "table" | "variable" | "class_family"
-    ) {
-        return Err(invalid_ref(value, &entity));
-    }
+    let entity = refs::expect(
+        &conn,
+        value,
+        &["register", "table", "variable", "class_family"],
+        NOT_TAKEN,
+    )?;
     Ok(serde_json::to_value(related_documents(&conn, &entity)?)
         .expect("RelatedDocument serializes"))
 }

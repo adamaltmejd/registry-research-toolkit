@@ -133,6 +133,22 @@ impl Error {
         Self::new(Code::InvalidRef, message, vec![value.into()])
     }
 
+    /// `not_found` for `value`, a ref that names nothing the server serves.
+    #[must_use]
+    pub fn not_found(value: &str) -> Self {
+        Self::new(
+            Code::NotFound,
+            format!("Nothing is named {value:?}."),
+            vec![value.into()],
+        )
+    }
+
+    /// `internal_error`: a defect, never the caller's input.
+    #[must_use]
+    pub fn internal(message: impl Into<String>) -> Self {
+        Self::new(Code::InternalError, message, vec![])
+    }
+
     #[must_use]
     pub fn invalid_parameter(name: &str) -> Self {
         Self::new(
@@ -169,10 +185,6 @@ impl Error {
 
 impl From<rusqlite::Error> for Error {
     fn from(err: rusqlite::Error) -> Self {
-        Self::new(
-            Code::InternalError,
-            format!("Catalog query failed: {err}"),
-            vec![],
-        )
+        Self::internal(format!("Catalog query failed: {err}"))
     }
 }
