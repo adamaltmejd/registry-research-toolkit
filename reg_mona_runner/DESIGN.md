@@ -44,14 +44,14 @@ project number. An order writes `<base>/export_data/<nr>_<YYYY-MM-DD>/`, cleared
 
 1. Parse and check the whole manifest before touching the database: version, then mode
    and steward, then shape. The manifest, its provenance and every object the runner
-   reads (files, columns, storage, row filters) are closed, so an unknown field there
-   is a refusal. What the runner does not read (clips, findings, a column's `role`,
-   `refs` and `slot`, the provenance ids) is only required by name: order files come
-   from the catalog's writer, not by hand (maintainer, Q8, 2026-11-04). A field the order file writes as null is required and may be null (a
-   timeless file's `delivery`, a storage `length`); a field it omits when empty is
-   optional. `extract_format` is required: the runner has no default format. A column
-   without an expected storage `type` is refused, since the storage check below needs
-   one.
+   reads (files, columns, storage, row filters) are closed, so an unknown field there is
+   a refusal. What the runner does not read (clips, findings, a column's `role`, `refs`
+   and `slot`, the provenance ids) is only required by name: order files come from the
+   catalog's writer, not by hand (maintainer, Q8, 2026-11-04). A field the order file
+   writes as null is required and may be null (a timeless file's `delivery`, a storage
+   `length`); a field it omits when empty is optional. `extract_format` is required: the
+   runner has no default format. A column without an expected storage `type` is refused,
+   since the storage check below needs one.
 2. Plan the files: one per manifest file, named `<name>.<format>` (the catalog names the
    file after the physical table, [../crates/DESIGN.md](../crates/DESIGN.md), "MONA
    order file"), its columns in manifest order (ordered columns first, then held keys).
