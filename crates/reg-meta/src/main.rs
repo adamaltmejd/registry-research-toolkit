@@ -22,6 +22,7 @@
 
 mod limit;
 mod mcp;
+mod usage;
 mod validator;
 
 use std::convert::Infallible;
@@ -41,6 +42,7 @@ use reg_catalog::{Catalog, DEFAULT_MMAP_SIZE, Error};
 use serde_json::{Value, json};
 
 use crate::limit::Limits;
+use crate::usage::Usage;
 use crate::validator::Validators;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -233,7 +235,8 @@ async fn serve(
     }
     let app = app
         .with_state(Arc::clone(&server))
-        .merge(mcp::router(server, public_host, limits));
+        .merge(mcp::router(server, public_host, limits))
+        .layer(axum::middleware::from_fn(usage::timing));
     let listener = tokio::net::TcpListener::bind(addr)
         .await
         .expect("bind the port");
@@ -259,6 +262,8 @@ async fn serve(
 struct Answer {
     status: StatusCode,
     body: Value,
+    /// The operation's usage label, sent as [`usage::HEADER`].
+    usage: Option<Usage>,
 }
 
 impl Answer {
@@ -271,13 +276,21 @@ impl Answer {
                 json!({"error": err, "meta": meta}),
             ),
         };
-        Self { status, body }
+        Self {
+            status,
+            body,
+            usage: None,
+        }
     }
 }
 
 impl IntoResponse for Answer {
     fn into_response(self) -> Response {
-        (self.status, json(self.body.to_string())).into_response()
+        let mut response = (self.status, json(self.body.to_string())).into_response();
+        if let Some(usage) = self.usage {
+            response.headers_mut().insert(usage::HEADER, usage.header());
+        }
+        response
     }
 }
 
@@ -294,15 +307,21 @@ async fn call<T: Send + 'static>(
         .expect("operation task")
 }
 
-/// Answer `op` for the request's parameters, declared by `params`.
+/// Answer `op` for the request's parameters, declared by `params`, with its usage
+/// label; `mcp` when an MCP tool call asked.
 async fn run(
     server: &Arc<Server>,
     op: &'static Operation,
     params: Vec<&'static Param>,
     query: Vec<(String, String)>,
+    mcp: bool,
 ) -> Answer {
-    let result = call(server, params, op.run, query).await;
-    Answer::new(server, result)
+    let result = call(server, params, op.run, query.clone()).await;
+    let usage = Usage::of(op, &query, &result, mcp);
+    Answer {
+        usage: Some(usage),
+        ..Answer::new(server, result)
+    }
 }
 
 fn json(body: String) -> Response {
@@ -361,7 +380,7 @@ async fn answer(
     Query(query): Query<Vec<(String, String)>>,
 ) -> Response {
     let params = request_params(route, path, query);
-    run(&server, op, op.route_params(route), params)
+    run(&server, op, op.route_params(route), params, false)
         .await
         .into_response()
 }
@@ -381,7 +400,7 @@ async fn submit(
         Ok(params) => params,
         Err(refused) => return *refused,
     };
-    run(&server, op, op.route_params(route), params)
+    run(&server, op, op.route_params(route), params, false)
         .await
         .into_response()
 }
