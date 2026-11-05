@@ -29,9 +29,8 @@ the orders. Run steps are in [README.md](README.md).
   helper (`reg_export_gate/DESIGN.md`, "The R file"), since each file is uploaded alone.
 - **One configuration block.** The steward id, the export root and the connection (DSN
   `P1105`) sit at the top of the script, so another steward copies the file and edits
-  that block. Two environment variables (`SWECOV_EXTRACT_BASE` and
-  `SWECOV_EXTRACT_CONNECTION`) override the root and the connection; they exist for the
-  tests and are unset on MONA.
+  that block. One environment variable, `SWECOV_EXTRACT_BASE`, overrides the root; it
+  exists for the tests and is unset on MONA.
 - **No dry run** (maintainer, 2026-10-21). A rerun overwrites the order's export folder
   and archive copy, so a run is cheap to repeat.
 - **Source or Rscript.** Under `source()` in an interactive session the script reports

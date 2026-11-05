@@ -44,19 +44,9 @@ config <- list(
   }
 )
 
-# Test overrides (process boundaries): another export root, and an ODBC
-# connection string instead of the DSN. Unset on MONA.
+# Test override (a process boundary): another export root. Unset on MONA.
 if (nzchar(Sys.getenv("SWECOV_EXTRACT_BASE"))) {
   config$base <- Sys.getenv("SWECOV_EXTRACT_BASE")
-}
-if (nzchar(Sys.getenv("SWECOV_EXTRACT_CONNECTION"))) {
-  config$connect <- function() {
-    DBI::dbConnect(
-      odbc::odbc(),
-      .connection_string = Sys.getenv("SWECOV_EXTRACT_CONNECTION"),
-      bigint = "character"
-    )
-  }
 }
 
 # ---- Exit codes (stable; reg_mona_runner/DESIGN.md) ---------------------------
@@ -362,12 +352,8 @@ check_column <- function(col, where, format) {
   check_string(s$type, paste0(where, ".storage.type"))
   check_count_or_null(s$precision, paste0(where, ".storage.precision"))
   check_count_or_null(s$scale, paste0(where, ".storage.scale"))
-  # -1 is SQL Server's max.
-  is_max <- is.numeric(s$length) &&
-    length(s$length) == 1L &&
-    !is.na(s$length) &&
-    s$length == -1
-  if (!is_max) {
+  # -1 is SQL Server's max (parse_json reads it as the integer -1L).
+  if (!identical(s$length, -1L)) {
     check_count_or_null(s$length, paste0(where, ".storage.length"))
   }
   check_enum(col$role, paste0(where, ".role"), c("ordered", "row_key", "carried"))
@@ -448,11 +434,7 @@ check_file <- function(f, where, format) {
     )
   }
   # Case-sensitive, as Stata's variable names are.
-  written <- vapply(
-    f$columns,
-    function(col) if (is.null(col$stata_name)) col$name else col$stata_name,
-    ""
-  )
+  written <- vapply(f$columns, written_name, "")
   clash <- unique(written[duplicated(written)])
   if (length(clash)) {
     refuse(
@@ -587,6 +569,11 @@ check_manifest <- function(doc) {
 
 # ---- Output files -----------------------------------------------------------------
 
+# The name a column is written under: its .dta alias, else its own.
+written_name <- function(col) {
+  if (is.null(col$stata_name)) col$name else col$stata_name
+}
+
 # One output file per manifest file, named by its stem and the format's extension
 # (crates/DESIGN.md, "MONA order file"), its columns in manifest order, each
 # written under its .dta alias or its own name.
@@ -597,11 +584,7 @@ plan_files <- function(manifest_files, format) {
       schema = f$schema,
       table = f$table,
       columns = vapply(f$columns, `[[`, "", "name"),
-      names = vapply(
-        f$columns,
-        function(col) if (is.null(col$stata_name)) col$name else col$stata_name,
-        ""
-      ),
+      names = vapply(f$columns, written_name, ""),
       storage = lapply(f$columns, `[[`, "storage"),
       filter = f$row_filter
     )
@@ -1131,8 +1114,9 @@ write_csv <- function(df, path) {
 # A writer for one output file: write(chunk) takes each fetched chunk (the first
 # may have no rows), finish() completes the file, release() frees what an
 # unfinished file holds (the failed order's folder is then cleared). `types` are
-# the file's columns' resolve_columns() facts, in column order.
-csv_writer <- function(path, columns, types) {
+# the file's columns' resolve_columns() facts, in column order; `names` are the
+# names they are written under, which only a .dta order renames (plan_files).
+csv_writer <- function(path, columns, types, names) {
   sink <- file(path, open = "wb")
   writeBin(csv_header(columns), sink)
   state <- new.env()
@@ -1170,7 +1154,7 @@ arrow_type <- function(type, precision, scale) {
 }
 
 # Streams one row group per chunk, so a file is never held whole in memory.
-parquet_writer <- function(path, columns, types) {
+parquet_writer <- function(path, columns, types, names) {
   schema <- arrow::schema(stats::setNames(
     lapply(seq_along(columns), function(j) {
       arrow_type(types$type[j], types$precision[j], types$scale[j])
@@ -1335,18 +1319,14 @@ dta_writer <- function(path, columns, types, names) {
   )
 }
 
-WRITERS <- list(parquet = parquet_writer, csv = csv_writer)
+WRITERS <- list(dta = dta_writer, parquet = parquet_writer, csv = csv_writer)
 
 extract_file <- function(con, file, types, format, out) {
   batch <- select_batch(file, types)
   n <- length(file$columns)
   path <- file.path(out, file$name)
   column_types <- lapply(types, `[`, seq_len(n))
-  writer <- if (format == "dta") {
-    dta_writer(path, file$columns, column_types, file$names)
-  } else {
-    WRITERS[[format]](path, file$columns, column_types)
-  }
+  writer <- WRITERS[[format]](path, file$columns, column_types, file$names)
   on.exit(writer$release(), add = TRUE)
   what <- paste0("extracting ", file$name)
   res <- tryCatch(

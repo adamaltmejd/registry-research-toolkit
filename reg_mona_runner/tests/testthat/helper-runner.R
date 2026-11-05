@@ -21,23 +21,13 @@ golden_order <- function(case, steward = "swecov") {
   p$base_generation <- id
   p$project$project_hash <- id
   doc$provenance <- p
-  path <- tempfile(paste0(case, "-"), fileext = ".json")
-  writeLines(
-    jsonlite::toJSON(doc, auto_unbox = TRUE, null = "null", pretty = TRUE),
-    path,
-    useBytes = TRUE
-  )
-  path
+  doc
 }
 
-# A fresh export root whose orders/ holds `orders`: name -> order file path, or
-# name -> raw text.
-export_root <- function(orders = list(), text = list()) {
+# A fresh export root whose orders/ holds `text`: name -> raw order text.
+export_root <- function(text = list()) {
   base <- tempfile("export-")
   dir.create(file.path(base, "orders"), recursive = TRUE)
-  for (name in names(orders)) {
-    file.copy(orders[[name]], file.path(base, "orders", paste0(name, ".json")))
-  }
   for (name in names(text)) {
     writeBin(
       charToRaw(enc2utf8(text[[name]])),
@@ -53,10 +43,7 @@ run_runner <- function(base) {
     file.path(R.home("bin"), "Rscript"),
     shQuote(file.path(runner_dir, "swecov_extract.R")),
     # system2 pastes env into a shell command: quote the values.
-    env = c(
-      paste0("SWECOV_EXTRACT_BASE=", shQuote(base)),
-      "SWECOV_EXTRACT_CONNECTION="
-    ),
+    env = paste0("SWECOV_EXTRACT_BASE=", shQuote(base)),
     stdout = output,
     stderr = output
   )
@@ -83,6 +70,6 @@ expect_refused <- function(base, name, code) {
 
 # A compact rewrite of a case's order with one change applied.
 order_text <- function(case, change, steward = "swecov") {
-  doc <- jsonlite::read_json(golden_order(case, steward))
-  as.character(jsonlite::toJSON(change(doc), auto_unbox = TRUE, null = "null"))
+  doc <- change(golden_order(case, steward))
+  as.character(jsonlite::toJSON(doc, auto_unbox = TRUE, null = "null"))
 }
