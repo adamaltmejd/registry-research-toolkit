@@ -13,7 +13,7 @@ import {
   errMessage,
   type Graph,
   type OrderCheck,
-  reportPick,
+  reportPicks,
 } from "./api";
 import {
   graphRead,
@@ -325,7 +325,7 @@ export function useVariableCoverage({
         }
       }
       projectStore.updateField("sources", candidate.sources);
-      picks.forEach(reportPick);
+      reportPicks(picks);
       setSelected(new Set());
       setError(null);
       setAdded(true);

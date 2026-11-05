@@ -86,16 +86,20 @@ export async function apiGet<T>(
 }
 
 /**
- * Report that `fqid` was added to the project: the usage statistics' pick beacon
- * (`reg_webapp/DESIGN.md` → "Usage recording"), answered at the edge and never
- * forwarded. Fire and forget: the variable id only, nothing from the project, and a
- * failure (no edge in local dev, an old browser) changes nothing on the page.
+ * Report the variables one add put in the project: the usage statistics' pick beacon,
+ * one request per add (`reg_webapp/DESIGN.md` → "Usage recording"), answered at the
+ * edge and never forwarded. Fire and forget: the variable ids only (at most 100),
+ * nothing from the project, and a failure (no edge in local dev, an old browser)
+ * changes nothing on the page.
  */
-export function reportPick(fqid: string): void {
+export function reportPicks(fqids: string[]): void {
+  if (!fqids.length) return;
   try {
     navigator.sendBeacon?.(
       `${API_BASE}/event`,
-      new Blob([JSON.stringify({ fqid })], { type: "application/json" }),
+      new Blob([JSON.stringify({ fqids: fqids.slice(0, 100) })], {
+        type: "application/json",
+      }),
     );
   } catch {
     // A beacon is best-effort.
