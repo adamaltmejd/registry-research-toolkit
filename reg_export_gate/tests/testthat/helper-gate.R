@@ -193,7 +193,7 @@ run_gate <- function(gate_bin, staging, output, schema, policy) {
   if (!is.null(policy)) {
     args <- c(args, "--policy", policy)
   }
-  line <- system2(gate_bin, args, stdout = TRUE, stderr = FALSE)
+  line <- system2(gate_bin, shQuote(args), stdout = TRUE, stderr = FALSE)
   # A refusal exits non-zero, which system2() records as an attribute.
   sub("^refused: ", "", as.vector(line))
 }
