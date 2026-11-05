@@ -1,5 +1,0 @@
-{"kind":"register","provider":"demo","register":"dk","name":"Diakritregistret"}
-{"kind":"table","provider":"demo","register":"dk","table":"t","name":"Tabell"}
-{"kind":"release","provider":"demo","register":"dk","table":"t","release":"t2020","name":"Tabell 2020","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"final"}
-{"kind":"occurrence","provider":"demo","register":"dk","table":"t","release":"t2020","column":"Aa","source_key":"aa","label":"Här","dtype":"char","length":2}
-{"kind":"occurrence","provider":"demo","register":"dk","table":"t","release":"t2020","column":"Bb","source_key":"bb","label":"Har","dtype":"char","length":2}

@@ -164,6 +164,7 @@ impl Statement {
                 subject, fields, ..
             } => {
                 validate_fields(fields)?;
+                published_type(fields.dtype.as_deref())?;
                 fields.validate_references()?;
                 fields.validate_subject(subject)?;
             }
@@ -396,6 +397,19 @@ fn validate_fields(fields: &impl Serialize) -> Result<(), String> {
         return Err("fields must state at least one field".into());
     }
     Ok(())
+}
+
+/// A `set` states a type under its published name only (`integer`, `text`, ...), so an
+/// override never reads as a reader alias such as `char`, which the integer-code rule
+/// rewrites (#2071). An `assert` transcribes a delivery in reader vocabulary, so the rule
+/// reads its `char` like a source record's.
+fn published_type(dtype: Option<&str>) -> Result<(), String> {
+    match dtype {
+        Some(t) if crate::dtype_info(t).and_then(|d| d.published) != Some(t) => Err(format!(
+            "type-name: type {t:?} is not a published type name (integer, decimal, text, date, datetime, boolean, geometry, uuid, binary, identifier)"
+        )),
+        _ => Ok(()),
+    }
 }
 
 fn value_set_reference(hash: Option<&str>) -> Result<(), String> {

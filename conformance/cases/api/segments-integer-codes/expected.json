@@ -2,25 +2,47 @@
   {
     "status": 200,
     "json": {
-      "/data/items/*/type": ["integer"]
+      "/data/items/*/type": [
+        "integer"
+      ],
+      "/data/items/*/evidence/*/overrides": [
+        [
+          [
+            {
+              "field": "type",
+              "value": "integer",
+              "prov": "rule",
+              "statement": null,
+              "rule": "integer-codes",
+              "source_value": "char"
+            }
+          ]
+        ]
+      ]
     }
   },
   {
     "status": 200,
     "json": {
-      "/data/items/*/type": ["text"]
+      "/data/items/*/type": [
+        "text"
+      ]
     }
   },
   {
     "status": 200,
     "json": {
-      "/data/items/*/type": ["text"]
+      "/data/items/*/type": [
+        "text"
+      ]
     }
   },
   {
     "status": 200,
     "json": {
-      "/data/items/*/type": ["text"]
+      "/data/items/*/type": [
+        "text"
+      ]
     }
   }
 ]

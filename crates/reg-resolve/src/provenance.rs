@@ -317,7 +317,7 @@ pub fn finalize(
                 if mask & override_bit("period") == 0 {
                     let render = |p: &Interval| reg_core::render(std::slice::from_ref(p));
                     values.push(FinalValue {
-                        subject,
+                        subject: subject.clone(),
                         field: "period".into(),
                         value: occurrence.period.as_ref().map(render),
                         source_value: occurrence.stated.as_ref().map(render),
@@ -325,6 +325,18 @@ pub fn finalize(
                     });
                 }
                 mask |= override_bit("period");
+            }
+            if let Some(stated) = &occurrence.stated_dtype
+                && mask & override_bit("type") == 0
+            {
+                values.push(FinalValue {
+                    subject,
+                    field: "type".into(),
+                    value: occurrence.occurrence.dtype.clone(),
+                    source_value: Some(stated.clone()),
+                    origin: Origin::Rule("integer-codes"),
+                });
+                mask |= override_bit("type");
             }
             if mask != 0 {
                 result.occurrence_masks.insert((ri, oi), mask);

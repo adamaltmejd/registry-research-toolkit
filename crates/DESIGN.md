@@ -2112,13 +2112,17 @@ the rule never splits a segment into text and integer years. It runs in resoluti
 the segments are built and before F1, so a type change between an integer segment and a
 text neighbour is an ordinary `F1:type-change` notice.
 
-Curated > rule > source (clean-room §2.4): curation states text as `text`, which the
-rule never reads, so `set type = "text"` pins a column as text. The rule reads
-documented code literals only, never MONA rows, names or sampling. It proposes no
-decimal: D's 2026-10-28 ruling keeps integer/decimal switches to evidenced curation, and
-a code list proves its codes, not that an uncoded amount is integral. On 0.75.0 the
-retired N1 pass published 25,676 reviews (all text to integer) on 3,673 coded variables
-and 45 row keys; the rule applies to the coded ones whose whole segment qualifies.
+Curated > rule > source (clean-room §2.4): a `set` may name a type only by its published
+name (`type-name` refusal otherwise), so an override to text is `text`, which the rule
+never reads, and `set type = "text"` pins a column as text. An `assert` transcribes a
+delivery in reader vocabulary, so the rule reads its `char` like a source record's. Each
+change the rule makes is provenance: an occurrence override on `type`, rule
+`integer-codes`, with the stated `char` as its source value. The rule reads documented
+code literals only, never MONA rows, names or sampling. It proposes no decimal: D's
+2026-10-28 ruling keeps integer/decimal switches to evidenced curation, and a code list
+proves its codes, not that an uncoded amount is integral. On 0.75.0 the retired N1 pass
+published 25,676 reviews (all text to integer) on 3,673 coded variables and 45 row keys;
+the rule applies to the coded ones whose whole segment qualifies.
 
 The adopted type is catalog metadata. Extract files take their types from SQL storage
 (`reg_mona_runner/DESIGN.md`, "Types per format"), so the rule changes no `.dta`,
