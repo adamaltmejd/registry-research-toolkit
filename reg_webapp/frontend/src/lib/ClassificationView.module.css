@@ -6,3 +6,9 @@
   gap: var(--space-4);
   min-width: 0;
 }
+
+/* The version picker at a field's width, its edges on the code search's
+   (FilterInput's cap), not across the whole pane. */
+.field {
+  max-width: 40ch;
+}

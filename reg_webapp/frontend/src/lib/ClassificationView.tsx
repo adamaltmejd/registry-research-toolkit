@@ -66,18 +66,21 @@ export function ClassificationView({
     // stays in the version picker.
     columnYearRuns([v], bounds, axis[0]).map((run) => {
       const years = catalogPeriodLabel(v.period);
+      const name = versionName(v);
       return {
         id: v.fqid,
         lane: laneOf(v),
         // No column name: the version is named in the tooltip, in the UI face.
         name: "",
-        label: v.name,
+        label: name,
         from: run.from,
         to: run.to,
         years,
         state: "default",
-        selectable: false,
-        accessibleName: `${v.name}, ${years}`,
+        // Pressing a version picks it, as the Select below does.
+        selectable: true,
+        isSelected: v.fqid === picked,
+        accessibleName: name,
       };
     }),
   );
@@ -109,8 +112,6 @@ export function ClassificationView({
       laneOf(to) === lane ? [`${to.name} continues ${from.name}`] : [],
     ),
   }));
-  const focused = focus ? byFqid.get(focus) : undefined;
-  const focusLane = focused ? laneOf(focused) : null;
   return (
     <article className={styles.page}>
       <Definitions
@@ -133,22 +134,26 @@ export function ClassificationView({
           edges={edges}
           axis={axis}
           window={study ? [study.from, study.to] : null}
-          focus={focusLane}
+          focusSpan={focus}
+          hint={null}
+          onToggle={setPicked}
         />
       </Panel>
       {version && (
         <Panel title="Codes">
           <div className={classStyles.codes}>
             {versions.length > 1 && (
-              <Select
-                label="Version"
-                value={version.fqid}
-                options={versions.map((v) => ({
-                  id: v.fqid,
-                  name: `${v.name}, ${catalogPeriodLabel(v.period)}`,
-                }))}
-                onChange={setPicked}
-              />
+              <div className={classStyles.field}>
+                <Select
+                  label="Version"
+                  value={version.fqid}
+                  options={versions.map((v) => ({
+                    id: v.fqid,
+                    name: versionName(v),
+                  }))}
+                  onChange={setPicked}
+                />
+              </div>
             )}
             <ValueSetCodes
               key={version.fqid}
@@ -182,4 +187,15 @@ function laneOrder(versions: readonly Version[]): Version[] {
   return parts.flatMap((part) =>
     versions.filter((version) => (version.part ?? "") === part),
   );
+}
+
+/** A version as the picker names it: its name, then its years unless the
+ * name already states them ("Utbildningsnivå 2020", not "…2020, From 2020"). */
+function versionName(version: Version): string {
+  const years = catalogPeriodLabel(version.period);
+  const stated = years.match(/\d{4}/g) ?? [];
+  return stated.length > 0 &&
+    stated.every((year) => version.name.includes(year))
+    ? version.name
+    : `${version.name}, ${years}`;
 }

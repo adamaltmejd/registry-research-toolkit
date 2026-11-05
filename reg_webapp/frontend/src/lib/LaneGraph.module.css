@@ -279,8 +279,10 @@ a.nameText {
   border-color: var(--text);
 }
 
-/* Will be added: the selection wash, pine as text. */
-.span[data-staged="add"] .face {
+/* Will be added: the selection wash, pine as text. A picked span that adds
+   nothing (a classification's version) is marked the same way. */
+.span[data-staged="add"] .face,
+.span[data-selected] .face {
   border-color: var(--accent);
   border-width: 2px;
   background: var(--accent-band);
@@ -303,7 +305,8 @@ a.nameText {
   box-shadow: inset 0 0 0 1px var(--err);
 }
 
-.pick:hover:where([data-state="default"]:not([data-staged])) .face {
+.pick:hover:where([data-state="default"]:not([data-staged], [data-selected]))
+  .face {
   background: var(--surface-hover);
 }
 

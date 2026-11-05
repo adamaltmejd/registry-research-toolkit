@@ -1,12 +1,14 @@
 .filter {
   display: flex;
   align-items: baseline;
-  gap: var(--space-3);
 }
 
+/* A field's width, not the pane's: a field needs no more (new rule, proposed
+   by the implementer). */
 .field {
   flex: 1;
   min-width: 0;
+  max-width: 40ch;
 }
 
 .input {
@@ -28,6 +30,12 @@
 /* The native search clear glyph: Escape already clears the field. */
 .input::-webkit-search-cancel-button {
   appearance: none;
+}
+
+/* The gap only while a count shows, so the empty count takes no room and the
+   field's edge stays put. */
+.count:not(:empty) {
+  margin-inline-start: var(--space-3);
 }
 
 .count {

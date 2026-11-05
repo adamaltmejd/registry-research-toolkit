@@ -57,21 +57,34 @@ function Versions({ family }: { family: ClassFamilyRef }) {
   const parts = [
     ...new Set(family.versions.map((version) => version.part ?? "")),
   ];
-  const list = (versions: ClassFamilyRef["versions"]) => (
+  const list = (versions: ClassFamilyRef["versions"], part = "") => (
     <ul
       className={`${styles.plainList} ${listStyles.versions}`}
       aria-label={`Versions of ${family.name}`}
     >
-      {versions.map((version) => (
-        <li key={version.fqid}>
-          <a className="link" href={catalogHref(version.fqid)}>
-            {version.name}
-          </a>{" "}
-          <span className={listStyles.years}>
-            {catalogPeriodLabel(version.period)}
-          </span>
-        </li>
-      ))}
+      {versions.map((version) => {
+        const years = catalogPeriodLabel(version.period);
+        // A version named as its part (Sektorkod (RAMS/LISA)) would repeat
+        // the heading above it: its years are the link.
+        return version.name === part ? (
+          <li key={version.fqid}>
+            <a
+              className="link"
+              href={catalogHref(version.fqid)}
+              aria-label={`${version.name}, ${years}`}
+            >
+              {years}
+            </a>
+          </li>
+        ) : (
+          <li key={version.fqid}>
+            <a className="link" href={catalogHref(version.fqid)}>
+              {version.name}
+            </a>{" "}
+            <span className={listStyles.years}>{years}</span>
+          </li>
+        );
+      })}
     </ul>
   );
   if (parts.length <= 1) return list(family.versions);
@@ -82,6 +95,7 @@ function Versions({ family }: { family: ClassFamilyRef }) {
           {part && <h4 className={listStyles.part}>{part}</h4>}
           {list(
             family.versions.filter((version) => (version.part ?? "") === part),
+            part,
           )}
         </section>
       ))}
