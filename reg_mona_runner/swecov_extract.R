@@ -161,9 +161,14 @@ install_missing <- function(pkgs) {
 
 # ---- Manifest validation --------------------------------------------------------
 #
-# The closed v4 order file (crates/reg-core/src/manifest.rs), checked here at the
-# runner's own input boundary. A field Rust writes as null is required and may be
-# null; a field Rust omits when empty is optional (absent, or null, means none).
+# The v4 order file (crates/reg-core/src/manifest.rs), checked here at the
+# runner's own input boundary. The manifest, its provenance and every object the
+# runner reads (files, columns, storage, row filters) are closed: an unknown key
+# is a refusal, and each field the runner reads is checked. What it does not read
+# (clips, findings, a column's role, refs and slot, the provenance ids, a file's
+# delivery) is only required by name: the Rust writer is the authority on those.
+# A field Rust writes as null is required and may be null; a field Rust omits
+# when empty is optional (absent, or null, means none).
 
 is_object <- function(x) is.list(x) && !is.null(names(x))
 is_array <- function(x) is.list(x) && is.null(names(x))
@@ -206,22 +211,9 @@ check_string <- function(x, where) {
   x
 }
 
-# A required field that may be null, else a non-empty string.
-check_string_or_null <- function(x, where) {
-  if (!is.null(x)) check_string(x, where)
-  x
-}
-
 check_count_or_null <- function(x, where) {
   if (!is.null(x) && !is_count(x)) {
     refuse("manifest", where, " is not a non-negative integer or null")
-  }
-  x
-}
-
-check_array <- function(x, where) {
-  if (!is_array(x)) {
-    refuse("manifest", where, " is not an array")
   }
   x
 }
@@ -260,23 +252,6 @@ check_iso_day <- function(x, where) {
   x
 }
 
-# A half-open [start, end) of ISO days; null is an open end.
-check_period <- function(p, where) {
-  check_object(p, where, c("start", "end"))
-  for (k in c("start", "end")) {
-    if (!is.null(p[[k]])) check_iso_day(p[[k]], paste0(where, ".", k))
-  }
-  p
-}
-
-check_periods <- function(x, where) {
-  check_array(x, where)
-  for (i in seq_along(x)) {
-    check_period(x[[i]], sprintf("%s[%d]", where, i - 1L))
-  }
-  x
-}
-
 check_filter <- function(f, where) {
   check_object(f, where, c("column", "encoding", "ranges"))
   check_name(f$column, paste0(where, ".column"))
@@ -300,20 +275,6 @@ check_filter <- function(f, where) {
     }
   }
   f
-}
-
-check_ref <- function(r, where) {
-  check_object(
-    r,
-    where,
-    c("source", "binding", "table", "variable", "period", "spelling")
-  )
-  for (k in c("source", "table", "variable", "spelling")) {
-    check_string(r[[k]], paste0(where, ".", k))
-  }
-  check_count_or_null(r$binding, paste0(where, ".binding"))
-  check_period(r$period, paste0(where, ".period"))
-  r
 }
 
 check_column <- function(col, where, format) {
@@ -356,20 +317,6 @@ check_column <- function(col, where, format) {
   if (!identical(s$length, -1L)) {
     check_count_or_null(s$length, paste0(where, ".storage.length"))
   }
-  check_enum(col$role, paste0(where, ".role"), c("ordered", "row_key", "carried"))
-  check_array(col$refs, paste0(where, ".refs"))
-  for (i in seq_along(col$refs)) {
-    check_ref(col$refs[[i]], sprintf("%s.refs[%d]", where, i - 1L))
-  }
-  if (!is.null(col$slot)) {
-    at <- paste0(where, ".slot")
-    check_object(col$slot, at, c("kind", "index"), "family")
-    check_string(col$slot$kind, paste0(at, ".kind"))
-    check_string(col$slot$index, paste0(at, ".index"))
-    if (!is.null(col$slot$family)) {
-      check_string(col$slot$family, paste0(at, ".family"))
-    }
-  }
   col
 }
 
@@ -406,7 +353,6 @@ check_file <- function(f, where, format) {
   check_file_name(f$name, paste0(where, ".name"))
   check_name(f$schema, paste0(where, ".schema"))
   check_name(f$table, paste0(where, ".table"))
-  check_string_or_null(f$delivery, paste0(where, ".delivery"))
   for (k in c("partition", "projection")) {
     if (!is.null(f[[k]])) check_string(f[[k]], paste0(where, ".", k))
   }
@@ -420,7 +366,11 @@ check_file <- function(f, where, format) {
     refuse("manifest", where, ".columns is not a non-empty array")
   }
   for (i in seq_along(f$columns)) {
-    check_column(f$columns[[i]], sprintf("%s.columns[%d]", where, i - 1L), format)
+    check_column(
+      f$columns[[i]],
+      sprintf("%s.columns[%d]", where, i - 1L),
+      format
+    )
   }
   columns <- vapply(f$columns, `[[`, "", "name")
   twice <- unique(columns[duplicated(columns)])
@@ -445,54 +395,6 @@ check_file <- function(f, where, format) {
     )
   }
   f
-}
-
-check_clip <- function(clip, where) {
-  check_object(
-    clip,
-    where,
-    c("source", "binding", "variable", "requested", "ordered")
-  )
-  check_string(clip$source, paste0(where, ".source"))
-  check_string(clip$variable, paste0(where, ".variable"))
-  if (!is_count(clip$binding)) {
-    refuse("manifest", where, ".binding is not a non-negative integer")
-  }
-  check_periods(clip$requested, paste0(where, ".requested"))
-  check_periods(clip$ordered, paste0(where, ".ordered"))
-  clip
-}
-
-check_issue <- function(issue, where) {
-  check_object(
-    issue,
-    where,
-    c(
-      "level",
-      "code",
-      "path",
-      "message",
-      "source",
-      "variable",
-      "table",
-      "period",
-      "successor_fqid"
-    )
-  )
-  check_enum(issue$level, paste0(where, ".level"), c("error", "warning", "info"))
-  check_string(issue$code, paste0(where, ".code"))
-  check_string(issue$message, paste0(where, ".message"))
-  # An empty path points at the whole project.
-  if (!is_string(issue$path)) {
-    refuse("manifest", where, ".path is not a string")
-  }
-  for (k in c("source", "variable", "table", "successor_fqid")) {
-    check_string_or_null(issue[[k]], paste0(where, ".", k))
-  }
-  if (!is.null(issue$period)) {
-    check_period(issue$period, paste0(where, ".period"))
-  }
-  issue
 }
 
 # The whole manifest, in the order of the stable exit codes: version, then mode
@@ -537,27 +439,6 @@ check_manifest <- function(doc) {
     "provenance",
     c("mode", "steward", "catalog", "holdings", "base_generation", "project")
   )
-  identity <- list(
-    catalog = c("release", "schema", "generation"),
-    holdings = c("owner", "generation"),
-    project = c("schema_version", "project_hash", "name")
-  )
-  for (part in names(identity)) {
-    at <- paste0("provenance.", part)
-    check_object(p[[part]], at, identity[[part]])
-    for (k in identity[[part]]) {
-      check_string(p[[part]][[k]], paste0(at, ".", k))
-    }
-  }
-  check_string(p$base_generation, "provenance.base_generation")
-  check_array(doc$clips, "clips")
-  for (i in seq_along(doc$clips)) {
-    check_clip(doc$clips[[i]], sprintf("clips[%d]", i - 1L))
-  }
-  check_array(doc$findings, "findings")
-  for (i in seq_along(doc$findings)) {
-    check_issue(doc$findings[[i]], sprintf("findings[%d]", i - 1L))
-  }
   if (!is_array(doc$files) || !length(doc$files)) {
     refuse("manifest", "files is not a non-empty array")
   }
