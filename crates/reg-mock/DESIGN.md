@@ -33,6 +33,36 @@ the SPA's WebAssembly build, which has no use for them. The saved API answers ar
 another contract's documents (conformance/api/operations.toml): `input.rs` reads only
 the fields it uses and ignores the rest.
 
+## Invariants
+
+What `compile` holds to; each rule names its one place in the code.
+
+1. **Answers are whole and current** (`load_answers`, `compile`): one catalog
+   generation, the order answer's `project_hash` equal to the project's, every page of
+   every answer (numbered `-0001`, ..., the last with `next_cursor: null`), each value
+   set's codes once and `n_items` of them, ISO periods. Anything else is refused.
+2. **A physical column is resolved once** (`Context::resolve`). Its references (the
+   variables it delivers, and row keys) are gathered first: in the delivery layout the
+   order file's column, in the standard layout one name in one table-year file. Then:
+   - *type*: the project's `type` for any of its variables, matched by variable, so a
+     row key or a carried copy without a binding takes it too; two different `type`s are
+     refused (`column_types_disagree`). Else the held storage's type, else the catalog's
+     (#2071, G8/G10, `resolve_type`).
+   - *segments*: per reference, those overlapping the column's period, from the held
+     placement's rows (delivery), else the reference's table, else, for a reference
+     without a binding only, any table (a person id carried from another register). None
+     for a reference is `segment_missing`.
+   - *codes*: every code of every value set of those segments, once.
+   - *identifier and length*: the earliest segment's.
+3. **Years** (`delivery_files`, `standard_files`): a delivery file holds the union of
+   its references' years, and every column is read over all of them, as the runner does;
+   a column is missing only in years its placement holds no segment. A standard file is
+   one table-year, and its columns' period is that year within the order. simplify: one
+   code list per column, not per year; give codes years if a pipeline checks codes by
+   year.
+4. **Rules** (`apply_rules`): a file's sources agree on unit, population and rows; a
+   column's sources agree on its column rule; a rule naming no column is refused.
+
 ## Compile
 
 `reg-meta mock compile --project --rules --answers DIR --out`. `DIR` holds exactly one

@@ -437,7 +437,11 @@ struct Context<'a> {
     format: ExtractFormat,
 }
 
-/// One column of a variable in a table over a period, before the rules.
+/// A physical column's name and its references.
+type NamedRefs<'a> = (&'a str, Vec<Column<'a>>);
+
+/// One reference of a physical column: a variable in a table over a period.
+#[derive(Clone)]
 struct Column<'a> {
     name: &'a str,
     source: &'a str,
@@ -447,13 +451,18 @@ struct Column<'a> {
     period: &'a Period,
     /// The held file and column, in the delivery layout.
     placement: Option<(&'a str, &'a str)>,
+    /// The period the column covers, when not the reference's own: a standard file's
+    /// year, a delivery file's years.
+    year_period: Option<Period>,
 }
 
 impl Context<'_> {
     /// One file per table and year (or one for a timeless table): the source's
-    /// requested columns, then the table's row keys.
+    /// requested columns, then the table's row keys, each name resolved once.
     fn standard_files(&self, order: &LogicalOrder, refusals: &mut Vec<Refusal>) -> Vec<Built> {
-        let mut files: BTreeMap<(&str, Option<i32>), Built> = BTreeMap::new();
+        // Keyed by table, not by file name: two tables whose names collide stay two
+        // files, and check_files refuses the shared name.
+        let mut files: BTreeMap<(&str, Option<i32>), Vec<NamedRefs<'_>>> = BTreeMap::new();
         let ordered = order.entries.iter().map(|e| Column {
             name: &e.spelling,
             source: &e.source,
@@ -462,6 +471,7 @@ impl Context<'_> {
             variable: &e.variable,
             period: &e.period,
             placement: None,
+            year_period: None,
         });
         let keys = order.row_keys.iter().flat_map(|k| {
             k.columns.iter().map(move |c| Column {
@@ -472,6 +482,7 @@ impl Context<'_> {
                 variable: &c.variable,
                 period: &k.period,
                 placement: None,
+                year_period: None,
             })
         });
         for column in ordered.chain(keys) {
@@ -484,69 +495,65 @@ impl Context<'_> {
                 None => vec![None],
             };
             for year in years {
-                // Keyed by table, not by file name: two tables whose names collide stay
-                // two files, and check_files refuses the shared name.
-                let built = files.entry((column.table, year)).or_insert_with(|| {
-                    Built::new(
-                        standard_file_name(column.table, year),
-                        year.into_iter().collect(),
-                    )
+                // The year within the ordered period: a value set or type can change
+                // between and within years.
+                let mut r = column.clone();
+                r.year_period = year.map(|y| within(year_period(y), column.period));
+                let refs = files.entry((column.table, year)).or_default();
+                let at = refs.iter().position(|(name, _)| *name == column.name);
+                let i = at.unwrap_or_else(|| {
+                    refs.push((column.name, Vec::new()));
+                    refs.len() - 1
                 });
-                // A row key the source also requested is that column, of its type: the
-                // binding's override, which the row key does not carry.
-                if column.binding.is_none()
-                    && let Some(i) = built
-                        .file
-                        .columns
-                        .iter()
-                        .position(|c| c.name == column.name)
-                {
-                    built.add_source(i, column.source);
-                    continue;
-                }
-                // Each year's own segment, within the ordered period: a value set or type
-                // can change between and within years.
-                let period = year.map(|y| within(year_period(y), column.period));
-                let draft = Column {
-                    period: period.as_ref().unwrap_or(column.period),
-                    ..column
-                };
-                let Some(spec_column) = self.column(&draft, None, refusals) else {
-                    continue;
-                };
-                // Two sources' columns of one name are one column, of one type.
-                match built
-                    .file
-                    .columns
-                    .iter()
-                    .position(|c| c.name == column.name)
-                {
-                    Some(i) => {
-                        let name = built.file.name.clone();
-                        merge_column(&mut built.file.columns[i], spec_column, &name, refusals);
-                        built.add_source(i, column.source);
-                    }
-                    None => built.push(column.source, spec_column),
-                }
+                refs[i].1.push(r);
             }
         }
-        files.into_values().collect()
+        let mut built_files = Vec::new();
+        for ((table, year), columns) in files {
+            let mut built = Built::new(standard_file_name(table, year), year.into_iter().collect());
+            for (name, refs) in columns {
+                if let Some(column) = self.resolve(&built.file.name, name, &refs, None, refusals) {
+                    built.push_with(column, &refs);
+                }
+            }
+            built_files.push(built);
+        }
+        built_files
     }
 
-    /// The order file's files and columns, as named. A file's years are its columns'
-    /// requested years (simplify: the runner extracts a file without a row filter over
-    /// its whole delivery; the mock holds only the requested years, upgrade if a
-    /// pipeline reads years it did not order).
+    /// The order file's files and columns, as named; each column resolved once over
+    /// the file's years, which the runner reads every column over.
     fn delivery_files(&self, manifest: &Manifest, refusals: &mut Vec<Refusal>) -> Vec<Built> {
         let mut files = Vec::new();
         for file in &manifest.files {
             let mut built = Built::new(file.name.clone(), Vec::new());
+            // simplify: the runner extracts a file without a row filter over its whole
+            // delivery; the mock holds only the requested years, upgrade if a pipeline
+            // reads years it did not order.
             let mut years = BTreeSet::new();
+            for r in file.columns.iter().flat_map(|c| &c.refs) {
+                match self::years(&r.period) {
+                    Ok(Some(ys)) => years.extend(ys),
+                    Ok(None) => {}
+                    Err(()) => refusals.push(open_period(&r.source, &r.variable)),
+                }
+            }
+            built.file.years = years.into_iter().collect();
+            let span = match (built.file.years.first(), built.file.years.last()) {
+                (Some(&first), Some(&last)) => Period {
+                    start: year_period(first).start,
+                    end: year_period(last).end,
+                },
+                _ => Period {
+                    start: None,
+                    end: None,
+                },
+            };
             for column in &file.columns {
                 let row_filter = file.row_filter.as_ref().filter(|f| f.column == column.name);
-                // The runner's period column: a row key placing no variable.
-                // It has no row filter when the order covers the whole delivery.
-                let Some(r) = column.refs.first() else {
+                // The runner's period column: a row key placing no variable. It has no
+                // row filter when the order covers the whole delivery.
+                if column.refs.is_empty() {
                     if column.role == manifest::Role::RowKey {
                         built.push_unsourced(year_column(column, row_filter.map(|f| f.encoding)));
                     } else {
@@ -558,72 +565,52 @@ impl Context<'_> {
                         ));
                     }
                     continue;
-                };
-                for r in &column.refs {
-                    match self::years(&r.period) {
-                        Ok(Some(ys)) => years.extend(ys),
-                        Ok(None) => {}
-                        Err(()) => refusals.push(open_period(&r.source, &r.variable)),
-                    }
                 }
-                // A column several requested variables share is drawn as the first
-                // requested one; an implicit row key (no binding) takes its type.
-                let r = column
+                let refs: Vec<Column<'_>> = column
                     .refs
                     .iter()
-                    .find(|r| r.binding.is_some())
-                    .unwrap_or(r);
-                let draft = Column {
-                    name: &column.name,
-                    source: &r.source,
-                    binding: r.binding,
-                    table: &r.table,
-                    variable: &r.variable,
-                    period: &r.period,
-                    placement: Some((&file.table, &column.name)),
+                    .map(|r| Column {
+                        name: &column.name,
+                        source: &r.source,
+                        binding: r.binding,
+                        table: &r.table,
+                        variable: &r.variable,
+                        period: &r.period,
+                        placement: Some((&file.table, &column.name)),
+                        year_period: Some(span.clone()),
+                    })
+                    .collect();
+                let Some(mut spec_column) = self.resolve(
+                    &file.name,
+                    &column.name,
+                    &refs,
+                    Some(&column.storage),
+                    refusals,
+                ) else {
+                    continue;
                 };
-                if let Some(mut spec_column) = self.column(&draft, Some(&column.storage), refusals)
-                {
-                    spec_column.stata_name.clone_from(&column.stata_name);
-                    spec_column.label = column.stata_name.as_ref().map(|_| column.name.clone());
-                    if let Some(filter) = row_filter {
-                        spec_column.attribute = Some(Attribute::Year);
-                        spec_column.encoding = Some(filter.encoding);
-                    }
-                    // The runner reads every column over the file's years: a column is
-                    // missing only in years its placement does not hold.
-                    spec_column.years = self.held_years(&file.table, &column.name);
-                    // Every variable the column delivers must agree on its type; its
-                    // codes are all of theirs (simplify: one code list for every year,
-                    // give codes years if a pipeline checks codes by year).
-                    for other in column
-                        .refs
+                spec_column.stata_name.clone_from(&column.stata_name);
+                spec_column.label = column.stata_name.as_ref().map(|_| column.name.clone());
+                if let Some(filter) = row_filter {
+                    spec_column.attribute = Some(Attribute::Year);
+                    spec_column.encoding = Some(filter.encoding);
+                }
+                // Missing only in the file's years its placement holds no segment.
+                let held = self.held_years(&file.table, &column.name);
+                if !held.is_empty() {
+                    spec_column.years = built
+                        .file
+                        .years
                         .iter()
-                        .filter(|o| !std::ptr::eq(*o, r) && o.binding.is_some())
-                    {
-                        let draft = Column {
-                            source: &other.source,
-                            binding: other.binding,
-                            table: &other.table,
-                            variable: &other.variable,
-                            period: &other.period,
-                            ..draft
-                        };
-                        if let Some(other_column) =
-                            self.column(&draft, Some(&column.storage), refusals)
-                        {
-                            merge_column(&mut spec_column, other_column, &file.name, refusals);
-                        }
-                    }
-                    built.push(&r.source, spec_column);
-                    let i = built.file.columns.len() - 1;
-                    for other in &column.refs {
-                        built.add_source(i, &other.source);
+                        .copied()
+                        .filter(|y| held.contains(y))
+                        .collect();
+                    if spec_column.years == built.file.years {
+                        spec_column.years.clear();
                     }
                 }
+                built.push_with(spec_column, &refs);
             }
-            built.file.years = years.into_iter().collect();
-            self.finish_delivery_file(&file.table, &mut built, refusals);
             files.push(built);
         }
         files
@@ -641,89 +628,57 @@ impl Context<'_> {
         held.into_iter().collect()
     }
 
-    /// A delivery file's columns over all its years: their placements' codes, and
-    /// years only where a column is missing in some.
-    fn finish_delivery_file(&self, table: &str, built: &mut Built, refusals: &mut Vec<Refusal>) {
-        // The runner extracts each column over all the file's years: its codes are
-        // its placement's in each of them, not only in its own requested years.
-        for column in &mut built.file.columns {
-            if column.codes.is_empty() && column.attribute.is_some() {
-                continue;
-            }
-            let at = format!("{}/{}", built.file.name, column.name);
-            for hash in self.held_value_sets(table, &column.name, &built.file.years) {
-                let Some(codes) = self.answers.values.get(hash) else {
-                    refusals.push(Refusal::new(
-                        "values_missing",
-                        at.clone(),
-                        format!(
-                            "save every page of the values answer for value_set={hash} \
-                             into values/"
-                        ),
-                    ));
-                    continue;
-                };
-                for code in codes {
-                    if !column.codes.iter().any(|c| c.code == code.code) {
-                        column.codes.push(code.clone());
-                    }
-                }
-            }
-        }
-        // A column held in every year of its file needs no years of its own.
-        for column in &mut built.file.columns {
-            column.years.retain(|y| built.file.years.contains(y));
-            if column.years == built.file.years {
-                column.years.clear();
-            }
-        }
-    }
-
-    /// The value sets of a held placement's segment rows in any of `years`.
-    fn held_value_sets(&self, file: &str, column: &str, years: &[i32]) -> BTreeSet<&str> {
-        self.answers
-            .segments
-            .iter()
-            .filter(|s| s.file.as_deref() == Some(file) && s.column.as_deref() == Some(column))
-            .filter(|s| match self::years(&s.period) {
-                Ok(Some(held)) => held.iter().any(|y| years.contains(y)),
-                _ => true,
-            })
-            .filter_map(|s| s.value_set.as_ref().map(|v| v.hash.as_str()))
-            .collect()
-    }
-
-    /// The column's type, codes and flags from its segment, the project override and
-    /// the held storage.
-    fn column(
+    /// One physical column from all its references (DESIGN.md, "Invariants", 2).
+    fn resolve(
         &self,
-        column: &Column<'_>,
+        file: &str,
+        name: &str,
+        refs: &[Column<'_>],
         storage: Option<&Storage>,
         refusals: &mut Vec<Refusal>,
     ) -> Option<SpecColumn> {
-        let at = format!("{}/{}/{}", column.source, column.table, column.name);
-        let Some(segment) = self.segment(column) else {
+        let at = format!("{file}/{name}");
+        // The project's type for any variable the column delivers.
+        let mut overrides: Vec<ColumnType> = Vec::new();
+        for t in refs.iter().filter_map(|r| self.binding_type(r)) {
+            if !overrides.contains(&t) {
+                overrides.push(t);
+            }
+        }
+        if overrides.len() > 1 {
             refusals.push(Refusal::new(
-                "segment_missing",
+                "column_types_disagree",
                 at,
-                format!(
-                    "save the segments answer for {} with variable={} into segments/, or for \
-                     a variable of another register its own answer (segments/{})",
-                    column.table, column.variable, column.variable
-                ),
+                "the variables delivered in this column have different `type`s in \
+                 project_data.json: give them the same",
             ));
             return None;
-        };
-        let binding_override = column.binding.and_then(|b| {
-            let source = self
-                .project
-                .sources
-                .iter()
-                .find(|s| s.name == column.source)?;
-            source.bindings.get(b)?.column_type
-        });
-        let (dtype, held) = match resolve_type(binding_override, storage, segment.dtype.as_deref())
-        {
+        }
+        let mut segments: Vec<&Segment> = Vec::new();
+        for r in refs {
+            let found = self.segments(r);
+            if found.is_empty() {
+                refusals.push(Refusal::new(
+                    "segment_missing",
+                    format!("{}/{}/{}", r.source, r.table, r.name),
+                    format!(
+                        "save the segments answer for {} with variable={} into segments/, \
+                         or for a variable of another register its own answer \
+                         (segments/{})",
+                        r.table, r.variable, r.variable
+                    ),
+                ));
+                return None;
+            }
+            segments.extend(found);
+        }
+        segments.sort_by_key(|s| s.period.days((i64::MIN, i64::MAX)));
+        let primary = segments[0];
+        let (dtype, held) = match resolve_type(
+            overrides.first().copied(),
+            storage,
+            primary.dtype.as_deref(),
+        ) {
             Ok(resolved) => resolved,
             Err(code) => {
                 refusals.push(Refusal::new(
@@ -736,79 +691,96 @@ impl Context<'_> {
                 return None;
             }
         };
-        let codes = match &segment.value_set {
-            Some(vs) => {
-                let Some(codes) = self.answers.values.get(&vs.hash) else {
-                    refusals.push(Refusal::new(
-                        "values_missing",
-                        at,
-                        format!(
-                            "save every page of the values answer for value_set={} into values/",
-                            vs.hash
-                        ),
-                    ));
-                    return None;
-                };
-                codes.clone()
+        let mut codes: Vec<Code> = Vec::new();
+        let hashes: BTreeSet<&str> = segments
+            .iter()
+            .filter_map(|s| s.value_set.as_ref().map(|v| v.hash.as_str()))
+            .collect();
+        for hash in hashes {
+            let Some(set) = self.answers.values.get(hash) else {
+                refusals.push(Refusal::new(
+                    "values_missing",
+                    at,
+                    format!(
+                        "save every page of the values answer for value_set={hash} into values/"
+                    ),
+                ));
+                return None;
+            };
+            for code in set {
+                if !codes.iter().any(|c| c.code == code.code) {
+                    codes.push(code.clone());
+                }
             }
-            None => Vec::new(),
-        };
+        }
         let stata_name = (self.format == ExtractFormat::Dta && storage.is_none())
-            .then(|| manifest::stata_name(column.name))
+            .then(|| manifest::stata_name(name))
             .flatten();
         Some(SpecColumn {
-            name: column.name.to_owned(),
-            label: stata_name.as_ref().map(|_| column.name.to_owned()),
+            name: name.to_owned(),
+            label: stata_name.as_ref().map(|_| name.to_owned()),
             stata_name,
             dtype,
             storage: held.then(|| storage.cloned()).flatten(),
-            length: segment.length,
+            length: primary.length,
             codes,
             attribute: None,
             map: BTreeMap::new(),
             encoding: None,
             years: Vec::new(),
-            identifier: segment.identifier.unwrap_or(false),
+            identifier: primary.identifier.unwrap_or(false),
             null_rate: None,
         })
     }
 
-    /// The variable's segment that overlaps the period, earliest first: the held
-    /// placement's row (delivery layout), else the table's, else for a row key any
-    /// table's, since a row key can be another register's variable (a person id
+    /// The project's `type` for the reference's variable: its own binding's, or for a
+    /// reference without one (a row key, a carried copy) any binding of that variable.
+    fn binding_type(&self, r: &Column<'_>) -> Option<ColumnType> {
+        if let Some(b) = r.binding {
+            let source = self.project.sources.iter().find(|s| s.name == r.source)?;
+            return source.bindings.get(b)?.column_type;
+        }
+        self.project
+            .sources
+            .iter()
+            .flat_map(|s| &s.bindings)
+            .filter(|b| b.variable == r.variable)
+            .find_map(|b| b.column_type)
+    }
+
+    /// The reference's segments over its period, earliest first: the held placement's
+    /// rows (delivery layout), else its table's, else for a reference without a binding
+    /// any table's, since a row key can be another register's variable (a person id
     /// carried into a steward table) whose segments are its own table's.
-    fn segment(&self, column: &Column<'_>) -> Option<&Segment> {
+    fn segments(&self, r: &Column<'_>) -> Vec<&Segment> {
         let open = (i64::MIN, i64::MAX);
-        let (start, end) = column.period.days(open);
+        let period = r.year_period.as_ref().unwrap_or(r.period);
+        let (start, end) = period.days(open);
         let overlapping = || {
             self.answers
                 .segments
                 .iter()
-                .filter(|s| s.variable == column.variable)
+                .filter(|s| s.variable == r.variable)
                 .filter(move |s| {
                     let (s_start, s_end) = s.period.days(open);
                     s_start < end && start < s_end
                 })
         };
-        let earliest = |a: &&Segment, b: &&Segment| a.period.days(open).cmp(&b.period.days(open));
-        let in_table = || overlapping().filter(|s| s.table == column.table);
-        column
-            .placement
-            .and_then(|(file, name)| {
-                in_table()
-                    .filter(|s| {
-                        s.file.as_deref() == Some(file) && s.column.as_deref() == Some(name)
-                    })
-                    .min_by(earliest)
-            })
-            .or_else(|| in_table().min_by(earliest))
-            .or_else(|| {
-                column
-                    .binding
-                    .is_none()
-                    .then(|| overlapping().min_by(earliest))
-                    .flatten()
-            })
+        let in_table = || overlapping().filter(|s| s.table == r.table);
+        let mut found: Vec<&Segment> = match r.placement {
+            Some((file, name)) => in_table()
+                .filter(|s| s.file.as_deref() == Some(file) && s.column.as_deref() == Some(name))
+                .collect(),
+            None => Vec::new(),
+        };
+        if found.is_empty() {
+            found = in_table().collect();
+        }
+        if found.is_empty() && r.binding.is_none() {
+            found = overlapping().collect();
+        }
+        found.sort_by_key(|s| s.period.days(open));
+        found
     }
 }
 
@@ -833,23 +805,6 @@ fn within(period: Period, bounds: &Period) -> Period {
     Period {
         start: later(period.start, &bounds.start),
         end: earlier(period.end, &bounds.end),
-    }
-}
-
-/// Columns merged into one agree on their type and hold all of their codes.
-fn merge_column(kept: &mut SpecColumn, other: SpecColumn, file: &str, refusals: &mut Vec<Refusal>) {
-    if kept.dtype != other.dtype || kept.storage.is_some() != other.storage.is_some() {
-        refusals.push(Refusal::new(
-            "column_types_disagree",
-            format!("{file}/{}", kept.name),
-            "the variables delivered in this column resolve to different types: give their \
-             bindings the same `type` in project_data.json",
-        ));
-    }
-    for code in other.codes {
-        if !kept.codes.iter().any(|c| c.code == code.code) {
-            kept.codes.push(code);
-        }
     }
 }
 
@@ -905,9 +860,18 @@ impl Built {
         }
     }
 
-    fn push(&mut self, source: &str, column: SpecColumn) {
-        self.file.source.get_or_insert_with(|| source.to_owned());
-        self.column_sources.push(vec![source.to_owned()]);
+    /// A column with the sources of its references.
+    fn push_with(&mut self, column: SpecColumn, refs: &[Column<'_>]) {
+        let mut sources: Vec<String> = Vec::new();
+        for r in refs {
+            if !sources.iter().any(|s| s == r.source) {
+                sources.push(r.source.to_owned());
+            }
+        }
+        if let Some(first) = sources.first() {
+            self.file.source.get_or_insert_with(|| first.clone());
+        }
+        self.column_sources.push(sources);
         self.file.columns.push(column);
     }
 
@@ -915,13 +879,6 @@ impl Built {
     fn push_unsourced(&mut self, column: SpecColumn) {
         self.column_sources.push(Vec::new());
         self.file.columns.push(column);
-    }
-
-    fn add_source(&mut self, column: usize, source: &str) {
-        let sources = &mut self.column_sources[column];
-        if !sources.iter().any(|s| s == source) {
-            sources.push(source.to_owned());
-        }
     }
 }
 
