@@ -1,0 +1,261 @@
+{
+  "description": "The shipped mock-stats schema and policy pass a scaffold-shaped export. A count of exactly the minimum, and a suppressed (null) count with its rows statistic null. A statistic resting on exactly the minimum support of 50, and a cell of 49 units whose statistics are all null. Doubles that are exactly their 3-significant-digit rendering at the edges: zero, a binary-exact 0.125, a negative, the smallest and largest magnitudes, each given by its bits (−45.6, 1.23e-300, 9.99e307, 0.123), so no parser rounds them on the way in. The two extremes are the correctly rounded doubles, which R's own parser (as.numeric) misses by a few units in the last place: a gate must read decimals back with a correctly rounded parser.",
+  "schema": "../../../schemas/mock-stats.schema.json",
+  "policy": "../../../schemas/mock-stats.policy.json",
+  "candidate": {
+    "counts.parquet": {
+      "columns": [
+        {
+          "name": "scaffold",
+          "type": "string",
+          "values": [
+            "0.1.0",
+            "0.1.0",
+            "0.1.0"
+          ]
+        },
+        {
+          "name": "key_epoch",
+          "type": "int32",
+          "values": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "name": "table",
+          "type": "string",
+          "values": [
+            "income_by_sex",
+            "income_by_sex",
+            "income_by_sex"
+          ]
+        },
+        {
+          "name": "target",
+          "type": "string",
+          "values": [
+            "population",
+            "individ_2020",
+            "individ_2020/Kommun"
+          ]
+        },
+        {
+          "name": "year",
+          "type": "int32",
+          "values": [
+            2020,
+            2020,
+            2020
+          ]
+        },
+        {
+          "name": "age_min",
+          "type": "int32",
+          "values": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "name": "age_max",
+          "type": "int32",
+          "values": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "name": "sex",
+          "type": "int32",
+          "values": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "name": "code",
+          "type": "string",
+          "values": [
+            null,
+            null,
+            "0180"
+          ]
+        },
+        {
+          "name": "n_units",
+          "type": "int64",
+          "values": [
+            5,
+            50,
+            null
+          ]
+        },
+        {
+          "name": "n_rows",
+          "type": "double",
+          "values": [
+            null,
+            123,
+            null
+          ]
+        }
+      ]
+    },
+    "deciles.parquet": {
+      "columns": [
+        {
+          "name": "scaffold",
+          "type": "string",
+          "values": [
+            "0.1.0",
+            "0.1.0"
+          ]
+        },
+        {
+          "name": "key_epoch",
+          "type": "int32",
+          "values": [
+            1,
+            1
+          ]
+        },
+        {
+          "name": "table",
+          "type": "string",
+          "values": [
+            "income_by_sex",
+            "income_by_sex"
+          ]
+        },
+        {
+          "name": "target",
+          "type": "string",
+          "values": [
+            "individ_2020/LoneInk",
+            "individ_2020/LoneInk"
+          ]
+        },
+        {
+          "name": "year",
+          "type": "int32",
+          "values": [
+            2020,
+            2020
+          ]
+        },
+        {
+          "name": "age_min",
+          "type": "int32",
+          "values": [
+            null,
+            null
+          ]
+        },
+        {
+          "name": "age_max",
+          "type": "int32",
+          "values": [
+            null,
+            null
+          ]
+        },
+        {
+          "name": "sex",
+          "type": "int32",
+          "values": [
+            null,
+            2
+          ]
+        },
+        {
+          "name": "n_units",
+          "type": "int64",
+          "values": [
+            50,
+            49
+          ]
+        },
+        {
+          "name": "p10",
+          "type": "double",
+          "values": [
+            0,
+            null
+          ]
+        },
+        {
+          "name": "p20",
+          "type": "double",
+          "values": [
+            0.125,
+            null
+          ]
+        },
+        {
+          "name": "p30",
+          "type": "double",
+          "values": [
+            "0xc046cccccccccccd",
+            null
+          ]
+        },
+        {
+          "name": "p40",
+          "type": "double",
+          "values": [
+            "0x01aa5beebf2d16d6",
+            null
+          ]
+        },
+        {
+          "name": "p50",
+          "type": "double",
+          "values": [
+            "0x3fbf7ced916872b0",
+            null
+          ]
+        },
+        {
+          "name": "p60",
+          "type": "double",
+          "values": [
+            1000,
+            null
+          ]
+        },
+        {
+          "name": "p70",
+          "type": "double",
+          "values": [
+            2500,
+            null
+          ]
+        },
+        {
+          "name": "p80",
+          "type": "double",
+          "values": [
+            12300,
+            null
+          ]
+        },
+        {
+          "name": "p90",
+          "type": "double",
+          "values": [
+            "0x7fe1c864f19027ea",
+            null
+          ]
+        }
+      ]
+    }
+  },
+  "expect": {
+    "result": "pass"
+  }
+}
