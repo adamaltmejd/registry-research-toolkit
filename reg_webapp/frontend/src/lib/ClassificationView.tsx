@@ -73,18 +73,19 @@ export function ClassificationView({
   // 1996) draws arrows.
   const laneOf = (v: Version) => v.part ?? node.name;
   const spans: LaneSpanModel[] = versions.flatMap((v) =>
-    // An open end stops at the catalog's last year, not at a later version's
-    // start that stretched the axis: ICD-10 does not run into ICD-11's 2027.
+    // A dated open end stops at the catalog's last year, not at a later
+    // version's start that stretched the axis: ICD-10 does not run into
+    // ICD-11's 2027. An undated version (ATC) spans the axis and ends at its
+    // end, never past it (DESIGN.md → Time, year-independent spans).
     columnYearRuns(
       [v],
       [
         bounds[0],
         v.period.end
           ? bounds[1]
-          : Math.max(
-              catalogBounds.max,
-              v.period.start ? Number(v.period.start.slice(0, 4)) : bounds[0],
-            ),
+          : v.period.start
+            ? Math.max(catalogBounds.max, Number(v.period.start.slice(0, 4)))
+            : axis[1],
       ],
       axis[0],
     ).map((run) => {
