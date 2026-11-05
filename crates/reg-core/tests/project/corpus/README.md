@@ -2,9 +2,7 @@
 
 Golden `(input.json, expected_ValidationResult.json)` pairs that pin the contract for
 `project_data.json` structural validation: `reg_core::validate_structural`, which the
-server's validate and order operations run first. The retired `reg_schema` validator
-wrote most cases; the rest pin the intentional differences named in `src/structural.rs`
-and shapes only the project types need.
+server's validate and order operations run first.
 
 ## Layout
 

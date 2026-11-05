@@ -71,7 +71,7 @@ jobs:
       # `crates`: cargo fmt, clippy, test and machete. `rust`: the workspace build, then the
       # whole conformance suite against `reg-meta serve` and `reg-meta mcp`, out of
       # process, then the release checks on the synthetic artifact (`--test release`): the
-      # one job that builds the binaries, so the builder leg below does not.
+      # one job that builds the binaries.
       # Commands: scripts/gate.sh.
       - run: bash scripts/gate.sh crates rust
 

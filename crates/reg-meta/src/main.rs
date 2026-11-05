@@ -24,6 +24,7 @@
 mod limit;
 mod mcp;
 mod mock;
+mod usage;
 mod validator;
 
 use std::convert::Infallible;
@@ -43,6 +44,7 @@ use reg_catalog::{Catalog, DEFAULT_MMAP_SIZE, Error};
 use serde_json::{Value, json};
 
 use crate::limit::Limits;
+use crate::usage::Usage;
 use crate::validator::Validators;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -238,7 +240,8 @@ async fn serve(
     }
     let app = app
         .with_state(Arc::clone(&server))
-        .merge(mcp::router(server, public_host, limits));
+        .merge(mcp::router(server, public_host, limits))
+        .layer(axum::middleware::from_fn(usage::timing));
     let listener = tokio::net::TcpListener::bind(addr)
         .await
         .expect("bind the port");
@@ -264,6 +267,8 @@ async fn serve(
 struct Answer {
     status: StatusCode,
     body: Value,
+    /// The operation's usage label, sent as [`usage::HEADER`].
+    usage: Option<Usage>,
 }
 
 impl Answer {
@@ -276,13 +281,21 @@ impl Answer {
                 json!({"error": err, "meta": meta}),
             ),
         };
-        Self { status, body }
+        Self {
+            status,
+            body,
+            usage: None,
+        }
     }
 }
 
 impl IntoResponse for Answer {
     fn into_response(self) -> Response {
-        (self.status, json(self.body.to_string())).into_response()
+        let mut response = (self.status, json(self.body.to_string())).into_response();
+        if let Some(usage) = self.usage {
+            response.headers_mut().insert(usage::HEADER, usage.header());
+        }
+        response
     }
 }
 
@@ -299,15 +312,21 @@ async fn call<T: Send + 'static>(
         .expect("operation task")
 }
 
-/// Answer `op` for the request's parameters, declared by `params`.
+/// Answer `op` for the request's parameters, declared by `params`, with its usage
+/// label; `mcp` when an MCP tool call asked.
 async fn run(
     server: &Arc<Server>,
     op: &'static Operation,
     params: Vec<&'static Param>,
     query: Vec<(String, String)>,
+    mcp: bool,
 ) -> Answer {
-    let result = call(server, params, op.run, query).await;
-    Answer::new(server, result)
+    let result = call(server, params, op.run, query.clone()).await;
+    let usage = Usage::of(op, &query, &result, mcp);
+    Answer {
+        usage: Some(usage),
+        ..Answer::new(server, result)
+    }
 }
 
 fn json(body: String) -> Response {
@@ -366,7 +385,7 @@ async fn answer(
     Query(query): Query<Vec<(String, String)>>,
 ) -> Response {
     let params = request_params(route, path, query);
-    run(&server, op, op.route_params(route), params)
+    run(&server, op, op.route_params(route), params, false)
         .await
         .into_response()
 }
@@ -382,11 +401,17 @@ async fn submit(
     bytes: Bytes,
 ) -> Response {
     let body = op.body().expect("a POST operation has a body");
-    let params = match posted(&server, body, route, query, &bytes) {
+    let params = match posted(body, route, query, &bytes) {
         Ok(params) => params,
-        Err(refused) => return *refused,
+        Err(err) => {
+            return Answer {
+                usage: Some(Usage::refused(op.name, &err)),
+                ..Answer::new(&server, Err(err))
+            }
+            .into_response();
+        }
     };
-    run(&server, op, op.route_params(route), params)
+    run(&server, op, op.route_params(route), params, false)
         .await
         .into_response()
 }
@@ -400,9 +425,9 @@ async fn submit_download(
     bytes: Bytes,
 ) -> Response {
     let body = download.body().expect("a POST download has a body");
-    let params = match posted(&server, body, download.path, query, &bytes) {
+    let params = match posted(body, download.path, query, &bytes) {
         Ok(params) => params,
-        Err(refused) => return *refused,
+        Err(err) => return refusal(&server, err),
     };
     let declared = download.params.iter().collect();
     match call(&server, declared, download.run, params).await {
@@ -412,15 +437,14 @@ async fn submit_download(
 }
 
 /// A POST's request parameters: the query's, then its body, parsed strictly
-/// ([`body::parse`]), as the parameter `body`; or the response refusing the body.
+/// ([`body::parse`]), as the parameter `body`; or the error refusing the body.
 fn posted(
-    server: &Server,
     body: &Param,
     route: &str,
     query: Vec<(String, String)>,
     bytes: &[u8],
-) -> Result<Vec<(String, String)>, Box<Response>> {
-    let project = body::parse(bytes).map_err(|err| Box::new(refusal(server, err)))?;
+) -> Result<Vec<(String, String)>, Error> {
+    let project = body::parse(bytes)?;
     let mut params = request_params(route, Vec::new(), query);
     params.push((body.name.to_owned(), project.to_string()));
     Ok(params)
