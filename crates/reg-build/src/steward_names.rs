@@ -12,21 +12,6 @@ use serde_json::Value;
 
 use crate::error::Result;
 
-/// Steward names and the document and project names that identify a steward's
-/// deliveries, compared whole-token and case-insensitively. An exact list, never a
-/// pattern (maintainer ruling, 2026-11-05); a new steward adds its names here.
-const STEWARD_TOKENS: [&str; 4] = ["SWECOV", "P1105", "Leveransrapport", "IFAU"];
-
-/// The first steward token in `text`. Tokens split on every non-alphanumeric
-/// character, so `P1105_LopNr` and `p1105-lopnr` match and a code `CP1105` does not.
-fn steward_token(text: &str) -> Option<&'static str> {
-    text.split(|c: char| !c.is_alphanumeric()).find_map(|word| {
-        STEWARD_TOKENS
-            .into_iter()
-            .find(|token| word.eq_ignore_ascii_case(token))
-    })
-}
-
 /// Delivered spellings and selectors are source names, not curated text; they stay as
 /// the source delivers them.
 const SOURCE_NAMES: [&str; 3] = ["subject", "object", "spelling"];
@@ -75,7 +60,7 @@ fn entry(at: &str, value: &Value, keys: Option<&BTreeSet<String>>, out: &mut Vec
             }
             continue;
         }
-        if let Some(token) = steward_token(text) {
+        if let Some(token) = reg_readers::private_evidence::steward_name(text) {
             let fix = if field == "evidence" {
                 "move it to the private evidence file and cite it as private:ev-NNNN"
             } else {
@@ -145,7 +130,7 @@ pub(crate) fn ids(curation: &Path, resolved: &[reg_resolve::Resolved]) -> Result
             .chain(r.tables.iter().filter_map(|t| t.slug.as_ref()))
             .chain(r.variables.iter().map(|v| &v.slug));
         for id in ids {
-            if let Some(token) = steward_token(id) {
+            if let Some(token) = reg_readers::private_evidence::steward_name(id) {
                 let reason = format!("names a steward ({token}); switch it, with no retirement");
                 out.push(
                     crate::ledger_refusal(&ledger, id, "steward-name", &reason).unwrap_or_else(

@@ -1,7 +1,8 @@
 //! The private evidence file: curation evidence that names a data steward, kept in the
 //! private inputs repository and cited from public curation as `private:ev-NNNN`
-//! (`crates/DESIGN.md`, "Steward provenance"). The builder only checks that every
-//! reference resolves; it never emits the text.
+//! (`crates/DESIGN.md`, "Steward provenance"), and the steward names public curation
+//! must not use. The builder only checks that every reference resolves; it never emits
+//! the text.
 //!
 //! One TOML table of `ev-NNNN = "<evidence>"`.
 
@@ -9,6 +10,23 @@ use std::collections::BTreeMap;
 use std::path::Path;
 
 use crate::{ReadError, ReadOutput, error};
+
+/// Steward names and the document and project names that identify a steward's
+/// deliveries, compared whole-token and case-insensitively. An exact list, never a
+/// pattern (maintainer ruling, 2026-11-05); a new steward adds its names here. They
+/// live in this crate because only readers may name a provider.
+const STEWARD_NAMES: [&str; 4] = ["SWECOV", "P1105", "Leveransrapport", "IFAU"];
+
+/// The first steward name in `text`. Words split at every non-alphanumeric character,
+/// so `P1105_LopNr` and `p1105-lopnr` match and a code `CP1105` does not.
+#[must_use]
+pub fn steward_name(text: &str) -> Option<&'static str> {
+    text.split(|c: char| !c.is_alphanumeric()).find_map(|word| {
+        STEWARD_NAMES
+            .into_iter()
+            .find(|name| word.eq_ignore_ascii_case(name))
+    })
+}
 
 /// A reference key: `ev-` and at least four ASCII digits.
 #[must_use]
