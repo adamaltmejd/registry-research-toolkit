@@ -238,7 +238,7 @@ hosted MCP through its own origin and worker.
   worker forwards none of it.
 - **Hosted MCP** (`crates/DESIGN.md`, "Agent and web interface"): `/mcp` on
   `reg-meta.vqv.uk` (the global catalog) and on `data.swecov.se`, whose SWECOV artifact
-  is public. Both workers forward `/mcp` (`ROUTE_MCP`); the active `fly.toml` passes
+  is public. Both workers forward `/mcp`; the active `fly.toml` passes
   `REG_META_PUBLIC_HOST`, which rmcp's allowed hosts admit beside the loopback names.
   `/mcp` and the project POSTs share one rate limit per client address (60 a minute;
   Cost protection, below). Behind Fly the peer is Fly's proxy, so the worker proves a
@@ -271,11 +271,10 @@ hosted MCP through its own origin and worker.
   SWECOV uses `FLY_API_TOKEN_SWECOV`. The SWECOV bake also requires
   `REG_META_HOLDINGS_SHA256` and downloads `reg_meta_swecov.db.zst` from the same tag.
   Both digests are checked together; `content.sha256` covers the binary and every baked
-  DB in sorted order. The server admits the pair at boot. The non-global bake branch
-  remains unexercised by CI until a release carries the paired asset. Nothing deploys
-  without green CI: a `wait-ci` job polls this commit's ci.yml run and the origin/edge
-  deploy jobs require its success — an image that builds but fails the CI gate never
-  ships. Each deploy job carries a HEAD-of-main guard (GHA concurrency serializes by
+  DB in sorted order. The server admits the pair at boot. Nothing deploys without green
+  CI: a `wait-ci` job polls this commit's ci.yml run and the origin/edge deploy jobs
+  require its success — an image that builds but fails the CI gate never ships. Each
+  deploy job carries a HEAD-of-main guard (GHA concurrency serializes by
   build-completion order, not commit order — without the guard an older commit's slow
   build could overwrite a newer deploy; it also makes non-main dispatches deploy-inert).
   Because a guarded commit skips, `changes` diffs a push against the last deployed
@@ -327,17 +326,6 @@ hosted MCP through its own origin and worker.
   (DNS-01 cert issuance — the reliable path behind a proxy; never proxy a hostname
   pointing at `*.fly.dev`: Fly's edge has no cert for the custom SNI → 525). SSL mode
   Full (strict). No dedicated IPv4 — the free shared IPv4 works behind the proxy.
-- **SWECOV deployment switch**: all four SWECOV jobs (`swecov-asset-guard`,
-  `build-swecov-image`, `deploy-swecov`, `edge-deploy-swecov`) independently require
-  repository variable `SWECOV_DEPLOY` to equal exactly `on`. It defaults off: unset or
-  any other value skips all four jobs without affecting global. Only after the paired
-  release exists, the maintainer enables it with
-  `gh variable set SWECOV_DEPLOY --body on`, then dispatches
-  `gh workflow run container-build.yml` for first activation; never wait for the next
-  push. Turning it off again stops SWECOV redeploys on later pushes. Merging with it
-  unset leaves the running 0.64 app and edge worker on `data.swecov.se` unchanged;
-  global redeploys once because the `__edge_v` restoration changed `crates/**` and the
-  global content digest.
 - **SWECOV paired deploys**: origin and edge always deploy together. Image-affecting or
   SWECOV edge changes trigger the image build, origin deploy and edge deploy in
   sequence; the edge requires a successful origin deploy and cannot follow a skipped
@@ -349,22 +337,22 @@ hosted MCP through its own origin and worker.
   `continue-on-error: true` because the deployed-commit resolver counts only successful
   workflow runs: making the whole run fail would repeatedly rebuild the global image
   from an old deployed base. All three SWECOV jobs require explicit `ok=true`; no global
-  job depends on them. If enabled on 0.71.0 the guard fails by design and global
-  deployment remains unaffected. There is no holdings schema guard in CI; pair admission
-  and the entrypoint smoke fail the SWECOV deploy if it is incompatible. Frontend-only
-  pushes also run the schema guard; when enabled, the asset guard tolerates failure
-  until the paired 0.72.0 release. A failing `deploy-swecov` (refused pair, OOM or
-  failed probe) still makes the whole run fail; the resolver then rebuilds and redeploys
-  global on later pushes until SWECOV is fixed, as in the previous deployment design.
+  job depends on them. On a global-only release (a maintainer option) the guard fails by
+  design and global deployment remains unaffected. There is no holdings schema guard in
+  CI; pair admission and the entrypoint smoke fail the SWECOV deploy if it is
+  incompatible. Frontend-only pushes also run the schema guard and the asset guard. A
+  failing `deploy-swecov` (refused pair, OOM or failed probe) still makes the whole run
+  fail; the resolver then rebuilds and redeploys global on later pushes until SWECOV is
+  fixed, as in the previous deployment design.
 - **Edge workers** (`reg_webapp/edge/`): `wrangler.jsonc` deploys
   `reg-webapp-global-edge` on `reg-meta.vqv.uk/*` without assets. It forwards `/mcp`
   alone with the edge token and returns a `no-store` 404 elsewhere.
   `wrangler.swecov.jsonc` deploys `reg-webapp-swecov-edge` on `data.swecov.se/*`,
   serving `frontend/dist/` with `single-page-application` fallback. Its
-  `run_worker_first` paths and `ORIGIN_PATHS` (plus enabled `MCP_PATH`) in
-  `src/index.ts` must stay in lockstep: `/api`, `/api/*`, `/openapi.json`, `/mcp` reach
-  the origin, including browser navigations. `/assets/*` also runs the worker first: an
-  HTML fallback becomes a `no-store` 404. Existing hashed assets receive the immutable
+  `run_worker_first` paths and `ORIGIN_PATHS` (plus `MCP_PATH`) in `src/index.ts` must
+  stay in lockstep: `/api`, `/api/*`, `/openapi.json`, `/mcp` reach the origin,
+  including browser navigations. `/assets/*` also runs the worker first: an HTML
+  fallback becomes a `no-store` 404. Existing hashed assets receive the immutable
   one-year policy from `frontend/public/_headers`, copied to `dist/`. The SPA HTML keeps
   Workers' default revalidation policy.
 - **Cache generations**: only the assets-enabled worker's API/OpenAPI forwards stamp
@@ -398,15 +386,11 @@ after binding; it is not the startup allowance. After the smoke gate passes, the
 entrypoint reads the served DBs into the page cache in the background (`nice cat`), so
 the site serves while the cache warms; the read ends with the container.
 
-The first push after this restoration merges rebuilds and redeploys global: the
-`__edge_v` server restoration changes `crates/**`, the binary and its content digest.
-
 ### Rollback
 
-Before Release A, the maintainer records the running SWECOV image tag and Workers
-version id, and confirms a surviving 0.64 image in `registry.fly.io/reg-webapp-swecov`.
-The image prune job's `KEEP=10` window retains only the newest ten tags; preserve the
-rollback image before it falls outside that window.
+The image prune job's `KEEP=10` window retains only the newest ten tags; note the
+running SWECOV image tag and Workers version id before a risky deploy so the rollback
+image is not pruned.
 
 Inspect origin history with `flyctl releases --app reg-webapp-swecov`, then restore:
 
@@ -418,9 +402,9 @@ Inspect edge versions with
 `bunx wrangler versions list --config reg_webapp/edge/wrangler.swecov.jsonc`, then
 `bunx wrangler rollback <version-id> --config reg_webapp/edge/wrangler.swecov.jsonc`.
 Roll back both halves together: the origin image and SPA/worker are a paired release.
-Before the first deploy, confirm `REG_META_EDGE_TOKEN` on Fly app `reg-webapp-swecov`
-equals `EDGE_TOKEN` on worker `reg-webapp-swecov-edge`; the repository secrets must
-include `FLY_API_TOKEN_SWECOV` and `CLOUDFLARE_API_TOKEN` scoped to zone swecov.se.
+Confirm `REG_META_EDGE_TOKEN` on Fly app `reg-webapp-swecov` equals `EDGE_TOKEN` on
+worker `reg-webapp-swecov-edge`; the repository secrets must include
+`FLY_API_TOKEN_SWECOV` and `CLOUDFLARE_API_TOKEN` scoped to zone swecov.se.
 
 ## Why CI uses a fixture DB, not a real asset
 

@@ -12,10 +12,6 @@
 interface Env {
   ASSETS?: Fetcher;
   DEPLOY_VERSION?: string;
-  // "true" where the deployment's catalog is served over hosted MCP: the global
-  // catalog and a steward whose artifact is public (crates/DESIGN.md, "Hosted MCP").
-  // An MCP-only deployment (no ASSETS) sets it too.
-  ROUTE_MCP?: string;
   // Secret (`wrangler secret put EDGE_TOKEN`), equal to the origin's
   // REG_META_EDGE_TOKEN: it proves a request came through this worker, so the
   // origin rate-limits `/mcp` by the request's CF-Connecting-IP. Without it the
@@ -25,9 +21,8 @@ interface Env {
 }
 
 // LOCKSTEP: must match assets.run_worker_first in wrangler.swecov.jsonc (same set,
-// glob syntax there): the paths `reg-meta serve` answers. `/mcp` joins only where
-// ROUTE_MCP is set — a POST (never a navigation) reaches the worker even without
-// run_worker_first, so a worker without it must refuse to forward it here.
+// glob syntax there): the paths `reg-meta serve` answers. `/mcp` is MCP_PATH: a POST
+// (never a navigation) reaches the worker even without run_worker_first.
 const ORIGIN_PATHS = [/^\/api(\/|$)/, /^\/openapi\.json$/];
 const MCP_PATH = /^\/mcp$/;
 // Hashed static assets (assets.run_worker_first has `/assets/*` too): a miss is a
@@ -56,7 +51,7 @@ export default {
       });
     }
     const url = new URL(request.url);
-    const mcp = env.ROUTE_MCP === "true" && MCP_PATH.test(url.pathname);
+    const mcp = MCP_PATH.test(url.pathname);
     const api = env.ASSETS && ORIGIN_PATHS.some((re) => re.test(url.pathname));
     const toOrigin = mcp || api;
     if (toOrigin) {

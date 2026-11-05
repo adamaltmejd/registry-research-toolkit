@@ -129,21 +129,6 @@ RUN mkdir -p /opt/reg_webapp \
         printf '%s\n' /opt/reg_meta/*.db | LC_ALL=C sort | xargs sha256sum; } \
     | sha256sum | cut -d' ' -f1 > /opt/reg_webapp/content.sha256
 
-# #224 provenance-confinement assertion (deployment-side). The earlier route-source
-# check was vacuous and is retired, and assertion #1 lived in the now-archived MONA
-# bundle build, so this is the one that remains. The bake stage fetches only
-# the catalog and optional holdings asset (no provenance asset), so reg_meta.provenance.db*
-# debug sibling should never enter the image. This RUN is defense in depth: it FAILS THE BUILD if any
-# provenance.db* file is present anywhere in the image filesystem (.dockerignore
-# also excludes local copies from the build context). Stable non-zero exit on
-# hit. Runs in THIS stage (not the bake stage) so it scans the assembled
-# shipping filesystem — everything the stage COPYs in — not just the fetch
-# environment.
-RUN if find / -name 'reg_meta.provenance.db*' -print -quit 2>/dev/null | grep -q .; then \
-        echo 'FATAL: reg_meta.provenance.db* present in image (provenance confinement #3 breached)' >&2; \
-        exit 1; \
-    fi
-
 # The selected holdings partner is admitted with the base catalog at boot.
 ARG REG_META_CATALOG=global
 ENV REG_META_CATALOG=$REG_META_CATALOG

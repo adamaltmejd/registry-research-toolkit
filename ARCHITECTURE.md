@@ -36,9 +36,9 @@ Access), a remote-desktop environment. Three consequences shape the whole toolki
 
 Some research organizations re-license registry data from their own warehouses instead
 of each project going through SCB directly. SWECOV's hosted catalog is the paired
-`reg_meta_swecov.db.zst` served with the base (`--catalog swecov`; deployment is gated
-by `SWECOV_DEPLOY`). The global server, served over MCP only (#1709), has no holdings:
-its `order` returns the logical order of a project, and nothing receives it.
+`reg_meta_swecov.db.zst` served with the base (`--catalog swecov`). The global server,
+served over MCP only (#1709), has no holdings: its `order` returns the logical order of
+a project, and nothing receives it.
 
 ## What the toolkit is
 
