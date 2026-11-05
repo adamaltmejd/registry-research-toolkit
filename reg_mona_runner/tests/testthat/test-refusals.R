@@ -5,9 +5,11 @@
 
 test_that("an export root without orders/ is a setup failure (2)", {
   # Regression: the runner treats a mistyped base path as "no orders" and exits 0.
-  base <- tempfile("export-")
-  dir.create(base)
-  expect_identical(run_runner(base)$status, 2L)
+  base <- export_root()
+  unlink(file.path(base, "orders"), recursive = TRUE)
+  run <- run_runner(base)
+  expect_identical(run$status, 2L)
+  expect_match(run$output, "no orders folder", all = FALSE)
 })
 
 test_that("an order that is not JSON is refused (3)", {
