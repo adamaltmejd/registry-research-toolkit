@@ -278,7 +278,6 @@ impl Context<'_> {
             let cadence = self.cadence(cell(row, cadence), &at);
             self.records.push(Record::Table(Table {
                 role: None,
-                unit_type: None,
                 provider: self.provider.to_owned(),
                 register: self.register.to_owned(),
                 table: handle,

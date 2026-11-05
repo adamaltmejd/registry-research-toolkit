@@ -55,7 +55,6 @@ pub fn variable_level_setter(statement: &Statement) -> Option<&str> {
                     | "description"
                     | "definition"
                     | "operational_definition"
-                    | "synonyms"
             )
         }))
     .then_some(variable)
@@ -519,7 +518,7 @@ fn stated_fields(fields: &impl serde::Serialize) -> BTreeMap<String, Value> {
         .into_iter()
         .filter(|(_, v)| !v.is_null())
         .map(|(field, mut value)| {
-            if matches!(field.as_str(), "sets" | "tags" | "sentinels" | "synonyms")
+            if matches!(field.as_str(), "sets" | "tags" | "sentinels")
                 && let Some(values) = value.as_array_mut()
             {
                 values.sort_by(|a, b| a.as_str().cmp(&b.as_str()));
@@ -738,8 +737,6 @@ fn variable_membership_field(statement: &Statement) -> Option<&'static str> {
         Some("sets")
     } else if fields.tags.is_some() {
         Some("tags")
-    } else if fields.synonyms.is_some() {
-        Some("synonyms")
     } else {
         None
     }
@@ -1264,7 +1261,7 @@ fn application_dependencies(
                 }
             }
         }
-        Statement::Assert { subject, fact, .. } => {
+        Statement::Assert { subject, .. } => {
             if let Some(register) = records.iter().find_map(|r| match r {
                 Record::Register(r) => Some(r),
                 _ => None,
@@ -1289,11 +1286,6 @@ fn application_dependencies(
                     table,
                     release,
                 ));
-            }
-            if let AssertFact::Occurrence { fields } = fact
-                && let Some(hash) = &fields.value_set
-            {
-                hashes.insert(hash.clone());
             }
         }
         Statement::Set { fields, .. } => {
@@ -1917,11 +1909,6 @@ pub fn apply_metadata(
                     apply::MetadataValue::Tags(tags) => {
                         if let Some(variable) = occurrence.variable {
                             resolved.variables[variable].tags.clone_from(tags);
-                        }
-                    }
-                    apply::MetadataValue::Synonyms(synonyms) => {
-                        if let Some(variable) = occurrence.variable {
-                            resolved.variables[variable].synonyms.clone_from(synonyms);
                         }
                     }
                     apply::MetadataValue::Description { text, at } => {

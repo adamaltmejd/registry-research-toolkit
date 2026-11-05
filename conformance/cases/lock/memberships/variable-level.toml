@@ -15,9 +15,3 @@ kind = "set"
 subject = "var:published"
 fields = { tags = ["income"] }
 evidence = "The concept describes income."
-
-[[statement]]
-kind = "set"
-subject = "var:published"
-fields = { synonyms = ["Earnings"] }
-evidence = "Earnings is an alternate search label."

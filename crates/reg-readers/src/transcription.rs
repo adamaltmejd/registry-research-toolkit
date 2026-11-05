@@ -86,7 +86,6 @@ pub fn read(
             .push(table.clone());
         records.push(Record::Table(Table {
             role: None,
-            unit_type: None,
             provider: provider.to_owned(),
             register,
             table,

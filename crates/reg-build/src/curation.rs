@@ -1561,13 +1561,7 @@ fn run_selected(
             let locator = statement_locator(root, statement)?;
             let asserted =
                 reg_resolve::curation::apply::asserted_value_set(&statement.statement, &locator);
-            let hash = match &statement.statement {
-                reg_frame::statement::Statement::Assert {
-                    fact: reg_frame::statement::AssertFact::Occurrence { fields },
-                    ..
-                } => fields.value_set.as_deref(),
-                _ => asserted.as_ref().map(|set| set.hash.as_str()),
-            };
+            let hash = asserted.as_ref().map(|set| set.hash.as_str());
             let source = slots
                 .as_ref()
                 .map_or_else(Vec::new, |slots| slots.source(provider, register, hash));

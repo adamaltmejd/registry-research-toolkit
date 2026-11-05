@@ -244,7 +244,6 @@ pub struct Variable {
     pub tags: BTreeSet<String>,
     pub facets: BTreeMap<String, reg_frame::statement::MemberFacet>,
     pub facets_at: Option<Locator>,
-    pub synonyms: BTreeSet<String>,
     /// One curated account of the variable's meaning, independent of source wording.
     pub description: Option<String>,
     pub pinned: bool,
@@ -473,7 +472,6 @@ pub(crate) fn resolve_located(
         let mut table = stated.get(handle).map_or_else(
             || Table {
                 role: None,
-                unit_type: None,
                 provider: register.provider.clone(),
                 register: register.register.clone(),
                 table: handle.to_owned(),
@@ -1238,7 +1236,6 @@ pub(crate) fn resolve_located(
             facets: BTreeMap::new(),
             facets_at: None,
             tags: BTreeSet::new(),
-            synonyms: BTreeSet::new(),
             description: None,
             slug: if *assigned {
                 key.clone()
