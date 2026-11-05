@@ -1,0 +1,113 @@
+/* A classification family's versions (DESIGN.md → Detail pane): each used
+   version is a disclosure over the variables that use it, in start order. */
+.versions {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.version + .version {
+  border-top: 1px solid var(--border);
+}
+
+.versionHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+  padding: var(--space-3);
+}
+
+/* The version a version address opens: the current lane's fill. */
+.version[data-current] > .versionHead,
+.version[data-current] .versionTrigger {
+  background: var(--accent-soft);
+}
+
+.disclosure {
+  min-width: 0;
+}
+
+.versionHeading {
+  margin: 0;
+  font: inherit;
+}
+/* A version address focuses the heading; its ring is painted on the trigger,
+   whose fill would otherwise cover it. */
+.versionHeading:focus-visible {
+  outline: none;
+}
+.versionHeading:focus-visible > .versionTrigger {
+  box-shadow: var(--focus-ring-inset);
+}
+
+/* Chevron, then name, years and count on one line; on a narrow pane they wrap
+   under the name, not under the chevron. */
+.versionTrigger {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  width: 100%;
+  padding: var(--space-3);
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: start;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.versionTrigger svg {
+  flex-shrink: 0;
+}
+
+.versionLine {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-3);
+  min-width: 0;
+}
+.disclosure[data-expanded] .versionTrigger svg {
+  transform: rotate(90deg);
+}
+.version .versionTrigger[data-hovered] {
+  background: var(--surface-hover);
+}
+.versionTrigger[data-focus-visible] {
+  outline: none;
+  box-shadow: var(--focus-ring-inset);
+}
+
+.versionName {
+  margin: 0;
+  font-size: var(--text-h3);
+  font-weight: 600;
+}
+.versionName:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.years {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}
+
+.count {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+}
+
+.unusedNote {
+  margin: 0;
+  padding: 0 var(--space-3) var(--space-3);
+  color: var(--text-muted);
+}
+
+/* A run of versions no variable uses, folded into one line. */
+.unused {
+  padding: var(--space-3);
+  color: var(--text-muted);
+}

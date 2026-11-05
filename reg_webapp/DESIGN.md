@@ -66,24 +66,26 @@ its scope and its `steward_config` branding (`/api/context`).
 
 ## Catalog pages
 
-Provider, register and table pages read `catalog/{ref}`; register and table findings
-come from `findings/{ref}`. They do not read variable segments. The generated OpenAPI
-types own the response shapes. An implicit table shares its register's FQID, so its
-canonical link opens the register; it has no separately addressable table page.
+Provider, register, table and classification pages read `catalog/{ref}`; register and
+table findings come from `findings/{ref}`. A table page lists its variables from the
+table answer (`variables`, each with the merged `periods` its segments hold in that
+table, so a gap in delivery stays a gap) and reads no segments. A provider page draws
+each register from its `periods` the same way (merged spans of its dated tables). The
+generated OpenAPI types own the response shapes. An implicit table shares its register's
+FQID, so its canonical link opens the register; it has no separately addressable table
+page.
 
 Catalog periods are half-open ISO date intervals. The frontend adapts the exclusive end
 to reg-core's inclusive interval renderer, without copying its period grammar. The
-register's `unplaced` list contains release names, not variable identities. Populations
-belong to releases and keep that context on the table page.
+register's `unplaced` list contains release names, not variable identities.
 
 Catalog findings reuse `DataWarnings` and `ScopedDataWarnings`: review items before
 notices, grouped under human titles with stable codes in delayed tooltips. Entries mount
 only when a group is expanded, keeping large registers usable without mounting thousands
 of notices on load. Subject links use register, table and variable names from the
 register response, falling back to identifiers only when names are unknown.
-`Finding.tsx` remains the separate project-validation renderer. Table releases also
-start collapsed and expand in edition order, marking primary releases. The obsolete
-variants browser has no route or data source; editions remain deferred.
+`Finding.tsx` remains the separate project-validation renderer. The obsolete variants
+browser has no route or data source.
 
 Variable value sets stay inline, deduplicated by hash across segments, with table and
 period coverage. Disclosures fetch codes on first expansion through `values`; hashes
@@ -92,12 +94,20 @@ Hierarchical sets start at level one, load children by parent code, and keep exp
 branches while search shows flat matches with levels. Only active search shows a
 matching result count; sentinel items are labelled in plain words.
 
-Classification-version routes (`/catalog/class/<family>/<version>`) read `values` with
-`classification` directly: classifications are not `Show` nodes. Humanized version slugs
-and value-set names are the available title metadata. A family has no page because the
-API cannot list its versions. Classification umbrella group routes remain separate.
-Segments supply their own classification links; a null value-set classification is never
-inferred from its names.
+A classification family page (`/catalog/class/<family>`) reads `show`: its versions in
+start order and the steward's variables that use them, each with the `segments` rows
+that carry the family. A version route (`/catalog/class/<family>/<version>`) reads the
+version, then its family, and renders the family page with that version in focus: one
+page, as a grouped variable's address renders its group. The codes are the columns'
+value sets on the shared `CodeTimeline`, fetched through `values`, not the version's
+whole list. Every classification name on screen is the name the server serves (`show`,
+or `classification_name` on a segment row); the SPA never makes a name up from a slug,
+and a null value-set classification is never inferred from its names. The project editor
+and its findings name versions only from the segment rows already read, never with a
+`show` per version (one binding can have dozens of candidates); where no loaded row
+carries a version (a pin not delivered on the project's tables), it shows the version's
+own id, the ref's last part, as an id. A cross-register version list names each
+variable's register from the root read the browse column makes.
 
 ## Why no auth — cost protection instead
 

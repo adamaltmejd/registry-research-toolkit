@@ -9,7 +9,7 @@
         {
           "fqid": "demo/reg2",
           "name": "Andra registret",
-          "period": {"start": "2019-01-01", "end": "2021-01-01"},
+          "periods": [{"start": "2019-01-01", "end": "2021-01-01"}],
           "variables": [
             {
               "fqid": "demo/reg2/inkomstbrutto",
@@ -36,7 +36,7 @@
         {
           "fqid": "demo/reg3",
           "name": "Tredje registret",
-          "period": {"start": "2018-01-01", "end": "2021-01-01"},
+          "periods": [{"start": "2018-01-01", "end": "2021-01-01"}],
           "variables": [
             {
               "fqid": "demo/reg3/kon",

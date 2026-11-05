@@ -1262,7 +1262,8 @@ export interface components {
         ShowProviderRegister: {
             fqid: string;
             name: string;
-            period: components["schemas"]["Period"];
+            /** @description The periods its dated tables are delivered, merged, in start order. Gaps stay gaps. */
+            periods: components["schemas"]["Period"][];
             variables: components["schemas"]["ShowProviderVariable"][];
         };
         /**
@@ -1322,11 +1323,12 @@ export interface components {
             role: string;
             timeless: boolean;
         };
-        /** @description A variable in a table, over the years it has in that table. */
+        /** @description A variable in a table, over the periods it has in that table. */
         ShowTableVariable: {
             fqid: string;
             name: string;
-            period: components["schemas"]["Period"];
+            /** @description The periods its segments here cover, merged, in start order. Gaps stay gaps. */
+            periods: components["schemas"]["Period"][];
         };
         ShowVariableRef: {
             fqid: string;

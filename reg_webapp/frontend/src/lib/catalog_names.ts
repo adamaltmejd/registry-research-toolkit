@@ -9,7 +9,6 @@ import {
   type RootChild,
   type ShowNode,
 } from "./api";
-import { humanizeClassificationSlug } from "./catalog";
 
 /** One cached catalog read. `value` is null until it lands and STAYS null when it
  * failed; `loading` tells those two apart (the caller's `aria-busy`, and a settled
@@ -299,8 +298,7 @@ export function catalogNames(
   const registers = new Set<string>();
   for (const ref of refs) {
     if (ref.startsWith("class/")) {
-      const name = classificationNameRead(ref).value;
-      if (name) names.set(ref, name);
+      names.set(ref, classificationLabel(ref));
       continue;
     }
     registers.add(ref.split("/").slice(0, 2).join("/"));
@@ -319,7 +317,7 @@ export function catalogNames(
 export function catalogNameRead(ref: string | null): Read<string> {
   if (ref === null) return UNASKED;
   if (ref.startsWith("class/")) {
-    return classificationNameRead(ref);
+    return { value: classificationLabel(ref), loading: false };
   }
   const state = registerRead(ref.split("/").slice(0, 2).join("/"));
   return {
@@ -340,10 +338,34 @@ export function ancestorNameRead(ref: string | null): Read<string> {
   };
 }
 
-/** Use the classification page's version title, not content-shared value-set aliases. */
-function classificationNameRead(ref: string): Read<string> {
-  return {
-    value: humanizeClassificationSlug(ref.split("/").at(-1) ?? ""),
-    loading: false,
-  };
+const classificationNames = new WeakMap<object, ReadonlyMap<string, string>>();
+
+/** Every classification name the per-period rows read so far carry
+ * (`classification_name`), by version ref. A name read never asks `show` for a
+ * classification: one binding can have dozens of candidate versions, and
+ * fetching each in full only for its name cost a request apiece. Cached per
+ * `reads` object, which a settled read replaces. */
+function loadedClassificationNames(): ReadonlyMap<string, string> {
+  const cached = classificationNames.get(reads);
+  if (cached) return cached;
+  const names = new Map<string, string>();
+  for (const [key, read] of Object.entries(reads)) {
+    if (!key.startsWith("segments:") && !key.startsWith("table-segments:"))
+      continue;
+    for (const row of (read.value as CatalogSegment[] | null) ?? [])
+      if (row.classification && row.classification_name)
+        names.set(row.classification, row.classification_name);
+  }
+  classificationNames.set(reads, names);
+  return names;
+}
+
+/** A classification version as text: its name from a row already read, or,
+ * where no loaded row carries it (a pinned version not delivered on the
+ * project's tables), its own id, the ref's last part, shown as an id rather
+ * than a name made up from it. */
+function classificationLabel(ref: string): string {
+  return (
+    loadedClassificationNames().get(ref) ?? (ref.split("/").at(-1) as string)
+  );
 }

@@ -252,8 +252,7 @@ attribute and nothing else. Do not pre-build it; design so that it stays that sm
 The site is a steward site (SWECOV now, IFAU next) and shows only what its steward
 holds. Screens use the researcher's words, never the catalog's internal model
 (maintainer 2026-11-04, #2066). The steward's own name, description and order
-instructions come from `/api/context`, never from code. Some screens still use the old
-words; the slices in `SPA-REDESIGN.md` bring them in line.
+instructions come from `/api/context`, never from code.
 
   | Say                                                              | Not                                    |
   | ---------------------------------------------------------------- | -------------------------------------- |
@@ -268,7 +267,7 @@ words; the slices in `SPA-REDESIGN.md` bring them in line.
   | Group                                                            | groups, part of                        |
   | Notes on this data                                               | findings, data warnings                |
   | Row identifier                                                   | row keys                               |
-  | Who is included                                                  | populations                            |
+  | Classification, version                                          | class family, vintage                  |
   | Table (in a project)                                             | source                                 |
   | Column, variable                                                 | binding                                |
   | Check                                                            | draft check, catalog check             |
@@ -284,8 +283,10 @@ catalog does not state has no pill. The SPA never edits a project's type: a proj
 states one only to override the catalog, by editing the file (#2071, G13).
 
 **Not shown at all:** role, coded, state, temporality, storage, unplaced releases,
-source and provenance, timeless, implicit, cadence, edition, primary. A fact that is not
-stated has no row. A yes/no fact (identifier, sensitive) shows only when yes.
+source and provenance, timeless, implicit, cadence, edition, primary, populations,
+releases, and a table's row keys (the catalog marks every identifier column as one;
+Operator Q2, #2252). A fact that is not stated has no row. A yes/no fact (identifier,
+sensitive) shows only when yes.
 
 ## Colors
 
@@ -492,9 +493,12 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   itself; maintainer Q5, 2026-11-04). The names come from reads the browse columns
   already make, so the trail fetches nothing of its own; an ancestor whose name has not
   arrived is left out, never shown as its slug. A group page's trail skips the group
-  namespace, and a classification page has none. Then, on a register's or a variable's
-  page the kind mark (its `TypeTag` with the glyph), `h1`, member-of line, facets as a
-  labelled row, the actions row, then definitions, then the `Timeline`, then the list of
+  namespace. A classification page has no ancestors, so its trail is the "Browse
+  registers" crumb alone, on a version address too: that address renders the family
+  page, whose `h1` already names the family (slice 3, Q4). Then, on a register's,
+  table's, variable's, group's or classification's page the kind mark (its `TypeTag`,
+  with the glyph on a register or variable), `h1`, member-of line, facets as a labelled
+  row, the actions row, then definitions, then the `Timeline`, then the list of
   variables or columns, "Notes on this data" (the findings, only when there are any;
   maintainer 2026-11-04), then source documents. A variable page has no source and
   provenance section; MCP keeps `evidence=true` (maintainer 2026-11-04). Padding
@@ -527,17 +531,41 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   provider's wording is the Description: once when every period agrees, otherwise each
   wording under its years. It sits under the facts, above the `Timeline`. Timeline and
   facts read the one per-period list (`segments`): on a steward deployment its rows are
-  the files and columns the steward has, over the years it has them. A table page leaves
-  out a Row keys, Populations or Releases panel with nothing to list, and Timeless or
-  Implicit when "No". Placement caveats are steward working notes, not shown until the
-  steward curates them for readers. A register page has no tables table: its tables are
-  FilterChips over the variable list, each with its period, a lens with OR within the
-  selection, offered only when two or more tables deliver variables (the archived
-  variant chips, maintainer 2026-11-03). A Tables definition row links every table's
-  page by name. A register page has no "Unplaced releases" panel (maintainer
-  2026-11-04). In steward mode a supplemental-only variable is selectable for a project
-  like a reference variable: `order` and `validate` read the composed steward view
-  (crates/DESIGN.md, "Three questions, three scopes").
+  the files and columns the steward has, over the years it has them. A table page shows
+  its `h1` name, a member-of line naming its register, its description only when stated,
+  a Years row, then its variables as `VariableRow`s on the table's own axis (the years
+  its variables have in it, not the register's), each over the years it has in this
+  table, then notes and source documents; it has no role, cadence, row-key, population
+  or release section (Operator Q2, #2252). A classification page is its family's
+  (Operator Q4, #2252): the family name as `h1`, its description only when stated, then
+  a Versions panel listing every version in start order (Q1), each with its name, its
+  years, and the steward's variables that use it as `VariableRow`s over the years their
+  columns use that version, or "No variable here uses this version." A used version is a
+  disclosure whose trigger shows its name, years and a count ("24 variables"), closed by
+  default; its rows mount only while open. A family with one used version, or at most 30
+  rows in all (about two screens), opens whole: a short list costs less to show than to
+  open version by version, and a long one (lkf: 36 used versions, ~700 rows) would
+  otherwise be a 35,000 px page. Which versions are open is local state, not in the URL.
+  A run of consecutive versions no variable uses folds into one muted line giving their
+  count and years ("9 versions, 1982–1990: …"; a lone version keeps its name), so a
+  47-version family is not a page of empty entries; a version address inside a run
+  splits it, and that version keeps its own entry. Where the family's variables span
+  registers, each row names its register on a muted second line. Every version shares
+  the family's one axis range (from the dated deliveries; a year-independent row does
+  not widen it), so bars compare across versions and with the codes below by year,
+  though not pixel for pixel: the rows' bar column and the code timeline's track sit in
+  different layouts. Then the `CodeTimeline` of the codes those columns use (their value
+  sets, not the version's whole list; Q3). A version's address renders the family page
+  with that version current and open: its heading on `accent-soft`, focused and scrolled
+  into view as a grouped variable's lane is. Placement caveats are steward working
+  notes, not shown until the steward curates them for readers. A register page has no
+  tables table: its tables are FilterChips over the variable list, each with its period,
+  a lens with OR within the selection, offered only when two or more tables deliver
+  variables (the archived variant chips, maintainer 2026-11-03). A Tables definition row
+  links every table's page by name. A register page has no "Unplaced releases" panel
+  (maintainer 2026-11-04). In steward mode a supplemental-only variable is selectable
+  for a project like a reference variable: `order` and `validate` read the composed
+  steward view (crates/DESIGN.md, "Three questions, three scopes").
 
 Spacing is a 0.25 rem rhythm (`1`–`6`); gaps are set by the container that owns the gap,
 never by margins on children. Density is tuned for scanning long lists: rows are 5–6 px
@@ -656,17 +684,18 @@ Time is the axis every relation is drawn on.
   period as well as the study window. Data still delivered ends at the catalog's last
   year, and data whose start is unknown begins at its first, where that data is drawn. A
   year-independent span (no start and no end, a timeless table's) begins at the axis
-  start on a lane, so its column stays pickable; a `VariableRow` has no dated years for
-  it, so it draws a bare track read as "No dated delivery." and does not count toward
-  the axis. A one-year axis widens by one step of 5, backward where forward would pass
-  the catalog's last year. A page's drawings share its one axis, so a register's
-  `VariableRow`s line up with its `Timeline`, and a page with several sources draws them
-  on one axis. The axis of a `LaneGraph` (the `Timeline` and source timelines), a code
-  timeline and a `VariableRow` list labels its first and last year, at every width
-  (maintainer 2026-11-05), each on its own cell against the track's edge. On a
-  `LaneGraph` a window bound whose label would touch an end's hangs away from that end,
-  and where they still touch, the bound's label is dropped (the window's band still
-  marks it); an end's label never moves or gives way.
+  start on a lane (and ends at its end, never past it), so its column stays pickable; a
+  `VariableRow` has no dated years for it, so it draws a bare track read as "No dated
+  delivery." and does not count toward the axis. A one-year axis widens by one step of
+  5, backward where forward would pass the catalog's last year. A page's drawings share
+  its one year range, so they compare by year, not pixel for pixel: a `VariableRow`'s
+  bar column, the `Timeline` and the `CodeTimeline` each have their own gutters. A page
+  with several sources draws them on one range. The axis of a `LaneGraph` (the
+  `Timeline` and source timelines), a code timeline and a `VariableRow` list labels its
+  first and last year, at every width (maintainer 2026-11-05), each on its own cell
+  against the track's edge. On a `LaneGraph` a window bound whose label would touch an
+  end's hangs away from that end, and where they still touch, the bound's label is
+  dropped (the window's band still marks it); an end's label never moves or gives way.
 
 - A **`Timeline`** is drawn on the page's axis, its coverage row captioned "Years" in
   the name column (dropped when the names stack, where the axis heads the row), with no
@@ -913,13 +942,14 @@ grow new visual language meanwhile.
   with its years in micro mono `text-muted` only where the type changes over time. The
   words are the catalog types in plain words ("Words"; #2071). No hue: the type is a
   fact, not a node kind, so it never borrows a `TypeTag` colour.
-- **TypeTag:** the five `cat-*` hues, in mixed lists, and as the kind mark over a
-  register's or a variable's page title, where it leads with a glyph in its ink (a table
-  for a register, one filled column of it for a variable). A group page's kind mark has
-  no glyph. The label is fixed per type (Register, Variable, Code list, Classification,
-  Group) and a caller passes only the type. 0.75 rem, line-height 1.4, padding 1 px 7
-  px, `sm` radius. A palette row shows a name and its `TypeTag`, never an identifier
-  (maintainer Q5, 2026-11-04).
+- **TypeTag:** the five `cat-*` hues, in mixed lists, and as the kind mark over a detail
+  page's title, where a register's or a variable's leads with a glyph in its ink (a
+  table for a register, one filled column of it for a variable). A table's, group's or
+  classification's kind mark has no glyph. The label is fixed per type (Register, Table,
+  Variable, Code list, Classification, Group) and a caller passes only the type. A table
+  takes its register's hue: it is part of the register, and the word tells them apart.
+  0.75 rem, line-height 1.4, padding 1 px 7 px, `sm` radius. A palette row shows a name
+  and its `TypeTag`, never an identifier (maintainer Q5, 2026-11-04).
 - **FilterChip:** a real checkbox behind an `sm`-radius face (padding 4 px 9 px),
   `accent-bg` with an `accent` border and `accent-ink` text at weight 600 when on. A
   LENS: toggling narrows what is shown, never the project. A strip is the facet's
@@ -981,8 +1011,10 @@ grow new visual language meanwhile.
   a near-duplicate of a primitive.
 - Do keep one `primary` button per pane. Don't add counters, hero sections, decorative
   gradients, oversized cards, cards inside cards, or stock imagery.
-- Do design for 375, 768, 1280 and 1920 px and verify with `dev.sh shot --all`. Don't
-  add breakpoints or `display: contents` (it strips accessibility roles).
+- Do design for 375, 768, 1280 and 1920 px and verify with `dev.sh shot --all`, on the
+  fixture and on a real steward pair (`REG_META_DB` with `REG_META_CATALOG`), with a
+  fresh-agent rendered review before merge. Don't add breakpoints or `display: contents`
+  (it strips accessibility roles).
 - Do keep focus visible via `:focus-visible` (or `[data-focus-visible]` on RAC parts)
   `{ box-shadow: var(--focus-ring) }` in each component's own CSS, and respect
   `prefers-reduced-motion`. Motion answers a user action at the three durations above;

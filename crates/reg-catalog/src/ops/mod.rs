@@ -100,15 +100,25 @@ impl Server {
 /// Steward mode: days `[start, end)` of a variable in a table, clipped to the hull of
 /// the placements of that pair that overlap them; `None` when none does (crates/DESIGN.md,
 /// "A steward deployment serves its holdings only"). `schema` lines and `show` row keys
-/// clip through it.
-pub(crate) struct HeldClip<'c>(rusqlite::Statement<'c>);
+/// clip through it. `clip` stays a hull (one span per segment, gaps included) because
+/// those consumers need one span; `clip_each` keeps the gaps.
+pub(crate) struct HeldClip<'c> {
+    hull: rusqlite::Statement<'c>,
+    each: rusqlite::Statement<'c>,
+}
 
 impl<'c> HeldClip<'c> {
     pub(crate) fn new(holdings: &'c rusqlite::Connection) -> Result<Self, Error> {
-        Ok(Self(holdings.prepare(
-            "SELECT min(start), max(end) FROM holding_mapping
-             WHERE table_pid = ?1 AND variable_pid = ?2 AND start < ?4 AND ?3 < end",
-        )?))
+        Ok(Self {
+            hull: holdings.prepare(
+                "SELECT min(start), max(end) FROM holding_mapping
+                 WHERE table_pid = ?1 AND variable_pid = ?2 AND start < ?4 AND ?3 < end",
+            )?,
+            each: holdings.prepare(
+                "SELECT start, end FROM holding_mapping
+                 WHERE table_pid = ?1 AND variable_pid = ?2 AND start < ?4 AND ?3 < end",
+            )?,
+        })
     }
 
     pub(crate) fn clip(
@@ -118,13 +128,34 @@ impl<'c> HeldClip<'c> {
         (start, end): (i64, i64),
     ) -> Result<Option<(i64, i64)>, Error> {
         let (first, last): (Option<i64>, Option<i64>) = self
-            .0
+            .hull
             .query_row(rusqlite::params![table, variable, start, end], |row| {
                 Ok((row.get(0)?, row.get(1)?))
             })?;
         Ok(first
             .zip(last)
             .map(|(first, last)| (start.max(first), end.min(last))))
+    }
+
+    /// Every overlapping placement's intersection with the segment, so gaps between
+    /// disjoint placements survive (table variable periods).
+    pub(crate) fn clip_each(
+        &mut self,
+        table: &str,
+        variable: &str,
+        (start, end): (i64, i64),
+    ) -> Result<Vec<(i64, i64)>, Error> {
+        let placed = self
+            .each
+            .query_map(rusqlite::params![table, variable, start, end], |row| {
+                Ok((row.get::<_, i64>(0)?, row.get::<_, i64>(1)?))
+            })?;
+        let mut spans = Vec::new();
+        for placement in placed {
+            let (first, last) = placement?;
+            spans.push((start.max(first), end.min(last)));
+        }
+        Ok(spans)
     }
 }
 
