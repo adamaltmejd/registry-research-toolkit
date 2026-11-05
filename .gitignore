@@ -1,20 +1,13 @@
-# Python
-__pycache__/
-*.py[cod]
-*.egg-info/
+# Build output
 dist/
 # Root-anchored: only the repo-root packaging dir, so a source package named
 # `build/` elsewhere stays tracked.
 /build/
 
 # Environments
-.venv/
 .env
 .envrc
 
-# Tools
-.ruff_cache/
-.pytest_cache/
 # Cargo workspace build output (root Cargo.toml)
 /target/
 
@@ -29,9 +22,6 @@ Thumbs.db
 
 # Project
 .tmp/
-
-# Personal exploration scripts (not part of the toolkit's curated scripts/)
-scripts/sample_*.py
 
 # reg_meta database (built from SCB exports, not committed)
 *.db
