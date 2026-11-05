@@ -79,12 +79,13 @@ choice so the researcher can judge it:
   for registers that keep the dead and emigrated (cause of death).
 - `rows_per_unit.mean`: below 1, the share of eligible units with a row; above 1, the
   mean count (events).
-- `columns`, by the column's name in the file: `attribute` (`person_key`, `firm_key`,
-  `sex`, `birth_year`, `birth_date`, `age`, `county`, `municipality`, `death_date`,
-  `year`), `map` from an attribute's value to the delivered code (`male`/`female` for
-  sex), `null_rate`, or `codes` replacing the catalog's. Mark every person or firm id
-  that should join across files as `person_key` or `firm_key`; any other identifier is
-  random.
+- `columns`, by the column's `name` in `mock_spec.json` (the order's name, not the
+  `stata_name` a `.dta` file shows for a long or invalid one): `attribute`
+  (`person_key`, `firm_key`, `sex`, `birth_year`, `birth_date`, `age`, `county`,
+  `municipality`, `death_date`, `year`), `map` from an attribute's value to the
+  delivered code (`male`/`female` for sex), `null_rate`, or `codes` replacing the
+  catalog's. Mark every person or firm id that should join across files as `person_key`
+  or `firm_key`; any other identifier is random.
 - Optional: `null_rate` for the whole spec (default 0.02), `rename` from a compiled file
   name to the delivery's, `tables` for files the catalog does not know (in the spec's
   file shape).
