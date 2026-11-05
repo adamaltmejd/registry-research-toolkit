@@ -6,7 +6,7 @@
 use std::sync::Arc;
 
 use crate::limit::{Limits, guard};
-use crate::usage::{self, Slot};
+use crate::usage::{self, Slot, Usage};
 use crate::{Answer, VERSION, run};
 use axum::Router;
 use axum::extract::DefaultBodyLimit;
@@ -252,7 +252,10 @@ impl ServerHandler for Tools {
             .and_then(|op| query(op, arguments).map(|query| (op, query)));
         let mut answer = match call {
             Ok((op, query)) => run(&self.server, op, op.params.iter().collect(), query, true).await,
-            Err(err) => Answer::new(&self.server, Err(err)),
+            Err(err) => Answer {
+                usage: Some(Usage::refused(&request.name, &err)),
+                ..Answer::new(&self.server, Err(err))
+            },
         };
         // Over HTTP the label goes on the response (`usage::mcp`); stdio has none.
         let slot = context

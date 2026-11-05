@@ -471,12 +471,15 @@ only the fields the request has:
   `order` names none; the SPA reports a pick with its own beacon instead.
 - `q`, `n`: a search's text and the hits on the answered page. `n: 0` is a search that
   found nothing.
-- `err`: a refusal's code.
+- `err`: a refusal's code, including an MCP tool call refused before it ran (its `op`
+  is then the tool name).
 
 Search text and ids pass a scrub first: a word holding an `@` and any run of six or more
-digits (`-` or `+` allowed between them) become `<redacted>`. That covers person and
-organisation numbers, dates, phone numbers and email addresses, and also removes a
-six-digit code someone searched for (accepted, maintainer 2026-11-04). The text is kept
+digits (`-` or `+` allowed between them, any Unicode digit) become `<redacted>`. That
+covers person and organisation numbers, dates, phone numbers written without spaces and
+email addresses, and also removes a six-digit code someone searched for (accepted,
+maintainer 2026-11-04). Digits split by spaces pass: joining them would also join years
+listed in a search. The text is kept
 at most 200 characters and never shown to users. The header is ASCII (other characters
 as JSON `\u` escapes) and at most 4 KiB. Ids are dropped first, then the text is cut.
 The cached copy of a response keeps its label, so a cache hit is labelled too. A 304

@@ -25,8 +25,9 @@ pub const HEADER: &str = "x-reg-usage";
 /// The placeholder [`scrub`] puts in place of a personal-looking value.
 const PLACEHOLDER: &str = "<redacted>";
 /// Digits in one run, `-` or `+` allowed between them, from which [`scrub`] replaces
-/// it: a person number (10 or 12), an org number, a date, a phone number. A 6-digit
-/// code is replaced too; accepted (maintainer, 2026-11-04).
+/// it: a person number (10 or 12), an org number, a date, a phone number written
+/// without spaces. Any Unicode digit counts, full-width ones included. A 6-digit code
+/// is replaced too; accepted (maintainer, 2026-11-04).
 const SCRUB_DIGITS: usize = 6;
 /// Characters of search text kept, as `search`'s own `q` cap.
 const MAX_TEXT: usize = 200;
@@ -92,6 +93,15 @@ impl Usage {
             q: text.map(|q| scrub(q).chars().take(MAX_TEXT).collect()),
             n: text.and(result.as_ref().ok()).map(hits),
             err: result.as_ref().err().map(code),
+        }
+    }
+
+    /// The label of an MCP tool call refused before an operation ran: the tool name
+    /// and the refusal's code.
+    pub fn refused(tool: &str, err: &Error) -> Self {
+        Self {
+            err: Some(code(err)),
+            ..Self::method(tool)
         }
     }
 
@@ -183,7 +193,7 @@ fn scrub_digits(word: &str) -> String {
     let mut out = String::new();
     let mut i = 0;
     while i < chars.len() {
-        if !chars[i].is_ascii_digit() {
+        if !chars[i].is_numeric() {
             out.push(chars[i]);
             i += 1;
             continue;
@@ -191,11 +201,11 @@ fn scrub_digits(word: &str) -> String {
         // The run: digits, with a single `-` or `+` between two of them.
         let (start, mut end, mut digits) = (i, i, 0);
         while end < chars.len() {
-            if chars[end].is_ascii_digit() {
+            if chars[end].is_numeric() {
                 digits += 1;
                 end += 1;
             } else if matches!(chars[end], '-' | '+')
-                && chars.get(end + 1).is_some_and(char::is_ascii_digit)
+                && chars.get(end + 1).is_some_and(|c| c.is_numeric())
             {
                 end += 1;
             } else {
@@ -212,11 +222,12 @@ fn scrub_digits(word: &str) -> String {
     out
 }
 
-/// `text` with every non-ASCII character as a JSON `\u` escape.
+/// `text` with every character a header value refuses (non-ASCII, and DEL, which
+/// JSON leaves unescaped) as a JSON `\u` escape.
 fn ascii(text: &str) -> String {
     let mut out = String::with_capacity(text.len());
     for c in text.chars() {
-        if c.is_ascii() {
+        if c.is_ascii() && c != '\x7f' {
             out.push(c);
         } else {
             let mut units = [0; 2];
