@@ -573,11 +573,10 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   only where a version continues into another part (SUN 1996 into its three parts).
   Lanes run in the order each part first starts. The page's axis reaches every version's
   start, beyond the catalog's years where needed (ICD-11), so every version has a span.
-  The graph is the version picker on a wide layout; below the narrow breakpoint the
-  graph is hidden and a full-width "Version" `Select` picks instead ("on phones we
-  should probably have a dropdown rather than a graph", maintainer ruling, 2026-11-05),
-  offered when there are two or more versions, an option adding the years only when the
-  name lacks them. A "Codes" panel follows: the narrow layout's `Select`, the picked
+  The graph is the version picker at every width, with no `Select`, as a column is
+  picked on the variable and group pages ("this should use the same component/design for
+  classifications as for variables/columns on group/variable pages", and "Graph
+  everywhere", maintainer ruling, 2026-11-05). A "Codes" panel follows: the picked
   version's whole list through `ValueSetCodes`, then "Changes since" and the name of
   each version it succeeds: the counts as one line ("2 added, 1 removed, 2 relabelled.",
   or "No codes changed."), then a disclosure that lists the codes under Added, Removed

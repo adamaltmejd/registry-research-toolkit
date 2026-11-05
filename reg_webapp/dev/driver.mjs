@@ -647,9 +647,9 @@ async function browseGroupCase(page, shoot) {
 }
 
 // Classification page → version picker boundary (maintainer ruling 2026-11-05):
-// the Versions graph picks on a wide layout and a Select below the narrow
-// breakpoint. Fails if the wide layout shows the Select or a span does not pick
-// its version, or the narrow one shows the graph or its Select does not pick.
+// the Versions graph is the picker at every width, pressed with the mouse.
+// Fails if a version has no span, the default is not picked, or a mouse press
+// on a span does not pick its version (its code changes stay on screen).
 // Versions and the default (the latest started, Nivå 2020) come from
 // webapp-dev/curation/classifications.toml.
 async function classificationPickerCase(page, shoot) {
@@ -658,25 +658,14 @@ async function classificationPickerCase(page, shoot) {
   await settled(page);
   const changes = main.getByRole("heading", { name: "Changes since Utbildningsnivå 2000", exact: true });
   await changes.waitFor();
-  const picker = main.getByRole("button", { name: /Version$/ });
   const spans = main.getByRole("checkbox");
-  const narrow = !(await page.getByRole("button", { name: "Collapse all", exact: true }).isVisible());
-  if (narrow) {
-    check(await spans.count() === 0, "the narrow layout shows the Versions graph");
-    check((await picker.textContent()).startsWith("Utbildningsnivå 2020"), "the Select does not show the default version");
-    await picker.click();
-    await page.getByRole("option", { name: /^Utbildningsnivå 2000/ }).click();
-    await page.getByRole("listbox").waitFor({ state: "detached" });
-  } else {
-    check(await picker.count() === 0, "the wide layout shows the version Select");
-    check(await spans.count() === 3, `expected one span per version, got ${await spans.count()}`);
-    check(await main.getByRole("checkbox", { name: /^Utbildningsnivå 2020/ }).isChecked(), "the default version's span is not picked");
-    const older = main.getByRole("checkbox", { name: /^Utbildningsnivå 2000/ });
-    // A mouse press on the drawn span: the checkbox input itself is visually
-    // hidden under its label's face.
-    await older.locator("xpath=ancestor::label[1]").click();
-    check(await older.isChecked(), "pressing a span did not pick its version");
-  }
+  check(await spans.count() === 3, `expected one span per version, got ${await spans.count()}`);
+  check(await main.getByRole("checkbox", { name: /^Utbildningsnivå 2020/ }).isChecked(), "the default version's span is not picked");
+  const older = main.getByRole("checkbox", { name: /^Utbildningsnivå 2000/ });
+  // A mouse press on the drawn span: the checkbox input itself is visually
+  // hidden under its label's face.
+  await older.locator("xpath=ancestor::label[1]").click();
+  check(await older.isChecked(), "pressing a span did not pick its version");
   await changes.waitFor({ state: "detached" });
   await settled(page);
   await shoot("classification-picker");

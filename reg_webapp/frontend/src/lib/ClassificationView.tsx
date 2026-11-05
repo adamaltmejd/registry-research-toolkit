@@ -8,7 +8,6 @@ import { dataAxis } from "./period";
 import { columnYearRuns, datedYearRuns, studyWindow } from "./study_window";
 import { Definitions } from "./ui/Definitions";
 import { Panel } from "./ui/Panel";
-import { Select } from "./ui/Select";
 import { useProject } from "./use_project";
 import { ValueSetCodes, VersionChanges } from "./ValueSetCodes";
 import { windowBounds } from "./window_bounds";
@@ -87,7 +86,7 @@ export function ClassificationView({
         to: run.to,
         years,
         state: "default",
-        // Pressing a version picks it: the graph is the wide layout's picker.
+        // Pressing a version picks it: the graph is the picker at every width.
         selectable: true,
         isSelected: v.fqid === picked,
         accessibleName: name,
@@ -136,40 +135,22 @@ export function ClassificationView({
             : []),
         ]}
       />
-      {/* The graph is the picker on a wide layout and the Select below the
-          narrow breakpoint, where a year is too narrow to press (maintainer
-          ruling, 2026-11-05). */}
-      <div className={classStyles.wide}>
-        <Panel title="Versions">
-          <LaneGraph
-            label="Versions"
-            lanes={lanes}
-            spans={spans}
-            edges={edges}
-            axis={axis}
-            window={study ? [study.from, study.to] : null}
-            focusSpan={focus}
-            hint={null}
-            onToggle={setChosen}
-          />
-        </Panel>
-      </div>
+      <Panel title="Versions">
+        <LaneGraph
+          label="Versions"
+          lanes={lanes}
+          spans={spans}
+          edges={edges}
+          axis={axis}
+          window={study ? [study.from, study.to] : null}
+          focusSpan={focus}
+          hint={null}
+          onToggle={setChosen}
+        />
+      </Panel>
       {version && (
         <Panel title="Codes">
           <div className={classStyles.codes}>
-            {versions.length > 1 && (
-              <div className={classStyles.narrow}>
-                <Select
-                  label="Version"
-                  value={version.fqid}
-                  options={versions.map((v) => ({
-                    id: v.fqid,
-                    name: versionName(v),
-                  }))}
-                  onChange={setChosen}
-                />
-              </div>
-            )}
             <ValueSetCodes
               key={version.fqid}
               subject={{ classification: version.fqid }}

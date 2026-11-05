@@ -1,25 +1,8 @@
-/* A classification's codes panel (DESIGN.md → Detail pane): the version
-   picker, the picked version's codes, then its changes, the gap owned here. */
+/* A classification's codes panel (DESIGN.md → Detail pane): the picked
+   version's codes, then its changes, the gap owned here. */
 .codes {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
   min-width: 0;
-}
-
-/* The Versions graph picks on a wide layout, the Select below the narrow
-   breakpoint (maintainer ruling, 2026-11-05). */
-.wide {
-  display: contents;
-}
-.narrow {
-  display: none;
-}
-@media (max-width: 60rem) {
-  .wide {
-    display: none;
-  }
-  .narrow {
-    display: block;
-  }
 }
