@@ -4,6 +4,7 @@ mod compile;
 mod input;
 mod keys;
 mod references;
+mod scope;
 mod verify;
 mod verify_mappings;
 
@@ -294,6 +295,7 @@ fn compiler_digest() -> String {
         include_str!("references.rs"),
         include_str!("compile.rs"),
         include_str!("verify.rs"),
+        include_str!("scope.rs"),
         include_str!("schema.sql"),
         include_str!("../main.rs"),
         include_str!("../emit.rs"),

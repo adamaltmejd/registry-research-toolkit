@@ -160,8 +160,8 @@ build when the builder's inputs have not changed (8a, "Reusing an earlier build"
   `reg_meta_swecov.db.zst`) needs the maintainer's explicit choice, recorded in the
   notes. Its consequence: `swecov-asset-guard` fails, SWECOV is not rebuilt and stays on
   the previous pair, and the commit still counts as deployed (step 10).
-- The scope check (8h) is an automated gate: the holdings asset is public and carries
-  only what the catalog serves.
+- The content check inside the pair verifier (8e, see 8h) is an automated gate: the
+  holdings asset is public and carries only what the catalog serves.
 
 Variables used below (absolute paths, as in 8a):
 
@@ -243,7 +243,7 @@ what it prints:
   `run it`. 8b and 8c append `<step> <base sha>` to `passed` once they pass, so a build
   whose checks never finished carries nothing over, and a mark made against another base
   does not count.
-- Always run 8d-8h and the 8i `base_sha` check at the release commit: the holdings build
+- Always run 8d-8g and the 8i `base_sha` check at the release commit: the holdings build
   from the steward checkout, which no toolkit file pins, so an earlier pair never
   carries over.
 
@@ -393,33 +393,28 @@ Exit 1 only means the two differ (`|| [ $? -eq 1 ]` keeps `set -e` from stopping
 exit 2 is an error and stops the release. The maintainer reads that summary for
 go/no-go; its counts go in the release notes.
 
-#### 8h. Scope check
+#### 8h. Scope check (part of 8e)
 
 The SWECOV catalog is public (maintainer 2026-11-03), so there is no disclosure review.
 The release must carry only what the catalog serves, never background data: steward
-repository notes, raw census or storage exports, inventory working files.
-`cargo xtask scope-check` fails when the holdings DB's schema differs from the schema
-the builder declares (every table, FTS shadow tables included, and every column must
-match, none extra or missing), when a meta key is not on the check's allowlist, when
+repository notes, raw census or storage exports, inventory working files. The pair
+verifier (`reg-build holdings` and `reg-build verify --catalog`, 8d and 8e) refuses with
+a located `holdings_content_<class>` line per item when the holdings DB's schema differs
+from the schema the builder declares (every table, FTS shadow tables included, and every
+column must match, none extra or missing), when a meta key is not on its allowlist, when
 `occurrence_locator` has rows, when a text or blob value exceeds its size bound, or when
 a `text` body names a steward working file (`*.json`, `*.jsonl`, `*.toml`) or a census
-row (`census:row=`); the last needs a steward-repo fix and re-pin, not a check change.
-Run it from this release checkout (it compiles in the builder's DDL at that commit) and
-record its one-line result in the release notes:
+row (`census:row=`); the last needs a steward-repo fix, not a check change. There is no
+separate command: a pair that passed 8e passed this check.
 
-```sh
-set -o pipefail
-cargo xtask scope-check "$evidence/catalog/reg_meta_swecov.db" | tee "$evidence/scope-check.txt"
-```
-
-A failure stops the release. Fix the build or, when the item belongs in the paired
-catalog, add its meta key or size bound to `crates/xtask/src/scope_check.rs` in a
-reviewed PR; then rebuild from 8d. Then re-check `$base_sha` against the local base file
-(it must be unchanged since 8a) and proceed.
+When an item belongs in the paired catalog, add its meta key or size bound to
+`crates/reg-build/src/holdings/scope.rs` in a reviewed PR; then rebuild from 8d. Then
+re-check `$base_sha` against the local base file (it must be unchanged since 8a) and
+proceed.
 
 #### 8i. Compress, checksum and upload both assets to the draft
 
-After verification, diff review, conformance and the scope check:
+After verification, diff review and conformance:
 
 ```sh
 [ "$(shasum -a 256 "$evidence/catalog/reg_meta.db" | cut -d' ' -f1)" = "$base_sha" ]

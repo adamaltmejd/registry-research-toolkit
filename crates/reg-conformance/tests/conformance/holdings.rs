@@ -51,7 +51,7 @@ fn compiled_pair_is_deterministic_and_verified() {
     // placement beside its disjoint allowed twin, a withheld required key, stored
     // delivery bounds replacing authored ones, a child data cell carried as a key, a
     // projection losing its parent key, swapped Code/Year associations, Late shortened
-    // by a day, Code's coding caveat removed).
+    // by a day, Code's coding caveat removed, a text body naming a steward working file).
     let pair = steward::pair().unwrap();
     let holdings = &pair.holdings;
     let published = pair.dir.join("reg_meta_fixture.db");

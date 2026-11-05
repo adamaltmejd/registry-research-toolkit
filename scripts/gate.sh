@@ -113,13 +113,6 @@ rust() {
 	[ "$rc" -ne 0 ] || run cmp "$out/1.db" "$out/2.db" || rc=1
 	rm -rf "$out"
 	[ "$rc" -eq 0 ] || return 1
-	# Release step 8h's scope check on the synthetic pair, so an unlisted meta key or a
-	# schema drift fails here rather than at the release.
-	out=$(mktemp -d "${TMPDIR:-/tmp}/gate-paired.XXXXXX") || return 1
-	run "$BIN/reg-fixture" --paired "$out" &&
-		run "$BIN/xtask" scope-check "$out/reg_meta_fixture.db" || rc=1
-	rm -rf "$out"
-	[ "$rc" -eq 0 ] || return 1
 	# The conformance suite (crates/reg-conformance), then the release checks with the
 	# `base` fixture's artifact standing in for a real one (no `REG_ARTIFACT_DIR`).
 	run cargo test -p reg-conformance --test conformance --locked &&

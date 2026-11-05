@@ -302,6 +302,8 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<()> {
     if meta(&db, "owner_kind")? != "steward" || !reg_core::is_slug(&meta(&db, "owner_id")?) {
         return Err("holdings_owner_invalid".into());
     }
+    // Before the source re-read: a leak refuses even when the steward checkout is gone.
+    super::scope::check(&db)?;
     let (topology, census, declarations) = sources(&db, root)?;
     for key in ["steward", "scope"] {
         if !serde_json::from_str::<serde_json::Value>(&meta(&db, key)?)

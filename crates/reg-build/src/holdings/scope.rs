@@ -1,20 +1,18 @@
-//! `cargo xtask scope-check <reg_meta_swecov.db>`: a holdings DB carries only what the
-//! builder declares.
+//! A holdings DB carries only what the builder declares (release step 8e).
 //!
-//! The SWECOV catalog is public (maintainer 2026-11-03), so the paired holdings asset has
-//! no disclosure review. What a release must not carry is background data: steward-repo
-//! notes, raw census or storage exports, inventory working files. This check enforces
-//! that mechanically. It lives here, not in `reg-build`, so the gate on the public asset
-//! stays independent of the code that writes it (post-F ruling Q16).
+//! The holdings asset is public (maintainer 2026-11-03), so it has no disclosure
+//! review. What it must not carry is background data: steward-repo notes, raw census or
+//! storage exports, inventory working files. The pair verifier enforces that here, in
+//! the released `reg-build`, because a steward repository verifies its own pair with
+//! that binary alone (the steward-repository move, R15.4; this supersedes the post-F
+//! Q16 choice of an xtask command).
 //!
 //! - Schema: every table (FTS shadow tables included) and column must equal what
 //!   executing the builder's DDL yields in SQLite. An extra or missing table or column
 //!   fails. `holding_relation` is optional: the builder emits it only when the steward
-//!   declares external relations. The DDL is the builder's own source text, compiled in
-//!   with `include_str!` (it is the declaration this check holds the file to); the meta
-//!   allowlist and the size bounds below are kept here by hand, so a new key or a raised
-//!   bound is a reviewed diff in this file.
-//! - Meta: every key must be in [`META_KEYS`].
+//!   declares external relations.
+//! - Meta: every key must be in [`META_KEYS`]. The allowlist and the size bounds are
+//!   kept here by hand, so a new key or a raised bound is a reviewed diff in this file.
 //! - Rows: tables the steward build must leave empty ([`EMPTY_TABLES`]) have no rows. The
 //!   semantic part keeps the catalog schema, but its source locators point into steward
 //!   working files.
@@ -26,23 +24,20 @@
 //!   public site (0.72.0: "Evidence: reference-occurrence-evidence.jsonl;
 //!   census:row=489; ...").
 //!
-//! The DB is opened read-only. Output is one summary line and the failing items' names,
-//! never row contents. Exit 1 on any failure, 2 on a usage or open error.
+//! A refusal names each failing item (a table, a column, a key or a text id), never row
+//! contents.
 
 use std::collections::{BTreeMap, BTreeSet};
 
-use rusqlite::{Connection, OpenFlags};
+use rusqlite::Connection;
 
-const EXIT_FAIL: u8 = 1;
-const EXIT_USAGE: u8 = 2;
-
-const USAGE: &str = "usage: cargo xtask scope-check <reg_meta_swecov.db>";
+use crate::error::Result;
 
 /// The builder's DDL, in the order it creates the tables.
 const DDL: [&str; 3] = [
-    include_str!("../../reg-build/src/schema.sql"),
-    include_str!("../../reg-build/src/holdings/relations.sql"),
-    include_str!("../../reg-build/src/holdings/schema.sql"),
+    include_str!("../schema.sql"),
+    include_str!("relations.sql"),
+    include_str!("schema.sql"),
 ];
 
 const OPTIONAL_TABLES: [&str; 1] = ["holding_relation"];
@@ -103,27 +98,6 @@ const EMPTY_TABLES: [&str; 1] = ["occurrence_locator"];
 
 type Columns = BTreeMap<String, BTreeSet<(String, String)>>;
 
-#[must_use]
-pub fn main(args: &[String]) -> u8 {
-    let [db] = args else {
-        eprintln!("{USAGE}");
-        return EXIT_USAGE;
-    };
-    match check(db) {
-        Ok(failing) => {
-            if failing {
-                EXIT_FAIL
-            } else {
-                0
-            }
-        }
-        Err(e) => {
-            eprintln!("scope check: {e}");
-            EXIT_USAGE
-        }
-    }
-}
-
 /// Tables with their (column, upper-cased type) sets, and the names of the virtual tables.
 fn schema_of(con: &Connection) -> rusqlite::Result<(Columns, BTreeSet<String>)> {
     let tables: Vec<(String, String)> = con
@@ -153,30 +127,24 @@ fn schema_of(con: &Connection) -> rusqlite::Result<(Columns, BTreeSet<String>)> 
     Ok((cols, virtual_tables))
 }
 
-fn expected_schema() -> Result<Columns, String> {
-    let con = Connection::open_in_memory().map_err(|e| e.to_string())?;
+fn expected_schema() -> Result<Columns> {
+    let con = Connection::open_in_memory()?;
     con.execute_batch(&DDL.join("\n"))
         .map_err(|e| format!("the builder's DDL: {e}"))?;
-    Ok(schema_of(&con).map_err(|e| e.to_string())?.0)
+    Ok(schema_of(&con)?.0)
 }
 
-/// Prints the report; `Ok(true)` when anything fails.
-fn check(path: &str) -> Result<bool, String> {
-    let con = Connection::open_with_flags(
-        path,
-        OpenFlags::SQLITE_OPEN_READ_ONLY | OpenFlags::SQLITE_OPEN_NO_MUTEX,
-    )
-    .map_err(|e| format!("{path}: {e}"))?;
+/// Refuses with one `holdings_content_<class>: <item>` line per failing item.
+pub(super) fn check(con: &Connection) -> Result<()> {
     let want = expected_schema()?;
-    let sql = |e: rusqlite::Error| format!("{path}: {e}");
-    let (have, virtual_tables) = schema_of(&con).map_err(sql)?;
+    let (have, virtual_tables) = schema_of(con)?;
 
-    let extra_tables: Vec<String> = have
+    let extra_tables = have
         .keys()
         .filter(|t| !want.contains_key(*t))
         .cloned()
         .collect();
-    let missing_tables: Vec<String> = want
+    let missing_tables = want
         .keys()
         .filter(|t| !have.contains_key(*t) && !OPTIONAL_TABLES.contains(&t.as_str()))
         .cloned()
@@ -190,19 +158,19 @@ fn check(path: &str) -> Result<bool, String> {
         extra_columns.extend(have_cols.difference(want_cols).map(named));
         missing_columns.extend(want_cols.difference(have_cols).map(named));
     }
-    let mut too_big = oversize_columns(&con, &have, &virtual_tables).map_err(sql)?;
+    let mut too_big = oversize_columns(con, &have, &virtual_tables)?;
 
     let meta: Vec<(String, Option<i64>)> = if have.contains_key("meta") {
-        con.prepare("SELECT key, length(CAST(value AS BLOB)) FROM meta")
-            .and_then(|mut s| {
-                s.query_map([], |r| Ok((r.get(0)?, r.get(1)?)))?
-                    .collect::<Result<_, _>>()
-            })
-            .map_err(sql)?
+        crate::error::rows(
+            con,
+            "SELECT key, length(CAST(value AS BLOB)) FROM meta",
+            [],
+            |r| Ok((r.get(0)?, r.get(1)?)),
+        )?
     } else {
         Vec::new()
     };
-    let unknown_keys: Vec<String> = meta
+    let unknown_keys = meta
         .iter()
         .filter(|(k, _)| !META_KEYS.contains(&k.as_str()))
         .map(|(k, _)| k.clone())
@@ -220,39 +188,44 @@ fn check(path: &str) -> Result<bool, String> {
     let mut filled = Vec::new();
     for t in EMPTY_TABLES {
         if have.contains_key(t)
-            && con
-                .query_row(&format!("SELECT EXISTS(SELECT 1 FROM \"{t}\")"), [], |r| {
-                    r.get::<_, bool>(0)
-                })
-                .map_err(sql)?
+            && con.query_row(&format!("SELECT EXISTS(SELECT 1 FROM \"{t}\")"), [], |r| {
+                r.get::<_, bool>(0)
+            })?
         {
             filled.push(t.to_owned());
         }
     }
 
     let leaked = if have.contains_key("text") {
-        working_references(&con).map_err(sql)?
+        working_references(con)?
     } else {
         Vec::new()
     };
 
-    let items = [
-        ("extra table", extra_tables),
-        ("missing table", missing_tables),
-        ("extra column", extra_columns),
-        ("missing column", missing_columns),
-        ("unknown meta key", unknown_keys),
-        ("oversize value", too_big),
-        ("non-empty table", filled),
-        ("working-file reference", leaked),
+    let mut items: [(&str, Vec<String>); 8] = [
+        ("extra_table", extra_tables),
+        ("missing_table", missing_tables),
+        ("extra_column", extra_columns),
+        ("missing_column", missing_columns),
+        ("meta_key", unknown_keys),
+        ("oversize", too_big),
+        ("nonempty_table", filled),
+        ("working_file", leaked),
     ];
-    let columns = have.values().map(BTreeSet::len).sum::<usize>();
-    let counts = format!(
-        "tables={} columns={columns} meta_keys={}",
-        have.len(),
-        meta.len()
-    );
-    Ok(report(&counts, items))
+    let mut lines = Vec::new();
+    for (class, names) in &mut items {
+        names.sort();
+        lines.extend(
+            names
+                .iter()
+                .map(|name| format!("holdings_content_{class}: {name}")),
+        );
+    }
+    if lines.is_empty() {
+        Ok(())
+    } else {
+        Err(lines.join("\n").into())
+    }
 }
 
 /// TEXT, BLOB and untyped columns over their bound, with the size found.
@@ -303,32 +276,10 @@ fn working_references(con: &Connection) -> rusqlite::Result<Vec<String>> {
     Ok(leaked)
 }
 
-/// Prints the summary line and each failing item's name; `true` when any fails.
-fn report(counts: &str, mut items: [(&str, Vec<String>); 8]) -> bool {
-    let failing: usize = items.iter().map(|(_, v)| v.len()).sum();
-    let per_class: Vec<String> = items
-        .iter()
-        .map(|(label, v)| format!("{}s={}", label.replace(' ', "_"), v.len()))
-        .collect();
-    println!(
-        "scope check {}: {counts} {}",
-        if failing > 0 { "FAIL" } else { "ok" },
-        per_class.join(" ")
-    );
-    for (label, names) in &mut items {
-        names.sort();
-        for name in names.iter() {
-            println!("  {label}: {name}");
-        }
-    }
-    failing > 0
-}
-
-/// Python's `\w` on a `str`: alphanumeric or underscore.
+/// Regex `\w`: alphanumeric or underscore.
 fn is_word(c: char) -> bool {
     c.is_alphanumeric() || c == '_'
 }
-
 /// The first steward working-file name (`[\w./-]+\.(jsonl?|toml)\b`) or census row
 /// locator (`census:row=`) in `body`, as the reported kind: `json`, `jsonl`, `toml` or
 /// `census:row`. Leftmost match first; at one start, the file name wins and its last
