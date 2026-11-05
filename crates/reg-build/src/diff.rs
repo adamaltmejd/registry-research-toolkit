@@ -5,7 +5,8 @@
 //! Everything is compared by natural key (pid, table name, meta key), never by row id:
 //! row ids are renumbered every build. Each section lists at most `N` differences in
 //! text; `--json` prints every difference as one object. Exit 0 when nothing differs, 1
-//! when something does, 2 on a usage or IO error or a schema-version mismatch.
+//! when something does, 2 on a usage or IO error or an incomparable schema version
+//! (OLD may be on an older catalog schema; `catalog` says how that is reported).
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::process::ExitCode;
@@ -144,6 +145,9 @@ impl Section {
         }
     }
 }
+
+/// The sections, and the (old, current) schema versions of a cross-schema diff.
+type Report = (Vec<Section>, Option<(u32, u32)>);
 
 /// The old and the new catalog, both read-only.
 struct Pair {
@@ -288,10 +292,13 @@ fn ordinary_tables(conn: &Connection) -> Result<BTreeSet<String>> {
         .collect())
 }
 
-fn rows(p: &Pair) -> Result<Section> {
+/// Row counts per table; `skip` holds the one-sided tables of a cross-schema diff,
+/// reported under schema changes instead.
+fn rows(p: &Pair, skip: &BTreeSet<String>) -> Result<Section> {
     // Both sides' tables: a table dropped by a same-major revision still reports its old count.
     let names: BTreeSet<String> = ordinary_tables(&p.old)?
         .union(&ordinary_tables(&p.new)?)
+        .filter(|name| !skip.contains(*name))
         .cloned()
         .collect();
     let count = |conn: &Connection, name: &str| -> Result<Option<i64>> {
@@ -921,29 +928,128 @@ fn findings(p: &Pair) -> Result<Section> {
     Ok(Section::flat("findings", "findings", items))
 }
 
-/// The catalog sections, after the schema-version check.
-fn catalog(pair: &Pair, args: &Args) -> Result<Vec<Section>> {
-    let expected = reg_core::CATALOG_SCHEMA_VERSION.to_string();
-    for (conn, path) in [(&pair.old, &args.old), (&pair.new, &args.new)] {
-        let version = schema_version(conn, path)?;
-        if version != expected {
-            return Err(
-                format!("{path}: schema version {version}, this build diffs {expected}").into(),
-            );
+/// The columns of each ordinary table.
+fn columns(conn: &Connection) -> Result<BTreeMap<String, BTreeSet<String>>> {
+    ordinary_tables(conn)?
+        .into_iter()
+        .map(|table| {
+            let cols = query(
+                conn,
+                &format!(
+                    "SELECT name FROM pragma_table_info({})",
+                    quote_literal(&table)
+                ),
+                |r| r.get(0),
+            )?;
+            Ok((table, cols.into_iter().collect()))
+        })
+        .collect()
+}
+
+fn quote_literal(s: &str) -> String {
+    format!("'{}'", s.replace('\'', "''"))
+}
+
+/// Tables and columns on one side only, across a schema bump. The other sections read
+/// only what both sides have, so these are named here once and their rows never diffed.
+fn schema_changes(p: &Pair) -> Result<(Section, BTreeSet<String>)> {
+    let (old, new) = (columns(&p.old)?, columns(&p.new)?);
+    let mut one_sided = BTreeSet::new();
+    let (mut tables_removed, mut tables_added) = (Vec::new(), Vec::new());
+    let (mut columns_removed, mut columns_added) = (Vec::new(), Vec::new());
+    let table = |name: &str| Item::new(json!({"table": name}), name.to_owned());
+    let column = |t: &str, c: &str| Item::new(json!({"table": t, "column": c}), format!("{t}.{c}"));
+    for (name, cols) in &old {
+        match new.get(name) {
+            None => {
+                tables_removed.push(table(name));
+                one_sided.insert(name.clone());
+            }
+            Some(other) => columns_removed.extend(cols.difference(other).map(|c| column(name, c))),
         }
     }
-    let (variables, hash_changes) = variables(pair)?;
-    Ok(vec![
-        schema(pair)?,
-        meta(pair)?,
-        rows(pair)?,
-        ids(pair)?,
-        registers(pair)?,
-        tables(pair)?,
-        variables,
-        valuesets(pair, &hash_changes)?,
-        findings(pair)?,
-    ])
+    for (name, cols) in &new {
+        match old.get(name) {
+            None => {
+                tables_added.push(table(name));
+                one_sided.insert(name.clone());
+            }
+            Some(other) => columns_added.extend(cols.difference(other).map(|c| column(name, c))),
+        }
+    }
+    let section = Section {
+        key: "schema_changes",
+        title: "schema changes",
+        groups: vec![
+            ("tables_removed", tables_removed),
+            ("tables_added", tables_added),
+            ("columns_removed", columns_removed),
+            ("columns_added", columns_added),
+        ],
+    };
+    Ok((section, one_sided))
+}
+
+/// The catalog sections, after the schema-version check. NEW must have this build's
+/// schema; OLD may have an older one (a release diffs across a schema bump) but never a
+/// newer one. Returns (old, current) schema versions when they differ.
+fn catalog(pair: &Pair, args: &Args) -> Result<Report> {
+    let expected = reg_core::CATALOG_SCHEMA_VERSION;
+    let refuse = |path: &str, version: &str| -> crate::error::Error {
+        format!("{path}: schema version {version}, this build diffs {expected}").into()
+    };
+    let new = schema_version(&pair.new, &args.new)?;
+    if new != expected.to_string() {
+        return Err(refuse(&args.new, &new));
+    }
+    let old_text = schema_version(&pair.old, &args.old)?;
+    let old = match old_text.parse::<u32>() {
+        Ok(v) if v <= expected => v,
+        _ => return Err(refuse(&args.old, &old_text)),
+    };
+    if old == expected {
+        let (variables, hash_changes) = variables(pair)?;
+        return Ok((
+            vec![
+                schema(pair)?,
+                meta(pair)?,
+                rows(pair, &BTreeSet::new())?,
+                ids(pair)?,
+                registers(pair)?,
+                tables(pair)?,
+                variables,
+                valuesets(pair, &hash_changes)?,
+                findings(pair)?,
+            ],
+            None,
+        ));
+    }
+    // A query the older schema cannot answer is a located refusal, not a silent gap.
+    let sections = (|| -> Result<Vec<Section>> {
+        let (changes, one_sided) = schema_changes(pair)?;
+        let mut schema = schema(pair)?;
+        for (_, items) in &mut schema.groups {
+            items.retain(|i| {
+                !(i.json["type"] == "table"
+                    && one_sided.contains(i.json["name"].as_str().unwrap_or_default()))
+            });
+        }
+        let (variables, hash_changes) = variables(pair)?;
+        Ok(vec![
+            changes,
+            schema,
+            meta(pair)?,
+            rows(pair, &one_sided)?,
+            ids(pair)?,
+            registers(pair)?,
+            tables(pair)?,
+            variables,
+            valuesets(pair, &hash_changes)?,
+            findings(pair)?,
+        ])
+    })()
+    .map_err(|e| format!("{}: schema {old} is not comparable: {e}", args.old))?;
+    Ok((sections, Some((old, expected))))
 }
 
 /// The report: text or JSON, and whether any counted difference exists.
@@ -952,23 +1058,31 @@ fn diff(args: &Args) -> Result<(String, bool)> {
         old: open(&args.old)?,
         new: open(&args.new)?,
     };
-    let sections = if args.holdings {
+    let (sections, cross) = if args.holdings {
         holdings::sections(&pair, &args.old, &args.new)?
     } else {
         catalog(&pair, args)?
     };
     let differs = sections.iter().any(Section::differs);
     let out = if args.json {
-        let mut tree = Value::Object(
-            sections
-                .iter()
-                .map(|s| (s.key.to_owned(), s.json()))
-                .collect(),
-        );
+        let mut tree: serde_json::Map<String, Value> = sections
+            .iter()
+            .map(|s| (s.key.to_owned(), s.json()))
+            .collect();
+        if let Some((old, current)) = cross {
+            tree.insert(
+                "cross_schema".into(),
+                json!({"previous": old, "current": current}),
+            );
+        }
+        let mut tree = Value::Object(tree);
         tree.sort_all_objects();
         tree.to_string() + "\n"
     } else {
-        sections
+        let head = cross.map_or_else(String::new, |(old, current)| {
+            format!("cross-schema comparison: previous schema {old}, current schema {current}\n\n")
+        });
+        head + &sections
             .iter()
             .map(|s| s.text(args.limit))
             .collect::<Vec<_>>()

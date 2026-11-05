@@ -267,9 +267,13 @@ target/release/reg-build verify "$evidence/catalog/reg_meta.db" --previous "$pre
 
 Retain stdout in `catalog-verify.txt` beside `catalog-diff.json`, including the pre-v1
 id-change report when the previous release is pre-v1. `--previous` is required. A
-verification failure stops publication. The current verifier requires the previous DB to
-have the same schema version; a future schema bump that makes it incomparable needs a
-reviewed procedure change before release, not an unrecorded skip.
+verification failure stops publication. The verifier compares across a catalog schema
+bump: the previous DB's schema version must be present and no newer than the current
+one, and when it is older stdout carries a
+`cross-schema comparison: previous schema N, current schema M` line that the evidence
+keeps. If the id queries cannot run on the older schema (a dropped table or column),
+verify refuses with `previous release: schema N is not comparable: <sqlite error>`; that
+refusal needs a reviewed procedure change before release, not an unrecorded skip.
 
 #### 8c. Review the catalog diff
 
@@ -282,10 +286,16 @@ target/release/reg-build diff "$prev/reg_meta.db" "$evidence/catalog/reg_meta.db
 ```
 
 Exit 0 means no changes, 1 means differences to review, and 2 means an error that stops
-the release. Handle exit 1 explicitly if running under `set -e`. The builder agent reads
-the diff, confirms only intended changes, and puts its summary in the release notes.
-After 8b passes, and again after the diff review, record each step:
-`echo "8b $base_sha" >> "$evidence/passed"`,
+the release. Handle exit 1 explicitly if running under `set -e`. Across a catalog schema
+bump the diff accepts a previous DB on an older schema (never a newer one): the text
+starts with `cross-schema comparison: previous schema N, current schema M` (JSON
+`cross_schema`), and a `schema changes` section (JSON `schema_changes`) names each table
+and column on one side only, without diffing their rows. Review that section against the
+bump's PR. A query the older schema cannot answer exits 2 with
+`schema N is not comparable: <sqlite error>`, which needs the same reviewed procedure
+change as 8b. The builder agent reads the diff, confirms only intended changes, and puts
+its summary in the release notes. After 8b passes, and again after the diff review,
+record each step: `echo "8b $base_sha" >> "$evidence/passed"`,
 `echo "8c $base_sha" >> "$evidence/passed"`.
 
 #### 8d. Compile the holdings
@@ -369,17 +379,21 @@ decides, and the finding is recorded in the notes.
 
 #### 8g. Compare the holdings census with the previous paired release
 
-From 0.72.0 on both sides are built by `reg-build holdings`. The baseline (`$old`)
-depends on the holdings schema. When it moved since the previous release, the baseline
-is the previous release's steward pin recompiled with this release's binary against this
-release's base catalog, into a separate directory. Otherwise it is the previous paired
-release's `reg_meta_swecov.db`: download its `reg_meta_swecov.db.zst` to a separate
-directory, verify its compressed SHA-256 against GitHub's asset digest and decompress
-it. `reg-build diff --holdings` refuses a holdings schema mismatch
-(`PRAGMA user_version` or the `schema_version` meta key) and names it. It reports census
-placement per column (placed, held, unplaced, and the changed placements by old to new
-`table_pid`, classed newly placed, folded or renamed, variable or interval changed, or
-unmapped), reader-visible text changes by kind (keys, never bodies), and finding and
+From 0.72.0 on both sides are built by `reg-build holdings`. The baseline (`$old`) is
+always the previous paired release's published `reg_meta_swecov.db`, what users had:
+download its `reg_meta_swecov.db.zst` to a separate directory, verify its compressed
+SHA-256 against GitHub's asset digest and decompress it. Never recompile an old steward
+pin. `reg-build diff --holdings` accepts a baseline on an older holdings schema, never a
+newer one; it refuses a missing or non-numeric schema, or a `PRAGMA user_version` that
+differs from the `schema_version` meta key, and names both sides. Across a schema bump
+the text starts with `cross-schema comparison: previous schema N, current schema M`
+(JSON `cross_schema`) and a `schema changes` section (JSON `schema_changes`) counts the
+version change and names each table and column on one side only, without diffing their
+rows; a query the older schema cannot answer exits 2 with
+`holdings schema N is not comparable: <sqlite error>`. It reports census placement per
+column (placed, held, unplaced, and the changed placements by old to new `table_pid`,
+classed newly placed, folded or renamed, variable or interval changed, or unmapped),
+reader-visible text changes by kind (keys, never bodies), and finding and
 holdings-notice deltas by code. The JSON goes to the evidence directory only.
 
 ```sh

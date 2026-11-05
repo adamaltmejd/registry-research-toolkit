@@ -109,13 +109,6 @@
   width: 20px;
 }
 
-.loading {
-  padding: 5px var(--space-3) 5px calc(var(--space-1) + 20px + var(--space-3));
-  color: var(--text-muted);
-  font-size: var(--text-sm);
-  font-style: italic;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .triangle {
     transition: none;

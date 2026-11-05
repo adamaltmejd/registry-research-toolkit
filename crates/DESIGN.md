@@ -753,27 +753,33 @@ overlapping curated overrides are refused at both locations.
 
 **Decisions taken in milestone C.**
 
-- **Release diff.** `reg-build diff OLD NEW [--json] [-n N]` compares two current-schema
-  catalogs by natural key (pid, table name, meta key), never by row id, in nine
-  sections: schema (`sqlite_master`), meta, row counts per table, ids (added, removed,
-  kind changed, moved, retired), provider and register names, table names, roles,
-  unit-type slugs and spans, per-variable segments, label and definition runs, value
-  sets (including shared-hash sentinel changes and the codes added and removed where
-  only a segment's value-set hash changed), and finding counts per code. Text shows at
-  most `N` (default 20) per section; `--json` is complete. Exit 0 when nothing differs,
-  1 when something does (the meta keys `generation_id`, `catalog_version`,
-  `builder_version` and `curation_digest` never count, since they differ every release),
-  2 on a usage or IO error or a missing or different `schema_version` major. A surviving
-  variable id is listed as moved when both occurrence target sets are non-empty and no
-  old/new pair shares a table slug and folded spelling with overlapping `[start, end)`
-  periods. Explicit table ids are compared by table name; implicit tables share their
-  register's id and are excluded. `--holdings` compares two holdings catalogs of the
-  same holdings schema instead (release step 8g): census columns by (physical table,
-  column), with placed, held and unplaced counts, changed placements grouped by old and
-  new `table_pid` and classed newly placed, folded or renamed, variable or interval
-  changed, or unmapped; reader-visible text by kind, keyed by pid and source key and
-  listing keys, never bodies; and finding and holdings-notice deltas by code, compared
-  by (code, subject, period).
+- **Release diff.** `reg-build diff OLD NEW [--json] [-n N]` compares a current-schema
+  NEW with an OLD of the same or an older schema by natural key (pid, table name, meta
+  key), never by row id, in nine sections: schema (`sqlite_master`), meta, row counts
+  per table, ids (added, removed, kind changed, moved, retired), provider and register
+  names, table names, roles, cadences and spans, per-variable segments, label and
+  definition runs, value sets (including shared-hash sentinel changes and the codes
+  added and removed where only a segment's value-set hash changed), and finding counts
+  per code. Text shows at most `N` (default 20) per section; `--json` is complete. Exit
+  0 when nothing differs, 1 when something does (the meta keys `generation_id`,
+  `catalog_version`, `builder_version` and `curation_digest` never count, since they
+  differ every release), 2 on a usage or IO error, a missing `schema_version`, a NEW not
+  on this build's schema or an OLD on a newer one. Across a schema bump the report
+  starts with a cross-schema line (`cross_schema` in JSON) and a schema changes section
+  naming each table and column on one side only; those are never row-diffed, the other
+  sections read only what both sides have, and a query the older schema cannot answer
+  exits 2 as `OLD: schema N is not comparable: <error>`. A schema-only difference exits 1.
+  A surviving variable id is listed as moved when both occurrence target sets are
+  non-empty and no old/new pair shares a table slug and folded spelling with overlapping
+  `[start, end)` periods. Explicit table ids are compared by table name; implicit tables
+  share their register's id and are excluded. `--holdings` compares two holdings
+  catalogs instead (release step 8g), OLD on the same or an older holdings schema with
+  the same cross-schema report: census columns by (physical table, column), with placed,
+  held and unplaced counts, changed placements grouped by old and new `table_pid` and
+  classed newly placed, folded or renamed, variable or interval changed, or unmapped;
+  reader-visible text by kind, keyed by pid and source key and listing keys, never
+  bodies; and finding and holdings-notice deltas by code, compared by (code, subject,
+  period).
 - **The frame reader.** `frame` reads a directory of frame JSONL files as one input, the
   neutral interchange format that conformance fixtures are written in by hand. The
   reader assigns every locator (file and line) and computes every value-set hash, so a
@@ -790,24 +796,27 @@ overlapping curated overrides are refused at both locations.
   release. `emit` runs it on the staged file before replacing the output, so conformance
   and the release skill call the same authority. The schema version is
   `reg_core::CATALOG_SCHEMA_VERSION`, stamped into both `meta.schema_version` and
-  `PRAGMA user_version`; `verify` requires both to equal it, and a previous file of any
-  other version is not comparable. When the previous release's catalog version has an
-  integer major of at least 1, removed ids from `ident` or `var_set` must appear with
-  the same kind in `ident_retired`, and existing retirements must remain. A published
-  variable id's targets are its column-bearing occurrences' (table slug, folded
-  spelling, `[start, end)` period) triples. Targets overlap when table and spelling
-  match and their periods overlap; matching names in disjoint periods do not preserve
-  identity. An explicit table id targets its table name. Implicit tables share their
-  register's id and are excluded from the table rule. If an id of the same kind
-  survives, both target sets are non-empty, and no old/new targets overlap,
-  `verify --previous` refuses it as moved under that same version rule, naming the pid
-  and both target sets; retire that id and mint a new one. Otherwise, missing unretired
-  ids, moved ids and removed retirements are reported on stdout, one line per id in id
-  order with a total count, without refusing. The rule follows the previous release's
-  version, whatever the candidate's: a `dev` or 1.0.0 candidate compared with a 0.x
-  release is lenient. No flag changes this rule; other verification checks still apply.
-  Overlapping targets, including growth, are allowed. `diff` lists and counts moved ids
-  in its `ids` section. Registers and providers are excluded from this rule.
+  `PRAGMA user_version`; `verify` requires both to equal it. A previous file with a
+  missing or newer schema version is not comparable; an older one is compared while the
+  id queries still run on it (a missing table or column refuses as
+  `schema N is not comparable: <sqlite error>`), and stdout records the cross-schema
+  comparison. When the previous release's catalog version has an integer major of at
+  least 1, removed ids from `ident` or `var_set` must appear with the same kind in
+  `ident_retired`, and existing retirements must remain. A published variable id's
+  targets are its column-bearing occurrences' (table slug, folded spelling,
+  `[start, end)` period) triples. Targets overlap when table and spelling match and
+  their periods overlap; matching names in disjoint periods do not preserve identity. An
+  explicit table id targets its table name. Implicit tables share their register's id
+  and are excluded from the table rule. If an id of the same kind survives, both target
+  sets are non-empty, and no old/new targets overlap, `verify --previous` refuses it as
+  moved under that same version rule, naming the pid and both target sets; retire that
+  id and mint a new one. Otherwise, missing unretired ids, moved ids and removed
+  retirements are reported on stdout, one line per id in id order with a total count,
+  without refusing. The rule follows the previous release's version, whatever the
+  candidate's: a `dev` or 1.0.0 candidate compared with a 0.x release is lenient. No
+  flag changes this rule; other verification checks still apply. Overlapping targets,
+  including growth, are allowed. `diff` lists and counts moved ids in its `ids` section.
+  Registers and providers are excluded from this rule.
 - **The link stage** (`reg-build/src/link.rs`) only matches endpoints: an endpoint names
   its register by handle or by name (`fold_identity` of the trimmed name, which exactly
   one register must match), then a table, a release or a variable by source key, where a
@@ -942,6 +951,19 @@ trailing Unicode punctuation; displayed wording stays original. A silent provide
 set, `coded` unknown, and `state` clear (the default) are all left out, which keeps
 agent context small. Storage type stays in the catalog (orders use it) and is shown only
 when stated.
+
+**A page load is a few requests, not one per row (#2232).** The edge rate-limits every
+request, cache hits included, so a view never fans out a read per listed entity. The
+root `show` carries each provider's registers (the provider summary's list), so the
+browse column is one read. `segments` at a table ref with `variable` (up to 200
+variables) lists those variables' rows in that table as one list, each row naming its
+`variable`, so the project page reads a table's columns in a few requests. Each page
+rebuilds the read's whole row set, so naming many variables trades requests for repeated
+work: on a 107-column LISA draft 25 variables a read gives 9 reads building 3,010 rows,
+100 gives 9 building 11,812. A table ref without `variable` is refused: a whole table's
+list runs to thousands of rows, rebuilt per page. A cursor binds a SHA-256 of the
+request's parameters, not the parameters themselves, so naming 200 variables keeps it
+short.
 
 **Names next to ids.** A response that refers to a register, table or variable carries
 its name next to the FQID, as `show` gives it (a reference row's name over a steward

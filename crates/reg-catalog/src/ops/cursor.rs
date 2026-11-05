@@ -2,7 +2,7 @@
 //! (`operations.toml`: a cursor from another generation is `stale_cursor`).
 
 use super::Params;
-use reg_core::hex;
+use reg_core::{hex, sha256_hex};
 
 use crate::{Code, Error};
 
@@ -44,16 +44,13 @@ pub fn invalid(message: &str) -> Error {
 }
 
 /// A cursor is the hex of `generation.context.offset.position`: the generation it
-/// was issued on, the request it continues (`context`, itself hex, since a query
-/// text may hold a `.`), where the next page starts and the position of the row
-/// before it (last, so it may hold a `.`).
+/// was issued on, the request it continues (the SHA-256 of `context`: fixed-size, so
+/// a request naming 200 variables keeps a short cursor, and free of `.`), where the
+/// next page starts and the position of the row before it (last, so it may hold a
+/// `.`).
 #[must_use]
 pub fn encode(generation: &str, context: &str, offset: usize, position: &str) -> String {
-    hex(format!(
-        "{generation}.{}.{offset}.{position}",
-        hex(context.as_bytes())
-    )
-    .as_bytes())
+    hex(format!("{generation}.{}.{offset}.{position}", sha256_hex(context)).as_bytes())
 }
 
 /// The cursor's offset (1 to `depth`) and position.
@@ -92,7 +89,7 @@ pub fn decode(
             vec![generation.into()],
         ));
     }
-    if issued_for != hex(context.as_bytes()) {
+    if issued_for != sha256_hex(context) {
         return Err(invalid("Cursor was issued for other parameters."));
     }
     let offset = offset
