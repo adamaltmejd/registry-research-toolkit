@@ -1,0 +1,229 @@
+{
+  "description": "A decile resting on 49 units, one below the policy's statistic_min_support of 50, refuses, though 49 passes min_cell_count.",
+  "schema": "../../../schemas/mock-stats.schema.json",
+  "policy": "../../../schemas/mock-stats.policy.json",
+  "candidate": {
+    "counts.parquet": {
+      "columns": [
+        {
+          "name": "scaffold",
+          "type": "string",
+          "values": [
+            "0.1.0"
+          ]
+        },
+        {
+          "name": "key_epoch",
+          "type": "int32",
+          "values": [
+            1
+          ]
+        },
+        {
+          "name": "table",
+          "type": "string",
+          "values": [
+            "income_by_sex"
+          ]
+        },
+        {
+          "name": "target",
+          "type": "string",
+          "values": [
+            "population"
+          ]
+        },
+        {
+          "name": "year",
+          "type": "int32",
+          "values": [
+            2020
+          ]
+        },
+        {
+          "name": "age_min",
+          "type": "int32",
+          "values": [
+            null
+          ]
+        },
+        {
+          "name": "age_max",
+          "type": "int32",
+          "values": [
+            null
+          ]
+        },
+        {
+          "name": "sex",
+          "type": "int32",
+          "values": [
+            null
+          ]
+        },
+        {
+          "name": "code",
+          "type": "string",
+          "values": [
+            null
+          ]
+        },
+        {
+          "name": "n_units",
+          "type": "int64",
+          "values": [
+            5
+          ]
+        },
+        {
+          "name": "n_rows",
+          "type": "double",
+          "values": [
+            null
+          ]
+        }
+      ]
+    },
+    "deciles.parquet": {
+      "columns": [
+        {
+          "name": "scaffold",
+          "type": "string",
+          "values": [
+            "0.1.0"
+          ]
+        },
+        {
+          "name": "key_epoch",
+          "type": "int32",
+          "values": [
+            1
+          ]
+        },
+        {
+          "name": "table",
+          "type": "string",
+          "values": [
+            "income_by_sex"
+          ]
+        },
+        {
+          "name": "target",
+          "type": "string",
+          "values": [
+            "individ_2020/LoneInk"
+          ]
+        },
+        {
+          "name": "year",
+          "type": "int32",
+          "values": [
+            2020
+          ]
+        },
+        {
+          "name": "age_min",
+          "type": "int32",
+          "values": [
+            null
+          ]
+        },
+        {
+          "name": "age_max",
+          "type": "int32",
+          "values": [
+            null
+          ]
+        },
+        {
+          "name": "sex",
+          "type": "int32",
+          "values": [
+            null
+          ]
+        },
+        {
+          "name": "n_units",
+          "type": "int64",
+          "values": [
+            49
+          ]
+        },
+        {
+          "name": "p10",
+          "type": "double",
+          "values": [
+            null
+          ]
+        },
+        {
+          "name": "p20",
+          "type": "double",
+          "values": [
+            null
+          ]
+        },
+        {
+          "name": "p30",
+          "type": "double",
+          "values": [
+            null
+          ]
+        },
+        {
+          "name": "p40",
+          "type": "double",
+          "values": [
+            null
+          ]
+        },
+        {
+          "name": "p50",
+          "type": "double",
+          "values": [
+            100
+          ]
+        },
+        {
+          "name": "p60",
+          "type": "double",
+          "values": [
+            null
+          ]
+        },
+        {
+          "name": "p70",
+          "type": "double",
+          "values": [
+            null
+          ]
+        },
+        {
+          "name": "p80",
+          "type": "double",
+          "values": [
+            null
+          ]
+        },
+        {
+          "name": "p90",
+          "type": "double",
+          "values": [
+            null
+          ]
+        }
+      ]
+    }
+  },
+  "expect": {
+    "result": "refused",
+    "code": "disclosure",
+    "findings": [
+      {
+        "file": "deciles.parquet",
+        "column": "p50",
+        "rule": "statistic_support_too_small"
+      }
+    ]
+  }
+}

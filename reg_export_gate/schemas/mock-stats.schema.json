@@ -1,0 +1,50 @@
+{
+  "format": "reg-export-gate/schema",
+  "format_version": 1,
+  "name": "mock-stats",
+  "version": 1,
+  "description": "Marginal statistics for local mock data (#707 milestone 2), written by the register-mock-data scaffold: cell-key-perturbed unit counts and rounded deciles, by year, age range and sex.",
+  "files": [
+    {
+      "name": "counts.parquet",
+      "description": "Units per cell: the project's population, a file's units and rows, or a column's codes.",
+      "columns": [
+        { "name": "scaffold", "type": "string", "role": "dimension" },
+        { "name": "key_epoch", "type": "integer", "role": "dimension" },
+        { "name": "table", "type": "string", "role": "dimension" },
+        { "name": "target", "type": "string", "role": "dimension" },
+        { "name": "year", "type": "integer", "role": "dimension" },
+        { "name": "age_min", "type": "integer", "role": "dimension" },
+        { "name": "age_max", "type": "integer", "role": "dimension" },
+        { "name": "sex", "type": "integer", "role": "dimension" },
+        { "name": "code", "type": "string", "role": "dimension" },
+        { "name": "n_units", "type": "integer", "role": "person_count" },
+        { "name": "n_rows", "type": "double", "role": "statistic", "support": "n_units" }
+      ]
+    },
+    {
+      "name": "deciles.parquet",
+      "description": "Deciles p10 to p90 of a numeric column per cell.",
+      "columns": [
+        { "name": "scaffold", "type": "string", "role": "dimension" },
+        { "name": "key_epoch", "type": "integer", "role": "dimension" },
+        { "name": "table", "type": "string", "role": "dimension" },
+        { "name": "target", "type": "string", "role": "dimension" },
+        { "name": "year", "type": "integer", "role": "dimension" },
+        { "name": "age_min", "type": "integer", "role": "dimension" },
+        { "name": "age_max", "type": "integer", "role": "dimension" },
+        { "name": "sex", "type": "integer", "role": "dimension" },
+        { "name": "n_units", "type": "integer", "role": "person_count" },
+        { "name": "p10", "type": "double", "role": "statistic", "support": "n_units" },
+        { "name": "p20", "type": "double", "role": "statistic", "support": "n_units" },
+        { "name": "p30", "type": "double", "role": "statistic", "support": "n_units" },
+        { "name": "p40", "type": "double", "role": "statistic", "support": "n_units" },
+        { "name": "p50", "type": "double", "role": "statistic", "support": "n_units" },
+        { "name": "p60", "type": "double", "role": "statistic", "support": "n_units" },
+        { "name": "p70", "type": "double", "role": "statistic", "support": "n_units" },
+        { "name": "p80", "type": "double", "role": "statistic", "support": "n_units" },
+        { "name": "p90", "type": "double", "role": "statistic", "support": "n_units" }
+      ]
+    }
+  ]
+}
