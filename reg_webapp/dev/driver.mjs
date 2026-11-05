@@ -672,8 +672,9 @@ async function classificationPickerCase(page, shoot) {
     check(await spans.count() === 3, `expected one span per version, got ${await spans.count()}`);
     check(await main.getByRole("checkbox", { name: /^Utbildningsnivå 2020/ }).isChecked(), "the default version's span is not picked");
     const older = main.getByRole("checkbox", { name: /^Utbildningsnivå 2000/ });
-    await older.focus();
-    await older.press("Space");
+    // A mouse press on the drawn span: the checkbox input itself is visually
+    // hidden under its label's face.
+    await older.locator("xpath=ancestor::label[1]").click();
     check(await older.isChecked(), "pressing a span did not pick its version");
   }
   await changes.waitFor({ state: "detached" });
