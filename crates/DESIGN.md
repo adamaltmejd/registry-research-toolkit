@@ -2109,12 +2109,14 @@ name (`type-name` refusal otherwise), so an override to text is `text`, which th
 never reads, and `set type = "text"` pins a column as text. An `assert` transcribes a
 delivery in reader vocabulary, so the rule reads its `char` like a source record's. Each
 change the rule makes is provenance: an occurrence override on `type`, rule
-`integer-codes`, with the stated `char` as its source value. The rule reads documented
-code literals only, never MONA rows, names or sampling. It proposes no decimal: D's
-2026-10-28 ruling keeps integer/decimal switches to evidenced curation, and a code list
-proves its codes, not that an uncoded amount is integral. On 0.75.0 the retired N1 pass
-published 25,676 reviews (all text to integer) on 3,673 coded variables and 45 row keys;
-the rule applies to the coded ones whose whole segment qualifies.
+`integer-codes`, with the stated `char` as its source value. A converted segment that
+now matches an adjacent integer segment of one form joins it, as segment building joins
+adjacent runs. The rule reads documented code literals only, never MONA rows, names or
+sampling. It proposes no decimal: D's 2026-10-28 ruling keeps integer/decimal switches
+to evidenced curation, and a code list proves its codes, not that an uncoded amount is
+integral. On 0.75.0 the retired N1 pass published 25,676 reviews (all text to integer)
+on 3,673 coded variables and 45 row keys; the rule applies to the coded ones whose whole
+segment qualifies.
 
 The adopted type is catalog metadata. Extract files take their types from SQL storage
 (`reg_mona_runner/DESIGN.md`, "Types per format"), so the rule changes no `.dta`,

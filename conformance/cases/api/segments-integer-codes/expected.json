@@ -16,7 +16,8 @@
               "rule": "integer-codes",
               "source_value": "char"
             }
-          ]
+          ],
+          []
         ]
       ]
     }

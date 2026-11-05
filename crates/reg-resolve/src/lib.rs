@@ -1261,6 +1261,10 @@ pub(crate) fn resolve_located(
             texts,
         });
     }
+    // Before any finding names a segment by index (it rejoins segments) and before F1,
+    // so type changes compare the published segment types.
+    integer_codes::apply(&mut variables, &mut resolved, valuesets);
+
     // Evaluate the exemption on final segments, after adjacent components have joined.
     // Assignments can merge keys; this exemption applies only within one source key.
     let mut segment_occurrences: BTreeMap<(usize, usize), Vec<&ResolvedOccurrence>> =
@@ -1361,9 +1365,6 @@ pub(crate) fn resolve_located(
             }
         }
     }
-
-    // Before F1, so type changes compare the published segment types.
-    integer_codes::apply(&mut variables, &mut resolved, valuesets);
 
     f1::changes(
         &variables,
