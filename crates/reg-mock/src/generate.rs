@@ -421,7 +421,8 @@ fn attribute_cell(
                 return from_text(&mapped(&format!("{county}80")), kind);
             }
             // One municipality per unit, the same in every file: drawn from the unit's
-            // own stream, not the column's.
+            // own stream, not the column's. simplify: a stream per row, cache it per
+            // unit if --allow-large runs past the 1M cap get slow.
             let key = person.map_or_else(|| unit.firm.map(|f| f.key), |p| Some(p.key))?;
             let mut stable = Rng::new(unit.seed, &format!("municipality/{key}"));
             from_text(&mapped(pool[pick(&mut stable, pool.len())]), kind)?
