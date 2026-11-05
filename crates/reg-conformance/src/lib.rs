@@ -459,7 +459,12 @@ pub fn pin_steward(root: &Path) -> Result<(), String> {
         "Pin synthetic inputs",
     ])?;
     if git(&["remote", "get-url", "origin"]).is_err() {
-        git(&["remote", "add", "origin", "fixture"])?;
+        git(&[
+            "remote",
+            "add",
+            "origin",
+            "https://example.invalid/fixture/steward.git",
+        ])?;
     }
     Ok(())
 }
