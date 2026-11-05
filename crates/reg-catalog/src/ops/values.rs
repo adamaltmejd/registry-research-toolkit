@@ -160,18 +160,7 @@ fn classification_set(conn: &Connection, given: &str) -> Result<i64, Error> {
 
 /// One decoded keyset position, or `None` for the first page.
 fn position(server: &Server, params: &Params) -> Result<Option<String>, Error> {
-    params
-        .get("cursor")
-        .map(|token| {
-            cursor::decode(
-                token,
-                server.catalog.generation(),
-                &cursor::context(params),
-                usize::MAX,
-            )
-            .map(|(_, position)| position)
-        })
-        .transpose()
+    Ok(cursor::start(server, params, "cursor", "", usize::MAX)?.map(|(_, position)| position))
 }
 
 /// A value set's items in `ord` order (so an item's index is its `ord`), each with its
@@ -285,12 +274,7 @@ fn content(
         .take(limit + 1)
         .collect();
     let next_cursor = cursor::next(&mut page, limit, |last| {
-        Some(cursor::encode(
-            server.catalog.generation(),
-            &cursor::context(params),
-            limit,
-            &last.to_string(),
-        ))
+        Some(cursor::token(server, params, "", limit, &last.to_string()))
     });
     let items = page.into_iter().map(|ord| items[ord].0.clone()).collect();
     Ok(serde_json::to_value(ValueItemsPage {
@@ -357,12 +341,7 @@ fn pair(server: &Server, conn: &Connection, params: &Params, code: &str) -> Resu
     }
     let mut page: Vec<(String, i64)> = found.into_iter().take(limit + 1).collect();
     let next_cursor = cursor::next(&mut page, limit, |(hash, _)| {
-        Some(cursor::encode(
-            server.catalog.generation(),
-            &cursor::context(params),
-            limit,
-            hash,
-        ))
+        Some(cursor::token(server, params, "", limit, hash))
     });
     let items = page
         .into_iter()

@@ -140,19 +140,10 @@ fn findings(server: &Server, params: &Params) -> Result<Value, Error> {
     // A cursor pages one group, so it comes with that group's code (every cursor is
     // issued for one). A code holds one severity; were it to hold two, the offset
     // would page both groups alike.
-    let offset = match params.get("cursor") {
-        Some(_) if code.is_none() => return Err(Error::invalid_parameter("cursor")),
-        Some(&token) => {
-            cursor::decode(
-                token,
-                server.catalog.generation(),
-                &cursor::context(params),
-                usize::MAX,
-            )?
-            .0
-        }
-        None => 0,
-    };
+    if params.get("cursor").is_some() && code.is_none() {
+        return Err(Error::invalid_parameter("cursor"));
+    }
+    let offset = cursor::start(server, params, "cursor", "", usize::MAX)?.map_or(0, |(o, _)| o);
     let end = offset.saturating_add(take);
 
     // The query streams every finding in order; each group's count is its rows, and
@@ -252,14 +243,10 @@ fn findings(server: &Server, params: &Params) -> Result<Value, Error> {
         group.next_cursor = (end < group.count).then(|| {
             let mut next = Params {
                 values: params.values.clone(),
+                cursors: params.cursors.clone(),
             };
             next.values.insert("code", vec![group.code.as_str()]);
-            cursor::encode(
-                server.catalog.generation(),
-                &cursor::context(&next),
-                end,
-                "",
-            )
+            cursor::token(server, &next, "", end, "")
         });
     }
     Ok(serde_json::to_value(FindingGroups { groups }).expect("findings serialize"))

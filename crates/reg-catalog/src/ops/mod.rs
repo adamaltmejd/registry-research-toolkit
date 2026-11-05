@@ -210,6 +210,8 @@ type Components = Vec<(String, RefOr<Schema>)>;
 #[derive(Default)]
 pub struct Params<'a> {
     values: BTreeMap<&'a str, Vec<&'a str>>,
+    /// The operation's [`Type::Cursor`] parameters, which a cursor's context leaves out.
+    cursors: Vec<&'static str>,
 }
 
 impl<'a> Params<'a> {
@@ -356,7 +358,14 @@ pub fn call<T>(
     run: Run<T>,
     query: &[(String, String)],
 ) -> Result<T, Error> {
-    let mut params = Params::default();
+    let mut params = Params {
+        cursors: declared
+            .iter()
+            .filter(|p| matches!(p.ty, Type::Cursor))
+            .map(|p| p.name)
+            .collect(),
+        ..Params::default()
+    };
     for (name, value) in query {
         // Unknown and repeated parameters are errors, never ignored; a repeat is an
         // array's next value.

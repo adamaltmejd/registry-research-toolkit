@@ -181,18 +181,7 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
     };
     let evidence = flag(params, "evidence")?;
     let limit = limit(params)?;
-    let offset = match params.get("cursor") {
-        Some(&token) => {
-            cursor::decode(
-                token,
-                server.catalog.generation(),
-                &cursor::context(params),
-                usize::MAX,
-            )?
-            .0
-        }
-        None => 0,
-    };
+    let offset = cursor::start(server, params, "cursor", "", usize::MAX)?.map_or(0, |(o, _)| o);
     // simplify: the whole list is built, then paged; a variable has tens of rows and
     // a table read at most 200 variables' rows in one table. Page in SQL again if a
     // list reaches thousands.
@@ -217,12 +206,7 @@ fn segments(server: &Server, params: &Params) -> Result<Value, Error> {
     sort(&mut rows);
     let mut page: Vec<Row> = rows.into_iter().skip(offset).take(limit + 1).collect();
     let next_cursor = cursor::next(&mut page, limit, |_| {
-        Some(cursor::encode(
-            server.catalog.generation(),
-            &cursor::context(params),
-            offset + limit,
-            "",
-        ))
+        Some(cursor::token(server, params, "", offset + limit, ""))
     });
     let items = served(server, &origins, page, evidence)?;
     Ok(serde_json::to_value(SegmentPage { items, next_cursor }).expect("a page serializes"))

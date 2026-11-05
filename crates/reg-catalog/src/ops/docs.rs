@@ -192,13 +192,7 @@ fn search(server: &Server, params: &Params) -> Result<Value, Error> {
         None => None,
     };
     let limit = limit(params)?;
-    let context = cursor::context(params);
-    let offset = match params.get("cursor") {
-        Some(cursor) => {
-            cursor::decode(cursor, server.catalog.generation(), &context, SEARCH_DEPTH)?.0
-        }
-        None => 0,
-    };
+    let offset = cursor::start(server, params, "cursor", "", SEARCH_DEPTH)?.map_or(0, |(o, _)| o);
 
     // A page never passes the SEARCH_DEPTH-th hit; one extra row tells whether more follow.
     let take = limit.min(SEARCH_DEPTH - offset);
@@ -210,14 +204,8 @@ fn search(server: &Server, params: &Params) -> Result<Value, Error> {
         offset,
     )?;
     let next_cursor = cursor::next(&mut items, take, |last| {
-        (offset + take < SEARCH_DEPTH).then(|| {
-            cursor::encode(
-                server.catalog.generation(),
-                &context,
-                offset + take,
-                &last.doc,
-            )
-        })
+        (offset + take < SEARCH_DEPTH)
+            .then(|| cursor::token(server, params, "", offset + take, &last.doc))
     });
     let register_ingested = register
         .map(|id| {

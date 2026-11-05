@@ -403,13 +403,8 @@ fn schema(server: &Server, params: &Params) -> Result<Value, Error> {
     let request = super::days(params, "period")?.unwrap_or((i64::MIN, i64::MAX));
     // The cursor is checked before the ref: a cursor from another generation is stale
     // whatever its ref now resolves to.
-    let context = cursor::context(params);
-    let (offset, after) = match params.get("cursor") {
-        Some(token) => {
-            let (offset, text) =
-                cursor::decode(token, server.catalog.generation(), &context, usize::MAX)?;
-            (offset, Some(position(&text)?))
-        }
+    let (offset, after) = match cursor::start(server, params, "cursor", "", usize::MAX)? {
+        Some((offset, text)) => (offset, Some(position(&text)?)),
         None => (0, None),
     };
     let conn = server.catalog.connect_for_ref(params["ref"])?;
@@ -442,9 +437,10 @@ fn schema(server: &Server, params: &Params) -> Result<Value, Error> {
         .take(limit + 1)
         .collect();
     let next_cursor = cursor::next(&mut rest, limit, |last| {
-        Some(cursor::encode(
-            server.catalog.generation(),
-            &context,
+        Some(cursor::token(
+            server,
+            params,
+            "",
             offset + limit,
             &format!(
                 "{}{SEPARATOR}{}{SEPARATOR}{}{SEPARATOR}{}",
