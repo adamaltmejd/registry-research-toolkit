@@ -2028,16 +2028,7 @@ pub(super) fn complete_findings(
     }
     crate::timing::done("findings: curate links", t);
     let t = std::time::Instant::now();
-    crate::proposals::generate(
-        &mut resolved,
-        &applied.classifications,
-        &sets,
-        // Classification sentinels bind after the curation stages (`bound_sentinels`)
-        // and are keyed by a hash unbound occurrences may share: N1 reads only the
-        // statement-declared ones, which both stages see.
-        &sentinel_codes(applied.sentinels.iter().filter(|s| s.inventory.is_none())),
-        &linked,
-    )?;
+    crate::proposals::generate(&mut resolved, &applied.classifications, &sets, &linked)?;
     crate::timing::done("findings: proposals", t);
     Ok(resolved)
 }
