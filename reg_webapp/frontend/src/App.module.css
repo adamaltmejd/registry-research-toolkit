@@ -72,9 +72,19 @@
     grid-template-columns: minmax(0, 1fr);
   }
   /* The register page lists its variables itself, so the stacked layout has
-     no second column. */
-  .body .list {
+     no second column, except on a list page while the search holds text: the
+     column's matches replace the page, under its breadcrumb (App.tsx). */
+  .body:not([data-narrow-shows="list"]) .list,
+  .body[data-narrow-shows="list"] .routed {
     display: none;
+  }
+  .body[data-narrow-shows="list"] .list {
+    position: static;
+    order: 1;
+    height: calc(100dvh - var(--top-bar-height, 0px));
+  }
+  .body[data-narrow-shows="list"] .detail {
+    min-height: 0;
   }
   .browse {
     position: static;
@@ -85,7 +95,7 @@
   }
   /* On the list the pane keeps only the root's visually hidden h1, so the page
      keeps its `main` landmark and its heading. */
-  .body[data-narrow-shows="detail"] .browse,
+  .body:not([data-narrow-shows="browse"]) .browse,
   .body[data-narrow-shows="browse"] .crumbs {
     display: none;
   }
