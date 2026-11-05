@@ -304,7 +304,10 @@ function useRegisterColumn(
     selectedId: items.some((item) => item.id === selectedId)
       ? selectedId
       : null,
-    selectedExact: items.some((item) => item.id === selectedId),
+    // A member's address selects its group's row, which is not that page.
+    selectedExact:
+      selectedId === selectedFqid &&
+      items.some((item) => item.id === selectedId),
     empty: needle.trim()
       ? `No variables match “${needle.trim()}”. Press Escape to clear the search.`
       : "This register lists no variables.",
