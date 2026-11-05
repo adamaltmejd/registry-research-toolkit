@@ -901,12 +901,12 @@ grow new visual language meanwhile.
   1,500 rows renders every row, so find-in-page works. A longer one (a provider's page:
   4,378 rows on /catalog/scb) renders only the rows in view, with RAC's `Virtualizer`
   and `ListLayout`: whole, it took about 3.2 s to paint and 820 ms an arrow key at 6×
-  CPU throttling on a production build; virtualized, 1.0 s and 22 ms. There its
-  register headers scroll with the rows (RAC 1.22.1's `ListLayout` cannot keep them
-  sticky) and find-in-page sees only the rows in view; the search bar covers it. The
-  global catalog's largest registers (ULF, FRIDA, HEK) pass the threshold too; in a
-  virtualized list the selected row draws its own static bar, since the layout places
-  rows where the moving bar cannot measure them.
+  CPU throttling on a production build; virtualized, 1.0 s and 22 ms. There its register
+  headers scroll with the rows (RAC 1.22.1's `ListLayout` cannot keep them sticky) and
+  find-in-page sees only the rows in view; the search bar covers it. The global
+  catalog's largest registers (ULF, FRIDA, HEK) pass the threshold too; in a virtualized
+  list the selected row draws its own static bar, since the layout places rows where the
+  moving bar cannot measure them.
 - **ColumnChip:** the one treatment for a column name (see Typography). Three states:
   outlined, in project (`accent` fill), outside the study window (`viz-span-out`,
   `text-muted`: `text-faint` fails AA for chip text, so the faint stroke carries the
