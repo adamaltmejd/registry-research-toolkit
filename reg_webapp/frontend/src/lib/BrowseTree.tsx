@@ -510,6 +510,14 @@ export function BrowseTree({ className }: { className?: string }) {
                 />
               )}
             </Tree>
+            {/* Where the classifications group would be: without it a failed
+              read would look like a catalog with none. */}
+            {families.value === null && (
+              <StatusRow tone="error" live="alert" className={styles.error}>
+                The classification list did not load. Reload the page to try
+                again.
+              </StatusRow>
+            )}
           </>
         )}
         <span

@@ -295,6 +295,7 @@ pub struct ShowSetFacet {
 }
 
 fn show(server: &Server, params: &Params) -> Result<Value, Error> {
+    let evidence = flag(params, "evidence")?;
     if params.get("ref").is_some_and(|r| *r == "class") {
         let families = class_families(server)?;
         return Ok(serde_json::to_value(Show::ClassFamilies { families }).expect("Show serializes"));
@@ -303,7 +304,6 @@ fn show(server: &Server, params: &Params) -> Result<Value, Error> {
         Some(value) => server.catalog.connect_for_ref(value)?,
         None => server.catalog.connect()?,
     };
-    let evidence = flag(params, "evidence")?;
     let shown = match params.get("ref") {
         None => {
             let extra = server.catalog.connect_holdings()?;
