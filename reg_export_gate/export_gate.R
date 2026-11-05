@@ -435,7 +435,12 @@ export_gate <- local({
   # rewrite, so a cell that looks suppressed could hold a value.
   check_disclosure <- function(candidates, policy) {
     findings <- list()
-    minimum <- arrow::Scalar$create(policy$min_cell_count, arrow::int64())
+    # A minimum past int64 (2^63 and up) is above every count; Arrow would
+    # clamp it to INT64_MAX, letting that count pass.
+    above_all <- policy$min_cell_count >= 2^63
+    minimum <- if (!above_all) {
+      arrow::Scalar$create(policy$min_cell_count, arrow::int64())
+    }
     for (cand in candidates) {
       file <- cand$spec$name
       columns <- cand$columns
@@ -449,11 +454,11 @@ export_gate <- local({
         }
         if (col$role %in% COUNT_ROLES) {
           # A negative count is below any minimum.
-          below <- arrow::call_function(
-            "less",
-            column$cast(arrow::int64()),
-            minimum
-          )
+          below <- if (above_all) {
+            !is_null(column)
+          } else {
+            arrow::call_function("less", column$cast(arrow::int64()), minimum)
+          }
           if (any_true(below)) {
             findings <- c(
               findings,
