@@ -214,6 +214,14 @@ Design brief:
 - Verification routes: <dev.sh shot routes and states>
 ```
 
+Every new visible element reuses an existing primitive or token pattern from the same
+surface. The PR body carries a short "new elements" table: element, nearest existing
+analogue on the same page or column, and any deviation with its reason.
+
+A DESIGN.md edit in a PR that changes UI is listed in the PR body as "new rule, proposed
+by the implementer" or "maintainer ruling: <quote or ref>". Attribute a line to the
+maintainer only with their words or a link to them; your own choice is never a ruling.
+
 Check the brief against the closest existing view: same pattern, primitives, states and
 names for the same things? A divergence, or a duplicate of an existing route, primitive
 or data contract, is a design fork to surface with a recommendation. Then implement the

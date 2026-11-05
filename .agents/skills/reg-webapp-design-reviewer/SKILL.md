@@ -39,6 +39,12 @@ covers the server and catalog pages only), and all source — new, reworked and 
 — is held to it. A breach of its "Colors", "Typography", "Components" or "Do's and
 Don'ts" rules is a finding; the checks below are where the yield is.
 
+The candidate's own DESIGN.md edits are proposals, not the spec. Judge each against the
+rest of the design system before you judge the code against it. A line attributed to the
+maintainer must quote or link the maintainer's words; an attribution without that is a
+finding. The PR body lists each DESIGN.md change as "new rule, proposed by the
+implementer" or "maintainer ruling: <quote or ref>"; a missing list is a finding.
+
 ## Source review
 
 ### Token discipline
@@ -182,13 +188,13 @@ printed console output alongside it.
 - Cross-route coherence: render at least one untouched sibling route beside the changed
   one and compare type scale, spacing rhythm, rules and dividers, and table/card/tag
   treatment. Flag divergence from the surrounding app.
-- Sibling match: for each new element (a row, a divider, a header, a mark), name the
-  existing component it imitates and compare the two side by side, in the same list
-  where there is one. A divider, border or separator with a different token, colour or
-  weight from the other rules in that list is a finding, even when a token comment or
-  the candidate's own DESIGN.md edit allows it: the candidate cannot license itself.
-  (#2305 drew the Classifications rule in `border-strong` beside `border` section
-  rules.)
+- Neighbour check (mandatory): for each new element in the PR body's "new elements"
+  table (a row, a divider, a header, a mark), find its nearest analogue on the same page
+  or in the same column and compare their computed styles in the rendered pass: border
+  colour and width, spacing on each side, type, radius. Any difference the table does
+  not explain is at least a P2, even when a token comment or the candidate's own
+  DESIGN.md edit allows it. (#2305 drew the Classifications rule in `border-strong`
+  beside the column's `border` section rules.)
 
 Drive by hand where touched: a tree collapse with a child focused (Tab still enters the
 tree), a filter then Escape (expansion restored), an overlay under reduced motion, `⌘K`.

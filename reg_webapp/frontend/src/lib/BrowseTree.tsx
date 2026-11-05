@@ -51,19 +51,20 @@ import { useCatalogRead } from "./use_store_read";
 /** One row: a provider at level 1, a register under it; or, below the
  * providers, the one "Classifications" row, which never expands: the
  * classifications are listed in the next column, as a register's variables
- * are (maintainer 2026-11-05). */
+ * are (maintainer review of the classification pages, 2026-11-05, point 2). */
 interface BrowseNode {
   id: string;
   name: string;
   href: string;
   children: BrowseNode[];
-  /** Set on a register the filter keeps only through its variables: how many. */
-  variableMatches?: number;
+  /** Set on a row the filter keeps only through what it lists: how many
+   * ("4 variables", "3 classifications"). */
+  matchedOn?: string;
   /** Drawn under a rule that sets it apart from the rows above. */
   separated?: boolean;
-  /** Names listed under a leaf row in the next column: the filter keeps the
-   * row while one of them matches. */
-  listedNames?: string[];
+  /** The items a leaf row lists in the next column, each by its names: the
+   * filter keeps the row while one of them matches. */
+  listed?: { noun: [string, string]; names: string[][] };
 }
 
 const COLLAPSED_KEY = "reg_webapp:browse_collapsed";
@@ -149,15 +150,21 @@ function filterNodes(
       if (node.children.length > 0) matched.add(node.id);
       return [node];
     }
-    if (
-      node.listedNames &&
-      rankFilter(node.listedNames, needle, (name) => [name]).length > 0
-    )
-      return [node];
+    const listedHits = node.listed
+      ? rankFilter(node.listed.names, needle, (names) => names).length
+      : 0;
+    if (node.listed && listedHits > 0)
+      return [{ ...node, matchedOn: counted(listedHits, node.listed.noun) }];
     const byName = rankFilter(node.children, needle, named);
     const byVariables = node.children
       .filter((child) => !byName.includes(child) && facets.has(child.id))
-      .map((child) => ({ ...child, variableMatches: facets.get(child.id) }));
+      .map((child) => ({
+        ...child,
+        matchedOn: counted(facets.get(child.id) ?? 0, [
+          "variable",
+          "variables",
+        ]),
+      }));
     const children = [...byName, ...byVariables];
     if (children.length === 0) return [];
     matched.add(node.id);
@@ -183,18 +190,19 @@ function browseNodes(
   }));
   if (families.length === 0) return providers;
   // One row after the providers, under the list's section rule (maintainer
-  // 2026-11-05); the classifications themselves are the next column's items.
-  // The filter matches them by name and slug, as that column does.
+  // review of the classification pages, 2026-11-05, point 1); the
+  // classifications themselves are the next column's items. The filter matches
+  // them by name and slug, as that column does.
   const classifications: BrowseNode = {
     id: CLASSIFICATIONS,
     name: CLASSIFICATIONS_LABEL,
     href: catalogHref(CLASSIFICATIONS),
     separated: true,
     children: [],
-    listedNames: families.flatMap((family) => [
-      family.name,
-      leafSlug(family.fqid),
-    ]),
+    listed: {
+      noun: ["classification", "classifications"],
+      names: families.map((family) => [family.name, leafSlug(family.fqid)]),
+    },
   };
   return [...providers, classifications];
 }
@@ -537,7 +545,8 @@ export function BrowseTree({ className }: { className?: string }) {
   );
 }
 
-const matchedCount = (n: number) => (n === 1 ? "1 variable" : `${n} variables`);
+const counted = (n: number, [one, many]: [string, string]) =>
+  `${n} ${n === 1 ? one : many}`;
 
 function BrowseItem({
   node,
@@ -566,9 +575,9 @@ function BrowseItem({
     <TreeItem
       id={node.id}
       textValue={
-        node.variableMatches === undefined
+        node.matchedOn === undefined
           ? node.name
-          : `${node.name}, matched on ${matchedCount(node.variableMatches)}`
+          : `${node.name}, matched on ${node.matchedOn}`
       }
       className={`${styles.row} ${node.separated ? styles.separated : ""}`}
       onPress={
@@ -602,9 +611,9 @@ function BrowseItem({
               </span>
               {/* A register kept only through its variables says so on its
                   own line (DESIGN.md → ColumnList → Filter state). */}
-              {node.variableMatches !== undefined && (
-                <span className={styles.variableMatches}>
-                  matched on <b>{matchedCount(node.variableMatches)}</b>
+              {node.matchedOn !== undefined && (
+                <span className={styles.matchedOn}>
+                  matched on <b>{node.matchedOn}</b>
                 </span>
               )}
             </span>

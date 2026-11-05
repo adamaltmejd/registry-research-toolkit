@@ -389,9 +389,9 @@ function useProviderColumn(
 
 /**
  * The classification pages' column: every classification, by name in Swedish
- * collation, as a register's column lists its variables (maintainer
- * 2026-11-05). The search filters it by name and slug, on the list already
- * loaded for the browse column. A version's address selects its
+ * collation, as a register's column lists its variables (maintainer review
+ * of the classification pages, 2026-11-05, point 2). The search filters it by
+ * name and slug, on the list already loaded for the browse column. A version's address selects its
  * classification's row. Null off the classification pages.
  */
 function useClassificationColumn(

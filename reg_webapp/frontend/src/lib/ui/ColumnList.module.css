@@ -149,7 +149,8 @@
 }
 
 /* The rule between sections of a column list: the `border` hairline, the same
-   in both browse columns (maintainer 2026-11-05). */
+   in both browse columns (maintainer review of the classification pages,
+   2026-11-05, point 1). */
 .sectionRule {
   border-top: 1px solid var(--border);
 }
