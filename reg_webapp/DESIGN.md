@@ -472,8 +472,10 @@ only the fields the request has:
   `order` names none; the SPA reports a pick with its own beacon instead.
 - `q`, `n`: a search's text and the hits on the answered page. `n: 0` is a search that
   found nothing.
-- `err`: a refusal's code, including an MCP tool call refused before it ran (its `op` is
-  then the tool name).
+- `err`: a refusal's code, including an MCP tool call or a POST body refused before the
+  operation ran (`op` is then the tool or operation name). A refusal from the write
+  limits (rate limit, body cap) comes before any operation is known and carries no
+  label; the edge records its status.
 
 Search text and ids pass a scrub first: a word holding an `@` and any run of six or more
 digits (`-` or `+` allowed between them, any Unicode digit) become `<redacted>`. That

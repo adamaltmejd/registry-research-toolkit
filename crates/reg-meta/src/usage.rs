@@ -31,7 +31,7 @@ const PLACEHOLDER: &str = "<redacted>";
 const SCRUB_DIGITS: usize = 6;
 /// Characters of search text kept, as `search`'s own `q` cap.
 const MAX_TEXT: usize = 200;
-/// Variable ids of one MCP `order` counted as picks.
+/// Ids in one label: an MCP `order`'s picks, and any request's ref parameters.
 const MAX_PICKS: usize = 100;
 /// The MCP methods a label names; any other is `other` ([`Usage::method`]).
 const MCP_METHODS: [&str; 8] = [
@@ -85,9 +85,12 @@ impl Usage {
         mcp: bool,
     ) -> Self {
         let declared = |name: &str| op.params.iter().find(|p| p.name == name);
+        // Bounded before anything is scrubbed or serialized: a refused request may
+        // repeat a ref parameter thousands of times.
         let mut fqids: Vec<String> = query
             .iter()
             .filter(|(name, _)| declared(name).is_some_and(|p| matches!(p.ty, Type::Ref)))
+            .take(MAX_PICKS)
             .map(|(_, value)| scrub(value))
             .collect();
         if mcp && op.name == "order" {
@@ -95,7 +98,8 @@ impl Usage {
                 .iter()
                 .find(|(name, _)| declared(name).is_some_and(|p| matches!(p.ty, Type::Project)))
                 .and_then(|(_, text)| serde_json::from_str::<Value>(text).ok());
-            fqids.extend(bound_variables(body.as_ref()).take(MAX_PICKS).map(scrub));
+            let room = MAX_PICKS - fqids.len();
+            fqids.extend(bound_variables(body.as_ref()).take(room).map(scrub));
         }
         let text = query.iter().find(|(name, _)| name == "q").map(|(_, q)| q);
         Self {

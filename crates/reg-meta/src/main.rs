@@ -396,9 +396,15 @@ async fn submit(
     bytes: Bytes,
 ) -> Response {
     let body = op.body().expect("a POST operation has a body");
-    let params = match posted(&server, body, route, query, &bytes) {
+    let params = match posted(body, route, query, &bytes) {
         Ok(params) => params,
-        Err(refused) => return *refused,
+        Err(err) => {
+            return Answer {
+                usage: Some(Usage::refused(op.name, &err)),
+                ..Answer::new(&server, Err(err))
+            }
+            .into_response();
+        }
     };
     run(&server, op, op.route_params(route), params, false)
         .await
@@ -414,9 +420,9 @@ async fn submit_download(
     bytes: Bytes,
 ) -> Response {
     let body = download.body().expect("a POST download has a body");
-    let params = match posted(&server, body, download.path, query, &bytes) {
+    let params = match posted(body, download.path, query, &bytes) {
         Ok(params) => params,
-        Err(refused) => return *refused,
+        Err(err) => return refusal(&server, err),
     };
     let declared = download.params.iter().collect();
     match call(&server, declared, download.run, params).await {
@@ -426,15 +432,14 @@ async fn submit_download(
 }
 
 /// A POST's request parameters: the query's, then its body, parsed strictly
-/// ([`body::parse`]), as the parameter `body`; or the response refusing the body.
+/// ([`body::parse`]), as the parameter `body`; or the error refusing the body.
 fn posted(
-    server: &Server,
     body: &Param,
     route: &str,
     query: Vec<(String, String)>,
     bytes: &[u8],
-) -> Result<Vec<(String, String)>, Box<Response>> {
-    let project = body::parse(bytes).map_err(|err| Box::new(refusal(server, err)))?;
+) -> Result<Vec<(String, String)>, Error> {
+    let project = body::parse(bytes)?;
     let mut params = request_params(route, Vec::new(), query);
     params.push((body.name.to_owned(), project.to_string()));
     Ok(params)
