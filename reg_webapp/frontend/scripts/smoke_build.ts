@@ -10,11 +10,27 @@
 // The API is aborted throughout: the bootstrap needs no server.
 //
 //   bun scripts/smoke_build.ts
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { preview } from "vite";
 
 const BOOTSTRAP_ALERT = "The app could not load one of its parts";
 const CATALOG_NAV = 'nav[aria-label="Catalog"]';
 const AGENT_BROWSER = `${import.meta.dir}/../node_modules/agent-browser/bin/agent-browser.js`;
+// The daemon's sockets default to ~/.agent-browser, which a sandboxed shell cannot
+// write (#1776): a private temp dir, as dev.sh makes, removed at the end. Short on
+// purpose, under /tmp: it holds a unix socket, whose path caps at 103 bytes. Each spawn
+// passes process.env explicitly: Bun.spawn's default is the environment at startup.
+let socketDir: string | undefined;
+if (!process.env.AGENT_BROWSER_SOCKET_DIR) {
+  try {
+    socketDir = mkdtempSync("/tmp/ab.");
+  } catch {
+    socketDir = mkdtempSync(join(tmpdir(), "ab."));
+  }
+  process.env.AGENT_BROWSER_SOCKET_DIR = socketDir;
+}
 
 function check(ok: boolean, what: string): void {
   if (!ok) throw new Error(`smoke: ${what}`);
@@ -34,7 +50,7 @@ async function ab(session: string, ...args: string[]): Promise<string> {
       "2m",
       ...args,
     ],
-    { stdout: "pipe", stderr: "pipe" },
+    { stdout: "pipe", stderr: "pipe", env: process.env },
   );
   const [out, err, code] = await Promise.all([
     new Response(run.stdout).text(),
@@ -119,8 +135,10 @@ try {
   );
 } finally {
   for (const session of sessions) {
-    await Bun.spawn(["bun", AGENT_BROWSER, "--session", session, "close"])
-      .exited;
+    await Bun.spawn(["bun", AGENT_BROWSER, "--session", session, "close"], {
+      env: process.env,
+    }).exited;
   }
   await server.close();
+  if (socketDir) rmSync(socketDir, { recursive: true, force: true });
 }

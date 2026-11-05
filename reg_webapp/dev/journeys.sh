@@ -194,6 +194,16 @@ JOURNEYS=(
 	steward:paired:1280x900
 )
 
+# The page's uncaught exceptions, one first line each. Fails closed: a failed command
+# or a response that is not a successful error list is an error, never "none".
+page_errors() {
+	local json
+	json=$(ab errors --json) || return 1
+	printf '%s' "$json" | bun -e 'const r = await Bun.stdin.json();
+		if (r.success !== true || !Array.isArray(r.data?.errors)) process.exit(1);
+		for (const e of r.data.errors) console.log(e.text.split("\n")[0])'
+}
+
 # Run the named journeys (none: every journey of the served fixture), each in its own
 # session, then check the page threw nothing. Prints each journey's time.
 run_journeys() {
@@ -215,8 +225,9 @@ run_journeys() {
 		ab_session="reg-webapp-$$-$name"
 		started=$SECONDS
 		if ab set viewport "${viewport%x*}" "${viewport#*x}" >/dev/null && "j_$name"; then
-			errors=$(ab errors --json | bun -e 'for (const e of (await Bun.stdin.json()).data?.errors ?? []) console.log(e.text.split("\n")[0])')
-			if [ -n "$errors" ]; then
+			if ! errors=$(page_errors); then
+				fail "could not read the page's errors" || rc=1
+			elif [ -n "$errors" ]; then
 				fail "the page threw: $errors" || rc=1
 			else
 				echo "journey: OK $name ($((SECONDS - started)) s)"
