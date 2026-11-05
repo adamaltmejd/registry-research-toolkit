@@ -180,8 +180,15 @@ printed console output alongside it.
   behavior outside this candidate). Treat `incomplete` entries as prompts to check by
   eye, not findings.
 - Cross-route coherence: render at least one untouched sibling route beside the changed
-  one and compare type scale, spacing rhythm and table/card/tag treatment. Flag
-  divergence from the surrounding app.
+  one and compare type scale, spacing rhythm, rules and dividers, and table/card/tag
+  treatment. Flag divergence from the surrounding app.
+- Sibling match: for each new element (a row, a divider, a header, a mark), name the
+  existing component it imitates and compare the two side by side, in the same list
+  where there is one. A divider, border or separator with a different token, colour or
+  weight from the other rules in that list is a finding, even when a token comment or
+  the candidate's own DESIGN.md edit allows it: the candidate cannot license itself.
+  (#2305 drew the Classifications rule in `border-strong` beside `border` section
+  rules.)
 
 Drive by hand where touched: a tree collapse with a child focused (Tab still enters the
 tree), a filter then Escape (expansion restored), an overlay under reduced motion, `⌘K`.

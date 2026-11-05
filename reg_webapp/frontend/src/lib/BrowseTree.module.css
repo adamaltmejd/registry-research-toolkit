@@ -115,9 +115,10 @@
   }
 }
 
-/* The classifications sit below the providers under an ink rule: a section of
-   their own, not another provider (maintainer 2026-11-05). */
-.row[data-separated] {
+/* The Classifications row sits below the providers under the list's section
+   rule, the one over another register's matches in the variables column
+   (maintainer 2026-11-05). */
+.separated {
+  composes: sectionRule from "./ui/ColumnList.module.css";
   margin-top: var(--space-2);
-  border-top: 1px solid var(--border-strong);
 }

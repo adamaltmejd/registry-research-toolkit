@@ -62,6 +62,11 @@ export function App() {
     route.fqidPath !== "class"
       ? route.fqidPath
       : null;
+  const classPath =
+    route.name === "catalog-node" &&
+    (route.fqidPath === "class" || route.fqidPath.startsWith("class/"))
+      ? route.fqidPath
+      : null;
   const searching = useBrowseFiltering();
   const [providerRef = null, registerRef = null] = trailAncestors(route);
   const provider = useCatalogRead(ancestorNameRead, providerRef);
@@ -105,6 +110,7 @@ export function App() {
             <VariableList
               registerFqid={registerFqid}
               providerFqid={providerFqid}
+              classPath={classPath}
               selectedFqid={
                 route.name === "catalog-node" &&
                 unqualifiedCatalogPath(route.fqidPath).split("/").length > 2
