@@ -1,5 +1,6 @@
-// The production build's bootstrap, before merge (`scripts/gate.sh frontend`, after
-// `bun run build`): Vite's preview server serves dist/, and Chromium checks that
+// The production build's bootstrap, before merge (`scripts/gate.sh flows`, after
+// `bun run build`): Vite's preview server serves dist/, and Chrome, driven by
+// agent-browser, checks that
 //   1. the app mounts (its "Catalog" navigation, the browse tree, renders),
 //   2. the reg-core .wasm answers 200 with `application/wasm`,
 //   3. with the .wasm request aborted, the bootstrap alert renders in #app,
@@ -9,20 +10,68 @@
 // The API is aborted throughout: the bootstrap needs no server.
 //
 //   bun scripts/smoke_build.ts
-import { chromium, type Page } from "playwright";
+import { mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import { preview } from "vite";
-import { chromiumLaunchArgs } from "./chromium";
 
 const BOOTSTRAP_ALERT = "The app could not load one of its parts";
+const CATALOG_NAV = 'nav[aria-label="Catalog"]';
+const AGENT_BROWSER = `${import.meta.dir}/../node_modules/agent-browser/bin/agent-browser.js`;
+// The daemon's sockets default to ~/.agent-browser, which a sandboxed shell cannot
+// write (#1776): a private temp dir, as dev.sh makes, removed at the end. Short on
+// purpose, under /tmp: it holds a unix socket, whose path caps at 103 bytes. Each spawn
+// passes process.env explicitly: Bun.spawn's default is the environment at startup.
+let socketDir: string | undefined;
+if (!process.env.AGENT_BROWSER_SOCKET_DIR) {
+  try {
+    socketDir = mkdtempSync("/tmp/ab.");
+  } catch {
+    socketDir = mkdtempSync(join(tmpdir(), "ab."));
+  }
+  process.env.AGENT_BROWSER_SOCKET_DIR = socketDir;
+}
 
 function check(ok: boolean, what: string): void {
   if (!ok) throw new Error(`smoke: ${what}`);
   console.log(`smoke: ok — ${what}`);
 }
 
-async function open(page: Page, base: string): Promise<void> {
-  await page.route("**/api/**", (route) => route.abort());
-  await page.goto(base);
+/** One agent-browser command in `session`; its stdout, or a thrown error. Async: the
+ * preview server runs on this process's event loop, which a sync spawn would block. */
+async function ab(session: string, ...args: string[]): Promise<string> {
+  const run = Bun.spawn(
+    [
+      "bun",
+      AGENT_BROWSER,
+      "--session",
+      session,
+      "--idle-timeout",
+      "2m",
+      ...args,
+    ],
+    { stdout: "pipe", stderr: "pipe", env: process.env },
+  );
+  const [out, err, code] = await Promise.all([
+    new Response(run.stdout).text(),
+    new Response(run.stderr).text(),
+    run.exited,
+  ]);
+  if (code !== 0)
+    throw new Error(`smoke: agent-browser ${args.join(" ")}: ${out}${err}`);
+  return out;
+}
+
+/** A fresh session that aborts the API (and `alsoAbort`) from the first navigation. */
+async function open(
+  session: string,
+  base: string,
+  alsoAbort?: string,
+): Promise<void> {
+  await ab(session, "open");
+  await ab(session, "network", "route", "**/api/**", "--abort");
+  if (alsoAbort) await ab(session, "network", "route", alsoAbort, "--abort");
+  await ab(session, "open", base);
 }
 
 const DIST = `${import.meta.dir}/../dist`;
@@ -51,44 +100,45 @@ if (!base) {
   await server.close();
   throw new Error("smoke: vite preview reported no local URL");
 }
-const browser = await chromium.launch({ args: chromiumLaunchArgs });
+// One session per page: each is its own browser, so the first page's cached .wasm
+// cannot satisfy the second page's aborted load.
+const sessions = [`smoke-${process.pid}`, `smoke-${process.pid}-broken`];
 try {
-  // One context for both pages: under `--single-process` (the seatbelt sandbox) a
-  // second browser context crashes Chromium. Routes below are page-scoped, and
-  // routed requests bypass the HTTP cache, so the first page's .wasm cannot
-  // satisfy the second page's aborted load.
-  const context = await browser.newContext();
-  const page = await context.newPage();
-  const wasm = page.waitForResponse((r) => r.url().endsWith(".wasm"));
-  await open(page, base);
-  const response = await wasm;
+  const [session, broken] = sessions;
+  await open(session, base);
+  await ab(session, "wait", CATALOG_NAV);
+  const mountedMs = Number(await ab(session, "eval", "performance.now()"));
+  const requests: {
+    url: string;
+    status: number;
+    responseHeaders?: Record<string, string>;
+  }[] = JSON.parse(
+    await ab(session, "network", "requests", "--filter", ".wasm", "--json"),
+  ).data.requests;
+  const wasm = requests.find((r) => r.url.endsWith(".wasm"));
+  const type = wasm?.responseHeaders?.["Content-Type"];
   check(
-    response.status() === 200 &&
-      response.headers()["content-type"] === "application/wasm",
-    `the .wasm answers 200 application/wasm (${response.status()} ${response.headers()["content-type"]})`,
+    wasm?.status === 200 && type === "application/wasm",
+    `the .wasm answers 200 application/wasm (${wasm?.status} ${type})`,
   );
-  await page
-    .getByRole("navigation", { name: "Catalog" })
-    .waitFor({ timeout: 10_000 });
-  const mountedMs = await page.evaluate(() => performance.now());
   check(
     true,
     `the app mounts (${mountedMs.toFixed(0)} ms after navigation start)`,
   );
 
-  const broken = await context.newPage();
-  await broken.route("**/*.wasm", (route) => route.abort());
-  await open(broken, base);
-  await broken
-    .locator("#app")
-    .getByRole("alert")
-    .filter({ hasText: BOOTSTRAP_ALERT })
-    .waitFor({ timeout: 10_000 });
+  await open(broken, base, "**/*.wasm");
+  await ab(broken, "wait", "--text", BOOTSTRAP_ALERT);
   check(
-    (await broken.getByRole("navigation", { name: "Catalog" }).count()) === 0,
+    (await ab(broken, "get", "count", `#app [role="alert"]`)).trim() !== "0" &&
+      (await ab(broken, "get", "count", CATALOG_NAV)).trim() === "0",
     "with the .wasm aborted, the bootstrap alert renders and the app does not mount",
   );
 } finally {
-  await browser.close();
+  for (const session of sessions) {
+    await Bun.spawn(["bun", AGENT_BROWSER, "--session", session, "close"], {
+      env: process.env,
+    }).exited;
+  }
   await server.close();
+  if (socketDir) rmSync(socketDir, { recursive: true, force: true });
 }

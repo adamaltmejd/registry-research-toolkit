@@ -120,15 +120,16 @@ rust() {
 }
 
 flows() {
-	# The production bootstrap and interactive flows share the browser-only job.
+	# The production bootstrap smoke and the user journeys share the browser-only job.
 	run_in "$FRONTEND" bun install --frozen-lockfile &&
 		run_in "$FRONTEND" bun run gen:wasm &&
 		run_in "$FRONTEND" bun run build &&
 		run_in "$FRONTEND" bun scripts/smoke_build.ts || return 1
 	local out dev=$ROOT/reg_webapp/dev/dev.sh
 	out=$(mktemp -d "${TMPDIR:-/tmp}/gate-flows.XXXXXX") || return 1
+	# The journeys of each fixture (reg_webapp/dev/journeys.sh).
 	run bash "$dev" --fixture-db flows "$out" </dev/null &&
-		run bash "$dev" --paired-fixture flows "$out" steward-held </dev/null || return 1
+		run bash "$dev" --paired-fixture flows "$out" </dev/null || return 1
 	# Kept on failure: the screenshots are the evidence.
 	rm -rf "$out"
 }

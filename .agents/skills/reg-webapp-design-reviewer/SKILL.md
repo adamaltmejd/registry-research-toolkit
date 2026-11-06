@@ -218,11 +218,10 @@ where the evidence in hand establishes a candidate defect with that impact.
 Fill every field of the rendered template and report the routes, states and viewports
 you actually inspected. Say whether captures are author iteration or retained gate
 evidence. `gate.sh flows` (`dev.sh --fixture-db flows <out-dir>`, then
-`dev.sh --paired-fixture flows <out-dir> steward-held`) covers only its driver scenarios
-(the `scenarios` table in `driver.mjs`) and, in CI, only phone and desktop
-(`REG_WEBAPP_FLOW_VIEWPORTS`; local runs default to all four); every case must pass, and
-a `check(...)` that was weakened is a finding. Approval needs evidence for every surface
-changed.
+`dev.sh --paired-fixture flows <out-dir>`) covers only its user journeys (the `JOURNEYS`
+table in `reg_webapp/dev/journeys.sh`), at desktop width except one at 375 px; every
+journey must pass, and an assertion that was weakened is a finding. Approval needs
+evidence for every surface changed.
 
 ## Severity, findings and fixes
 

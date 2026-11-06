@@ -9,7 +9,7 @@ use std::process::Command;
 use reg_conformance::{Scratch, cached_reader_artifact, fixture, holdings_case, pinned_holdings};
 use serde_json::Value;
 
-use crate::common::cli::{Ran, exec, execute, verify_holdings};
+use crate::common::cli::{Ran, column, exec, execute, verify_holdings};
 use crate::common::steward::{self, append, edit, locked_copy, read, splice_slot_family, write};
 use crate::common::{read_json, run_all};
 
@@ -179,6 +179,41 @@ fn census_replacement_refuses_vanished_columns() {
         fs::read(&out).unwrap() == original,
         "a refusal replaced the pair"
     );
+}
+
+#[test]
+fn renamed_physical_column_matches_its_catalog_name() {
+    // Fails if `[[rename]]` is ignored (the column lands unmatched), if it is looked up
+    // after `[[rewrite]]` (the `Received_` strip leaves `Olde`, which no rename names),
+    // or if the catalog name replaces the emitted physical name. The expected
+    // placements are the unmodified pair's for its physical `Old`.
+    let mapped = |db: &Path, name: &str| {
+        column(
+            db,
+            &format!(
+                "SELECT m.table_pid||' '||m.variable_pid||' '||m.start||' '||m.end
+                 FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id
+                 WHERE c.name='{name}' ORDER BY 1"
+            ),
+        )
+    };
+    let original = mapped(
+        &steward::pair().unwrap().dir.join("reg_meta_fixture.db"),
+        "Old",
+    );
+    assert!(!original.is_empty(), "the fixture's Old places nothing");
+    let dir = Scratch::new("census-rename").unwrap();
+    let root = locked_copy(dir.path()).unwrap();
+    edit(&root.join("census.csv"), ",Old,", ",Received_Olde,", false).unwrap();
+    edit(&root.join("storage.csv"), ",Old,", ",Received_Olde,", false).unwrap();
+    append(
+        &root.join("curation/readers/holdings.toml"),
+        "\n[[rename]]\nphysical = \"Received_Olde\"\ncatalog = \"Old\"\nevidence = \"Synthetic census renames Old.\"\n",
+    )
+    .unwrap();
+    let out = dir.path().join("renamed.db");
+    compile(dir.path(), &out).ok();
+    assert_eq!(mapped(&out, "Received_Olde"), original);
 }
 
 /// Apply the `refusals.toml` edits `edits` to the steward checkout at `root`.

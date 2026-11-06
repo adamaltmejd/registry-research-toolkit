@@ -8,8 +8,8 @@ use serde::Deserialize;
 
 use crate::{ReadError, config, error};
 
-/// Reader vocabulary and evidenced, literal prefix rewrites. Rewrites affect matching
-/// only; the artifact retains exact trimmed physical identifiers.
+/// Reader vocabulary, evidenced exact-name renames and literal prefix rewrites. Both
+/// affect matching only; the artifact retains exact trimmed physical identifiers.
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
 struct Config {
@@ -17,6 +17,8 @@ struct Config {
     census_table: String,
     #[serde(default = "column_prefix")]
     census_columns: String,
+    #[serde(default)]
+    rename: Vec<Rename>,
     #[serde(default)]
     rewrite: Vec<Rewrite>,
 }
@@ -27,6 +29,16 @@ fn table_header() -> String {
 
 fn column_prefix() -> String {
     "V".to_owned()
+}
+
+/// One exact physical name matched as one catalog name. Looked up on the trimmed
+/// physical name before any rewrite; a renamed column skips every rewrite.
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+struct Rename {
+    physical: String,
+    catalog: String,
+    evidence: String,
 }
 
 #[derive(Deserialize)]
@@ -48,6 +60,8 @@ pub struct ReadOutput {
     pub tables: Vec<Table>,
     /// Storage coordinates absent from the admitted census (including extra tables).
     pub storage_extra_columns: usize,
+    /// Every `[[rename]]` catalog name, in config order, for the compiler to resolve.
+    pub rename_targets: Vec<String>,
 }
 
 /// A census column and every exact storage candidate. Missing/multiple candidates
@@ -189,6 +203,7 @@ pub fn read(
             "empty header/prefix or rewrite evidence",
         ));
     }
+    let renames = renames(&config.rename)?;
     let facts = storage(storage_export)?;
     let mut csv = reader(census, "census")?;
     let names = headers(&mut csv, "census")?;
@@ -231,12 +246,7 @@ pub fn read(
             if !seen.insert(column) {
                 return Err(at("census", row, "duplicate physical column"));
             }
-            let mut match_name = column.to_owned();
-            for rewrite in &config.rewrite {
-                if let Some(rest) = match_name.strip_prefix(&rewrite.prefix) {
-                    match_name = format!("{}{rest}", rewrite.replacement);
-                }
-            }
+            let match_name = match_name(column, &renames, &config.rewrite);
             if match_name.is_empty() {
                 return Err(at(
                     "census",
@@ -275,5 +285,66 @@ pub fn read(
             .keys()
             .filter(|key| !matched_storage.contains(*key))
             .count(),
+        rename_targets: config.rename.into_iter().map(|r| r.catalog).collect(),
     })
+}
+
+/// Admit `[[rename]]` as an exact physical → catalog map. Errors locate entries by their
+/// 1-based position in the config, never by name.
+fn renames(entries: &[Rename]) -> Result<BTreeMap<&str, &str>, ReadError> {
+    const ROLE: &str = "holdings_reader";
+    let mut out = BTreeMap::new();
+    for (n, entry) in (1..).zip(entries) {
+        if entry.physical.is_empty()
+            || entry.physical.trim() != entry.physical
+            || entry.catalog.trim().is_empty()
+            || entry.evidence.trim().is_empty()
+        {
+            return Err(error(
+                ROLE,
+                format!(
+                    "census_rename_invalid: rename {n}: empty or untrimmed name, or empty evidence"
+                ),
+            ));
+        }
+        if out
+            .insert(entry.physical.as_str(), entry.catalog.as_str())
+            .is_some()
+        {
+            return Err(error(
+                ROLE,
+                format!("census_rename_duplicate: rename {n}: physical name already renamed"),
+            ));
+        }
+    }
+    // Renames apply once, never transitively; a catalog name that is itself a renamed
+    // physical name reads as a chain, so it refuses rather than guessing the intent.
+    if let Some(n) = (1..)
+        .zip(entries)
+        .find(|(_, e)| out.contains_key(e.catalog.as_str()))
+        .map(|(n, _)| n)
+    {
+        return Err(error(
+            ROLE,
+            format!(
+                "census_rename_chain: rename {n}: catalog name is also a renamed physical name"
+            ),
+        ));
+    }
+    Ok(out)
+}
+
+/// The name a physical column is matched by: its `[[rename]]` catalog name when it has
+/// one, and then no rewrite applies; otherwise every `[[rewrite]]` in config order.
+fn match_name(column: &str, renames: &BTreeMap<&str, &str>, rewrites: &[Rewrite]) -> String {
+    if let Some(&catalog) = renames.get(column) {
+        return catalog.to_owned();
+    }
+    let mut name = column.to_owned();
+    for rewrite in rewrites {
+        if let Some(rest) = name.strip_prefix(&rewrite.prefix) {
+            name = format!("{}{rest}", rewrite.replacement);
+        }
+    }
+    name
 }
