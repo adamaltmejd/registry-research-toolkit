@@ -59,6 +59,10 @@ const TITLES: Readonly<Record<string, string>> = {
   rows_unfiltered: "Every year of this table is delivered",
   row_filter_widened: "Rows are delivered for whole years around the request",
   row_filter_union: "Tables sharing a file are delivered over all their years",
+  // A steward with several databases: an order draws from one.
+  database_required: "Choose a database",
+  database_unknown: "The data holder has no such database",
+  not_in_database: "This column is not in the chosen database",
 };
 
 export function issueTitle(issue: ValidationIssue): string {

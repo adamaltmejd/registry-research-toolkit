@@ -13,7 +13,9 @@ interface Props {
   label: string;
   labelHidden?: boolean;
   "aria-label"?: string;
-  value: string;
+  /** `null` is no choice yet: the trigger shows `placeholder`. */
+  value: string | null;
+  placeholder?: string;
   options: { id: string; name: string }[];
   onChange: (value: string) => void;
 }
@@ -24,6 +26,7 @@ export function Select({
   labelHidden = false,
   "aria-label": ariaLabel,
   value,
+  placeholder,
   options,
   onChange,
 }: Props) {
@@ -32,6 +35,7 @@ export function Select({
       className={styles.select}
       aria-label={ariaLabel}
       selectedKey={value}
+      placeholder={placeholder}
       onSelectionChange={(key) => {
         if (key !== null) onChange(String(key));
       }}

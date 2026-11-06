@@ -274,6 +274,7 @@ instructions come from `/api/context`, never from code.
   | Years not available                                              | period adjustments, clips              |
   | Ready to order, Has warnings, Has problems, Can't be ordered yet | valid, warnings, errors, order blocked |
   | Check did not run                                                | check failed, error, unchecked         |
+  | Database                                                         | linkage space, schema, category        |
 
 **Type** is one list for every screen, the catalog's types in plain words: Whole number,
 Decimal number, Text, Date, Date and time, Yes or no, Geometry, UUID, Binary, Identifier
@@ -926,7 +927,15 @@ grow new visual language meanwhile.
 - **Project page** (`/project`, maintainer ruling Q1, 2026-11-04): the `h1` "Project"
   with no breadcrumb repeating it, the name field, then "Download project_data.json",
   "Open a project file…" and a ghost "Discard"; opening over a project and discarding
-  ask first in a `Dialog`. Under them, the steward's `order_instructions` from
+  ask first in a `Dialog`. A steward with several databases, each with its own person
+  key, adds a **Database** `Select` under the name field: an order draws from one
+  database, so a project names one (`linkage.database`), and with one database nothing
+  is shown. Until one is chosen the Select reads "Choose a database", an `info`
+  `StatusRow` above the verdict reads "Choose the database your data comes from", and
+  Download is inert and points at that row; the server's `database_required` is not
+  listed again. A column the chosen database does not have is the server's
+  `not_in_database` on its card, naming the databases that do; it is a finding, never
+  a disabled option. Under them, the steward's `order_instructions` from
   `/api/context` as sent (its own line breaks, no markdown, never text from code), then
   the verdict, "Tables" (one card per table) and "What will be delivered". A card's
   column years load with its own table, not with other cards: a column the catalog does

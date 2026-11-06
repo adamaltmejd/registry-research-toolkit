@@ -20,6 +20,7 @@ import { tableYears } from "./study_window";
 import { Button } from "./ui/Button";
 import { ConfirmDialog } from "./ui/ConfirmDialog";
 import { EmptyState } from "./ui/EmptyState";
+import { Select } from "./ui/Select";
 import { StatusRow } from "./ui/StatusRow";
 import { useCatalogNames } from "./use_catalog_names";
 import {
@@ -53,8 +54,21 @@ export function ProjectEditor({
   const shown: ProjectCheck = busy
     ? { ...validation, ...validation.previous, loading: false }
     : validation;
-  const instructions =
-    stewardConfig(context)?.presentation.order_instructions ?? null;
+  const config = stewardConfig(context);
+  const instructions = config?.presentation.order_instructions ?? null;
+  // A steward with several databases, each with its own person key: an order
+  // draws from one, so the project names it (`linkage.database`). With one
+  // database there is nothing to choose and nothing is shown.
+  const spaces = config?.spaces ?? [];
+  const databases = spaces.length > 1 ? spaces : null;
+  const database = draft?.linkage?.database ?? null;
+  // The client gate, from `/api/context` with no round trip: the server's
+  // check may stop before it reaches the database. An id the steward does
+  // not have counts as no choice (the server names it `database_unknown`).
+  const needsDatabase =
+    draft !== null &&
+    databases !== null &&
+    !databases.some((space) => space.id === database);
   // A saved window outside this deployment's catalog span is clamped into it at
   // open, so the exported project never keeps decades the catalog cannot hold (#1037).
   const open = (text: string) => {
@@ -133,8 +147,27 @@ export function ProjectEditor({
               <Input />
             </TextField>
           )}
+          {draft && databases && (
+            <div className={styles.field}>
+              <Select
+                label="Database"
+                placeholder="Choose a database"
+                value={needsDatabase ? null : database}
+                options={databases}
+                onChange={(id) =>
+                  projectStore.updateField("linkage", { database: id })
+                }
+              />
+            </div>
+          )}
           <div className={styles.toolbar}>
-            <Button onPress={() => projectStore.download()}>
+            <Button
+              isInert={needsDatabase}
+              aria-describedby={needsDatabase ? DATABASE_REASON : undefined}
+              onPress={() => {
+                if (!needsDatabase) projectStore.download();
+              }}
+            >
               Download project_data.json
             </Button>
             {openFile}
@@ -153,7 +186,12 @@ export function ProjectEditor({
           {instructions && (
             <p className={styles.instructions}>{instructions}</p>
           )}
-          <Check project={project} validation={shown} busy={busy} />
+          <Check
+            project={project}
+            validation={shown}
+            busy={busy}
+            needsDatabase={needsDatabase}
+          />
           {draft && (
             <Sources
               context={context}
@@ -204,6 +242,9 @@ export function ProjectEditor({
   );
 }
 
+/** The row that says why Download refuses, which the button points at. */
+const DATABASE_REASON = "project-database-reason";
+
 const count = (n: number, word: string) => `${n} ${word}${n === 1 ? "" : "s"}`;
 
 /** The verdict in the banner's words, then the findings no table card holds in
@@ -213,17 +254,21 @@ function Check({
   project,
   validation,
   busy,
+  needsDatabase,
 }: {
   project: ProjectSnapshot;
   validation: ProjectCheck;
   busy: boolean;
+  needsDatabase: boolean;
 }) {
   const verdict = projectVerdict(project, validation);
   const words = VERDICT_WORDS[verdict];
   const structural = project.draft === null;
-  const issues: ValidationIssue[] = structural
-    ? project.issues
-    : (validation.data?.issues ?? []);
+  // The database row above the verdict says what `database_required` says, in
+  // the page's words, so the finding is neither listed nor counted again.
+  const issues: ValidationIssue[] = (
+    structural ? project.issues : (validation.data?.issues ?? [])
+  ).filter((issue) => !needsDatabase || issue.code !== "database_required");
   const onCard = (issue: ValidationIssue) =>
     !structural && issue.path.startsWith("/sources/");
   // A note on a card (level info) needs no link here: it changes no verdict.
@@ -232,7 +277,8 @@ function Check({
   );
   const problems = issues.filter((issue) => issue.level === "error").length;
   const warnings = issues.filter((issue) => issue.level === "warning").length;
-  if (verdict === "empty") return null;
+  // An empty project has no verdict, but Download still needs its reason.
+  if (verdict === "empty" && !needsDatabase) return null;
   return (
     <section
       id="project-checks"
@@ -241,7 +287,12 @@ function Check({
       aria-busy={busy || verdict === "checking" || undefined}
       className={styles.check}
     >
-      {verdict === "checking" ? (
+      {needsDatabase && (
+        <StatusRow tone="info" id={DATABASE_REASON}>
+          Choose the database your data comes from.
+        </StatusRow>
+      )}
+      {verdict === "empty" ? null : verdict === "checking" ? (
         // The verdict word, plain as in the banner: no glyph, no tone.
         <p className={styles.checking}>{words}</p>
       ) : validation.error && !structural ? (
@@ -274,7 +325,7 @@ function Check({
                   : `${words}: ${count(problems, "problem")}. Fix ${problems === 1 ? "it" : "them"} below.`}
         </StatusRow>
       )}
-      {listed.length > 0 && verdict !== "checking" && (
+      {listed.length > 0 && !["checking", "empty"].includes(verdict) && (
         <ul className={styles.issues} aria-label="Problems and warnings">
           {listed.map((issue) =>
             onCard(issue) ? (
