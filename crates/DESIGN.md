@@ -334,29 +334,28 @@ Accepting one requires reviewed curation and a premise lock.
   Assignments cannot merge concurrent different folded spellings in one table;
   resolution refuses with `D-11` at lock, before a malformed segment can be published.
 - `label`, `definition`, `operational_definition`, `unit`, `value_set`, `coded`,
-  `spelling`, `identifier`, `sensitive`, `type`, `length` and `format` belong to
-  occurrences; text runs and segments derive from those occurrences. `period` changes
-  occurrence bounds or the addressed release's placement. `description` on tables and
-  releases stays on those entities. `coverage` replaces a table's source bound and
-  requires a table selector and one contiguous period; it lives in the table's existing
-  bounds. The overridden source bound remains evidence and the review premise, so a
-  source-bound change reopens review. `sets` and `tags` belong to variables; typed
-  curation decisions resolve to variable memberships. Tags use the existing variable tag
-  storage; register tags are derived by the reader, never curated or propagated to
-  variables. `notice` resolves to a finding on its selected subject. The emitter
-  serializes these resolved facts and never derives them from provenance. Occurrence
-  descriptions are not a field: source wording stays in occurrence labels, definitions
-  and operational definitions. A variable has one optional curated `description`, owned
-  by `var:<id>` and stored in `variable.description_text`. An occurrence description
-  setter is a located `description-subject` refusal; different descriptions for one
-  variable are refused, not selected by period or precedence. Table and release
-  descriptions remain fields of those entities. No fact gets a second semantic home. A
-  value-set override chooses the occurrence's own set while retaining its source
-  population alternatives as evidence. Unsupported entity/field combinations are located
-  refusals. Type corrections that change the family participate in F6 and ambiguity
-  resolution; length corrections do not. Corrected conflict markers clear while the
-  original premises remain evidence. Format is carried and published without changing
-  agreement or F1 findings.
+  `spelling`, `identifier`, `sensitive`, `type` and `format` belong to occurrences; text
+  runs and segments derive from those occurrences. `period` changes occurrence bounds or
+  the addressed release's placement. `description` on tables and releases stays on those
+  entities. `coverage` replaces a table's source bound and requires a table selector and
+  one contiguous period; it lives in the table's existing bounds. The overridden source
+  bound remains evidence and the review premise, so a source-bound change reopens
+  review. `sets` and `tags` belong to variables; typed curation decisions resolve to
+  variable memberships. Tags use the existing variable tag storage; register tags are
+  derived by the reader, never curated or propagated to variables. `notice` resolves to
+  a finding on its selected subject. The emitter serializes these resolved facts and
+  never derives them from provenance. Occurrence descriptions are not a field: source
+  wording stays in occurrence labels, definitions and operational definitions. A
+  variable has one optional curated `description`, owned by `var:<id>` and stored in
+  `variable.description_text`. An occurrence description setter is a located
+  `description-subject` refusal; different descriptions for one variable are refused,
+  not selected by period or precedence. Table and release descriptions remain fields of
+  those entities. No fact gets a second semantic home. A value-set override chooses the
+  occurrence's own set while retaining its source population alternatives as evidence.
+  Unsupported entity/field combinations are located refusals. Type corrections that
+  change the family participate in F6 and ambiguity resolution. Corrected conflict
+  markers clear while the original premises remain evidence. Format is carried and
+  published without changing agreement or F1 findings.
 - **One variable, one description (maintainer, 2026-11-02).** The one curated
   description states both what the variable means and how it is measured or derived.
   There is no separate curated operational definition. For example: "Usual weekly hours
@@ -413,19 +412,16 @@ Accepting one requires reviewed curation and a premise lock.
   not support, or content shared by several unbound versions leave the link unset;
   containment never makes one. Variable `tags` applies as normalized membership,
   independently of identity, binding, ordering and peers. Table and occurrence `role`
-  values use one validated vocabulary for each entity kind. `unit_type` is accepted but
-  no longer published (the catalog dropped its unit-type table). Table setters require a
-  source-stated or asserted table, not a synthesized implicit table. Table and release
-  `name` changes preserve their public ids; variable names use `label`. Variable
-  `synonyms` enrich search labels without adding delivery aliases. `set sentinels` at an
-  occurrence or variable address applies after value-set overrides to the published
-  hashes, including population alternatives. Sentinel codes are set-wide:
-  `vs_item.sentinel` changes for every reference to that shared set. Missing codes in an
-  explicit setter and disagreeing local declarations for the same hash refuse at their
-  authoring locations. Classification inventory `sentinel_codes` names known
-  non-canonical codes in columns bound to that exact version, not codes in its canonical
-  book. It marks the listed codes present in each bound occurrence's value sets,
-  including population alternatives; declarations absent from all bound sets are
+  values use one validated vocabulary for each entity kind. Table setters require a
+  source-stated or asserted table, not a synthesized implicit table. Variable names use
+  `label`. `set sentinels` at an occurrence or variable address applies after value-set
+  overrides to the published hashes, including population alternatives. Sentinel codes
+  are set-wide: `vs_item.sentinel` changes for every reference to that shared set.
+  Missing codes in an explicit setter and disagreeing local declarations for the same
+  hash refuse at their authoring locations. Classification inventory `sentinel_codes`
+  names known non-canonical codes in columns bound to that exact version, not codes in
+  its canonical book. It marks the listed codes present in each bound occurrence's value
+  sets, including population alternatives; declarations absent from all bound sets are
   counted, not refused. Classification lists sharing a bound set are additive. A listed
   code that is canonical in any version bound to that set, including the declaring
   version, refuses at the binding and inventory locations. The bits remain set-wide, and
@@ -442,15 +438,15 @@ Accepting one requires reviewed curation and a premise lock.
   retaining field-level old/new diagnostics rather than reporting only changed hashes.
   Versions 1 and 2 refuse with an instruction to run `reg-build lock`; locks are
   regenerated, never migrated. Variable-level setters are `var:` setters containing only
-  `sets`, `tags`, `label`, `description`, `definition`, `operational_definition` or
-  `synonyms`. Their locked `subjects` record the variable slug, distinct matched locator
-  count and SHA-256 of the sorted canonical locator JSON lines. Changed membership
-  refuses with the variable subject and old/new counts, even when the counts are equal.
-  Occurrence field values and container facts (register, table and release objects) are
-  not premises for these setters. No container fact is folded into the digest: these
-  fields apply metadata to the matched variable without consuming container contents;
-  selector membership is already checked by the locator digest. Non-container objects
-  retain their full premises. None of these seven fields references a value set or
+  `sets`, `tags`, `label`, `description`, `definition` or `operational_definition`.
+  Their locked `subjects` record the variable slug, distinct matched locator count and
+  SHA-256 of the sorted canonical locator JSON lines. Changed membership refuses with
+  the variable subject and old/new counts, even when the counts are equal. Occurrence
+  field values and container facts (register, table and release objects) are not
+  premises for these setters. No container fact is folded into the digest: these fields
+  apply metadata to the matched variable without consuming container contents; selector
+  membership is already checked by the locator digest. Non-container objects retain
+  their full premises. None of these six fields references a value set or
   classification: those dependencies arise from other setter fields, which retain full
   premises. A variable-level lock entry therefore has constant size, independent of
   occurrence count and container text length. Every other statement, including mixed
@@ -521,15 +517,15 @@ Kind-specific content is:
 
 `set.fields` is closed: `table`, `variable`, `label`, `description`, `sets`, `unit`,
 `definition`, `operational_definition`, `value_set`, `coded`, `period`, `spelling`,
-`identifier`, `sensitive`, `type`, `length`, `format`, `notice`, `coverage`,
-`classification`, `tags`, `sentinels`, `role`, `unit_type`, `name`, `synonyms`, `axes`
-and `facets`. Source-shaped assertion fields have a separate closed schema, including
-table `name` and occurrence `type` and `length`. Lists of sets, tags, sentinels and
-synonyms normalize as sorted sets; asserted codes sort by code, while duplicate codes
-are refused. Addresses normalize folded spellings, expanded braces and sorted guards and
-period tokens before hashing. Links add relations; conflicting successions refuse. There
-is no successor-choice or `reject` form. Merged release changes update every claim to
-the release's final placement.
+`identifier`, `sensitive`, `type`, `format`, `notice`, `coverage`, `classification`,
+`tags`, `sentinels`, `role`, `axes` and `facets`. Source-shaped assertion fields have a
+separate closed schema: table `name`, `description` and `coverage`; occurrence `label`,
+`definition`, `unit`, `type`, `length`, `sensitive` and `identifier`. Lists of sets,
+tags and sentinels normalize as sorted sets; asserted codes sort by code, while
+duplicate codes are refused. Addresses normalize folded spellings, expanded braces and
+sorted guards and period tokens before hashing. Links add relations; conflicting
+successions refuse. There is no successor-choice or `reject` form. Merged release
+changes update every claim to the release's final placement.
 
 The loader reads every register directory in sorted order. Unknown kinds or fields,
 missing evidence, malformed addresses, misplaced coordinate fields, and duplicate

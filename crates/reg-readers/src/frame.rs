@@ -49,7 +49,7 @@ pub fn read(root: &Path, rel: &str) -> Result<ReadOutput, ReadError> {
             if object.contains_key("locator") || object.contains_key("also") {
                 return Err(located("locator is assigned by the reader"));
             }
-            for field in ["classification", "role", "unit_type"] {
+            for field in ["classification", "role"] {
                 if object.contains_key(field) {
                     return Err(located(&format!("{field} is curated; use set {field}")));
                 }

@@ -16,13 +16,7 @@ use crate::error::Result;
 /// and a classification's reader locator stay as the source delivers them. Exact paths
 /// from the top of an entry, so a nested key of the same name (a facet axis called
 /// `spelling`) is still curated text.
-const SOURCE_NAMES: [&str; 5] = [
-    "subject",
-    "object",
-    "fields.spelling",
-    "fact.fields.spelling",
-    "value_set",
-];
+const SOURCE_NAMES: [&str; 4] = ["subject", "object", "fields.spelling", "value_set"];
 
 /// Every curated string of `value` with its dotted field path, source names excepted.
 fn texts<'a>(value: &'a Value, path: &str, out: &mut Vec<(String, &'a str)>) {

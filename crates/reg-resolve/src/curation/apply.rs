@@ -141,7 +141,6 @@ pub enum MetadataValue {
         facets: BTreeMap<String, reg_frame::statement::MemberFacet>,
         at: Locator,
     },
-    Synonyms(BTreeSet<String>),
     Description {
         text: String,
         at: Locator,
@@ -698,8 +697,7 @@ pub fn apply(
                     if !matches!(subject, Address::Table(_)) {
                         return Err("assert table requires a table address".into());
                     }
-                    let fields =
-                        assert_fields(fields, &["name", "description", "coverage", "period"])?;
+                    let fields = assert_fields(fields, &["name", "description", "coverage"])?;
                     let mut value = json!({"kind":"table","provider":register.provider,"register":register.register,"table":table,"name":null,"description":null,"from":null,"to":null,"cadence":null,"locator":at});
                     fill_fields(&mut value, fields)?;
                     value
@@ -719,14 +717,9 @@ pub fn apply(
                         &[
                             "label",
                             "definition",
-                            "operational_definition",
                             "unit",
                             "type",
                             "length",
-                            "spelling",
-                            "period",
-                            "value_set",
-                            "coded",
                             "sensitive",
                             "identifier",
                         ],
@@ -753,22 +746,6 @@ pub fn apply(
                                 "assert occurrence fact contradicts its subject guard".into()
                             );
                         }
-                    }
-                    if let Some(scope) = &scope
-                        && !value["from"].is_null()
-                        && !reg_core::gaps(&[span(&value, records, &context)?], scope.clone())
-                            .is_empty()
-                    {
-                        return Err(
-                            "assert occurrence period lies outside its subject scope".into()
-                        );
-                    }
-                    if let Some(hash) = text(&value, "valueset")
-                        && !records
-                            .iter()
-                            .any(|r| matches!(r, Record::ValueSet(v) if v.hash == hash))
-                    {
-                        return Err("assert occurrence names an unknown value set; assert the code list first".into());
                     }
                     value
                 }
@@ -1062,22 +1039,17 @@ fn apply_fields(
                         | "sensitive"
                         | "format"
                         | "type"
-                        | "length"
                         | "period"
                         | "sets"
                         | "tags"
                         | "facets"
-                        | "synonyms"
                         | "sentinels"
                         | "role"
                         | "classification"
                         | "notice"
                 ),
-                "table" => matches!(
-                    field.as_str(),
-                    "description" | "coverage" | "name" | "role" | "unit_type"
-                ),
-                "release" => matches!(field.as_str(), "description" | "period" | "name"),
+                "table" => matches!(field.as_str(), "description" | "coverage" | "role"),
+                "release" => matches!(field.as_str(), "description" | "period"),
                 _ => false,
             };
             if !supported {
@@ -1102,15 +1074,6 @@ fn apply_fields(
                 "role" => {
                     crate::role_value(kind, winning.as_str().expect("typed role"))?;
                     after["role"] = winning.clone();
-                }
-                "unit_type" => {
-                    if !reg_core::is_slug(winning.as_str().expect("typed unit type")) {
-                        return Err("set unit_type requires a catalog slug".into());
-                    }
-                    after["unit_type"] = winning.clone();
-                }
-                "name" if winning.as_str().is_none_or(|v| v.trim().is_empty()) => {
-                    return Err("set name requires a nonblank entity name".into());
                 }
                 "sentinels" => {
                     let Record::Occurrence(occurrence) = record else {
@@ -1150,7 +1113,7 @@ fn apply_fields(
                         out.sentinels.insert(hash.clone(), codes.clone());
                     }
                 }
-                "facets" | "synonyms" | "notice" => {}
+                "facets" | "notice" => {}
                 "description" if kind == "occurrence" => {}
                 "period" | "coverage" => {
                     let period = winning
@@ -1293,12 +1256,6 @@ fn apply_fields(
                 out.metadata.push(Metadata {
                     key: key.clone(),
                     value: MetadataValue::Tags(tags.iter().cloned().collect()),
-                });
-            }
-            if let Some(synonyms) = &metadata_fields.synonyms {
-                out.metadata.push(Metadata {
-                    key: key.clone(),
-                    value: MetadataValue::Synonyms(synonyms.iter().cloned().collect()),
                 });
             }
             if let Some(description) = &metadata_fields.description {

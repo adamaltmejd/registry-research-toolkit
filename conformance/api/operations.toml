@@ -54,7 +54,7 @@ note = """One ranked list per call over primary `search` and fallback `search_de
 (FTS5), deduplicated by `search_item.id`. Primary matches precede fallback matches; \
 within each index order is \
 bm25, then kind, then `sort_key` (schema §2.1): there is no exact-identity \
-first rule and no type prior, and pins and synonyms are curation (D). Without `type` \
+first rule and no type prior. Without `type` \
 every kind ranks together; with `type` that kind only. `register` filters by \
 `search_item.register_id`; `period` keeps rows whose hull overlaps it. \
 `tag` accepts a tag slug or tag/<slug> and keeps only its member variables; unknown tags refuse with not_found, like unknown registers. A `code` hit \

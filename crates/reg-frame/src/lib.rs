@@ -118,11 +118,9 @@ pub struct Table {
     /// frequency the reader's config recognises.
     pub cadence: Option<String>,
     pub locator: Locator,
-    /// Curated table kind and observational unit; source readers leave these unset.
+    /// Curated table kind; source readers leave it unset.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub role: Option<String>,
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub unit_type: Option<String>,
 }
 
 /// A population a release states, in the source's order.

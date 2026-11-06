@@ -70,16 +70,13 @@ pub enum Relation {
 pub struct SetFields {
     pub table: Option<String>,
     pub variable: Option<String>,
-    pub name: Option<String>,
     pub label: Option<String>,
     pub definition: Option<String>,
     pub operational_definition: Option<String>,
     pub unit: Option<String>,
     pub description: Option<String>,
-    pub synonyms: Option<Vec<String>>,
     #[serde(rename = "type")]
     pub dtype: Option<String>,
-    pub length: Option<u64>,
     pub format: Option<String>,
     pub spelling: Option<String>,
     pub period: Option<PeriodSet>,
@@ -92,7 +89,6 @@ pub struct SetFields {
     pub sensitive: Option<bool>,
     pub identifier: Option<bool>,
     pub role: Option<String>,
-    pub unit_type: Option<String>,
     pub sets: Option<Vec<String>>,
     pub tags: Option<Vec<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -126,15 +122,10 @@ pub struct AssertFields {
     pub coverage: Option<PeriodSet>,
     pub label: Option<String>,
     pub definition: Option<String>,
-    pub operational_definition: Option<String>,
     pub unit: Option<String>,
     #[serde(rename = "type")]
     pub dtype: Option<String>,
     pub length: Option<u64>,
-    pub spelling: Option<String>,
-    pub period: Option<PeriodSet>,
-    pub value_set: Option<String>,
-    pub coded: Option<bool>,
     pub sensitive: Option<bool>,
     pub identifier: Option<bool>,
 }
@@ -171,7 +162,6 @@ impl Statement {
             Self::Assert { fact, .. } => match fact {
                 AssertFact::Occurrence { fields } | AssertFact::Table { fields } => {
                     validate_fields(fields)?;
-                    value_set_reference(fields.value_set.as_deref())?;
                     if matches!(fact, AssertFact::Occurrence { .. }) && fields.description.is_some()
                     {
                         return Err("description-subject: an occurrence cannot assert a description; use set description on var:<id>".into());
@@ -345,14 +335,9 @@ impl SetFields {
     }
 
     fn normalize(&mut self) {
-        for values in [
-            &mut self.synonyms,
-            &mut self.sentinels,
-            &mut self.sets,
-            &mut self.tags,
-        ]
-        .into_iter()
-        .flatten()
+        for values in [&mut self.sentinels, &mut self.sets, &mut self.tags]
+            .into_iter()
+            .flatten()
         {
             values.sort();
             values.dedup();

@@ -238,7 +238,6 @@ pub fn read(
             .entry((rid.clone(), vid.clone()))
             .or_insert_with(|| Table {
                 role: None,
-                unit_type: None,
                 provider: provider.to_owned(),
                 register: handle.clone(),
                 table: table.clone(),
