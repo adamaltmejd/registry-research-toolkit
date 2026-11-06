@@ -33,7 +33,7 @@ const TITLES: Readonly<Record<string, string>> = {
   edition_disagreement: "Editions disagree about this variable",
   classification_incompatible: "Classification does not match the study years",
   classification_version_ambiguous: "Choose one classification version",
-  ambiguous_window: "The study years cannot be ordered yet",
+  ambiguous_window: "The study years are ambiguous for this variable",
   coverage_end_unstated: "The end of coverage has not been confirmed",
   form_change: "The delivered column changes during the study years",
   binding_type_differs: "The type in the project differs from the catalog",
@@ -45,8 +45,8 @@ const TITLES: Readonly<Record<string, string>> = {
   table_succession_undated: "The table succession has no stated date",
   period_default_on_dated_table: "Choose years for this dated table",
   period_on_timeless_table: "This table has no years",
-  period_not_orderable: "These years cannot be ordered",
-  project_empty: "Project has no variables to order",
+  period_not_orderable: "These years cannot be read",
+  project_empty: "Project has no variables",
   // The steward's tables (a steward server's `order` runs this stage too).
   // `mapping_caveat` is not shown (api.ts `forReaders`).
   mapping_missing: "This column is not available for these years",

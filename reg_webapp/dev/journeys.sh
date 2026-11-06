@@ -140,14 +140,14 @@ j_classification() {
 # the added column (the file's contract is reg-core's validator's).
 j_order() {
 	local saved=$out_dir/order-project_data.json
-	open_project "$WEBAPP_PROJECT" && wait_text "Ready to order." &&
+	open_project "$WEBAPP_PROJECT" && wait_text "Ready to download." &&
 		visit /catalog/demo/hush/antal &&
 		press checkbox "Antal, Antal personer, Familjer, 2021–2022, click to select" &&
 		press button "Add 1 column to project" &&
 		tree 'image "Antal, Antal personer, Familjer, 2021–2022, in project"' &&
 		visit /project && ab reload >/dev/null && settled &&
 		see heading "Hushållsregistret" && see link "Antal personer" &&
-		wait_text "Ready to order." || return 1
+		wait_text "Ready to download." || return 1
 	local ref
 	ref=$(ab snapshot -i | sed -n 's/.*button "Download project_data.json" \[ref=\(e[0-9]*\)\].*/\1/p')
 	[ -n "$ref" ] || fail "no Download project_data.json button" || return 1
@@ -190,7 +190,7 @@ j_steward() {
 		fill searchbox "Search registers, variables" Late && wait_text "Late measure" &&
 		press option "Late measure" && wait_url "**/catalog/demo/held/late" &&
 		tree 'image "Late, Late measure, Pool, 2019–2020' &&
-		open_project "$project" && wait_text "Can't be ordered yet: 1 problem." &&
+		open_project "$project" && wait_text "Not ready to download: 1 problem." &&
 		press button "Remove Variable name unavailable from Held reference metadata" &&
 		press button "Remove column" && wait_text "Received_Id" && shot
 }

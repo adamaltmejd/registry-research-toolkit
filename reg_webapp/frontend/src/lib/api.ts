@@ -167,6 +167,17 @@ export function stewardConfig(context: Context | null): StewardConfig | null {
   return context?.steward_config ?? null;
 }
 
+/** The deployment's name: the steward's, or the toolkit's where no steward is
+ * configured. `null` while `/api/context` is loading or has failed, so a steward
+ * site never shows the toolkit's name in its place (#2345). */
+export function brandName(context: Context | null): string | null {
+  if (context === null) return null;
+  const presentation = stewardConfig(context)?.presentation;
+  return (
+    presentation?.long_name ?? presentation?.name ?? "Registry Research Toolkit"
+  );
+}
+
 /** `show`'s `kind`-tagged summary of a ref. */
 export type ShowNode = RustSchemas["Show"];
 

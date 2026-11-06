@@ -269,14 +269,18 @@ function Check({
   const words = VERDICT_WORDS[verdict];
   const structural = project.draft === null;
   // Where the Database select is shown, it and the row above the verdict say
-  // what `database_required` says, in the page's words, so the finding is
-  // neither listed nor counted again; that holds once a database is chosen too,
+  // what `database_required` and `database_unknown` say, in the page's words,
+  // so neither finding is listed nor counted again; that holds once a database is chosen too,
   // since the previous check, kept on screen while the next runs, still carries
   // it. Without the select (no `/api/context`) the finding is the only
   // explanation and stays.
   const issues: ValidationIssue[] = (
     structural ? project.issues : (validation.data?.issues ?? [])
-  ).filter((issue) => !databaseShown || issue.code !== "database_required");
+  ).filter(
+    (issue) =>
+      !databaseShown ||
+      !["database_required", "database_unknown"].includes(issue.code),
+  );
   const onCard = (issue: ValidationIssue) =>
     !structural && issue.path.startsWith("/sources/");
   // A note on a card (level info) needs no link here: it changes no verdict.
@@ -285,6 +289,9 @@ function Check({
   );
   const problems = issues.filter((issue) => issue.level === "error").length;
   const warnings = issues.filter((issue) => issue.level === "warning").length;
+  // Only the database is missing: the row above is the whole answer, since a
+  // choice not yet made is no error (#2345).
+  const onlyDatabase = needsDatabase && verdict === "blocked" && problems === 0;
   // An empty project has no verdict, but Download still needs its reason.
   if (verdict === "empty" && !needsDatabase) return null;
   return (
@@ -311,7 +318,7 @@ function Check({
         >
           The check did not run ({validation.error}). Retry, or reload the page.
         </StatusRow>
-      ) : (
+      ) : onlyDatabase ? null : (
         <StatusRow
           tone={
             verdict === "ready"
@@ -325,7 +332,7 @@ function Check({
           {verdict === "ready"
             ? `${words}.`
             : verdict === "warnings"
-              ? `${words}: ${count(warnings, "warning")}. Review ${warnings === 1 ? "it" : "them"} before you order.`
+              ? `${words}: ${count(warnings, "warning")}. Review ${warnings === 1 ? "it" : "them"} before you download.`
               : structural
                 ? `${words}: this file is not a project_data.json the site can read. Fix the ${count(problems, "problem")} below and open it again.`
                 : problems === 0

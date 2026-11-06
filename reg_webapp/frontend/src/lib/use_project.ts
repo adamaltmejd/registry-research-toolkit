@@ -110,9 +110,9 @@ export function projectVerdict(
 export const VERDICT_WORDS: Record<Verdict, string> = {
   checking: "Checking",
   empty: "Empty",
-  ready: "Ready to order",
+  ready: "Ready to download",
   warnings: "Has warnings",
   problems: "Has problems",
-  blocked: "Can't be ordered yet",
+  blocked: "Not ready to download",
   unchecked: "Check did not run",
 };

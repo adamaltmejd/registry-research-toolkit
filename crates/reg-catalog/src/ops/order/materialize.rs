@@ -433,10 +433,12 @@ fn reference(server: &Server, entry: &OrderEntry, (lo, hi): Days) -> Ref {
 /// names its implicit database is accepted.
 pub(super) fn database(server: &Server, project: &ProjectData) -> (Option<String>, Vec<Issue>) {
     let spaces = server.catalog.spaces().unwrap_or_default();
+    // The id first, as `linkage.database` takes it: a name may carry its own
+    // parenthesis ("Name (Gloss)"), so "Name (id)" read as "Name (Gloss) (id)".
     let names = || {
         spaces
             .iter()
-            .map(|s| format!("{} ({})", s.name, s.id))
+            .map(|s| format!("{:?} for {}", s.id, s.name))
             .collect::<Vec<_>>()
             .join(", ")
     };
@@ -450,7 +452,7 @@ pub(super) fn database(server: &Server, project: &ProjectData) -> (Option<String
                 format!(
                     "The data holder keeps its data in {} databases, each with its own \
                      person key: {}. Choose the one this project draws from in \
-                     linkage.database, and make a separate project for each database",
+                     linkage.database, and make a separate project for each database.",
                     spaces.len(),
                     names()
                 ),
@@ -467,7 +469,7 @@ pub(super) fn database(server: &Server, project: &ProjectData) -> (Option<String
                 "database_unknown",
                 "/linkage/database",
                 format!(
-                    "The data holder has no database {:?}. Its databases are: {}",
+                    "The data holder has no database {:?}. Its databases are: {}.",
                     linkage.database,
                     names()
                 ),
@@ -537,6 +539,29 @@ fn not_in_database(
             |r| r.get(0),
         )?;
         let source = &project.sources[s];
+        // "for the requested period" only when the chosen database holds the column
+        // in some other years.
+        let held_other_years = order
+            .entries
+            .iter()
+            .filter(|e| index[e.source.as_str()] == s && e.binding == b)
+            .map(|e| {
+                held.query_row(
+                    "SELECT EXISTS(SELECT 1 FROM holding_mapping m
+                       JOIN holding_column c ON c.id = m.column_id
+                       JOIN holding_table h ON h.id = c.holding_id
+                     WHERE h.space = ?3 AND m.table_pid = ?1 AND m.variable_pid = ?2)",
+                    rusqlite::params![e.table, e.variable, space],
+                    |r| r.get::<_, bool>(0),
+                )
+            })
+            .collect::<Result<Vec<_>, _>>()?
+            .contains(&true);
+        let when = if held_other_years {
+            " for the requested period"
+        } else {
+            ""
+        };
         let names: Vec<&str> = elsewhere.iter().map(|(_, name)| name.as_str()).collect();
         findings.push(Issue {
             source: Some(source.name.clone()),
@@ -547,8 +572,8 @@ fn not_in_database(
                 "not_in_database",
                 path,
                 format!(
-                    "{variable} in {} is not in the database {chosen} for the requested \
-                     period. It is in: {}. Make a separate project for each database",
+                    "{variable} in {} is not in the database {chosen}{when}. It is in: {}. \
+                     Make a separate project for each database.",
                     source.table,
                     names.join(", ")
                 ),

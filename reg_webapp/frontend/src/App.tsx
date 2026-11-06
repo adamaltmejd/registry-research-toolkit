@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { I18nProvider, RouterProvider } from "react-aria-components";
 import styles from "./App.module.css";
 import {
+  brandName,
   type Context,
   getContext,
   type OrderCheck,
@@ -35,15 +36,13 @@ const useHref = (href: string) => href;
 export function App() {
   const context = useAsyncResource("context", getContext);
   const config = stewardConfig(context.data);
-  const brand =
-    config?.presentation.long_name ??
-    config?.presentation.name ??
-    "Registry Research Toolkit";
+  const brand = brandName(context.data);
   const logo = config
     ? `data:image/svg+xml,${encodeURIComponent(config.logo)}`
     : null;
   useEffect(() => {
-    document.title = brand;
+    // No name while the context is missing: never the toolkit's on a steward site.
+    document.title = brand ?? "Data browser";
     if (logo === null) return;
     const icon = document.createElement("link");
     icon.rel = "icon";
@@ -175,7 +174,9 @@ function RoutedView({
 }) {
   switch (route.name) {
     case "home":
-      return <Home config={stewardConfig(context)} />;
+      return (
+        <Home config={stewardConfig(context)} brand={brandName(context)} />
+      );
     case "root":
       // The variables column says to choose a register; the pane does not
       // repeat it.
