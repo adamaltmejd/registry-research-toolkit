@@ -32,8 +32,8 @@ const USAGE: &str = "usage: cargo xtask search-eval [--url URL] [--limit N]";
 
 /// A case's `group` is the arm it searches. `value` is deliberately absent: a code hit
 /// has no FQID, so a `value` case could never match. The actionable target is always
-/// the owning entity (register / variable / classification).
-const GROUPS: [&str; 3] = ["register", "variable", "classification"];
+/// the owning entity (register / variable).
+const GROUPS: [&str; 2] = ["register", "variable"];
 
 #[derive(Deserialize)]
 struct EvalSet {
@@ -72,10 +72,20 @@ pub fn main(args: &[String]) -> u8 {
     }
 }
 
+/// Whether a 422 body is `invalid_parameter` on `type`.
+fn refused_type(body: &str) -> bool {
+    serde_json::from_str::<Value>(body).is_ok_and(|v| {
+        v["error"]["code"] == "invalid_parameter" && v["error"]["fields"]["parameter"] == "type"
+    })
+}
+
 /// The first page of `group`'s arm for `query`: `{items, next_cursor}`.
+/// A 422 naming the `type` parameter (a type the API refuses) is a miss, an empty page;
+/// any other non-2xx (including a 422 on `limit`) fails the run, so a server error is
+/// not read as a ranking regression.
 fn page(url: &str, query: &str, group: &str, limit: u32) -> Result<Value, (u8, String)> {
     let out = Command::new("curl")
-        .args(["-fsS", "--get"])
+        .args(["-sS", "--get", "-w", "\n%{http_code}"])
         .args(["--data-urlencode", &format!("q={query}")])
         .args(["--data-urlencode", &format!("type={group}")])
         .args(["--data-urlencode", &format!("limit={limit}")])
@@ -89,7 +99,21 @@ fn page(url: &str, query: &str, group: &str, limit: u32) -> Result<Value, (u8, S
             format!("no search answer from {url}: {}", stderr.trim()),
         ));
     }
-    let mut body: Value = serde_json::from_slice(&out.stdout).map_err(|e| {
+    let text = String::from_utf8_lossy(&out.stdout);
+    let (body, status) = text.rsplit_once('\n').unwrap_or(("", ""));
+    if status == "422" && refused_type(body) {
+        return Ok(Value::Null);
+    }
+    if !status.starts_with('2') {
+        return Err((
+            EXIT_FAIL,
+            format!(
+                "search answer from {url} was HTTP {status}: {}",
+                body.trim()
+            ),
+        ));
+    }
+    let mut body: Value = serde_json::from_str(body).map_err(|e| {
         (
             EXIT_FAIL,
             format!("search answer from {url} is not JSON: {e}"),

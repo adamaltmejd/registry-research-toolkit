@@ -19,12 +19,12 @@
 # Fields:
 #   query     - the omnibox input.
 #   group     - which result group the intended result should land in
-#               (register | variable | classification).
-#   intended  - the navigable target: an FQID (scb/iot, class/icd).
+#               (register | variable).
+#   intended  - the navigable target: an FQID (scb/iot, scb/lisa/civilstand).
 #   expect    - "hit": should rank well today (regression guard).
 #               "gap": the steward-wanted answer does NOT surface today — a curation /
-#               concept-group target (e.g. golden-boost #311, or folding a classification
-#               family). A gap that turns into a hit is progress, flagged "closed!".
+#               concept-group target (e.g. golden-boost #311). A gap that turns into a hit is progress,
+#               flagged "closed!".
 #   note      - what the case exercises / why the intended is what it is.
 #   confirmed - steward has signed off on this (query -> intended) pair (all true here).
 #
@@ -113,45 +113,3 @@ intended = "scb/lisa/civilstand"
 expect = "hit"
 confirmed = true
 note = "Marital status. Exact names lead (#1180, maintainer-accepted): ~60 variables named exactly Civilstånd fill the page, so the guard is LISA's plain Civilstånd, not RTB's civilgrel (Civilstånd tidigare relationsperson)."
-
-# ── Code query -> the classification that CONTAINS it (#393 item 5, PR #504) ──
-[[case]]
-query = "C12"
-group = "classification"
-intended = "class/icd"
-expect = "hit"
-confirmed = true
-note = "The #393 motivating case: C12 = malignant neoplasm in ICD-10-SE (also an SNI2007 code). Item 5 surfaces the owning classification."
-
-[[case]]
-query = "F32"
-group = "classification"
-intended = "class/icd"
-expect = "hit"
-confirmed = true
-note = "F32 = depressive episode (ICD-10-SE), via code-containment."
-
-[[case]]
-query = "Z59.6"
-group = "classification"
-intended = "class/icd"
-expect = "hit"
-confirmed = true
-note = "Dotted ICD code -> ICD-10-SE via code-containment."
-
-# ── Classification name / acronym -> that classification ─────────────────────
-[[case]]
-query = "ICD-10"
-group = "classification"
-intended = "class/icd"
-expect = "hit"
-confirmed = true
-note = "Classification acronym -> classification, rank 1."
-
-[[case]]
-query = "SNI 2007"
-group = "classification"
-intended = "class/sni"
-expect = "hit"
-confirmed = true
-note = "Classification name + vintage."
