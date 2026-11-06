@@ -1773,15 +1773,17 @@ also run on a steward server, resolves it before placement:
 - `database_unknown` (error, `/linkage/database`): the id is none of the steward's
   spaces. A single-space steward needs no `linkage`; one naming its implicit space is
   accepted;
-- `not_in_database` (error, at the binding): no placement in the chosen space holds an
-  entry that another space holds over the requested days. The message names those
-  spaces. It replaces that entry's gap findings.
+- `not_in_database` (error, at the binding): the chosen space holds no day of the
+  binding, and another space holds one of its entries over the requested days. The
+  message names those spaces. It replaces the binding's gap warnings. A binding the
+  chosen space holds in part keeps its `coverage_gap` and orders clipped.
 
-Placement, contested cells and column windows read only the chosen space's tables, so
-every file of an order comes from one database. Each file's `schema` already names it
-through the steward config, so the order file stays version 4 with no new field: the
-MONA runner refuses unknown fields, and a single-space steward's orders change only in
-`project_hash`.
+Placement, contested cells, column windows and the logical order's row keys read only
+the chosen space's tables (the steward row-key cache is keyed by table and space), so
+every file of an order comes from one database and `row_keys` names the key it carries.
+Each file's `schema` already names it through the steward config, so the order file
+stays version 4 with no new field: the MONA runner refuses unknown fields, and a
+single-space steward's orders change only in `project_hash`.
 
 There is no cross-database order: no option, flag or key-file field. A researcher who
 needs two databases makes one project for each, and the extracts are joined outside the

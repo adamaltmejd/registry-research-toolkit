@@ -240,7 +240,7 @@ pub fn split_schemas(root: &Path) -> Result<(), String> {
         &topology,
         "\n[[table]]\nschema_name = \"aux\"\nphysical_name = \"Part A\"\ndisposition = \"dated\"\n\
          delivery = \"2021\"\ntable_pids = [\"demo/held\"]\nlocator = \"fixture:aux-copy\"\n\n\
-         [[table.key]]\nentity = [\"demo/held/id\"]\ntime = []\nperiod_key = \"year\"\n\
+         [[table.key]]\nentity = [\"demo/held/value\"]\ntime = []\nperiod_key = \"year\"\n\
          locator = \"fixture:declared-entity-time-key\"\n",
     )
 }

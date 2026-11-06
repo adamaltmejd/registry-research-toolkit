@@ -159,7 +159,8 @@ fn an_order_draws_from_one_database() {
     // a project merged from two databases' projects (demo/held 2020 is only in Pool,
     // in `main`) orders instead of refusing that binding with `not_in_database` naming
     // the database that holds it; or if placement ignores the chosen database (the
-    // `aux` order then also takes main's Part A and Part B).
+    // `aux` order then also takes main's Part A and Part B), or if the logical order's row
+    // keys ignore it (aux's Part A is keyed on New, main's tables on Id).
     let port = steward::spaces().unwrap();
     let source = |name: &str, period: i64| {
         json!({"name": name, "table": "demo/held", "period": period,
@@ -225,4 +226,15 @@ fn an_order_draws_from_one_database() {
         .map(|f| (f["schema"].as_str().unwrap(), f["table"].as_str().unwrap()))
         .collect();
     assert_eq!(files, [("aux", "Part A")], "{ordered}");
+    let (status, logical) =
+        client::json(port, "POST", "/api/project/order", &[], Some(&project)).unwrap();
+    assert_eq!(status, 200, "{logical}");
+    let keys: Vec<&str> = logical["data"]["row_keys"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .flat_map(|k| k["columns"].as_array().unwrap())
+        .map(|c| c["variable"].as_str().unwrap())
+        .collect();
+    assert_eq!(keys, ["demo/held/value"], "{logical}");
 }

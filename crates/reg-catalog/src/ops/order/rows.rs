@@ -25,20 +25,25 @@ struct KeySegment {
     entity: bool,
 }
 
-/// The steward branch of [`key_segments`] per table pid. Its query scans every
-/// segment of both databases (~350 ms per table), and its answer depends on the table
-/// alone: the catalog and holdings are opened immutable and replaced only by a
-/// redeploy, so an answer holds for the life of the process. Errors are not cached.
+/// The steward branch of [`key_segments`] per (table pid, database). Its query scans
+/// every segment of both databases (~350 ms per table), and its answer depends on the
+/// table and the database alone: the catalog and holdings are opened immutable and
+/// replaced only by a redeploy, so an answer holds for the life of the process. Errors
+/// are not cached.
 // simplify: unbounded, one entry per table asked about (at most the catalog's tables;
 // ~154 held today), filled lazily; move the computation into the holdings build if
 // the table count grows or the map shows in memory.
 #[derive(Default)]
-pub(crate) struct StewardKeys(Mutex<HashMap<String, Arc<Vec<KeySegment>>>>);
+pub(crate) struct StewardKeys(Mutex<HashMap<KeyedTable, Arc<Vec<KeySegment>>>>);
+
+/// (table pid, database id).
+type KeyedTable = (String, Option<String>);
 
 /// Physical key declarations select the key set; metadata supplies state only.
 fn key_segments(
     server: &Server,
     conn: &Connection,
+    space: Option<&str>,
     serving: &Serving,
 ) -> Result<Arc<Vec<KeySegment>>, Error> {
     if server.catalog.steward().is_none() {
@@ -62,23 +67,30 @@ fn key_segments(
     }
     let cache = &server.steward_keys.0;
     let pid = &serving.table.pid;
+    let at = (pid.clone(), space.map(str::to_owned));
     if let Some(hit) = cache
         .lock()
         .unwrap_or_else(PoisonError::into_inner)
-        .get(pid)
+        .get(&at)
     {
         return Ok(Arc::clone(hit));
     }
     // Computed outside the lock: two first requests for one table both compute it.
-    let keys = Arc::new(steward_key_segments(conn, pid)?);
+    let keys = Arc::new(steward_key_segments(conn, pid, space)?);
     cache
         .lock()
         .unwrap_or_else(PoisonError::into_inner)
-        .insert(pid.clone(), Arc::clone(&keys));
+        .insert(at, Arc::clone(&keys));
     Ok(keys)
 }
 
-fn steward_key_segments(conn: &Connection, table_pid: &str) -> Result<Vec<KeySegment>, Error> {
+/// The declared key columns of the tables serving `table_pid`, in database `space`
+/// (every database when `None`, an order already blocked by its `linkage`).
+fn steward_key_segments(
+    conn: &Connection,
+    table_pid: &str,
+    space: Option<&str>,
+) -> Result<Vec<KeySegment>, Error> {
     let mut mappings = conn.prepare(
         "WITH semantics AS (
            SELECT t.pid AS table_pid,v.pid AS variable_pid,s.start,s.end,s.state
@@ -95,17 +107,17 @@ fn steward_key_segments(conn: &Connection, table_pid: &str) -> Result<Vec<KeySeg
          FROM held.holding_table h JOIN held.holding_column c ON c.holding_id=h.id
          JOIN held.holding_mapping m ON m.column_id=c.id JOIN json_each(h.key_requirements) k
          JOIN held.holding_column sc ON sc.holding_id=h.id
-         JOIN held.holding_mapping served ON served.column_id=sc.id AND served.table_pid=?
+         JOIN held.holding_mapping served ON served.column_id=sc.id AND served.table_pid=?1
            AND served.start<m.end AND served.end>m.start
          JOIN semantics s ON s.table_pid=m.table_pid AND s.variable_pid=m.variable_pid
            AND s.start<min(m.end,served.end) AND s.end>max(m.start,served.start)
-         WHERE json_extract(k.value,'$.hold') IS NULL AND (
+         WHERE (?2 IS NULL OR h.space=?2) AND json_extract(k.value,'$.hold') IS NULL AND (
            EXISTS(SELECT 1 FROM json_each(k.value,'$.entity') e WHERE e.value=m.variable_pid)
            OR EXISTS(SELECT 1 FROM json_each(k.value,'$.time') e WHERE e.value=m.variable_pid))
          ORDER BY m.variable_pid,c.name,m.start",
     )?;
     let mut out = Vec::new();
-    for row in mappings.query_map([table_pid], |r| {
+    for row in mappings.query_map(rusqlite::params![table_pid, space], |r| {
         Ok((
             KeySegment {
                 variable: r.get(0)?,
@@ -183,6 +195,7 @@ fn merge_key_segments(out: Vec<KeySegment>) -> Vec<KeySegment> {
 pub(super) fn row_keys(
     server: &Server,
     conn: &Connection,
+    space: Option<&str>,
     index: usize,
     source: &Source,
     serving: &[Serving],
@@ -190,7 +203,7 @@ pub(super) fn row_keys(
     let mut out = Vec::new();
     let mut findings = Vec::new();
     for s in serving {
-        let rows = key_segments(server, conn, s)?;
+        let rows = key_segments(server, conn, space, s)?;
         // Day-number pieces `[start, end)` of each column inside the requested days.
         let mut pieces = Vec::new();
         for KeySegment {
