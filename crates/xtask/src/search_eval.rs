@@ -32,8 +32,8 @@ const USAGE: &str = "usage: cargo xtask search-eval [--url URL] [--limit N]";
 
 /// A case's `group` is the arm it searches. `value` is deliberately absent: a code hit
 /// has no FQID, so a `value` case could never match. The actionable target is always
-/// the owning entity (register / variable / classification).
-const GROUPS: [&str; 3] = ["register", "variable", "classification"];
+/// the owning entity (register / variable).
+const GROUPS: [&str; 2] = ["register", "variable"];
 
 #[derive(Deserialize)]
 struct EvalSet {
@@ -73,9 +73,11 @@ pub fn main(args: &[String]) -> u8 {
 }
 
 /// The first page of `group`'s arm for `query`: `{items, next_cursor}`.
+/// No `-f`: an HTTP refusal (e.g. 422 for a type the API dropped) has a JSON error body
+/// with no `data`, so it reads as an empty page, a miss, instead of aborting the run.
 fn page(url: &str, query: &str, group: &str, limit: u32) -> Result<Value, (u8, String)> {
     let out = Command::new("curl")
-        .args(["-fsS", "--get"])
+        .args(["-sS", "--get"])
         .args(["--data-urlencode", &format!("q={query}")])
         .args(["--data-urlencode", &format!("type={group}")])
         .args(["--data-urlencode", &format!("limit={limit}")])
