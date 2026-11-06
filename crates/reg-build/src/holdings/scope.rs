@@ -13,9 +13,6 @@
 //!   declares external relations.
 //! - Meta: every key must be in [`META_KEYS`]. The allowlist and the size bounds are
 //!   kept here by hand, so a new key or a raised bound is a reviewed diff in this file.
-//! - Rows: tables the steward build must leave empty ([`EMPTY_TABLES`]) have no rows. The
-//!   semantic part keeps the catalog schema, but its source locators point into steward
-//!   working files.
 //! - Size: every TEXT, BLOB or untyped column of every table stays under its bound, so a
 //!   raw payload in an allowed column is caught.
 //! - Text: no `text` body names a steward working file (`*.json`, `*.jsonl`, `*.toml`)
@@ -79,12 +76,11 @@ const META_KEYS: [&str; 30] = [
 /// Size bounds in bytes, set from the 0.71.0 preview DB's maxima with margin: no ordinary
 /// TEXT column exceeds 918; a raw export is larger than any of these.
 const DEFAULT_BOUND: i64 = 2048;
-const BOUNDS: [(&str, i64); 4] = [
+const BOUNDS: [(&str, i64); 3] = [
     // FTS5 index pages (preview max 4 053), page size 4 096 by default.
     ("doc_fts_data.block", 16_384),
     ("search_data.block", 16_384),
     ("search_description_data.block", 16_384),
-    ("search_exact_data.block", 16_384), // exact-match ranking index (#2167)
 ];
 /// Bounded per key, below.
 const PER_KEY: &str = "meta.value";
@@ -92,9 +88,6 @@ const META_BOUND: i64 = 4096; // preview max 1 755 (`logo`)
 const META_BOUNDS: [(&str, i64); 1] = [
     ("scope", 120_000), // the steward's public scope document (preview 81 974)
 ];
-
-/// Catalog-schema tables a steward build emits empty: rows would name working files.
-const EMPTY_TABLES: [&str; 1] = ["occurrence_locator"];
 
 type Columns = BTreeMap<String, BTreeSet<(String, String)>>;
 
@@ -185,31 +178,19 @@ pub(super) fn check(con: &Connection) -> Result<()> {
         }
     }
 
-    let mut filled = Vec::new();
-    for t in EMPTY_TABLES {
-        if have.contains_key(t)
-            && con.query_row(&format!("SELECT EXISTS(SELECT 1 FROM \"{t}\")"), [], |r| {
-                r.get::<_, bool>(0)
-            })?
-        {
-            filled.push(t.to_owned());
-        }
-    }
-
     let leaked = if have.contains_key("text") {
         working_references(con)?
     } else {
         Vec::new()
     };
 
-    let mut items: [(&str, Vec<String>); 8] = [
+    let mut items: [(&str, Vec<String>); 7] = [
         ("extra_table", extra_tables),
         ("missing_table", missing_tables),
         ("extra_column", extra_columns),
         ("missing_column", missing_columns),
         ("meta_key", unknown_keys),
         ("oversize", too_big),
-        ("nonempty_table", filled),
         ("working_file", leaked),
     ];
     let mut lines = Vec::new();

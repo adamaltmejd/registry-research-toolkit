@@ -918,11 +918,16 @@ release assets are left unchanged.
 - **Schema addition M2.** `alias_variable` indexes `alias(variable_id)` for the
   variable-to-names direction.
 - `search_item` code rows are (code, label) pairs, not (value set, item): `code_text`,
-  `label_text`, no `valueset_id`. The value sets of a pair come from `vs_item_code`
-  (C-10 ruling: one row per item measured 1.48 GB).
-- `vs_item_code` exists only for that lookup (about 90-100 MB). Packing items into one
-  BLOB per value set (schema §5.2, about −65 MB on `vs_item`) is the lever if size
-  matters.
+  `label_text`, no `valueset_id` (C-10 ruling: one row per item measured 1.48 GB).
+- The builder writes a pair's value sets, those some segment references, to
+  `search_code_valueset (item_id, valueset_id)`: the `values?code=` drill-down and the
+  hit's `value_set_count` read it by primary key. It replaced an index
+  `vs_item_code ON vs_item(code_text, label_text)` over every value set (107 MB at
+  0.80.0). Referenced sets hold 90% of `vs_item` rows, so the table keeps 5.4M rows and
+  about 59 MB of that (#2335). Packing each code row's value-set ids into one value on
+  `search_item` is the next lever if size matters, and packing items into one BLOB per
+  value set (schema §5.2, about −65 MB on `vs_item`) another. Reading the pairs from
+  `vs_item` without either costs a full scan (about 125 MB) per drill-down.
 - **Edition and qualifier are not part of a request.** The primary segments serve every
   order (final over preliminary); the builder stores no selection segments. Naming an
   edition or a qualifier is deferred until curation, so the periods grammar and the
@@ -1033,11 +1038,13 @@ order file carries ids only.
 `show(ref, evidence=true)` adds `evidence`: provider definition/operational-definition
 texts use the same containment rule within each occurrence, then identical normalized
 texts are grouped with all their periods, preserving gaps. Each text retains its source
-occurrences: labels, units, periods, table, status, source keys, exact spellings and
-source locators. Occurrences without either text are kept in `source_only`. Evidence
-also includes delivered/curated aliases; applied curation fields with statement
-file/line, evidence and caveat; and linked documents. Original provider text and
-spelling values are restored from override provenance when a correction exists,
+occurrences: labels, units, periods, table, status, source keys and exact spellings. The
+input rows behind an occurrence are build provenance and stay in the build: the catalog
+has no `occurrence_locator` table (maintainer 2026-11-06, #2335; about 68 MB at 0.80.0,
+read by no curation workflow). Occurrences without either text are kept in
+`source_only`. Evidence also includes delivered/curated aliases; applied curation fields
+with statement file/line, evidence and caveat; and linked documents. Original provider
+text and spelling values are restored from override provenance when a correction exists,
 including a source that was silent. Actual description, identity and group/tag statement
 locators are included; a ledger id does not acquire an invented statement. Evidence is
 never loaded or returned by the default summary. `segments(evidence=true)` remains the
@@ -1883,14 +1890,12 @@ the published pair (#2113): the `locator` columns of `holding_table`, `holding_c
 `holding_mapping` and `holding_notice`,
 `holding_reference_occurrence.locator`/`evidence`, and `meta.input_pins`. Both stay
 steward input: a locator on every decision locates compiler and verifier refusals, and
-the evidence on every reference occurrence records its review in the steward repo. The
-supplemental semantic part keeps the catalog schema but emits no `occurrence_locator`
-rows, since its source rows are steward working files. `meta.input_manifest_sha256` (one
-digest over the sorted `path\tsha256` pins) replaces the per-file pins; `steward_repo`,
-`steward_commit` and `steward_config` stay because `reg-build verify --steward-repo`
-needs them to admit the pinned checkout and recompute that digest. Build provenance for
-review lives in the `--report` JSON under `steward`: repo, commit, config and every
-input pin. That report is private release evidence.
+the evidence on every reference occurrence records its review in the steward repo.
+`meta.input_manifest_sha256` (one digest over the sorted `path\tsha256` pins) replaces
+the per-file pins; `steward_repo`, `steward_commit` and `steward_config` stay because
+`reg-build verify --steward-repo` needs them to admit the pinned checkout and recompute
+that digest. Build provenance for review lives in the `--report` JSON under `steward`:
+repo, commit, config and every input pin. That report is private release evidence.
 
 Holdings schema 7 replaces the unique `holding_table.physical_name` with a unique
 (`schema_name`, `physical_name`) for schema-keyed censuses (see "Schema-keyed census").
@@ -2482,10 +2487,11 @@ and delivered spellings; `label`: labels; `body`: definitions, register/table
 descriptions and document text), plus `search_description` for the curated variable
 description. Both use `search_item.id` as rowid. The builder indexes raw text under
 `unicode61 remove_diacritics 2`, which folds case and diacritics, and the reader applies
-no fold of its own: `lan` finds `län` (#2163). A third index, `search_exact`, holds each
-row's widest text (its description row's, else its primary row's) under
-`remove_diacritics 0`, only to rank exact matches first. Pins, synonyms and type priors
-are curation (D). A call returns one ranked list.
+no fold of its own: `lan` finds `län` (#2163). An exact-spelling index that ranked
+diacritic-exact matches first (`search_exact`, about 74 MB at 0.80.0) was dropped on the
+maintainer's ruling of 2026-11-06 (#2335): it moved 3 top-1 hits of 59 measured queries
+(`län`, `lön`, `företag`). Pins, synonyms and type priors are curation (D). A call
+returns one ranked list.
 
 1. **Tokens.** Each maximal run of Unicode letters and digits in `q` is a quoted prefix
    term `"tok"*`, joined by spaces (AND, within one row), so FTS5 operators in `q` are
@@ -2495,13 +2501,12 @@ are curation (D). A call returns one ranked list.
    items (`{registers: []}` for facets) without a query. `ops/fts.rs::query` is the one
    implementation; `docs_search` shares it.
 2. **Rank.** Primary matches first, then description matches absent from the primary
-   match set. Within each, rows that also match `search_exact` (the query as typed,
-   diacritics kept, case folded) come first, so `här` lists `här` before `har` and `har`
-   lists `har` before `här` (#2163). Then `bm25(index, 10.0, 5.0, 1.0)` (name, label,
-   body), ascending. The primary corpus and its scores are unaffected by descriptions.
-   FTS5 scores a row by its weighted hit count against its whole token count, so a hit
-   weighs most in an id or spelling and least in a definition or document text: a
-   variable labelled `Vikt` ranks above a longer one whose definition says vikt.
+   match set. Within each, `bm25(index, 10.0, 5.0, 1.0)` (name, label, body), ascending;
+   `här` and `har` match the same rows and rank them alike. The primary corpus and its
+   scores are unaffected by descriptions. FTS5 scores a row by its weighted hit count
+   against its whole token count, so a hit weighs most in an id or spelling and least in
+   a definition or document text: a variable labelled `Vikt` ranks above a longer one
+   whose definition says vikt.
 3. **Ties.** Then `search_item.kind` in SQL text order (`code`, `document`, `register`,
    `table`, `variable`), then `sort_key`, which is unique. Two rows tie on bm25 when the
    query hits the same weighted count in rows of equal token count.
@@ -2525,7 +2530,7 @@ are curation (D). A call returns one ranked list.
      the label, `spellings` the variable's `alias` folds, sorted;
    - code `{code, label, value_set_count}`: `label` `null` when the pair has none, the
      count is of distinct value sets holding the pair that some segment references
-     (`vs_item_code`, `segment_valueset`);
+     (`search_code_valueset`, written by the builder);
    - document `{doc, title, heading, page}`: `doc` is the hash; `heading` and `page`
      come from the document's best `doc_fts` section for the same expression
      (`bm25(doc_fts)`, then `ord`), both `null` when no section matches.

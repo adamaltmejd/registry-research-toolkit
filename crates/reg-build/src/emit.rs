@@ -81,9 +81,6 @@ pub struct Catalog {
     pub statements: Vec<StatementRow>,
     pub provenance: reg_resolve::provenance::Finalized,
     pub classifications: Vec<reg_resolve::curation::apply::Classification>,
-    /// False for a steward's supplemental build: its source rows are private working
-    /// files, so the published pair carries no `occurrence_locator` rows (#2113).
-    pub occurrence_locators: bool,
 }
 
 /// A cell before interning: text, folded names and spellings are resolved to row ids
@@ -746,19 +743,6 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                     Cell::Int(override_mask),
                 ],
             );
-            for locator in std::iter::once(&x.locator).chain(&x.also) {
-                if !catalog.occurrence_locators || curated_locators.contains(locator) {
-                    continue;
-                }
-                rows.push(
-                    "occurrence_locator",
-                    vec![
-                        Cell::Int(oid),
-                        Cell::Int(id(input_of(locator)?)),
-                        Cell::Str(format!("{}:{}", locator.input, locator.at)),
-                    ],
-                );
-            }
             for pv in &x.population_valuesets {
                 rows.push(
                     "occurrence_population_valueset",
@@ -1257,6 +1241,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
             table: &table_id,
             variable: &variable_id,
             doc_register: &doc_register,
+            valueset: &valueset_id,
         },
     )?;
     for (i, item) in search.iter().enumerate() {
@@ -1274,6 +1259,12 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                 Cell::Str(item.sort_key.clone()),
             ],
         );
+        for &valueset in &item.valuesets {
+            rows.push(
+                "search_code_valueset",
+                vec![Cell::Int(id(i)), Cell::Int(valueset)],
+            );
+        }
     }
 
     // Interning, in sort order.
@@ -1434,14 +1425,14 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
     // Contentless FTS5: the rows go in rowid order, then each index is merged. The
     // description index holds only described items, with the description after the body.
     let tx = db.transaction()?;
-    for table in ["search", "search_description", "search_exact"] {
+    for table in ["search", "search_description"] {
         let mut insert = tx.prepare(&format!(
             "INSERT INTO {table}(rowid, name, label, body) VALUES (?1, ?2, ?3, ?4)"
         ))?;
         for (i, item) in search.iter().enumerate() {
             let body: Cow<'_, str> = match (table, item.description.is_empty()) {
-                ("search", _) | ("search_exact", true) => item.body.as_str().into(),
-                ("search_description", true) => continue,
+                ("search", _) => item.body.as_str().into(),
+                (_, true) => continue,
                 _ => format!("{}\n{}", item.body, item.description).into(),
             };
             insert

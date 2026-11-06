@@ -18,23 +18,17 @@ const TYPES: &[&str] = &["register", "table", "variable", "code", "document"];
 const DEPTH: usize = 1000;
 
 /// The rank (rule 2) and its ties (rule 3).
-// simplify: exact match (diacritics kept) is one sort key ahead of bm25; revisit with
-// smarter ranking.
-const ORDER: &str = "m.tier, m.exact DESC, m.rank, i.kind, i.sort_key";
+const ORDER: &str = "m.tier, m.rank, i.kind, i.sort_key";
 
 // Keep the original corpus and its scores unchanged. Only description matches that
 // miss the primary index follow it, with base text retained for cross-field ANDs.
-// `exact`: the row also matches with diacritics kept (`search_exact`).
-const MATCHES: &str = "WITH folded AS (
+const MATCHES: &str = "WITH matched AS (
     SELECT rowid AS id, 0 AS tier, bm25(search, 10.0, 5.0, 1.0) AS rank
     FROM search WHERE search MATCH ?1
     UNION ALL
     SELECT rowid, 1, bm25(search_description, 10.0, 5.0, 1.0)
     FROM search_description WHERE search_description MATCH ?1
       AND rowid NOT IN (SELECT rowid FROM search WHERE search MATCH ?1)
-), matched AS (
-    SELECT f.*, f.id IN (SELECT rowid FROM search_exact WHERE search_exact MATCH ?1) AS exact
-    FROM folded f
 )";
 
 pub const OPERATIONS: &[Operation] = &[
@@ -517,22 +511,15 @@ fn hit(
 
 /// A code row's pair and the count of referenced value sets that hold it.
 fn code_hit(conn: &Connection, id: i64) -> rusqlite::Result<SearchHit> {
-    let (code_text, label_text, code, label): (i64, Option<i64>, String, Option<String>) = conn
-        .query_row(
-            "SELECT i.code_text, i.label_text, c.body, l.body
-             FROM search_item i
-               JOIN text c ON c.id = i.code_text
-               LEFT JOIN text l ON l.id = i.label_text
-             WHERE i.id = ?",
-            [id],
-            |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?)),
-        )?;
-    let value_set_count = conn.query_row(
-        "SELECT COUNT(DISTINCT valueset_id) FROM vs_item
-         WHERE code_text = ? AND label_text IS ?
-           AND EXISTS (SELECT 1 FROM segment WHERE segment.valueset_id = vs_item.valueset_id)",
-        params![code_text, label_text],
-        |row| row.get(0),
+    let (code, label, value_set_count): (String, Option<String>, i64) = conn.query_row(
+        "SELECT c.body, l.body,
+                (SELECT COUNT(*) FROM search_code_valueset v WHERE v.item_id = i.id)
+         FROM search_item i
+           JOIN text c ON c.id = i.code_text
+           LEFT JOIN text l ON l.id = i.label_text
+         WHERE i.id = ?",
+        [id],
+        |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
     )?;
     Ok(SearchHit::Code {
         code,

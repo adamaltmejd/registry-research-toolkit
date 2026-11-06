@@ -67,14 +67,18 @@ SELECT v.id FROM valueset v JOIN (SELECT valueset_id, COUNT(*) n FROM vs_item GR
 SELECT i.valueset_id, i.ord FROM vs_item i WHERE i.parent_ord IS NOT NULL AND NOT EXISTS (
   SELECT 1 FROM vs_item p WHERE p.valueset_id = i.valueset_id AND p.ord = i.parent_ord);
 -- a value set's classification link: equal is the version's content; subset has no
--- code outside the version but its sentinels
+-- code outside the version but its sentinels. A set anti-join: vs_item has no index on
+-- code, and SQLite indexes the NOT IN subquery itself (0.23 s at 0.80.0 scale; a
+-- correlated NOT EXISTS scans the version's items per code). Both columns are NOT NULL.
 SELECT v.id FROM valueset v JOIN class_version c ON c.id = v.class_version_id
 WHERE v.class_match = 'equal' AND c.valueset_id <> v.id;
 SELECT DISTINCT v.id FROM valueset v
   JOIN class_version c ON c.id = v.class_version_id
   JOIN vs_item i ON i.valueset_id = v.id
-WHERE v.class_match = 'subset' AND i.sentinel = 0 AND NOT EXISTS (
-  SELECT 1 FROM vs_item k WHERE k.valueset_id = c.valueset_id AND k.code_text = i.code_text);
+WHERE v.class_match = 'subset' AND i.sentinel = 0
+  AND (c.valueset_id, i.code_text) NOT IN (
+    SELECT valueset_id, code_text FROM vs_item
+    WHERE valueset_id IN (SELECT valueset_id FROM class_version));
 
 -- A classification states a part on every version or on none: its page groups the
 -- versions by part, and a version without one would belong to no line.
@@ -104,15 +108,28 @@ WHERE o.status = 'unplaced' AND (r.id IS NULL OR r.parse_state <> 'unparsed');
 
 -- search rows and FTS rows agree (contentless index: compare counts)
 SELECT 1 WHERE (SELECT COUNT(*) FROM search_item) <> (SELECT COUNT(*) FROM search_docsize);
-SELECT 1 WHERE (SELECT COUNT(*) FROM search_item) <> (SELECT COUNT(*) FROM search_exact_docsize);
 
 -- supplementary FTS rows use the primary search rowid of a variable
 SELECT d.id FROM search_description_docsize d LEFT JOIN search_item s ON s.id = d.id
 WHERE s.kind IS NOT 'variable';
 
--- every code row's (code, label) pair occurs in vs_item (via vs_item_code)
+-- every code row has a value set, and its value sets are exactly the segment-referenced
+-- sets that hold its (code, label) pair
 SELECT id FROM search_item s WHERE kind = 'code' AND NOT EXISTS (
-  SELECT 1 FROM vs_item v WHERE v.code_text = s.code_text AND v.label_text IS s.label_text);
+  SELECT 1 FROM search_code_valueset c WHERE c.item_id = s.id);
+SELECT 1 WHERE EXISTS (
+  SELECT s.id, v.valueset_id FROM vs_item v
+    JOIN search_item s ON s.kind = 'code' AND s.code_text = v.code_text
+      AND s.label_text IS v.label_text
+  WHERE EXISTS (SELECT 1 FROM segment g WHERE g.valueset_id = v.valueset_id)
+  EXCEPT SELECT item_id, valueset_id FROM search_code_valueset
+) OR EXISTS (
+  SELECT item_id, valueset_id FROM search_code_valueset
+  EXCEPT SELECT s.id, v.valueset_id FROM vs_item v
+    JOIN search_item s ON s.kind = 'code' AND s.code_text = v.code_text
+      AND s.label_text IS v.label_text
+  WHERE EXISTS (SELECT 1 FROM segment g WHERE g.valueset_id = v.valueset_id)
+);
 
 -- meta has its required keys
 SELECT column1 FROM (VALUES ('schema_version'),('generation_id'),('catalog_version'),

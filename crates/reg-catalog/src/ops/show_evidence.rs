@@ -8,7 +8,7 @@ use utoipa::ToSchema;
 
 use super::docs::{self, RelatedDocument};
 use super::refs::Entity;
-use super::segments::{Locator, StatementLocation};
+use super::segments::StatementLocation;
 use super::{Period, Server};
 use crate::{Error, rows};
 
@@ -44,7 +44,6 @@ pub struct ProviderTextSource {
     label: Option<String>,
     #[schema(required = true)]
     unit: Option<String>,
-    locators: Vec<Locator>,
 }
 
 /// A column name the variable is known by (case ignored).
@@ -94,7 +93,6 @@ const SOURCE_ROWS: &str = "SELECT o.id, t.pid AS table_pid, o.start, o.end, o.st
  WHERE o.variable_id = ?1";
 
 struct SourceRow {
-    id: i64,
     start: i64,
     end: i64,
     definition: Option<String>,
@@ -104,7 +102,6 @@ struct SourceRow {
 
 fn source_row(server: &Server, row: &Row<'_>) -> rusqlite::Result<SourceRow> {
     Ok(SourceRow {
-        id: row.get(0)?,
         start: row.get(2)?,
         end: row.get(3)?,
         definition: row.get(8)?,
@@ -118,7 +115,6 @@ fn source_row(server: &Server, row: &Row<'_>) -> rusqlite::Result<SourceRow> {
             spelling: row.get(6)?,
             label: row.get(7)?,
             unit: row.get(10)?,
-            locators: Vec::new(),
         },
     })
 }
@@ -202,27 +198,12 @@ pub(super) fn load(
     conn: &Connection,
     entity: &Entity,
 ) -> Result<VariableEvidence, Error> {
-    let mut rows = rows(
+    let rows = rows(
         conn,
         &format!("{SOURCE_ROWS} ORDER BY t.pid, o.start, o.end, o.source_key, spelling, o.id"),
         [entity.id],
         |row| source_row(server, row),
     )?;
-    let mut locators = conn.prepare(
-        "SELECT i.name, l.locator
-         FROM occurrence_locator l JOIN input i ON i.id = l.input_id
-         WHERE l.occurrence_id = ? ORDER BY i.name, l.locator",
-    )?;
-    for row in &mut rows {
-        row.source.locators = locators
-            .query_map([row.id], |row| {
-                Ok(Locator {
-                    input: row.get(0)?,
-                    locator: row.get(1)?,
-                })
-            })?
-            .collect::<rusqlite::Result<_>>()?;
-    }
     let mut text_indices = BTreeMap::new();
     let mut grouped: Vec<(ProviderText, Vec<reg_core::days::Span>)> = Vec::new();
     let mut source_only = Vec::new();

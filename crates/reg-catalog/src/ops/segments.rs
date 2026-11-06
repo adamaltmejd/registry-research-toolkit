@@ -127,14 +127,7 @@ pub struct Occurrence {
     label: Option<String>,
     source_key: String,
     status: String,
-    locators: Vec<Locator>,
     overrides: Vec<Override>,
-}
-
-#[derive(Clone, Serialize, ToSchema)]
-pub struct Locator {
-    pub(super) input: String,
-    pub(super) locator: String,
 }
 
 /// A curated value that replaced the provider's.
@@ -647,11 +640,6 @@ fn occurrences(server: &Server, conn: &Connection, segment: i64) -> Result<Vec<O
             ))
         },
     )?;
-    let mut locators = conn.prepare(
-        "SELECT i.name, l.locator
-         FROM occurrence_locator l JOIN input i ON i.id = l.input_id
-         WHERE l.occurrence_id = ? ORDER BY i.name, l.locator",
-    )?;
     let mut overrides = conn.prepare(
         "SELECT o.field, o.value, o.prov, o.rule_code, o.source_value, s.file, s.line
          FROM override o LEFT JOIN statement s ON s.id = o.statement_id
@@ -670,14 +658,6 @@ fn occurrences(server: &Server, conn: &Connection, segment: i64) -> Result<Vec<O
                     label,
                     source_key,
                     status,
-                    locators: locators
-                        .query_map([id], |row| {
-                            Ok(Locator {
-                                input: row.get(0)?,
-                                locator: row.get(1)?,
-                            })
-                        })?
-                        .collect::<rusqlite::Result<_>>()?,
                     overrides: overrides
                         .query_map([id], |row| {
                             Ok(Override {
