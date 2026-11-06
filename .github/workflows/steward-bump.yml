@@ -3,10 +3,11 @@ name: Steward bump
 # Reusable: a steward repository's scheduled bump (SWECOV move T5, R10 and R13). When a
 # newer reg_meta/v* release than the steward's `toolkit.toml` pin exists, re-lock the
 # steward's curation against that release's base, move the pin and every
-# `steward-*.yml@reg_meta/v…` ref in the caller's workflows, and open a PR. The PR's own
-# CI (the caller's steward-build) posts the holdings diff for review; merging it
-# publishes and deploys. A release that breaks the steward contract fails the re-lock
-# here, and the steward stays on its last good pin.
+# `steward-*.yml@reg_meta/v…` ref in the caller's workflows, and open a PR. The PR is
+# reviewed like any steward PR (a local holdings build, verify and diff against the
+# newest release); whether merging it releases is the caller's choice. A release that
+# breaks the steward contract fails the re-lock here, and the steward stays on its last
+# good pin. A day with no newer release costs a checkout and one release listing.
 #
 #   on: { schedule: [{ cron: "23 5 * * *" }], workflow_dispatch: {} }
 #   jobs:
@@ -125,4 +126,4 @@ jobs:
           git push -q origin "$BRANCH"
           gh pr create --base "$DEFAULT_BRANCH" --head "$BRANCH" \
             --title "chore($STEWARD): bump reg_meta to ${NEWEST#reg_meta/v} and re-lock" \
-            --body "Moves the toolkit pin from \`$CURRENT\` to \`$NEWEST\` and re-locks the curation against its base. Review the holdings diff in this PR's steward-build summary; merging publishes and deploys."
+            --body "Moves the toolkit pin from \`$CURRENT\` to \`$NEWEST\` and re-locks the curation against its base. Review it with a local holdings build and diff against the newest release (AGENTS.md)."

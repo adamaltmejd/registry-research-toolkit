@@ -12,13 +12,13 @@ name: Steward build
 # `build` downloads the release's `reg-build` and base catalog (public, digests checked
 # against GitHub's), runs `reg-build holdings` on the caller's checkout (which also runs
 # the pair verifier and its content check), and diffs the holdings against `previous`.
-# The diff goes to the job summary: on a pull request, the summary is the review gate.
+# The diff goes to the job summary, which the caller's release notes link.
 # `conformance` runs the release's pair checks (`reg-conformance --test release`) with
 # the released `reg-meta`. The pair leaves as the workflow artifact `holdings`:
 # `reg_meta_<steward>.db.zst` and its `.sha256`, plus the private build report.
 #
 # On a pull_request event actions/checkout builds the PR's merge commit, so that is
-# the steward commit the artifact records; publish only from a push build.
+# the steward commit the artifact records; publish only from a build of main.
 
 on:
   workflow_call:

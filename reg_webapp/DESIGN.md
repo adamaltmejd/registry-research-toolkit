@@ -391,8 +391,8 @@ lists its inputs and an example call.
   its content check, then `reg-build diff --holdings` against a previous holdings asset
   (a release in the caller repository or a URL). With no previous asset, the diff is
   skipped and the summary says so. A second job runs the release's pair conformance with
-  the released `reg-meta`. The diff goes to the job summary, which is the review gate on
-  a PR. The pair leaves as a workflow artifact.
+  the released `reg-meta`. The diff goes to the job summary. The pair leaves as a
+  workflow artifact.
 - `steward-deploy.yml`: bakes `reg_webapp/steward.Dockerfile` (the runtime stage of the
   toolkit image, with the binary and both DBs from the build context, so the image needs
   no token), deploys it to the steward's Fly app, deploys the toolkit's edge worker with
@@ -407,8 +407,19 @@ lists its inputs and an example call.
   caller's workflows (the `uses:` refs and `reg_meta_tag` inputs), and opens a PR with a
   token the caller supplies (`GITHUB_TOKEN` cannot change workflow files).
 
+Steward repositories are private, so their CI spends a metered Actions quota; the
+toolkit's own CI does not. A steward therefore builds where it releases, not on every PR
+(maintainer 2026-11-06). PR CI checks only that the pins agree. The merge gate is an
+independent review that builds, verifies and diffs the holdings locally against the
+newest release with the pinned `reg-build`; each steward's `AGENTS.md` has the commands.
+A release is a `workflow_dispatch` of the steward's release workflow, which builds, runs
+conformance, publishes and deploys. The repository variable `STEWARD_RELEASE=auto`
+restores a release on every push to `main`, for when the PR pace allows it; unset, a
+push releases nothing. A bump PR is reviewed and released the same way.
+
 The inputs of these workflows are a contract with every steward repository. A change to
-them breaks a steward only at its next bump, as a red PR; the release notes name it.
+them breaks a steward only at its next bump, as a failed re-lock or in the bump PR's
+review; the release notes name it.
 
 A steward's Fly app sets `REG_META_EDGE_TOKEN` and its Fly config checks `/healthz`, as
 the global one does: with the token set, a check on any other path gets 403 and fails
