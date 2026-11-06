@@ -4923,3 +4923,39 @@ kind = "set"
 subject = "individer: Sektor where key = 'v2692'"
 fields = { "variable" = "institutionell-sektor" }
 evidence = "Column Sektor in individer: key v2692 1999-2013, key v33 from 2014 (r12879). The opdef of v33 ('det företag där personen bedöms ha bedrivit sin huvudsakliga sysselsättning') is that of v2692; the foretag table gives Sektor key v33 for the same 3-digit codes in 1999-2013. Only the label of code 000 differs.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=251464 (r12878)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=251468 (r12879)"
+
+[[statement]]
+kind = "assert"
+subject = "jobbregistret: PersonNr @2013-01-01..2013-12-31 where key = 'v57' and release = 'r5625'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Personnummer", "definition" = "Identitetsbegrepp för personer. Tilldelas av Skattemyndigheten.", "type" = "text", "length" = 12, "sensitive" = false, "identifier" = true } }
+evidence = "private:ev-3789"
+
+[[statement]]
+kind = "assert"
+subject = "jobbregistret: PersonNr @2014-01-01..2014-12-31 where key = 'v57' and release = 'r7246'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Personnummer", "definition" = "Identitetsbegrepp för personer. Tilldelas av Skattemyndigheten.", "type" = "text", "length" = 12, "sensitive" = false, "identifier" = true } }
+evidence = "private:ev-3790"
+
+[[statement]]
+kind = "assert"
+subject = "jobbregistret: PersonNr @2015-01-01..2015-12-31 where key = 'v57' and release = 'r9936'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Personnummer", "definition" = "Identitetsbegrepp för personer. Tilldelas av Skattemyndigheten.", "type" = "text", "length" = 12, "sensitive" = false, "identifier" = true } }
+evidence = "private:ev-3791"
+
+[[statement]]
+kind = "assert"
+subject = "jobbregistret: PersonNr @2016-01-01..2016-12-31 where key = 'v57' and release = 'r11635'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Personnummer", "definition" = "Identitetsbegrepp för personer. Tilldelas av Skattemyndigheten.", "type" = "text", "length" = 12, "sensitive" = false, "identifier" = true } }
+evidence = "private:ev-3792"
+
+[[statement]]
+kind = "assert"
+subject = "jobbregistret: PersonNr @2017-01-01..2017-12-31 where key = 'v57' and release = 'r12757'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Personnummer", "definition" = "Identitetsbegrepp för personer. Tilldelas av Skattemyndigheten.", "type" = "text", "length" = 12, "sensitive" = false, "identifier" = true } }
+evidence = "private:ev-3793"
+
+[[statement]]
+kind = "assert"
+subject = "jobbregistret: PersonNr @2018-01-01..2018-12-31 where key = 'v57' and release = 'r13657'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Personnummer", "definition" = "Identitetsbegrepp för personer. Tilldelas av Skattemyndigheten.", "type" = "text", "length" = 12, "sensitive" = false, "identifier" = true } }
+evidence = "private:ev-3794"
