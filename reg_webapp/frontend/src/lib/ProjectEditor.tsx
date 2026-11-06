@@ -190,6 +190,7 @@ export function ProjectEditor({
             project={project}
             validation={shown}
             busy={busy}
+            databaseShown={draft !== null && databases !== null}
             needsDatabase={needsDatabase}
           />
           {draft && (
@@ -254,23 +255,28 @@ function Check({
   project,
   validation,
   busy,
+  databaseShown,
   needsDatabase,
 }: {
   project: ProjectSnapshot;
   validation: ProjectCheck;
   busy: boolean;
+  /** The Database select is on the page (several databases, a readable draft). */
+  databaseShown: boolean;
   needsDatabase: boolean;
 }) {
   const verdict = projectVerdict(project, validation);
   const words = VERDICT_WORDS[verdict];
   const structural = project.draft === null;
-  // The database row above the verdict says what `database_required` says, in
-  // the page's words, so the finding is neither listed nor counted again. It is
-  // dropped even once a database is chosen: the previous check, kept on screen
-  // while the next one runs, still carries it.
+  // Where the Database select is shown, it and the row above the verdict say
+  // what `database_required` says, in the page's words, so the finding is
+  // neither listed nor counted again; that holds once a database is chosen too,
+  // since the previous check, kept on screen while the next runs, still carries
+  // it. Without the select (no `/api/context`) the finding is the only
+  // explanation and stays.
   const issues: ValidationIssue[] = (
     structural ? project.issues : (validation.data?.issues ?? [])
-  ).filter((issue) => issue.code !== "database_required");
+  ).filter((issue) => !databaseShown || issue.code !== "database_required");
   const onCard = (issue: ValidationIssue) =>
     !structural && issue.path.startsWith("/sources/");
   // A note on a card (level info) needs no link here: it changes no verdict.
