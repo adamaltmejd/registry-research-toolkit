@@ -6,7 +6,8 @@
 #
 # code       stable; `fields` lists the keys of its `fields` object.
 # class      usage 400/422, not_found 404, conflict 409, order_blocked 422,
-#            unavailable 503, internal 500; limit 413/429 (HTTP only).
+#            unavailable 503, internal 500; limit 413/429 and forbidden 403
+#            (HTTP only).
 # surface    operation: any operation, either transport. http: the HTTP transport only.
 #            startup: `serve` or `mcp` refuses to start (never listens).
 # status     the HTTP status (operation and http codes).
@@ -174,6 +175,16 @@ class = "limit"
 surface = "http"
 status = 429
 fields = ["retry_after_seconds"]
+
+[[code]]
+code = "edge_token_required"
+class = "forbidden"
+surface = "http"
+status = 403
+fields = []
+note = """`serve` with `REG_META_EDGE_TOKEN` set refuses every request whose \
+`x-edge-token` header does not carry it, except `GET /healthz`: the origin answers \
+only its edge worker (reg_webapp/DESIGN.md, "Origin lock")."""
 
 [[code]]
 code = "db_not_found"

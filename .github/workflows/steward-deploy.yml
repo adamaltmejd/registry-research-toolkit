@@ -37,6 +37,9 @@ name: Steward deploy
 # Cloudflare by the maintainer, not here). The probes then send the service token
 # (CF_ACCESS_CLIENT_ID / CF_ACCESS_CLIENT_SECRET) and skip the edge-cache probe, whose
 # HIT is not asserted behind Access; with no token they skip with a notice.
+# The caller's Fly app sets REG_META_EDGE_TOKEN to the worker's EDGE_TOKEN, and its Fly
+# config's HTTP check reads `/healthz`: with the token set, the origin refuses any other
+# request without it, Fly's check included (reg_webapp/DESIGN.md, "Origin lock").
 # `dry_run` stops after the image: built locally, run, and probed until its
 # entrypoint gate passes. Nothing is pushed or deployed.
 

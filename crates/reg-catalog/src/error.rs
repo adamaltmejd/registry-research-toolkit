@@ -83,6 +83,8 @@ codes! {
         "Send a smaller body.";
     RateLimited "rate_limited" "limit" 429 0 ["retry_after_seconds"]
         "Wait the given number of seconds and retry.";
+    EdgeTokenRequired "edge_token_required" "forbidden" 403 0 []
+        "Reach this server through its public host; the origin answers only its edge.";
     DbNotFound "db_not_found" "unavailable" 0 10 []
         "Pass --db with the directory that holds reg_meta.db.";
     SchemaIncompatible "schema_incompatible" "unavailable" 0 10 ["schema_version", "supported"]
