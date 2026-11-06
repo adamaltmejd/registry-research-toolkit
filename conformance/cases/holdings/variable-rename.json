@@ -1,0 +1,7 @@
+{
+  "note": "Pool's census drops the Old/New spelling change: one physical column Value, renamed to the variable demo/held/value. The base frame documents that variable as Old from 2017-01-01 to 2018-12-31 and New from 2019-01-01 to 2021-12-31; Pool delivers 2017..2020. A variable rename places both documented intervals inside the delivery, split at the spelling change. Bounds are days since 1970-01-01, end exclusive: 2017-01-01 = 17167, 2019-01-01 = 17897, 2021-01-01 = 18628. Oracle: the base frame and Pool's authored delivery.",
+  "expected": [
+    "demo/held demo/held/value 17167 17897",
+    "demo/held demo/held/value 17897 18628"
+  ]
+}

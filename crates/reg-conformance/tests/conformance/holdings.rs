@@ -221,23 +221,10 @@ fn renamed_physical_column_matches_its_catalog_name() {
 fn variable_rename_places_every_documented_spelling() {
     // Fails if a `variable` rename resolves its FQID to one spelling and folds by it:
     // `demo/held/value` is spelled `Old` to 2018 and `New` from 2019, so a single
-    // spelling places only one of the Pool's two intervals. The expected placements are
-    // the unmodified pair's for its physical `Old` and `New` together.
-    let mapped = |db: &Path, names: &str| {
-        column(
-            db,
-            &format!(
-                "SELECT m.table_pid||' '||m.variable_pid||' '||m.start||' '||m.end
-                 FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id
-                 JOIN holding_table t ON t.id=c.holding_id
-                 WHERE t.physical_name='Pool' AND c.name IN ({names}) ORDER BY 1"
-            ),
-        )
-    };
-    let original = mapped(
-        &steward::pair().unwrap().dir.join("reg_meta_fixture.db"),
-        "'Old','New'",
-    );
+    // spelling places only one of the Pool's two intervals. The expected placements
+    // (`variable-rename.json`) come from the base frame and Pool's authored delivery.
+    let case = read_json(&holdings_case().join("variable-rename.json")).unwrap();
+    let expected: Vec<String> = serde_json::from_value(case["expected"].clone()).unwrap();
     let dir = Scratch::new("census-variable-rename").unwrap();
     let root = locked_copy(dir.path()).unwrap();
     edit(&root.join("census.csv"), ",Old,New,", ",Value,,", false).unwrap();
@@ -257,7 +244,16 @@ fn variable_rename_places_every_documented_spelling() {
     .unwrap();
     let out = dir.path().join("variable.db");
     compile(dir.path(), &out).ok();
-    assert_eq!(mapped(&out, "'Value'"), original);
+    assert_eq!(
+        column(
+            &out,
+            "SELECT m.table_pid||' '||m.variable_pid||' '||m.start||' '||m.end
+             FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id
+             JOIN holding_table t ON t.id=c.holding_id
+             WHERE t.physical_name='Pool' AND c.name='Value' ORDER BY 1",
+        ),
+        expected
+    );
 }
 
 #[test]

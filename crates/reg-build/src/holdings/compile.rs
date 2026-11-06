@@ -523,9 +523,14 @@ pub(super) fn renames_resolve(
     index: &BTreeMap<String, Vec<Segment>>,
     targets: &[census::Match],
 ) -> Result<()> {
-    match (1..).zip(targets).find(|(_, t)| {
-        let target = Target::of(t);
-        !index.values().flatten().any(|s| target.matches(s))
+    let segments = || index.values().flatten();
+    let spellings: BTreeSet<_> = segments()
+        .map(|s| reg_core::fold_identity(&s.spelling))
+        .collect();
+    let variables: BTreeSet<_> = segments().map(|s| s.variable.as_str()).collect();
+    match (1..).zip(targets).find(|(_, t)| match t {
+        census::Match::Spelling(name) => !spellings.contains(&reg_core::fold_identity(name)),
+        census::Match::Variable(fqid) => !variables.contains(fqid.as_str()),
     }) {
         Some((n, _)) => Err(format!(
             "census_rename_unresolved: rename {n}: target matches no documented spelling or variable"
