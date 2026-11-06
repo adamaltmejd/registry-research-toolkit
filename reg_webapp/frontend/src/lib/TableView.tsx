@@ -6,7 +6,6 @@ import { registerRead, registerSubjectNames } from "./catalog_names";
 import { catalogPeriodLabel } from "./catalog_period";
 import { dataAxis } from "./period";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
-import { ScopedDataWarnings } from "./ScopedDataWarnings";
 import { datedYearRuns, studyWindow } from "./study_window";
 import { Definitions } from "./ui/Definitions";
 import { EmptyState } from "./ui/EmptyState";
@@ -104,7 +103,6 @@ export function TableView({
           </VariableRowList>
         )}
       </Panel>
-      <ScopedDataWarnings fqids={[node.fqid]} names={names} />
       <RelatedDocumentsPanel fqids={[node.fqid]} names={names} />
     </article>
   );

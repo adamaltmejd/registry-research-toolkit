@@ -7,7 +7,6 @@ import { catalogHref } from "./catalog";
 import { loadRegister, registerSubjectNames } from "./catalog_names";
 import groupStyles from "./GroupView.module.css";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
-import { ScopedDataWarnings } from "./ScopedDataWarnings";
 import { Button } from "./ui/Button";
 import { Definitions } from "./ui/Definitions";
 import { Skeleton } from "./ui/Skeleton";
@@ -261,7 +260,6 @@ export function GroupView({
         window={coverage.window}
         bounds={factBounds}
       />
-      <ScopedDataWarnings fqids={fqids} names={names} />
       <RelatedDocumentsPanel fqids={fqids} names={names} />
       {coverage.addBar}
     </article>

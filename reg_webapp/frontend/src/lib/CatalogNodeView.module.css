@@ -53,41 +53,10 @@
   outline: none;
   box-shadow: var(--focus-ring);
 }
-.findings,
 .plainList {
   margin: 0;
   padding: 0;
   list-style: none;
-}
-.findings {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  padding-bottom: var(--space-3);
-}
-/* A focused item draws its ring on the row inside it: the row's fill would cover an
-   inset ring on the item itself. */
-.findings > li:focus-visible {
-  outline: none;
-}
-.findings > li:focus-visible > * {
-  box-shadow: var(--focus-ring-inset);
-}
-/* Under the list, inside the panel's clipping box: the inline padding is the focus
-   ring's width (3px, tokens.css --focus-ring), so a focused button's ring shows whole. */
-.findingsFoot {
-  margin: 0;
-  padding: 0 3px var(--space-3);
-}
-.finding {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  overflow-wrap: anywhere;
-}
-.finding > a {
-  align-self: flex-start;
-  max-width: 100%;
 }
 /* A variable's name wraps rather than truncates: many names share a long start
    ("Antal bruttoveckor undervisning på distans, …") and differ only at the end. */

@@ -10,7 +10,6 @@ import styles from "./CatalogNodeView.module.css";
 import { catalogHref } from "./catalog";
 import { loadRegister, registerSubjectNames } from "./catalog_names";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
-import { ScopedDataWarnings } from "./ScopedDataWarnings";
 import { Button as ActionButton } from "./ui/Button";
 import { Definitions } from "./ui/Definitions";
 import { Panel } from "./ui/Panel";
@@ -179,7 +178,6 @@ export function VariableView({
         )}
       </div>
       {segments.data && <ValueSetView segments={segments.data} names={names} />}
-      <ScopedDataWarnings fqids={[node.fqid]} names={names} />
       <RelatedDocumentsPanel fqids={[node.fqid]} names={names} />
       {coverage.addBar}
     </article>
