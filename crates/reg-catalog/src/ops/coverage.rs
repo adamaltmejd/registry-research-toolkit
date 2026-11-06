@@ -38,6 +38,11 @@ pub struct Coverage {
 pub struct CoverageTable {
     fqid: String,
     name: String,
+    /// On a data holder with several databases, the id of the database these spans are
+    /// held in; a table held in more than one is listed once per database.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[schema(nullable = false)]
+    space: Option<String>,
     spans: Vec<Period>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     gaps: Vec<CoverageGap>,
@@ -157,6 +162,7 @@ fn coverage(server: &Server, params: &Params) -> Result<Value, Error> {
         tables.push(CoverageTable {
             fqid,
             name,
+            space: None,
             spans: periods(server, &table_spans),
             gaps: table_gaps,
             releases,
@@ -170,6 +176,9 @@ fn coverage(server: &Server, params: &Params) -> Result<Value, Error> {
     })
     .expect("Coverage serializes"))
 }
+
+/// A held table's grouping: its fqid, then its space's config order and id.
+type Key = (String, Option<i64>, Option<String>);
 
 /// Steward mode: the years the steward holds, per table, from its placements; the
 /// catalog's wider spans, gaps and releases are not the steward's (maintainer
@@ -192,18 +201,31 @@ fn held(
             ));
         }
     };
-    let placements: Vec<(String, Span)> = rows(
+    // Keyed by table, then the space's config order, so a table's databases list as
+    // `steward_config.spaces` does. A single-space steward states no space (segments'
+    // rule).
+    let placements: Vec<(Key, Span)> = rows(
         extra,
         &format!(
-            "SELECT m.table_pid, m.start, m.end FROM holding_mapping m
-             WHERE {filter} ORDER BY m.table_pid, m.start, m.end"
+            "SELECT m.table_pid, s.ord, s.id, m.start, m.end
+             FROM holding_mapping m
+               JOIN holding_column c ON c.id = m.column_id
+               JOIN holding_table h ON h.id = c.holding_id
+               LEFT JOIN holding_space s ON s.id = h.space
+                 AND (SELECT count(*) FROM holding_space) > 1
+             WHERE {filter}"
         ),
         [&hit.pid],
-        |row| Ok((row.get(0)?, (row.get(1)?, row.get(2)?))),
+        |row| {
+            Ok((
+                (row.get(0)?, row.get(1)?, row.get(2)?),
+                (row.get(3)?, row.get(4)?),
+            ))
+        },
     )?;
-    let mut by_table: BTreeMap<String, Vec<Span>> = BTreeMap::new();
-    for (table, span) in placements {
-        by_table.entry(table).or_default().push(span);
+    let mut by_table: BTreeMap<Key, Vec<Span>> = BTreeMap::new();
+    for (key, span) in placements {
+        by_table.entry(key).or_default().push(span);
     }
     let name = |pid: &str| -> Result<String, Error> {
         let sql = "SELECT x.body FROM tbl t JOIN text x ON x.id = t.name_text WHERE t.pid = ?";
@@ -216,7 +238,7 @@ fn held(
     };
     let mut hull: Option<Span> = None;
     let mut tables = Vec::with_capacity(by_table.len());
-    for (fqid, spans) in by_table {
+    for ((fqid, _, space), spans) in by_table {
         let spans = merge(spans);
         for &(start, end) in &spans {
             hull = Some(hull.map_or((start, end), |(s, e)| (s.min(start), e.max(end))));
@@ -224,6 +246,7 @@ fn held(
         tables.push(CoverageTable {
             name: name(&fqid)?,
             fqid,
+            space,
             spans: periods(server, &spans),
             gaps: vec![],
             releases: vec![],

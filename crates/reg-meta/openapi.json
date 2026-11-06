@@ -1803,6 +1803,10 @@
             },
             "description": "Absent for a variable (releases belong to tables) and on a data holder's catalog."
           },
+          "space": {
+            "type": "string",
+            "description": "On a data holder with several databases, the id of the database these spans are\nheld in; a table held in more than one is listed once per database."
+          },
           "spans": {
             "type": "array",
             "items": {
