@@ -934,8 +934,8 @@ grow new visual language meanwhile.
   `StatusRow` above the verdict reads "Choose the database your data comes from", and
   Download is inert and points at that row; the server's `database_required` is not
   listed again. A column the chosen database does not have is the server's
-  `not_in_database` on its card, naming the databases that do; it is a finding, never
-  a disabled option. Under them, the steward's `order_instructions` from
+  `not_in_database` on its card, naming the databases that do; it is a finding, never a
+  disabled option. Under the buttons, the steward's `order_instructions` from
   `/api/context` as sent (its own line breaks, no markdown, never text from code), then
   the verdict, "Tables" (one card per table) and "What will be delivered". A card's
   column years load with its own table, not with other cards: a column the catalog does
