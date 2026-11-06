@@ -190,7 +190,7 @@ export function classFamiliesRead(): Read<ClassFamilyRef[]> {
   });
 }
 
-/** A register's display names, shared by table headers and located findings. */
+/** A register's display names, shared by table headers and related documents. */
 export function registerRead(ref: string): Read<RegisterShow> {
   return read(`register:${ref}`, () => loadRegister(ref));
 }
@@ -294,7 +294,7 @@ export async function loadRegister(
 const subjectNames = new WeakMap<RegisterShow, ReadonlyMap<string, string>>();
 const NO_NAMES: ReadonlyMap<string, string> = new Map();
 
-/** Display names shared by register descendants and their located findings. */
+/** Display names shared by register descendants and the panels that cite them. */
 export function registerSubjectNames(
   register?: RegisterShow | null,
 ): ReadonlyMap<string, string> {

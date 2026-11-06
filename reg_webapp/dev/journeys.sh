@@ -72,10 +72,10 @@ shot() { ab screenshot --full "$out_dir/$journey.png" >/dev/null || fail "could 
 WEBAPP_PROJECT=$root/conformance/cases/fixtures/webapp-dev/project_data.json
 
 # J1 browse page types. Fails if a provider, register, table or variable route stops
-# dispatching to its page, the trail stops naming the ancestors, a table chip stops
-# narrowing the register's variables, or a finding no longer opens. The fixture's Familjer
-# table holds one of Hushållsregistret's five variables (Antal), so the chip must
-# leave "1 of 5 shown": a chip that filters nothing leaves 5 of 5.
+# dispatching to its page, the trail stops naming the ancestors, or a table chip stops
+# narrowing the register's variables. The fixture's Familjer table holds one of
+# Hushållsregistret's five variables (Antal), so the chip must leave "1 of 5 shown": a
+# chip that filters nothing leaves 5 of 5.
 j_browse() {
 	visit /catalog && press row "Demoleverantören" && wait_url "**/catalog/demo" &&
 		see listbox "Variables in Demoleverantören" &&
@@ -86,8 +86,6 @@ j_browse() {
 		tree 'checkbox "Familjer 2021–2022" \[checked=true' &&
 		press link "Familjer" && wait_url "**/catalog/demo/hush/fam" &&
 		see heading "Familjer" && see link "Demoleverantören" &&
-		press button "Notice: source notice (1)" &&
-		wait_text "Familjebegreppet ändrades 2021." &&
 		press link "Antal personer" && wait_url "**/catalog/demo/hush/antal" &&
 		see heading "Antal personer" && shot
 }

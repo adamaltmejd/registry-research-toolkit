@@ -34,15 +34,17 @@ the reader verifies the manifest's SHA-256.
 
 ```sh
 target/release/reg-build build --inputs "$inputs" --assets "$assets" \
-  --curation curation --out "$run_dir/reg_meta.db" --report "$run_dir/build-report.json"
+  --curation curation --out "$run_dir/reg_meta.db" --report "$run_dir/build-report.json" \
+  --findings "$run_dir/findings.jsonl"
 ```
 
-`--out` is a database filename. Without `--release` the build is a dev build: refused
-curation statements (changed premises, empty or ambiguous selectors, conflicts) are
-skipped and reported, so it completes as a diagnostic. `--release` (with
-`--catalog-version`) refuses them, and also unplaced or split ledger ids and variables
-without a ledger id. Read the report's warnings and confirm all expected providers and
-inputs are present.
+`--out` is a database filename. The catalog carries no findings (F1–F9, V1, F3
+proposals, source notices); `--findings` writes them, one sorted JSON object per line,
+for curation review. Without `--release` the build is a dev build: refused curation
+statements (changed premises, empty or ambiguous selectors, conflicts) are skipped and
+reported, so it completes as a diagnostic. `--release` (with `--catalog-version`)
+refuses them, and also unplaced or split ledger ids and variables without a ledger id.
+Read the report's warnings and confirm all expected providers and inputs are present.
 
 `reg-build read --inputs … --curation … --out DIR` dumps the source frames as JSONL (and
 each input's warnings) without resolving: use it to inspect what a reader produced.

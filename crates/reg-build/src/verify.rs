@@ -2,6 +2,7 @@
 //! (§4.2, §4.3). `emit` runs it before replacing the output; `reg-build verify`
 //! runs it on any file.
 
+use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
 use crate::error::Result;
@@ -45,6 +46,18 @@ pub(crate) fn semantic(db: &Connection) -> Result<()> {
     Ok(())
 }
 
+/// One untyped segment's own occurrences, for the F6 check in [`types`].
+#[derive(Default)]
+struct Own {
+    families: BTreeSet<&'static str>,
+    /// Label key, value set, classification, source key: one entry when they agree.
+    forms: BTreeSet<OwnForm>,
+    /// An occurrence spelled other than the segment's folded spelling.
+    off_spelling: bool,
+}
+
+type OwnForm = (Option<String>, Option<i64>, Option<i64>, String);
+
 /// Use the same closed family map as resolution, including the F6 exemption. The
 /// catalog holds only published names, never a reader or curation alias (#2071).
 fn types(db: &Connection) -> Result<()> {
@@ -59,12 +72,45 @@ fn types(db: &Connection) -> Result<()> {
             return Err(format!("unpublished catalog dtype {dtype:?}").into());
         }
     }
+    let family = |dtype: Option<&str>| {
+        dtype.and_then(|t| reg_frame::dtype_info(t).expect("validated dtype").family)
+    };
+    // The F6 source conflict, as resolution decides it (reg-resolve, `type_conflicts`): an
+    // untyped segment whose own occurrences state two or more known families but agree on
+    // label (`label_key`), value set, classification and source key, each spelled as the
+    // segment's folded spelling. A segment's occurrences are exactly the used ones
+    // resolution segmented; any other disagreement leaves the segment ambiguous.
+    let mut owns = BTreeMap::<i64, Own>::new();
+    let mut stated = db.prepare(
+        "SELECT o.segment_id, o.dtype, t.body, o.valueset_id, o.class_version_id,
+                o.source_key, sp.fold_id IS NOT s.fold_id
+         FROM occurrence o JOIN segment s ON s.id = o.segment_id
+         LEFT JOIN text t ON t.id = o.label_text
+         LEFT JOIN spelling sp ON sp.id = o.spelling_id
+         WHERE s.dtype IS NULL",
+    )?;
+    let mut rows = stated.query([])?;
+    while let Some(row) = rows.next()? {
+        let own = owns.entry(row.get(0)?).or_default();
+        if let Some(f) = family(row.get::<_, Option<String>>(1)?.as_deref()) {
+            own.families.insert(f);
+        }
+        let label: Option<String> = row.get(2)?;
+        own.forms.insert((
+            label.as_deref().map(reg_core::label_key),
+            row.get(3)?,
+            row.get(4)?,
+            row.get(5)?,
+        ));
+        own.off_spelling |= row.get::<_, bool>(6)?;
+    }
+    let conflicts: BTreeSet<i64> = owns
+        .into_iter()
+        .filter(|(_, own)| own.families.len() > 1 && own.forms.len() == 1 && !own.off_spelling)
+        .map(|(segment, _)| segment)
+        .collect();
     let mut pairs = db.prepare(
-        "SELECT o.id, o.dtype, s.dtype, s.state, EXISTS (
-             SELECT 1 FROM finding f
-             WHERE f.subject_kind = 'segment' AND f.subject_id = s.id
-               AND f.code = 'F6:source-conflict' AND f.severity = 'review'
-               AND f.start = s.start AND f.end = s.end)
+        "SELECT o.id, o.dtype, s.dtype, s.state, s.id
          FROM occurrence o JOIN segment s ON s.id = o.segment_id
          WHERE o.dtype IS NOT s.dtype",
     )?;
@@ -72,9 +118,6 @@ fn types(db: &Connection) -> Result<()> {
     while let Some(row) = rows.next()? {
         let occurrence: Option<String> = row.get(1)?;
         let segment: Option<String> = row.get(2)?;
-        let family = |dtype: Option<&str>| {
-            dtype.and_then(|t| reg_frame::dtype_info(t).expect("validated dtype").family)
-        };
         // A published unknown is NULL (the alias check above refuses `unspecified`); a
         // known type beneath it fails the family check below unless ambiguity or an F6
         // conflict left it blank.
@@ -91,12 +134,8 @@ fn types(db: &Connection) -> Result<()> {
             .into());
         }
         let state: String = row.get(3)?;
-        let exempt: bool = row.get(4)?;
-        if state != "ambiguous"
-            && own.is_some()
-            && own != published
-            && !(segment.is_none() && exempt)
-        {
+        let conflict = conflicts.contains(&row.get::<_, i64>(4)?);
+        if state != "ambiguous" && own.is_some() && own != published && !conflict {
             return Err(format!(
                 "occurrence {}: type family disagrees with its segment",
                 row.get::<_, i64>(0)?

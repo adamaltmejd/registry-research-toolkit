@@ -74,7 +74,7 @@ pub struct Relation {
     pub statement: Option<String>,
 }
 
-/// One notice finding before row ids.
+/// One source notice: an `S0` finding (`findings.rs`).
 pub struct Notice {
     pub subject: Entity,
     pub at: Option<String>,

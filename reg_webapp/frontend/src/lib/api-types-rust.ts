@@ -190,23 +190,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/findings/{ref}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description The review items and notices on a register, table or variable (including its column histories), optionally for one period, table or rule code, as one group per severity and code: its count and its first `limit` items. A group's `next_cursor`, sent with `code` set to the group's code, pages its items. */
-        get: operations["findings"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/graph/{ref}": {
         parameters: {
             query?: never;
@@ -546,33 +529,6 @@ export interface components {
         FacetVariable: {
             fqid: string;
             name: string;
-        };
-        Finding: {
-            /** @description A curator's caveat. */
-            caveat: string | null;
-            /** @description A rule code and its sub-kind, `F7:edition-disagreement`. */
-            code: string;
-            message: string;
-            period: components["schemas"]["Period"] | null;
-            /** @description `review` or `notice`. */
-            severity: string;
-            subject: components["schemas"]["Subject"];
-        };
-        /** @description The findings of one severity and code. */
-        FindingGroup: {
-            code: string;
-            /** @description How many findings the group holds under the request's filters. */
-            count: number;
-            /** @description One page of them, in subject order. */
-            items: components["schemas"]["Finding"][];
-            /** @description The next page, for a request with `code` set to this group's code. */
-            next_cursor: string | null;
-            /** @description `review` or `notice`. */
-            severity: string;
-        };
-        FindingGroups: {
-            /** @description Review groups first, then notices; by code within each. */
-            groups: components["schemas"]["FindingGroup"][];
         };
         /** @description The focus, its nodes and the relations between them. */
         Graph: {
@@ -1467,26 +1423,6 @@ export interface components {
             scale: number | null;
             type: string | null;
         };
-        /** @description What a finding is about. */
-        Subject: {
-            /** @description The register, table or variable it is about. */
-            fqid: string | null;
-            /** @description `register`, `table`, `release`, `variable`, `segment`, `occurrence` or `valueset`. */
-            kind: string;
-            /** @description The name of `fqid`, as `show` gives it. */
-            name: string | null;
-            period: components["schemas"]["Period"] | null;
-            /** @description A release's literal delivery name. */
-            release: string | null;
-            /** @description The exact column name in that delivery. */
-            spelling: string | null;
-            /** @description Its table. */
-            table: string | null;
-            /** @description The name of `table`. */
-            table_name: string | null;
-            /** @description A value set's hash. */
-            value_set: string | null;
-        };
         /** @description `validate`'s result: `ok` exactly when no issue is an `error`. */
         Validation: {
             issues: components["schemas"]["NamedIssue"][];
@@ -1859,49 +1795,6 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: components["schemas"]["DocPage"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-            /** @description An error in `api/errors.toml` */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        error: components["schemas"]["Error"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-        };
-    };
-    findings: {
-        parameters: {
-            query?: {
-                period?: string;
-                table?: string;
-                code?: string;
-                limit?: number;
-                cursor?: string;
-            };
-            header?: never;
-            path: {
-                ref: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["FindingGroups"];
                         meta: components["schemas"]["Meta"];
                     };
                 };

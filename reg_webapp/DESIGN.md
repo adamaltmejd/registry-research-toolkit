@@ -66,26 +66,21 @@ its scope and its `steward_config` branding (`/api/context`).
 
 ## Catalog pages
 
-Provider, register, table and classification pages read `catalog/{ref}`; register and
-table findings come from `findings/{ref}`. A table page lists its variables from the
-table answer (`variables`, each with the merged `periods` its segments hold in that
-table, so a gap in delivery stays a gap) and reads no segments. A provider page draws
-each register from its `periods` the same way (merged spans of its dated tables). The
-generated OpenAPI types own the response shapes. An implicit table shares its register's
-FQID, so its canonical link opens the register; it has no separately addressable table
-page.
+Provider, register, table and classification pages read `catalog/{ref}`. A table page
+lists its variables from the table answer (`variables`, each with the merged `periods`
+its segments hold in that table, so a gap in delivery stays a gap) and reads no
+segments. A provider page draws each register from its `periods` the same way (merged
+spans of its dated tables). The generated OpenAPI types own the response shapes. An
+implicit table shares its register's FQID, so its canonical link opens the register; it
+has no separately addressable table page.
 
 Catalog periods are half-open ISO date intervals. The frontend adapts the exclusive end
 to reg-core's inclusive interval renderer, without copying its period grammar. The
 register's `unplaced` list contains release names, not variable identities.
 
-Catalog findings reuse `DataWarnings` and `ScopedDataWarnings`: review items before
-notices, grouped under human titles with stable codes in delayed tooltips. Entries mount
-only when a group is expanded, keeping large registers usable without mounting thousands
-of notices on load. Subject links use register, table and variable names from the
-register response, falling back to identifiers only when names are unknown.
-`Finding.tsx` remains the separate project-validation renderer. The obsolete variants
-browser has no route or data source.
+Catalog pages show no build findings: the catalog does not carry them (maintainer
+2026-11-06, #2335; #2318 decides what comes back). `Finding.tsx` is the
+project-validation renderer. The obsolete variants browser has no route or data source.
 
 Variable value sets stay inline, deduplicated by hash across segments, with table and
 period coverage. Disclosures fetch codes on first expansion through `values`; hashes
@@ -157,10 +152,10 @@ admission corpus pins the refusals. The webapp ships no DDL or schema-version au
 
 `conformance/api/operations.toml` defines the complete operation surface, parameters,
 response shapes and error codes. `crates/reg-meta/openapi.json` is its server snapshot.
-Catalog operations expose nodes, segments, findings, coverage, schemas, relationships
-and content-addressed value sets. Search ranks FTS hits across registers, tables,
-variables, classifications, codes and documents. A steward deployment adds holdings and
-physical orders (the MONA order file).
+Catalog operations expose nodes, segments, coverage, schemas, relationships and
+content-addressed value sets. Search ranks FTS hits across registers, tables, variables,
+classifications, codes and documents. A steward deployment adds holdings and physical
+orders (the MONA order file).
 
 Documentation lives in the same admitted catalog. The docs operations search document
 sections, return a document by content hash, list linked documents and serve embedded

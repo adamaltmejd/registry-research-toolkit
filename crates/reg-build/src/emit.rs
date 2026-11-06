@@ -3,16 +3,17 @@
 //! data, and the file is written with `VACUUM INTO`, so two builds from the same pins give the same bytes.
 //!
 //! It fills the identity, coverage, release, variable, segment, occurrence, gap,
-//! value-set, relation, finding, document and search tables (`search.rs`);
-//! including curated winners and their statement evidence.
+//! value-set, relation, document and search tables (`search.rs`);
+//! including curated winners and their statement evidence. Findings are not published:
+//! they are a build output (`findings.rs`).
 
 use std::borrow::Cow;
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
 use reg_frame::ValueSet;
+use reg_resolve::Resolved;
 use reg_resolve::provenance::{FinalValue, Origin, Subject as ProvenanceSubject};
-use reg_resolve::{Resolved, Subject};
 
 use crate::docs::Document;
 use crate::error::Result;
@@ -448,7 +449,6 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
             .copied()
             .ok_or_else(|| format!("{}: no manifest input read this file", locator.input))
     };
-    let mut findings = Vec::new();
     for (ri, r) in catalog.registers.iter().enumerate() {
         let reg = &r.register;
         let reg_pid = pid_of_register(r);
@@ -583,6 +583,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                     Cell::Str(rel.edition.clone()),
                     Cell::Str(rel.qualifier.clone().unwrap_or_default()),
                     flag(release.primary),
+                    Cell::Int(i64::from(release.edition_disagreement)),
                     Cell::Text(rel.name.clone()),
                     opt_text(rel.description.as_ref()),
                     Cell::Str(rel.release.clone()),
@@ -787,21 +788,6 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                 ],
             );
         }
-
-        for f in &r.findings {
-            let (kind, subject) = match f.subject {
-                Subject::Register => ("register", register_row),
-                Subject::Release(x) => ("release", release_id[&(ri, x)]),
-                Subject::Variable(v) => ("variable", variable_id[&(ri, v)]),
-                Subject::Segment(v, s) => ("segment", segment_id[&(ri, v, s)]),
-                Subject::Occurrence(o) => ("occurrence", occurrence_id[&(ri, o)]),
-            };
-            let period = f.period.as_ref().map(|p| (start(&p.0), end(&p.1)));
-            findings.push((
-                (reg_pid.clone(), f.code, kind, subject, period),
-                (register_row, f.severity, f.message.clone()),
-            ));
-        }
     }
 
     // The link stage's entities, by row id and public id.
@@ -917,21 +903,6 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
             }
         }
     }
-    for notice in &catalog.notices {
-        let r = &catalog.registers[notice.subject.register()];
-        let reg_pid = pid_of_register(r);
-        let period = notice.at.as_deref().map(|at| (start(at), end(at)));
-        findings.push((
-            (
-                reg_pid.clone(),
-                "S0:source-notice",
-                notice.subject.kind(),
-                row_of(notice.subject),
-                period,
-            ),
-            (register_id[&reg_pid], "notice", notice.text.clone()),
-        ));
-    }
     // Relation ids follow (kind, subject id, object id, at); the entity kinds break the
     // tie of an implicit table, whose id is its register's.
     let mut relations: Vec<_> = catalog
@@ -979,27 +950,6 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
             ],
         );
     }
-    findings.sort();
-    for (i, ((_, code, kind, subject, period), (register_row, severity, message))) in
-        findings.into_iter().enumerate()
-    {
-        rows.push(
-            "finding",
-            vec![
-                Cell::Int(id(i)),
-                Cell::Str(code.into()),
-                Cell::Str(severity.into()),
-                Cell::Str(kind.into()),
-                Cell::Int(subject),
-                Cell::Int(register_row),
-                opt_int(period.map(|p| p.0)),
-                opt_int(period.map(|p| p.1)),
-                Cell::Text(message),
-                Cell::Null,
-            ],
-        );
-    }
-
     // A value set's classification comes from curation only (D29): the version whose
     // content it is, or the one version its classified segments are curated to when its
     // codes, sentinels aside, are that version's. Containment checks a link, never makes

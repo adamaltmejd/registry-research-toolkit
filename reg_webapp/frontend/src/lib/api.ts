@@ -437,8 +437,6 @@ export type ClassFamiliesShow = Extract<ShowNode, { kind: "class_families" }>;
 /** A classification as the classification list names it. */
 export type ClassFamilyRef = ClassFamiliesShow["families"][number];
 export type CatalogPeriod = RustSchemas["Period"];
-export type CatalogFinding = RustSchemas["Finding"];
-export type CatalogFindingGroup = RustSchemas["FindingGroup"];
 export type CatalogSegment = RustSchemas["Segment"];
 export type Graph = RustSchemas["Graph"];
 
@@ -475,24 +473,6 @@ export async function getSegments(
     cursor = page.next_cursor;
   } while (cursor !== null);
   return items;
-}
-
-/** Review items and notices for a catalog subject, including its descendants: one
- * group per severity and code, with its count and a first page of items. `code` with a
- * group's `next_cursor` fetches that group's next page. */
-export async function getFindings(
-  ref: string,
-  options?: { code?: string; cursor?: string; signal?: AbortSignal },
-): Promise<CatalogFindingGroup[]> {
-  const query = new URLSearchParams();
-  if (options?.code !== undefined) query.set("code", options.code);
-  if (options?.cursor !== undefined) query.set("cursor", options.cursor);
-  const data = await rustGet<RustSchemas["FindingGroups"]>(
-    `/findings/${encodeFqid(ref)}`,
-    query,
-    options,
-  );
-  return data.groups;
 }
 
 export type ValueSetRef = RustSchemas["ValueSetRef"];

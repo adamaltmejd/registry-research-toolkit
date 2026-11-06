@@ -11,7 +11,6 @@ pub mod context;
 pub mod coverage;
 pub mod cursor;
 pub mod docs;
-pub mod findings;
 pub mod fts;
 pub mod graph;
 pub mod order;
@@ -349,7 +348,6 @@ pub fn all() -> impl Iterator<Item = &'static Operation> {
         .chain(context::OPERATIONS)
         .chain(show::OPERATIONS)
         .chain(segments::OPERATIONS)
-        .chain(findings::OPERATIONS)
         .chain(values::OPERATIONS)
         .chain(graph::OPERATIONS)
         .chain(coverage::OPERATIONS)

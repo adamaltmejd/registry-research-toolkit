@@ -116,7 +116,10 @@ CREATE TABLE release (
   edition          TEXT NOT NULL CHECK (edition IN ('final','unstated','preliminary')),
   qualifier        TEXT NOT NULL DEFAULT '',  -- free text from the name; '' = none
   is_primary       INTEGER CHECK (is_primary IN (0,1)),
-  name_text        INTEGER NOT NULL REFERENCES text(id),  -- literal delivery name
+  -- 1: a non-primary edition differs from its primary on a key's spellings or type
+  -- families (resolve's F7); the order check's `edition_disagreement` reads it.
+  edition_disagreement INTEGER NOT NULL CHECK (edition_disagreement IN (0,1)),
+  name_text       INTEGER NOT NULL REFERENCES text(id),  -- literal delivery name
   description_text INTEGER REFERENCES text(id),
   source_key       TEXT NOT NULL,         -- opaque: 'r18774', or 'stmt:<hash>' if asserted
   input_id         INTEGER REFERENCES input(id),  -- NULL only when asserted
@@ -405,25 +408,6 @@ CREATE TABLE var_set_member_facet (
   FOREIGN KEY (set_id, variable_id) REFERENCES var_set_member(set_id, variable_id),
   FOREIGN KEY (set_id, axis) REFERENCES var_set_axis(set_id, axis)
 ) STRICT, WITHOUT ROWID;
-
--- Findings shown to readers: open review items and notices.
--- code is a rule code plus its sub-kind: 'F1:type-change',
--- 'F2:ambiguous', 'F7:edition-disagreement', 'F9:unparsed-delivery', 'T1:clamp'.
-CREATE TABLE finding (
-  id               INTEGER PRIMARY KEY,
-  code             TEXT NOT NULL,
-  severity         TEXT NOT NULL CHECK (severity IN ('review','notice')),
-  subject_kind     TEXT NOT NULL CHECK (subject_kind IN ('register','table','release','variable','segment','occurrence','valueset')),
-  subject_id       INTEGER NOT NULL,
-  register_id      INTEGER REFERENCES register(id),
-  start            INTEGER,
-  end              INTEGER,
-  message_text     INTEGER NOT NULL REFERENCES text(id),
-  caveat_text      INTEGER REFERENCES text(id),
-  CHECK ((start IS NULL) = (end IS NULL))
-) STRICT;
-CREATE INDEX finding_subject  ON finding(subject_kind, subject_id);
-CREATE INDEX finding_register ON finding(register_id, code);
 
 CREATE TABLE doc (
   id         INTEGER PRIMARY KEY,

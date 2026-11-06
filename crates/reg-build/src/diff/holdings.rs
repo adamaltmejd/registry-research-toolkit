@@ -58,7 +58,7 @@ const TEXT: [(&str, &str); 6] = [
     ),
 ];
 
-/// Finding subjects by kind, as SQL returning (row id, key that survives a rebuild).
+/// Statement subjects by kind, as SQL returning (row id, key that survives a rebuild).
 const SUBJECTS: [(&str, &str); 9] = [
     ("register", "SELECT id, pid FROM register"),
     ("table", "SELECT id, pid FROM tbl"),
@@ -417,6 +417,38 @@ fn delta(key: &'static str, title: &'static str, pair: &Pair, sql: &str) -> Resu
     Ok(Section::flat(key, title, items))
 }
 
+/// The deliveries whose edition disagrees with the primary (`release.edition_disagreement`,
+/// the order check's warning), keyed by table and source key. Catalogs before schema 12
+/// carry the fact as F7 findings instead: the section says so and compares nothing.
+fn editions(p: &Pair) -> Result<Section> {
+    let has = |conn: &rusqlite::Connection| -> Result<bool> {
+        Ok(conn.query_row(
+            "SELECT EXISTS(SELECT 1 FROM pragma_table_info('release')
+                           WHERE name = 'edition_disagreement')",
+            [],
+            |r| r.get(0),
+        )?)
+    };
+    if !has(&p.old)? || !has(&p.new)? {
+        return Ok(Section::flat(
+            "editions",
+            "edition disagreements",
+            vec![shown(Item::new(
+                json!({"compared": false}),
+                "editions: not compared, one side predates catalog schema 12".to_owned(),
+            ))],
+        ));
+    }
+    delta(
+        "editions",
+        "edition disagreements (by table/delivery, period)",
+        p,
+        "SELECT 'edition_disagreement', t.pid || '/' || r.source_key, \
+         ifnull(CAST(r.start AS TEXT), ''), ifnull(CAST(r.end AS TEXT), '') \
+         FROM release r JOIN tbl t ON t.id = r.table_id WHERE r.edition_disagreement = 1",
+    )
+}
+
 /// The linkage spaces (id, name, order) and each table's space, keyed by its stored
 /// schema and name. Holdings before schema 8 have no spaces: the section says so and
 /// compares nothing, and the schema changes list the added table and column.
@@ -525,13 +557,6 @@ fn same_schema(p: &Pair, os: &(i64, Option<String>)) -> Result<Vec<Section>> {
             format!("{side}: {text}"),
         )));
     }
-    let subjects = subject_cte();
-    let findings_sql = format!(
-        "WITH subject(kind, id, key) AS ({subjects}) \
-         SELECT f.code, f.subject_kind || ':' || ifnull(s.key, f.subject_id), \
-         ifnull(CAST(f.start AS TEXT), ''), ifnull(CAST(f.end AS TEXT), '') FROM finding f \
-         LEFT JOIN subject s ON s.kind = f.subject_kind AND s.id = f.subject_id"
-    );
     let notices_sql = "SELECT n.code, json_array(t.schema_name, t.physical_name) || '/' || ifnull(c.name, ''), \
                        ifnull(CAST(n.start AS TEXT), ''), ifnull(CAST(n.end AS TEXT), '') \
                        FROM holding_notice n JOIN holding_table t ON t.id = n.holding_id \
@@ -540,17 +565,12 @@ fn same_schema(p: &Pair, os: &(i64, Option<String>)) -> Result<Vec<Section>> {
     out.extend(census(p)?);
     out.push(texts(p)?);
     out.push(delta(
-        "findings",
-        "findings (by code, subject, period)",
-        p,
-        &findings_sql,
-    )?);
-    out.push(delta(
         "notices",
         "holdings notices (by code, table/column, period)",
         p,
         notices_sql,
     )?);
+    out.push(editions(p)?);
     out.push(spaces(p)?);
     Ok(out)
 }
