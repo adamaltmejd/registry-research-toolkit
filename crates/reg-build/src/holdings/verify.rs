@@ -53,11 +53,12 @@ fn sources(
     )?;
     let source_tables = census.tables.len();
     let source_columns: usize = census.tables.iter().map(|t| t.columns.len()).sum();
+    let keyed = compile::schema_keyed(&census.tables);
     let topology: input::Topology = crate::toml_file(&input::path(root, &config.inputs.holdings)?)
         .map_err(|_| "holdings_topology_invalid: malformed authored topology")?;
     // Each authored table with its delivery and coverage, parsed for every table before
     // any is compared.
-    let authored: BTreeMap<&str, _> = topology
+    let authored: BTreeMap<compile::Identity, _> = topology
         .table
         .iter()
         .map(|table| {
@@ -67,7 +68,7 @@ fn sources(
                 .map(compile::canonical_period)
                 .transpose()?;
             Ok((
-                table.physical_name.as_str(),
+                compile::authored_identity(table, keyed),
                 (table, delivery, compile::table_periods(table)?),
             ))
         })
@@ -78,34 +79,46 @@ fn sources(
         .flat_map(|t| {
             t.column
                 .iter()
-                .map(move |c| ((t.physical_name.as_str(), c.name.as_str()), c))
+                .map(move |c| ((compile::authored_identity(t, keyed), c.name.as_str()), c))
         })
         .collect();
     let sql = "SELECT physical_name,id,schema_name,table_type FROM holding_table";
-    let mut tables: BTreeMap<String, (i64, Option<String>, Option<String>)> =
-        rows(db, sql, [], |r| {
-            Ok((r.get(0)?, (r.get(1)?, r.get(2)?, r.get(3)?)))
-        })?
-        .into_iter()
-        .collect();
+    let mut tables = BTreeMap::<compile::Identity, (i64, Option<String>, Option<String>)>::new();
+    for (identity, stored) in rows(db, sql, [], |r| {
+        let schema: Option<String> = r.get(2)?;
+        Ok((
+            (schema.clone().filter(|_| keyed), r.get(0)?),
+            (r.get(1)?, schema, r.get(3)?),
+        ))
+    })? {
+        // The DDL's unique (schema_name, physical_name) admits repeated NULL schemas, and
+        // a name-keyed identity ignores the schema: a second row would escape the census.
+        let id = stored.0;
+        if tables.insert(identity, stored).is_some() {
+            return Err(format!("holdings:table={id}: holdings_census_table_extra").into());
+        }
+    }
     for table in &census.tables {
         let location = format!("census:row={}", table.source_row);
         let (id, schema, kind) = tables
-            .remove(&table.name)
+            .remove(&compile::census_identity(table))
             .ok_or_else(|| format!("{location}: holdings_census_table_missing"))?;
         #[allow(clippy::type_complexity)]
-        let (placement, disposition, delivery, recorded, binding): (
+        let (placement, disposition, delivery, recorded, binding, parent_in_schema): (
             (Option<String>, Option<String>, Option<String>),
             String,
             Option<String>,
             String,
             (Option<String>, Option<String>),
+            bool,
         ) = db.query_row(
+            // A schema-keyed projection's parent is in the projection's own schema.
             "SELECT p.physical_name,h.projection_token,h.partition,h.disposition,h.delivery,
-                h.key_requirements,c.name,h.period_encoding
+                h.key_requirements,c.name,h.period_encoding,
+                p.id IS NULL OR NOT ?2 OR p.schema_name IS h.schema_name
              FROM holding_table h LEFT JOIN holding_table p ON p.id=h.projection_of
-             LEFT JOIN holding_column c ON c.id=h.period_column_id WHERE h.id=?",
-            [id],
+             LEFT JOIN holding_column c ON c.id=h.period_column_id WHERE h.id=?1",
+            rusqlite::params![id, keyed],
             |r| {
                 Ok((
                     (r.get(0)?, r.get(1)?, r.get(2)?),
@@ -113,14 +126,18 @@ fn sources(
                     r.get(4)?,
                     r.get(5)?,
                     (r.get(6)?, r.get(7)?),
+                    r.get(8)?,
                 ))
             },
         )?;
-        let Some((spec, spec_delivery, spec_periods)) = authored.get(table.name.as_str()) else {
+        let Some((spec, spec_delivery, spec_periods)) =
+            authored.get(&compile::census_identity(table))
+        else {
             return Err(format!("{location}: holdings_topology_source_mismatch").into());
         };
-        if (&spec.projection_of, &spec.projection_token, &spec.partition)
-            != (&placement.0, &placement.1, &placement.2)
+        if !parent_in_schema
+            || (&spec.projection_of, &spec.projection_token, &spec.partition)
+                != (&placement.0, &placement.1, &placement.2)
         {
             return Err(format!("{location}: holdings_topology_source_mismatch").into());
         }
@@ -196,7 +213,7 @@ fn sources(
                 return Err(format!("{location}: holdings_census_ordinal_mismatch").into());
             }
             let authored = authored_columns
-                .get(&(table.name.as_str(), column.name.as_str()))
+                .get(&(compile::census_identity(table), column.name.as_str()))
                 .copied();
             compile::column_periods(authored, &[])
                 .map_err(|error| format!("{location}: {error}"))?;

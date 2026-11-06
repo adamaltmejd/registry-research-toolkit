@@ -264,8 +264,9 @@ pub(super) fn verify(db: &Connection, base: &Connection, topology: &input::Topol
     let mut routes = BTreeMap::new();
     for table in &topology.table {
         let holding: i64 = db.query_row(
-            "SELECT id FROM holding_table WHERE physical_name=?",
-            [&table.physical_name],
+            // The authored schema is the stored one whenever it is given.
+            "SELECT id FROM holding_table WHERE physical_name=?1 AND (?2 IS NULL OR schema_name=?2)",
+            rusqlite::params![table.physical_name, table.schema_name],
             |row| row.get(0),
         )?;
         let authored: BTreeSet<_> = table

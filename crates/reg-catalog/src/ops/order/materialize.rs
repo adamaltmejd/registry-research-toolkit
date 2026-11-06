@@ -106,6 +106,8 @@ struct Placement {
 /// A physical table with what a file needs of it.
 struct Holding {
     physical_name: String,
+    /// The name findings use (`holdings::TABLE_LABEL`).
+    label: String,
     schema_name: Option<String>,
     file_name: String,
     delivery: Option<String>,
@@ -244,29 +246,23 @@ fn build(
                 "file_name_unsafe",
                 format!(
                     "The stored file name {:?} of table {:?} is {reason}.",
-                    holding.file_name, holding.physical_name
+                    holding.file_name, holding.label
                 ),
             ));
         }
-        if let Some(other) = names.insert(
-            holding.file_name.to_lowercase(),
-            holding.physical_name.clone(),
-        ) {
+        if let Some(other) = names.insert(holding.file_name.to_lowercase(), holding.label.clone()) {
             findings.push(at(
                 "file_name_unsafe",
                 format!(
                     "Tables {other:?} and {:?} name files that differ only in case.",
-                    holding.physical_name
+                    holding.label
                 ),
             ));
         }
         if holding.schema_name.is_none() {
             findings.push(at(
                 "physical_schema_missing",
-                format!(
-                    "Table {:?} has no single stored schema.",
-                    holding.physical_name
-                ),
+                format!("Table {:?} has no single stored schema.", holding.label),
             ));
         }
         for days in draft.days.values_mut() {
@@ -457,10 +453,14 @@ fn placements(
 
 fn holding(held: &Connection, id: i64) -> Result<Holding, Error> {
     let mut holding = held.query_row(
-        "SELECT h.physical_name, h.schema_name, h.file_name, h.delivery, h.partition,
-                h.projection_token, p.id, p.name, h.period_encoding, h.key_requirements
-         FROM holding_table h LEFT JOIN holding_column p ON p.id = h.period_column_id
-         WHERE h.id = ?",
+        &format!(
+            "SELECT h.physical_name, h.schema_name, h.file_name, h.delivery, h.partition,
+                h.projection_token, p.id, p.name, h.period_encoding, h.key_requirements,
+                {}
+             FROM holding_table h LEFT JOIN holding_column p ON p.id = h.period_column_id
+             WHERE h.id = ?",
+            crate::holdings::TABLE_LABEL
+        ),
         [id],
         |r| {
             Ok(Holding {
@@ -475,6 +475,7 @@ fn holding(held: &Connection, id: i64) -> Result<Holding, Error> {
                     _ => None,
                 },
                 keys: r.get(9)?,
+                label: r.get(10)?,
                 held: vec![],
             })
         },
@@ -741,7 +742,7 @@ fn keys(
                         "Table {:?} cannot be ordered yet: the data holder does not \
                          supply its row identifier. Leave this table out, or ask the data \
                          holder",
-                        holding.physical_name
+                        holding.label
                     ),
                 ));
                 continue;
@@ -783,7 +784,7 @@ fn keys(
                             "Table {:?} has {} columns that could be its row identifier \
                              {variable}, so it cannot be ordered for the years requested. Ask \
                              the data holder",
-                            holding.physical_name,
+                            holding.label,
                             distinct.len()
                         ),
                     ));
@@ -795,7 +796,7 @@ fn keys(
                         format!(
                             "Table {:?} has no column for its row identifier {variable} \
                              for {}, so those years cannot be ordered. Leave them out",
-                            holding.physical_name,
+                            holding.label,
                             span(server, piece)
                         ),
                     );
@@ -950,7 +951,7 @@ fn row_filter(
                     format!(
                         "Table {:?} has no period column, so every row of its \
                          delivery {} is extracted",
-                        holding.physical_name,
+                        holding.label,
                         holding.delivery.as_deref().unwrap_or("(timeless)")
                     ),
                 ));
@@ -971,7 +972,7 @@ fn row_filter(
                 format!(
                     "Rows of table {:?} are filtered on {column:?} at its {} precision, \
                      so the filter covers whole units around the request",
-                    holding.physical_name,
+                    holding.label,
                     serde_json::to_value(encoding)
                         .expect("serializes")
                         .as_str()
@@ -992,7 +993,7 @@ fn row_filter(
                     format!(
                         "Several sources share table {:?}; every column of its file \
                          is extracted over the union of their periods, {}",
-                        holding.physical_name,
+                        holding.label,
                         union
                             .iter()
                             .map(|&d| span(server, d))

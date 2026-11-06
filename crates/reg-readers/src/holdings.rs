@@ -9,7 +9,8 @@ use serde::Deserialize;
 use crate::{ReadError, config, error};
 
 /// Reader vocabulary, evidenced exact-name renames and literal prefix rewrites. Both
-/// affect matching only; the artifact retains exact trimmed physical identifiers.
+/// affect matching only; the artifact retains exact trimmed physical identifiers. An
+/// optional schema header keys tables by (schema, table) instead of table alone.
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
 struct Config {
@@ -17,6 +18,7 @@ struct Config {
     census_table: String,
     #[serde(default = "column_prefix")]
     census_columns: String,
+    census_schema: Option<String>,
     #[serde(default)]
     rename: Vec<Rename>,
     #[serde(default)]
@@ -51,6 +53,9 @@ struct Rewrite {
 
 /// One accounted physical table; no observation records are read.
 pub struct Table {
+    /// The census schema cell; `Some` exactly when the reader config names a schema
+    /// header, and then the table's identity is (schema, name).
+    pub schema: Option<String>,
     pub name: String,
     pub source_row: usize,
     pub columns: Vec<Column>,
@@ -193,6 +198,7 @@ pub fn read(
     let config: Config = config(config_path)?;
     if config.census_table.is_empty()
         || config.census_columns.is_empty()
+        || config.census_schema.as_ref().is_some_and(String::is_empty)
         || config
             .rewrite
             .iter()
@@ -207,33 +213,26 @@ pub fn read(
     let facts = storage(storage_export)?;
     let mut csv = reader(census, "census")?;
     let names = headers(&mut csv, "census")?;
-    let table = names
-        .iter()
-        .position(|h| h == &config.census_table)
-        .ok_or_else(|| error("census", "missing table header"))?;
-    let mut columns = Vec::new();
-    let mut ordinals = BTreeSet::new();
-    for (index, name) in names.iter().enumerate() {
-        if let Some(suffix) = name.strip_prefix(&config.census_columns) {
-            let ordinal = suffix
-                .parse::<i64>()
-                .map_err(|_| error("census", "invalid column ordinal header"))?;
-            if ordinal <= 0 || !ordinals.insert(ordinal) {
-                return Err(error("census", "duplicate or nonpositive column ordinal"));
-            }
-            columns.push((index, ordinal));
-        }
-    }
-    if columns.is_empty() {
-        return Err(error("census", "no physical column headers"));
-    }
-    columns.sort_by_key(|&(_, ordinal)| ordinal);
+    let position = |header: &str, missing: &str| {
+        names
+            .iter()
+            .position(|h| h == header)
+            .ok_or_else(|| error("census", missing))
+    };
+    let table = position(&config.census_table, "missing table header")?;
+    let schema_column = config
+        .census_schema
+        .as_deref()
+        .map(|header| position(header, "missing schema header"))
+        .transpose()?;
+    let columns = column_headers(&names, &config.census_columns)?;
     let mut tables = BTreeMap::new();
     let mut matched_storage = BTreeSet::new();
     for (row, record) in (2..).zip(csv.records()) {
         let record = record.map_err(|_| at("census", row, "malformed CSV record"))?;
         let name = record[table].trim();
-        if name.is_empty() {
+        let schema = schema_column.map(|index| record[index].trim().to_owned());
+        if name.is_empty() || schema.as_ref().is_some_and(String::is_empty) {
             return Err(at("census", row, "missing table identifier"));
         }
         let mut seen = BTreeSet::new();
@@ -258,17 +257,19 @@ pub fn read(
                 name: column.to_owned(),
                 ordinal,
                 match_name,
+                // Every schema's facts; the compiler keeps the authored schema's.
                 storage: facts
                     .get(&(name.to_owned(), column.to_owned()))
                     .cloned()
                     .unwrap_or_default(),
             });
-            matched_storage.insert((name.to_owned(), column.to_owned()));
+            matched_storage.insert((schema.clone(), name.to_owned(), column.to_owned()));
         }
         if tables
             .insert(
-                name.to_owned(),
+                (schema.clone(), name.to_owned()),
                 Table {
+                    schema,
                     name: name.to_owned(),
                     source_row: row,
                     columns: physical,
@@ -281,12 +282,53 @@ pub fn read(
     }
     Ok(ReadOutput {
         tables: tables.into_values().collect(),
-        storage_extra_columns: facts
-            .keys()
-            .filter(|key| !matched_storage.contains(*key))
+        storage_extra_columns: storage_coordinates(&facts, schema_column.is_some())
+            .difference(&matched_storage)
             .count(),
         rename_targets: config.rename.into_iter().map(|r| r.catalog).collect(),
     })
+}
+
+/// The numbered physical-column headers as (header index, ordinal), by ordinal.
+fn column_headers(names: &[String], prefix: &str) -> Result<Vec<(usize, i64)>, ReadError> {
+    let mut columns = Vec::new();
+    let mut ordinals = BTreeSet::new();
+    for (index, name) in names.iter().enumerate() {
+        if let Some(suffix) = name.strip_prefix(prefix) {
+            let ordinal = suffix
+                .parse::<i64>()
+                .map_err(|_| error("census", "invalid column ordinal header"))?;
+            if ordinal <= 0 || !ordinals.insert(ordinal) {
+                return Err(error("census", "duplicate or nonpositive column ordinal"));
+            }
+            columns.push((index, ordinal));
+        }
+    }
+    if columns.is_empty() {
+        return Err(error("census", "no physical column headers"));
+    }
+    columns.sort_by_key(|&(_, ordinal)| ordinal);
+    Ok(columns)
+}
+
+/// Every distinct storage coordinate, (schema, table, column) for a schema-keyed census
+/// and (table, column) otherwise.
+fn storage_coordinates(
+    facts: &BTreeMap<(String, String), Vec<Storage>>,
+    keyed: bool,
+) -> BTreeSet<(Option<String>, String, String)> {
+    facts
+        .iter()
+        .flat_map(|((table, column), storages)| {
+            storages.iter().map(move |s| {
+                (
+                    keyed.then(|| s.schema_name.clone()),
+                    table.clone(),
+                    column.clone(),
+                )
+            })
+        })
+        .collect()
 }
 
 /// Admit `[[rename]]` as an exact physical → catalog map. Errors locate entries by their

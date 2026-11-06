@@ -1647,10 +1647,10 @@ symlinks.
 inventory and series remain migration evidence, not additional compiler authorities.
 Automatic matching still reads the raw census against the resolved semantic view; it
 does not consume generated automatic mappings. The census reader's closed config names
-the table header and numbered-column prefix and permits evidenced exact-name renames and
-literal prefix rewrites only. Identifiers remain exact after reader trimming; renames
-and rewrites affect matching, not emitted physical names. CSV errors identify input
-roles and row numbers without echoing private source values.
+the table header and numbered-column prefix, optionally a schema header, and permits
+evidenced exact-name renames and literal prefix rewrites only. Identifiers remain exact
+after reader trimming; renames and rewrites affect matching, not emitted physical names.
+CSV errors identify input roles and row numbers without echoing private source values.
 
 #### Census reader renames and rewrites
 
@@ -1688,6 +1688,41 @@ duplicate-placement rule at verify
 column decision (`unmap`, `hold` or an explicit mapping) on one of them. The reader does
 not refuse it earlier: a reader refusal would come before the column decision that fixes
 it, and the steward would have to drop the rename for every table.
+
+#### Schema-keyed census
+
+A steward whose census covers several databases or schemas names the column that holds
+the schema in the census reader config: `census_schema = "<header>"` (IFAU: `Category`,
+one value per database; 1,890 table names repeat across its eight databases). Without it
+nothing changes: a table is its name, and a repeated name refuses.
+
+With it, a table is (schema, name). The reader refuses an empty schema cell as a missing
+table identifier and a repeated (schema, name) as `duplicate physical table` at its
+census row, the same refusal a repeated name gets without a schema. Storage facts are
+matched by (schema, table, column), and only facts outside the admitted (schema, table,
+column) set count as storage extras.
+
+`holdings.toml` addresses a table by the existing `[[table]]` fields `schema_name` and
+`physical_name`; there is no qualified `schema.table` spelling, since physical names may
+contain dots and the order already carries schema and table separately to the runner.
+Under a schema-keyed census every `[[table]]` gives `schema_name`, equal to its census
+schema; an entry without it does not match its census table and refuses as
+`holdings_accounting_invalid: authored tables differ from census`. Without a
+schema-keyed census `schema_name` keeps its older meaning only: it picks the storage
+schema of a table whose name has facts in several, and is no part of the identity.
+Column decisions, keys and dispositions sit inside their `[[table]]`, so they need no
+schema of their own. `projection_of` names a parent in the projection's own schema.
+
+The compiled `file_name` of a schema-keyed table is the slug of `<schema>_<name>`
+(`AFK_X` → `afk_x`), so two databases' tables of one name get distinct files; a
+name-keyed table's file name is the slug of its name as before. `holding_table` is
+unique on (`schema_name`, `physical_name`) from holdings schema 7.
+`reg-build diff --holdings` keys a table by its stored schema and name as separate
+parts, never by a joined string. Readers (the held `file` of `segments` and order
+findings) name a table `<schema>.<name>` only when another held table has the same name,
+so a single-schema holder's names read unchanged; the order itself carries schema and
+table separately. A label can still coincide with a dotted physical name in another
+schema; the file name stays the unique handle.
 
 Ordinary supplemental curation records its locks with
 `reg-build lock --base <catalog> --inputs <steward-repo> --curation <steward-repo>/curation`.
@@ -1770,6 +1805,9 @@ digest over the sorted `path\tsha256` pins) replaces the per-file pins; `steward
 needs them to admit the pinned checkout and recompute that digest. Build provenance for
 review lives in the `--report` JSON under `steward`: repo, commit, config and every
 input pin. That report is private release evidence.
+
+Holdings schema 7 replaces the unique `holding_table.physical_name` with a unique
+(`schema_name`, `physical_name`) for schema-keyed censuses (see "Schema-keyed census").
 
 The following tables describe the physical layer's grains; all intervals use the
 catalog's half-open day convention:

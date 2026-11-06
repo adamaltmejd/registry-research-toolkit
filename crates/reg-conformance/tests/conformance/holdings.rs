@@ -216,6 +216,57 @@ fn renamed_physical_column_matches_its_catalog_name() {
     assert_eq!(mapped(&out, "Received_Olde"), original);
 }
 
+#[test]
+fn schema_keyed_census_holds_one_name_in_two_schemas() {
+    // Fails if a schema-keyed census still keys tables by name (the aux twin of
+    // Excluded refuses as a duplicate, or the unique physical name refuses it at
+    // insert), if file names ignore the schema (both twins slug to `excluded`), or if
+    // a repeated (schema, table) is admitted.
+    let dir = Scratch::new("census-schema").unwrap();
+    let root = locked_copy(dir.path()).unwrap();
+    let census = root.join("census.csv");
+    edit(&census, "Synthetic,", "dbo,", true).unwrap();
+    append(&census, "aux,Excluded,Excluded,Secret,,,,,,,,\n").unwrap();
+    edit(
+        &root.join("curation/readers/holdings.toml"),
+        "census_columns = \"V\"\n",
+        "census_columns = \"V\"\ncensus_schema = \"Category\"\n",
+        false,
+    )
+    .unwrap();
+    let topology = root.join("holdings.toml");
+    edit(
+        &topology,
+        "[[table]]\n",
+        "[[table]]\nschema_name = \"dbo\"\n",
+        true,
+    )
+    .unwrap();
+    append(
+        &topology,
+        "\n[[table]]\nschema_name = \"aux\"\nphysical_name = \"Excluded\"\n\
+         disposition = \"excluded\"\ntable_pids = []\nreason = \"Outside the authored observation scope\"\n\
+         locator = \"fixture:excluded-aux\"\n\n[[table.column]]\nname = \"Secret\"\n\
+         unmap = \"Not observation data\"\nlocator = \"fixture:excluded-aux-secret\"\n",
+    )
+    .unwrap();
+    let out = dir.path().join("schemas.db");
+    compile(dir.path(), &out).ok();
+    assert_eq!(
+        column(
+            &out,
+            "SELECT schema_name||' '||file_name FROM holding_table
+             WHERE physical_name='Excluded' ORDER BY 1"
+        ),
+        ["aux aux_excluded", "dbo dbo_excluded"]
+    );
+    let base = cached_reader_artifact(&holdings_case().join("base")).unwrap();
+    verify_holdings(&out, &base, &root).ok();
+    append(&census, "dbo,Excluded,Excluded,Secret,,,,,,,,\n").unwrap();
+    compile(dir.path(), &dir.path().join("repeated.db"))
+        .refused(&["census", "row=12: duplicate physical table"]);
+}
+
 /// Apply the `refusals.toml` edits `edits` to the steward checkout at `root`.
 fn apply(root: &Path, edits: &Value) -> Result<(), String> {
     for change in edits.as_array().into_iter().flatten() {

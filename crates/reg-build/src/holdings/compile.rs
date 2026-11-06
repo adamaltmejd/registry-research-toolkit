@@ -519,6 +519,28 @@ pub(super) fn renames_resolve(
     }
 }
 
+/// A physical table's identity: (schema, name) when the census reader is schema-keyed,
+/// the name alone (schema `None`) otherwise.
+pub(super) type Identity = (Option<String>, String);
+
+/// Whether the census reader keyed its tables by schema.
+pub(super) fn schema_keyed(census: &[census::Table]) -> bool {
+    census.iter().any(|t| t.schema.is_some())
+}
+
+pub(super) fn census_identity(table: &census::Table) -> Identity {
+    (table.schema.clone(), table.name.clone())
+}
+
+/// An authored table's identity. Without a schema-keyed census `schema_name` only selects
+/// storage facts and is no part of the identity.
+pub(super) fn authored_identity(table: &input::Table, keyed: bool) -> Identity {
+    (
+        table.schema_name.clone().filter(|_| keyed),
+        table.physical_name.clone(),
+    )
+}
+
 #[allow(clippy::too_many_lines)]
 pub(super) fn write(
     db: &mut Connection,
@@ -529,23 +551,24 @@ pub(super) fn write(
 ) -> Result<(usize, usize, usize, usize)> {
     let index = segment_index(base, db)?;
     renames_resolve(&index, rename_targets)?;
+    let keyed = schema_keyed(&census);
     let mut authored = BTreeMap::new();
     for table in topology.table {
         if table.locator.trim().is_empty()
             || authored
-                .insert(table.physical_name.clone(), table)
+                .insert(authored_identity(&table, keyed), table)
                 .is_some()
         {
             return Err("holdings_accounting_invalid: duplicate table or missing locator".into());
         }
     }
-    census.sort_by(|a, b| a.name.cmp(&b.name));
+    census.sort_by_key(census_identity);
     let ids: BTreeMap<_, _> = census
         .iter()
         .enumerate()
         .map(|(i, t)| {
             (
-                t.name.clone(),
+                census_identity(t),
                 i64::try_from(i + 1).expect("table count fits i64"),
             )
         })
@@ -563,8 +586,9 @@ pub(super) fn write(
     // Parents and row-period columns reference rows filled later in this transaction.
     tx.execute_batch("PRAGMA defer_foreign_keys=ON;")?;
     for table in census {
-        let authored = &authored[&table.name];
-        let id = ids[&table.name];
+        let identity = census_identity(&table);
+        let authored = &authored[&identity];
+        let id = ids[&identity];
         let result = (|| -> Result<()> {
             super::keys::validate_shapes(id, &authored.key)?;
             let spans = table_periods(authored)?;
@@ -577,7 +601,8 @@ pub(super) fn write(
                 .projection_of
                 .as_ref()
                 .map(|name| {
-                    ids.get(name)
+                    // A projection's parent is in the projection's own schema.
+                    ids.get(&(table.schema.clone(), name.clone()))
                         .copied()
                         .ok_or("holdings_projection_invalid: missing parent")
                 })
@@ -605,7 +630,11 @@ pub(super) fn write(
                 .as_deref()
                 .or_else(|| (schema.len() == 1).then(|| *schema.first().expect("one schema")));
             let table_type = (kinds.len() == 1).then(|| *kinds.first().expect("one kind"));
-            let file_name = reg_resolve::slugify(&table.name).replace('-', "_");
+            let file_name = reg_resolve::slugify(&match &table.schema {
+                Some(schema) => format!("{schema}_{}", table.name),
+                None => table.name.clone(),
+            })
+            .replace('-', "_");
             // The runner's rules (reg_core::manifest), applied at publication so a
             // name it would refuse never reaches an order. Slugs are lowercase, so a
             // case-insensitive collision is an exact one here.
