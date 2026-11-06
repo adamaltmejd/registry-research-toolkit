@@ -496,14 +496,39 @@ pub(super) fn segment_index(
     Ok(index)
 }
 
+/// Refuse a `[[rename]]` whose catalog name is no documented spelling anywhere in the
+/// catalog or semantic view: it could never match, so it is a typo or a stale entry.
+pub(super) fn renames_resolve(
+    index: &BTreeMap<String, Vec<Segment>>,
+    targets: &[String],
+) -> Result<()> {
+    let spellings: BTreeSet<_> = index
+        .values()
+        .flatten()
+        .map(|s| reg_core::fold_identity(&s.spelling))
+        .collect();
+    match (1..)
+        .zip(targets)
+        .find(|(_, t)| !spellings.contains(&reg_core::fold_identity(t)))
+    {
+        Some((n, _)) => Err(format!(
+            "census_rename_unresolved: rename {n}: catalog name matches no documented spelling"
+        )
+        .into()),
+        None => Ok(()),
+    }
+}
+
 #[allow(clippy::too_many_lines)]
 pub(super) fn write(
     db: &mut Connection,
     base: &Connection,
     topology: input::Topology,
     mut census: Vec<census::Table>,
+    rename_targets: &[String],
 ) -> Result<(usize, usize, usize, usize)> {
     let index = segment_index(base, db)?;
+    renames_resolve(&index, rename_targets)?;
     let mut authored = BTreeMap::new();
     for table in topology.table {
         if table.locator.trim().is_empty()

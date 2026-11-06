@@ -218,7 +218,13 @@ fn write(
     )?;
     let mut db = Connection::open(scratch)?;
     db.execute_batch("PRAGMA foreign_keys=ON;")?;
-    let counts = compile::write(&mut db, &base_db, topology, census.tables)?;
+    let counts = compile::write(
+        &mut db,
+        &base_db,
+        topology,
+        census.tables,
+        &census.rename_targets,
+    )?;
     let mut generation = crate::sha256_file(&input::path(root, &pin.config)?)?.0;
     for part in [
         &base_generation,
