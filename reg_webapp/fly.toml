@@ -23,7 +23,8 @@ primary_region = "arn" # Stockholm — the user base is Swedish register researc
   # `Host` besides loopback. The global catalog
   # has no public webapp: its edge worker forwards `/mcp` only. The edge token
   # (REG_META_EDGE_TOKEN, a Fly secret matching the edge worker's EDGE_TOKEN)
-  # lets `/mcp` rate-limit each edge client by its own address.
+  # locks the origin to the edge (reg_webapp/DESIGN.md, "Origin lock") and lets
+  # `/mcp` rate-limit each edge client by its own address.
   REG_META_PUBLIC_HOST = "reg-meta.vqv.uk"
 
 [http_service]
@@ -39,8 +40,9 @@ primary_region = "arn" # Stockholm — the user base is Swedish register researc
   # past its restart policy, the proxy boots it on the next request.
   auto_start_machines = true
 
-  # Gate deploys on the live API: the first endpoint the entrypoint smoke gate
-  # probes before it hands the foreground to `reg-meta serve`.
+  # Gate deploys on the live server. `/healthz`, the one path the origin lock leaves
+  # open: Fly calls the origin directly, without the edge token. The entrypoint gate
+  # has already probed the API before `reg-meta serve` takes traffic.
   [[http_service.checks]]
     interval = "30s"
     timeout = "5s"
@@ -48,7 +50,7 @@ primary_region = "arn" # Stockholm — the user base is Swedish register researc
     # time before checks count.
     grace_period = "60s"
     method = "GET"
-    path = "/api/context"
+    path = "/healthz"
 
 [[vm]]
   size = "shared-cpu-1x"

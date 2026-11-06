@@ -250,8 +250,8 @@ side-project zone, chosen to keep the personal altmejd.se zone out of it.
   verify it against the SHA-256 digest GitHub records for it, unpack), a pinned Rust
   stage building `reg-meta`, and a Debian slim runtime with `curl` for the smoke gate.
   The image serves the API and `/mcp` only; a steward's edge worker serves the SPA. The
-  global image serves `/api` too (the binary has no per-route switch, and fly.toml's
-  health check reads `/api/context`); its edge worker forwards none of it.
+  global image serves `/api` too (the binary has no per-route switch); its edge worker
+  forwards none of it, and the origin lock refuses it to anyone else.
 - **Hosted MCP** (`crates/DESIGN.md`, "Agent and web interface"): `/mcp` on
   `reg-meta.vqv.uk` (the global catalog) and on each public steward host
   (`data.swecov.se`). Every worker forwards `/mcp`; the active Fly config passes
@@ -260,13 +260,14 @@ side-project zone, chosen to keep the personal altmejd.se zone out of it.
   Cost protection, below). Behind Fly the peer is Fly's proxy, so the worker proves a
   request came through the edge with a shared secret (`EDGE_TOKEN` on the worker,
   `REG_META_EDGE_TOKEN` on the Fly app, sent as `x-edge-token`); only such a request is
-  keyed on its `CF-Connecting-IP`. Any other request, a direct-origin hit included, is
-  keyed on its peer, so a forged `CF-Connecting-IP` buys nothing. A worker without the
-  secret refuses every forward with a `no-store` 503, rather than put every edge client
-  in the proxy's one bucket. After each edge deploy, `container-build.yml` (and
-  `steward-deploy.yml` for a steward) sends `initialize`, `tools/list` and one `search`
-  to the public `/mcp`. Those smoke requests send `User-Agent: reg-meta-ci-smoke`, which
-  usage statistics count as client `ci` and the reports leave out.
+  keyed on its `CF-Connecting-IP`. With the secret set, the origin refuses every other
+  request (Origin lock, below), so a forged `CF-Connecting-IP` buys nothing. A worker
+  without the secret refuses every forward with a `no-store` 503, rather than put every
+  edge client in the proxy's one bucket. After each edge deploy, `container-build.yml`
+  (and `steward-deploy.yml` for a steward) sends `initialize`, `tools/list` and one
+  `search` to the public `/mcp`. Those smoke requests send
+  `User-Agent: reg-meta-ci-smoke`, which usage statistics count as client `ci` and the
+  reports leave out.
 - **Usage recording** (#1323; the origin's label is "Usage statistics" below): each
   worker writes one Workers Analytics Engine data point (dataset `reg_meta_usage`,
   binding `USAGE`, kept 3 months) per forwarded `/api` and `/mcp` request, from the
@@ -321,9 +322,10 @@ side-project zone, chosen to keep the personal altmejd.se zone out of it.
   redeploy, and no such run in the last 200 counts as everything changed. Two gates
   guard a bad image: the entrypoint smoke gate (it probes `context`, `search`, docs
   search and `/mcp` with `curl`, and the container exits non-zero before ever serving
-  when artifact admission or a probe fails) and fly.toml's `/api/context` HTTP check
-  (flyctl reports failure if it never passes). The docs probe searches `lisa` and
-  requires a `doc` field in a hit.
+  when artifact admission or a probe fails) and fly.toml's `/healthz` HTTP check (flyctl
+  reports failure if it never passes). The gate's probes send the edge token, which the
+  origin lock requires on loopback too. The docs probe searches `lisa` and requires a
+  `doc` field in a hit.
 - **Schema guard**: a standalone `schema-guard` job compares `CATALOG_SCHEMA_VERSION`
   (`crates/reg-core/src/lib.rs`) with the same constant at the newest `reg_meta/v*` tag
   (`git show <tag>:crates/reg-core/src/lib.rs`). Two outcomes: equal passes; different,
@@ -408,6 +410,11 @@ lists its inputs and an example call.
 The inputs of these workflows are a contract with every steward repository. A change to
 them breaks a steward only at its next bump, as a red PR; the release notes name it.
 
+A steward's Fly app sets `REG_META_EDGE_TOKEN` and its Fly config checks `/healthz`, as
+the global one does: with the token set, a check on any other path gets 403 and fails
+the deploy (Origin lock, below). Where a site sits behind Cloudflare Access, the lock is
+what keeps its `*.fly.dev` origin from answering around Access.
+
 A steward image boots as the global one does, through the same entrypoint, with three
 differences:
 
@@ -461,6 +468,32 @@ partial order. The logical order check and semantic findings live in `reg-catalo
 `crates/DESIGN.md` documents their rules. Physical files and the manifest come from the
 steward's holdings (`ops/order/materialize.rs`).
 
+## Origin lock (`crates/reg-meta/src/limit.rs`)
+
+Cloudflare guards only the hostnames it fronts. The Fly origin also answers on
+`<app>.fly.dev` and its public IPs, where neither the edge's rate limits nor Cloudflare
+Access apply. So when `REG_META_EDGE_TOKEN` is set, `serve` refuses every request whose
+`x-edge-token` header does not carry it with `edge_token_required` (403, the error
+document), on every route and on unknown paths, before the rate limit. The comparison is
+of SHA-256 digests without an early exit. Unset, nothing is refused (local runs, CI, the
+conformance suite).
+
+- **No separate switch.** A set token that is not enforced is the gap itself: the worker
+  already sends the token on every forward, and a deployment that sets it on the origin
+  is behind an edge. Every deployment (global, SWECOV, IFAU) sets it.
+- **`GET /healthz` is exempt**: 200 with an empty body, once the server is listening
+  (that is, after artifact admission). Fly's HTTP check calls the origin directly, and a
+  header in a Fly config would commit the secret. It serves nothing, so the exemption
+  publishes nothing.
+- **Loopback is not exempt.** The entrypoint gate sends the token from its environment
+  instead. One rule with one exemption is easier to reason about than a peer-address
+  rule, and Fly's proxy is never loopback anyway.
+- **Rotation** sets both sides (`wrangler secret put EDGE_TOKEN` and
+  `flyctl secrets set REG_META_EDGE_TOKEN=…`) to one new value. Between the two, the
+  edge gets 403; set the worker right after the Fly secret (which restarts the machine).
+- **Not auth.** It proves a request came through the worker, nothing about the person.
+  Who may use a private steward site is Cloudflare Access's decision, at the edge.
+
 ## Cost protection (`crates/reg-meta/src/limit.rs`)
 
 Every project POST and `/mcp` sit behind the same two origin-side guards; GET reads are
@@ -472,13 +505,13 @@ origin hits that bypass the edge.
   `Retry-After: 1`). `serve --write-limit N` changes the 60, for verification runs (the
   conformance suite and release admission) that replay many projects from one address; a
   deployment keeps the default. The client is the edge's `CF-Connecting-IP` when the
-  request carries the edge token (`REG_META_EDGE_TOKEN`), otherwise the peer, and an
-  IPv6 address counts as its /64. **Address-only** by design: a session token would
-  bucket per browser (helpful behind NAT) but adds a fingerprinting surface for
-  anonymous public data. Buckets are per process (lost on restart, not shared across
-  replicas), which suffices as the origin backstop behind the edge. A deployment whose
-  worker sends no edge token keys every client on Fly's proxy, so all of them share one
-  bucket.
+  edge token (`REG_META_EDGE_TOKEN`) is set (the origin lock has admitted only requests
+  that carry it), otherwise the peer, and an IPv6 address counts as its /64.
+  **Address-only** by design: a session token would bucket per browser (helpful behind
+  NAT) but adds a fingerprinting surface for anonymous public data. Buckets are per
+  process (lost on restart, not shared across replicas), which suffices as the origin
+  backstop behind the edge. A deployment without the edge token keys every client on
+  Fly's proxy, so all of them share one bucket.
 - **Body cap** — `payload_too_large` (413) over 1 MiB, counted as the body streams in
   (axum's `DefaultBodyLimit`), never trusting `Content-Length`. 1 MiB is far above any
   plausible `project_data.json`.

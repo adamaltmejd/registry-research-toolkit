@@ -1,6 +1,7 @@
-//! The write limits of `serve`: `/mcp` and every POST operation and download sit
-//! behind [`guard`], one token bucket per client address shared by all of them, then
-//! the body cap.
+//! The origin lock and the write limits of `serve`. With the edge token set, every route
+//! but `/healthz` sits behind [`edge`], which refuses a request without it. `/mcp` and
+//! every POST operation and download then sit behind [`guard`], one token bucket per
+//! client address shared by all of them, then the body cap.
 
 use std::collections::HashMap;
 use std::net::{IpAddr, SocketAddr};
@@ -28,8 +29,9 @@ pub const DEFAULT_PER_MINUTE: u64 = 60;
 /// write latency.
 const MAX_TRACKED: usize = 10_000;
 /// The secret the edge worker sends as [`EDGE_TOKEN_HEADER`] on every origin request.
-/// A request carrying it came through the edge, so its `CF-Connecting-IP` is the
-/// client's address; any other request is keyed on its peer address.
+/// When it is set, [`edge`] refuses any request without it, so every request that
+/// reaches [`guard`] came through the edge and its `CF-Connecting-IP` is the client's
+/// address. When it is unset, every request is keyed on its peer address.
 const EDGE_TOKEN_ENV: &str = "REG_META_EDGE_TOKEN";
 const EDGE_TOKEN_HEADER: &str = "x-edge-token";
 
@@ -37,7 +39,8 @@ pub struct Limits {
     server: Arc<Server>,
     /// Each bucket's capacity.
     capacity: u64,
-    /// The SHA-256 of the edge token; `None` trusts no request as the edge's.
+    /// The SHA-256 of the edge token; `None` locks nothing and trusts no request as the
+    /// edge's.
     edge_token: Option<[u8; 32]>,
     buckets: Mutex<HashMap<IpAddr, Bucket>>,
 }
@@ -72,23 +75,29 @@ impl Limits {
         })
     }
 
-    /// The address a request is limited by: the edge-supplied `CF-Connecting-IP` when
-    /// the request carries the edge token, otherwise its peer; an IPv6 address as its
-    /// /64.
-    fn client(&self, headers: &HeaderMap, peer: IpAddr) -> IpAddr {
-        let header = |name| headers.get(name).and_then(|value| value.to_str().ok());
-        let from_edge = self.edge_token.is_some_and(|token| {
-            header(EDGE_TOKEN_HEADER).is_some_and(|sent| {
+    /// Whether `headers` carry the edge token; true when none is set.
+    fn admits(&self, headers: &HeaderMap) -> bool {
+        self.edge_token.is_none_or(|token| {
+            headers.get(EDGE_TOKEN_HEADER).is_some_and(|sent| {
                 // Equal digests, compared without an early exit.
-                let sent: [u8; 32] = Sha256::digest(sent).into();
+                let sent: [u8; 32] = Sha256::digest(sent.as_bytes()).into();
                 let diff = sent
                     .iter()
                     .zip(token)
                     .fold(0, |diff, (a, b)| diff | (a ^ b));
                 diff == 0
             })
-        });
-        let client = from_edge
+        })
+    }
+
+    /// The address a request is limited by: the edge-supplied `CF-Connecting-IP` when an
+    /// edge token is set ([`edge`] admits only requests that carry it), otherwise its
+    /// peer; an IPv6 address as its /64.
+    fn client(&self, headers: &HeaderMap, peer: IpAddr) -> IpAddr {
+        let header = |name| headers.get(name).and_then(|value| value.to_str().ok());
+        let client = self
+            .edge_token
+            .is_some()
             .then(|| header("cf-connecting-ip")?.parse().ok())
             .flatten()
             .unwrap_or(peer);
@@ -120,6 +129,21 @@ impl Limits {
         bucket.tokens = bucket.tokens.saturating_sub(1);
         allowed
     }
+}
+
+/// The origin lock: with the edge token set, `edge_token_required` (403) for a request
+/// that does not carry it. Layered over every route but `/healthz`, outside [`guard`],
+/// so a refused request never takes a token from a bucket.
+pub async fn edge(State(limits): State<Arc<Limits>>, request: Request, next: Next) -> Response {
+    if limits.admits(request.headers()) {
+        return next.run(request).await;
+    }
+    let err = Error::new(
+        Code::EdgeTokenRequired,
+        "This request did not come through the public host.",
+        vec![],
+    );
+    crate::refusal(&limits.server, err)
 }
 
 /// The write limits, answered with the error document: `rate_limited` per client

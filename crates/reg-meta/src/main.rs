@@ -11,8 +11,10 @@
 //! `DIR/reg_meta_NAME.db` holdings partner; the default `global` opens the base only. `serve` serves every registered operation and
 //! download, `/openapi.json` and MCP at `/mcp` on `--host` (default
 //! 127.0.0.1); `/mcp` admits the `Host` header `--public-host` besides the loopback
-//! names. `/mcp` and every POST share one rate limit per client address, keyed with
-//! the edge token in `REG_META_EDGE_TOKEN` (`limit.rs`): `--write-limit` tokens
+//! names. With `REG_META_EDGE_TOKEN` set, every route but `GET /healthz` refuses a
+//! request whose `x-edge-token` header does not carry it (`limit.rs`).
+//! `/mcp` and every POST share one rate limit per client address, keyed with
+//! the edge token (`limit.rs`): `--write-limit` tokens
 //! (default 60), refilled one a second. `--mmap-size` sets each SQLite connection's
 //! `PRAGMA mmap_size` (default 2 GiB, `reg_catalog::DEFAULT_MMAP_SIZE`; 0 disables
 //! memory-mapping). Once bound, `serve` prints `listening on ADDR:PORT` on stderr,
@@ -240,8 +242,13 @@ async fn serve(
     }
     let app = app
         .with_state(Arc::clone(&server))
-        .merge(mcp::router(server, public_host, limits))
-        .layer(axum::middleware::from_fn(usage::timing));
+        .merge(mcp::router(server, public_host, Arc::clone(&limits)))
+        .layer(axum::middleware::from_fn(usage::timing))
+        // Outermost, so it also covers the fallback: an unknown path is refused, not 404.
+        .layer(from_fn_with_state(limits, limit::edge))
+        // After the lock, so outside it: Fly's health check calls the origin directly,
+        // without the edge token. Listening means admitted, so 200 is ready.
+        .route("/healthz", get(|| async { StatusCode::OK }));
     let listener = tokio::net::TcpListener::bind(addr)
         .await
         .expect("bind the port");

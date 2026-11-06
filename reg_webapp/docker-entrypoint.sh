@@ -24,6 +24,10 @@ else
 fi
 # Per request, so a stalled server cannot hang the gate past its deadline.
 MAX_TIME=10
+# With REG_META_EDGE_TOKEN set, `serve` refuses every request without it, loopback
+# included (reg_webapp/DESIGN.md, "Origin lock"), so the probes send it as the edge
+# worker does. Unset, curl sends no header (an empty value removes it).
+EDGE_TOKEN_HEADER="x-edge-token: ${REG_META_EDGE_TOKEN:-}"
 
 # `/mcp` admits the public host's `Host` header only where the deployment names one
 # (reg_webapp/fly.toml and each steward repository's Fly config do).
@@ -61,26 +65,26 @@ fail() {
 # Readiness: admission runs before the bind, so a refused artifact exits the server
 # (its error document is on stderr) and the wait fails at once.
 waited=0
-until curl -fsS --max-time "$MAX_TIME" -o /dev/null "$BASE/api/context?$EDGE_V" 2>/dev/null; do
+until curl -fsS -H "$EDGE_TOKEN_HEADER" --max-time "$MAX_TIME" -o /dev/null "$BASE/api/context?$EDGE_V" 2>/dev/null; do
     kill -0 "$SERVER_PID" 2>/dev/null || fail "reg-meta exited"
     [ "$waited" -lt "$READY_DEADLINE" ] || fail "no answer within ${READY_DEADLINE}s"
     sleep 1
     waited=$((waited + 1))
 done
 if [ "$REG_META_CATALOG" != global ]; then
-    curl -fsS --max-time "$MAX_TIME" "$BASE/api/context?$EDGE_V" \
+    curl -fsS -H "$EDGE_TOKEN_HEADER" --max-time "$MAX_TIME" "$BASE/api/context?$EDGE_V" \
         | grep -q '"steward_config":{' || fail "steward context"
 fi
 # The first search reads its pages cold from Fly's throttled rootfs (measured
 # 2026-10-09 on 0.44.0: 328 MB in 19 s at ~17 MB/s; warm 0.2 s), so it gets the
 # readiness deadline rather than the per-request one.
-curl -fsS --max-time "$READY_DEADLINE" -o /dev/null "$BASE/api/search?q=inkomst&$EDGE_V" \
+curl -fsS -H "$EDGE_TOKEN_HEADER" --max-time "$READY_DEADLINE" -o /dev/null "$BASE/api/search?q=inkomst&$EDGE_V" \
     || fail "search"
 # The docs must be populated, not just admitted (#8): `lisa` is in every release, and
 # a hit carries `doc` (DocHit: doc, title, kind, heading, page, snippet).
-curl -fsS --max-time "$MAX_TIME" "$BASE/api/docs/search?q=lisa&limit=1&$EDGE_V" \
+curl -fsS -H "$EDGE_TOKEN_HEADER" --max-time "$MAX_TIME" "$BASE/api/docs/search?q=lisa&limit=1&$EDGE_V" \
     | grep -q '"doc":"' || fail "docs search"
-curl -fsS --max-time "$MAX_TIME" "$BASE/mcp" \
+curl -fsS -H "$EDGE_TOKEN_HEADER" --max-time "$MAX_TIME" "$BASE/mcp" \
     -H 'accept: application/json, text/event-stream' \
     -H 'content-type: application/json' \
     -H 'mcp-protocol-version: 2025-11-25' \

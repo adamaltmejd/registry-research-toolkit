@@ -367,7 +367,7 @@ jobs:
           version: "0.5.0"
       # Two gates guard a bad image: the container entrypoint probes
       # `context`, `search`, docs search and `/mcp` before `reg-meta serve` takes traffic (a
-      # bad image exits non-zero), and fly.toml's /api/context HTTP check must
+      # bad image exits non-zero), and fly.toml's /healthz HTTP check must
       # pass before flyctl reports success.
       # --ha=false keeps the single-machine topology (see fly.toml header).
       - if: steps.head.outputs.skip != 'true'
