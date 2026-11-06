@@ -1,5 +1,83 @@
 [[statement]]
 kind = "set"
+subject = "aterkrav-ersattning: belopp"
+fields = { "variable" = "aterkravt-belopp" }
+evidence = "Återkrävt belopp: det bruttobelopp som återkrävs för angiven ersättningstyp.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
+subject = "eesutbet: belopp"
+fields = { "variable" = "totalt-ersattningsbelopp" }
+evidence = "Totalt ersättningsbelopp: det belopp som en EES-utbetalning avser.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
+subject = "utbetalning: belopp"
+fields = { "variable" = "utbetalt-belopp" }
+evidence = "Utbetalt belopp: det bruttobelopp som utbetalats till personen för angiven ersättningstyp och kassakortsvecka.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
+subject = "eesutbet: dagar"
+fields = { "variable" = "antal-dagar-eesutbet" }
+evidence = "Antal dagar i Eesutbet: det antal utbetalade dagar som en EES-utbetalning avser.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
+subject = "utbetalning: dagar"
+fields = { "variable" = "antal-utbetalade-dagar" }
+evidence = "Antal utbetalade dagar: utbetalade dagar som ersättningstypen och kassakortet avser.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
+subject = "eesutbet: typ"
+fields = { "variable" = "typ-eesutbet" }
+evidence = "Typ i Eesutbet: om vistelsen utomlands avser U2 eller E303.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
+subject = "medlemskap: typ"
+fields = { "variable" = "typ-av-medlemskap" }
+evidence = "Typ av medlemskap: vilken sorts medlemskap personen har.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
+subject = "sparr: typ"
+fields = { "variable" = "typ-sparr" }
+evidence = "Typ i Sparr: anger tillsammans med objektkod och typkod vilken ersättningsspärr som avses.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
+subject = "sparr: typkod"
+fields = { "variable" = "typkod-sparr" }
+evidence = "Typkod i Sparr: anger tillsammans med objektkod och typ vilken ersättningsspärr som avses.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
+subject = "sparr: objektkod"
+fields = { "variable" = "objektkod-sparr" }
+evidence = "Objektkod i Sparr: anger tillsammans med typ och typkod vilken ersättningsspärr som avses.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
+subject = "eesutbet: landkod"
+fields = { "variable" = "landskod-eesutbet" }
+evidence = "Landskod i Eesutbet: landet där utbetalningen skett.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
+subject = "eesutbet: inkomstar"
+fields = { "variable" = "inkomstar-eesutbet" }
+evidence = "Inkomstår i Eesutbet: året då ersättningen utbetalades i det land där personen var arbetssökande.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
+subject = "eesutbet: tomdatum"
+fields = { "variable" = "till-och-med-datum-eesutbet" }
+evidence = "Till och med datum i Eesutbet: slutdatum för beviljad ersättning som utbetalats i söklandet.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
 subject = "var:aktivitetsstodsdagar"
 fields = { "tags" = ["employment", "transfers"] }
 evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
@@ -24,6 +102,18 @@ evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlems
 
 [[statement]]
 kind = "set"
+subject = "var:antal-dagar-aterkrav"
+fields = { "tags" = ["employment", "transfers"] }
+evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-dagar-eesutbet"
+fields = { "tags" = ["employment", "transfers"] }
+evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
 subject = "var:antal-deltidsveckor"
 fields = { "tags" = ["employment", "transfers"] }
 evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
@@ -31,6 +121,12 @@ evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlems
 [[statement]]
 kind = "set"
 subject = "var:antal-tilldelade-dagar"
+fields = { "tags" = ["employment", "transfers"] }
+evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-utbetalade-dagar"
 fields = { "tags" = ["employment", "transfers"] }
 evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
 
@@ -54,6 +150,12 @@ evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlems
 
 [[statement]]
 kind = "set"
+subject = "var:aterbetalat-belopp"
+fields = { "tags" = ["employment", "transfers"] }
+evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
 subject = "var:aterbetalningskod"
 fields = { "tags" = ["employment", "transfers"] }
 evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
@@ -67,6 +169,12 @@ evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlems
 [[statement]]
 kind = "set"
 subject = "var:aterkravsbokforingsdatumet"
+fields = { "tags" = ["employment", "transfers"] }
+evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:aterkravt-belopp"
 fields = { "tags" = ["employment", "transfers"] }
 evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
 
@@ -97,12 +205,6 @@ evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlems
 [[statement]]
 kind = "set"
 subject = "var:avstnedssnr"
-fields = { "tags" = ["employment", "transfers"] }
-evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
-
-[[statement]]
-kind = "set"
-subject = "var:belopp"
 fields = { "tags" = ["employment", "transfers"] }
 evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
 
@@ -156,6 +258,18 @@ evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlems
 
 [[statement]]
 kind = "set"
+subject = "var:beslutstyp"
+fields = { "tags" = ["employment", "transfers"] }
+evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutstypkod"
+fields = { "tags" = ["employment", "transfers"] }
+evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
 subject = "var:beslutsvarde-beslutsvarde"
 fields = { "tags" = ["employment", "transfers"] }
 evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
@@ -175,12 +289,6 @@ evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlems
 [[statement]]
 kind = "set"
 subject = "var:betalningsbokforingsdatum"
-fields = { "tags" = ["employment", "transfers"] }
-evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
-
-[[statement]]
-kind = "set"
-subject = "var:dagar"
 fields = { "tags" = ["employment", "transfers"] }
 evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
 
@@ -247,8 +355,8 @@ evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlems
 [[statement]]
 kind = "set"
 subject = "var:ersattningsgrundande-daglon"
-fields = { "tags" = ["employment", "transfers"] }
-evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+fields = { "tags" = ["income", "transfers"] }
+evidence = "Den ersättningsgrundande daglönen är personens tidigare inkomst per dag som ersättningen beräknas på: en inkomst, och grunden för en transferering.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
 
 [[statement]]
 kind = "set"
@@ -324,7 +432,13 @@ evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlems
 
 [[statement]]
 kind = "set"
-subject = "var:inkomstar"
+subject = "var:inkomstar-aterkrav"
+fields = { "tags" = ["employment", "transfers"] }
+evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:inkomstar-eesutbet"
 fields = { "tags" = ["employment", "transfers"] }
 evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
 
@@ -396,7 +510,7 @@ evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlems
 
 [[statement]]
 kind = "set"
-subject = "var:landskod"
+subject = "var:landskod-eesutbet"
 fields = { "tags" = ["employment", "transfers"] }
 evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
 
@@ -439,6 +553,12 @@ evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlems
 [[statement]]
 kind = "set"
 subject = "var:objektkod"
+fields = { "tags" = ["employment", "transfers"] }
+evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:objektkod-sparr"
 fields = { "tags" = ["employment", "transfers"] }
 evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
 
@@ -546,7 +666,19 @@ evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlems
 
 [[statement]]
 kind = "set"
-subject = "var:till-och-med-datum"
+subject = "var:till-och-med-datum-aktivitetsstod"
+fields = { "tags" = ["employment", "transfers"] }
+evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:till-och-med-datum-eesutbet"
+fields = { "tags" = ["employment", "transfers"] }
+evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:totalt-ersattningsbelopp"
 fields = { "tags" = ["employment", "transfers"] }
 evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
 
@@ -558,7 +690,7 @@ evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlems
 
 [[statement]]
 kind = "set"
-subject = "var:typ"
+subject = "var:typ-av-medlemskap"
 fields = { "tags" = ["employment", "transfers"] }
 evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
 
@@ -570,7 +702,19 @@ evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlems
 
 [[statement]]
 kind = "set"
-subject = "var:typkod"
+subject = "var:typ-eesutbet"
+fields = { "tags" = ["employment", "transfers"] }
+evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-sparr"
+fields = { "tags" = ["employment", "transfers"] }
+evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:typkod-sparr"
 fields = { "tags" = ["employment", "transfers"] }
 evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
 
@@ -613,6 +757,12 @@ evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlems
 [[statement]]
 kind = "set"
 subject = "var:utbetalningsersattningsnummer"
+fields = { "tags" = ["employment", "transfers"] }
+evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:utbetalt-belopp"
 fields = { "tags" = ["employment", "transfers"] }
 evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
 
