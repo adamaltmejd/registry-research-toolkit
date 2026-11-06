@@ -533,21 +533,6 @@
           ],
           "type": "object"
         },
-        "Locator": {
-          "properties": {
-            "input": {
-              "type": "string"
-            },
-            "locator": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "input",
-            "locator"
-          ],
-          "type": "object"
-        },
         "Meta": {
           "properties": {
             "catalog_version": {
@@ -586,12 +571,6 @@
                 "null"
               ]
             },
-            "locators": {
-              "items": {
-                "$ref": "#/$defs/Locator"
-              },
-              "type": "array"
-            },
             "overrides": {
               "items": {
                 "$ref": "#/$defs/Override"
@@ -628,7 +607,6 @@
             "label",
             "source_key",
             "status",
-            "locators",
             "overrides"
           ],
           "type": "object"
@@ -772,12 +750,6 @@
                 "null"
               ]
             },
-            "locators": {
-              "items": {
-                "$ref": "#/$defs/Locator"
-              },
-              "type": "array"
-            },
             "period": {
               "$ref": "#/$defs/Period"
             },
@@ -810,8 +782,7 @@
             "source_key",
             "spelling",
             "label",
-            "unit",
-            "locators"
+            "unit"
           ],
           "type": "object"
         },
@@ -2112,21 +2083,6 @@
           ],
           "type": "object"
         },
-        "Locator": {
-          "properties": {
-            "input": {
-              "type": "string"
-            },
-            "locator": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "input",
-            "locator"
-          ],
-          "type": "object"
-        },
         "Meta": {
           "properties": {
             "catalog_version": {
@@ -2165,12 +2121,6 @@
                 "null"
               ]
             },
-            "locators": {
-              "items": {
-                "$ref": "#/$defs/Locator"
-              },
-              "type": "array"
-            },
             "overrides": {
               "items": {
                 "$ref": "#/$defs/Override"
@@ -2207,7 +2157,6 @@
             "label",
             "source_key",
             "status",
-            "locators",
             "overrides"
           ],
           "type": "object"

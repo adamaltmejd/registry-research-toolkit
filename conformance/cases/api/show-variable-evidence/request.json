@@ -1,5 +1,5 @@
 {
-  "note": "Fails if evidence is not opt-in, curated labels are presented as provider labels, source text periods/keys/spellings/units/locators are lost, authored description/id/group decisions lose their statement locations, a statement serves its build-time `evidence` string (build provenance, not a reader fact), or directly linked documents disappear. The second artifact retains the earlier source-label/spelling change case. Expected values come from readable source JSONL, var:/identity setters and the committed document source text.",
+  "note": "Fails if evidence is not opt-in, curated labels are presented as provider labels, source text periods/keys/spellings/units are lost, authored description/id/group decisions lose their statement locations, a statement serves its build-time `evidence` string (build provenance, not a reader fact), or directly linked documents disappear. The second artifact retains the earlier source-label/spelling change case. Expected values come from readable source JSONL, var:/identity setters and the committed document source text.",
   "fixture": "descriptions",
   "artifacts": {
     "entities": {

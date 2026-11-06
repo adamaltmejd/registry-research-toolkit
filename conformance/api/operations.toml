@@ -408,7 +408,7 @@ sensitive = "boolean?"
 identifier = "boolean?"
 role = "\"row_key\" | \"time_start\" | \"time_stop\" | \"time_point\" | \"measure\" | \"code\" | \"label\""
 state = "\"ambiguous\" | \"preliminary\"?"
-evidence = "with `evidence` only: [{release (Release | null), period, spelling, label, source_key, status, locators [{input, locator}], overrides [{field, value, prov, statement {file, line} | null, rule | null, source_value}]}]"
+evidence = "with `evidence` only: [{release (Release | null), period, spelling, label, source_key, status, overrides [{field, value, prov, statement {file, line} | null, rule | null, source_value}]}]"
 
 [shape.ValueItem]
 code = "string; may be \"\" (a real item)"

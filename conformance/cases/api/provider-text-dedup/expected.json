@@ -41,12 +41,6 @@
               "spelling": "Deduplicated",
               "label": "Deduplicated provider prose",
               "unit": null,
-              "locators": [
-                {
-                  "input": "frame",
-                  "locator": "frame/descriptions.jsonl:line=14"
-                }
-              ],
               "field": "definition"
             },
             {
@@ -60,12 +54,6 @@
               "spelling": "Deduplicated",
               "label": "Deduplicated provider prose",
               "unit": null,
-              "locators": [
-                {
-                  "input": "frame",
-                  "locator": "frame/descriptions.jsonl:line=15"
-                }
-              ],
               "field": "definition"
             },
             {
@@ -79,12 +67,6 @@
               "spelling": "Deduplicated",
               "label": "Deduplicated provider prose",
               "unit": null,
-              "locators": [
-                {
-                  "input": "frame",
-                  "locator": "frame/descriptions.jsonl:line=16"
-                }
-              ],
               "field": "operational_definition"
             }
           ]

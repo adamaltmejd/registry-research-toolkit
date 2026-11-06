@@ -25,12 +25,6 @@
               "spelling": "Measure",
               "label": "Measure",
               "unit": "hours",
-              "locators": [
-                {
-                  "input": "frame",
-                  "locator": "frame/descriptions.jsonl:line=4"
-                }
-              ],
               "field": "definition"
             },
             {
@@ -44,12 +38,6 @@
               "spelling": "Measure",
               "label": "Measure",
               "unit": "hours",
-              "locators": [
-                {
-                  "input": "frame",
-                  "locator": "frame/descriptions.jsonl:line=5"
-                }
-              ],
               "field": "definition"
             },
             {
@@ -63,12 +51,6 @@
               "spelling": "Measure",
               "label": "Measure",
               "unit": "hours",
-              "locators": [
-                {
-                  "input": "frame",
-                  "locator": "frame/descriptions.jsonl:line=8"
-                }
-              ],
               "field": "definition"
             }
           ]
@@ -97,12 +79,6 @@
               "spelling": "Measure",
               "label": "Measure",
               "unit": "hours",
-              "locators": [
-                {
-                  "input": "frame",
-                  "locator": "frame/descriptions.jsonl:line=4"
-                }
-              ],
               "field": "operational_definition"
             },
             {
@@ -116,12 +92,6 @@
               "spelling": "Measure",
               "label": "Measure",
               "unit": "hours",
-              "locators": [
-                {
-                  "input": "frame",
-                  "locator": "frame/descriptions.jsonl:line=5"
-                }
-              ],
               "field": "operational_definition"
             },
             {
@@ -135,12 +105,6 @@
               "spelling": "Measure",
               "label": "Measure",
               "unit": "hours",
-              "locators": [
-                {
-                  "input": "frame",
-                  "locator": "frame/descriptions.jsonl:line=6"
-                }
-              ],
               "field": "operational_definition"
             },
             {
@@ -154,12 +118,6 @@
               "spelling": "Measure",
               "label": "Measure",
               "unit": "hours",
-              "locators": [
-                {
-                  "input": "frame",
-                  "locator": "frame/descriptions.jsonl:line=7"
-                }
-              ],
               "field": "operational_definition"
             },
             {
@@ -173,12 +131,6 @@
               "spelling": "Measure",
               "label": "Measure",
               "unit": "hours",
-              "locators": [
-                {
-                  "input": "frame",
-                  "locator": "frame/descriptions.jsonl:line=8"
-                }
-              ],
               "field": "operational_definition"
             }
           ]
@@ -207,12 +159,6 @@
               "spelling": "Measure",
               "label": "Measure",
               "unit": "hours",
-              "locators": [
-                {
-                  "input": "frame",
-                  "locator": "frame/descriptions.jsonl:line=6"
-                }
-              ],
               "field": "definition"
             },
             {
@@ -226,12 +172,6 @@
               "spelling": "Measure",
               "label": "Measure",
               "unit": "hours",
-              "locators": [
-                {
-                  "input": "frame",
-                  "locator": "frame/descriptions.jsonl:line=7"
-                }
-              ],
               "field": "definition"
             }
           ]

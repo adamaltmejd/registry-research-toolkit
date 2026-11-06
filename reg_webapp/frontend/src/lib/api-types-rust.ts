@@ -581,10 +581,6 @@ export interface components {
         };
         /** @enum {string} */
         IssueLevel: "error" | "warning" | "info";
-        Locator: {
-            input: string;
-            locator: string;
-        };
         LogicalOrder: {
             catalog: components["schemas"]["OrderCatalog"];
             /** @description Every period that cannot be delivered, also when the order succeeds. */
@@ -684,7 +680,6 @@ export interface components {
         /** @description One delivery behind this row. */
         Occurrence: {
             label: string | null;
-            locators: components["schemas"]["Locator"][];
             overrides: components["schemas"]["Override"][];
             period: components["schemas"]["Period"];
             release: components["schemas"]["Release"] | null;
@@ -896,7 +891,6 @@ export interface components {
         ProviderTextSource: {
             field?: string | null;
             label: string | null;
-            locators: components["schemas"]["Locator"][];
             period: components["schemas"]["Period"];
             source_key: string;
             spelling: string | null;

@@ -311,14 +311,6 @@ CREATE TABLE occurrence_population_valueset (
   PRIMARY KEY (occurrence_id, population_ord, valueset_id)
 ) STRICT, WITHOUT ROWID;
 
--- Which input rows stated an occurrence (merged population rows give several).
-CREATE TABLE occurrence_locator (
-  occurrence_id INTEGER NOT NULL REFERENCES occurrence(id),
-  input_id      INTEGER NOT NULL REFERENCES input(id),
-  locator       TEXT NOT NULL,            -- opaque: '<file>:row=12'
-  PRIMARY KEY (occurrence_id, input_id, locator)
-) STRICT, WITHOUT ROWID;
-
 -- Non-source winners. subject_kind names the table subject_id points into.
 CREATE TABLE override (
   subject_kind TEXT NOT NULL CHECK (subject_kind IN ('occurrence','table','release','variable','register','valueset','class_version','set')),

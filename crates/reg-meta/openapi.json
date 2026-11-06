@@ -2287,21 +2287,6 @@
           "info"
         ]
       },
-      "Locator": {
-        "type": "object",
-        "required": [
-          "input",
-          "locator"
-        ],
-        "properties": {
-          "input": {
-            "type": "string"
-          },
-          "locator": {
-            "type": "string"
-          }
-        }
-      },
       "LogicalOrder": {
         "type": "object",
         "required": [
@@ -2679,7 +2664,6 @@
           "label",
           "source_key",
           "status",
-          "locators",
           "overrides"
         ],
         "properties": {
@@ -2688,12 +2672,6 @@
               "string",
               "null"
             ]
-          },
-          "locators": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Locator"
-            }
           },
           "overrides": {
             "type": "array",
@@ -3391,8 +3369,7 @@
           "source_key",
           "spelling",
           "label",
-          "unit",
-          "locators"
+          "unit"
         ],
         "properties": {
           "field": {
@@ -3406,12 +3383,6 @@
               "string",
               "null"
             ]
-          },
-          "locators": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Locator"
-            }
           },
           "period": {
             "$ref": "#/components/schemas/Period"

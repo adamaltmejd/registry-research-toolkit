@@ -1033,8 +1033,11 @@ order file carries ids only.
 `show(ref, evidence=true)` adds `evidence`: provider definition/operational-definition
 texts use the same containment rule within each occurrence, then identical normalized
 texts are grouped with all their periods, preserving gaps. Each text retains its source
-occurrences: labels, units, periods, table, status, source keys, exact spellings and
-source locators. Occurrences without either text are kept in `source_only`. Evidence
+occurrences: labels, units, periods, table, status, source keys and exact spellings.
+The input rows behind an occurrence are build provenance and stay in the build: the
+catalog has no `occurrence_locator` table (maintainer 2026-11-06, #2335; about 68 MB at
+0.80.0, read by no curation workflow). Occurrences without either text are kept in
+`source_only`. Evidence
 also includes delivered/curated aliases; applied curation fields with statement
 file/line, evidence and caveat; and linked documents. Original provider text and
 spelling values are restored from override provenance when a correction exists,
@@ -1883,9 +1886,8 @@ the published pair (#2113): the `locator` columns of `holding_table`, `holding_c
 `holding_mapping` and `holding_notice`,
 `holding_reference_occurrence.locator`/`evidence`, and `meta.input_pins`. Both stay
 steward input: a locator on every decision locates compiler and verifier refusals, and
-the evidence on every reference occurrence records its review in the steward repo. The
-supplemental semantic part keeps the catalog schema but emits no `occurrence_locator`
-rows, since its source rows are steward working files. `meta.input_manifest_sha256` (one
+the evidence on every reference occurrence records its review in the steward repo.
+`meta.input_manifest_sha256` (one
 digest over the sorted `path\tsha256` pins) replaces the per-file pins; `steward_repo`,
 `steward_commit` and `steward_config` stay because `reg-build verify --steward-repo`
 needs them to admit the pinned checkout and recompute that digest. Build provenance for

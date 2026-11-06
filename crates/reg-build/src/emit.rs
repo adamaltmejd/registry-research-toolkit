@@ -81,9 +81,6 @@ pub struct Catalog {
     pub statements: Vec<StatementRow>,
     pub provenance: reg_resolve::provenance::Finalized,
     pub classifications: Vec<reg_resolve::curation::apply::Classification>,
-    /// False for a steward's supplemental build: its source rows are private working
-    /// files, so the published pair carries no `occurrence_locator` rows (#2113).
-    pub occurrence_locators: bool,
 }
 
 /// A cell before interning: text, folded names and spellings are resolved to row ids
@@ -746,19 +743,6 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                     Cell::Int(override_mask),
                 ],
             );
-            for locator in std::iter::once(&x.locator).chain(&x.also) {
-                if !catalog.occurrence_locators || curated_locators.contains(locator) {
-                    continue;
-                }
-                rows.push(
-                    "occurrence_locator",
-                    vec![
-                        Cell::Int(oid),
-                        Cell::Int(id(input_of(locator)?)),
-                        Cell::Str(format!("{}:{}", locator.input, locator.at)),
-                    ],
-                );
-            }
             for pv in &x.population_valuesets {
                 rows.push(
                     "occurrence_population_valueset",
