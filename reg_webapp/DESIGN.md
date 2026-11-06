@@ -368,7 +368,9 @@ side-project zone, chosen to keep the personal altmejd.se zone out of it.
 
 After the smoke gate passes, the entrypoint reads the served DBs into the page cache in
 the background (`nice cat`), so the site serves while the cache warms; the read ends
-with the container. The global boot allows 60 seconds (`REG_META_READY_DEADLINE`).
+with the container. The global boot allows 60 seconds (`REG_META_READY_DEADLINE`). The
+entrypoint caps glibc at two malloc arenas for the server, so the process stays near 100
+MB instead of climbing with each burst of requests (#2335).
 
 ### Rollback
 

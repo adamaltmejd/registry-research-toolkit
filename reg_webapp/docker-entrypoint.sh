@@ -46,7 +46,11 @@ fi
 REG_META_CONTENT_DIGEST=$(cat /opt/reg_webapp/content.sha256)
 REG_META_CATALOG_SHA256=$(cat /opt/reg_webapp/catalog.sha256)
 export REG_META_CONTENT_DIGEST REG_META_CATALOG_SHA256
-reg-meta "$@" &
+# `MALLOC_ARENA_MAX=2`: glibc gives each blocking-pool thread its own arena and keeps
+# what they free, so RSS climbs with every burst. Measured 2026-11-06 (0.80.0, 1 CPU /
+# 1 GB VM, six passes of the search/browse/MCP mix): 247 MB and still rising by
+# default, flat at about 100 MB with 2, same latency (#2335).
+MALLOC_ARENA_MAX=2 reg-meta "$@" &
 SERVER_PID=$!
 
 # If we exit before handing off (smoke failure / signal), don't leak the server.
