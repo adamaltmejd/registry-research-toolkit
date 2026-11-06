@@ -485,11 +485,14 @@ fn held_rows(
 ) -> Result<Vec<Row>, Error> {
     let placements = rows(
         extra,
-        "SELECT m.table_pid, c.name, m.start, m.end, h.physical_name, m.role
-         FROM holding_mapping m
-           JOIN holding_column c ON c.id = m.column_id
-           JOIN holding_table h ON h.id = c.holding_id
-         WHERE m.variable_pid = ?1 AND (?2 IS NULL OR m.table_pid = ?2)",
+        &format!(
+            "SELECT m.table_pid, c.name, m.start, m.end, {}, m.role
+             FROM holding_mapping m
+               JOIN holding_column c ON c.id = m.column_id
+               JOIN holding_table h ON h.id = c.holding_id
+             WHERE m.variable_pid = ?1 AND (?2 IS NULL OR m.table_pid = ?2)",
+            crate::holdings::TABLE_LABEL
+        ),
         rusqlite::params![variable, table],
         |row| {
             Ok((

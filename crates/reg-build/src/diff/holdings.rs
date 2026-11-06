@@ -1,7 +1,7 @@
 //! `reg-build diff --holdings OLD NEW`: what changed between two holdings catalogs
 //! (release step 8g; `crates/DESIGN.md`, "Release diff").
 //!
-//! Census columns are keyed by (physical table, column name), text and notices by the
+//! Census columns are keyed by (schema, physical table, column name), text and notices by the
 //! natural keys below, never by row id. Only counts and keys are printed: no text body
 //! and no census or storage value.
 
@@ -14,8 +14,9 @@ use crate::error::Result;
 
 /// (`table_pid`, `variable_pid`, start, end), the bounds as text.
 type Placement = (String, String, String, String);
-/// (schema-qualified table, column): a steward may hold one table name in two schemas.
-type Column = (String, String);
+/// (stored schema, physical table, column): a steward may hold one table name in two
+/// schemas, and a physical name may contain a dot, so the parts are never joined.
+type Column = (Option<String>, String, String);
 /// (code, subject key, start, end) -> occurrences.
 type Bag = BTreeMap<(String, String, String, String), i64>;
 
@@ -53,7 +54,7 @@ const TEXT: [(&str, &str); 6] = [
     ),
     (
         "mapping caveat",
-        "SELECT ifnull(t.schema_name || '.', '') || t.physical_name || '/' || c.name || ' ' || m.table_pid || ' ' || m.variable_pid || '@' || m.start || '-' || m.end, m.caveat FROM holding_mapping m JOIN holding_column c ON c.id = m.column_id JOIN holding_table t ON t.id = c.holding_id WHERE m.caveat IS NOT NULL",
+        "SELECT json_array(t.schema_name, t.physical_name) || '/' || c.name || ' ' || m.table_pid || ' ' || m.variable_pid || '@' || m.start || '-' || m.end, m.caveat FROM holding_mapping m JOIN holding_column c ON c.id = m.column_id JOIN holding_table t ON t.id = c.holding_id WHERE m.caveat IS NOT NULL",
     ),
 ];
 
@@ -122,28 +123,27 @@ fn placements(
     conn: &rusqlite::Connection,
 ) -> Result<BTreeMap<Column, (String, BTreeSet<Placement>)>> {
     let mut out: BTreeMap<Column, (String, BTreeSet<Placement>)> = BTreeMap::new();
-    for (table, column, disposition) in query(
+    for (table, disposition) in query(
         conn,
-        "SELECT ifnull(t.schema_name || '.', '') || t.physical_name, c.name, c.disposition FROM holding_column c \
+        "SELECT t.schema_name, t.physical_name, c.name, c.disposition FROM holding_column c \
          JOIN holding_table t ON t.id = c.holding_id",
-        |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)),
+        |r| Ok(((r.get(0)?, r.get(1)?, r.get(2)?), r.get(3)?)),
     )? {
-        out.insert((table, column), (disposition, BTreeSet::new()));
+        out.insert(table, (disposition, BTreeSet::new()));
     }
-    for (table, column, placement) in query(
+    for (column, placement) in query(
         conn,
-        "SELECT ifnull(t.schema_name || '.', '') || t.physical_name, c.name, m.table_pid, m.variable_pid, \
+        "SELECT t.schema_name, t.physical_name, c.name, m.table_pid, m.variable_pid, \
          ifnull(CAST(m.start AS TEXT), ''), ifnull(CAST(m.end AS TEXT), '') FROM holding_mapping m \
          JOIN holding_column c ON c.id = m.column_id JOIN holding_table t ON t.id = c.holding_id",
         |r| {
             Ok((
-                r.get::<_, String>(0)?,
-                r.get::<_, String>(1)?,
-                (r.get(2)?, r.get(3)?, r.get(4)?, r.get(5)?),
+                (r.get(0)?, r.get(1)?, r.get(2)?),
+                (r.get(3)?, r.get(4)?, r.get(5)?, r.get(6)?),
             ))
         },
     )? {
-        if let Some((_, set)) = out.get_mut(&(table, column)) {
+        if let Some((_, set)) = out.get_mut(&column) {
             set.insert(placement);
         }
     }
@@ -220,7 +220,7 @@ fn totals(old: &Census, new: &Census) -> Vec<Item> {
     let only = |a: &BTreeMap<Column, _>, b: &BTreeMap<Column, _>| -> Vec<Value> {
         a.keys()
             .filter(|k| !b.contains_key(*k))
-            .map(|(t, c)| json!({"table": t, "column": c}))
+            .map(|(s, t, c)| json!({"schema": s, "table": t, "column": c}))
             .collect()
     };
     for (name, list) in [
@@ -247,7 +247,7 @@ fn census(p: &Pair) -> Result<Vec<Section>> {
         let Some((nd, np)) = new.get(key) else {
             continue;
         };
-        let column = json!({"table": key.0, "column": key.1});
+        let column = json!({"schema": key.0, "table": key.1, "column": key.2});
         if op != np {
             let mut c = column;
             c["old"] = json!(op);
@@ -501,7 +501,7 @@ fn same_schema(p: &Pair, os: &(i64, Option<String>)) -> Result<Vec<Section>> {
          ifnull(CAST(f.start AS TEXT), ''), ifnull(CAST(f.end AS TEXT), '') FROM finding f \
          LEFT JOIN subject s ON s.kind = f.subject_kind AND s.id = f.subject_id"
     );
-    let notices_sql = "SELECT n.code, ifnull(t.schema_name || '.', '') || t.physical_name || '/' || ifnull(c.name, ''), \
+    let notices_sql = "SELECT n.code, json_array(t.schema_name, t.physical_name) || '/' || ifnull(c.name, ''), \
                        ifnull(CAST(n.start AS TEXT), ''), ifnull(CAST(n.end AS TEXT), '') \
                        FROM holding_notice n JOIN holding_table t ON t.id = n.holding_id \
                        LEFT JOIN holding_column c ON c.id = n.column_id";

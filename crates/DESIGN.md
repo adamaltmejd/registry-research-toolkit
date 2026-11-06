@@ -1717,8 +1717,12 @@ The compiled `file_name` of a schema-keyed table is the slug of `<schema>_<name>
 (`AFK_X` → `afk_x`), so two databases' tables of one name get distinct files; a
 name-keyed table's file name is the slug of its name as before. `holding_table` is
 unique on (`schema_name`, `physical_name`) from holdings schema 7.
-`reg-build diff --holdings` labels a table `<schema>.<name>` when it has a stored
-schema.
+`reg-build diff --holdings` keys a table by its stored schema and name as separate
+parts, never by a joined string. Readers (the held `file` of `segments` and order
+findings) name a table `<schema>.<name>` only when another held table has the same name,
+so a single-schema holder's names read unchanged; the order itself carries schema and
+table separately. A label can still coincide with a dotted physical name in another
+schema; the file name stays the unique handle.
 
 Ordinary supplemental curation records its locks with
 `reg-build lock --base <catalog> --inputs <steward-repo> --curation <steward-repo>/curation`.
