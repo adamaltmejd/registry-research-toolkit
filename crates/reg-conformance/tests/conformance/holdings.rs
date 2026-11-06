@@ -218,6 +218,49 @@ fn renamed_physical_column_matches_its_catalog_name() {
 }
 
 #[test]
+fn variable_rename_places_every_documented_spelling() {
+    // Fails if a `variable` rename resolves its FQID to one spelling and folds by it:
+    // `demo/held/value` is spelled `Old` to 2018 and `New` from 2019, so a single
+    // spelling places only one of the Pool's two intervals. The expected placements are
+    // the unmodified pair's for its physical `Old` and `New` together.
+    let mapped = |db: &Path, names: &str| {
+        column(
+            db,
+            &format!(
+                "SELECT m.table_pid||' '||m.variable_pid||' '||m.start||' '||m.end
+                 FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id
+                 JOIN holding_table t ON t.id=c.holding_id
+                 WHERE t.physical_name='Pool' AND c.name IN ({names}) ORDER BY 1"
+            ),
+        )
+    };
+    let original = mapped(
+        &steward::pair().unwrap().dir.join("reg_meta_fixture.db"),
+        "'Old','New'",
+    );
+    let dir = Scratch::new("census-variable-rename").unwrap();
+    let root = locked_copy(dir.path()).unwrap();
+    edit(&root.join("census.csv"), ",Old,New,", ",Value,,", false).unwrap();
+    let storage = root.join("storage.csv");
+    edit(
+        &storage,
+        "Pool,BASE TABLE,Old,",
+        "Pool,BASE TABLE,Value,",
+        false,
+    )
+    .unwrap();
+    edit(&storage, "dbo,Pool,BASE TABLE,New,int,,10,0,3\n", "", false).unwrap();
+    append(
+        &root.join("curation/readers/holdings.toml"),
+        "\n[[rename]]\nphysical = \"Value\"\nvariable = \"demo/held/value\"\nevidence = \"Synthetic census drops the spelling change.\"\n",
+    )
+    .unwrap();
+    let out = dir.path().join("variable.db");
+    compile(dir.path(), &out).ok();
+    assert_eq!(mapped(&out, "'Value'"), original);
+}
+
+#[test]
 fn schema_keyed_census_holds_one_name_in_two_schemas() {
     // Fails if a schema-keyed census still keys tables by name (the aux twin of
     // Excluded refuses as a duplicate, or the unique physical name refuses it at
