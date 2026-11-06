@@ -14,6 +14,10 @@
       "$ref": "#/$defs/ProjectExtractFormat",
       "description": "The extract file format. Absent means the order authoring default, `dta`, which\nthe order file resolves; it is never inserted here. An explicit `null` is\n`invalid_field_type`."
     },
+    "linkage": {
+      "$ref": "#/$defs/ProjectLinkage",
+      "description": "The steward database the order draws from. Required by a steward with more\nthan one database; a steward with one needs none. An explicit `null` is\n`invalid_field_type`."
+    },
     "name": {
       "type": "string"
     },
@@ -100,6 +104,20 @@
         "parquet",
         "csv"
       ]
+    },
+    "ProjectLinkage": {
+      "type": "object",
+      "description": "Which of a steward's databases (its linkage spaces) an order draws from: the tables\nof one database share a person key, so one order comes from one.",
+      "required": [
+        "database"
+      ],
+      "properties": {
+        "database": {
+          "type": "string",
+          "description": "A database id from the steward's `steward_config.spaces`."
+        }
+      },
+      "additionalProperties": false
     },
     "ProjectPanel": {
       "type": "object",

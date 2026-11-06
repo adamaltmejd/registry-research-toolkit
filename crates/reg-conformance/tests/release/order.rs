@@ -18,7 +18,8 @@ const MCP_TABLES: usize = 3;
 
 /// One sampled table: its project and what the census expects of its order.
 struct Sampled {
-    pid: String,
+    /// The table pid, and its database on a steward pair.
+    label: String,
     project: Value,
     bindings: usize,
     /// Whether the table also orders through MCP.
@@ -66,7 +67,7 @@ fn sampled_whole_table_orders_agree_with_census() {
     run_all(
         "release order",
         &sampled,
-        |table| table.pid.clone(),
+        |table| table.label.clone(),
         |table| check(port, table, open_start),
     );
 }
@@ -180,25 +181,27 @@ fn order(port: u16, project: &Value) -> Result<client::Response, String> {
     )
 }
 
-/// The tables to sample from, by pid: every table, or on a steward pair the reference
-/// tables the holdings place something in.
-fn candidates(db: &Connection, holdings: Option<&Connection>) -> Vec<String> {
-    let all = rows(db, "SELECT pid FROM tbl ORDER BY pid", [], |r| r.get(0));
+/// The tables to sample from, by pid: every table, or on a steward pair each reference
+/// table the holdings place something in, once per database that places it (an order
+/// draws from one database: crates/DESIGN.md, "Linkage spaces").
+fn candidates(db: &Connection, holdings: Option<&Connection>) -> Vec<(String, Option<String>)> {
+    let all: Vec<String> = rows(db, "SELECT pid FROM tbl ORDER BY pid", [], |r| r.get(0));
     let Some(holdings) = holdings else {
-        return all;
+        return all.into_iter().map(|pid| (pid, None)).collect();
     };
     let reference: HashSet<String> = all.into_iter().collect();
     rows(
         holdings,
-        "SELECT DISTINCT table_pid FROM holding_mapping ORDER BY table_pid",
+        "SELECT DISTINCT m.table_pid, h.space FROM holding_mapping m
+         JOIN holding_column c ON c.id = m.column_id JOIN holding_table h ON h.id = c.holding_id
+         ORDER BY m.table_pid, h.space",
         [],
-        |r| r.get(0),
+        |r| Ok((r.get(0)?, Some(r.get(1)?))),
     )
     .into_iter()
-    .filter(|pid| reference.contains(pid))
+    .filter(|(pid, _)| reference.contains(pid))
     .collect()
 }
-
 /// The sampled tables, read from the artifact alone (plus the steward's holdings file
 /// when one is served), and `meta`'s `open_start`.
 ///
@@ -207,14 +210,16 @@ fn candidates(db: &Connection, holdings: Option<&Connection>) -> Vec<String> {
 /// is blocked, so a sample of all tables would leave the order checks covering little.
 fn census(db: &Connection, holdings: Option<&Connection>) -> (Vec<Sampled>, i64) {
     let pids = candidates(db, holdings);
-    let key_pairs: HashSet<(String, String)> = holdings
+    // (table, variable, database) of every row-key placement.
+    let key_pairs: HashSet<(String, String, String)> = holdings
         .map(|h| {
             rows(
                 h,
-                "SELECT DISTINCT table_pid, variable_pid FROM holding_mapping
-                 WHERE role = 'row_key'",
+                "SELECT DISTINCT m.table_pid, m.variable_pid, h.space FROM holding_mapping m
+                 JOIN holding_column c ON c.id = m.column_id
+                 JOIN holding_table h ON h.id = c.holding_id WHERE m.role = 'row_key'",
                 [],
-                |r| Ok((r.get(0)?, r.get(1)?)),
+                |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)),
             )
         })
         .unwrap_or_default()
@@ -226,7 +231,8 @@ fn census(db: &Connection, holdings: Option<&Connection>) -> (Vec<Sampled>, i64)
     let first = reg_core::iso_day_number("1900-01-01").expect("a date");
     let last = reg_core::iso_day_number("2100-01-01").expect("a date");
     let mut sampled = Vec::new();
-    for pid in pids.iter().step_by(step).take(SAMPLE) {
+    for (pid, space) in pids.iter().step_by(step).take(SAMPLE) {
+        let in_space = space.clone().unwrap_or_default();
         let (table_id, timeless, lo, hi): (i64, bool, i64, i64) = db
             .query_row(
                 "SELECT t.id, t.timeless, min(s.start), max(s.end)
@@ -245,16 +251,7 @@ fn census(db: &Connection, holdings: Option<&Connection>) -> (Vec<Sampled>, i64)
                 Some((lo, hi)),
             )
         };
-        let placed: Option<HashSet<String>> = holdings.map(|h| {
-            rows(
-                h,
-                "SELECT DISTINCT variable_pid FROM holding_mapping WHERE table_pid = ?1",
-                [pid],
-                |r| r.get(0),
-            )
-            .into_iter()
-            .collect()
-        });
+        let placed = holdings.map(|h| placed(h, pid, &in_space));
         let variables: Vec<String> = rows(
             db,
             "SELECT DISTINCT v.pid FROM segment s JOIN variable v ON v.id = s.variable_id
@@ -285,8 +282,9 @@ fn census(db: &Connection, holdings: Option<&Connection>) -> (Vec<Sampled>, i64)
         // `key_requirements` as the server does.
         let joins = |s: &Segment| {
             s.role.as_deref() == Some("row_key")
-                && holdings
-                    .is_none_or(|_| key_pairs.contains(&(s.table.clone(), s.variable.clone())))
+                && holdings.is_none_or(|_| {
+                    key_pairs.contains(&(s.table.clone(), s.variable.clone(), in_space.clone()))
+                })
         };
         let covered: HashSet<&str> = segments.iter().map(|s| s.variable.as_str()).collect();
         let mut blocked = segments.iter().any(|s| {
@@ -296,11 +294,13 @@ fn census(db: &Connection, holdings: Option<&Connection>) -> (Vec<Sampled>, i64)
         if let Some(holdings) = holdings
             && !blocked
         {
-            blocked = unheld(holdings, &variables, &segments);
+            blocked = unheld(holdings, &in_space, &variables, &segments);
         }
         sampled.push(Sampled {
-            pid: pid.clone(),
-            project: project(pid, &period, &variables),
+            label: space
+                .as_ref()
+                .map_or_else(|| pid.clone(), |space| format!("{pid} in {space}")),
+            project: project(pid, space.as_deref(), &period, &variables),
             bindings: variables.len(),
             mcp: sampled.len() < MCP_TABLES,
             blocked,
@@ -414,14 +414,16 @@ fn serving(db: &Connection, table_id: i64) -> Vec<(i64, String, Option<i64>, Opt
         .collect()
 }
 
-/// Whether the steward's holdings leave a bound variable `mapping_missing` over its
-/// clipped segments (the logical order's entries), read from the holdings file alone:
-/// either no `holding_mapping` row places any day of the variable's entries, or a day
+/// Whether the steward's holdings in database `space` leave a bound variable blocked
+/// (`mapping_missing`, or `not_in_database` when only another database places it) over
+/// its clipped segments (the logical order's entries), read from the holdings file
+/// alone: either no `holding_mapping` row of the database's tables places any day of
+/// the variable's entries, or a day
 /// no mapping places lies in an `ambiguous_delivered_owners` notice naming it. Partial
 /// coverage only warns. A projection's copy of its parent's days is dropped by the
 /// server but never empties a held variable, so it is not modelled here
 /// (crates/reg-catalog/src/ops/order/materialize.rs, `gaps` and `clip`).
-fn unheld(holdings: &Connection, variables: &[String], segments: &[Segment]) -> bool {
+fn unheld(holdings: &Connection, space: &str, variables: &[String], segments: &[Segment]) -> bool {
     let mut held: HashMap<&str, bool> = variables.iter().map(|v| (v.as_str(), false)).collect();
     let mut contested = false;
     for segment in segments {
@@ -430,12 +432,17 @@ fn unheld(holdings: &Connection, variables: &[String], segments: &[Segment]) -> 
         };
         let (lo, hi) = (segment.start, segment.end);
         let windows = |sql: &str| -> Vec<(i64, i64)> {
-            rows(holdings, sql, [&segment.table, &segment.variable], |r| {
-                Ok((r.get(0)?, r.get(1)?))
-            })
+            rows(
+                holdings,
+                sql,
+                [&segment.table, &segment.variable, space],
+                |r| Ok((r.get(0)?, r.get(1)?)),
+            )
         };
         let mut placed: Vec<(i64, i64)> = windows(
-            "SELECT start, end FROM holding_mapping WHERE table_pid = ?1 AND variable_pid = ?2",
+            "SELECT m.start, m.end FROM holding_mapping m
+             JOIN holding_column c ON c.id = m.column_id JOIN holding_table h ON h.id = c.holding_id
+             WHERE m.table_pid = ?1 AND m.variable_pid = ?2 AND h.space = ?3",
         )
         .into_iter()
         .filter(|&(a, z)| a < hi && z > lo)
@@ -458,6 +465,7 @@ fn unheld(holdings: &Connection, variables: &[String], segments: &[Segment]) -> 
             let notices = windows(
                 "SELECT n.start, n.end FROM holding_notice n
                  JOIN holding_notice_candidate c ON c.notice_id = n.id
+                 JOIN holding_table h ON h.id = n.holding_id AND h.space = ?3
                  WHERE n.code = 'ambiguous_delivered_owners' AND n.start IS NOT NULL
                  AND c.table_pid = ?1 AND c.variable_pid = ?2",
             );
@@ -469,9 +477,24 @@ fn unheld(holdings: &Connection, variables: &[String], segments: &[Segment]) -> 
     contested || !held.values().all(|&h| h)
 }
 
-fn project(pid: &str, period: &Value, variables: &[String]) -> Value {
-    json!({
-        "schema_version": "6.0.0",
+/// The variables the tables of database `space` place in table `pid`.
+fn placed(holdings: &Connection, pid: &str, space: &str) -> HashSet<String> {
+    rows(
+        holdings,
+        "SELECT DISTINCT m.variable_pid FROM holding_mapping m
+         JOIN holding_column c ON c.id = m.column_id JOIN holding_table h ON h.id = c.holding_id
+         WHERE m.table_pid = ?1 AND h.space = ?2",
+        [pid, space],
+        |r| r.get(0),
+    )
+    .into_iter()
+    .collect()
+}
+
+/// The whole-table project; on a steward pair it names the sampled database.
+fn project(pid: &str, space: Option<&str>, period: &Value, variables: &[String]) -> Value {
+    let mut project = json!({
+        "schema_version": "6.1.0",
         "reg_meta_version": "0.64.0",
         "name": "Release order",
         "sources": [{
@@ -483,5 +506,9 @@ fn project(pid: &str, period: &Value, variables: &[String]) -> Value {
                 .map(|v| json!({"variable": v}))
                 .collect::<Vec<_>>(),
         }],
-    })
+    });
+    if let Some(space) = space {
+        project["linkage"] = json!({ "database": space });
+    }
+    project
 }

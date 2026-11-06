@@ -1,8 +1,8 @@
 {
-  "note": "`typ` 2020 types `Belopp` int, `Namn` char and `Okand` unspecified (published as unknown). Each binding states a type: `text` on Belopp differs from the catalog's integer, `text` on Namn agrees, `integer` on Okand fills an unknown type. Fails if Belopp stops getting exactly one non-blocking `binding_type_differs` at the binding over 2020 naming both types, if an agreeing override or one on an unknown catalog type gets one, or if an override changes an entry's catalog `type`. Oracle: the fixture's JSONL and the 6.0.0 binding `type` (maintainer G10).",
+  "note": "`typ` 2020 types `Belopp` int, `Namn` char and `Okand` unspecified (published as unknown). Each binding states a type: `text` on Belopp differs from the catalog's integer, `text` on Namn agrees, `integer` on Okand fills an unknown type. Fails if Belopp stops getting exactly one non-blocking `binding_type_differs` at the binding over 2020 naming both types, if an agreeing override or one on an unknown catalog type gets one, or if an override changes an entry's catalog `type`. Oracle: the fixture's JSONL and the 6.1.0 binding `type` (maintainer G10).",
   "fixture": "orders",
   "project": {
-    "schema_version": "6.0.0",
+    "schema_version": "6.1.0",
     "reg_meta_version": "0.76.0",
     "name": "Order case",
     "sources": [

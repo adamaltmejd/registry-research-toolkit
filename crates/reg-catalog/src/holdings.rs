@@ -398,6 +398,12 @@ impl Catalog {
         })
     }
 
+    /// The admitted steward's linkage spaces in config order: one for a steward that
+    /// declares none. Absent in reference-only mode.
+    pub(crate) fn spaces(&self) -> Option<&[Space]> {
+        self.holdings.as_ref().map(|h| h.spaces.as_slice())
+    }
+
     /// The steward's presentation and logo, served from the admitted artifact;
     /// runtime never reads the steward repository.
     pub(crate) fn steward_config(&self) -> Option<serde_json::Value> {

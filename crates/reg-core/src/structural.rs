@@ -28,7 +28,7 @@ use crate::project::{ColumnType, ExtractFormat};
 use crate::validation::{IssueLevel, ValidationIssue, ValidationResult};
 
 const PROJECT_REQUIRED: [&str; 4] = ["schema_version", "reg_meta_version", "name", "sources"];
-const PROJECT_OPTIONAL: [&str; 3] = ["panels", "window", "extract_format"];
+const PROJECT_OPTIONAL: [&str; 4] = ["panels", "window", "extract_format", "linkage"];
 const SOURCE_KEYS: [&str; 4] = ["name", "table", "period", "bindings"];
 const BINDING_KEYS: [&str; 5] = [
     "variable",
@@ -39,6 +39,7 @@ const BINDING_KEYS: [&str; 5] = [
 ];
 const PANEL_KEYS: [&str; 3] = ["panel_id", "members", "comment"];
 const WINDOW_KEYS: [&str; 2] = ["from", "to"];
+const LINKAGE_KEYS: [&str; 1] = ["database"];
 
 const PERIOD_FORMS: &str =
     "(YYYY, YYYY-MM, YYYY-MM-DD, HTYYYY, VTYYYY, LA<YYYY>, YYYY-Q[1-4], YYYY-H[12])";
@@ -57,6 +58,7 @@ pub fn validate_structural(data: &Value) -> ValidationResult {
         Some(root) => {
             check_top_level(root, &mut issues);
             check_window(get(root, "window"), &mut issues);
+            check_linkage(get(root, "linkage"), &mut issues);
             check_sources(get(root, "sources"), &mut issues);
             check_panels(get(root, "panels"), get(root, "sources"), &mut issues);
         }
@@ -430,6 +432,22 @@ fn check_top_level(root: &Map<String, Value>, issues: &mut Issues) {
             ),
         );
     }
+}
+
+/// The optional `linkage`: a closed `{"database": <string>}`. Whether the database is
+/// one of the steward's is a holdings rule (`database_unknown`).
+fn check_linkage(linkage: Option<&Value>, issues: &mut Issues) {
+    let Some(linkage) = linkage else { return };
+    let Some(map) = linkage.as_object() else {
+        issues.error(
+            "invalid_field_type",
+            "/linkage".into(),
+            "linkage must be an object {'database': <id>}".into(),
+        );
+        return;
+    };
+    check_unexpected_keys(map, &LINKAGE_KEYS, "/linkage", "linkage", issues);
+    required_string(map, "database", "/linkage", "linkage 'database'", issues);
 }
 
 /// The optional study window: a closed `{"from", "to"}` of int years, `to >= from`.

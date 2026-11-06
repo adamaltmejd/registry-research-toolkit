@@ -1,5 +1,5 @@
 {
-  "schema_version": "6.0.0",
+  "schema_version": "6.1.0",
   "reg_meta_version": "reg_meta/v1.0.0",
   "name": "every_documented_field",
   "window": {
@@ -7,6 +7,9 @@
     "to": 2019
   },
   "extract_format": "parquet",
+  "linkage": {
+    "database": "u"
+  },
   "sources": [
     {
       "name": "lisa_2018",

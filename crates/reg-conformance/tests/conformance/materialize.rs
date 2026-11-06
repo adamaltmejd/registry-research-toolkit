@@ -151,3 +151,90 @@ fn unnamed_project_is_a_logical_draft_but_no_order_file() {
         client::json(port, "POST", "/api/project/order", &[], Some(&project)).unwrap();
     assert_eq!(status, 200);
 }
+
+#[test]
+fn an_order_draws_from_one_database() {
+    // On a steward with two databases (`steward::spaces`: Part A copied into `aux`).
+    // Fails if a project without `linkage` is not refused with `database_required`; if
+    // a project merged from two databases' projects (demo/held 2020 is only in Pool,
+    // in `main`) orders instead of refusing that binding with `not_in_database` naming
+    // the database that holds it; or if placement ignores the chosen database (the
+    // `aux` order then also takes main's Part A and Part B), or if the logical order's row
+    // keys ignore it (aux's Part A is keyed on New, main's tables on Id).
+    let port = steward::spaces().unwrap();
+    let source = |name: &str, period: i64| {
+        json!({"name": name, "table": "demo/held", "period": period,
+               "bindings": [{"variable": "demo/held/value"}]})
+    };
+    let mut project = json!({
+        "schema_version": reg_core::project::SCHEMA_VERSION,
+        "reg_meta_version": "0.79.0",
+        "name": "Two databases",
+        "sources": [source("late", 2021)],
+    });
+    let codes = |findings: &Value| -> Vec<(String, String)> {
+        findings
+            .as_array()
+            .unwrap()
+            .iter()
+            .filter(|f| f["level"] == "error")
+            .map(|f| {
+                (
+                    f["code"].as_str().unwrap().into(),
+                    f["path"].as_str().unwrap().into(),
+                )
+            })
+            .collect()
+    };
+    for route in [ROUTE, "/api/project/order"] {
+        let (status, refused) = client::json(port, "POST", route, &[], Some(&project)).unwrap();
+        assert_eq!(status, 422, "{route}: {refused}");
+        assert_eq!(
+            codes(&refused["error"]["fields"]["findings"]),
+            [("database_required".into(), "/linkage".into())],
+            "{route}: {refused}"
+        );
+    }
+    let (_, validated) =
+        client::json(port, "POST", "/api/project/validate", &[], Some(&project)).unwrap();
+    assert_eq!(
+        codes(&validated["data"]["issues"]),
+        [("database_required".into(), "/linkage".into())],
+        "{validated}"
+    );
+
+    project["linkage"] = json!({"database": "aux"});
+    project["sources"] = json!([source("late", 2021), source("early", 2020)]);
+    let (status, refused) = client::json(port, "POST", ROUTE, &[], Some(&project)).unwrap();
+    assert_eq!(status, 422, "{refused}");
+    let findings = &refused["error"]["fields"]["findings"];
+    assert_eq!(
+        codes(findings),
+        [("not_in_database".into(), "/sources/1/bindings/0".into())],
+        "{refused}"
+    );
+    let message = findings[0]["message"].as_str().unwrap();
+    assert!(message.contains("It is in: Main database."), "{message}");
+
+    project["sources"] = json!([source("late", 2021)]);
+    let (status, ordered) = client::json(port, "POST", ROUTE, &[], Some(&project)).unwrap();
+    assert_eq!(status, 200, "{ordered}");
+    let files: Vec<(&str, &str)> = ordered["data"]["files"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|f| (f["schema"].as_str().unwrap(), f["table"].as_str().unwrap()))
+        .collect();
+    assert_eq!(files, [("aux", "Part A")], "{ordered}");
+    let (status, logical) =
+        client::json(port, "POST", "/api/project/order", &[], Some(&project)).unwrap();
+    assert_eq!(status, 200, "{logical}");
+    let keys: Vec<&str> = logical["data"]["row_keys"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .flat_map(|k| k["columns"].as_array().unwrap())
+        .map(|c| c["variable"].as_str().unwrap())
+        .collect();
+    assert_eq!(keys, ["demo/held/value"], "{logical}");
+}

@@ -846,6 +846,12 @@ export interface components {
              *     `invalid_field_type`.
              */
             extract_format?: components["schemas"]["ProjectExtractFormat"];
+            /**
+             * @description The steward database the order draws from. Required by a steward with more
+             *     than one database; a steward with one needs none. An explicit `null` is
+             *     `invalid_field_type`.
+             */
+            linkage?: components["schemas"]["ProjectLinkage"];
             name: string;
             panels?: components["schemas"]["ProjectPanel"][];
             reg_meta_version: string;
@@ -861,6 +867,14 @@ export interface components {
             /** @description A hash of the project document. */
             project_hash: string;
             schema_version: string;
+        };
+        /**
+         * @description Which of a steward's databases (its linkage spaces) an order draws from: the tables
+         *     of one database share a person key, so one order comes from one.
+         */
+        ProjectLinkage: {
+            /** @description A database id from the steward's `steward_config.spaces`. */
+            database: string;
         };
         /** @description A panel over sources. */
         ProjectPanel: {

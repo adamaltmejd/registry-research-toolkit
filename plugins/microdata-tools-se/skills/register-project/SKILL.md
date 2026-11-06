@@ -19,7 +19,7 @@ the `register-metadata-search` skill.
 
 ## Drafting a project
 
-1. Set the document's `schema_version` to `"6.0.0"`. Set `reg_meta_version` (required)
+1. Set the document's `schema_version` to `"6.1.0"`. Set `reg_meta_version` (required)
    to the serving catalog's release tag, `reg_meta/vX.Y.Z`. Read `meta.catalog_version`
    from a catalog tool response and format its release version `X.Y.Z` as that tag. If
    it is not a release version (for example, `dev`), ask which catalog release to use.
@@ -40,14 +40,22 @@ the `register-metadata-search` skill.
    the read tools: `{"from": 2015, "to": 2019}` is a range, `[2015, 2019]` is two
    separate years, `2019` is one year. A range string such as `"2015..2019"` is refused
    with `invalid_period`.
-4. Call `order` with `operation: "validate"` and the document as `project`. Fix every
+4. A data holder whose data sits in several databases, each with its own person key,
+   needs `"linkage": {"database": "<id>"}`: `validate` names the databases in a
+   `database_required` error, and `segments` gives each held row its `space`, the id of
+   the database the column is in. One project draws from one database. A variable that
+   database lacks is a `not_in_database` error naming the databases that have it. Never
+   merge two databases into one project: make a separate project for each database. The
+   researcher joins the extracts later, outside this toolkit. A data holder with one
+   database needs no `linkage`.
+5. Call `order` with `operation: "validate"` and the document as `project`. Fix every
    issue whose `level` is `error` and validate again until `ok` is true; report the
    warnings to the user.
-5. Save the file as `project_data.json`.
+6. Save the file as `project_data.json`.
 
 ## Questions about my project
 
-1. Read the user's `project_data.json`. If its `schema_version` is not `"6.0.0"`, say so
+1. Read the user's `project_data.json`. If its `schema_version` is not `"6.1.0"`, say so
    and stop: the server reads one version exactly.
 2. Call `order` with `operation: "order"` and the document as `project`. It returns the
    logical order: per source, the table, the period and the entries, each with the

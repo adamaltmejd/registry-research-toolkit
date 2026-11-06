@@ -27,6 +27,11 @@ literal kind namespaces; malformed forms cannot resolve as another kind.
   file resolves; the default is never written into the project. The structural layer
   refuses a non-string, including explicit `null` (`invalid_field_type`), and a string
   outside the three (`invalid_enum_value`).
+- **`linkage`** is an optional top-level closed object (contract 6.1.0 on),
+  `{"database": <string>}`: the steward database the order draws from. The structural
+  layer checks the shape only; whether the steward needs one and whether the id is one
+  of its databases are holdings findings (`database_required`, `database_unknown`,
+  `not_in_database`; [../DESIGN.md](../DESIGN.md), "Linkage spaces").
 - **`Binding.follow_successor`** is an optional boolean in contract 5.1.0. Absent or
   false orders only the named variable. True permits the catalog order layer to extend
   along `continues` successors after that variable ends; the precise chain and refusal

@@ -431,6 +431,9 @@ pub fn check(
     if held.is_some() {
         server.catalog.attach_holdings(&conn)?;
     }
+    // Row keys come from the chosen database's tables, as the files do; its findings
+    // are the holdings stage's to report.
+    let space = materialize::database(server, project).0;
     let mut findings = Vec::new();
     let mut entries = Vec::new();
     let mut row_keys = Vec::new();
@@ -445,7 +448,15 @@ pub fn check(
             }
             _ => (&conn, held.is_some()),
         };
-        let checked = check_source(server, origin, &conn, composed, index, source)?;
+        let checked = check_source(
+            server,
+            origin,
+            &conn,
+            space.as_deref(),
+            composed,
+            index,
+            source,
+        )?;
         findings.extend(checked.findings);
         entries.extend(checked.entries);
         row_keys.extend(checked.row_keys);
@@ -556,6 +567,7 @@ fn check_source(
     server: &Server,
     conn: &Connection,
     keys: &Connection,
+    space: Option<&str>,
     composed: bool,
     index: usize,
     source: &Source,
@@ -656,7 +668,7 @@ fn check_source(
     if !followed.is_empty() {
         serving = combine_serving(serving, followed);
     }
-    let (row_keys, mut keyed) = rows::row_keys(server, keys, index, source, &serving)?;
+    let (row_keys, mut keyed) = rows::row_keys(server, keys, space, index, source, &serving)?;
     rows::unbound(&mut keyed, &checked.findings);
     keyed.sort_by_key(Issue::key);
     checked.findings.extend(keyed);
