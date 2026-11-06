@@ -514,7 +514,7 @@ CREATE TABLE search_item (
 ) STRICT;
 
 CREATE VIRTUAL TABLE search USING fts5(
-  name, label, body,                      -- pid + spellings; labels + synonyms; definitions
+  name, label, body,                      -- pid + spellings; labels; definitions
   content = '',
   tokenize = 'unicode61 remove_diacritics 2',
   prefix = '2 3'
