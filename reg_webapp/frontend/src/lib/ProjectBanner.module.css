@@ -99,15 +99,18 @@ a.verdict {
   color: inherit;
 }
 /* A check that did not run says nothing about the project: plain, like
-   Checking, but a link to /project's Retry. */
+   Checking, but a link to /project's Retry. A database not yet chosen is a
+   choice to make, not an error: plain too, a link to the check section, whose info row asks for it. */
 .status[data-status="checking"] > .verdict,
 .status[data-status="empty"] > .verdict,
+.status[data-status="database"] > .verdict,
 .status[data-status="unchecked"] > .verdict {
   color: var(--text-muted);
   font-weight: var(--body-weight);
 }
 .status[data-status="checking"],
 .status[data-status="empty"],
+.status[data-status="database"],
 .status[data-status="unchecked"] {
   color: var(--text-muted);
 }

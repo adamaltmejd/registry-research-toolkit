@@ -254,27 +254,27 @@ holds. Screens use the researcher's words, never the catalog's internal model
 (maintainer 2026-11-04, #2066). The steward's own name, description and order
 instructions come from `/api/context`, never from code.
 
-  | Say                                                              | Not                                    |
-  | ---------------------------------------------------------------- | -------------------------------------- |
-  | (nothing: everything shown is held)                              | held, holdings, held matches           |
-  | (nothing: the timeline shows it)                                 | segments, census                       |
-  | Column name                                                      | spelling                               |
-  | Description                                                      | provider wording                       |
-  | Years                                                            | coverage                               |
-  | Years to add                                                     | add window                             |
-  | Study years                                                      | study window                           |
-  | Topics                                                           | tags                                   |
-  | Group                                                            | groups, part of                        |
-  | Notes on this data                                               | findings, data warnings                |
-  | Row identifier                                                   | row keys                               |
-  | Classification, version                                          | class family, vintage                  |
-  | Table (in a project)                                             | source                                 |
-  | Column, variable                                                 | binding                                |
-  | Check                                                            | draft check, catalog check             |
-  | Years not available                                              | period adjustments, clips              |
-  | Ready to order, Has warnings, Has problems, Can't be ordered yet | valid, warnings, errors, order blocked |
-  | Check did not run                                                | check failed, error, unchecked         |
-  | Database                                                         | linkage space, schema, category        |
+  | Say                                                               | Not                                    |
+  | ----------------------------------------------------------------- | -------------------------------------- |
+  | (nothing: everything shown is held)                               | held, holdings, held matches           |
+  | (nothing: the timeline shows it)                                  | segments, census                       |
+  | Column name                                                       | spelling                               |
+  | Description                                                       | provider wording                       |
+  | Years                                                             | coverage                               |
+  | Years to add                                                      | add window                             |
+  | Study years                                                       | study window                           |
+  | Topics                                                            | tags                                   |
+  | Group                                                             | groups, part of                        |
+  | Notes on this data                                                | findings, data warnings                |
+  | Row identifier                                                    | row keys                               |
+  | Classification, version                                           | class family, vintage                  |
+  | Table (in a project)                                              | source                                 |
+  | Column, variable                                                  | binding                                |
+  | Check                                                             | draft check, catalog check             |
+  | Years not available                                               | period adjustments, clips              |
+  | Ready to download, Has warnings, Has problems, Can't download yet | valid, warnings, errors, order blocked |
+  | Check did not run                                                 | check failed, error, unchecked         |
+  | Database                                                          | linkage space, schema, category        |
 
 **Type** is one list for every screen, the catalog's types in plain words: Whole number,
 Decimal number, Text, Date, Date and time, Yes or no, Geometry, UUID, Binary, Identifier
@@ -896,25 +896,27 @@ grow new visual language meanwhile.
   and column counts, the verdict, save state — on `accent-soft` with a 1 px `border`
   hairline and a 3 px `accent` leading bar. The name is `h3`, the counts `mono` ("1
   table, 2 columns"). The verdict is the project page's, in the same words (see Project
-  page), and leads with its glyph: "✓ Ready to order" in `ok`, "▲ Has warnings" in
-  `warn`, "✕ Has problems" or "✕ Can't be ordered yet" in `err`; not yet checked or in
+  page), and leads with its glyph: "✓ Ready to download" in `ok`, "▲ Has warnings" in
+  `warn`, "✕ Has problems" or "✕ Can't download yet" in `err`; not yet checked or in
   flight it is a plain `text-muted` "Checking" with no glyph; a draft with no tables yet
   is the same plain "Empty", never an error, since nothing has gone wrong. A check that
   did not run (a rate limit, the network) is the same plain "Check did not run", never
-  "Has problems": it says nothing about the project. Its slot is as wide as the widest
-  verdict, so the banner keeps one size while the check runs. A verdict /project
-  explains (Has warnings, Has problems, Can't be ordered yet with their findings, Check
-  did not run with Retry) is a link, in its status hue with the link's `accent` rule, to
-  the verdict on /project, which takes focus; Ready to order and Checking stay plain
-  text. Unsaved changes are a quiet `mono` `text-muted` "unsaved", never a status hue.
-  The study window, labelled "Study years", is the period picker: an inline two-thumb
-  RAC `Slider` (no popover) bounded by the viewed catalog's first and last year, drawn
-  as the Timeline's study-window band (see Time: `accent-bg` between `accent` bounds,
-  the thumbs on those bounds) on a `surface` strip, its years an `accent-ink` `mono`
-  readout, with a "Clear" ghost action; the label, the readout and Clear keep one line.
-  With no project open it is the same box, empty and untinted with a `border` leading
-  bar, holding a `default` "Create a project" Button, which starts a project and opens
-  it, and nothing in the catalog is tinted.
+  "Has problems": it says nothing about the project. A database not yet chosen, when
+  nothing else is wrong, is the same plain "Choose a database", never an error
+  (maintainer, #2345), and links to /project. Its slot is as wide as the widest verdict,
+  so the banner keeps one size while the check runs. A verdict /project explains (Has
+  warnings, Has problems, Can't download yet with their findings, Check did not run with
+  Retry, Choose a database) is a link, in its status hue with the link's `accent` rule,
+  to the verdict on /project, which takes focus; Ready to download and Checking stay
+  plain text. Unsaved changes are a quiet `mono` `text-muted` "unsaved", never a status
+  hue. The study window, labelled "Study years", is the period picker: an inline
+  two-thumb RAC `Slider` (no popover) bounded by the viewed catalog's first and last
+  year, drawn as the Timeline's study-window band (see Time: `accent-bg` between
+  `accent` bounds, the thumbs on those bounds) on a `surface` strip, its years an
+  `accent-ink` `mono` readout, with a "Clear" ghost action; the label, the readout and
+  Clear keep one line. With no project open it is the same box, empty and untinted with
+  a `border` leading bar, holding a `default` "Create a project" Button, which starts a
+  project and opens it, and nothing in the catalog is tinted.
 - **Findings** (titled "Notes on this data" wherever they are listed, maintainer
   2026-11-04) are `StatusRow`s in their level's tone, set under what they concern: a
   column's under its lane, a source's at the top of its card. Each names its place in
@@ -933,32 +935,35 @@ grow new visual language meanwhile.
   project names one (`linkage.database`), and with one database nothing is shown. Until
   one is chosen the Select reads "Choose a database", an `info` `StatusRow` above the
   verdict reads "Choose the database your data comes from", and Download is inert and
-  points at that row; the server's `database_required` is not listed again. A column the
-  chosen database does not have is the server's `not_in_database` on its card, naming
-  the databases that do; it is a finding, never a disabled option. Under the buttons,
-  the steward's `order_instructions` from `/api/context` as sent (its own line breaks,
-  no markdown, never text from code), then the verdict, "Tables" (one card per table)
-  and "What will be delivered". A card's column years load with its own table, not with
-  other cards: a column the catalog does not know shows its own error and leaves the
-  card's other columns their years, and adding or removing a column reloads no other
-  (#2232). There is one check and no button for it: WASM on every edit, then `order` 350
-  ms after the last edit WASM accepted. The verdict is one `StatusRow`: "Ready to
-  order", "Has warnings" with the count, "Can't be ordered yet" with the count of
-  problems, or "Has problems" for a file that fails the structure check, whose problems
-  are listed in full under it; a check that did not run is an `err` row with Retry.
-  While a newer check runs, the verdict, its list and "What will be delivered" keep the
-  previous check's answer (not a check that did not run) with `aria-busy`; the banner's
-  plain `text-muted` "Checking" shows in its place only when there is none, or when a
-  table or column was added, removed or moved since, so the earlier findings would sit
-  on the wrong card. A draft with no tables is "Empty" and is not checked. "What will be
-  delivered" is the order the catalog would serve, shown only when the project can be
-  ordered: per table its name and years, each column as a `ColumnChip` (with its years
-  only where they differ from the table's) beside the variable's name, "Years not
-  available" per column the period asks more of than the table has, and the "Row
-  identifier" columns. There is no order-file download: the steward's instructions say
-  how to order. With no project the page is one `EmptyState`, "No project yet", with
-  "Create a project" and "Open a project file…". Below `breakpoint-narrow` a column's
-  row on a card stacks: its name and Remove, its spans, then Type.
+  points at that row; the server's `database_required` and `database_unknown` are not
+  listed again, and while nothing else is wrong that row is the only one: a choice not
+  yet made is no error verdict (maintainer, #2345); while the check after a choice runs,
+  the verdict reads Checking. A column the chosen database does not have is the server's
+  `not_in_database` on its card, naming the databases that do; it is a finding, never a
+  disabled option. Under the buttons, the steward's `order_instructions` from
+  `/api/context` as sent (its own line breaks, no markdown, never text from code), then
+  the verdict, "Tables" (one card per table) and "What will be delivered". A card's
+  column years load with its own table, not with other cards: a column the catalog does
+  not know shows its own error and leaves the card's other columns their years, and
+  adding or removing a column reloads no other (#2232). There is one check and no button
+  for it: WASM on every edit, then `order` 350 ms after the last edit WASM accepted. The
+  verdict is one `StatusRow`: "Ready to download", "Has warnings" with the count, "Can't
+  download yet" with the count of problems, or "Has problems" for a file that fails the
+  structure check, whose problems are listed in full under it; a check that did not run
+  is an `err` row with Retry. While a newer check runs, the verdict, its list and "What
+  will be delivered" keep the previous check's answer (not a check that did not run)
+  with `aria-busy`; the banner's plain `text-muted` "Checking" shows in its place only
+  when there is none, or when a table or column was added, removed or moved since, so
+  the earlier findings would sit on the wrong card. A draft with no tables is "Empty"
+  and is not checked. "What will be delivered" is the order the catalog would serve,
+  shown only when the project can be ordered: per table its name and years, each column
+  as a `ColumnChip` (with its years only where they differ from the table's) beside the
+  variable's name, "Years not available" per column the period asks more of than the
+  table has, and the "Row identifier" columns. There is no order-file download: the
+  steward's instructions say how to order. With no project the page is one `EmptyState`,
+  "No project yet", with "Create a project" and "Open a project file…". Below
+  `breakpoint-narrow` a column's row on a card stacks: its name and Remove, its spans,
+  then Type.
 - **ColumnList:** a `label` header that names whose items they are ("Variables in
   Aktivitetsstöd", on a group page too, where the group's folded row is selected; one
   line, truncated with an ellipsis, the whole of it as hover text) (#1825), then items

@@ -8,7 +8,7 @@ import {
   SliderThumb,
   SliderTrack,
 } from "react-aria-components";
-import type { Context } from "./api";
+import { type Context, stewardConfig } from "./api";
 import styles from "./ProjectBanner.module.css";
 import { clampYearWindow } from "./period";
 import type { ProjectStudyWindow } from "./project_data";
@@ -34,6 +34,7 @@ const GLYPHS: Record<Verdict, string> = {
   warnings: "▲",
   problems: "✕",
   blocked: "✕",
+  database: "",
   unchecked: "",
 };
 
@@ -43,6 +44,7 @@ const EXPLAINED: ReadonlySet<Verdict> = new Set([
   "warnings",
   "problems",
   "blocked",
+  "database",
   "unchecked",
 ]);
 
@@ -78,7 +80,11 @@ export function ProjectBanner({
         </Button>
       </div>
     );
-  const status = projectVerdict(snapshot, validation);
+  const status = projectVerdict(
+    snapshot,
+    validation,
+    (stewardConfig(context)?.spaces.length ?? 0) > 1,
+  );
   const sources = draft?.sources.length ?? 0;
   const columns =
     draft?.sources.reduce(

@@ -80,6 +80,12 @@ export function useProjectCheck(): ProjectCheck {
   };
 }
 
+/** The findings the project page's Database select answers. */
+export const DATABASE_CODES: readonly string[] = [
+  "database_required",
+  "database_unknown",
+];
+
 export type Verdict =
   | "checking"
   | "empty"
@@ -87,21 +93,32 @@ export type Verdict =
   | "warnings"
   | "problems"
   | "blocked"
+  | "database"
   | "unchecked";
 
 /** One verdict for the banner and /project, in the same words. A file that
  * fails the structure check has problems; a draft the catalog refuses to order
- * can't be ordered yet; a check that did not run (rate limit, network) says so,
+ * can't be downloaded yet, unless its only problem is the database not yet
+ * chosen where the page offers the Database select (`select`; a choice to make,
+ * not an error, #2345); a check that did not run (rate limit, network) says so,
  * and /project explains it with Retry. */
 export function projectVerdict(
   { draft }: ProjectSnapshot,
   check: Pick<ProjectCheck, "loading" | "data" | "error">,
+  select: boolean,
 ): Verdict {
   if (!draft) return "problems";
   if (draft.sources.length === 0) return "empty";
   if (check.loading) return "checking";
   if (check.error || !check.data) return "unchecked";
-  if (check.data.order === null) return "blocked";
+  if (check.data.order === null) {
+    const errors = check.data.issues.filter((issue) => issue.level === "error");
+    return select &&
+      errors.length > 0 &&
+      errors.every((issue) => DATABASE_CODES.includes(issue.code))
+      ? "database"
+      : "blocked";
+  }
   return check.data.issues.some((issue) => issue.level === "warning")
     ? "warnings"
     : "ready";
@@ -110,9 +127,10 @@ export function projectVerdict(
 export const VERDICT_WORDS: Record<Verdict, string> = {
   checking: "Checking",
   empty: "Empty",
-  ready: "Ready to order",
+  ready: "Ready to download",
   warnings: "Has warnings",
   problems: "Has problems",
-  blocked: "Can't be ordered yet",
+  blocked: "Can't download yet",
+  database: "Choose a database",
   unchecked: "Check did not run",
 };

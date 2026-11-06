@@ -1,7 +1,7 @@
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 import { Autocomplete, Input, SearchField } from "react-aria-components";
 import { flushSync } from "react-dom";
-import { type Context, stewardConfig } from "./api";
+import { brandName, type Context, stewardConfig } from "./api";
 import {
   browseFilter,
   useBrowseFilter,
@@ -52,10 +52,7 @@ export function TopBar({
   validation: ProjectCheck;
 }) {
   const config = stewardConfig(context);
-  const brand =
-    config?.presentation.long_name ??
-    config?.presentation.name ??
-    "Registry Research Toolkit";
+  const brand = brandName(context);
   const ref = useRef<HTMLElement>(null);
   const input = useRef<HTMLInputElement>(null);
   const field = useRef<HTMLDivElement>(null);
@@ -159,16 +156,18 @@ export function TopBar({
       {/* The row is the shell's width, so on a wide screen the banner stays
           over the detail pane's edge instead of the screen's. */}
       <div className={styles.inner} data-search-open={searchOpen || undefined}>
-        <a href="/" className={styles.brand}>
-          <span className={styles.brandName}>{brand}</span>
-          {config && (
-            <img
-              className={styles.brandLogo}
-              alt={brand}
-              src={`data:image/svg+xml,${encodeURIComponent(config.logo)}`}
-            />
-          )}
-        </a>
+        {brand !== null && (
+          <a href="/" className={styles.brand}>
+            <span className={styles.brandName}>{brand}</span>
+            {config && (
+              <img
+                className={styles.brandLogo}
+                alt={brand}
+                src={`data:image/svg+xml,${encodeURIComponent(config.logo)}`}
+              />
+            )}
+          </a>
+        )}
         {/* Text here filters both browse columns in place, never the open
           page. Enter opens the palette under it, for registers, variables
           and the app's places; the field stays the

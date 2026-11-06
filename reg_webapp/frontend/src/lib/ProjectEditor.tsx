@@ -24,10 +24,12 @@ import { Select } from "./ui/Select";
 import { StatusRow } from "./ui/StatusRow";
 import { useCatalogNames } from "./use_catalog_names";
 import {
+  DATABASE_CODES,
   type ProjectCheck,
   projectVerdict,
   useProject,
   VERDICT_WORDS,
+  type Verdict,
 } from "./use_project";
 import { useCatalogRead, useDistinct } from "./use_store_read";
 import { issueId, type ValidationIssue } from "./validation";
@@ -203,9 +205,9 @@ export function ProjectEditor({
           )}
           {draft &&
             shown.data?.order &&
-            ["ready", "warnings"].includes(projectVerdict(project, shown)) && (
-              <DeliverySummary order={shown.data.order} busy={busy} />
-            )}
+            ["ready", "warnings"].includes(
+              projectVerdict(project, shown, databases !== null),
+            ) && <DeliverySummary order={shown.data.order} busy={busy} />}
         </>
       )}
       <ConfirmDialog
@@ -265,18 +267,30 @@ function Check({
   databaseShown: boolean;
   needsDatabase: boolean;
 }) {
-  const verdict = projectVerdict(project, validation);
+  const checked = projectVerdict(project, validation, databaseShown);
+  // A database not yet chosen: with the select on the page, the info row above
+  // is the whole answer (a choice to make, not an error, #2345); once one is
+  // chosen, the previous check still says it until the next arrives, so the
+  // page says Checking. A chosen database the server still refuses, or no
+  // select (no `/api/context`), lists the finding as a problem.
+  const verdict: Verdict =
+    checked !== "database"
+      ? checked
+      : needsDatabase
+        ? "database"
+        : busy
+          ? "checking"
+          : "blocked";
   const words = VERDICT_WORDS[verdict];
   const structural = project.draft === null;
-  // Where the Database select is shown, it and the row above the verdict say
-  // what `database_required` says, in the page's words, so the finding is
-  // neither listed nor counted again; that holds once a database is chosen too,
-  // since the previous check, kept on screen while the next runs, still carries
-  // it. Without the select (no `/api/context`) the finding is the only
-  // explanation and stays.
+  // While the select and the row above the verdict say what `database_required`
+  // and `database_unknown` say, in the page's words, neither finding is listed
+  // nor counted again; so too while the check after a choice runs, since the
+  // previous check, kept on screen, still carries it.
+  const hideDatabase = databaseShown && (needsDatabase || busy);
   const issues: ValidationIssue[] = (
     structural ? project.issues : (validation.data?.issues ?? [])
-  ).filter((issue) => !databaseShown || issue.code !== "database_required");
+  ).filter((issue) => !hideDatabase || !DATABASE_CODES.includes(issue.code));
   const onCard = (issue: ValidationIssue) =>
     !structural && issue.path.startsWith("/sources/");
   // A note on a card (level info) needs no link here: it changes no verdict.
@@ -311,7 +325,7 @@ function Check({
         >
           The check did not run ({validation.error}). Retry, or reload the page.
         </StatusRow>
-      ) : (
+      ) : verdict === "database" ? null : (
         <StatusRow
           tone={
             verdict === "ready"
@@ -325,7 +339,7 @@ function Check({
           {verdict === "ready"
             ? `${words}.`
             : verdict === "warnings"
-              ? `${words}: ${count(warnings, "warning")}. Review ${warnings === 1 ? "it" : "them"} before you order.`
+              ? `${words}: ${count(warnings, "warning")}. Review ${warnings === 1 ? "it" : "them"} before you download.`
               : structural
                 ? `${words}: this file is not a project_data.json the site can read. Fix the ${count(problems, "problem")} below and open it again.`
                 : problems === 0
