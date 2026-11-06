@@ -209,9 +209,9 @@ first full build 7 coded segments of 166k sat between two neighbours with one va
 spelling and type. A D `set` states those.
 
 **Review proposals (F3, V1).** Proposals are review findings whose messages carry ranked
-candidate statements as TOML in the existing curation grammar. They use the existing
-findings output and never change identity, relations or classification bindings.
-Accepting one requires reviewed curation and a premise lock.
+candidate statements as TOML in the existing curation grammar. They go to the build's
+findings output with the other findings and never change identity, relations or
+classification bindings. Accepting one requires reviewed curation and a premise lock.
 
 - F3 compares successive, non-overlapping variables with different source keys,
   including different spellings. Label, type and value-set agreement rank candidates;
@@ -398,9 +398,27 @@ Accepting one requires reviewed curation and a premise lock.
 - `label_of` is a relation consumed by the runtime's graph endpoint. The converter's
   legacy code/label pairs created presentation groups; D-3c does not synthesize those
   legacy groups, change identity or alter order bindings.
-- Publication uses the complete finding collector, including F3 and V1 proposals after
-  curated links. F5 is currently a notice, F6 a review; neither independently blocks
-  orders. F7 edition findings remain warnings.
+- The findings output is the complete finding collector, including F3 and V1 proposals
+  after curated links. F5 is currently a notice, F6 a review; neither independently
+  blocks orders. F7 edition findings remain warnings.
+- **Findings are a build output, not published (maintainer 2026-11-06, #2335).** The
+  catalog carries only what the MCP tools and the SPA read; at 0.80.0 the `finding`
+  table and its texts were about a quarter of the file.
+  `reg-build build --findings FILE` (and `holdings --findings FILE`) writes every
+  finding as JSON Lines for curation work: one object per finding with `register`,
+  `code`, `subject_kind`, `subject`, `period` (inclusive ISO days, or null), `severity`
+  and `message`, sorted in that field order, so two builds from the same pins write the
+  same bytes. A subject is named by keys that survive a rebuild: a register, table or
+  variable by its public id, a release as `<table>/<delivery name>`, a segment as
+  `<variable>@<table>@<start>`, an occurrence as `<table>/<source key>@<start>`. No
+  reader operation serves findings; #2318 decides what an opt-in MCP tool adds back.
+  `reg-build verify` needs no finding for the F6 type exemption: an untyped segment
+  whose own occurrences state two or more type families is exactly the segment
+  resolution left blank for a source conflict. The one finding fact the catalog keeps is
+  F7's: `release.edition_disagreement` marks the release, because the order check's
+  `edition_disagreement` warning reads it, and re-deriving it would repeat resolve's
+  edition comparison (over shadowed occurrences, with types before the integer-codes
+  rule) in the reader.
 - `classification` selects an exact curated `class/<family>/<version>` for whole
   occurrences. The curated frame carries this optional version through resolution;
   readers leave it unset, and the source JSONL reader refuses it. Referenced inventory
@@ -795,21 +813,22 @@ release assets are left unchanged.
 
 - **Release diff.** `reg-build diff OLD NEW [--json] [-n N]` compares a current-schema
   NEW with an OLD of the same or an older schema by natural key (pid, table name, meta
-  key), never by row id, in nine sections: schema (`sqlite_master`), meta, row counts
+  key), never by row id, in eight sections: schema (`sqlite_master`), meta, row counts
   per table, ids (added, removed, kind changed, moved, retired), provider and register
   names, table names, roles, cadences and spans, per-variable segments, label and
   definition runs, value sets (including shared-hash sentinel changes and the codes
-  added and removed where only a segment's value-set hash changed), and finding counts
-  per code. Text shows at most `N` (default 20) per section; `--json` is complete. Exit
-  0 when nothing differs, 1 when something does (the meta keys `generation_id`,
-  `catalog_version`, `builder_version` and `curation_digest` never count, since they
-  differ every release), 2 on a usage or IO error, a missing `schema_version`, a NEW not
-  on this build's schema or an OLD on a newer one. Across a schema bump the report
-  starts with a cross-schema line (`cross_schema` in JSON) and a schema changes section
-  naming each table and column on one side only; those are never row-diffed, the other
-  sections read only what both sides have, and a query the older schema cannot answer
-  exits 2 as `OLD: schema N is not comparable: <error>`. A schema-only difference exits 1.
-  A surviving variable id is listed as moved when both occurrence target sets are
+  added and removed where only a segment's value-set hash changed). Findings are not in
+  the catalog; compare two builds' `--findings` files for those. Text shows at most `N`
+  (default 20) per section; `--json` is complete. Exit 0 when nothing differs, 1 when
+  something does (the meta keys `generation_id`, `catalog_version`, `builder_version`
+  and `curation_digest` never count, since they differ every release), 2 on a usage or
+  IO error, a missing `schema_version`, a NEW not on this build's schema or an OLD on a
+  newer one. Across a schema bump the report starts with a cross-schema line
+  (`cross_schema` in JSON) and a schema changes section naming each table and column on
+  one side only; those are never row-diffed, the other sections read only what both
+  sides have, and a query the older schema cannot answer exits 2 as
+  `OLD: schema N is not comparable: <error>`. A schema-only difference exits 1. A
+  surviving variable id is listed as moved when both occurrence target sets are
   non-empty and no old/new pair shares a table slug and folded spelling with overlapping
   `[start, end)` periods. Explicit table ids are compared by table name; implicit tables
   share their register's id and are excluded. `--holdings` compares two holdings
@@ -818,7 +837,7 @@ release assets are left unchanged.
   held and unplaced counts, changed placements grouped by old and new `table_pid` and
   classed newly placed, folded or renamed, variable or interval changed, or unmapped;
   reader-visible text by kind, keyed by pid and source key and listing keys, never
-  bodies; and finding and holdings-notice deltas by code, compared by (code, subject,
+  bodies; and holdings-notice deltas by code, compared by (code, table and column,
   period).
 - **The frame reader.** `frame` reads a directory of frame JSONL files as one input, the
   neutral interchange format that conformance fixtures are written in by hand. The
@@ -952,17 +971,15 @@ Rules:
   an ambiguous one returns the candidates with their FQIDs as `ambiguous_ref`, so the
   next call can be exact.
 - **`show` plus facet operations.** `show(ref)` returns a summary for any kind; separate
-  operations fetch the heavy parts: `segments`, `findings`, `values`, `graph`,
-  `coverage` and `schema`/`diff`.
+  operations fetch the heavy parts: `segments`, `values`, `graph`, `coverage` and
+  `schema`/`diff`.
 - **One time filter, `period`**, in `reg-core`'s grammar (`2019`, `2015..2019`,
   `LA2019`, `2019-03`, `2019-01-01..2019-06-30`). `diff` takes `from` and `to` in the
   same grammar.
 - **Cursor paging for open-ended lists**: `limit` (default 50) and `cursor`, returning
   `{"items": [...], "next_cursor": ...}`. A list bounded by the request or the entity is
-  a plain array. `findings` answers one group per severity and code, with its count and
-  a page of its items: an entity's findings are bounded but run to thousands in a few
-  codes, and a reader wants the counts first. Cursors bind to the generation, so a stale
-  cursor fails loudly. No offsets.
+  a plain array. Cursors bind to the generation, so a stale cursor fails loudly. No
+  offsets.
 - **One parameter per concept and one result shape per operation**, independent of
   result count.
 - **Errors** are `{error, meta}` with
@@ -1008,11 +1025,10 @@ short.
 **Names next to ids.** A response that refers to a register, table or variable carries
 its name next to the FQID, as `show` gives it (a reference row's name over a steward
 overlay's), so a reader needs no `show` per id: `search` hits have `name` and
-`register_name`, `segments` rows `table_name`, `findings` subjects `name` and
-`table_name`, and the `order` and `validate` rows and findings `table_name`,
-`variable_name` and `successor_name` (`NamedIssue`). One batched read per origin names a
-whole response (`refs::names`), never a read per row. The MONA order file carries ids
-only.
+`register_name`, `segments` rows `table_name`, and the `order` and `validate` rows and
+findings `table_name`, `variable_name` and `successor_name` (`NamedIssue`). One batched
+read per origin names a whole response (`refs::names`), never a read per row. The MONA
+order file carries ids only.
 
 `show(ref, evidence=true)` adds `evidence`: provider definition/operational-definition
 texts use the same containment rule within each occurrence, then identical normalized
@@ -1057,9 +1073,9 @@ An earlier scheme baked SCB's CSV vocabulary and yearly cadence into the model, 
 broke when Socialstyrelsen and Försäkringskassan arrived. The v4 model removes those
 assumptions: registers own tables, variables are register-scoped, a variable's history
 is its segments (one form of the variable in one table over a period), and ids have no
-variant or period slot. The relations between entities (`relation`) and the notices and
-review items (`finding`) are rows of their own, and build-time resolution normalizes
-provider oddities into the universal shape.
+variant or period slot. The relations between entities (`relation`) are rows of their
+own, the notices and review items are the build's findings output (never published), and
+build-time resolution normalizes provider oddities into the universal shape.
 
 ## FQID grammar
 

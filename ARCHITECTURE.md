@@ -198,13 +198,13 @@ mechanisms are documented in the owning DESIGN.md and only summarized here.
   way.
 - **Performance budget (v1 targets, not yet CI-enforced).** Starting points: the catalog
   reads the Rust server answers (`/api/catalog/*` and the facets
-  `/api/{segments,findings,values,graph}/*`) p95 ≤ 200 ms (cache miss);
-  `/api/project/validate` and `/api/project/order` p95 ≤ 1 s; representative broad
-  `/api/search` cache-miss p95 ≤ 500 ms. Search correctness and latency are origin
-  properties: edge hits do not substitute for cold-origin evidence.
-  Classification/value-set initial responses must be bounded by bucket/page limits
-  rather than total code cardinality, and cold/repeat rendered routes target CLS < 0.1.
-  The load-test harness, its fixtures and a CI perf gate are remaining work (#1455).
+  `/api/{segments,values,graph}/*`) p95 ≤ 200 ms (cache miss); `/api/project/validate`
+  and `/api/project/order` p95 ≤ 1 s; representative broad `/api/search` cache-miss p95
+  ≤ 500 ms. Search correctness and latency are origin properties: edge hits do not
+  substitute for cold-origin evidence. Classification/value-set initial responses must
+  be bounded by bucket/page limits rather than total code cardinality, and cold/repeat
+  rendered routes target CLS < 0.1. The load-test harness, its fixtures and a CI perf
+  gate are remaining work (#1455).
 - **Project schema version.** Schema breakage is signalled by `project_data.json`'s
   `schema_version`. Contract 5.1.0 added optional boolean `follow_successor` on variable
   bindings; absent or false keeps the bound variable's own history. Contract 5.2.0 adds
