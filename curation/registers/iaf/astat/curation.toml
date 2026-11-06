@@ -78,6 +78,12 @@ evidence = "Till och med datum i Eesutbet: slutdatum för beviljad ersättning s
 
 [[statement]]
 kind = "set"
+subject = "utbetalning: deltidsdagar"
+fields = { "variable" = "deltidsdagar-utbetalning" }
+evidence = "Deltidsdagar i Utbetalning: antalet utbetalade deltidsdagar för veckan som kassakortet avser.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
 subject = "var:aktivitetsstodsdagar"
 fields = { "tags" = ["employment", "transfers"] }
 evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
@@ -306,7 +312,13 @@ evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlems
 
 [[statement]]
 kind = "set"
-subject = "var:deltidsdagar"
+subject = "var:deltidsdagar-aterkrav"
+fields = { "tags" = ["employment", "transfers"] }
+evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:deltidsdagar-utbetalning"
 fields = { "tags" = ["employment", "transfers"] }
 evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
 
