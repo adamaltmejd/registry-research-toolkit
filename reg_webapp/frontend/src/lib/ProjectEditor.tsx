@@ -265,10 +265,12 @@ function Check({
   const words = VERDICT_WORDS[verdict];
   const structural = project.draft === null;
   // The database row above the verdict says what `database_required` says, in
-  // the page's words, so the finding is neither listed nor counted again.
+  // the page's words, so the finding is neither listed nor counted again. It is
+  // dropped even once a database is chosen: the previous check, kept on screen
+  // while the next one runs, still carries it.
   const issues: ValidationIssue[] = (
     structural ? project.issues : (validation.data?.issues ?? [])
-  ).filter((issue) => !needsDatabase || issue.code !== "database_required");
+  ).filter((issue) => issue.code !== "database_required");
   const onCard = (issue: ValidationIssue) =>
     !structural && issue.path.startsWith("/sources/");
   // A note on a card (level info) needs no link here: it changes no verdict.
