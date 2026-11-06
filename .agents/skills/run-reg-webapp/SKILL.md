@@ -10,11 +10,11 @@ description: Run, screenshot, and drive the reg_webapp dev setup (Rust server + 
 The tooling lives in `reg_webapp/dev/`: `dev.sh` starts the Rust server
 (`reg-meta serve`) and Vite (whose `/api` proxy, in
 `reg_webapp/frontend/vite.config.ts`, sends every route to the Rust server) on FREE
-ports. `smoke` and `shot` drive the page with
+ports. `smoke`, `shot` and `flows` drive the page with
 [agent-browser](https://github.com/vercel-labs/agent-browser) (a frontend devDep, pinned
-exactly in `reg_webapp/frontend/package.json`); `flows` runs `driver.mjs`, the
-Playwright driver. Every command starts at the **repo root**; `dev.sh` serves the
-checkout it lives in, whatever your cwd.
+exactly in `reg_webapp/frontend/package.json`); `flows` runs the user journeys in
+`journeys.sh`. Every command starts at the **repo root**; `dev.sh` serves the checkout
+it lives in, whatever your cwd.
 
 ## Prerequisites
 
@@ -26,13 +26,11 @@ You need:
 - `bun` and `cargo`; for `gen:wasm`, `rustup target add wasm32-unknown-unknown` and
   `cargo install wasm-bindgen-cli --version <v> --locked`, with `<v>` the `=` pin in
   `crates/reg-core-wasm/Cargo.toml`.
-- For `smoke` / `shot`: a Chrome for agent-browser. It finds an installed Google Chrome;
-  with none, run
+- For `smoke`, `shot` and `flows`: a Chrome for agent-browser. It finds an installed
+  Google Chrome; with none, run
   `bun reg_webapp/frontend/node_modules/agent-browser/bin/agent-browser.js install` once
   (Chrome for Testing into `~/.agent-browser`); the same command with `doctor` says
   which browser it resolves.
-- For `flows`: Playwright's Chromium, once:
-  `(cd reg_webapp/frontend && bunx playwright install chromium)`.
 - A catalog: `--fixture-db` (below), or `REG_META_DB` set to a directory holding a
   release asset (`reg_meta.db`; root `README.md`). The server refuses a catalog whose
   schema it does not admit (`CATALOG_SCHEMA_VERSION` in `crates/reg-core/src/lib.rs`)
@@ -43,7 +41,7 @@ You need:
 ```sh
 bash reg_webapp/dev/dev.sh --fixture-db smoke
 bash reg_webapp/dev/dev.sh --fixture-db shot [--mobile|--tablet|--desktop|--wide|--all|--viewport WxH]... <route>...
-bash reg_webapp/dev/dev.sh --fixture-db flows <out-dir> [scenario...]
+bash reg_webapp/dev/dev.sh --fixture-db flows <out-dir> [journey...]
 bash reg_webapp/dev/dev.sh --fixture-db          # interactive, Ctrl-C stops
 bash reg_webapp/dev/dev.sh --paired-fixture ...  # the same modes on the synthetic pair
 ```
@@ -68,14 +66,14 @@ job.
 - **`shot`** captures `_<route>` per route × viewport; non-desktop captures get a
   `-<label>` suffix. `--all` is the four widths (375 / 768 / 1280 / 1920) the
   design-reviewer skill judges.
-- **`flows`** runs the driver's scenarios (the `scenarios` table in `driver.mjs`:
-  `browse-pages`, `browse-search`, `browse-group`, `browse-variable`, `browse-values`,
-  `variable-succession`, `linked-documents`, `project-pages`, `add-variable-columns`,
-  `source-cards` and `steward-held`; name some to run only those) at four viewports (CI
-  sets `REG_WEBAPP_FLOW_VIEWPORTS=mobile,desktop`: phone and desktop only), each in a
-  fresh browser context against the real servers, and writes the PNGs into `<out-dir>`.
-  Ten use the `demo` / `demo2` content of `--fixture-db`; `steward-held` needs
-  `--paired-fixture`.
+- **`flows`** runs the user journeys (the `JOURNEYS` table in `journeys.sh`: `browse`,
+  `search`, `variable`, `classification`, `order` and `narrow` on `--fixture-db`,
+  `steward` on `--paired-fixture`; name some to run only those), each in a fresh
+  agent-browser session against the real servers, at desktop width except `narrow` (375
+  px). It writes one PNG per journey into `<out-dir>` and prints each journey's time.
+  Journeys click with the pointer and assert only the rendered page; a click a journey
+  cannot make is a suspected UI defect. `bash scripts/gate.sh flows` also runs the
+  production-build smoke (`reg_webapp/frontend/scripts/smoke_build.ts`).
 - **Interactive** prints the URLs; the Rust server's OpenAPI document is at
   `<rust>/openapi.json`. Pin ports with `RUST_PORT=… FRONTEND_PORT=…` if needed.
 
@@ -132,23 +130,25 @@ vitest): `(cd reg_webapp/frontend && bun run test)`.
 ## Gotchas
 
 - **`networkidle` is not "rendered".** React swaps in data after the network settles.
-  `settled()` (in `dev.sh` and in `driver.mjs`) waits for every `[aria-busy="true"]` to
-  clear — by hand, `$ab wait --fn '!document.querySelector("[aria-busy=\"true\"]")'`
+  `settled()` (in `dev.sh`, used by `journeys.sh`) waits for every `[aria-busy="true"]`
+  to clear — by hand, `$ab wait --fn '!document.querySelector("[aria-busy=\"true\"]")'`
   after every navigation/click. Each loading placeholder carries `aria-busy="true"`; new
   ones must too (don't key on copy like "Loading…").
-- **agent-browser 0.39.2's text `errors` prints a bare `✗`** whatever it holds; read
+- **agent-browser 0.41.2's text `errors` prints a bare `✗`** whatever it holds; read
   `errors --json` (`dev.sh` does).
-- **Playwright's `waitForFunction` takes `(fn, arg, options)`** (`driver.mjs`). Options
-  as the second argument become the page-function argument and the timeout never
-  applies; pass `null` for `arg`.
+- **`find role … --name` does not wait**: it fails at once when the element is not there
+  yet, and agent-browser has no role selector for `wait`. `journeys.sh`'s `see` retries
+  it for 10 s; `press` and `fill` go through `see`. `--exact` matches the whole name.
+- **File paths go absolute** (`upload`, `download`, `screenshot`): the daemon resolves a
+  relative path against its own cwd.
+- **Never drive agent-browser with a sync spawn from the process serving the page**
+  (`smoke_build.ts` runs Vite preview in process): the blocked event loop serves nothing
+  and the command fails with `os error 35`.
 - **The first `a[href^="/catalog"]` is the header nav link.** To drill, click the first
   link strictly deeper than the current path (`a[href^="<current>/"]`).
 - **Every year slider labels its thumbs "From year" / "To year".** Scope by group:
   `Years to add` (variable coverage), `Years for <table>` (source card) and
   `Study years` (project banner).
-- **`driver.mjs` must run from `reg_webapp/frontend/`** (it `createRequire`s playwright
-  from the cwd): `cd reg_webapp/frontend && bun ../dev/driver.mjs <out-dir> …`.
-  Elsewhere: `Cannot find package 'playwright'`. `dev.sh flows` does this for you.
 - The Vite proxy defaults to `http://127.0.0.1:8001` but honors `REG_META_SERVER_URL`;
   `dev.sh` sets it.
 - Every route the SPA calls is the Rust server's; bodies are `{data, meta}` (a refusal
@@ -157,20 +157,18 @@ vitest): `(cd reg_webapp/frontend && bun run test)`.
 ## Troubleshooting
 
 - Screenshot shows breadcrumbs + `Loading…` → the fetch hadn't landed; re-run, or raise
-  `settled()`'s 10 s timeout.
+  agent-browser's 25 s wait timeout (`AGENT_BROWSER_DEFAULT_TIMEOUT`, in ms).
 - The Rust server exits at boot about the DB/schema → no `REG_META_DB`, or an
   inadmissible schema. Use `--fixture-db` or a current release asset.
-- agent-browser cannot launch Chrome (`smoke` / `shot`) → `$ab doctor` names the browser
-  it resolved. In a sandboxed shell that denies Chrome's sandbox or its child processes,
-  pass launch flags through the environment: `AGENT_BROWSER_ARGS=--no-sandbox`, then
+- agent-browser cannot launch Chrome (`smoke` / `shot` / `flows`) → `$ab doctor` names
+  the browser it resolved. In a sandboxed shell that denies Chrome's sandbox or its
+  child processes, pass launch flags through the environment:
+  `AGENT_BROWSER_ARGS=--no-sandbox`, then
   `AGENT_BROWSER_ARGS=--no-sandbox,--single-process,--disable-gpu`.
-- `smoke` / `shot` keep agent-browser's daemon sockets in a private `/tmp/ab.*`
-  directory (`AGENT_BROWSER_SOCKET_DIR`, removed on exit), not `~/.agent-browser`, so a
-  shell that cannot write `$HOME` still gets a daemon. Set the variable yourself to
-  choose the directory; the path must stay short (unix socket, 103 bytes). Verified from
-  a Claude Bash shell only. The Chrome install (`agent-browser install`) still writes
-  `~/.agent-browser`, so install it outside the sandbox or use an installed Google
-  Chrome.
-- Chromium fails to launch in `flows` → `driver.mjs` tries a ladder (sandboxed,
-  no-sandbox, single-process; `LAUNCH_LADDER`) and reports each rung's error; read the
-  FIRST.
+- `smoke` / `shot` / `flows` keep agent-browser's daemon sockets in a private
+  `/tmp/ab.*` directory (`AGENT_BROWSER_SOCKET_DIR`, removed on exit), not
+  `~/.agent-browser`, so a shell that cannot write `$HOME` still gets a daemon. Set the
+  variable yourself to choose the directory; the path must stay short (unix socket, 103
+  bytes). Verified from a Claude Bash shell only. The Chrome install
+  (`agent-browser install`) still writes `~/.agent-browser`, so install it outside the
+  sandbox or use an installed Google Chrome.

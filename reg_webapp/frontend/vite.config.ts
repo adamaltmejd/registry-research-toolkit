@@ -57,7 +57,7 @@ export default defineConfig({
     },
   },
   // Pure-logic tests (`*.test.ts`) in jsdom. Component behavior is exercised by
-  // the `flows` driver (reg_webapp/dev/driver.mjs), not here.
+  // the `flows` user journeys (reg_webapp/dev/journeys.sh), not here.
   test: {
     environment: "jsdom",
     include: [

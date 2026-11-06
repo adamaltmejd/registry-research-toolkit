@@ -186,25 +186,8 @@ jobs:
       - *rust-cache
       - *wasm-bindgen
       - run: bun install --frozen-lockfile
-      # The build smoke (scripts/smoke_build.ts) loads the built app in a real
-      # headless Chromium via Playwright. Cache the browser binary (keyed on the
-      # lockfile, so it re-downloads only when deps change) so the ~90 MB download is a one-time cost, not per-run.
-      - name: Cache Playwright browser
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ~/.cache/ms-playwright
-          key: ${{ runner.os }}-playwright-${{ hashFiles('reg_webapp/frontend/bun.lock') }}
-      # A no-op on a cache hit. No `--with-deps`/`install-deps`: the runner image
-      # ships Chrome, so every shared library headless Chromium needs is already
-      # there, and apt would only add fonts and xvfb the smoke never uses. That apt
-      # fetch is what timed the job out when the Azure Ubuntu mirror slowed to
-      # ~40 kB/s (Oct 2026). If the image ever drops a library, launch fails fast
-      # naming it; restore `install-deps` then.
-      - run: bunx playwright install chromium
-      # Bootstrap plus shell/search against the source-built synthetic fixture.
-      # Phone and desktop only (about 80 s saved); the design-review skill's
-      # four-width review covers 768 px and the wide viewport.
+      # The build smoke and the user journeys (ARCHITECTURE.md "Tiers") drive the
+      # runner image's preinstalled Google Chrome with agent-browser, whose npm package
+      # ships its native binaries: no browser download or apt step.
       - run: bash scripts/gate.sh flows
         working-directory: .
-        env:
-          REG_WEBAPP_FLOW_VIEWPORTS: mobile,desktop
