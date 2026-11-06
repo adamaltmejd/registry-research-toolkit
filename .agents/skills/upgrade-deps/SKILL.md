@@ -35,12 +35,11 @@ together, reading actual files rather than a saved version list:
   the release CI's `lint` job installs), `reg_webapp/Dockerfile`, and the Rust toolchain
   and `Cargo.toml`/`Cargo.lock` dependencies.
 - The SPA: `reg_webapp/frontend/package.json` and `bun.lock` (exact pins, including
-  `agent-browser` and React Aria), the wrangler pin
-  (`bunx wrangler@<pin> deploy`) in `.github/workflows/container-build.yml` and
-  `.github/workflows/steward-deploy.yml`, which must stay equal (one Renovate regex
-  manager moves both), and the `wasm-bindgen` CLI pin in `.github/workflows/ci.yml`,
-  which must equal the exact `wasm-bindgen` version in
-  `crates/reg-core-wasm/Cargo.toml`.
+  `agent-browser` and React Aria), the wrangler pin (`bunx wrangler@<pin> deploy`) in
+  `.github/workflows/container-build.yml` and `.github/workflows/steward-deploy.yml`,
+  which must stay equal (one Renovate regex manager moves both), and the `wasm-bindgen`
+  CLI pin in `.github/workflows/ci.yml`, which must equal the exact `wasm-bindgen`
+  version in `crates/reg-core-wasm/Cargo.toml`.
 
 Verify current stable versions and compatibility from package registries and upstream
 release documentation. Distinguish latest stable, latest compatible and a requested LTS
