@@ -1038,14 +1038,13 @@ order file carries ids only.
 `show(ref, evidence=true)` adds `evidence`: provider definition/operational-definition
 texts use the same containment rule within each occurrence, then identical normalized
 texts are grouped with all their periods, preserving gaps. Each text retains its source
-occurrences: labels, units, periods, table, status, source keys and exact spellings.
-The input rows behind an occurrence are build provenance and stay in the build: the
-catalog has no `occurrence_locator` table (maintainer 2026-11-06, #2335; about 68 MB at
-0.80.0, read by no curation workflow). Occurrences without either text are kept in
-`source_only`. Evidence
-also includes delivered/curated aliases; applied curation fields with statement
-file/line, evidence and caveat; and linked documents. Original provider text and
-spelling values are restored from override provenance when a correction exists,
+occurrences: labels, units, periods, table, status, source keys and exact spellings. The
+input rows behind an occurrence are build provenance and stay in the build: the catalog
+has no `occurrence_locator` table (maintainer 2026-11-06, #2335; about 68 MB at 0.80.0,
+read by no curation workflow). Occurrences without either text are kept in
+`source_only`. Evidence also includes delivered/curated aliases; applied curation fields
+with statement file/line, evidence and caveat; and linked documents. Original provider
+text and spelling values are restored from override provenance when a correction exists,
 including a source that was silent. Actual description, identity and group/tag statement
 locators are included; a ledger id does not acquire an invented statement. Evidence is
 never loaded or returned by the default summary. `segments(evidence=true)` remains the
@@ -1892,12 +1891,11 @@ the published pair (#2113): the `locator` columns of `holding_table`, `holding_c
 `holding_reference_occurrence.locator`/`evidence`, and `meta.input_pins`. Both stay
 steward input: a locator on every decision locates compiler and verifier refusals, and
 the evidence on every reference occurrence records its review in the steward repo.
-`meta.input_manifest_sha256` (one
-digest over the sorted `path\tsha256` pins) replaces the per-file pins; `steward_repo`,
-`steward_commit` and `steward_config` stay because `reg-build verify --steward-repo`
-needs them to admit the pinned checkout and recompute that digest. Build provenance for
-review lives in the `--report` JSON under `steward`: repo, commit, config and every
-input pin. That report is private release evidence.
+`meta.input_manifest_sha256` (one digest over the sorted `path\tsha256` pins) replaces
+the per-file pins; `steward_repo`, `steward_commit` and `steward_config` stay because
+`reg-build verify --steward-repo` needs them to admit the pinned checkout and recompute
+that digest. Build provenance for review lives in the `--report` JSON under `steward`:
+repo, commit, config and every input pin. That report is private release evidence.
 
 Holdings schema 7 replaces the unique `holding_table.physical_name` with a unique
 (`schema_name`, `physical_name`) for schema-keyed censuses (see "Schema-keyed census").
@@ -2503,12 +2501,12 @@ returns one ranked list.
    items (`{registers: []}` for facets) without a query. `ops/fts.rs::query` is the one
    implementation; `docs_search` shares it.
 2. **Rank.** Primary matches first, then description matches absent from the primary
-   match set. Within each, `bm25(index, 10.0, 5.0, 1.0)` (name, label, body),
-   ascending; `här` and `har` match the same rows and rank them alike. The primary
-   corpus and its scores are unaffected by descriptions.
-   FTS5 scores a row by its weighted hit count against its whole token count, so a hit
-   weighs most in an id or spelling and least in a definition or document text: a
-   variable labelled `Vikt` ranks above a longer one whose definition says vikt.
+   match set. Within each, `bm25(index, 10.0, 5.0, 1.0)` (name, label, body), ascending;
+   `här` and `har` match the same rows and rank them alike. The primary corpus and its
+   scores are unaffected by descriptions. FTS5 scores a row by its weighted hit count
+   against its whole token count, so a hit weighs most in an id or spelling and least in
+   a definition or document text: a variable labelled `Vikt` ranks above a longer one
+   whose definition says vikt.
 3. **Ties.** Then `search_item.kind` in SQL text order (`code`, `document`, `register`,
    `table`, `variable`), then `sort_key`, which is unique. Two rows tie on bm25 when the
    query hits the same weighted count in rows of equal token count.
