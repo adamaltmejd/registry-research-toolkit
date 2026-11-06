@@ -1241,6 +1241,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
             table: &table_id,
             variable: &variable_id,
             doc_register: &doc_register,
+            valueset: &valueset_id,
         },
     )?;
     for (i, item) in search.iter().enumerate() {
@@ -1258,6 +1259,12 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                 Cell::Str(item.sort_key.clone()),
             ],
         );
+        for &valueset in &item.valuesets {
+            rows.push(
+                "search_code_valueset",
+                vec![Cell::Int(id(i)), Cell::Int(valueset)],
+            );
+        }
     }
 
     // Interning, in sort order.

@@ -156,7 +156,7 @@ note = """Two modes. By content: one value set's items, by its hash or by a \
 classification version's ref (its `valueset_id`). By pair: `code` with an optional \
 `label` (absent = the item has no label) lists the value sets that some segment \
 references and that hold that (code, label) pair, as `[ValueSetRef]` ordered by hash \
-(index `vs_item_code`); this is the drill-down from a `code` search hit, and each \
+(`search_code_valueset`); this is the drill-down from a `code` search hit, and each \
 set's variables follow from `segments`' value set. Exactly one of `value_set`, \
 `classification` and `code`, otherwise `invalid_parameter`; `label` is valid only \
 with `code`; `level`, `parent` and `q` apply to the content mode only. In content \

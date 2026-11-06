@@ -511,22 +511,15 @@ fn hit(
 
 /// A code row's pair and the count of referenced value sets that hold it.
 fn code_hit(conn: &Connection, id: i64) -> rusqlite::Result<SearchHit> {
-    let (code_text, label_text, code, label): (i64, Option<i64>, String, Option<String>) = conn
-        .query_row(
-            "SELECT i.code_text, i.label_text, c.body, l.body
-             FROM search_item i
-               JOIN text c ON c.id = i.code_text
-               LEFT JOIN text l ON l.id = i.label_text
-             WHERE i.id = ?",
-            [id],
-            |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?)),
-        )?;
-    let value_set_count = conn.query_row(
-        "SELECT COUNT(DISTINCT valueset_id) FROM vs_item
-         WHERE code_text = ? AND label_text IS ?
-           AND EXISTS (SELECT 1 FROM segment WHERE segment.valueset_id = vs_item.valueset_id)",
-        params![code_text, label_text],
-        |row| row.get(0),
+    let (code, label, value_set_count): (String, Option<String>, i64) = conn.query_row(
+        "SELECT c.body, l.body,
+                (SELECT COUNT(*) FROM search_code_valueset v WHERE v.item_id = i.id)
+         FROM search_item i
+           JOIN text c ON c.id = i.code_text
+           LEFT JOIN text l ON l.id = i.label_text
+         WHERE i.id = ?",
+        [id],
+        |row| Ok((row.get(0)?, row.get(1)?, row.get(2)?)),
     )?;
     Ok(SearchHit::Code {
         code,

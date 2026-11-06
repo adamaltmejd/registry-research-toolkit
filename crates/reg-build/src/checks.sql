@@ -109,9 +109,23 @@ SELECT 1 WHERE (SELECT COUNT(*) FROM search_item) <> (SELECT COUNT(*) FROM searc
 SELECT d.id FROM search_description_docsize d LEFT JOIN search_item s ON s.id = d.id
 WHERE s.kind IS NOT 'variable';
 
--- every code row's (code, label) pair occurs in vs_item (via vs_item_code)
+-- every code row has a value set, and its value sets are exactly the segment-referenced
+-- sets that hold its (code, label) pair
 SELECT id FROM search_item s WHERE kind = 'code' AND NOT EXISTS (
-  SELECT 1 FROM vs_item v WHERE v.code_text = s.code_text AND v.label_text IS s.label_text);
+  SELECT 1 FROM search_code_valueset c WHERE c.item_id = s.id);
+SELECT 1 WHERE EXISTS (
+  SELECT s.id, v.valueset_id FROM vs_item v
+    JOIN search_item s ON s.kind = 'code' AND s.code_text = v.code_text
+      AND s.label_text IS v.label_text
+  WHERE EXISTS (SELECT 1 FROM segment g WHERE g.valueset_id = v.valueset_id)
+  EXCEPT SELECT item_id, valueset_id FROM search_code_valueset
+) OR EXISTS (
+  SELECT item_id, valueset_id FROM search_code_valueset
+  EXCEPT SELECT s.id, v.valueset_id FROM vs_item v
+    JOIN search_item s ON s.kind = 'code' AND s.code_text = v.code_text
+      AND s.label_text IS v.label_text
+  WHERE EXISTS (SELECT 1 FROM segment g WHERE g.valueset_id = v.valueset_id)
+);
 
 -- meta has its required keys
 SELECT column1 FROM (VALUES ('schema_version'),('generation_id'),('catalog_version'),

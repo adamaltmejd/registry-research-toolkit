@@ -200,7 +200,6 @@ CREATE TABLE vs_item (
   sentinel    INTEGER NOT NULL DEFAULT 0 CHECK (sentinel IN (0,1)),  -- "unknown" etc.
   PRIMARY KEY (valueset_id, ord)
 ) STRICT, WITHOUT ROWID;
-CREATE INDEX vs_item_code ON vs_item(code_text, label_text);
 
 -- Per-code validity dates are applied at read time and not stored (design D30).
 
@@ -472,7 +471,7 @@ CREATE INDEX alias_variable ON alias(variable_id);
 
 -- Search: one row per searchable entity; rowid shared with the FTS index.
 -- A 'code' row is a distinct (code, label) pair of the referenced value sets; their
--- value sets are found through vs_item_code. sort_key breaks bm25 ties
+-- value sets are in search_code_valueset. sort_key breaks bm25 ties
 -- deterministically (pid, or 'code' U+001F 'label').
 CREATE TABLE search_item (
   id          INTEGER PRIMARY KEY,
@@ -488,6 +487,17 @@ CREATE TABLE search_item (
   CHECK ((kind = 'code') = (entity_id IS NULL)),
   CHECK (kind = 'code' OR label_text IS NULL)
 ) STRICT;
+
+-- A 'code' row's value sets: those some segment references that hold its pair. The
+-- drill-down from a code hit (`values?code=`) and its count. It replaces an index on
+-- vs_item(code_text, label_text) that covered every value set (107 MB at 0.80.0).
+-- simplify: 5.4M rows, about 59 MB at 0.80.0 (90% of vs_item's rows); packing each
+-- code row's ids into one value on search_item is the next lever if size matters.
+CREATE TABLE search_code_valueset (
+  item_id     INTEGER NOT NULL REFERENCES search_item(id),
+  valueset_id INTEGER NOT NULL REFERENCES valueset(id),
+  PRIMARY KEY (item_id, valueset_id)
+) STRICT, WITHOUT ROWID;
 
 CREATE VIRTUAL TABLE search USING fts5(
   name, label, body,                      -- pid + spellings; labels; definitions

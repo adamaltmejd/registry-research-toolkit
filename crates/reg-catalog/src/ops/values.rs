@@ -456,26 +456,24 @@ fn pair(server: &Server, conn: &Connection, params: &Params, code: &str) -> Resu
     if let Some(phrase) = phrase {
         let pairs = rows(
             conn,
-            "SELECT si.code_text, si.label_text
+            "SELECT si.id
                  FROM search s
                    JOIN search_item si ON si.id = s.rowid AND si.kind = 'code'
                    JOIN text c ON c.id = si.code_text
                    LEFT JOIN text l ON l.id = si.label_text
                  WHERE search MATCH ? AND c.body = ? AND l.body IS ?",
             rusqlite::params![phrase, code, label],
-            |row| Ok((row.get::<_, i64>(0)?, row.get::<_, Option<i64>>(1)?)),
+            |row| row.get::<_, i64>(0),
         )?;
         let mut sets = conn.prepare(
-            "SELECT v.id, v.hash FROM vs_item i JOIN valueset v ON v.id = i.valueset_id
-             WHERE i.code_text = ? AND i.label_text IS ? AND v.hash > ?
-               AND EXISTS (SELECT 1 FROM segment s WHERE s.valueset_id = v.id)
-             GROUP BY v.id ORDER BY v.hash LIMIT ?",
+            "SELECT v.id, v.hash FROM search_code_valueset c JOIN valueset v ON v.id = c.valueset_id
+             WHERE c.item_id = ? AND v.hash > ?
+             ORDER BY v.hash LIMIT ?",
         )?;
-        for (code_text, label_text) in pairs {
+        for item in pairs {
             let rows = sets.query_map(
                 rusqlite::params![
-                    code_text,
-                    label_text,
+                    item,
                     after,
                     i64::try_from(limit + 1).expect("a limit fits i64")
                 ],

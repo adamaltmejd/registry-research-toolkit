@@ -918,11 +918,16 @@ release assets are left unchanged.
 - **Schema addition M2.** `alias_variable` indexes `alias(variable_id)` for the
   variable-to-names direction.
 - `search_item` code rows are (code, label) pairs, not (value set, item): `code_text`,
-  `label_text`, no `valueset_id`. The value sets of a pair come from `vs_item_code`
-  (C-10 ruling: one row per item measured 1.48 GB).
-- `vs_item_code` exists only for that lookup (about 90-100 MB). Packing items into one
-  BLOB per value set (schema §5.2, about −65 MB on `vs_item`) is the lever if size
-  matters.
+  `label_text`, no `valueset_id` (C-10 ruling: one row per item measured 1.48 GB).
+- The builder writes a pair's value sets, those some segment references, to
+  `search_code_valueset (item_id, valueset_id)`: the `values?code=` drill-down and the
+  hit's `value_set_count` read it by primary key. It replaced an index
+  `vs_item_code ON vs_item(code_text, label_text)` over every value set (107 MB at
+  0.80.0). Referenced sets hold 90% of `vs_item` rows, so the table keeps 5.4M rows and
+  about 59 MB of that (#2335). Packing each code row's value-set ids into one value on
+  `search_item` is the next lever if size matters, and packing items into one BLOB per
+  value set (schema §5.2, about −65 MB on `vs_item`) another. Reading the pairs from
+  `vs_item` without either costs a full scan (about 125 MB) per drill-down.
 - **Edition and qualifier are not part of a request.** The primary segments serve every
   order (final over preliminary); the builder stores no selection segments. Naming an
   edition or a qualifier is deferred until curation, so the periods grammar and the
@@ -2527,7 +2532,7 @@ returns one ranked list.
      the label, `spellings` the variable's `alias` folds, sorted;
    - code `{code, label, value_set_count}`: `label` `null` when the pair has none, the
      count is of distinct value sets holding the pair that some segment references
-     (`vs_item_code`, `segment_valueset`);
+     (`search_code_valueset`, written by the builder);
    - document `{doc, title, heading, page}`: `doc` is the hash; `heading` and `page`
      come from the document's best `doc_fts` section for the same expression
      (`bm25(doc_fts)`, then `ord`), both `null` when no section matches.

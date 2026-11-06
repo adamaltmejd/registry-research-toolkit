@@ -15,6 +15,9 @@ pub struct Item {
     pub span: Option<(i64, i64)>,
     /// A 'code' row's (code, label) pair; the label is `None` when the item has none.
     pub pair: Option<(String, Option<String>)>,
+    /// A 'code' row's value sets: those some segment references that hold the pair,
+    /// by id ascending (`search_code_valueset`). Empty for every other kind.
+    pub valuesets: Vec<i64>,
     pub sort_key: String,
     pub name: String,
     pub label: String,
@@ -30,6 +33,8 @@ pub struct Ids<'a> {
     pub variable: &'a BTreeMap<(usize, usize), i64>,
     /// A document's id → the register of its first resolved subject.
     pub doc_register: &'a BTreeMap<i64, i64>,
+    /// A value set's hash → its id.
+    pub valueset: &'a BTreeMap<&'a str, i64>,
 }
 
 /// How much of a document's text its search row carries; `doc_fts` holds the whole.
@@ -53,6 +58,7 @@ pub fn items(catalog: &Catalog, ids: &Ids) -> Result<Vec<Item>, String> {
             register_id: Some(register_id),
             span: Some((emit::start(&r.coverage.0), emit::end(&r.coverage.1))),
             pair: None,
+            valuesets: Vec::new(),
             sort_key: reg_pid.clone(),
             name: reg_pid,
             label: reg.name.clone().unwrap_or_default(),
@@ -71,6 +77,7 @@ pub fn items(catalog: &Catalog, ids: &Ids) -> Result<Vec<Item>, String> {
                 register_id: Some(register_id),
                 span: Some(emit::hull(&table.spans)),
                 pair: None,
+                valuesets: Vec::new(),
                 sort_key: pid.clone(),
                 name: pid,
                 label: table.table.name.clone().unwrap_or_default(),
@@ -98,6 +105,7 @@ pub fn items(catalog: &Catalog, ids: &Ids) -> Result<Vec<Item>, String> {
                 register_id: Some(register_id),
                 span: Some((emit::start(&variable.hull.0), emit::end(&variable.hull.1))),
                 pair: None,
+                valuesets: Vec::new(),
                 sort_key: pid,
                 name,
                 label,
@@ -106,7 +114,7 @@ pub fn items(catalog: &Catalog, ids: &Ids) -> Result<Vec<Item>, String> {
             });
         }
     }
-    items.extend(code_items(catalog));
+    items.extend(code_items(catalog, ids.valueset));
     for (d, document) in catalog.docs.iter().enumerate() {
         let doc = &document.doc;
         let doc_id = emit::count(d) + 1;
@@ -117,6 +125,7 @@ pub fn items(catalog: &Catalog, ids: &Ids) -> Result<Vec<Item>, String> {
             register_id: ids.doc_register.get(&doc_id).copied(),
             span: None,
             pair: None,
+            valuesets: Vec::new(),
             sort_key: format!("doc:{}", doc.hash),
             name: String::new(),
             label: doc.title.clone(),
@@ -150,10 +159,10 @@ fn variable_texts(variable: &reg_resolve::Variable) -> (String, Vec<&str>) {
     (labels.join("\n"), definitions)
 }
 
-/// Code rows: one per distinct (code, label) of the value sets some segment states.
-/// Pairs compare as text, as `vs_item_code` does. A value set only occurrences reach
-/// adds none.
-fn code_items(catalog: &Catalog) -> Vec<Item> {
+/// Code rows: one per distinct (code, label) of the value sets some segment states,
+/// each with those sets. Pairs compare as text, as `vs_item` stores them. A value set
+/// only occurrences reach adds none.
+fn code_items(catalog: &Catalog, valueset_id: &BTreeMap<&str, i64>) -> Vec<Item> {
     let referenced: BTreeSet<&str> = catalog
         .registers
         .iter()
@@ -161,19 +170,25 @@ fn code_items(catalog: &Catalog) -> Vec<Item> {
         .flat_map(|v| &v.segments)
         .filter_map(|s| s.valueset.as_deref())
         .collect();
-    let mut pairs = BTreeSet::new();
+    let mut pairs: BTreeMap<(&str, Option<&str>), Vec<i64>> = BTreeMap::new();
+    // Hash order is id order, so each list ascends; a pair repeated within one set
+    // repeats only that set's id, the list's last.
     for (hash, (set, _)) in &catalog.valuesets {
         if referenced.contains(hash.as_str()) {
-            pairs.extend(
-                set.items
-                    .iter()
-                    .map(|i| (i.code.as_str(), i.label.as_deref())),
-            );
+            let id = valueset_id[hash.as_str()];
+            for i in &set.items {
+                let sets = pairs
+                    .entry((i.code.as_str(), i.label.as_deref()))
+                    .or_default();
+                if sets.last() != Some(&id) {
+                    sets.push(id);
+                }
+            }
         }
     }
     pairs
         .into_iter()
-        .map(|(code, label)| {
+        .map(|((code, label), valuesets)| {
             // U+001F cannot occur in either text. A missing label has no separator, so
             // its key differs from the empty label's.
             let sort_key = label.map_or_else(
@@ -186,6 +201,7 @@ fn code_items(catalog: &Catalog) -> Vec<Item> {
                 register_id: None,
                 span: None,
                 pair: Some((code.to_owned(), label.map(str::to_owned))),
+                valuesets,
                 sort_key,
                 name: code.to_owned(),
                 label: label.unwrap_or_default().to_owned(),
