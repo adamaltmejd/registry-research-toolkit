@@ -1,5 +1,5 @@
 repo = "adamaltmejd/registry-catalog-inputs"
-commit = "e5fda6563b7f406d6fa05792bc2af3b057e48e5c"
+commit = "41dc1d249e7693debf2614e5689436198bfe9e23"
 
 [[provider]]
 pid = "scb"
@@ -28,6 +28,14 @@ name = "Riksarkivet"
 [[provider]]
 pid = "umu"
 name = "Umeå universitet"
+
+# Source: "ASTAT-dokumentation" (edition 2026-07-29),
+# https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf, pinned
+# as catalog/evidence/IAF/astatdokumentation.pdf in the inputs repository. No licence
+# stated.
+[[provider]]
+pid = "iaf"
+name = "Inspektionen för arbetslöshetsförsäkringen"
 
 [[provider]]
 pid = "sos"
@@ -68,6 +76,12 @@ name = "umu-transcription"
 reader = "transcription"
 path = "catalog/source/transcriptions/umu"
 provider = "umu"
+
+[[input]]
+name = "iaf-transcription"
+reader = "transcription"
+path = "catalog/source/transcriptions/iaf"
+provider = "iaf"
 
 # The SCB metadata export, byte-exact as received: a release asset of the inputs
 # repository, fetched with `gh release download scb-raw-2026-03` into `<assets>/`.
