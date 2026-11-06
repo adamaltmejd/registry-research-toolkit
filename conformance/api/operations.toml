@@ -4,7 +4,7 @@
 # Changing it is a maintainer decision; choices the interface rules do not dictate say
 # so in `note`.
 #
-# The v5 API reads catalog schema 11. The emitted DDL is crates/reg-build/src/schema.sql.
+# The v5 API reads catalog schema 12. The emitted DDL is crates/reg-build/src/schema.sql.
 #
 # Every response is `{"data": <result>, "meta": <Meta>}`; an error is
 # `{"error": <Error>, "meta": <Meta>}` (shapes below). Raw-bytes downloads
@@ -27,7 +27,7 @@
 #            `?` marks optional.
 #   result   the `data` shape: a [shape.*] name, `Page<T>` (= {items: [T], next_cursor:
 #            cursor | null}) or a description of its fields. A list bounded by
-#            the request or the entity (a variable's findings, a register's documents) is
+#            the request or the entity (a register's documents) is
 #            a plain array, not a page.
 #   errors   codes from errors.toml it can return beyond the ones every operation can:
 #            invalid_parameter, catalog_unavailable, internal_error.
@@ -109,7 +109,7 @@ note = """The summary for any ref; no ref is the catalog root. A provider lists 
 registers each with its variables, as the register's own summary lists them, so the \
 provider alone lists every variable of its registers. Sets require \
 set/<provider>/<register>/<slug>; malformed set refs are invalid_ref. Heavy parts are other operations: a variable's segments \
-(`segments`), relations (`graph`), findings (`findings`), codes (`values`) and coverage \
+(`segments`), relations (`graph`), codes (`values`) and coverage \
 (`coverage`). Variable summaries show the curated description, the coverage hull, and \
 sets and tags when it has any; the provider's wording is per period on `segments`. A \
 paired catalog serves only what the steward holds: any other register, table or \
@@ -144,22 +144,6 @@ names so (`valueset_name`), replacing `value_set_version`. `evidence` adds each 
 row's occurrences, their provenance and the losing source values (schema §2.1, \
 "Per-period detail"; design §2.4). Facet routes are `/api/<operation>/{ref}` rather \
 than `/api/catalog/{ref}/<facet>`, which a variable named `segments` could shadow."""
-
-[[operation]]
-name = "findings"
-http = ["GET /api/findings/{ref}"]
-params = { ref = "ref", period = "period?", table = "ref?", code = "string?", limit = "limit?", cursor = "cursor?" }
-result = "{groups: [{code, severity, count, items: [Finding], next_cursor: cursor | null}]}, review groups first, then by code; items ordered by subject kind, subject, start"
-errors = ["invalid_ref", "not_found", "retired_ref", "table_is_register", "ambiguous_ref", "invalid_period", "invalid_cursor", "stale_cursor"]
-note = """The review and notice findings on a register (`finding_register`), a table or \
-a variable, its segments and its occurrences (`finding_subject`), overlapping \
-`period`. Renamed from `warnings`: v4's entity is the finding (schema §1.1). `code` \
-narrows by the rule code prefix (`F7`, `F7:edition-disagreement`). One group per \
-severity and code: `count` is its total under the filters, `items` its first `limit`. \
-A register holds thousands of findings in a few codes, so a group is paged: its \
-`next_cursor` is issued for the request with `code` set to the group's code, and a \
-`cursor` without `code` is `invalid_parameter`. No MCP tool: segments and the order \
-check carry the findings an agent needs; the SPA's entity pages are the consumer."""
 
 [[operation]]
 name = "values"
@@ -350,18 +334,6 @@ note = """Every result period is half-open, `[start, end)` (schema §0). A reque
 `period` stays the project grammar (`2018`, `2015..2019`); a period is never a \
 `{from, to}` year pair in a result."""
 
-[shape.Subject]
-kind = "\"register\" | \"table\" | \"release\" | \"variable\" | \"segment\" | \"occurrence\" | \"valueset\""
-fqid = "string | null; the register, table or variable; for a segment or an occurrence, its variable (null for an occurrence without one)"
-name = "string | null; the name of `fqid`, as `show` gives it"
-table = "string | null; the table of a release, segment or occurrence"
-table_name = "string | null; the name of `table`"
-period = "Period | null; the release's, segment's or occurrence's period (null when unplaced)"
-release = "string | null; a release's literal delivery name"
-spelling = "string | null; an occurrence's exact spelling"
-value_set = "string | null; a value set's hash"
-note = "What a finding is about, by natural key: segments, releases and occurrences have no public id, and row ids are never exposed (design §2.3)."
-
 [shape.ValueSetRef]
 hash = "string; valueset.hash"
 n_items = "integer"
@@ -437,14 +409,6 @@ identifier = "boolean?"
 role = "\"row_key\" | \"time_start\" | \"time_stop\" | \"time_point\" | \"measure\" | \"code\" | \"label\""
 state = "\"ambiguous\" | \"preliminary\"?"
 evidence = "with `evidence` only: [{release (Release | null), period, spelling, label, source_key, status, locators [{input, locator}], overrides [{field, value, prov, statement {file, line} | null, rule | null, source_value}]}]"
-
-[shape.Finding]
-code = "string; rule code and sub-kind, `F7:edition-disagreement`"
-severity = "\"review\" | \"notice\""
-subject = "Subject"
-period = "Period | null"
-message = "string"
-caveat = "string | null; an acked statement's caveat"
 
 [shape.ValueItem]
 code = "string; may be \"\" (a real item)"

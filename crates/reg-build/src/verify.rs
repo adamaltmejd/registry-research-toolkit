@@ -2,6 +2,7 @@
 //! (§4.2, §4.3). `emit` runs it before replacing the output; `reg-build verify`
 //! runs it on any file.
 
+use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
 use crate::error::Result;
@@ -59,12 +60,27 @@ fn types(db: &Connection) -> Result<()> {
             return Err(format!("unpublished catalog dtype {dtype:?}").into());
         }
     }
+    let family = |dtype: Option<&str>| {
+        dtype.and_then(|t| reg_frame::dtype_info(t).expect("validated dtype").family)
+    };
+    // The F6 source conflict, as resolution decides it: an untyped segment whose own
+    // occurrences state two or more known families. A segment's occurrences are exactly
+    // the used ones resolution segmented, and resolution leaves a type blank over two
+    // families only for this conflict (or an ambiguous segment, skipped below).
+    let mut families = BTreeMap::<i64, BTreeSet<&'static str>>::new();
+    let mut stated = db.prepare(
+        "SELECT o.segment_id, o.dtype FROM occurrence o JOIN segment s ON s.id = o.segment_id
+         WHERE s.dtype IS NULL AND o.dtype IS NOT NULL",
+    )?;
+    let mut rows = stated.query([])?;
+    while let Some(row) = rows.next()? {
+        let dtype: String = row.get(1)?;
+        if let Some(f) = family(Some(&dtype)) {
+            families.entry(row.get(0)?).or_default().insert(f);
+        }
+    }
     let mut pairs = db.prepare(
-        "SELECT o.id, o.dtype, s.dtype, s.state, EXISTS (
-             SELECT 1 FROM finding f
-             WHERE f.subject_kind = 'segment' AND f.subject_id = s.id
-               AND f.code = 'F6:source-conflict' AND f.severity = 'review'
-               AND f.start = s.start AND f.end = s.end)
+        "SELECT o.id, o.dtype, s.dtype, s.state, s.id
          FROM occurrence o JOIN segment s ON s.id = o.segment_id
          WHERE o.dtype IS NOT s.dtype",
     )?;
@@ -72,9 +88,6 @@ fn types(db: &Connection) -> Result<()> {
     while let Some(row) = rows.next()? {
         let occurrence: Option<String> = row.get(1)?;
         let segment: Option<String> = row.get(2)?;
-        let family = |dtype: Option<&str>| {
-            dtype.and_then(|t| reg_frame::dtype_info(t).expect("validated dtype").family)
-        };
         // A published unknown is NULL (the alias check above refuses `unspecified`); a
         // known type beneath it fails the family check below unless ambiguity or an F6
         // conflict left it blank.
@@ -91,12 +104,10 @@ fn types(db: &Connection) -> Result<()> {
             .into());
         }
         let state: String = row.get(3)?;
-        let exempt: bool = row.get(4)?;
-        if state != "ambiguous"
-            && own.is_some()
-            && own != published
-            && !(segment.is_none() && exempt)
-        {
+        let conflict = families
+            .get(&row.get::<_, i64>(4)?)
+            .is_some_and(|f| f.len() > 1);
+        if state != "ambiguous" && own.is_some() && own != published && !conflict {
             return Err(format!(
                 "occurrence {}: type family disagrees with its segment",
                 row.get::<_, i64>(0)?

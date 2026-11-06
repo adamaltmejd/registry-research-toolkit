@@ -58,7 +58,7 @@ const TEXT: [(&str, &str); 6] = [
     ),
 ];
 
-/// Finding subjects by kind, as SQL returning (row id, key that survives a rebuild).
+/// Statement subjects by kind, as SQL returning (row id, key that survives a rebuild).
 const SUBJECTS: [(&str, &str); 9] = [
     ("register", "SELECT id, pid FROM register"),
     ("table", "SELECT id, pid FROM tbl"),
@@ -525,13 +525,6 @@ fn same_schema(p: &Pair, os: &(i64, Option<String>)) -> Result<Vec<Section>> {
             format!("{side}: {text}"),
         )));
     }
-    let subjects = subject_cte();
-    let findings_sql = format!(
-        "WITH subject(kind, id, key) AS ({subjects}) \
-         SELECT f.code, f.subject_kind || ':' || ifnull(s.key, f.subject_id), \
-         ifnull(CAST(f.start AS TEXT), ''), ifnull(CAST(f.end AS TEXT), '') FROM finding f \
-         LEFT JOIN subject s ON s.kind = f.subject_kind AND s.id = f.subject_id"
-    );
     let notices_sql = "SELECT n.code, json_array(t.schema_name, t.physical_name) || '/' || ifnull(c.name, ''), \
                        ifnull(CAST(n.start AS TEXT), ''), ifnull(CAST(n.end AS TEXT), '') \
                        FROM holding_notice n JOIN holding_table t ON t.id = n.holding_id \
@@ -539,12 +532,6 @@ fn same_schema(p: &Pair, os: &(i64, Option<String>)) -> Result<Vec<Section>> {
     let mut out = vec![Section::flat("meta", "holdings", sides)];
     out.extend(census(p)?);
     out.push(texts(p)?);
-    out.push(delta(
-        "findings",
-        "findings (by code, subject, period)",
-        p,
-        &findings_sql,
-    )?);
     out.push(delta(
         "notices",
         "holdings notices (by code, table/column, period)",

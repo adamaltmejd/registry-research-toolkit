@@ -600,20 +600,20 @@ fn runs(pieces: &[Piece], test: &dyn Fn(&Piece) -> bool) -> Vec<(usize, Interval
     runs
 }
 
-/// `edition_disagreement`: reg-resolve's F7 finding is on a release, so it reaches the
-/// binding through a release of a serving table that documents the variable and
-/// overlaps its pieces there.
-// simplify: F7 names the release, not the keys that disagree, so a variable the release
+/// `edition_disagreement`: reg-resolve's F7 marks a release
+/// (`release.edition_disagreement`), so it reaches the binding through a release of a
+/// serving table that documents the variable and overlaps its pieces there.
+// simplify: F7 marks the release, not the keys that disagree, so a variable the release
 // documents in agreement is reported too; revisit if F7 gains a variable subject.
 fn editions(at: &Located, pieces: &[Piece]) -> Result<Vec<Issue>, Error> {
     let scope = at.scope;
     let mut found = Vec::new();
     let part = |db: &str, table: &str, variable: &str, joins: &str| {
         format!(
-            "SELECT f.start, f.end
-             FROM {db}.finding f JOIN {db}.release r ON r.id = f.subject_id {joins}
-             WHERE f.subject_kind = 'release' AND f.code = 'F7:edition-disagreement'
-               AND f.start IS NOT NULL AND {table} = ?1
+            "SELECT r.start, r.end
+             FROM {db}.release r {joins}
+             WHERE r.edition_disagreement = 1
+               AND r.start IS NOT NULL AND {table} = ?1
                AND EXISTS (SELECT 1 FROM {db}.occurrence o {variable})"
         )
     };
@@ -623,7 +623,7 @@ fn editions(at: &Located, pieces: &[Piece]) -> Result<Vec<Issue>, Error> {
         "WHERE o.release_id = r.id AND o.variable_id = ?2",
         "",
     );
-    // The holdings database's own findings reach a base table and variable by public id.
+    // The holdings database's own releases reach a base table and variable by public id.
     let sql = if scope.composed {
         let held = part(
             "held",

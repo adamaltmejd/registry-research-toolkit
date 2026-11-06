@@ -3,12 +3,12 @@
 //! ```text
 //! reg-build read  --inputs DIR --curation DIR --out DIR [--assets DIR]
 //! reg-build build --inputs DIR --curation DIR --out FILE [--assets DIR] [--report FILE]
-//!                 [--catalog-version V] [--release]
+//!                 [--findings FILE] [--catalog-version V] [--release]
 //! reg-build lock [REGISTER...] --inputs DIR --curation DIR [--assets DIR] [--base FILE]
 //! reg-build verify FILE [--previous FILE]
 //! reg-build verify FILE --catalog FILE --steward-repo DIR
 //! reg-build holdings --base FILE --steward NAME --steward-repo DIR --config FILE
-//!                    --out FILE [--report FILE]
+//!                    --out FILE [--report FILE] [--findings FILE]
 //! reg-build pin --steward-repo DIR --config FILE
 //! reg-build diff [--holdings] OLD NEW [--json] [-n N]
 //! ```
@@ -22,7 +22,8 @@
 //! `<name>.warnings` under `--out`. `build` resolves each register with its ledger
 //! `<curation>/registers/<provider>/<register>/ids.toml`, matches the frames' links and
 //! notices across the resolved registers (`link.rs`), and writes the catalog file to `--out`
-//! and the build report (JSON) to `--report`. `--catalog-version` (default `dev`) is
+//! and the build report (JSON) to `--report`; with `--findings`, it writes the findings,
+//! which the catalog does not carry, as sorted JSON Lines (`findings.rs`). `--catalog-version` (default `dev`) is
 //! recorded in the file; `--release` refuses unplaced or split ledger ids and variables
 //! without a ledger id. A refusal
 //! prints the error on stderr and exits 1. `diff` compares two catalog files by natural
@@ -38,6 +39,7 @@ mod docs;
 mod emit;
 mod error;
 mod external;
+mod findings;
 mod holdings;
 mod id_targets;
 mod link;
@@ -85,6 +87,7 @@ struct Args {
     out: PathBuf,
     assets: Option<PathBuf>,
     report: Option<PathBuf>,
+    findings: Option<PathBuf>,
     catalog_version: String,
     release: bool,
     registers: Vec<String>,
@@ -102,8 +105,8 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args> {
     let command = args
         .next()
         .ok_or("usage: reg-build read|build --inputs DIR --curation DIR --out PATH")?;
-    let (mut inputs, mut curation, mut out, mut assets, mut report, mut version) =
-        (None, None, None, None, None, None);
+    let (mut inputs, mut curation, mut out, mut assets, mut report, mut findings, mut version) =
+        (None, None, None, None, None, None, None);
     let mut release = false;
     let mut registers = Vec::new();
     let mut base = None;
@@ -114,6 +117,7 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args> {
             "--out" => &mut out,
             "--assets" => &mut assets,
             "--report" => &mut report,
+            "--findings" if command == "build" => &mut findings,
             "--catalog-version" => &mut version,
             "--base" if command == "lock" => &mut base,
             "--release" => {
@@ -142,6 +146,7 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args> {
         out,
         assets: assets.map(PathBuf::from),
         report: report.map(PathBuf::from),
+        findings: findings.map(PathBuf::from),
         catalog_version: version.unwrap_or_else(|| "dev".to_owned()),
         release,
         registers,
@@ -709,7 +714,11 @@ fn build_with_provenance(
             None => "build refused; use --report FILE for details".into(),
         });
     }
-    emit::write(&catalog, &args.out)
+    emit::write(&catalog, &args.out)?;
+    match &args.findings {
+        Some(path) => findings::write(&catalog, path),
+        None => Ok(()),
+    }
 }
 
 fn lock(args: &Args) -> Result<()> {

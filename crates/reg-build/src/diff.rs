@@ -910,24 +910,6 @@ fn registers(p: &Pair) -> Result<Section> {
     Ok(Section::flat("registers", "registers", items))
 }
 
-fn findings(p: &Pair) -> Result<Section> {
-    let (old, new) = p.maps("SELECT code, count(*) FROM finding GROUP BY code", |r| {
-        Ok((r.get::<_, String>(0)?, r.get::<_, i64>(1)?))
-    })?;
-    let count = |v: Option<&i64>| v.copied().unwrap_or(0);
-    let items = changed(&old, &new)
-        .into_iter()
-        .map(|(code, o, n)| {
-            let (o, n) = (count(o), count(n));
-            Item::new(
-                json!({"code": code, "old": o, "new": n}),
-                format!("{code}: {o} → {n}"),
-            )
-        })
-        .collect();
-    Ok(Section::flat("findings", "findings", items))
-}
-
 /// The columns of each ordinary table.
 fn columns(conn: &Connection) -> Result<BTreeMap<String, BTreeSet<String>>> {
     ordinary_tables(conn)?
@@ -1019,7 +1001,6 @@ fn catalog(pair: &Pair, args: &Args) -> Result<Report> {
                 tables(pair)?,
                 variables,
                 valuesets(pair, &hash_changes)?,
-                findings(pair)?,
             ],
             None,
         ));
@@ -1045,7 +1026,6 @@ fn catalog(pair: &Pair, args: &Args) -> Result<Report> {
             tables(pair)?,
             variables,
             valuesets(pair, &hash_changes)?,
-            findings(pair)?,
         ])
     })()
     .map_err(|e| format!("{}: schema {old} is not comparable: {e}", args.old))?;

@@ -235,6 +235,9 @@ pub struct ResolvedRelease {
     /// For a placed release, whether it is the primary edition of its period and
     /// qualifier; `None` when unplaced.
     pub primary: Option<bool>,
+    /// A non-primary edition that differs from its primary on a key's spellings or type
+    /// families (its F7 finding). Published: the order check reads it.
+    pub edition_disagreement: bool,
 }
 
 #[derive(Debug)]
@@ -519,6 +522,7 @@ pub(crate) fn resolve_located(
             release: (*r).clone(),
             table: t,
             primary: None,
+            edition_disagreement: false,
         });
     }
     let rank = |edition: &str| match edition {
@@ -736,6 +740,7 @@ pub(crate) fn resolve_located(
             .map(|(key, _)| *key)
             .collect();
         if !differ.is_empty() {
+            releases[x].edition_disagreement = true;
             findings.push(Finding {
                 code: "F7:edition-disagreement",
                 severity: "review",

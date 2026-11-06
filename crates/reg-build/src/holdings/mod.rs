@@ -31,6 +31,7 @@ pub(crate) fn run(args: impl Iterator<Item = String>) -> Result<()> {
             "--out",
             "--config",
             "--report",
+            "--findings",
         ]
         .contains(&k.as_str())
     }) {
@@ -41,6 +42,7 @@ pub(crate) fn run(args: impl Iterator<Item = String>) -> Result<()> {
     let out = PathBuf::from(need("--out")?);
     let owner = need("--steward")?;
     let report = flags.get("--report").map(PathBuf::from);
+    let findings = flags.get("--findings").map(PathBuf::from);
     // The pin is the checkout itself: its `origin`, `HEAD` and the config path, admitted
     // only on a clean tree. Each steward repository pins the toolkit, not the reverse.
     let pin = input::checkout(&root, &need("--config")?)?;
@@ -48,6 +50,7 @@ pub(crate) fn run(args: impl Iterator<Item = String>) -> Result<()> {
     crate::verify::catalog(&base, None)?;
     if std::iter::once(&out)
         .chain(report.iter())
+        .chain(findings.iter())
         .any(|path| path == &base || path.canonicalize().ok() == base.canonicalize().ok())
     {
         return Err("holdings_output_invalid: output must differ from base".into());
@@ -72,6 +75,7 @@ pub(crate) fn run(args: impl Iterator<Item = String>) -> Result<()> {
             &pin,
             &config,
             report.as_deref(),
+            findings.as_deref(),
         )?;
         verify::pair(&staged, &base, &root)?;
         let summary = {
@@ -160,6 +164,7 @@ fn write(
     pin: &input::Pin,
     config: &input::Config,
     report: Option<&Path>,
+    findings: Option<&Path>,
 ) -> Result<()> {
     let curation = input::path(root, &config.curation_root)?
         .parent()
@@ -174,6 +179,7 @@ fn write(
             out: scratch.to_path_buf(),
             assets: None,
             report: report.map(Path::to_path_buf),
+            findings: findings.map(Path::to_path_buf),
             catalog_version: "supplemental".into(),
             release: true,
             registers: vec![],
