@@ -131,9 +131,9 @@ includes `crates`), `rust` for `conformance/` and the Rust server, and `frontend
 `flows` for `reg_webapp/frontend` and `reg_webapp/dev`. The R packages are not gated:
 run their testthat suites by hand. For the edge worker, run
 `bunx wrangler@<pin> deploy --dry-run --config reg_webapp/edge/wrangler.jsonc`, with the
-wrangler pin `.github/workflows/container-build.yml` deploys with. A change that
-redesigns a module rather than deleting from it, or needs more than one sitting, becomes
-a GitHub issue instead (search open and closed first).
+wrangler pin `.github/workflows/container-build.yml` and `steward-deploy.yml` deploy
+with. A change that redesigns a module rather than deleting from it, or needs more than
+one sitting, becomes a GitHub issue instead (search open and closed first).
 
 ## 5. Report
 

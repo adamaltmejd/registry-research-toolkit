@@ -26,6 +26,18 @@
       "depNameTemplate": "jolars/panache",
       "datasourceTemplate": "github-releases",
       "extractVersionTemplate": "^v(?<version>.+)$"
+    },
+    {
+      "description": "The wrangler pin in container-build.yml (global edge) and steward-deploy.yml (steward edges): one regex, so one PR moves both.",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^\\.github/workflows/(container-build|steward-deploy)\\.yml$/"
+      ],
+      "matchStrings": [
+        "bunx wrangler@(?<currentValue>[0-9][^\\s]*)"
+      ],
+      "depNameTemplate": "wrangler",
+      "datasourceTemplate": "npm"
     }
   ],
   "packageRules": [
