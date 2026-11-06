@@ -1686,10 +1686,10 @@ one exact trimmed physical name, across every census table, to one catalog name
 accepted. A `catalog` match name goes through the ordinary fold. A `variable` target
 matches the routed tables' segments of that variable whatever their documented spelling,
 so the period picks the spelling: `scb/rtb/familjer-1990-1997` spells the family id
-`FAMID90` in 1990, `FAMID91` in 1991 and so on, and one `variable =
-"scb/rtb/familjeidentitet-rtb"` rename places a steward's unsuffixed `FAMID` in every
-year, where a `catalog` rename would place one. Renames exist because a steward that
-renamed a column everywhere (IFAU: 212 such names over about 10,000 tables) would
+`FAMID90` in 1990, `FAMID91` in 1991 and so on, and one
+`variable = "scb/rtb/familjeidentitet-rtb"` rename places a steward's unsuffixed `FAMID`
+in every year, where a `catalog` rename would place one. Renames exist because a steward
+that renamed a column everywhere (IFAU: 212 such names over about 10,000 tables) would
 otherwise need one reviewed `[[table.column.mapping]]` per table.
 
 A rename has no table scope. A spelling that is two variables in one catalog table (the
