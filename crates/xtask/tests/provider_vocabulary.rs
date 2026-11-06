@@ -19,7 +19,7 @@ const NEUTRAL_CRATES: [&str; 5] = [
     "reg-catalog",
     "reg-meta",
 ];
-const WORDS: [&str; 19] = [
+const WORDS: [&str; 20] = [
     "scb",
     "sos",
     "socialstyrelsen",
@@ -32,6 +32,7 @@ const WORDS: [&str; 19] = [
     "pliktverket",
     "riksarkivet",
     "umu",
+    "iaf",
     "swecov",
     "xlsx",
     "calamine",
