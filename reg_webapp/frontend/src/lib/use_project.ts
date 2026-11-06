@@ -99,11 +99,13 @@ export type Verdict =
 /** One verdict for the banner and /project, in the same words. A file that
  * fails the structure check has problems; a draft the catalog refuses to order
  * can't be downloaded yet, unless its only problem is the database not yet
- * chosen (a choice to make, not an error, #2345); a check that did not run (rate limit, network) says so,
+ * chosen where the page offers the Database select (`select`; a choice to make,
+ * not an error, #2345); a check that did not run (rate limit, network) says so,
  * and /project explains it with Retry. */
 export function projectVerdict(
   { draft }: ProjectSnapshot,
   check: Pick<ProjectCheck, "loading" | "data" | "error">,
+  select: boolean,
 ): Verdict {
   if (!draft) return "problems";
   if (draft.sources.length === 0) return "empty";
@@ -111,7 +113,8 @@ export function projectVerdict(
   if (check.error || !check.data) return "unchecked";
   if (check.data.order === null) {
     const errors = check.data.issues.filter((issue) => issue.level === "error");
-    return errors.length > 0 &&
+    return select &&
+      errors.length > 0 &&
       errors.every((issue) => DATABASE_CODES.includes(issue.code))
       ? "database"
       : "blocked";

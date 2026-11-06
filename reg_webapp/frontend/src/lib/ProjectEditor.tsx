@@ -205,9 +205,9 @@ export function ProjectEditor({
           )}
           {draft &&
             shown.data?.order &&
-            ["ready", "warnings"].includes(projectVerdict(project, shown)) && (
-              <DeliverySummary order={shown.data.order} busy={busy} />
-            )}
+            ["ready", "warnings"].includes(
+              projectVerdict(project, shown, databases !== null),
+            ) && <DeliverySummary order={shown.data.order} busy={busy} />}
         </>
       )}
       <ConfirmDialog
@@ -267,7 +267,7 @@ function Check({
   databaseShown: boolean;
   needsDatabase: boolean;
 }) {
-  const checked = projectVerdict(project, validation);
+  const checked = projectVerdict(project, validation, databaseShown);
   // A database not yet chosen: with the select on the page, the info row above
   // is the whole answer (a choice to make, not an error, #2345); once one is
   // chosen, the previous check still says it until the next arrives, so the
@@ -276,13 +276,11 @@ function Check({
   const verdict: Verdict =
     checked !== "database"
       ? checked
-      : !databaseShown
-        ? "blocked"
-        : needsDatabase
-          ? "database"
-          : busy
-            ? "checking"
-            : "blocked";
+      : needsDatabase
+        ? "database"
+        : busy
+          ? "checking"
+          : "blocked";
   const words = VERDICT_WORDS[verdict];
   const structural = project.draft === null;
   // While the select and the row above the verdict say what `database_required`
