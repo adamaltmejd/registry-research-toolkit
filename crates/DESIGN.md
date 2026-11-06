@@ -1724,6 +1724,47 @@ so a single-schema holder's names read unchanged; the order itself carries schem
 table separately. A label can still coincide with a dotted physical name in another
 schema; the file name stays the unique handle.
 
+#### Linkage spaces
+
+A linkage space is a set of a steward's tables that share one person key: on screen, a
+database. A steward whose databases each have their own key holds separate spaces. A
+copy of one series in two databases is then not interchangeable with the other, and an
+order draws from one space only (the order contract is a later change). The steward
+config (`steward.toml`, not the census reader config, since spaces describe the
+steward's data) declares them:
+
+```toml
+[[space]]
+id = "a"              # slug; the id an order names
+name = "Database A"   # the database's name as the steward shows it
+schemas = ["A"]       # census schema values; several schemas may share one space
+```
+
+Without `[[space]]` the steward has one implicit space: its owner id, named by its
+presentation `name`. Nothing is shown for it, and SWECOV's config is unchanged. With any
+`[[space]]` the census must be schema-keyed, and compile refuses, located at
+`config:space=N` or the census row:
+
+- `holdings_space_invalid`: a space without a slug id, a name or a schema; a repeated id
+  or name; a listed schema absent from the census or already in another space;
+- `holdings_space_unmapped`: a census schema in no space.
+
+Holdings schema 8 stores the spaces in `holding_space` (`id`, `name`, `ord` in config
+order) and each table's space in `holding_table.space`. `verify` re-derives both from
+the pinned config and census (`holdings_space_source_mismatch`). The duplicate-placement
+rule holds within one space: the same variable over the same period in two spaces'
+tables is admitted, while inside one space the partition, projection and carried-key
+exemptions apply unchanged. The per-column checks are inside one table, so already
+inside one space, and a projection's parent is in the projection's own schema.
+`reg-build diff --holdings` compares the spaces and each table's space; against holdings
+before schema 8 it compares none, and the schema changes name the added table and
+column.
+
+Readers stay space-blind except where a space is chosen: possession, `show` and search
+serve a variable if any space holds it. `/api/context` `steward_config.spaces` lists
+`{id, name}` in config order, always (one entry for a single-space steward). `segments`
+gives each held row its `space` id only when the steward has more than one space.
+
 Ordinary supplemental curation records its locks with
 `reg-build lock --base <catalog> --inputs <steward-repo> --curation <steward-repo>/curation`.
 `reg-build pin --steward-repo <dir> --config <path>` then rewrites the config's `[pins]`
@@ -1808,6 +1849,8 @@ input pin. That report is private release evidence.
 
 Holdings schema 7 replaces the unique `holding_table.physical_name` with a unique
 (`schema_name`, `physical_name`) for schema-keyed censuses (see "Schema-keyed census").
+
+Holdings schema 8 adds `holding_space` and `holding_table.space` (see "Linkage spaces").
 
 The following tables describe the physical layer's grains; all intervals use the
 catalog's half-open day convention:

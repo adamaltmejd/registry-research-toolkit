@@ -27,6 +27,8 @@ pub(crate) struct Holdings {
     path: PathBuf,
     meta: BTreeMap<String, String>,
     possession: Possession,
+    /// The linkage spaces, in the steward's order.
+    spaces: Vec<Space>,
 }
 
 /// What a steward deployment serves: the public ids an accepted placement names, and
@@ -123,6 +125,15 @@ pub struct Steward {
     pub schema_version: String,
 }
 
+/// One of the data holder's databases: its tables share a person key.
+#[derive(Clone, Serialize, ToSchema)]
+pub struct Space {
+    /// Stable slug.
+    pub id: String,
+    /// The name a researcher picks it by.
+    pub name: String,
+}
+
 /// The data holder's name, logo and description.
 #[derive(ToSchema)]
 #[expect(
@@ -133,6 +144,9 @@ pub struct StewardConfig {
     presentation: StewardPresentation,
     /// The logo's SVG markup.
     logo: String,
+    /// The databases whose tables share a person key, in the steward's order: one
+    /// for a steward that declares none. An order draws from one.
+    spaces: Vec<Space>,
 }
 
 #[derive(Deserialize, ToSchema)]
@@ -265,11 +279,12 @@ impl Catalog {
             path,
             meta,
             possession: Possession::default(),
+            spaces: Vec::new(),
         });
         catalog.admit_identities()?;
         catalog
             .admit_possession()
-            .map_err(|_| refuse("holdings placements are unreadable"))?;
+            .map_err(|_| refuse("holdings placements or spaces are unreadable"))?;
         Ok(catalog)
     }
 
@@ -277,8 +292,21 @@ impl Catalog {
         let conn = self.connect()?;
         self.attach_holdings(&conn)?;
         let possession = Possession::read(&conn)?;
+        let mut query = conn.prepare("SELECT id, name FROM held.holding_space ORDER BY ord")?;
+        let spaces = query
+            .query_map([], |r| {
+                Ok(Space {
+                    id: r.get(0)?,
+                    name: r.get(1)?,
+                })
+            })?
+            .collect::<Result<Vec<_>, _>>()?;
+        if spaces.is_empty() {
+            return Err(Error::internal("Holdings declare no linkage space."));
+        }
         if let Some(holdings) = self.holdings.as_mut() {
             holdings.possession = possession;
+            holdings.spaces = spaces;
         }
         Ok(())
     }
@@ -376,6 +404,7 @@ impl Catalog {
         self.holdings.as_ref().map(|h| serde_json::json!({
             "presentation": serde_json::from_str::<serde_json::Value>(&h.meta["steward"]).expect("admitted JSON"),
             "logo": h.meta["logo"],
+            "spaces": h.spaces,
         }))
     }
 

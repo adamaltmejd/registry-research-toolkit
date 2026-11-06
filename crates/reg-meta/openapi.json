@@ -4274,6 +4274,10 @@
           "sensitive": {
             "type": "boolean"
           },
+          "space": {
+            "type": "string",
+            "description": "On a data holder with several databases, the id of the database the file is in."
+          },
           "state": {
             "type": "string",
             "description": "Present only when the column is ambiguous; absent means clear."
@@ -5224,6 +5228,24 @@
         },
         "additionalProperties": false
       },
+      "Space": {
+        "type": "object",
+        "description": "One of the data holder's databases: its tables share a person key.",
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Stable slug."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name a researcher picks it by."
+          }
+        }
+      },
       "StatementLocation": {
         "type": "object",
         "required": [
@@ -5269,7 +5291,8 @@
         "description": "The data holder's name, logo and description.",
         "required": [
           "presentation",
-          "logo"
+          "logo",
+          "spaces"
         ],
         "properties": {
           "logo": {
@@ -5278,6 +5301,13 @@
           },
           "presentation": {
             "$ref": "#/components/schemas/StewardPresentation"
+          },
+          "spaces": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Space"
+            },
+            "description": "The databases whose tables share a person key, in the steward's order: one\nfor a steward that declares none. An order draws from one."
           }
         }
       },

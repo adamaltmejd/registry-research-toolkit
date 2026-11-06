@@ -417,6 +417,37 @@ fn delta(key: &'static str, title: &'static str, pair: &Pair, sql: &str) -> Resu
     Ok(Section::flat(key, title, items))
 }
 
+/// The linkage spaces (id, name, order) and each table's space, keyed by its stored
+/// schema and name. Holdings before schema 8 have no spaces: the section says so and
+/// compares nothing, and the schema changes list the added table and column.
+fn spaces(p: &Pair) -> Result<Section> {
+    let has = |conn: &rusqlite::Connection| -> Result<bool> {
+        Ok(conn.query_row(
+            "SELECT EXISTS(SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'holding_space')",
+            [],
+            |r| r.get(0),
+        )?)
+    };
+    if !has(&p.old)? || !has(&p.new)? {
+        return Ok(Section::flat(
+            "spaces",
+            "linkage spaces",
+            vec![shown(Item::new(
+                json!({"compared": false}),
+                "spaces: not compared, one side predates holdings schema 8".to_owned(),
+            ))],
+        ));
+    }
+    delta(
+        "spaces",
+        "linkage spaces (by id, name, order) and table spaces (by table)",
+        p,
+        "SELECT 'space', id, name, CAST(ord AS TEXT) FROM holding_space UNION ALL \
+         SELECT 'table space', json_array(schema_name, physical_name), space, '' \
+         FROM holding_table",
+    )
+}
+
 /// The holdings sections, and (old, current) holdings schemas when they differ. Equal
 /// schemas diff as always. Otherwise NEW must be on this build's holdings schema and OLD
 /// on an older one, each with `user_version` equal to `meta.schema_version`.
@@ -520,5 +551,6 @@ fn same_schema(p: &Pair, os: &(i64, Option<String>)) -> Result<Vec<Section>> {
         p,
         notices_sql,
     )?);
+    out.push(spaces(p)?);
     Ok(out)
 }

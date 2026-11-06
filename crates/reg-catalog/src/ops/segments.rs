@@ -68,6 +68,10 @@ pub struct Segment {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[schema(nullable = false)]
     file: Option<String>,
+    /// On a data holder with several databases, the id of the database the file is in.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[schema(nullable = false)]
+    space: Option<String>,
     /// The provider's definition over this period; a change of wording starts a row.
     #[serde(skip_serializing_if = "Option::is_none")]
     #[schema(nullable = false)]
@@ -486,7 +490,8 @@ fn held_rows(
     let placements = rows(
         extra,
         &format!(
-            "SELECT m.table_pid, c.name, m.start, m.end, {}, m.role
+            "SELECT m.table_pid, c.name, m.start, m.end, {}, m.role,
+               CASE WHEN (SELECT count(*) FROM holding_space) > 1 THEN h.space END
              FROM holding_mapping m
                JOIN holding_column c ON c.id = m.column_id
                JOIN holding_table h ON h.id = c.holding_id
@@ -502,11 +507,12 @@ fn held_rows(
                 row.get::<_, i64>(3)?,
                 row.get::<_, String>(4)?,
                 row.get::<_, String>(5)?,
+                row.get::<_, Option<String>>(6)?,
             ))
         },
     )?;
     let mut out = Vec::new();
-    for (table, column, start, end, file, role) in placements {
+    for (table, column, start, end, file, role, space) in placements {
         let in_table: Vec<&Row> = catalog
             .iter()
             .filter(|r| r.segment.table == table)
@@ -550,6 +556,7 @@ fn held_rows(
             part.segment.table.clone_from(&table);
             part.segment.column.clone_from(&column);
             part.segment.file = Some(file.clone());
+            part.segment.space.clone_from(&space);
             out.push(part);
         }
     }
