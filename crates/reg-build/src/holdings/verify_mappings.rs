@@ -143,13 +143,13 @@ fn claims(
             }
         }
     } else {
-        let spelling = reg_core::fold_identity(&column.match_name);
+        let target = compile::Target::of(&column.match_name);
         for route in &table.routes {
             let segments = index.get(route).ok_or("holdings_table_route_unresolved")?;
-            for segment in segments.iter().filter(|s| {
-                reg_core::fold_identity(&s.spelling) == spelling
-                    && s.timeless == (table.disposition == "timeless")
-            }) {
+            for segment in segments
+                .iter()
+                .filter(|s| target.matches(s) && s.timeless == (table.disposition == "timeless"))
+            {
                 claims.push(claim(segment, &spans, false, None, None));
             }
         }

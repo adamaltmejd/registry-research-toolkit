@@ -1680,11 +1680,27 @@ CSV errors identify input roles and row numbers without echoing private source v
 A steward whose physical column names differ from the catalog's documented spellings
 lists the differences in the census reader config. `[[rewrite]]` (`prefix`,
 `replacement`, `evidence`) replaces a literal prefix of every column that has it.
-`[[rename]]` (`physical`, `catalog`, `evidence`) maps one exact trimmed physical name to
-one catalog name, across every census table. Patterns are never accepted; the match name
-then goes through the ordinary fold. Renames exist because a steward that renamed a
-column everywhere (IFAU: 212 such names over about 10,000 tables) would otherwise need
-one reviewed `[[table.column.mapping]]` per table.
+`[[rename]]` (`physical`, `evidence`, and exactly one of `catalog` and `variable`) maps
+one exact trimmed physical name, across every census table, to one catalog name
+(`catalog`) or to one catalog variable (`variable`, an FQID). Patterns are never
+accepted. A `catalog` match name goes through the ordinary fold. A `variable` target
+matches the routed tables' segments of that variable whatever their documented spelling,
+so the period picks the spelling: `scb/rtb/familjer-1990-1997` spells the family id
+`FAMID90` in 1990, `FAMID91` in 1991 and so on, and one
+`variable = "scb/rtb/familjeidentitet-rtb"` rename places a steward's unsuffixed `FAMID`
+in every year, where a `catalog` rename would place one. Renames exist because a steward
+that renamed a column everywhere (IFAU: 212 such names over about 10,000 tables) would
+otherwise need one reviewed `[[table.column.mapping]]` per table.
+
+A rename has no table scope. A spelling that is two variables in one catalog table (the
+wage-structure `StoraN`, `Lillan` and `Nsvar`: `scb/slp/storanarb` and the other `…arb`
+variables in a steward's manual-worker tables, the `…ovr` ones in its salaried tables)
+is mapped per table by `[[table.column.mapping]]`, which is already the table-scoped
+variable target; a column with an explicit mapping never consults `[[rename]]`. A
+`variable` rename is reader-wide, so a rename to one side places that side in every
+table that routes to the variable, the other side's tables included; those tables need
+their explicit mappings. Nothing refuses the omission: the catalog cannot tell which
+physical tables hold which side.
 
 Order: the reader looks the exact physical name up in `[[rename]]` first. A hit is the
 match name, and no rewrite applies to it. Otherwise each `[[rewrite]]` applies in config
@@ -1694,15 +1710,16 @@ therefore has one match result, never one from each list.
 
 Refusals, each naming the entry by its 1-based position, never by name:
 
-- `census_rename_invalid`: an empty or untrimmed physical name, an empty catalog name,
-  or empty evidence.
+- `census_rename_invalid`: an empty or untrimmed physical name, not exactly one of
+  `catalog` and `variable`, an empty catalog name, an empty or untrimmed variable, or
+  empty evidence.
 - `census_rename_duplicate`: two entries for one physical name.
 - `census_rename_chain`: a catalog name that is itself a renamed physical name. Renames
   apply once; a chain means the author expected them to compose, so it refuses rather
   than guess.
 - `census_rename_unresolved` (compiler and verify): a catalog name that folds to no
-  documented spelling in the base or semantic view. It can never match, so it is a typo
-  or a stale entry.
+  documented spelling, or a variable with no segment, in the base or semantic view. It
+  can never match, so it is a typo or a stale entry.
 
 A rename that collides with a rewrite result, or with any other column, is two columns
 of one table reaching the same match name. That is refused where both place, by the

@@ -220,14 +220,13 @@ pub(super) fn candidates(
             }
         }
     } else {
-        let folded = reg_core::fold_identity(&column.match_name);
+        let target = Target::of(&column.match_name);
         for route in &table.routes {
             let segments = index
                 .get(route)
                 .ok_or("holdings_table_route_unresolved: default route absent")?;
             for segment in segments {
-                if segment.timeless != (table.disposition == "timeless")
-                    || reg_core::fold_identity(&segment.spelling) != folded
+                if segment.timeless != (table.disposition == "timeless") || !target.matches(segment)
                 {
                     continue;
                 }
@@ -496,23 +495,45 @@ pub(super) fn segment_index(
     Ok(index)
 }
 
-/// Refuse a `[[rename]]` whose catalog name is no documented spelling anywhere in the
-/// catalog or semantic view: it could never match, so it is a typo or a stale entry.
+/// A census column's match target, folded once: a spelling or a variable FQID.
+pub(super) enum Target<'a> {
+    Spelling(String),
+    Variable(&'a str),
+}
+
+impl<'a> Target<'a> {
+    pub(super) fn of(target: &'a census::Match) -> Self {
+        match target {
+            census::Match::Spelling(name) => Self::Spelling(reg_core::fold_identity(name)),
+            census::Match::Variable(fqid) => Self::Variable(fqid),
+        }
+    }
+
+    pub(super) fn matches(&self, segment: &Segment) -> bool {
+        match self {
+            Self::Spelling(folded) => reg_core::fold_identity(&segment.spelling) == *folded,
+            Self::Variable(fqid) => segment.variable == *fqid,
+        }
+    }
+}
+
+/// Refuse a `[[rename]]` whose target matches no segment anywhere in the catalog or
+/// semantic view: it could never match, so it is a typo or a stale entry.
 pub(super) fn renames_resolve(
     index: &BTreeMap<String, Vec<Segment>>,
-    targets: &[String],
+    targets: &[census::Match],
 ) -> Result<()> {
-    let spellings: BTreeSet<_> = index
-        .values()
-        .flatten()
+    let segments = || index.values().flatten();
+    let spellings: BTreeSet<_> = segments()
         .map(|s| reg_core::fold_identity(&s.spelling))
         .collect();
-    match (1..)
-        .zip(targets)
-        .find(|(_, t)| !spellings.contains(&reg_core::fold_identity(t)))
-    {
+    let variables: BTreeSet<_> = segments().map(|s| s.variable.as_str()).collect();
+    match (1..).zip(targets).find(|(_, t)| match t {
+        census::Match::Spelling(name) => !spellings.contains(&reg_core::fold_identity(name)),
+        census::Match::Variable(fqid) => !variables.contains(fqid.as_str()),
+    }) {
         Some((n, _)) => Err(format!(
-            "census_rename_unresolved: rename {n}: catalog name matches no documented spelling"
+            "census_rename_unresolved: rename {n}: target matches no documented spelling or variable"
         )
         .into()),
         None => Ok(()),
@@ -547,7 +568,7 @@ pub(super) fn write(
     base: &Connection,
     topology: input::Topology,
     mut census: Vec<census::Table>,
-    rename_targets: &[String],
+    rename_targets: &[census::Match],
     spaces: &super::spaces::Spaces,
 ) -> Result<(usize, usize, usize, usize)> {
     let index = segment_index(base, db)?;

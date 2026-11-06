@@ -1,0 +1,8 @@
+{
+  "note": "Pool delivers 2017..2020. The base frame documents demo/held/value as Old from 2017-01-01 to 2018-12-31 and New from 2019-01-01 to 2021-12-31. catalog: Pool's Old is received as Received_Olde and renamed to the catalog spelling Old, so it places Old's documented interval. variable: Pool's Old and New are received as one column Value and renamed to the variable demo/held/value, so it places both documented intervals, split at the spelling change. Bounds are days since 1970-01-01, end exclusive: 2017-01-01 = 17167, 2019-01-01 = 17897, 2021-01-01 = 18628. Oracle: the base frame and Pool's authored delivery.",
+  "catalog": ["demo/held demo/held/value 17167 17897"],
+  "variable": [
+    "demo/held demo/held/value 17167 17897",
+    "demo/held demo/held/value 17897 18628"
+  ]
+}
