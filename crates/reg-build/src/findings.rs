@@ -97,8 +97,12 @@ fn lines(catalog: &Catalog) -> Vec<Line> {
 /// # Errors
 /// `findings` and one of `others` are the same file.
 pub(crate) fn refuse_alias(findings: &Path, others: &[&Path]) -> Result<()> {
-    // The parent canonicalized (it must exist for the write anyway) plus the file name.
+    // An existing path resolves fully (a symlink names its target); a new one is its
+    // parent canonicalized (it must exist for the write anyway) plus the file name.
     let key = |p: &Path| {
+        if let Ok(file) = p.canonicalize() {
+            return Some(file);
+        }
         let dir = match p.parent() {
             Some(d) if !d.as_os_str().is_empty() => d.canonicalize().ok()?,
             _ => std::env::current_dir().ok()?,

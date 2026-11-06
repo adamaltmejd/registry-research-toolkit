@@ -400,18 +400,22 @@ struct TableInfo {
     timeless: i64,
     cadence: Option<String>,
     spans: Vec<(i64, i64)>,
+    /// Deliveries whose edition disagrees with the primary (`release.edition_disagreement`,
+    /// read by the order check's warning). A schema without the column has none.
+    disagreeing: Vec<String>,
 }
 
 impl TableInfo {
     fn json(&self) -> Value {
         json!({"name": self.name, "description": self.description,
                "role": self.role, "timeless": self.timeless, "cadence": self.cadence,
-               "spans": self.spans.iter().map(|&(s, e)| json!([iso_day(s), iso_day(e)])).collect::<Vec<_>>()})
+               "spans": self.spans.iter().map(|&(s, e)| json!([iso_day(s), iso_day(e)])).collect::<Vec<_>>(),
+               "edition_disagreement": self.disagreeing})
     }
 
     fn text(&self) -> String {
         format!(
-            "name={:?} description={:?} role={} timeless={} cadence={} spans={}",
+            "name={:?} description={:?} role={} timeless={} cadence={} spans={} edition_disagreement={:?}",
             self.name,
             self.description,
             self.role,
@@ -420,7 +424,8 @@ impl TableInfo {
             self.spans
                 .iter()
                 .map(|&(s, e)| span(s, e))
-                .collect::<String>()
+                .collect::<String>(),
+            self.disagreeing
         )
     }
 }
@@ -442,6 +447,7 @@ fn table_infos(conn: &Connection) -> Result<BTreeMap<String, TableInfo>> {
                     timeless: r.get(4)?,
                     cadence: r.get(5)?,
                     spans: Vec::new(),
+                    disagreeing: Vec::new(),
                 },
             ))
         },
@@ -463,6 +469,26 @@ fn table_infos(conn: &Connection) -> Result<BTreeMap<String, TableInfo>> {
     for (pid, start, end) in spans {
         if let Some(info) = infos.get_mut(&pid) {
             info.spans.push((start, end));
+        }
+    }
+    let flagged: bool = conn.query_row(
+        "SELECT count(*) = 1 FROM pragma_table_info('release')
+         WHERE name = 'edition_disagreement'",
+        [],
+        |r| r.get(0),
+    )?;
+    if flagged {
+        let rows = query(
+            conn,
+            "SELECT t.pid, n.body FROM release r JOIN tbl t ON t.id = r.table_id
+             JOIN text n ON n.id = r.name_text
+             WHERE r.edition_disagreement = 1 ORDER BY t.pid, n.body",
+            |r| Ok((r.get::<_, String>(0)?, r.get::<_, String>(1)?)),
+        )?;
+        for (pid, name) in rows {
+            if let Some(info) = infos.get_mut(&pid) {
+                info.disagreeing.push(name);
+            }
         }
     }
     Ok(infos)
