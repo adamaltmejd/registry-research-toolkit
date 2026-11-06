@@ -82,3 +82,7 @@
 .option[data-focus-visible] {
   box-shadow: var(--focus-ring-inset);
 }
+
+.value[data-placeholder] {
+  color: var(--text-muted);
+}

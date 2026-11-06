@@ -274,6 +274,7 @@ instructions come from `/api/context`, never from code.
   | Years not available                                              | period adjustments, clips              |
   | Ready to order, Has warnings, Has problems, Can't be ordered yet | valid, warnings, errors, order blocked |
   | Check did not run                                                | check failed, error, unchecked         |
+  | Database                                                         | linkage space, schema, category        |
 
 **Type** is one list for every screen, the catalog's types in plain words: Whole number,
 Decimal number, Text, Date, Date and time, Yes or no, Geometry, UUID, Binary, Identifier
@@ -926,30 +927,38 @@ grow new visual language meanwhile.
 - **Project page** (`/project`, maintainer ruling Q1, 2026-11-04): the `h1` "Project"
   with no breadcrumb repeating it, the name field, then "Download project_data.json",
   "Open a project file…" and a ghost "Discard"; opening over a project and discarding
-  ask first in a `Dialog`. Under them, the steward's `order_instructions` from
-  `/api/context` as sent (its own line breaks, no markdown, never text from code), then
-  the verdict, "Tables" (one card per table) and "What will be delivered". A card's
-  column years load with its own table, not with other cards: a column the catalog does
-  not know shows its own error and leaves the card's other columns their years, and
-  adding or removing a column reloads no other (#2232). There is one check and no button
-  for it: WASM on every edit, then `order` 350 ms after the last edit WASM accepted. The
-  verdict is one `StatusRow`: "Ready to order", "Has warnings" with the count, "Can't be
-  ordered yet" with the count of problems, or "Has problems" for a file that fails the
-  structure check, whose problems are listed in full under it; a check that did not run
-  is an `err` row with Retry. While a newer check runs, the verdict, its list and "What
-  will be delivered" keep the previous check's answer (not a check that did not run)
-  with `aria-busy`; the banner's plain `text-muted` "Checking" shows in its place only
-  when there is none, or when a table or column was added, removed or moved since, so
-  the earlier findings would sit on the wrong card. A draft with no tables is "Empty"
-  and is not checked. "What will be delivered" is the order the catalog would serve,
-  shown only when the project can be ordered: per table its name and years, each column
-  as a `ColumnChip` (with its years only where they differ from the table's) beside the
-  variable's name, "Years not available" per column the period asks more of than the
-  table has, and the "Row identifier" columns. There is no order-file download: the
-  steward's instructions say how to order. With no project the page is one `EmptyState`,
-  "No project yet", with "Create a project" and "Open a project file…". Below
-  `breakpoint-narrow` a column's row on a card stacks: its name and Remove, its spans,
-  then Type.
+  ask first in a `Dialog`. A steward with several databases, each with its own person
+  key (maintainer ruling 2026-11-06: on this page only, and only then), adds a
+  **Database** `Select` under the name field: an order draws from one database, so a
+  project names one (`linkage.database`), and with one database nothing is shown. Until
+  one is chosen the Select reads "Choose a database", an `info` `StatusRow` above the
+  verdict reads "Choose the database your data comes from", and Download is inert and
+  points at that row; the server's `database_required` is not listed again. A column the
+  chosen database does not have is the server's `not_in_database` on its card, naming
+  the databases that do; it is a finding, never a disabled option. Under the buttons,
+  the steward's `order_instructions` from `/api/context` as sent (its own line breaks,
+  no markdown, never text from code), then the verdict, "Tables" (one card per table)
+  and "What will be delivered". A card's column years load with its own table, not with
+  other cards: a column the catalog does not know shows its own error and leaves the
+  card's other columns their years, and adding or removing a column reloads no other
+  (#2232). There is one check and no button for it: WASM on every edit, then `order` 350
+  ms after the last edit WASM accepted. The verdict is one `StatusRow`: "Ready to
+  order", "Has warnings" with the count, "Can't be ordered yet" with the count of
+  problems, or "Has problems" for a file that fails the structure check, whose problems
+  are listed in full under it; a check that did not run is an `err` row with Retry.
+  While a newer check runs, the verdict, its list and "What will be delivered" keep the
+  previous check's answer (not a check that did not run) with `aria-busy`; the banner's
+  plain `text-muted` "Checking" shows in its place only when there is none, or when a
+  table or column was added, removed or moved since, so the earlier findings would sit
+  on the wrong card. A draft with no tables is "Empty" and is not checked. "What will be
+  delivered" is the order the catalog would serve, shown only when the project can be
+  ordered: per table its name and years, each column as a `ColumnChip` (with its years
+  only where they differ from the table's) beside the variable's name, "Years not
+  available" per column the period asks more of than the table has, and the "Row
+  identifier" columns. There is no order-file download: the steward's instructions say
+  how to order. With no project the page is one `EmptyState`, "No project yet", with
+  "Create a project" and "Open a project file…". Below `breakpoint-narrow` a column's
+  row on a card stacks: its name and Remove, its spans, then Type.
 - **ColumnList:** a `label` header that names whose items they are ("Variables in
   Aktivitetsstöd", on a group page too, where the group's folded row is selected; one
   line, truncated with an ellipsis, the whole of it as hover text) (#1825), then items
