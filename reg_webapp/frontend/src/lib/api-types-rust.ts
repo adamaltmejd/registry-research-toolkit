@@ -438,6 +438,11 @@ export interface components {
             name: string;
             /** @description Absent for a variable (releases belong to tables) and on a data holder's catalog. */
             releases?: components["schemas"]["Release"][];
+            /**
+             * @description On a data holder with several databases, the id of the database these spans are
+             *     held in; a table held in more than one is listed once per database.
+             */
+            space?: string;
             spans: components["schemas"]["Period"][];
         };
         /** @description A curated statement that supplied a field of this variable. */

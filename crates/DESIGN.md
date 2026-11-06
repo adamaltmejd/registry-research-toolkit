@@ -1763,6 +1763,9 @@ Readers stay space-blind except where a space is chosen: possession, `show` and 
 serve a variable if any space holds it. `/api/context` `steward_config.spaces` lists
 `{id, name}` in config order, always (one entry for a single-space steward). `segments`
 gives each held row its `space` id only when the steward has more than one space.
+`coverage` then lists a table once per space that holds it, with that space's `space` id
+and spans, in config order, so a catalog page can name the databases that hold each
+delivery before a project chooses one; a single-space steward's coverage is unchanged.
 
 An order names its database in the project's optional `linkage.database` (project
 document 6.1.0). The holdings stage of `materialize_order`, which `validate` and `order`
