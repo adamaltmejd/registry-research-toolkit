@@ -1,7 +1,7 @@
 {
-  "crates/reg-core/tests/project/corpus/minimal/input.json": "00e4b95d6fc0979e82350177f124927ed55fdef09379aab8b1f0437a5e340f63",
-  "crates/reg-core/tests/project/corpus/panel_happy_path/input.json": "2bc451b738d2c3cb02bb067a574f15807290a2f8e484e235282071c0c4bfb2d9",
-  "crates/reg-core/tests/project/corpus/with_period_range/input.json": "c49f1e198c326e5e3519fb60a39fc543c2369dd11c3d11c596a0c27ebf61e8c1",
-  "crates/reg-core/tests/project/corpus/every_documented_field_is_accepted/input.json": "70381de3f315d256f3e2694388c589339b2f46060fd317f22ea691935f65fd60",
-  "crates/reg-core/tests/project/corpus/period_list_of_sorted_disjoint_segments_is_ok/input.json": "473186a12e5c4bedf58b6c38aa12780ea2e4bb5be40e3f22932754bd59a213a5"
+  "crates/reg-core/tests/project/corpus/minimal/input.json": "cece4b812e90482129dfc5e594facfffba1989ed1353a74f7b6a8a67340f9bca",
+  "crates/reg-core/tests/project/corpus/panel_happy_path/input.json": "99606259ae37aa8d064c6d623a6fcd022f93930aeb59dee71a8cc4affbedf09b",
+  "crates/reg-core/tests/project/corpus/with_period_range/input.json": "684b4232479f2a4cbf21b4da1ea2530c310e75bfca5a7c9f3fc0dc03ae17bfef",
+  "crates/reg-core/tests/project/corpus/every_documented_field_is_accepted/input.json": "756e9af24d5c0a2ea14b79d6cdb71c13efdac46c6c196ac8fe49250a1347f7b1",
+  "crates/reg-core/tests/project/corpus/period_list_of_sorted_disjoint_segments_is_ok/input.json": "e5f58bd1af246b3ce6be4bb05ee4dfcc2c1731651ef6d490c364e9210a3a1fc2"
 }

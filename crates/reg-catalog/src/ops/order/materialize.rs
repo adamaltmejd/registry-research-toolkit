@@ -163,13 +163,14 @@ fn build(
         .enumerate()
         .map(|(i, s)| (s.name.as_str(), i))
         .collect();
-    let mut findings: Vec<Issue> = Vec::new();
+    let (space, mut findings) = database(server, project);
+    let space = space.as_deref();
     let mut drafts: BTreeMap<i64, Draft> = BTreeMap::new();
     let mut bindings = Bindings::new();
     for (e, entry) in order.entries.iter().enumerate() {
         let s = index[entry.source.as_str()];
         let days = entry.period.days(open);
-        let placements = placements(held, &entry.table, &entry.variable, days)?;
+        let placements = placements(held, &entry.table, &entry.variable, days, space)?;
         // Keyed by the project binding's own variable: a followed successor's entry
         // names the successor, but its logical clip is recorded under the binding.
         let binding = bindings.entry((s, entry.binding)).or_insert_with(|| {
@@ -223,7 +224,16 @@ fn build(
                 });
             }
         }
-        gaps(held, server, s, entry, days, &placements, &mut findings)?;
+        gaps(
+            held,
+            server,
+            s,
+            entry,
+            days,
+            space,
+            &placements,
+            &mut findings,
+        )?;
     }
     let clips = clip(
         server,
@@ -329,7 +339,7 @@ fn build(
     physical.sort_by(|a, b| (&a.path, a.key()).cmp(&(&b.path, b.key())));
     let mut all: Vec<Issue> = Vec::new();
     for finding in &order.findings {
-        if !held_as_stated(server, held, project, &finding.issue)? {
+        if !held_as_stated(server, held, project, space, &finding.issue)? {
             all.push(finding.issue.clone());
         }
     }
@@ -354,6 +364,7 @@ fn held_as_stated(
     server: &Server,
     held: &Connection,
     project: &ProjectData,
+    space: Option<&str>,
     issue: &Issue,
 ) -> Result<bool, Error> {
     let (true, Some(table), Some(variable), Some(period)) = (
@@ -382,7 +393,7 @@ fn held_as_stated(
     let Some(stated) = stated else {
         return Ok(false);
     };
-    let placements = placements(held, table, variable, period.days(server.open))?;
+    let placements = placements(held, table, variable, period.days(server.open), space)?;
     if placements.is_empty() {
         return Ok(false);
     }
@@ -407,13 +418,123 @@ fn reference(server: &Server, entry: &OrderEntry, (lo, hi): Days) -> Ref {
     }
 }
 
-/// The accepted placements of (table, variable) over `days`; a projection keeps only
-/// the days its parent does not also place, and only those inside the request.
+/// The database the order draws from, or the finding that leaves it unchosen: `None`
+/// with a `database_required` or `database_unknown` error, and then placements are
+/// not filtered by database. A single-database steward needs no `linkage`; one that
+/// names its implicit database is accepted.
+fn database(server: &Server, project: &ProjectData) -> (Option<String>, Vec<Issue>) {
+    let spaces = server.catalog.spaces().unwrap_or_default();
+    let names = || {
+        spaces
+            .iter()
+            .map(|s| format!("{} ({})", s.name, s.id))
+            .collect::<Vec<_>>()
+            .join(", ")
+    };
+    match &project.linkage {
+        None if spaces.len() > 1 => (
+            None,
+            vec![Issue::new(
+                IssueLevel::Error,
+                "database_required",
+                "/linkage",
+                format!(
+                    "The data holder keeps its data in {} databases, each with its own \
+                     person key: {}. Choose the one this project draws from in \
+                     linkage.database, and make a separate project for each database",
+                    spaces.len(),
+                    names()
+                ),
+            )],
+        ),
+        None => (spaces.first().map(|s| s.id.clone()), vec![]),
+        Some(linkage) if spaces.iter().any(|s| s.id == linkage.database) => {
+            (Some(linkage.database.clone()), vec![])
+        }
+        Some(linkage) => (
+            None,
+            vec![Issue::new(
+                IssueLevel::Error,
+                "database_unknown",
+                "/linkage/database",
+                format!(
+                    "The data holder has no database {:?}. Its databases are: {}",
+                    linkage.database,
+                    names()
+                ),
+            )],
+        ),
+    }
+}
+
+/// When a binding's entry has no placement in the chosen database but another
+/// database holds it over the requested days: push `not_in_database`, naming those
+/// databases, and return true. An order never draws from two databases, so a project
+/// merged from two databases' projects refuses here (crates/DESIGN.md, "Linkage
+/// spaces").
+fn not_in_database(
+    held: &Connection,
+    server: &Server,
+    source: usize,
+    entry: &OrderEntry,
+    days: Days,
+    space: Option<&str>,
+    findings: &mut Vec<Issue>,
+) -> Result<bool, Error> {
+    let Some(space) = space else {
+        return Ok(false);
+    };
+    let elsewhere: Vec<String> = rows(
+        held,
+        "SELECT s.name FROM holding_space s WHERE s.id <> ?5 AND EXISTS(
+             SELECT 1 FROM holding_mapping m JOIN holding_column c ON c.id = m.column_id
+               JOIN holding_table h ON h.id = c.holding_id
+             WHERE h.space = s.id AND m.table_pid = ?1 AND m.variable_pid = ?2
+               AND m.start < ?4 AND m.end > ?3)
+         ORDER BY s.ord",
+        rusqlite::params![entry.table, entry.variable, days.0, days.1, space],
+        |r| r.get(0),
+    )?;
+    if elsewhere.is_empty() {
+        return Ok(false);
+    }
+    let chosen: String = held.query_row(
+        "SELECT name FROM holding_space WHERE id = ?",
+        [space],
+        |r| r.get(0),
+    )?;
+    findings.push(Issue {
+        source: Some(entry.source.clone()),
+        variable: Some(entry.variable.clone()),
+        table: Some(entry.table.clone()),
+        period: Some(server.period(days.0, days.1)),
+        ..Issue::new(
+            IssueLevel::Error,
+            "not_in_database",
+            format!("/sources/{source}/bindings/{}", entry.binding),
+            format!(
+                "{} in {} is not in the database {} for {}. It is in: {}. Make a \
+                 separate project for each database",
+                entry.variable,
+                entry.table,
+                chosen,
+                span(server, days),
+                elsewhere.join(", ")
+            ),
+        )
+    });
+    Ok(true)
+}
+
+/// The accepted placements of (table, variable) over `days` in database `space`
+/// (every database when `None`); a projection keeps only the days its parent does not
+/// also place, and only those inside the request.
 fn placements(
     held: &Connection,
     table: &str,
     variable: &str,
     days: Days,
+    space: Option<&str>,
 ) -> Result<Vec<Placement>, Error> {
     let found: Vec<Placement> = rows(
         held,
@@ -421,8 +542,9 @@ fn placements(
              FROM holding_mapping m JOIN holding_column c ON c.id = m.column_id
                JOIN holding_table h ON h.id = c.holding_id
              WHERE m.table_pid = ?1 AND m.variable_pid = ?2 AND m.start < ?4 AND m.end > ?3
+               AND (?5 IS NULL OR h.space = ?5)
              ORDER BY h.id, c.ordinal, m.start",
-        rusqlite::params![table, variable, days.0, days.1],
+        rusqlite::params![table, variable, days.0, days.1, space],
         |r| {
             Ok(Placement {
                 holding: r.get(0)?,
@@ -533,12 +655,16 @@ fn span(server: &Server, (lo, hi): Days) -> String {
 /// rivals) is `mapping_missing` and blocks; a day inside a routing table's delivery
 /// that only a column window leaves out is `column_window_unavailable`; any other is a
 /// `coverage_gap`. Whether the last two block is decided per binding in [`clip`].
+/// An entry no placement in the chosen database holds, but another database does, is
+/// `not_in_database` instead.
+#[allow(clippy::too_many_arguments)]
 fn gaps(
     held: &Connection,
     server: &Server,
     source: usize,
     entry: &OrderEntry,
     days: Days,
+    space: Option<&str>,
     placements: &[Placement],
     findings: &mut Vec<Issue>,
 ) -> Result<(), Error> {
@@ -552,23 +678,30 @@ fn gaps(
     if missing.is_empty() {
         return Ok(());
     }
+    if placements.is_empty() && not_in_database(held, server, source, entry, days, space, findings)?
+    {
+        return Ok(());
+    }
     let contested: Vec<Days> = merge(rows(
         held,
         "SELECT n.start, n.end FROM holding_notice n
              JOIN holding_notice_candidate c ON c.notice_id = n.id
+             JOIN holding_table h ON h.id = n.holding_id
              WHERE n.code = 'ambiguous_delivered_owners'
-               AND c.table_pid = ? AND c.variable_pid = ?",
-        [&entry.table, &entry.variable],
+               AND c.table_pid = ?1 AND c.variable_pid = ?2 AND (?3 IS NULL OR h.space = ?3)",
+        rusqlite::params![entry.table, entry.variable, space],
         |r| Ok((r.get(0)?, r.get(1)?)),
     )?);
     let windowed: Vec<Days> = merge(
         rows(
             held,
             "SELECT DISTINCT p.start, p.end FROM holding_period p
-             WHERE EXISTS(SELECT 1 FROM holding_mapping m JOIN holding_column c ON c.id = m.column_id
-               WHERE c.holding_id = p.holding_id AND m.table_pid = ? AND m.variable_pid = ?
+               JOIN holding_table h ON h.id = p.holding_id
+             WHERE (?3 IS NULL OR h.space = ?3)
+               AND EXISTS(SELECT 1 FROM holding_mapping m JOIN holding_column c ON c.id = m.column_id
+               WHERE c.holding_id = p.holding_id AND m.table_pid = ?1 AND m.variable_pid = ?2
                  AND m.window IS NOT NULL)",
-            [&entry.table, &entry.variable],
+            rusqlite::params![entry.table, entry.variable, space],
             |r| Ok((r.get(0)?, r.get(1)?)),
         )?,
     );

@@ -23,7 +23,7 @@ use crate::{
 };
 
 /// The `project_data.json` contract this runtime reads, exactly.
-pub const SCHEMA_VERSION: &str = "6.0.0";
+pub const SCHEMA_VERSION: &str = "6.1.0";
 
 /// The project in `raw`, or the issues that reject it without a catalog: the single
 /// entry point the server's validate and order operations share.
@@ -182,6 +182,22 @@ pub struct ProjectData {
     #[serde(default)]
     #[cfg_attr(feature = "openapi", schema(nullable = false))]
     pub extract_format: Option<ExtractFormat>,
+    /// The steward database the order draws from. Required by a steward with more
+    /// than one database; a steward with one needs none. An explicit `null` is
+    /// `invalid_field_type`.
+    #[serde(default)]
+    #[cfg_attr(feature = "openapi", schema(nullable = false))]
+    pub linkage: Option<Linkage>,
+}
+
+/// Which of a steward's databases (its linkage spaces) an order draws from: the tables
+/// of one database share a person key, so one order comes from one.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectLinkage))]
+#[serde(deny_unknown_fields)]
+pub struct Linkage {
+    /// A database id from the steward's `steward_config.spaces`.
+    pub database: String,
 }
 
 /// [`ProjectData`]'s fields as deserialized, so that `ProjectData` has no public
@@ -199,6 +215,8 @@ struct Fields {
     window: Option<StudyWindow>,
     #[serde(default)]
     extract_format: Option<ExtractFormat>,
+    #[serde(default)]
+    linkage: Option<Linkage>,
 }
 
 impl ProjectData {
@@ -226,6 +244,7 @@ impl ProjectData {
             panels: f.panels,
             window: f.window,
             extract_format: f.extract_format,
+            linkage: f.linkage,
         })
     }
 }

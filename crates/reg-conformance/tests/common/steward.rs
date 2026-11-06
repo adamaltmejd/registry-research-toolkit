@@ -211,3 +211,77 @@ fn prepare_materialize(directory: &Path) -> Result<(), String> {
     write(&path, &text)?;
     compile(directory).map(drop)
 }
+
+/// Split the steward copy at `root` into a schema-keyed census of two schemas: every
+/// table in `dbo`, plus a copy of Part A (Id, New over 2021) in `aux`. It compiles only
+/// once [`declare_spaces`] puts the two schemas in separate databases.
+pub fn split_schemas(root: &Path) -> Result<(), String> {
+    let census = root.join("census.csv");
+    edit(&census, "Synthetic,", "dbo,", true)?;
+    append(&census, "aux,Partition,Part A,Id,New,,,,,,,\n")?;
+    append(
+        &root.join("storage.csv"),
+        "aux,Part A,BASE TABLE,Id,int,,10,0,1\naux,Part A,BASE TABLE,New,int,,10,0,2\n",
+    )?;
+    edit(
+        &root.join("curation/readers/holdings.toml"),
+        "census_columns = \"V\"\n",
+        "census_columns = \"V\"\ncensus_schema = \"Category\"\n",
+        false,
+    )?;
+    let topology = root.join("holdings.toml");
+    edit(
+        &topology,
+        "[[table]]\n",
+        "[[table]]\nschema_name = \"dbo\"\n",
+        true,
+    )?;
+    append(
+        &topology,
+        "\n[[table]]\nschema_name = \"aux\"\nphysical_name = \"Part A\"\ndisposition = \"dated\"\n\
+         delivery = \"2021\"\ntable_pids = [\"demo/held\"]\nlocator = \"fixture:aux-copy\"\n\n\
+         [[table.key]]\nentity = [\"demo/held/id\"]\ntime = []\nperiod_key = \"year\"\n\
+         locator = \"fixture:declared-entity-time-key\"\n",
+    )
+}
+
+/// Declare the databases `main` (schema `dbo`) and `aux` (schema `aux`) in the pinned
+/// steward at `root` and commit them: pinning rewrites `steward.toml`, so this follows
+/// it.
+pub fn declare_spaces(root: &Path) -> Result<(), String> {
+    append(
+        &root.join("steward.toml"),
+        "\n[[space]]\nid = \"main\"\nname = \"Main database\"\nschemas = [\"dbo\"]\n\n\
+         [[space]]\nid = \"aux\"\nname = \"Auxiliary database\"\nschemas = [\"aux\"]\n",
+    )?;
+    run(std::process::Command::new("git").arg("-C").arg(root).args([
+        "commit",
+        "--quiet",
+        "-am",
+        "Declare two spaces",
+    ]))
+    .map(drop)
+}
+
+/// The server of a steward with two databases ([`split_schemas`], [`declare_spaces`]),
+/// built once per run.
+pub fn spaces() -> Result<u16, String> {
+    static PAIR: Built = OnceLock::new();
+    let dir = PAIR
+        .get_or_init(|| {
+            let dir = server::log_dir().join("spaces");
+            let root = locked_copy(&dir)?;
+            split_schemas(&root)?;
+            let holdings = pinned_holdings(&dir)?;
+            declare_spaces(&root)?;
+            run(holdings
+                .command()
+                .arg("--out")
+                .arg(dir.join("reg_meta_fixture.db")))?;
+            std::os::unix::fs::symlink(&holdings.base, dir.join("reg_meta.db"))
+                .map_err(|e| e.to_string())?;
+            Ok(dir)
+        })
+        .clone()?;
+    Ok(server::steward_server(&dir, "fixture")?.port)
+}

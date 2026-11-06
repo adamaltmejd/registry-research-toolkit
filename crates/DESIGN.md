@@ -1114,7 +1114,7 @@ with `--catalog <steward>` ("Holdings").
 
 ## The logical order
 
-`order` runs the order check of design v4 §9 on a 6.0.0 project and returns the logical
+`order` runs the order check of design v4 §9 on a 6.1.0 project and returns the logical
 order of schema §2.3 as `data`, or the error `order_blocked`. `validate` runs the same
 check and returns the same findings as issues. Both transports call the one
 implementation in `reg-catalog`, which is what makes their results identical. The check
@@ -1206,7 +1206,7 @@ and `sun2000niva`.
 {
   "data": {
     "catalog": {"generation_id": "9f2c…", "catalog_version": "0.65.0", "schema_version": "4"},
-    "project": {"name": "income-panel", "schema_version": "6.0.0",
+    "project": {"name": "income-panel", "schema_version": "6.1.0",
                 "reg_meta_version": "0.65.0", "project_hash": "51ab…"},
     "entries": [
       {"source": "lisa", "binding": 0, "provider": "scb", "register": "scb/lisa",
@@ -1256,7 +1256,7 @@ and `sun2000niva`.
        "variable_name": "Disponibel inkomst", "table_name": "Individer", "successor_name": null}
     ]
   },
-  "meta": {"contract_version": "6.0.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
+  "meta": {"contract_version": "6.1.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
 }
 ```
 
@@ -1285,7 +1285,7 @@ Request: source `lisa`, period `2018..2020`, bindings `kommun` and `dispink`.
       ]
     }
   },
-  "meta": {"contract_version": "6.0.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
+  "meta": {"contract_version": "6.1.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
 }
 ```
 
@@ -1729,9 +1729,8 @@ schema; the file name stays the unique handle.
 A linkage space is a set of a steward's tables that share one person key: on screen, a
 database. A steward whose databases each have their own key holds separate spaces. A
 copy of one series in two databases is then not interchangeable with the other, and an
-order draws from one space only (the order contract is a later change). The steward
-config (`steward.toml`, not the census reader config, since spaces describe the
-steward's data) declares them:
+order draws from one space only. The steward config (`steward.toml`, not the census
+reader config, since spaces describe the steward's data) declares them:
 
 ```toml
 [[space]]
@@ -1764,6 +1763,31 @@ Readers stay space-blind except where a space is chosen: possession, `show` and 
 serve a variable if any space holds it. `/api/context` `steward_config.spaces` lists
 `{id, name}` in config order, always (one entry for a single-space steward). `segments`
 gives each held row its `space` id only when the steward has more than one space.
+
+An order names its database in the project's optional `linkage.database` (project
+document 6.1.0). The holdings stage of `materialize_order`, which `validate` and `order`
+also run on a steward server, resolves it before placement:
+
+- `database_required` (error, `/linkage`): the steward has more than one space and the
+  project has no `linkage`;
+- `database_unknown` (error, `/linkage/database`): the id is none of the steward's
+  spaces. A single-space steward needs no `linkage`; one naming its implicit space is
+  accepted;
+- `not_in_database` (error, at the binding): no placement in the chosen space holds an
+  entry that another space holds over the requested days. The message names those
+  spaces. It replaces that entry's gap findings.
+
+Placement, contested cells and column windows read only the chosen space's tables, so
+every file of an order comes from one database. Each file's `schema` already names it
+through the steward config, so the order file stays version 4 with no new field: the
+MONA runner refuses unknown fields, and a single-space steward's orders change only in
+`project_hash`.
+
+There is no cross-database order: no option, flag or key-file field. A researcher who
+needs two databases makes one project for each, and the extracts are joined outside the
+toolkit with SCB's key-to-key file. A `project_data.json` merged from two databases'
+projects still names one database, so every binding held only in the other refuses with
+`not_in_database`, and such a file never yields an order.
 
 Ordinary supplemental curation records its locks with
 `reg-build lock --base <catalog> --inputs <steward-repo> --curation <steward-repo>/curation`.
@@ -1979,7 +2003,7 @@ promised (the runner deliberately has no `ORDER BY`).
 holdings pair come from startup configuration, with no request owner override. Add
 optional `extract_format = dta|parquet|csv` to project schema 5.2.0 ("Project document
 5.2.0"), defaulting to `dta` in order authoring. `project.rs::SCHEMA_VERSION` admits
-6.0.0 exactly; every other version is `unsupported_schema_version`. Older projects are
+6.1.0 exactly; every other version is `unsupported_schema_version`. Older projects are
 re-authored, not migrated or admitted by a compatibility path (AGENTS.md, "Maturity and
 compatibility"; ARCHITECTURE.md, "Project schema version"). When the optional field is
 absent, use the authoring default without inserting it before project hashing. The
@@ -2321,6 +2345,18 @@ a steward server `validate` and `order` also run the holdings stage of
 `materialize_order` would not block: a variable the steward does not hold is
 `mapping_missing` at check time, not when the coordinator makes the order (#2194). A
 steward `order` that succeeds carries the holdings stage's warnings with its own.
+
+### Project document 6.1.0
+
+`schema_version` `6.1.0` adds the optional top-level `linkage`, a closed
+`{"database": <string>}`: the steward database (linkage space) the order draws from. The
+structural check tests the shape only (`unexpected_field`, `missing_required_field`,
+`invalid_field_type` under `/linkage`); whether the id is one of the steward's, and
+whether the steward needs one, are holdings findings ("Linkage spaces"). Optional fields
+hash as `null`, so every `project_hash` changes (maintainer, 2026-11-06). A 6.0.0
+document is re-authored by setting `schema_version`.
+
+Nothing else changes: 6.0.0 below holds otherwise.
 
 ### Project document 6.0.0
 

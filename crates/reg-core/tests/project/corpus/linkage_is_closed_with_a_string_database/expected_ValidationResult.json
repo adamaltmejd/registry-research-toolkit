@@ -1,0 +1,16 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "unexpected_field",
+      "path": "/linkage/db",
+      "message": "unexpected key 'db' on linkage"
+    },
+    {
+      "level": "error",
+      "code": "missing_required_field",
+      "path": "/linkage/database",
+      "message": "linkage 'database' is required"
+    }
+  ]
+}

@@ -471,7 +471,7 @@ fn unheld(holdings: &Connection, variables: &[String], segments: &[Segment]) -> 
 
 fn project(pid: &str, period: &Value, variables: &[String]) -> Value {
     json!({
-        "schema_version": "6.0.0",
+        "schema_version": "6.1.0",
         "reg_meta_version": "0.64.0",
         "name": "Release order",
         "sources": [{

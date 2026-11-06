@@ -211,12 +211,14 @@ mechanisms are documented in the owning DESIGN.md and only summarized here.
   optional top-level `extract_format` (`dta`, `parquet`, `csv`); absent means the order
   authoring default `dta`, resolved by the order file and never inserted into the
   project. Contract 6.0.0 makes the binding `type` an optional override in catalog type
-  names and drops the subtype and format fields. `reg-core` accepts exactly its
-  `SCHEMA_VERSION` and refuses any other with an `unsupported_schema_version` issue
-  rather than migrating it ([`crates/reg-core/DESIGN.md`](crates/reg-core/DESIGN.md)).
-  Pre-v1 there are no migration scripts, deprecation wrappers or compatibility shims:
-  breaking changes are clean breaks and testers re-author affected projects (`AGENTS.md`
-  → "Maturity and compatibility").
+  names and drops the subtype and format fields. Contract 6.1.0 adds optional top-level
+  `linkage.database`, the steward database an order draws from. `reg-core` accepts
+  exactly its `SCHEMA_VERSION` and refuses any other with an
+  `unsupported_schema_version` issue rather than migrating it
+  ([`crates/reg-core/DESIGN.md`](crates/reg-core/DESIGN.md)). Pre-v1 there are no
+  migration scripts, deprecation wrappers or compatibility shims: breaking changes are
+  clean breaks and testers re-author affected projects (`AGENTS.md` → "Maturity and
+  compatibility").
 
 ## API style
 
