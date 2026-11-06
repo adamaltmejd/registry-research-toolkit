@@ -91,6 +91,31 @@ fn lines(catalog: &Catalog) -> Vec<Line> {
     lines
 }
 
+/// Refuse a findings path that names another output of the run (the catalog, the
+/// report), however spelled: writing it would replace that file with JSON Lines.
+///
+/// # Errors
+/// `findings` and one of `others` are the same file.
+pub(crate) fn refuse_alias(findings: &Path, others: &[&Path]) -> Result<()> {
+    // The parent canonicalized (it must exist for the write anyway) plus the file name.
+    let key = |p: &Path| {
+        let dir = match p.parent() {
+            Some(d) if !d.as_os_str().is_empty() => d.canonicalize().ok()?,
+            _ => std::env::current_dir().ok()?,
+        };
+        Some(dir.join(p.file_name()?))
+    };
+    let own = key(findings);
+    if own.is_some() && others.iter().any(|o| key(o) == own) {
+        return Err(format!(
+            "--findings {} names another output of this run",
+            findings.display()
+        )
+        .into());
+    }
+    Ok(())
+}
+
 /// Write `catalog`'s findings to `out`.
 ///
 /// # Errors

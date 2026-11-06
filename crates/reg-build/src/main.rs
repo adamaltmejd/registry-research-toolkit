@@ -714,11 +714,15 @@ fn build_with_provenance(
             None => "build refused; use --report FILE for details".into(),
         });
     }
-    emit::write(&catalog, &args.out)?;
-    match &args.findings {
-        Some(path) => findings::write(&catalog, path),
-        None => Ok(()),
+    // Findings first: a findings path that cannot be written must fail the build before
+    // the catalog replaces the previous one.
+    if let Some(path) = &args.findings {
+        let mut others = vec![args.out.as_path()];
+        others.extend(args.report.as_deref());
+        findings::refuse_alias(path, &others)?;
+        findings::write(&catalog, path)?;
     }
+    emit::write(&catalog, &args.out)
 }
 
 fn lock(args: &Args) -> Result<()> {

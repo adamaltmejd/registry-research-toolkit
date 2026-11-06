@@ -55,6 +55,11 @@ pub(crate) fn run(args: impl Iterator<Item = String>) -> Result<()> {
     {
         return Err("holdings_output_invalid: output must differ from base".into());
     }
+    if let Some(path) = &findings {
+        let mut others = vec![out.as_path()];
+        others.extend(report.as_deref());
+        crate::findings::refuse_alias(path, &others)?;
+    }
     // The scratch is only supplemental metadata, never a reference-catalog copy.
     let name = out
         .file_name()
