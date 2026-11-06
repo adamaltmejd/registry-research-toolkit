@@ -53,11 +53,12 @@ fn sources(
     )?;
     let source_tables = census.tables.len();
     let source_columns: usize = census.tables.iter().map(|t| t.columns.len()).sum();
+    let keyed = compile::schema_keyed(&census.tables);
     let topology: input::Topology = crate::toml_file(&input::path(root, &config.inputs.holdings)?)
         .map_err(|_| "holdings_topology_invalid: malformed authored topology")?;
     // Each authored table with its delivery and coverage, parsed for every table before
     // any is compared.
-    let authored: BTreeMap<&str, _> = topology
+    let authored: BTreeMap<compile::Identity, _> = topology
         .table
         .iter()
         .map(|table| {
@@ -67,7 +68,7 @@ fn sources(
                 .map(compile::canonical_period)
                 .transpose()?;
             Ok((
-                table.physical_name.as_str(),
+                compile::authored_identity(table, keyed),
                 (table, delivery, compile::table_periods(table)?),
             ))
         })
@@ -78,20 +79,24 @@ fn sources(
         .flat_map(|t| {
             t.column
                 .iter()
-                .map(move |c| ((t.physical_name.as_str(), c.name.as_str()), c))
+                .map(move |c| ((compile::authored_identity(t, keyed), c.name.as_str()), c))
         })
         .collect();
     let sql = "SELECT physical_name,id,schema_name,table_type FROM holding_table";
-    let mut tables: BTreeMap<String, (i64, Option<String>, Option<String>)> =
+    let mut tables: BTreeMap<compile::Identity, (i64, Option<String>, Option<String>)> =
         rows(db, sql, [], |r| {
-            Ok((r.get(0)?, (r.get(1)?, r.get(2)?, r.get(3)?)))
+            let schema: Option<String> = r.get(2)?;
+            Ok((
+                (schema.clone().filter(|_| keyed), r.get(0)?),
+                (r.get(1)?, schema, r.get(3)?),
+            ))
         })?
         .into_iter()
         .collect();
     for table in &census.tables {
         let location = format!("census:row={}", table.source_row);
         let (id, schema, kind) = tables
-            .remove(&table.name)
+            .remove(&compile::census_identity(table))
             .ok_or_else(|| format!("{location}: holdings_census_table_missing"))?;
         #[allow(clippy::type_complexity)]
         let (placement, disposition, delivery, recorded, binding): (
@@ -116,7 +121,9 @@ fn sources(
                 ))
             },
         )?;
-        let Some((spec, spec_delivery, spec_periods)) = authored.get(table.name.as_str()) else {
+        let Some((spec, spec_delivery, spec_periods)) =
+            authored.get(&compile::census_identity(table))
+        else {
             return Err(format!("{location}: holdings_topology_source_mismatch").into());
         };
         if (&spec.projection_of, &spec.projection_token, &spec.partition)
@@ -196,7 +203,7 @@ fn sources(
                 return Err(format!("{location}: holdings_census_ordinal_mismatch").into());
             }
             let authored = authored_columns
-                .get(&(table.name.as_str(), column.name.as_str()))
+                .get(&(compile::census_identity(table), column.name.as_str()))
                 .copied();
             compile::column_periods(authored, &[])
                 .map_err(|error| format!("{location}: {error}"))?;

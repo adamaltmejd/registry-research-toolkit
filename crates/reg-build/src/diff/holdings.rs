@@ -14,6 +14,7 @@ use crate::error::Result;
 
 /// (`table_pid`, `variable_pid`, start, end), the bounds as text.
 type Placement = (String, String, String, String);
+/// (schema-qualified table, column): a steward may hold one table name in two schemas.
 type Column = (String, String);
 /// (code, subject key, start, end) -> occurrences.
 type Bag = BTreeMap<(String, String, String, String), i64>;
@@ -52,7 +53,7 @@ const TEXT: [(&str, &str); 6] = [
     ),
     (
         "mapping caveat",
-        "SELECT t.physical_name || '/' || c.name || ' ' || m.table_pid || ' ' || m.variable_pid || '@' || m.start || '-' || m.end, m.caveat FROM holding_mapping m JOIN holding_column c ON c.id = m.column_id JOIN holding_table t ON t.id = c.holding_id WHERE m.caveat IS NOT NULL",
+        "SELECT ifnull(t.schema_name || '.', '') || t.physical_name || '/' || c.name || ' ' || m.table_pid || ' ' || m.variable_pid || '@' || m.start || '-' || m.end, m.caveat FROM holding_mapping m JOIN holding_column c ON c.id = m.column_id JOIN holding_table t ON t.id = c.holding_id WHERE m.caveat IS NOT NULL",
     ),
 ];
 
@@ -123,7 +124,7 @@ fn placements(
     let mut out: BTreeMap<Column, (String, BTreeSet<Placement>)> = BTreeMap::new();
     for (table, column, disposition) in query(
         conn,
-        "SELECT t.physical_name, c.name, c.disposition FROM holding_column c \
+        "SELECT ifnull(t.schema_name || '.', '') || t.physical_name, c.name, c.disposition FROM holding_column c \
          JOIN holding_table t ON t.id = c.holding_id",
         |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)),
     )? {
@@ -131,7 +132,7 @@ fn placements(
     }
     for (table, column, placement) in query(
         conn,
-        "SELECT t.physical_name, c.name, m.table_pid, m.variable_pid, \
+        "SELECT ifnull(t.schema_name || '.', '') || t.physical_name, c.name, m.table_pid, m.variable_pid, \
          ifnull(CAST(m.start AS TEXT), ''), ifnull(CAST(m.end AS TEXT), '') FROM holding_mapping m \
          JOIN holding_column c ON c.id = m.column_id JOIN holding_table t ON t.id = c.holding_id",
         |r| {
@@ -500,7 +501,7 @@ fn same_schema(p: &Pair, os: &(i64, Option<String>)) -> Result<Vec<Section>> {
          ifnull(CAST(f.start AS TEXT), ''), ifnull(CAST(f.end AS TEXT), '') FROM finding f \
          LEFT JOIN subject s ON s.kind = f.subject_kind AND s.id = f.subject_id"
     );
-    let notices_sql = "SELECT n.code, t.physical_name || '/' || ifnull(c.name, ''), \
+    let notices_sql = "SELECT n.code, ifnull(t.schema_name || '.', '') || t.physical_name || '/' || ifnull(c.name, ''), \
                        ifnull(CAST(n.start AS TEXT), ''), ifnull(CAST(n.end AS TEXT), '') \
                        FROM holding_notice n JOIN holding_table t ON t.id = n.holding_id \
                        LEFT JOIN holding_column c ON c.id = n.column_id";

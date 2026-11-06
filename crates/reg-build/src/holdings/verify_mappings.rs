@@ -31,11 +31,17 @@ struct Claim {
 /// Here only the source declarations determine the required carried flag.
 fn projection_copy(
     table: &input::Table,
-    tables: &BTreeMap<&str, &input::Table>,
+    tables: &BTreeMap<compile::Identity, &input::Table>,
+    keyed: bool,
     variable: &str,
     span: Span,
 ) -> Result<bool> {
-    let Some(parent) = table.projection_of.as_deref().and_then(|p| tables.get(p)) else {
+    // A projection's parent is in the projection's own schema.
+    let Some(parent) = table
+        .projection_of
+        .as_ref()
+        .and_then(|p| tables.get(&(compile::authored_identity(table, keyed).0, p.clone())))
+    else {
         return Ok(false);
     };
     let mut shared = Vec::new();
@@ -176,7 +182,8 @@ fn claim(
 fn expected(
     claims: &[Claim],
     table: &input::Table,
-    tables: &BTreeMap<&str, &input::Table>,
+    tables: &BTreeMap<compile::Identity, &input::Table>,
+    keyed: bool,
 ) -> Result<(Mappings, Contested)> {
     let mut routes = BTreeMap::<&str, Vec<&Claim>>::new();
     for claim in claims {
@@ -230,7 +237,8 @@ fn expected(
                 );
             }
             let mut attributes = first.attributes.clone();
-            attributes.carried |= projection_copy(table, tables, &attributes.variable, span)?;
+            attributes.carried |=
+                projection_copy(table, tables, keyed, &attributes.variable, span)?;
             expected.entry(attributes).or_default().push(span);
         }
     }
@@ -246,43 +254,47 @@ pub(super) fn verify(
     // segment_index seeds from every tbl row, including segmentless tables.
     let index = compile::segment_index(base, db)?;
     compile::renames_resolve(&index, &census.rename_targets)?;
+    let keyed = compile::schema_keyed(&census.tables);
     let tables: BTreeMap<_, _> = topology
         .table
         .iter()
-        .map(|t| (t.physical_name.as_str(), t))
+        .map(|t| (compile::authored_identity(t, keyed), t))
         .collect();
     let mut query = db.prepare(
         "SELECT m.table_pid,m.variable_pid,m.role,m.carried,m.caveat,m.window,m.start,m.end
          FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id
-         JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name=?1 AND c.name=?2",
+         JOIN holding_table h ON h.id=c.holding_id WHERE h.physical_name=?1 AND c.name=?2 AND (?3 IS NULL OR h.schema_name=?3)",
     )?;
     let mut rivals = db.prepare(
         "SELECT n.code,r.table_pid,r.variable_pid,n.start,n.end
          FROM holding_notice_candidate r JOIN holding_notice n ON n.id=r.notice_id
          JOIN holding_column c ON c.id=n.column_id JOIN holding_table h ON h.id=c.holding_id
-         WHERE h.physical_name=?1 AND c.name=?2",
+         WHERE h.physical_name=?1 AND c.name=?2 AND (?3 IS NULL OR h.schema_name=?3)",
     )?;
     for table in &census.tables {
-        let authored = tables[table.name.as_str()];
+        let authored = tables[&compile::census_identity(table)];
         for column in &table.columns {
             let location = format!("census:row={}:column={}", table.source_row, column.ordinal);
             let mut compare = || -> Result<Option<&str>> {
                 let (mut expected, mut contested) =
-                    expected(&claims(authored, column, &index)?, authored, &tables)?;
+                    expected(&claims(authored, column, &index)?, authored, &tables, keyed)?;
                 let mut stored = Mappings::new();
-                let rows = query.query_map(rusqlite::params![table.name, column.name], |r| {
-                    Ok((
-                        Attributes {
-                            table: r.get(0)?,
-                            variable: r.get(1)?,
-                            role: r.get(2)?,
-                            carried: r.get(3)?,
-                            caveat: r.get(4)?,
-                            window: r.get(5)?,
-                        },
-                        (r.get(6)?, r.get(7)?),
-                    ))
-                })?;
+                let rows = query.query_map(
+                    rusqlite::params![table.name, column.name, table.schema],
+                    |r| {
+                        Ok((
+                            Attributes {
+                                table: r.get(0)?,
+                                variable: r.get(1)?,
+                                role: r.get(2)?,
+                                carried: r.get(3)?,
+                                caveat: r.get(4)?,
+                                window: r.get(5)?,
+                            },
+                            (r.get(6)?, r.get(7)?),
+                        ))
+                    },
+                )?;
                 for row in rows {
                     let (attributes, span) = row?;
                     stored.entry(attributes).or_default().push(span);
@@ -298,9 +310,10 @@ pub(super) fn verify(
                     ));
                 }
                 let mut recorded = Contested::new();
-                let rows = rivals.query_map(rusqlite::params![table.name, column.name], |r| {
-                    Ok(((r.get(0)?, r.get(1)?, r.get(2)?), (r.get(3)?, r.get(4)?)))
-                })?;
+                let rows = rivals.query_map(
+                    rusqlite::params![table.name, column.name, table.schema],
+                    |r| Ok(((r.get(0)?, r.get(1)?, r.get(2)?), (r.get(3)?, r.get(4)?))),
+                )?;
                 for row in rows {
                     let (key, span) = row?;
                     recorded.entry(key).or_default().push(span);

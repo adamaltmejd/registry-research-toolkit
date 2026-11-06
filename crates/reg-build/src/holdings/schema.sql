@@ -8,7 +8,7 @@ CREATE TABLE holding_reference_occurrence (
 -- Physical holdings are paired with, never appended to, the reference catalog.
 CREATE TABLE holding_table (
  id INTEGER PRIMARY KEY,
- physical_name TEXT NOT NULL UNIQUE,
+ physical_name TEXT NOT NULL,
  key_requirements TEXT NOT NULL DEFAULT '[]' CHECK(json_valid(key_requirements)),
  schema_name TEXT,
  table_type TEXT,
@@ -24,7 +24,10 @@ CREATE TABLE holding_table (
  CHECK((disposition = 'dated') = (delivery IS NOT NULL)),
  CHECK(partition IS NULL OR projection_of IS NULL),
  CHECK((projection_of IS NULL) = (projection_token IS NULL)),
- CHECK((period_column_id IS NULL) = (period_encoding IS NULL))
+ CHECK((period_column_id IS NULL) = (period_encoding IS NULL)),
+ -- A schema-keyed census may hold one name in two schemas; the reader refuses a
+ -- duplicate name (or schema and name), so a NULL schema needs no tighter key here.
+ UNIQUE(schema_name, physical_name)
 ) STRICT;
 CREATE TABLE holding_route (
  holding_id INTEGER NOT NULL REFERENCES holding_table(id),
