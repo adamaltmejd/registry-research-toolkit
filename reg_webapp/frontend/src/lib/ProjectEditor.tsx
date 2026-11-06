@@ -271,7 +271,8 @@ function Check({
   // A database not yet chosen: with the select on the page, the info row above
   // is the whole answer (a choice to make, not an error, #2345); once one is
   // chosen, the previous check still says it until the next arrives, so the
-  // page says Checking. Without the select the finding is listed, as a problem.
+  // page says Checking. A chosen database the server still refuses, or no
+  // select (no `/api/context`), lists the finding as a problem.
   const verdict: Verdict =
     checked !== "database"
       ? checked
@@ -279,19 +280,19 @@ function Check({
         ? "blocked"
         : needsDatabase
           ? "database"
-          : "checking";
+          : busy
+            ? "checking"
+            : "blocked";
   const words = VERDICT_WORDS[verdict];
   const structural = project.draft === null;
-  // Where the Database select is shown, it and the row above the verdict say
-  // what `database_required` and `database_unknown` say, in the page's words,
-  // so neither finding is listed nor counted again; that holds once a database
-  // is chosen too,
-  // since the previous check, kept on screen while the next runs, still carries
-  // it. Without the select (no `/api/context`) the finding is the only
-  // explanation and stays.
+  // While the select and the row above the verdict say what `database_required`
+  // and `database_unknown` say, in the page's words, neither finding is listed
+  // nor counted again; so too while the check after a choice runs, since the
+  // previous check, kept on screen, still carries it.
+  const hideDatabase = databaseShown && (needsDatabase || busy);
   const issues: ValidationIssue[] = (
     structural ? project.issues : (validation.data?.issues ?? [])
-  ).filter((issue) => !databaseShown || !DATABASE_CODES.includes(issue.code));
+  ).filter((issue) => !hideDatabase || !DATABASE_CODES.includes(issue.code));
   const onCard = (issue: ValidationIssue) =>
     !structural && issue.path.startsWith("/sources/");
   // A note on a card (level info) needs no link here: it changes no verdict.

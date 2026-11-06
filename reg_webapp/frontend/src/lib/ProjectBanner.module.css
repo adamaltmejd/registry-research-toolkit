@@ -100,7 +100,7 @@ a.verdict {
 }
 /* A check that did not run says nothing about the project: plain, like
    Checking, but a link to /project's Retry. A database not yet chosen is a
-   choice to make, not an error: plain too, a link to the Database select. */
+   choice to make, not an error: plain too, a link to the check section, whose info row asks for it. */
 .status[data-status="checking"] > .verdict,
 .status[data-status="empty"] > .verdict,
 .status[data-status="database"] > .verdict,
