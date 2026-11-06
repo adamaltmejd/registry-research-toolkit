@@ -109,6 +109,14 @@ pub(crate) fn refuse_alias(findings: &Path, others: &[&Path]) -> Result<()> {
         };
         Some(dir.join(p.file_name()?))
     };
+    // A dangling link would be written through to a target this check cannot name.
+    if findings.is_symlink() && !findings.exists() {
+        return Err(format!(
+            "--findings {} is a symlink to a missing file",
+            findings.display()
+        )
+        .into());
+    }
     let own = key(findings);
     if own.is_some() && others.iter().any(|o| key(o) == own) {
         return Err(format!(
