@@ -1434,14 +1434,14 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
     // Contentless FTS5: the rows go in rowid order, then each index is merged. The
     // description index holds only described items, with the description after the body.
     let tx = db.transaction()?;
-    for table in ["search", "search_description", "search_exact"] {
+    for table in ["search", "search_description"] {
         let mut insert = tx.prepare(&format!(
             "INSERT INTO {table}(rowid, name, label, body) VALUES (?1, ?2, ?3, ?4)"
         ))?;
         for (i, item) in search.iter().enumerate() {
             let body: Cow<'_, str> = match (table, item.description.is_empty()) {
-                ("search", _) | ("search_exact", true) => item.body.as_str().into(),
-                ("search_description", true) => continue,
+                ("search", _) => item.body.as_str().into(),
+                (_, true) => continue,
                 _ => format!("{}\n{}", item.body, item.description).into(),
             };
             insert

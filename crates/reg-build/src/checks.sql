@@ -104,7 +104,6 @@ WHERE o.status = 'unplaced' AND (r.id IS NULL OR r.parse_state <> 'unparsed');
 
 -- search rows and FTS rows agree (contentless index: compare counts)
 SELECT 1 WHERE (SELECT COUNT(*) FROM search_item) <> (SELECT COUNT(*) FROM search_docsize);
-SELECT 1 WHERE (SELECT COUNT(*) FROM search_item) <> (SELECT COUNT(*) FROM search_exact_docsize);
 
 -- supplementary FTS rows use the primary search rowid of a variable
 SELECT d.id FROM search_description_docsize d LEFT JOIN search_item s ON s.id = d.id

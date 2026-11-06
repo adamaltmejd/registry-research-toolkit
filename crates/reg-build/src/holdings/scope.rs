@@ -79,12 +79,11 @@ const META_KEYS: [&str; 30] = [
 /// Size bounds in bytes, set from the 0.71.0 preview DB's maxima with margin: no ordinary
 /// TEXT column exceeds 918; a raw export is larger than any of these.
 const DEFAULT_BOUND: i64 = 2048;
-const BOUNDS: [(&str, i64); 4] = [
+const BOUNDS: [(&str, i64); 3] = [
     // FTS5 index pages (preview max 4 053), page size 4 096 by default.
     ("doc_fts_data.block", 16_384),
     ("search_data.block", 16_384),
     ("search_description_data.block", 16_384),
-    ("search_exact_data.block", 16_384), // exact-match ranking index (#2167)
 ];
 /// Bounded per key, below.
 const PER_KEY: &str = "meta.value";

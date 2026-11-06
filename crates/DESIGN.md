@@ -2482,10 +2482,11 @@ and delivered spellings; `label`: labels; `body`: definitions, register/table
 descriptions and document text), plus `search_description` for the curated variable
 description. Both use `search_item.id` as rowid. The builder indexes raw text under
 `unicode61 remove_diacritics 2`, which folds case and diacritics, and the reader applies
-no fold of its own: `lan` finds `län` (#2163). A third index, `search_exact`, holds each
-row's widest text (its description row's, else its primary row's) under
-`remove_diacritics 0`, only to rank exact matches first. Pins, synonyms and type priors
-are curation (D). A call returns one ranked list.
+no fold of its own: `lan` finds `län` (#2163). An exact-spelling index that ranked
+diacritic-exact matches first (`search_exact`, about 74 MB at 0.80.0) was dropped on the
+maintainer's ruling of 2026-11-06 (#2335): it moved 3 top-1 hits of 59 measured queries
+(`län`, `lön`, `företag`). Pins, synonyms and type priors are curation (D). A call
+returns one ranked list.
 
 1. **Tokens.** Each maximal run of Unicode letters and digits in `q` is a quoted prefix
    term `"tok"*`, joined by spaces (AND, within one row), so FTS5 operators in `q` are
@@ -2495,10 +2496,9 @@ are curation (D). A call returns one ranked list.
    items (`{registers: []}` for facets) without a query. `ops/fts.rs::query` is the one
    implementation; `docs_search` shares it.
 2. **Rank.** Primary matches first, then description matches absent from the primary
-   match set. Within each, rows that also match `search_exact` (the query as typed,
-   diacritics kept, case folded) come first, so `här` lists `här` before `har` and `har`
-   lists `har` before `här` (#2163). Then `bm25(index, 10.0, 5.0, 1.0)` (name, label,
-   body), ascending. The primary corpus and its scores are unaffected by descriptions.
+   match set. Within each, `bm25(index, 10.0, 5.0, 1.0)` (name, label, body),
+   ascending; `här` and `har` match the same rows and rank them alike. The primary
+   corpus and its scores are unaffected by descriptions.
    FTS5 scores a row by its weighted hit count against its whole token count, so a hit
    weighs most in an id or spelling and least in a definition or document text: a
    variable labelled `Vikt` ranks above a longer one whose definition says vikt.

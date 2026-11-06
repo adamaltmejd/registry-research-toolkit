@@ -61,8 +61,8 @@ every kind ranks together; with `type` that kind only. `register` filters by \
 is one distinct (code, label) pair, not a value set (schema §2.1, "Code search"): \
 `register` and `period` do not apply to it and exclude `code` rows from a \
 filtered search. Its value sets come from `values?code=&label=`. The tokenizer is \
-`unicode61 remove_diacritics 2`, so `lan` finds `län` (#2163); an exact match \
-(diacritics kept) ranks before a folded one of the same tier. `set` hits wait for D. `q` is at \
+`unicode61 remove_diacritics 2`, so `lan` finds `län` (#2163) and ranks with it by bm25 \
+alone. `set` hits wait for D. `q` is at \
 most 200 characters with no NUL; a query with no letter or digit returns no items, not \
 an error. Exact column names are `resolve`. Paging stops at depth 1000. Default limit \
 50, maximum 200. A paired steward returns a separately labelled `steward` group \

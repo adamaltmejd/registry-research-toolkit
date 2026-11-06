@@ -512,14 +512,3 @@ CREATE VIRTUAL TABLE search_description USING fts5(
   tokenize = 'unicode61 remove_diacritics 2',
   prefix = '2 3'
 );
-
--- simplify: exact-match tie-break only. The search indexes fold diacritics (#2163) and
--- are contentless, so the reader cannot compare a hit's text with the query; this index
--- keeps diacritics and holds each row's widest text (search_description's when the row
--- has one, else search's). Replace it when smarter ranking lands.
-CREATE VIRTUAL TABLE search_exact USING fts5(
-  name, label, body,
-  content = '',
-  tokenize = 'unicode61 remove_diacritics 0',
-  prefix = '2 3'
-);
