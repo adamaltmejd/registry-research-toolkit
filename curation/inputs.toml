@@ -37,6 +37,14 @@ name = "Umeå universitet"
 pid = "iaf"
 name = "Inspektionen för arbetslöshetsförsäkringen"
 
+# Source: the UGU codebooks ("Codebook for UGU <year>", 11 cohorts),
+# https://www.gu.se/utvardering-genom-uppfoljning/kodbocker, pinned byte-exact as the
+# inputs repository release gu-ugu-codebooks-2026-11-06 (hashes in
+# catalog/evidence/gu/ugu-codebooks.json). No licence stated.
+[[provider]]
+pid = "gu"
+name = "Göteborgs universitet"
+
 [[provider]]
 pid = "sos"
 name = "Socialstyrelsen"
@@ -82,6 +90,12 @@ name = "iaf-transcription"
 reader = "transcription"
 path = "catalog/source/transcriptions/iaf"
 provider = "iaf"
+
+[[input]]
+name = "gu-transcription"
+reader = "transcription"
+path = "catalog/source/transcriptions/gu"
+provider = "gu"
 
 # The SCB metadata export, byte-exact as received: a release asset of the inputs
 # repository, fetched with `gh release download scb-raw-2026-03` into `<assets>/`.
