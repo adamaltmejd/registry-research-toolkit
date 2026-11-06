@@ -67,14 +67,18 @@ SELECT v.id FROM valueset v JOIN (SELECT valueset_id, COUNT(*) n FROM vs_item GR
 SELECT i.valueset_id, i.ord FROM vs_item i WHERE i.parent_ord IS NOT NULL AND NOT EXISTS (
   SELECT 1 FROM vs_item p WHERE p.valueset_id = i.valueset_id AND p.ord = i.parent_ord);
 -- a value set's classification link: equal is the version's content; subset has no
--- code outside the version but its sentinels
+-- code outside the version but its sentinels. A set anti-join: vs_item has no index on
+-- code, and SQLite indexes the NOT IN subquery itself (0.23 s at 0.80.0 scale; a
+-- correlated NOT EXISTS scans the version's items per code). Both columns are NOT NULL.
 SELECT v.id FROM valueset v JOIN class_version c ON c.id = v.class_version_id
 WHERE v.class_match = 'equal' AND c.valueset_id <> v.id;
 SELECT DISTINCT v.id FROM valueset v
   JOIN class_version c ON c.id = v.class_version_id
   JOIN vs_item i ON i.valueset_id = v.id
-WHERE v.class_match = 'subset' AND i.sentinel = 0 AND NOT EXISTS (
-  SELECT 1 FROM vs_item k WHERE k.valueset_id = c.valueset_id AND k.code_text = i.code_text);
+WHERE v.class_match = 'subset' AND i.sentinel = 0
+  AND (c.valueset_id, i.code_text) NOT IN (
+    SELECT valueset_id, code_text FROM vs_item
+    WHERE valueset_id IN (SELECT valueset_id FROM class_version));
 
 -- A classification states a part on every version or on none: its page groups the
 -- versions by part, and a version without one would belong to no line.
