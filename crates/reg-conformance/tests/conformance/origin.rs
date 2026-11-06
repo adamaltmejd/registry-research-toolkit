@@ -1,4 +1,4 @@
-//! The origin guards of `reg-meta serve` (reg_webapp/DESIGN.md, "Origin lock" and "Cost
+//! The origin guards of `reg-meta serve` (`reg_webapp/DESIGN.md`, "Origin lock" and "Cost
 //! protection"): with the edge token set, the lock in front of every route, and the
 //! write rate limit behind it, keyed on the edge's client address.
 
