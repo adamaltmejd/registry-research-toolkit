@@ -238,3 +238,64 @@ fn an_order_draws_from_one_database() {
         .collect();
     assert_eq!(keys, ["demo/held/value"], "{logical}");
 }
+
+#[test]
+fn readers_name_the_database_of_each_held_table() {
+    // On `steward::spaces`, demo/held/value is in Pool, Part A and Part B (`main`) and in
+    // the `aux` copy of Part A over 2021 only. Fails if coverage merges the two databases'
+    // spans into one entry, lists them out of config order or drops `space`, or if a
+    // segments row loses its database (crates/DESIGN.md, "Linkage spaces").
+    let port = steward::spaces().unwrap();
+    let get = |route: &str| {
+        let (status, body) = client::json(port, "GET", route, &[], None).unwrap();
+        assert_eq!(status, 200, "{route}: {body}");
+        body
+    };
+    let coverage = get("/api/coverage/demo/held/value");
+    let tables: Vec<(&str, &str, &Value)> = coverage["data"]["tables"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|t| {
+            (
+                t["fqid"].as_str().unwrap(),
+                t["space"].as_str().unwrap(),
+                &t["spans"],
+            )
+        })
+        .collect();
+    assert_eq!(tables.len(), 2, "{coverage}");
+    assert_eq!(
+        (tables[0].0, tables[0].1),
+        ("demo/held", "main"),
+        "{coverage}"
+    );
+    assert_eq!(
+        tables[1],
+        (
+            "demo/held",
+            "aux",
+            &json!([{"start": "2021-01-01", "end": "2022-01-01"}])
+        ),
+        "{coverage}"
+    );
+
+    let segments = get("/api/segments/demo/held/value?limit=200");
+    let held: std::collections::BTreeSet<(&str, &str)> = segments["data"]["items"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|s| (s["file"].as_str().unwrap(), s["space"].as_str().unwrap()))
+        .collect();
+    assert_eq!(
+        held,
+        [
+            ("Part B", "main"),
+            ("Pool", "main"),
+            ("aux.Part A", "aux"),
+            ("dbo.Part A", "main"),
+        ]
+        .into(),
+        "{segments}"
+    );
+}

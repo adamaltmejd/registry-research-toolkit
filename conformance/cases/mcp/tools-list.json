@@ -3332,6 +3332,10 @@
               },
               "type": "array"
             },
+            "space": {
+              "description": "On a data holder with several databases, the id of the database these spans are\nheld in; a table held in more than one is listed once per database.",
+              "type": "string"
+            },
             "spans": {
               "items": {
                 "$ref": "#/$defs/Period"
