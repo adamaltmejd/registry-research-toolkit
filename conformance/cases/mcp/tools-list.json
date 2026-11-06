@@ -967,6 +967,10 @@
             "sensitive": {
               "type": "boolean"
             },
+            "space": {
+              "description": "On a data holder with several databases, the id of the database the file is in.",
+              "type": "string"
+            },
             "state": {
               "description": "Present only when the column is ambiguous; absent means clear.",
               "type": "string"
@@ -2409,6 +2413,10 @@
             },
             "sensitive": {
               "type": "boolean"
+            },
+            "space": {
+              "description": "On a data holder with several databases, the id of the database the file is in.",
+              "type": "string"
             },
             "state": {
               "description": "Present only when the column is ambiguous; absent means clear.",

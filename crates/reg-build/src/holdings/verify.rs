@@ -51,6 +51,25 @@ fn sources(
         &input::path(root, &config.inputs.storage_export)?,
         &input::path(root, &config.inputs.census_reader)?,
     )?;
+    let spaces = super::spaces::resolve(root, &config, &census.tables)?;
+    let stored: Vec<(i64, String, String)> = rows(
+        db,
+        "SELECT ord,id,name FROM holding_space ORDER BY ord",
+        [],
+        |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)),
+    )?;
+    if !stored
+        .iter()
+        .map(|(ord, id, name)| (*ord, id, name))
+        .eq((1i64..)
+            .zip(&spaces.list)
+            .map(|(ord, (id, name))| (ord, id, name)))
+    {
+        return Err(
+            "config:space: holdings_space_source_mismatch: stored spaces differ from the config"
+                .into(),
+        );
+    }
     let source_tables = census.tables.len();
     let source_columns: usize = census.tables.iter().map(|t| t.columns.len()).sum();
     let keyed = compile::schema_keyed(&census.tables);
@@ -82,13 +101,15 @@ fn sources(
                 .map(move |c| ((compile::authored_identity(t, keyed), c.name.as_str()), c))
         })
         .collect();
-    let sql = "SELECT physical_name,id,schema_name,table_type FROM holding_table";
-    let mut tables = BTreeMap::<compile::Identity, (i64, Option<String>, Option<String>)>::new();
+    let sql = "SELECT physical_name,id,schema_name,table_type,space FROM holding_table";
+    #[allow(clippy::type_complexity)]
+    let mut tables =
+        BTreeMap::<compile::Identity, (i64, Option<String>, Option<String>, String)>::new();
     for (identity, stored) in rows(db, sql, [], |r| {
         let schema: Option<String> = r.get(2)?;
         Ok((
             (schema.clone().filter(|_| keyed), r.get(0)?),
-            (r.get(1)?, schema, r.get(3)?),
+            (r.get(1)?, schema, r.get(3)?, r.get(4)?),
         ))
     })? {
         // The DDL's unique (schema_name, physical_name) admits repeated NULL schemas, and
@@ -100,9 +121,12 @@ fn sources(
     }
     for table in &census.tables {
         let location = format!("census:row={}", table.source_row);
-        let (id, schema, kind) = tables
+        let (id, schema, kind, space) = tables
             .remove(&compile::census_identity(table))
             .ok_or_else(|| format!("{location}: holdings_census_table_missing"))?;
+        if space != spaces.of(table) {
+            return Err(format!("{location}: holdings_space_source_mismatch").into());
+        }
         #[allow(clippy::type_complexity)]
         let (placement, disposition, delivery, recorded, binding, parent_in_schema): (
             (Option<String>, Option<String>, Option<String>),
@@ -469,11 +493,12 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<()> {
     super::keys::verify(&db, &base, &topology)?;
     super::verify_mappings::verify(&db, &base, &topology, &census)?;
     // A documented position family only authorizes distinct positions in one file.
-    // Other duplicates still need a partition, projection, or carried key.
+    // Other duplicates within one space still need a partition, projection, or carried
+    // key; the same placement in two spaces is two databases' copies.
     let mut duplicates = db.prepare(
         "SELECT ha.id,hb.id,a.table_pid,a.variable_pid,max(a.start,b.start),min(a.end,b.end) FROM holding_mapping a JOIN holding_mapping b ON a.id<b.id AND a.table_pid=b.table_pid AND a.variable_pid=b.variable_pid
       AND a.start<b.end AND b.start<a.end JOIN holding_column ca ON ca.id=a.column_id JOIN holding_column cb ON cb.id=b.column_id
-      JOIN holding_table ha ON ha.id=ca.holding_id JOIN holding_table hb ON hb.id=cb.holding_id
+      JOIN holding_table ha ON ha.id=ca.holding_id JOIN holding_table hb ON hb.id=cb.holding_id AND hb.space=ha.space
       WHERE a.carried=0 AND b.carried=0 AND NOT(ha.id!=hb.id AND ha.partition IS NOT NULL AND hb.partition IS NOT NULL AND ha.partition!=hb.partition)
       AND ha.projection_of IS NOT hb.id AND hb.projection_of IS NOT ha.id
       AND NOT(ha.id=hb.id AND ca.slot_family IS NOT NULL AND cb.slot_family IS NOT NULL

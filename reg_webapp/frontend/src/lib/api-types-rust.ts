@@ -1113,6 +1113,8 @@ export interface components {
             period: components["schemas"]["Period"];
             role: string;
             sensitive?: boolean;
+            /** @description On a data holder with several databases, the id of the database the file is in. */
+            space?: string;
             /** @description Present only when the column is ambiguous; absent means clear. */
             state?: string;
             /** @description The table's fqid. */
@@ -1385,6 +1387,13 @@ export interface components {
             index: string;
             kind: string;
         };
+        /** @description One of the data holder's databases: its tables share a person key. */
+        Space: {
+            /** @description Stable slug. */
+            id: string;
+            /** @description The name a researcher picks it by. */
+            name: string;
+        };
         StatementLocation: {
             file: string;
             /** Format: int64 */
@@ -1402,6 +1411,11 @@ export interface components {
             /** @description The logo's SVG markup. */
             logo: string;
             presentation: components["schemas"]["StewardPresentation"];
+            /**
+             * @description The databases whose tables share a person key, in the steward's order: one
+             *     for a steward that declares none. An order draws from one.
+             */
+            spaces: components["schemas"]["Space"][];
         };
         StewardPresentation: {
             /** @description Inline markdown: emphasis and `[text](https://…)` links. */

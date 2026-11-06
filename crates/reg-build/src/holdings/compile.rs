@@ -548,6 +548,7 @@ pub(super) fn write(
     topology: input::Topology,
     mut census: Vec<census::Table>,
     rename_targets: &[String],
+    spaces: &super::spaces::Spaces,
 ) -> Result<(usize, usize, usize, usize)> {
     let index = segment_index(base, db)?;
     renames_resolve(&index, rename_targets)?;
@@ -585,6 +586,12 @@ pub(super) fn write(
     let mut file_names = BTreeMap::<String, String>::new();
     // Parents and row-period columns reference rows filled later in this transaction.
     tx.execute_batch("PRAGMA defer_foreign_keys=ON;")?;
+    for (ord, (space, name)) in (1i64..).zip(&spaces.list) {
+        tx.execute(
+            "INSERT INTO holding_space VALUES(?,?,?)",
+            params![space, name, ord],
+        )?;
+    }
     for table in census {
         let identity = census_identity(&table);
         let authored = &authored[&identity];
@@ -651,8 +658,8 @@ pub(super) fn write(
                 ).into());
             }
             // The period column and its encoding are set together once the columns exist.
-            tx.execute("INSERT INTO holding_table(id,physical_name,key_requirements,schema_name,table_type,file_name,disposition,delivery,partition,projection_of,
-          projection_token,reason) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)",params![id,table.name,serde_json::to_string(&authored.key)?,schema_name,table_type,
+            tx.execute("INSERT INTO holding_table(id,physical_name,space,key_requirements,schema_name,table_type,file_name,disposition,delivery,partition,projection_of,
+          projection_token,reason) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",params![id,table.name,spaces.of(&table),serde_json::to_string(&authored.key)?,schema_name,table_type,
           file_name,authored.disposition,authored.delivery.as_deref().map(canonical_period).transpose()?,authored.partition,projection,authored.projection_token,
           authored.reason]).map_err(|_|"holdings_table_invalid: duplicate name or invalid topology".to_owned())?;
             for (start, end) in &spans {

@@ -5,10 +5,18 @@ CREATE TABLE holding_reference_occurrence (
  variable_pid TEXT NOT NULL,
  PRIMARY KEY(table_pid,variable_pid)
 ) STRICT, WITHOUT ROWID;
+-- Linkage spaces: the tables of one space share a person key, so an order draws from
+-- one. A steward without declared spaces has one implicit row.
+CREATE TABLE holding_space (
+ id TEXT PRIMARY KEY,
+ name TEXT NOT NULL,
+ ord INTEGER NOT NULL UNIQUE
+) STRICT, WITHOUT ROWID;
 -- Physical holdings are paired with, never appended to, the reference catalog.
 CREATE TABLE holding_table (
  id INTEGER PRIMARY KEY,
  physical_name TEXT NOT NULL,
+ space TEXT NOT NULL REFERENCES holding_space(id),
  key_requirements TEXT NOT NULL DEFAULT '[]' CHECK(json_valid(key_requirements)),
  schema_name TEXT,
  table_type TEXT,

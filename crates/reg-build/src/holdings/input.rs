@@ -25,6 +25,18 @@ pub(super) struct Config {
     pub presentation: Presentation,
     pub inputs: Inputs,
     pub pins: BTreeMap<String, String>,
+    /// The steward's linkage spaces (`crates/DESIGN.md`, "Linkage spaces"); none means one
+    /// implicit space.
+    #[serde(default)]
+    pub space: Vec<Space>,
+}
+
+#[derive(Deserialize)]
+#[serde(deny_unknown_fields)]
+pub(super) struct Space {
+    pub id: String,
+    pub name: String,
+    pub schemas: Vec<String>,
 }
 
 #[derive(Deserialize)]

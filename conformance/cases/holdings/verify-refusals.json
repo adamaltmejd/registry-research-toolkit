@@ -20,7 +20,7 @@
     "location": "column=10"
   },
   {
-    "sql": "INSERT INTO holding_table(physical_name,file_name,disposition,reason) VALUES('Invented','invented','lookup','Not in census'); UPDATE meta SET value='10' WHERE key='census_tables'",
+    "sql": "INSERT INTO holding_table(physical_name,space,file_name,disposition,reason) VALUES('Invented','fixture','invented','lookup','Not in census'); UPDATE meta SET value='10' WHERE key='census_tables'",
     "code": "holdings_census_table_extra",
     "location": "holdings:table="
   },
@@ -105,5 +105,10 @@
     "sql": "UPDATE text SET body=body || ' Evidence: inventory-evidence.jsonl' WHERE id=(SELECT min(id) FROM text)",
     "code": "holdings_content_working_file",
     "location": "text:"
+  },
+  {
+    "sql": "UPDATE holding_space SET name='Renamed'",
+    "code": "holdings_space_source_mismatch",
+    "location": "config:space"
   }
 ]

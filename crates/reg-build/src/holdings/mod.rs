@@ -5,6 +5,7 @@ mod input;
 mod keys;
 mod references;
 mod scope;
+mod spaces;
 mod verify;
 mod verify_mappings;
 
@@ -216,6 +217,7 @@ fn write(
         &input::path(root, &config.inputs.storage_export)?,
         &input::path(root, &config.inputs.census_reader)?,
     )?;
+    let spaces = spaces::resolve(root, config, &census.tables)?;
     let mut db = Connection::open(scratch)?;
     db.execute_batch("PRAGMA foreign_keys=ON;")?;
     let counts = compile::write(
@@ -224,6 +226,7 @@ fn write(
         topology,
         census.tables,
         &census.rename_targets,
+        &spaces,
     )?;
     let mut generation = crate::sha256_file(&input::path(root, &pin.config)?)?.0;
     for part in [
@@ -315,6 +318,7 @@ fn compiler_digest() -> String {
         include_str!("compile.rs"),
         include_str!("verify.rs"),
         include_str!("scope.rs"),
+        include_str!("spaces.rs"),
         include_str!("schema.sql"),
         include_str!("../main.rs"),
         include_str!("../emit.rs"),

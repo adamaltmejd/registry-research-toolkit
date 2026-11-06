@@ -51,7 +51,8 @@ fn compiled_pair_is_deterministic_and_verified() {
     // placement beside its disjoint allowed twin, a withheld required key, stored
     // delivery bounds replacing authored ones, a child data cell carried as a key, a
     // projection losing its parent key, swapped Code/Year associations, Late shortened
-    // by a day, Code's coding caveat removed, a text body naming a steward working file).
+    // by a day, Code's coding caveat removed, a text body naming a steward working file,
+    // a stored space renamed away from the config).
     let pair = steward::pair().unwrap();
     let holdings = &pair.holdings;
     let published = pair.dir.join("reg_meta_fixture.db");
@@ -265,6 +266,73 @@ fn schema_keyed_census_holds_one_name_in_two_schemas() {
     append(&census, "dbo,Excluded,Excluded,Secret,,,,,,,,\n").unwrap();
     compile(dir.path(), &dir.path().join("repeated.db"))
         .refused(&["census", "row=12: duplicate physical table"]);
+}
+
+#[test]
+fn one_placement_in_two_spaces_is_two_databases_copies() {
+    // Fails if the duplicate-placement check ignores the space (the aux copy of Part A
+    // refuses beside the dbo original even in its own space), if it stops refusing
+    // within one space (the single-space compile publishes), or if a table is stored
+    // in another space than its schema's.
+    let dir = Scratch::new("census-spaces").unwrap();
+    let root = locked_copy(dir.path()).unwrap();
+    let census = root.join("census.csv");
+    edit(&census, "Synthetic,", "dbo,", true).unwrap();
+    append(&census, "aux,Partition,Part A,Id,New,,,,,,,\n").unwrap();
+    append(
+        &root.join("storage.csv"),
+        "aux,Part A,BASE TABLE,Id,int,,10,0,1\naux,Part A,BASE TABLE,New,int,,10,0,2\n",
+    )
+    .unwrap();
+    edit(
+        &root.join("curation/readers/holdings.toml"),
+        "census_columns = \"V\"\n",
+        "census_columns = \"V\"\ncensus_schema = \"Category\"\n",
+        false,
+    )
+    .unwrap();
+    let topology = root.join("holdings.toml");
+    edit(
+        &topology,
+        "[[table]]\n",
+        "[[table]]\nschema_name = \"dbo\"\n",
+        true,
+    )
+    .unwrap();
+    append(
+        &topology,
+        "\n[[table]]\nschema_name = \"aux\"\nphysical_name = \"Part A\"\ndisposition = \"dated\"\n\
+         delivery = \"2021\"\ntable_pids = [\"demo/held\"]\nlocator = \"fixture:aux-copy\"\n\n\
+         [[table.key]]\nentity = [\"demo/held/id\"]\ntime = []\nperiod_key = \"year\"\n\
+         locator = \"fixture:declared-entity-time-key\"\n",
+    )
+    .unwrap();
+    let out = dir.path().join("spaces.db");
+    compile(dir.path(), &out)
+        .refused(&["inventory_cell_conflict: undeclared duplicate physical placement"]);
+    let holdings = pinned_holdings(dir.path()).unwrap();
+    append(
+        &root.join("steward.toml"),
+        "\n[[space]]\nid = \"main\"\nname = \"Main database\"\nschemas = [\"dbo\"]\n\n\
+         [[space]]\nid = \"aux\"\nname = \"Auxiliary database\"\nschemas = [\"aux\"]\n",
+    )
+    .unwrap();
+    exec(Command::new("git").arg("-C").arg(&root).args([
+        "commit",
+        "--quiet",
+        "-am",
+        "Declare two spaces",
+    ]))
+    .ok();
+    exec(holdings.command().arg("--out").arg(&out)).ok();
+    assert_eq!(
+        column(
+            &out,
+            "SELECT h.schema_name||' '||h.space||' '||s.ord FROM holding_table h
+             JOIN holding_space s ON s.id=h.space WHERE h.physical_name='Part A' ORDER BY 1"
+        ),
+        ["aux aux 2", "dbo main 1"]
+    );
 }
 
 /// Apply the `refusals.toml` edits `edits` to the steward checkout at `root`.
