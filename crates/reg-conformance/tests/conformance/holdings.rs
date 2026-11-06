@@ -182,27 +182,33 @@ fn census_replacement_refuses_vanished_columns() {
     );
 }
 
+/// The `renames.json` placements of `case`.
+fn rename_expected(case: &str) -> Vec<String> {
+    let cases = read_json(&holdings_case().join("renames.json")).unwrap();
+    serde_json::from_value(cases[case].clone()).unwrap()
+}
+
+/// Pool's placements of its physical column `name`, as `table variable start end`.
+fn pool_placements(db: &Path, name: &str) -> Vec<String> {
+    column(
+        db,
+        &format!(
+            "SELECT m.table_pid||' '||m.variable_pid||' '||m.start||' '||m.end
+             FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id
+             JOIN holding_table t ON t.id=c.holding_id
+             WHERE t.physical_name='Pool' AND c.name='{name}' ORDER BY 1"
+        ),
+    )
+}
+
 #[test]
 fn renamed_physical_column_matches_its_catalog_name() {
     // Fails if `[[rename]]` is ignored (the column lands unmatched), if it is looked up
     // after `[[rewrite]]` (the `Received_` strip leaves `Olde`, which no rename names),
     // or if the catalog name replaces the emitted physical name. The expected
-    // placements are the unmodified pair's for its physical `Old`.
-    let mapped = |db: &Path, name: &str| {
-        column(
-            db,
-            &format!(
-                "SELECT m.table_pid||' '||m.variable_pid||' '||m.start||' '||m.end
-                 FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id
-                 WHERE c.name='{name}' ORDER BY 1"
-            ),
-        )
-    };
-    let original = mapped(
-        &steward::pair().unwrap().dir.join("reg_meta_fixture.db"),
-        "Old",
-    );
-    assert!(!original.is_empty(), "the fixture's Old places nothing");
+    // placements (`renames.json`, `catalog`) come from the base frame and Pool's
+    // authored delivery.
+    let expected = rename_expected("catalog");
     let dir = Scratch::new("census-rename").unwrap();
     let root = locked_copy(dir.path()).unwrap();
     edit(&root.join("census.csv"), ",Old,", ",Received_Olde,", false).unwrap();
@@ -214,7 +220,7 @@ fn renamed_physical_column_matches_its_catalog_name() {
     .unwrap();
     let out = dir.path().join("renamed.db");
     compile(dir.path(), &out).ok();
-    assert_eq!(mapped(&out, "Received_Olde"), original);
+    assert_eq!(pool_placements(&out, "Received_Olde"), expected);
 }
 
 #[test]
@@ -222,9 +228,8 @@ fn variable_rename_places_every_documented_spelling() {
     // Fails if a `variable` rename resolves its FQID to one spelling and folds by it:
     // `demo/held/value` is spelled `Old` to 2018 and `New` from 2019, so a single
     // spelling places only one of the Pool's two intervals. The expected placements
-    // (`variable-rename.json`) come from the base frame and Pool's authored delivery.
-    let case = read_json(&holdings_case().join("variable-rename.json")).unwrap();
-    let expected: Vec<String> = serde_json::from_value(case["expected"].clone()).unwrap();
+    // (`renames.json`, `variable`) come from the base frame and Pool's authored delivery.
+    let expected = rename_expected("variable");
     let dir = Scratch::new("census-variable-rename").unwrap();
     let root = locked_copy(dir.path()).unwrap();
     edit(&root.join("census.csv"), ",Old,New,", ",Value,,", false).unwrap();
@@ -244,16 +249,7 @@ fn variable_rename_places_every_documented_spelling() {
     .unwrap();
     let out = dir.path().join("variable.db");
     compile(dir.path(), &out).ok();
-    assert_eq!(
-        column(
-            &out,
-            "SELECT m.table_pid||' '||m.variable_pid||' '||m.start||' '||m.end
-             FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id
-             JOIN holding_table t ON t.id=c.holding_id
-             WHERE t.physical_name='Pool' AND c.name='Value' ORDER BY 1",
-        ),
-        expected
-    );
+    assert_eq!(pool_placements(&out, "Value"), expected);
 }
 
 #[test]
