@@ -34,6 +34,7 @@ const GLYPHS: Record<Verdict, string> = {
   warnings: "▲",
   problems: "✕",
   blocked: "✕",
+  database: "",
   unchecked: "",
 };
 
@@ -43,6 +44,7 @@ const EXPLAINED: ReadonlySet<Verdict> = new Set([
   "warnings",
   "problems",
   "blocked",
+  "database",
   "unchecked",
 ]);
 

@@ -190,7 +190,7 @@ j_steward() {
 		fill searchbox "Search registers, variables" Late && wait_text "Late measure" &&
 		press option "Late measure" && wait_url "**/catalog/demo/held/late" &&
 		tree 'image "Late, Late measure, Pool, 2019–2020' &&
-		open_project "$project" && wait_text "Not ready to download: 1 problem." &&
+		open_project "$project" && wait_text "Can't download yet: 1 problem." &&
 		press button "Remove Variable name unavailable from Held reference metadata" &&
 		press button "Remove column" && wait_text "Received_Id" && shot
 }

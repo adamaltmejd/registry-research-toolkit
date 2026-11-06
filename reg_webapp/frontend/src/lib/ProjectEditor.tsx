@@ -24,10 +24,12 @@ import { Select } from "./ui/Select";
 import { StatusRow } from "./ui/StatusRow";
 import { useCatalogNames } from "./use_catalog_names";
 import {
+  DATABASE_CODES,
   type ProjectCheck,
   projectVerdict,
   useProject,
   VERDICT_WORDS,
+  type Verdict,
 } from "./use_project";
 import { useCatalogRead, useDistinct } from "./use_store_read";
 import { issueId, type ValidationIssue } from "./validation";
@@ -265,22 +267,31 @@ function Check({
   databaseShown: boolean;
   needsDatabase: boolean;
 }) {
-  const verdict = projectVerdict(project, validation);
+  const checked = projectVerdict(project, validation);
+  // A database not yet chosen: with the select on the page, the info row above
+  // is the whole answer (a choice to make, not an error, #2345); once one is
+  // chosen, the previous check still says it until the next arrives, so the
+  // page says Checking. Without the select the finding is listed, as a problem.
+  const verdict: Verdict =
+    checked !== "database"
+      ? checked
+      : !databaseShown
+        ? "blocked"
+        : needsDatabase
+          ? "database"
+          : "checking";
   const words = VERDICT_WORDS[verdict];
   const structural = project.draft === null;
   // Where the Database select is shown, it and the row above the verdict say
   // what `database_required` and `database_unknown` say, in the page's words,
-  // so neither finding is listed nor counted again; that holds once a database is chosen too,
+  // so neither finding is listed nor counted again; that holds once a database
+  // is chosen too,
   // since the previous check, kept on screen while the next runs, still carries
   // it. Without the select (no `/api/context`) the finding is the only
   // explanation and stays.
   const issues: ValidationIssue[] = (
     structural ? project.issues : (validation.data?.issues ?? [])
-  ).filter(
-    (issue) =>
-      !databaseShown ||
-      !["database_required", "database_unknown"].includes(issue.code),
-  );
+  ).filter((issue) => !databaseShown || !DATABASE_CODES.includes(issue.code));
   const onCard = (issue: ValidationIssue) =>
     !structural && issue.path.startsWith("/sources/");
   // A note on a card (level info) needs no link here: it changes no verdict.
@@ -289,9 +300,6 @@ function Check({
   );
   const problems = issues.filter((issue) => issue.level === "error").length;
   const warnings = issues.filter((issue) => issue.level === "warning").length;
-  // Only the database is missing: the row above is the whole answer, since a
-  // choice not yet made is no error (#2345).
-  const onlyDatabase = needsDatabase && verdict === "blocked" && problems === 0;
   // An empty project has no verdict, but Download still needs its reason.
   if (verdict === "empty" && !needsDatabase) return null;
   return (
@@ -318,7 +326,7 @@ function Check({
         >
           The check did not run ({validation.error}). Retry, or reload the page.
         </StatusRow>
-      ) : onlyDatabase ? null : (
+      ) : verdict === "database" ? null : (
         <StatusRow
           tone={
             verdict === "ready"
