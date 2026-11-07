@@ -17,6 +17,13 @@ advancing main at a time. A requested dependency upgrade goes through
 packaging or workflow fixes land as separate reviewed commits before the bump; if a
 draft or tag already exists, follow Error recovery first.
 
+The maintainer's go covers the whole release, from the bump to the steward deploys. The
+outward-facing steps (`gh release upload`, `gh release edit`, the publish PATCH, steward
+merges and `gh workflow run main.yml` dispatches) match allow rules in the maintainer's
+local settings, so they do not stop at the auto-mode check. Run each one as a single
+bare command: no `cd … &&`, no env-var prefix, no pipe. A compound command is checked
+part by part and can still be refused.
+
 ## Packages
 
   | Package  | Version files                                   | Release workflow                                                                            |
