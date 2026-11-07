@@ -1,0 +1,101 @@
+[[statement]]
+kind = "set"
+subject = "var:arenderegistreringsdatum"
+fields = { "tags" = ["migration"] }
+evidence = "MoA är SCB:s register över beslut om uppehållstillstånd och uppehållsrätt (grund för bosättning), byggt på Migrationsverkets leveranser.\nSCB, Migrationsstatistik i Sverige (2014), bilaga 6, https://regeringen.se/contentassets/416ba8f3128347d3a8625b664250ae83/b3f83850.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:avidatum-migrationsverket"
+fields = { "tags" = ["migration"] }
+evidence = "MoA är SCB:s register över beslut om uppehållstillstånd och uppehållsrätt (grund för bosättning), byggt på Migrationsverkets leveranser.\nSCB, Migrationsstatistik i Sverige (2014), bilaga 6, https://regeringen.se/contentassets/416ba8f3128347d3a8625b664250ae83/b3f83850.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:beslut-frandatum"
+fields = { "tags" = ["migration"] }
+evidence = "MoA är SCB:s register över beslut om uppehållstillstånd och uppehållsrätt (grund för bosättning), byggt på Migrationsverkets leveranser.\nSCB, Migrationsstatistik i Sverige (2014), bilaga 6, https://regeringen.se/contentassets/416ba8f3128347d3a8625b664250ae83/b3f83850.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:beslut-tilldatum"
+fields = { "tags" = ["migration"] }
+evidence = "MoA är SCB:s register över beslut om uppehållstillstånd och uppehållsrätt (grund för bosättning), byggt på Migrationsverkets leveranser.\nSCB, Migrationsstatistik i Sverige (2014), bilaga 6, https://regeringen.se/contentassets/416ba8f3128347d3a8625b664250ae83/b3f83850.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsdatum"
+fields = { "tags" = ["migration"] }
+evidence = "MoA är SCB:s register över beslut om uppehållstillstånd och uppehållsrätt (grund för bosättning), byggt på Migrationsverkets leveranser.\nSCB, Migrationsstatistik i Sverige (2014), bilaga 6, https://regeringen.se/contentassets/416ba8f3128347d3a8625b664250ae83/b3f83850.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsregistreringsdatum"
+fields = { "tags" = ["migration"] }
+evidence = "MoA är SCB:s register över beslut om uppehållstillstånd och uppehållsrätt (grund för bosättning), byggt på Migrationsverkets leveranser.\nSCB, Migrationsstatistik i Sverige (2014), bilaga 6, https://regeringen.se/contentassets/416ba8f3128347d3a8625b664250ae83/b3f83850.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutstyp"
+fields = { "tags" = ["migration"] }
+evidence = "MoA är SCB:s register över beslut om uppehållstillstånd och uppehållsrätt (grund för bosättning), byggt på Migrationsverkets leveranser.\nSCB, Migrationsstatistik i Sverige (2014), bilaga 6, https://regeringen.se/contentassets/416ba8f3128347d3a8625b664250ae83/b3f83850.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:ensamkommande-barn"
+fields = { "tags" = ["migration"] }
+evidence = "MoA är SCB:s register över beslut om uppehållstillstånd och uppehållsrätt (grund för bosättning), byggt på Migrationsverkets leveranser.\nSCB, Migrationsstatistik i Sverige (2014), bilaga 6, https://regeringen.se/contentassets/416ba8f3128347d3a8625b664250ae83/b3f83850.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:grund-for-bosattning-klassningsgruppering"
+fields = { "tags" = ["migration"] }
+evidence = "MoA är SCB:s register över beslut om uppehållstillstånd och uppehållsrätt (grund för bosättning), byggt på Migrationsverkets leveranser.\nSCB, Migrationsstatistik i Sverige (2014), bilaga 6, https://regeringen.se/contentassets/416ba8f3128347d3a8625b664250ae83/b3f83850.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:inkomstdatum-for-ansokan"
+fields = { "tags" = ["migration"] }
+evidence = "MoA är SCB:s register över beslut om uppehållstillstånd och uppehållsrätt (grund för bosättning), byggt på Migrationsverkets leveranser.\nSCB, Migrationsstatistik i Sverige (2014), bilaga 6, https://regeringen.se/contentassets/416ba8f3128347d3a8625b664250ae83/b3f83850.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:inresedatum"
+fields = { "tags" = ["migration"] }
+evidence = "MoA är SCB:s register över beslut om uppehållstillstånd och uppehållsrätt (grund för bosättning), byggt på Migrationsverkets leveranser.\nSCB, Migrationsstatistik i Sverige (2014), bilaga 6, https://regeringen.se/contentassets/416ba8f3128347d3a8625b664250ae83/b3f83850.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:student"
+fields = { "tags" = ["migration", "education"] }
+evidence = "MoA är SCB:s register över beslut om uppehållstillstånd och uppehållsrätt (grund för bosättning), byggt på Migrationsverkets leveranser.\nSCB, Migrationsstatistik i Sverige (2014), bilaga 6, https://regeringen.se/contentassets/416ba8f3128347d3a8625b664250ae83/b3f83850.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "tags" = ["demographics"] }
+evidence = "MoA är SCB:s register över beslut om uppehållstillstånd och uppehållsrätt (grund för bosättning), byggt på Migrationsverkets leveranser.\nSCB, Migrationsstatistik i Sverige (2014), bilaga 6, https://regeringen.se/contentassets/416ba8f3128347d3a8625b664250ae83/b3f83850.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarland"
+fields = { "tags" = ["demographics"] }
+evidence = "MoA är SCB:s register över beslut om uppehållstillstånd och uppehållsrätt (grund för bosättning), byggt på Migrationsverkets leveranser.\nSCB, Migrationsstatistik i Sverige (2014), bilaga 6, https://regeringen.se/contentassets/416ba8f3128347d3a8625b664250ae83/b3f83850.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva"
+fields = { "tags" = ["education"] }
+evidence = "MoA är SCB:s register över beslut om uppehållstillstånd och uppehållsrätt (grund för bosättning), byggt på Migrationsverkets leveranser.\nSCB, Migrationsstatistik i Sverige (2014), bilaga 6, https://regeringen.se/contentassets/416ba8f3128347d3a8625b664250ae83/b3f83850.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningslangd"
+fields = { "tags" = ["education"] }
+evidence = "MoA är SCB:s register över beslut om uppehållstillstånd och uppehållsrätt (grund för bosättning), byggt på Migrationsverkets leveranser.\nSCB, Migrationsstatistik i Sverige (2014), bilaga 6, https://regeringen.se/contentassets/416ba8f3128347d3a8625b664250ae83/b3f83850.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkeskod-ssyk-96"
+fields = { "tags" = ["employment"] }
+evidence = "MoA är SCB:s register över beslut om uppehållstillstånd och uppehållsrätt (grund för bosättning), byggt på Migrationsverkets leveranser.\nSCB, Migrationsstatistik i Sverige (2014), bilaga 6, https://regeringen.se/contentassets/416ba8f3128347d3a8625b664250ae83/b3f83850.pdf"
