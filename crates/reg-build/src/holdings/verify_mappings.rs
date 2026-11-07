@@ -77,6 +77,7 @@ fn claims(
     table: &input::Table,
     column: &reg_readers::holdings::Column,
     index: &BTreeMap<String, Vec<compile::Segment>>,
+    variables: &compile::Variables<'_>,
 ) -> Result<Vec<Claim>> {
     let decision = table.column.iter().find(|c| c.name == column.name);
     let spans = compile::column_periods(decision, &compile::table_periods(table)?)?;
@@ -102,18 +103,7 @@ fn claims(
                 .map(compile::periods)
                 .transpose()?
                 .unwrap_or_else(|| spans.clone());
-            let segments = index
-                .get(&mapping.table_pid)
-                .ok_or("holdings_table_route_unresolved")?;
-            let variable: Vec<_> = segments
-                .iter()
-                .filter(|s| s.variable == mapping.variable_pid)
-                .collect();
-            if variable.is_empty() {
-                return Err(
-                    "stale_declared_mapping_target: variable absent from routed table".into(),
-                );
-            }
+            let variable = compile::mapping_segments(index, variables, mapping)?;
             let documented: Vec<_> = variable
                 .iter()
                 .filter(|s| {
@@ -129,10 +119,10 @@ fn claims(
                         .into(),
                 );
             }
-            for segment in segments.iter().filter(|s| {
-                s.variable == mapping.variable_pid
-                    && s.timeless == (table.disposition == "timeless")
-            }) {
+            for segment in variable
+                .iter()
+                .filter(|s| s.timeless == (table.disposition == "timeless"))
+            {
                 claims.push(claim(
                     segment,
                     &wanted,
@@ -247,13 +237,12 @@ fn expected(
 
 pub(super) fn verify(
     db: &Connection,
-    base: &Connection,
+    index: &BTreeMap<String, Vec<compile::Segment>>,
+    variables: &compile::Variables<'_>,
     topology: &input::Topology,
     census: &reg_readers::holdings::ReadOutput,
 ) -> Result<()> {
-    // segment_index seeds from every tbl row, including segmentless tables.
-    let index = compile::segment_index(base, db)?;
-    compile::renames_resolve(&index, &census.rename_targets)?;
+    compile::renames_resolve(index, &census.rename_targets)?;
     let keyed = compile::schema_keyed(&census.tables);
     let tables: BTreeMap<_, _> = topology
         .table
@@ -276,8 +265,12 @@ pub(super) fn verify(
         for column in &table.columns {
             let location = format!("census:row={}:column={}", table.source_row, column.ordinal);
             let mut compare = || -> Result<Option<&str>> {
-                let (mut expected, mut contested) =
-                    expected(&claims(authored, column, &index)?, authored, &tables, keyed)?;
+                let (mut expected, mut contested) = expected(
+                    &claims(authored, column, index, variables)?,
+                    authored,
+                    &tables,
+                    keyed,
+                )?;
                 let mut stored = Mappings::new();
                 let rows = query.query_map(
                     rusqlite::params![table.name, column.name, table.schema],

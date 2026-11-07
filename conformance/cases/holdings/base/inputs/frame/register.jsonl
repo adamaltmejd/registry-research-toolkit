@@ -26,3 +26,4 @@
 {"kind":"occurrence","provider":"demo","register":"keyed","table":"visits","column":"Amount","source_key":"amount","label":"Visit amount","dtype":"int","from":"2017-01-01","to":"2022-12-31"}
 {"kind":"occurrence","provider":"demo","register":"keyed","table":"visits","column":"Score","source_key":"score","label":"Visit score","dtype":"int","from":"2017-01-01","to":"2022-12-31"}
 {"kind":"occurrence","provider":"demo","register":"keyed","table":"visits","column":"Year","source_key":"year","label":"Visit year","dtype":"int","from":"2017-01-01","to":"2022-12-31"}
+{"kind":"occurrence","provider":"demo","register":"held","table":"linked","column":"RelativeId","source_key":"relative-id","label":"Relative identifier, ordinary orderable column","dtype":"int","identifier":true,"from":"2017-01-01","to":"2021-12-31"}
