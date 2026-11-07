@@ -1,5 +1,5 @@
 repo = "adamaltmejd/registry-catalog-inputs"
-commit = "963aae13be04a273a6f86e8c5f6dbe435392fc67"
+commit = "36830b78154cd69d73dfde047d233339b2235571"
 
 [[provider]]
 pid = "scb"
@@ -111,6 +111,11 @@ provider = "scb"
 # D by scripts/rebuild_attach_lisa.py from the lisa reader's frames and section map
 # (both since deleted). Its standalone register is retired.
 
+# scb/moa (Registret över migrations- och asylstatistik) is transcribed from SCB's
+# "Migrationsstatistik i Sverige" (2014), Bilaga 6,
+# https://regeringen.se/contentassets/416ba8f3128347d3a8625b664250ae83/b3f83850.pdf, with
+# field names from the STATIV 2022 and 2024 documentation; all three are pinned under
+# catalog/evidence/scb-moa/ in the inputs repository. No licence stated.
 [[input]]
 name = "scb-transcription"
 reader = "transcription"

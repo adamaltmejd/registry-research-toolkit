@@ -1,0 +1,28 @@
+# Public ids of scb/moa. A variable's id is the slug of its label; personnr follows the
+# identifier canon. Written with the register's transcription, 2026-11-07.
+[tables]
+"grundtabell" = "grundtabell"
+"stocktabell" = "stocktabell"
+
+[variables]
+"arenderegistreringsdatum" = ["grundtabell: AreRegDatum"]
+"avidatum-migrationsverket" = ["grundtabell: AviDatum"]
+"beslut-frandatum" = ["grundtabell: BeslFranDatum"]
+"beslut-tilldatum" = ["grundtabell: Beslut tilldatum"]
+"beslutsdatum" = ["grundtabell: BeslDatum", "stocktabell: BeslDatum"]
+"beslutsregistreringsdatum" = ["grundtabell: Beslutsregistreringsdatum"]
+"beslutstyp" = ["grundtabell: Beslutstyp"]
+"dossiernummer" = ["grundtabell: Dossiernummer"]
+"ensamkommande-barn" = ["grundtabell: Ensamkommande"]
+"grund-for-bosattning-klassningsgruppering" = ["grundtabell: GFB_KlassGrupp", "stocktabell: GFB_KlassGrupp"]
+"inkomstdatum-for-ansokan" = ["grundtabell: InkomDatum"]
+"inresedatum" = ["grundtabell: Inresedatum"]
+"kon" = ["grundtabell: Kön"]
+"medborgarland" = ["grundtabell: Land"]
+"personnr" = ["grundtabell: Personnummer", "stocktabell: Personnummer"]
+"referens-organisationsnummer" = ["grundtabell: Referens organisationsnummer"]
+"sb-gruppens-id-nr" = ["grundtabell: SB-gruppens ID-nr"]
+"student" = ["grundtabell: Student"]
+"utbildningslangd" = ["grundtabell: Utbildningslängd"]
+"utbildningsniva" = ["grundtabell: Utbildning"]
+"yrkeskod-ssyk-96" = ["grundtabell: SSYK"]
