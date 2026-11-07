@@ -253,6 +253,59 @@ fn variable_rename_places_every_documented_spelling() {
 }
 
 #[test]
+fn table_less_mapping_places_on_every_documenting_table() {
+    // Fails if a mapping that names no table places in only one of the tables that
+    // document its variable (RelativeId in demo/held and demo/held/linked), ignores the
+    // steward table's timelessness (Id would also place in the timeless
+    // demo/owners/spare), if verify re-derives or key-checks those placements
+    // differently from the compiler, or if a table-less mapping to a variable no table
+    // documents is admitted. Expected rows (`derived.json`) come from the base frame
+    // and Derived's authored delivery.
+    let expected = read_json(&holdings_case().join("derived.json")).unwrap();
+    let dir = Scratch::new("derived").unwrap();
+    let root = locked_copy(dir.path()).unwrap();
+    append(
+        &root.join("census.csv"),
+        "Synthetic,Derived,Derived,Id,RelativeId,,,,,,,\n",
+    )
+    .unwrap();
+    append(
+        &root.join("storage.csv"),
+        "dbo,Derived,BASE TABLE,Id,int,,10,0,1\ndbo,Derived,BASE TABLE,RelativeId,int,,10,0,2\n",
+    )
+    .unwrap();
+    let topology = root.join("holdings.toml");
+    append(
+        &topology,
+        &read(&holdings_case().join("derived.toml")).unwrap(),
+    )
+    .unwrap();
+    let out = dir.path().join("derived.db");
+    compile(dir.path(), &out).ok();
+    assert_eq!(
+        column(
+            &out,
+            "SELECT m.table_pid||' '||m.variable_pid||' '||m.start||' '||m.end||' '||m.carried
+             FROM holding_mapping m JOIN holding_column c ON c.id=m.column_id
+             JOIN holding_table t ON t.id=c.holding_id
+             WHERE t.physical_name='Derived' ORDER BY 1"
+        ),
+        serde_json::from_value::<Vec<String>>(expected["placements"].clone()).unwrap()
+    );
+    let base = cached_reader_artifact(&holdings_case().join("base")).unwrap();
+    verify_holdings(&out, &base, &root).ok();
+    edit(
+        &topology,
+        "variable_pid = \"demo/held/relative-id\"",
+        "variable_pid = \"demo/held/absent\"",
+        false,
+    )
+    .unwrap();
+    compile(dir.path(), &dir.path().join("absent.db"))
+        .refused(&[expected["absent_variable"].as_str().unwrap()]);
+}
+
+#[test]
 fn schema_keyed_census_holds_one_name_in_two_schemas() {
     // Fails if a schema-keyed census still keys tables by name (the aux twin of
     // Excluded refuses as a duplicate, or the unique physical name refuses it at

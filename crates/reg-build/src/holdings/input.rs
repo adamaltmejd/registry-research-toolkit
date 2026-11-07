@@ -133,7 +133,10 @@ impl std::fmt::Display for SlotIndex {
 #[derive(Deserialize)]
 #[serde(deny_unknown_fields)]
 pub(super) struct Mapping {
-    pub table_pid: String,
+    /// The catalog table the column is placed in. Absent, the column is placed on its
+    /// variable in every table that documents it (`crates/DESIGN.md`, "Steward-derived
+    /// tables").
+    pub table_pid: Option<String>,
     pub variable_pid: String,
     pub delivery: Option<String>,
     pub caveat: Option<String>,

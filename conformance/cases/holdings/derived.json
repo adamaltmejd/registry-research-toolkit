@@ -1,0 +1,9 @@
+{
+  "note": "Derived delivers 2017..2019 and its mappings name no table (derived.toml). The base frame documents demo/owners/id in the dated demo/owners (2017-2019) and the timeless demo/owners/spare, and demo/held/relative-id in the dated demo/held and demo/held/linked (2017-2021). So Id places once, in demo/owners, as the carried key, and RelativeId places in both dated tables over the delivery. Rows are `table variable start end carried`; bounds are days since 1970-01-01, end exclusive: 2017-01-01 = 17167, 2020-01-01 = 18262. Oracle: the base frame and Derived's authored delivery.",
+  "placements": [
+    "demo/held demo/held/relative-id 17167 18262 0",
+    "demo/held/linked demo/held/relative-id 17167 18262 0",
+    "demo/owners demo/owners/id 17167 18262 1"
+  ],
+  "absent_variable": "stale_declared_mapping_target: variable is documented in no table"
+}

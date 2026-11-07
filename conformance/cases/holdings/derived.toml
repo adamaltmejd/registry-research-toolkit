@@ -1,0 +1,28 @@
+
+# A steward-derived table: no catalog table holds both columns, so its mappings name
+# variables only.
+[[table]]
+physical_name = "Derived"
+disposition = "dated"
+delivery = "2017..2019"
+locator = "fixture:derived"
+
+[[table.column]]
+name = "Id"
+locator = "fixture:derived-id"
+[[table.column.mapping]]
+variable_pid = "demo/owners/id"
+carried = true
+locator = "fixture:derived-id"
+
+[[table.column]]
+name = "RelativeId"
+locator = "fixture:derived-relative-id"
+[[table.column.mapping]]
+variable_pid = "demo/held/relative-id"
+locator = "fixture:derived-relative-id"
+
+[[table.key]]
+entity = ["demo/owners/id"]
+time = []
+locator = "fixture:declared-entity-time-key"

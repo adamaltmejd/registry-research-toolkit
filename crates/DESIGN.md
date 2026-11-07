@@ -1549,6 +1549,7 @@ The generic compiler does the following against the exact catalog/semantic-view 
    optional `delivery` window) names an evidence-backed variable and replaces automatic
    matching for that column; it cannot clear an ambiguous catalog segment.
    Partition/projection and duplicate placement checks still apply after owner grouping.
+   A mapping may omit `table_pid` (see "Steward-derived tables" below).
 5. Emit keys `(table_pid, variable_pid, interval)` pointing to the literal physical
    column. An unmatched or empty-intersection column is retained with a
    `mapping_missing` notice and worklist row, without an orderable mapping. It does
@@ -1584,6 +1585,53 @@ adopted catalog type and physical precision/scale/length. Catalog typing never s
 storage export. Storage mismatch findings require review; missing or ambiguous schema
 facts and unsafe output types remain publication/materialization refusals. No
 disagreement auto-corrects provider types.
+
+#### Steward-derived tables
+
+A steward may hold its own small extracts or recodes (a grouping, a citizenship or
+migration extract, a generation link) whose columns are catalog variables while no
+single catalog table holds them all (maintainer, 2026-11-07: "let a steward table place
+columns on catalog variables without naming a source table"). Such a `[[table]]` gives
+no `table_pids`, and each placed column has a `[[table.column.mapping]]` with
+`variable_pid` and `locator` but no `table_pid`:
+
+```toml
+[[table]]
+physical_name = "Derived"
+disposition = "dated"
+delivery = "2017..2019"
+locator = "…"
+
+[[table.column]]
+name = "Id"
+locator = "…"
+[[table.column.mapping]]
+variable_pid = "demo/owners/id"
+carried = true                 # a row key only, as on any mapping
+locator = "…"
+
+[[table.key]]
+entity = ["demo/owners/id"]
+locator = "…"
+```
+
+The compiler places such a column on its variable in every catalog or semantic-view
+table that documents it, over the owed interval, each table independently: exactly the
+placements one explicit mapping per table would give. Only tables of the steward table's
+timelessness count, as everywhere. A `delivery` window must lie inside the union of
+those tables' unambiguous coverage. `delivery`, `caveat`, `carried`, `hold` and
+`follow_up` keep their meaning. A variable no table documents is
+`stale_declared_mapping_target`. The holdings schema and readers are unchanged: a
+placement still records a real `(table_pid, variable_pid)`, so `segments`, `coverage`
+and orders show a derived file as one more held file of each such table, and the
+artifact keeps no mark that its mapping named no table.
+
+A route-less table matches no column automatically, so `[[rename]]` never places there;
+every placed column, its key columns included, needs its own mapping. The
+duplicate-placement rule is unchanged: a derived column placed on a variable that
+another of the steward's tables in the same space holds over the same period refuses
+(`inventory_cell_conflict`), since an order would get two files for one cell. Mark the
+derived copy `carried` where it is a key, or decide the column (`unmap`, `hold`).
 
 ### Compiled facts and publication
 

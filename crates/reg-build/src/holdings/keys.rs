@@ -259,7 +259,12 @@ fn validate(db: &Connection, base: &Connection, holding: i64, key: &input::RowKe
 }
 
 #[allow(clippy::too_many_lines)]
-pub(super) fn verify(db: &Connection, base: &Connection, topology: &input::Topology) -> Result<()> {
+pub(super) fn verify(
+    db: &Connection,
+    base: &Connection,
+    variables: &compile::Variables<'_>,
+    topology: &input::Topology,
+) -> Result<()> {
     let declarations = declarations(db)?;
     let mut routes = BTreeMap::new();
     for table in &topology.table {
@@ -278,7 +283,16 @@ pub(super) fn verify(db: &Connection, base: &Connection, topology: &input::Topol
                     .column
                     .iter()
                     .flat_map(|column| &column.mapping)
-                    .map(|mapping| mapping.table_pid.clone()),
+                    .flat_map(|mapping| match &mapping.table_pid {
+                        Some(table) => vec![table.clone()],
+                        // A table-less mapping routes to every table documenting its variable.
+                        None => variables
+                            .get(mapping.variable_pid.as_str())
+                            .into_iter()
+                            .flatten()
+                            .map(|s| s.table.clone())
+                            .collect(),
+                    }),
             )
             .collect();
         routes.insert(holding, authored);

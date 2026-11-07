@@ -154,6 +154,7 @@ pub(super) fn candidates(
     decision: Option<&input::Column>,
     owed: &[Span],
     index: &BTreeMap<String, Vec<Segment>>,
+    variables: &Variables<'_>,
 ) -> Result<Vec<Candidate>> {
     let mut out = Vec::new();
     if let Some(decision) = decision
@@ -166,18 +167,7 @@ pub(super) fn candidates(
             if mapping.locator.trim().is_empty() {
                 return Err("stale_declared_mapping_target: evidence locator required".into());
             }
-            let segments = index
-                .get(&mapping.table_pid)
-                .ok_or("holdings_table_route_unresolved: explicit route absent")?;
-            let variable: Vec<_> = segments
-                .iter()
-                .filter(|s| s.variable == mapping.variable_pid)
-                .collect();
-            if variable.is_empty() {
-                return Err(
-                    "stale_declared_mapping_target: variable absent from routed table".into(),
-                );
-            }
+            let variable = mapping_segments(index, variables, mapping)?;
             let wanted = match &mapping.delivery {
                 Some(window) => {
                     let wanted = periods(window)?;
@@ -495,6 +485,48 @@ pub(super) fn segment_index(
     Ok(index)
 }
 
+/// Every table's segments of each variable, in table order.
+pub(super) type Variables<'a> = BTreeMap<&'a str, Vec<&'a Segment>>;
+
+pub(super) fn by_variable(index: &BTreeMap<String, Vec<Segment>>) -> Variables<'_> {
+    let mut variables = Variables::new();
+    for segment in index.values().flatten() {
+        variables
+            .entry(segment.variable.as_str())
+            .or_default()
+            .push(segment);
+    }
+    variables
+}
+
+/// The segments an explicit column mapping places from: its variable's in the table it
+/// names or, when it names none (a steward-derived table), in every table that
+/// documents the variable. Compile and verify both read placements through this.
+pub(super) fn mapping_segments<'a>(
+    index: &'a BTreeMap<String, Vec<Segment>>,
+    variables: &Variables<'a>,
+    mapping: &input::Mapping,
+) -> Result<Vec<&'a Segment>> {
+    let Some(table) = &mapping.table_pid else {
+        return variables
+            .get(mapping.variable_pid.as_str())
+            .cloned()
+            .ok_or_else(|| {
+                "stale_declared_mapping_target: variable is documented in no table".into()
+            });
+    };
+    let segments: Vec<_> = index
+        .get(table)
+        .ok_or("holdings_table_route_unresolved: explicit route absent")?
+        .iter()
+        .filter(|s| s.variable == mapping.variable_pid)
+        .collect();
+    if segments.is_empty() {
+        return Err("stale_declared_mapping_target: variable absent from routed table".into());
+    }
+    Ok(segments)
+}
+
 /// A census column's match target, folded once: a spelling or a variable FQID.
 pub(super) enum Target<'a> {
     Spelling(String),
@@ -572,6 +604,7 @@ pub(super) fn write(
     spaces: &super::spaces::Spaces,
 ) -> Result<(usize, usize, usize, usize)> {
     let index = segment_index(base, db)?;
+    let variables = by_variable(&index);
     renames_resolve(&index, rename_targets)?;
     let keyed = schema_keyed(&census);
     let mut authored = BTreeMap::new();
@@ -820,7 +853,8 @@ pub(super) fn write(
                     if hold.is_some() || unmap.is_some() || spans.is_empty() {
                         return Ok(());
                     }
-                    let candidates = candidates(authored, column, decision, &owed, &index)?;
+                    let candidates =
+                        candidates(authored, column, decision, &owed, &index, &variables)?;
                     let accepted = placements(&tx, id, cid, &candidates, &owed, &authored.key)?;
                     if accepted.is_empty() && authored.key.iter().any(|key| key.hold.is_some()) {
                         return Ok(());
