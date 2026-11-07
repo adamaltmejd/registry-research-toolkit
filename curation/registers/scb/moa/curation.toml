@@ -99,3 +99,63 @@ kind = "set"
 subject = "var:yrkeskod-ssyk-96"
 fields = { "tags" = ["employment"] }
 evidence = "MoA är SCB:s register över beslut om uppehållstillstånd och uppehållsrätt (grund för bosättning), byggt på Migrationsverkets leveranser.\nSCB, Migrationsstatistik i Sverige (2014), bilaga 6, https://regeringen.se/contentassets/416ba8f3128347d3a8625b664250ae83/b3f83850.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:arenderegistreringsdatum"
+fields = { "type" = "text" }
+evidence = "Samma kolumn, AreRegDatum, är text (längd 8) i scb/rtb (grund-bosattning-31-12) och scb/stativ (STATIV), som båda hämtar den från MoA. Bilaga 6 (SCB, Migrationsstatistik i Sverige 2014) anger ingen lagringstyp."
+
+[[statement]]
+kind = "set"
+subject = "var:beslut-frandatum"
+fields = { "type" = "text" }
+evidence = "Samma kolumn, BeslFranDatum, är text (längd 8) i scb/rtb (grund-bosattning-31-12) från 2008. Bilaga 6 (SCB, Migrationsstatistik i Sverige 2014) anger ingen lagringstyp."
+
+[[statement]]
+kind = "set"
+subject = "var:beslut-tilldatum"
+fields = { "type" = "text" }
+evidence = "Systerkolumnen till BeslFranDatum heter BeslTillDatum i scb/rtb (grund-bosattning-31-12) och är text (längd 8) från 2008; bilagan skriver namnet \"Beslut tilldatum\". Bilaga 6 (SCB, Migrationsstatistik i Sverige 2014) anger ingen lagringstyp."
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsdatum"
+fields = { "type" = "text" }
+evidence = "Samma kolumn, BeslDatum, är text (längd 8) i scb/stativ (STATIV) och i scb/rtb (grund-bosattning-31-12) från 2008; i scb/rtb 1987–2007 är den integer. Bilaga 6 (SCB, Migrationsstatistik i Sverige 2014) anger ingen lagringstyp."
+
+[[statement]]
+kind = "set"
+subject = "var:beslutstyp"
+fields = { "type" = "text" }
+evidence = "Samma variabel heter BeslutTyp i scb/rtb (grund-bosattning-31-12) och är text (längd 8–12) i alla årgångar. Bilaga 6 (SCB, Migrationsstatistik i Sverige 2014) anger ingen lagringstyp."
+
+[[statement]]
+kind = "set"
+subject = "var:ensamkommande-barn"
+fields = { "type" = "text" }
+evidence = "Samma kolumn, Ensamkommande, är text (längd 1) i scb/rtb (grund-bosattning-31-12) och scb/stativ (STATIV). Bilaga 6 (SCB, Migrationsstatistik i Sverige 2014) anger ingen lagringstyp."
+
+[[statement]]
+kind = "set"
+subject = "var:grund-for-bosattning-klassningsgruppering"
+fields = { "type" = "integer" }
+evidence = "Samma kolumn, GFB_KlassGrupp, är integer (längd 2) i scb/stativ (STATIV) och i scb/rtb (grund-bosattning-31-12, stavad GFB_Klassgrupp). Bilaga 6 (SCB, Migrationsstatistik i Sverige 2014) anger ingen lagringstyp."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomstdatum-for-ansokan"
+fields = { "type" = "text" }
+evidence = "Samma kolumn, InkomDatum, är text (längd 8) i scb/rtb (grund-bosattning-31-12). Bilaga 6 (SCB, Migrationsstatistik i Sverige 2014) anger ingen lagringstyp."
+
+[[statement]]
+kind = "set"
+subject = "var:personnr"
+fields = { "type" = "text" }
+evidence = "Personnumret heter PersonNr i scb/rtb och scb/stativ och är text (längd 12) där; kolumnen Personnummer är text i alla register som har den. Bilaga 6 (SCB, Migrationsstatistik i Sverige 2014) anger ingen lagringstyp."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkeskod-ssyk-96"
+fields = { "type" = "text" }
+evidence = "Samma kolumn, SSYK, är text (längd 4) i scb/rtb (grund-bosattning-31-12). Bilaga 6 (SCB, Migrationsstatistik i Sverige 2014) anger ingen lagringstyp."
