@@ -1,5 +1,5 @@
 repo = "adamaltmejd/registry-catalog-inputs"
-commit = "a0f54691377d313161f14a652c88f85b746a65ac"
+commit = "fdfa80247a4da564281f1787cefcb009e872c99e"
 
 [[provider]]
 pid = "scb"
