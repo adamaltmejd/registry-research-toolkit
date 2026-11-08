@@ -1,12 +1,19 @@
 # Public ids of fk/foraldrapenning, from the slug pins at 9e28ba5b2.
 [tables]
+"delfall-1-1" = "delfall-1-1"
+"fall" = "fall"
 "fl-delfall1" = "fl-delfall1"
 "fl-fall" = "fl-fall"
 "fp-delfall1" = "fp-delfall1"
 "fp-fall" = "fp-fall"
 
 [variables]
+"dagbelopp" = ["delfall-1-1: DAGBELOPP"]
 "dagtyp" = ["fl-delfall1: DAGTYP"]
+"del-belopp-brutto" = ["delfall-1-1: DEL_BELOPP_BRUTTO"]
+"del-dagar-brutto" = ["delfall-1-1: DEL_DAGAR_BRUTTO"]
+"del-dagar-netto" = ["delfall-1-1: DEL_DAGAR_NETTO"]
+"del-dagar-tot" = ["delfall-1-1: DEL_DAGAR_TOT"]
 "del-from-datum" = ["fl-delfall1: DEL_FROM_DATUM"]
 "del-tom-datum" = ["fl-delfall1: DEL_TOM_DATUM"]
 "delfall-belopp" = ["fl-delfall1: DELFALL_BELOPP"]
@@ -14,8 +21,12 @@
 "delfall-dagar-lo-so" = ["fl-delfall1: DELFALL_DAGAR_LO_SO"]
 "delfall-dagar-tot" = ["fl-delfall1: DELFALL_DAGAR_TOT"]
 "delfall-nettodagar" = ["fl-delfall1: DELFALL_NETTODAGAR"]
+"ersniva" = ["delfall-1-1: ERSNIVA"]
 "fall-belopp" = ["fl-delfall1: FALL_BELOPP"]
+"fall-belopp-brutto" = ["fall: FALL_BELOPP_BRUTTO"]
 "fall-bruttodagar" = ["fl-delfall1: FALL_BRUTTODAGAR"]
+"fall-dagar-brutto" = ["fall: FALL_DAGAR_BRUTTO"]
+"fall-dagar-netto" = ["fall: FALL_DAGAR_NETTO"]
 "fall-dagar-tot" = ["fl-delfall1: FALL_DAGAR_TOT"]
 "fall-from-datum" = ["fl-delfall1: FALL_FROM_DATUM"]
 "fall-nettodagar" = ["fl-delfall1: FALL_NETTODAGAR"]
@@ -23,5 +34,7 @@
 "foddat-barn" = ["fl-delfall1: FODDAT_BARN"]
 "niva" = ["fl-delfall1: NIVA"]
 "omfattning" = ["fl-delfall1: OMFATTNING"]
+"osaker" = ["delfall-1-1: OSAKER"]
+"overlfor" = ["delfall-1-1: OVERLFOR"]
 "persid" = ["fl-delfall1: PERSID"]
 "persid-barn" = ["fl-delfall1: PERSID_BARN"]

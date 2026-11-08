@@ -1,5 +1,5 @@
 repo = "adamaltmejd/registry-catalog-inputs"
-commit = "36830b78154cd69d73dfde047d233339b2235571"
+commit = "4ee0188283b06bbf4b5354a2e20c88bfffc8c595"
 
 [[provider]]
 pid = "scb"
@@ -49,6 +49,13 @@ name = "Göteborgs universitet"
 pid = "sos"
 name = "Socialstyrelsen"
 
+# The fk MiDAS registers foraldrapenning and sjukpenning also follow two FK
+# publications, pinned under catalog/evidence/fk/ in the inputs repository: PM 2020:2
+# "MiDAS föräldrapenning" (dnr 007188-2020),
+# https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc11e/1666183907826/midas-foraldrapenning-pm-2020-2.pdf,
+# and "MiDAS Sjukpenning och rehabiliteringspenning", version 1.02 (2011),
+# https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc11f/1666183936381/dokumentation-av-midas-sjukpenning-och-rehabiliteringspenning.pdf.
+# No licence stated.
 [[input]]
 name = "fk-transcription"
 reader = "transcription"
