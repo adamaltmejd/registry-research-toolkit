@@ -574,3 +574,9 @@ kind = "set"
 subject = "delfall-4-7: Persid"
 fields = { "variable" = "lopnr" }
 evidence = "Persid: Individspecifikt löpnummer, the same person key the other tables of the register spell Lopnr (FK's later variabelförteckning).\nMiDAS Sjukpenning och rehabiliteringspenning, version 1.02 (2011), Bilaga 1, Delfall 4-7, https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc11f/1666183936381/dokumentation-av-midas-sjukpenning-och-rehabiliteringspenning.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:lopnr"
+fields = { "label" = "Lopnr" }
+evidence = "Keeps the label of FK's current variabelförteckning; the delfall tables 1-2 to 4-7 transcribed from MiDAS Sjukpenning och rehabiliteringspenning version 1.02 (2011) spell the same key Persid and would otherwise outnumber it."
