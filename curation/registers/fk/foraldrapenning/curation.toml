@@ -154,3 +154,69 @@ kind = "set"
 subject = "var:omfattning"
 fields = { "tags" = ["transfers"] }
 evidence = "Omfattningen avser föräldrapenning.\ncatalog:variable_text:191:8401:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dagbelopp"
+fields = { "tags" = ["transfers"] }
+evidence = "Föräldrapenning (äldre version), 1993 till september 2013.\nFK PM 2020:2, MiDAS föräldrapenning, s. 35-36, https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc11e/1666183907826/midas-foraldrapenning-pm-2020-2.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:del-belopp-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "Föräldrapenning (äldre version), 1993 till september 2013.\nFK PM 2020:2, MiDAS föräldrapenning, s. 35-36, https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc11e/1666183907826/midas-foraldrapenning-pm-2020-2.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:del-dagar-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "Föräldrapenning (äldre version), 1993 till september 2013.\nFK PM 2020:2, MiDAS föräldrapenning, s. 35-36, https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc11e/1666183907826/midas-foraldrapenning-pm-2020-2.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:del-dagar-netto"
+fields = { "tags" = ["transfers"] }
+evidence = "Föräldrapenning (äldre version), 1993 till september 2013.\nFK PM 2020:2, MiDAS föräldrapenning, s. 35-36, https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc11e/1666183907826/midas-foraldrapenning-pm-2020-2.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:del-dagar-tot"
+fields = { "tags" = ["transfers"] }
+evidence = "Föräldrapenning (äldre version), 1993 till september 2013.\nFK PM 2020:2, MiDAS föräldrapenning, s. 35-36, https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc11e/1666183907826/midas-foraldrapenning-pm-2020-2.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:ersniva"
+fields = { "tags" = ["transfers"] }
+evidence = "Föräldrapenning (äldre version), 1993 till september 2013.\nFK PM 2020:2, MiDAS föräldrapenning, s. 35-36, https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc11e/1666183907826/midas-foraldrapenning-pm-2020-2.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-belopp-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "Föräldrapenning (äldre version), 1993 till september 2013.\nFK PM 2020:2, MiDAS föräldrapenning, s. 35-36, https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc11e/1666183907826/midas-foraldrapenning-pm-2020-2.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-dagar-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "Föräldrapenning (äldre version), 1993 till september 2013.\nFK PM 2020:2, MiDAS föräldrapenning, s. 35-36, https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc11e/1666183907826/midas-foraldrapenning-pm-2020-2.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-dagar-netto"
+fields = { "tags" = ["transfers"] }
+evidence = "Föräldrapenning (äldre version), 1993 till september 2013.\nFK PM 2020:2, MiDAS föräldrapenning, s. 35-36, https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc11e/1666183907826/midas-foraldrapenning-pm-2020-2.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:osaker"
+fields = { "tags" = ["transfers"] }
+evidence = "Föräldrapenning (äldre version), 1993 till september 2013.\nFK PM 2020:2, MiDAS föräldrapenning, s. 35-36, https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc11e/1666183907826/midas-foraldrapenning-pm-2020-2.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:overlfor"
+fields = { "tags" = ["transfers"] }
+evidence = "Föräldrapenning (äldre version), 1993 till september 2013.\nFK PM 2020:2, MiDAS föräldrapenning, s. 35-36, https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc11e/1666183907826/midas-foraldrapenning-pm-2020-2.pdf"
