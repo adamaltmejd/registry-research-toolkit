@@ -1062,10 +1062,39 @@ fn move_release(
     Ok(())
 }
 
-/// The releases `after` holds in another table than `before`, each as its old source
-/// endpoint and new table. A release keeps its locator through a move.
+/// A release `set table` moved: its source address before the move and its new table.
+#[derive(Debug, Clone)]
+pub struct ReleaseMove {
+    provider: String,
+    register: String,
+    /// The register's name, folded as the link stage folds a `register_name` end.
+    register_name: Option<String>,
+    table: String,
+    release: String,
+    to: String,
+}
+
+impl ReleaseMove {
+    fn names(&self, end: &reg_frame::Endpoint) -> bool {
+        let register = match (&end.register, &end.register_name) {
+            (Some(handle), _) => *handle == self.register,
+            (None, Some(name)) => {
+                self.register_name.as_deref() == Some(&*reg_core::fold_identity(name.trim()))
+            }
+            (None, None) => false,
+        };
+        end.kind == "release"
+            && end.provider == self.provider
+            && register
+            && end.table.as_deref() == Some(self.table.as_str())
+            && end.key.as_deref() == Some(self.release.as_str())
+    }
+}
+
+/// The releases `after` holds in another table than `before`. A release keeps its
+/// locator through a move.
 #[must_use]
-pub fn release_moves(before: &[Record], after: &[Record]) -> Vec<(reg_frame::Endpoint, String)> {
+pub fn release_moves(before: &[Record], after: &[Record]) -> Vec<ReleaseMove> {
     let placed: BTreeMap<_, _> = after
         .iter()
         .filter_map(|record| match record {
@@ -1080,21 +1109,31 @@ pub fn release_moves(before: &[Record], after: &[Record]) -> Vec<(reg_frame::End
                 return None;
             };
             let new = placed.get(&(&old.provider, &old.register, &old.release, &old.locator))?;
-            (new.table != old.table).then(|| {
-                let end = reg_frame::Endpoint {
-                    table: Some(old.table.clone()),
-                    key: Some(old.release.clone()),
-                    ..reg_frame::Endpoint::new("release", &old.provider, Some(&old.register))
-                };
-                (end, new.table.clone())
+            (new.table != old.table).then(|| ReleaseMove {
+                provider: old.provider.clone(),
+                register: old.register.clone(),
+                register_name: before.iter().find_map(|record| match record {
+                    Record::Register(r)
+                        if r.provider == old.provider && r.register == old.register =>
+                    {
+                        r.name
+                            .as_deref()
+                            .map(|name| reg_core::fold_identity(name.trim()))
+                    }
+                    _ => None,
+                }),
+                table: old.table.clone(),
+                release: old.release.clone(),
+                to: new.table.clone(),
             })
         })
         .collect()
 }
 
-/// Point source notices and document subjects that name a moved release at its new
-/// table: they address it by table, so the link stage could not resolve them.
-pub fn follow_release_moves(moves: &[(reg_frame::Endpoint, String)], records: &mut [Record]) {
+/// Point source notices and document subjects that name a moved release, by register
+/// handle or name, at its new table: they address it by table, so the link stage could
+/// not resolve them.
+pub fn follow_release_moves(moves: &[ReleaseMove], records: &mut [Record]) {
     if moves.is_empty() {
         return;
     }
@@ -1105,8 +1144,8 @@ pub fn follow_release_moves(moves: &[(reg_frame::Endpoint, String)], records: &m
             _ => continue,
         };
         for end in ends {
-            if let Some((_, table)) = moves.iter().find(|(old, _)| old == end) {
-                end.table = Some(table.clone());
+            if let Some(moved) = moves.iter().find(|moved| moved.names(end)) {
+                end.table = Some(moved.to.clone());
             }
         }
     }
