@@ -15,19 +15,6 @@
   },
   "customManagers": [
     {
-      "description": "The panache pin, the gate's PANACHE_VERSION (CI's `lint` job installs the release it names).",
-      "customType": "regex",
-      "managerFilePatterns": [
-        "/^scripts/gate\\.sh$/"
-      ],
-      "matchStrings": [
-        "PANACHE_VERSION=(?<currentValue>[0-9][^\\s]*)"
-      ],
-      "depNameTemplate": "jolars/panache",
-      "datasourceTemplate": "github-releases",
-      "extractVersionTemplate": "^v(?<version>.+)$"
-    },
-    {
       "description": "The wrangler pin in container-build.yml (global edge) and steward-deploy.yml (steward edges): one regex, so one PR moves both.",
       "customType": "regex",
       "managerFilePatterns": [

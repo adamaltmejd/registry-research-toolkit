@@ -16,7 +16,8 @@ primary_region = "arn" # Stockholm — the user base is Swedish register researc
   # Resolved relative to this file (flyctl convention), i.e. reg_webapp/Dockerfile.
   dockerfile = "Dockerfile"
   # A local `fly deploy` must pass the bake's build args: REG_META_TAG=reg_meta/vX.Y.Z
-  # and the REG_META_DB_SHA256 asset digest (Dockerfile header).
+  # and the REG_META_DB_SHA256 asset digest, plus the build secret
+  # `--build-secret gh_token=<token>` (Dockerfile header).
 
 [env]
   # The hosted MCP endpoint (crates/DESIGN.md, "Hosted MCP"): `/mcp` admits this

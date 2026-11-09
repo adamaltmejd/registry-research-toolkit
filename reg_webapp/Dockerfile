@@ -5,10 +5,12 @@
 # and `/mcp`. A steward's image is steward.Dockerfile.
 #
 # Build context is the REPO ROOT (not reg_webapp/): the server stage needs the
-# Cargo workspace. The DB bake needs the release tag and the SHA-256 digest GitHub
-# records for the asset (container-build.yml resolves both). Build with:
+# Cargo workspace. The DB bake needs the release tag, the SHA-256 digest GitHub
+# records for the asset (container-build.yml resolves both) and a GitHub token as the
+# `gh_token` build secret. Build with:
 #
-#   docker build -f reg_webapp/Dockerfile -t reg-webapp \
+#   GH_TOKEN=$(gh auth token) docker build -f reg_webapp/Dockerfile -t reg-webapp \
+#     --secret id=gh_token,env=GH_TOKEN \
 #     --build-arg REG_META_TAG=reg_meta/vX.Y.Z --build-arg REG_META_DB_SHA256=<hex> .
 #
 # (`gh release view reg_meta/vX.Y.Z --json assets` lists each asset's digest.)
@@ -43,20 +45,31 @@
 # The tag and digest have no defaults: nothing resolves `latest`, and an unverified
 # download never enters the image. The digest is bare lowercase hex
 # (GitHub's `sha256:` prefix stripped). The tag's `/` is URL-encoded in the URL.
+#
+# The fetch goes through the REST API with the `gh_token` secret, not the anonymous
+# releases/download URL: anonymous downloads 504ed for 30 min in GitHub's 2026-11-09
+# incident and blocked a deploy. The secret is required, so a build without it fails
+# rather than falling back to anonymous. A secret mount is in no layer and not in the
+# cache key. curl drops the Authorization header on the API's redirect to the object
+# store, which is what that host expects (no --location-trusted).
 FROM debian:trixie-20261020-slim@sha256:62bd423aeee912639ca8ee681c2b762cb3e25137e0a92b20be455898a9f034ad AS regmeta-db
 
 # ca-certificates is only a Recommends of curl, so it is named for the HTTPS fetch.
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends ca-certificates curl zstd \
+    && apt-get install -y --no-install-recommends ca-certificates curl jq zstd \
     && rm -rf /var/lib/apt/lists/*
 
 ARG REG_META_TAG
 ARG REG_META_DB_SHA256
 WORKDIR /opt/reg_meta
-RUN : "${REG_META_TAG:?build arg REG_META_TAG (reg_meta/vX.Y.Z) is required}" \
+RUN --mount=type=secret,id=gh_token,required=true,env=GH_TOKEN \
+    : "${REG_META_TAG:?build arg REG_META_TAG (reg_meta/vX.Y.Z) is required}" \
     && : "${REG_META_DB_SHA256:?build arg REG_META_DB_SHA256 is required (the release has no such catalog asset?)}" \
-    && base="https://github.com/adamaltmejd/registry-research-toolkit/releases/download/$(printf '%s' "$REG_META_TAG" | sed 's|/|%2F|g')" \
-    && curl -fsSL --retry 3 -o db.zst "$base/reg_meta.db.zst" \
+    && api="https://api.github.com/repos/adamaltmejd/registry-research-toolkit/releases/tags/$(printf '%s' "$REG_META_TAG" | sed 's|/|%2F|g')" \
+    && auth="Authorization: Bearer $GH_TOKEN" \
+    && asset=$(curl -fsSL --retry 3 -H "$auth" "$api" \
+        | jq -er '[.assets[] | select(.name == "reg_meta.db.zst") | .url] | if length == 1 then .[0] else error("no single reg_meta.db.zst") end') \
+    && curl -fsSL --retry 3 -H "$auth" -H "Accept: application/octet-stream" -o db.zst "$asset" \
     && printf '%s  db.zst\n' "$REG_META_DB_SHA256" | sha256sum --strict -c - \
     && zstd -q -d --rm db.zst -o reg_meta.db \
     && mkdir -p /opt/reg_webapp \

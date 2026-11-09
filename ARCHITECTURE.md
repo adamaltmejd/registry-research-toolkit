@@ -262,10 +262,10 @@ This is the complete list of boundaries a test may assert at.
    workspace build, the whole conformance suite against the Rust server, then the
    release checks on the synthetic catalog artifact), with room for a cold rust-cache
    and its save. Each binary is built once, in `rust`. The `lint` job runs
-   `gate.sh lint` (panache and shellcheck); the repo-policy lints and the plugin schema
-   drift check are `crates/xtask` tests in `cargo test --workspace`. The OpenAPI
-   snapshot is a `crates/reg-meta` test. The `reg-webapp-frontend` job runs install,
-   WASM generation, type checks, lint, unit tests, build and codegen drift;
+   `gate.sh lint` (shellcheck); the repo-policy lints and the plugin schema drift check
+   are `crates/xtask` tests in `cargo test --workspace`. The OpenAPI snapshot is a
+   `crates/reg-meta` test. The `reg-webapp-frontend` job runs install, WASM generation,
+   type checks, lint, unit tests, build and codegen drift;
    `reg-webapp-flows` runs the production-build smoke and the user journeys
    (`reg_webapp/dev/journeys.sh`, agent-browser) against source-built synthetic
    fixtures, at desktop width except one narrow journey at 375 px; the four-width review
