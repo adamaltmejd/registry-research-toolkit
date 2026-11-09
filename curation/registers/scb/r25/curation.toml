@@ -27992,125 +27992,125 @@ caveat = "SCB's Registerinformation export lists FOLKHUST on IoT only for 1981-1
 [[statement]]
 kind = "assert"
 subject = "individer-och-dodsbon: TPENSAU @2011-01-01..2011-12-31 where key = 'v44791' and release = 'r4346'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Pensioner, utländskt beskattade (individ)", "definition" = "Pensioner, utländskt beskattade", "type" = "integer", "sensitive" = false, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Pensioner, utländskt beskattade", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "private:ev-3834"
-caveat = "SCB's Registerinformation export lists TPENSAU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TPENSAU for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A697), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 2020 edition."
+caveat = "SCB's Registerinformation export lists TPENSAU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TPENSAU for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A697), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "assert"
 subject = "individer-och-dodsbon: TPENSAU @2012-01-01..2012-12-31 where key = 'v44791' and release = 'r5226'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Pensioner, utländskt beskattade (individ)", "definition" = "Pensioner, utländskt beskattade", "type" = "integer", "sensitive" = false, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Pensioner, utländskt beskattade", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "private:ev-3835"
-caveat = "SCB's Registerinformation export lists TPENSAU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TPENSAU for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A697), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 2020 edition."
+caveat = "SCB's Registerinformation export lists TPENSAU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TPENSAU for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A697), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "assert"
 subject = "individer-och-dodsbon: TPENSAU @2013-01-01..2013-12-31 where key = 'v44791' and release = 'r5626'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Pensioner, utländskt beskattade (individ)", "definition" = "Pensioner, utländskt beskattade", "type" = "integer", "sensitive" = false, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Pensioner, utländskt beskattade", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "private:ev-3836"
-caveat = "SCB's Registerinformation export lists TPENSAU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TPENSAU for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A697), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 2020 edition."
+caveat = "SCB's Registerinformation export lists TPENSAU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TPENSAU for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A697), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "assert"
 subject = "individer-och-dodsbon: TPENSAU @2014-01-01..2014-12-31 where key = 'v44791' and release = 'r7298'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Pensioner, utländskt beskattade (individ)", "definition" = "Pensioner, utländskt beskattade", "type" = "integer", "sensitive" = false, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Pensioner, utländskt beskattade", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "private:ev-3837"
-caveat = "SCB's Registerinformation export lists TPENSAU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TPENSAU for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A697), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 2020 edition."
+caveat = "SCB's Registerinformation export lists TPENSAU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TPENSAU for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A697), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "assert"
 subject = "individer-och-dodsbon: TPENSAU @2015-01-01..2015-12-31 where key = 'v44791' and release = 'r9969'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Pensioner, utländskt beskattade (individ)", "definition" = "Pensioner, utländskt beskattade", "type" = "integer", "sensitive" = false, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Pensioner, utländskt beskattade", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "private:ev-3838"
-caveat = "SCB's Registerinformation export lists TPENSAU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TPENSAU for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A697), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 2020 edition."
+caveat = "SCB's Registerinformation export lists TPENSAU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TPENSAU for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A697), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "assert"
 subject = "individer-och-dodsbon: TPENSAU @2016-01-01..2016-12-31 where key = 'v44791' and release = 'r11663'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Pensioner, utländskt beskattade (individ)", "definition" = "Pensioner, utländskt beskattade", "type" = "integer", "sensitive" = false, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Pensioner, utländskt beskattade", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "private:ev-3839"
-caveat = "SCB's Registerinformation export lists TPENSAU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TPENSAU for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A697), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 2020 edition."
+caveat = "SCB's Registerinformation export lists TPENSAU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TPENSAU for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A697), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "assert"
 subject = "individer-och-dodsbon: TPENSAU @2017-01-01..2017-12-31 where key = 'v44791' and release = 'r13443'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Pensioner, utländskt beskattade (individ)", "definition" = "Pensioner, utländskt beskattade", "type" = "integer", "sensitive" = false, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Pensioner, utländskt beskattade", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "private:ev-3840"
-caveat = "SCB's Registerinformation export lists TPENSAU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TPENSAU for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A697), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 2020 edition."
+caveat = "SCB's Registerinformation export lists TPENSAU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TPENSAU for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A697), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "assert"
 subject = "individer-och-dodsbon: TPENSAU @2018-01-01..2018-12-31 where key = 'v44791' and release = 'r13744'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Pensioner, utländskt beskattade (individ)", "definition" = "Pensioner, utländskt beskattade", "type" = "integer", "sensitive" = false, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Pensioner, utländskt beskattade", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "private:ev-3841"
-caveat = "SCB's Registerinformation export lists TPENSAU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TPENSAU for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A697), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 2020 edition."
+caveat = "SCB's Registerinformation export lists TPENSAU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TPENSAU for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A697), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "assert"
 subject = "individer-och-dodsbon: TPENSAU @2019-01-01..2019-12-31 where key = 'v44791' and release = 'r15780'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Pensioner, utländskt beskattade (individ)", "definition" = "Pensioner, utländskt beskattade", "type" = "integer", "sensitive" = false, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Pensioner, utländskt beskattade", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "private:ev-3842"
-caveat = "SCB's Registerinformation export lists TPENSAU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TPENSAU for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A697), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 2020 edition."
+caveat = "SCB's Registerinformation export lists TPENSAU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TPENSAU for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A697), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "assert"
 subject = "individer-och-dodsbon: TTJLONU @2011-01-01..2011-12-31 where key = 'v1172' and release = 'r4346'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön (nordisk, utländskt beskattad, individ)", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "private:ev-3843"
-caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 2020 edition."
+caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "assert"
 subject = "individer-och-dodsbon: TTJLONU @2012-01-01..2012-12-31 where key = 'v1172' and release = 'r5226'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön (nordisk, utländskt beskattad, individ)", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "private:ev-3844"
-caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 2020 edition."
+caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "assert"
 subject = "individer-och-dodsbon: TTJLONU @2013-01-01..2013-12-31 where key = 'v1172' and release = 'r5626'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön (nordisk, utländskt beskattad, individ)", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "private:ev-3845"
-caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 2020 edition."
+caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "assert"
 subject = "individer-och-dodsbon: TTJLONU @2014-01-01..2014-12-31 where key = 'v1172' and release = 'r7298'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön (nordisk, utländskt beskattad, individ)", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "private:ev-3846"
-caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 2020 edition."
+caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "assert"
 subject = "individer-och-dodsbon: TTJLONU @2015-01-01..2015-12-31 where key = 'v1172' and release = 'r9969'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön (nordisk, utländskt beskattad, individ)", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "private:ev-3847"
-caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 2020 edition."
+caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "assert"
 subject = "individer-och-dodsbon: TTJLONU @2016-01-01..2016-12-31 where key = 'v1172' and release = 'r11663'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön (nordisk, utländskt beskattad, individ)", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "private:ev-3848"
-caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 2020 edition."
+caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "assert"
 subject = "individer-och-dodsbon: TTJLONU @2017-01-01..2017-12-31 where key = 'v1172' and release = 'r13443'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön (nordisk, utländskt beskattad, individ)", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "private:ev-3849"
-caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 2020 edition."
+caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "assert"
 subject = "individer-och-dodsbon: TTJLONU @2018-01-01..2018-12-31 where key = 'v1172' and release = 'r13744'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön (nordisk, utländskt beskattad, individ)", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "private:ev-3850"
-caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 2020 edition."
+caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "assert"
 subject = "individer-och-dodsbon: TTJLONU @2019-01-01..2019-12-31 where key = 'v1172' and release = 'r15780'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön (nordisk, utländskt beskattad, individ)", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "private:ev-3851"
-caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 2020 edition."
+caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."

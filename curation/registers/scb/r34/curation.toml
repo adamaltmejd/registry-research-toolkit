@@ -24129,7 +24129,7 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 [[statement]]
 kind = "assert"
 subject = "individer-16plus: ATPFortSjuk @2002-01-01..2002-12-31 where key = 'v41867' and release = 'r15302'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Förtidspension/Sjukbidrag från ATP, egenförmån", "definition" = "Förtidspension/Sjukbidrag från ATP, egenförmån", "type" = "integer", "sensitive" = true, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "label" = "Förtidspension/Sjukbidrag från ATP, egenförmån", "definition" = "Förtidspension/Sjukbidrag från ATP, egenförmån", "type" = "integer", "identifier" = false } }
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A619\n\nSCB's LISA variable list documents ATPFortSjuk on LISA for 1993-2002. SCB's Registerinformation export lists it on this register only for 1993-2001; label, definition and type follow the export's 2001 edition."
 
 [[statement]]
@@ -24267,7 +24267,7 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 [[statement]]
 kind = "assert"
 subject = "individer-16plus: FolkFortSjuk @2002-01-01..2002-12-31 where key = 'v41870' and release = 'r15302'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Förtidspension/Sjukbidrag från folkpension, egenförmån", "definition" = "Förtidspension/Sjukbidrag från folkpension, egenförmån", "type" = "integer", "sensitive" = true, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "label" = "Förtidspension/Sjukbidrag från folkpension, egenförmån", "definition" = "Förtidspension/Sjukbidrag från folkpension, egenförmån", "type" = "integer", "identifier" = false } }
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A615\n\nSCB's LISA variable list documents FolkFortSjuk on LISA for 1993-2002. SCB's Registerinformation export lists it on this register only for 1993-2001; label, definition and type follow the export's 2001 edition."
 
 [[statement]]
