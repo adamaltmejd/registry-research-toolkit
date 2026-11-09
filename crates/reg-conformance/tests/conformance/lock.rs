@@ -107,6 +107,50 @@ fn merged_source_keys_take_variable_statements() {
     curated("lock", &inputs, &curation, &[]).refused(&[expected["refused"].as_str().unwrap()]);
 }
 
+#[test]
+fn release_moves_whole_and_attached() {
+    // Regression: `set table` on a release subject moves its occurrences but leaves
+    // the release (or its gap marker) behind, or detaches them into dated rows, so the
+    // destination has no release for editions, cadence and gaps. Twin: moving one
+    // column of that release beside the whole move is a partial move and must refuse
+    // at both statements, not apply in statement order.
+    let case = cases().join("lock/release-move");
+    let expected = read_json(&case.join("expected.json")).unwrap();
+    let dir = scratch("release-move");
+    let curation = curation_copy(&case, dir.path());
+    let inputs = case.join("inputs");
+    let catalog = dir.path().join("catalog.db");
+    curated("lock", &inputs, &curation, &[]).ok();
+    curated(
+        "build",
+        &inputs,
+        &curation,
+        &["--release".as_ref(), "--out".as_ref(), catalog.as_os_str()],
+    )
+    .ok();
+    let rows: Value = column(
+        &catalog,
+        "SELECT json_array(t.pid, r.source_key, o.source_key, o.status) FROM occurrence o \
+         JOIN tbl t ON t.id=o.table_id JOIN release r ON r.id=o.release_id \
+         AND r.table_id=o.table_id ORDER BY t.pid, r.source_key, o.source_key",
+    )
+    .iter()
+    .map(|row| serde_json::from_str::<Value>(row).unwrap())
+    .collect();
+    assert_eq!(rows, expected["occurrences"]);
+    let statements = curation.join("registers/demo/mv/curation.toml");
+    let mut text = fs::read_to_string(&statements).unwrap();
+    text.push_str(&fs::read_to_string(case.join("refused.toml")).unwrap());
+    fs::write(&statements, text).unwrap();
+    let refused = expected["refused"].as_array().unwrap();
+    curated("lock", &inputs, &curation, &[]).refused(
+        &refused
+            .iter()
+            .map(|v| v.as_str().unwrap())
+            .collect::<Vec<_>>(),
+    );
+}
+
 /// Each occurrence's `[variable pid, exact spelling, <column>]` in `db`, in `order`.
 fn occurrences(db: &Path, value: &str, order: &str) -> Value {
     let sql = format!(

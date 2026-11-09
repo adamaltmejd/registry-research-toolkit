@@ -1,0 +1,6 @@
+[tables]
+t = "t"
+k = "k"
+
+[variables]
+alpha = ["t: A"]

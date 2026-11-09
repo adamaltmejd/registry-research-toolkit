@@ -4916,30 +4916,30 @@ evidence = "Maintainer ruling 2026-11-09 (option a): SCB delivers this table on 
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: {alder,antkurs,arbsekt,arr1,arr10,arr2,arr3,arr4,arr5,arr6,arr7,arr8,arr9,fackh,fikod0gr,fikod1gr,fikod2gr,fikod3gr,fikod4gr,fikod5gr,fikod6gr,fikod7gr,fikod8gr,fikod9gr,fstor,halvar,hreg,kon,namnare,nargrenx,t11a,t11b,t11c,t11d,t11e,t11f,t11g,t11h,t11i,t11j,t12a,t12b,t12c,t12d,t12e,t12f,t12g,t12h,t12i,t12j,t2,t3,taljare,uenr,utbniv,viktclan,xplangd0,xplangd1,xplangd2,xplangd3,xplangd4,xplangd5,xplangd6,xplangd7,xplangd8,xplangd9} where release = 'r15072'"
+subject = "release:source-annual-1999-2003/r15072"
 fields = { "table" = "kalenderar" }
-evidence = "Release 'Hela året 1999' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+evidence = "Release 'Hela året 1999' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: {alder,antkurs,arbsekt,arr1,arr10,arr2,arr3,arr4,arr5,arr6,arr7,arr8,arr9,fackh,fikod0gr,fikod1gr,fikod2gr,fikod3gr,fikod4gr,fikod5gr,fikod6gr,fikod7gr,fikod8gr,fikod9gr,fstor,halvar,hreg,kon,namnare,nargrenx,t11a,t11b,t11c,t11d,t11e,t11f,t11g,t11h,t11i,t11j,t12a,t12b,t12c,t12d,t12e,t12f,t12g,t12h,t12i,t12j,t13a,t13b,t13c,t13d,t13e,t13f,t13g,t13h,t13i,t13j,t2,t3,taljare,uenr,utbniv,viktclan,xplangd0,xplangd1,xplangd2,xplangd3,xplangd4,xplangd5,xplangd6,xplangd7,xplangd8,xplangd9} where release = 'r15200'"
+subject = "release:source-annual-1999-2003/r15200"
 fields = { "table" = "kalenderar" }
-evidence = "Release 'Hela året 2000' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+evidence = "Release 'Hela året 2000' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: {alder,antkurs,arbsekt,arr1,arr10,arr2,arr3,arr4,arr5,arr6,arr7,arr8,arr9,fackh,fikod0gr,fikod1gr,fikod2gr,fikod3gr,fikod4gr,fikod5gr,fikod6gr,fikod7gr,fikod8gr,fikod9gr,fstor,halvar,hreg,kon,namnare,nargrenx,t11a,t11b,t11c,t11d,t11e,t11f,t11g,t11h,t11i,t11j,t12a,t12b,t12c,t12d,t12e,t12f,t12g,t12h,t12i,t12j,t13a,t13b,t13c,t13d,t13e,t13f,t13g,t13h,t13i,t13j,t2,t3,taljare,uenr,utbniv,viktclan,xplangd0,xplangd1,xplangd2,xplangd3,xplangd4,xplangd5,xplangd6,xplangd7,xplangd8,xplangd9} where release = 'r15202'"
+subject = "release:source-annual-1999-2003/r15202"
 fields = { "table" = "kalenderar" }
-evidence = "Release 'Hela året 2001' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+evidence = "Release 'Hela året 2001' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: {alder,antkurs,arbsekt,arr1,arr10,arr2,arr3,arr4,arr5,arr6,arr7,arr8,arr9,fackh,fikod0gr,fikod1gr,fikod2gr,fikod3gr,fikod4gr,fikod5gr,fikod6gr,fikod7gr,fikod8gr,fikod9gr,fstor,gxpld1,gxpld10,gxpld2,gxpld3,gxpld4,gxpld5,gxpld6,gxpld7,gxpld8,gxpld9,halvar,hreg,kon,namnare,nargrenx,t12a,t12b,t12c,t12d,t12e,t12f,t12g,t12h,t12i,t12j,t13a,t13b,t13c,t13d,t13e,t13f,t13g,t13h,t13i,t13j,t14a,t14b,t14c,t14d,t14e,t14f,t14g,t14h,t14i,t14j,t2,t3,taljare,uenr,utbniv,viktclan} where release = 'r15203'"
+subject = "release:source-annual-1999-2003/r15203"
 fields = { "table" = "kalenderar" }
-evidence = "Release 'Hela året 2002' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+evidence = "Release 'Hela året 2002' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: {alder,antkurs,arbsekt,arr1,arr10,arr2,arr3,arr4,arr5,arr6,arr7,arr8,arr9,fackh,fikod0gr,fikod1gr,fikod2gr,fikod3gr,fikod4gr,fikod5gr,fikod6gr,fikod7gr,fikod8gr,fikod9gr,fstor,halvar,hreg,kon,namnare,nargrenx,t12a,t12b,t12c,t12d,t12e,t12f,t12g,t12h,t12i,t12j,t13a,t13b,t13c,t13d,t13e,t13f,t13g,t13h,t13i,t13j,t14a,t14b,t14c,t14d,t14e,t14f,t14g,t14h,t14i,t14j,t2,t3,taljare,uenr,utbniv,viktclan,xplangd0,xplangd1,xplangd2,xplangd3,xplangd4,xplangd5,xplangd6,xplangd7,xplangd8,xplangd9} where release = 'r15211'"
+subject = "release:source-annual-1999-2003/r15211"
 fields = { "table" = "kalenderar" }
-evidence = "Release 'Hela året 2003' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+evidence = "Release 'Hela året 2003' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."

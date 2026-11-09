@@ -554,6 +554,17 @@ pub fn apply(
                 });
             }
         }
+        Statement::Set {
+            subject: Address::Release { .. },
+            fields,
+            ..
+        } if fields.table.is_some() => {
+            let target = table_handle(records, ledger, fields.table.as_ref().expect("table set"))?;
+            if !table_handles(records).any(|handle| handle == target) {
+                return Err("set table requires an existing table; assert the table first".into());
+            }
+            move_release(records, &target, premise, &mut out)?;
+        }
         Statement::Set { fields, .. } if fields.table.is_some() || fields.variable.is_some() => {
             let target_handle = fields
                 .table
@@ -972,6 +983,88 @@ pub fn apply(
     Ok(out)
 }
 
+/// Move a whole release, with every occurrence and gap marker attached to it, to
+/// `target`. The rows stay attached, so editions, cadence and gaps follow the release.
+fn move_release(
+    records: &[Record],
+    target: &str,
+    premise: &Premise,
+    out: &mut Applied,
+) -> Result<(), String> {
+    let [subject] = &premise.subjects[..] else {
+        return Err("set table on a release selects exactly one release".into());
+    };
+    let index = records
+        .iter()
+        .position(|record| {
+            matches!(record, Record::Release(_)) && selected_record_value(&tree(record), subject)
+        })
+        .ok_or("set table names an unknown release")?;
+    let Record::Release(release) = &records[index] else {
+        unreachable!("position matched a release")
+    };
+    let period = crate::placed(release)
+        .ok_or("set table cannot move an unplaced release; set its period first")?;
+    if records.iter().any(|record| {
+        matches!(record, Record::Release(r)
+            if r.provider == release.provider
+                && r.register == release.register
+                && r.table == target
+                && r.release == release.release)
+    }) {
+        return Err(format!(
+            "set table would collide with release {:?} in destination table {target:?}",
+            release.release
+        ));
+    }
+    let attached = |row: &Occurrence| {
+        row.provider == release.provider
+            && row.register == release.register
+            && row.table == release.table
+            && row.release.as_deref() == Some(release.release.as_str())
+    };
+    let rows: Vec<usize> = records
+        .iter()
+        .enumerate()
+        .filter(|&(i, record)| {
+            i == index || matches!(record, Record::Occurrence(row) if attached(row))
+        })
+        .map(|(i, _)| i)
+        .collect();
+    for &i in &rows {
+        match &mut out.records[i] {
+            Record::Release(row) => target.clone_into(&mut row.table),
+            Record::Occurrence(row) => target.clone_into(&mut row.table),
+            _ => unreachable!("rows are the release and its occurrences"),
+        }
+    }
+    check_table_coverage(&tree(&out.records[index]), &period, records)?;
+    // Provenance names the rows at their new coordinate, with the moved release's period.
+    let context = crate::OccurrenceContext::new(&out.records);
+    for &i in &rows {
+        let period = match &out.records[i] {
+            Record::Occurrence(row) => context.period(row),
+            _ => Some(period.clone()),
+        };
+        out.changes.push(change(
+            &context,
+            &tree(&out.records[i]),
+            "table",
+            &json!(target),
+            &json!(release.table),
+            period,
+        )?);
+    }
+    Ok(())
+}
+
+fn selected_record_value(value: &Value, source: &super::SourcePremise) -> bool {
+    source.locator == locator(value)
+        && ["kind", "provider", "register", "table", "release"]
+            .iter()
+            .all(|field| source.fields.get(*field).unwrap_or(&Value::Null) == &value[*field])
+}
+
 fn selected_record(
     record: &Record,
     value: &Value,
@@ -988,10 +1081,7 @@ fn selected_record(
                 context,
             );
         }
-        source.locator == locator(value)
-            && ["kind", "provider", "register", "table", "release"]
-                .iter()
-                .all(|field| source.fields.get(*field).unwrap_or(&Value::Null) == &value[*field])
+        selected_record_value(value, source)
     })
 }
 
@@ -1342,11 +1432,10 @@ pub fn rekey(
                 (
                     Some(release.provider.as_str()),
                     Some(release.register.as_str()),
-                    Some(release.table.as_str()),
                     Some(release.release.as_str()),
                     &release.locator,
                 ),
-                crate::placed(release),
+                (release.table.as_str(), crate::placed(release)),
             )),
             _ => None,
         })
@@ -1401,15 +1490,16 @@ pub fn rekey(
         }
     }
     for claim in claims.iter_mut().map(|claim| &mut claim.change) {
+        // A release keeps its locator through a move; its claims follow it.
         if claim.kind == "release"
-            && let Some(period) = releases.get(&(
+            && let Some((table, period)) = releases.get(&(
                 claim.provider.as_deref(),
                 claim.register.as_deref(),
-                claim.table.as_deref(),
                 claim.release.as_deref(),
                 &claim.locator,
             ))
         {
+            claim.table = Some((*table).to_owned());
             claim.period.clone_from(period);
         }
         let Some(identity) = &claim.identity else {

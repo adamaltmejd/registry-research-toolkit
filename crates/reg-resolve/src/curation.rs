@@ -814,16 +814,33 @@ fn premise_overlap(
             let mut source = premise_source(row);
             Arc::make_mut(&mut source.fields)
                 .insert("table_slug".into(), Value::String(table.clone()));
-            // Table moves detach dated release rows; a release guard no longer matches.
-            Arc::make_mut(&mut source.fields).insert("release".into(), Value::Null);
+            // An occurrence move detaches dated release rows; a release guard no longer
+            // matches. A release move keeps its rows attached.
+            if !matches!(subject(moving), Address::Release { .. }) {
+                Arc::make_mut(&mut source.fields).insert("release".into(), Value::Null);
+            }
             !select(address, &[source], &BTreeMap::new()).is_empty()
         })
+    };
+    // A release move takes every row of the release, so any other move of one of them
+    // is a partial move of that release.
+    let moves_release_of = |moving: &Statement, premise: &Premise, other: &Premise| {
+        matches!(subject(moving), Address::Release { .. })
+            && premise.subjects.iter().any(|release| {
+                other.subjects.iter().any(|row| {
+                    ["provider", "register", "table", "release"]
+                        .iter()
+                        .all(|f| release.fields.get(*f) == row.fields.get(*f))
+                })
+            })
     };
     overlaps(&left_premise.subjects, &right_premise.subjects)
         || (moves_table(left)
             && moves_table(right)
             && (selects_moved(left, left_premise, right)
-                || selects_moved(right, right_premise, left)))
+                || selects_moved(right, right_premise, left)
+                || moves_release_of(left, left_premise, right_premise)
+                || moves_release_of(right, right_premise, left_premise)))
 }
 
 /// Find overlaps between already-applied source-shaped claims and evaluated
@@ -1697,8 +1714,11 @@ pub fn resolve(
                             ["type", "value_set", "population_valuesets"].map(str::to_owned),
                         );
                     }
+                    // A release subject moves the release with its attached occurrences.
                     if (values.table.is_some() || values.variable.is_some())
                         && !matches!(address, Address::Occurrence { .. })
+                        && !(values.variable.is_none()
+                            && matches!(address, Address::Release { .. }))
                     {
                         return Err(
                             "table and variable fields require an occurrence selector".into()

@@ -1,7 +1,7 @@
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: skolkommun @1997-07-01..1997-12-31"
+subject = "kursdeltagare-vartermin: skolkommun where release = 'r14207'"
 fields = { "classification" = "class/lkf/lkf1997" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF1997.toml:23\n\nLegacy exact value-set label: LKF 1997-01-01/ Län, kommuner och församlingar"
 
@@ -31,13 +31,13 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF1998.toml:23\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {skolkommun,skollan} @1998-01-01..1998-06-30"
+subject = "kursdeltagare-vartermin: {skolkommun,skollan} where release = 'r14199'"
 fields = { "classification" = "class/lkf/lkf1998" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF1998.toml:23\n\nLegacy exact value-set label: LKF 1998-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {skolkommun,skollan} @1998-07-01..1998-12-31"
+subject = "kursdeltagare-vartermin: {skolkommun,skollan} where release = 'r14205'"
 fields = { "classification" = "class/lkf/lkf1998" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF1998.toml:23\n\nLegacy exact value-set label: LKF 1998-01-01/ Län, kommuner och församlingar"
 
@@ -61,13 +61,13 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF1999.toml:25\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {skolkommun,skollan} @1999-01-01..1999-06-30"
+subject = "kursdeltagare-vartermin: {skolkommun,skollan} where release = 'r14200'"
 fields = { "classification" = "class/lkf/lkf1999" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {skolkommun,skollan} @1999-07-01..1999-12-31"
+subject = "kursdeltagare-vartermin: {skolkommun,skollan} where release = 'r14206'"
 fields = { "classification" = "class/lkf/lkf1999" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
 
@@ -97,13 +97,13 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2000.toml:26\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {skolkommun,skollan} @2000-01-01..2000-06-30"
+subject = "kursdeltagare-vartermin: {skolkommun,skollan} where release = 'r14202'"
 fields = { "classification" = "class/lkf/lkf2000" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {skolkommun,skollan} @2000-07-01..2000-12-31"
+subject = "kursdeltagare-vartermin: {skolkommun,skollan} where release = 'r14208'"
 fields = { "classification" = "class/lkf/lkf2000" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
 
@@ -133,13 +133,13 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2001.toml:27\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {skolkommun,skollan} @2001-01-01..2001-06-30"
+subject = "kursdeltagare-vartermin: {skolkommun,skollan} where release = 'r14203'"
 fields = { "classification" = "class/lkf/lkf2001" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {skolkommun,skollan} @2001-07-01..2001-12-31"
+subject = "kursdeltagare-vartermin: {skolkommun,skollan} where release = 'r14209'"
 fields = { "classification" = "class/lkf/lkf2001" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
 
@@ -169,7 +169,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2002.toml:25\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {skolkommun,skollan} @2002-01-01..2002-06-30"
+subject = "kursdeltagare-vartermin: {skolkommun,skollan} where release = 'r14204'"
 fields = { "classification" = "class/lkf/lkf2002" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
 
@@ -511,60 +511,60 @@ evidence = "Maintainer ruling 2026-11-09 (option a): SCB delivers this table on 
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-lasar: {avb,avbdat,betyg,csnpoang,dagkvall,fodelselandnamn,hemkommun,hman,kslut,kstart,kursdeltid,kurskod,niva,personnr,poang,skolform,skolid,skolkod,skolkommun,sunniva,tpoang,utbanord,utbatgard,utim} where release = 'r14207'"
+subject = "release:kursdeltagare-lasar/r14207"
 fields = { "table" = "kursdeltagare-vartermin" }
-evidence = "Release '1997 höstterminen' is a termin delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+evidence = "Release '1997 höstterminen' is a termin delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-lasar: {avb,avbdat,betyg,csnpoang,dagkvall,fodelselandnamn,hemkommun,hman,kslut,kstart,kursdeltid,kurskod,niva,personnr,poang,skolform,skolid,skolkod,skolkommun,skollan,sunniva,tpoang,utbanord,utbatgard,utim} where release = 'r14199'"
+subject = "release:kursdeltagare-lasar/r14199"
 fields = { "table" = "kursdeltagare-vartermin" }
-evidence = "Release '1998 vårterminen' is a termin delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+evidence = "Release '1998 vårterminen' is a termin delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-lasar: {avb,avbdat,betyg,csnpoang,dagkvall,fodelselandnamn,hemkommun,hman,kslut,kstart,kursdeltid,kurskod,niva,personnr,poang,skolform,skolid,skolkod,skolkommun,skollan,sunniva,tpoang,utbanord,utbatgard,utim} where release = 'r14205'"
+subject = "release:kursdeltagare-lasar/r14205"
 fields = { "table" = "kursdeltagare-vartermin" }
-evidence = "Release '1998 höstterminen' is a termin delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+evidence = "Release '1998 höstterminen' is a termin delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-lasar: {avb,avbdat,betyg,csnpoang,dagkvall,fodelselandnamn,hemkommun,hman,kslut,kstart,kursdeltid,kurskod,niva,personnr,poang,skolform,skolid,skolkod,skolkommun,skollan,sunniva,tpoang,utbanord,utbatgard,utim} where release = 'r14200'"
+subject = "release:kursdeltagare-lasar/r14200"
 fields = { "table" = "kursdeltagare-vartermin" }
-evidence = "Release '1999 vårterminen' is a termin delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+evidence = "Release '1999 vårterminen' is a termin delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-lasar: {avb,avbdat,betyg,csnpoang,dagkvall,fodelselandnamn,hemkommun,hman,kslut,kstart,kursdeltid,kurskod,niva,personnr,poang,skolform,skolid,skolkod,skolkommun,skollan,sunniva,tpoang,utbanord,utbatgard,utim} where release = 'r14206'"
+subject = "release:kursdeltagare-lasar/r14206"
 fields = { "table" = "kursdeltagare-vartermin" }
-evidence = "Release '1999 höstterminen' is a termin delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+evidence = "Release '1999 höstterminen' is a termin delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-lasar: {avb,avbdat,betyg,csnpoang,dagkvall,fodelselandnamn,hemkommun,hman,kslut,kstart,kursdeltid,kurskod,niva,personnr,poang,skolform,skolid,skolkod,skolkommun,skollan,sunniva,tpoang,utbanord,utbatgard,utim} where release = 'r14202'"
+subject = "release:kursdeltagare-lasar/r14202"
 fields = { "table" = "kursdeltagare-vartermin" }
-evidence = "Release '2000 vårterminen' is a termin delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+evidence = "Release '2000 vårterminen' is a termin delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-lasar: {avb,avbdat,betyg,csnpoang,dagkvall,fodelselandnamn,hemkommun,hman,kslut,kstart,kursdeltid,kurskod,niva,personnr,poang,skolform,skolid,skolkod,skolkommun,skollan,sunniva,tpoang,utbanord,utbatgard,utim} where release = 'r14208'"
+subject = "release:kursdeltagare-lasar/r14208"
 fields = { "table" = "kursdeltagare-vartermin" }
-evidence = "Release '2000 höstterminen' is a termin delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+evidence = "Release '2000 höstterminen' is a termin delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-lasar: {avb,avbdat,betyg,csnpoang,dagkvall,fodelselandnamn,hemkommun,hman,kslut,kstart,kursdeltid,kurskod,niva,personnr,poang,skolform,skolid,skolkod,skolkommun,skollan,sunniva,tpoang,utbanord,utbatgard,utim} where release = 'r14203'"
+subject = "release:kursdeltagare-lasar/r14203"
 fields = { "table" = "kursdeltagare-vartermin" }
-evidence = "Release '2001 vårterminen' is a termin delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+evidence = "Release '2001 vårterminen' is a termin delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-lasar: {avb,avbdat,betyg,csnpoang,dagkvall,fodelselandnamn,hemkommun,hman,kslut,kstart,kursdeltid,kurskod,niva,personnr,poang,skolform,skolid,skolkod,skolkommun,skollan,sunniva,tpoang,utbanord,utbatgard,utim} where release = 'r14209'"
+subject = "release:kursdeltagare-lasar/r14209"
 fields = { "table" = "kursdeltagare-vartermin" }
-evidence = "Release '2001 höstterminen' is a termin delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+evidence = "Release '2001 höstterminen' is a termin delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-lasar: {avb,avbdat,betyg,csnpoang,dagkvall,fodelselandnamn,hemkommun,hman,kslut,kstart,kursdeltid,kurskod,niva,personnr,poang,skolform,skolid,skolkod,skolkommun,skollan,sunniva,tpoang,utbanord,utbatgard,utim} where release = 'r14204'"
+subject = "release:kursdeltagare-lasar/r14204"
 fields = { "table" = "kursdeltagare-vartermin" }
-evidence = "Release '2002 vårterminen' is a termin delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+evidence = "Release '2002 vårterminen' is a termin delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."

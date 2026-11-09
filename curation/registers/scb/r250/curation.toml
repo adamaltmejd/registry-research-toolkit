@@ -266,7 +266,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2025.toml:21\
 
 [[statement]]
 kind = "set"
-subject = "elever-kalenderar: hemkommun @2024-01-01..2024-12-31"
+subject = "elever-kalenderar: hemkommun where release = 'r20033'"
 fields = { "classification" = "class/lkf/lkf2025" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2025.toml:21\n\nLegacy exact value-set label: LKF 2025-01-01 /Län, kommuner och församlingar"
 
@@ -278,7 +278,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2025.toml:21\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-kalenderar: hemkommun @2024-01-01..2024-12-31"
+subject = "kursdeltagare-kalenderar: hemkommun where release = 'r20031'"
 fields = { "classification" = "class/lkf/lkf2025" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2025.toml:21\n\nLegacy exact value-set label: LKF 2025-01-01 /Län, kommuner och församlingar"
 
@@ -1282,9 +1282,9 @@ evidence = "Maintainer ruling 2026-11-09 (option a): SCB delivers this table on 
 
 [[statement]]
 kind = "set"
-subject = "elever: {alder,antkurs1,antkurs2,avb,fodelselandnamn,forlaggn,gyfid,gyfnamn,hemkommun,hman,jurform,komgrupp23,kommungrupp_text,kon,niva,personnr,poang1,poang2,provn,skolenhetskod,skolkommun,skolkommun_text,skollan,skollan_text,sun2020niva_2,tpoang,utbanord,valid} where release = 'r20033'"
+subject = "release:elever/r20033"
 fields = { "table" = "elever-kalenderar" }
-evidence = "Release '2024' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+evidence = "Release '2024' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
 
 [[statement]]
 kind = "assert"
@@ -1294,6 +1294,6 @@ evidence = "Maintainer ruling 2026-11-09 (option a): SCB delivers this table on 
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare: {avb,avbdat,avslut,betyg,fodar,fodelselandnamn,forlaggn,gyfid,gyfnamn,hemkommun,hkurs_kod,hkurs_text,hman,jurform,kdeltid,komgrupp23,kommungrupp_text,kon,koptutb,kslut,kstart,kursdeltid,kurskod,niva,orgnamn,orgnr,orsak,personnr,provn,skolenhetskod,skolkommun,skolkommun_text,skollan,skollan_text,sun2020niva_2,termin,tpoang,utbanord,valid,verkar,verkform,yrkeskod_text,yrkespaketkod} where release = 'r20031'"
+subject = "release:kursdeltagare/r20031"
 fields = { "table" = "kursdeltagare-kalenderar" }
-evidence = "Release '2024' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+evidence = "Release '2024' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."

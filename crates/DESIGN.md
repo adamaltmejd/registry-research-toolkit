@@ -305,8 +305,13 @@ classification bindings. Accepting one requires reviewed curation and a premise 
 - `set table = "<slug>"` moves selected whole occurrences to an existing table before
   default resolution. It does not merge source rows or rank sources. Disagreements at
   the destination follow the existing F6 and ambiguity rules; a curator corrects the
-  disagreeing field with `set`. A moved release occurrence becomes dated and detached;
-  unplaced releases and population-specific value sets cannot be detached.
+  disagreeing field with `set`. On a `release:<table>/<handle>` subject it moves the
+  placed release with every occurrence and gap marker attached to it; they stay
+  attached, so editions, cadence and gaps follow the release and the source table no
+  longer lists it. Another move of any of its rows is a conflict: a release is moved
+  whole or not at all. An occurrence selector moves only the selected occurrences, so a
+  moved release occurrence becomes dated and detached; unplaced releases and
+  population-specific value sets cannot be detached.
 - A selector's period must cover every matched occurrence whole. A partial selection
   refuses with `selector period cuts occurrence …; select whole occurrences`. No
   operation splits source occurrences. Selectors read an immutable phase snapshot.

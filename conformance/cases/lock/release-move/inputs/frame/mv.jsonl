@@ -1,0 +1,10 @@
+{"kind":"register","provider":"demo","register":"mv","name":"Move fixture"}
+{"kind":"table","provider":"demo","register":"mv","table":"t","name":"T"}
+{"kind":"table","provider":"demo","register":"mv","table":"k","name":"K"}
+{"kind":"release","provider":"demo","register":"mv","table":"t","release":"r1","name":"T 2000","from":"2000-01-01","to":"2000-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"mv","table":"t","release":"r2","name":"T 2001","from":"2001-01-01","to":"2001-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"mv","table":"t","release":"r3","name":"T 2000/01","from":"2000-07-01","to":"2001-06-30","grain":"span","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"mv","table":"t","release":"r1","column":"A","source_key":"a","label":"Alpha"}
+{"kind":"occurrence","provider":"demo","register":"mv","table":"t","release":"r2","column":"A","source_key":"a","label":"Alpha"}
+{"kind":"occurrence","provider":"demo","register":"mv","table":"t","release":"r3","column":"A","source_key":"a","label":"Alpha"}
+{"kind":"occurrence","provider":"demo","register":"mv","table":"t","release":"r3","column":"","source_key":"b","label":"Beta"}

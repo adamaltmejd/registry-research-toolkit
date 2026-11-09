@@ -1,0 +1,12 @@
+{
+  "occurrences": [
+    ["demo/mv/k", "r3", "a", "used"],
+    ["demo/mv/k", "r3", "b", "gap_marker"],
+    ["demo/mv/t", "r1", "a", "used"],
+    ["demo/mv/t", "r2", "a", "used"]
+  ],
+  "refused": [
+    "registers/demo/mv/curation.toml:1: curation-overlap:",
+    "registers/demo/mv/curation.toml:7: curation-overlap:"
+  ]
+}

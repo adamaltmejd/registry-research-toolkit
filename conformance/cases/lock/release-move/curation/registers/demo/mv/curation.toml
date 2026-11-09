@@ -1,0 +1,5 @@
+[[statement]]
+kind = "set"
+subject = "release:t/r3"
+fields = { "table" = "k" }
+evidence = "The school-year delivery is its own table."
