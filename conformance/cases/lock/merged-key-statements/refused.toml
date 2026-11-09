@@ -1,0 +1,6 @@
+
+[[statement]]
+kind = "set"
+subject = "t: ORDER"
+fields = { label = "Order" }
+evidence = "Two source keys that curation did not merge still need a guard."

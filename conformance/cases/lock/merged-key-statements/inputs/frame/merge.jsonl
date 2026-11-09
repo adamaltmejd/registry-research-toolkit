@@ -1,0 +1,6 @@
+{"kind":"register","provider":"demo","register":"merge","name":"Merge fixture"}
+{"kind":"table","provider":"demo","register":"merge","table":"t","name":"T"}
+{"kind":"occurrence","provider":"demo","register":"merge","table":"t","column":"COUNT","source_key":"v1","label":"Children, father","from":"2000-01-01","to":"2000-12-31"}
+{"kind":"occurrence","provider":"demo","register":"merge","table":"t","column":"COUNT","source_key":"v2","label":"Children, mother","from":"2000-01-01","to":"2000-12-31"}
+{"kind":"occurrence","provider":"demo","register":"merge","table":"t","column":"ORDER","source_key":"v3","label":"Order, father","from":"2000-01-01","to":"2000-12-31"}
+{"kind":"occurrence","provider":"demo","register":"merge","table":"t","column":"ORDER","source_key":"v4","label":"Order, mother","from":"2000-01-01","to":"2000-12-31"}
