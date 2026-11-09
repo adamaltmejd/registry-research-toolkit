@@ -857,3 +857,24 @@ kind = "set"
 subject = "var:uuid-fst"
 fields = { "label" = "Universalt unik identitet (fastighet)" }
 evidence = "#2102 same-label cluster 'Universalt unik identitet' (2 variables): judged different meaning, high confidence; Column names UUID_Adr and UUID_Fst: address vs property."
+
+[[statement]]
+kind = "assert"
+subject = "table:individer"
+fact = { entity = "table", fields = { name = "Individer", description = "Årsvisa uppgifter från Geografidatabasen för individer: personens demografiska statistikområde (DeSO), 1990–2024. DeSO-indelningen infördes 2018; för tidigare år har SCB tagit fram koderna i efterhand.", coverage = "1990..2024" } }
+evidence = "private:ev-3896"
+caveat = "SCB's Registerinformation export documents no person table in Geografidatabasen. The table rests on SCB's delivery lists and yearly deliveries of it for 1990-2024. The lists do not state which edition of the DeSO division the years before 2018 use."
+
+[[statement]]
+kind = "assert"
+subject = "individer: PersonNr @1990..2024 where key = 'v57'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Personnummer", "definition" = "Identitetsbegrepp för personer. Tilldelas av Skattemyndigheten.", "type" = "text", "length" = 12, "sensitive" = false, "identifier" = true } }
+evidence = "private:ev-3897"
+caveat = "The delivery carries the person number pseudonymised as a serial number. Label, definition and length follow SCB's documentation of PersonNr (key v57) on its other registers."
+
+[[statement]]
+kind = "assert"
+subject = "individer: DeSO @1990..2024 where key = 'v37894'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Demografiska statistikområden (DeSO)", "definition" = "SCB:s demografiska statistikområden som är en rikstäckande indelning som följer läns- och kommungränserna.", "type" = "text", "length" = 9, "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3898"
+caveat = "Label, definition and length follow SCB's documentation of DeSO (key v37894) on Adresser, fastigheter och koordinater, 2018-2023."

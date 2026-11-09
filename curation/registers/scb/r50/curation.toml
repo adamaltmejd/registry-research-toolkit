@@ -919,3 +919,10 @@ kind = "set"
 subject = "lonestrukturstatistik-privat-sektor-slp: SumHelglon @2004"
 fields = { "unit" = "Kronor (SEK)" }
 evidence = "SumHelglon (key v5608, 'Ersättning för förlorad lön vid helgdagar') is 'Kronor (SEK)' in every release except 2004, where SCB gives 'Hektar' (Registerinformation.csv:row=448245 (r1048), row=448955)."
+
+[[statement]]
+kind = "assert"
+subject = "lonestrukturstatistik-privat-sektor-slp: OvtTim @1997-01-01..1997-12-31 where key = 'v5719' and release = 'r4388'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Antal övertidstimmar", "definition" = "Antal övertidstimmar", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3902"
+caveat = "SCB's Registerinformation export lists OvtTim only from 1998. SCB's documentation of SLP 1997-2000 (https://www.scb.se/contentassets/97b958f7258b45d284f96669d5e4590d/am0103_do_19972000.pdf) lists overtime hours in the measurement period for 1997, from the employer's payroll system; it names that column Timmar97, the same name it gives worked hours, so the delivered spelling OvtTim rests on the 1998 edition and on a delivery of the 1997 file. Label, definition and type follow the export's 1998 edition."
