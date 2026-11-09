@@ -182,9 +182,9 @@ no git hooks: CI is the gate, so run the relevant step before pushing.
 - `bash scripts/gate.sh all` — the full gate before a PR (`g0`, `rust`, `flows`,
   `frontend`). The R packages are not gated: their testthat suites run only by hand
   (`Rscript -e 'testthat::test_dir("<pkg>/tests/testthat")'`).
-- `bash scripts/gate.sh lint` — panache (markdown) and shellcheck. The repo-policy lints
-  (provider vocabulary, skill reads and aliases, test size, no Python) and the plugin
-  schema drift check are `crates/xtask` tests, run by `crates`.
+- `bash scripts/gate.sh lint` — shellcheck. The repo-policy lints (provider
+  vocabulary, skill reads and aliases, test size, no Python) and the plugin schema drift
+  check are `crates/xtask` tests, run by `crates`.
 - `bash scripts/gate.sh g0 rust` — lint and crates, plus the conformance run against the
   Rust server.
 - `bash scripts/gate.sh regen` — regenerate rebase-sensitive generated files; after a
@@ -195,9 +195,7 @@ no git hooks: CI is the gate, so run the relevant step before pushing.
 - Real-artifact conformance:
   `REG_ARTIFACT_DIR=<dir> [REG_CATALOG=<steward>] cargo test -p reg-conformance --test release`
   (release step 8d; a steward pair in `steward-build.yml`).
-- Local prerequisites: `cargo install cargo-machete --locked`, panache at the
-  `PANACHE_VERSION` in `scripts/gate.sh`
-  (`cargo install panache --version <pin> --locked`), shellcheck and bun.
+- Local prerequisites: `cargo install cargo-machete --locked`, shellcheck and bun.
 - A new worktree needs no setup step: the gate and `dev.sh` install the SPA's packages
   on demand.
 - The LISA register markdown (`catalog/docs/markdown/lisa/*.md` in the private inputs

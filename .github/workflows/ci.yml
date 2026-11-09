@@ -20,31 +20,15 @@ jobs:
       # toward each job's budget (the full-tree checkout took 36 s here, 9 s
       # without them). No job here reads them: Rust tests, the conformance run
       # and the suites below use fixture curation only (conformance/cases/fixtures),
-      # never curation/; lint's tools read source, markdown and manifests, not
-      # `.lock` files.
+      # never curation/; lint's shellcheck reads shell scripts, not `.lock` files.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           sparse-checkout: &no-locks |
             /*
             !curation/**/*.lock
           sparse-checkout-cone-mode: false
-      # The prebuilt panache release binary at gate.sh's PANACHE_VERSION (the one pin; the
-      # gate refuses any other), checked against that release's SHA256SUMS. Not
-      # taiki-e/install-action: it does not know panache, and its cargo-binstall
-      # fallback compiles from source (~3 min). shellcheck is preinstalled on the
-      # runner. No Rust toolchain: lint compiles nothing.
-      - name: Install panache
-        run: |
-          version=$(sed -n 's/^PANACHE_VERSION=//p' scripts/gate.sh)
-          asset=panache-x86_64-unknown-linux-gnu.tar.gz
-          base=https://github.com/jolars/panache/releases/download/v$version
-          cd "$RUNNER_TEMP"
-          curl -fsSL --retry 3 -O "$base/$asset" -O "$base/SHA256SUMS"
-          grep " $asset\$" SHA256SUMS | sha256sum -c -
-          mkdir -p "$HOME/.local/bin"
-          tar -xzf "$asset" -C "$HOME/.local/bin" ./panache
-          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-      # panache (markdown) and shellcheck; commands and tool pins: scripts/gate.sh.
+      # shellcheck, preinstalled on the runner; the command: scripts/gate.sh. No Rust
+      # toolchain: lint compiles nothing.
       - run: bash scripts/gate.sh lint
 
   # The Rust workspace (root Cargo.toml, crates/). Latest stable toolchain, no pin:

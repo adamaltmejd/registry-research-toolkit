@@ -319,6 +319,9 @@ jobs:
           build-args: |
             REG_META_TAG=${{ needs.schema-guard.outputs.tag }}
             REG_META_DB_SHA256=${{ needs.schema-guard.outputs.db_sha256 }}
+          # The DB bake's authenticated release fetch (Dockerfile, stage 1).
+          secrets: |
+            gh_token=${{ github.token }}
 
   deploy:
     needs: [build-image, wait-ci, schema-guard]

@@ -31,9 +31,8 @@ Resolve the requested scope before updating. A named dependency stays a named up
 with its necessary dependency closure. For a complete refresh, audit these surfaces
 together, reading actual files rather than a saved version list:
 
-- Runtime/tool/image pins in `.github/workflows/`, `scripts/gate.sh` (`PANACHE_VERSION`,
-  the release CI's `lint` job installs), `reg_webapp/Dockerfile`, and the Rust toolchain
-  and `Cargo.toml`/`Cargo.lock` dependencies.
+- Runtime/tool/image pins in `.github/workflows/`, `reg_webapp/Dockerfile`, and the
+  Rust toolchain and `Cargo.toml`/`Cargo.lock` dependencies.
 - The SPA: `reg_webapp/frontend/package.json` and `bun.lock` (exact pins, including
   `agent-browser` and React Aria), the wrangler pin (`bunx wrangler@<pin> deploy`) in
   `.github/workflows/container-build.yml` and `.github/workflows/steward-deploy.yml`,
