@@ -333,6 +333,13 @@ classification bindings. Accepting one requires reviewed curation and a premise 
   releases or variables. Selectors and premises use the immutable phase view.
   Assignments cannot merge concurrent different folded spellings in one table;
   resolution refuses with `D-11` at lock, before a malformed segment can be published.
+  Assignments may merge one folded spelling documented under two source keys, such as
+  SCB's Flergenerationsregistret `antalbarn`, one column under a VarId per parent
+  (maintainer, 2026-11-09). A selector matching overlapping occurrences that differ in
+  source key or label is ambiguous and needs a `where` guard, except a pair of different
+  keys already assigned one variable: default identity splits by key, so only curation
+  joins them, and later `var:`, tags and sets statements address the merged variable.
+  The curator still sets the per-key labels so that the segment agrees.
 - `label`, `definition`, `operational_definition`, `unit`, `value_set`, `coded`,
   `spelling`, `identifier`, `sensitive`, `type` and `format` belong to occurrences; text
   runs and segments derive from those occurrences. `period` changes occurrence bounds or

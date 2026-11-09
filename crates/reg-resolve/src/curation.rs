@@ -459,7 +459,16 @@ fn same_subject(a: &Source, b: &Source) -> bool {
         && a.locators.iter().any(|l| b.locators.contains(l))
 }
 
-fn ambiguity(matches: &[Match], view: &[Source]) -> Result<(), String> {
+/// Two overlapping matches at one coordinate must agree on source key and label, or the
+/// statement needs a `where` guard. The exception is a pair of different source keys
+/// that a curation `set variable` placed on one variable: default identity splits by
+/// source key (`crate::resolve`), so only that statement can join them, and once joined
+/// they are one variable rather than a choice. Same-key pairs keep the check.
+fn ambiguity(
+    matches: &[Match],
+    view: &[Source],
+    source_variables: &[Vec<String>],
+) -> Result<(), String> {
     let mut candidates = BTreeSet::new();
     let mut ambiguous = false;
     let mut coordinates: BTreeMap<(&str, String), Vec<&Match>> = BTreeMap::new();
@@ -482,9 +491,14 @@ fn ambiguity(matches: &[Match], view: &[Source]) -> Result<(), String> {
             let a_source = &view[a.source];
             for b in &matches[i + 1..] {
                 let b_source = &view[b.source];
+                let keys_differ = a_source.fields.get("key") != b_source.fields.get("key");
+                let merged = keys_differ
+                    && source_variables[a.source]
+                        .iter()
+                        .any(|v| source_variables[b.source].contains(v));
                 if overlaps(a, b)
-                    && (a_source.fields.get("key") != b_source.fields.get("key")
-                        || a_source.fields.get("label") != b_source.fields.get("label"))
+                    && !merged
+                    && (keys_differ || a_source.fields.get("label") != b_source.fields.get("label"))
                 {
                     ambiguous = true;
                     for source in [a_source, b_source] {
@@ -1602,7 +1616,7 @@ pub fn resolve(
                     ..
                 }
             ) {
-                ambiguity(&matches, &view)?;
+                ambiguity(&matches, &view, &index.source_variables)?;
             }
             whole?;
             let mut fields: BTreeSet<String> = [
@@ -1752,7 +1766,7 @@ pub fn resolve(
                         return Err("empty match for link object".into());
                     }
                     if !matches!(address, Address::Variable(_)) {
-                        ambiguity(&objects, &view)?;
+                        ambiguity(&objects, &view, &index.source_variables)?;
                     }
                     whole_occurrences(&objects, &view)?;
                     dependency_fields(&address, &mut fields);

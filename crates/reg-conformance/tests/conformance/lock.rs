@@ -89,6 +89,24 @@ fn assignments_refuse_concurrent_folds_at_lock() {
     assert_eq!(Value::from(located), expected["located_errors"]);
 }
 
+#[test]
+fn merged_source_keys_take_variable_statements() {
+    // Regression: either a `var:` statement on a variable that curation merged from two
+    // overlapping source keys is refused `ambiguous`, so the merge cannot be finished,
+    // or the exemption widens and an unmerged two-key column takes an unguarded statement.
+    let case = cases().join("lock/merged-key-statements");
+    let expected = read_json(&case.join("expected.json")).unwrap();
+    let dir = scratch("merged-keys");
+    let curation = curation_copy(&case, dir.path());
+    let statements = curation.join("registers/demo/merge/curation.toml");
+    let inputs = case.join("inputs");
+    curated("lock", &inputs, &curation, &[]).ok();
+    let mut text = fs::read_to_string(&statements).unwrap();
+    text.push_str(&fs::read_to_string(case.join("refused.toml")).unwrap());
+    fs::write(&statements, text).unwrap();
+    curated("lock", &inputs, &curation, &[]).refused(&[expected["refused"].as_str().unwrap()]);
+}
+
 /// Each occurrence's `[variable pid, exact spelling, <column>]` in `db`, in `order`.
 fn occurrences(db: &Path, value: &str, order: &str) -> Value {
     let sql = format!(

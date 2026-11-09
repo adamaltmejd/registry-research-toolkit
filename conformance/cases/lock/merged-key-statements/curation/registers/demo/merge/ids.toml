@@ -1,0 +1,7 @@
+[tables]
+t = "t"
+
+[variables]
+children = ["t: COUNT"]
+order-father = ["t: ORDER # v3"]
+order-mother = ["t: ORDER # v4"]

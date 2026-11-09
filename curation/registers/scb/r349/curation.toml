@@ -36,30 +36,6 @@ evidence = "Antal äktenskap avser familjeförhållanden.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:antal-biologiska-barn-far"
-fields = { "sets" = ["antal-biologiska-barn"] }
-evidence = "Identitetsfaktens överlapp behöver avgöras; måttet gäller biologiska barn.\ncatalog:occurrence:96727\ncatalog:occurrence:96728\ncatalog:variable_text:10915:-3287:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-biologiska-barn-far"
-fields = { "tags" = ["family-household"] }
-evidence = "Identitetsfaktens överlapp behöver avgöras; måttet gäller biologiska barn.\ncatalog:occurrence:96727\ncatalog:occurrence:96728\ncatalog:variable_text:10915:-3287:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-biologiska-barn-mor"
-fields = { "sets" = ["antal-biologiska-barn"] }
-evidence = "Identitetsfaktens överlapp behöver avgöras; måttet gäller biologiska barn.\ncatalog:occurrence:96727\ncatalog:occurrence:96728\ncatalog:variable_text:10916:-3287:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-biologiska-barn-mor"
-fields = { "tags" = ["family-household"] }
-evidence = "Identitetsfaktens överlapp behöver avgöras; måttet gäller biologiska barn.\ncatalog:occurrence:96727\ncatalog:occurrence:96728\ncatalog:variable_text:10916:-3287:20454"
-
-[[statement]]
-kind = "set"
 subject = "var:ateranvant-personnr"
 fields = { "sets" = ["ateranvant-personnummer"] }
 evidence = "Markeringen hör till gruppen för återanvända personnummer.\ncatalog:variable_text:10917:-3287:20454"
@@ -900,30 +876,6 @@ evidence = "Moderns personnummer hör till föräldrapersonnummergruppen.\ncatal
 
 [[statement]]
 kind = "set"
-subject = "var:syskonordnr-far"
-fields = { "sets" = ["ordningsnummer-i-syskonskaran"] }
-evidence = "Identitetsfaktens överlapp behöver avgöras; variabeln anger ordningsnummer i syskonskaran.\ncatalog:occurrence:96731\ncatalog:occurrence:96732"
-
-[[statement]]
-kind = "set"
-subject = "var:syskonordnr-far"
-fields = { "tags" = [] }
-evidence = "Identitetsfaktens överlapp behöver avgöras; variabeln anger ordningsnummer i syskonskaran.\ncatalog:occurrence:96731\ncatalog:occurrence:96732"
-
-[[statement]]
-kind = "set"
-subject = "var:syskonordnr-mor"
-fields = { "sets" = ["ordningsnummer-i-syskonskaran"] }
-evidence = "Identitetsfaktens överlapp behöver avgöras; variabeln anger ordningsnummer i syskonskaran.\ncatalog:occurrence:96731\ncatalog:occurrence:96732"
-
-[[statement]]
-kind = "set"
-subject = "var:syskonordnr-mor"
-fields = { "tags" = [] }
-evidence = "Identitetsfaktens överlapp behöver avgöras; variabeln anger ordningsnummer i syskonskaran.\ncatalog:occurrence:96731\ncatalog:occurrence:96732"
-
-[[statement]]
-kind = "set"
 subject = "var:utvandringsland-personakt"
 fields = { "sets" = [] }
 evidence = "Landet anges i samband med utvandring.\ncatalog:variable_text:11005:-8401:-731"
@@ -993,12 +945,6 @@ kind = "set"
 subject = "set:adoptivrelationens-slutdatum"
 fields = { "label" = "Adoptivrelationens slutdatum" }
 evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
-
-[[statement]]
-kind = "set"
-subject = "set:antal-biologiska-barn"
-fields = { "label" = "Antal biologiska barn" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
 kind = "set"
@@ -1074,6 +1020,60 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
-subject = "set:ordningsnummer-i-syskonskaran"
-fields = { "label" = "Ordningsnummer i syskonskaran" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+subject = "antal-barn: antalbarn where key = 'v31003'"
+fields = { "variable" = "antal-biologiska-barn" }
+evidence = "SCB Registerinformation.csv, Flergenerationsregistret, variant Antal barn, version 1961-01-01 –– 2025-12-31 (RegVerID 20335): one column, Kolumnnamn antalbarn, documented under two variables, Antal biologiska barn, far (VarId 31003) and Antal biologiska barn, mor (VarId 21766). The variant description says it holds the number of biological children for each mother and each father. A researcher orders one column, so the catalog places it as one variable."
+
+[[statement]]
+kind = "set"
+subject = "antal-barn: antalbarn where key = 'v31003'"
+fields = { "label" = "Antal biologiska barn", "definition" = "Antal biologiska barn för varje mor respektive far. SCB dokumenterar kolumnen som två variabler, Antal biologiska barn, far och Antal biologiska barn, mor. Uppgiften beräknas endast för biologiska barn, utifrån Flergenerationsregistrets delregister Biologiska föräldrar." }
+evidence = "SCB Registerinformation.csv, Flergenerationsregistret, variant Antal barn, version 1961-01-01 –– 2025-12-31 (RegVerID 20335): one column, Kolumnnamn antalbarn, documented under two variables, Antal biologiska barn, far (VarId 31003) and Antal biologiska barn, mor (VarId 21766). The variant description says it holds the number of biological children for each mother and each father. A researcher orders one column, so the catalog places it as one variable. Definition: SCB Registerinformation.csv, Flergenerationsregistret, variant Antal barn (RegVerID 20335): Registervariantbeskrivning, Registerversionmätinformation and the definitions of VarId 31003 and 21766."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-biologiska-barn"
+fields = { "tags" = ["family-household"] }
+evidence = "SCB Registerinformation.csv, Flergenerationsregistret, variant Antal barn, version 1961-01-01 –– 2025-12-31 (RegVerID 20335): one column, Kolumnnamn antalbarn, documented under two variables, Antal biologiska barn, far (VarId 31003) and Antal biologiska barn, mor (VarId 21766). The variant description says it holds the number of biological children for each mother and each father. A researcher orders one column, so the catalog places it as one variable."
+
+[[statement]]
+kind = "set"
+subject = "antal-barn: antalbarn where key = 'v21766'"
+fields = { "variable" = "antal-biologiska-barn" }
+evidence = "SCB Registerinformation.csv, Flergenerationsregistret, variant Antal barn, version 1961-01-01 –– 2025-12-31 (RegVerID 20335): one column, Kolumnnamn antalbarn, documented under two variables, Antal biologiska barn, far (VarId 31003) and Antal biologiska barn, mor (VarId 21766). The variant description says it holds the number of biological children for each mother and each father. A researcher orders one column, so the catalog places it as one variable."
+
+[[statement]]
+kind = "set"
+subject = "antal-barn: antalbarn where key = 'v21766'"
+fields = { "label" = "Antal biologiska barn", "definition" = "Antal biologiska barn för varje mor respektive far. SCB dokumenterar kolumnen som två variabler, Antal biologiska barn, far och Antal biologiska barn, mor. Uppgiften beräknas endast för biologiska barn, utifrån Flergenerationsregistrets delregister Biologiska föräldrar." }
+evidence = "SCB Registerinformation.csv, Flergenerationsregistret, variant Antal barn, version 1961-01-01 –– 2025-12-31 (RegVerID 20335): one column, Kolumnnamn antalbarn, documented under two variables, Antal biologiska barn, far (VarId 31003) and Antal biologiska barn, mor (VarId 21766). The variant description says it holds the number of biological children for each mother and each father. A researcher orders one column, so the catalog places it as one variable. Definition: SCB Registerinformation.csv, Flergenerationsregistret, variant Antal barn (RegVerID 20335): Registervariantbeskrivning, Registerversionmätinformation and the definitions of VarId 31003 and 21766."
+
+[[statement]]
+kind = "set"
+subject = "barns-ordningsnummer: ordnr where key = 'v21780'"
+fields = { "variable" = "syskonordnr" }
+evidence = "SCB Registerinformation.csv, Flergenerationsregistret, variant Barns ordningsnummer, version 1961-01-01 –– 2025-12-31: one column, Kolumnnamn ordnr, documented under two variables, Ordningsnummer i syskonskaran, far (VarId 21780) and Ordningsnummer i syskonskaran, mor (VarId 24372). The variant description says it holds the child's birth order among siblings on the biological mother's and father's side. A researcher orders one column, so the catalog places it as one variable."
+
+[[statement]]
+kind = "set"
+subject = "barns-ordningsnummer: ordnr where key = 'v21780'"
+fields = { "label" = "Ordningsnummer i syskonskaran", "definition" = "Barnets ordningsnummer efter födelsetid i syskonskaran på den biologiska moderns respektive faderns sida. Ordningsnumret räknas bland de barn som har uppgift om samma förälder; saknas uppgift om föräldern kan barnet inte föras till syskonskaran. SCB dokumenterar kolumnen som två variabler, Ordningsnummer i syskonskaran, far och Ordningsnummer i syskonskaran, mor." }
+evidence = "SCB Registerinformation.csv, Flergenerationsregistret, variant Barns ordningsnummer, version 1961-01-01 –– 2025-12-31: one column, Kolumnnamn ordnr, documented under two variables, Ordningsnummer i syskonskaran, far (VarId 21780) and Ordningsnummer i syskonskaran, mor (VarId 24372). The variant description says it holds the child's birth order among siblings on the biological mother's and father's side. A researcher orders one column, so the catalog places it as one variable. Definition: SCB Registerinformation.csv, Flergenerationsregistret, variant Barns ordningsnummer: Registervariantbeskrivning and the definitions and descriptions of VarId 21780 and 24372."
+
+[[statement]]
+kind = "set"
+subject = "var:syskonordnr"
+fields = { "tags" = [] }
+evidence = "SCB Registerinformation.csv, Flergenerationsregistret, variant Barns ordningsnummer, version 1961-01-01 –– 2025-12-31: one column, Kolumnnamn ordnr, documented under two variables, Ordningsnummer i syskonskaran, far (VarId 21780) and Ordningsnummer i syskonskaran, mor (VarId 24372). The variant description says it holds the child's birth order among siblings on the biological mother's and father's side. A researcher orders one column, so the catalog places it as one variable."
+
+[[statement]]
+kind = "set"
+subject = "barns-ordningsnummer: ordnr where key = 'v24372'"
+fields = { "variable" = "syskonordnr" }
+evidence = "SCB Registerinformation.csv, Flergenerationsregistret, variant Barns ordningsnummer, version 1961-01-01 –– 2025-12-31: one column, Kolumnnamn ordnr, documented under two variables, Ordningsnummer i syskonskaran, far (VarId 21780) and Ordningsnummer i syskonskaran, mor (VarId 24372). The variant description says it holds the child's birth order among siblings on the biological mother's and father's side. A researcher orders one column, so the catalog places it as one variable."
+
+[[statement]]
+kind = "set"
+subject = "barns-ordningsnummer: ordnr where key = 'v24372'"
+fields = { "label" = "Ordningsnummer i syskonskaran", "definition" = "Barnets ordningsnummer efter födelsetid i syskonskaran på den biologiska moderns respektive faderns sida. Ordningsnumret räknas bland de barn som har uppgift om samma förälder; saknas uppgift om föräldern kan barnet inte föras till syskonskaran. SCB dokumenterar kolumnen som två variabler, Ordningsnummer i syskonskaran, far och Ordningsnummer i syskonskaran, mor." }
+evidence = "SCB Registerinformation.csv, Flergenerationsregistret, variant Barns ordningsnummer, version 1961-01-01 –– 2025-12-31: one column, Kolumnnamn ordnr, documented under two variables, Ordningsnummer i syskonskaran, far (VarId 21780) and Ordningsnummer i syskonskaran, mor (VarId 24372). The variant description says it holds the child's birth order among siblings on the biological mother's and father's side. A researcher orders one column, so the catalog places it as one variable. Definition: SCB Registerinformation.csv, Flergenerationsregistret, variant Barns ordningsnummer: Registervariantbeskrivning and the definitions and descriptions of VarId 21780 and 24372."

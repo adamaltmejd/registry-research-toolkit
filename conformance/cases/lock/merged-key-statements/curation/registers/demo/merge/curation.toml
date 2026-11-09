@@ -1,0 +1,29 @@
+[[statement]]
+kind = "set"
+subject = "t: COUNT where key = 'v1'"
+fields = { variable = "children" }
+evidence = "One column documented under two source keys, one per parent."
+
+[[statement]]
+kind = "set"
+subject = "t: COUNT where key = 'v2'"
+fields = { variable = "children" }
+evidence = "One column documented under two source keys, one per parent."
+
+[[statement]]
+kind = "set"
+subject = "t: COUNT where key = 'v1'"
+fields = { label = "Children" }
+evidence = "The merged variable covers both parents."
+
+[[statement]]
+kind = "set"
+subject = "t: COUNT where key = 'v2'"
+fields = { label = "Children" }
+evidence = "The merged variable covers both parents."
+
+[[statement]]
+kind = "set"
+subject = "var:children"
+fields = { description = "Number of children of the parent on the row." }
+evidence = "A variable statement addresses both merged source keys."
