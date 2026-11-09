@@ -27715,3 +27715,402 @@ kind = "set"
 subject = "individer-och-dodsbon: FTILLG where key = 'v14694'"
 fields = { "label" = "Summa tillgångar under förmögenhet", "definition" = "Summa tillgångar under förmögenhet" }
 evidence = "Opdef and column FTILLG say Summa tillgångar under förmögenhet; the net wording is copied from FSP v2551."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: ATPALD @1990-01-01..1990-12-31 where key = 'v41270' and release = 'r13817'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ålderspension från ATP, egenförmån", "definition" = "Ålderspension från ATP, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3795"
+caveat = "SCB's Registerinformation export lists ATPALD on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents ATPAld for 1990-2004 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A666), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: ATPALD @1991-01-01..1991-12-31 where key = 'v41270' and release = 'r13632'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ålderspension från ATP, egenförmån", "definition" = "Ålderspension från ATP, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3796"
+caveat = "SCB's Registerinformation export lists ATPALD on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents ATPAld for 1990-2004 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A666), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: ATPALD @1992-01-01..1992-12-31 where key = 'v41270' and release = 'r13459'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ålderspension från ATP, egenförmån", "definition" = "Ålderspension från ATP, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3797"
+caveat = "SCB's Registerinformation export lists ATPALD on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents ATPAld for 1990-2004 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A666), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: ATPALD @1993-01-01..1993-12-31 where key = 'v41270' and release = 'r13458'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ålderspension från ATP, egenförmån", "definition" = "Ålderspension från ATP, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3798"
+caveat = "SCB's Registerinformation export lists ATPALD on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents ATPAld for 1990-2004 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A666), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: ATPALD @1994-01-01..1994-12-31 where key = 'v41270' and release = 'r13457'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ålderspension från ATP, egenförmån", "definition" = "Ålderspension från ATP, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3799"
+caveat = "SCB's Registerinformation export lists ATPALD on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents ATPAld for 1990-2004 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A666), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: ATPALD @1995-01-01..1995-12-31 where key = 'v41270' and release = 'r13388'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ålderspension från ATP, egenförmån", "definition" = "Ålderspension från ATP, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3800"
+caveat = "SCB's Registerinformation export lists ATPALD on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents ATPAld for 1990-2004 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A666), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: ATPALD @1996-01-01..1996-12-31 where key = 'v41270' and release = 'r13268'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ålderspension från ATP, egenförmån", "definition" = "Ålderspension från ATP, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3801"
+caveat = "SCB's Registerinformation export lists ATPALD on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents ATPAld for 1990-2004 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A666), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: ATPALD @1997-01-01..1997-12-31 where key = 'v41270' and release = 'r9926'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ålderspension från ATP, egenförmån", "definition" = "Ålderspension från ATP, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3802"
+caveat = "SCB's Registerinformation export lists ATPALD on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents ATPAld for 1990-2004 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A666), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: ATPALD @1998-01-01..1998-12-31 where key = 'v41270' and release = 'r8651'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ålderspension från ATP, egenförmån", "definition" = "Ålderspension från ATP, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3803"
+caveat = "SCB's Registerinformation export lists ATPALD on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents ATPAld for 1990-2004 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A666), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: ATPALD @1999-01-01..1999-12-31 where key = 'v41270' and release = 'r5893'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ålderspension från ATP, egenförmån", "definition" = "Ålderspension från ATP, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3804"
+caveat = "SCB's Registerinformation export lists ATPALD on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents ATPAld for 1990-2004 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A666), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: ATPALD @2000-01-01..2000-12-31 where key = 'v41270' and release = 'r5889'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ålderspension från ATP, egenförmån", "definition" = "Ålderspension från ATP, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3805"
+caveat = "SCB's Registerinformation export lists ATPALD on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents ATPAld for 1990-2004 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A666), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: ATPALD @2001-01-01..2001-12-31 where key = 'v41270' and release = 'r5847'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ålderspension från ATP, egenförmån", "definition" = "Ålderspension från ATP, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3806"
+caveat = "SCB's Registerinformation export lists ATPALD on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents ATPAld for 1990-2004 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A666), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: ATPALD @2002-01-01..2002-12-31 where key = 'v41270' and release = 'r5822'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ålderspension från ATP, egenförmån", "definition" = "Ålderspension från ATP, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3807"
+caveat = "SCB's Registerinformation export lists ATPALD on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents ATPAld for 1990-2004 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A666), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: FOLKALD @1990-01-01..1990-12-31 where key = 'v41219' and release = 'r13817'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ålderspension från folkpension, egenförmån", "definition" = "Ålderspension från folkpension, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3808"
+caveat = "SCB's Registerinformation export lists FOLKALD on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents FolkAld for 1990-2002 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A665), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: FOLKALD @1991-01-01..1991-12-31 where key = 'v41219' and release = 'r13632'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ålderspension från folkpension, egenförmån", "definition" = "Ålderspension från folkpension, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3809"
+caveat = "SCB's Registerinformation export lists FOLKALD on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents FolkAld for 1990-2002 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A665), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: FOLKALD @1992-01-01..1992-12-31 where key = 'v41219' and release = 'r13459'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ålderspension från folkpension, egenförmån", "definition" = "Ålderspension från folkpension, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3810"
+caveat = "SCB's Registerinformation export lists FOLKALD on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents FolkAld for 1990-2002 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A665), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: FOLKALD @1993-01-01..1993-12-31 where key = 'v41219' and release = 'r13458'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ålderspension från folkpension, egenförmån", "definition" = "Ålderspension från folkpension, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3811"
+caveat = "SCB's Registerinformation export lists FOLKALD on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents FolkAld for 1990-2002 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A665), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: FOLKALD @1994-01-01..1994-12-31 where key = 'v41219' and release = 'r13457'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ålderspension från folkpension, egenförmån", "definition" = "Ålderspension från folkpension, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3812"
+caveat = "SCB's Registerinformation export lists FOLKALD on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents FolkAld for 1990-2002 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A665), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: FOLKALD @1995-01-01..1995-12-31 where key = 'v41219' and release = 'r13388'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ålderspension från folkpension, egenförmån", "definition" = "Ålderspension från folkpension, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3813"
+caveat = "SCB's Registerinformation export lists FOLKALD on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents FolkAld for 1990-2002 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A665), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: FOLKALD @1996-01-01..1996-12-31 where key = 'v41219' and release = 'r13268'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ålderspension från folkpension, egenförmån", "definition" = "Ålderspension från folkpension, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3814"
+caveat = "SCB's Registerinformation export lists FOLKALD on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents FolkAld for 1990-2002 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A665), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: FOLKALD @1997-01-01..1997-12-31 where key = 'v41219' and release = 'r9926'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ålderspension från folkpension, egenförmån", "definition" = "Ålderspension från folkpension, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3815"
+caveat = "SCB's Registerinformation export lists FOLKALD on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents FolkAld for 1990-2002 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A665), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: FOLKALD @1998-01-01..1998-12-31 where key = 'v41219' and release = 'r8651'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ålderspension från folkpension, egenförmån", "definition" = "Ålderspension från folkpension, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3816"
+caveat = "SCB's Registerinformation export lists FOLKALD on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents FolkAld for 1990-2002 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A665), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: FOLKALD @1999-01-01..1999-12-31 where key = 'v41219' and release = 'r5893'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ålderspension från folkpension, egenförmån", "definition" = "Ålderspension från folkpension, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3817"
+caveat = "SCB's Registerinformation export lists FOLKALD on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents FolkAld for 1990-2002 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A665), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: FOLKALD @2000-01-01..2000-12-31 where key = 'v41219' and release = 'r5889'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ålderspension från folkpension, egenförmån", "definition" = "Ålderspension från folkpension, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3818"
+caveat = "SCB's Registerinformation export lists FOLKALD on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents FolkAld for 1990-2002 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A665), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: FOLKALD @2001-01-01..2001-12-31 where key = 'v41219' and release = 'r5847'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ålderspension från folkpension, egenförmån", "definition" = "Ålderspension från folkpension, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3819"
+caveat = "SCB's Registerinformation export lists FOLKALD on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents FolkAld for 1990-2002 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A665), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: FOLKALD @2002-01-01..2002-12-31 where key = 'v41219' and release = 'r5822'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ålderspension från folkpension, egenförmån", "definition" = "Ålderspension från folkpension, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3820"
+caveat = "SCB's Registerinformation export lists FOLKALD on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents FolkAld for 1990-2002 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A665), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: FOLKHUST @1990-01-01..1990-12-31 where key = 'v41216' and release = 'r13817'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Hustrutillägg", "definition" = "Hustrutillägget från folkpension, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3821"
+caveat = "SCB's Registerinformation export lists FOLKHUST on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents FolkHust for 1990-2002 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A695), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: FOLKHUST @1991-01-01..1991-12-31 where key = 'v41216' and release = 'r13632'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Hustrutillägg", "definition" = "Hustrutillägget från folkpension, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3822"
+caveat = "SCB's Registerinformation export lists FOLKHUST on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents FolkHust for 1990-2002 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A695), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: FOLKHUST @1992-01-01..1992-12-31 where key = 'v41216' and release = 'r13459'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Hustrutillägg", "definition" = "Hustrutillägget från folkpension, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3823"
+caveat = "SCB's Registerinformation export lists FOLKHUST on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents FolkHust for 1990-2002 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A695), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: FOLKHUST @1993-01-01..1993-12-31 where key = 'v41216' and release = 'r13458'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Hustrutillägg", "definition" = "Hustrutillägget från folkpension, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3824"
+caveat = "SCB's Registerinformation export lists FOLKHUST on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents FolkHust for 1990-2002 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A695), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: FOLKHUST @1994-01-01..1994-12-31 where key = 'v41216' and release = 'r13457'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Hustrutillägg", "definition" = "Hustrutillägget från folkpension, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3825"
+caveat = "SCB's Registerinformation export lists FOLKHUST on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents FolkHust for 1990-2002 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A695), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: FOLKHUST @1995-01-01..1995-12-31 where key = 'v41216' and release = 'r13388'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Hustrutillägg", "definition" = "Hustrutillägget från folkpension, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3826"
+caveat = "SCB's Registerinformation export lists FOLKHUST on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents FolkHust for 1990-2002 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A695), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: FOLKHUST @1996-01-01..1996-12-31 where key = 'v41216' and release = 'r13268'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Hustrutillägg", "definition" = "Hustrutillägget från folkpension, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3827"
+caveat = "SCB's Registerinformation export lists FOLKHUST on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents FolkHust for 1990-2002 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A695), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: FOLKHUST @1997-01-01..1997-12-31 where key = 'v41216' and release = 'r9926'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Hustrutillägg", "definition" = "Hustrutillägget från folkpension, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3828"
+caveat = "SCB's Registerinformation export lists FOLKHUST on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents FolkHust for 1990-2002 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A695), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: FOLKHUST @1998-01-01..1998-12-31 where key = 'v41216' and release = 'r8651'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Hustrutillägg", "definition" = "Hustrutillägget från folkpension, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3829"
+caveat = "SCB's Registerinformation export lists FOLKHUST on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents FolkHust for 1990-2002 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A695), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: FOLKHUST @1999-01-01..1999-12-31 where key = 'v41216' and release = 'r5893'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Hustrutillägg", "definition" = "Hustrutillägget från folkpension, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3830"
+caveat = "SCB's Registerinformation export lists FOLKHUST on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents FolkHust for 1990-2002 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A695), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: FOLKHUST @2000-01-01..2000-12-31 where key = 'v41216' and release = 'r5889'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Hustrutillägg", "definition" = "Hustrutillägget från folkpension, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3831"
+caveat = "SCB's Registerinformation export lists FOLKHUST on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents FolkHust for 1990-2002 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A695), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: FOLKHUST @2001-01-01..2001-12-31 where key = 'v41216' and release = 'r5847'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Hustrutillägg", "definition" = "Hustrutillägget från folkpension, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3832"
+caveat = "SCB's Registerinformation export lists FOLKHUST on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents FolkHust for 1990-2002 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A695), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: FOLKHUST @2002-01-01..2002-12-31 where key = 'v41216' and release = 'r5822'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Hustrutillägg", "definition" = "Hustrutillägget från folkpension, egenförmån", "type" = "decimal", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3833"
+caveat = "SCB's Registerinformation export lists FOLKHUST on IoT only for 1981-1989. The years 1990-2002 rest on SCB's LISA variable list, which documents FolkHust for 1990-2002 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A695), and on a delivery of IoT that carries the column under this name in those years. Label, definition and type follow the export's 1989 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: TPENSAU @2011-01-01..2011-12-31 where key = 'v44791' and release = 'r4346'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Pensioner, utländskt beskattade", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3834"
+caveat = "SCB's Registerinformation export lists TPENSAU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TPENSAU for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A697), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: TPENSAU @2012-01-01..2012-12-31 where key = 'v44791' and release = 'r5226'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Pensioner, utländskt beskattade", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3835"
+caveat = "SCB's Registerinformation export lists TPENSAU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TPENSAU for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A697), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: TPENSAU @2013-01-01..2013-12-31 where key = 'v44791' and release = 'r5626'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Pensioner, utländskt beskattade", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3836"
+caveat = "SCB's Registerinformation export lists TPENSAU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TPENSAU for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A697), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: TPENSAU @2014-01-01..2014-12-31 where key = 'v44791' and release = 'r7298'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Pensioner, utländskt beskattade", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3837"
+caveat = "SCB's Registerinformation export lists TPENSAU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TPENSAU for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A697), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: TPENSAU @2015-01-01..2015-12-31 where key = 'v44791' and release = 'r9969'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Pensioner, utländskt beskattade", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3838"
+caveat = "SCB's Registerinformation export lists TPENSAU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TPENSAU for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A697), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: TPENSAU @2016-01-01..2016-12-31 where key = 'v44791' and release = 'r11663'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Pensioner, utländskt beskattade", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3839"
+caveat = "SCB's Registerinformation export lists TPENSAU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TPENSAU for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A697), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: TPENSAU @2017-01-01..2017-12-31 where key = 'v44791' and release = 'r13443'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Pensioner, utländskt beskattade", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3840"
+caveat = "SCB's Registerinformation export lists TPENSAU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TPENSAU for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A697), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: TPENSAU @2018-01-01..2018-12-31 where key = 'v44791' and release = 'r13744'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Pensioner, utländskt beskattade", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3841"
+caveat = "SCB's Registerinformation export lists TPENSAU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TPENSAU for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A697), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: TPENSAU @2019-01-01..2019-12-31 where key = 'v44791' and release = 'r15780'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Pensioner, utländskt beskattade", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3842"
+caveat = "SCB's Registerinformation export lists TPENSAU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TPENSAU for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A697), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: TTJLONU @2011-01-01..2011-12-31 where key = 'v1172' and release = 'r4346'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3843"
+caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: TTJLONU @2012-01-01..2012-12-31 where key = 'v1172' and release = 'r5226'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3844"
+caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: TTJLONU @2013-01-01..2013-12-31 where key = 'v1172' and release = 'r5626'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3845"
+caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: TTJLONU @2014-01-01..2014-12-31 where key = 'v1172' and release = 'r7298'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3846"
+caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: TTJLONU @2015-01-01..2015-12-31 where key = 'v1172' and release = 'r9969'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3847"
+caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: TTJLONU @2016-01-01..2016-12-31 where key = 'v1172' and release = 'r11663'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3848"
+caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: TTJLONU @2017-01-01..2017-12-31 where key = 'v1172' and release = 'r13443'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3849"
+caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: TTJLONU @2018-01-01..2018-12-31 where key = 'v1172' and release = 'r13744'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3850"
+caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: TTJLONU @2019-01-01..2019-12-31 where key = 'v1172' and release = 'r15780'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3851"
+caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."

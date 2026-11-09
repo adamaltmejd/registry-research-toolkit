@@ -1000,3 +1000,309 @@ kind = "set"
 subject = "var:kontant-ersattning-inte-underlag-arbetsgivaravgift"
 fields = { "label" = "Ersättning för egenavgifter (kontant ersättning, inte underlag för arbetsgivaravgifter)" }
 evidence = "#2102 same-label cluster 'Ersättning för egenavgifter' (2 variables): judged different meaning, high confidence; Opdefs: cash compensation that is a base for egenavgifter versus cash compensation that is not a base for arbetsgivaravgifter."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: AMBASSAD_ANSTALLD_SVERIGE @2021..2023 where key = 'v41328'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Betalar skatt i beskickningslandet", "definition" = "Personen är anställd vid en diplomatisk representation hos främmande stat i Sverige och ska betala skatt i beskickninglandet enligt skatteavtal.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3852"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: ANDRA_KOSTNADSERS @2021..2023 where key = 'v1192'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Övriga kostnadsersättningar", "definition" = "Övriga kostnadsersättningar.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3853"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: ANTAL_DAGAR_SJOINKOMST @2021..2023 where key = 'v41336'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sjöinkomst", "definition" = "Ersättning till en sjöman för arbete ombord på ett svenskt fartyg som Skatteverket klassificerat till närfart eller fjärrfart, eller ett handelsfartyg som är registrerat i ett fartygsregister i en annan stat än Sverige inom Europeiska ekonomiska samarbetsområdet (EES).", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3854"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: ASTNr @2021..2023 where key = 'v17'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Arbetsställenummer", "definition" = "Identitetsbegrepp för arbetsställe. Arbetsställenumret ger tillsammans med organisationsnummer en identitet för arbetsställe.", "type" = "integer", "sensitive" = false, "identifier" = true } }
+evidence = "private:ev-3855"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: AVDRAG_UTGIFT_ARBETET @2021..2023 where key = 'v4055'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Kostnadsavdrag", "definition" = "Kostnadsavdrag.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3856"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: AVDR_PREL_SKATT @2021..2023 where key = 'v21816'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Avdragen preliminär A-skatt enligt från arbetsgivare", "definition" = "Avdragen preliminär A-skatt enligt från arbetsgivare.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3857"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: AVDR_SKATT_ASINK @2021..2023 where key = 'v41324'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Avdragen särskild inkomstskatt för utomlands bosatta.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3858"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: AVDR_SKATT_SINK @2021..2023 where key = 'v41324'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Avdragen särskild inkomstskatt för utomlands bosatta.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3859"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: AVRAKNING_AVGIFTSFRI_ERS @2021..2023 where key = 'v41333'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Avräkning från avgiftsfri ersättning", "definition" = "Ersättning som redovisats i tidigare redovisningsperioder och som nu är avgiftspliktig.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3860"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: BILERSATTNING @2021..2023 where key = 'v6060'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Bilersättning", "definition" = "Anger om bilersättning har utgått med belopp enligt schablon.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3861"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: BOSTADSF_EJ_SMAHUS_EJ_ULAG_SA @2021..2023 where key = 'v16099'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Bostadsförmåner som arbetsgivaren tillhandahåller de anställda.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3862"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: BOSTADSF_EJ_SMAHUS_ULAG_AG @2021..2023 where key = 'v16099'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Bostadsförmåner som arbetsgivaren tillhandahåller de anställda.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3863"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: BOSTADSF_EJ_SMAHUS_ULAG_EA @2021..2023 where key = 'v16099'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Bostadsförmåner som arbetsgivaren tillhandahåller de anställda.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3864"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: BOSTADSF_SMAHUS_EJ_ULAG_SA @2021..2023 where key = 'v16099'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Bostadsförmåner som arbetsgivaren tillhandahåller de anställda.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3865"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: BOSTADSF_SMAHUS_ULAG_AG @2021..2023 where key = 'v16099'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Bostadsförmåner som arbetsgivaren tillhandahåller de anställda.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3866"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. The delivered name is BOSTADSF_SMAHUS_ULAG_AG; the export spells it BOSTADSF_SMAHUS_UL_AG_AG for 2019-2020. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: BOSTADSF_SMAHUS_ULAG_AG @2021..2023"
+fields = { "variable" = "bostadsforman-smahus-underlag-arbetsgivaravgift-slf" }
+evidence = "private:ev-3867"
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: BOSTADSF_SMAHUS_ULAG_EA @2021..2023 where key = 'v16099'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Bostadsförmåner som arbetsgivaren tillhandahåller de anställda.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3868"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. The delivered name is BOSTADSF_SMAHUS_ULAG_EA; the export spells it BOSTADSF_SMAHUS_UL_AG_EA for 2019-2020. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: BOSTADSF_SMAHUS_ULAG_EA @2021..2023"
+fields = { "variable" = "bostadsforman-smahus-underlag-egenavgift" }
+evidence = "private:ev-3869"
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: DM_VID_BILFORMAN_EJ_ULAG_SA @2021..2023 where key = 'v21831'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Drivmedel vid bilförmån enligt arbetsgivare.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3870"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: DM_VID_BILFORMAN_ULAG_AG @2021..2023 where key = 'v21831'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Drivmedel vid bilförmån enligt arbetsgivare.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3871"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: DM_VID_BILFORMAN_ULAG_EA @2021..2023 where key = 'v21831'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Drivmedel vid bilförmån enligt arbetsgivare.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3872"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: EJSKATTEAVDR_EJBESKATTNING_SV @2021..2023 where key = 'v41337'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ej skatteavdrag", "definition" = "Beslut finns om att skatteavdrag inte ska göras på grund av utlandsarbete.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3873"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: ERS_EJ_SOC_AVG_EJ_JOBBAVD @2021..2023 where key = 'v21879'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Skattepliktiga ersättningar, ej underlag för sociala avgifter eller särskild löneskatt", "definition" = "Skattepliktiga ersättningar som inte är underlag för socialavgifter eller särskild lönesskatt och som inte ger rätt till skattereduktion för arbetsinkomst.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3874"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: ERS_FORMAN_BOSTAD_MM_SINK @2021..2023 where key = 'v6104'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ersättning för resa till och från Sverige för utomlands bosatta", "definition" = "Sammanlagt belopp av ersättning/förmån avseende resa till och från Sverige för utomlands bosatta vid anställningens början och slut samt bostad i Sverige under anställningstiden.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3875"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: FORMAN_HAR_JUSTERATS @2021..2023 where key = 'v1073'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Markering för rättad post", "definition" = "Markering för rättad post.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3876"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: FORMAN_SOM_PENSION_EJ_ULAG_SA @2021..2023 where key = 'v22251'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Förmån som pension", "definition" = "Variabeln visar om en person till följd av tidigare anställning, har någon typ av förmån som pension.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3877"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: FORSKAR_SKATTE_NAMNDEN @2021..2023 where key = 'v41334'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Skattefria förmåner och ersättningar", "definition" = "Skattefria förmåner och ersättningar", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3878"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: HYRESERSATTNING @2021..2023 where key = 'v6093'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Hyresersättning", "definition" = "Marknadsmässig ersättning för lokal som arbetsgivaren hyrt av den anställde.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3879"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: KONTANT_ERSATTNING_EJ_ULAG_SA @2021..2023 where key = 'v6090'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Ersättning till den som utan att vara näringsidkare ändå ska betala egenavgifter.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3880"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: KONTANT_ERSATTNING_ULAG_AG @2021..2023 where key = 'v1172'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3881"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: KONTANT_ERSATTNING_ULAG_EA @2021..2023 where key = 'v6090'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Ersättning till den som utan att vara näringsidkare ändå ska betala egenavgifter.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3882"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: PeOrgNr @2021..2023 where key = 'v56'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Person-/organisationsnummer", "definition" = "Identitetsbegrepp för juridiska enheter. För juridiska personer tilldelas organisationsnummer av Bolagsverket, Skatteverket, Kammarkollegiet, Lantmäteriet, Länsstyrelse eller SCB, beroende på bolagsform. För fysiska personer med näringsverksamhet används personnumret.", "type" = "text", "length" = 12, "sensitive" = true, "identifier" = true } }
+evidence = "private:ev-3883"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. The delivery carries it pseudonymised as a serial number. Label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: PersonNr @2021..2023 where key = 'v22865'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Person-/samordnings-/organisationsnummer", "definition" = "Identitetsbegrepp för en aktör.", "type" = "text", "length" = 12, "sensitive" = true, "identifier" = true } }
+evidence = "private:ev-3884"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. The delivery carries it pseudonymised as a serial number. Label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: SP_BILFORMAN_EJ_ULAG_SA @2021..2023 where key = 'v6087'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Belopp av skattepliktig bilförmån.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3885"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: SP_BILFORMAN_ULAG_AG @2021..2023 where key = 'v6087'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Belopp av skattepliktig bilförmån.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3886"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: SP_BILFORMAN_ULAG_EA @2021..2023 where key = 'v6087'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Belopp av skattepliktig bilförmån.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3887"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: SP_OVRIGA_FORMANER_EJ_ULAG_SA @2021..2023 where key = 'v1195'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Skattepliktiga förmåner utom bilförmån och drivmedel vid bilförmån.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3888"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: SP_OVRIGA_FORMANER_ULAG_AG @2021..2023 where key = 'v1195'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Skattepliktiga förmåner utom bilförmån och drivmedel vid bilförmån.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3889"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: SP_OVRIGA_FORMANER_ULAG_EA @2021..2023 where key = 'v1195'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Skattepliktiga förmåner utom bilförmån och drivmedel vid bilförmån.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3890"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: TJANSTEPENSION @2021..2023 where key = 'v596'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Tjänstepension", "definition" = "Det belopp en person fått från utbetalaren i tjänstepension.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3891"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: TRAKTAMENTE @2021..2023 where key = 'v41325'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Traktamente", "definition" = "Traktamente är en ersättning som en anställd kan få av sin arbetsgivare när denna reser i tjänsten. Traktamentet ska täcka de ökade levnadskostnaderna under tjänsteresan, det vill säga utgifter för logi, högre måltidskostnader än vanligt och diverse småutgifter.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3892"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: UNDERLAG_ROTARBETE @2021..2023 where key = 'v24169'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Underlag för skattereduktion för ROT- arbete som förmån", "definition" = "Underlag för skattereduktion för ROT- arbete som förmån, enligt arbetsgivare.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3893"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: UNDERLAG_RUTARBETE @2021..2023 where key = 'v21209'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Underlag för skattereduktion för RUT- arbete som förmån", "definition" = "Underlag för skattereduktion för RUT- arbete som förmån, enligt arbetsgivare.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3894"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: VISSA_AVDRAG @2021..2023 where key = 'v1824'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Avdrag för vissa lönetillägg", "definition" = "Anger vissa belopp som ingår i bruttolönen och som inkomsttagaren själv får göra avdrag för i sin deklaration.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "private:ev-3895"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Label, definition and type follow the export's 2020 edition."

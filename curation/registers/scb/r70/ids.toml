@@ -4,6 +4,7 @@ public = "gdb"
 "Adresser" = "adresser"
 "Adresser, fastigheter och koordinater" = "adresser-fastigheter"
 "Fastigheter" = "fastigheter"
+"individer" = "individer"
 
 [variables]
 "adressmark" = ["Fastigheter: AdressMark"]
@@ -66,3 +67,4 @@ public = "gdb"
 "ostlig-koordinat-sweref-adress" = ["Adresser, fastigheter och koordinater: YKOORD_Adr"]
 "ostlig-koordinat-sweref-fastighet" = ["Adresser, fastigheter och koordinater: YKOORD_Fst"]
 "riksnyckel-rnpadrpl" = ["Adresser: RNPADRPL"]
+"personnr" = ["individer: PersonNr"]

@@ -23903,3 +23903,513 @@ kind = "set"
 subject = "var:ssyk3-2012"
 fields = { "description" = "Yrkeskod på 3-siffernivå enligt SSYK 2012 för den huvudsakliga sysselsättningen." }
 evidence = "Etikett och definition anger yrke (SSYK 2012); den operationella definitionen \"Arbetsställenummer\" finns bara i en årgång (2016) och är en kopia.\n0.74.0 catalog, key v510, releases r11268, r12202, r8612; reg_meta.db:occurrence:373213,373486,373790"
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: CSFVI @2010-01-01..2010-12-31 where key = 'v99' and release = 'r8652'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: CSFVI @2011-01-01..2011-12-31 where key = 'v99' and release = 'r7319'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: CSFVI @2012-01-01..2012-12-31 where key = 'v99' and release = 'r7309'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: CSFVI @2013-01-01..2013-12-31 where key = 'v99' and release = 'r6053'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: CSFVI @2014-01-01..2014-12-31 where key = 'v99' and release = 'r8612'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: CSFVI @2015-01-01..2015-12-31 where key = 'v99' and release = 'r11268'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: CSFVI @2016-01-01..2016-12-31 where key = 'v99' and release = 'r12202'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: CSFVI @2017-01-01..2017-12-31 where key = 'v99' and release = 'r13286'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: CSFVI @2018-01-01..2018-12-31 where key = 'v99' and release = 'r14349'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: CSFVI @2019-01-01..2019-12-31 where key = 'v99' and release = 'r16266'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkHB04 @2011-01-01..2011-12-31 where key = 'v22' and release = 'r7319'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst", "definition" = "Beräknad disponibel inkomst.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A758\n\nSCB's LISA variable list documents DispInkHB04 on LISA for 2011-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkHB04 @2012-01-01..2012-12-31 where key = 'v22' and release = 'r7309'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst", "definition" = "Beräknad disponibel inkomst.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A758\n\nSCB's LISA variable list documents DispInkHB04 on LISA for 2011-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkHB04 @2013-01-01..2013-12-31 where key = 'v22' and release = 'r6053'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst", "definition" = "Beräknad disponibel inkomst.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A758\n\nSCB's LISA variable list documents DispInkHB04 on LISA for 2011-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkHB04 @2014-01-01..2014-12-31 where key = 'v22' and release = 'r8612'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst", "definition" = "Beräknad disponibel inkomst.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A758\n\nSCB's LISA variable list documents DispInkHB04 on LISA for 2011-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkHB04 @2015-01-01..2015-12-31 where key = 'v22' and release = 'r11268'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst", "definition" = "Beräknad disponibel inkomst.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A758\n\nSCB's LISA variable list documents DispInkHB04 on LISA for 2011-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkHB04 @2016-01-01..2016-12-31 where key = 'v22' and release = 'r12202'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst", "definition" = "Beräknad disponibel inkomst.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A758\n\nSCB's LISA variable list documents DispInkHB04 on LISA for 2011-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkHB04 @2017-01-01..2017-12-31 where key = 'v22' and release = 'r13286'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst", "definition" = "Beräknad disponibel inkomst.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A758\n\nSCB's LISA variable list documents DispInkHB04 on LISA for 2011-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkHB04 @2018-01-01..2018-12-31 where key = 'v22' and release = 'r14349'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst", "definition" = "Beräknad disponibel inkomst.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A758\n\nSCB's LISA variable list documents DispInkHB04 on LISA for 2011-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkHB04 @2019-01-01..2019-12-31 where key = 'v22' and release = 'r16266'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst", "definition" = "Beräknad disponibel inkomst.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A758\n\nSCB's LISA variable list documents DispInkHB04 on LISA for 2011-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkKEHB04 @2011-01-01..2011-12-31 where key = 'v4493' and release = 'r7319'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst per konsumtionsenhet", "definition" = "Disponibel inkomst per konsumtionsenhet.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A753\n\nSCB's LISA variable list documents DispInkKEHB04 on LISA for 2011-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkKEHB04 @2012-01-01..2012-12-31 where key = 'v4493' and release = 'r7309'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst per konsumtionsenhet", "definition" = "Disponibel inkomst per konsumtionsenhet.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A753\n\nSCB's LISA variable list documents DispInkKEHB04 on LISA for 2011-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkKEHB04 @2013-01-01..2013-12-31 where key = 'v4493' and release = 'r6053'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst per konsumtionsenhet", "definition" = "Disponibel inkomst per konsumtionsenhet.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A753\n\nSCB's LISA variable list documents DispInkKEHB04 on LISA for 2011-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkKEHB04 @2014-01-01..2014-12-31 where key = 'v4493' and release = 'r8612'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst per konsumtionsenhet", "definition" = "Disponibel inkomst per konsumtionsenhet.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A753\n\nSCB's LISA variable list documents DispInkKEHB04 on LISA for 2011-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkKEHB04 @2015-01-01..2015-12-31 where key = 'v4493' and release = 'r11268'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst per konsumtionsenhet", "definition" = "Disponibel inkomst per konsumtionsenhet.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A753\n\nSCB's LISA variable list documents DispInkKEHB04 on LISA for 2011-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkKEHB04 @2016-01-01..2016-12-31 where key = 'v4493' and release = 'r12202'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst per konsumtionsenhet", "definition" = "Disponibel inkomst per konsumtionsenhet.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A753\n\nSCB's LISA variable list documents DispInkKEHB04 on LISA for 2011-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkKEHB04 @2017-01-01..2017-12-31 where key = 'v4493' and release = 'r13286'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst per konsumtionsenhet", "definition" = "Disponibel inkomst per konsumtionsenhet.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A753\n\nSCB's LISA variable list documents DispInkKEHB04 on LISA for 2011-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkKEHB04 @2018-01-01..2018-12-31 where key = 'v4493' and release = 'r14349'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst per konsumtionsenhet", "definition" = "Disponibel inkomst per konsumtionsenhet.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A753\n\nSCB's LISA variable list documents DispInkKEHB04 on LISA for 2011-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkKEHB04 @2019-01-01..2019-12-31 where key = 'v4493' and release = 'r16266'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Disponibel inkomst per konsumtionsenhet", "definition" = "Disponibel inkomst per konsumtionsenhet.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A753\n\nSCB's LISA variable list documents DispInkKEHB04 on LISA for 2011-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: TTJLONU @2011-01-01..2011-12-31 where key = 'v1172' and release = 'r7319'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön (nordisk, utländskt beskattad, individ)", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A416\n\nSCB's LISA variable list documents TTJLONU on LISA for 2011-2023. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: TTJLONU @2012-01-01..2012-12-31 where key = 'v1172' and release = 'r7309'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön (nordisk, utländskt beskattad, individ)", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A416\n\nSCB's LISA variable list documents TTJLONU on LISA for 2011-2023. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: TTJLONU @2013-01-01..2013-12-31 where key = 'v1172' and release = 'r6053'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön (nordisk, utländskt beskattad, individ)", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A416\n\nSCB's LISA variable list documents TTJLONU on LISA for 2011-2023. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: TTJLONU @2014-01-01..2014-12-31 where key = 'v1172' and release = 'r8612'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön (nordisk, utländskt beskattad, individ)", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A416\n\nSCB's LISA variable list documents TTJLONU on LISA for 2011-2023. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: TTJLONU @2015-01-01..2015-12-31 where key = 'v1172' and release = 'r11268'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön (nordisk, utländskt beskattad, individ)", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A416\n\nSCB's LISA variable list documents TTJLONU on LISA for 2011-2023. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: TTJLONU @2016-01-01..2016-12-31 where key = 'v1172' and release = 'r12202'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön (nordisk, utländskt beskattad, individ)", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A416\n\nSCB's LISA variable list documents TTJLONU on LISA for 2011-2023. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: TTJLONU @2017-01-01..2017-12-31 where key = 'v1172' and release = 'r13286'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön (nordisk, utländskt beskattad, individ)", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A416\n\nSCB's LISA variable list documents TTJLONU on LISA for 2011-2023. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: TTJLONU @2018-01-01..2018-12-31 where key = 'v1172' and release = 'r14349'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön (nordisk, utländskt beskattad, individ)", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A416\n\nSCB's LISA variable list documents TTJLONU on LISA for 2011-2023. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: TTJLONU @2019-01-01..2019-12-31 where key = 'v1172' and release = 'r16266'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön (nordisk, utländskt beskattad, individ)", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A416\n\nSCB's LISA variable list documents TTJLONU on LISA for 2011-2023. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: ATPFortSjuk @2002-01-01..2002-12-31 where key = 'v41867' and release = 'r15302'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Förtidspension/Sjukbidrag från ATP, egenförmån", "definition" = "Förtidspension/Sjukbidrag från ATP, egenförmån", "type" = "integer", "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A619\n\nSCB's LISA variable list documents ATPFortSjuk on LISA for 1993-2002. SCB's Registerinformation export lists it on this register only for 1993-2001; label, definition and type follow the export's 2001 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: CSFVI @1990-01-01..1990-12-31 where key = 'v99' and release = 'r15515'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: CSFVI @1991-01-01..1991-12-31 where key = 'v99' and release = 'r15514'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: CSFVI @1992-01-01..1992-12-31 where key = 'v99' and release = 'r15513'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: CSFVI @1993-01-01..1993-12-31 where key = 'v99' and release = 'r15512'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: CSFVI @1994-01-01..1994-12-31 where key = 'v99' and release = 'r15473'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: CSFVI @1995-01-01..1995-12-31 where key = 'v99' and release = 'r15472'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: CSFVI @1996-01-01..1996-12-31 where key = 'v99' and release = 'r15471'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: CSFVI @1997-01-01..1997-12-31 where key = 'v99' and release = 'r15470'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: CSFVI @1998-01-01..1998-12-31 where key = 'v99' and release = 'r15469'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: CSFVI @1999-01-01..1999-12-31 where key = 'v99' and release = 'r15434'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: CSFVI @2000-01-01..2000-12-31 where key = 'v99' and release = 'r15433'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: CSFVI @2001-01-01..2001-12-31 where key = 'v99' and release = 'r15312'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: CSFVI @2002-01-01..2002-12-31 where key = 'v99' and release = 'r15302'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: CSFVI @2003-01-01..2003-12-31 where key = 'v99' and release = 'r15297'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: CSFVI @2004-01-01..2004-12-31 where key = 'v99' and release = 'r15279'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: CSFVI @2005-01-01..2005-12-31 where key = 'v99' and release = 'r14882'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: CSFVI @2006-01-01..2006-12-31 where key = 'v99' and release = 'r14875'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: CSFVI @2007-01-01..2007-12-31 where key = 'v99' and release = 'r11656'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: CSFVI @2008-01-01..2008-12-31 where key = 'v99' and release = 'r11637'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: CSFVI @2009-01-01..2009-12-31 where key = 'v99' and release = 'r11636'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Sammanräknad förvärvsinkomst", "definition" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A441\n\nSCB's LISA variable list documents CSFVI on LISA for 1990-2024. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: FolkATPFam @2002-01-01..2002-12-31 where key = 'v41869' and release = 'r15302'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Efterlevandeförmån av folkpension och ATP", "definition" = "Efterlevandeförmån av folkpension och ATP", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A715\n\nSCB's LISA variable list documents FolkATPFam on LISA for 1990-2002. SCB's Registerinformation export lists it on this register only for 1990-2001; label, definition and type follow the export's 2001 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: FolkAld @2002-01-01..2002-12-31 where key = 'v41219' and release = 'r15302'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ålderspension från folkpension, egenförmån", "definition" = "Ålderspension från folkpension, egenförmån", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A665\n\nSCB's LISA variable list documents FolkAld on LISA for 1990-2002. SCB's Registerinformation export lists it on this register only for 1990-2001; label, definition and type follow the export's 2001 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-16plus: FolkFortSjuk @2002-01-01..2002-12-31 where key = 'v41870' and release = 'r15302'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Förtidspension/Sjukbidrag från folkpension, egenförmån", "definition" = "Förtidspension/Sjukbidrag från folkpension, egenförmån", "type" = "integer", "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A615\n\nSCB's LISA variable list documents FolkFortSjuk on LISA for 1993-2002. SCB's Registerinformation export lists it on this register only for 1993-2001; label, definition and type follow the export's 2001 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: CSFVI_INKLGP @2011..2019"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Sammanräknad deklarerad förvärvsinkomst, inklusive utländskt beskattad lön från annat nordiskt land", "definition" = "Sammanräknad deklarerad förvärvsinkomst, inklusive utländskt beskattad lön från annat nordiskt land, 2011–2019. Från 2020 ingår sådan lön i CSFVI; för 2011–2019 skiljer sig variabeln därför från CSFVI.", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A440\n\nSCB's LISA variable list documents CSFVI_INKLGP on LISA for 2011-2019 (Grundregister IoT). SCB's Registerinformation export has no row for the column; from 2020 the amount is part of CSFVI."
+
+[[statement]]
+kind = "set"
+subject = "var:sammanraknad-forvarvsinkomst-inkl-nordisk"
+fields = { "description" = "Sammanräknad deklarerad förvärvsinkomst - inkl. utländsk beskattad lön, annat nordiskt land" }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A440"
+
+[[statement]]
+kind = "set"
+subject = "var:sammanraknad-forvarvsinkomst-inkl-nordisk"
+fields = { "tags" = ["income"] }
+evidence = "Inkomstvariabel i LISA, som CSFVI.\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A440"
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DekLon_INKLGP @2011..2019"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Deklarerad löneinkomst, inklusive utländskt beskattad lön från annat nordiskt land", "definition" = "Deklarerad löneinkomst, inklusive utländskt beskattad lön från annat nordiskt land, 2011–2019. Från 2020 ingår sådan lön i DekLon; för 2011–2019 skiljer sig variabeln därför från DekLon.", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A414\n\nSCB's LISA variable list documents DekLon_INKLGP on LISA for 2011-2019 (Grundregister IoT). SCB's Registerinformation export has no row for the column; from 2020 the amount is part of DekLon."
+
+[[statement]]
+kind = "set"
+subject = "var:loneinkomst-inkl-nordisk"
+fields = { "description" = "Deklarerad löneinkomst - inkl. utländsk beskattad lön, annat nordiskt land" }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A414"
+
+[[statement]]
+kind = "set"
+subject = "var:loneinkomst-inkl-nordisk"
+fields = { "tags" = ["income"] }
+evidence = "Inkomstvariabel i LISA, som DekLon.\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A414"
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkKE_INKLGP @2011..2019"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Disponibel inkomst per konsumtionsenhet för familj, inklusive utländskt beskattad lön och pension från annat nordiskt land", "definition" = "Disponibel inkomst per konsumtionsenhet för familj, inklusive utländskt beskattad lön och pension från annat nordiskt land, 2011–2019. Från 2020 ingår sådan lön och pension i DispInkKE; för 2011–2019 skiljer sig variabeln därför från DispInkKE.", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A759\n\nSCB's LISA variable list documents DispInkKE_INKLGP on LISA for 2011-2019 (Grundregister IoT). SCB's Registerinformation export has no row for the column; from 2020 the amount is part of DispInkKE."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-ke-familj-inkl-nordisk"
+fields = { "description" = "Disponibel inkomst per konsumtionsenhet för familj - inkl. utländsk beskattad lön och pension, annat nordiskt land" }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A759"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-ke-familj-inkl-nordisk"
+fields = { "tags" = ["income"] }
+evidence = "Inkomstvariabel i LISA, som DispInkKE.\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A759"
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkKE04_INKLGP @2011..2019"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Disponibel inkomst per konsumtionsenhet för familj, 2004 års definition, inklusive utländskt beskattad lön och pension från annat nordiskt land", "definition" = "Disponibel inkomst per konsumtionsenhet för familj, 2004 års definition, inklusive utländskt beskattad lön och pension från annat nordiskt land, 2011–2019. Från 2020 ingår sådan lön och pension i DispInkKE04; för 2011–2019 skiljer sig variabeln därför från DispInkKE04.", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A760\n\nSCB's LISA variable list documents DispInkKE04_INKLGP on LISA for 2011-2019 (Grundregister IoT). SCB's Registerinformation export has no row for the column; from 2020 the amount is part of DispInkKE04."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-ke-familj-2004-inkl-nordisk"
+fields = { "description" = "Disponibel inkomst per konsumtionsenhet för familj, 2004 års definition - inkl. utländsk beskattad lön och pension, annat nordiskt land" }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A760"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-per-ke-familj-2004-inkl-nordisk"
+fields = { "tags" = ["income"] }
+evidence = "Inkomstvariabel i LISA, som DispInkKE04.\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A760"
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkKEHB04_INKLGP @2011..2019"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Disponibel inkomst per konsumtionsenhet för hushållet, inklusive lön intjänad i annat nordiskt land", "definition" = "Disponibel inkomst per konsumtionsenhet för hushållet, inklusive lön intjänad i annat nordiskt land, 2011–2019. Från 2020 ingår sådan lön i DispInkKEHB04; för 2011–2019 skiljer sig variabeln därför från DispInkKEHB04.", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A761\n\nSCB's LISA variable list documents DispInkKEHB04_INKLGP on LISA for 2011-2019 (Grundregister IoT). SCB's Registerinformation export has no row for the column; from 2020 the amount is part of DispInkKEHB04."
+
+[[statement]]
+kind = "set"
+subject = "var:dispinkkehb04-inkl-nordisk"
+fields = { "description" = "Disponibel inkomst per konsumtionsenhet för hushållet - inkl. lön intjänad i annat nordiskt land" }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A761"
+
+[[statement]]
+kind = "set"
+subject = "var:dispinkkehb04-inkl-nordisk"
+fields = { "tags" = ["income"] }
+evidence = "Inkomstvariabel i LISA, som DispInkKEHB04.\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A761"
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInk04_INKLGP @2011..2019"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Disponibel inkomst (individens delkomponent), inklusive utländskt beskattad lön och pension från annat nordiskt land", "definition" = "Disponibel inkomst (individens delkomponent), inklusive utländskt beskattad lön och pension från annat nordiskt land, 2011–2019. Från 2020 ingår sådan lön och pension i DispInk04; för 2011–2019 skiljer sig variabeln därför från DispInk04.", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A762\n\nSCB's LISA variable list documents DispInk04_INKLGP on LISA for 2011-2019 (Grundregister IoT). SCB's Registerinformation export has no row for the column; from 2020 the amount is part of DispInk04."
+
+[[statement]]
+kind = "set"
+subject = "var:delkomponent-disponibel-inkomst-2004-inkl-nordisk"
+fields = { "description" = "Disponibel inkomst (individens delkomponent) - inkl. utländsk beskattad lön och pension, annat nordiskt land" }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A762"
+
+[[statement]]
+kind = "set"
+subject = "var:delkomponent-disponibel-inkomst-2004-inkl-nordisk"
+fields = { "tags" = ["income"] }
+evidence = "Inkomstvariabel i LISA, som DispInk04.\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A762"
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkFam04_INKLGP @2011..2019"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Disponibel inkomst för familj, inklusive utländskt beskattad lön och pension från annat nordiskt land", "definition" = "Disponibel inkomst för familj, inklusive utländskt beskattad lön och pension från annat nordiskt land, 2011–2019. Från 2020 ingår sådan lön och pension i DispInkFam04; för 2011–2019 skiljer sig variabeln därför från DispInkFam04.", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A763\n\nSCB's LISA variable list documents DispInkFam04_INKLGP on LISA for 2011-2019 (Grundregister IoT). SCB's Registerinformation export has no row for the column; from 2020 the amount is part of DispInkFam04."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj-2004-inkl-nordisk"
+fields = { "description" = "Disponibel inkomst för familj - inkl. utländsk beskattad lön och pension, annat nordiskt land" }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A763"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-familj-2004-inkl-nordisk"
+fields = { "tags" = ["income"] }
+evidence = "Inkomstvariabel i LISA, som DispInkFam04.\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A763"
+
+[[statement]]
+kind = "assert"
+subject = "individer-15plus: DispInkHB04_INKLGP @2011..2019"
+fact = { "entity" = "occurrence", "fields" = { "type" = "integer", "label" = "Disponibel inkomst för hushållet, inklusive utländskt beskattad lön och pension från annat nordiskt land", "definition" = "Disponibel inkomst för hushållet, inklusive utländskt beskattad lön och pension från annat nordiskt land, 2011–2019. Från 2020 ingår sådan lön och pension i DispInkHB04; för 2011–2019 skiljer sig variabeln därför från DispInkHB04.", "sensitive" = false, "identifier" = false } }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A764\n\nSCB's LISA variable list documents DispInkHB04_INKLGP on LISA for 2011-2019 (Grundregister IoT). SCB's Registerinformation export has no row for the column; from 2020 the amount is part of DispInkHB04."
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-inkl-nordisk"
+fields = { "description" = "Disponibel inkomst för hushållet - inkl. utländsk beskattad lön och pension, annat nordiskt land" }
+evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A764"
+
+[[statement]]
+kind = "set"
+subject = "var:disponibel-inkomst-inkl-nordisk"
+fields = { "tags" = ["income"] }
+evidence = "Inkomstvariabel i LISA, som DispInkHB04.\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A764"

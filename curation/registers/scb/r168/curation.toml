@@ -7956,3 +7956,24 @@ kind = "assert"
 subject = "fek-slutdata: fgb219 @2002-01-01..2002-12-31 where key = 'v4215' and release = '2002'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Varulager", "definition" = "Varulager", "type" = "decimal", "length" = 16, "sensitive" = false, "identifier" = false } }
 evidence = "private:ev-0484"
+
+[[statement]]
+kind = "assert"
+subject = "table:fek-juridisk-enhet"
+fact = { entity = "table", fields = { name = "FEK Juridisk enhet", description = "Årsvisa filer från Företagens ekonomi på juridisk enhet: företagsenhetens nummer (FENr) och de juridiska enheternas person-/organisationsnummer (PeOrgNr), 2022–2023.", coverage = "2022..2023" } }
+evidence = "private:ev-3899"
+caveat = "SCB's Registerinformation export documents no FEK table on juridisk enhet. The table rests on SCB's delivery list and yearly deliveries for 2022-2023, which document only the two keys. Financial columns at this level are not documented by SCB and are left out."
+
+[[statement]]
+kind = "assert"
+subject = "fek-juridisk-enhet: FENr @2022..2023 where key = 'v29'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Företagsenhetsnummer", "definition" = "Identitetsbegrepp för företagsenhet. En företagsenhet är en organisatorisk enhet som producerar varor eller tjänster. Den består av en eller flera juridiska enheter.", "type" = "decimal", "sensitive" = false, "identifier" = true } }
+evidence = "private:ev-3900"
+caveat = "The delivery carries the number pseudonymised as a serial number. Label, definition and type follow SCB's documentation of fenr (key v29) on FEK Slutdata (verksamhetsenhet), 2022-2023."
+
+[[statement]]
+kind = "assert"
+subject = "fek-juridisk-enhet: PeOrgNr @2022..2023 where key = 'v56'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Person-/organisationsnummer", "definition" = "Identitetsbegrepp för juridiska enheter. För juridiska personer tilldelas organisationsnummer av Bolagsverket, Skatteverket, Kammarkollegiet, Lantmäteriet, Länsstyrelse eller SCB, beroende på bolagsform. För fysiska personer med näringsverksamhet används personnumret.", "type" = "text", "length" = 12, "sensitive" = false, "identifier" = true } }
+evidence = "private:ev-3901"
+caveat = "The delivery carries the number pseudonymised as a serial number. Label, definition and length follow SCB's documentation of PeOrgNr (key v56) on FEK Slutdata (företagsenhet), 2022-2023."

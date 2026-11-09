@@ -8,6 +8,7 @@ public = "fek"
 "FEK Slutdata (lokal verksamhetsenhet)" = "fek-slutdata-lokal"
 "FEK Slutdata (verksamhetsenhet)" = "fek-slutdata-verksamhetsenhet"
 "FEK blankettvariabler (VE)" = "fek-blankettvariabler-ve"
+"fek-juridisk-enhet" = "fek-juridisk-enhet"
 
 [variables]
 "ackumulerade-overavskrivningar" = ["FEK Preliminära data (FE): fgb330"]
