@@ -1003,6 +1003,10 @@ fn move_release(
     let Record::Release(release) = &records[index] else {
         unreachable!("position matched a release")
     };
+    // Already in place: no move, so the redundant-set check reports it.
+    if release.table == target {
+        return Ok(());
+    }
     let period = crate::placed(release)
         .ok_or("set table cannot move an unplaced release; set its period first")?;
     if records.iter().any(|record| {
@@ -1056,6 +1060,56 @@ fn move_release(
         )?);
     }
     Ok(())
+}
+
+/// The releases `after` holds in another table than `before`, each as its old source
+/// endpoint and new table. A release keeps its locator through a move.
+#[must_use]
+pub fn release_moves(before: &[Record], after: &[Record]) -> Vec<(reg_frame::Endpoint, String)> {
+    let placed: BTreeMap<_, _> = after
+        .iter()
+        .filter_map(|record| match record {
+            Record::Release(r) => Some(((&r.provider, &r.register, &r.release, &r.locator), r)),
+            _ => None,
+        })
+        .collect();
+    before
+        .iter()
+        .filter_map(|record| {
+            let Record::Release(old) = record else {
+                return None;
+            };
+            let new = placed.get(&(&old.provider, &old.register, &old.release, &old.locator))?;
+            (new.table != old.table).then(|| {
+                let end = reg_frame::Endpoint {
+                    table: Some(old.table.clone()),
+                    key: Some(old.release.clone()),
+                    ..reg_frame::Endpoint::new("release", &old.provider, Some(&old.register))
+                };
+                (end, new.table.clone())
+            })
+        })
+        .collect()
+}
+
+/// Point source notices and document subjects that name a moved release at its new
+/// table: they address it by table, so the link stage could not resolve them.
+pub fn follow_release_moves(moves: &[(reg_frame::Endpoint, String)], records: &mut [Record]) {
+    if moves.is_empty() {
+        return;
+    }
+    for record in records {
+        let ends: Vec<&mut reg_frame::Endpoint> = match record {
+            Record::Notice(notice) => vec![&mut notice.subject],
+            Record::Doc(doc) => doc.subjects.iter_mut().map(|s| &mut s.endpoint).collect(),
+            _ => continue,
+        };
+        for end in ends {
+            if let Some((_, table)) = moves.iter().find(|(old, _)| old == end) {
+                end.table = Some(table.clone());
+            }
+        }
+    }
 }
 
 fn selected_record_value(value: &Value, source: &super::SourcePremise) -> bool {

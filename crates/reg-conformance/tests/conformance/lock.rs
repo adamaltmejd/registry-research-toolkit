@@ -115,21 +115,38 @@ fn release_moves_whole_and_attached() {
     // column of that release beside the whole move is a partial move and must refuse
     // at both statements, not apply in statement order. Chain: moving a column out of
     // the destination the release lands in must refuse too, not leave the release's
-    // column behind while the destination's own one moves on.
+    // column behind while the destination's own one moves on. Notice: the source notice
+    // on the moved release must follow it, not stay addressed to the old table and drop
+    // out of the findings as an unresolved link.
     let case = cases().join("lock/release-move");
     let expected = read_json(&case.join("expected.json")).unwrap();
     let dir = scratch("release-move");
     let curation = curation_copy(&case, dir.path());
     let inputs = case.join("inputs");
     let catalog = dir.path().join("catalog.db");
+    let findings = dir.path().join("findings.jsonl");
     curated("lock", &inputs, &curation, &[]).ok();
     curated(
         "build",
         &inputs,
         &curation,
-        &["--release".as_ref(), "--out".as_ref(), catalog.as_os_str()],
+        &[
+            "--release".as_ref(),
+            "--out".as_ref(),
+            catalog.as_os_str(),
+            "--findings".as_ref(),
+            findings.as_os_str(),
+        ],
     )
     .ok();
+    let notices: Vec<Value> = fs::read_to_string(&findings)
+        .unwrap()
+        .lines()
+        .map(|line| serde_json::from_str::<Value>(line).unwrap())
+        .filter(|f| f["code"] == "S0:source-notice")
+        .map(|f| f["subject"].clone())
+        .collect();
+    assert_eq!(Value::from(notices), expected["notices"]);
     let rows: Value = column(
         &catalog,
         "SELECT json_array(t.pid, r.source_key, o.source_key, o.status) FROM occurrence o \
