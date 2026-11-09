@@ -1,11 +1,32 @@
 # Public ids of fk/sjuk-aktivitetsersattning, from the slug pins at 9e28ba5b2.
 [tables]
+"ar-1" = "ar-1"
 "delfall-1-1" = "delfall-1-1"
 "delfall-2-1" = "delfall-2-1"
 "fall-1" = "fall-1"
 "fall-2" = "fall-2"
 
 [variables]
+"antal-inflode" = ["ar-1: Antal_Inflode"]
+"antal-utflode" = ["ar-1: Antal_Utflode"]
+"ar" = ["ar-1: Ar"]
+"ar-a-belopp-brutto" = ["ar-1: Ar_a_belopp_brutto"]
+"ar-a-dagar-brutto" = ["ar-1: Ar_a_dagar_brutto"]
+"ar-a-dagar-netto" = ["ar-1: Ar_a_dagar_netto"]
+"ar-belopp-brutto" = ["ar-1: Ar_belopp_brutto"]
+"ar-belopp-gar-brutto" = ["ar-1: Ar_belopp_gar_brutto"]
+"ar-belopp-ink-brutto" = ["ar-1: Ar_belopp_ink_brutto"]
+"ar-dagar-brutto" = ["ar-1: Ar_dagar_brutto"]
+"ar-dagar-netto" = ["ar-1: Ar_dagar_netto"]
+"ar-ftp-belopp-brutto" = ["ar-1: Ar_ftp_belopp_brutto"]
+"ar-ftp-dagar-brutto" = ["ar-1: Ar_ftp_dagar_brutto"]
+"ar-ftp-dagar-netto" = ["ar-1: Ar_ftp_dagar_netto"]
+"ar-s-belopp-brutto" = ["ar-1: Ar_s_belopp_brutto"]
+"ar-s-dagar-brutto" = ["ar-1: Ar_s_dagar_brutto"]
+"ar-s-dagar-netto" = ["ar-1: Ar_s_dagar_netto"]
+"ar-sjb-belopp-brutto" = ["ar-1: Ar_sjb_belopp_brutto"]
+"ar-sjb-dagar-brutto" = ["ar-1: Ar_sjb_dagar_brutto"]
+"ar-sjb-dagar-netto" = ["ar-1: Ar_sjb_dagar_netto"]
 "del-belopp-brutto" = ["delfall-1-1: Del_belopp_brutto"]
 "del-belopp-gar-brutto" = ["delfall-1-1: Del_belopp_gar_brutto"]
 "del-belopp-ink-brutto" = ["delfall-1-1: Del_belopp_ink_brutto"]
@@ -33,9 +54,11 @@
 "har-aktivitetsersattning" = ["fall-1: A"]
 "lopnr" = ["delfall-1-1: Lopnr"]
 "manader" = ["delfall-1-1: Manader"]
+"manader-sista-fall" = ["ar-1: Manader"]
 "manbelopp" = ["delfall-1-1: Manbelopp"]
 "omf-from" = ["fall-1: Omf_from"]
 "omf-tom" = ["fall-1: Omf_tom"]
 "omfattning" = ["delfall-1-1: Omfattning"]
 "sjukbidrag" = ["fall-1: Sjb"]
 "sjukersattning" = ["fall-1: S"]
+"status" = ["ar-1: Status"]

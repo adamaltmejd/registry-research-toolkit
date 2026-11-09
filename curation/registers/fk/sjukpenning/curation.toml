@@ -580,3 +580,1263 @@ kind = "set"
 subject = "var:lopnr"
 fields = { "label" = "Lopnr" }
 evidence = "Keeps the label of FK's current variabelförteckning; the delfall tables 1-2 to 4-7 transcribed from MiDAS Sjukpenning och rehabiliteringspenning version 1.02 (2011) spell the same key Persid and would otherwise outnumber it."
+
+[[statement]]
+kind = "set"
+subject = "manad-1: Delforman1_kod"
+fields = { "variable" = "delforman1-kod-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet Månad 1: Delforman1_kod, \"Kod för delförmån sista ersatta dag i månaden\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "manad-1: Delforman1"
+fields = { "variable" = "delforman1-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet Månad 1: Delforman1, \"Klartext för ersatt delförmån\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "manad-1: Delforman2_kod"
+fields = { "variable" = "delforman2-kod-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet Månad 1: Delforman2_kod, \"Kod för eventuell ytterligare delförmån sista ersatta dag i månaden. Den delförmånskod med högst värde är klassificerad som \"andra\" delförmån.\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "manad-1: Delforman2"
+fields = { "variable" = "delforman2-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet Månad 1: Delforman2, \"Klartext för eventuell ytterligare ersatt delförmån. Den delförmånskod med högst värde är klassificerad som \"andra\" delförmån.\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "manad-1: Inkomsttyp_kod"
+fields = { "variable" = "inkomsttyp-kod-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet Månad 1: Inkomsttyp_kod, \"Kod för inkomsttyp (SGI) som ligger till grund för ersättningen vid sista ersatta dag i månaden\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "manad-1: Inkomsttyp"
+fields = { "variable" = "inkomsttyp-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet Månad 1: Inkomsttyp, \"Klaretxt för inkomsttyp (SGI) som ligger till grund för ersättningen\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "manad-1: Omfattning"
+fields = { "variable" = "omfattning-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet Månad 1: Omfattning, \"Omfattning (sjukskrivningsgrad) i decimaltal vid sista ersatta dag under månaden. Omfattning är i i förhållande till arbetstid. En person som har 50% arbetstid och inte kan arbeta alls på grund av nedsatt arbetsförmåga kommer att ha 100% i omfattning\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "kvartal-1: Delforman1_kod"
+fields = { "variable" = "delforman1-kod-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet Kvartal 1: Delforman1_kod, \"Kod för delförmån sista ersatta dag i kvartalet\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "kvartal-1: Delforman1"
+fields = { "variable" = "delforman1-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet Kvartal 1: Delforman1, \"Klartext för ersatt delförmån\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "kvartal-1: Delforman2_kod"
+fields = { "variable" = "delforman2-kod-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet Kvartal 1: Delforman2_kod, \"Kod för eventuell ytterligare delförmån sista ersatta dag i kvartalet. Den delförmånskod med högst värde är klassificerad som \"andra\" delförmån.\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "kvartal-1: Delforman2"
+fields = { "variable" = "delforman2-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet Kvartal 1: Delforman2, \"Klartext för eventuell ytterligare ersatt delförmån. Den delförmånskod med högst värde är klassificerad som \"andra\" delförmån.\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "kvartal-1: Inkomsttyp_kod"
+fields = { "variable" = "inkomsttyp-kod-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet Kvartal 1: Inkomsttyp_kod, \"Kod för inkomsttyp (SGI) som ligger till grund för ersättningen vid sista ersatta dag i kvartalet\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "kvartal-1: Inkomsttyp"
+fields = { "variable" = "inkomsttyp-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet Kvartal 1: Inkomsttyp, \"Klaretxt för inkomsttyp (SGI) som ligger till grund för ersättningen\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "kvartal-1: Omfattning"
+fields = { "variable" = "omfattning-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet Kvartal 1: Omfattning, \"Omfattning (sjukskrivningsgrad) i decimaltal vid sista ersatta dag under kvartalet. Omfattning är i i förhållande till arbetstid. En person som har 50% arbetstid och inte kan arbeta alls på grund av nedsatt arbetsförmåga kommer att ha 100% i omfattning\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "ar-1: Delforman1_kod"
+fields = { "variable" = "delforman1-kod-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 1: Delforman1_kod, \"Kod för delförmån sista ersatta dag i året\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "ar-1: Delforman1"
+fields = { "variable" = "delforman1-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 1: Delforman1, \"Klartext för ersatt delförmån\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "ar-1: Delforman2_kod"
+fields = { "variable" = "delforman2-kod-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 1: Delforman2_kod, \"Kod för eventuell ytterligare delförmån sista ersatta dag i året. Den delförmånskod med högst värde är klassificerad som \"andra\" delförmån.\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "ar-1: Delforman2"
+fields = { "variable" = "delforman2-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 1: Delforman2, \"Klartext för eventuell ytterligare ersatt delförmån. Den delförmånskod med högst värde är klassificerad som \"andra\" delförmån.\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "ar-1: Inkomsttyp_kod"
+fields = { "variable" = "inkomsttyp-kod-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 1: Inkomsttyp_kod, \"Kod för inkomsttyp (SGI) som ligger till grund för ersättningen vid sista ersatta dag i året\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "ar-1: Inkomsttyp"
+fields = { "variable" = "inkomsttyp-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 1: Inkomsttyp, \"Klaretxt för inkomsttyp (SGI) som ligger till grund för ersättningen\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "ar-1: Omfattning"
+fields = { "variable" = "omfattning-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 1: Omfattning, \"Omfattning (sjukskrivningsgrad) i decimaltal vid sista ersatta dag under året. Omfattning är i i förhållande till arbetstid. En person som har 50% arbetstid och inte kan arbeta alls på grund av nedsatt arbetsförmåga kommer att ha 100% i omfattning\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Ar_dagar_tot"
+fields = { "variable" = "ar-dagar-tot-dag15" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Ar_dagar_tot, \"Antal sjukfallsdagar totalt under året för dagar från dag 15 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 15 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Ar_dagar_brutto"
+fields = { "variable" = "ar-dagar-brutto-dag15" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Ar_dagar_brutto, \"Antal ersatta bruttodagar under året för dagar från dag 15 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 15 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Ar_dagar_netto"
+fields = { "variable" = "ar-dagar-netto-dag15" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Ar_dagar_netto, \"Antal ersatta nettodagar under året för dagar från dag 15 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 15 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Ar_belopp_brutto"
+fields = { "variable" = "ar-belopp-brutto-dag15" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Ar_belopp_brutto, \"Utbetalt belopp före skatt från Försäkringskassan under året för dagar från dag 15 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 15 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Ar_belopp_a_brutto"
+fields = { "variable" = "ar-belopp-a-brutto-dag15" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Ar_belopp_a_brutto, \"Utbetalt belopp för A-inkomst före skatt från Försäkringskassan under året för dagar från dag 15 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 15 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Ar_belopp_b_brutto"
+fields = { "variable" = "ar-belopp-b-brutto-dag15" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Ar_belopp_b_brutto, \"Utbetalt belopp för B-inkomst före skatt från Försäkringskassan under året för dagar från dag 15 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 15 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Ar_belopp_o_brutto"
+fields = { "variable" = "ar-belopp-o-brutto-dag15" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Ar_belopp_o_brutto, \"Utbetalt belopp för övriga inkomster (ej A- eller B-inkomst) före skatt från Försäkringskassan under året\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 15 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Ar_sjp_dagar_brutto"
+fields = { "variable" = "ar-sjp-dagar-brutto-dag15" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Ar_sjp_dagar_brutto, \"Antal ersatta bruttodagar med sjukpenning under året för dagar från dag 15 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 15 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Ar_sjp_dagar_netto"
+fields = { "variable" = "ar-sjp-dagar-netto-dag15" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Ar_sjp_dagar_netto, \"Antal ersatta nettodagar med sjukpenning under året för dagar från dag 15 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 15 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Ar_sjp_belopp_brutto"
+fields = { "variable" = "ar-sjp-belopp-brutto-dag15" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Ar_sjp_belopp_brutto, \"Utbetalt belopp sjukpenning före skatt under året för dagar från dag 15 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 15 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Ar_fb_sjp_dagar_brutto"
+fields = { "variable" = "ar-fb-sjp-dagar-brutto-dag15" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Ar_fb_sjp_dagar_brutto, \"Antal ersatta bruttodagar med förebyggande sjukpenning under året för dagar från dag 15 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 15 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Ar_fb_sjp_dagar_netto"
+fields = { "variable" = "ar-fb-sjp-dagar-netto-dag15" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Ar_fb_sjp_dagar_netto, \"Antal ersatta nettodagar med förebyggande sjukpenning under året för dagar från dag 15 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 15 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Ar_fb_sjp_belopp_brutto"
+fields = { "variable" = "ar-fb-sjp-belopp-brutto-dag15" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Ar_fb_sjp_belopp_brutto, \"Utbetalt belopp förebyggande sjukpenning före skatt under året för dagar från dag 15 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 15 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Ar_rehabp_dagar_brutto"
+fields = { "variable" = "ar-rehabp-dagar-brutto-dag15" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Ar_rehabp_dagar_brutto, \"Antal ersatta bruttodagar med rehabiliteringspenning under året för dagar från dag 15 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 15 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Ar_rehabp_dagar_netto"
+fields = { "variable" = "ar-rehabp-dagar-netto-dag15" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Ar_rehabp_dagar_netto, \"Antal ersatta nettodagar med rehabiliteringspenning under året för dagar från dag 15 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 15 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Ar_rehabp_belopp_brutto"
+fields = { "variable" = "ar-rehabp-belopp-brutto-dag15" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Ar_rehabp_belopp_brutto, \"Utbetalt belopp rehabiliteringspenning före skatt under året för dagar från dag 15 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 15 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Ar_askp_dagar_brutto"
+fields = { "variable" = "ar-askp-dagar-brutto-dag15" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Ar_askp_dagar_brutto, \"Antal ersatta bruttodagar med arbetsskadesjukpenning under året för dagar från dag 15 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 15 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Ar_askp_dagar_netto"
+fields = { "variable" = "ar-askp-dagar-netto-dag15" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Ar_askp_dagar_netto, \"Antal ersatta nettodagar med arbetsskadesjukpenning under året för dagar från dag 15 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 15 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Ar_askp_belopp_brutto"
+fields = { "variable" = "ar-askp-belopp-brutto-dag15" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Ar_askp_belopp_brutto, \"Utbetalt belopp arbetsskadesjukpenning före skatt under året för dagar från dag 15 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 15 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Ar_karens_dagar"
+fields = { "variable" = "ar-karens-dagar-dag15" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Ar_karens_dagar, \"Antal karensdagar under året för sjukfall 15 dagar eller längre\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 15 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Ar_sjl_dagar"
+fields = { "variable" = "ar-sjl-dagar-dag15" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Ar_sjl_dagar, \"Antal sjuklönedagar under året för sjukfall 15 dagar eller längre\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 15 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Inflode"
+fields = { "variable" = "inflode-dag15" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Inflode, \"Antal sjukfall påbörjade under året för sjukfall 15 dagar eller längre\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 15 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Utflode"
+fields = { "variable" = "utflode-dag15" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Utflode, \"Antal sjukfall avslutade under året, exkl. de senaste två månaderna, för sjukfall 15 dagar eller längre\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 15 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Antal_sjukfall"
+fields = { "variable" = "antal-sjukfall-dag15" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Antal_sjukfall, \"Antal sjukfall 15 dagar eller längre pågående någon gång under året\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 15 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Status"
+fields = { "variable" = "status-dag15" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Status, \"0/1-variabel med \"etta\" om sjukfallet 15 dagar eller längre är pågående vid slutet på året och \"nolla\" om sjukfallet är avslutat under året. Missing-värde visas vid karensdag och sjuklön sista dagen i året.\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 15 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Delforman1_kod"
+fields = { "variable" = "delforman1-kod-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Delforman1_kod, \"Kod för delförmån sista ersatta dag i året\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Delforman1"
+fields = { "variable" = "delforman1-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Delforman1, \"Klartext för ersatt delförmån\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Delforman2_kod"
+fields = { "variable" = "delforman2-kod-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Delforman2_kod, \"Kod för eventuell ytterligare delförmån sista ersatta dag i året. Den delförmånskod med högst värde är klassificerad som \"andra\" delförmån.\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Delforman2"
+fields = { "variable" = "delforman2-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Delforman2, \"Klartext för eventuell ytterligare ersatt delförmån. Den delförmånskod med högst värde är klassificerad som \"andra\" delförmån.\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Inkomsttyp_kod"
+fields = { "variable" = "inkomsttyp-kod-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Inkomsttyp_kod, \"Kod för inkomsttyp (SGI) som ligger till grund för ersättningen vid sista ersatta dag i året\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Inkomsttyp"
+fields = { "variable" = "inkomsttyp-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Inkomsttyp, \"Klaretxt för inkomsttyp (SGI) som ligger till grund för ersättningen\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: Omfattning"
+fields = { "variable" = "omfattning-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 15: Omfattning, \"Omfattning (sjukskrivningsgrad) i decimaltal vid sista ersatta dag under året. Omfattning är i i förhållande till arbetstid. En person som har 50% arbetstid och inte kan arbeta alls på grund av nedsatt arbetsförmåga kommer att ha 100% i omfattning\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Ar_dagar_tot"
+fields = { "variable" = "ar-dagar-tot-dag30" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Ar_dagar_tot, \"Antal sjukfallsdagar totalt under året för dagar från dag 30 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 30 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Ar_dagar_brutto"
+fields = { "variable" = "ar-dagar-brutto-dag30" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Ar_dagar_brutto, \"Antal ersatta bruttodagar under året för dagar från dag 30 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 30 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Ar_dagar_netto"
+fields = { "variable" = "ar-dagar-netto-dag30" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Ar_dagar_netto, \"Antal ersatta nettodagar under året för dagar från dag 30 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 30 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Ar_belopp_brutto"
+fields = { "variable" = "ar-belopp-brutto-dag30" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Ar_belopp_brutto, \"Utbetalt belopp före skatt från Försäkringskassan under året för dagar från dag 30 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 30 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Ar_belopp_a_brutto"
+fields = { "variable" = "ar-belopp-a-brutto-dag30" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Ar_belopp_a_brutto, \"Utbetalt belopp för A-inkomst före skatt från Försäkringskassan under året för dagar från dag 30 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 30 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Ar_belopp_b_brutto"
+fields = { "variable" = "ar-belopp-b-brutto-dag30" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Ar_belopp_b_brutto, \"Utbetalt belopp för B-inkomst före skatt från Försäkringskassan under året för dagar från dag 30 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 30 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Ar_belopp_o_brutto"
+fields = { "variable" = "ar-belopp-o-brutto-dag30" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Ar_belopp_o_brutto, \"Utbetalt belopp för övriga inkomster (ej A- eller B-inkomst) före skatt från Försäkringskassan under året\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 30 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Ar_sjp_dagar_brutto"
+fields = { "variable" = "ar-sjp-dagar-brutto-dag30" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Ar_sjp_dagar_brutto, \"Antal ersatta bruttodagar med sjukpenning under året för dagar från dag 30 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 30 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Ar_sjp_dagar_netto"
+fields = { "variable" = "ar-sjp-dagar-netto-dag30" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Ar_sjp_dagar_netto, \"Antal ersatta nettodagar med sjukpenning under året för dagar från dag 30 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 30 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Ar_sjp_belopp_brutto"
+fields = { "variable" = "ar-sjp-belopp-brutto-dag30" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Ar_sjp_belopp_brutto, \"Utbetalt belopp sjukpenning före skatt under året för dagar från dag 30 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 30 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Ar_fb_sjp_dagar_brutto"
+fields = { "variable" = "ar-fb-sjp-dagar-brutto-dag30" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Ar_fb_sjp_dagar_brutto, \"Antal ersatta bruttodagar med förebyggande sjukpenning under året för dagar från dag 30 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 30 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Ar_fb_sjp_dagar_netto"
+fields = { "variable" = "ar-fb-sjp-dagar-netto-dag30" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Ar_fb_sjp_dagar_netto, \"Antal ersatta nettodagar med förebyggande sjukpenning under året för dagar från dag 30 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 30 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Ar_fb_sjp_belopp_brutto"
+fields = { "variable" = "ar-fb-sjp-belopp-brutto-dag30" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Ar_fb_sjp_belopp_brutto, \"Utbetalt belopp förebyggande sjukpenning före skatt under året för dagar från dag 30 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 30 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Ar_rehabp_dagar_brutto"
+fields = { "variable" = "ar-rehabp-dagar-brutto-dag30" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Ar_rehabp_dagar_brutto, \"Antal ersatta bruttodagar med rehabiliteringspenning under året för dagar från dag 30 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 30 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Ar_rehabp_dagar_netto"
+fields = { "variable" = "ar-rehabp-dagar-netto-dag30" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Ar_rehabp_dagar_netto, \"Antal ersatta nettodagar med rehabiliteringspenning under året för dagar från dag 30 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 30 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Ar_rehabp_belopp_brutto"
+fields = { "variable" = "ar-rehabp-belopp-brutto-dag30" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Ar_rehabp_belopp_brutto, \"Utbetalt belopp rehabiliteringspenning före skatt under året för dagar från dag 30 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 30 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Ar_askp_dagar_brutto"
+fields = { "variable" = "ar-askp-dagar-brutto-dag30" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Ar_askp_dagar_brutto, \"Antal ersatta bruttodagar med arbetsskadesjukpenning under året för dagar från dag 30 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 30 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Ar_askp_dagar_netto"
+fields = { "variable" = "ar-askp-dagar-netto-dag30" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Ar_askp_dagar_netto, \"Antal ersatta nettodagar med arbetsskadesjukpenning under året för dagar från dag 30 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 30 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Ar_askp_belopp_brutto"
+fields = { "variable" = "ar-askp-belopp-brutto-dag30" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Ar_askp_belopp_brutto, \"Utbetalt belopp arbetsskadesjukpenning före skatt under året för dagar från dag 30 i sjukfallet och framåt\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 30 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Ar_karens_dagar"
+fields = { "variable" = "ar-karens-dagar-dag30" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Ar_karens_dagar, \"Antal karensdagar under året för sjukfall 30 dagar eller längre\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 30 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Ar_sjl_dagar"
+fields = { "variable" = "ar-sjl-dagar-dag30" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Ar_sjl_dagar, \"Antal sjuklönedagar under året för sjukfall 30 dagar eller längre\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 30 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Inflode"
+fields = { "variable" = "inflode-dag30" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Inflode, \"Antal sjukfall påbörjade under året för sjukfall 30 dagar eller längre\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 30 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Utflode"
+fields = { "variable" = "utflode-dag30" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Utflode, \"Antal sjukfall avslutade under året, exkl. de senaste två månaderna, för sjukfall 30 dagar eller längre\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 30 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Antal_sjukfall"
+fields = { "variable" = "antal-sjukfall-dag30" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Antal_sjukfall, \"Antal sjukfall 30 dagar eller längre pågående någon gång under året\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 30 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Status"
+fields = { "variable" = "status-dag30" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Status, \"0/1-variabel med \"etta\" om sjukfallet 30 dagar eller längre är pågående vid slutet på året och \"nolla\" om sjukfallet är avslutat under året. Missing-värde visas vid karensdag och sjuklön sista dagen i året.\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is only sick-leave days from day 30 on, or cases at least that long."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Delforman1_kod"
+fields = { "variable" = "delforman1-kod-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Delforman1_kod, \"Kod för delförmån sista ersatta dag i året\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Delforman1"
+fields = { "variable" = "delforman1-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Delforman1, \"Klartext för ersatt delförmån\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Delforman2_kod"
+fields = { "variable" = "delforman2-kod-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Delforman2_kod, \"Kod för eventuell ytterligare delförmån sista ersatta dag i året. Den delförmånskod med högst värde är klassificerad som \"andra\" delförmån.\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Delforman2"
+fields = { "variable" = "delforman2-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Delforman2, \"Klartext för eventuell ytterligare ersatt delförmån. Den delförmånskod med högst värde är klassificerad som \"andra\" delförmån.\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Inkomsttyp_kod"
+fields = { "variable" = "inkomsttyp-kod-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Inkomsttyp_kod, \"Kod för inkomsttyp (SGI) som ligger till grund för ersättningen vid sista ersatta dag i året\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Inkomsttyp"
+fields = { "variable" = "inkomsttyp-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Inkomsttyp, \"Klaretxt för inkomsttyp (SGI) som ligger till grund för ersättningen\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: Omfattning"
+fields = { "variable" = "omfattning-sista-dag" }
+evidence = "https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx), sheet År 30: Omfattning, \"Omfattning (sjukskrivningsgrad) i decimaltal vid sista ersatta dag under året. Omfattning är i i förhållande till arbetstid. En person som har 50% arbetstid och inte kan arbeta alls på grund av nedsatt arbetsförmåga kommer att ha 100% i omfattning\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the value on the last paid day of the panel period."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sjukfall"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sjukfall-dag15"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sjukfall-dag30"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-askp-belopp-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-askp-belopp-brutto-dag15"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-askp-belopp-brutto-dag30"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-askp-dagar-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-askp-dagar-brutto-dag15"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-askp-dagar-brutto-dag30"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-askp-dagar-netto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-askp-dagar-netto-dag15"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-askp-dagar-netto-dag30"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-belopp-a-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-belopp-a-brutto-dag15"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-belopp-a-brutto-dag30"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-belopp-b-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-belopp-b-brutto-dag15"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-belopp-b-brutto-dag30"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-belopp-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-belopp-brutto-dag15"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-belopp-brutto-dag30"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-belopp-o-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-belopp-o-brutto-dag15"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-belopp-o-brutto-dag30"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-dagar-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-dagar-brutto-dag15"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-dagar-brutto-dag30"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-dagar-netto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-dagar-netto-dag15"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-dagar-netto-dag30"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-dagar-tot"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-dagar-tot-dag15"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-dagar-tot-dag30"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-fb-sjp-belopp-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-fb-sjp-belopp-brutto-dag15"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-fb-sjp-belopp-brutto-dag30"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-fb-sjp-dagar-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-fb-sjp-dagar-brutto-dag15"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-fb-sjp-dagar-brutto-dag30"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-fb-sjp-dagar-netto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-fb-sjp-dagar-netto-dag15"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-fb-sjp-dagar-netto-dag30"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-karens-dagar"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-karens-dagar-dag15"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-karens-dagar-dag30"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-rehabp-belopp-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-rehabp-belopp-brutto-dag15"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-rehabp-belopp-brutto-dag30"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-rehabp-dagar-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-rehabp-dagar-brutto-dag15"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-rehabp-dagar-brutto-dag30"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-rehabp-dagar-netto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-rehabp-dagar-netto-dag15"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-rehabp-dagar-netto-dag30"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-sjl-dagar"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-sjl-dagar-dag15"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-sjl-dagar-dag30"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-sjp-belopp-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-sjp-belopp-brutto-dag15"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-sjp-belopp-brutto-dag30"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-sjp-dagar-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-sjp-dagar-brutto-dag15"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-sjp-dagar-brutto-dag30"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-sjp-dagar-netto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-sjp-dagar-netto-dag15"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-sjp-dagar-netto-dag30"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:delforman1-kod-sista-dag"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:delforman1-sista-dag"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:delforman2-kod-sista-dag"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:delforman2-sista-dag"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:inflode"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:inflode-dag15"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:inflode-dag30"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomsttyp-kod-sista-dag"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomsttyp-sista-dag"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:kv-askp-belopp-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:kv-askp-dagar-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:kv-askp-dagar-netto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:kv-belopp-a-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:kv-belopp-b-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:kv-belopp-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:kv-belopp-o-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:kv-dagar-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:kv-dagar-netto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:kv-dagar-tot"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:kv-fb-sjp-belopp-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:kv-fb-sjp-dagar-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:kv-fb-sjp-dagar-netto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:kv-karens-dagar"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:kv-rehabp-belopp-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:kv-rehabp-dagar-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:kv-rehabp-dagar-netto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:kv-sjl-dagar"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:kv-sjp-belopp-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:kv-sjp-dagar-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:kv-sjp-dagar-netto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:man-askp-belopp-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:man-askp-dagar-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:man-askp-dagar-netto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:man-belopp-a-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:man-belopp-b-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:man-belopp-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:man-belopp-o-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:man-dagar-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:man-dagar-netto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:man-dagar-tot"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:man-fb-sjp-belopp-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:man-fb-sjp-dagar-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:man-fb-sjp-dagar-netto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:man-karens-dagar"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:man-rehabp-belopp-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:man-rehabp-dagar-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:man-rehabp-dagar-netto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:man-sjl-dagar"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:man-sjp-belopp-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:man-sjp-dagar-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:man-sjp-dagar-netto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning-sista-dag"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:sjukfallslangd"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:status"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:status-dag15"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:status-dag30"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:utflode"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:utflode-dag15"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:utflode-dag30"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
