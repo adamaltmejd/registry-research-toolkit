@@ -29,19 +29,19 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/yrkeshogskolan.tom
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: kommun @2018"
+subject = "studerande-kalenderar: kommun @2018"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: kommun @2019"
+subject = "studerande-kalenderar: kommun @2019"
 fields = { "classification" = "class/lkf/lkf2019" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: kommun @2020"
+subject = "studerande-kalenderar: kommun @2020"
 fields = { "classification" = "class/lkf/lkf2020" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
 
@@ -53,13 +53,13 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2021.toml:28\
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: kommun @2021"
+subject = "studerande-kalenderar: kommun @2021"
 fields = { "classification" = "class/lkf/lkf2021" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: {studiekommun_senaste_kod,studiekommun_start_kod} where release = 'r18163'"
+subject = "studerande-kalenderar: {studiekommun_senaste_kod,studiekommun_start_kod} @2021-01-01..2021-12-31"
 fields = { "classification" = "class/lkf/lkf2021" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
 
@@ -71,13 +71,13 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2022.toml:28\
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: kommun @2022"
+subject = "studerande-kalenderar: kommun @2022"
 fields = { "classification" = "class/lkf/lkf2022" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: {studiekommun_senaste_kod,studiekommun_start_kod} where release = 'r20162'"
+subject = "studerande-kalenderar: {studiekommun_senaste_kod,studiekommun_start_kod} @2022-01-01..2022-12-31"
 fields = { "classification" = "class/lkf/lkf2022" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
 
@@ -89,13 +89,13 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2023.toml:27\
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: kommun @2023"
+subject = "studerande-kalenderar: kommun @2023"
 fields = { "classification" = "class/lkf/lkf2023" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: {studiekommun_senaste_kod,studiekommun_start_kod} where release = 'r20167'"
+subject = "studerande-kalenderar: {studiekommun_senaste_kod,studiekommun_start_kod} @2023-01-01..2023-12-31"
 fields = { "classification" = "class/lkf/lkf2023" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
 
@@ -107,91 +107,91 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2024.toml:27\
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: kommun @2024"
+subject = "studerande-kalenderar: kommun @2024"
 fields = { "classification" = "class/lkf/lkf2024" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: {studiekommun_senaste_kod,studiekommun_start_kod} where release = 'r20191'"
+subject = "studerande-kalenderar: {studiekommun_senaste_kod,studiekommun_start_kod} @2024-01-01..2024-12-31"
 fields = { "classification" = "class/lkf/lkf2024" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: kommun @2005"
+subject = "studerande-kalenderar: kommun @2005"
 fields = { "classification" = "class/lkf/lkf2005" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: kommun @2006"
+subject = "studerande-kalenderar: kommun @2006"
 fields = { "classification" = "class/lkf/lkf2006" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: kommun @2007"
+subject = "studerande-kalenderar: kommun @2007"
 fields = { "classification" = "class/lkf/lkf2007" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: kommun @2008"
+subject = "studerande-kalenderar: kommun @2008"
 fields = { "classification" = "class/lkf/lkf2008" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: kommun @2009"
+subject = "studerande-kalenderar: kommun @2009"
 fields = { "classification" = "class/lkf/lkf2009" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: kommun @2010"
+subject = "studerande-kalenderar: kommun @2010"
 fields = { "classification" = "class/lkf/lkf2010" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: kommun @2011"
+subject = "studerande-kalenderar: kommun @2011"
 fields = { "classification" = "class/lkf/lkf2011" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: kommun @2012"
+subject = "studerande-kalenderar: kommun @2012"
 fields = { "classification" = "class/lkf/lkf2012" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: kommun @2013"
+subject = "studerande-kalenderar: kommun @2013"
 fields = { "classification" = "class/lkf/lkf2013" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: kommun @2014"
+subject = "studerande-kalenderar: kommun @2014"
 fields = { "classification" = "class/lkf/lkf2014" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: kommun @2015"
+subject = "studerande-kalenderar: kommun @2015"
 fields = { "classification" = "class/lkf/lkf2015" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: kommun @2016"
+subject = "studerande-kalenderar: kommun @2016"
 fields = { "classification" = "class/lkf/lkf2016" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: kommun @2017"
+subject = "studerande-kalenderar: kommun @2017"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
 
@@ -209,6 +209,12 @@ evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-INRIKTNI
 
 [[statement]]
 kind = "set"
+subject = "studerande-kalenderar: sun2000inr"
+fields = { "classification" = "class/sun/sun2000-inriktning" }
+evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
 subject = "sokande: {gymnasiebakgrund_sun2000niva,sun2000niva}"
 fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
@@ -216,6 +222,12 @@ evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.tom
 [[statement]]
 kind = "set"
 subject = "studerande-source-range-2005-2024: {gymnasiebakgrund_sun2000niva,sun2000niva,sun2000niva_1}"
+fields = { "classification" = "class/sun/sun2000-niva" }
+evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "studerande-kalenderar: {gymnasiebakgrund_sun2000niva,sun2000niva,sun2000niva_1}"
 fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
@@ -233,7 +245,13 @@ evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:34
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: {sun2020niva_old,sun2020niva_old_far,sun2020niva_old_for,sun2020niva_old_mor} where release = 'r15749'"
+subject = "studerande-kalenderar: {sun2000niva_old,sun2000niva_old_far,sun2000niva_old_for,sun2000niva_old_mor}"
+fields = { "classification" = "class/sun/niva-oldv1" }
+evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "studerande-kalenderar: {sun2020niva_old,sun2020niva_old_far,sun2020niva_old_for,sun2020niva_old_mor} @2019-01-01..2019-12-31"
 fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
 
@@ -257,6 +275,12 @@ evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-INRIKTNI
 
 [[statement]]
 kind = "set"
+subject = "studerande-kalenderar: {sun1inr_utb,sun2020inr,sun4inr_utb}"
+fields = { "classification" = "class/sun/sun2020-inriktning" }
+evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
 subject = "sokande: {gymnasiebakgrund_sun2020niva,sun2020niva}"
 fields = { "classification" = "class/sun/sun2020-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
@@ -275,6 +299,12 @@ evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-NIVA.tom
 
 [[statement]]
 kind = "set"
+subject = "studerande-kalenderar: {gymnasiebakgrund_sun2020niva,sun2020niva,sun3niva_utb_beraknad}"
+fields = { "classification" = "class/sun/sun2020-niva" }
+evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
 subject = "sokande: sun2020niva_old"
 fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
@@ -287,13 +317,13 @@ evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:35
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: {sun2020niva_old,sun2020niva_old_far,sun2020niva_old_for,sun2020niva_old_mor} where release = 'r16348'"
+subject = "studerande-kalenderar: {sun2020niva_old,sun2020niva_old_far,sun2020niva_old_for,sun2020niva_old_mor} @2020-01-01..2020-12-31"
 fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: {sun2020niva_old,sun2020niva_old_far,sun2020niva_old_for,sun2020niva_old_mor} where release = 'r18163'"
+subject = "studerande-kalenderar: {sun2020niva_old,sun2020niva_old_far,sun2020niva_old_for,sun2020niva_old_mor} @2021-01-01..2021-12-31"
 fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
 
@@ -305,19 +335,19 @@ evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:35
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: {sun2020niva_old,sun2020niva_old_far,sun2020niva_old_for,sun2020niva_old_mor} where release = 'r20162'"
+subject = "studerande-kalenderar: {sun2020niva_old,sun2020niva_old_far,sun2020niva_old_for,sun2020niva_old_mor} @2022-01-01..2022-12-31"
 fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: {sun2020niva_old,sun2020niva_old_far,sun2020niva_old_for,sun2020niva_old_mor} where release = 'r20167'"
+subject = "studerande-kalenderar: {sun2020niva_old,sun2020niva_old_far,sun2020niva_old_for,sun2020niva_old_mor} @2023-01-01..2023-12-31"
 fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
 
 [[statement]]
 kind = "set"
-subject = "studerande-source-range-2005-2024: {sun2020niva_old,sun2020niva_old_far,sun2020niva_old_for,sun2020niva_old_mor} where release = 'r20191'"
+subject = "studerande-kalenderar: {sun2020niva_old,sun2020niva_old_far,sun2020niva_old_for,sun2020niva_old_mor} @2024-01-01..2024-12-31"
 fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
 
@@ -2901,3 +2931,129 @@ kind = "set"
 subject = "avklarade-poang: utbildningslangdyhpoang @2014-01-01..2023-12-31 where key = 'v49914'"
 fields = { "variable" = "utbildningspoang-yh-utbildningslangdpoangyh-utb" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): UtbildningsLangdPoangYH_Utb in studerande-kurser, studerande-source-range-2005-2024; UtbildningslangdYHpoang in avklarade-poang: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Only a note that 5 YH-points equal one week of full-time study; other members have none); folded into utbildningspoang-yh-utbildningslangdpoangyh-utb."
+
+[[statement]]
+kind = "assert"
+subject = "table:studerande-kalenderar"
+fact = { entity = "table", fields = { name = "Studerande och examinerade, kalenderår", coverage = "2005-01-01..2024-12-31" } }
+evidence = "Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. The kalenderår releases of studerande-source-range-2005-2024 (2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024) form this table; the coverage is the union of their periods."
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: {alder,aldersgrupp,antagensombedriverstudier_slutar,antagensombedriverstudier_startar,avslutunderaret,examen,fodelsear,fodelseland_gruppering_yh,fodelseland_varldsdel,fodelselandnamn,gymnasiebakgrund,gymnasiebakgrund_sun2000niva,kommun,kon,omgangsnr,personnr,studerande,sun2000inr,sun2000niva_1,sun2000niva_old,sun2000niva_old_far,sun2000niva_old_for,sun2000niva_old_mor,terminstuderande_ht,terminstuderande_vt,utbildningsnr,utlsvbakg_yh} where release = 'r13794'"
+fields = { "table" = "studerande-kalenderar" }
+evidence = "Release '2005' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: {alder,aldersgrupp,antagensombedriverstudier_slutar,antagensombedriverstudier_startar,avslutunderaret,examen,fodelsear,fodelseland_gruppering_yh,fodelseland_varldsdel,fodelselandnamn,gymnasiebakgrund,gymnasiebakgrund_sun2000niva,kommun,kon,omgangsnr,personnr,studerande,sun2000inr,sun2000niva_1,sun2000niva_old,sun2000niva_old_far,sun2000niva_old_for,sun2000niva_old_mor,terminstuderande_ht,terminstuderande_vt,utbildningsnr,utlsvbakg_yh} where release = 'r13793'"
+fields = { "table" = "studerande-kalenderar" }
+evidence = "Release '2006' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: {alder,aldersgrupp,antagensombedriverstudier_slutar,antagensombedriverstudier_startar,avslutunderaret,examen,fodelsear,fodelseland_gruppering_yh,fodelseland_varldsdel,fodelselandnamn,gymnasiebakgrund,gymnasiebakgrund_sun2000niva,kommun,kon,omgangsnr,personnr,studerande,sun2000inr,sun2000niva_1,sun2000niva_old,sun2000niva_old_far,sun2000niva_old_for,sun2000niva_old_mor,terminstuderande_ht,terminstuderande_vt,utbildningsnr,utlsvbakg_yh} where release = 'r13792'"
+fields = { "table" = "studerande-kalenderar" }
+evidence = "Release '2007' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: {alder,aldersgrupp,antagensombedriverstudier_slutar,antagensombedriverstudier_startar,avslutunderaret,examen,fodelsear,fodelseland_gruppering_yh,fodelseland_varldsdel,fodelselandnamn,gymnasiebakgrund,gymnasiebakgrund_sun2000niva,kommun,kon,omgangsnr,personnr,studerande,sun2000inr,sun2000niva_1,sun2000niva_old,sun2000niva_old_far,sun2000niva_old_for,sun2000niva_old_mor,terminstuderande_ht,terminstuderande_vt,utbildningsnr,utlsvbakg_yh} where release = 'r13791'"
+fields = { "table" = "studerande-kalenderar" }
+evidence = "Release '2008' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: {alder,aldersgrupp,antagensombedriverstudier_slutar,antagensombedriverstudier_startar,avslutunderaret,examen,fodelsear,fodelseland_gruppering_yh,fodelseland_varldsdel,fodelselandnamn,gymnasiebakgrund,gymnasiebakgrund_sun2000niva,kommun,kon,omgangsnr,personnr,studerande,sun2000inr,sun2000niva_1,sun2000niva_old,sun2000niva_old_far,sun2000niva_old_for,sun2000niva_old_mor,terminstuderande_ht,terminstuderande_vt,utbildningsnr,utlsvbakg_yh} where release = 'r13790'"
+fields = { "table" = "studerande-kalenderar" }
+evidence = "Release '2009' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: {alder,aldersgrupp,antagensombedriverstudier_slutar,antagensombedriverstudier_startar,avslutunderaret,examen,fodelsear,fodelseland_gruppering_yh,fodelseland_varldsdel,fodelselandnamn,gymnasiebakgrund,gymnasiebakgrund_sun2000niva,kommun,kon,omgangsnr,personnr,studerande,sun2000inr,sun2000niva_1,sun2000niva_old,sun2000niva_old_far,sun2000niva_old_for,sun2000niva_old_mor,terminstuderande_ht,terminstuderande_vt,utbildningsnr,utlsvbakg_yh} where release = 'r13789'"
+fields = { "table" = "studerande-kalenderar" }
+evidence = "Release '2010' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: {alder,aldersgrupp,antagensombedriverstudier_slutar,antagensombedriverstudier_startar,avslutunderaret,examen,fodelsear,fodelseland_gruppering_yh,fodelseland_varldsdel,fodelselandnamn,gymnasiebakgrund,gymnasiebakgrund_sun2000niva,kommun,kon,omgangsnr,personnr,studerande,sun2000inr,sun2000niva_1,sun2000niva_old,sun2000niva_old_far,sun2000niva_old_for,sun2000niva_old_mor,terminstuderande_ht,terminstuderande_vt,utbildningsnr,utlsvbakg_yh} where release = 'r13788'"
+fields = { "table" = "studerande-kalenderar" }
+evidence = "Release '2011' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: {alder,aldersgrupp,antagensombedriverstudier_slutar,antagensombedriverstudier_startar,avslutunderaret,examen,fodelsear,fodelseland_gruppering_yh,fodelseland_varldsdel,fodelselandnamn,gymnasiebakgrund,gymnasiebakgrund_sun2000niva,kommun,kon,omgangsnr,personnr,studerande,sun2000inr,sun2000niva_1,sun2000niva_old,sun2000niva_old_far,sun2000niva_old_for,sun2000niva_old_mor,terminstuderande_ht,terminstuderande_vt,utbildningsnr,utlsvbakg_yh} where release = 'r13787'"
+fields = { "table" = "studerande-kalenderar" }
+evidence = "Release '2012' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: {alder,aldersgrupp,antagensombedriverstudier_slutar,antagensombedriverstudier_startar,avslutunderaret,examen,fodelsear,fodelseland_gruppering_yh,fodelseland_varldsdel,fodelselandnamn,gymnasiebakgrund,gymnasiebakgrund_sun2000niva,kommun,kon,omgangsnr,personnr,studerande,sun2000inr,sun2000niva_1,sun2000niva_old,sun2000niva_old_far,sun2000niva_old_for,sun2000niva_old_mor,terminstuderande_ht,terminstuderande_vt,utbildningsnr,utlsvbakg_yh} where release = 'r13786'"
+fields = { "table" = "studerande-kalenderar" }
+evidence = "Release '2013' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: {alder,aldersgrupp,antagensombedriverstudier_slutar,antagensombedriverstudier_startar,avslutunderaret,beslutsar,examen,fodelsear,fodelseland_gruppering_yh,fodelseland_varldsdel_flergen,fodelselandnamn_flergen,gymnasiebakgrund,gymnasiebakgrund_sun2000niva,inhoppare,kommun,komvux_slutar,kon,omgangsnr,personnr,studerande,studiekommun_slut,studiekommun_start,studieort_slut,studieort_start,sun2000inr,sun2000niva,sun2000niva_old,sun2000niva_old_far,sun2000niva_old_for,sun2000niva_old_mor,terminstuderande_ht,terminstuderande_vt,utbildningsnr,utlsvbakg_yh} where release = 'r13742'"
+fields = { "table" = "studerande-kalenderar" }
+evidence = "Release '2014' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: {alder,aldersgrupp,antagensombedriverstudier_slutar,antagensombedriverstudier_startar,avslutunderaret,beslutsar,examen,fodelsear,fodelseland_gruppering_yh,fodelseland_varldsdel_flergen,fodelselandnamn_flergen,gymnasiebakgrund,gymnasiebakgrund_sun2000niva,inhoppare,kommun,komvux_slutar,kon,omgangsnr,personnr,studerande,studiekommun_slut,studiekommun_start,studieort_slut,studieort_start,sun2000inr,sun2000niva,sun2000niva_old,sun2000niva_old_far,sun2000niva_old_for,sun2000niva_old_mor,terminstuderande_ht,terminstuderande_vt,utbildningsnr,utlsvbakg_yh} where release = 'r13741'"
+fields = { "table" = "studerande-kalenderar" }
+evidence = "Release '2015' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: {alder,aldersgrupp,antagensombedriverstudier_slutar,antagensombedriverstudier_startar,avslutunderaret,beslutsar,examen,fodelsear,fodelseland_gruppering_yh,fodelseland_varldsdel_flergen,fodelselandnamn_flergen,gymnasiebakgrund,gymnasiebakgrund_sun2000niva,inhoppare,kommun,komvux_slutar,kon,omgangsnr,personnr,studerande,studiekommun_slut,studiekommun_start,studieort_slut,studieort_start,sun2000inr,sun2000niva,sun2000niva_old,sun2000niva_old_far,sun2000niva_old_for,sun2000niva_old_mor,terminstuderande_ht,terminstuderande_vt,utbildningsnr,utlsvbakg_yh} where release = 'r13740'"
+fields = { "table" = "studerande-kalenderar" }
+evidence = "Release '2016' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: {alder,aldersgrupp,antagensombedriverstudier_slutar,antagensombedriverstudier_startar,avslutunderaret,beslutsar,examen,fodelsear,fodelseland_gruppering_yh,fodelseland_varldsdel_flergen,fodelselandnamn_flergen,gymnasiebakgrund,gymnasiebakgrund_sun2000niva,inhoppare,kommun,komvux_slutar,kon,omgangsnr,personnr,studerande,studiekommun_slut,studiekommun_start,studieort_slut,studieort_start,sun2000inr,sun2000niva,sun2000niva_old,sun2000niva_old_far,sun2000niva_old_for,sun2000niva_old_mor,terminstuderande_ht,terminstuderande_vt,utbildningsnr,utlsvbakg_yh} where release = 'r13739'"
+fields = { "table" = "studerande-kalenderar" }
+evidence = "Release '2017' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: {alder,aldersgrupp,antagensombedriverstudier_slutar,antagensombedriverstudier_startar,avslutunderaret,beslutsar,datinv,examen,examensdatum,fodelsear,fodelseland_gruppering_yh,fodelseland_varldsdel_flergen,fodelselandnamn_flergen,gymnasiebakgrund,gymnasiebakgrund_sun2000niva,inhoppare,kommun,komvux_slutar,kon,omgangsnr,personnr,studerande,studiekommun_start,studieort_start,sun2000inr,sun2000niva,sun2000niva_old,sun2000niva_old_far,sun2000niva_old_for,sun2000niva_old_mor,terminstuderande_ht,terminstuderande_vt,tiddatinv,utbildningsnr,utlsvbakg_yh} where release = 'r13737'"
+fields = { "table" = "studerande-kalenderar" }
+evidence = "Release '2018' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: {alder,aldersgrupp,antagensombedriverstudier_slutar,antagensombedriverstudier_startar,avslutunderaret,beslutsar,datinv,examen,examensdatum,fodelsear,fodelseland_gruppering_yh,fodelseland_varldsdel_flergen,fodelselandnamn_flergen,gymnasiebakgrund,gymnasiebakgrund_sun2020niva,inhoppare,kommun,komvux_slutar,kon,omgangsnr,personnr,studerande,studiekommun_slut,studiekommun_start,sun2000inr,sun2020inr,sun2020niva,sun2020niva_old,sun2020niva_old_far,sun2020niva_old_for,sun2020niva_old_mor,terminstuderande_ht,terminstuderande_vt,tiddatinv,utbildningsnr,utlsvbakg_yh} where release = 'r15749'"
+fields = { "table" = "studerande-kalenderar" }
+evidence = "Release '2019' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: {alder,aldersgrupp,antagensombedriverstudier_slutar,antagensombedriverstudier_startar,avslutunderaret,beslutsar,datinv,examen,examensdatum,fa15namn_senaste,fa15namn_start,fodelsear,fodelseland_gruppering_yh,fodelseland_varldsdel_flergen,fodelselandnamn_flergen,gymnasiebakgrund,gymnasiebakgrund_sun2020niva,inhoppare,kommun,komvux_slutar,kon,kort_utbildning,omgangsnr,personnr,studerande,studiekommun_senaste,studiekommun_start,studieort_senaste,studieort_start,sun2000inr,sun2020inr,sun2020niva,sun2020niva_old,sun2020niva_old_far,sun2020niva_old_for,sun2020niva_old_mor,terminstuderande_ht,terminstuderande_vt,tiddatinv,utbildningsnr,utlsvbakg_yh} where release = 'r16348'"
+fields = { "table" = "studerande-kalenderar" }
+evidence = "Release '2020' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: {alder,aldersgrupp,antagensombedriverstudier_slutar,antagensombedriverstudier_startar,antal_veckor_ht,antal_veckor_vt,avslutunderaret,beslutsar,datinv,examen,examensdatum,fa15namn_senaste,fa15namn_start,fa15nr_senaste,fa15nr_start,faktisktstuderande,faktisktstuderande_ht,faktisktstuderande_vt,fodelsear,fodelseland_gruppering_yh,fodelseland_varldsdel_flergen,fodelselandnamn_flergen,gymnasiebakgrund,gymnasiebakgrund_sun2020niva,inhoppare,kommun,komvux_slutar,kon,kort_utbildning,omgangsnr,personnr,studerande,studiekommun_senaste,studiekommun_senaste_kod,studiekommun_start,studiekommun_start_kod,studieort_senaste,studieort_start,sun2000inr,sun2020inr,sun2020niva,sun2020niva_old,sun2020niva_old_far,sun2020niva_old_for,sun2020niva_old_mor,terminstuderande_ht,terminstuderande_vt,tiddatinv,utbildningsnr,utlsvbakg_yh} where release = 'r18163'"
+fields = { "table" = "studerande-kalenderar" }
+evidence = "Release '2021' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: {alder,aldersgrupp,antagensombedriverstudier_slutar,antagensombedriverstudier_startar,antal_veckor_ht,antal_veckor_vt,avslutunderaret,beslutsar,datinv,examen,examensdatum,fa15namn_senaste,fa15namn_start,fa15nr_senaste,fa15nr_start,faktisktstuderande,faktisktstuderande_ht,faktisktstuderande_vt,fodelsear,fodelseland_gruppering_yh,fodelseland_varldsdel_flergen,fodelselandnamn_flergen,gymnasiebakgrund,gymnasiebakgrund_sun2020niva,inhoppare,kommun,komvux_slutar,kon,kort_utbildning,omgangsnr,personnr,studerande,studiekommun_senaste,studiekommun_senaste_kod,studiekommun_start,studiekommun_start_kod,studieort_senaste,studieort_start,sun2000inr,sun2020inr,sun2020niva,sun2020niva_old,sun2020niva_old_far,sun2020niva_old_for,sun2020niva_old_mor,tiddatinv,utbildningsnr,utlsvbakg_yh} where release = 'r20162'"
+fields = { "table" = "studerande-kalenderar" }
+evidence = "Release '2022' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: {alder,aldersgrupp,antagensombedriverstudier_slutar,antagensombedriverstudier_startar,antal_veckor_ht,antal_veckor_vt,avslutunderaret,beslutsar,datinv,examen,examensdatum,fa15namn_senaste,fa15namn_start,fa15nr_senaste,fa15nr_start,faktisktstuderande,faktisktstuderande_ht,faktisktstuderande_vt,fodelsear,fodelseland_gruppering_yh,fodelseland_varldsdel_flergen,fodelselandnamn_flergen,gymnasiebakgrund,gymnasiebakgrund_sun2020niva,inhoppare,kommun,komvux_slutar,kon,kort_utbildning,omgangsnr,personnr,studerande,studiekommun_senaste,studiekommun_senaste_kod,studiekommun_start,studiekommun_start_kod,studieort_senaste,studieort_start,sun2000inr,sun2020inr,sun2020niva,sun2020niva_old,sun2020niva_old_far,sun2020niva_old_for,sun2020niva_old_mor,tiddatinv,utbildningsnr,utlsvbakg_yh} where release = 'r20167'"
+fields = { "table" = "studerande-kalenderar" }
+evidence = "Release '2023' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: {alder,aldersgrupp,antagensombedriverstudier_slutar,antagensombedriverstudier_startar,antal_veckor_ht,antal_veckor_vt,ar,avslutunderaret,beslutsar,datinv,examen,examensdatum,fa15namn_senaste,fa15namn_start,fa15nr_senaste,fa15nr_start,faktisktstuderande,faktisktstuderande_ht,faktisktstuderande_vt,fodelsear,fodelseland_gruppering_yh,fodelseland_varldsdel_flergen,fodelselandnamn_flergen,gymnasiebakgrund,gymnasiebakgrund_sun2020niva,inhoppare,kommun,komvux_slutar,kon,kort_utbildning,omgangsnr,personnr,studerande,studiekommun_senaste,studiekommun_senaste_kod,studiekommun_start,studiekommun_start_kod,studieort_senaste,studieort_start,sun2000inr,sun2020inr,sun2020niva,sun2020niva_old,sun2020niva_old_far,sun2020niva_old_for,sun2020niva_old_mor,tiddatinv,utbildningsnr,utlsvbakg_yh} where release = 'r20191'"
+fields = { "table" = "studerande-kalenderar" }
+evidence = "Release '2024' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."

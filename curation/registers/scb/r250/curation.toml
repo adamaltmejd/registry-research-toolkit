@@ -62,7 +62,19 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2024.toml:27\
 
 [[statement]]
 kind = "set"
+subject = "elever-kalenderar: skolkommun where key = 'v14815'"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
 subject = "elever: skollan"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "elever-kalenderar: skollan"
 fields = { "classification" = "class/lkf/lkf2024" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
 
@@ -75,6 +87,12 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2024.toml:27\
 [[statement]]
 kind = "set"
 subject = "kursdeltagare: {skolkommun,skollan}"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-kalenderar: {skolkommun,skollan}"
 fields = { "classification" = "class/lkf/lkf2024" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
 
@@ -248,7 +266,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2025.toml:21\
 
 [[statement]]
 kind = "set"
-subject = "elever: hemkommun where release = 'r20033'"
+subject = "elever-kalenderar: hemkommun @2024-01-01..2024-12-31"
 fields = { "classification" = "class/lkf/lkf2025" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2025.toml:21\n\nLegacy exact value-set label: LKF 2025-01-01 /Län, kommuner och församlingar"
 
@@ -260,7 +278,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2025.toml:21\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare: hemkommun where release = 'r20031'"
+subject = "kursdeltagare-kalenderar: hemkommun @2024-01-01..2024-12-31"
 fields = { "classification" = "class/lkf/lkf2025" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2025.toml:21\n\nLegacy exact value-set label: LKF 2025-01-01 /Län, kommuner och församlingar"
 
@@ -272,7 +290,19 @@ evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-NIVA.tom
 
 [[statement]]
 kind = "set"
+subject = "elever-kalenderar: {sun2020niva_2,utbsun}"
+fields = { "classification" = "class/sun/sun2020-niva" }
+evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
 subject = "kursdeltagare: sun2020niva_2"
+fields = { "classification" = "class/sun/sun2020-niva" }
+evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-kalenderar: sun2020niva_2"
 fields = { "classification" = "class/sun/sun2020-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
 
@@ -296,7 +326,19 @@ evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2020.toml
 
 [[statement]]
 kind = "set"
+subject = "elever-kalenderar: jurform @2020-10-15,2021-10-15,2022-10-15,2023-10-15,2024"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
 subject = "kursdeltagare: jurform"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-kalenderar: jurform"
 fields = { "classification" = "class/jurform/jurform2020" }
 evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
 
@@ -1231,3 +1273,27 @@ kind = "set"
 subject = "var:yrkespaketkod"
 fields = { "label" = "Yrkespaket (kod)" }
 evidence = "#2102 same-label cluster 'Yrkespaket' (2 variables): judged different meaning, high confidence; Yrkespaketkod holds the code (value set), Yrkeskod_text the name in clear text (opdef)."
+
+[[statement]]
+kind = "assert"
+subject = "table:elever-kalenderar"
+fact = { entity = "table", fields = { name = "Elever, kalenderår", coverage = "2024-01-01..2024-12-31" } }
+evidence = "Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. The kalenderår releases of elever (2024) form this table; the coverage is the union of their periods."
+
+[[statement]]
+kind = "set"
+subject = "elever: {alder,antkurs1,antkurs2,avb,fodelselandnamn,forlaggn,gyfid,gyfnamn,hemkommun,hman,jurform,komgrupp23,kommungrupp_text,kon,niva,personnr,poang1,poang2,provn,skolenhetskod,skolkommun,skolkommun_text,skollan,skollan_text,sun2020niva_2,tpoang,utbanord,valid} where release = 'r20033'"
+fields = { "table" = "elever-kalenderar" }
+evidence = "Release '2024' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
+
+[[statement]]
+kind = "assert"
+subject = "table:kursdeltagare-kalenderar"
+fact = { entity = "table", fields = { name = "Kursdeltagare i anpassad kommunal vuxenutbildning, kalenderår", coverage = "2024-01-01..2024-12-31" } }
+evidence = "Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. The kalenderår releases of kursdeltagare (2024) form this table; the coverage is the union of their periods."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare: {avb,avbdat,avslut,betyg,fodar,fodelselandnamn,forlaggn,gyfid,gyfnamn,hemkommun,hkurs_kod,hkurs_text,hman,jurform,kdeltid,komgrupp23,kommungrupp_text,kon,koptutb,kslut,kstart,kursdeltid,kurskod,niva,orgnamn,orgnr,orsak,personnr,provn,skolenhetskod,skolkommun,skolkommun_text,skollan,skollan_text,sun2020niva_2,termin,tpoang,utbanord,valid,verkar,verkform,yrkeskod_text,yrkespaketkod} where release = 'r20031'"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '2024' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the whole release."
