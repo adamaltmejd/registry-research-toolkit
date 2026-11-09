@@ -358,3 +358,135 @@ kind = "set"
 subject = "var:sjukersattning"
 fields = { "tags" = ["transfers"] }
 evidence = "Indikatorn anger om fallet innehåller sjukersättning.\ncatalog:variable_text:326:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "ar-1: Manader"
+fields = { "variable" = "manader-sista-fall" }
+evidence = "https://www.forsakringskassan.se/download/18.2bf3af9018425d7d4add00/1779350800884/variabelforteckning-midas-sjukersattning-aktivitetsersattning.xlsx (pinned as catalog/evidence/fk/variabelforteckning-midas-sjukersattning-aktivitetsersattning.xlsx), sheet År 1: Manader, \"Antalet månader det sista fallet i det aktuella året har pågått\". Kept apart from the same column name on the register's other tables, whose FK wording measures something else; here it is the months of the last case in the year."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-inflode"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.2bf3af9018425d7d4add00/1779350800884/variabelforteckning-midas-sjukersattning-aktivitetsersattning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-utflode"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.2bf3af9018425d7d4add00/1779350800884/variabelforteckning-midas-sjukersattning-aktivitetsersattning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-a-belopp-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.2bf3af9018425d7d4add00/1779350800884/variabelforteckning-midas-sjukersattning-aktivitetsersattning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-a-dagar-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.2bf3af9018425d7d4add00/1779350800884/variabelforteckning-midas-sjukersattning-aktivitetsersattning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-a-dagar-netto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.2bf3af9018425d7d4add00/1779350800884/variabelforteckning-midas-sjukersattning-aktivitetsersattning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-belopp-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.2bf3af9018425d7d4add00/1779350800884/variabelforteckning-midas-sjukersattning-aktivitetsersattning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-belopp-gar-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.2bf3af9018425d7d4add00/1779350800884/variabelforteckning-midas-sjukersattning-aktivitetsersattning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-belopp-ink-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.2bf3af9018425d7d4add00/1779350800884/variabelforteckning-midas-sjukersattning-aktivitetsersattning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-dagar-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.2bf3af9018425d7d4add00/1779350800884/variabelforteckning-midas-sjukersattning-aktivitetsersattning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-dagar-netto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.2bf3af9018425d7d4add00/1779350800884/variabelforteckning-midas-sjukersattning-aktivitetsersattning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-ftp-belopp-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.2bf3af9018425d7d4add00/1779350800884/variabelforteckning-midas-sjukersattning-aktivitetsersattning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-ftp-dagar-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.2bf3af9018425d7d4add00/1779350800884/variabelforteckning-midas-sjukersattning-aktivitetsersattning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-ftp-dagar-netto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.2bf3af9018425d7d4add00/1779350800884/variabelforteckning-midas-sjukersattning-aktivitetsersattning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-s-belopp-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.2bf3af9018425d7d4add00/1779350800884/variabelforteckning-midas-sjukersattning-aktivitetsersattning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-s-dagar-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.2bf3af9018425d7d4add00/1779350800884/variabelforteckning-midas-sjukersattning-aktivitetsersattning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-s-dagar-netto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.2bf3af9018425d7d4add00/1779350800884/variabelforteckning-midas-sjukersattning-aktivitetsersattning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-sjb-belopp-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.2bf3af9018425d7d4add00/1779350800884/variabelforteckning-midas-sjukersattning-aktivitetsersattning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-sjb-dagar-brutto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.2bf3af9018425d7d4add00/1779350800884/variabelforteckning-midas-sjukersattning-aktivitetsersattning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-sjb-dagar-netto"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.2bf3af9018425d7d4add00/1779350800884/variabelforteckning-midas-sjukersattning-aktivitetsersattning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:manader-sista-fall"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.2bf3af9018425d7d4add00/1779350800884/variabelforteckning-midas-sjukersattning-aktivitetsersattning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:status"
+fields = { "tags" = ["transfers"] }
+evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.2bf3af9018425d7d4add00/1779350800884/variabelforteckning-midas-sjukersattning-aktivitetsersattning.xlsx); tagged like the register's other benefit measures."
