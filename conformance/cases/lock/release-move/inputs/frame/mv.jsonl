@@ -8,3 +8,7 @@
 {"kind":"occurrence","provider":"demo","register":"mv","table":"t","release":"r2","column":"A","source_key":"a","label":"Alpha"}
 {"kind":"occurrence","provider":"demo","register":"mv","table":"t","release":"r3","column":"A","source_key":"a","label":"Alpha"}
 {"kind":"occurrence","provider":"demo","register":"mv","table":"t","release":"r3","column":"","source_key":"b","label":"Beta"}
+{"kind":"table","provider":"demo","register":"mv","table":"j","name":"J"}
+{"kind":"release","provider":"demo","register":"mv","table":"k","release":"r4","name":"K 2002","from":"2002-01-01","to":"2002-12-31","grain":"year","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"mv","table":"t","release":"r3","column":"C","source_key":"c","label":"Gamma"}
+{"kind":"occurrence","provider":"demo","register":"mv","table":"k","release":"r4","column":"C","source_key":"c","label":"Gamma"}

@@ -113,7 +113,9 @@ fn release_moves_whole_and_attached() {
     // the release (or its gap marker) behind, or detaches them into dated rows, so the
     // destination has no release for editions, cadence and gaps. Twin: moving one
     // column of that release beside the whole move is a partial move and must refuse
-    // at both statements, not apply in statement order.
+    // at both statements, not apply in statement order. Chain: moving a column out of
+    // the destination the release lands in must refuse too, not leave the release's
+    // column behind while the destination's own one moves on.
     let case = cases().join("lock/release-move");
     let expected = read_json(&case.join("expected.json")).unwrap();
     let dir = scratch("release-move");
