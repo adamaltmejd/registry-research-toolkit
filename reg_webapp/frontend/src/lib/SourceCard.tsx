@@ -157,6 +157,12 @@ export function SourceCard({
       (segment) => segment.table === source.table,
     );
     const columns = variableColumns(onTable);
+    // The server's verdict that the chosen database lacks the column: its lane
+    // draws it as a column outside the study years does, not as in the
+    // project (#2343).
+    const elsewhere = findings.some(
+      (issue) => issue.code === "not_in_database",
+    );
     const period = sourcePeriodIntervals(source.period);
     const candidates = [
       ...new Set(
@@ -196,9 +202,14 @@ export function SourceCard({
         to: runs[runs.length - 1].to,
         segments: runs.map((run) => ({ name: null, ...run })),
         years,
-        state: "in",
+        state: elsewhere ? "out" : "in",
         selectable: false,
-        accessibleName: [column.spelling, name, years, "in project"]
+        accessibleName: [
+          column.spelling,
+          name,
+          years,
+          elsewhere ? "not in the chosen database" : "in project",
+        ]
           .filter(Boolean)
           .join(", "),
       });
@@ -211,7 +222,8 @@ export function SourceCard({
     return {
       id,
       name,
-      href: catalogHref(id),
+      // A variable the catalog does not name has no page to link to.
+      href: names.has(id) ? catalogHref(id) : null,
       action: (
         <Button
           variant="ghost"
@@ -229,7 +241,11 @@ export function SourceCard({
           {!graph && (
             <div className={styles.columns}>
               {columns.map((column) => (
-                <ColumnChip key={column.id} name={column.spelling} state="in" />
+                <ColumnChip
+                  key={column.id}
+                  name={column.spelling}
+                  state={elsewhere ? "out" : "in"}
+                />
               ))}
             </div>
           )}

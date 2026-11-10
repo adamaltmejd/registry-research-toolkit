@@ -800,7 +800,17 @@ Time is the axis every relation is drawn on.
   lane. The variable's columns are its lanes, one per table, each titled by a "Table"
   kind pill (the `TypeTag` with its glyph) and the table's name, so a lane reads as one
   of the variable's tables, not as another variable (#2319); labelled spans in the
-  `ColumnChip` shape.
+  `ColumnChip` shape. On a steward with several databases, the line under a table's
+  name says which databases have it, by their `/api/context` names (#2343, #2344):
+  "All databases" when every one has the same years, the names when those that have
+  it share years, and each name with its years when they differ. The line wraps
+  rather than cut a database off. With one database there is no line. Once the
+  project names a database, a span draws that database's years and adds only those;
+  a column the database lacks keeps its own years drawn as outside the years to add
+  (`viz-span-out`), cannot be picked, and its accessible name ends "Not in
+  <database>." A column already in the project that the database lacks is blocked,
+  as one outside the study years is (new rules, proposed by the implementer for
+  #2343 and #2344).
   One span per column name on a table: a steward's yearly files of one table are the
   same column delivered in several files, one box over their years with a gap where a
   year is not delivered (maintainer 2026-11-04). A span's column name is never cut: it
@@ -1013,7 +1023,12 @@ grow new visual language meanwhile.
   yet made is no error verdict (maintainer, #2345); while the check after a choice runs,
   the verdict reads Checking. A column the chosen database does not have is the server's
   `not_in_database` on its card, naming the databases that do; it is a finding, never a
-  disabled option. Under the buttons, the steward's `order_instructions` from
+  disabled option, and its lane draws the column as outside (`viz-span-out`), never
+  with the in-project fill (#2343). The name field is the shared form field the
+  Database `Select` is: a `micro-label` over a `border-strong` hairline (maintainer
+  ruling 2026-11-06, #2341: "components should match"). A variable the catalog does
+  not name keeps its finding and has no link; the card's other columns keep their
+  years. Under the buttons, the steward's `order_instructions` from
   `/api/context` as sent (its own line breaks, no markdown, never text from code), then
   the verdict, "Tables" (one card per table) and "What will be delivered". A card's
   column years load with its own table, not with other cards: a column the catalog does

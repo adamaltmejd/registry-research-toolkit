@@ -25,6 +25,12 @@ import {
 } from "./catalog_names";
 import { segmentYears } from "./catalog_period";
 import {
+  chosenDatabase,
+  databasesLine,
+  inDatabase,
+  stewardDatabases,
+} from "./databases";
+import {
   type LaneEdgeModel,
   LaneGraph,
   type LaneModel,
@@ -181,6 +187,13 @@ export function useVariableCoverage({
   const bounds = windowBounds(context);
   const catalogBounds: [number, number] = [bounds.min, bounds.max];
   const study = studyWindow(draft);
+  const databases = stewardDatabases(context);
+  const database = chosenDatabase(context, draft);
+  // What the add flow reads of a column: its rows in the project's database.
+  const offered = (column: VariableColumn): VariableColumn => ({
+    ...column,
+    segments: inDatabase(column.segments, database),
+  });
   // Every column of every subject by its span id: a group member's carries
   // its fqid, since two members can share a table and a column name.
   const prefix = (subject: CoverageSubject) =>
@@ -238,7 +251,7 @@ export function useVariableCoverage({
   const picked = columns.filter(
     ({ id, subject, column }) =>
       selected.has(id) &&
-      columnWindowPeriod(column, active) !== null &&
+      columnWindowPeriod(offered(column), active) !== null &&
       !columnInProject(draft, subject.fqid, column.table),
   );
   const spansOf = new Map(
@@ -255,6 +268,7 @@ export function useVariableCoverage({
         selected,
         idPrefix: prefix(subject),
         readOnly: !allowAdd,
+        database,
       }),
     ]),
   );
@@ -290,7 +304,7 @@ export function useVariableCoverage({
             .filter(
               ({ id, column }) =>
                 previous.has(id) &&
-                columnWindowPeriod(column, next ?? seed) !== null,
+                columnWindowPeriod(offered(column), next ?? seed) !== null,
             )
             .map(({ id }) => id),
         ),
@@ -328,9 +342,9 @@ export function useVariableCoverage({
                   pick.subject === subject &&
                   pick.column.table === column.table,
               ) &&
-              columnWindowPeriod(column, active) !== null,
+              columnWindowPeriod(offered(column), active) !== null,
           )
-          .map(({ column }) => column);
+          .map(({ column }) => offered(column));
         if (adding.length) {
           candidate = addColumns(
             candidate,
@@ -395,9 +409,17 @@ export function useVariableCoverage({
                 ),
               ].map((table): LaneModel => {
                 const id = `${prefix(subject)}${table}`;
+                const line = databasesLine(
+                  subject.segments.filter((segment) => segment.table === table),
+                  databases,
+                );
                 return {
                   id,
                   name: names.get(table) ?? "Table name unavailable",
+                  // Which databases have the table's rows (#2344): the line
+                  // wraps, since a name cut off would hide a database.
+                  sub: line ? { text: line } : null,
+                  wrap: !!line,
                   pill: <TypeTag type="table" glyph />,
                   nested: !!subject.lane,
                   relations: neighbours.relations.get(id),

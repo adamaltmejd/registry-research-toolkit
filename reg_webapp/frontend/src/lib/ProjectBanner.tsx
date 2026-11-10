@@ -8,7 +8,8 @@ import {
   SliderThumb,
   SliderTrack,
 } from "react-aria-components";
-import { type Context, stewardConfig } from "./api";
+import type { Context } from "./api";
+import { stewardDatabases } from "./databases";
 import styles from "./ProjectBanner.module.css";
 import { clampYearWindow } from "./period";
 import type { ProjectStudyWindow } from "./project_data";
@@ -83,7 +84,7 @@ export function ProjectBanner({
   const status = projectVerdict(
     snapshot,
     validation,
-    (stewardConfig(context)?.spaces.length ?? 0) > 1,
+    stewardDatabases(context) !== null,
   );
   const sources = draft?.sources.length ?? 0;
   const columns =
