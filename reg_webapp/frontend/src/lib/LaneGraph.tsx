@@ -243,10 +243,16 @@ export function LaneGraph({
     const node = graphRef.current;
     if (!node || keepFrom === undefined || keepTo === undefined) return;
     const margin = 16;
-    if (keepFrom < node.scrollLeft)
+    const view = node.clientWidth;
+    // A span wider than the view keeps its leading edge, where its name sits.
+    const fits = keepTo - keepFrom + 2 * margin <= view;
+    if (
+      keepFrom < node.scrollLeft ||
+      (!fits && keepFrom > node.scrollLeft + view - margin)
+    )
       node.scrollLeft = Math.max(keepFrom - margin, 0);
-    else if (keepTo > node.scrollLeft + node.clientWidth)
-      node.scrollLeft = keepTo - node.clientWidth + margin;
+    else if (fits && keepTo > node.scrollLeft + view)
+      node.scrollLeft = keepTo - view + margin;
   }, [keepFrom, keepTo]);
   const spansByLane = new Map<string, LaneSpanModel[]>();
   for (const span of spans) {
