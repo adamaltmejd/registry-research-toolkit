@@ -140,7 +140,8 @@ fn checked(
 
 /// The logical order cut to what the steward's files deliver: the order file's clips
 /// replace the logical ones (they start from the same requests) and each entry keeps
-/// only its binding's delivered days, so a `coverage_gap` is not reported as delivered.
+/// only its binding's delivered days, and each row key the days its table's entries keep,
+/// so a `coverage_gap` is not reported as delivered.
 fn delivered(
     server: &Server,
     order: &mut LogicalOrder,
@@ -166,6 +167,27 @@ fn delivered(
                     ..entry.clone()
                 })
                 .collect(),
+        })
+        .collect();
+    // A row identifier is delivered only over days some entry of its table is.
+    order.row_keys = std::mem::take(&mut order.row_keys)
+        .into_iter()
+        .flat_map(|keys| {
+            let days = reg_core::days::merge(
+                order
+                    .entries
+                    .iter()
+                    .filter(|e| e.source == keys.source && e.table == keys.table)
+                    .map(|e| e.period.days(open))
+                    .collect(),
+            );
+            reg_core::days::overlap(&[keys.period.days(open)], &days)
+                .into_iter()
+                .map(|(lo, hi)| OrderRowKeys {
+                    period: server.period(lo, hi),
+                    ..keys.clone()
+                })
+                .collect::<Vec<_>>()
         })
         .collect();
     let names = refs::names(
@@ -405,7 +427,7 @@ pub struct OrderValueSet {
 }
 
 /// A serving table's row-key columns over a period.
-#[derive(Serialize, ToSchema)]
+#[derive(Clone, Serialize, ToSchema)]
 pub struct OrderRowKeys {
     source: String,
     table: String,
@@ -416,7 +438,7 @@ pub struct OrderRowKeys {
 }
 
 /// A row-key column: its variable and the spelling it is delivered under.
-#[derive(Serialize, ToSchema)]
+#[derive(Clone, Serialize, ToSchema)]
 pub struct RowKeyColumn {
     variable: String,
     /// The variable's name.

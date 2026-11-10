@@ -2451,7 +2451,8 @@ a steward server `validate` and `order` also run the holdings stage of
 `mapping_missing` at check time, not when the coordinator makes the order (#2194). A
 steward `order` that succeeds carries the holdings stage's warnings with its own, and
 the order file's clips in place of the logical ones, each entry cut to its binding's
-delivered days: a `coverage_gap` is not listed as delivered (#2220).
+delivered days and each row key to its table's: a `coverage_gap` is not listed as
+delivered (#2220).
 
 ### Project document 6.1.0
 
