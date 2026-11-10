@@ -10,6 +10,7 @@ import {
   type RootChild,
   type ShowNode,
 } from "./api";
+import { registerOfPath } from "./catalog";
 
 /** One cached catalog read. `value` is null until it lands and STAYS null when it
  * failed; `loading` tells those two apart (the caller's `aria-busy`, and a settled
@@ -387,5 +388,16 @@ function loadedClassificationNames(): ReadonlyMap<string, string> {
 function classificationLabel(ref: string): string {
   return (
     loadedClassificationNames().get(ref) ?? (ref.split("/").at(-1) as string)
+  );
+}
+
+/** Whether a catalog path is a table's address, from the register read the
+ * trail already makes: such an address renders its register's page (#2316). */
+export function isTablePathRead(path: string | null): boolean {
+  const register = path === null ? null : registerOfPath(path);
+  if (register === null || register === path) return false;
+  return (
+    registerRead(register).value?.tables.some((table) => table.fqid === path) ??
+    false
   );
 }

@@ -7,7 +7,7 @@ interface InlineSegment {
   /** The emphasis to render, or `null` for plain text. */
   emphasis: Emphasis | null;
   /** An `https` link target; any other scheme, `http` too, stays literal text
-   * (#2110). */
+   * (Operator lane brief 2026-11-10, PR #2391). */
   href?: string;
 }
 

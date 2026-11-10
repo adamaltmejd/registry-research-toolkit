@@ -60,7 +60,7 @@ const GLYPHS: Record<ColumnType, ReactNode> = {
  * A column's type (DESIGN.md → Components → Pill): its glyph and the word,
  * with the years it holds where a column's type changes over time. An
  * identifier takes its own hue, every other type one shared hue (maintainer
- * 2026-11-10, #2317). One pill per type; never for a node's kind (that is
+ * ruling 2026-11-10, quoted in PR #2391). One pill per type; never for a node's kind (that is
  * `TypeTag`) or for status.
  */
 export function TypePill({

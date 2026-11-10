@@ -331,10 +331,10 @@ pure role remaps.
   appears in a MIXED list — palette results, mentions, a project's sources — and as the
   kind pill on a page's pill row. `cat-id` is an identifier's Type pill and `cat-type`
   every other column type's: three categories, kind, identifier and type, one hue each
-  (maintainer 2026-11-10, #2317; the two hex values are proposed by the implementer).
-  Fill and border take the raw hue at a 10 % tint; label text takes the `-ink` stop so
-  every label clears AA. In a list where every item is the same type (registers under
-  Registers, variables within a group) there is no type mark at all.
+  (maintainer ruling 2026-11-10, quoted in PR #2391; the two hex values are proposed by
+  the implementer). Fill and border take the raw hue at a 10 % tint; label text takes
+  the `-ink` stop so every label clears AA. In a list where every item is the same type
+  (registers under Registers, variables within a group) there is no type mark at all.
 - **Graph marks:** `viz-edge-succession` (ink, solid) is a definition change;
   `viz-edge-rename` (muted, dashed) is a rename. Spans are `viz-span` with a
   `border-strong` stroke; outside the study window they take `viz-span-out` and
@@ -511,8 +511,9 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
 - **Home (`/`):** after the design system's Cover, with no hero, cards or counters: the
   product name in `display` type, the deployment's description (`steward.json`
   `description`: what the site is and, for a deployment like SWECOV, what holds the
-  data) in `text-muted`, with inline emphasis and `https` links (#2110; any other scheme stays text). The browse columns
-  are beside it and the project box is in the top bar, so there is no link into either.
+  data) in `text-muted`, with inline emphasis and `https` links (Operator lane brief
+  2026-11-10, PR #2391; any other scheme stays text). The browse columns are beside it
+  and the project box is in the top bar, so there is no link into either.
 - **Detail pane:** breadcrumb path ("Browse registers" as a button below the breakpoint,
   then the ancestors' names in the UI face, `text-muted`: the provider, then the
   register, each a link, ending at the page's parent, since the `h1` names the page
@@ -534,84 +535,85 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   breadcrumb: the kind ("Register", "Variable", "Variable group", each with its glyph),
   then on a variable page its Type pills; a classification's page has no kind pill
   (#2317). Then the `h1`, with no member-of line: the breadcrumb names the register
-  (#2317). Then facets as a labelled row, the actions row, then definitions, then the `Timeline`, then the list of variables or
-  columns, then source documents. A catalog page lists no build findings: the catalog
-  does not carry them (maintainer 2026-11-06, #2335). A variable page has no source and
-  provenance section; MCP keeps `evidence=true` (maintainer 2026-11-04). Padding
-  `spacing.5`. A grouped variable has no page of its own (maintainer 2026-11-04): its
-  address (from search, the palette, a project card or a note) renders its group's page,
-  one route and one page, not a redirect, with that member's lane `current` and its name
-  focused and scrolled into view, unless focus is already elsewhere: opened from a
-  browse column, focus stays on that column's row. A variable is in at most one group. A
-  group page carries the Variable group pill, the `h1`, the group's description as prose under them, and constant facets once in the
-  facets row. Every member is a lane of one `LaneGraph` on the page's axis, in API
-  order, carrying everything a variable page carries: a lane is titled by its varying
-  facets in curated axis order, with the member's name on the line under it, and by the
-  name alone when no axis varies; under it its Type pills, its other facts, and its
-  description where it differs from the group's (two lines, "More" opens the rest). The
-  lane grows to hold them, and its name and line wrap. Its columns are spans to tick,
-  with one coverage row, one "Years to add" and one add bar for the whole group. A
-  succession neighbour outside the group is a read-only lane with its arrows; a relation
-  between two members is an arrow between their lanes. The page's codes, notes and
-  source documents cover every member. A variable page's facts are Type, Classification,
-  Sensitive (only when yes; an identifier is its Type pill) and Topics (maintainer
-  2026-11-04); role, coding, state, temporality, storage and period are not shown. Type
-  is one `TypePill` per type its columns are written as, with the years inside only
-  where it changes over time, in the pill row beside the kind pill rather than a
-  definition row (#2317). The other facts are what its columns state: one value
-  where every column states it alike, each value with its years where they differ, and
-  no row where none states it, never "Not stated" down the list. The `Timeline` states
-  the years and carries the columns, their tables and years, so there is no Years row,
-  no tables list and no table of columns under it; value sets have their own panel, so
-  the facts name only the classification. Where there is no curated description, the
+  (#2317). Then facets as a labelled row, the actions row, then definitions, then the
+  `Timeline`, then the list of variables or columns, then source documents. A catalog
+  page lists no build findings: the catalog does not carry them (maintainer 2026-11-06,
+  #2335). A variable page has no source and provenance section; MCP keeps
+  `evidence=true` (maintainer 2026-11-04). Padding `spacing.5`. A grouped variable has
+  no page of its own (maintainer 2026-11-04): its address (from search, the palette, a
+  project card or a note) renders its group's page, one route and one page, not a
+  redirect, with that member's lane `current` and its name focused and scrolled into
+  view, unless focus is already elsewhere: opened from a browse column, focus stays on
+  that column's row. A variable is in at most one group. A group page carries the
+  Variable group pill, the `h1`, the group's description as prose under them, and
+  constant facets once in the facets row. Every member is a lane of one `LaneGraph` on
+  the page's axis, in API order, carrying everything a variable page carries: a lane is
+  titled by its varying facets in curated axis order, with the member's name on the line
+  under it, and by the name alone when no axis varies; under it its Type pills, its
+  other facts, and its description where it differs from the group's (two lines, "More"
+  opens the rest). The lane grows to hold them, and its name and line wrap. Its columns
+  are spans to tick, with one coverage row, one "Years to add" and one add bar for the
+  whole group. A succession neighbour outside the group is a read-only lane with its
+  arrows; a relation between two members is an arrow between their lanes. The page's
+  codes, notes and source documents cover every member. A variable page's facts are
+  Type, Classification, Sensitive (only when yes; an identifier is its Type pill) and
+  Topics (maintainer 2026-11-04); role, coding, state, temporality, storage and period
+  are not shown. Type is one `TypePill` per type its columns are written as, with the
+  years inside only where it changes over time, in the pill row beside the kind pill
+  rather than a definition row (#2317). The other facts are what its columns state: one
+  value where every column states it alike, each value with its years where they differ,
+  and no row where none states it, never "Not stated" down the list. The `Timeline`
+  states the years and carries the columns, their tables and years, so there is no Years
+  row, no tables list and no table of columns under it; value sets have their own panel,
+  so the facts name only the classification. Where there is no curated description, the
   provider's wording is the Description: once when every period agrees, otherwise each
   wording under its years. It sits under the facts, above the `Timeline`. Timeline and
   facts read the one per-period list (`segments`): on a steward deployment its rows are
-  the files and columns the steward has, over the years it has them. A table has no page of
-  its own (maintainer, dogfood 2026-11-05, #2316): its address (a project card, the
+  the files and columns the steward has, over the years it has them. A table has no page
+  of its own (maintainer, dogfood 2026-11-05, #2316): its address (a project card, the
   palette, a link) renders its register's page with that table's chip on, one route and
   one page, not a redirect; where no chip names it (it delivers no variable, or it is
-  the register's only delivering table) the page shows the whole list. A classification's page shows its codes, its
-  versions and the code changes between them, and no variables (maintainer review
-  2026-11-05, point 5): the classification's name as `h1`, then Publisher and
-  Description as definitions, only when stated. One unframed `LaneGraph` with no
-  heading, as on the variable and group pages (maintainer ruling, 2026-11-05), draws the
-  versions on the page's axis with one lane per part, named by the part in the group
-  page's lane-name style, or one lane named by the classification where it has no parts
-  (the approved plan). Each version is a span on its part's lane, with no name on it:
-  its tooltip names the version and its years in the UI face. Succession within a part
-  reads as order along its lane; an arrow is drawn only where a version continues into
-  another part (SUN 1996 into its three parts). Lanes run in the order each part first
-  starts. The page's axis reaches every version's start, beyond the catalog's years
-  where needed (ICD-11), so every version has a span; an open-ended version's span still
-  ends at the catalog's last year. The graph is the version picker at every width, with
-  no `Select`, as a column is picked on the variable and group pages ("this should use
-  the same component/design for classifications as for variables/columns on
-  group/variable pages", and "Graph everywhere", maintainer ruling, 2026-11-05), under
-  the hint "Click a version to see its codes." (new rule, proposed by the implementer,
-  after the group page's hint). A panel titled "Codes in" and the picked version's name
-  alone, without its years follows, so the version is named on screen and not only in a
-  tooltip (new rule, proposed by the implementer): the picked version's whole list
-  through `ValueSetCodes`, then "Changes since" and the name of each version it
-  succeeds: the counts as one line ("2 added, 1 removed, 2 relabelled.", or "No codes
-  changed."), then a disclosure that lists the codes under Added, Removed and Relabelled
-  (a relabelled code says what it "Was:"), a page at a time with "Show more" (no
-  correspondence tables yet, #795). The picked version is the one a version address
-  names, else the latest version that has started by the catalog's last year (maintainer
-  ruling, 2026-11-05); it is local state, its part's lane on `accent-soft` and its span
-  in the group page's selected-span style. Pressing a span picks its version (maintainer
-  ruling, 2026-11-05), and a version address focuses that span (new rule, proposed by
-  the implementer: picking does not change the URL, which would reload the page).
-  Placement caveats are steward working notes, not shown until the steward curates them
-  for readers. A register page shows under its `h1` only its description, as prose: the timeline
-  shows the years and the chips the tables, so there is no Years or Tables row (#2316).
-  It has no tables table: its tables are FilterChips above the variable list, each with
-  its period, a lens with OR within the selection, offered only when two or more tables
-  deliver variables (the archived variant chips, maintainer 2026-11-03). A register page
-  has no "Unplaced releases" panel (maintainer 2026-11-04). In steward mode a
-  supplemental-only variable is selectable for a project like a reference variable:
-  `order` and `validate` read the composed steward view (crates/DESIGN.md, "Three
-  questions, three scopes").
+  the register's only delivering table) the page shows the whole list. A
+  classification's page shows its codes, its versions and the code changes between them,
+  and no variables (maintainer review 2026-11-05, point 5): the classification's name as
+  `h1`, then Publisher and Description as definitions, only when stated. One unframed
+  `LaneGraph` with no heading, as on the variable and group pages (maintainer ruling,
+  2026-11-05), draws the versions on the page's axis with one lane per part, named by
+  the part in the group page's lane-name style, or one lane named by the classification
+  where it has no parts (the approved plan). Each version is a span on its part's lane,
+  with no name on it: its tooltip names the version and its years in the UI face.
+  Succession within a part reads as order along its lane; an arrow is drawn only where a
+  version continues into another part (SUN 1996 into its three parts). Lanes run in the
+  order each part first starts. The page's axis reaches every version's start, beyond
+  the catalog's years where needed (ICD-11), so every version has a span; an open-ended
+  version's span still ends at the catalog's last year. The graph is the version picker
+  at every width, with no `Select`, as a column is picked on the variable and group
+  pages ("this should use the same component/design for classifications as for
+  variables/columns on group/variable pages", and "Graph everywhere", maintainer ruling,
+  2026-11-05), under the hint "Click a version to see its codes." (new rule, proposed by
+  the implementer, after the group page's hint). A panel titled "Codes in" and the
+  picked version's name alone, without its years follows, so the version is named on
+  screen and not only in a tooltip (new rule, proposed by the implementer): the picked
+  version's whole list through `ValueSetCodes`, then "Changes since" and the name of
+  each version it succeeds: the counts as one line ("2 added, 1 removed, 2 relabelled.",
+  or "No codes changed."), then a disclosure that lists the codes under Added, Removed
+  and Relabelled (a relabelled code says what it "Was:"), a page at a time with "Show
+  more" (no correspondence tables yet, #795). The picked version is the one a version
+  address names, else the latest version that has started by the catalog's last year
+  (maintainer ruling, 2026-11-05); it is local state, its part's lane on `accent-soft`
+  and its span in the group page's selected-span style. Pressing a span picks its
+  version (maintainer ruling, 2026-11-05), and a version address focuses that span (new
+  rule, proposed by the implementer: picking does not change the URL, which would reload
+  the page). Placement caveats are steward working notes, not shown until the steward
+  curates them for readers. A register page shows under its `h1` only its description,
+  as prose: the timeline shows the years and the chips the tables, so there is no Years
+  or Tables row (#2316). It has no tables table: its tables are FilterChips above the
+  variable list, each with its period, a lens with OR within the selection, offered only
+  when two or more tables deliver variables (the archived variant chips, maintainer
+  2026-11-03). A register page has no "Unplaced releases" panel (maintainer 2026-11-04).
+  In steward mode a supplemental-only variable is selectable for a project like a
+  reference variable: `order` and `validate` read the composed steward view
+  (crates/DESIGN.md, "Three questions, three scopes").
 
 Spacing is a 0.25 rem rhythm (`1`–`6`); gaps are set by the container that owns the gap,
 never by margins on children. Density is tuned for scanning long lists: rows are 5–6 px
@@ -1022,7 +1024,7 @@ grow new visual language meanwhile.
   - **TypePill:** a column's type, its glyph and the word, with its years only where the
     type changes over time. The words are the catalog types in plain words ("Words";
     #2071). An identifier takes `cat-id`, every other type `cat-type` (maintainer
-    2026-11-10, #2317).
+    ruling 2026-11-10, quoted in PR #2391).
 - **FilterChip:** a real checkbox behind an `sm`-radius face (padding 4 px 9 px),
   `accent-bg` with an `accent` border and `accent-ink` text at weight 600 when on. A
   LENS: toggling narrows what is shown, never the project. A strip is the facet's

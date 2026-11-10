@@ -196,3 +196,9 @@
   border-radius: 50%;
   background: var(--accent);
 }
+
+/* The header's link (#2324): `.label` clips for its ellipsis, so the ring is
+   drawn inside the link. */
+.label a:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--accent);
+}

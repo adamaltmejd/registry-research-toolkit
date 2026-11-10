@@ -183,7 +183,7 @@
   --cat-code: #9a6b1a; /* gold — value-set codes */
   --cat-class: #7a3f8c; /* plum — classifications */
   --cat-group: #2f6b3f; /* moss — variable groups */
-  /* The column-type pills beside a kind pill (maintainer 2026-11-10, #2317): an
+  /* The column-type pills beside a kind pill (maintainer ruling 2026-11-10, quoted in PR #2391): an
      identifier, and every other column type. */
   --cat-id: #8a4b2c; /* sienna — identifiers */
   --cat-type: #4e6070; /* slate — column types */

@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import styles from "./Pill.module.css";
 
 /** The pill hues: a node kind's, an identifier's, and every other column
- * type's (maintainer 2026-11-10, #2317). */
+ * type's (maintainer ruling 2026-11-10, quoted in PR #2391). */
 export type PillTone =
   | "reg"
   | "var"

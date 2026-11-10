@@ -18,7 +18,7 @@ import {
   trailAncestors,
   unqualifiedCatalogPath,
 } from "./lib/catalog";
-import { ancestorNameRead } from "./lib/catalog_names";
+import { ancestorNameRead, isTablePathRead } from "./lib/catalog_names";
 import { Home } from "./lib/Home";
 import { ProjectEditor } from "./lib/ProjectEditor";
 import { onNavClick, type Route, router } from "./lib/router";
@@ -82,7 +82,14 @@ export function App() {
   const register = useCatalogRead(ancestorNameRead, registerRef);
   const names = new Map<string, string>();
   if (providerRef && provider.value) names.set(providerRef, provider.value);
-  if (registerRef && register.value) names.set(registerRef, register.value);
+  // A table address renders its register's page, whose h1 names the register:
+  // its trail ends at the provider, as the register's own does (#2316).
+  const tablePage = useCatalogRead(
+    isTablePathRead,
+    route.name === "catalog-node" ? route.fqidPath : null,
+  );
+  if (registerRef && register.value && !tablePage)
+    names.set(registerRef, register.value);
   const breadcrumbs = routeBreadcrumbs(route, names).map((crumb) =>
     searching && crumb.narrowOnly
       ? { ...crumb, label: SHOW_MATCHING_REGISTERS_LABEL }

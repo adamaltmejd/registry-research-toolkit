@@ -33,8 +33,8 @@ const GLYPHS: Partial<Record<NodeType, ReactNode>> = {
   group: (
     <>
       <rect x="1.5" y="2.5" width="11" height="9" rx="1" />
-      <rect x="3.5" y="2.5" width="3" height="9" fill="currentColor" />
-      <rect x="7.5" y="2.5" width="3" height="9" fill="currentColor" />
+      <rect x="3" y="2.5" width="2.5" height="9" fill="currentColor" />
+      <rect x="8.5" y="2.5" width="2.5" height="9" fill="currentColor" />
     </>
   ),
 };
