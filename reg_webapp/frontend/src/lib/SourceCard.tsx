@@ -36,7 +36,7 @@ import { Panel } from "./ui/Panel";
 import { Select } from "./ui/Select";
 import { NameSkeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
-import { issueId, type ValidationIssue } from "./validation";
+import { issueId, issueNames, type ValidationIssue } from "./validation";
 
 type Table = RegisterShow["tables"][number];
 
@@ -138,11 +138,16 @@ export function SourceCard({
   const spans: LaneSpanModel[] = [];
   const lanes: LaneModel[] = source.bindings.map((binding, bindingIndex) => {
     const id = binding.variable;
-    const name = names.get(id) ?? "Variable name unavailable";
     const path = `${sourcePath}/bindings/${bindingIndex}`;
     const findings = issues.filter(
       (issue) => issue.path === path || issue.path.startsWith(`${path}/`),
     );
+    // A variable this steward does not offer has no page to read its name
+    // from; the check's finding about it names it (#2220).
+    const name =
+      names.get(id) ??
+      findings.map((issue) => issueNames(issue).get(id)).find(Boolean) ??
+      "Variable name unavailable";
     const onTable = (segments.get(id) ?? []).filter(
       (segment) => segment.table === source.table,
     );

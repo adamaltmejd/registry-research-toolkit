@@ -1280,7 +1280,8 @@ and `sun2000niva`.
     ],
     "findings": [
       {"level": "info", "code": "period_clipped", "path": "/sources/0/bindings/1",
-       "message": "scb/lisa/sun2000niva is available from 2004-01-01; 2003 is not ordered",
+       "message": "There is no data on scb/lisa/sun2000niva in scb/lisa/individ for
+                  [2003-01-01, 2004-01-01). Those years will not be delivered.",
        "source": "lisa", "variable": "scb/lisa/sun2000niva", "table": "scb/lisa/individ",
        "period": {"start": "2003-01-01", "end": "2004-01-01"}, "successor_fqid": null,
        "variable_name": "Utbildningsnivå", "table_name": "Individer", "successor_name": null},
@@ -2327,8 +2328,10 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
   placement holds is a `coverage_gap` warning plus a clip when the binding holds some
   day, and `mapping_missing` (error) when it holds none. A day a routing table delivers
   but only a column `window` leaves out is `column_window_unavailable` under the same
-  partial-vs-whole rule. A day of an `ambiguous_delivered_owners` notice that names the
-  variable among its rivals is `mapping_missing` even when the rest is held. A clip is
+  partial-vs-whole rule. A gap's message ends with what the researcher can do, set
+  where its level is: nothing as a warning (those years are not delivered), other years
+  or removing the variable as an error (#2220). A day of an
+  `ambiguous_delivered_owners` notice that names the variable among its rivals is `mapping_missing` even when the rest is held. A clip is
   the binding's own: its requested days are the logical clip recorded under the project
   binding's variable, so a `follow_successor` binding whose entries name only successors
   still reports the days lost between hops.
@@ -2447,7 +2450,10 @@ a steward server `validate` and `order` also run the holdings stage of
 `materialize_order`, so `ok` is true, and `order` succeeds, exactly when
 `materialize_order` would not block: a variable the steward does not hold is
 `mapping_missing` at check time, not when the coordinator makes the order (#2194). A
-steward `order` that succeeds carries the holdings stage's warnings with its own.
+steward `order` that succeeds carries the holdings stage's warnings with its own, and
+the order file's clips in place of the logical ones, each entry cut to its binding's
+delivered days and each row key to its table's: a `coverage_gap` is not listed as
+delivered (#2220).
 
 ### Project document 6.1.0
 

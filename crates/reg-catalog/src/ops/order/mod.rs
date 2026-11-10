@@ -131,11 +131,92 @@ fn checked(
         (server.catalog.connect_holdings()?, server.catalog.steward())
     {
         match materialize::manifest(server, &held, steward, project, &order)? {
-            Ok(manifest) => order.findings = named_issues(server, manifest.findings)?,
+            Ok(manifest) => delivered(server, &mut order, manifest)?,
             Err(findings) => return Ok(Err(findings)),
         }
     }
     Ok(Ok(order))
+}
+
+/// The logical order cut to what the steward's files deliver: the order file's clips
+/// replace the logical ones (they start from the same requests) and each entry keeps
+/// only its binding's delivered days, and each row key the days its table's entries keep,
+/// so a `coverage_gap` is not reported as delivered.
+fn delivered(
+    server: &Server,
+    order: &mut LogicalOrder,
+    manifest: reg_core::manifest::Manifest,
+) -> Result<(), Error> {
+    let open = server.open;
+    // By binding, not variable: a followed successor's entry names the successor.
+    let ordered = |entry: &OrderEntry| {
+        manifest
+            .clips
+            .iter()
+            .find(|c| c.source == entry.source && c.binding == entry.binding)
+            .map(|c| reg_core::days::merge(c.ordered.iter().map(|p| p.days(open)).collect()))
+    };
+    order.entries = std::mem::take(&mut order.entries)
+        .into_iter()
+        .flat_map(|entry| match ordered(&entry) {
+            None => vec![entry],
+            Some(days) => reg_core::days::overlap(&[entry.period.days(open)], &days)
+                .into_iter()
+                .map(|(lo, hi)| OrderEntry {
+                    period: server.period(lo, hi),
+                    ..entry.clone()
+                })
+                .collect(),
+        })
+        .collect();
+    // A row identifier is delivered only over days some entry of its table is.
+    order.row_keys = std::mem::take(&mut order.row_keys)
+        .into_iter()
+        .flat_map(|keys| {
+            let days = reg_core::days::merge(
+                order
+                    .entries
+                    .iter()
+                    .filter(|e| e.source == keys.source && e.table == keys.table)
+                    .map(|e| e.period.days(open))
+                    .collect(),
+            );
+            reg_core::days::overlap(&[keys.period.days(open)], &days)
+                .into_iter()
+                .map(|(lo, hi)| OrderRowKeys {
+                    period: server.period(lo, hi),
+                    ..keys.clone()
+                })
+                .collect::<Vec<_>>()
+        })
+        .collect();
+    let names = refs::names(
+        server,
+        manifest
+            .clips
+            .iter()
+            .map(|c| c.variable.as_str())
+            .chain(manifest.findings.iter().flat_map(issue_refs)),
+    )?;
+    order.clips = manifest
+        .clips
+        .into_iter()
+        .map(|c| {
+            Ok(OrderClip {
+                variable_name: names.of(Named::Variable, &c.variable)?,
+                source: c.source,
+                variable: c.variable,
+                requested: c.requested,
+                ordered: c.ordered,
+            })
+        })
+        .collect::<Result<_, Error>>()?;
+    order.findings = manifest
+        .findings
+        .into_iter()
+        .map(|issue| NamedIssue::name(issue, &names))
+        .collect();
+    Ok(())
 }
 
 /// The structurally valid project, or `project_invalid` with its issues.
@@ -304,7 +385,7 @@ pub struct OrderProject {
 }
 
 /// One stretch of one requested variable in one table.
-#[derive(Serialize, ToSchema)]
+#[derive(Clone, Serialize, ToSchema)]
 pub struct OrderEntry {
     /// The project source's name.
     source: String,
@@ -339,14 +420,14 @@ pub struct OrderEntry {
 }
 
 /// An entry's value set by its content hash.
-#[derive(Serialize, ToSchema)]
+#[derive(Clone, Serialize, ToSchema)]
 pub struct OrderValueSet {
     hash: String,
     n_items: i64,
 }
 
 /// A serving table's row-key columns over a period.
-#[derive(Serialize, ToSchema)]
+#[derive(Clone, Serialize, ToSchema)]
 pub struct OrderRowKeys {
     source: String,
     table: String,
@@ -357,7 +438,7 @@ pub struct OrderRowKeys {
 }
 
 /// A row-key column: its variable and the spelling it is delivered under.
-#[derive(Serialize, ToSchema)]
+#[derive(Clone, Serialize, ToSchema)]
 pub struct RowKeyColumn {
     variable: String,
     /// The variable's name.

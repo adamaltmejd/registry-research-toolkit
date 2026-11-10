@@ -75,7 +75,7 @@
       "level": "info",
       "code": "period_clipped",
       "path": "/sources/0/bindings/0",
-      "message": "demo/pins/kod is not available over [2019-01-01, 2020-01-01); that part is not ordered",
+      "message": "There is no data on demo/pins/kod in demo/pins for [2019-01-01, 2020-01-01). Those years will not be delivered.",
       "source": "s",
       "variable": "demo/pins/kod",
       "variable_name": "Code",

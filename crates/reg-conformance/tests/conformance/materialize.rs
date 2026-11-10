@@ -90,6 +90,22 @@ fn check_case(case: &Path) -> Result<(), String> {
         if !json_eq(&Value::from(bare), &data["findings"]) {
             return Err(format!("order's findings differ: {logical}"));
         }
+        // Fails if steward `order` keeps the logical clips, so the project page lists
+        // years under "What will be delivered" that a `coverage_gap` leaves out
+        // (#2220). `order`'s clip names its variable; the order file's its binding.
+        let strip = |list: &Value, key: &str| -> Value {
+            let mut list = list.clone();
+            for clip in list.as_array_mut().into_iter().flatten() {
+                clip.as_object_mut().map(|map| map.remove(key));
+            }
+            list
+        };
+        if !json_eq(
+            &strip(&logical["data"]["clips"], "variable_name"),
+            &strip(&data["clips"], "binding"),
+        ) {
+            return Err(format!("order's clips differ: {logical}"));
+        }
     } else {
         if status != 422 || answer["error"]["code"] != "order_blocked" {
             return Err(format!("expected order_blocked: {status} {answer}"));
