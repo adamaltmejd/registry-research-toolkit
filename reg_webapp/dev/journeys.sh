@@ -106,18 +106,16 @@ j_search() {
 }
 
 # J3 open a variable. Fails if the variable page loses its lane per table or the
-# catalog type in plain words (Antal's int: Whole number), a value set stops opening
-# with its codes, or the code search stops narrowing them.
+# catalog type in plain words (Antal's int: Whole number), or a value set of 20 codes or
+# fewer stops opening at once with its codes and no search field (#2320).
 j_variable() {
 	visit /catalog/demo/hush/antal && see heading "Antal personer" &&
 		see list "Variable columns" &&
 		tree 'image "Antal, Antal personer, Familjer, 2021–2022' &&
 		tree 'image "Antal, Antal personer, Individer, 2021' &&
 		wait_text "Whole number" &&
-		visit /catalog/demo/bas/kon && press button "kon; Basregistret 2015–2022" &&
-		wait_text "Kvinna" && tree 'StaticText "Man"' &&
-		fill searchbox "Search codes" Kvinna && wait_text "1 of 3" &&
-		no_tree 'StaticText "Man"' && shot
+		visit /catalog/demo/bas/kon && wait_text "Kvinna" && tree 'StaticText "Man"' &&
+		no_tree 'searchbox "Search codes"' && shot
 }
 
 # J4 classification version, picked with the mouse (maintainer 2026-11-05). Fails if

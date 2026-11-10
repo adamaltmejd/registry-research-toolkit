@@ -318,13 +318,14 @@ pure role remaps.
   selected row's bar, the focus ring, the study-window bounds. `accent-bg` is the wash:
   selected variable rows, the study-window band, the active segment. `accent-band` is
   one stop stronger and has one use: an add window that differs from the study window
-  (see Time). `accent-soft` is the project banner's fill and the current lane in a
-  graph. `accent-ink` is pine as text (in-project counts, window years on an axis).
+  (see Time). `accent-soft` is the project banner's fill and the picked version's lane
+  on a classification's page; a variable's or group's lanes have no fill (maintainer,
+  dogfood 2026-11-05, #2319). `accent-ink` is pine as text (in-project counts, window years on an axis).
   Never use pine for a verdict, a type or decoration; `ok` is a verdict, `accent` is
   ownership.
 - **Status (`err`, `warn`, `info`, `ok` and their `-bg` tints):** the only other
-  chromatic chrome, each paired with a glyph and text. `warn` also marks a definition
-  change on a timeline. Never use a `-bg` tint as a text color, and never use a status
+  chromatic chrome, each paired with a glyph and text. A timeline marks no coding
+  change ("Drop them", maintainer, dogfood 2026-11-05, #2319). Never use a `-bg` tint as a text color, and never use a status
   hue for emphasis, selection, or brand.
 - **Categorical (`cat-reg` teal, `cat-var` indigo, `cat-code` gold, `cat-class` plum,
   `cat-group` moss; `cat-id` sienna, `cat-type` slate):** the `Pill` hues. A node kind's
@@ -533,7 +534,7 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   its address (new rule, proposed by the implementer). Then, on a register's,
   variable's, group's or classification's page one row of same-size pills under the
   breadcrumb: the kind ("Register", "Variable", "Variable group", each with its glyph),
-  then on a variable page its Type pills; a classification's page has no kind pill
+  then on a variable's or group's page its Type pills; a classification's page has no kind pill
   (#2317). Then the `h1`, with no member-of line: the breadcrumb names the register
   (#2317). Then facets as a labelled row, the actions row, then definitions, then the
   `Timeline`, then the list of variables or columns, then source documents. A catalog
@@ -542,34 +543,41 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   `evidence=true` (maintainer 2026-11-04). Padding `spacing.5`. A grouped variable has
   no page of its own (maintainer 2026-11-04): its address (from search, the palette, a
   project card or a note) renders its group's page, one route and one page, not a
-  redirect, with that member's lane `current` and its name focused and scrolled into
-  view, unless focus is already elsewhere: opened from a browse column, focus stays on
-  that column's row. A variable is in at most one group. A group page carries the
-  Variable group pill, the `h1`, the group's description as prose under them, and
-  constant facets once in the facets row. Every member is a lane of one `LaneGraph` on
-  the page's axis, in API order, carrying everything a variable page carries: a lane is
-  titled by its varying facets in curated axis order, with the member's name on the line
-  under it, and by the name alone when no axis varies; under it its Type pills, its
-  other facts, and its description where it differs from the group's (two lines, "More"
-  opens the rest). The lane grows to hold them, and its name and line wrap. Its columns
-  are spans to tick, with one coverage row, one "Years to add" and one add bar for the
-  whole group. A succession neighbour outside the group is a read-only lane with its
-  arrows; a relation between two members is an arrow between their lanes. The page's
-  codes, notes and source documents cover every member; its successions and documents
-  are one read each at the group's ref, not one per member (#2232, 2026-11-10). A
-  variable page's facts are Type, Classification, Sensitive (only when yes; an
+  redirect, with that member's name focused and scrolled into view, unless focus is
+  already elsewhere: opened from a browse column, focus stays on that column's row. A
+  variable is in at most one group. A variable's page and a group's page are one page
+  (maintainer, dogfood 2026-11-05, #2319): only the address (`/set/`) and the kind pill
+  tell them apart. Both carry the pill row, the `h1`, a group's constant facets once in
+  the facets row, the facts, the Description panel, the `Timeline`, the value sets and
+  the source documents, every one over all the page's columns; a group's successions
+  and documents are one read each at the group's ref, not one per member (#2232,
+  2026-11-10). On a group page every
+  member is a lane of the one `LaneGraph`, in API order: a lane is titled by its varying
+  facets in curated axis order, with the member's name on the line under it, and by the
+  name alone when no axis varies; under it only its description where it differs from
+  the group's (two lines, "More" opens the rest). The lane grows to hold it, and its
+  name and line wrap. Its columns are spans to tick, with one coverage row, one "Years
+  to add" and one add bar for the whole group. A succession neighbour outside the group
+  is a read-only lane with its arrows; a relation between two members is an arrow
+  between their lanes. The facts are Type, Classification, Sensitive (only when yes; an
   identifier is its Type pill) and Topics (maintainer 2026-11-04); role, coding, state,
-  temporality, storage and period are not shown. Type is one `TypePill` per type its
-  columns are written as, with the years inside only where it changes over time, in the
-  pill row beside the kind pill rather than a definition row (#2317). The other facts
-  are what its columns state: one value where every column states it alike, each value
-  with its years where they differ, and no row where none states it, never "Not stated"
-  down the list. The `Timeline`
-  states the years and carries the columns, their tables and years, so there is no Years
-  row, no tables list and no table of columns under it; value sets have their own panel,
-  so the facts name only the classification. Where there is no curated description, the
-  provider's wording is the Description: once when every period agrees, otherwise each
-  wording under its years. It sits under the facts, above the `Timeline`. Timeline and
+  temporality, storage and period are not shown. They sit in the page's head on both
+  pages, never in a lane (#2319). Type is one `TypePill` per type the columns are
+  written as, with the years inside only where it changes over time, in the pill row
+  beside the kind pill rather than a definition row (#2317). The other facts are what
+  the columns state: one value where every column states it alike, each value with its
+  years where they differ, and no row where none states it, never "Not stated" down the
+  list. Classification names the classification once, by its name, linking to its page,
+  where the versions are; only a version the classifications list lacks is named by
+  itself (maintainer 2026-11-10, in this PR: on the SWECOV Kommun group the members code
+  28 versions of one classification). The `Timeline` states the years and carries the
+  columns, their tables and years, so there is no Years row, no tables list and no table
+  of columns under it; value sets have their own panel, so the facts name only the
+  classification. The Description is the curated description; on a variable page
+  without one it is the provider's wording: once when every period agrees, otherwise
+  each wording under its years. It sits under the facts, above the `Timeline`, on both
+  pages (new rule, proposed by the implementer: a group's description was prose under
+  its `h1`). Timeline and
   facts read the one per-period list (`segments`): on a steward deployment its rows are
   the files and columns the steward has, over the years it has them. A table has no page
   of its own (maintainer, dogfood 2026-11-05, #2316): its address (a project card, the
@@ -596,7 +604,7 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   the implementer, after the group page's hint). A panel titled "Codes in" and the
   picked version's name alone, without its years follows, so the version is named on
   screen and not only in a tooltip (new rule, proposed by the implementer): the picked
-  version's whole list through `ValueSetCodes`, then "Changes since" and the name of
+  version's list through `ValueSetCodes` (see value sets, under Time), then "Changes since" and the name of
   each version it succeeds: the counts as one line ("2 added, 1 removed, 2 relabelled.",
   or "No codes changed."), then a disclosure that lists the codes under Added, Removed
   and Relabelled (a relabelled code says what it "Was:"), a page at a time with "Show
@@ -761,24 +769,28 @@ Time is the axis every relation is drawn on.
   delivery." and does not count toward the axis. A one-year axis widens by one step of
   5, backward where forward would pass the catalog's last year. A page's drawings share
   its one year range, so they compare by year, not pixel for pixel: a `VariableRow`'s
-  bar column, the `Timeline` and the `CodeTimeline` each have their own gutters. A page
+  bar column and the `Timeline` each have their own gutters. A page
   with several sources draws them on one range. The axis of a `LaneGraph` (the
-  `Timeline` and source timelines), a code timeline and a `VariableRow` list labels its
+  `Timeline` and source timelines) and of a `VariableRow` list labels its
   first and last year, at every width (maintainer 2026-11-05), each on its own cell
   against the track's edge. On a `LaneGraph` a window bound whose label would touch an
   end's hangs away from that end, and where they still touch, the bound's label is
   dropped (the window's band still marks it); an end's label never moves or gives way.
 
-- A **`Timeline`** is drawn on the page's axis, its coverage row captioned "Years" in
-  the name column (dropped when the names stack, where the axis heads the row), with no
+- A **`Timeline`** is drawn on the page's axis, its coverage row captioned in the name
+  column: by the variable's name on a variable page, which heads the drawing (#2319),
+  and "Years" on a group page. Stacked, "Years" is dropped (the axis heads the row) and
+  the variable's name sits over the drawing (maintainer 2026-11-10, in this PR). No
   header, no "Variable" column header and no legend (maintainer 2026-11-04); a screen
   reader hears the covered years and the years to add. Coverage is one ink box per
   delivered year, a `surface` hairline between boxes, empty where a year has no
   delivery. On a variable page it is one drawing with the columns (#1833, maintainer
   ruling 2026-10-23): it is drawn as a `LaneGraph` headed by the coverage row (axis,
   then coverage with the period thumbs, then lanes), so the band runs through every
-  lane. The variable's columns are its lanes, one per table and titled by the table's
-  name, labelled spans in the `ColumnChip` shape with a coding change as a `warn` mark.
+  lane. The variable's columns are its lanes, one per table, each titled by a "Table"
+  kind pill (the `TypeTag` with its glyph) and the table's name, so a lane reads as one
+  of the variable's tables, not as another variable (#2319); labelled spans in the
+  `ColumnChip` shape.
   One span per column name on a table: a steward's yearly files of one table are the
   same column delivered in several files, one box over their years with a gap where a
   year is not delivered (maintainer 2026-11-04). A span's column name is never cut: it
@@ -793,10 +805,10 @@ Time is the axis every relation is drawn on.
   the breakpoint, a lane's spans start just under its name. Hovering or focusing a span
   shows its column, table and years at once in a RAC `Tooltip` with no delay. The
   variables a succession reaches are further lanes in time order, with their arrows. A
-  line under the drawing says "Click a column to add it to your project."; with no
-  project open it says "Create a project to add columns." beside a "Create a project"
-  button, the top bar's action, since the top bar scrolls away below the breakpoint.
-  There is no second graph on the page. While it loads the region is a `Skeleton`; a
+  line under the drawing says "Click a column to add it to your project." while a
+  project is open; with none there is no line and no button at any width, since the top
+  bar has the action ("yes", maintainer, dogfood 2026-11-05, #2319). There is no second
+  graph on the page. While it loads the region is a `Skeleton`; a
   failed load is an error `StatusRow` in the region with Retry; a variable with no years
   says "No years recorded for this variable." in place of the lanes. Succession reaches
   one hop of read-only lanes, with arrows from predecessor to successor and each
@@ -840,19 +852,17 @@ Time is the axis every relation is drawn on.
   staged. On a variable page the `LaneGraph` is the `Timeline` (above). Don't draw
   free-form node graphs; the time axis is the information.
 
-- A group page's **codes** are a code timeline on the page's axis, at the page's width,
-  so its track is the lanes' track: one row per code and label, sorted by code
-  (numerically), a further label of the same code continuing its row without the code or
-  a rule. A box marks the years some column uses it; a light `surface-sunken` track the
-  years the block's columns have codes. A column that has codes in those years but not
-  this one is named under the label ("Not in" its `ColumnChip`, with years only where
-  that is part of its years), or the users are ("Only in"), whichever is shorter. Boxes
-  have no hover and no tab stop; each row tells a screen reader the years it is used.
-  Code lists one column codes, or that share 30% of their code and label pairs, are one
-  block; with several blocks each is headed by its columns, with one there is no
-  heading. A block whose lists all have at most 10 codes shows at once; a longer one
-  waits for "Show codes". A hierarchical list is browsed level by level (the value-set
-  browser), not drawn. There is no legend (maintainer 2026-11-04, PLAN §14).
+- A variable's or group's **value sets** are one panel, "Value sets", in one component
+  on both pages (#2320, maintainer 2026-11-10; this overturns the 2026-11-04 group-page
+  code timeline, PLAN §14): one entry per distinct code list, a disclosure titled by its
+  first name ("and N more"), over the tables that use it, each table's name linking to
+  its register page with the column's `ColumnChip` carrying its years (the column tells
+  a group's members apart where they share a table; new rule, proposed by the
+  implementer). Opened, it lists the list's names, then its codes (`ValueSetCodes`). A
+  list of 20 codes or fewer opens at once, with no search field; a larger one opens on
+  demand, with "Search codes", and reads 50 codes at a time before "Show more"
+  (maintainer 2026-11-10, #2320). A classification's page lists a version's codes the
+  same way. A hierarchical list is browsed level by level.
 
 - **Terms** read as runs: consecutive half-years join across the year ("HT2012–VT2019"),
   and the same half-year in consecutive years joins on the year ("VT2013–2019").
