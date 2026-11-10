@@ -2944,7 +2944,7 @@
   },
   {
     "name": "graph",
-    "description": "What a variable, table or register replaces, is replaced by or is derived from, with the date and the source's own note. `kind=derived_from` is the lineage.",
+    "description": "What a variable, table or register replaces, is replaced by or is derived from, with the date and the source's own note. `kind=derived_from` is the lineage. A set ref answers for all its member variables at once.",
     "inputSchema": {
       "properties": {
         "kind": {
@@ -5311,7 +5311,7 @@
   },
   {
     "name": "docs",
-    "description": "Set `operation` to one of these; `?` marks an optional argument.\n- `docs_search` (q?, register?, limit?, cursor?): Search the catalog's documents; without `q`, list them by title. `register` keeps that register's documents.\n- `docs_get` (doc): A document by hash: what it covers, an excerpt and, when available, the full text.\n- `docs_related` (ref): The documents about a register (including its tables and variables), table, variable or classification.",
+    "description": "Set `operation` to one of these; `?` marks an optional argument.\n- `docs_search` (q?, register?, limit?, cursor?): Search the catalog's documents; without `q`, list them by title. `register` keeps that register's documents.\n- `docs_get` (doc): A document by hash: what it covers, an excerpt and, when available, the full text.\n- `docs_related` (ref): The documents about a register (including its tables and variables), table, variable or classification, or about any of a set's member variables.",
     "inputSchema": {
       "properties": {
         "cursor": {

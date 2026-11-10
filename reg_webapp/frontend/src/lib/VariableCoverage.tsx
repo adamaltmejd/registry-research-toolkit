@@ -17,6 +17,7 @@ import {
 } from "./api";
 import {
   graphRead,
+  groupGraphReads,
   type Read,
   registerRead,
   registerSubjectNames,
@@ -61,8 +62,14 @@ export interface CoverageSubject {
   lane?: Omit<LaneModel, "id" | "relations" | "current">;
 }
 
-const readGraphs = (refs: readonly string[]) =>
-  Object.fromEntries(refs.map((fqid) => [fqid, graphRead(fqid)]));
+/** `key` is `[group, ...fqids]` as JSON: a group page reads its members' graphs
+ * in one request, a variable page its own. */
+const readGraphs = (key: string) => {
+  const [group, ...fqids] = JSON.parse(key) as [string | null, ...string[]];
+  return group
+    ? groupGraphReads(group, fqids)
+    : Object.fromEntries(fqids.map((fqid) => [fqid, graphRead(fqid)]));
+};
 const readNeighbourSegments = (refs: readonly string[]) =>
   Object.fromEntries(refs.map((fqid) => [fqid, segmentsRead(fqid)]));
 const readNeighbourRegisters = (refs: readonly string[]) =>
@@ -75,9 +82,17 @@ const pending = (reads: Record<string, Read<unknown>>) =>
 
 /** The one-hop succession of the page's variables: their graphs, the columns
  * of the neighbours outside them, and the names of the neighbours' other
- * registers. */
-export function useSuccession(fqids: readonly string[], register: string) {
-  const graphReads = useCatalogRead(readGraphs, useDistinct(fqids));
+ * registers. A group page names its `group`, whose one read answers for every
+ * member. */
+export function useSuccession(
+  fqids: readonly string[],
+  register: string,
+  group: string | null = null,
+) {
+  const graphReads = useCatalogRead(
+    readGraphs,
+    JSON.stringify([group, ...useDistinct(fqids)]),
+  );
   const own = new Set(fqids);
   const neighbours = useCatalogRead(
     readNeighbourSegments,

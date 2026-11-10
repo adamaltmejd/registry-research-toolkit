@@ -1286,37 +1286,35 @@ fn set_members(
     conn: &Connection,
     entity: &Entity,
 ) -> Result<Vec<(i64, ShowSetMember)>, Error> {
-    let mut members: Vec<(i64, ShowSetMember)> = rows(
-        conn,
-        "SELECT v.id, v.pid, l.body, d.body FROM var_set_member m
-         JOIN variable v ON v.id = m.variable_id
+    let mut texts = conn.prepare(
+        "SELECT l.body, d.body FROM variable v
          JOIN text l ON l.id = v.label_text
          LEFT JOIN text d ON d.id = v.description_text
-         WHERE m.set_id = ? ORDER BY v.pid",
-        [entity.id],
-        |row| {
+         WHERE v.id = ?",
+    )?;
+    let mut members = refs::set_members(server, conn, entity)?
+        .into_iter()
+        .map(|(id, fqid)| {
+            let (name, description) =
+                texts.query_row([id], |row| Ok((row.get(0)?, row.get(1)?)))?;
             Ok((
-                row.get(0)?,
+                id,
                 ShowSetMember {
-                    fqid: row.get(1)?,
-                    name: row.get(2)?,
-                    description: row.get(3)?,
+                    fqid,
+                    name,
+                    description,
                     segments: vec![],
                     facets: vec![],
                 },
             ))
-        },
-    )?;
+        })
+        .collect::<Result<Vec<_>, Error>>()?;
     let mut facets = conn.prepare(
         "SELECT f.axis, f.value, l.body FROM var_set_member_facet f
          JOIN var_set_axis a ON a.set_id = f.set_id AND a.axis = f.axis
          JOIN text l ON l.id = f.label_text
          WHERE f.set_id = ? AND f.variable_id = ? ORDER BY a.ord",
     )?;
-    members.retain(|(_, member)| server.catalog.serves("variable", &member.fqid));
-    if server.catalog.steward().is_some() && members.is_empty() {
-        return Err(Error::not_found(&entity.pid));
-    }
     let origins = segments::origins(server, server.catalog.connect()?)?;
     // simplify: one segments list per member; batch by variable id if a set reaches
     // hundreds of members.

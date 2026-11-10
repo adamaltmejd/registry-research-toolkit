@@ -555,14 +555,16 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   are spans to tick, with one coverage row, one "Years to add" and one add bar for the
   whole group. A succession neighbour outside the group is a read-only lane with its
   arrows; a relation between two members is an arrow between their lanes. The page's
-  codes, notes and source documents cover every member. A variable page's facts are
-  Type, Classification, Sensitive (only when yes; an identifier is its Type pill) and
-  Topics (maintainer 2026-11-04); role, coding, state, temporality, storage and period
-  are not shown. Type is one `TypePill` per type its columns are written as, with the
-  years inside only where it changes over time, in the pill row beside the kind pill
-  rather than a definition row (#2317). The other facts are what its columns state: one
-  value where every column states it alike, each value with its years where they differ,
-  and no row where none states it, never "Not stated" down the list. The `Timeline`
+  codes, notes and source documents cover every member; its successions and documents
+  are one read each at the group's ref, not one per member (#2232, 2026-11-10). A
+  variable page's facts are Type, Classification, Sensitive (only when yes; an
+  identifier is its Type pill) and Topics (maintainer 2026-11-04); role, coding, state,
+  temporality, storage and period are not shown. Type is one `TypePill` per type its
+  columns are written as, with the years inside only where it changes over time, in the
+  pill row beside the kind pill rather than a definition row (#2317). The other facts
+  are what its columns state: one value where every column states it alike, each value
+  with its years where they differ, and no row where none states it, never "Not stated"
+  down the list. The `Timeline`
   states the years and carries the columns, their tables and years, so there is no Years
   row, no tables list and no table of columns under it; value sets have their own panel,
   so the facts name only the classification. Where there is no curated description, the

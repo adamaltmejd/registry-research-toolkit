@@ -1031,8 +1031,10 @@ request, cache hits included, so a view never fans out a read per listed entity.
 root `show` carries each provider's registers (the provider summary's list), so the
 browse column is one read. `segments` at a table ref with `variable` (up to 200
 variables) lists those variables' rows in that table as one list, each row naming its
-`variable`, so the project page reads a table's columns in a few requests. Each page
-rebuilds the read's whole row set, so naming many variables trades requests for repeated
+`variable`, so the project page reads a table's columns in a few requests. `graph` and
+`docs_related` at a set ref answer the union of its served members' answers (a member's
+own graph is the edges that touch it), so a group page reads each in one request, not
+one per member. Each page rebuilds the read's whole row set, so naming many variables trades requests for repeated
 work: on a 107-column LISA draft 25 variables a read gives 9 reads building 3,010 rows,
 100 gives 9 building 11,812. A table ref without `variable` is refused: a whole table's
 list runs to thousands of rows, rebuilt per page. A cursor binds a SHA-256 of the

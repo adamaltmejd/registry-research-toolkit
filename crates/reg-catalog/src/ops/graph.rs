@@ -1,4 +1,4 @@
-//! `graph`: the typed relations around a variable, a table or a register.
+//! `graph`: the typed relations around a variable, a table, a register or a set's members.
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -18,7 +18,8 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     paths: &["/api/graph/{ref}"],
     tool: Some("graph"),
     description: "What a variable, table or register replaces, is replaced by or is derived \
-        from, with the date and the source's own note. `kind=derived_from` is the lineage.",
+        from, with the date and the source's own note. `kind=derived_from` is the lineage. \
+        A set ref answers for all its member variables at once.",
     params: &[
         Param::required("ref", Type::Ref),
         Param::optional("kind", Type::Enum(KINDS)),
@@ -79,14 +80,17 @@ fn held_only<K>(server: &Server, nodes: &mut Nodes, edges: &mut Vec<(K, GraphEdg
     });
 }
 
-fn graph(server: &Server, params: &Params) -> Result<Value, Error> {
-    let conn = server.catalog.connect_for_ref(params["ref"])?;
-    let value = params["ref"];
-    let kind = params.get("kind").copied();
-    if kind.is_some_and(|k| !KINDS.contains(&k)) {
-        return Err(Error::invalid_parameter("kind"));
-    }
-    let entity = refs::resolve(&conn, value)?;
+/// A holdings relation row as read: its kind, both ends by kind and pid, and its start.
+type ExternalKey = (String, String, String, String, String, Option<i64>);
+
+/// Each focus of `entity` with the entities whose relations it has: the entity itself
+/// (a register with its implicit table), or each of a set's members.
+fn focuses(
+    server: &Server,
+    conn: &Connection,
+    value: &str,
+    entity: &refs::Entity,
+) -> Result<Vec<(String, Vec<End>)>, Error> {
     let mut ends: Vec<End> = vec![(entity.kind.clone(), entity.id)];
     match entity.kind.as_str() {
         "variable" | "table" => {}
@@ -94,12 +98,19 @@ fn graph(server: &Server, params: &Params) -> Result<Value, Error> {
             // A register with an implicit table has that table's relations too: the
             // table carries the register's pid.
             let implicit = rows(
-                &conn,
+                conn,
                 "SELECT id FROM tbl WHERE pid = ?",
                 [&entity.pid],
                 |row| row.get::<_, i64>(0),
             )?;
             ends.extend(implicit.into_iter().map(|id| ("table".to_owned(), id)));
+        }
+        // A set is the union of its members' graphs (#2232).
+        "set" => {
+            return Ok(refs::set_members(server, conn, entity)?
+                .into_iter()
+                .map(|(id, fqid)| (fqid, vec![("variable".to_owned(), id)]))
+                .collect());
         }
         // simplify: classification graphs (versions and their correspondences) are not
         // served; serve them when a reader needs version correspondences.
@@ -112,17 +123,32 @@ fn graph(server: &Server, params: &Params) -> Result<Value, Error> {
             return Err(refs::wrong_kind(
                 value,
                 other,
-                "not a variable, a table or a register",
+                "not a variable, a table, a register or a set",
             ));
         }
     }
+    Ok(vec![(entity.pid.clone(), ends)])
+}
+
+fn graph(server: &Server, params: &Params) -> Result<Value, Error> {
+    let conn = server.catalog.connect_for_ref(params["ref"])?;
+    let value = params["ref"];
+    let kind = params.get("kind").copied();
+    if kind.is_some_and(|k| !KINDS.contains(&k)) {
+        return Err(Error::invalid_parameter("kind"));
+    }
+    let entity = refs::resolve(&conn, value)?;
+    let focuses = focuses(server, &conn, value, &entity)?;
 
     let mut nodes = Nodes::new();
-    let (pid, name) = node(&conn, &(entity.kind.clone(), entity.id))?;
-    nodes.insert((pid, entity.kind.clone()), name);
+    for (_, ends) in &focuses {
+        let (focus_kind, _) = &ends[0];
+        let (pid, name) = node(&conn, &ends[0])?;
+        nodes.insert((pid, focus_kind.clone()), name);
+    }
     let mut edges = Vec::new();
     let mut seen = BTreeSet::new();
-    for end in &ends {
+    for end in focuses.iter().flat_map(|(_, ends)| ends) {
         let mut statement = conn.prepare(
             "SELECT r.id, r.kind, r.subject_kind, r.subject_id, r.object_kind, r.object_id,
                     r.at_start, r.at_end, r.prov, c.body
@@ -168,7 +194,18 @@ fn graph(server: &Server, params: &Params) -> Result<Value, Error> {
             ));
         }
     }
-    external_relations(server, &entity.pid, &ends, kind, &mut nodes, &mut edges)?;
+    let mut external = BTreeSet::new();
+    for (focus, ends) in &focuses {
+        external_relations(
+            server,
+            focus,
+            ends,
+            kind,
+            &mut external,
+            &mut nodes,
+            &mut edges,
+        )?;
+    }
     // NULL `at_start` sorts first; the key is the contract's, which `relation`'s
     // uniqueness makes total up to the implicit table's shared pid.
     edges.sort_by(|a, b| a.0.cmp(&b.0));
@@ -191,6 +228,9 @@ fn external_relations(
     focus: &str,
     ends: &[End],
     kind: Option<&str>,
+    // The rows already answered: an edge between two of a set's members is read for
+    // each of them.
+    seen: &mut BTreeSet<ExternalKey>,
     nodes: &mut Nodes,
     edges: &mut Vec<Edge>,
 ) -> Result<(), Error> {
@@ -222,6 +262,17 @@ fn external_relations(
         let (relation, subject_kind, from, object_kind, to, start, end, caveat) = row?;
         let selected = |pid: &str, kind: &str| pid == focus && ends.iter().any(|e| e.0 == kind);
         if !selected(&from, &subject_kind) && !selected(&to, &object_kind) {
+            continue;
+        }
+        let key = (
+            relation.clone(),
+            subject_kind.clone(),
+            from.clone(),
+            object_kind.clone(),
+            to.clone(),
+            start,
+        );
+        if !seen.insert(key) {
             continue;
         }
         let (_, from_name) = node_by_pid(&extra, &subject_kind, &from)?;

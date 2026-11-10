@@ -1,0 +1,7 @@
+{
+  "note": "graph at a set ref, from fixtures/webapp-dev: the person set (curation: Ålder and Kommun) answers the union of its members' graphs, so a group page reads every member's succession in one request (#2232). Kommun's derived_from link to Hushållsregistret (frame links) is its one edge; Ålder has none but is still a node, as each member is the focus of its own graph. The focus is the set's fqid. Fails if a set ref is refused, if a member without edges is dropped, or if a member's edge is missing.",
+  "fixture": "webapp-dev",
+  "requests": [
+    {"operation": "graph", "path": "/api/graph/set/demo/bas/person"}
+  ]
+}
