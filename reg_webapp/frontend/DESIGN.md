@@ -584,17 +584,16 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   palette, a link) renders its register's page with that table's chip on, one route and
   one page, not a redirect; where no chip names it (it delivers no variable, or it is
   the register's only delivering table) the page shows the whole list. A
-  classification's page shows its codes, its versions and the code changes between them,
-  and no variables (maintainer review 2026-11-05, point 5): the classification's name as
-  `h1`, then Publisher and Description as definitions, only when stated. One unframed
+  classification's page shows its codes and its versions, and no variables (maintainer
+  review 2026-11-05, point 5): the classification's name as `h1`, then Publisher and Description as definitions, only when stated. One unframed
   `LaneGraph` with no heading, as on the variable and group pages (maintainer ruling,
   2026-11-05), draws the versions on the page's axis with one lane per part, named by
   the part in the group page's lane-name style, or one lane named by the classification
   where it has no parts (the approved plan). Each version is a span on its part's lane,
   with no name on it: its tooltip names the version and its years in the UI face.
-  Succession within a part reads as order along its lane; an arrow is drawn only where a
-  version continues into another part (SUN 1996 into its three parts). Lanes run in the
-  order each part first starts. The page's axis reaches every version's start, beyond
+  Succession reads as order along a lane, with no arrows, also where a version continues
+  into another part (SUN 1996 into its three parts; maintainer, dogfood 2026-11-05,
+  #2323). Lanes run in the order each part first starts. The page's axis reaches every version's start, beyond
   the catalog's years where needed (ICD-11), so every version has a span; an open-ended
   version's span still ends at the catalog's last year. The graph is the version picker
   at every width, with no `Select`, as a column is picked on the variable and group
@@ -604,11 +603,9 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   the implementer, after the group page's hint). A panel titled "Codes in" and the
   picked version's name alone, without its years follows, so the version is named on
   screen and not only in a tooltip (new rule, proposed by the implementer): the picked
-  version's list through `ValueSetCodes` (see value sets, under Time), then "Changes since" and the name of
-  each version it succeeds: the counts as one line ("2 added, 1 removed, 2 relabelled.",
-  or "No codes changed."), then a disclosure that lists the codes under Added, Removed
-  and Relabelled (a relabelled code says what it "Was:"), a page at a time with "Show
-  more" (no correspondence tables yet, #795). The picked version is the one a version
+  version's list through `ValueSetCodes` (see value sets, under Time). There is no list of
+  the codes changed since the version before (maintainer, dogfood 2026-11-05, #2323; a
+  correspondence table is #795). The picked version is the one a version
   address names, else the latest version that has started by the catalog's last year
   (maintainer ruling, 2026-11-05); it is local state, its part's lane on `accent-soft`
   and its span in the group page's selected-span style. Pressing a span picks its
@@ -795,11 +792,9 @@ Time is the axis every relation is drawn on.
   One span per column name on a table: a steward's yearly files of one table are the
   same column delivered in several files, one box over their years with a gap where a
   year is not delivered (maintainer 2026-11-04). A span's column name is never cut: it
-  sits inside the widest delivered part when it fits there. After it, in muted mono,
-  come the files the steward holds it in on a steward deployment, yearly files as year
-  runs after their stem (`UtdAdr1 RTB_SaBo_Adress_2015–2020`, `RTB_2015–2017, 2019`),
-  others as a list: cut short with an ellipsis where the span is narrow, and dropped
-  where only a few characters would show. A span too narrow for the column name is a
+  sits inside the widest delivered part when it fits there, with no list of the files it is
+  delivered in: the lane already names the table (maintainer, dogfood 2026-11-05,
+  #2321). A span too narrow for the column name is a
   plain bar with the name beside it: to the right, to the left at the axis end, else in
   a gap between its deliveries, and only where no room is free over the bars at the
   track's end, never cut; the bar carries the span's years where they fit. Stacked below

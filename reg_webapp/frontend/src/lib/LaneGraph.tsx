@@ -23,7 +23,6 @@ import {
   laneGeometry,
   type PlacedSpan,
   SPAN_HEIGHT,
-  spanLabel,
 } from "./lane_graph";
 import { coverageMarks } from "./period";
 import type { ProjectStudyWindow } from "./project_data";
@@ -75,8 +74,8 @@ export interface LaneSpanModel extends LaneSpanGeometryInput {
   /** A checkbox when true; a mark to read otherwise. */
   selectable: boolean;
   isSelected?: boolean;
-  /** The table (on a steward site, the file) the column is in, named in the
-   * span's tooltip. */
+  /** The table the column is in, named in the span's tooltip where the lane
+   * does not name it (a group member's lane). */
   where?: string;
   /** The table's fqid: which span of a variable a relation anchors on. */
   tableRef?: string;
@@ -835,9 +834,7 @@ function Span({
   const showYears =
     at.segments.length === 1 &&
     labelWidth(
-      at.label === "inside"
-        ? `${at.table ? spanLabel(span) : span.name} ${span.years}`
-        : span.years,
+      at.label === "inside" ? `${span.name} ${span.years}` : span.years,
     ) <= at.width;
   // An unnamed series (an interrupted delivery) carries its name once, on its
   // widest part, so a one-year first delivery does not clip it.
@@ -856,7 +853,6 @@ function Span({
         // oxlint-disable-next-line react/no-array-index-key
         key={i}
         name={name}
-        table={name && at.table ? span.table : undefined}
         years={showYears ? span.years : undefined}
         state={span.state}
         className={styles.face}

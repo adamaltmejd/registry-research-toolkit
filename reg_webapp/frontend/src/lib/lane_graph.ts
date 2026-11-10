@@ -23,9 +23,6 @@ export interface LaneSpanGeometryInput {
   lane: string;
   /** The column name, the text set on the span. */
   name: string;
-  /** The file the column is held in, set on the span after its name (a
-   * steward deployment's variable page). */
-  table?: string;
   /** Inclusive years on the axis. */
   from: number;
   to: number;
@@ -84,10 +81,6 @@ export interface PlacedSpan {
   label: "inside" | "right" | "left";
   /** Where a name set beside the span starts, from the span's left edge. */
   labelX: number;
-  /** Whether the span's file is set after its name (cut short inside a
-   * narrow span); false where only a few characters of it would fit, and
-   * always beside a span, where only the name is set. */
-  table: boolean;
 }
 
 interface PlacedLane {
@@ -154,14 +147,6 @@ const LABEL_PAD = 14;
 const LABEL_GAP = 4;
 const PACK_GAP = 6;
 const MIN_SPAN = 6;
-// The least of a file worth showing after the name: four characters and the
-// gap, else it is dropped rather than cut to an ellipsis alone.
-const TABLE_MIN = 4 * COLUMN_CHAR + LABEL_GAP;
-
-/** The text a span carries: its column name, then its file when it has one. */
-export function spanLabel(span: { name: string; table?: string }): string {
-  return span.table ? `${span.name} ${span.table}` : span.name;
-}
 
 export function labelWidth(name: string): number {
   return name.length * COLUMN_CHAR + LABEL_PAD;
@@ -202,8 +187,7 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
       const left = x(span.from);
       const width = Math.max(x(span.to + 1) - left, MIN_SPAN);
       // The column name is never cut (maintainer 2026-11-04): it sits inside
-      // when it fits, with the file after it cut short, or dropped where only
-      // a few of its characters would show. A span too narrow for the name is
+      // when it fits, with no file list (#2321). A span too narrow for the name is
       // a plain bar with the name beside it, right, or left at the axis end.
       // The name is drawn in one delivered segment, the widest, so it must fit
       // that segment, not the envelope across gaps.
@@ -240,8 +224,6 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
               : gap
                 ? ["right", gap.from + LABEL_GAP]
                 : ["right", Math.max(trackX, trackEnd - need) - left];
-      const withTable =
-        !!span.table && label === "inside" && need + TABLE_MIN <= room;
       const start = Math.min(left, left + labelX);
       const end = Math.max(
         left + width,
@@ -264,7 +246,6 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
         segments,
         label,
         labelX,
-        table: withTable,
       });
     }
     rowsOf.set(lane.id, Math.max(rowEnds.length, 1));

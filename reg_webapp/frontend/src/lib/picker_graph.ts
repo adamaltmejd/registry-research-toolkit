@@ -2,7 +2,6 @@
 import {
   columnInProject,
   columnWindowPeriod,
-  filesLabel,
   type VariableColumn,
 } from "./add_columns";
 import type { Graph, VariableShow } from "./api";
@@ -77,8 +76,8 @@ export function variableSpans({
       id,
       lane: lane ?? `${idPrefix}${column.table}`,
       name: column.spelling,
-      table: filesLabel(column.files),
-      where: filesLabel(column.files) ?? names.get(column.table),
+      // A lane per table names it; a group member's one lane mixes tables.
+      where: lane ? names.get(column.table) : undefined,
       tableRef: column.table,
       from: first,
       to: last,
@@ -93,9 +92,7 @@ export function variableSpans({
       accessibleName: `${[
         column.spelling,
         variable.name,
-        filesLabel(column.files) ??
-          names.get(column.table) ??
-          "Table name unavailable",
+        names.get(column.table) ?? "Table name unavailable",
         years,
         note?.text ??
           (source
@@ -109,12 +106,7 @@ export function variableSpans({
     };
     return [
       readOnly
-        ? readOnlySpan(
-            span,
-            !!source,
-            variable.name,
-            filesLabel(column.files) ?? names.get(column.table),
-          )
+        ? readOnlySpan(span, !!source, variable.name, names.get(column.table))
         : span,
     ];
   });
