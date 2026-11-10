@@ -260,17 +260,20 @@ export function LaneGraph({
     else if (fits && keepTo > node.scrollLeft + view)
       node.scrollLeft = keepTo - view + margin;
   }, [keepFrom, keepTo, width]);
-  // With nothing picked, a graph that scrolls opens on its latest years, once,
-  // so a lane whose only span is recent does not read as empty.
-  const scrolls = !!geometry && geometry.contentWidth > width;
+  // Unless it keeps a picked span in view, a graph that scrolls opens once on
+  // its latest span, so a lane whose only span is recent does not read as
+  // empty; the span, not the axis end, which study years may stretch past.
+  const latest =
+    geometry && geometry.contentWidth > width && keep === undefined
+      ? Math.max(...[...geometry.spans.values()].map((s) => s.x + s.width))
+      : undefined;
   const opened = useRef(false);
-  const nonePicked = picked.length === 0;
   useEffect(() => {
     const node = graphRef.current;
-    if (!node || !scrolls || opened.current) return;
+    if (!node || latest === undefined || opened.current) return;
     opened.current = true;
-    if (nonePicked) node.scrollLeft = node.scrollWidth;
-  }, [scrolls, nonePicked]);
+    node.scrollLeft = Math.max(latest - node.clientWidth + 16, 0);
+  }, [latest]);
   const spansByLane = new Map<string, LaneSpanModel[]>();
   for (const span of spans) {
     spansByLane.set(span.lane, [...(spansByLane.get(span.lane) ?? []), span]);

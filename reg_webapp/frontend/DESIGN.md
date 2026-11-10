@@ -853,9 +853,9 @@ Time is the axis every relation is drawn on.
   shortest span is 24 px wide (WCAG 2.2 target size) and the graph scrolls sideways
   inside itself, never the page, with the lane names pinned at its left edge. A
   single-pick graph keeps its picked span in view, so a classification opens on its
-  latest version, and its tooltip sits under the span, clear of the lane's name; with
-  nothing picked, a graph that scrolls opens once on its latest years, so a lane with
-  only a recent span does not read as empty. A ticked or picked span keeps its
+  latest version, and its tooltip sits under the span, clear of the lane's name; any
+  other graph that scrolls opens once on its latest span, so a lane with only a recent
+  span does not read as empty. A ticked or picked span keeps its
   neighbours' size and 1 px stroke, changing only its colours, and its focus ring is
   drawn inside it, so pressing it shifts nothing (maintainer, dogfood 2026-11-05,
   #2321). On `/project` a column's
