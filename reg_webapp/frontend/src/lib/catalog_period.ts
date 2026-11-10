@@ -17,15 +17,11 @@ type Days = readonly [string | null, string | null];
  * period token. Whole school years (1 July to 30 June) read as school years
  * (`1999/2000`, `1984/1985–2023/2024`); anything else as the calendar years
  * its first and last days fall in, so a 31 December snapshot is its year
- * (`1968–2025`). Spans join where they meet at that grain. Null when a span
- * has no dated bound: there are no years to state. This is display only;
+ * (`1968–2025`). Spans join where they meet at that grain. Null when they join into one
+ * with no dated bound: there are no years to state. This is display only;
  * `renderIntervals` writes the project file. */
 function daysLabel(intervals: readonly Days[]): string | null {
-  if (
-    intervals.length === 0 ||
-    intervals.some(([first, last]) => first === null && last === null)
-  )
-    return null;
+  if (intervals.length === 0) return null;
   const year = (day: string | null) =>
     day === null ? null : Number(day.slice(0, 4));
   const school = intervals.every(
@@ -49,6 +45,7 @@ function daysLabel(intervals: readonly Days[]): string | null {
         run.to === null || span.to === null ? null : Math.max(run.to, span.to);
     else runs.push({ ...span });
   }
+  if (runs.some(({ from, to }) => from === null && to === null)) return null;
   const name = (y: number) => (school ? `${y}/${y + 1}` : String(y));
   return runs
     .map(({ from, to }) =>
@@ -84,11 +81,39 @@ export function sourcePeriodLabel(period: unknown): string | null {
     : daysLabel(parsed.intervals);
 }
 
-/** The years of several catalog periods, joined where they meet. */
+/** The years of several catalog periods, joined where they meet. Segments
+ * split at a metadata boundary are coalesced first, so a school year cut in
+ * January still reads as a school year. */
 export function catalogPeriodRuns(
   periods: readonly CatalogPeriod[],
 ): string | null {
-  return daysLabel(periods.map(catalogDays));
+  const sorted = [...periods].sort((a, b) =>
+    a.start === b.start
+      ? 0
+      : a.start === null
+        ? -1
+        : b.start === null
+          ? 1
+          : a.start < b.start
+            ? -1
+            : 1,
+  );
+  const runs: CatalogPeriod[] = [];
+  for (const period of sorted) {
+    const last = runs.at(-1);
+    if (
+      last &&
+      (last.end === null || period.start === null || period.start <= last.end)
+    )
+      last.end =
+        last.end === null || period.end === null
+          ? null
+          : last.end > period.end
+            ? last.end
+            : period.end;
+    else runs.push({ ...period });
+  }
+  return daysLabel(runs.map(catalogDays));
 }
 
 /** `requested` less `ordered`: the years a clip cannot deliver. Half-open ISO
