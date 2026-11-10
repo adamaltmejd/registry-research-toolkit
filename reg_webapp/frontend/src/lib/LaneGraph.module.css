@@ -101,9 +101,10 @@
   border-top: 1px solid var(--border);
 }
 
+/* As wide as the drawing (its width is set inline), so a lane's name and
+   below block can stay pinned while a grown track scrolls. */
 .lane {
   position: absolute;
-  right: 0;
   left: 0;
 }
 
@@ -172,6 +173,14 @@
 .graph[data-stacked] .name {
   min-height: 0;
   justify-content: flex-start;
+}
+
+/* Pinned to the graph's left edge while a grown track scrolls (#2310). */
+.pinned,
+.graph[data-stacked] .lane > .name,
+.graph[data-stacked] .lane > .nameRow {
+  position: sticky;
+  left: 0;
 }
 
 .nameText {

@@ -101,8 +101,9 @@ export interface LaneGeometry {
   coverageY: number | null;
   lanes: PlacedLane[];
   spans: Map<string, PlacedSpan>;
-  /** Where the widest drawing ends: past the graph's width only when a column
-   * name is wider than the whole track, and the graph then scrolls itself. */
+  /** Where the widest drawing ends: past the graph's width when a column name
+   * is wider than the whole track or a stacked track grows to its spans'
+   * least width, and the graph then scrolls itself. */
   contentWidth: number;
   /** `label` and `anchor` are set on the one label that stands for both
    * window bounds when they are too close to label apart. */
@@ -147,6 +148,9 @@ const LABEL_PAD = 14;
 const LABEL_GAP = 4;
 const PACK_GAP = 6;
 const MIN_SPAN = 6;
+// Stacked (phones), the shortest span is at least WCAG 2.2's 24 px target
+// size, and the track grows past the graph's width to make room (#2310).
+const MIN_TARGET = 24;
 
 export function labelWidth(name: string): number {
   return name.length * COLUMN_CHAR + LABEL_PAD;
@@ -165,9 +169,22 @@ function tickYears(axis: [number, number], pxPerYear: number): number[] {
 export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
   const stacked = input.width < NAME_WIDTH + NAME_GAP + MIN_TRACK;
   const trackX = stacked ? 0 : NAME_WIDTH + NAME_GAP;
-  const trackWidth = Math.max(input.width - trackX, 1);
   const [first, last] = input.axis;
-  const pxPerYear = trackWidth / Math.max(last + 1 - first, 1);
+  const axisYears = Math.max(last + 1 - first, 1);
+  // Keyed on the years alone, never on which spans are pickable, so the track
+  // keeps its scale while an add window moves.
+  const shortest = Math.min(
+    ...input.spans.map((span) =>
+      Math.max(Math.min(span.to, last) + 1 - Math.max(span.from, first), 1),
+    ),
+  );
+  const pxPerYear = Math.max(
+    Math.max(input.width - trackX, 1) / axisYears,
+    stacked && Number.isFinite(shortest) ? MIN_TARGET / shortest : 0,
+  );
+  const trackWidth = pxPerYear * axisYears;
+  // The drawing's width: the graph's, or the grown track's.
+  const drawWidth = Math.max(input.width, trackX + trackWidth);
   const x = (year: number) => trackX + (year - first) * pxPerYear;
 
   // Place each span on the track, then pack each lane's spans into rows by the
@@ -331,7 +348,7 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
       tick.anchor ??
       (tick.x - trackX < 16
         ? "start"
-        : input.width - tick.x < 16
+        : drawWidth - tick.x < 16
           ? "end"
           : "middle");
     return anchor === "start"
@@ -446,7 +463,7 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
     coverageY,
     lanes,
     spans: placed,
-    contentWidth: Math.max(input.width, ...ends.values()),
+    contentWidth: Math.max(drawWidth, ...ends.values()),
     ticks,
     edges,
   };

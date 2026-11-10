@@ -198,7 +198,9 @@ export function LaneGraph({
   const markerId = useId();
   // The one DOM measurement: the graph's width, which the layout needs to
   // place labels and pack rows.
+  const graphRef = useRef<HTMLDivElement | null>(null);
   const measure = useCallback((node: HTMLDivElement | null) => {
+    graphRef.current = node;
     if (!node) return;
     const observer = new ResizeObserver(([entry]) => {
       setWidth(Math.floor(entry.contentRect.width));
@@ -224,6 +226,22 @@ export function LaneGraph({
           nameHeights,
         })
       : null;
+  // A graph that scrolls keeps its one picked span in view (a classification's
+  // version, which opens on the latest), by its own scroll, never the page's.
+  const picked = spans.filter((span) => span.isSelected);
+  const keep =
+    picked.length === 1 ? geometry?.spans.get(picked[0].id) : undefined;
+  const keepFrom = keep?.x;
+  const keepTo = keep ? keep.x + keep.width : undefined;
+  useEffect(() => {
+    const node = graphRef.current;
+    if (!node || keepFrom === undefined || keepTo === undefined) return;
+    const margin = 16;
+    if (keepFrom < node.scrollLeft)
+      node.scrollLeft = Math.max(keepFrom - margin, 0);
+    else if (keepTo > node.scrollLeft + node.clientWidth)
+      node.scrollLeft = keepTo - node.clientWidth + margin;
+  }, [keepFrom, keepTo]);
   const spansByLane = new Map<string, LaneSpanModel[]>();
   for (const span of spans) {
     spansByLane.set(span.lane, [...(spansByLane.get(span.lane) ?? []), span]);
@@ -240,12 +258,19 @@ export function LaneGraph({
         ref={measure}
         className={styles.graph}
         data-stacked={geometry?.stacked || undefined}
-        // A name wider than the track scrolls inside the graph, never the page.
+        // A name wider than the track, or a stacked track grown to its spans'
+        // least width, scrolls inside the graph, never the page.
         data-scroll={(geometry && geometry.contentWidth > width) || undefined}
-        style={{ height: geometry?.height ?? 0 }}
       >
         {geometry && (
           <>
+            {/* Sizes the scroll box from inside, so a classic horizontal
+                scrollbar adds to the graph's height instead of covering the
+                last lane. */}
+            <div
+              aria-hidden="true"
+              style={{ width: geometry.contentWidth, height: geometry.height }}
+            />
             <Marks
               geometry={geometry}
               lanes={lanes}
@@ -253,7 +278,7 @@ export function LaneGraph({
               window={window}
               addWindow={addWindow}
               coverage={coverage}
-              width={width}
+              width={geometry.contentWidth}
               hovered={hovered}
               markerId={markerId}
             />
@@ -297,7 +322,11 @@ export function LaneGraph({
                   <li
                     key={lane.id}
                     className={styles.lane}
-                    style={{ top: placed.y, height: placed.height }}
+                    style={{
+                      top: placed.y,
+                      height: placed.height,
+                      width: geometry.contentWidth,
+                    }}
                   >
                     <LaneName
                       lane={lane}
@@ -341,6 +370,7 @@ export function LaneGraph({
                     {lane.below && (
                       <LaneBelow
                         id={lane.id}
+                        width={width}
                         top={placed.height - (below.get(lane.id) ?? 0)}
                         onHeight={onBelowHeight}
                       >
@@ -567,18 +597,23 @@ function Marks({
 function LaneBelow({
   id,
   top,
+  width,
   onHeight,
   children,
 }: {
   id: string;
   top: number;
+  /** The graph's own width: the block stays in view while the lane scrolls. */
+  width: number;
   onHeight: (id: string, height: number) => void;
   children: ReactNode;
 }) {
   const measure = useMeasuredHeight(id, onHeight);
   return (
     <div ref={measure} className={styles.below} style={{ top }}>
-      {children}
+      <div className={styles.pinned} style={{ width }}>
+        {children}
+      </div>
     </div>
   );
 }
