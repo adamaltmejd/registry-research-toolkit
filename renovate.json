@@ -77,6 +77,13 @@
         "unicode-properties"
       ],
       "allowedVersions": "<=0.1.4"
+    },
+    {
+      "description": "Hold: the SPA's `typescript` is only openapi-typescript's peer (gen:types), which needs the JS compiler API that TypeScript 7 dropped. Type checking uses `@typescript/native` (TS 7), which this rule does not match. Drop when openapi-typescript supports TS 7.",
+      "matchDepNames": [
+        "typescript"
+      ],
+      "allowedVersions": "<7"
     }
   ]
 }

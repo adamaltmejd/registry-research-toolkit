@@ -170,7 +170,7 @@ jobs:
       - uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
       - name: Log in to registry.fly.io
         if: ${{ !inputs.dry_run }}
-        uses: docker/login-action@81c6f93d4bc991e510b342a00b419b3bb4efc5c6 # v4.7.0
+        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
         with:
           registry: registry.fly.io
           username: x
@@ -236,7 +236,7 @@ jobs:
           persist-credentials: false
       - uses: superfly/flyctl-actions/setup-flyctl@ed8efb33836e8b2096c7fd3ba1c8afe303ebbff1 # 1.6
         with:
-          version: "0.5.0"
+          version: "0.5.6"
       # The entrypoint gate and the Fly config's HTTP check must pass before flyctl
       # reports success. --ha=false keeps the single-machine topology.
       - run: flyctl deploy --config "$FLY_CONFIG" --app "$FLY_APP" --image "$IMAGE" --ha=false
@@ -279,7 +279,7 @@ jobs:
             "https://api.cloudflare.com/client/v4/zones?name=$ZONE" | jq '.result | length')
           [ "$count" = 1 ] || { echo "::error::CLOUDFLARE_API_TOKEN cannot see zone $ZONE: add it to the token's Zone Resources" >&2; exit 1; }
       - run: >-
-          bunx wrangler@4.152.0 deploy --config "$WRANGLER_CONFIG"
+          bunx wrangler@4.159.0 deploy --config "$WRANGLER_CONFIG"
           --var "DEPLOY_VERSION:$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
         env:
           WRANGLER_CONFIG: ${{ inputs.wrangler_config }}
