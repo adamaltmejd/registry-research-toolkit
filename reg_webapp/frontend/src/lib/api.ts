@@ -498,24 +498,6 @@ export function getValues(
   return rustGet<ValueItemsPage>("/values", query, options);
 }
 
-export type ValueChangesPage = RustSchemas["ValueChangesPage"];
-export type ValueChange = RustSchemas["ValueChange"];
-
-/** One page of the codes added, removed and relabelled from the `compare`
- * version to the `classification` version, with the counts over all pages. */
-export function getValueChanges(
-  classification: string,
-  compare: string,
-  filters: { cursor?: string; limit?: number } = {},
-  options?: { signal?: AbortSignal },
-): Promise<ValueChangesPage> {
-  const query = new URLSearchParams({ classification, compare });
-  for (const [key, value] of Object.entries(filters)) {
-    if (value !== undefined) query.set(key, String(value));
-  }
-  return rustGet<ValueChangesPage>("/values", query, options);
-}
-
 // ── Linked source documents ──────────────────────────────────────────────
 export type RelatedDocument = RustSchemas["RelatedDocument"];
 export type DocDetail = RustSchemas["DocDetail"];

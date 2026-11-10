@@ -3,13 +3,9 @@ import {
   Disclosure,
   Button as DisclosureButton,
   DisclosurePanel,
-  Heading,
 } from "react-aria-components";
 import {
-  getValueChanges,
   getValues,
-  type ValueChange,
-  type ValueChangesPage,
   type ValueItem,
   type ValueItemsPage,
   type ValueSetRef,
@@ -153,17 +149,15 @@ function Branch({
 }
 
 /** A list read page by page through the server's cursor: the pages read so
- * far, the latest page (for what every page repeats, a total or counts), and
- * the list and "Show more" refs. The owner remounts it to start over. */
+ * far and the list and "Show more" refs. The owner remounts it to start over. */
 function usePages<
   Item,
   Page extends { items: Item[]; next_cursor: string | null },
-  List extends HTMLElement = HTMLUListElement,
 >(
   key: string,
   load: (cursor: string | undefined, signal: AbortSignal) => Promise<Page>,
 ) {
-  const list = useRef<List>(null);
+  const list = useRef<HTMLUListElement>(null);
   const moreButton = useRef<HTMLButtonElement>(null);
   const [carried, setCarried] = useState<{ items: Item[]; cursor?: string }>({
     items: [],
@@ -189,7 +183,6 @@ function usePages<
   const cursor = resource.data?.next_cursor;
   return {
     items,
-    page: resource.data,
     loading: resource.loading,
     error: resource.error,
     listRef: list,
@@ -306,124 +299,5 @@ function CodePage({
         }
       />
     </div>
-  );
-}
-
-const CHANGE_HEADINGS = {
-  added: "Added",
-  removed: "Removed",
-  relabelled: "Relabelled",
-} as const;
-
-/** The codes added, removed and relabelled from `compare` to `classification`
- * (two versions of one classification): the counts first, the codes on
- * demand, a page at a time. Remount it for another pair. */
-export function VersionChanges({
-  classification,
-  compare,
-  compareName,
-}: {
-  classification: string;
-  compare: string;
-  compareName: string;
-}) {
-  const pages = usePages<ValueChange, ValueChangesPage, HTMLDivElement>(
-    JSON.stringify([classification, compare]),
-    (cursor, signal) =>
-      getValueChanges(
-        classification,
-        compare,
-        { limit: 200, cursor },
-        { signal },
-      ),
-  );
-  const counts = pages.page?.counts;
-  const parts = counts
-    ? (["added", "removed", "relabelled"] as const).flatMap((change) =>
-        counts[change] > 0
-          ? [`${counts[change]} ${CHANGE_HEADINGS[change].toLowerCase()}`]
-          : [],
-      )
-    : [];
-  // The server pages added, then removed, then relabelled: each run of one
-  // kind goes under its heading, which a later page continues.
-  const runs: { change: ValueChange["change"]; items: ValueChange[] }[] = [];
-  for (const item of pages.items) {
-    const last = runs.at(-1);
-    if (last?.change === item.change) last.items.push(item);
-    else runs.push({ change: item.change, items: [item] });
-  }
-  return (
-    <section className={styles.changes}>
-      <h3 className={styles.changesHeading}>Changes since {compareName}</h3>
-      {/* The first page carries the counts: until it arrives, or when it
-          fails, the foot says so. */}
-      {counts && (
-        <p className={styles.counts}>
-          {parts.length > 0 ? `${parts.join(", ")}.` : "No codes changed."}
-        </p>
-      )}
-      {pages.items.length > 0 && (
-        <Disclosure className={pageStyles.disclosure}>
-          {({ isExpanded }) => (
-            <>
-              <Heading level={4} className={pageStyles.disclosureHeading}>
-                <DisclosureButton
-                  slot="trigger"
-                  className={pageStyles.disclosureButton}
-                >
-                  <TreeChevron />
-                  Show the changed codes
-                </DisclosureButton>
-              </Heading>
-              <DisclosurePanel
-                className={`motion-disclose ${isExpanded ? "open" : ""}`}
-              >
-                <div className={styles.panel}>
-                  <div
-                    ref={pages.listRef}
-                    tabIndex={-1}
-                    className={styles.list}
-                  >
-                    {runs.map((run) => (
-                      <section key={`${run.change}:${run.items[0].code}`}>
-                        <h5 className={`micro-label ${styles.runHeading}`}>
-                          {CHANGE_HEADINGS[run.change]}
-                        </h5>
-                        <ul className={pageStyles.plainList}>
-                          {run.items.map((item) => (
-                            <li key={item.code} className={styles.row}>
-                              <code className={styles.code}>
-                                {item.code === "" ? '""' : item.code}
-                              </code>
-                              <span className={styles.label}>
-                                <span>
-                                  {(item.change === "removed"
-                                    ? item.previous_label
-                                    : item.label) ?? "Not stated"}
-                                </span>
-                                {item.change === "relabelled" && (
-                                  <span className={styles.note}>
-                                    Was: {item.previous_label ?? "Not stated"}
-                                  </span>
-                                )}
-                              </span>
-                            </li>
-                          ))}
-                        </ul>
-                      </section>
-                    ))}
-                  </div>
-                  <PagesFoot pages={pages} what="Code changes" empty={null} />
-                </div>
-              </DisclosurePanel>
-            </>
-          )}
-        </Disclosure>
-      )}
-      {pages.items.length === 0 && (
-        <PagesFoot pages={pages} what="Code changes" empty={null} />
-      )}
-    </section>
   );
 }

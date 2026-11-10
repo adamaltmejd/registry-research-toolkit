@@ -23,9 +23,6 @@ export interface LaneSpanGeometryInput {
   lane: string;
   /** The column name, the text set on the span. */
   name: string;
-  /** The file the column is held in, set on the span after its name (a
-   * steward deployment's variable page). */
-  table?: string;
   /** Inclusive years on the axis. */
   from: number;
   to: number;
@@ -65,6 +62,9 @@ interface LaneGeometryInput {
    * than a name and its line (a group member's facts and description) the
    * lane grows to hold it, and stacked, the spans start under it. */
   nameHeights?: ReadonlyMap<string, number>;
+  /** The primary pointer is a finger: a graph whose spans would be under 24 px
+   * beside the names stacks at any width, to take the 24 px floor. */
+  touch?: boolean;
 }
 
 interface PlacedSegment {
@@ -84,10 +84,6 @@ export interface PlacedSpan {
   label: "inside" | "right" | "left";
   /** Where a name set beside the span starts, from the span's left edge. */
   labelX: number;
-  /** Whether the span's file is set after its name (cut short inside a
-   * narrow span); false where only a few characters of it would fit, and
-   * always beside a span, where only the name is set. */
-  table: boolean;
 }
 
 interface PlacedLane {
@@ -108,8 +104,9 @@ export interface LaneGeometry {
   coverageY: number | null;
   lanes: PlacedLane[];
   spans: Map<string, PlacedSpan>;
-  /** Where the widest drawing ends: past the graph's width only when a column
-   * name is wider than the whole track, and the graph then scrolls itself. */
+  /** Where the widest drawing ends: past the graph's width when a column name
+   * is wider than the whole track or a stacked track grows to its spans'
+   * least width, and the graph then scrolls itself. */
   contentWidth: number;
   /** `label` and `anchor` are set on the one label that stands for both
    * window bounds when they are too close to label apart. */
@@ -154,14 +151,10 @@ const LABEL_PAD = 14;
 const LABEL_GAP = 4;
 const PACK_GAP = 6;
 const MIN_SPAN = 6;
-// The least of a file worth showing after the name: four characters and the
-// gap, else it is dropped rather than cut to an ellipsis alone.
-const TABLE_MIN = 4 * COLUMN_CHAR + LABEL_GAP;
-
-/** The text a span carries: its column name, then its file when it has one. */
-export function spanLabel(span: { name: string; table?: string }): string {
-  return span.table ? `${span.name} ${span.table}` : span.name;
-}
+// Stacked (phones, or any graph under a finger whose spans would be smaller),
+// the shortest span is at least WCAG 2.2's 24 px target size, and the track
+// grows past the graph's width to make room (#2310).
+const MIN_TARGET = 24;
 
 export function labelWidth(name: string): number {
   return name.length * COLUMN_CHAR + LABEL_PAD;
@@ -178,11 +171,29 @@ function tickYears(axis: [number, number], pxPerYear: number): number[] {
 }
 
 export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
-  const stacked = input.width < NAME_WIDTH + NAME_GAP + MIN_TRACK;
-  const trackX = stacked ? 0 : NAME_WIDTH + NAME_GAP;
-  const trackWidth = Math.max(input.width - trackX, 1);
   const [first, last] = input.axis;
-  const pxPerYear = trackWidth / Math.max(last + 1 - first, 1);
+  const axisYears = Math.max(last + 1 - first, 1);
+  // Keyed on the years alone, never on which spans are pickable, so the track
+  // keeps its scale while an add window moves.
+  const shortest = Math.min(
+    ...input.spans.map((span) =>
+      Math.max(Math.min(span.to, last) + 1 - Math.max(span.from, first), 1),
+    ),
+  );
+  const besideTrack = input.width - NAME_WIDTH - NAME_GAP;
+  // Under a finger, a graph whose shortest span would be under 24 px beside
+  // the names stacks, as on a phone, and grows its track there.
+  const stacked =
+    besideTrack < MIN_TRACK ||
+    (!!input.touch && (besideTrack / axisYears) * shortest < MIN_TARGET);
+  const trackX = stacked ? 0 : NAME_WIDTH + NAME_GAP;
+  const pxPerYear = Math.max(
+    Math.max(input.width - trackX, 1) / axisYears,
+    stacked && Number.isFinite(shortest) ? MIN_TARGET / shortest : 0,
+  );
+  const trackWidth = pxPerYear * axisYears;
+  // The drawing's width: the graph's, or the grown track's.
+  const drawWidth = Math.max(input.width, trackX + trackWidth);
   const x = (year: number) => trackX + (year - first) * pxPerYear;
 
   // Place each span on the track, then pack each lane's spans into rows by the
@@ -202,8 +213,7 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
       const left = x(span.from);
       const width = Math.max(x(span.to + 1) - left, MIN_SPAN);
       // The column name is never cut (maintainer 2026-11-04): it sits inside
-      // when it fits, with the file after it cut short, or dropped where only
-      // a few of its characters would show. A span too narrow for the name is
+      // when it fits, with no file list (#2321). A span too narrow for the name is
       // a plain bar with the name beside it, right, or left at the axis end.
       // The name is drawn in one delivered segment, the widest, so it must fit
       // that segment, not the envelope across gaps.
@@ -240,8 +250,6 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
               : gap
                 ? ["right", gap.from + LABEL_GAP]
                 : ["right", Math.max(trackX, trackEnd - need) - left];
-      const withTable =
-        !!span.table && label === "inside" && need + TABLE_MIN <= room;
       const start = Math.min(left, left + labelX);
       const end = Math.max(
         left + width,
@@ -264,10 +272,10 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
         segments,
         label,
         labelX,
-        table: withTable,
       });
     }
-    rowsOf.set(lane.id, Math.max(rowEnds.length, 1));
+    // A lane with no spans (a group member's heading row) keeps no span row.
+    rowsOf.set(lane.id, rowEnds.length);
   }
 
   // Stack the lanes and give each span its row's height.
@@ -279,7 +287,7 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
   // keep the lane's top and the lane grows to the taller of the two.
   const spanTop = new Map<string, number>();
   for (const lane of input.lanes) {
-    const rows = rowsOf.get(lane.id) ?? 1;
+    const rows = rowsOf.get(lane.id) ?? 0;
     const name = input.nameHeights?.get(lane.id) ?? 0;
     // Stacked, the spans start right under the measured name.
     const top = stacked
@@ -290,7 +298,7 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
     const height =
       (stacked
         ? top + rows * ROW_STEP + 2
-        : Math.max(LANE_HEIGHT + (rows - 1) * ROW_STEP, name)) +
+        : Math.max(LANE_HEIGHT + (Math.max(rows, 1) - 1) * ROW_STEP, name)) +
       (input.below?.get(lane.id) ?? 0);
     lanes.push({ id: lane.id, y, height });
     laneTop.set(lane.id, y);
@@ -350,7 +358,7 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
       tick.anchor ??
       (tick.x - trackX < 16
         ? "start"
-        : input.width - tick.x < 16
+        : drawWidth - tick.x < 16
           ? "end"
           : "middle");
     return anchor === "start"
@@ -465,7 +473,7 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
     coverageY,
     lanes,
     spans: placed,
-    contentWidth: Math.max(input.width, ...ends.values()),
+    contentWidth: Math.max(drawWidth, ...ends.values()),
     ticks,
     edges,
   };

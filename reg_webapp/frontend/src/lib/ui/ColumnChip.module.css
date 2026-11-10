@@ -15,16 +15,6 @@
   white-space: nowrap;
 }
 
-/* The file is a machine name too, so it stays mono; muted and regular weight
-   so the column name leads. */
-.table {
-  min-width: 0;
-  overflow: hidden;
-  color: var(--text-muted);
-  font-weight: 400;
-  text-overflow: ellipsis;
-}
-
 .years {
   color: var(--text-muted);
   font-size: var(--text-micro);
@@ -38,7 +28,6 @@
   color: var(--accent-fg);
 }
 
-.in .table,
 .in .years {
   color: var(--accent-bg);
 }

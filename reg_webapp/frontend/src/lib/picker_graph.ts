@@ -2,7 +2,6 @@
 import {
   columnInProject,
   columnWindowPeriod,
-  filesLabel,
   type VariableColumn,
 } from "./add_columns";
 import type { Graph, VariableShow } from "./api";
@@ -23,7 +22,6 @@ export function variableSpans({
   catalogBounds,
   selected,
   idPrefix = "",
-  lane,
   readOnly = false,
 }: {
   columns: readonly VariableColumn[];
@@ -36,8 +34,6 @@ export function variableSpans({
   /** Span ids, `idPrefix` included. */
   selected: ReadonlySet<string>;
   idPrefix?: string;
-  /** One lane for every column (a group member's); else a lane per table. */
-  lane?: string;
   readOnly?: boolean;
 }): LaneSpanModel[] {
   const study = studyWindow(project);
@@ -60,25 +56,19 @@ export function variableSpans({
         )
       : null;
     const sourceLabel = sourcePeriodLabel(source?.period);
+    // How a committed column stands to the study window, in its accessible name.
     const note =
-      relation && relation !== "same"
-        ? {
-            text:
-              relation === "disjoint"
-                ? `In project, outside the study years (${sourceLabel}).`
-                : `In project for ${sourceLabel}, which differs from the study years.`,
-            tone:
-              relation === "disjoint" ? ("error" as const) : ("info" as const),
-          }
-        : null;
+      relation === "disjoint"
+        ? `In project, outside the study years (${sourceLabel}).`
+        : relation && relation !== "same"
+          ? `In project for ${sourceLabel}, which differs from the study years.`
+          : null;
     const years = segmentYears(column.segments);
     const id = `${idPrefix}${column.id}`;
     const span: LaneSpanModel = {
       id,
-      lane: lane ?? `${idPrefix}${column.table}`,
+      lane: `${idPrefix}${column.table}`,
       name: column.spelling,
-      table: filesLabel(column.files),
-      where: filesLabel(column.files) ?? names.get(column.table),
       tableRef: column.table,
       from: first,
       to: last,
@@ -89,15 +79,12 @@ export function variableSpans({
       isSelected: inside && selected.has(id),
       staged: inside && selected.has(id) && !source ? "add" : null,
       blocked: relation === "disjoint",
-      note,
       accessibleName: `${[
         column.spelling,
         variable.name,
-        filesLabel(column.files) ??
-          names.get(column.table) ??
-          "Table name unavailable",
+        names.get(column.table) ?? "Table name unavailable",
         years,
-        note?.text ??
+        note ??
           (source
             ? "in project"
             : inside
@@ -109,12 +96,7 @@ export function variableSpans({
     };
     return [
       readOnly
-        ? readOnlySpan(
-            span,
-            !!source,
-            variable.name,
-            filesLabel(column.files) ?? names.get(column.table),
-          )
+        ? readOnlySpan(span, !!source, variable.name, names.get(column.table))
         : span,
     ];
   });
@@ -134,7 +116,6 @@ function readOnlySpan(
     isSelected: undefined,
     staged: null,
     blocked: false,
-    note: null,
     accessibleName: `${[
       span.name,
       variableName,

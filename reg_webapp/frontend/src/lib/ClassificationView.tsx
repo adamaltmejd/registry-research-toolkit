@@ -1,7 +1,6 @@
 import { useState } from "react";
 import type { ClassFamilyShow, Context } from "./api";
 import styles from "./CatalogNodeView.module.css";
-import classStyles from "./ClassificationView.module.css";
 import { catalogPeriodLabel } from "./catalog_period";
 import { LaneGraph, type LaneModel, type LaneSpanModel } from "./LaneGraph";
 import { dataAxis } from "./period";
@@ -9,14 +8,13 @@ import { columnYearRuns, datedYearRuns, studyWindow } from "./study_window";
 import { Definitions } from "./ui/Definitions";
 import { Panel } from "./ui/Panel";
 import { useProject } from "./use_project";
-import { ValueSetCodes, VersionChanges } from "./ValueSetCodes";
+import { ValueSetCodes } from "./ValueSetCodes";
 import { windowBounds } from "./window_bounds";
 
 type Version = ClassFamilyShow["versions"][number];
 
 /** A classification's page (DESIGN.md → Detail pane): its versions as lanes
- * on the year axis, then one version's codes and what changed since the
- * version before it. A version's address renders this page with that version
+ * on the year axis, then one version's codes. A version's address renders this page with that version
  * picked (`focus`). */
 export function ClassificationView({
   node,
@@ -68,9 +66,8 @@ export function ClassificationView({
     bounds,
   );
   // One lane per part, named by it; a classification without parts is one
-  // lane under its own name (the approved plan). Succession within a part
-  // reads as order along its lane; only a version split across parts (SUN
-  // 1996) draws arrows.
+  // lane under its own name (the approved plan). Succession reads as order
+  // along a lane, with no arrows (#2323).
   const laneOf = (v: Version) => v.part ?? node.name;
   const spans: LaneSpanModel[] = versions.flatMap((v) =>
     // A dated open end stops at the catalog's last year, not at a later
@@ -109,33 +106,12 @@ export function ClassificationView({
       };
     }),
   );
-  const drawn = new Set(spans.map((span) => span.id));
-  const crossings = versions.flatMap((v) =>
-    v.succeeds.flatMap((older) => {
-      const from = byFqid.get(older);
-      return from &&
-        drawn.has(older) &&
-        drawn.has(v.fqid) &&
-        laneOf(from) !== laneOf(v)
-        ? [{ from, to: v }]
-        : [];
-    }),
-  );
-  const edges = crossings.map(({ from, to }) => ({
-    id: `${from.fqid}>${to.fqid}`,
-    from: from.fqid,
-    to: to.fqid,
-    kind: "succession" as const,
-  }));
   const pickedLane = version ? laneOf(version) : null;
   const lanes: LaneModel[] = [...new Set(versions.map(laneOf))].map((lane) => ({
     id: lane,
     name: lane,
     wrap: true,
     current: lane === pickedLane,
-    relations: crossings.flatMap(({ from, to }) =>
-      laneOf(to) === lane ? [`${to.name} continues ${from.name}`] : [],
-    ),
   }));
   return (
     <article className={styles.page}>
@@ -156,35 +132,21 @@ export function ClassificationView({
         label="Versions"
         lanes={lanes}
         spans={spans}
-        edges={edges}
+        edges={[]}
         axis={axis}
         window={study ? [study.from, study.to] : null}
         focusSpan={focus}
         hint="Click a version to see its codes."
+        single
         onToggle={setChosen}
       />
       {version && (
         <Panel title={`Codes in ${version.name}`}>
-          <div className={classStyles.codes}>
-            <ValueSetCodes
-              key={version.fqid}
-              subject={{ classification: version.fqid }}
-              valueSet={version.value_set}
-            />
-            {version.succeeds.flatMap((older) => {
-              const name = byFqid.get(older)?.name;
-              return name
-                ? [
-                    <VersionChanges
-                      key={`${older}>${version.fqid}`}
-                      classification={version.fqid}
-                      compare={older}
-                      compareName={name}
-                    />,
-                  ]
-                : [];
-            })}
-          </div>
+          <ValueSetCodes
+            key={version.fqid}
+            subject={{ classification: version.fqid }}
+            valueSet={version.value_set}
+          />
         </Panel>
       )}
     </article>

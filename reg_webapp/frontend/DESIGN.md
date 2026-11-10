@@ -556,11 +556,17 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   facets in curated axis order, with the member's name on the line under it, and by the
   name alone when no axis varies; under it only its description where it differs from
   the group's (two lines, "More" opens the rest). The lane grows to hold it, and its
-  name and line wrap. Its columns are spans to tick, with one coverage row, one "Years
-  to add" and one add bar for the whole group. A succession neighbour outside the group
-  is a read-only lane with its arrows; a relation between two members is an arrow
-  between their lanes. The facts are Type, Classification, Sensitive (only when yes; an
-  identifier is its Type pill) and Topics (maintainer 2026-11-04); role, coding, state,
+  name and line wrap. It is a heading row with no spans: under it each table the member
+  is delivered in is a row of its own, set in from the left, headed by the Table pill
+  and the table's name as a variable page's table lanes are, also when the member has
+  only one table ("on variable group pages where a lane can have many tables, the table
+  name would go as a row heading in the leftmost column", and "Always one row per
+  table", maintainer rulings, 2026-11-10, #2395). Its columns are spans to tick, with
+  one coverage row, one "Years to add" and one add bar for the whole group. A succession
+  neighbour outside the group is a read-only lane with its arrows; a relation between
+  two members is an arrow between their table rows. The facts are Type, Classification,
+  Sensitive (only when yes; an identifier is its Type pill) and Topics (maintainer
+  2026-11-04); role, coding, state,
   temporality, storage and period are not shown. They sit in the page's head on both
   pages, never in a lane (#2319). Type is one `TypePill` per type the columns are
   written as, with the years inside only where it changes over time, in the pill row
@@ -584,37 +590,39 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   palette, a link) renders its register's page with that table's chip on, one route and
   one page, not a redirect; where no chip names it (it delivers no variable, or it is
   the register's only delivering table) the page shows the whole list. A
-  classification's page shows its codes, its versions and the code changes between them,
-  and no variables (maintainer review 2026-11-05, point 5): the classification's name as
-  `h1`, then Publisher and Description as definitions, only when stated. One unframed
-  `LaneGraph` with no heading, as on the variable and group pages (maintainer ruling,
-  2026-11-05), draws the versions on the page's axis with one lane per part, named by
-  the part in the group page's lane-name style, or one lane named by the classification
-  where it has no parts (the approved plan). Each version is a span on its part's lane,
-  with no name on it: its tooltip names the version and its years in the UI face.
-  Succession within a part reads as order along its lane; an arrow is drawn only where a
-  version continues into another part (SUN 1996 into its three parts). Lanes run in the
-  order each part first starts. The page's axis reaches every version's start, beyond
-  the catalog's years where needed (ICD-11), so every version has a span; an open-ended
-  version's span still ends at the catalog's last year. The graph is the version picker
-  at every width, with no `Select`, as a column is picked on the variable and group
-  pages ("this should use the same component/design for classifications as for
-  variables/columns on group/variable pages", and "Graph everywhere", maintainer ruling,
-  2026-11-05), under the hint "Click a version to see its codes." (new rule, proposed by
-  the implementer, after the group page's hint). A panel titled "Codes in" and the
-  picked version's name alone, without its years follows, so the version is named on
-  screen and not only in a tooltip (new rule, proposed by the implementer): the picked
-  version's list through `ValueSetCodes` (see value sets, under Time), then "Changes since" and the name of
-  each version it succeeds: the counts as one line ("2 added, 1 removed, 2 relabelled.",
-  or "No codes changed."), then a disclosure that lists the codes under Added, Removed
-  and Relabelled (a relabelled code says what it "Was:"), a page at a time with "Show
-  more" (no correspondence tables yet, #795). The picked version is the one a version
-  address names, else the latest version that has started by the catalog's last year
-  (maintainer ruling, 2026-11-05); it is local state, its part's lane on `accent-soft`
-  and its span in the group page's selected-span style. Pressing a span picks its
-  version (maintainer ruling, 2026-11-05), and a version address focuses that span (new
-  rule, proposed by the implementer: picking does not change the URL, which would reload
-  the page). Placement caveats are steward working notes, not shown until the steward
+  classification's page shows its codes and its versions, and no variables (maintainer
+  review 2026-11-05, point 5): the classification's name as `h1`, then Publisher and
+  Description as definitions, only when stated. One unframed `LaneGraph` with no
+  heading, as on the variable and group pages (maintainer ruling, 2026-11-05), draws the
+  versions on the page's axis with one lane per part, named by the part in the group
+  page's lane-name style, or one lane named by the classification where it has no parts
+  (the approved plan). Each version is a span on its part's lane, with no name on it:
+  its years sit on it where they fit, and where they do not its tooltip names the
+  version and its years in the UI face (#2321). Succession reads as order along a lane,
+  with no arrows, also where a version continues into another part (SUN 1996 into its
+  three parts; maintainer, dogfood 2026-11-05, #2323). Lanes run in the order each part
+  first starts. The page's axis reaches every version's start, beyond the catalog's
+  years where needed (ICD-11), so every version has a span; an open-ended version's span
+  still ends at the catalog's last year. The graph is the version picker at every width,
+  with no `Select`, as a column is picked on the variable and group pages ("this should
+  use the same component/design for classifications as for variables/columns on
+  group/variable pages", and "Graph everywhere", maintainer ruling, 2026-11-05), under
+  the hint "Click a version to see its codes." (new rule, proposed by the implementer,
+  after the group page's hint). A panel titled "Codes in" and the picked version's name
+  alone, without its years follows, so the version is named on screen and not only in a
+  tooltip (new rule, proposed by the implementer): the picked version's list through
+  `ValueSetCodes` (see value sets, under Time). There is no list of the codes changed
+  since the version before (maintainer, dogfood 2026-11-05, #2323; a correspondence
+  table is #795). The picked version is the one a version address names, else the
+  latest version that has started by the catalog's last year (maintainer ruling,
+  2026-11-05); it is local state, its part's lane on `accent-soft` and its span in the
+  group page's selected-span style. Pressing a span picks its version (maintainer
+  ruling, 2026-11-05), and a version address focuses that span (new rule, proposed by
+  the implementer: picking does not change the URL, which would reload the page). Since
+  one version is picked at a time, the spans are one radio group, not checkboxes: one
+  tab stop, the arrow keys move between versions and pick them ("expose it as a radio
+  group", maintainer comment on #2310, 2026-11-05). Placement caveats are steward
+  working notes, not shown until the steward
   curates them for readers. A register page shows under its `h1` only its description,
   as prose: the timeline shows the years and the chips the tables, so there is no Years
   or Tables row (#2316). It has no tables table: its tables are FilterChips above the
@@ -706,8 +714,9 @@ Time is the axis every relation is drawn on.
   window is drawn the axis years are its bounds in `accent-ink`; the study window's
   bounds keep their rules, unlabelled. An add widens its source's period to the union
   and never narrows it, so the add window raises no warning; a column already in the
-  project whose source years differ from the study window says so in its tooltip and
-  accessible name, not in a line under the graph (#1833); one outside the window is
+  project whose source years differ from the study window says so in its accessible
+  name, not in a tooltip (maintainer ruling, 2026-11-10, #2395) or a line under the
+  graph (#1833); one outside the window is
   still named there at `err`. A register pane draws the `Timeline` read-only; a group
   pane draws it as the variable page does, a lane per member.
 
@@ -795,16 +804,16 @@ Time is the axis every relation is drawn on.
   One span per column name on a table: a steward's yearly files of one table are the
   same column delivered in several files, one box over their years with a gap where a
   year is not delivered (maintainer 2026-11-04). A span's column name is never cut: it
-  sits inside the widest delivered part when it fits there. After it, in muted mono,
-  come the files the steward holds it in on a steward deployment, yearly files as year
-  runs after their stem (`UtdAdr1 RTB_SaBo_Adress_2015–2020`, `RTB_2015–2017, 2019`),
-  others as a list: cut short with an ellipsis where the span is narrow, and dropped
-  where only a few characters would show. A span too narrow for the column name is a
-  plain bar with the name beside it: to the right, to the left at the axis end, else in
-  a gap between its deliveries, and only where no room is free over the bars at the
-  track's end, never cut; the bar carries the span's years where they fit. Stacked below
-  the breakpoint, a lane's spans start just under its name. Hovering or focusing a span
-  shows its column, table and years at once in a RAC `Tooltip` with no delay. The
+  sits inside the widest delivered part when it fits there, with no list of the files
+  it is delivered in: the lane already names the table (maintainer, dogfood 2026-11-05,
+  #2321). A span too narrow for the column name is a plain bar with the name beside
+  it: to the right, to the left at the axis end, else in a gap between its deliveries,
+  and only where no room is free over the bars at the track's end, never cut; the bar
+  carries the span's years where they fit. Stacked below the breakpoint, a lane's spans
+  start just under its name. Hovering or focusing a span shows a RAC `Tooltip` with no
+  delay only where the span's own text is cut off, which is its years (maintainer,
+  dogfood 2026-11-05, #2321; the strict reading, maintainer ruling, 2026-11-10): no
+  table name and no study-window note in a tooltip, and no table name on a span. The
   variables a succession reaches are further lanes in time order, with their arrows. A
   line under the drawing says "Click a column to add it to your project." while a
   project is open; with none there is no line and no button at any width, since the top
@@ -844,12 +853,26 @@ Time is the axis every relation is drawn on.
   lane's name opens the variable, with the register on its line when it differs from the
   page's; that line also describes the link. A read-only neighbour lane still shows its
   columns' "in project" state. A span is a checkbox for the add bar, and hovering it
-  highlights its edges. On `/project` a column's findings sit across its lane, under its
-  spans. It shares the page's axis with the `Timeline`. It draws the study window's band
-  and, over it, an add window that differs, as on the variable page, with the axis years
-  on the add window's bounds when one is drawn. It has no legend: a span's tooltip names
-  it, its accessible name carries its state, and each lane states its relations in words
-  to a screen reader (maintainer 2026-11-04). Its add bar shows only while a change is
+  highlights its edges. Spans stay pressable (#2310, after the maintainer ruling "Graph
+  everywhere", 2026-11-05; the mechanics are new rules, proposed by the implementer):
+  stacked below the breakpoint, and at any width where the primary pointer is a finger
+  (`pointer: coarse`) and its spans would be smaller beside the names (it then stacks
+  too), the track is widened until its shortest span is 24 px wide (WCAG 2.2 target
+  size) and the graph scrolls sideways inside itself, never the page, with the lane
+  names pinned at its left edge. A single-pick graph keeps its picked span in view, so a
+  classification opens on its latest version, and its tooltip sits under the span,
+  clear of the lane's name; any
+  other graph that scrolls opens once on its latest span, so a lane with only a recent
+  span does not read as empty. A ticked or picked span keeps its
+  neighbours' size and 1 px stroke, changing only its colours, and its focus ring is
+  drawn inside it, so pressing it shifts nothing (maintainer, dogfood 2026-11-05,
+  #2321). On `/project` a column's
+  findings sit across its lane, under its spans. It shares the page's axis with the
+  `Timeline`. It draws the study window's band and, over it, an add window that differs,
+  as on the variable page, with the axis years on the add window's bounds when one is
+  drawn. It has no legend: a span names its column, a tooltip adds the years it cuts,
+  its accessible name carries its state, and each lane states its relations in words to
+  a screen reader (maintainer 2026-11-04). Its add bar shows only while a change is
   staged. On a variable page the `LaneGraph` is the `Timeline` (above). Don't draw
   free-form node graphs; the time axis is the information.
 

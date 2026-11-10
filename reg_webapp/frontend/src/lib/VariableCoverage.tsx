@@ -57,8 +57,8 @@ export interface CoverageSubject {
   fqid: string;
   name: string;
   segments: readonly CatalogSegment[];
-  /** A group member: its columns share this one lane. Without it (the
-   * variable page) each table is a lane, titled by the table's name. */
+  /** A group member: its heading row, over one lane per table. Without it
+   * (the variable page) the tables' lanes are the lanes. */
   lane?: Omit<LaneModel, "id" | "relations">;
 }
 
@@ -254,7 +254,6 @@ export function useVariableCoverage({
         catalogBounds,
         selected,
         idPrefix: prefix(subject),
-        lane: subject.lane ? subject.fqid : undefined,
         readOnly: !allowAdd,
       }),
     ]),
@@ -384,29 +383,30 @@ export function useVariableCoverage({
         <LaneGraph
           label={label}
           lanes={[
-            ...subjects.flatMap((subject): LaneModel[] =>
-              subject.lane
-                ? [
-                    {
-                      ...subject.lane,
-                      id: subject.fqid,
-                      relations: neighbours.relations.get(subject.fqid),
-                    },
-                  ]
-                : // The page is the variable: its lanes are its tables.
-                  [
-                    ...new Set(
-                      (columnsOf.get(subject.fqid) ?? []).map(
-                        (column) => column.table,
-                      ),
-                    ),
-                  ].map((table) => ({
-                    id: table,
-                    name: names.get(table) ?? "Table name unavailable",
-                    pill: <TypeTag type="table" glyph />,
-                    relations: neighbours.relations.get(table),
-                  })),
-            ),
+            ...subjects.flatMap((subject): LaneModel[] => {
+              // A lane per table, titled by the table, as on the variable page;
+              // a group member heads its tables with its own row, which draws
+              // no spans (maintainer ruling, 2026-11-10, #2395).
+              const tables = [
+                ...new Set(
+                  (columnsOf.get(subject.fqid) ?? []).map(
+                    (column) => column.table,
+                  ),
+                ),
+              ].map((table): LaneModel => {
+                const id = `${prefix(subject)}${table}`;
+                return {
+                  id,
+                  name: names.get(table) ?? "Table name unavailable",
+                  pill: <TypeTag type="table" glyph />,
+                  nested: !!subject.lane,
+                  relations: neighbours.relations.get(id),
+                };
+              });
+              return subject.lane
+                ? [{ ...subject.lane, id: subject.fqid }, ...tables]
+                : tables;
+            }),
             ...neighbours.lanes,
           ]}
           spans={[...spans, ...neighbours.spans]}

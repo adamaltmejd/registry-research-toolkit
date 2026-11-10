@@ -1,8 +1,0 @@
-/* A classification's codes panel (DESIGN.md → Detail pane): the picked
-   version's codes, then its changes, the gap owned here. */
-.codes {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  min-width: 0;
-}

@@ -5,10 +5,13 @@ import {
   useId,
   useRef,
   useState,
+  useSyncExternalStore,
 } from "react";
 import {
   Checkbox,
   Focusable,
+  Radio,
+  RadioGroup,
   Tooltip,
   TooltipTrigger,
 } from "react-aria-components";
@@ -23,7 +26,6 @@ import {
   laneGeometry,
   type PlacedSpan,
   SPAN_HEIGHT,
-  spanLabel,
 } from "./lane_graph";
 import { coverageMarks } from "./period";
 import type { ProjectStudyWindow } from "./project_data";
@@ -40,6 +42,8 @@ export interface LaneModel {
   current?: boolean;
   /** A kind pill before the name: a variable page's lanes are tables. */
   pill?: ReactNode;
+  /** A row under another lane's heading row: a group member's table. */
+  nested?: boolean;
   /** More about the lane under its name and line, in the name column: a
    * group member's type, facts and description. The lane grows to hold it. */
   detail?: ReactNode;
@@ -69,15 +73,9 @@ export interface LaneSpanModel extends LaneSpanGeometryInput {
   staged?: "add" | "remove" | null;
   /** In the project through a source the study window has moved off. */
   blocked?: boolean;
-  /** How the committed column relates to the study window, where it is more
-   * than "in project": shown in its tooltip and accessible name. */
-  note?: { text: string; tone: "info" | "error" } | null;
   /** A checkbox when true; a mark to read otherwise. */
   selectable: boolean;
   isSelected?: boolean;
-  /** The table (on a steward site, the file) the column is in, named in the
-   * span's tooltip. */
-  where?: string;
   /** The table's fqid: which span of a variable a relation anchors on. */
   tableRef?: string;
   /** Starts with the column name, then the variable, the years and the
@@ -139,6 +137,9 @@ interface Props {
   focusSpan?: string | null;
   /** Under the graph while any span is selectable; null for none. */
   hint?: string | null;
+  /** One span is picked at a time (a classification's version): the spans are
+   * one radio group, a single tab stop with arrow keys between them (#2310). */
+  single?: boolean;
 }
 
 /** Measured heights by lane id, and the callback a measured block reports
@@ -169,8 +170,9 @@ function useHeights() {
  * its column, variable and years. Tab walks the spans lane by lane and Space
  * toggles one. On a variable page a coverage row heads the lanes, so the
  * Timeline and the columns are one drawing on one axis (#1833). There is no
- * legend: a span's tooltip names it, and the relations are sentences in each
- * lane (maintainer 2026-11-04).
+ * legend: the span names its column, a tooltip adds only what the span cuts
+ * (#2321), and the relations are sentences in each lane (maintainer
+ * 2026-11-04).
  */
 export function LaneGraph({
   label,
@@ -187,6 +189,7 @@ export function LaneGraph({
   focus = null,
   focusSpan = null,
   hint = "Click a column to add it to your project.",
+  single = false,
 }: Props) {
   const [width, setWidth] = useState(0);
   const [hovered, setHovered] = useState<string | null>(null);
@@ -198,7 +201,9 @@ export function LaneGraph({
   const markerId = useId();
   // The one DOM measurement: the graph's width, which the layout needs to
   // place labels and pack rows.
+  const graphRef = useRef<HTMLDivElement | null>(null);
   const measure = useCallback((node: HTMLDivElement | null) => {
+    graphRef.current = node;
     if (!node) return;
     const observer = new ResizeObserver(([entry]) => {
       setWidth(Math.floor(entry.contentRect.width));
@@ -207,6 +212,7 @@ export function LaneGraph({
     return () => observer.disconnect();
   }, []);
 
+  const touch = useCoarsePointer();
   const geometry =
     width > 0
       ? laneGeometry({
@@ -222,8 +228,48 @@ export function LaneGraph({
           coverageRow: coverage !== undefined,
           below,
           nameHeights,
+          touch,
         })
       : null;
+  // A single-pick graph that scrolls keeps its picked span in view (a classification's
+  // version, which opens on the latest), by its own scroll, never the page's.
+  const picked = spans.filter((span) => span.isSelected);
+  const keep =
+    single && picked.length === 1
+      ? geometry?.spans.get(picked[0].id)
+      : undefined;
+  const keepFrom = keep?.x;
+  const keepTo = keep ? keep.x + keep.width : undefined;
+  useEffect(() => {
+    const node = graphRef.current;
+    if (!node || keepFrom === undefined || keepTo === undefined) return;
+    const margin = 16;
+    // The measured width, so a resize that keeps the scale still re-runs this.
+    const view = width;
+    // A span wider than the view keeps its leading edge, where its name sits.
+    const fits = keepTo - keepFrom + 2 * margin <= view;
+    if (
+      keepFrom < node.scrollLeft ||
+      (!fits && keepFrom > node.scrollLeft + view - margin)
+    )
+      node.scrollLeft = Math.max(keepFrom - margin, 0);
+    else if (fits && keepTo > node.scrollLeft + view)
+      node.scrollLeft = keepTo - view + margin;
+  }, [keepFrom, keepTo, width]);
+  // Unless it keeps a picked span in view, a graph that scrolls opens once on
+  // its latest span, so a lane whose only span is recent does not read as
+  // empty; the span, not the axis end, which study years may stretch past.
+  const latest =
+    geometry && geometry.contentWidth > width && keep === undefined
+      ? Math.max(...[...geometry.spans.values()].map((s) => s.x + s.width))
+      : undefined;
+  const opened = useRef(false);
+  useEffect(() => {
+    const node = graphRef.current;
+    if (!node || latest === undefined || opened.current) return;
+    opened.current = true;
+    node.scrollLeft = Math.max(latest - node.clientWidth + 16, 0);
+  }, [latest]);
   const spansByLane = new Map<string, LaneSpanModel[]>();
   for (const span of spans) {
     spansByLane.set(span.lane, [...(spansByLane.get(span.lane) ?? []), span]);
@@ -240,12 +286,19 @@ export function LaneGraph({
         ref={measure}
         className={styles.graph}
         data-stacked={geometry?.stacked || undefined}
-        // A name wider than the track scrolls inside the graph, never the page.
+        // A name wider than the track, or a stacked track grown to its spans'
+        // least width, scrolls inside the graph, never the page.
         data-scroll={(geometry && geometry.contentWidth > width) || undefined}
-        style={{ height: geometry?.height ?? 0 }}
       >
         {geometry && (
           <>
+            {/* Sizes the scroll box from inside, so a classic horizontal
+                scrollbar adds to the graph's height instead of covering the
+                last lane. */}
+            <div
+              aria-hidden="true"
+              style={{ width: geometry.contentWidth, height: geometry.height }}
+            />
             <Marks
               geometry={geometry}
               lanes={lanes}
@@ -253,7 +306,7 @@ export function LaneGraph({
               window={window}
               addWindow={addWindow}
               coverage={coverage}
-              width={width}
+              width={geometry.contentWidth}
               hovered={hovered}
               markerId={markerId}
             />
@@ -289,68 +342,85 @@ export function LaneGraph({
                 )}
               </span>
             )}
-            <ol className={styles.lanes} aria-label={label}>
-              {geometry.lanes.map((placed) => {
-                const lane = lanes.find((l) => l.id === placed.id);
-                if (!lane) return null;
-                return (
-                  <li
-                    key={lane.id}
-                    className={styles.lane}
-                    style={{ top: placed.y, height: placed.height }}
-                  >
-                    <LaneName
-                      lane={lane}
-                      width={geometry.stacked ? width : geometry.trackX - 16}
-                      // Stacked, every lane's spans start under its measured
-                      // name; beside the track only a detail grows the lane.
-                      onHeight={
-                        lane.detail || lane.wrap || geometry.stacked
-                          ? onNameHeight
-                          : undefined
-                      }
-                      focus={lane.id === focus}
-                      top={placed.y}
-                    />
-                    <ul className={styles.spans}>
-                      {(spansByLane.get(lane.id) ?? []).map((span) => {
-                        const at = geometry.spans.get(span.id);
-                        return at ? (
-                          <li
-                            key={span.id}
-                            className={styles.slot}
-                            style={{
-                              left: at.x,
-                              top: at.y - placed.y,
-                              width: at.width,
-                              height: SPAN_HEIGHT,
-                            }}
-                          >
-                            <Span
-                              span={span}
-                              at={at}
-                              isDisabled={isDisabled}
-                              onToggle={onToggle}
-                              onActive={setHovered}
-                              focus={span.id === focusSpan}
-                            />
-                          </li>
-                        ) : null;
-                      })}
-                    </ul>
-                    {lane.below && (
-                      <LaneBelow
-                        id={lane.id}
-                        top={placed.height - (below.get(lane.id) ?? 0)}
-                        onHeight={onBelowHeight}
-                      >
-                        {lane.below}
-                      </LaneBelow>
-                    )}
-                  </li>
-                );
-              })}
-            </ol>
+            <Picker
+              single={single}
+              label={label}
+              value={picked[0]?.id ?? null}
+              isDisabled={isDisabled}
+              onChange={onToggle}
+            >
+              <ol
+                className={styles.lanes}
+                aria-label={single ? undefined : label}
+              >
+                {geometry.lanes.map((placed) => {
+                  const lane = lanes.find((l) => l.id === placed.id);
+                  if (!lane) return null;
+                  return (
+                    <li
+                      key={lane.id}
+                      className={styles.lane}
+                      style={{
+                        top: placed.y,
+                        height: placed.height,
+                        width: geometry.contentWidth,
+                      }}
+                    >
+                      <LaneName
+                        lane={lane}
+                        width={geometry.stacked ? width : geometry.trackX - 16}
+                        // Stacked, every lane's spans start under its measured
+                        // name; beside the track only a detail grows the lane.
+                        onHeight={
+                          lane.detail || lane.wrap || geometry.stacked
+                            ? onNameHeight
+                            : undefined
+                        }
+                        focus={lane.id === focus}
+                        top={placed.y}
+                      />
+                      <ul className={styles.spans}>
+                        {(spansByLane.get(lane.id) ?? []).map((span) => {
+                          const at = geometry.spans.get(span.id);
+                          return at ? (
+                            <li
+                              key={span.id}
+                              className={styles.slot}
+                              style={{
+                                left: at.x,
+                                top: at.y - placed.y,
+                                width: at.width,
+                                height: SPAN_HEIGHT,
+                              }}
+                            >
+                              <Span
+                                span={span}
+                                at={at}
+                                isDisabled={isDisabled}
+                                onToggle={onToggle}
+                                onActive={setHovered}
+                                focus={span.id === focusSpan}
+                                single={single}
+                              />
+                            </li>
+                          ) : null;
+                        })}
+                      </ul>
+                      {lane.below && (
+                        <LaneBelow
+                          id={lane.id}
+                          width={width}
+                          top={placed.height - (below.get(lane.id) ?? 0)}
+                          onHeight={onBelowHeight}
+                        >
+                          {lane.below}
+                        </LaneBelow>
+                      )}
+                    </li>
+                  );
+                })}
+              </ol>
+            </Picker>
           </>
         )}
       </div>
@@ -567,18 +637,23 @@ function Marks({
 function LaneBelow({
   id,
   top,
+  width,
   onHeight,
   children,
 }: {
   id: string;
   top: number;
+  /** The graph's own width: the block stays in view while the lane scrolls. */
+  width: number;
   onHeight: (id: string, height: number) => void;
   children: ReactNode;
 }) {
   const measure = useMeasuredHeight(id, onHeight);
   return (
     <div ref={measure} className={styles.below} style={{ top }}>
-      {children}
+      <div className={styles.pinned} style={{ width }}>
+        {children}
+      </div>
     </div>
   );
 }
@@ -713,7 +788,7 @@ function LaneText({
   return (
     <div
       ref={measure}
-      className={`${styles.name} ${lane.detail || lane.wrap ? styles.detailed : ""}`}
+      className={`${styles.name} ${lane.detail || lane.wrap ? styles.detailed : ""} ${lane.nested ? styles.nested : ""}`}
       style={width ? { width } : undefined}
     >
       {lane.pill ? (
@@ -806,6 +881,7 @@ function Span({
   onToggle,
   onActive,
   focus,
+  single,
 }: {
   span: LaneSpanModel;
   at: PlacedSpan;
@@ -813,13 +889,14 @@ function Span({
   onToggle?: (id: string) => void;
   onActive: (id: string | null) => void;
   focus: boolean;
+  single: boolean;
 }) {
   const face = useRef<HTMLLabelElement & HTMLSpanElement>(null);
   const focusInput = useFocusOnce(focus, at.y);
   // Set while the page moves focus here itself (a version address): that
   // focus opens no tooltip, which would cover the lane's name.
   const quiet = useRef(false);
-  // The checkbox's root is its label; focus lands on its input.
+  // The checkbox's or radio's root is its label; focus lands on its input.
   const pickRef = useCallback(
     (node: HTMLLabelElement | null) => {
       face.current = node;
@@ -835,9 +912,7 @@ function Span({
   const showYears =
     at.segments.length === 1 &&
     labelWidth(
-      at.label === "inside"
-        ? `${at.table ? spanLabel(span) : span.name} ${span.years}`
-        : span.years,
+      at.label === "inside" ? `${span.name} ${span.years}` : span.years,
     ) <= at.width;
   // An unnamed series (an interrupted delivery) carries its name once, on its
   // widest part, so a one-year first delivery does not clip it.
@@ -856,7 +931,6 @@ function Span({
         // oxlint-disable-next-line react/no-array-index-key
         key={i}
         name={name}
-        table={name && at.table ? span.table : undefined}
         years={showYears ? span.years : undefined}
         state={span.state}
         className={styles.face}
@@ -897,13 +971,19 @@ function Span({
     "data-staged": span.staged ?? undefined,
     "data-blocked": span.blocked || undefined,
   };
-  const tip = (
+  // The tooltip opens only where the span's own text is cut off (maintainer,
+  // 2026-11-10, #2321): its years. The column name is never cut.
+  const tipped = !!span.years && !showYears;
+  const tip = tipped && (
     <Tooltip
       triggerRef={face}
       className={({ isEntering, isExiting }) =>
         `${findingStyles.tooltip} ${isEntering ? "motion-rise-in" : ""} ${isExiting ? "motion-rise-out" : ""}`
       }
       offset={6}
+      // A single-pick graph's arrow keys open it on each step: under the span,
+      // it leaves the lane's name readable.
+      placement={single ? "bottom" : "top"}
       style={{ zIndex: "var(--z-popover)" }}
     >
       {/* A span without a column name (a classification version) says its
@@ -912,13 +992,12 @@ function Span({
         {span.name ? (
           <>
             <code>{span.name}</code>
-            {span.where && ` in ${span.where}`}, {span.years}
+            {span.years && `, ${span.years}`}
           </>
         ) : (
           (span.label ?? span.years)
         )}
       </span>
-      {span.note && <span>{span.note.text}</span>}
     </Tooltip>
   );
   const show = (on: boolean) => {
@@ -958,23 +1037,86 @@ function Span({
     // the tooltip through onOpenChange; hover is the face's own, since the
     // input is visually hidden. The tooltip is placed on the visible face.
     <TooltipTrigger isOpen={open} onOpenChange={show} delay={0} closeDelay={0}>
-      <Checkbox
-        ref={pickRef}
-        className={`${styles.span} ${styles.pick}`}
-        style={{ height: SPAN_HEIGHT }}
-        aria-label={span.accessibleName}
-        isSelected={span.isSelected ?? false}
-        isDisabled={isDisabled}
-        onChange={() => onToggle(span.id)}
-        onHoverStart={() => show(true)}
-        onHoverEnd={() => show(false)}
-        onFocus={() => show(true)}
-        onBlur={() => show(false)}
-        {...attributes}
-      >
-        {body}
-      </Checkbox>
+      {single ? (
+        // The group owns the value and the disabled state.
+        <Radio
+          ref={pickRef}
+          value={span.id}
+          className={`${styles.span} ${styles.pick}`}
+          style={{ height: SPAN_HEIGHT }}
+          aria-label={span.accessibleName}
+          onHoverStart={() => show(true)}
+          onHoverEnd={() => show(false)}
+          onFocus={() => show(true)}
+          onBlur={() => show(false)}
+          {...attributes}
+        >
+          {body}
+        </Radio>
+      ) : (
+        <Checkbox
+          ref={pickRef}
+          className={`${styles.span} ${styles.pick}`}
+          style={{ height: SPAN_HEIGHT }}
+          aria-label={span.accessibleName}
+          isSelected={span.isSelected ?? false}
+          isDisabled={isDisabled}
+          onChange={() => onToggle(span.id)}
+          onHoverStart={() => show(true)}
+          onHoverEnd={() => show(false)}
+          onFocus={() => show(true)}
+          onBlur={() => show(false)}
+          {...attributes}
+        >
+          {body}
+        </Checkbox>
+      )}
       {tip}
     </TooltipTrigger>
+  );
+}
+
+/** The lanes as one radio group where one span is picked at a time; as
+ * they are otherwise, each span its own checkbox. */
+function Picker({
+  single,
+  label,
+  value,
+  isDisabled,
+  onChange,
+  children,
+}: {
+  single: boolean;
+  label: string;
+  value: string | null;
+  isDisabled: boolean;
+  onChange?: (id: string) => void;
+  children: ReactNode;
+}) {
+  if (!single) return children;
+  return (
+    <RadioGroup
+      aria-label={label}
+      value={value}
+      isDisabled={isDisabled}
+      onChange={onChange}
+    >
+      {children}
+    </RadioGroup>
+  );
+}
+
+const COARSE = "(pointer: coarse)";
+
+/** Whether the primary pointer is a finger: a touch screen of any width gets
+ * the spans' 24 px least width (#2310). */
+function useCoarsePointer(): boolean {
+  return useSyncExternalStore(
+    (onChange) => {
+      const query = window.matchMedia(COARSE);
+      query.addEventListener("change", onChange);
+      return () => query.removeEventListener("change", onChange);
+    },
+    () => window.matchMedia(COARSE).matches,
   );
 }

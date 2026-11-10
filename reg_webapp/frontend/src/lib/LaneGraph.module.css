@@ -101,9 +101,10 @@
   border-top: 1px solid var(--border);
 }
 
+/* As wide as the drawing (its width is set inline), so a lane's name and
+   below block can stay pinned while a grown track scrolls. */
 .lane {
   position: absolute;
-  right: 0;
   left: 0;
 }
 
@@ -145,6 +146,12 @@
   padding-bottom: var(--space-1);
 }
 
+/* A group member's table under its heading row (maintainer ruling,
+   2026-11-10, #2395). */
+.nested {
+  padding-inline-start: var(--space-4);
+}
+
 /* A name block with a lane action: the text block takes the room, the action
    keeps its own width at the row's end. */
 .nameRow {
@@ -172,6 +179,14 @@
 .graph[data-stacked] .name {
   min-height: 0;
   justify-content: flex-start;
+}
+
+/* Pinned to the graph's left edge while a grown track scrolls (#2310). */
+.pinned,
+.graph[data-stacked] .lane > .name,
+.graph[data-stacked] .lane > .nameRow {
+  position: sticky;
+  left: 0;
 }
 
 .nameText {
@@ -280,11 +295,11 @@ a.nameText {
 }
 
 /* Will be added: the selection wash, pine as text. A picked span that adds
-   nothing (a classification's version) is marked the same way. */
+   nothing (a classification's version) is marked the same way. Its stroke
+   keeps the base 1 px, so it is its neighbours' size (#2321). */
 .span[data-staged="add"] .face,
 .span[data-selected] .face {
   border-color: var(--accent);
-  border-width: 2px;
   background: var(--accent-band);
   color: var(--accent-ink);
 }
@@ -310,8 +325,10 @@ a.nameText {
   background: var(--surface-hover);
 }
 
+/* Inside the face, so focus after a press draws no ring past the span's box
+   (#2321); a blocked span keeps its error border. */
 .span[data-focus-visible] .face {
-  box-shadow: var(--focus-ring);
+  box-shadow: var(--focus-ring-inset);
 }
 
 .glyph {
