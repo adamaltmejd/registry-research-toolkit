@@ -230,6 +230,7 @@ a.nameText {
 /* Its lane grows, so a long name and its line wrap instead of cutting
    members of one long name to the same few words. */
 .detailed > .nameText,
+.detailed > .titled > .nameText,
 .detailed > .sub {
   white-space: normal;
 }

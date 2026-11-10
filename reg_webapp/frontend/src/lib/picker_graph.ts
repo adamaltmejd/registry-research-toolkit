@@ -7,6 +7,7 @@ import {
 import type { Graph, VariableShow } from "./api";
 import { catalogHref } from "./catalog";
 import { segmentYears, sourcePeriodLabel } from "./catalog_period";
+import { inDatabase, type Space } from "./databases";
 import type { LaneEdgeModel, LaneModel, LaneSpanModel } from "./LaneGraph";
 import { periodWindowRelation } from "./period";
 import type { ProjectData, ProjectStudyWindow } from "./project_data";
@@ -23,6 +24,8 @@ export function variableSpans({
   selected,
   idPrefix = "",
   readOnly = false,
+  database = null,
+  notInDatabase = new Set(),
 }: {
   columns: readonly VariableColumn[];
   variable: Pick<VariableShow, "fqid" | "name">;
@@ -35,10 +38,19 @@ export function variableSpans({
   selected: ReadonlySet<string>;
   idPrefix?: string;
   readOnly?: boolean;
+  /** The database the project names: a span draws that database's years, and
+   * a column it lacks draws its own years as outside it (#2344). */
+  database?: Space | null;
+  /** The tables whose binding of this variable the project's check says the
+   * database lacks over its years (`not_in_database`). */
+  notInDatabase?: ReadonlySet<string>;
 }): LaneSpanModel[] {
   const study = studyWindow(project);
-  return columns.flatMap((column) => {
-    const eras = columnYearRuns(column.segments, catalogBounds, axis[0]);
+  return columns.flatMap((all) => {
+    const column = { ...all, segments: inDatabase(all.segments, database) };
+    const absent = column.segments.length === 0;
+    const drawn = absent ? all : column;
+    const eras = columnYearRuns(drawn.segments, catalogBounds, axis[0]);
     if (!eras.length) return [];
     const first = eras[0].from;
     const last = eras[eras.length - 1].to;
@@ -47,7 +59,11 @@ export function variableSpans({
         entry.table === column.table &&
         entry.bindings.some((binding) => binding.variable === variable.fqid),
     );
-    const inside = columnWindowPeriod(column, selection) !== null;
+    const inside = !absent && columnWindowPeriod(column, selection) !== null;
+    // Whether a committed binding can be ordered from the database turns on
+    // its requested years, its other column names and its successor: the
+    // project's check decides, and the page shows its verdict.
+    const unusable = !!source && notInDatabase.has(column.table);
     const relation = source
       ? periodWindowRelation(
           source.period,
@@ -56,14 +72,21 @@ export function variableSpans({
         )
       : null;
     const sourceLabel = sourcePeriodLabel(source?.period);
-    // How a committed column stands to the study window, in its accessible name.
+    // How a committed column stands to the study window and the project's
+    // database, in its accessible name.
     const note =
-      relation === "disjoint"
-        ? `In project, outside the study years (${sourceLabel}).`
-        : relation && relation !== "same"
-          ? `In project for ${sourceLabel}, which differs from the study years.`
-          : null;
-    const years = segmentYears(column.segments);
+      unusable && database
+        ? `In project, not in ${database.name} for its years.`
+        : absent && database
+          ? source
+            ? `In project; this column name is not in ${database.name}.`
+            : `Not in ${database.name}.`
+          : relation === "disjoint"
+            ? `In project, outside the study years (${sourceLabel}).`
+            : relation && relation !== "same"
+              ? `In project for ${sourceLabel}, which differs from the study years.`
+              : null;
+    const years = segmentYears(drawn.segments);
     const id = `${idPrefix}${column.id}`;
     const span: LaneSpanModel = {
       id,
@@ -78,7 +101,7 @@ export function variableSpans({
       selectable: !!project && !source && inside,
       isSelected: inside && selected.has(id),
       staged: inside && selected.has(id) && !source ? "add" : null,
-      blocked: relation === "disjoint",
+      blocked: relation === "disjoint" || unusable,
       accessibleName: `${[
         column.spelling,
         variable.name,

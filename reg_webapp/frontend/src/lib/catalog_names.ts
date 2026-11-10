@@ -245,12 +245,14 @@ export function tableSegmentsReads(
         ),
       (error: unknown) => {
         const refused = refusedVariable(error, batch);
-        // A failed read is not an error surface — see the module comment.
+        // A failed read is not an error surface — see the module comment. A
+        // variable the server refuses by name has no rows here, which is an
+        // answer, not a failure: the project's check names why, and the
+        // card's other columns keep their years.
         settleReads(
-          (refused === null ? batch : [refused]).map((variable) => [
-            key(variable),
-            null,
-          ]),
+          refused === null
+            ? batch.map((variable) => [key(variable), null])
+            : [[key(refused), []]],
         );
         // Each retry drops one variable, so this ends within the batch.
         const rest = batch.filter((variable) => variable !== refused);

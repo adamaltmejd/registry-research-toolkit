@@ -8,6 +8,7 @@ import {
 } from "./api";
 import { registerRead, tableSegmentsReads } from "./catalog_names";
 import { DeliverySummary } from "./DeliverySummary";
+import { stewardDatabases } from "./databases";
 import { IssueLink, LocatedIssue } from "./Finding";
 import { focusAfterRemoval } from "./focus_after_removal";
 import styles from "./ProjectEditor.module.css";
@@ -61,8 +62,7 @@ export function ProjectEditor({
   // A steward with several databases, each with its own person key: an order
   // draws from one, so the project names it (`linkage.database`). With one
   // database there is nothing to choose and nothing is shown.
-  const spaces = config?.spaces ?? [];
-  const databases = spaces.length > 1 ? spaces : null;
+  const databases = stewardDatabases(context);
   const database = draft?.linkage?.database ?? null;
   // The client gate, from `/api/context` with no round trip: the server's
   // check may stop before it reaches the database. An id the steward does
@@ -145,7 +145,8 @@ export function ProjectEditor({
               value={draft.name}
               onChange={(name) => projectStore.updateField("name", name)}
             >
-              <Label>Project name</Label>
+              {/* The shared form-field label, as `ui/Select` draws it (#2341). */}
+              <Label className="micro-label">Project name</Label>
               <Input />
             </TextField>
           )}
