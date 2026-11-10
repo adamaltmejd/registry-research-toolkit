@@ -47,6 +47,7 @@ describe("source period labels", () => {
     ["2020-02", "February 2020"],
     ["2019-10-15", "15 October 2019"],
     ["LA1999", "1999/2000"],
+    [["2018", "LA2019"], "2018, 2019/2020"],
     [{ from: "2019", to: "2020-06-30" }, "2019–30 June 2020"],
     ["_default", null],
   ])("renders %s as %s", (period, expected) => {

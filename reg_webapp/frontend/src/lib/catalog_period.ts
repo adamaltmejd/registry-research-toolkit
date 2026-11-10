@@ -138,11 +138,13 @@ export function sourcePeriodLabel(period: unknown): string | null {
   const parsed = sourcePeriodIntervals(period);
   if ("error" in parsed || parsed.intervals === null) return null;
   const { intervals } = parsed;
-  const whole = intervals.every(
-    ([first, last]) =>
-      (first.endsWith("-01-01") && last.endsWith("-12-31")) ||
-      (first.endsWith("-07-01") && last.endsWith("-06-30")),
-  );
+  // One grain throughout joins at that grain; a mix (`[2018, LA2019]`) reads
+  // each interval on its own, so no school year turns into calendar years.
+  const all = (from: string, to: string) =>
+    intervals.every(
+      ([first, last]) => first.endsWith(from) && last.endsWith(to),
+    );
+  const whole = all("-01-01", "-12-31") || all("-07-01", "-06-30");
   return whole ? daysLabel(intervals) : intervals.map(exactText).join(", ");
 }
 
