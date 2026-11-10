@@ -158,8 +158,8 @@ export function SourceCard({
     );
     const columns = variableColumns(onTable);
     // The server's verdict that the chosen database lacks the column: its lane
-    // draws it as a column outside the study years does, not as in the
-    // project (#2343).
+    // draws it blocked, as the variable page draws a column outside the study
+    // years, not with the plain in-project fill (#2343).
     const elsewhere = findings.some(
       (issue) => issue.code === "not_in_database",
     );
@@ -202,7 +202,8 @@ export function SourceCard({
         to: runs[runs.length - 1].to,
         segments: runs.map((run) => ({ name: null, ...run })),
         years,
-        state: elsewhere ? "out" : "in",
+        state: "in",
+        blocked: elsewhere,
         selectable: false,
         accessibleName: [
           column.spelling,

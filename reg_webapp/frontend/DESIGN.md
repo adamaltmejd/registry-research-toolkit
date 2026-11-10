@@ -804,7 +804,10 @@ Time is the axis every relation is drawn on.
   name says which databases have it, by their `/api/context` names (#2343, #2344):
   "All databases" when every one has the same years, the names when those that have
   it share years, and each name with its years when they differ. The line wraps
-  rather than cut a database off. With one database there is no line. Once the
+  between databases, never inside a name or a range, and the table's name wraps
+  with it. When the project's database lacks the table, the line opens "Not in
+  <database>.", the visible reason its columns cannot be added. With one database
+  there is no line. Once the
   project names a database, a span draws that database's years and adds only those;
   a column the database lacks keeps its own years drawn as outside the years to add
   (`viz-span-out`), cannot be picked, and its accessible name ends "Not in
@@ -1023,8 +1026,9 @@ grow new visual language meanwhile.
   yet made is no error verdict (maintainer, #2345); while the check after a choice runs,
   the verdict reads Checking. A column the chosen database does not have is the server's
   `not_in_database` on its card, naming the databases that do; it is a finding, never a
-  disabled option, and its lane draws the column as outside (`viz-span-out`), never
-  with the in-project fill (#2343). The name field is the shared form field the
+  disabled option, and its lane draws the column blocked (the error ring and ✕), as
+  the variable page draws a column outside the study years, never with the plain
+  in-project fill (#2343). The name field is the shared form field the
   Database `Select` is: a `micro-label` over a `border-strong` hairline (maintainer
   ruling 2026-11-06, #2341: "components should match"). A variable the catalog does
   not name keeps its finding and has no link; the card's other columns keep their

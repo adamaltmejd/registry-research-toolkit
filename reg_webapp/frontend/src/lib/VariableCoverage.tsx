@@ -412,6 +412,7 @@ export function useVariableCoverage({
                 const line = databasesLine(
                   subject.segments.filter((segment) => segment.table === table),
                   databases,
+                  database,
                 );
                 return {
                   id,

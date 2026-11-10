@@ -41,6 +41,7 @@ export function inDatabase<T extends { space?: string }>(
 export function databasesLine(
   segments: readonly Pick<CatalogSegment, "space" | "period">[],
   databases: readonly Space[] | null,
+  chosen: Space | null = null,
 ): string | null {
   if (!databases) return null;
   const years = databases.flatMap((space) => {
@@ -50,7 +51,18 @@ export function databasesLine(
   if (years.length === 0) return null;
   const same = years.every((entry) => entry.years === years[0].years);
   if (same && years.length === databases.length) return "All databases";
-  return same
-    ? years.map((entry) => entry.name).join(", ")
-    : years.map((entry) => `${entry.name} ${entry.years}`).join(", ");
+  const line = (
+    same
+      ? years.map((entry) => entry.name)
+      : years.map((entry) => `${entry.name} ${entry.years}`)
+  )
+    // A word joiner after each hyphen and dash: the line wraps between
+    // databases, never inside a name ("IFAU-U") or a range ("2022–2025").
+    .map((entry) => entry.replace(/([-–])/g, "$1\u2060"))
+    .join(", ");
+  // The project's database, when the table has no rows in it: the reason its
+  // columns cannot be added, in sight (#2344).
+  return chosen && !years.some((entry) => entry.name === chosen.name)
+    ? `Not in ${chosen.name}. In ${line}`
+    : line;
 }
