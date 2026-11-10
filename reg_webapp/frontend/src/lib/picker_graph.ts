@@ -25,6 +25,7 @@ export function variableSpans({
   idPrefix = "",
   readOnly = false,
   database = null,
+  notInDatabase = new Set(),
 }: {
   columns: readonly VariableColumn[];
   variable: Pick<VariableShow, "fqid" | "name">;
@@ -40,6 +41,9 @@ export function variableSpans({
   /** The database the project names: a span draws that database's years, and
    * a column it lacks draws its own years as outside it (#2344). */
   database?: Space | null;
+  /** The tables whose binding of this variable the project's check says the
+   * database lacks over its years (`not_in_database`). */
+  notInDatabase?: ReadonlySet<string>;
 }): LaneSpanModel[] {
   const study = studyWindow(project);
   return columns.flatMap((all) => {
@@ -56,24 +60,10 @@ export function variableSpans({
         entry.bindings.some((binding) => binding.variable === variable.fqid),
     );
     const inside = !absent && columnWindowPeriod(column, selection) !== null;
-    // A binding names a variable and a table, not a column name: only when no
-    // name of it on this table is in the database is a committed one unusable
-    // there (the server's `not_in_database`). A binding that follows its
-    // successor may get those years from the successor, which only the
-    // project's check resolves, so it is not judged here.
-    const followed = !!source?.bindings.some(
-      (binding) =>
-        binding.variable === variable.fqid && binding.follow_successor,
-    );
-    const unusable =
-      absent &&
-      !!source &&
-      !followed &&
-      !columns.some(
-        (other) =>
-          other.table === column.table &&
-          inDatabase(other.segments, database).length > 0,
-      );
+    // Whether a committed binding can be ordered from the database turns on
+    // its requested years, its other column names and its successor: the
+    // project's check decides, and the page shows its verdict.
+    const unusable = !!source && notInDatabase.has(column.table);
     const relation = source
       ? periodWindowRelation(
           source.period,
@@ -85,17 +75,17 @@ export function variableSpans({
     // How a committed column stands to the study window and the project's
     // database, in its accessible name.
     const note =
-      absent && database
-        ? unusable
-          ? `In project, not in ${database.name}.`
-          : source && followed
-            ? `In project, not in ${database.name}; the project's check says whether its successor covers it.`
+      unusable && database
+        ? `In project, not in ${database.name} for its years.`
+        : absent && database
+          ? source
+            ? `In project; this column name is not in ${database.name}.`
             : `Not in ${database.name}.`
-        : relation === "disjoint"
-          ? `In project, outside the study years (${sourceLabel}).`
-          : relation && relation !== "same"
-            ? `In project for ${sourceLabel}, which differs from the study years.`
-            : null;
+          : relation === "disjoint"
+            ? `In project, outside the study years (${sourceLabel}).`
+            : relation && relation !== "same"
+              ? `In project for ${sourceLabel}, which differs from the study years.`
+              : null;
     const years = segmentYears(drawn.segments);
     const id = `${idPrefix}${column.id}`;
     const span: LaneSpanModel = {
@@ -107,12 +97,7 @@ export function variableSpans({
       to: last,
       segments: eras.map((era) => ({ name: null, ...era })),
       years,
-      state:
-        source && (!absent || unusable || followed)
-          ? "in"
-          : inside
-            ? "default"
-            : "out",
+      state: source ? "in" : inside ? "default" : "out",
       selectable: !!project && !source && inside,
       isSelected: inside && selected.has(id),
       staged: inside && selected.has(id) && !source ? "add" : null,

@@ -811,8 +811,10 @@ Time is the axis every relation is drawn on.
   project names a database, a span draws that database's years and adds only those;
   a column the database lacks keeps its own years drawn as outside the years to add
   (`viz-span-out`), cannot be picked, and its accessible name ends "Not in
-  <database>." A column already in the project that the database lacks is blocked,
-  as one outside the study years is (new rules, proposed by the implementer for
+  <database>." A column already in the project is blocked, as one outside the study
+  years is, where the project's check finds it not in the database
+  (`not_in_database`): that turns on its years, its other column names and its
+  successor, so the page shows the check's verdict rather than its own (new rules, proposed by the implementer for
   #2343 and #2344).
   One span per column name on a table: a steward's yearly files of one table are the
   same column delivered in several files, one box over their years with a gap where a

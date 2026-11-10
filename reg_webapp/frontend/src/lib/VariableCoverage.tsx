@@ -269,6 +269,15 @@ export function useVariableCoverage({
         idPrefix: prefix(subject),
         readOnly: !allowAdd,
         database,
+        notInDatabase: new Set(
+          (validation?.issues ?? []).flatMap((issue) =>
+            issue.code === "not_in_database" &&
+            issue.variable === subject.fqid &&
+            issue.table
+              ? [issue.table]
+              : [],
+          ),
+        ),
       }),
     ]),
   );
