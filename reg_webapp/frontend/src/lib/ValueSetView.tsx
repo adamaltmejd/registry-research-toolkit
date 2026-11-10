@@ -120,10 +120,10 @@ function ValueSetEntry({
                 <a className="link" href={catalogHref(table)}>
                   {tableName(table)}
                 </a>{" "}
-                <ColumnChip
-                  name={column}
-                  years={catalogPeriodRuns(periods) || undefined}
-                />
+                <ColumnChip name={column} />
+                {/* Outside the chip, which never wraps: a long run of school
+                    years wraps on a phone. */}
+                <TableYears periods={periods} />
               </li>
             ))}
           </ul>
@@ -147,5 +147,17 @@ function ValueSetEntry({
         </>
       )}
     </Disclosure>
+  );
+}
+
+function TableYears({ periods }: { periods: CatalogSegment["period"][] }) {
+  const years = catalogPeriodRuns(periods);
+  return (
+    years && (
+      <>
+        {" "}
+        <code>{years}</code>
+      </>
+    )
   );
 }

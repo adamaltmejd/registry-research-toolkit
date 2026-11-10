@@ -569,7 +569,7 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   years where they differ, and no row where none states it, never "Not stated" down the
   list. Classification names the classification once, by its name, linking to its page,
   where the versions are; only a version the classifications list lacks is named by
-  itself (maintainer 2026-11-10, in this PR: on the SWECOV Kommun group the members code
+  itself ("Family once", maintainer 2026-11-10, PR #2394 comment 6775423821: on the SWECOV Kommun group the members code
   28 versions of one classification). The `Timeline` states the years and carries the
   columns, their tables and years, so there is no Years row, no tables list and no table
   of columns under it; value sets have their own panel, so the facts name only the
@@ -780,7 +780,8 @@ Time is the axis every relation is drawn on.
 - A **`Timeline`** is drawn on the page's axis, its coverage row captioned in the name
   column: by the variable's name on a variable page, which heads the drawing (#2319),
   and "Years" on a group page. Stacked, "Years" is dropped (the axis heads the row) and
-  the variable's name sits over the drawing (maintainer 2026-11-10, in this PR). No
+  the variable's name sits over the drawing ("Caption + phone line", maintainer 2026-11-10, PR #2394 comment
+  6775423821). No
   header, no "Variable" column header and no legend (maintainer 2026-11-04); a screen
   reader hears the covered years and the years to add. Coverage is one ink box per
   delivered year, a `surface` hairline between boxes, empty where a year has no
@@ -856,7 +857,7 @@ Time is the axis every relation is drawn on.
   on both pages (#2320, maintainer 2026-11-10; this overturns the 2026-11-04 group-page
   code timeline, PLAN §14): one entry per distinct code list, a disclosure titled by its
   first name ("and N more"), over the tables that use it, each table's name linking to
-  its register page with the column's `ColumnChip` carrying its years (the column tells
+  its register page then the column's `ColumnChip` and its years, which wrap (the column tells
   a group's members apart where they share a table; new rule, proposed by the
   implementer). Opened, it lists the list's names, then its codes (`ValueSetCodes`). A
   list of 20 codes or fewer opens at once, with no search field; a larger one opens on
