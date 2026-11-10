@@ -1320,3 +1320,63 @@ subject = "individuppgifter-agi: ERSATTNINGS_KOD @2021..2023 where key = 'v6112'
 fact = { "entity" = "occurrence", "fields" = { "label" = "Ersättningskod", "definition" = "Kod på sociala kontrolluppgiften som anger vilken typ av ersättning som avses.", "type" = "integer", "sensitive" = true, "identifier" = false } }
 evidence = "private:ev-3904"
 caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly social-benefit files for 2021-2023. SCB delivers this column, in 2019-2020 as in 2021-2023, as four positions of one row per person and month (ERSATTNINGS_KOD1 to ERSATTNINGS_KOD4); stewards map them as position slots of this variable. Label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: BILERSATTNING @2021..2023 where key = 'v6060'"
+fields = { "value_set" = "7d5060c201561844078446f7f3f20fef63eea2b9932ef583f87cbcfb104eb34c" }
+evidence = "SCB's Registerinformation export codes BILERSATTNING (key v6060) with this value set in its 2019 and 2020 editions. The 2021-2023 occurrence follows the export's 2020 edition, as its assert states, so it carries the same code list."
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: BOSTADSF_EJ_SMAHUS_EJ_ULAG_SA @2021..2023 where key = 'v16099'"
+fields = { "value_set" = "7d5060c201561844078446f7f3f20fef63eea2b9932ef583f87cbcfb104eb34c" }
+evidence = "SCB's Registerinformation export codes BOSTADSF_EJ_SMAHUS_EJ_ULAG_SA (key v16099) with this value set in its 2019 and 2020 editions. The 2021-2023 occurrence follows the export's 2020 edition, as its assert states, so it carries the same code list."
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: BOSTADSF_EJ_SMAHUS_ULAG_AG @2021..2023 where key = 'v16099'"
+fields = { "value_set" = "7d5060c201561844078446f7f3f20fef63eea2b9932ef583f87cbcfb104eb34c" }
+evidence = "SCB's Registerinformation export codes BOSTADSF_EJ_SMAHUS_ULAG_AG (key v16099) with this value set in its 2019 and 2020 editions. The 2021-2023 occurrence follows the export's 2020 edition, as its assert states, so it carries the same code list."
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: BOSTADSF_EJ_SMAHUS_ULAG_EA @2021..2023 where key = 'v16099'"
+fields = { "value_set" = "7d5060c201561844078446f7f3f20fef63eea2b9932ef583f87cbcfb104eb34c" }
+evidence = "SCB's Registerinformation export codes BOSTADSF_EJ_SMAHUS_ULAG_EA (key v16099) with this value set in its 2019 and 2020 editions. The 2021-2023 occurrence follows the export's 2020 edition, as its assert states, so it carries the same code list."
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: BOSTADSF_SMAHUS_EJ_ULAG_SA @2021..2023 where key = 'v16099'"
+fields = { "value_set" = "7d5060c201561844078446f7f3f20fef63eea2b9932ef583f87cbcfb104eb34c" }
+evidence = "SCB's Registerinformation export codes BOSTADSF_SMAHUS_EJ_ULAG_SA (key v16099) with this value set in its 2019 and 2020 editions. The 2021-2023 occurrence follows the export's 2020 edition, as its assert states, so it carries the same code list."
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: BOSTADSF_SMAHUS_ULAG_AG @2021..2023 where key = 'v16099'"
+fields = { "value_set" = "7d5060c201561844078446f7f3f20fef63eea2b9932ef583f87cbcfb104eb34c" }
+evidence = "SCB's Registerinformation export codes BOSTADSF_SMAHUS_ULAG_AG (key v16099) with this value set in its 2019 and 2020 editions. The 2021-2023 occurrence follows the export's 2020 edition, as its assert states, so it carries the same code list."
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: BOSTADSF_SMAHUS_ULAG_EA @2021..2023 where key = 'v16099'"
+fields = { "value_set" = "7d5060c201561844078446f7f3f20fef63eea2b9932ef583f87cbcfb104eb34c" }
+evidence = "SCB's Registerinformation export codes BOSTADSF_SMAHUS_ULAG_EA (key v16099) with this value set in its 2019 and 2020 editions. The 2021-2023 occurrence follows the export's 2020 edition, as its assert states, so it carries the same code list."
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: FORMAN_HAR_JUSTERATS @2021..2023 where key = 'v1073'"
+fields = { "value_set" = "7d5060c201561844078446f7f3f20fef63eea2b9932ef583f87cbcfb104eb34c" }
+evidence = "SCB's Registerinformation export codes FORMAN_HAR_JUSTERATS (key v1073) with this value set in its 2019 and 2020 editions. The 2021-2023 occurrence follows the export's 2020 edition, as its assert states, so it carries the same code list."
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: FORMAN_SOM_PENSION_EJ_ULAG_SA @2021..2023 where key = 'v22251'"
+fields = { "value_set" = "7d5060c201561844078446f7f3f20fef63eea2b9932ef583f87cbcfb104eb34c" }
+evidence = "SCB's Registerinformation export codes FORMAN_SOM_PENSION_EJ_ULAG_SA (key v22251) with this value set in its 2019 and 2020 editions. The 2021-2023 occurrence follows the export's 2020 edition, as its assert states, so it carries the same code list."
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: ERSATTNINGS_KOD @2021..2023 where key = 'v6112'"
+fields = { "value_set" = "a82b212087e4acdd4408f7dfdb391b38ba0af7222241226c34afc28abb2f335f" }
+evidence = "SCB's Registerinformation export codes ERSATTNINGS_KOD (key v6112) with this value set in its 2019 and 2020 editions. The 2021-2023 occurrence follows the export's 2020 edition, as its assert states, so it carries the same code list."
