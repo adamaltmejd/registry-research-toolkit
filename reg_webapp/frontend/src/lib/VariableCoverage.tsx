@@ -187,6 +187,9 @@ export function useVariableCoverage({
     subjects.flatMap((subject) => subject.segments),
     catalogBounds,
   );
+  const delivered = segmentYears(
+    subjects.flatMap((subject) => subject.segments),
+  );
   const available = runs.length
     ? { from: runs[0].from, to: runs[runs.length - 1].to }
     : null;
@@ -360,7 +363,7 @@ export function useVariableCoverage({
           </div>
         )}
         <span className="visually-hidden">
-          Years {segmentYears(subjects.flatMap((subject) => subject.segments))}.
+          {delivered && `Years ${delivered}.`}
           {allowAdd && ` Years to add ${yearWindowLabel(active)}.`}
           {allowAdd && outside.length > 0
             ? ` No delivery in ${outside.map(yearWindowLabel).join(", ")}.`

@@ -118,7 +118,24 @@ export function variableSpans({
       blocked: relation === "disjoint",
       note,
       changes,
-      accessibleName: `${column.spelling}, ${variable.name}, ${filesLabel(column.files) ?? names.get(column.table) ?? "Table name unavailable"}, ${years}, ${note?.text ?? (source ? "in project" : inside ? "click to select" : "outside the years to add")}${changes.length ? `. Coding changes in ${changeYears}.` : ""}`,
+      accessibleName: `${[
+        column.spelling,
+        variable.name,
+        filesLabel(column.files) ??
+          names.get(column.table) ??
+          "Table name unavailable",
+        years,
+        note?.text ??
+          (source
+            ? "in project"
+            : inside
+              ? "click to select"
+              : "outside the years to add"),
+      ]
+        .filter(Boolean)
+        .join(
+          ", ",
+        )}${changes.length ? `. Coding changes in ${changeYears}.` : ""}`,
     };
     return [
       readOnly
@@ -148,7 +165,17 @@ function readOnlySpan(
     staged: null,
     blocked: false,
     note: null,
-    accessibleName: `${span.name}, ${variableName}, ${tableName}, ${span.years}, ${inProject ? "in project" : "read only"}${span.changes?.length ? `. Coding changes in ${span.changes.join(", ")}.` : ""}`,
+    accessibleName: `${[
+      span.name,
+      variableName,
+      tableName,
+      span.years,
+      inProject ? "in project" : "read only",
+    ]
+      .filter(Boolean)
+      .join(
+        ", ",
+      )}${span.changes?.length ? `. Coding changes in ${span.changes.join(", ")}.` : ""}`,
   };
 }
 
