@@ -1266,9 +1266,21 @@ fn application_dependencies(
                 apply::table_handle(records, ledger, fields.table.as_ref().expect("table set"))?;
             for matched in selected {
                 let source = &view[matched.source];
-                let Some((provider, register, _table, release)) = context(source) else {
+                let Some((provider, register, table, release)) = context(source) else {
                     continue;
                 };
+                // A release move rewrites its attached occurrences and gap markers, so
+                // their rows (and, below, their value sets) are part of its premise.
+                if source.text("kind") == Some("release") {
+                    needed.extend(
+                        table_occurrences
+                            .get(&(provider.clone(), register.clone(), table))
+                            .into_iter()
+                            .flatten()
+                            .copied()
+                            .filter(|&i| view[i].text("release") == release.as_deref()),
+                    );
+                }
                 let target_register = register;
                 let target_table = Some(destination.clone());
                 contexts.insert((
