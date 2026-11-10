@@ -197,8 +197,19 @@
   background: var(--accent);
 }
 
-/* The header's link (#2324): `.label` clips for its ellipsis, so the ring is
-   drawn inside the link. */
-.label a:focus-visible {
-  box-shadow: inset 0 0 0 2px var(--accent);
+/* The header's link (#2324): the link truncates itself, so its box, and the
+   inset ring a clipping label needs, end at the label's edge; "Variables in"
+   stays whole. */
+.linked {
+  display: flex;
+  white-space: pre;
+}
+.linked a {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.linked a:focus-visible {
+  box-shadow: var(--focus-ring-inset);
 }

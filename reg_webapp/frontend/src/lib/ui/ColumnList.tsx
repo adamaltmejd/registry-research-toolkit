@@ -451,7 +451,7 @@ export function ColumnList({
     >
       <div className={styles.header}>
         <span
-          className={`micro-label ${styles.label}`}
+          className={`micro-label ${styles.label} ${href === undefined ? "" : styles.linked}`}
           title={subject === undefined ? undefined : name}
         >
           {href === undefined ? (
