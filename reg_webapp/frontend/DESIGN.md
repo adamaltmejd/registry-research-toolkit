@@ -639,7 +639,8 @@ Time is the axis every relation is drawn on.
   `1984/1985–2023/2024` for a range (maintainer, #2315, dogfood 2026-11-05); anything
   else reads as the calendar years its first and last days fall in, so a 31 December
   snapshot is its year (`1968–2025`, not `1968-12-31–2025`; #2315, 2026-11-06). Stretches
-  that meet at that grain read as one range (yearly snapshots `2010–2020`). A gap the
+  that meet at that grain read as one range (yearly snapshots `2010–2020`); stretches of
+  different grains stay apart (`2018, 2019/2020`). A gap the
   server reports inside a year reads as that year too; a gap no whole year fills is the
   server's to stop reporting (maintainer, PR #2389, 2026-11-10). Text that states
   delivered years (a list row's, a lane's, a fact's) is read from the catalog periods,

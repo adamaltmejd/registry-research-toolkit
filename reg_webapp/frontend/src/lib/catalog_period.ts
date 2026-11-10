@@ -1,5 +1,4 @@
 import type { CatalogPeriod } from "./api";
-import { yearWindowLabel } from "./period";
 import { sourcePeriodIntervals } from "./reg_core";
 
 /** Catalog periods are half-open; reg-core renders inclusive date intervals. */
@@ -14,31 +13,35 @@ export function catalogLastDate(period: CatalogPeriod): string | null {
 type Days = readonly [string | null, string | null];
 
 /** Days as a reader sees them (DESIGN.md → Time): years, never a date or a
- * period token. Whole school years (1 July to 30 June) read as school years
- * (`1999/2000`, `1984/1985–2023/2024`); anything else as the calendar years
- * its first and last days fall in, so a 31 December snapshot is its year
- * (`1968–2025`). Spans join where they meet at that grain. Null when they join into one
- * with no dated bound: there are no years to state. This is display only;
+ * period token. A whole school year span (1 July to 30 June) reads in school
+ * years (`1999/2000`, `1984/1985–2023/2024`); any other span as the calendar
+ * years its first and last days fall in, so a 31 December snapshot is its year
+ * (`1968–2025`). Spans of one grain join where they meet at it; spans of
+ * different grains stay apart (`2018, 2019/2020`). Null when they join into
+ * one with no dated bound: there are no years to state. This is display only;
  * `renderIntervals` writes the project file. */
 function daysLabel(intervals: readonly Days[]): string | null {
   if (intervals.length === 0) return null;
   const year = (day: string | null) =>
     day === null ? null : Number(day.slice(0, 4));
-  const school = intervals.every(
-    ([first, last]) => first?.endsWith("-07-01") && last?.endsWith("-06-30"),
-  );
+  type Run = { from: number | null; to: number | null; school: boolean };
   // A school year is numbered by the year it starts in.
-  const spans = intervals
-    .map(([first, last]) => ({
-      from: year(first),
-      to: school ? (year(last) as number) - 1 : year(last),
-    }))
+  const spans: Run[] = intervals
+    .map(([first, last]) => {
+      const school = !!first?.endsWith("-07-01") && !!last?.endsWith("-06-30");
+      return {
+        from: year(first),
+        to: school ? (year(last) as number) - 1 : year(last),
+        school,
+      };
+    })
     .sort((a, b) => (a.from ?? -Infinity) - (b.from ?? -Infinity));
-  const runs: { from: number | null; to: number | null }[] = [];
+  const runs: Run[] = [];
   for (const span of spans) {
     const run = runs.at(-1);
     if (
       run &&
+      run.school === span.school &&
       (run.to === null || span.from === null || span.from <= run.to + 1)
     )
       run.to =
@@ -46,19 +49,13 @@ function daysLabel(intervals: readonly Days[]): string | null {
     else runs.push({ ...span });
   }
   if (runs.some(({ from, to }) => from === null && to === null)) return null;
-  const name = (y: number) => (school ? `${y}/${y + 1}` : String(y));
   return runs
-    .map(({ from, to }) =>
-      from === null
-        ? `Through ${name(to as number)}`
-        : to === null
-          ? `From ${name(from)}`
-          : school
-            ? from === to
-              ? name(from)
-              : `${name(from)}–${name(to)}`
-            : yearWindowLabel({ from, to }),
-    )
+    .map(({ from, to, school }) => {
+      const name = (y: number) => (school ? `${y}/${y + 1}` : String(y));
+      if (from === null) return `Through ${name(to as number)}`;
+      if (to === null) return `From ${name(from)}`;
+      return from === to ? name(from) : `${name(from)}–${name(to)}`;
+    })
     .join(", ");
 }
 
@@ -138,13 +135,11 @@ export function sourcePeriodLabel(period: unknown): string | null {
   const parsed = sourcePeriodIntervals(period);
   if ("error" in parsed || parsed.intervals === null) return null;
   const { intervals } = parsed;
-  // One grain throughout joins at that grain; a mix (`[2018, LA2019]`) reads
-  // each interval on its own, so no school year turns into calendar years.
-  const all = (from: string, to: string) =>
-    intervals.every(
-      ([first, last]) => first.endsWith(from) && last.endsWith(to),
-    );
-  const whole = all("-01-01", "-12-31") || all("-07-01", "-06-30");
+  const whole = intervals.every(
+    ([first, last]) =>
+      (first.endsWith("-01-01") && last.endsWith("-12-31")) ||
+      (first.endsWith("-07-01") && last.endsWith("-06-30")),
+  );
   return whole ? daysLabel(intervals) : intervals.map(exactText).join(", ");
 }
 
