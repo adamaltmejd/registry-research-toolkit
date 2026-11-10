@@ -172,8 +172,8 @@ j_narrow() {
 
 # J7 steward-held view (paired fixture). Fails if the pairing is ignored (steward
 # branding), held-only search drops a supplemental provider's variables, a held
-# variable loses its held file and years, or the check stops refusing a column the
-# steward does not hold (RelativeId: in the catalog, not in Pool) or stops naming
+# variable loses its table and years (spans name no file, #2321), or the check
+# stops refusing a column the steward does not hold (RelativeId: in the catalog, not in Pool) or stops naming
 # the received row key once it is removed, or names the column it refuses by a
 # placeholder instead of its catalog name (#2220). Project: holdings order-key-requirements.json.
 j_steward() {
@@ -188,7 +188,7 @@ j_steward() {
 		wait_text "Second position" && see option "Second position, in Delivery slots" &&
 		fill searchbox "Search registers, variables" Late && wait_text "Late measure" &&
 		press option "Late measure" && wait_url "**/catalog/demo/held/late" &&
-		tree 'image "Late, Late measure, Pool, 2019–2020' &&
+		tree 'image "Late, Late measure, Held reference metadata, 2019–2020' &&
 		open_project "$project" && wait_text "Can't download yet: 1 problem." &&
 		press button "Remove Relative identifier, ordinary orderable column from Held reference metadata" &&
 		press button "Remove column" && wait_text "Received_Id" && shot
