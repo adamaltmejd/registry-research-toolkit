@@ -183,7 +183,8 @@ export function SourceCard({
     for (const column of columns) {
       const runs = columnYearRuns(column.segments, bounds, axis[0]);
       if (!runs.length) continue;
-      const years = runs.map(yearWindowLabel).join(", ");
+      // A timeless table has no years to state: its span is an empty box.
+      const years = timeless ? "" : runs.map(yearWindowLabel).join(", ");
       spans.push({
         id: `${id}:${column.id}`,
         lane: id,
@@ -194,7 +195,9 @@ export function SourceCard({
         years,
         state: "in",
         selectable: false,
-        accessibleName: `${column.spelling}, ${name}, ${years}, in project`,
+        accessibleName: [column.spelling, name, years, "in project"]
+          .filter(Boolean)
+          .join(", "),
       });
     }
     const pinned =

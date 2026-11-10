@@ -98,9 +98,11 @@ export function RegisterView({
                     onChange={() => toggleTable(table.fqid)}
                   >
                     {table.name}
-                    <span className={styles.period}>
-                      {catalogPeriodLabel(table.period)}
-                    </span>
+                    {catalogPeriodLabel(table.period) && (
+                      <span className={styles.period}>
+                        {catalogPeriodLabel(table.period)}
+                      </span>
+                    )}
                   </FilterChip>
                 ))}
                 {/* Mounted empty: a live region inserted with its first text

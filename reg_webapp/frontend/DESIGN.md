@@ -642,8 +642,10 @@ Time is the axis every relation is drawn on.
   month, quarter or term is its year (proposed by the implementer). Stretches that meet
   at that grain read as one range (yearly snapshots `2010–2020`). A period with no dated
   bound (a year-independent classification version, a timeless table or source) has no
-  years text: a timeline draws it as an empty box and a list leaves its years out; there
-  is no "Unbounded" (maintainer, #2323, dogfood 2026-11-05: "Yes drop it there too").
+  years text: a timeline draws it as an empty box and a list leaves its years out (#2323:
+  "an unbounded version is an empty box in the timeline, with nothing on the list"); there
+  is no "Unbounded", on `/project` either (maintainer, #2323, dogfood 2026-11-05: "Yes drop
+  it there too").
   The label is display only: `renderIntervals` writes the project file.
 
 - The **study window** is the project's period, named "Study years" on screen
