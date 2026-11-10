@@ -24075,55 +24075,55 @@ evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Ind
 [[statement]]
 kind = "assert"
 subject = "individer-15plus: TTJLONU @2011-01-01..2011-12-31 where key = 'v1172' and release = 'r7319'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön (nordisk, utländskt beskattad, individ)", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A416\n\nSCB's LISA variable list documents TTJLONU on LISA for 2011-2023. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "assert"
 subject = "individer-15plus: TTJLONU @2012-01-01..2012-12-31 where key = 'v1172' and release = 'r7309'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön (nordisk, utländskt beskattad, individ)", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A416\n\nSCB's LISA variable list documents TTJLONU on LISA for 2011-2023. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "assert"
 subject = "individer-15plus: TTJLONU @2013-01-01..2013-12-31 where key = 'v1172' and release = 'r6053'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön (nordisk, utländskt beskattad, individ)", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A416\n\nSCB's LISA variable list documents TTJLONU on LISA for 2011-2023. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "assert"
 subject = "individer-15plus: TTJLONU @2014-01-01..2014-12-31 where key = 'v1172' and release = 'r8612'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön (nordisk, utländskt beskattad, individ)", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A416\n\nSCB's LISA variable list documents TTJLONU on LISA for 2011-2023. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "assert"
 subject = "individer-15plus: TTJLONU @2015-01-01..2015-12-31 where key = 'v1172' and release = 'r11268'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön (nordisk, utländskt beskattad, individ)", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A416\n\nSCB's LISA variable list documents TTJLONU on LISA for 2011-2023. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "assert"
 subject = "individer-15plus: TTJLONU @2016-01-01..2016-12-31 where key = 'v1172' and release = 'r12202'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön (nordisk, utländskt beskattad, individ)", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A416\n\nSCB's LISA variable list documents TTJLONU on LISA for 2011-2023. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "assert"
 subject = "individer-15plus: TTJLONU @2017-01-01..2017-12-31 where key = 'v1172' and release = 'r13286'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön (nordisk, utländskt beskattad, individ)", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A416\n\nSCB's LISA variable list documents TTJLONU on LISA for 2011-2023. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "assert"
 subject = "individer-15plus: TTJLONU @2018-01-01..2018-12-31 where key = 'v1172' and release = 'r14349'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön (nordisk, utländskt beskattad, individ)", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A416\n\nSCB's LISA variable list documents TTJLONU on LISA for 2011-2023. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "assert"
 subject = "individer-15plus: TTJLONU @2019-01-01..2019-12-31 where key = 'v1172' and release = 'r16266'"
-fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön (nordisk, utländskt beskattad, individ)", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+fact = { "entity" = "occurrence", "fields" = { "label" = "Kontant bruttolön", "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A416\n\nSCB's LISA variable list documents TTJLONU on LISA for 2011-2023. SCB's Registerinformation export lists it on this register only for 2020-2023; label, definition and type follow the export's 2020 edition."
 
 [[statement]]

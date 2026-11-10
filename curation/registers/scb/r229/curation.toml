@@ -7,7 +7,7 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/personalutbildning
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: arr5 @2006-01-01..2006-06-30"
+subject = "halvarsvis: arr5 @2006-01-01..2006-06-30"
 fields = { "label" = "Kurs/utbildningsanordnare, kurs 5 — Arr5" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/personalutbildningsstatistik.toml:1670\n\nComplete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 
@@ -73,49 +73,49 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/personalutbildning
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: kommun @2006-01-01..2006-06-30"
+subject = "halvarsvis: kommun @2006-01-01..2006-06-30"
 fields = { "classification" = "class/lkf/lkf2005" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: kommun @2008-01-01..2008-06-30"
+subject = "halvarsvis: kommun @2008-01-01..2008-06-30"
 fields = { "classification" = "class/lkf/lkf2008" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: kommun @2010-01-01..2010-06-30"
+subject = "halvarsvis: kommun @2010-01-01..2010-06-30"
 fields = { "classification" = "class/lkf/lkf2010" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: {fikod1,fikod2,fikod3,fikod4,fikod5,sun2000inr}"
+subject = "halvarsvis: {fikod1,fikod2,fikod3,fikod4,fikod5,sun2000inr}"
 fields = { "classification" = "class/sun/sun2000-inriktning" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: sun2000niva"
+subject = "halvarsvis: sun2000niva"
 fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: utbniv @1995-07-01..1995-12-31"
+subject = "halvarsvis: utbniv @1995-07-01..1995-12-31"
 fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: utbniv @2006-01-01..2006-06-30,2008-01-01..2008-06-30"
+subject = "halvarsvis: utbniv @2006-01-01..2006-06-30,2008-01-01..2008-06-30"
 fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: utbniv @1996..2003"
+subject = "halvarsvis: utbniv @1996..2003"
 fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
 
@@ -127,7 +127,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:35
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: {husni2007_1,husni2007_2}"
+subject = "halvarsvis: {husni2007_1,husni2007_2}"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "python-builder-pre-cutover:curation/classifications/SNI2007.toml:33\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning 2007, Branscher"
 
@@ -3788,19 +3788,19 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKäl
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: Taljarlk @2006-01-01..2006-06-30 where key = 'v17467'"
+subject = "halvarsvis: Taljarlk @2006-01-01..2006-06-30 where key = 'v17467'"
 fields = { "label" = "Antal timmar för lärarledda kurser, konferenser" }
 evidence = "Part of #2040. scb/personalutbildningsstatistik/antalt-timmar-for-lararledda-kurser-konferanser: Correct Antalt and konferanser only; retain the original comma rather than inserting och. Three survey releases. Reviewed occurrence label: Antalt timmar för lärarledda kurser, konferanser"
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: Taljarlk @2008-01-01..2008-06-30 where key = 'v17467'"
+subject = "halvarsvis: Taljarlk @2008-01-01..2008-06-30 where key = 'v17467'"
 fields = { "label" = "Antal timmar för lärarledda kurser, konferenser" }
 evidence = "Part of #2040. scb/personalutbildningsstatistik/antalt-timmar-for-lararledda-kurser-konferanser: Correct Antalt and konferanser only; retain the original comma rather than inserting och. Three survey releases. Reviewed occurrence label: Antalt timmar för lärarledda kurser, konferanser"
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: Taljarlk @2010-01-01..2010-06-30 where key = 'v17467'"
+subject = "halvarsvis: Taljarlk @2010-01-01..2010-06-30 where key = 'v17467'"
 fields = { "label" = "Antal timmar för lärarledda kurser, konferenser" }
 evidence = "Part of #2040. scb/personalutbildningsstatistik/antalt-timmar-for-lararledda-kurser-konferanser: Correct Antalt and konferanser only; retain the original comma rather than inserting och. Three survey releases. Reviewed occurrence label: Antalt timmar för lärarledda kurser, konferanser"
 
@@ -4912,34 +4912,34 @@ evidence = "Column t8e2 / T9E2, unit 'Månad'; same pattern as kurs 1."
 kind = "assert"
 subject = "table:kalenderar"
 fact = { entity = "table", fields = { name = "Personalutbildningsstatistik (PUT), kalenderår", coverage = "1999-01-01..2003-12-31" } }
-evidence = "Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. The kalenderår releases of source-annual-1999-2003 (Hela året 1999, Hela året 2000, Hela året 2001, Hela året 2002, Hela året 2003) form this table; the coverage is the union of their periods."
+evidence = "Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. The kalenderår releases of the source table (now halvarsvis) (Hela året 1999, Hela året 2000, Hela året 2001, Hela året 2002, Hela året 2003) form this table; the coverage is the union of their periods."
 
 [[statement]]
 kind = "set"
-subject = "release:source-annual-1999-2003/r15072"
+subject = "release:halvarsvis/r15072"
 fields = { "table" = "kalenderar" }
 evidence = "Release 'Hela året 1999' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
 
 [[statement]]
 kind = "set"
-subject = "release:source-annual-1999-2003/r15200"
+subject = "release:halvarsvis/r15200"
 fields = { "table" = "kalenderar" }
 evidence = "Release 'Hela året 2000' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
 
 [[statement]]
 kind = "set"
-subject = "release:source-annual-1999-2003/r15202"
+subject = "release:halvarsvis/r15202"
 fields = { "table" = "kalenderar" }
 evidence = "Release 'Hela året 2001' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
 
 [[statement]]
 kind = "set"
-subject = "release:source-annual-1999-2003/r15203"
+subject = "release:halvarsvis/r15203"
 fields = { "table" = "kalenderar" }
 evidence = "Release 'Hela året 2002' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
 
 [[statement]]
 kind = "set"
-subject = "release:source-annual-1999-2003/r15211"
+subject = "release:halvarsvis/r15211"
 fields = { "table" = "kalenderar" }
 evidence = "Release 'Hela året 2003' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."

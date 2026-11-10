@@ -1,7 +1,7 @@
 # Public ids of scb/r229 (today's scb/personalutbildningsstatistik), from the slug pins at fe08cf2a9.
 public = "personalutbildningsstatistik"
 [tables]
-"Personalutbildningsstatistik (PUT)" = "source-annual-1999-2003"
+"Personalutbildningsstatistik (PUT)" = "halvarsvis"
 
 [variables]
 "alder" = ["Personalutbildningsstatistik (PUT): ALDER"]
