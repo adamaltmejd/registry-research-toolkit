@@ -21,6 +21,11 @@ export const SHOW_MATCHING_REGISTERS_LABEL = "Show matching registers";
  * otherwise (DESIGN.md → Swedish text). */
 export const svCollator = new Intl.Collator("sv", { sensitivity: "base" });
 
+/** A value set of at most this many codes shows whole, opened at once with no
+ * search field; a larger one is searched and read a page at a time
+ * (maintainer, 2026-11-10, #2320). */
+export const SMALL_VALUE_SET = 20;
+
 /** A provider's registers in the one order every list of them uses: the
  * register column, the provider page and its variables column (maintainer
  * 2026-11-05), by name in Swedish collation. The server lists them by FQID. */

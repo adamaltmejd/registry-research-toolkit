@@ -32,9 +32,6 @@ export interface LaneSpanGeometryInput {
   /** Disjoint parts of the span: the eras of a rename, or the deliveries of an
    * interrupted series. One part spanning `from`..`to` when absent. */
   segments?: LaneSegment[];
-  /** Years the column's coding changed under the same name, marked above
-   * the span. */
-  changes?: readonly number[];
 }
 
 export type LaneEdgeKind = "succession" | "rename";
@@ -146,11 +143,8 @@ export const COVERAGE_HEIGHT = 40;
 const NAME_WIDTH = 230;
 const NAME_GAP = 16;
 const MIN_TRACK = 360;
-// Stacked, a two-line lane name and coding marks on separate rows: the room
-// kept until the name block is measured.
+// Stacked, the room a two-line lane name keeps until it is measured.
 const STACKED_NAME_HEIGHT = 54;
-// The row a span's coding marks take above it (the `axis` type and a pixel).
-const MARK_ROOM = 14;
 // Stacked, the least room between a measured name and its spans.
 const NAME_SPAN_GAP = 4;
 // IBM Plex Mono advances 0.6 em; the `column` type is 12 px. Set in mono, a
@@ -287,14 +281,10 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
   for (const lane of input.lanes) {
     const rows = rowsOf.get(lane.id) ?? 1;
     const name = input.nameHeights?.get(lane.id) ?? 0;
-    // Stacked, the spans start right under the measured name, with room for
-    // coding marks only where a span has them.
-    const marked = input.spans.some(
-      (span) => span.lane === lane.id && (span.changes?.length ?? 0) > 0,
-    );
+    // Stacked, the spans start right under the measured name.
     const top = stacked
       ? name > 0
-        ? name + (marked ? MARK_ROOM : NAME_SPAN_GAP)
+        ? name + NAME_SPAN_GAP
         : STACKED_NAME_HEIGHT
       : (LANE_HEIGHT - SPAN_HEIGHT) / 2;
     const height =

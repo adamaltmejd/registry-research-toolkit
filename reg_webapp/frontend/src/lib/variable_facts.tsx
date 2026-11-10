@@ -12,31 +12,44 @@ import styles from "./variable_facts.module.css";
  * row is left out rather than printed as "Not stated" or "No". */
 type SegmentFact = { key: string; value: ReactNode } | null;
 
-const FACTS: readonly {
+/** A classification version's family, by the version's ref: its name is the
+ * server's, from the classifications list. */
+export type ClassFamilies = ReadonlyMap<string, { fqid: string; name: string }>;
+
+const facts = (
+  families: ClassFamilies,
+): readonly {
   term: string;
   of: (row: CatalogSegment) => SegmentFact;
-}[] = [
+}[] => [
   // An identifier shows as the Identifier type pill, so it has no row here.
   {
     term: "Sensitive",
     of: (row) => (row.sensitive ? { key: "yes", value: "Yes" } : null),
   },
   // The codes themselves have their own section; only the classification
-  // they code is a fact here, by the name the server serves with the row
-  // (never derived from its ref; a row without one states no fact).
+  // they code is a fact here: its family once, whose page lists the versions
+  // (#2319), else the version, by the name the server serves (never derived
+  // from a ref; a row without one states no fact).
   {
     term: "Classification",
-    of: (row) =>
-      row.classification && row.classification_name
+    of: (row) => {
+      if (!row.classification) return null;
+      const family = families.get(row.classification);
+      const [ref, name] = family
+        ? [family.fqid, family.name]
+        : [row.classification, row.classification_name];
+      return name
         ? {
-            key: row.classification,
+            key: ref,
             value: (
-              <a className="link" href={catalogHref(row.classification)}>
-                {row.classification_name}
+              <a className="link" href={catalogHref(ref)}>
+                {name}
               </a>
             ),
           }
-        : null,
+        : null;
+    },
   },
 ];
 
@@ -113,26 +126,14 @@ export function typePills(segments: readonly CatalogSegment[]): ReactNode[] {
   ));
 }
 
-/** The Type row of a group member's lane: its `typePills` as a fact. */
-export function typeFact(segments: readonly CatalogSegment[]): Definition[] {
-  const pills = typePills(segments);
-  return pills.length === 0
-    ? []
-    : [
-        {
-          term: "Type",
-          value: <span className={styles.types}>{pills}</span>,
-        },
-      ];
-}
-
-/** The facts of a variable's segments (DESIGN.md → Detail pane): a fact every
- * segment states alike is one value; one that differs lists each value with
- * its years; a fact no segment states is left out. */
+/** The facts of a variable's or a group's segments (DESIGN.md → Detail pane):
+ * a fact every segment states alike is one value; one that differs lists each
+ * value with its years; a fact no segment states is left out. */
 export function segmentFacts(
   segments: readonly CatalogSegment[],
+  families: ClassFamilies,
 ): Definition[] {
-  return FACTS.flatMap(({ term, of }) => {
+  return facts(families).flatMap(({ term, of }) => {
     const { groups, unstated } = groupFact(segments, of);
     if (groups.length === 0) return [];
     if (groups.length === 1 && !unstated)

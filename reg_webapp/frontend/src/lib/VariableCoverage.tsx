@@ -46,10 +46,10 @@ import { columnYearRuns, studyWindow } from "./study_window";
 import { AddBar } from "./ui/AddBar";
 import { Button } from "./ui/Button";
 import { StatusRow } from "./ui/StatusRow";
+import { TypeTag } from "./ui/TypeTag";
 import { useProject } from "./use_project";
 import { useCatalogRead, useDistinct } from "./use_store_read";
 import styles from "./VariableCoverage.module.css";
-import { createProject } from "./window";
 import { windowBounds } from "./window_bounds";
 
 /** A variable the page draws and adds from. */
@@ -59,7 +59,7 @@ export interface CoverageSubject {
   segments: readonly CatalogSegment[];
   /** A group member: its columns share this one lane. Without it (the
    * variable page) each table is a lane, titled by the table's name. */
-  lane?: Omit<LaneModel, "id" | "relations" | "current">;
+  lane?: Omit<LaneModel, "id" | "relations">;
 }
 
 /** `key` is `[group, ...fqids]` as JSON: a group page reads its members' graphs
@@ -355,9 +355,6 @@ export function useVariableCoverage({
     }
   };
   return {
-    /** The page's axis and study years, for what it draws under the timeline. */
-    axis,
-    window: study ? ([study.from, study.to] as [number, number]) : null,
     graph: !context ? null : columns.length === 0 ? (
       <p className={styles.hint}>
         No years recorded for this {subjects.length > 1 ? "group" : "variable"}.
@@ -393,7 +390,6 @@ export function useVariableCoverage({
                     {
                       ...subject.lane,
                       id: subject.fqid,
-                      current: subject.fqid === focus,
                       relations: neighbours.relations.get(subject.fqid),
                     },
                   ]
@@ -407,7 +403,7 @@ export function useVariableCoverage({
                   ].map((table) => ({
                     id: table,
                     name: names.get(table) ?? "Table name unavailable",
-                    current: true,
+                    pill: <TypeTag type="table" glyph />,
                     relations: neighbours.relations.get(table),
                   })),
             ),
@@ -420,7 +416,17 @@ export function useVariableCoverage({
           addWindow={
             allowAdd && (differs || !study) ? [active.from, active.to] : null
           }
-          coverage={{ covered: available, years, outside }}
+          coverage={{
+            covered: available,
+            years,
+            outside,
+            // A variable page heads its drawing with the variable: its lanes
+            // are its tables (#2319).
+            caption:
+              subjects.length === 1 && !subjects[0].lane
+                ? subjects[0].name
+                : undefined,
+          }}
           overlay={
             allowAdd && available ? (
               <PeriodThumbs
@@ -464,20 +470,6 @@ export function useVariableCoverage({
               project page
             </a>{" "}
             to add columns.
-          </p>
-        )}
-        {allowAdd && raw === null && (
-          <p className={styles.create}>
-            Create a project to add columns.
-            <Button
-              onPress={() => {
-                createProject(context);
-                // The button goes once a project exists; focus stays on the timeline.
-                heading.current?.focus();
-              }}
-            >
-              Create a project
-            </Button>
           </p>
         )}
       </div>

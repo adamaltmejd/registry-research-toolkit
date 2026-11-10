@@ -36,8 +36,10 @@ export interface LaneModel {
   sub?: { text: string; mono?: boolean } | null;
   /** The variable's own page; the name links there. */
   href?: string | null;
-  /** The variable this page is about, on `accent-soft`. */
+  /** The version a classification page shows, on `accent-soft`. */
   current?: boolean;
+  /** A kind pill before the name: a variable page's lanes are tables. */
+  pill?: ReactNode;
   /** More about the lane under its name and line, in the name column: a
    * group member's type, facts and description. The lane grows to hold it. */
   detail?: ReactNode;
@@ -105,6 +107,9 @@ interface LaneCoverage {
   years: readonly number[] | null;
   /** The band's years outside coverage, in `info-bg` on this row. */
   outside: readonly ProjectStudyWindow[];
+  /** What the row is the coverage of, in place of "Years": the variable on
+   * its own page, which heads the drawing. Stacked, it sits over the drawing. */
+  caption?: string;
 }
 
 interface Props {
@@ -226,6 +231,11 @@ export function LaneGraph({
 
   return (
     <div className={styles.frame}>
+      {geometry?.stacked && coverage?.caption && (
+        <p className={styles.stackedCaption} aria-hidden="true">
+          {coverage.caption}
+        </p>
+      )}
       <div
         ref={measure}
         className={styles.graph}
@@ -270,7 +280,13 @@ export function LaneGraph({
                 }}
                 aria-hidden="true"
               >
-                Years
+                {coverage?.caption ? (
+                  <span className={styles.named} title={coverage.caption}>
+                    {coverage.caption}
+                  </span>
+                ) : (
+                  "Years"
+                )}
               </span>
             )}
             <ol className={styles.lanes} aria-label={label}>
@@ -669,40 +685,44 @@ function LaneText({
 }) {
   const subId = useId();
   const focusName = useFocusOnce(focus, top);
+  const name = lane.href ? (
+    <a
+      className={`link ${styles.nameText}`}
+      href={lane.href}
+      // Tab reads links only: the line under the name tells lanes of one
+      // name apart, so it describes the link.
+      aria-describedby={lane.sub ? subId : undefined}
+      // The name and its line truncate; two lanes can then read alike
+      // (SyssStat11, SyssStat19), so the whole of each is the hover text.
+      title={lane.name}
+    >
+      {lane.name}
+    </a>
+  ) : (
+    <span
+      ref={focusName}
+      className={styles.nameText}
+      title={lane.name}
+      // The focus target of a member's address, said in words.
+      tabIndex={focus ? -1 : undefined}
+      aria-current={focus ? "true" : undefined}
+    >
+      {lane.name}
+    </span>
+  );
   return (
     <div
       ref={measure}
       className={`${styles.name} ${lane.detail || lane.wrap ? styles.detailed : ""}`}
       style={width ? { width } : undefined}
     >
-      {lane.href ? (
-        <a
-          className={`link ${styles.nameText}`}
-          href={lane.href}
-          // The page's own subject (a group's focused member): said in words,
-          // not only by the lane's fill.
-          aria-current={lane.current ? "page" : undefined}
-          // Tab reads links only: the line under the name tells lanes of one
-          // name apart, so it describes the link.
-          aria-describedby={lane.sub ? subId : undefined}
-          // The name and its line truncate; two lanes can then read alike
-          // (SyssStat11, SyssStat19), so the whole of each is the hover text.
-          title={lane.name}
-        >
-          {lane.name}
-        </a>
-      ) : (
-        <span
-          ref={focusName}
-          className={styles.nameText}
-          title={lane.name}
-          // The focus target of a member's address: said in words, not only
-          // by the lane's fill.
-          tabIndex={focus ? -1 : undefined}
-          aria-current={focus ? "true" : undefined}
-        >
-          {lane.name}
+      {lane.pill ? (
+        <span className={styles.titled}>
+          {lane.pill}
+          {name}
         </span>
+      ) : (
+        name
       )}
       {lane.sub && (
         <span
@@ -870,21 +890,6 @@ function Span({
           {span.name}
         </span>
       )}
-      {(span.changes ?? []).map((year) => (
-        <span
-          key={year}
-          className={styles.change}
-          style={{
-            left: Math.max(
-              0,
-              ((year - span.from) / (span.to + 1 - span.from)) * at.width,
-            ),
-          }}
-          aria-hidden="true"
-        >
-          ▲
-        </span>
-      ))}
     </>
   );
   const attributes = {

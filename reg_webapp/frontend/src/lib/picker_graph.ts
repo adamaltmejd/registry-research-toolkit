@@ -9,7 +9,7 @@ import type { Graph, VariableShow } from "./api";
 import { catalogHref } from "./catalog";
 import { segmentYears, sourcePeriodLabel } from "./catalog_period";
 import type { LaneEdgeModel, LaneModel, LaneSpanModel } from "./LaneGraph";
-import { coverageMarks, periodWindowRelation, yearWindowLabel } from "./period";
+import { periodWindowRelation } from "./period";
 import type { ProjectData, ProjectStudyWindow } from "./project_data";
 import { columnYearRuns, studyWindow } from "./study_window";
 
@@ -72,33 +72,6 @@ export function variableSpans({
           }
         : null;
     const years = segmentYears(column.segments);
-    // A segment that states no coding (an undocumented held year) is unknown, not
-    // a change: compare only segments that state some.
-    const coding = column.segments
-      .filter(
-        (segment) =>
-          segment.classification != null ||
-          segment.value_set != null ||
-          (segment.coded != null && segment.coded !== "unknown"),
-      )
-      .sort((a, b) =>
-        (a.period.start ?? "").localeCompare(b.period.start ?? ""),
-      );
-    const changes = [
-      ...new Set(
-        coding.flatMap((segment, index) =>
-          index > 0 &&
-          (segment.classification !== coding[index - 1].classification ||
-            segment.value_set?.hash !== coding[index - 1].value_set?.hash) &&
-          segment.period.start
-            ? [Number(segment.period.start.slice(0, 4))]
-            : [],
-        ),
-      ),
-    ].sort((a, b) => a - b);
-    const changeYears = coverageMarks({ from: first, to: last }, changes)
-      .delivered.map(yearWindowLabel)
-      .join(", ");
     const id = `${idPrefix}${column.id}`;
     const span: LaneSpanModel = {
       id,
@@ -117,7 +90,6 @@ export function variableSpans({
       staged: inside && selected.has(id) && !source ? "add" : null,
       blocked: relation === "disjoint",
       note,
-      changes,
       accessibleName: `${[
         column.spelling,
         variable.name,
@@ -133,9 +105,7 @@ export function variableSpans({
               : "outside the years to add"),
       ]
         .filter(Boolean)
-        .join(
-          ", ",
-        )}${changes.length ? `. Coding changes in ${changeYears}.` : ""}`,
+        .join(", ")}`,
     };
     return [
       readOnly
@@ -173,9 +143,7 @@ function readOnlySpan(
       inProject ? "in project" : "read only",
     ]
       .filter(Boolean)
-      .join(
-        ", ",
-      )}${span.changes?.length ? `. Coding changes in ${span.changes.join(", ")}.` : ""}`,
+      .join(", ")}`,
   };
 }
 
@@ -274,7 +242,6 @@ export function successionLanes({
         name: node.name,
         sub: { text: tableNames.get(table) ?? "Table name unavailable" },
         href: catalogHref(fqid),
-        current: false,
       });
     }
   }
