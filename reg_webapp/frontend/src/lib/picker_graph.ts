@@ -58,10 +58,17 @@ export function variableSpans({
     const inside = !absent && columnWindowPeriod(column, selection) !== null;
     // A binding names a variable and a table, not a column name: only when no
     // name of it on this table is in the database is a committed one unusable
-    // there (the server's `not_in_database`).
+    // there (the server's `not_in_database`). A binding that follows its
+    // successor may get those years from the successor, which only the
+    // project's check resolves, so it is not judged here.
+    const followed = !!source?.bindings.some(
+      (binding) =>
+        binding.variable === variable.fqid && binding.follow_successor,
+    );
     const unusable =
       absent &&
       !!source &&
+      !followed &&
       !columns.some(
         (other) =>
           other.table === column.table &&
@@ -81,7 +88,9 @@ export function variableSpans({
       absent && database
         ? unusable
           ? `In project, not in ${database.name}.`
-          : `Not in ${database.name}.`
+          : source && followed
+            ? `In project, not in ${database.name}; the project's check says whether its successor covers it.`
+            : `Not in ${database.name}.`
         : relation === "disjoint"
           ? `In project, outside the study years (${sourceLabel}).`
           : relation && relation !== "same"
@@ -99,7 +108,11 @@ export function variableSpans({
       segments: eras.map((era) => ({ name: null, ...era })),
       years,
       state:
-        source && (!absent || unusable) ? "in" : inside ? "default" : "out",
+        source && (!absent || unusable || followed)
+          ? "in"
+          : inside
+            ? "default"
+            : "out",
       selectable: !!project && !source && inside,
       isSelected: inside && selected.has(id),
       staged: inside && selected.has(id) && !source ? "add" : null,
