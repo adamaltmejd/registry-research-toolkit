@@ -366,6 +366,8 @@ export function GroupView({
             : name
               ? { text: name }
               : null,
+        // A member's name and line wrap whether or not it has a description.
+        wrap: true,
         detail: member.description ? (
           <MemberDescription description={member.description} />
         ) : undefined,
