@@ -968,7 +968,7 @@ fn keys(
                 let covered = merge(over.iter().map(|(_, _, d, ..)| *d).collect());
                 let uncovered = minus(&days, &covered);
                 if !distinct.is_empty() {
-                    findings.push(block(
+                    let mut issue = block(
                         "held_key_ambiguous",
                         format!(
                             "Table {:?} has {} columns that could be its row identifier \
@@ -977,7 +977,9 @@ fn keys(
                             holding.label,
                             distinct.len()
                         ),
-                    ));
+                    );
+                    issue.variable = Some((*variable).to_owned());
+                    findings.push(issue);
                     continue;
                 }
                 if let Some(&piece) = uncovered.first() {

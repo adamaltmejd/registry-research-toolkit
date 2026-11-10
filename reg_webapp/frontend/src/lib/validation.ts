@@ -73,7 +73,7 @@ const TITLES: Readonly<Record<string, string>> = {
   mapping_missing: "This column is not available for these years",
   coverage_gap: "This column is not available for some years",
   column_window_unavailable: "This column leaves out some requested years",
-  held_key_missing: "The row identifier is missing for some years",
+  held_key_missing: "The row identifier is not available",
   held_key_ambiguous: "The row identifier is in more than one column",
   file_name_unsafe: "This table's file name cannot be used",
   physical_schema_missing: "This table has no single location",
