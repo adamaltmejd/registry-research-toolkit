@@ -320,16 +320,9 @@ a.nameText {
 }
 
 /* Inside the face, so focus after a press draws no ring past the span's box
-   (#2321); a blocked span keeps its error line outside the ring. */
+   (#2321); a blocked span keeps its error border. */
 .span[data-focus-visible] .face {
   box-shadow: var(--focus-ring-inset);
-}
-
-.span[data-blocked][data-focus-visible] .face {
-  box-shadow:
-    inset 0 0 0 1px var(--err),
-    inset 0 0 0 2px var(--accent),
-    inset 0 0 0 4px var(--accent-bg);
 }
 
 .glyph {

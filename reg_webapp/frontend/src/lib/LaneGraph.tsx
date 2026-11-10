@@ -254,6 +254,17 @@ export function LaneGraph({
     else if (fits && keepTo > node.scrollLeft + view)
       node.scrollLeft = keepTo - view + margin;
   }, [keepFrom, keepTo]);
+  // With nothing picked, a graph that scrolls opens on its latest years, once,
+  // so a lane whose only span is recent does not read as empty.
+  const scrolls = !!geometry && geometry.contentWidth > width;
+  const opened = useRef(false);
+  const nonePicked = picked.length === 0;
+  useEffect(() => {
+    const node = graphRef.current;
+    if (!node || !scrolls || opened.current) return;
+    opened.current = true;
+    if (nonePicked) node.scrollLeft = node.scrollWidth;
+  }, [scrolls, nonePicked]);
   const spansByLane = new Map<string, LaneSpanModel[]>();
   for (const span of spans) {
     spansByLane.set(span.lane, [...(spansByLane.get(span.lane) ?? []), span]);
@@ -966,6 +977,9 @@ function Span({
         `${findingStyles.tooltip} ${isEntering ? "motion-rise-in" : ""} ${isExiting ? "motion-rise-out" : ""}`
       }
       offset={6}
+      // A single-pick graph's arrow keys open it on each step: under the span,
+      // it leaves the lane's name readable.
+      placement={single ? "bottom" : "top"}
       style={{ zIndex: "var(--z-popover)" }}
     >
       {/* A span without a column name (a classification version) says its
