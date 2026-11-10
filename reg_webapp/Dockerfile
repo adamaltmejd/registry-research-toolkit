@@ -90,7 +90,7 @@ RUN --mount=type=secret,id=gh_token,required=true,env=GH_TOKEN \
 # workspace manifest names every crate under crates/ as a member, so all of them
 # are copied; only `reg-meta` and its dependencies are built. `--locked` asserts
 # Cargo.lock is current (CI parity).
-FROM rust:1.99.1-slim-trixie@sha256:b8e062b1c3a80183df83d9ba187cadd2b5ab84bc78d453dbfeb2fccd5f982247 AS server
+FROM rust:1.99.1-slim-trixie@sha256:f6c4a35d21dbb3c89d7a8d056c193e94fc09037f2b58dd858b09c39a47dd02d7 AS server
 WORKDIR /build
 COPY Cargo.toml Cargo.lock ./
 COPY crates/ ./crates/
