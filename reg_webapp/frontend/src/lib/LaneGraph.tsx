@@ -168,8 +168,9 @@ function useHeights() {
  * its column, variable and years. Tab walks the spans lane by lane and Space
  * toggles one. On a variable page a coverage row heads the lanes, so the
  * Timeline and the columns are one drawing on one axis (#1833). There is no
- * legend: a span's tooltip names it, and the relations are sentences in each
- * lane (maintainer 2026-11-04).
+ * legend: the span names its column, a tooltip adds only what the span cuts
+ * (#2321), and the relations are sentences in each lane (maintainer
+ * 2026-11-04).
  */
 export function LaneGraph({
   label,
@@ -893,7 +894,11 @@ function Span({
     "data-staged": span.staged ?? undefined,
     "data-blocked": span.blocked || undefined,
   };
-  const tip = (
+  // The tooltip opens only where it says what the span does not show (#2321):
+  // years cut from the face, the table of a lane that mixes tables, or a
+  // note. The column name is never cut, so it is no reason on its own.
+  const tipped = (!!span.years && !showYears) || !!span.where || !!span.note;
+  const tip = tipped && (
     <Tooltip
       triggerRef={face}
       className={({ isEntering, isExiting }) =>
@@ -908,7 +913,8 @@ function Span({
         {span.name ? (
           <>
             <code>{span.name}</code>
-            {span.where && ` in ${span.where}`}, {span.years}
+            {span.where && ` in ${span.where}`}
+            {span.years && `, ${span.years}`}
           </>
         ) : (
           (span.label ?? span.years)
