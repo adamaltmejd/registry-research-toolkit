@@ -612,7 +612,9 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   and its span in the group page's selected-span style. Pressing a span picks its
   version (maintainer ruling, 2026-11-05), and a version address focuses that span (new
   rule, proposed by the implementer: picking does not change the URL, which would reload
-  the page). Placement caveats are steward working notes, not shown until the steward
+  the page). Since one version is picked at a time, the spans are one radio group, not
+  checkboxes: one tab stop, the arrow keys move between versions and pick them
+  (maintainer, #2310, 2026-11-05). Placement caveats are steward working notes, not shown until the steward
   curates them for readers. A register page shows under its `h1` only its description,
   as prose: the timeline shows the years and the chips the tables, so there is no Years
   or Tables row (#2316). It has no tables table: its tables are FilterChips above the
@@ -841,7 +843,11 @@ Time is the axis every relation is drawn on.
   lane's name opens the variable, with the register on its line when it differs from the
   page's; that line also describes the link. A read-only neighbour lane still shows its
   columns' "in project" state. A span is a checkbox for the add bar, and hovering it
-  highlights its edges. A ticked or picked span keeps its neighbours' size and 1 px
+  highlights its edges. Stacked below the breakpoint, the track is widened until its
+  shortest span is 24 px wide (WCAG 2.2 target size) and the graph scrolls sideways
+  inside itself, never the page, with the lane names pinned at its left edge; a graph
+  with one picked span keeps that span in view, so a classification opens on its
+  latest version (#2310, maintainer ruling "Graph everywhere", 2026-11-05). A ticked or picked span keeps its neighbours' size and 1 px
   stroke, changing only its colours, and its focus ring is drawn inside it, so pressing
   it shifts nothing (maintainer, dogfood 2026-11-05, #2321). On `/project` a column's
   findings sit across its lane, under its spans. It shares the page's axis with the

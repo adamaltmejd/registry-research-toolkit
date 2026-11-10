@@ -9,6 +9,8 @@ import {
 import {
   Checkbox,
   Focusable,
+  Radio,
+  RadioGroup,
   Tooltip,
   TooltipTrigger,
 } from "react-aria-components";
@@ -138,6 +140,9 @@ interface Props {
   focusSpan?: string | null;
   /** Under the graph while any span is selectable; null for none. */
   hint?: string | null;
+  /** One span is picked at a time (a classification's version): the spans are
+   * one radio group, a single tab stop with arrow keys between them (#2310). */
+  single?: boolean;
 }
 
 /** Measured heights by lane id, and the callback a measured block reports
@@ -187,6 +192,7 @@ export function LaneGraph({
   focus = null,
   focusSpan = null,
   hint = "Click a column to add it to your project.",
+  single = false,
 }: Props) {
   const [width, setWidth] = useState(0);
   const [hovered, setHovered] = useState<string | null>(null);
@@ -314,73 +320,85 @@ export function LaneGraph({
                 )}
               </span>
             )}
-            <ol className={styles.lanes} aria-label={label}>
-              {geometry.lanes.map((placed) => {
-                const lane = lanes.find((l) => l.id === placed.id);
-                if (!lane) return null;
-                return (
-                  <li
-                    key={lane.id}
-                    className={styles.lane}
-                    style={{
-                      top: placed.y,
-                      height: placed.height,
-                      width: geometry.contentWidth,
-                    }}
-                  >
-                    <LaneName
-                      lane={lane}
-                      width={geometry.stacked ? width : geometry.trackX - 16}
-                      // Stacked, every lane's spans start under its measured
-                      // name; beside the track only a detail grows the lane.
-                      onHeight={
-                        lane.detail || lane.wrap || geometry.stacked
-                          ? onNameHeight
-                          : undefined
-                      }
-                      focus={lane.id === focus}
-                      top={placed.y}
-                    />
-                    <ul className={styles.spans}>
-                      {(spansByLane.get(lane.id) ?? []).map((span) => {
-                        const at = geometry.spans.get(span.id);
-                        return at ? (
-                          <li
-                            key={span.id}
-                            className={styles.slot}
-                            style={{
-                              left: at.x,
-                              top: at.y - placed.y,
-                              width: at.width,
-                              height: SPAN_HEIGHT,
-                            }}
-                          >
-                            <Span
-                              span={span}
-                              at={at}
-                              isDisabled={isDisabled}
-                              onToggle={onToggle}
-                              onActive={setHovered}
-                              focus={span.id === focusSpan}
-                            />
-                          </li>
-                        ) : null;
-                      })}
-                    </ul>
-                    {lane.below && (
-                      <LaneBelow
-                        id={lane.id}
-                        width={width}
-                        top={placed.height - (below.get(lane.id) ?? 0)}
-                        onHeight={onBelowHeight}
-                      >
-                        {lane.below}
-                      </LaneBelow>
-                    )}
-                  </li>
-                );
-              })}
-            </ol>
+            <Picker
+              single={single}
+              label={label}
+              value={picked[0]?.id ?? null}
+              isDisabled={isDisabled}
+              onChange={onToggle}
+            >
+              <ol
+                className={styles.lanes}
+                aria-label={single ? undefined : label}
+              >
+                {geometry.lanes.map((placed) => {
+                  const lane = lanes.find((l) => l.id === placed.id);
+                  if (!lane) return null;
+                  return (
+                    <li
+                      key={lane.id}
+                      className={styles.lane}
+                      style={{
+                        top: placed.y,
+                        height: placed.height,
+                        width: geometry.contentWidth,
+                      }}
+                    >
+                      <LaneName
+                        lane={lane}
+                        width={geometry.stacked ? width : geometry.trackX - 16}
+                        // Stacked, every lane's spans start under its measured
+                        // name; beside the track only a detail grows the lane.
+                        onHeight={
+                          lane.detail || lane.wrap || geometry.stacked
+                            ? onNameHeight
+                            : undefined
+                        }
+                        focus={lane.id === focus}
+                        top={placed.y}
+                      />
+                      <ul className={styles.spans}>
+                        {(spansByLane.get(lane.id) ?? []).map((span) => {
+                          const at = geometry.spans.get(span.id);
+                          return at ? (
+                            <li
+                              key={span.id}
+                              className={styles.slot}
+                              style={{
+                                left: at.x,
+                                top: at.y - placed.y,
+                                width: at.width,
+                                height: SPAN_HEIGHT,
+                              }}
+                            >
+                              <Span
+                                span={span}
+                                at={at}
+                                isDisabled={isDisabled}
+                                onToggle={onToggle}
+                                onActive={setHovered}
+                                focus={span.id === focusSpan}
+                                single={single}
+                              />
+                            </li>
+                          ) : null;
+                        })}
+                      </ul>
+                      {lane.below && (
+                        <LaneBelow
+                          id={lane.id}
+                          width={width}
+                          top={placed.height - (below.get(lane.id) ?? 0)}
+                          onHeight={onBelowHeight}
+                        >
+                          {lane.below}
+                        </LaneBelow>
+                      )}
+                    </li>
+                  );
+                })}
+              </ol>
+            </Picker>
           </>
         )}
       </div>
@@ -841,6 +859,7 @@ function Span({
   onToggle,
   onActive,
   focus,
+  single,
 }: {
   span: LaneSpanModel;
   at: PlacedSpan;
@@ -848,13 +867,14 @@ function Span({
   onToggle?: (id: string) => void;
   onActive: (id: string | null) => void;
   focus: boolean;
+  single: boolean;
 }) {
   const face = useRef<HTMLLabelElement & HTMLSpanElement>(null);
   const focusInput = useFocusOnce(focus, at.y);
   // Set while the page moves focus here itself (a version address): that
   // focus opens no tooltip, which would cover the lane's name.
   const quiet = useRef(false);
-  // The checkbox's root is its label; focus lands on its input.
+  // The checkbox's or radio's root is its label; focus lands on its input.
   const pickRef = useCallback(
     (node: HTMLLabelElement | null) => {
       face.current = node;
@@ -995,23 +1015,71 @@ function Span({
     // the tooltip through onOpenChange; hover is the face's own, since the
     // input is visually hidden. The tooltip is placed on the visible face.
     <TooltipTrigger isOpen={open} onOpenChange={show} delay={0} closeDelay={0}>
-      <Checkbox
-        ref={pickRef}
-        className={`${styles.span} ${styles.pick}`}
-        style={{ height: SPAN_HEIGHT }}
-        aria-label={span.accessibleName}
-        isSelected={span.isSelected ?? false}
-        isDisabled={isDisabled}
-        onChange={() => onToggle(span.id)}
-        onHoverStart={() => show(true)}
-        onHoverEnd={() => show(false)}
-        onFocus={() => show(true)}
-        onBlur={() => show(false)}
-        {...attributes}
-      >
-        {body}
-      </Checkbox>
+      {single ? (
+        // The group owns the value and the disabled state.
+        <Radio
+          ref={pickRef}
+          value={span.id}
+          className={`${styles.span} ${styles.pick}`}
+          style={{ height: SPAN_HEIGHT }}
+          aria-label={span.accessibleName}
+          onHoverStart={() => show(true)}
+          onHoverEnd={() => show(false)}
+          onFocus={() => show(true)}
+          onBlur={() => show(false)}
+          {...attributes}
+        >
+          {body}
+        </Radio>
+      ) : (
+        <Checkbox
+          ref={pickRef}
+          className={`${styles.span} ${styles.pick}`}
+          style={{ height: SPAN_HEIGHT }}
+          aria-label={span.accessibleName}
+          isSelected={span.isSelected ?? false}
+          isDisabled={isDisabled}
+          onChange={() => onToggle(span.id)}
+          onHoverStart={() => show(true)}
+          onHoverEnd={() => show(false)}
+          onFocus={() => show(true)}
+          onBlur={() => show(false)}
+          {...attributes}
+        >
+          {body}
+        </Checkbox>
+      )}
       {tip}
     </TooltipTrigger>
+  );
+}
+
+/** The lanes as one radio group where one span is picked at a time; as
+ * they are otherwise, each span its own checkbox. */
+function Picker({
+  single,
+  label,
+  value,
+  isDisabled,
+  onChange,
+  children,
+}: {
+  single: boolean;
+  label: string;
+  value: string | null;
+  isDisabled: boolean;
+  onChange?: (id: string) => void;
+  children: ReactNode;
+}) {
+  if (!single) return children;
+  return (
+    <RadioGroup
+      aria-label={label}
+      value={value}
+      isDisabled={isDisabled}
+      onChange={onChange}
+    >
+      {children}
+    </RadioGroup>
   );
 }

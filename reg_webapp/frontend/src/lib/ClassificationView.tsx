@@ -137,6 +137,7 @@ export function ClassificationView({
         window={study ? [study.from, study.to] : null}
         focusSpan={focus}
         hint="Click a version to see its codes."
+        single
         onToggle={setChosen}
       />
       {version && (

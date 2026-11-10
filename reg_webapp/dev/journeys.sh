@@ -124,12 +124,12 @@ j_variable() {
 # curation/classifications.toml.
 j_classification() {
 	visit /catalog/class/demo-utb && see heading "Utbildningsnomenklatur" &&
-		tree 'checkbox "Utbildningsnivå 2020" \[checked=true' &&
+		tree 'radio "Utbildningsnivå 2020" \[checked=true' &&
 		see heading "Codes in Utbildningsnivå 2020" &&
-		press checkbox "Utbildningsnivå 2000, 2000–2019" &&
+		press radio "Utbildningsnivå 2000, 2000–2019" &&
 		wait_text "Codes in Utbildningsnivå 2000" &&
-		tree 'checkbox "Utbildningsnivå 2000, 2000–2019" \[checked=true' &&
-		tree 'checkbox "Utbildningsnivå 2020" \[checked=false' && shot
+		tree 'radio "Utbildningsnivå 2000, 2000–2019" \[checked=true' &&
+		tree 'radio "Utbildningsnivå 2020" \[checked=false' && shot
 }
 
 # J5 build an order and save it. Fails if opening a project file stops reaching the
