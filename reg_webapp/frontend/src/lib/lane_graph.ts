@@ -274,7 +274,8 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
         labelX,
       });
     }
-    rowsOf.set(lane.id, Math.max(rowEnds.length, 1));
+    // A lane with no spans (a group member's heading row) keeps no span row.
+    rowsOf.set(lane.id, rowEnds.length);
   }
 
   // Stack the lanes and give each span its row's height.
@@ -286,7 +287,7 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
   // keep the lane's top and the lane grows to the taller of the two.
   const spanTop = new Map<string, number>();
   for (const lane of input.lanes) {
-    const rows = rowsOf.get(lane.id) ?? 1;
+    const rows = rowsOf.get(lane.id) ?? 0;
     const name = input.nameHeights?.get(lane.id) ?? 0;
     // Stacked, the spans start right under the measured name.
     const top = stacked
@@ -297,7 +298,7 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
     const height =
       (stacked
         ? top + rows * ROW_STEP + 2
-        : Math.max(LANE_HEIGHT + (rows - 1) * ROW_STEP, name)) +
+        : Math.max(LANE_HEIGHT + (Math.max(rows, 1) - 1) * ROW_STEP, name)) +
       (input.below?.get(lane.id) ?? 0);
     lanes.push({ id: lane.id, y, height });
     laneTop.set(lane.id, y);

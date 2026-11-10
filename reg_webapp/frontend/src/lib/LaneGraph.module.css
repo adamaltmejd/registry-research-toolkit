@@ -146,6 +146,12 @@
   padding-bottom: var(--space-1);
 }
 
+/* A group member's table under its heading row (maintainer ruling,
+   2026-11-10, #2395). */
+.nested {
+  padding-inline-start: var(--space-4);
+}
+
 /* A name block with a lane action: the text block takes the room, the action
    keeps its own width at the row's end. */
 .nameRow {

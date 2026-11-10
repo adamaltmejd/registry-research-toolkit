@@ -22,7 +22,6 @@ export function variableSpans({
   catalogBounds,
   selected,
   idPrefix = "",
-  lane,
   readOnly = false,
 }: {
   columns: readonly VariableColumn[];
@@ -35,8 +34,6 @@ export function variableSpans({
   /** Span ids, `idPrefix` included. */
   selected: ReadonlySet<string>;
   idPrefix?: string;
-  /** One lane for every column (a group member's); else a lane per table. */
-  lane?: string;
   readOnly?: boolean;
 }): LaneSpanModel[] {
   const study = studyWindow(project);
@@ -74,10 +71,8 @@ export function variableSpans({
     const id = `${idPrefix}${column.id}`;
     const span: LaneSpanModel = {
       id,
-      lane: lane ?? `${idPrefix}${column.table}`,
+      lane: `${idPrefix}${column.table}`,
       name: column.spelling,
-      // A lane per table names it; a group member's one lane mixes tables.
-      where: lane ? names.get(column.table) : undefined,
       tableRef: column.table,
       from: first,
       to: last,
@@ -88,7 +83,6 @@ export function variableSpans({
       isSelected: inside && selected.has(id),
       staged: inside && selected.has(id) && !source ? "add" : null,
       blocked: relation === "disjoint",
-      note,
       accessibleName: `${[
         column.spelling,
         variable.name,
@@ -126,7 +120,6 @@ function readOnlySpan(
     isSelected: undefined,
     staged: null,
     blocked: false,
-    note: null,
     accessibleName: `${[
       span.name,
       variableName,

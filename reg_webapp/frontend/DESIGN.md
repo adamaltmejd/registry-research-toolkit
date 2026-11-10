@@ -556,11 +556,17 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   facets in curated axis order, with the member's name on the line under it, and by the
   name alone when no axis varies; under it only its description where it differs from
   the group's (two lines, "More" opens the rest). The lane grows to hold it, and its
-  name and line wrap. Its columns are spans to tick, with one coverage row, one "Years
-  to add" and one add bar for the whole group. A succession neighbour outside the group
-  is a read-only lane with its arrows; a relation between two members is an arrow
-  between their lanes. The facts are Type, Classification, Sensitive (only when yes; an
-  identifier is its Type pill) and Topics (maintainer 2026-11-04); role, coding, state,
+  name and line wrap. It is a heading row with no spans: under it each table the member
+  is delivered in is a row of its own, set in from the left, headed by the Table pill
+  and the table's name as a variable page's table lanes are, also when the member has
+  only one table ("on variable group pages where a lane can have many tables, the table
+  name would go as a row heading in the leftmost column", and "Always one row per
+  table", maintainer rulings, 2026-11-10, #2395). Its columns are spans to tick, with
+  one coverage row, one "Years to add" and one add bar for the whole group. A succession
+  neighbour outside the group is a read-only lane with its arrows; a relation between
+  two members is an arrow between their table rows. The facts are Type, Classification,
+  Sensitive (only when yes; an identifier is its Type pill) and Topics (maintainer
+  2026-11-04); role, coding, state,
   temporality, storage and period are not shown. They sit in the page's head on both
   pages, never in a lane (#2319). Type is one `TypePill` per type the columns are
   written as, with the years inside only where it changes over time, in the pill row
@@ -708,8 +714,9 @@ Time is the axis every relation is drawn on.
   window is drawn the axis years are its bounds in `accent-ink`; the study window's
   bounds keep their rules, unlabelled. An add widens its source's period to the union
   and never narrows it, so the add window raises no warning; a column already in the
-  project whose source years differ from the study window says so in its tooltip and
-  accessible name, not in a line under the graph (#1833); one outside the window is
+  project whose source years differ from the study window says so in its accessible
+  name, not in a tooltip (maintainer ruling, 2026-11-10, #2395) or a line under the
+  graph (#1833); one outside the window is
   still named there at `err`. A register pane draws the `Timeline` read-only; a group
   pane draws it as the variable page does, a lane per member.
 
@@ -804,11 +811,11 @@ Time is the axis every relation is drawn on.
   and only where no room is free over the bars at the track's end, never cut; the bar
   carries the span's years where they fit. Stacked below the breakpoint, a lane's spans
   start just under its name. Hovering or focusing a span shows a RAC `Tooltip` with no
-  delay only where the span's text is cut off (maintainer, dogfood 2026-11-05, #2321),
-  read as: where it says what the span does not show, namely its years cut from the
-  face, its table on a group member's lane (which mixes tables), or how it stands to the
-  study window (new rule, proposed by the implementer). The variables a succession
-  reaches are further lanes in time order, with their arrows. A line under the drawing says "Click a column to add it to your project." while a
+  delay only where the span's own text is cut off, which is its years (maintainer,
+  dogfood 2026-11-05, #2321; the strict reading, maintainer ruling, 2026-11-10): no
+  table name and no study-window note in a tooltip, and no table name on a span. The
+  variables a succession reaches are further lanes in time order, with their arrows. A
+  line under the drawing says "Click a column to add it to your project." while a
   project is open; with none there is no line and no button at any width, since the top
   bar has the action ("yes", maintainer, dogfood 2026-11-05, #2319). There is no second
   graph on the page. While it loads the region is a `Skeleton`; a
@@ -851,9 +858,10 @@ Time is the axis every relation is drawn on.
   stacked below the breakpoint, and at any width where the primary pointer is a finger
   (`pointer: coarse`) and its spans would be smaller beside the names (it then stacks
   too), the track is widened until its shortest span is 24 px wide (WCAG 2.2 target
-  size) and the graph scrolls sideways inside itself, never the page, with the lane names pinned at its left edge. A
-  single-pick graph keeps its picked span in view, so a classification opens on its
-  latest version, and its tooltip sits under the span, clear of the lane's name; any
+  size) and the graph scrolls sideways inside itself, never the page, with the lane
+  names pinned at its left edge. A single-pick graph keeps its picked span in view, so a
+  classification opens on its latest version, and its tooltip sits under the span,
+  clear of the lane's name; any
   other graph that scrolls opens once on its latest span, so a lane with only a recent
   span does not read as empty. A ticked or picked span keeps its
   neighbours' size and 1 px stroke, changing only its colours, and its focus ring is
@@ -862,7 +870,7 @@ Time is the axis every relation is drawn on.
   findings sit across its lane, under its spans. It shares the page's axis with the
   `Timeline`. It draws the study window's band and, over it, an add window that differs,
   as on the variable page, with the axis years on the add window's bounds when one is
-  drawn. It has no legend: a span names its column, a tooltip adds what the span cuts,
+  drawn. It has no legend: a span names its column, a tooltip adds the years it cuts,
   its accessible name carries its state, and each lane states its relations in words to
   a screen reader (maintainer 2026-11-04). Its add bar shows only while a change is
   staged. On a variable page the `LaneGraph` is the `Timeline` (above). Don't draw

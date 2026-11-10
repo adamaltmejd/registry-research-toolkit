@@ -42,6 +42,8 @@ export interface LaneModel {
   current?: boolean;
   /** A kind pill before the name: a variable page's lanes are tables. */
   pill?: ReactNode;
+  /** A row under another lane's heading row: a group member's table. */
+  nested?: boolean;
   /** More about the lane under its name and line, in the name column: a
    * group member's type, facts and description. The lane grows to hold it. */
   detail?: ReactNode;
@@ -71,15 +73,9 @@ export interface LaneSpanModel extends LaneSpanGeometryInput {
   staged?: "add" | "remove" | null;
   /** In the project through a source the study window has moved off. */
   blocked?: boolean;
-  /** How the committed column relates to the study window, where it is more
-   * than "in project": shown in its tooltip and accessible name. */
-  note?: { text: string; tone: "info" | "error" } | null;
   /** A checkbox when true; a mark to read otherwise. */
   selectable: boolean;
   isSelected?: boolean;
-  /** The table the column is in, named in the span's tooltip where the lane
-   * does not name it (a group member's lane). */
-  where?: string;
   /** The table's fqid: which span of a variable a relation anchors on. */
   tableRef?: string;
   /** Starts with the column name, then the variable, the years and the
@@ -792,7 +788,7 @@ function LaneText({
   return (
     <div
       ref={measure}
-      className={`${styles.name} ${lane.detail || lane.wrap ? styles.detailed : ""}`}
+      className={`${styles.name} ${lane.detail || lane.wrap ? styles.detailed : ""} ${lane.nested ? styles.nested : ""}`}
       style={width ? { width } : undefined}
     >
       {lane.pill ? (
@@ -975,10 +971,9 @@ function Span({
     "data-staged": span.staged ?? undefined,
     "data-blocked": span.blocked || undefined,
   };
-  // The tooltip opens only where it says what the span does not show (#2321):
-  // years cut from the face, the table of a lane that mixes tables, or a
-  // note. The column name is never cut, so it is no reason on its own.
-  const tipped = (!!span.years && !showYears) || !!span.where || !!span.note;
+  // The tooltip opens only where the span's own text is cut off (maintainer,
+  // 2026-11-10, #2321): its years. The column name is never cut.
+  const tipped = !!span.years && !showYears;
   const tip = tipped && (
     <Tooltip
       triggerRef={face}
@@ -997,14 +992,12 @@ function Span({
         {span.name ? (
           <>
             <code>{span.name}</code>
-            {span.where && ` in ${span.where}`}
             {span.years && `, ${span.years}`}
           </>
         ) : (
           (span.label ?? span.years)
         )}
       </span>
-      {span.note && <span>{span.note.text}</span>}
     </Tooltip>
   );
   const show = (on: boolean) => {
