@@ -243,7 +243,8 @@ export function LaneGraph({
     const node = graphRef.current;
     if (!node || keepFrom === undefined || keepTo === undefined) return;
     const margin = 16;
-    const view = node.clientWidth;
+    // The measured width, so a resize that keeps the scale still re-runs this.
+    const view = width;
     // A span wider than the view keeps its leading edge, where its name sits.
     const fits = keepTo - keepFrom + 2 * margin <= view;
     if (
@@ -253,7 +254,7 @@ export function LaneGraph({
       node.scrollLeft = Math.max(keepFrom - margin, 0);
     else if (fits && keepTo > node.scrollLeft + view)
       node.scrollLeft = keepTo - view + margin;
-  }, [keepFrom, keepTo]);
+  }, [keepFrom, keepTo, width]);
   // With nothing picked, a graph that scrolls opens on its latest years, once,
   // so a lane whose only span is recent does not read as empty.
   const scrolls = !!geometry && geometry.contentWidth > width;
