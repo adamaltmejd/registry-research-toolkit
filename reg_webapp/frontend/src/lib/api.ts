@@ -430,7 +430,6 @@ export async function searchFacets(
 /** A provider of the catalog root, with its registers. */
 export type RootChild = RootShow["providers"][number];
 
-export type TableShow = Extract<ShowNode, { kind: "table" }>;
 export type SetShow = Extract<ShowNode, { kind: "set" }>;
 export type ClassFamilyShow = Extract<ShowNode, { kind: "class_family" }>;
 export type ClassFamiliesShow = Extract<ShowNode, { kind: "class_families" }>;

@@ -8,8 +8,8 @@ overview) lives in the root `ARCHITECTURE.md`; remaining/unbuilt work lives in G
 issues. The API contract is `conformance/api/operations.toml` with its snapshot
 `crates/reg-meta/openapi.json`.
 
-The SPA shell, search, provider, register, table, variable, classification-version and
-loaded-project pages use the current API. The earlier SPA is archived on
+The SPA shell, search, provider, register, variable, classification and loaded-project
+pages use the current API. The earlier SPA is archived on
 `archive/reg-webapp-spa`.
 
 ## Loaded projects
@@ -66,13 +66,11 @@ its scope and its `steward_config` branding (`/api/context`).
 
 ## Catalog pages
 
-Provider, register, table and classification pages read `catalog/{ref}`. A table page
-lists its variables from the table answer (`variables`, each with the merged `periods`
-its segments hold in that table, so a gap in delivery stays a gap) and reads no
-segments. A provider page draws each register from its `periods` the same way (merged
+Provider, register and classification pages read `catalog/{ref}`. A table has no page:
+its address reads the table, then renders its register's page with that table's chip on
+(#2316). A provider page draws each register from its `periods` (merged
 spans of its dated tables). The generated OpenAPI types own the response shapes. An
-implicit table shares its register's FQID, so its canonical link opens the register; it
-has no separately addressable table page.
+implicit table shares its register's FQID, so its canonical link opens the register.
 
 Catalog periods are half-open ISO date intervals. The frontend adapts the exclusive end
 to reg-core's inclusive interval renderer, without copying its period grammar. The

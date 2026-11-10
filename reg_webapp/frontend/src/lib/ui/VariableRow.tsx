@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { type ReactNode, useId } from "react";
 import type { YearRun } from "../study_window";
 import styles from "./VariableRow.module.css";
 import { YearAxis, type YearSpan, YearTrack } from "./YearTrack";
@@ -55,7 +55,8 @@ export function VariableRow({
 }
 
 /** The list a pane's VariableRows sit in, under the axis their bars share:
- * its first and last year over the bars' column (DESIGN.md → Time). */
+ * its first and last year over the bars' column, beside `label` as the
+ * section's heading over the names (DESIGN.md → Time; #2316). */
 export function VariableRowList({
   label,
   axis,
@@ -65,12 +66,16 @@ export function VariableRowList({
   axis: YearSpan;
   children: ReactNode;
 }) {
+  const labelId = useId();
   return (
     <div className={styles.rows}>
       <div className={styles.axisRow}>
+        <h2 id={labelId} className={`micro-label ${styles.label}`}>
+          {label}
+        </h2>
         <YearAxis axis={axis} className={styles.bar} />
       </div>
-      <ul className={styles.list} aria-label={label}>
+      <ul className={styles.list} aria-labelledby={labelId}>
         {children}
       </ul>
     </div>

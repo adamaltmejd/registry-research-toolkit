@@ -294,6 +294,7 @@ function useRegisterColumn(
   const ownEmpty = others.length > 0 && items.length === 0;
   return {
     subject: node?.name,
+    href: node ? catalogHref(registerFqid) : undefined,
     size: variables.length,
     root: registerFqid,
     // Wait for other registers before declaring an empty search result.
@@ -372,6 +373,7 @@ function useProviderColumn(
   if (providerFqid === null) return null;
   return {
     subject: provider?.name,
+    href: provider ? catalogHref(providerFqid) : undefined,
     size: (provider?.registers ?? []).reduce(
       (sum, node) => sum + node.variables.length,
       0,
@@ -422,6 +424,7 @@ function useClassificationColumn(
   const listed = items.some((item) => item.id === selectedId);
   return {
     size: families.value?.length ?? 0,
+    href: catalogHref(CLASSIFICATIONS),
     root: CLASSIFICATIONS,
     sections: families.loading
       ? null

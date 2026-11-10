@@ -101,41 +101,47 @@ function segmentType(segment: CatalogSegment): ColumnType | null {
     : null;
 }
 
-/** The Type row: one pill per catalog type of the columns, with its years
+/** One pill per catalog type of the columns, with its years
  * inside only where the type changes over time (maintainer 2026-11-04); a
  * column whose type the catalog does not state adds no pill, but the stated
  * type then carries its years, so it never reads as the whole history. */
-export function typeFact(
+export function typePills(
   segments: readonly CatalogSegment[],
   bounds: readonly [number, number],
-): Definition[] {
+): ReactNode[] {
   const { groups, unstated } = groupFact(segments, (row) => {
     const type = segmentType(row);
     return type && { key: type, value: null };
   });
-  if (groups.length === 0) return [];
-  return [
-    {
-      term: "Type",
-      value: (
-        <span className={styles.types}>
-          {groups.map(([type, group]) => (
-            <TypePill
-              key={type}
-              type={type as ColumnType}
-              years={
-                groups.length > 1 || unstated
-                  ? columnYearRuns(group.segments, bounds)
-                      .map(yearWindowLabel)
-                      .join(", ")
-                  : undefined
-              }
-            />
-          ))}
-        </span>
-      ),
-    },
-  ];
+  return groups.map(([type, group]) => (
+    <TypePill
+      key={type}
+      type={type as ColumnType}
+      years={
+        groups.length > 1 || unstated
+          ? columnYearRuns(group.segments, bounds)
+              .map(yearWindowLabel)
+              .join(", ")
+          : undefined
+      }
+    />
+  ));
+}
+
+/** The Type row of a group member's lane: its `typePills` as a fact. */
+export function typeFact(
+  segments: readonly CatalogSegment[],
+  bounds: readonly [number, number],
+): Definition[] {
+  const pills = typePills(segments, bounds);
+  return pills.length === 0
+    ? []
+    : [
+        {
+          term: "Type",
+          value: <span className={styles.types}>{pills}</span>,
+        },
+      ];
 }
 
 /** The facts of a variable's segments (DESIGN.md → Detail pane): a fact every

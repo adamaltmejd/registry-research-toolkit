@@ -35,7 +35,7 @@
 /* App-wide link and text roles.
 
    A link is ink, never pine: pine is ownership (DESIGN.md → Colors). A PLAIN link
-   (no class of its own: prose, a member-of line) takes the design system's 1.5px
+   (no class of its own: prose) takes the design system's 1.5px
    `accent` bottom border and a `surface-hover` wash. An anchor with a class owns its
    look, because most of them wrap a block or a row and a bottom border would draw
    across all of it. `.link` gives a classed anchor the same look. */

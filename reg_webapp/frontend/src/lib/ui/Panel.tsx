@@ -2,7 +2,8 @@ import type { ReactNode } from "react";
 import styles from "./Panel.module.css";
 
 interface Props {
-  title: ReactNode;
+  /** None where the body heads itself (a VariableRowList's axis row). */
+  title?: ReactNode;
   action?: ReactNode;
   headingLevel?: 2 | 3;
   /** No body padding: the body is a table or list that owns its own. */
@@ -23,7 +24,7 @@ export function Panel({
   const Heading = headingLevel === 3 ? "h3" : "h2";
   return (
     <section className={styles.panel}>
-      {action ? (
+      {title === undefined ? null : action ? (
         <header className={styles.header}>
           <Heading className="micro-label">{title}</Heading>
           {action}

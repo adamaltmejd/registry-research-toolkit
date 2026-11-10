@@ -15,11 +15,16 @@ import { VariableRow, VariableRowList } from "./ui/VariableRow";
 import { useProject } from "./use_project";
 import { windowBounds } from "./window_bounds";
 
+/** A register's page. A table's address renders it too, with that table's
+ * chip on (`focus`): a table has no page of its own (maintainer, #2316). */
 export function RegisterView({
   node,
+  focus,
   context,
 }: {
   node: RegisterShow;
+  /** The table whose address this is, or null. */
+  focus: string | null;
   context: Context | null;
 }) {
   const { draft } = useProject();
@@ -45,18 +50,18 @@ export function RegisterView({
   // The table chips (the archived variant lens, maintainer 2026-11-03): OR
   // within the selection, a lens on the list only. A chip per table that
   // delivers a variable, so no chip narrows the list to nothing; with one such
-  // table there is nothing to filter on. The selection belongs to the register.
-  const [filter, setFilter] = useState<{
-    register: string;
-    tables: ReadonlySet<string>;
-  }>({ register: node.fqid, tables: new Set() });
-  const selected: ReadonlySet<string> =
-    filter.register === node.fqid ? filter.tables : new Set();
-  const tables = [...node.tables].sort((a, b) =>
-    svCollator.compare(a.name, b.name),
-  );
+  // table there is nothing to filter on, and a table address with no chip
+  // shows the whole list. The page is keyed by register and table address, so
+  // the selection starts afresh on each.
   const delivering = new Set(node.variables.flatMap((v) => v.tables));
-  const chipTables = tables.filter((table) => delivering.has(table.fqid));
+  const chipTables = [...node.tables]
+    .sort((a, b) => svCollator.compare(a.name, b.name))
+    .filter((table) => delivering.has(table.fqid));
+  const [selected, setSelected] = useState<ReadonlySet<string>>(() =>
+    chipTables.length > 1 && focus !== null && delivering.has(focus)
+      ? new Set([focus])
+      : new Set(),
+  );
   const shown =
     selected.size === 0
       ? node.variables
@@ -64,41 +69,21 @@ export function RegisterView({
   function toggleTable(fqid: string): void {
     const next = new Set(selected);
     if (!next.delete(fqid)) next.add(fqid);
-    setFilter({ register: node.fqid, tables: next });
+    setSelected(next);
   }
   return (
     <article className={styles.page}>
       <Definitions
         kind="register"
         title={node.name}
-        definitions={[
-          ...(node.description
-            ? [{ term: "Description", value: node.description }]
-            : []),
-          {
-            term: "Years",
-            value: <code>{catalogPeriodLabel(node.period)}</code>,
-          },
-          // The route to each table's page (role, cadence, placements),
-          // including tables no chip names.
-          ...(tables.length > 0
-            ? [
-                {
-                  term: "Tables",
-                  value: tables.map((table, i) => (
-                    <span key={table.fqid}>
-                      {i > 0 && ", "}
-                      <a className="link" href={catalogHref(table.fqid)}>
-                        {table.name}
-                      </a>
-                    </span>
-                  )),
-                },
-              ]
-            : []),
-        ]}
+        description={node.description ?? undefined}
       />
-      <Panel title="Variables" flush={node.variables.length > 0}>
+      {/* The list heads itself on its axis row (#2316); only the empty state
+          needs the panel's title. */}
+      <Panel
+        title={node.variables.length === 0 ? "Variables" : undefined}
+        flush={node.variables.length > 0}
+      >
         {node.variables.length === 0 ? (
           <EmptyState title="This register lists no variables." />
         ) : (

@@ -1,7 +1,11 @@
-.tag {
+/* One pill (DESIGN.md → Components → Pill): a node's kind, a column's type and
+   an identifier are the same size and shape, each in its own `cat-*` hue: fill
+   the hue at 10% over `surface`, border at 35%, text the `-ink` stop. */
+.pill {
   display: inline-flex;
   align-items: center;
-  padding: 1px 7px;
+  gap: var(--space-1);
+  padding: 1px 6px;
   border: 1px solid color-mix(in srgb, var(--tone-hue) 35%, transparent);
   border-radius: var(--radius-sm);
   background: color-mix(in srgb, var(--tone-hue) 10%, var(--surface));
@@ -12,16 +16,19 @@
   white-space: nowrap;
 }
 
-/* The kind glyph: strokes in the tag's ink. */
+/* The glyph: strokes in the pill's ink. */
 .glyph {
   flex: none;
-  margin-right: var(--space-1);
   fill: none;
   stroke: currentColor;
   stroke-width: 1.2;
 }
-.glyphFill {
-  fill: currentColor;
+
+.years {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  font-variant-numeric: tabular-nums;
 }
 
 .reg {
@@ -43,4 +50,12 @@
 .group {
   --tone-hue: var(--cat-group);
   --tone-ink: var(--cat-group-ink);
+}
+.id {
+  --tone-hue: var(--cat-id);
+  --tone-ink: var(--cat-id-ink);
+}
+.type {
+  --tone-hue: var(--cat-type);
+  --tone-ink: var(--cat-type-ink);
 }

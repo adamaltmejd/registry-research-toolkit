@@ -196,3 +196,22 @@
   border-radius: 50%;
   background: var(--accent);
 }
+
+/* The header's link (#2324): the link truncates itself, so its box, and the
+   inset ring a clipping label needs, end at the label's edge; "Variables in"
+   stays whole. */
+.linked {
+  display: flex;
+  white-space: pre;
+}
+.linked a {
+  min-width: 0;
+  /* Clearance for the inset ring, as a row's padding gives its own. */
+  padding-inline: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.linked a:focus-visible {
+  box-shadow: var(--focus-ring-inset);
+}

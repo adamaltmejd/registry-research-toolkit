@@ -6,7 +6,8 @@ interface InlineSegment {
   text: string;
   /** The emphasis to render, or `null` for plain text. */
   emphasis: Emphasis | null;
-  /** An `http(s)` link target; any other scheme stays literal text. */
+  /** An `https` link target; any other scheme, `http` too, stays literal text
+   * (Operator lane brief 2026-11-10, PR #2391). */
   href?: string;
 }
 
@@ -19,10 +20,10 @@ const UNESCAPE = new RegExp(String.raw`\\(${PUNCTUATION})`, "gu");
 // escaped closing marker as a delimiter after consuming only its backslash.
 const STAR_TEXT = String.raw`(?:${ESCAPE}|\\(?!${PUNCTUATION})|[^*\\])+?`;
 const UNDERSCORE_TEXT = String.raw`(?:${ESCAPE}|\\(?!${PUNCTUATION})|[^_\\])+?`;
-// `[text](https://…)`: the text holds no bracket and no nested span, the target
-// no whitespace or parenthesis.
+// `[text](https://…)`, https only: the text holds no bracket and no nested
+// span, the target no whitespace or parenthesis.
 const LINK_TEXT = String.raw`(?:${ESCAPE}|\\(?!${PUNCTUATION})|[^\[\]\\])+?`;
-const LINK = String.raw`\[(${LINK_TEXT})\]\((https?:\/\/[^\s()]+)\)`;
+const LINK = String.raw`\[(${LINK_TEXT})\]\((https:\/\/[^\s()]+)\)`;
 const SPAN = new RegExp(
   String.raw`(${ESCAPE})|${LINK}|\*\*(${STAR_TEXT})\*\*|\*(${STAR_TEXT})\*|(?<![\p{L}\p{N}])_(${UNDERSCORE_TEXT})_(?![\p{L}\p{N}])`,
   "gu",

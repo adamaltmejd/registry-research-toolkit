@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import type { ProjectBinding } from "../project_data";
-import styles from "./TypePill.module.css";
+import { Pill } from "./Pill";
 
 /** A column's catalog type: the names a project binding's optional `type`
  * override uses too, the one type list of the site (#2071). */
@@ -23,7 +23,7 @@ const NUMBER = <path d="M4 1 3 11M9 1 8 11M1 4h10M1 8h10" />;
 const OTHER = <circle cx="6" cy="6" r="4.5" />;
 
 /** Decorative: the word beside the glyph carries the type. Drawn on a 12 px
- * box in the pill's muted ink. */
+ * box in the pill's ink. */
 const GLYPHS: Record<ColumnType, ReactNode> = {
   integer: NUMBER,
   decimal: NUMBER,
@@ -57,9 +57,10 @@ const GLYPHS: Record<ColumnType, ReactNode> = {
 };
 
 /**
- * A column's type (DESIGN.md → Components → TypePill): a glyph and the word in
- * a hairline `sm` box, with the years it holds in muted mono where a column's
- * type changes over time. One pill per type; never for a node's kind (that is
+ * A column's type (DESIGN.md → Components → Pill): its glyph and the word,
+ * with the years it holds where a column's type changes over time. An
+ * identifier takes its own hue, every other type one shared hue (maintainer
+ * ruling 2026-11-10, quoted in PR #2391). One pill per type; never for a node's kind (that is
  * `TypeTag`) or for status.
  */
 export function TypePill({
@@ -71,18 +72,13 @@ export function TypePill({
   years?: string;
 }) {
   return (
-    <span className={styles.pill}>
-      <svg
-        className={styles.glyph}
-        viewBox="0 0 12 12"
-        width="12"
-        height="12"
-        aria-hidden="true"
-      >
-        {GLYPHS[type]}
-      </svg>
+    <Pill
+      tone={type === "identifier" ? "id" : "type"}
+      // Drawn on a 12 px box, centred on the pill's 14 px one.
+      glyph={<g transform="translate(1 1)">{GLYPHS[type]}</g>}
+      years={years}
+    >
       {WORDS[type]}
-      {years && <span className={styles.years}>{years}</span>}
-    </span>
+    </Pill>
   );
 }

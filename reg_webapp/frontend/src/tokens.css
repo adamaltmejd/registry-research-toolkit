@@ -175,13 +175,18 @@
   --gray-12: #fafaf8;
 
   /* Categorical palette — node TYPE (register / variable / code / classification /
-     group). Shown ONLY in a mixed list (search results, mentions, a project's
-     sources); a homogeneous list carries no type mark at all (DESIGN.md → Colors). */
+     group), shown in a mixed list (search results, mentions, a project's sources)
+     and in a page's pill row; a homogeneous list carries no type mark at all
+     (DESIGN.md → Colors). */
   --cat-reg: #1f7a7a; /* teal — registers */
   --cat-var: #4b4b9e; /* indigo — variables */
   --cat-code: #9a6b1a; /* gold — value-set codes */
   --cat-class: #7a3f8c; /* plum — classifications */
   --cat-group: #2f6b3f; /* moss — variable groups */
+  /* The column-type pills beside a kind pill (maintainer ruling 2026-11-10, quoted in PR #2391): an
+     identifier, and every other column type. */
+  --cat-id: #8a4b2c; /* sienna — identifiers */
+  --cat-type: #4e6070; /* slate — column types */
 
   /* ════════════════════════════════════════════════════════════════════════
      LAYER 2 — SEMANTIC ROLES (the layer components consume)
@@ -230,6 +235,8 @@
   --cat-code-ink: #835b16;
   --cat-class-ink: #683677;
   --cat-group-ink: #285b36;
+  --cat-id-ink: #754025;
+  --cat-type-ink: #42525f;
 
   /* Data-viz — the time components (Timeline, VariableRow, LaneGraph). Time is
      the only axis relations are drawn on; these are its marks, never chrome. */

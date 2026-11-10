@@ -4,7 +4,8 @@ import { parseInlineMarkdown } from "./inline_markdown";
 describe("inline markdown links", () => {
   // The steward description is deployment config rendered as an <a href>: a
   // link arm that accepted any scheme would turn `javascript:` text into a
-  // live link. Fails if the target is not limited to http(s).
+  // live link, and the site links only https (Operator lane brief, 2026-11-10).
+  // Fails if the target is not limited to https.
   it.each([
     [
       "See [SWECOV](https://swecov.se/data).",
@@ -13,6 +14,10 @@ describe("inline markdown links", () => {
         { text: "SWECOV", emphasis: null, href: "https://swecov.se/data" },
         { text: ".", emphasis: null },
       ],
+    ],
+    [
+      "[x](http://example.se)",
+      [{ text: "[x](http://example.se)", emphasis: null }],
     ],
     [
       "[x](javascript:alert(1))",
