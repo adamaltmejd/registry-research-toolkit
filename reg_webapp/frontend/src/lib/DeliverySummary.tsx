@@ -27,7 +27,21 @@ export function DeliverySummary({
       key.columns.map((column) => column.variable),
     ),
   ];
-  const names = useCatalogNames(refs);
+  // The order names every row; those stand in where the site has no page to
+  // read a name from (#2220).
+  const ordered = new Map<string, string>([
+    ...order.entries.flatMap((entry) => [
+      [entry.table, entry.table_name] as const,
+      [entry.variable, entry.variable_name] as const,
+    ]),
+    ...order.clips.map((clip) => [clip.variable, clip.variable_name] as const),
+    ...order.row_keys.flatMap((key) =>
+      key.columns.map(
+        (column) => [column.variable, column.variable_name] as const,
+      ),
+    ),
+  ]);
+  const names = new Map([...ordered, ...useCatalogNames(refs)]);
   const pending = useCatalogNamesPending(refs);
   // A name still loading is a placeholder, not a link; only a settled miss
   // says the name is unavailable.

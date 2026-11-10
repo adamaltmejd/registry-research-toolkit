@@ -13,6 +13,7 @@ import { StatusRow } from "./ui/StatusRow";
 import { useCatalogName, useCatalogNames } from "./use_catalog_names";
 import {
   issueId,
+  issueNames,
   issuePlace,
   issueRefs,
   issueTitle,
@@ -77,6 +78,15 @@ function FindingTitle({ title, code }: { title: string; code: string | null }) {
   );
 }
 
+/** The catalog's names for a finding's ids, with the server's where the
+ * catalog has none to give. */
+function useFindingNames(
+  issue: ValidationIssue,
+  refs: readonly string[],
+): ReadonlyMap<string, string> {
+  return new Map([...issueNames(issue), ...useCatalogNames(refs)]);
+}
+
 /** A plain link to a finding that sits on a table card: it scrolls to the
  * finding and focuses it. */
 export function IssueLink({
@@ -88,7 +98,7 @@ export function IssueLink({
 }) {
   const place = issuePlace(issue, raw);
   const refs = issueRefs(issue, raw);
-  const names = useCatalogNames(refs);
+  const names = useFindingNames(issue, refs);
   const variable = useCatalogName(place.variable);
   const table = useCatalogName(place.table);
   return (
@@ -102,7 +112,7 @@ export function IssueLink({
           rather than the join key flashing first. */}
         {[
           table.loading ? null : (table.value ?? place.source),
-          place.variable ? variable.value : null,
+          place.variable ? (variable.value ?? names.get(place.variable)) : null,
         ]
           .filter(Boolean)
           .map((part) => `${part}: `)
@@ -126,7 +136,7 @@ export function LocatedIssue({
 }) {
   const place = issuePlace(issue, raw);
   const refs = issueRefs(issue, raw);
-  const names = useCatalogNames(refs);
+  const names = useFindingNames(issue, refs);
   const variable = useCatalogName(place.variable);
   const table = useCatalogName(place.table);
   const successor = useCatalogName(issue.successor_fqid);
@@ -156,7 +166,12 @@ export function LocatedIssue({
           {place.variable &&
             !omitPlace.includes("variable") &&
             !variable.loading && (
-              <span>Variable: {variable.value ?? "Name unavailable"}</span>
+              <span>
+                Variable:{" "}
+                {variable.value ??
+                  names.get(place.variable) ??
+                  "Name unavailable"}
+              </span>
             )}
           {((variable.loading && !omitPlace.includes("variable")) ||
             (table.loading && !omitPlace.includes("table"))) && (
@@ -179,7 +194,8 @@ export function LocatedIssue({
               </div>
             ) : (
               <a className="link" href={catalogHref(issue.successor_fqid)}>
-                Successor: {successor.value ?? "Name unavailable"}
+                Successor:{" "}
+                {successor.value ?? issue.successor_name ?? "Name unavailable"}
               </a>
             ))}
         </div>

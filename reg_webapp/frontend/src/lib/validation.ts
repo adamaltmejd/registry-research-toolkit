@@ -2,7 +2,28 @@
 import type { components } from "./api-types-rust";
 import { catalogPeriodLabel } from "./catalog_period";
 
-export type ValidationIssue = components["schemas"]["Issue"];
+/** A finding, with the server's names for what it is about when the order check
+ * gave them (`NamedIssue`); a structural issue from WASM has none. */
+export type ValidationIssue = components["schemas"]["Issue"] &
+  Partial<
+    Pick<
+      components["schemas"]["NamedIssue"],
+      "variable_name" | "table_name" | "successor_name"
+    >
+  >;
+
+/** The server's names for a finding's ids. They stand in where the site has no
+ * page to read a name from: a variable this steward does not offer (#2220). */
+export function issueNames(issue: ValidationIssue): Map<string, string> {
+  const names = new Map<string, string>();
+  for (const [ref, name] of [
+    [issue.variable, issue.variable_name],
+    [issue.table, issue.table_name],
+    [issue.successor_fqid, issue.successor_name],
+  ] as const)
+    if (ref && name) names.set(ref, name);
+  return names;
+}
 
 // Current reg-core structural codes and catalog order/check findings. Their
 // messages remain the detail; titles name the problem without machine grammar.
@@ -52,7 +73,7 @@ const TITLES: Readonly<Record<string, string>> = {
   mapping_missing: "This column is not available for these years",
   coverage_gap: "This column is not available for some years",
   column_window_unavailable: "This column leaves out some requested years",
-  held_key_missing: "This table has no row identifier column",
+  held_key_missing: "The row identifier is missing for some years",
   held_key_ambiguous: "The row identifier is in more than one column",
   file_name_unsafe: "This table's file name cannot be used",
   physical_schema_missing: "This table has no single location",
@@ -61,7 +82,7 @@ const TITLES: Readonly<Record<string, string>> = {
   row_filter_union: "Tables sharing a file are delivered over all their years",
   // A steward with several databases: an order draws from one.
   database_required: "Choose a database",
-  database_unknown: "The data holder has no such database",
+  database_unknown: "This database does not exist",
   not_in_database: "This column is not in the chosen database",
 };
 

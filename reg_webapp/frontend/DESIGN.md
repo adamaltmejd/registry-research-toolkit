@@ -958,7 +958,8 @@ grow new visual language meanwhile.
   shown only when the project can be ordered: per table its name and years, each column
   as a `ColumnChip` (with its years only where they differ from the table's) beside the
   variable's name, "Years not available" per column the period asks more of than the
-  table has, and the "Row identifier" columns. There is no order-file download: the
+  table has or the steward has data for (a year without data is not listed as
+  delivered, #2220), and the "Row identifier" columns. There is no order-file download: the
   steward's instructions say how to order. With no project the page is one `EmptyState`,
   "No project yet", with "Create a project" and "Open a project file…". Below
   `breakpoint-narrow` a column's row on a card stacks: its name and Remove, its spans,
@@ -1041,7 +1042,9 @@ grow new visual language meanwhile.
   no "Loading…" line beside it. A name still loading inside a heading or link is a
   `NameSkeleton`: the inline line plus visually hidden text ("Loading table name"), so
   the heading keeps a name. Loading is not failure: only a settled miss shows the
-  fallback (a table's join key, "Variable name unavailable"). A source card's timeline
+  fallback (a table's join key, "Variable name unavailable"), and only after the names
+  the project check gives: a variable this steward does not offer has no page to read a
+  name from, so its finding and the order name it (#2220). A source card's timeline
   region shows one info `StatusRow`, "Loading years…", in place of the graph while it
   loads.
 
