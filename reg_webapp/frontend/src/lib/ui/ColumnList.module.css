@@ -206,6 +206,8 @@
 }
 .linked a {
   min-width: 0;
+  /* Clearance for the inset ring, as a row's padding gives its own. */
+  padding-inline: 2px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
