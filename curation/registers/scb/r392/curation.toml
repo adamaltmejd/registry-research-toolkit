@@ -1306,3 +1306,17 @@ subject = "individuppgifter-agi: VISSA_AVDRAG @2021..2023 where key = 'v1824'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Avdrag för vissa lönetillägg", "definition" = "Anger vissa belopp som ingår i bruttolönen och som inkomsttagaren själv får göra avdrag för i sin deklaration.", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "private:ev-3895"
 caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly files for 2021-2023 that carry this column. Label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: ERSATTNINGS_BELOPP @2021..2023 where key = 'v6111'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utbetalt ersättningsbelopp", "definition" = "Utbetald ersättning enligt social kontrolluppgift.", "type" = "integer", "sensitive" = true, "identifier" = false } }
+evidence = "private:ev-3903"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly social-benefit files for 2021-2023. SCB delivers this column, in 2019-2020 as in 2021-2023, as four positions of one row per person and month (ERSATTNINGS_BELOPP1 to ERSATTNINGS_BELOPP4); stewards map them as position slots of this variable. Label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: ERSATTNINGS_KOD @2021..2023 where key = 'v6112'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ersättningskod", "definition" = "Kod på sociala kontrolluppgiften som anger vilken typ av ersättning som avses.", "type" = "integer", "sensitive" = true, "identifier" = false } }
+evidence = "private:ev-3904"
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly social-benefit files for 2021-2023. SCB delivers this column, in 2019-2020 as in 2021-2023, as four positions of one row per person and month (ERSATTNINGS_KOD1 to ERSATTNINGS_KOD4); stewards map them as position slots of this variable. Label, definition and type follow the export's 2020 edition."
