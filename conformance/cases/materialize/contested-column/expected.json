@@ -11,7 +11,7 @@
       "level": "error",
       "code": "mapping_missing",
       "path": "/sources/0/bindings/0",
-      "message": "demo/owners/third in demo/owners cannot be ordered for [2018-01-01, 2020-01-01): the data holder's column for it is also claimed by another variable. Leave out those years, or ask the data holder",
+      "message": "demo/owners/third in demo/owners cannot be ordered for [2018-01-01, 2020-01-01): it is not clear whether its column there holds this variable or another one. Leave out those years.",
       "source": "a",
       "variable": "demo/owners/third",
       "variable_name": "Third owner",

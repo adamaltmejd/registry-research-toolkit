@@ -38,7 +38,7 @@ pub(super) fn materialize(server: &Server, params: &Params) -> Result<Value, Err
     else {
         return Err(Error::new(
             Code::HoldingsUnavailable,
-            "This server has no data holder's tables, so it cannot produce an order file.",
+            "This server has no tables to order from, so it cannot produce an order file.",
             vec![],
         ));
     };
@@ -450,9 +450,9 @@ pub(super) fn database(server: &Server, project: &ProjectData) -> (Option<String
                 "database_required",
                 "/linkage",
                 format!(
-                    "The data holder keeps its data in {} databases, each with its own \
-                     person key: {}. Choose the one this project draws from in \
-                     linkage.database, and make a separate project for each database.",
+                    "The data is kept in {} databases, each with its own person key: {}. Choose \
+                     the one this project draws from in linkage.database, and make a \
+                     separate project for each database.",
                     spaces.len(),
                     names()
                 ),
@@ -469,7 +469,7 @@ pub(super) fn database(server: &Server, project: &ProjectData) -> (Option<String
                 "database_unknown",
                 "/linkage/database",
                 format!(
-                    "The data holder has no database {:?}. Its databases are: {}.",
+                    "There is no database {:?}. The databases are: {}.",
                     linkage.database,
                     names()
                 ),
@@ -776,9 +776,8 @@ fn gaps(
             "mapping_missing",
             piece,
             format!(
-                "{} in {} cannot be ordered for {}: the data holder's column for it is \
-                 also claimed by another variable. Leave out those years, or ask the data \
-                 holder",
+                "{} in {} cannot be ordered for {}: it is not clear whether its column \
+                 there holds this variable or another one. Leave out those years.",
                 entry.variable,
                 entry.table,
                 span(server, piece)
@@ -792,8 +791,7 @@ fn gaps(
             "column_window_unavailable",
             piece,
             format!(
-                "The data holder's column for {} in {} does not cover {}, so those years \
-                 cannot be delivered",
+                "The column for {} in {} does not cover {}.",
                 entry.variable,
                 entry.table,
                 span(server, piece)
@@ -806,8 +804,7 @@ fn gaps(
             "coverage_gap",
             piece,
             format!(
-                "The data holder has no data on {} in {} for {}, so those years cannot be \
-                 delivered",
+                "There is no data on {} in {} for {}.",
                 entry.variable,
                 entry.table,
                 span(server, piece)
@@ -832,12 +829,22 @@ fn clip(
     for (&(s, b), (variable, requested, holds)) in bindings.iter_mut() {
         let path = format!("/sources/{s}/bindings/{b}");
         let held = merge(std::mem::take(holds));
-        if held.is_empty() {
-            for f in findings.iter_mut().filter(|f| f.path == path) {
+        for f in findings.iter_mut().filter(|f| f.path == path) {
+            // A gap says what the researcher can do only here, where its level is
+            // decided: nothing when other years are delivered, else change the request.
+            let gap = ["coverage_gap", "column_window_unavailable"].contains(&f.code.as_str());
+            if held.is_empty() {
                 f.level = IssueLevel::Error;
                 if f.code == "coverage_gap" {
                     "mapping_missing".clone_into(&mut f.code);
                 }
+            }
+            if gap {
+                f.message.push_str(if held.is_empty() {
+                    " Choose other years, or remove the variable from the project."
+                } else {
+                    " Those years will not be delivered."
+                });
             }
         }
         let source = &sources[s].name;
@@ -879,7 +886,7 @@ fn keys(
     findings: &mut Vec<Issue>,
 ) -> Result<(), Error> {
     let requirements: Vec<Value> = serde_json::from_str(&holding.keys)
-        .map_err(|_| Error::internal("The holder's row-key data is invalid."))?;
+        .map_err(|_| Error::internal("The row identifier data is invalid."))?;
     let mut columns = held.prepare(
         "SELECT c.id, m.table_pid, m.start, m.end, m.carried, c.name, m.caveat
          FROM holding_mapping m JOIN holding_column c ON c.id = m.column_id
@@ -899,7 +906,7 @@ fn keys(
                     let (lo, hi) = token
                         .trim()
                         .parse::<reg_core::Period>()
-                        .map_err(|_| Error::internal("The holder's row-key data is invalid."))?
+                        .map_err(|_| Error::internal("The row identifier data is invalid."))?
                         .iso_bounds();
                     Ok((super::day(&lo), super::day(&hi) + 1))
                 })
@@ -923,9 +930,8 @@ fn keys(
                 findings.push(block(
                     "held_key_missing",
                     format!(
-                        "Table {:?} cannot be ordered yet: the data holder does not \
-                         supply its row identifier. Leave this table out, or ask the data \
-                         holder",
+                        "Table {:?} cannot be ordered: its row identifier is not available. \
+                         Leave this table out.",
                         holding.label
                     ),
                 ));
@@ -966,8 +972,8 @@ fn keys(
                         "held_key_ambiguous",
                         format!(
                             "Table {:?} has {} columns that could be its row identifier \
-                             {variable}, so it cannot be ordered for the years requested. Ask \
-                             the data holder",
+                             {variable}, so it cannot be ordered for the years requested. \
+                             Leave out those years.",
                             holding.label,
                             distinct.len()
                         ),
@@ -979,7 +985,7 @@ fn keys(
                         "held_key_missing",
                         format!(
                             "Table {:?} has no column for its row identifier {variable} \
-                             for {}, so those years cannot be ordered. Leave them out",
+                             for {}, so those years cannot be ordered. Leave them out.",
                             holding.label,
                             span(server, piece)
                         ),
