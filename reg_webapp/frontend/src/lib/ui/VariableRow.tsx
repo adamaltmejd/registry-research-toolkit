@@ -11,6 +11,8 @@ interface Props {
   inProject: boolean;
   /** The years delivered, merged and ordered; empty draws a bare track. */
   coverage: readonly YearRun[];
+  /** The delivered years in words (`segmentYears`). */
+  years: string;
   /** The pane's axis, shared by every row. */
   axis: YearSpan;
   /** The study window, as a block on the track; null draws none. */
@@ -30,6 +32,7 @@ export function VariableRow({
   href,
   inProject,
   coverage,
+  years,
   axis,
   window,
 }: Props) {
@@ -45,6 +48,7 @@ export function VariableRow({
       <span className={styles.bar}>
         <YearTrack
           coverage={coverage}
+          years={years}
           axis={axis}
           window={window}
           inProject={inProject}

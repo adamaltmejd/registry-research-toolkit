@@ -2,7 +2,11 @@ import { useRef, useState } from "react";
 import { variableColumns } from "./add_columns";
 import { type CatalogSegment, errMessage, type RegisterShow } from "./api";
 import { catalogHref } from "./catalog";
-import { catalogLastDate, sourcePeriodLabel } from "./catalog_period";
+import {
+  catalogLastDate,
+  segmentYears,
+  sourcePeriodLabel,
+} from "./catalog_period";
 import { LocatedIssue } from "./Finding";
 import { focusAfterRemoval } from "./focus_after_removal";
 import {
@@ -12,7 +16,7 @@ import {
   type LaneSpanModel,
 } from "./LaneGraph";
 import { PeriodThumbs } from "./PeriodThumbs";
-import { sameYearWindow, uncoveredYears, yearWindowLabel } from "./period";
+import { sameYearWindow, uncoveredYears } from "./period";
 import type { ProjectData, ProjectStudyWindow } from "./project_data";
 import { projectStore } from "./project_store";
 import {
@@ -109,6 +113,7 @@ export function SourceCard({
         }
       : null;
   const unbounded = source.period === "_default" || table?.timeless;
+  const periodYears = unbounded ? null : sourcePeriodLabel(source.period);
   const graph =
     !loading && !loadError && !!table && (hull !== null || unbounded);
   const sourcePath = `/sources/${sourceIndex}`;
@@ -182,7 +187,7 @@ export function SourceCard({
     for (const column of columns) {
       const runs = columnYearRuns(column.segments, bounds, axis[0]);
       if (!runs.length) continue;
-      const years = runs.map(yearWindowLabel).join(", ");
+      const years = segmentYears(column.segments);
       spans.push({
         id: `${id}:${column.id}`,
         lane: id,
@@ -193,7 +198,9 @@ export function SourceCard({
         years,
         state: "in",
         selectable: false,
-        accessibleName: `${column.spelling}, ${name}, ${years}, in project`,
+        accessibleName: [column.spelling, name, years, "in project"]
+          .filter(Boolean)
+          .join(", "),
       });
     }
     const pinned =
@@ -327,14 +334,11 @@ export function SourceCard({
             {tableName}
           </a>
         )}
-        <span>
-          Years:{" "}
-          {unbounded ? (
-            "Unbounded"
-          ) : (
-            <code>{sourcePeriodLabel(source.period)}</code>
-          )}
-        </span>
+        {periodYears && (
+          <span>
+            Years: <code>{periodYears}</code>
+          </span>
+        )}
       </p>
       {loading && (
         <div aria-busy="true">

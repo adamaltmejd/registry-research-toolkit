@@ -22,6 +22,7 @@ import {
   registerSubjectNames,
   segmentsRead,
 } from "./catalog_names";
+import { segmentYears } from "./catalog_period";
 import {
   type LaneEdgeModel,
   LaneGraph,
@@ -185,6 +186,9 @@ export function useVariableCoverage({
   const runs = columnYearRuns(
     subjects.flatMap((subject) => subject.segments),
     catalogBounds,
+  );
+  const delivered = segmentYears(
+    subjects.flatMap((subject) => subject.segments),
   );
   const available = runs.length
     ? { from: runs[0].from, to: runs[runs.length - 1].to }
@@ -359,7 +363,7 @@ export function useVariableCoverage({
           </div>
         )}
         <span className="visually-hidden">
-          Years {runs.map(yearWindowLabel).join(", ")}.
+          {delivered && `Years ${delivered}.`}
           {allowAdd && ` Years to add ${yearWindowLabel(active)}.`}
           {allowAdd && outside.length > 0
             ? ` No delivery in ${outside.map(yearWindowLabel).join(", ")}.`

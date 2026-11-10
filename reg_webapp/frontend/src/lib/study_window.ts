@@ -1,4 +1,4 @@
-import type { CatalogSegment, RegisterShow } from "./api";
+import type { CatalogPeriod, CatalogSegment, RegisterShow } from "./api";
 import { catalogLastDate } from "./catalog_period";
 import type { ProjectData, ProjectStudyWindow } from "./project_data";
 
@@ -107,12 +107,17 @@ export function variableYearRuns(
   tables: readonly RegisterShow["tables"][number][],
   bounds: readonly [number, number],
 ): YearRun[] {
+  return datedYearRuns(variablePeriods(variable, tables), bounds);
+}
+
+/** What `variableYearRuns` draws, as catalog periods (for `segmentYears`). */
+export function variablePeriods(
+  variable: Pick<RegisterShow["variables"][number], "period" | "tables">,
+  tables: readonly RegisterShow["tables"][number][],
+): { period: CatalogPeriod }[] {
   const { start, end } = variable.period;
-  if (start !== null || end !== null) return datedYearRuns([variable], bounds);
-  return datedYearRuns(
-    tables.filter(
-      (table) => !table.timeless && variable.tables.includes(table.fqid),
-    ),
-    bounds,
+  if (start !== null || end !== null) return [variable];
+  return tables.filter(
+    (table) => !table.timeless && variable.tables.includes(table.fqid),
   );
 }

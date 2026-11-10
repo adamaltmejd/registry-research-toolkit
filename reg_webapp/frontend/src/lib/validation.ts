@@ -248,10 +248,11 @@ export function plainIssueText(
           (start !== "open" && end !== "open" && start >= end)
         )
           return interval;
-        return catalogPeriodLabel({
-          start: bound(start),
-          end: bound(end),
-        });
+        return (
+          // Both bounds open: a year-independent span, which has every year.
+          catalogPeriodLabel({ start: bound(start), end: bound(end) }) ??
+          "all years"
+        );
       },
     )
     .replace(/(?<![\d.-])(\d{4})\.\.(\d{4})(?![\d.-])/g, "$1–$2");

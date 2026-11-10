@@ -7,15 +7,10 @@ import {
 } from "./add_columns";
 import type { Graph, VariableShow } from "./api";
 import { catalogHref } from "./catalog";
+import { segmentYears, sourcePeriodLabel } from "./catalog_period";
 import type { LaneEdgeModel, LaneModel, LaneSpanModel } from "./LaneGraph";
-import {
-  coverageMarks,
-  periodLabel,
-  periodWindowRelation,
-  yearWindowLabel,
-} from "./period";
+import { coverageMarks, periodWindowRelation, yearWindowLabel } from "./period";
 import type { ProjectData, ProjectStudyWindow } from "./project_data";
-import { sourcePeriodYears } from "./reg_core";
 import { columnYearRuns, studyWindow } from "./study_window";
 
 export function variableSpans({
@@ -64,12 +59,7 @@ export function variableSpans({
           eras.map((era) => [`${era.from}-01-01`, `${era.to}-12-31`]),
         )
       : null;
-    const sourceYears = sourcePeriodYears(source?.period);
-    const sourceLabel = sourceYears
-      ? sourceYears
-          .map(([from, to]) => yearWindowLabel({ from, to }))
-          .join(", ")
-      : periodLabel(source?.period);
+    const sourceLabel = sourcePeriodLabel(source?.period);
     const note =
       relation && relation !== "same"
         ? {
@@ -81,7 +71,7 @@ export function variableSpans({
               relation === "disjoint" ? ("error" as const) : ("info" as const),
           }
         : null;
-    const years = eras.map(yearWindowLabel).join(", ");
+    const years = segmentYears(column.segments);
     // A segment that states no coding (an undocumented held year) is unknown, not
     // a change: compare only segments that state some.
     const coding = column.segments
@@ -128,7 +118,24 @@ export function variableSpans({
       blocked: relation === "disjoint",
       note,
       changes,
-      accessibleName: `${column.spelling}, ${variable.name}, ${filesLabel(column.files) ?? names.get(column.table) ?? "Table name unavailable"}, ${years}, ${note?.text ?? (source ? "in project" : inside ? "click to select" : "outside the years to add")}${changes.length ? `. Coding changes in ${changeYears}.` : ""}`,
+      accessibleName: `${[
+        column.spelling,
+        variable.name,
+        filesLabel(column.files) ??
+          names.get(column.table) ??
+          "Table name unavailable",
+        years,
+        note?.text ??
+          (source
+            ? "in project"
+            : inside
+              ? "click to select"
+              : "outside the years to add"),
+      ]
+        .filter(Boolean)
+        .join(
+          ", ",
+        )}${changes.length ? `. Coding changes in ${changeYears}.` : ""}`,
     };
     return [
       readOnly
@@ -158,7 +165,17 @@ function readOnlySpan(
     staged: null,
     blocked: false,
     note: null,
-    accessibleName: `${span.name}, ${variableName}, ${tableName}, ${span.years}, ${inProject ? "in project" : "read only"}${span.changes?.length ? `. Coding changes in ${span.changes.join(", ")}.` : ""}`,
+    accessibleName: `${[
+      span.name,
+      variableName,
+      tableName,
+      span.years,
+      inProject ? "in project" : "read only",
+    ]
+      .filter(Boolean)
+      .join(
+        ", ",
+      )}${span.changes?.length ? `. Coding changes in ${span.changes.join(", ")}.` : ""}`,
   };
 }
 

@@ -89,7 +89,8 @@ export function ClassificationView({
       ],
       axis[0],
     ).map((run) => {
-      const years = catalogPeriodLabel(v.period);
+      // An undated version (ATC) is an empty box: no years to draw.
+      const years = catalogPeriodLabel(v.period) ?? "";
       const name = versionName(v);
       return {
         id: v.fqid,
@@ -203,6 +204,7 @@ function laneOrder(versions: readonly Version[]): Version[] {
  * name already states them ("Utbildningsnivå 2020", not "…2020, From 2020"). */
 function versionName(version: Version): string {
   const years = catalogPeriodLabel(version.period);
+  if (years === null) return version.name;
   const stated = years.match(/\d{4}/g) ?? [];
   return stated.length > 0 &&
     stated.every((year) => version.name.includes(year))

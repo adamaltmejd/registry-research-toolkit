@@ -48,12 +48,11 @@ export function ClassificationsView({ node }: { node: ClassFamiliesShow }) {
 function Versions({ family }: { family: ClassFamilyRef }) {
   // One version: its name would repeat the classification's, so only its
   // years.
-  if (family.versions.length === 1)
-    return (
-      <p className={listStyles.single}>
-        {catalogPeriodLabel(family.versions[0].period)}
-      </p>
-    );
+  if (family.versions.length === 1) {
+    // An undated version (ATC) has no years: nothing to list.
+    const years = catalogPeriodLabel(family.versions[0].period);
+    return years && <p className={listStyles.single}>{years}</p>;
+  }
   const parts = [
     ...new Set(family.versions.map((version) => version.part ?? "")),
   ];
@@ -66,7 +65,7 @@ function Versions({ family }: { family: ClassFamilyRef }) {
         const years = catalogPeriodLabel(version.period);
         // A version named as its part (Sektorkod (RAMS/LISA)) would repeat
         // the heading above it: its years are the link.
-        return version.name === part ? (
+        return version.name === part && years ? (
           <li key={version.fqid}>
             <a
               className="link"
@@ -80,8 +79,13 @@ function Versions({ family }: { family: ClassFamilyRef }) {
           <li key={version.fqid}>
             <a className="link" href={catalogHref(version.fqid)}>
               {version.name}
-            </a>{" "}
-            <span className={listStyles.years}>{years}</span>
+            </a>
+            {years && (
+              <>
+                {" "}
+                <span className={listStyles.years}>{years}</span>
+              </>
+            )}
           </li>
         );
       })}

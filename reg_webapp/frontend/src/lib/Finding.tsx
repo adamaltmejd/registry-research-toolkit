@@ -181,7 +181,7 @@ export function LocatedIssue({
           )}
           {period && (
             <span>
-              Years: {period === "Unbounded" ? period : <code>{period}</code>}
+              Years: <code>{period}</code>
             </span>
           )}
           <span className={styles.message}>

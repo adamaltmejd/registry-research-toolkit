@@ -10,7 +10,6 @@
  * stays here is view state and year-integer arithmetic over reg-core's answers.
  */
 
-import { periodText } from "./catalog_period";
 import type {
   ProjectPeriodSegment,
   ProjectSourcePeriod,
@@ -23,7 +22,6 @@ import {
   renderIntervals,
   sourcePeriodFromWire,
   sourcePeriodIntervals,
-  sourcePeriodToWire,
   sourcePeriodYears,
   studyWindowInterval,
 } from "./reg_core";
@@ -370,15 +368,6 @@ export function yearWindowLabel(window: ProjectStudyWindow): string {
   return window.from === window.to
     ? String(window.from)
     : `${window.from}–${window.to}`;
-}
-
-/** A `Source.period` as a reader sees it: each segment of the wire with its range
- * separator as an en dash, the segments comma-separated (`2005–2008, 2012–2015`).
- * Null when the period has no wire (unset / malformed). Presentation only: the
- * wire is reg-core's. */
-export function periodLabel(period: unknown): string | null {
-  const wire = sourcePeriodToWire(period);
-  return wire === null ? null : periodText(wire);
 }
 
 /** How a source period sits against the project's common study window:

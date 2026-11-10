@@ -2,8 +2,7 @@ import type { ReactNode } from "react";
 import type { CatalogSegment } from "./api";
 import pageStyles from "./CatalogNodeView.module.css";
 import { catalogHref } from "./catalog";
-import { yearWindowLabel } from "./period";
-import { columnYearRuns } from "./study_window";
+import { segmentYears } from "./catalog_period";
 import type { Definition } from "./ui/Definitions";
 import { type ColumnType, TypePill } from "./ui/TypePill";
 import styles from "./variable_facts.module.css";
@@ -66,15 +65,8 @@ export function groupFact(
 }
 
 /** A fact's years, muted, as a fact that differs by period lists them. */
-export function factYears(
-  segments: readonly CatalogSegment[],
-  bounds: readonly [number, number],
-) {
-  return (
-    <span className={styles.years}>
-      {columnYearRuns(segments, bounds).map(yearWindowLabel).join(", ")}
-    </span>
-  );
+export function factYears(segments: readonly CatalogSegment[]) {
+  return <span className={styles.years}>{segmentYears(segments)}</span>;
 }
 
 const COLUMN_TYPES = {
@@ -105,10 +97,7 @@ function segmentType(segment: CatalogSegment): ColumnType | null {
  * inside only where the type changes over time (maintainer 2026-11-04); a
  * column whose type the catalog does not state adds no pill, but the stated
  * type then carries its years, so it never reads as the whole history. */
-export function typePills(
-  segments: readonly CatalogSegment[],
-  bounds: readonly [number, number],
-): ReactNode[] {
+export function typePills(segments: readonly CatalogSegment[]): ReactNode[] {
   const { groups, unstated } = groupFact(segments, (row) => {
     const type = segmentType(row);
     return type && { key: type, value: null };
@@ -118,22 +107,15 @@ export function typePills(
       key={type}
       type={type as ColumnType}
       years={
-        groups.length > 1 || unstated
-          ? columnYearRuns(group.segments, bounds)
-              .map(yearWindowLabel)
-              .join(", ")
-          : undefined
+        groups.length > 1 || unstated ? segmentYears(group.segments) : undefined
       }
     />
   ));
 }
 
 /** The Type row of a group member's lane: its `typePills` as a fact. */
-export function typeFact(
-  segments: readonly CatalogSegment[],
-  bounds: readonly [number, number],
-): Definition[] {
-  const pills = typePills(segments, bounds);
+export function typeFact(segments: readonly CatalogSegment[]): Definition[] {
+  const pills = typePills(segments);
   return pills.length === 0
     ? []
     : [
@@ -149,7 +131,6 @@ export function typeFact(
  * its years; a fact no segment states is left out. */
 export function segmentFacts(
   segments: readonly CatalogSegment[],
-  bounds: readonly [number, number],
 ): Definition[] {
   return FACTS.flatMap(({ term, of }) => {
     const { groups, unstated } = groupFact(segments, of);
@@ -163,7 +144,7 @@ export function segmentFacts(
           <ul className={pageStyles.plainList}>
             {groups.map(([key, group]) => (
               <li key={key}>
-                {group.value} {factYears(group.segments, bounds)}
+                {group.value} {factYears(group.segments)}
               </li>
             ))}
           </ul>

@@ -634,6 +634,28 @@ Time is the axis every relation is drawn on.
   spelling (`1990..2023`) appears only where the page shows the project file's own value
   (maintainer 2026-11-03).
 
+  A period as text is years, never an ISO date or a period token (`LA1999`, `HT2019`):
+  whole school years (1 July to 30 June) read as school years, `1999/2000` for one and
+  `1984/1985–2023/2024` for a range (maintainer, #2315, dogfood 2026-11-05); anything
+  else reads as the calendar years its first and last days fall in, so a 31 December
+  snapshot is its year (`1968–2025`, not `1968-12-31–2025`; #2315, 2026-11-06). Stretches
+  that meet at that grain read as one range (yearly snapshots `2010–2020`); stretches of
+  different grains stay apart (`2018, 2019/2020`). A gap the
+  server reports inside a year reads as that year too; a gap no whole year fills is the
+  server's to stop reporting (maintainer, PR #2389, 2026-11-10). Text that states
+  delivered years (a list row's, a lane's, a fact's) is read from the catalog periods,
+  not from the drawing's year cells, so a school-year register reads `1972/1973–2023/2024`
+  beside its bar (maintainer, PR #2389, 2026-11-10: fold). A source period on `/project`
+  that the thumbs cannot write (a term, quarter, month or day, hand-written in the file)
+  reads exactly, in words: `autumn 2019`, `spring 2020`, `2019 Q3`, `February 2020`,
+  `15 October 2019` (maintainer, PR #2389, 2026-11-10). A period with no dated
+  bound (a year-independent classification version, a timeless table or source) has no
+  years text: a timeline draws it as an empty box and a list leaves its years out (#2323:
+  "an unbounded version is an empty box in the timeline, with nothing on the list"); there
+  is no "Unbounded", on `/project` either (maintainer, #2323, dogfood 2026-11-05: "Yes drop
+  it there too").
+  The label is display only: `renderIntervals` writes the project file.
+
 - The **study window** is the project's period, named "Study years" on screen
   (maintainer Q4, 2026-11-04), set in the project banner (which is the period picker).
   Most researchers pick one, from a start year to the latest data, and it is bounded by
@@ -694,8 +716,8 @@ Time is the axis every relation is drawn on.
   widens the thumbs' bounds to their union; it is never clamped or rewritten on load. A
   comma-list period rests the thumbs on its outer years and a line under the drawing
   says a move makes it one span; a term period is shown as text with plain `LaneList`
-  rows. A timeless source says "Unbounded", with no thumbs. A dated table with
-  `_default` also says "Unbounded", but has thumbs seeded from table coverage so its
+  rows. A timeless source has no "Years:" line and no thumbs. A dated table with
+  `_default` has no "Years:" line either, but has thumbs seeded from table coverage so its
   missing period can be repaired; it writes only when a thumb rests. Every source card
   shares the page's one axis. The lanes are the card's columns: no list repeats them
   under the drawing (maintainer ruling 2026-10-23). Each lane's name carries a quiet
