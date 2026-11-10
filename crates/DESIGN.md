@@ -1280,7 +1280,8 @@ and `sun2000niva`.
     ],
     "findings": [
       {"level": "info", "code": "period_clipped", "path": "/sources/0/bindings/1",
-       "message": "scb/lisa/sun2000niva is available from 2004-01-01; 2003 is not ordered",
+       "message": "There is no data on scb/lisa/sun2000niva in scb/lisa/individ for
+                  [2003-01-01, 2004-01-01). Those years will not be delivered.",
        "source": "lisa", "variable": "scb/lisa/sun2000niva", "table": "scb/lisa/individ",
        "period": {"start": "2003-01-01", "end": "2004-01-01"}, "successor_fqid": null,
        "variable_name": "Utbildningsnivå", "table_name": "Individer", "successor_name": null},

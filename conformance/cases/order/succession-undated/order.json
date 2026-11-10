@@ -72,7 +72,7 @@
       "level": "info",
       "code": "period_clipped",
       "path": "/sources/0/bindings/0",
-      "message": "demo/und/ink is not available over [2018-01-01, 2020-01-01); that part is not ordered",
+      "message": "There is no data on demo/und/ink in demo/und/ett for [2018-01-01, 2020-01-01). Those years will not be delivered.",
       "source": "s",
       "variable": "demo/und/ink",
       "variable_name": "Inkomst",

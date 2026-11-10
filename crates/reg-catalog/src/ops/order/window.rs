@@ -356,8 +356,9 @@ fn materialize(
                 scope.table,
                 Some(days),
                 format!(
-                    "{} is not available over {}; that part is not ordered",
+                    "There is no data on {} in {} for {}. Those years will not be delivered.",
                     variable.pid,
+                    scope.table,
                     span(scope.server, days)
                 ),
             ));
