@@ -5,6 +5,7 @@ import {
   useId,
   useRef,
   useState,
+  useSyncExternalStore,
 } from "react";
 import {
   Checkbox,
@@ -215,6 +216,7 @@ export function LaneGraph({
     return () => observer.disconnect();
   }, []);
 
+  const touch = useCoarsePointer();
   const geometry =
     width > 0
       ? laneGeometry({
@@ -230,13 +232,16 @@ export function LaneGraph({
           coverageRow: coverage !== undefined,
           below,
           nameHeights,
+          touch,
         })
       : null;
-  // A graph that scrolls keeps its one picked span in view (a classification's
+  // A single-pick graph that scrolls keeps its picked span in view (a classification's
   // version, which opens on the latest), by its own scroll, never the page's.
   const picked = spans.filter((span) => span.isSelected);
   const keep =
-    picked.length === 1 ? geometry?.spans.get(picked[0].id) : undefined;
+    single && picked.length === 1
+      ? geometry?.spans.get(picked[0].id)
+      : undefined;
   const keepFrom = keep?.x;
   const keepTo = keep ? keep.x + keep.width : undefined;
   useEffect(() => {
@@ -1102,5 +1107,20 @@ function Picker({
     >
       {children}
     </RadioGroup>
+  );
+}
+
+const COARSE = "(pointer: coarse)";
+
+/** Whether the primary pointer is a finger: a touch screen of any width gets
+ * the spans' 24 px least width (#2310). */
+function useCoarsePointer(): boolean {
+  return useSyncExternalStore(
+    (onChange) => {
+      const query = window.matchMedia(COARSE);
+      query.addEventListener("change", onChange);
+      return () => query.removeEventListener("change", onChange);
+    },
+    () => window.matchMedia(COARSE).matches,
   );
 }

@@ -799,15 +799,16 @@ Time is the axis every relation is drawn on.
   year is not delivered (maintainer 2026-11-04). A span's column name is never cut: it
   sits inside the widest delivered part when it fits there, with no list of the files
   it is delivered in: the lane already names the table (maintainer, dogfood 2026-11-05,
-  #2321). A span too narrow for the column name is a plain bar with the name beside it: to the right, to the left at the axis end, else in
-  a gap between its deliveries, and only where no room is free over the bars at the
-  track's end, never cut; the bar carries the span's years where they fit. Stacked below
-  the breakpoint, a lane's spans start just under its name. Hovering or focusing a span
-  shows a RAC `Tooltip` with no delay only where it says what the span does not show:
-  its years when they are cut from the face, its table on a group member's lane (which
-  mixes tables), or how it stands to the study window; it does not repeat the span
-  (maintainer, dogfood 2026-11-05, #2321). The variables a succession reaches are further lanes in time order, with their arrows. A
-  line under the drawing says "Click a column to add it to your project." while a
+  #2321). A span too narrow for the column name is a plain bar with the name beside
+  it: to the right, to the left at the axis end, else in a gap between its deliveries,
+  and only where no room is free over the bars at the track's end, never cut; the bar
+  carries the span's years where they fit. Stacked below the breakpoint, a lane's spans
+  start just under its name. Hovering or focusing a span shows a RAC `Tooltip` with no
+  delay only where the span's text is cut off (maintainer, dogfood 2026-11-05, #2321),
+  read as: where it says what the span does not show, namely its years cut from the
+  face, its table on a group member's lane (which mixes tables), or how it stands to the
+  study window (new rule, proposed by the implementer). The variables a succession
+  reaches are further lanes in time order, with their arrows. A line under the drawing says "Click a column to add it to your project." while a
   project is open; with none there is no line and no button at any width, since the top
   bar has the action ("yes", maintainer, dogfood 2026-11-05, #2319). There is no second
   graph on the page. While it loads the region is a `Skeleton`; a
@@ -845,13 +846,19 @@ Time is the axis every relation is drawn on.
   lane's name opens the variable, with the register on its line when it differs from the
   page's; that line also describes the link. A read-only neighbour lane still shows its
   columns' "in project" state. A span is a checkbox for the add bar, and hovering it
-  highlights its edges. Stacked below the breakpoint, the track is widened until its
+  highlights its edges. Spans stay pressable (#2310, after the maintainer ruling "Graph
+  everywhere", 2026-11-05; the mechanics are new rules, proposed by the implementer):
+  stacked below the breakpoint, and on a touch screen at any width when its spans would
+  be smaller beside the names (it then stacks too), the track is widened until its
   shortest span is 24 px wide (WCAG 2.2 target size) and the graph scrolls sideways
-  inside itself, never the page, with the lane names pinned at its left edge; a graph
-  with one picked span keeps that span in view, so a classification opens on its
-  latest version (#2310, maintainer ruling "Graph everywhere", 2026-11-05). A ticked or picked span keeps its neighbours' size and 1 px
-  stroke, changing only its colours, and its focus ring is drawn inside it, so pressing
-  it shifts nothing (maintainer, dogfood 2026-11-05, #2321). On `/project` a column's
+  inside itself, never the page, with the lane names pinned at its left edge. A
+  single-pick graph keeps its picked span in view, so a classification opens on its
+  latest version, and its tooltip sits under the span, clear of the lane's name; with
+  nothing picked, a graph that scrolls opens once on its latest years, so a lane with
+  only a recent span does not read as empty. A ticked or picked span keeps its
+  neighbours' size and 1 px stroke, changing only its colours, and its focus ring is
+  drawn inside it, so pressing it shifts nothing (maintainer, dogfood 2026-11-05,
+  #2321). On `/project` a column's
   findings sit across its lane, under its spans. It shares the page's axis with the
   `Timeline`. It draws the study window's band and, over it, an add window that differs,
   as on the variable page, with the axis years on the add window's bounds when one is

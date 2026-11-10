@@ -62,6 +62,9 @@ interface LaneGeometryInput {
    * than a name and its line (a group member's facts and description) the
    * lane grows to hold it, and stacked, the spans start under it. */
   nameHeights?: ReadonlyMap<string, number>;
+  /** The primary pointer is a finger: a graph whose spans would be under 24 px
+   * beside the names stacks at any width, to take the 24 px floor. */
+  touch?: boolean;
 }
 
 interface PlacedSegment {
@@ -148,8 +151,9 @@ const LABEL_PAD = 14;
 const LABEL_GAP = 4;
 const PACK_GAP = 6;
 const MIN_SPAN = 6;
-// Stacked (phones), the shortest span is at least WCAG 2.2's 24 px target
-// size, and the track grows past the graph's width to make room (#2310).
+// Stacked (phones, or any graph under a finger whose spans would be smaller),
+// the shortest span is at least WCAG 2.2's 24 px target size, and the track
+// grows past the graph's width to make room (#2310).
 const MIN_TARGET = 24;
 
 export function labelWidth(name: string): number {
@@ -167,8 +171,6 @@ function tickYears(axis: [number, number], pxPerYear: number): number[] {
 }
 
 export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
-  const stacked = input.width < NAME_WIDTH + NAME_GAP + MIN_TRACK;
-  const trackX = stacked ? 0 : NAME_WIDTH + NAME_GAP;
   const [first, last] = input.axis;
   const axisYears = Math.max(last + 1 - first, 1);
   // Keyed on the years alone, never on which spans are pickable, so the track
@@ -178,6 +180,13 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
       Math.max(Math.min(span.to, last) + 1 - Math.max(span.from, first), 1),
     ),
   );
+  const besideTrack = input.width - NAME_WIDTH - NAME_GAP;
+  // Under a finger, a graph whose shortest span would be under 24 px beside
+  // the names stacks, as on a phone, and grows its track there.
+  const stacked =
+    besideTrack < MIN_TRACK ||
+    (!!input.touch && (besideTrack / axisYears) * shortest < MIN_TARGET);
+  const trackX = stacked ? 0 : NAME_WIDTH + NAME_GAP;
   const pxPerYear = Math.max(
     Math.max(input.width - trackX, 1) / axisYears,
     stacked && Number.isFinite(shortest) ? MIN_TARGET / shortest : 0,
