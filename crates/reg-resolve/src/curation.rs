@@ -785,11 +785,15 @@ fn subject_spans(statement: &Statement, source: &Source) -> Vec<Interval> {
     selected
 }
 
+/// `*_attached` are the rows a release move carries along with its release; they are
+/// moved like subjects but are not part of its premise.
 fn premise_overlap(
     left: &Statement,
     left_premise: &Premise,
+    left_attached: &[Source],
     right: &Statement,
     right_premise: &Premise,
+    right_attached: &[Source],
 ) -> bool {
     let overlaps = |left_rows: &[SourcePremise], right_rows: &[SourcePremise]| {
         left_rows.iter().any(|a| {
@@ -802,28 +806,50 @@ fn premise_overlap(
             })
         })
     };
-    let selects_moved = |moving: &Statement, premise: &Premise, other: &Statement| {
-        let Statement::Set { fields, .. } = moving else {
-            return false;
+    let selects_moved =
+        |moving: &Statement, premise: &Premise, attached: &[Source], other: &Statement| {
+            let Statement::Set { fields, .. } = moving else {
+                return false;
+            };
+            let Some(table) = &fields.table else {
+                return false;
+            };
+            let address = subject(other);
+            premise
+                .subjects
+                .iter()
+                .map(premise_source)
+                .chain(attached.iter().cloned())
+                .any(|mut source| {
+                    Arc::make_mut(&mut source.fields)
+                        .insert("table_slug".into(), Value::String(table.clone()));
+                    // An occurrence move detaches dated release rows; a release guard no longer
+                    // matches. A release move keeps its rows attached.
+                    if !matches!(subject(moving), Address::Release { .. }) {
+                        Arc::make_mut(&mut source.fields).insert("release".into(), Value::Null);
+                    }
+                    !select(address, &[source], &BTreeMap::new()).is_empty()
+                })
         };
-        let Some(table) = &fields.table else {
-            return false;
-        };
-        let address = subject(other);
-        premise.subjects.iter().any(|row| {
-            let mut source = premise_source(row);
-            Arc::make_mut(&mut source.fields)
-                .insert("table_slug".into(), Value::String(table.clone()));
-            // Table moves detach dated release rows; a release guard no longer matches.
-            Arc::make_mut(&mut source.fields).insert("release".into(), Value::Null);
-            !select(address, &[source], &BTreeMap::new()).is_empty()
-        })
+    // A release move takes every row of the release, so any other move of one of them
+    // is a partial move of that release.
+    let moves_release_of = |moving: &Statement, premise: &Premise, other: &Premise| {
+        matches!(subject(moving), Address::Release { .. })
+            && premise.subjects.iter().any(|release| {
+                other.subjects.iter().any(|row| {
+                    ["provider", "register", "table", "release"]
+                        .iter()
+                        .all(|f| release.fields.get(*f) == row.fields.get(*f))
+                })
+            })
     };
     overlaps(&left_premise.subjects, &right_premise.subjects)
         || (moves_table(left)
             && moves_table(right)
-            && (selects_moved(left, left_premise, right)
-                || selects_moved(right, right_premise, left)))
+            && (selects_moved(left, left_premise, left_attached, right)
+                || selects_moved(right, right_premise, right_attached, left)
+                || moves_release_of(left, left_premise, right_premise)
+                || moves_release_of(right, right_premise, left_premise)))
 }
 
 /// Find overlaps between already-applied source-shaped claims and evaluated
@@ -1240,9 +1266,21 @@ fn application_dependencies(
                 apply::table_handle(records, ledger, fields.table.as_ref().expect("table set"))?;
             for matched in selected {
                 let source = &view[matched.source];
-                let Some((provider, register, _table, release)) = context(source) else {
+                let Some((provider, register, table, release)) = context(source) else {
                     continue;
                 };
+                // A release move rewrites its attached occurrences and gap markers, so
+                // their rows (and, below, their value sets) are part of its premise.
+                if source.text("kind") == Some("release") {
+                    needed.extend(
+                        table_occurrences
+                            .get(&(provider.clone(), register.clone(), table))
+                            .into_iter()
+                            .flatten()
+                            .copied()
+                            .filter(|&i| view[i].text("release") == release.as_deref()),
+                    );
+                }
                 let target_register = register;
                 let target_table = Some(destination.clone());
                 contexts.insert((
@@ -1697,8 +1735,11 @@ pub fn resolve(
                             ["type", "value_set", "population_valuesets"].map(str::to_owned),
                         );
                     }
+                    // A release subject moves the release with its attached occurrences.
                     if (values.table.is_some() || values.variable.is_some())
                         && !matches!(address, Address::Occurrence { .. })
+                        && !(values.variable.is_none()
+                            && matches!(address, Address::Release { .. }))
                     {
                         return Err(
                             "table and variable fields require an occurrence selector".into()
@@ -1835,6 +1876,37 @@ pub fn resolve(
         .map(|(result, fallback)| result.as_ref().map_or(fallback, |r| &r.premise))
         .collect::<Vec<_>>();
     let candidates = conflict_candidates(statements, &premises);
+    // The occurrences and gap markers a release move carries, so a move out of its
+    // destination is a chain like one after an occurrence move.
+    let attached: Vec<Vec<Source>> = statements
+        .iter()
+        .zip(&premises)
+        .map(|(statement, premise)| {
+            let mut rows = Vec::new();
+            if !(moves_table(statement) && matches!(subject(statement), Address::Release { .. })) {
+                return rows;
+            }
+            for release in &premise.subjects {
+                let text = |f: &str| release.fields.get(f).and_then(Value::as_str);
+                let table = (
+                    text("provider").unwrap_or_default().to_owned(),
+                    text("register").unwrap_or_default().to_owned(),
+                    text("table").map(str::to_owned),
+                );
+                for &i in dependencies
+                    .table_occurrences
+                    .get(&table)
+                    .into_iter()
+                    .flatten()
+                {
+                    if view[i].text("release") == text("release") {
+                        rows.push(view[i].clone());
+                    }
+                }
+            }
+            rows
+        })
+        .collect();
     for (a, b) in candidates {
         if [a, b].into_iter().all(|i| matches!(statements[i], Statement::Set { fields, .. } if fields.sentinels.is_some())) {
             continue;
@@ -1849,8 +1921,10 @@ pub fn resolve(
         if premise_overlap(
             statements[a],
             out[a].as_ref().map_or(&selected[a], |r| &r.premise),
+            &attached[a],
             statements[b],
             out[b].as_ref().map_or(&selected[b], |r| &r.premise),
+            &attached[b],
         ) || (matches!(statements[a], Statement::Assert { .. })
             && matches!(statements[b], Statement::Assert { .. })
             && addresses_overlap(subject(statements[a]), subject(statements[b])))

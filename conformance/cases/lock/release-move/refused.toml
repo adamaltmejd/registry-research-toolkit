@@ -1,0 +1,12 @@
+
+[[statement]]
+kind = "set"
+subject = "t: A where release = 'r3'"
+fields = { "table" = "k" }
+evidence = "Moves one column of the release the statement above moves whole."
+
+[[statement]]
+kind = "set"
+subject = "k: C"
+fields = { "table" = "j" }
+evidence = "Moves on the column the release move above brings into k: a chain."

@@ -1,235 +1,235 @@
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r11223'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r11223'"
 fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r11858'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r11858'"
 fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r12912'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r12912'"
 fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r13273'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r13273'"
 fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r13274'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r13274'"
 fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r13276'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r13276'"
 fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r13277'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r13277'"
 fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r13278'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r13278'"
 fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r13279'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r13279'"
 fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r13280'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r13280'"
 fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r13281'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r13281'"
 fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r13282'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r13282'"
 fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r13283'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r13283'"
 fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r13284'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r13284'"
 fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r13285'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r13285'"
 fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r13316'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r13316'"
 fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r14391'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r14391'"
 fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r16518'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r16518'"
 fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r18332'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r18332'"
 fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r19460'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r19460'"
 fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r19467'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r19467'"
 fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r20011'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r20011'"
 fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r8588'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r8588'"
 fields = { "label" = "Antal utbildningsår i hemlandet, årsuppgift från kursen med senaste kursstart" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:288\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun where release = 'r8588'"
+subject = "kursdeltagare-kalenderar: hemkommun where release = 'r8588'"
 fields = { "label" = "Bostadskommun, senaste årsuppgiften" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:336\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun where release = 'r5438'"
+subject = "kursdeltagare-kalenderar: hemkommun where release = 'r5438'"
 fields = { "label" = "Folkbokföringskommun, senaste årsuppgiften" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:324\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun where release = 'r6065'"
+subject = "kursdeltagare-kalenderar: hemkommun where release = 'r6065'"
 fields = { "label" = "Folkbokföringskommun, senaste årsuppgiften" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:324\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun where release = 'r12912'"
+subject = "kursdeltagare-kalenderar: hemkommun where release = 'r12912'"
 fields = { "label" = "Hemkommun, senaste skolrapporten under kalenderåret" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:300\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun where release = 'r13273'"
+subject = "kursdeltagare-kalenderar: hemkommun where release = 'r13273'"
 fields = { "label" = "Hemkommun, senaste skolrapporten under kalenderåret" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:300\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun where release = 'r13274'"
+subject = "kursdeltagare-kalenderar: hemkommun where release = 'r13274'"
 fields = { "label" = "Hemkommun, senaste skolrapporten under kalenderåret" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:300\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun where release = 'r13276'"
+subject = "kursdeltagare-kalenderar: hemkommun where release = 'r13276'"
 fields = { "label" = "Hemkommun, senaste skolrapporten under kalenderåret" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:300\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun where release = 'r13277'"
+subject = "kursdeltagare-kalenderar: hemkommun where release = 'r13277'"
 fields = { "label" = "Hemkommun, senaste skolrapporten under kalenderåret" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:300\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun where release = 'r13278'"
+subject = "kursdeltagare-kalenderar: hemkommun where release = 'r13278'"
 fields = { "label" = "Hemkommun, senaste skolrapporten under kalenderåret" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:300\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun where release = 'r13279'"
+subject = "kursdeltagare-kalenderar: hemkommun where release = 'r13279'"
 fields = { "label" = "Hemkommun, senaste skolrapporten under kalenderåret" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:300\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun where release = 'r13280'"
+subject = "kursdeltagare-kalenderar: hemkommun where release = 'r13280'"
 fields = { "label" = "Hemkommun, senaste skolrapporten under kalenderåret" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:300\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun where release = 'r13281'"
+subject = "kursdeltagare-kalenderar: hemkommun where release = 'r13281'"
 fields = { "label" = "Hemkommun, senaste skolrapporten under kalenderåret" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:300\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun where release = 'r13282'"
+subject = "kursdeltagare-kalenderar: hemkommun where release = 'r13282'"
 fields = { "label" = "Hemkommun, senaste skolrapporten under kalenderåret" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:312\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun where release = 'r13283'"
+subject = "kursdeltagare-kalenderar: hemkommun where release = 'r13283'"
 fields = { "label" = "Hemkommun, senaste skolrapporten under kalenderåret" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:300\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun where release = 'r13284'"
+subject = "kursdeltagare-kalenderar: hemkommun where release = 'r13284'"
 fields = { "label" = "Hemkommun, senaste skolrapporten under kalenderåret" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:300\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun where release = 'r13285'"
+subject = "kursdeltagare-kalenderar: hemkommun where release = 'r13285'"
 fields = { "label" = "Hemkommun, senaste skolrapporten under kalenderåret" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:300\n\nComplete accepted SFI native36/14675 source families: these exact rows explicitly select the latest annual residence observation or the education report for the course with latest start. Keep reported residence, registered residence, unspecified-source residence and latest-course education separate. All other collection, academic-year and semester meanings retain their current owner and source periods. No annual/semester value equivalence, selected date, registration meaning or missing selection rule is inferred. Proof: Batch49-SFI-annual-selection-source-proof.json."
 
@@ -249,199 +249,205 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:10
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: elevtim where release = 'r12912'"
+subject = "kursdeltagare-kalenderar: elevtim where release = 'r12912'"
 fields = { "unit" = "Antal timmar" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:134\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: elevtim where release = 'r13273'"
+subject = "kursdeltagare-kalenderar: elevtim where release = 'r13273'"
 fields = { "unit" = "Antal timmar" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:134\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: elevtim where release = 'r13274'"
+subject = "kursdeltagare-kalenderar: elevtim where release = 'r13274'"
 fields = { "unit" = "Antal timmar" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:134\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: elevtim where release = 'r13276'"
+subject = "kursdeltagare-kalenderar: elevtim where release = 'r13276'"
 fields = { "unit" = "Antal timmar" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:134\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: elevtim where release = 'r13277'"
+subject = "kursdeltagare-kalenderar: elevtim where release = 'r13277'"
 fields = { "unit" = "Antal timmar" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:134\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: elevtim where release = 'r13278'"
+subject = "kursdeltagare-kalenderar: elevtim where release = 'r13278'"
 fields = { "unit" = "Antal timmar" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:134\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: elevtim where release = 'r13279'"
+subject = "kursdeltagare-kalenderar: elevtim where release = 'r13279'"
 fields = { "unit" = "Antal timmar" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:134\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: elevtim where release = 'r13280'"
+subject = "kursdeltagare-kalenderar: elevtim where release = 'r13280'"
 fields = { "unit" = "Antal timmar" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:134\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: elevtim where release = 'r13281'"
+subject = "kursdeltagare-kalenderar: elevtim where release = 'r13281'"
 fields = { "unit" = "Antal timmar" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:134\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: elevtim where release = 'r13282'"
+subject = "kursdeltagare-kalenderar: elevtim where release = 'r13282'"
 fields = { "unit" = "Antal timmar" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:134\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: elevtim where release = 'r13283'"
+subject = "kursdeltagare-kalenderar: elevtim where release = 'r13283'"
 fields = { "unit" = "Antal timmar" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:134\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: elevtim where release = 'r13284'"
+subject = "kursdeltagare-kalenderar: elevtim where release = 'r13284'"
 fields = { "unit" = "Antal timmar" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:134\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: elevtim where release = 'r13285'"
+subject = "kursdeltagare-kalenderar: elevtim where release = 'r13285'"
 fields = { "unit" = "Antal timmar" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:134\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: elevtim where release = 'r4341'"
+subject = "kursdeltagare-kalenderar: elevtim where release = 'r4341'"
 fields = { "unit" = "Antal timmar" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:146\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: elevtim where release = 'r4555'"
+subject = "kursdeltagare-kalenderar: elevtim where release = 'r4555'"
 fields = { "unit" = "Antal timmar" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:146\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: elevtim where release = 'r4886'"
+subject = "kursdeltagare-kalenderar: elevtim where release = 'r4886'"
 fields = { "unit" = "Antal timmar" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:146\n\nThe same source record defines delivered teaching hours of 60 minutes. Replace its generic count unit with Antal timmar; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r12912'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r12912'"
 fields = { "unit" = "År" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:98\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r13273'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r13273'"
 fields = { "unit" = "År" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:98\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r13274'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r13274'"
 fields = { "unit" = "År" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:98\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r13276'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r13276'"
 fields = { "unit" = "År" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:98\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r13277'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r13277'"
 fields = { "unit" = "År" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:98\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r13278'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r13278'"
 fields = { "unit" = "År" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:98\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r13279'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r13279'"
 fields = { "unit" = "År" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:98\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r13280'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r13280'"
 fields = { "unit" = "År" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:98\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r13281'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r13281'"
 fields = { "unit" = "År" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:98\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r13282'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r13282'"
 fields = { "unit" = "År" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:98\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r13283'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r13283'"
 fields = { "unit" = "År" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:98\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r13284'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r13284'"
 fields = { "unit" = "År" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:98\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r13285'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r13285'"
 fields = { "unit" = "År" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:98\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r4341'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r4341'"
 fields = { "unit" = "År" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:122\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r4555'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r4555'"
 fields = { "unit" = "År" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:110\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: utbildning where release = 'r4886'"
+subject = "kursdeltagare-kalenderar: utbildning where release = 'r4886'"
 fields = { "unit" = "År" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/komvux-sfi.toml:110\n\nThe same source record explicitly defines the quantity as years of schooling in the home country. Replace its generic count unit with År; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete family evidence: Batch47-occurrence-unit-complete-family-evidence.json; compiler proof: Batch47-SFI-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
 subject = "kursdeltagare-vartermin: hemkommun @2017"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-kalenderar: hemkommun @2017"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
 
@@ -459,7 +465,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2018.toml:27\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: skolkommun where release = 'r11858'"
+subject = "kursdeltagare-kalenderar: skolkommun where release = 'r11858'"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
 
@@ -483,7 +489,19 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2018.toml:27\
 
 [[statement]]
 kind = "set"
+subject = "nationella-prov-resultat-kalenderar: {skolkommun,skollan} @2018"
+fields = { "classification" = "class/lkf/lkf2018" }
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
 subject = "kursdeltagare-vartermin: hemkommun @2018"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-kalenderar: hemkommun @2018"
 fields = { "classification" = "class/lkf/lkf2019" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
 
@@ -501,7 +519,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2019.toml:25\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: skolkommun where release = 'r13316'"
+subject = "kursdeltagare-kalenderar: skolkommun where release = 'r13316'"
 fields = { "classification" = "class/lkf/lkf2019" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
 
@@ -525,6 +543,12 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2019.toml:25\
 
 [[statement]]
 kind = "set"
+subject = "nationella-prov-resultat-kalenderar: {skolkommun,skollan} @2019"
+fields = { "classification" = "class/lkf/lkf2019" }
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
 subject = "kursdeltagare-vartermin: hkommun where release = 'r14390'"
 fields = { "classification" = "class/lkf/lkf2020" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
@@ -537,7 +561,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2020.toml:23\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hkommun,skolkommun} where release = 'r14391'"
+subject = "kursdeltagare-kalenderar: {hkommun,skolkommun} where release = 'r14391'"
 fields = { "classification" = "class/lkf/lkf2020" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
 
@@ -555,13 +579,19 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2020.toml:23\
 
 [[statement]]
 kind = "set"
+subject = "nationella-prov-resultat-kalenderar: {skolkommun,skollan} @2020"
+fields = { "classification" = "class/lkf/lkf2020" }
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
 subject = "kursdeltagare-vartermin: hemkommun where release = 'r16517'"
 fields = { "classification" = "class/lkf/lkf2021" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun,skollan} where release = 'r16518'"
+subject = "kursdeltagare-kalenderar: {hemkommun,skolkommun,skollan} where release = 'r16518'"
 fields = { "classification" = "class/lkf/lkf2021" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
 
@@ -579,7 +609,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2021.toml:28\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {skolkommun,skollan} where release = 'r18332'"
+subject = "kursdeltagare-kalenderar: {skolkommun,skollan} where release = 'r18332'"
 fields = { "classification" = "class/lkf/lkf2021" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
 
@@ -591,13 +621,19 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2021.toml:28\
 
 [[statement]]
 kind = "set"
+subject = "nationella-prov-resultat-kalenderar: {skolkommun,skollan} @2021"
+fields = { "classification" = "class/lkf/lkf2021" }
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
 subject = "kursdeltagare-vartermin: hemkommun where release = 'r18331'"
 fields = { "classification" = "class/lkf/lkf2022" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun where release = 'r18332'"
+subject = "kursdeltagare-kalenderar: hemkommun where release = 'r18332'"
 fields = { "classification" = "class/lkf/lkf2022" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
 
@@ -615,6 +651,12 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2022.toml:28\
 
 [[statement]]
 kind = "set"
+subject = "kursdeltagare-kalenderar: {skolkommun,skollan} @2022"
+fields = { "classification" = "class/lkf/lkf2022" }
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
 subject = "nationella-prov-resultat-vartermin: {skolkommun,skollan} where release = 'r19978'"
 fields = { "classification" = "class/lkf/lkf2022" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
@@ -627,7 +669,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2022.toml:28\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun where release = 'r19460'"
+subject = "kursdeltagare-kalenderar: hemkommun where release = 'r19460'"
 fields = { "classification" = "class/lkf/lkf2023" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
 
@@ -657,7 +699,13 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2023.toml:27\
 
 [[statement]]
 kind = "set"
-subject = "nationella-prov-resultat-vartermin: {skolkommun,skollan} where release = 'r19980'"
+subject = "kursdeltagare-kalenderar: {skolkommun,skollan} @2023"
+fields = { "classification" = "class/lkf/lkf2023" }
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "nationella-prov-resultat-kalenderar: {skolkommun,skollan} where release = 'r19980'"
 fields = { "classification" = "class/lkf/lkf2023" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
 
@@ -675,7 +723,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2023.toml:27\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun where release = 'r19467'"
+subject = "kursdeltagare-kalenderar: hemkommun where release = 'r19467'"
 fields = { "classification" = "class/lkf/lkf2024" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
 
@@ -693,13 +741,19 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2024.toml:27\
 
 [[statement]]
 kind = "set"
+subject = "kursdeltagare-kalenderar: {skolkommun,skollan} @2024"
+fields = { "classification" = "class/lkf/lkf2024" }
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
 subject = "nationella-prov-resultat-vartermin: skollan where release = 'r19989'"
 fields = { "classification" = "class/lkf/lkf2024" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "nationella-prov-resultat-vartermin: {skolkommun,skollan} where release = 'r19983'"
+subject = "nationella-prov-resultat-kalenderar: {skolkommun,skollan} where release = 'r19983'"
 fields = { "classification" = "class/lkf/lkf2024" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
 
@@ -711,7 +765,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2024.toml:27\
 
 [[statement]]
 kind = "set"
-subject = "nationella-prov-resultat-vartermin: {skolkommun,skollan} where release = 'r19991'"
+subject = "nationella-prov-resultat-kalenderar: {skolkommun,skollan} where release = 'r19991'"
 fields = { "classification" = "class/lkf/lkf2024" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
 
@@ -735,7 +789,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF1997.toml:23\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: skollan @1997 where key = 'v49'"
+subject = "kursdeltagare-kalenderar: skollan @1997 where key = 'v49'"
 fields = { "classification" = "class/lkf/lkf1997" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF1997.toml:23\n\nLegacy exact value-set label: LKF 1997-01-01/ Län, kommuner och församlingar"
 
@@ -747,7 +801,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF1997.toml:23\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r14081'"
+subject = "kursdeltagare-lasar: {hemkommun,skolkommun} where release = 'r14081'"
 fields = { "classification" = "class/lkf/lkf1997" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF1997.toml:23\n\nLegacy exact value-set label: LKF 1997-01-01/ Län, kommuner och församlingar"
 
@@ -777,19 +831,19 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF1998.toml:23\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r14079'"
+subject = "kursdeltagare-lasar: {hemkommun,skolkommun} where release = 'r14079'"
 fields = { "classification" = "class/lkf/lkf1998" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF1998.toml:23\n\nLegacy exact value-set label: LKF 1998-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r14080'"
+subject = "kursdeltagare-lasar: {hemkommun,skolkommun} where release = 'r14080'"
 fields = { "classification" = "class/lkf/lkf1998" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF1998.toml:23\n\nLegacy exact value-set label: LKF 1998-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: skollan @1998 where key = 'v49'"
+subject = "kursdeltagare-kalenderar: skollan @1998 where key = 'v49'"
 fields = { "classification" = "class/lkf/lkf1999" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
 
@@ -801,7 +855,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF1999.toml:25\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r13284'"
+subject = "kursdeltagare-kalenderar: {hemkommun,skolkommun} where release = 'r13284'"
 fields = { "classification" = "class/lkf/lkf1999" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
 
@@ -819,7 +873,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF1999.toml:25\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: skollan @1999 where key = 'v49'"
+subject = "kursdeltagare-kalenderar: skollan @1999 where key = 'v49'"
 fields = { "classification" = "class/lkf/lkf2000" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
 
@@ -831,7 +885,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2000.toml:26\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r13283'"
+subject = "kursdeltagare-kalenderar: {hemkommun,skolkommun} where release = 'r13283'"
 fields = { "classification" = "class/lkf/lkf2000" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
 
@@ -849,19 +903,19 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2000.toml:26\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r14077'"
+subject = "kursdeltagare-lasar: {hemkommun,skolkommun} where release = 'r14077'"
 fields = { "classification" = "class/lkf/lkf2000" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r14078'"
+subject = "kursdeltagare-lasar: {hemkommun,skolkommun} where release = 'r14078'"
 fields = { "classification" = "class/lkf/lkf2000" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: skollan @2000 where key = 'v49'"
+subject = "kursdeltagare-kalenderar: skollan @2000 where key = 'v49'"
 fields = { "classification" = "class/lkf/lkf2001" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
 
@@ -873,7 +927,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2001.toml:27\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r13282'"
+subject = "kursdeltagare-kalenderar: {hemkommun,skolkommun} where release = 'r13282'"
 fields = { "classification" = "class/lkf/lkf2001" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
 
@@ -891,7 +945,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2001.toml:27\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: skollan @2001 where key = 'v49'"
+subject = "kursdeltagare-kalenderar: skollan @2001 where key = 'v49'"
 fields = { "classification" = "class/lkf/lkf2002" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
 
@@ -903,7 +957,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2002.toml:25\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r13281'"
+subject = "kursdeltagare-kalenderar: {hemkommun,skolkommun} where release = 'r13281'"
 fields = { "classification" = "class/lkf/lkf2002" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
 
@@ -921,19 +975,19 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2002.toml:25\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r14075'"
+subject = "kursdeltagare-lasar: {hemkommun,skolkommun} where release = 'r14075'"
 fields = { "classification" = "class/lkf/lkf2002" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r14076'"
+subject = "kursdeltagare-lasar: {hemkommun,skolkommun} where release = 'r14076'"
 fields = { "classification" = "class/lkf/lkf2002" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: skollan @2002 where key = 'v49'"
+subject = "kursdeltagare-kalenderar: skollan @2002 where key = 'v49'"
 fields = { "classification" = "class/lkf/lkf2003" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
 
@@ -945,7 +999,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2003.toml:24\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r13280'"
+subject = "kursdeltagare-kalenderar: {hemkommun,skolkommun} where release = 'r13280'"
 fields = { "classification" = "class/lkf/lkf2003" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
 
@@ -963,7 +1017,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2003.toml:24\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: skollan @2003 where key = 'v49'"
+subject = "kursdeltagare-kalenderar: skollan @2003 where key = 'v49'"
 fields = { "classification" = "class/lkf/lkf2004" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
 
@@ -975,7 +1029,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2004.toml:26\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r13279'"
+subject = "kursdeltagare-kalenderar: {hemkommun,skolkommun} where release = 'r13279'"
 fields = { "classification" = "class/lkf/lkf2004" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
 
@@ -993,19 +1047,19 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2004.toml:26\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r14073'"
+subject = "kursdeltagare-lasar: {hemkommun,skolkommun} where release = 'r14073'"
 fields = { "classification" = "class/lkf/lkf2004" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r14074'"
+subject = "kursdeltagare-lasar: {hemkommun,skolkommun} where release = 'r14074'"
 fields = { "classification" = "class/lkf/lkf2004" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: skollan @2004 where key = 'v49'"
+subject = "kursdeltagare-kalenderar: skollan @2004 where key = 'v49'"
 fields = { "classification" = "class/lkf/lkf2005" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
 
@@ -1017,7 +1071,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2005.toml:27\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r13278'"
+subject = "kursdeltagare-kalenderar: {hemkommun,skolkommun} where release = 'r13278'"
 fields = { "classification" = "class/lkf/lkf2005" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
 
@@ -1035,7 +1089,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2005.toml:27\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: skollan @2005 where key = 'v49'"
+subject = "kursdeltagare-kalenderar: skollan @2005 where key = 'v49'"
 fields = { "classification" = "class/lkf/lkf2006" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
 
@@ -1047,7 +1101,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2006.toml:32\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r13277'"
+subject = "kursdeltagare-kalenderar: {hemkommun,skolkommun} where release = 'r13277'"
 fields = { "classification" = "class/lkf/lkf2006" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
 
@@ -1065,19 +1119,19 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2006.toml:32\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r14071'"
+subject = "kursdeltagare-lasar: {hemkommun,skolkommun} where release = 'r14071'"
 fields = { "classification" = "class/lkf/lkf2006" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r14072'"
+subject = "kursdeltagare-lasar: {hemkommun,skolkommun} where release = 'r14072'"
 fields = { "classification" = "class/lkf/lkf2006" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: skollan @2006 where key = 'v49'"
+subject = "kursdeltagare-kalenderar: skollan @2006 where key = 'v49'"
 fields = { "classification" = "class/lkf/lkf2007" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
 
@@ -1095,7 +1149,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2007.toml:26\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r13276'"
+subject = "kursdeltagare-kalenderar: {hemkommun,skolkommun} where release = 'r13276'"
 fields = { "classification" = "class/lkf/lkf2007" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
 
@@ -1107,7 +1161,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2007.toml:26\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: skollan @2007 where key = 'v49'"
+subject = "kursdeltagare-kalenderar: skollan @2007 where key = 'v49'"
 fields = { "classification" = "class/lkf/lkf2008" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
 
@@ -1125,25 +1179,25 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2008.toml:29\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun,skollan} where release = 'r14069'"
+subject = "kursdeltagare-lasar: {hemkommun,skolkommun,skollan} where release = 'r14069'"
 fields = { "classification" = "class/lkf/lkf2008" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun,skollan} where release = 'r14070'"
+subject = "kursdeltagare-lasar: {hemkommun,skolkommun,skollan} where release = 'r14070'"
 fields = { "classification" = "class/lkf/lkf2008" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r13274'"
+subject = "kursdeltagare-kalenderar: {hemkommun,skolkommun} where release = 'r13274'"
 fields = { "classification" = "class/lkf/lkf2008" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2008.toml:29\n\nLegacy exact value-set label: LKF 2008-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: skollan @2008 where key = 'v49'"
+subject = "kursdeltagare-kalenderar: skollan @2008 where key = 'v49'"
 fields = { "classification" = "class/lkf/lkf2009" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
 
@@ -1155,7 +1209,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2009.toml:29\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r13273'"
+subject = "kursdeltagare-kalenderar: {hemkommun,skolkommun} where release = 'r13273'"
 fields = { "classification" = "class/lkf/lkf2009" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
 
@@ -1167,7 +1221,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2009.toml:29\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun,skollan} where release = 'r12912'"
+subject = "kursdeltagare-kalenderar: {hemkommun,skolkommun,skollan} where release = 'r12912'"
 fields = { "classification" = "class/lkf/lkf2010" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
 
@@ -1191,6 +1245,12 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2010.toml:28\
 
 [[statement]]
 kind = "set"
+subject = "nationella-prov-resultat-kalenderar: {kommun,lan,skom} @2010"
+fields = { "classification" = "class/lkf/lkf2010" }
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
 subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r12909'"
 fields = { "classification" = "class/lkf/lkf2011" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
@@ -1203,13 +1263,19 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2011.toml:26\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r4341'"
+subject = "kursdeltagare-kalenderar: {hemkommun,skolkommun} where release = 'r4341'"
 fields = { "classification" = "class/lkf/lkf2011" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "nationella-prov-resultat-vartermin: {kommun,lan,skom} @2011"
+fields = { "classification" = "class/lkf/lkf2011" }
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "nationella-prov-resultat-kalenderar: {kommun,lan,skom} @2011"
 fields = { "classification" = "class/lkf/lkf2011" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
 
@@ -1227,13 +1293,19 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2012.toml:26\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r4555'"
+subject = "kursdeltagare-kalenderar: {hemkommun,skolkommun} where release = 'r4555'"
 fields = { "classification" = "class/lkf/lkf2012" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "nationella-prov-resultat-vartermin: {kommun,lan} @2012"
+fields = { "classification" = "class/lkf/lkf2012" }
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "nationella-prov-resultat-kalenderar: {kommun,lan} @2012"
 fields = { "classification" = "class/lkf/lkf2012" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
 
@@ -1251,13 +1323,19 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2013.toml:27\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r4886'"
+subject = "kursdeltagare-kalenderar: {hemkommun,skolkommun} where release = 'r4886'"
 fields = { "classification" = "class/lkf/lkf2013" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
 subject = "nationella-prov-resultat-vartermin: {kommun,lan} @2013"
+fields = { "classification" = "class/lkf/lkf2013" }
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "nationella-prov-resultat-kalenderar: {kommun,lan} @2013"
 fields = { "classification" = "class/lkf/lkf2013" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
 
@@ -1275,7 +1353,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2014.toml:26\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r5438'"
+subject = "kursdeltagare-kalenderar: {hemkommun,skolkommun} where release = 'r5438'"
 fields = { "classification" = "class/lkf/lkf2014" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
 
@@ -1287,13 +1365,19 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2014.toml:26\
 
 [[statement]]
 kind = "set"
+subject = "nationella-prov-resultat-kalenderar: {kommun,lan} @2014"
+fields = { "classification" = "class/lkf/lkf2014" }
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
 subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r12913'"
 fields = { "classification" = "class/lkf/lkf2015" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r6065'"
+subject = "kursdeltagare-kalenderar: {hemkommun,skolkommun} where release = 'r6065'"
 fields = { "classification" = "class/lkf/lkf2015" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
 
@@ -1311,13 +1395,19 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2015.toml:25\
 
 [[statement]]
 kind = "set"
+subject = "nationella-prov-resultat-kalenderar: {kommun,lan} @2015"
+fields = { "classification" = "class/lkf/lkf2015" }
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
 subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r7483'"
 fields = { "classification" = "class/lkf/lkf2016" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r8588'"
+subject = "kursdeltagare-kalenderar: {hemkommun,skolkommun} where release = 'r8588'"
 fields = { "classification" = "class/lkf/lkf2016" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
 
@@ -1330,6 +1420,12 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2016.toml:31\
 [[statement]]
 kind = "set"
 subject = "nationella-prov-resultat-vartermin: {kommun,lan} @2016"
+fields = { "classification" = "class/lkf/lkf2016" }
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
+subject = "nationella-prov-resultat-kalenderar: {kommun,lan} @2016"
 fields = { "classification" = "class/lkf/lkf2016" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
 
@@ -1353,7 +1449,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2017.toml:26\
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: {hemkommun,skolkommun} where release = 'r11223'"
+subject = "kursdeltagare-kalenderar: {hemkommun,skolkommun} where release = 'r11223'"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
 
@@ -1365,13 +1461,19 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2017.toml:26\
 
 [[statement]]
 kind = "set"
+subject = "nationella-prov-resultat-kalenderar: {kommun,lan} @2017"
+fields = { "classification" = "class/lkf/lkf2017" }
+evidence = "python-builder-pre-cutover:curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
 subject = "kursdeltagare-vartermin: hemkommun where release = 'r20010'"
 fields = { "classification" = "class/lkf/lkf2025" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2025.toml:21\n\nLegacy exact value-set label: LKF 2025-01-01 /Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun where release = 'r20011'"
+subject = "kursdeltagare-kalenderar: hemkommun where release = 'r20011'"
 fields = { "classification" = "class/lkf/lkf2025" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2025.toml:21\n\nLegacy exact value-set label: LKF 2025-01-01 /Län, kommuner och församlingar"
 
@@ -1389,19 +1491,25 @@ evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.tom
 
 [[statement]]
 kind = "set"
+subject = "kursdeltagare-kalenderar: sun2000niva"
+fields = { "classification" = "class/sun/sun2000-niva" }
+evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
 subject = "kursdeltagare-vartermin: sun2020niva where release = 'r14390'"
 fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: sun2020niva where release = 'r14391'"
+subject = "kursdeltagare-kalenderar: sun2020niva where release = 'r14391'"
 fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: sun2020niva where release = 'r16518'"
+subject = "kursdeltagare-kalenderar: sun2020niva where release = 'r16518'"
 fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
 
@@ -1431,7 +1539,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-NIVA.tom
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: sun2020niva where release = 'r18332'"
+subject = "kursdeltagare-kalenderar: sun2020niva where release = 'r18332'"
 fields = { "classification" = "class/sun/sun2020-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
 
@@ -1443,13 +1551,19 @@ evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-NIVA.tom
 
 [[statement]]
 kind = "set"
+subject = "kursdeltagare-kalenderar: sun2020niva_2"
+fields = { "classification" = "class/sun/sun2020-niva" }
+evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
 subject = "kursdeltagare-vartermin: jurform where release = 'r11222'"
 fields = { "classification" = "class/jurform/jurform2000" }
 evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: jurform where release = 'r11223'"
+subject = "kursdeltagare-kalenderar: jurform where release = 'r11223'"
 fields = { "classification" = "class/jurform/jurform2000" }
 evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
 
@@ -1467,7 +1581,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2000.toml
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: jurform where release = 'r11858'"
+subject = "kursdeltagare-kalenderar: jurform where release = 'r11858'"
 fields = { "classification" = "class/jurform/jurform2000" }
 evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
 
@@ -1485,7 +1599,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2000.toml
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: jurform where release = 'r13316'"
+subject = "kursdeltagare-kalenderar: jurform where release = 'r13316'"
 fields = { "classification" = "class/jurform/jurform2000" }
 evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
 
@@ -1503,7 +1617,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2000.toml
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: jurform where release = 'r14391'"
+subject = "kursdeltagare-kalenderar: jurform where release = 'r14391'"
 fields = { "classification" = "class/jurform/jurform2000" }
 evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
 
@@ -1533,7 +1647,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2000.toml
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: jurform where release = 'r8588'"
+subject = "kursdeltagare-kalenderar: jurform where release = 'r8588'"
 fields = { "classification" = "class/jurform/jurform2000" }
 evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
 
@@ -1551,7 +1665,13 @@ evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2000.toml
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: jurform where release = 'r16518'"
+subject = "nationella-prov-resultat-kalenderar: jurform @2015..2021"
+fields = { "classification" = "class/jurform/jurform2000" }
+evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2000.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2000"
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-kalenderar: jurform where release = 'r16518'"
 fields = { "classification" = "class/jurform/jurform2020" }
 evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
 
@@ -1569,19 +1689,19 @@ evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2020.toml
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: jurform where release = 'r18332'"
+subject = "kursdeltagare-kalenderar: jurform where release = 'r18332'"
 fields = { "classification" = "class/jurform/jurform2020" }
 evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: jurform where release = 'r19460'"
+subject = "kursdeltagare-kalenderar: jurform where release = 'r19460'"
 fields = { "classification" = "class/jurform/jurform2020" }
 evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: jurform where release = 'r19467'"
+subject = "kursdeltagare-kalenderar: jurform where release = 'r19467'"
 fields = { "classification" = "class/jurform/jurform2020" }
 evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
 
@@ -1623,13 +1743,19 @@ evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2020.toml
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: jurform where release = 'r20011'"
+subject = "kursdeltagare-kalenderar: jurform where release = 'r20011'"
 fields = { "classification" = "class/jurform/jurform2020" }
 evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
 
 [[statement]]
 kind = "set"
 subject = "nationella-prov-resultat-vartermin: jurform @2022..2024"
+fields = { "classification" = "class/jurform/jurform2020" }
+evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
+
+[[statement]]
+kind = "set"
+subject = "nationella-prov-resultat-kalenderar: jurform @2022..2024"
 fields = { "classification" = "class/jurform/jurform2020" }
 evidence = "python-builder-pre-cutover:curation/classifications/JURFORM2020.toml:4\n\nLegacy exact value-set label: Standard för indelning efter juridisk form 2020"
 
@@ -2801,7 +2927,7 @@ evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for o
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: HemKommun @2016-01-01..2016-12-31 where key = 'v36' and release = 'r11223'"
+subject = "kursdeltagare-kalenderar: HemKommun @2016-01-01..2016-12-31 where key = 'v36' and release = 'r11223'"
 fields = { "label" = "Kommun (hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
 
@@ -2813,7 +2939,7 @@ evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for o
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: HemKommun @2017-01-01..2017-12-31 where key = 'v36' and release = 'r11858'"
+subject = "kursdeltagare-kalenderar: HemKommun @2017-01-01..2017-12-31 where key = 'v36' and release = 'r11858'"
 fields = { "label" = "Kommun (hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
 
@@ -2825,7 +2951,7 @@ evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for o
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: HemKommun @2018-01-01..2018-12-31 where key = 'v36' and release = 'r13316'"
+subject = "kursdeltagare-kalenderar: HemKommun @2018-01-01..2018-12-31 where key = 'v36' and release = 'r13316'"
 fields = { "label" = "Kommun (hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
 
@@ -2999,7 +3125,7 @@ evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for o
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: Hemkommun @2010-01-01..2010-12-31 where key = 'v36' and release = 'r4341'"
+subject = "kursdeltagare-kalenderar: Hemkommun @2010-01-01..2010-12-31 where key = 'v36' and release = 'r4341'"
 fields = { "label" = "Kommun (hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
 
@@ -3011,7 +3137,7 @@ evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for o
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: Hemkommun @2011-01-01..2011-12-31 where key = 'v36' and release = 'r4555'"
+subject = "kursdeltagare-kalenderar: Hemkommun @2011-01-01..2011-12-31 where key = 'v36' and release = 'r4555'"
 fields = { "label" = "Kommun (hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
 
@@ -3023,7 +3149,7 @@ evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for o
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: Hemkommun @2012-01-01..2012-12-31 where key = 'v36' and release = 'r4886'"
+subject = "kursdeltagare-kalenderar: Hemkommun @2012-01-01..2012-12-31 where key = 'v36' and release = 'r4886'"
 fields = { "label" = "Kommun (hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
 
@@ -3041,7 +3167,7 @@ evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for o
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: Hemkommun @2020-01-01..2020-12-31 where key = 'v36' and release = 'r16518'"
+subject = "kursdeltagare-kalenderar: Hemkommun @2020-01-01..2020-12-31 where key = 'v36' and release = 'r16518'"
 fields = { "label" = "Kommun (hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
 
@@ -3059,7 +3185,7 @@ evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for o
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: Hemkommun @2021-01-01..2021-12-31 where key = 'v36' and release = 'r18332'"
+subject = "kursdeltagare-kalenderar: Hemkommun @2021-01-01..2021-12-31 where key = 'v36' and release = 'r18332'"
 fields = { "label" = "Kommun (hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
 
@@ -3077,7 +3203,7 @@ evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for o
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: Hemkommun @2022-01-01..2022-12-31 where key = 'v36' and release = 'r19460'"
+subject = "kursdeltagare-kalenderar: Hemkommun @2022-01-01..2022-12-31 where key = 'v36' and release = 'r19460'"
 fields = { "label" = "Kommun (hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
 
@@ -3095,7 +3221,7 @@ evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for o
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: Hemkommun @2023-01-01..2023-12-31 where key = 'v36' and release = 'r19467'"
+subject = "kursdeltagare-kalenderar: Hemkommun @2023-01-01..2023-12-31 where key = 'v36' and release = 'r19467'"
 fields = { "label" = "Kommun (hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
 
@@ -3113,7 +3239,7 @@ evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for o
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: Hemkommun @2024-01-01..2024-12-31 where key = 'v36' and release = 'r20011'"
+subject = "kursdeltagare-kalenderar: Hemkommun @2024-01-01..2024-12-31 where key = 'v36' and release = 'r20011'"
 fields = { "label" = "Kommun (hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
 
@@ -3125,97 +3251,97 @@ evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for o
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun @1993-07-01..1994-06-30 where key = 'v36' and release = 'r14084'"
+subject = "kursdeltagare-lasar: hemkommun @1993-07-01..1994-06-30 where key = 'v36' and release = 'r14084'"
 fields = { "label" = "Kommun (hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun @1994-07-01..1995-06-30 where key = 'v36' and release = 'r14083'"
+subject = "kursdeltagare-lasar: hemkommun @1994-07-01..1995-06-30 where key = 'v36' and release = 'r14083'"
 fields = { "label" = "Kommun (hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun @1995-07-01..1996-06-30 where key = 'v36' and release = 'r14082'"
+subject = "kursdeltagare-lasar: hemkommun @1995-07-01..1996-06-30 where key = 'v36' and release = 'r14082'"
 fields = { "label" = "Kommun (hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun @1996-07-01..1997-06-30 where key = 'v36' and release = 'r14081'"
+subject = "kursdeltagare-lasar: hemkommun @1996-07-01..1997-06-30 where key = 'v36' and release = 'r14081'"
 fields = { "label" = "Kommun (hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun @1997-07-01..1998-06-30 where key = 'v36' and release = 'r14080'"
+subject = "kursdeltagare-lasar: hemkommun @1997-07-01..1998-06-30 where key = 'v36' and release = 'r14080'"
 fields = { "label" = "Kommun (hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun @1998-07-01..1999-06-30 where key = 'v36' and release = 'r14079'"
+subject = "kursdeltagare-lasar: hemkommun @1998-07-01..1999-06-30 where key = 'v36' and release = 'r14079'"
 fields = { "label" = "Kommun (hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun @1999-07-01..2000-06-30 where key = 'v36' and release = 'r14078'"
+subject = "kursdeltagare-lasar: hemkommun @1999-07-01..2000-06-30 where key = 'v36' and release = 'r14078'"
 fields = { "label" = "Kommun (hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun @2000-07-01..2001-06-30 where key = 'v36' and release = 'r14077'"
+subject = "kursdeltagare-lasar: hemkommun @2000-07-01..2001-06-30 where key = 'v36' and release = 'r14077'"
 fields = { "label" = "Kommun (hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun @2001-07-01..2002-06-30 where key = 'v36' and release = 'r14076'"
+subject = "kursdeltagare-lasar: hemkommun @2001-07-01..2002-06-30 where key = 'v36' and release = 'r14076'"
 fields = { "label" = "Kommun (hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun @2002-07-01..2003-06-30 where key = 'v36' and release = 'r14075'"
+subject = "kursdeltagare-lasar: hemkommun @2002-07-01..2003-06-30 where key = 'v36' and release = 'r14075'"
 fields = { "label" = "Kommun (hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun @2003-07-01..2004-06-30 where key = 'v36' and release = 'r14074'"
+subject = "kursdeltagare-lasar: hemkommun @2003-07-01..2004-06-30 where key = 'v36' and release = 'r14074'"
 fields = { "label" = "Kommun (hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun @2004-07-01..2005-06-30 where key = 'v36' and release = 'r14073'"
+subject = "kursdeltagare-lasar: hemkommun @2004-07-01..2005-06-30 where key = 'v36' and release = 'r14073'"
 fields = { "label" = "Kommun (hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun @2005-07-01..2006-06-30 where key = 'v36' and release = 'r14072'"
+subject = "kursdeltagare-lasar: hemkommun @2005-07-01..2006-06-30 where key = 'v36' and release = 'r14072'"
 fields = { "label" = "Kommun (hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun @2006-07-01..2007-06-30 where key = 'v36' and release = 'r14071'"
+subject = "kursdeltagare-lasar: hemkommun @2006-07-01..2007-06-30 where key = 'v36' and release = 'r14071'"
 fields = { "label" = "Kommun (hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun @2007-07-01..2008-06-30 where key = 'v36' and release = 'r14070'"
+subject = "kursdeltagare-lasar: hemkommun @2007-07-01..2008-06-30 where key = 'v36' and release = 'r14070'"
 fields = { "label" = "Kommun (hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
 
 [[statement]]
 kind = "set"
-subject = "kursdeltagare-vartermin: hemkommun @2008-07-01..2009-06-30 where key = 'v36' and release = 'r14069'"
+subject = "kursdeltagare-lasar: hemkommun @2008-07-01..2009-06-30 where key = 'v36' and release = 'r14069'"
 fields = { "label" = "Kommun (hemkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: hemkommun = kommun the student lives in (as reported by school, later folkbokförd or bor), skolkommun/Kommun/SKOM = kommun where the school is. HKommun runs concurrently with HemKommun with a near-identical opdef."
 
@@ -3249,3 +3375,386 @@ subject = "kursdeltagare-vartermin: Praktik where key = 'v28321'"
 fields = { "unit" = "Antal veckor" }
 evidence = "Etikett och definition anger antal veckor; enheten Antal timmar hör till efterföljande nyckel v14677. Enheten är densamma i alla årgångar av v28321, så rättelsen vilar på etikett, definition och den efterföljande nyckeln.\nold unit: 'Antal timmar'; Registerinformation.csv:row=544257 (r14055); Registerinformation.csv:row=544259 (r14068); Registerinformation.csv:row=544258 (r14054); Registerinformation.csv:row=544270 (r14075); Registerinformation.csv:row=544273 (r14074); Registerinformation.csv:row=544400 (r14073)"
 
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-kalenderar: Praktik where key = 'v28321'"
+fields = { "unit" = "Antal veckor" }
+evidence = "Etikett och definition anger antal veckor; enheten Antal timmar hör till efterföljande nyckel v14677. Enheten är densamma i alla årgångar av v28321, så rättelsen vilar på etikett, definition och den efterföljande nyckeln.\nold unit: 'Antal timmar'; Registerinformation.csv:row=544257 (r14055); Registerinformation.csv:row=544259 (r14068); Registerinformation.csv:row=544258 (r14054); Registerinformation.csv:row=544270 (r14075); Registerinformation.csv:row=544273 (r14074); Registerinformation.csv:row=544400 (r14073)"
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-lasar: Praktik where key = 'v28321'"
+fields = { "unit" = "Antal veckor" }
+evidence = "Etikett och definition anger antal veckor; enheten Antal timmar hör till efterföljande nyckel v14677. Enheten är densamma i alla årgångar av v28321, så rättelsen vilar på etikett, definition och den efterföljande nyckeln.\nold unit: 'Antal timmar'; Registerinformation.csv:row=544257 (r14055); Registerinformation.csv:row=544259 (r14068); Registerinformation.csv:row=544258 (r14054); Registerinformation.csv:row=544270 (r14075); Registerinformation.csv:row=544273 (r14074); Registerinformation.csv:row=544400 (r14073)"
+
+[[statement]]
+kind = "assert"
+subject = "table:kursdeltagare-kalenderar"
+fact = { entity = "table", fields = { name = "Kursdeltagare och utbildningsresultat, kalenderår", coverage = "1997-01-01..2024-12-31" } }
+evidence = "Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. The kalenderår releases of kursdeltagare-vartermin (1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024) form this table; the coverage is the union of their periods."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r13285"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '1997' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r13284"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '1998' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r13283"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '1999' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r13282"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '2000' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r13281"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '2001' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r13280"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '2002' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r13279"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '2003' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r13278"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '2004' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r13277"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '2005' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r13276"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '2006' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r13274"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '2007' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r13273"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '2008' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r12912"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '2009' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r4341"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '2010' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r4555"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '2011' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r4886"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '2012' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r5438"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '2013' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r6065"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '2014' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r8588"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '2015' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r11223"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '2016' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r11858"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '2017' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r13316"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '2018' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r14391"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '2019' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r16518"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '2020' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r18332"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '2021' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r19460"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '2022' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r19467"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '2023' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r20011"
+fields = { "table" = "kursdeltagare-kalenderar" }
+evidence = "Release '2024' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "assert"
+subject = "table:kursdeltagare-lasar"
+fact = { entity = "table", fields = { name = "Kursdeltagare och utbildningsresultat, läsår", coverage = "1993-07-01..2009-06-30" } }
+evidence = "Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. The läsår releases of kursdeltagare-vartermin (1993/1994, 1994/1995, 1995/1996, 1996/1997, 1997/1998, 1998/1999, 1999/2000, 2000/2001, 2001/2002, 2002/2003, 2003/2004, 2004/2005, 2005/2006, 2006/2007, 2007/2008, 2008/2009) form this table; the coverage is the union of their periods."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r14084"
+fields = { "table" = "kursdeltagare-lasar" }
+evidence = "Release '1993/1994' is a läsår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r14083"
+fields = { "table" = "kursdeltagare-lasar" }
+evidence = "Release '1994/1995' is a läsår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r14082"
+fields = { "table" = "kursdeltagare-lasar" }
+evidence = "Release '1995/1996' is a läsår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r14081"
+fields = { "table" = "kursdeltagare-lasar" }
+evidence = "Release '1996/1997' is a läsår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r14080"
+fields = { "table" = "kursdeltagare-lasar" }
+evidence = "Release '1997/1998' is a läsår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r14079"
+fields = { "table" = "kursdeltagare-lasar" }
+evidence = "Release '1998/1999' is a läsår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r14078"
+fields = { "table" = "kursdeltagare-lasar" }
+evidence = "Release '1999/2000' is a läsår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r14077"
+fields = { "table" = "kursdeltagare-lasar" }
+evidence = "Release '2000/2001' is a läsår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r14076"
+fields = { "table" = "kursdeltagare-lasar" }
+evidence = "Release '2001/2002' is a läsår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r14075"
+fields = { "table" = "kursdeltagare-lasar" }
+evidence = "Release '2002/2003' is a läsår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r14074"
+fields = { "table" = "kursdeltagare-lasar" }
+evidence = "Release '2003/2004' is a läsår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r14073"
+fields = { "table" = "kursdeltagare-lasar" }
+evidence = "Release '2004/2005' is a läsår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r14072"
+fields = { "table" = "kursdeltagare-lasar" }
+evidence = "Release '2005/2006' is a läsår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r14071"
+fields = { "table" = "kursdeltagare-lasar" }
+evidence = "Release '2006/2007' is a läsår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r14070"
+fields = { "table" = "kursdeltagare-lasar" }
+evidence = "Release '2007/2008' is a läsår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:kursdeltagare-vartermin/r14069"
+fields = { "table" = "kursdeltagare-lasar" }
+evidence = "Release '2008/2009' is a läsår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "assert"
+subject = "table:nationella-prov-resultat-kalenderar"
+fact = { entity = "table", fields = { name = "Nationella prov: resultat, kalenderår", coverage = "2010-01-01..2024-12-31" } }
+evidence = "Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. The kalenderår releases of nationella-prov-resultat-vartermin (2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024) form this table; the coverage is the union of their periods."
+
+[[statement]]
+kind = "set"
+subject = "release:nationella-prov-resultat-vartermin/r12817"
+fields = { "table" = "nationella-prov-resultat-kalenderar" }
+evidence = "Release '2010' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:nationella-prov-resultat-vartermin/r12797"
+fields = { "table" = "nationella-prov-resultat-kalenderar" }
+evidence = "Release '2011' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:nationella-prov-resultat-vartermin/r4930"
+fields = { "table" = "nationella-prov-resultat-kalenderar" }
+evidence = "Release '2012' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:nationella-prov-resultat-vartermin/r5458"
+fields = { "table" = "nationella-prov-resultat-kalenderar" }
+evidence = "Release '2013' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:nationella-prov-resultat-vartermin/r6071"
+fields = { "table" = "nationella-prov-resultat-kalenderar" }
+evidence = "Release '2014' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:nationella-prov-resultat-vartermin/r12818"
+fields = { "table" = "nationella-prov-resultat-kalenderar" }
+evidence = "Release '2015' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:nationella-prov-resultat-vartermin/r12819"
+fields = { "table" = "nationella-prov-resultat-kalenderar" }
+evidence = "Release '2016' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:nationella-prov-resultat-vartermin/r12820"
+fields = { "table" = "nationella-prov-resultat-kalenderar" }
+evidence = "Release '2017' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:nationella-prov-resultat-vartermin/r12824"
+fields = { "table" = "nationella-prov-resultat-kalenderar" }
+evidence = "Release '2018' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:nationella-prov-resultat-vartermin/r14389"
+fields = { "table" = "nationella-prov-resultat-kalenderar" }
+evidence = "Release '2019' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:nationella-prov-resultat-vartermin/r16520"
+fields = { "table" = "nationella-prov-resultat-kalenderar" }
+evidence = "Release '2020' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:nationella-prov-resultat-vartermin/r18334"
+fields = { "table" = "nationella-prov-resultat-kalenderar" }
+evidence = "Release '2021' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:nationella-prov-resultat-vartermin/r19980"
+fields = { "table" = "nationella-prov-resultat-kalenderar" }
+evidence = "Release '2022' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:nationella-prov-resultat-vartermin/r19983"
+fields = { "table" = "nationella-prov-resultat-kalenderar" }
+evidence = "Release '2023' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:nationella-prov-resultat-vartermin/r19991"
+fields = { "table" = "nationella-prov-resultat-kalenderar" }
+evidence = "Release '2024' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
