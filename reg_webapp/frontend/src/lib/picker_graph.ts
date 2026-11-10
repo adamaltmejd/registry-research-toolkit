@@ -56,6 +56,17 @@ export function variableSpans({
         entry.bindings.some((binding) => binding.variable === variable.fqid),
     );
     const inside = !absent && columnWindowPeriod(column, selection) !== null;
+    // A binding names a variable and a table, not a column name: only when no
+    // name of it on this table is in the database is a committed one unusable
+    // there (the server's `not_in_database`).
+    const unusable =
+      absent &&
+      !!source &&
+      !columns.some(
+        (other) =>
+          other.table === column.table &&
+          inDatabase(other.segments, database).length > 0,
+      );
     const relation = source
       ? periodWindowRelation(
           source.period,
@@ -68,7 +79,7 @@ export function variableSpans({
     // database, in its accessible name.
     const note =
       absent && database
-        ? source
+        ? unusable
           ? `In project, not in ${database.name}.`
           : `Not in ${database.name}.`
         : relation === "disjoint"
@@ -87,11 +98,12 @@ export function variableSpans({
       to: last,
       segments: eras.map((era) => ({ name: null, ...era })),
       years,
-      state: source ? "in" : inside ? "default" : "out",
+      state:
+        source && (!absent || unusable) ? "in" : inside ? "default" : "out",
       selectable: !!project && !source && inside,
       isSelected: inside && selected.has(id),
       staged: inside && selected.has(id) && !source ? "add" : null,
-      blocked: relation === "disjoint" || (absent && !!source),
+      blocked: relation === "disjoint" || unusable,
       accessibleName: `${[
         column.spelling,
         variable.name,
