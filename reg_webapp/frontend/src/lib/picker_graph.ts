@@ -56,17 +56,13 @@ export function variableSpans({
         )
       : null;
     const sourceLabel = sourcePeriodLabel(source?.period);
+    // How a committed column stands to the study window, in its accessible name.
     const note =
-      relation && relation !== "same"
-        ? {
-            text:
-              relation === "disjoint"
-                ? `In project, outside the study years (${sourceLabel}).`
-                : `In project for ${sourceLabel}, which differs from the study years.`,
-            tone:
-              relation === "disjoint" ? ("error" as const) : ("info" as const),
-          }
-        : null;
+      relation === "disjoint"
+        ? `In project, outside the study years (${sourceLabel}).`
+        : relation && relation !== "same"
+          ? `In project for ${sourceLabel}, which differs from the study years.`
+          : null;
     const years = segmentYears(column.segments);
     const id = `${idPrefix}${column.id}`;
     const span: LaneSpanModel = {
@@ -88,7 +84,7 @@ export function variableSpans({
         variable.name,
         names.get(column.table) ?? "Table name unavailable",
         years,
-        note?.text ??
+        note ??
           (source
             ? "in project"
             : inside
