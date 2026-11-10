@@ -7,7 +7,6 @@ import {
   type VariableShow,
 } from "./api";
 import styles from "./CatalogNodeView.module.css";
-import { catalogHref } from "./catalog";
 import { loadRegister, registerSubjectNames } from "./catalog_names";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
 import { Button as ActionButton } from "./ui/Button";
@@ -19,7 +18,12 @@ import { useAsyncResource } from "./use_async_resource";
 import { ValueSetView } from "./ValueSetView";
 import { useSuccession, useVariableCoverage } from "./VariableCoverage";
 import variableStyles from "./VariableView.module.css";
-import { factYears, groupFact, segmentFacts, typeFact } from "./variable_facts";
+import {
+  factYears,
+  groupFact,
+  segmentFacts,
+  typePills,
+} from "./variable_facts";
 import { windowBounds } from "./window_bounds";
 
 /** The curated description, else the provider's wording: once when every
@@ -110,20 +114,9 @@ export function VariableView({
     <article className={styles.page}>
       <Definitions
         kind="variable"
+        pills={typePills(rows, factBounds)}
         title={node.name}
-        memberOf={
-          register
-            ? [
-                {
-                  relation: "Register",
-                  label: register.name,
-                  href: catalogHref(node.register),
-                },
-              ]
-            : []
-        }
         definitions={[
-          ...typeFact(rows, factBounds),
           ...segmentFacts(rows, factBounds),
           ...(node.tags?.length
             ? [

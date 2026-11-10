@@ -61,6 +61,12 @@
   overflow-wrap: anywhere;
 }
 
+/* The list's heading, over the names. */
+.label {
+  grid-column: 2;
+  margin: 0;
+}
+
 .bar {
   grid-column: 3;
 }
@@ -74,6 +80,13 @@
   .bar {
     grid-row: 1;
     grid-column: 2;
+  }
+  /* The heading over the axis, the axis over the bars. */
+  .axisRow .bar {
+    grid-row: 2;
+  }
+  .label {
+    grid-row: 1;
   }
   .dot {
     grid-row: 2;

@@ -4,7 +4,6 @@ import {
   type KeyboardEvent,
   type ReactNode,
   useEffect,
-  useId,
   useRef,
 } from "react";
 import {
@@ -55,6 +54,9 @@ interface Props {
   /** Whose items these are (a register's or a group's name): the header reads
    * "<label> in <subject>", truncated, with the whole of it as hover text. */
   subject?: string;
+  /** The page the header links to (#2324): the subject's, linked from its
+   * name, or the whole list's (the classifications), linked from the label. */
+  href?: string;
   /** Whose list it is (the open register's FQID): a change re-roots it. */
   root?: string;
   /** Null while the items load. */
@@ -123,6 +125,7 @@ function revealAfterLayout(row: HTMLElement): void {
 export function ColumnList({
   label,
   subject,
+  href,
   root,
   sections,
   size,
@@ -134,7 +137,9 @@ export function ColumnList({
   error,
   className,
 }: Props) {
-  const labelId = useId();
+  // The list's and the column's name: plain text, not the header, which holds
+  // a link (#2324).
+  const name = subject === undefined ? label : `${label} in ${subject}`;
   const boxRef = useRef<HTMLDivElement>(null);
   const barRef = useRef<HTMLSpanElement>(null);
   useSelectionBar(boxRef, barRef);
@@ -181,7 +186,8 @@ export function ColumnList({
   };
   function onBlurCapture(event: FocusEvent): void {
     const to = event.relatedTarget;
-    if (!virtual || (to instanceof Node && event.currentTarget.contains(to)))
+    // Shift+Tab to the header's link leaves the list too.
+    if (!virtual || (to instanceof Node && boxRef.current?.contains(to)))
       return;
     // This capture handler runs before RAC's own blur: unfocus the list
     // first, or RAC focuses the new focused key's row and pulls focus back.
@@ -279,9 +285,11 @@ export function ColumnList({
     const row = event.target;
     if (virtual && row instanceof HTMLElement) revealAfterLayout(row);
     const from = event.relatedTarget;
+    // Tab from the header's link (#2324) arrives too: only a move within the
+    // scroll box is not an arrival.
     if (
       pressing.current ||
-      (from instanceof Node && event.currentTarget.contains(from))
+      (from instanceof Node && boxRef.current?.contains(from))
     )
       return;
     arriving.current = true;
@@ -378,7 +386,7 @@ export function ColumnList({
   const list = sections !== null && (
     <ListBox
       ref={onListRef}
-      aria-labelledby={labelId}
+      aria-label={name}
       className={({ state }) => {
         listState.current = state;
         return virtual ? `${styles.list} ${styles.virtual}` : styles.list;
@@ -426,7 +434,7 @@ export function ColumnList({
   return (
     <nav
       className={`${styles.column} ${className ?? ""}`}
-      aria-labelledby={labelId}
+      aria-label={name}
       data-browse-column="variables"
       onKeyDownCapture={onKeyDownCapture}
       // RAC selects inside the keydown, so the key's release ends the walk:
@@ -443,11 +451,23 @@ export function ColumnList({
     >
       <div className={styles.header}>
         <span
-          id={labelId}
           className={`micro-label ${styles.label}`}
-          title={subject === undefined ? undefined : `${label} in ${subject}`}
+          title={subject === undefined ? undefined : name}
         >
-          {subject === undefined ? label : `${label} in ${subject}`}
+          {href === undefined ? (
+            name
+          ) : subject === undefined ? (
+            <a className="link" href={href}>
+              {label}
+            </a>
+          ) : (
+            <>
+              {label} in{" "}
+              <a className="link" href={href}>
+                {subject}
+              </a>
+            </>
+          )}
         </span>
       </div>
       {/* The scroll box: the list and the column's one selection bar. */}

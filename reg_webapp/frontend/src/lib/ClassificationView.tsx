@@ -139,7 +139,6 @@ export function ClassificationView({
   return (
     <article className={styles.page}>
       <Definitions
-        kind="classification"
         title={node.name}
         definitions={[
           ...(node.publisher

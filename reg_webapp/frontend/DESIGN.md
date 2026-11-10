@@ -60,18 +60,23 @@ colors:
   info-bg: "#e6eef7"
   ok: "#1e7a3c"
   ok-bg: "#e3f3e8"
-  # Categorical node type — fill/border hues for TypeTag in MIXED lists only;
+  # Categorical — fill/border hues for the Pill: a node kind in MIXED lists and
+  # on a page's pill row, plus an identifier and every other column type;
   # label text uses the `-ink` stop (the hue 85% toward black).
   cat-reg: "#1f7a7a"
   cat-var: "#4b4b9e"
   cat-code: "#9a6b1a"
   cat-class: "#7a3f8c"
   cat-group: "#2f6b3f"
+  cat-id: "#8a4b2c"
+  cat-type: "#4e6070"
   cat-reg-ink: "#1a6868"
   cat-var-ink: "#404086"
   cat-code-ink: "#835b16"
   cat-class-ink: "#683677"
   cat-group-ink: "#285b36"
+  cat-id-ink: "#754025"
+  cat-type-ink: "#42525f"
   # Data-viz — marks of the time components (Timeline, VariableRow, LaneGraph).
   viz-span: "{colors.white}"
   viz-span-out: "{colors.border}"

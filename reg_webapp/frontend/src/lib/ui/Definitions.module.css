@@ -7,9 +7,11 @@
   margin-bottom: var(--space-5);
 }
 
-/* The kind mark over the title: the type's tag with its glyph. */
-.kind {
+/* The pill row over the title: the kind, then a variable's Type pills. */
+.pills {
   display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
 }
 
 .title {
@@ -19,29 +21,6 @@
   font-weight: var(--display-weight);
   letter-spacing: var(--h1-tracking);
   line-height: 1.1;
-}
-
-.fqid {
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-  font-size: var(--text-sm);
-  overflow-wrap: anywhere;
-}
-
-/* One link per relation, each its own item: no separator glyph between them. */
-.memberOf {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-1) var(--space-4);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  color: var(--text-muted);
-  font-size: var(--text-sm);
-}
-/* The link itself is the global plain link; the member-of line sets it at 600. */
-.memberOf a {
-  font-weight: var(--heading-weight);
 }
 
 .description {

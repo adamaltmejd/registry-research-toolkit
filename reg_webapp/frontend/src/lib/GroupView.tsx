@@ -3,7 +3,6 @@ import { Button as AriaButton } from "react-aria-components";
 import type { CatalogSegment, Context, OrderCheck, SetShow } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { CodeTimeline } from "./CodeTimeline";
-import { catalogHref } from "./catalog";
 import { loadRegister, registerSubjectNames } from "./catalog_names";
 import groupStyles from "./GroupView.module.css";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
@@ -196,17 +195,6 @@ export function GroupView({
       <Definitions
         kind="group"
         title={node.name}
-        memberOf={
-          register
-            ? [
-                {
-                  relation: "Register",
-                  label: register.name,
-                  href: catalogHref(node.register),
-                },
-              ]
-            : []
-        }
         description={node.description}
         facets={axes.flatMap((axis) =>
           !axis.varying && axis.value

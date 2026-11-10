@@ -6,7 +6,6 @@ import { sharedShow } from "./catalog_names";
 import { GroupView } from "./GroupView";
 import { ProviderView } from "./ProviderView";
 import { RegisterView } from "./RegisterView";
-import { TableView } from "./TableView";
 import { Skeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
 import { useAsyncResource } from "./use_async_resource";
@@ -24,12 +23,16 @@ export function CatalogNodeView({
   // A grouped variable has no page of its own: its address shows its
   // group's page with its lane in focus (a variable is in at most one group).
   // A classification version's address likewise shows its family's page with
-  // that version in focus (Operator Q4, #2252).
+  // that version in focus (Operator Q4, #2252). A table has no page either:
+  // its address shows its register's page with its chip on (#2316).
   const resource = useAsyncResource(fqidPath, async (signal) => {
     const node = await sharedShow(fqidPath, signal);
-    if (node.kind === "class_version")
+    if (node.kind === "class_version" || node.kind === "table")
       return {
-        node: await sharedShow(node.family.fqid, signal),
+        node: await sharedShow(
+          node.kind === "table" ? node.register : node.family.fqid,
+          signal,
+        ),
         focus: node.fqid,
       };
     if (node.kind !== "variable" || !node.sets?.length)
@@ -76,9 +79,14 @@ export function CatalogNodeView({
     case "provider":
       return <ProviderView node={node} context={context} />;
     case "register":
-      return <RegisterView key={node.fqid} node={node} context={context} />;
-    case "table":
-      return <TableView node={node} context={context} />;
+      return (
+        <RegisterView
+          key={`${node.fqid}:${focus ?? ""}`}
+          node={node}
+          focus={focus}
+          context={context}
+        />
+      );
     case "variable":
       return (
         <VariableView

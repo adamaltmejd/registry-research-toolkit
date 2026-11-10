@@ -45,7 +45,10 @@ export function ProviderView({
   return (
     <article className={styles.page}>
       <Definitions title={node.name} />
-      <Panel title="Registers" flush={registers.length > 0}>
+      <Panel
+        title={registers.length === 0 ? "Registers" : undefined}
+        flush={registers.length > 0}
+      >
         {registers.length === 0 ? (
           <EmptyState title="This provider has no registers in the catalog." />
         ) : (

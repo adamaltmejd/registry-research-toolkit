@@ -1,15 +1,6 @@
 import type { ReactNode } from "react";
 import styles from "./Definitions.module.css";
-import { TypeTag } from "./TypeTag";
-
-/** A link in the member-of line: what the subject belongs to. */
-interface MemberOf {
-  /** What the link is to the subject, in sentence case: "Member of",
-   * "Family". */
-  relation: string;
-  label: string;
-  href: string;
-}
+import { type NodeType, TypeTag } from "./TypeTag";
 
 /** One fact: a `label`-level term over prose, or a value the caller renders
  * (a mono identifier, a link). */
@@ -19,15 +10,13 @@ export interface Definition {
 }
 
 interface Props {
-  /** The page's kind mark over its title. Registers and variables have glyphs;
-   * tables, groups and classifications use their label without a glyph. */
-  kind?: "register" | "table" | "variable" | "group" | "classification";
+  /** The page's kind pill, with its glyph, first in the pill row. A
+   * classification's page has none (maintainer, #2317). */
+  kind?: Extract<NodeType, "register" | "variable" | "group">;
+  /** More pills after the kind's on the same row: a variable's Type pills. */
+  pills?: ReactNode;
   title: string;
-  /** The subject's machine identifier under the title, in mono; omitted where
-   * the breadcrumb already ends in it. */
-  fqid?: string;
-  memberOf?: readonly MemberOf[];
-  /** Prose under the title block: a group's description. */
+  /** Prose under the title block: a register's or a group's description. */
   description?: string;
   /** The subject's facets as a labelled row. */
   facets?: readonly { label: string; value: string }[];
@@ -36,37 +25,28 @@ interface Props {
 
 /**
  * The head of a detail pane (DESIGN.md → Detail pane; the Definitions mockup):
- * the `h1`, a member-of line whose links carry the accent underline, the facets
- * as a labelled row, then a definition list of `label` terms and `body` values.
- * The breadcrumb above it is the shell's.
+ * one row of pills (the kind, then the caller's), the `h1`, the facets as a
+ * labelled row, then a definition list of `label` terms and `body` values. The
+ * breadcrumb above it is the shell's and names what the page belongs to, so
+ * there is no member-of line (#2317).
  */
 export function Definitions({
   kind,
+  pills,
   title,
-  fqid,
-  memberOf = [],
   description,
   facets = [],
   definitions = [],
 }: Props) {
   return (
     <header className={styles.head}>
-      {kind && (
-        <span className={styles.kind}>
-          <TypeTag type={kind} glyph />
-        </span>
+      {(kind || pills) && (
+        <div className={styles.pills}>
+          {kind && <TypeTag type={kind} glyph />}
+          {pills}
+        </div>
       )}
       <h1 className={styles.title}>{title}</h1>
-      {fqid && <code className={styles.fqid}>{fqid}</code>}
-      {memberOf.length > 0 && (
-        <ul className={styles.memberOf}>
-          {memberOf.map((member) => (
-            <li key={member.href}>
-              {member.relation} <a href={member.href}>{member.label}</a>
-            </li>
-          ))}
-        </ul>
-      )}
       {description && <p className={styles.description}>{description}</p>}
       {facets.length > 0 && (
         <dl className={styles.facets}>
