@@ -3,13 +3,12 @@ import styles from "./CatalogNodeView.module.css";
 import { ClassificationsView } from "./ClassificationsView";
 import { ClassificationView } from "./ClassificationView";
 import { sharedShow } from "./catalog_names";
-import { GroupView } from "./GroupView";
 import { ProviderView } from "./ProviderView";
 import { RegisterView } from "./RegisterView";
 import { Skeleton } from "./ui/Skeleton";
 import { StatusRow } from "./ui/StatusRow";
 import { useAsyncResource } from "./use_async_resource";
-import { VariableView } from "./VariableView";
+import { GroupView, VariableView } from "./VariableView";
 
 export function CatalogNodeView({
   fqidPath,

@@ -7,36 +7,53 @@ import {
 } from "react-aria-components";
 import type { CatalogSegment, ValueSetRef } from "./api";
 import styles from "./CatalogNodeView.module.css";
-import { catalogHref } from "./catalog";
+import { catalogHref, SMALL_VALUE_SET } from "./catalog";
 import { catalogPeriodRuns } from "./catalog_period";
+import { ColumnChip } from "./ui/ColumnChip";
 import { Panel } from "./ui/Panel";
 import { TreeChevron } from "./ui/TreeChevron";
 import { ValueSetCodes } from "./ValueSetCodes";
 import valueStyles from "./ValueSetView.module.css";
 
-/** The segments are already ordered by the API; share one code read per distinct hash. */
+/** Where a value set is used: one column of one table, over its periods. */
+interface Use {
+  table: string;
+  column: string;
+  periods: CatalogSegment["period"][];
+}
+
+/** The value sets of a variable's or a group's columns (DESIGN.md → Detail
+ * pane): one entry per distinct hash, in the API's order, each naming the
+ * tables and columns that use it. A set of at most `SMALL_VALUE_SET` codes
+ * opens at once; a larger one reads its codes when opened (#2320). */
 export function ValueSetView({
   segments,
   names,
 }: {
-  segments: CatalogSegment[];
+  segments: readonly CatalogSegment[];
   names: ReadonlyMap<string, string>;
 }) {
   const sets = new Map<
     string,
-    { valueSet: ValueSetRef; tables: Map<string, CatalogSegment["period"][]> }
+    { valueSet: ValueSetRef; uses: Map<string, Use> }
   >();
   for (const segment of segments) {
     if (!segment.value_set) continue;
     const { hash } = segment.value_set;
     let entry = sets.get(hash);
     if (!entry) {
-      entry = { valueSet: segment.value_set, tables: new Map() };
+      entry = { valueSet: segment.value_set, uses: new Map() };
       sets.set(hash, entry);
     }
-    const periods = entry.tables.get(segment.table) ?? [];
-    periods.push(segment.period);
-    entry.tables.set(segment.table, periods);
+    // A group's members can share a table: the column tells them apart.
+    const key = JSON.stringify([segment.table, segment.column]);
+    const use = entry.uses.get(key) ?? {
+      table: segment.table,
+      column: segment.column,
+      periods: [],
+    };
+    use.periods.push(segment.period);
+    entry.uses.set(key, use);
   }
   if (!sets.size) return null;
   return (
@@ -50,27 +67,31 @@ export function ValueSetView({
 
 function ValueSetEntry({
   valueSet,
-  tables,
+  uses,
   names,
 }: {
   valueSet: ValueSetRef;
-  tables: Map<string, CatalogSegment["period"][]>;
+  uses: Map<string, Use>;
   names: ReadonlyMap<string, string>;
 }) {
-  const [requested, setRequested] = useState(false);
+  const small = valueSet.n_items <= SMALL_VALUE_SET;
+  const [requested, setRequested] = useState(small);
   const firstName = valueSet.names[0] ?? "Unnamed value set";
   const more = valueSet.names.length - 1;
   const label = `${firstName}${more > 0 ? ` and ${more} more` : ""}`;
-  const coverage = [...tables]
-    .map(([table, periods]) => {
-      const name = names.get(table) ?? "Table name unavailable";
-      const years = catalogPeriodRuns(periods);
-      return years ? `${name} ${years}` : name;
-    })
+  const tableName = (table: string) =>
+    names.get(table) ?? "Table name unavailable";
+  const coverage = [...uses.values()]
+    .map(({ table, column, periods }) =>
+      [tableName(table), column, catalogPeriodRuns(periods)]
+        .filter(Boolean)
+        .join(" "),
+    )
     .join("; ");
   return (
     <Disclosure
       className={styles.disclosure}
+      defaultExpanded={small}
       onExpandedChange={(expanded) => {
         if (expanded) setRequested(true);
       }}
@@ -94,12 +115,15 @@ function ValueSetEntry({
             </Button>
           </Heading>
           <ul className={`${styles.plainList} ${valueStyles.coverage}`}>
-            {[...tables].map(([table, periods]) => (
-              <li key={table}>
+            {[...uses].map(([key, { table, column, periods }]) => (
+              <li key={key}>
                 <a className="link" href={catalogHref(table)}>
-                  {names.get(table) ?? "Table name unavailable"}
-                </a>
-                <TableYears periods={periods} />
+                  {tableName(table)}
+                </a>{" "}
+                <ColumnChip
+                  name={column}
+                  years={catalogPeriodRuns(periods) || undefined}
+                />
               </li>
             ))}
           </ul>
@@ -123,17 +147,5 @@ function ValueSetEntry({
         </>
       )}
     </Disclosure>
-  );
-}
-
-function TableYears({ periods }: { periods: CatalogSegment["period"][] }) {
-  const years = catalogPeriodRuns(periods);
-  return (
-    years && (
-      <>
-        {" "}
-        <code>{years}</code>
-      </>
-    )
   );
 }

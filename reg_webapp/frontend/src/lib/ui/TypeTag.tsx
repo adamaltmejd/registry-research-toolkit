@@ -15,13 +15,22 @@ const TYPES = {
 export type NodeType = keyof typeof TYPES;
 
 /** The kind glyphs on a page's pill row, drawn in the pill's ink: a register
- * is a table, a variable one column of it, a group several columns.
+ * is a grid, a table one sheet of it, a variable one column, a group several
+ * columns.
  * Decorative: the word beside it carries the type. */
 const GLYPHS: Partial<Record<NodeType, ReactNode>> = {
   register: (
     <>
       <rect x="1.5" y="2.5" width="11" height="9" rx="1" />
       <path d="M1.5 5.5h11M1.5 8.5h11M5.5 5.5v6M9.5 5.5v6" />
+    </>
+  ),
+  // One of a register's tables: a sheet with its header row filled.
+  table: (
+    <>
+      <rect x="1.5" y="2.5" width="11" height="9" rx="1" />
+      <rect x="1.5" y="2.5" width="11" height="3" fill="currentColor" />
+      <path d="M1.5 8.5h11" />
     </>
   ),
   variable: (
@@ -42,8 +51,9 @@ const GLYPHS: Partial<Record<NodeType, ReactNode>> = {
 /** A node's kind (DESIGN.md → Components → Pill): the word is fixed per type,
  * so a caller passes only the type. In a mixed list (the palette, mentions, a
  * project's sources) without its glyph; with it (`glyph`) as the kind pill on
- * a register's, variable's or group's page. Never in a homogeneous list and
- * never for status or selection. */
+ * a register's, variable's or group's page, and before each table lane of a
+ * variable page's drawing (#2319). Never in a homogeneous list and never for
+ * status or selection. */
 export function TypeTag({
   type,
   glyph = false,

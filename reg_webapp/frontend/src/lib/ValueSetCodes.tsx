@@ -16,6 +16,7 @@ import {
   type ValuesSubject,
 } from "./api";
 import pageStyles from "./CatalogNodeView.module.css";
+import { SMALL_VALUE_SET } from "./catalog";
 import { FilterInput } from "./FilterInput";
 import { Button } from "./ui/Button";
 import { EmptyState } from "./ui/EmptyState";
@@ -25,12 +26,15 @@ import { TreeChevron } from "./ui/TreeChevron";
 import { useAsyncResource } from "./use_async_resource";
 import styles from "./ValueSetCodes.module.css";
 
+/** Codes per page past `SMALL_VALUE_SET` (maintainer, 2026-11-10, #2320). */
+const PAGE_SIZE = 50;
+
 interface Props {
   subject: ValuesSubject;
   valueSet: ValueSetRef;
 }
 
-/** Shared by an inline value set and a classification version. */
+/** Shared by a variable's or group's value set and a classification version. */
 export function ValueSetCodes({ subject, valueSet }: Props) {
   const [filter, setFilter] = useState("");
   const [query, setQuery] = useState("");
@@ -45,18 +49,20 @@ export function ValueSetCodes({ subject, valueSet }: Props) {
   }, [filter]);
   return (
     <div className={styles.panel}>
-      <FilterInput
-        value={filter}
-        onChange={setFilter}
-        total={valueSet.n_items}
-        shown={
-          filter.trim() === query && matches?.query === query
-            ? matches.total
-            : null
-        }
-        label="Search codes"
-        placeholder="Search codes…"
-      />
+      {valueSet.n_items > SMALL_VALUE_SET && (
+        <FilterInput
+          value={filter}
+          onChange={setFilter}
+          total={valueSet.n_items}
+          shown={
+            filter.trim() === query && matches?.query === query
+              ? matches.total
+              : null
+          }
+          label="Search codes"
+          placeholder="Search codes…"
+        />
+      )}
       {valueSet.hierarchical ? (
         <>
           {/* Keep the reader's expanded branches while search shows flat matches. */}
@@ -254,7 +260,7 @@ function CodePage({
       const page = await getValues(
         subject,
         {
-          limit: 200,
+          limit: PAGE_SIZE,
           q: query || undefined,
           parent,
           level: hierarchical && !query && parent === undefined ? 1 : undefined,
