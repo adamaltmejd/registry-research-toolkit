@@ -7,15 +7,10 @@ import {
 } from "./add_columns";
 import type { Graph, VariableShow } from "./api";
 import { catalogHref } from "./catalog";
+import { sourcePeriodLabel } from "./catalog_period";
 import type { LaneEdgeModel, LaneModel, LaneSpanModel } from "./LaneGraph";
-import {
-  coverageMarks,
-  periodLabel,
-  periodWindowRelation,
-  yearWindowLabel,
-} from "./period";
+import { coverageMarks, periodWindowRelation, yearWindowLabel } from "./period";
 import type { ProjectData, ProjectStudyWindow } from "./project_data";
-import { sourcePeriodYears } from "./reg_core";
 import { columnYearRuns, studyWindow } from "./study_window";
 
 export function variableSpans({
@@ -64,12 +59,7 @@ export function variableSpans({
           eras.map((era) => [`${era.from}-01-01`, `${era.to}-12-31`]),
         )
       : null;
-    const sourceYears = sourcePeriodYears(source?.period);
-    const sourceLabel = sourceYears
-      ? sourceYears
-          .map(([from, to]) => yearWindowLabel({ from, to }))
-          .join(", ")
-      : periodLabel(source?.period);
+    const sourceLabel = sourcePeriodLabel(source?.period);
     const note =
       relation && relation !== "same"
         ? {

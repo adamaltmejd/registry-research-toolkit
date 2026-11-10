@@ -109,6 +109,7 @@ export function SourceCard({
         }
       : null;
   const unbounded = source.period === "_default" || table?.timeless;
+  const periodYears = unbounded ? null : sourcePeriodLabel(source.period);
   const graph =
     !loading && !loadError && !!table && (hull !== null || unbounded);
   const sourcePath = `/sources/${sourceIndex}`;
@@ -327,14 +328,11 @@ export function SourceCard({
             {tableName}
           </a>
         )}
-        <span>
-          Years:{" "}
-          {unbounded ? (
-            "Unbounded"
-          ) : (
-            <code>{sourcePeriodLabel(source.period)}</code>
-          )}
-        </span>
+        {periodYears && (
+          <span>
+            Years: <code>{periodYears}</code>
+          </span>
+        )}
       </p>
       {loading && (
         <div aria-busy="true">

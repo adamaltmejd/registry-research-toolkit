@@ -173,7 +173,7 @@ export function DeliverySummary({
                       years={
                         catalogPeriodRuns(column.periods) === years
                           ? undefined
-                          : catalogPeriodRuns(column.periods)
+                          : (catalogPeriodRuns(column.periods) ?? undefined)
                       }
                     />
                     {variableLink(column.variable)}
@@ -215,7 +215,7 @@ export function DeliverySummary({
                           years={
                             catalogPeriodRuns(column.periods) === years
                               ? undefined
-                              : catalogPeriodRuns(column.periods)
+                              : (catalogPeriodRuns(column.periods) ?? undefined)
                           }
                         />
                         {variableLink(column.variable)}

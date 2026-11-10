@@ -1,5 +1,6 @@
 import type { CatalogPeriod } from "./api";
-import { renderIntervals, sourcePeriodIntervals } from "./reg_core";
+import { yearWindowLabel } from "./period";
+import { sourcePeriodIntervals } from "./reg_core";
 
 /** Catalog periods are half-open; reg-core renders inclusive date intervals. */
 export function catalogLastDate(period: CatalogPeriod): string | null {
@@ -9,66 +10,85 @@ export function catalogLastDate(period: CatalogPeriod): string | null {
   return last.toISOString().slice(0, 10);
 }
 
-/** A reg-core period spelling for reading: each range with an en dash, the
- * segments comma-spaced (`2005–2008, 2012`). Presentation only; the wire with
- * `..` stays reg-core's. */
-export function periodText(wire: string): string {
-  return wire
-    .split(",")
-    .map((segment) => segment.replace("..", "–"))
+/** Inclusive ISO days, null for an open end. */
+type Days = readonly [string | null, string | null];
+
+/** Days as a reader sees them (DESIGN.md → Time): years, never a date or a
+ * period token. Whole school years (1 July to 30 June) read as school years
+ * (`1999/2000`, `1984/1985–2023/2024`); anything else as the calendar years
+ * its first and last days fall in, so a 31 December snapshot is its year
+ * (`1968–2025`). Spans join where they meet at that grain. Null when a span
+ * has no dated bound: there are no years to state. This is display only;
+ * `renderIntervals` writes the project file. */
+function daysLabel(intervals: readonly Days[]): string | null {
+  if (
+    intervals.length === 0 ||
+    intervals.some(([first, last]) => first === null && last === null)
+  )
+    return null;
+  const year = (day: string | null) =>
+    day === null ? null : Number(day.slice(0, 4));
+  const school = intervals.every(
+    ([first, last]) => first?.endsWith("-07-01") && last?.endsWith("-06-30"),
+  );
+  // A school year is numbered by the year it starts in.
+  const spans = intervals
+    .map(([first, last]) => ({
+      from: year(first),
+      to: school ? (year(last) as number) - 1 : year(last),
+    }))
+    .sort((a, b) => (a.from ?? -Infinity) - (b.from ?? -Infinity));
+  const runs: { from: number | null; to: number | null }[] = [];
+  for (const span of spans) {
+    const run = runs.at(-1);
+    if (
+      run &&
+      (run.to === null || span.from === null || span.from <= run.to + 1)
+    )
+      run.to =
+        run.to === null || span.to === null ? null : Math.max(run.to, span.to);
+    else runs.push({ ...span });
+  }
+  const name = (y: number) => (school ? `${y}/${y + 1}` : String(y));
+  return runs
+    .map(({ from, to }) =>
+      from === null
+        ? `Through ${name(to as number)}`
+        : to === null
+          ? `From ${name(from)}`
+          : school
+            ? from === to
+              ? name(from)
+              : `${name(from)}–${name(to)}`
+            : yearWindowLabel({ from, to }),
+    )
     .join(", ");
 }
 
-export function catalogPeriodLabel(period: CatalogPeriod): string {
-  if (period.start === null && period.end === null) return "Unbounded";
-  const end = catalogLastDate(period);
-  if (end === null)
-    return `From ${period.start?.endsWith("-01-01") ? period.start.slice(0, 4) : period.start}`;
-  if (period.start === null)
-    return `Through ${end.endsWith("-12-31") ? end.slice(0, 4) : end}`;
-  return periodText(renderIntervals([[period.start, end]]));
+const catalogDays = (period: CatalogPeriod): Days => [
+  period.start,
+  catalogLastDate(period),
+];
+
+/** A catalog period's years, or null for one with no dated bound. */
+export function catalogPeriodLabel(period: CatalogPeriod): string | null {
+  return daysLabel([catalogDays(period)]);
 }
 
-/** Project periods use the same inclusive renderer as catalog periods. */
+/** A project source period's years, or null when it states none (unset,
+ * malformed, or the year-independent `_default`). */
 export function sourcePeriodLabel(period: unknown): string | null {
   const parsed = sourcePeriodIntervals(period);
-  if ("error" in parsed) return null;
-  return parsed.intervals === null
-    ? "Unbounded"
-    : periodText(renderIntervals(parsed.intervals));
+  return "error" in parsed || parsed.intervals === null
+    ? null
+    : daysLabel(parsed.intervals);
 }
 
-/** Coalesce half-open segment periods before displaying coverage runs. */
-export function catalogPeriodRuns(periods: readonly CatalogPeriod[]): string {
-  const sorted = periods
-    .map((period) => ({ ...period }))
-    .sort((a, b) =>
-      a.start === b.start
-        ? 0
-        : a.start === null
-          ? -1
-          : b.start === null
-            ? 1
-            : a.start < b.start
-              ? -1
-              : 1,
-    );
-  const runs: CatalogPeriod[] = [];
-  for (const period of sorted) {
-    const last = runs.at(-1);
-    if (
-      last &&
-      (last.end === null || period.start === null || period.start <= last.end)
-    ) {
-      last.end =
-        last.end === null || period.end === null
-          ? null
-          : last.end > period.end
-            ? last.end
-            : period.end;
-    } else runs.push(period);
-  }
-  return runs.map(catalogPeriodLabel).join(", ");
+/** The years of several catalog periods, joined where they meet. */
+export function catalogPeriodRuns(
+  periods: readonly CatalogPeriod[],
+): string | null {
+  return daysLabel(periods.map(catalogDays));
 }
 
 /** `requested` less `ordered`: the years a clip cannot deliver. Half-open ISO

@@ -62,10 +62,11 @@ function ValueSetEntry({
   const more = valueSet.names.length - 1;
   const label = `${firstName}${more > 0 ? ` and ${more} more` : ""}`;
   const coverage = [...tables]
-    .map(
-      ([table, periods]) =>
-        `${names.get(table) ?? "Table name unavailable"} ${catalogPeriodRuns(periods)}`,
-    )
+    .map(([table, periods]) => {
+      const name = names.get(table) ?? "Table name unavailable";
+      const years = catalogPeriodRuns(periods);
+      return years ? `${name} ${years}` : name;
+    })
     .join("; ");
   return (
     <Disclosure
@@ -97,8 +98,8 @@ function ValueSetEntry({
               <li key={table}>
                 <a className="link" href={catalogHref(table)}>
                   {names.get(table) ?? "Table name unavailable"}
-                </a>{" "}
-                <code>{catalogPeriodRuns(periods)}</code>
+                </a>
+                <TableYears periods={periods} />
               </li>
             ))}
           </ul>
@@ -122,5 +123,17 @@ function ValueSetEntry({
         </>
       )}
     </Disclosure>
+  );
+}
+
+function TableYears({ periods }: { periods: CatalogSegment["period"][] }) {
+  const years = catalogPeriodRuns(periods);
+  return (
+    years && (
+      <>
+        {" "}
+        <code>{years}</code>
+      </>
+    )
   );
 }

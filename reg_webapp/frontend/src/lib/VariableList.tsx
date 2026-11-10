@@ -130,7 +130,7 @@ function variableItems(
     name: row.name,
     label:
       (nameCounts.get(row.name) ?? 0) > 1
-        ? `${row.name}, ${catalogPeriodLabel(row.period)}`
+        ? [row.name, catalogPeriodLabel(row.period)].filter(Boolean).join(", ")
         : undefined,
     href: catalogHref(row.fqid),
     inProject: 0,
