@@ -7,7 +7,7 @@ import {
 } from "./add_columns";
 import type { Graph, VariableShow } from "./api";
 import { catalogHref } from "./catalog";
-import { sourcePeriodLabel } from "./catalog_period";
+import { segmentYears, sourcePeriodLabel } from "./catalog_period";
 import type { LaneEdgeModel, LaneModel, LaneSpanModel } from "./LaneGraph";
 import { coverageMarks, periodWindowRelation, yearWindowLabel } from "./period";
 import type { ProjectData, ProjectStudyWindow } from "./project_data";
@@ -71,7 +71,7 @@ export function variableSpans({
               relation === "disjoint" ? ("error" as const) : ("info" as const),
           }
         : null;
-    const years = eras.map(yearWindowLabel).join(", ");
+    const years = segmentYears(column.segments);
     // A segment that states no coding (an undocumented held year) is unknown, not
     // a change: compare only segments that state some.
     const coding = column.segments

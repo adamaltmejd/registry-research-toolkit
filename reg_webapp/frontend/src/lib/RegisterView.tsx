@@ -3,10 +3,15 @@ import type { Context, RegisterShow } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { catalogHref, svCollator } from "./catalog";
 import { registerSubjectNames } from "./catalog_names";
-import { catalogPeriodLabel } from "./catalog_period";
+import { catalogPeriodLabel, segmentYears } from "./catalog_period";
 import { dataAxis } from "./period";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
-import { datedYearRuns, studyWindow, variableYearRuns } from "./study_window";
+import {
+  datedYearRuns,
+  studyWindow,
+  variablePeriods,
+  variableYearRuns,
+} from "./study_window";
 import { Definitions } from "./ui/Definitions";
 import { EmptyState } from "./ui/EmptyState";
 import { FilterChip } from "./ui/FilterChip";
@@ -131,6 +136,9 @@ export function RegisterView({
                       href={catalogHref(variable.fqid)}
                       inProject={bound.has(variable.fqid)}
                       coverage={coverage}
+                      years={segmentYears(
+                        variablePeriods(variable, node.tables),
+                      )}
                       axis={axis}
                       window={study ? [study.from, study.to] : null}
                     />

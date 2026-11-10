@@ -638,9 +638,16 @@ Time is the axis every relation is drawn on.
   whole school years (1 July to 30 June) read as school years, `1999/2000` for one and
   `1984/1985–2023/2024` for a range (maintainer, #2315, dogfood 2026-11-05); anything
   else reads as the calendar years its first and last days fall in, so a 31 December
-  snapshot is its year (`1968–2025`, not `1968-12-31–2025`; #2315, 2026-11-06), and a
-  month, quarter or term is its year (proposed by the implementer). Stretches that meet
-  at that grain read as one range (yearly snapshots `2010–2020`). A period with no dated
+  snapshot is its year (`1968–2025`, not `1968-12-31–2025`; #2315, 2026-11-06). Stretches
+  that meet at that grain read as one range (yearly snapshots `2010–2020`). A gap the
+  server reports inside a year reads as that year too; a gap no whole year fills is the
+  server's to stop reporting (maintainer, PR #2389, 2026-11-10). Text that states
+  delivered years (a list row's, a lane's, a fact's) is read from the catalog periods,
+  not from the drawing's year cells, so a school-year register reads `1972/1973–2023/2024`
+  beside its bar (maintainer, PR #2389, 2026-11-10: fold). A source period on `/project`
+  that the thumbs cannot write (a term, quarter, month or day, hand-written in the file)
+  reads exactly, in words: `autumn 2019`, `spring 2020`, `2019 Q3`, `February 2020`,
+  `15 October 2019` (maintainer, PR #2389, 2026-11-10). A period with no dated
   bound (a year-independent classification version, a timeless table or source) has no
   years text: a timeline draws it as an empty box and a list leaves its years out (#2323:
   "an unbounded version is an empty box in the timeline, with nothing on the list"); there

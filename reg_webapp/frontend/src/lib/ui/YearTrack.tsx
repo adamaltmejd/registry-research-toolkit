@@ -13,6 +13,7 @@ export type YearSpan = readonly [number, number];
  */
 export function YearTrack({
   coverage,
+  years: delivered,
   axis,
   window,
   inProject = false,
@@ -20,6 +21,9 @@ export function YearTrack({
   /** The years delivered, merged and ordered; empty draws a bare track. An
    * open end is drawn to the axis but said as "from" or "through". */
   coverage: readonly YearRun[];
+  /** The delivered years in words (`segmentYears`): the cells cannot say a
+   * school year. */
+  years: string;
   /** The pane's axis, shared by every row. */
   axis: YearSpan;
   /** The study window, as a block on the track; null draws none. */
@@ -42,7 +46,9 @@ export function YearTrack({
   const years =
     coverage.length === 0
       ? "No dated delivery"
-      : `Delivered ${coverage.map(deliveredText).join(", ")}`;
+      : delivered
+        ? `Delivered ${delivered.replace(/\b(From|Through)\b/g, (bound) => bound.toLowerCase())}`
+        : "Delivered in every year";
   return (
     // Decorative: the years are read out beside it for assistive tech.
     <span
@@ -62,15 +68,6 @@ export function YearTrack({
       <span className="visually-hidden">{years}.</span>
     </span>
   );
-}
-
-/** One run in words. An open end is the catalog's bound, not a delivered
- * year, so it is not named (the page's period says "From 1952" too). */
-function deliveredText({ from, to, openStart, openEnd }: YearRun): string {
-  if (openStart && openEnd) return "in every year";
-  if (openEnd) return `from ${from}`;
-  if (openStart) return `through ${to}`;
-  return from === to ? `${from}` : `${from}–${to}`;
 }
 
 /**

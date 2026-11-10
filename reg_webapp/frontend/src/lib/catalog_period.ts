@@ -72,13 +72,78 @@ export function catalogPeriodLabel(period: CatalogPeriod): string | null {
   return daysLabel([catalogDays(period)]);
 }
 
-/** A project source period's years, or null when it states none (unset,
- * malformed, or the year-independent `_default`). */
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+
+/** One day in words: `15 October 2019`. */
+function dayText(day: string): string {
+  const [year, month, date] = day.split("-").map(Number);
+  return `${date} ${MONTHS[month - 1]} ${year}`;
+}
+
+/** Inclusive days in words, at the coarsest grain they fill exactly: a year,
+ * a school year, a term (`autumn 2019`; a half year is the same days), a quarter
+ * (`2019 Q3`), a month (`February 2020`) or a day; else a range of years
+ * where an end falls on a year's edge and of days where it does not. */
+function exactText([first, last]: readonly [string, string]): string {
+  const year = first.slice(0, 4);
+  const from = first.slice(5);
+  const to = last.slice(5);
+  if (year === last.slice(0, 4)) {
+    const whole: Record<string, string> = {
+      "01-01 12-31": year,
+      "01-01 06-30": `spring ${year}`,
+      "07-01 12-31": `autumn ${year}`,
+      "01-01 03-31": `${year} Q1`,
+      "04-01 06-30": `${year} Q2`,
+      "07-01 09-30": `${year} Q3`,
+      "10-01 12-31": `${year} Q4`,
+    };
+    const token = whole[`${from} ${to}`];
+    if (token) return token;
+    const month = Number(from.slice(0, 2));
+    if (from.endsWith("-01") && from.slice(0, 2) === to.slice(0, 2)) {
+      const next = new Date(Date.UTC(Number(year), month, 1));
+      next.setUTCDate(0);
+      if (next.toISOString().slice(0, 10) === last)
+        return `${MONTHS[month - 1]} ${year}`;
+    }
+    if (first === last) return dayText(first);
+  }
+  if (from === "07-01" && to === "06-30")
+    return daysLabel([[first, last]]) as string;
+  const start = from === "01-01" ? year : dayText(first);
+  const end = to === "12-31" ? last.slice(0, 4) : dayText(last);
+  return start === end ? start : `${start}–${end}`;
+}
+
+/** A project source period as a reader sees it, or null when it states no
+ * years (unset, malformed, or the year-independent `_default`). Whole years
+ * and school years read as catalog periods do; a period the year thumbs
+ * cannot write (a term, quarter, month or day, hand-written in the file)
+ * reads exactly, in words (maintainer 2026-11-10, PR #2389). */
 export function sourcePeriodLabel(period: unknown): string | null {
   const parsed = sourcePeriodIntervals(period);
-  return "error" in parsed || parsed.intervals === null
-    ? null
-    : daysLabel(parsed.intervals);
+  if ("error" in parsed || parsed.intervals === null) return null;
+  const { intervals } = parsed;
+  const whole = intervals.every(
+    ([first, last]) =>
+      (first.endsWith("-01-01") && last.endsWith("-12-31")) ||
+      (first.endsWith("-07-01") && last.endsWith("-06-30")),
+  );
+  return whole ? daysLabel(intervals) : intervals.map(exactText).join(", ");
 }
 
 /** The years of several catalog periods, joined where they meet. Segments
@@ -114,6 +179,15 @@ export function catalogPeriodRuns(
     else runs.push({ ...period });
   }
   return daysLabel(runs.map(catalogDays));
+}
+
+/** The years of segments (or any items with a catalog period), joined: what a
+ * drawing's year cells cannot say, such as school years. Empty when there are
+ * no dated years. */
+export function segmentYears(
+  segments: readonly { period: CatalogPeriod }[],
+): string {
+  return catalogPeriodRuns(segments.map((segment) => segment.period)) ?? "";
 }
 
 /** `requested` less `ordered`: the years a clip cannot deliver. Half-open ISO

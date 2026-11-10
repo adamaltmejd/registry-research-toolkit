@@ -29,17 +29,12 @@ const LONG = 90;
 function MemberDetail({
   segments,
   description,
-  bounds,
 }: {
   segments: readonly CatalogSegment[];
   description: string | undefined;
-  bounds: readonly [number, number];
 }) {
   const [open, setOpen] = useState(false);
-  const facts = [
-    ...typeFact(segments, bounds),
-    ...segmentFacts(segments, bounds),
-  ];
+  const facts = [...typeFact(segments), ...segmentFacts(segments)];
   return (
     <>
       {facts.length > 0 && (
@@ -171,7 +166,6 @@ export function GroupView({
           <MemberDetail
             segments={member.segments}
             description={member.description}
-            bounds={factBounds}
           />
         ),
       },

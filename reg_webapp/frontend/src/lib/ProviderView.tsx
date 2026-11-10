@@ -1,6 +1,7 @@
 import type { Context, ProviderShow } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { catalogHref, sortedRegisters } from "./catalog";
+import { segmentYears } from "./catalog_period";
 import { dataAxis } from "./period";
 import { datedYearRuns, studyWindow } from "./study_window";
 import { Definitions } from "./ui/Definitions";
@@ -62,6 +63,9 @@ export function ProviderView({
                   fqid.startsWith(`${register.fqid}/`),
                 )}
                 coverage={years}
+                years={segmentYears(
+                  register.periods.map((period) => ({ period })),
+                )}
                 axis={axis}
                 window={study ? [study.from, study.to] : null}
               />

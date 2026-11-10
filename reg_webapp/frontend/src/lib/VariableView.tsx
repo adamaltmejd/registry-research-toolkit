@@ -24,18 +24,15 @@ import {
   segmentFacts,
   typePills,
 } from "./variable_facts";
-import { windowBounds } from "./window_bounds";
 
 /** The curated description, else the provider's wording: once when every
  * stated period agrees, otherwise each wording with the years it is used. */
 function Description({
   description,
   segments,
-  bounds,
 }: {
   description: string | undefined;
   segments: readonly CatalogSegment[];
-  bounds: readonly [number, number];
 }) {
   const lines = (text: string) =>
     text.split("\n").map((line) => (
@@ -59,7 +56,7 @@ function Description({
         ? lines(groups[0][0])
         : groups.map(([text, group]) => (
             <div key={text} className={variableStyles.wording}>
-              <p>{factYears(group.segments, bounds)}</p>
+              <p>{factYears(group.segments)}</p>
               {lines(text)}
             </div>
           ))}
@@ -95,7 +92,6 @@ export function VariableView({
     ...registerSubjectNames(register),
     ...succession.names,
   ]);
-  const bounds = windowBounds(context);
   const rows = segments.data ?? [];
   const coverage = useVariableCoverage({
     subjects: [{ fqid: node.fqid, name: node.name, segments: rows }],
@@ -109,15 +105,14 @@ export function VariableView({
     successionError: succession.error,
     allowAdd: context !== null,
   });
-  const factBounds = [bounds.min, bounds.max] as const;
   return (
     <article className={styles.page}>
       <Definitions
         kind="variable"
-        pills={typePills(rows, factBounds)}
+        pills={typePills(rows)}
         title={node.name}
         definitions={[
-          ...segmentFacts(rows, factBounds),
+          ...segmentFacts(rows),
           ...(node.tags?.length
             ? [
                 {
@@ -128,11 +123,7 @@ export function VariableView({
             : []),
         ]}
       />
-      <Description
-        description={node.description}
-        segments={rows}
-        bounds={factBounds}
-      />
+      <Description description={node.description} segments={rows} />
       <div
         ref={timelineRegion}
         tabIndex={-1}

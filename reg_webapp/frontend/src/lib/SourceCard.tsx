@@ -2,7 +2,11 @@ import { useRef, useState } from "react";
 import { variableColumns } from "./add_columns";
 import { type CatalogSegment, errMessage, type RegisterShow } from "./api";
 import { catalogHref } from "./catalog";
-import { catalogLastDate, sourcePeriodLabel } from "./catalog_period";
+import {
+  catalogLastDate,
+  segmentYears,
+  sourcePeriodLabel,
+} from "./catalog_period";
 import { LocatedIssue } from "./Finding";
 import { focusAfterRemoval } from "./focus_after_removal";
 import {
@@ -12,7 +16,7 @@ import {
   type LaneSpanModel,
 } from "./LaneGraph";
 import { PeriodThumbs } from "./PeriodThumbs";
-import { sameYearWindow, uncoveredYears, yearWindowLabel } from "./period";
+import { sameYearWindow, uncoveredYears } from "./period";
 import type { ProjectData, ProjectStudyWindow } from "./project_data";
 import { projectStore } from "./project_store";
 import {
@@ -183,8 +187,7 @@ export function SourceCard({
     for (const column of columns) {
       const runs = columnYearRuns(column.segments, bounds, axis[0]);
       if (!runs.length) continue;
-      // A timeless table has no years to state: its span is an empty box.
-      const years = timeless ? "" : runs.map(yearWindowLabel).join(", ");
+      const years = segmentYears(column.segments);
       spans.push({
         id: `${id}:${column.id}`,
         lane: id,

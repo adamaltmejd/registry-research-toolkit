@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { catalogPeriodLabel, catalogPeriodRuns } from "./catalog_period";
+import {
+  catalogPeriodLabel,
+  catalogPeriodRuns,
+  sourcePeriodLabel,
+} from "./catalog_period";
 
 describe("catalog period labels", () => {
   // DESIGN.md → Time; cases from #2315 and #2323. The API's end is exclusive:
@@ -29,5 +33,23 @@ describe("catalog period labels", () => {
         { start: "2014-10-15", end: "2014-10-16" },
       ]),
     ).toBe("2010–2012, 2014");
+  });
+});
+
+describe("source period labels", () => {
+  // A period the year thumbs cannot write reads exactly, in words
+  // (maintainer 2026-11-10, PR #2389): coarsening HT2019 to "2019" claims the
+  // spring term too; echoing the token shows the file's grammar.
+  it.each([
+    ["HT2019", "autumn 2019"],
+    ["VT2020", "spring 2020"],
+    ["2019-Q3", "2019 Q3"],
+    ["2020-02", "February 2020"],
+    ["2019-10-15", "15 October 2019"],
+    ["LA1999", "1999/2000"],
+    [{ from: "2019", to: "2020-06-30" }, "2019–30 June 2020"],
+    ["_default", null],
+  ])("renders %s as %s", (period, expected) => {
+    expect(sourcePeriodLabel(period)).toBe(expected);
   });
 });
