@@ -142,7 +142,7 @@ jobs:
       - &wasm-bindgen
         uses: taiki-e/install-action@86f7a0ffb25f40114606501a311ebcfaf882ea32 # v2.88.0
         with:
-          tool: wasm-bindgen@0.2.129
+          tool: wasm-bindgen@0.2.130
       # The gate script runs from the repository root. `frontend`: gen:wasm and its size budget, check
       # (tsgo), lint, test (`vitest run`, jsdom), build, the codegen drift check (TS types are codegen'd from the
       # committed Rust `openapi.json` snapshot, so regenerating must leave them

@@ -67,6 +67,16 @@
       "prBodyNotes": [
         "Merges on green CI; the next curation real-seed build proves it (no standalone proof build)."
       ]
+    },
+    {
+      "description": "Hold: unicode-properties 0.1.5 is Unicode 18 and Rust std is on 17; reg-core keeps one Unicode version (crates/reg-core/Cargo.toml). Drop when the toolchain moves to Unicode 18.",
+      "matchDatasources": [
+        "crate"
+      ],
+      "matchPackageNames": [
+        "unicode-properties"
+      ],
+      "allowedVersions": "<=0.1.4"
     }
   ]
 }
