@@ -848,10 +848,10 @@ Time is the axis every relation is drawn on.
   columns' "in project" state. A span is a checkbox for the add bar, and hovering it
   highlights its edges. Spans stay pressable (#2310, after the maintainer ruling "Graph
   everywhere", 2026-11-05; the mechanics are new rules, proposed by the implementer):
-  stacked below the breakpoint, and on a touch screen at any width when its spans would
-  be smaller beside the names (it then stacks too), the track is widened until its
-  shortest span is 24 px wide (WCAG 2.2 target size) and the graph scrolls sideways
-  inside itself, never the page, with the lane names pinned at its left edge. A
+  stacked below the breakpoint, and at any width where the primary pointer is a finger
+  (`pointer: coarse`) and its spans would be smaller beside the names (it then stacks
+  too), the track is widened until its shortest span is 24 px wide (WCAG 2.2 target
+  size) and the graph scrolls sideways inside itself, never the page, with the lane names pinned at its left edge. A
   single-pick graph keeps its picked span in view, so a classification opens on its
   latest version, and its tooltip sits under the span, clear of the lane's name; any
   other graph that scrolls opens once on its latest span, so a lane with only a recent
