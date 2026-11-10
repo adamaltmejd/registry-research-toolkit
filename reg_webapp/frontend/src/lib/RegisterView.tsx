@@ -148,7 +148,7 @@ export function RegisterView({
           </>
         )}
       </Panel>
-      <RelatedDocumentsPanel fqids={[node.fqid]} names={names} filterable />
+      <RelatedDocumentsPanel fqid={node.fqid} names={names} filterable />
     </article>
   );
 }

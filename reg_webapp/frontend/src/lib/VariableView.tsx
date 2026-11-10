@@ -162,7 +162,7 @@ export function VariableView({
         )}
       </div>
       {segments.data && <ValueSetView segments={segments.data} names={names} />}
-      <RelatedDocumentsPanel fqids={[node.fqid]} names={names} />
+      <RelatedDocumentsPanel fqid={node.fqid} names={names} />
       {coverage.addBar}
     </article>
   );

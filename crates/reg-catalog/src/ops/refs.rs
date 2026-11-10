@@ -246,6 +246,34 @@ pub fn expect(
     }
 }
 
+/// A set's members this deployment serves, as `(variable row id, fqid)` in fqid
+/// order: the variables a set ref stands for in `graph` and `docs_related`, which
+/// answer it with the union of its members' answers, so a group page reads its
+/// members in one request (#2232).
+///
+/// # Errors
+///
+/// `not_found` in steward mode when the steward serves none of them, as `show` answers
+/// such a set.
+pub fn set_members(
+    server: &Server,
+    conn: &Connection,
+    set: &Entity,
+) -> Result<Vec<(i64, String)>, Error> {
+    let mut members: Vec<(i64, String)> = rows(
+        conn,
+        "SELECT v.id, v.pid FROM var_set_member m JOIN variable v ON v.id = m.variable_id
+         WHERE m.set_id = ? ORDER BY v.pid",
+        [set.id],
+        |row| Ok((row.get(0)?, row.get(1)?)),
+    )?;
+    members.retain(|(_, fqid)| server.catalog.serves("variable", fqid));
+    if server.catalog.steward().is_some() && members.is_empty() {
+        return Err(Error::not_found(&set.pid));
+    }
+    Ok(members)
+}
+
 /// A table ref: a `tbl.pid`, or a ref that resolves to a table. A register with an
 /// implicit table resolves to that table, which has the register's pid; one with
 /// explicit tables is `table_is_register`, listing their pids.

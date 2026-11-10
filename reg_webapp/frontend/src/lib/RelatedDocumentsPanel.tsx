@@ -234,25 +234,24 @@ function DocumentGroup({
   );
 }
 
-/** The documents about the page's subjects: one, or a group's members, whose
- * shared documents are listed once. */
+/** The documents about the page's subject: for a group, about any of its
+ * members, from one read (#2232); a document several cite is listed once. */
 export function RelatedDocumentsPanel({
-  fqids,
+  fqid,
+  members,
   names,
   filterable = false,
 }: {
-  fqids: readonly string[];
+  fqid: string;
+  /** A group's members: the page's subjects, which a document's "About" list
+   * leaves out, as it does the page's own subject. */
+  members?: readonly string[];
   names: Names;
   filterable?: boolean;
 }) {
-  // simplify: one request per subject, since the server relates documents to
-  // a variable, not a group; a group-level read would make it one.
-  const resource = useAsyncResource(fqids.join("\n"), async (signal) =>
-    (
-      await Promise.all(
-        fqids.map((fqid) => getRelatedDocuments(fqid, { signal })),
-      )
-    ).flat(),
+  const fqids = members ?? [fqid];
+  const resource = useAsyncResource(fqid, (signal) =>
+    getRelatedDocuments(fqid, { signal }),
   );
   const [filter, setFilter] = useState("");
   const documents = [

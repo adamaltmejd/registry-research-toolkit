@@ -7,7 +7,7 @@ use serde_json::Value;
 use utoipa::ToSchema;
 use utoipa::openapi::{ArrayBuilder, RefOr, Schema};
 
-use super::refs::{self, Entity};
+use super::refs;
 use super::{
     Cache, Components, Download, Operation, Param, Params, Raw, Server, Type, component, cursor,
     fts, hash, limit,
@@ -47,7 +47,7 @@ pub const OPERATIONS: &[Operation] = &[
         paths: &["/api/docs/related/{ref}"],
         tool: Some("docs"),
         description: "The documents about a register (including its tables and variables), \
-            table, variable or classification.",
+            table, variable or classification, or about any of a set's member variables.",
         params: &[Param::required("ref", Type::Ref)],
         cache: Cache::Day,
         run: related,
@@ -161,9 +161,12 @@ fn require_docs(conn: &Connection) -> Result<(), Error> {
 
 /// The `doc_link` rows `l` of an entity, as a SQL condition on `l` over `?1`, the
 /// entity's row id: its own, and for a register those of its tables (the implicit one
-/// included) and variables.
+/// included) and variables. For a set `?1` is a JSON array of its members' row ids.
 fn links_of(kind: &str) -> &'static str {
     match kind {
+        "set" => {
+            "l.subject_kind = 'variable' AND l.subject_id IN (SELECT value FROM json_each(?1))"
+        }
         "register" => {
             "(l.subject_kind = 'register' AND l.subject_id = ?1)
              OR (l.subject_kind = 'table'
@@ -398,17 +401,28 @@ fn related(server: &Server, params: &Params) -> Result<Value, Error> {
     let entity = refs::expect(
         &conn,
         value,
-        &["register", "table", "variable", "class_family"],
+        &["register", "table", "variable", "class_family", "set"],
         NOT_TAKEN,
     )?;
-    Ok(serde_json::to_value(related_documents(&conn, &entity)?)
-        .expect("RelatedDocument serializes"))
+    let documents = if entity.kind == "set" {
+        // A set is the union of its members' documents (#2232).
+        let members: Vec<i64> = refs::set_members(server, &conn, &entity)?
+            .into_iter()
+            .map(|(id, _)| id)
+            .collect();
+        related_documents(&conn, "set", Sql::Text(Value::from(members).to_string()))?
+    } else {
+        related_documents(&conn, &entity.kind, Sql::Integer(entity.id))?
+    };
+    Ok(serde_json::to_value(documents).expect("RelatedDocument serializes"))
 }
 
-/// Linked documents, allowing an empty catalog for an entity's evidence response.
+/// The documents linked to `subject` of `kind` (see [`links_of`]), allowing an empty
+/// catalog for an entity's evidence response.
 pub(super) fn related_documents(
     conn: &Connection,
-    entity: &Entity,
+    kind: &str,
+    subject: Sql,
 ) -> Result<Vec<RelatedDocument>, Error> {
     // DISTINCT: a register's own link and its table's link to one page of one
     // document are one row to the reader.
@@ -422,9 +436,9 @@ pub(super) fn related_documents(
                LEFT JOIN text dt ON dt.id = d.document_title_text
              WHERE {}
              ORDER BY t.body, d.hash, l.page",
-            links_of(&entity.kind)
+            links_of(kind)
         ),
-        [entity.id],
+        [subject],
         |row| {
             Ok(RelatedDocument {
                 doc: row.get(0)?,

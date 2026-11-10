@@ -270,9 +270,51 @@ export function tableSegmentsReads(
   );
 }
 
+const graphKey = (ref: string) => `graph:${ref}`;
+
 /** A variable's one-hop succession, shared by its variable or group page. */
 export function graphRead(ref: string): Read<Graph> {
-  return read(`graph:${ref}`, () => getGraph(ref, { kind: "continues" }));
+  return read(graphKey(ref), () => getGraph(ref, { kind: "continues" }));
+}
+
+/** `member`'s own graph within a group's: the edges that touch it and their ends,
+ * which is what the member's own read answers. */
+function memberGraph(graph: Graph, member: string): Graph {
+  const edges = graph.edges.filter(
+    (edge) => edge.from === member || edge.to === member,
+  );
+  const ends = new Set([member, ...edges.flatMap((e) => [e.from, e.to])]);
+  return {
+    focus: member,
+    nodes: graph.nodes.filter((node) => ends.has(node.fqid)),
+    edges,
+  };
+}
+
+/** Each of a group's `members`' one-hop successions from ONE read: the server
+ * answers a group ref with the union of its members' graphs (#2232), split here
+ * into each member's entry under `graphRead`'s key, so a member's own page reads
+ * nothing again. Only members not read yet are asked for; a failure fails them. */
+export function groupGraphReads(
+  group: string,
+  members: readonly string[],
+): Record<string, Read<Graph>> {
+  const missing = members.filter((member) => !reads[graphKey(member)]);
+  if (missing.length > 0) {
+    for (const member of missing) reads[graphKey(member)] = PENDING;
+    const settle = (graph: Graph | null) =>
+      settleReads(
+        missing.map((member) => [
+          graphKey(member),
+          graph && memberGraph(graph, member),
+        ]),
+      );
+    // A failed read is not an error surface — see the module comment.
+    getGraph(group, { kind: "continues" }).then(settle, () => settle(null));
+  }
+  return Object.fromEntries(
+    members.map((member) => [member, reads[graphKey(member)] as Read<Graph>]),
+  );
 }
 
 /** A page owns its pending/error state; only a successful cached read is reusable. */

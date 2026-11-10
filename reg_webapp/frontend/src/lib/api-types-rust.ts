@@ -163,7 +163,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description The documents about a register (including its tables and variables), table, variable or classification. */
+        /** @description The documents about a register (including its tables and variables), table, variable or classification, or about any of a set's member variables. */
         get: operations["docs_related"];
         put?: never;
         post?: never;
@@ -197,7 +197,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description What a variable, table or register replaces, is replaced by or is derived from, with the date and the source's own note. `kind=derived_from` is the lineage. */
+        /** @description What a variable, table or register replaces, is replaced by or is derived from, with the date and the source's own note. `kind=derived_from` is the lineage. A set ref answers for all its member variables at once. */
         get: operations["graph"];
         put?: never;
         post?: never;

@@ -264,7 +264,11 @@ pub(super) fn load(
         source_only,
         spellings,
         statements: statements(conn, entity.id)?,
-        documents: docs::related_documents(conn, entity)?,
+        documents: docs::related_documents(
+            conn,
+            &entity.kind,
+            rusqlite::types::Value::Integer(entity.id),
+        )?,
     })
 }
 

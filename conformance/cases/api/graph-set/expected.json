@@ -1,0 +1,25 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data": {
+        "focus": "set/demo/bas/person",
+        "nodes": [
+          {"fqid": "demo/bas/alder", "kind": "variable", "name": "Ålder"},
+          {"fqid": "demo/bas/kommun", "kind": "variable", "name": "Kommun"},
+          {"fqid": "demo/hush", "kind": "register", "name": "Hushållsregistret"}
+        ],
+        "edges": [
+          {
+            "kind": "derived_from",
+            "from": "demo/bas/kommun",
+            "to": "demo/hush",
+            "at": null,
+            "prov": "source",
+            "caveat": null
+          }
+        ]
+      }
+    }
+  }
+]

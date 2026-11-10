@@ -102,7 +102,7 @@ export function GroupView({
   );
   const register = registerResource.data;
   const fqids = node.members.map((member) => member.fqid);
-  const succession = useSuccession(fqids, node.register);
+  const succession = useSuccession(fqids, node.register, node.fqid);
   const names = new Map([
     ...registerSubjectNames(register),
     ...succession.names,
@@ -242,7 +242,7 @@ export function GroupView({
         window={coverage.window}
         bounds={factBounds}
       />
-      <RelatedDocumentsPanel fqids={fqids} names={names} />
+      <RelatedDocumentsPanel fqid={node.fqid} members={fqids} names={names} />
       {coverage.addBar}
     </article>
   );
