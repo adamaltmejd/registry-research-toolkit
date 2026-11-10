@@ -157,7 +157,7 @@ jobs:
       - uses: taiki-e/install-action@cfdb7ed4ccc7c7dce37759eae89dc5674b469b39 # v2.90.3
         if: matrix.spa
         with:
-          tool: wasm-bindgen@0.2.129
+          tool: wasm-bindgen@0.2.130
       - name: Build and pack the SPA bundle
         if: matrix.spa
         run: |

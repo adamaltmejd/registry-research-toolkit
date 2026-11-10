@@ -1,7 +1,7 @@
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: arr5 @1999..2003"
+subject = "kalenderar: arr5 @1999..2003"
 fields = { "label" = "Kurs/utbildningsanordnare, kurs 5 — Arr5" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/personalutbildningsstatistik.toml:1658\n\nComplete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 
@@ -13,61 +13,61 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/personalutbildning
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: gxpld6"
+subject = "kalenderar: gxpld6"
 fields = { "label" = "Omfattning för kurs/utbildning 1, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 1 andra halvåret omfattade (gxpld6)" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/personalutbildningsstatistik.toml:1550\n\nComplete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: xplangd6"
+subject = "kalenderar: xplangd6"
 fields = { "label" = "Omfattning för kurs/utbildning 1, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 1 andra halvåret omfattade (xplangd6)" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/personalutbildningsstatistik.toml:1538\n\nComplete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: gxpld7"
+subject = "kalenderar: gxpld7"
 fields = { "label" = "Omfattning för kurs/utbildning 2, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 2 andra halvåret omfattade (gxpld7)" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/personalutbildningsstatistik.toml:1574\n\nComplete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: xplangd7"
+subject = "kalenderar: xplangd7"
 fields = { "label" = "Omfattning för kurs/utbildning 2, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 2 andra halvåret omfattade (xplangd7)" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/personalutbildningsstatistik.toml:1562\n\nComplete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: gxpld8"
+subject = "kalenderar: gxpld8"
 fields = { "label" = "Omfattning för kurs/utbildning 3, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 3 andra halvåret omfattade (gxpld8)" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/personalutbildningsstatistik.toml:1598\n\nComplete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: xplangd8"
+subject = "kalenderar: xplangd8"
 fields = { "label" = "Omfattning för kurs/utbildning 3, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 3 andra halvåret omfattade (xplangd8)" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/personalutbildningsstatistik.toml:1586\n\nComplete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: gxpld9"
+subject = "kalenderar: gxpld9"
 fields = { "label" = "Omfattning för kurs/utbildning 4, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 4 andra halvåret omfattade (gxpld9)" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/personalutbildningsstatistik.toml:1622\n\nComplete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: xplangd9"
+subject = "kalenderar: xplangd9"
 fields = { "label" = "Omfattning för kurs/utbildning 4, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 4 andra halvåret omfattade (xplangd9)" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/personalutbildningsstatistik.toml:1610\n\nComplete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: gxpld5"
+subject = "kalenderar: gxpld5"
 fields = { "label" = "Omfattning för kurs/utbildning 5, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 5 första halvåret omfattade (gxpld5)" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/personalutbildningsstatistik.toml:1646\n\nComplete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "source-annual-1999-2003: xplangd5 where key = 'v17494'"
+subject = "kalenderar: xplangd5 where key = 'v17494'"
 fields = { "label" = "Omfattning för kurs/utbildning 5, antal dagar — Härledd variabel från två halvårsundersökningar. Variabeln anger hur många dagar kurs 5 första halvåret omfattade (xplangd5)" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/personalutbildningsstatistik.toml:1634\n\nComplete accepted source audit: Personalutbildningsstatistik11 and HIB14 complete native families/610 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch50-Personal-HIB25-source-proof.json."
 
@@ -116,6 +116,12 @@ evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:34
 [[statement]]
 kind = "set"
 subject = "source-annual-1999-2003: utbniv @1996..2003"
+fields = { "classification" = "class/sun/niva-oldv1" }
+evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
+
+[[statement]]
+kind = "set"
+subject = "kalenderar: utbniv @1996..2003"
 fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
 
@@ -4901,3 +4907,39 @@ kind = "set"
 subject = "var:kursomfattning-manader-5"
 fields = { "description" = "Omfattningen av kurs eller utbildning 5 i antal månader. Fylls i för de personer som angav kursens längd i månader; de som angav dagar finns i variabeln för antal dagar. SCB:s intervjufråga 'Hur många dagar omfattade kursen?' är samma fråga som för dagsvariabeln och påverkar inte enheten." }
 evidence = "Column t8e2 / T9E2, unit 'Månad'; same pattern as kurs 1."
+
+[[statement]]
+kind = "assert"
+subject = "table:kalenderar"
+fact = { entity = "table", fields = { name = "Personalutbildningsstatistik (PUT), kalenderår", coverage = "1999-01-01..2003-12-31" } }
+evidence = "Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. The kalenderår releases of source-annual-1999-2003 (Hela året 1999, Hela året 2000, Hela året 2001, Hela året 2002, Hela året 2003) form this table; the coverage is the union of their periods."
+
+[[statement]]
+kind = "set"
+subject = "release:source-annual-1999-2003/r15072"
+fields = { "table" = "kalenderar" }
+evidence = "Release 'Hela året 1999' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:source-annual-1999-2003/r15200"
+fields = { "table" = "kalenderar" }
+evidence = "Release 'Hela året 2000' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:source-annual-1999-2003/r15202"
+fields = { "table" = "kalenderar" }
+evidence = "Release 'Hela året 2001' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:source-annual-1999-2003/r15203"
+fields = { "table" = "kalenderar" }
+evidence = "Release 'Hela året 2002' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "release:source-annual-1999-2003/r15211"
+fields = { "table" = "kalenderar" }
+evidence = "Release 'Hela året 2003' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."

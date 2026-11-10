@@ -1556,6 +1556,7 @@ fn run_selected(
             }
         }
         let mut slots = structural_stage.then(|| Slots::new(std::mem::take(&mut records)));
+        let mut release_moves = Vec::new();
         for (statement, premise, provider, register) in accepted {
             let (_, ledger, _) = &locks[&(provider, register)];
             let locator = statement_locator(root, statement)?;
@@ -1610,6 +1611,10 @@ fn run_selected(
                             at.input, at.at
                         )
                     })?;
+                    release_moves.extend(reg_resolve::curation::apply::release_moves(
+                        &source,
+                        &applied.records,
+                    ));
                 }
                 Ok(applied)
             });
@@ -1670,6 +1675,7 @@ fn run_selected(
         if let Some(slots) = slots {
             records = slots.into_records();
         }
+        reg_resolve::curation::apply::follow_release_moves(&release_moves, &mut records);
         if fields_stage && !field_snapshot.is_empty() {
             if stage == Phase::Fields {
                 // Conflict checks retain the field phase view; links see final identities.
