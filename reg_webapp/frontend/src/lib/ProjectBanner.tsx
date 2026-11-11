@@ -28,8 +28,7 @@ import { useRoute } from "./use_router";
 import { createProject } from "./window";
 import { type WindowBounds, windowBounds } from "./window_bounds";
 
-// A ready project shows no verdict and no slot in the box (#2417); /project
-// still says it.
+// A ready project shows no verdict in the box (#2417); /project still says it.
 const GLYPHS: Record<Exclude<Verdict, "ready">, string> = {
   checking: "",
   empty: "",
@@ -120,30 +119,28 @@ export function ProjectBanner({
               {columns === 1 ? "column" : "columns"}
             </span>
           )}
-          {words && (
-            <span className={styles.status} data-status={status}>
-              {(Object.keys(GLYPHS) as (keyof typeof GLYPHS)[]).map((value) => (
-                <span key={value} className={styles.sizer} aria-hidden="true">
-                  {GLYPHS[value]} {VERDICT_WORDS[value]}
-                </span>
-              ))}
-              {EXPLAINED.has(status) ? (
-                <Link
-                  className={`link ${styles.verdict}`}
-                  href="/project#project-checks"
-                  onPress={() => {
-                    requestAnimationFrame(() =>
-                      document.getElementById("project-checks")?.focus(),
-                    );
-                  }}
-                >
-                  {words}
-                </Link>
-              ) : (
-                <span className={styles.verdict}>{words}</span>
-              )}
-            </span>
-          )}
+          <span className={styles.status} data-status={status}>
+            {(Object.keys(GLYPHS) as (keyof typeof GLYPHS)[]).map((value) => (
+              <span key={value} className={styles.sizer} aria-hidden="true">
+                {GLYPHS[value]} {VERDICT_WORDS[value]}
+              </span>
+            ))}
+            {EXPLAINED.has(status) ? (
+              <Link
+                className={`link ${styles.verdict}`}
+                href="/project#project-checks"
+                onPress={() => {
+                  requestAnimationFrame(() =>
+                    document.getElementById("project-checks")?.focus(),
+                  );
+                }}
+              >
+                {words}
+              </Link>
+            ) : (
+              words && <span className={styles.verdict}>{words}</span>
+            )}
+          </span>
         </div>
       </div>
       {draft && context && (
