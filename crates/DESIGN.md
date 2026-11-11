@@ -2374,8 +2374,10 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
   source did not request), `row_filter_widened` (the encoding's grain adds held days
   around the source's own request that no source asked for), `row_filter_union` (a
   source whose days are narrower than its shared file's union). Each is located at the
-  source and names the extra days, or the union, as periods; none names the physical
-  file or its delivery code, which are not the researcher's (#2409). A
+  source and names the extra days, or the union, in plain words at their grain
+  (`July to December 2018`, `2017 to June 2018`, a school year as `2004/2005`, per the
+  frontend DESIGN.md Time rule, #2315, #2389); none names the physical file or its
+  delivery code, which are not the researcher's (#2409). A
   selected mapping's `caveat` is a `mapping_caveat` warning located at the binding over
   the selected days (the Operator's 2026-10-19 warn-not-hold call); an automatically
   added key's caveat is located at its source.

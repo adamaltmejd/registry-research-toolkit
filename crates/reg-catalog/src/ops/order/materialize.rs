@@ -723,6 +723,103 @@ fn span(server: &Server, (lo, hi): Days) -> String {
     )
 }
 
+const MONTHS: [&str; 12] = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+];
+
+/// Days in plain words at their grain, for a researcher reading a finding (#2409): whole
+/// school years as `2004/2005` (`reg_webapp/frontend/DESIGN.md` → Time, #2315, #2389),
+/// whole years as `2017`, whole months as `July to December 2018` or `2017 to June 2018`,
+/// else days (`15 October 2019`); several spans joined with "and".
+fn plain(server: &Server, days: &[Days]) -> String {
+    let words: Vec<String> = days
+        .iter()
+        .map(|&(lo, hi)| {
+            let p = server.period(lo, hi);
+            let first = p.start.is_some().then(|| iso_day(lo));
+            let last = p.end.is_some().then(|| iso_day(hi - 1));
+            match (first, last) {
+                (Some(first), Some(last)) => plain_span(&first, &last),
+                (Some(first), None) => format!("{} onwards", plain_start(&first)),
+                (None, Some(last)) => format!("every year through {}", plain_end(&last)),
+                (None, None) => "every year".to_owned(),
+            }
+        })
+        .collect();
+    match words.split_last() {
+        Some((last, rest)) if !rest.is_empty() => format!("{} and {last}", rest.join(", ")),
+        _ => words.concat(),
+    }
+}
+
+/// One inclusive span of ISO days in words (see [`plain`]).
+fn plain_span(first: &str, last: &str) -> String {
+    let year = |iso: &str| -> i32 { iso[..4].parse().expect("an ISO year") };
+    if first.ends_with("-07-01") && last.ends_with("-06-30") {
+        let (from, to) = (year(first), year(last) - 1);
+        let school = |y: i32| format!("{y}/{}", y + 1);
+        return if from == to {
+            school(from)
+        } else {
+            format!("{} to {}", school(from), school(to))
+        };
+    }
+    let month = |iso: &str| MONTHS[iso[5..7].parse::<usize>().expect("an ISO month") - 1];
+    let month_end = |iso: &str| reg_core::next_iso_day(iso).ends_with("-01");
+    if year(first) == year(last) {
+        let y = year(first);
+        if first.ends_with("-01-01") && last.ends_with("-12-31") {
+            return y.to_string();
+        }
+        if first.ends_with("-01") && month_end(last) {
+            return if first[5..7] == last[5..7] {
+                format!("{} {y}", month(first))
+            } else {
+                format!("{} to {} {y}", month(first), month(last))
+            };
+        }
+        if first == last {
+            return plain_start(first);
+        }
+    }
+    format!("{} to {}", plain_start(first), plain_end(last))
+}
+
+/// A span's first day in words: its year or month when it starts one, else the day.
+fn plain_start(first: &str) -> String {
+    let day: u32 = first[8..].parse().expect("an ISO day");
+    let month = MONTHS[first[5..7].parse::<usize>().expect("an ISO month") - 1];
+    match (&first[5..], day) {
+        ("01-01", _) => first[..4].to_owned(),
+        (_, 1) => format!("{month} {}", &first[..4]),
+        _ => format!("{day} {month} {}", &first[..4]),
+    }
+}
+
+/// A span's last day in words: its year or month when it ends one, else the day.
+fn plain_end(last: &str) -> String {
+    let day: u32 = last[8..].parse().expect("an ISO day");
+    let month = MONTHS[last[5..7].parse::<usize>().expect("an ISO month") - 1];
+    if last.ends_with("-12-31") {
+        last[..4].to_owned()
+    } else if reg_core::next_iso_day(last).ends_with("-01") {
+        format!("{month} {}", &last[..4])
+    } else {
+        format!("{day} {month} {}", &last[..4])
+    }
+}
+
 /// The holdings findings for the days of `entry` no placement holds. A contested cell
 /// (a publish-time `ambiguous_delivered_owners` notice naming this variable among its
 /// rivals) is `mapping_missing` and blocks; a day inside a routing table's delivery
@@ -1187,12 +1284,7 @@ fn row_filter(
     findings: &mut Vec<Issue>,
 ) -> Option<RowFilter> {
     let union = merge(draft.days.values().flatten().copied().collect());
-    let spans = |days: &[Days]| {
-        days.iter()
-            .map(|&d| span(server, d))
-            .collect::<Vec<_>>()
-            .join(", ")
-    };
+    let spans = |days: &[Days]| plain(server, days);
     let mut info = |s: usize, code: &str, message: String| {
         let issue = Issue {
             source: Some(sources[s].name.clone()),
@@ -1237,7 +1329,7 @@ fn row_filter(
                 "row_filter_widened",
                 format!(
                     "Rows from {} are included because this table's rows are selected \
-                     by whole {unit}.",
+                     by whole {unit}s.",
                     spans(&extra)
                 ),
             );
