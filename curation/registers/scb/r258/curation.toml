@@ -20159,3 +20159,21 @@ kind = "set"
 subject = "var:turn"
 fields = { "description" = "Omsättning exklusive moms, i tusen kronor, enligt uppgift till respektive års undersökning." }
 evidence = "Turnover excl. VAT in tkr; the \"2016\" in SCB text appears in 2013-2015 releases so it is not year-specific. Existing TURN asserts (r258 curation.toml:483, 2103-2133) keep the \"2016\" label."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: AWSEU where key = 'v19120' and release = 'r5213'"
+fields = { "definition" = "Mäter e-handel från geografiskt område via webplats eller app i övriga EU" }
+evidence = "Registerinformation.csv, IT-användning i företag 2013 (release r5213), column AWSEU (key v19120, one row): the definition reads '... i världen', but the column is the övriga EU item of the AWSHM/AWSEU/AWSWW trio (Sverige, övriga EU, världen). In 2013 the three texts are rotated one place across the columns; from 2017 the same texts sit on the columns their names give (AWSEU has v19119's text). SCB's export carries the rotation, so the definition is corrected here. Operator, #2322 curation under the maintainer's 2026-11-11 delegation."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: AWSHM where key = 'v19119' and release = 'r5213'"
+fields = { "definition" = "Mäter e-handel från geografiskt område via webplats eller app i Sverige" }
+evidence = "Registerinformation.csv, IT-användning i företag 2013 (release r5213), column AWSHM (key v19119, one row): the definition reads '... i övriga EU', but the column is the Sverige item of the AWSHM/AWSEU/AWSWW trio (Sverige, övriga EU, världen). In 2013 the three texts are rotated one place across the columns; from 2017 the same texts sit on the columns their names give (AWSHM has v19121's text). SCB's export carries the rotation, so the definition is corrected here. Operator, #2322 curation under the maintainer's 2026-11-11 delegation."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: AWSWW where key = 'v19121' and release = 'r5213'"
+fields = { "definition" = "Mäter e-handel från geografiskt område via webplats eller app i världen." }
+evidence = "Registerinformation.csv, IT-användning i företag 2013 (release r5213), column AWSWW (key v19121, one row): the definition reads '... i Sverige', but the column is the världen item of the AWSHM/AWSEU/AWSWW trio (Sverige, övriga EU, världen). In 2013 the three texts are rotated one place across the columns; from 2017 the same texts sit on the columns their names give (AWSWW has v19120's text). SCB's export carries the rotation, so the definition is corrected here. Operator, #2322 curation under the maintainer's 2026-11-11 delegation."
