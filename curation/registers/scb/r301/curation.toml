@@ -9017,16 +9017,16 @@ evidence = "#2102 same-label cluster 'Svårighet vid utbildningsdeltagande' (12 
 kind = "set"
 subject = "var:arbete-under-aret"
 fields = { "description" = "Om personen har arbetat under det aktuella undersökningsåret; 2022 frågan om personen har arbetat minst 1 timme under de senaste 12 månaderna. Ställs till den som inte har uppgett arbete som huvudsaklig sysselsättning." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\n2022 lägger till frågetexten; samma filter båda åren.\ncatalog:variable_text:8466:16801:18993"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\n2022 lägger till frågetexten; samma filter båda åren.\ncatalog:variable_text:8466:16801:17167\ncatalog:variable_text:8466:18993:19358"
 
 [[statement]]
 kind = "set"
 subject = "var:hogsta-utbildning-avslutningsar"
 fields = { "description" = "Året då personen fullföljde sin högsta utbildningsnivå, det vill säga då examen utfärdades eller motsvarande." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\n2016–2022 preciserar ”framgångsrikt fullföljdes” som examen utfärdad.\ncatalog:variable_text:8563:15156:16801"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\n2016–2022 preciserar ”framgångsrikt fullföljdes” som examen utfärdad.\ncatalog:variable_text:8563:15156:15522\ncatalog:variable_text:8563:16801:17167"
 
 [[statement]]
 kind = "set"
 subject = "var:yrkesuppgift-isco"
 fields = { "description" = "Yrke klassificerat enligt International Standard Classification of Occupations (ISCO): ISCO-88 till 2012 och ISCO-08 från 2016. Från 2016 kodas intervjusvaret under eller efter intervjun." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKlassifikationsversionen byter 2016; det anges som fakta med år.\ncatalog:variable_text:8905:12965:16801:18993"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nKlassifikationsversionen byter 2016; det anges som fakta med år.\ncatalog:variable_text:8905:12965:13330\ncatalog:variable_text:8905:16801:17167\ncatalog:variable_text:8905:18993:19358"
