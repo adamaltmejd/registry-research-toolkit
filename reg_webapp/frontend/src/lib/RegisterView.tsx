@@ -1,9 +1,11 @@
 import { useMemo, useState } from "react";
 import type { Context, RegisterShow } from "./api";
 import styles from "./CatalogNodeView.module.css";
-import { catalogHref, svCollator } from "./catalog";
+import { catalogHref, rankVariables, svCollator } from "./catalog";
 import { registerSubjectNames } from "./catalog_names";
 import { catalogPeriodLabel, segmentYears } from "./catalog_period";
+import { FilterInput } from "./FilterInput";
+import { Highlight } from "./Highlight";
 import { dataAxis } from "./period";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
 import {
@@ -68,10 +70,17 @@ export function RegisterView({
       ? new Set([focus])
       : new Set(),
   );
-  const shown =
+  const chosen =
     selected.size === 0
       ? node.variables
       : node.variables.filter((v) => v.tables.some((t) => selected.has(t)));
+  // The variable filter (#2403): the variables column's box, on the list the
+  // chips leave. The page is keyed by address, so it starts empty on each.
+  const [needle, setNeedle] = useState("");
+  const shown = rankVariables(
+    [...chosen].sort((a, b) => svCollator.compare(a.name, b.name)),
+    needle,
+  );
   function toggleTable(fqid: string): void {
     const next = new Set(selected);
     if (!next.delete(fqid)) next.add(fqid);
@@ -114,16 +123,31 @@ export function RegisterView({
                     is not announced. */}
                 <span className={styles.shown} aria-live="polite">
                   {selected.size > 0
-                    ? `${shown.length} of ${node.variables.length} shown`
+                    ? `${chosen.length} of ${node.variables.length} shown`
                     : ""}
                 </span>
               </fieldset>
             )}
-            {/* Never empty: every chip's table delivers a variable. */}
-            <VariableRowList label="Variables" axis={axis}>
-              {[...shown]
-                .sort((a, b) => svCollator.compare(a.name, b.name))
-                .map((variable) => {
+            <div className={styles.variableFilter}>
+              <FilterInput
+                value={needle}
+                onChange={setNeedle}
+                total={chosen.length}
+                shown={shown.length}
+                label="Filter this register's variables"
+                placeholder="Filter variables…"
+              />
+            </div>
+            {/* Empty only through the filter: every chip's table delivers a
+                variable. */}
+            {shown.length === 0 ? (
+              <EmptyState
+                title={`No variables match “${needle.trim()}”.`}
+                description="Clear the filter to list them all."
+              />
+            ) : (
+              <VariableRowList label="Variables" axis={axis}>
+                {shown.map((variable) => {
                   const coverage = variableYearRuns(
                     variable,
                     node.tables,
@@ -132,7 +156,7 @@ export function RegisterView({
                   return (
                     <VariableRow
                       key={variable.fqid}
-                      name={variable.name}
+                      name={<Highlight text={variable.name} needle={needle} />}
                       href={catalogHref(variable.fqid)}
                       inProject={bound.has(variable.fqid)}
                       coverage={coverage}
@@ -144,7 +168,8 @@ export function RegisterView({
                     />
                   );
                 })}
-            </VariableRowList>
+              </VariableRowList>
+            )}
           </>
         )}
       </Panel>

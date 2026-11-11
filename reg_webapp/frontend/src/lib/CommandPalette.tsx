@@ -40,13 +40,6 @@ const ACTIONS: readonly Row[] = [
     type: null,
   },
   {
-    id: "action:browse",
-    label: "Browse the data",
-    detail: "Registers and their variables",
-    href: "/catalog",
-    type: null,
-  },
-  {
     id: "action:home",
     label: "Go to the start page",
     detail: null,

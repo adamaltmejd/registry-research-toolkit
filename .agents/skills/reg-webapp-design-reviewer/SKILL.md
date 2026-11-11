@@ -161,7 +161,7 @@ temp directory is purged, so a path without a description of what it showed is n
 evidence; never commit.
 
 If no route is given, derive the smallest stable route from the changed files and nearby
-tests. Common routes: `/`, `/catalog`,
+tests. Common routes: `/`,
 `/catalog/<provider>/<register>[/<table or variable>]`,
 `/catalog/set/<provider>/<register>/<key>`, `/catalog/class/<slug>`, `/project`.
 

@@ -23,28 +23,6 @@
   color: var(--text-faint);
 }
 
-/* "Browse registers" is the way back to the register list where the columns stack; above
-   the breakpoint the list is on screen, so the crumb goes. */
-@media (min-width: 60.0625rem) {
-  .narrowOnly {
-    display: none;
-  }
-}
-
-/* "Browse registers", the way back to the register list where the columns
-   stack: a default button, so it reads as an action rather than a path segment
-   (#1824). It takes its own line, so it needs no separator after it. */
-.back {
-  flex-basis: 100%;
-}
-.crumb.back::after {
-  content: none;
-}
-.backLink {
-  composes: button default from "./Button.module.css";
-  text-decoration: none;
-}
-
 .link {
   border-radius: var(--radius-sm);
   color: var(--text-muted);

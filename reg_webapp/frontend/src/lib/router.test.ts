@@ -37,7 +37,6 @@ describe("catalog href builders ↔ parseRoute", () => {
     // Non-ASCII and `%` must survive the encode → decode
     // round trip as the same route. An unencoded `%` would decode to not-found.
     const cases: [href: string, route: Route][] = [
-      [catalogHref(""), { name: "root" }],
       [
         catalogHref("scb/lisa/kön%"),
         { name: "catalog-node", fqidPath: "scb/lisa/kön%" },

@@ -8,12 +8,6 @@ import { encodeFqid } from "./api";
 import type { Route } from "./router";
 import type { BreadcrumbItem } from "./ui/types";
 
-/** The label of the breadcrumb's first crumb, the data-browser root at
- * `/catalog` (#675). Below the narrow breakpoint it is the way back to the
- * register list, so every page's trail leads with it; above it the list is on
- * screen and the crumb is hidden (DESIGN.md → Layout). */
-const BROWSE_REGISTERS_LABEL = "Browse registers";
-
 /** Swedish labels sort with å, ä and ö after z, case- and accent-blind
  * otherwise (DESIGN.md → Swedish text). */
 export const svCollator = new Intl.Collator("sv", { sensitivity: "base" });
@@ -116,7 +110,7 @@ export function rankFilter<T>(
  * FQID can't produce a malformed URL — a no-op for today's ASCII slugs. `class`
  * and `class/<slug>` are valid FQID paths (the classification axis). */
 export function catalogHref(fqidPath: string): string {
-  return fqidPath ? `/catalog/${encodeFqid(fqidPath)}` : "/catalog";
+  return `/catalog/${encodeFqid(fqidPath)}`;
 }
 
 /** Segments of an FQID path (`scb/lisa/kon` → `["scb", "lisa", "kon"]`).
@@ -147,6 +141,32 @@ export function leafSlug(fqid: string): string {
   return fqid.split("/").at(-1) ?? fqid;
 }
 
+/** The rows a variable filter keeps (#2398), name and slug hits first: the
+ * variables column's and the register page's (#2403). In the column a concept
+ * group's members also match on the group's name, so the group's row stays
+ * when its own name matches. A group kept only through a member's name reads
+ * as the group's name with nothing marked, so it ranks after every row whose
+ * visible name matches. */
+export function rankVariables<V extends { fqid: string; name: string }>(
+  variables: V[],
+  needle: string,
+  groupName: (fqid: string) => string | undefined = () => undefined,
+) {
+  const ranked = rankFilter(variables, needle, (row) => [
+    row.name,
+    leafSlug(row.fqid),
+    groupName(row.fqid),
+  ]);
+  const unmarked = (row: V) => {
+    const group = groupName(row.fqid);
+    return group !== undefined && !matchesFilter(needle, group);
+  };
+  return [
+    ...ranked.filter((row) => !unmarked(row)),
+    ...ranked.filter(unmarked),
+  ];
+}
+
 /** The catalog pages above a route's page, provider then register: the
  * ancestors its trail names. The group namespace (`set/`) has no page of its
  * own, so it adds none; a classification's one ancestor is the list of
@@ -163,25 +183,14 @@ export function trailAncestors(route: Route): string[] {
 
 /** The detail pane's breadcrumb trail for a route (#803): the ancestors' names,
  * ending at the page's parent, since the page's `h1` names the page itself
- * (maintainer Q5, 2026-11-04). Every trail but the register list's own leads
- * with "Browse registers", shown only below the narrow breakpoint, where it is
- * the way back to that list. An ancestor whose name has not arrived is left
+ * (maintainer Q5, 2026-11-04). An ancestor whose name has not arrived is left
  * out, never shown as its slug. */
 export function routeBreadcrumbs(
   route: Route,
   names: ReadonlyMap<string, string>,
 ): BreadcrumbItem[] {
-  if (route.name === "root") return [];
-  const browserRoot: BreadcrumbItem = {
-    label: BROWSE_REGISTERS_LABEL,
-    href: catalogHref(""),
-    narrowOnly: true,
-  };
-  return [
-    browserRoot,
-    ...trailAncestors(route).flatMap((fqid) => {
-      const label = names.get(fqid);
-      return label ? [{ label, href: catalogHref(fqid) }] : [];
-    }),
-  ];
+  return trailAncestors(route).flatMap((fqid) => {
+    const label = names.get(fqid);
+    return label ? [{ label, href: catalogHref(fqid) }] : [];
+  });
 }

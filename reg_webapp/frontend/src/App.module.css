@@ -64,30 +64,28 @@
   min-width: 0;
 }
 
-/* Below the narrow breakpoint (60rem, DESIGN.md → spacing.breakpoint-narrow) the
-   columns stack one at a time: the catalog root shows the list, every other page
-   its detail, with the breadcrumb's first crumb as the way back to the list. */
+/* Below the narrow breakpoint (60rem, DESIGN.md → spacing.breakpoint-narrow)
+   there is one column (#2403): the page, or, while the
+   top bar's button has it open, the register column in its place. The
+   variables column is never drawn: a register's page lists its variables. */
 @media (max-width: 60rem) {
   .body {
     grid-template-columns: minmax(0, 1fr);
   }
-  /* The register page lists its variables itself, so the stacked layout has
-     no second column. Scoped under `.body` to outrank the column's own
-     `display: flex`. */
-  .body .list {
-    display: none;
-  }
+  /* Open, it fills the viewport under the bar, as the page it stands in
+     for would. */
   .browse {
     position: static;
     height: auto;
+    min-height: calc(100dvh - var(--top-bar-height, 0px));
   }
   .detail {
     padding: var(--space-4);
   }
-  /* On the list the pane keeps only the root's visually hidden h1, so the page
-     keeps its `main` landmark and its heading. */
-  .body:not([data-narrow-shows="browse"]) .browse,
-  .body[data-narrow-shows="browse"] .crumbs {
+  /* Scoped under `.body` to outrank the column's own `display: flex`. */
+  .body .list,
+  .body:not([data-browser-open]) .browse,
+  .body[data-browser-open] .detail {
     display: none;
   }
 }

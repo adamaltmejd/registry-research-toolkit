@@ -145,7 +145,24 @@ function browseNodes(
  * Collapsing a group never moves the page: the detail pane keeps showing the
  * register it showed, and keyboard focus moves to the group row.
  */
-export function BrowseTree({ className }: { className?: string }) {
+export function BrowseTree({
+  id,
+  className,
+  onBrowse,
+  onChoose,
+  onEscape,
+}: {
+  id?: string;
+  className?: string;
+  /** The selection (the arrows, or a press) is about to open this row's
+   * page. */
+  onBrowse?: (key: string) => void;
+  /** A row was pressed (pointer, Enter or Space; not the arrows passing it):
+   * the narrow register browser closes on it (#2403). */
+  onChoose?: () => void;
+  /** Escape inside the column: the narrow register browser closes on it. */
+  onEscape?: () => void;
+}) {
   const boxRef = useRef<HTMLDivElement>(null);
   const barRef = useRef<HTMLSpanElement>(null);
   useSelectionBar(boxRef, barRef);
@@ -203,7 +220,10 @@ export function BrowseTree({ className }: { className?: string }) {
     if (keys === "all") return;
     const [key] = keys;
     const href = key === undefined ? undefined : hrefs.get(String(key));
-    if (href !== undefined && key !== currentKey) router.navigate(href);
+    if (href !== undefined && key !== currentKey) {
+      onBrowse?.(String(key));
+      router.navigate(href);
+    }
   }
 
   // The register row stays selected on a page under it (a variable, a group),
@@ -237,6 +257,13 @@ export function BrowseTree({ className }: { className?: string }) {
   // page, whose variables the column lists; RAC's Tree uses → only to expand
   // a group row. Captured, so the Tree never sees a key it would ignore.
   function onKeyDownCapture(event: KeyboardEvent): void {
+    // The tree never handles Escape (`escapeKeyBehavior="none"`).
+    if (event.key === "Escape" && onEscape) {
+      event.preventDefault();
+      event.stopPropagation();
+      onEscape();
+      return;
+    }
     const row = (event.target as Element).closest('[role="row"]');
     if (
       event.key === "ArrowRight" &&
@@ -256,6 +283,7 @@ export function BrowseTree({ className }: { className?: string }) {
 
   return (
     <nav
+      id={id}
       className={`${styles.column} ${className ?? ""}`}
       aria-label="Catalog"
       data-browse-column="registers"
@@ -318,6 +346,7 @@ export function BrowseTree({ className }: { className?: string }) {
                   current={current}
                   onOpenCurrent={openCurrentRow}
                   onExpand={expandGroup}
+                  onChoose={onChoose}
                 />
               )}
             </Tree>
@@ -348,12 +377,14 @@ function BrowseItem({
   current,
   onOpenCurrent,
   onExpand,
+  onChoose,
 }: {
   node: BrowseNode;
   counts: Record<string, number>;
   current: CurrentRow | null;
   onOpenCurrent: () => void;
   onExpand: (id: string) => void;
+  onChoose: (() => void) | undefined;
 }) {
   const count = inProjectCount(node, counts);
   // "page" only on the row whose own page is open; "true" on the register row
@@ -368,13 +399,11 @@ function BrowseItem({
       id={node.id}
       textValue={node.name}
       className={`${styles.row} ${node.separated ? styles.separated : ""}`}
-      onPress={
-        ariaCurrent === "true"
-          ? onOpenCurrent
-          : node.children.length > 0
-            ? () => onExpand(node.id)
-            : undefined
-      }
+      onPress={() => {
+        if (ariaCurrent === "true") onOpenCurrent();
+        else if (node.children.length > 0) onExpand(node.id);
+        onChoose?.();
+      }}
       render={(props) => (
         <div
           {...props}
@@ -406,6 +435,7 @@ function BrowseItem({
             current={current}
             onOpenCurrent={onOpenCurrent}
             onExpand={onExpand}
+            onChoose={onChoose}
           />
         )}
       </Collection>

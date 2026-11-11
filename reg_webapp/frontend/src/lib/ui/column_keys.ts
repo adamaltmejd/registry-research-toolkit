@@ -7,12 +7,13 @@
  *
  * Focus lands on the column's selected row. Failing that, the register column
  * focuses the collapsed group that holds the selected register
- * (`data-holds-current`), and nothing else; the variables column its first
- * row. Focusing a RAC row
- * element moves the collection's focused key with it (its focus handler), so
- * the arrows continue from there; it does not select, so the page stays put.
- * Returns false when there is no such column (the narrow layout, a page with
- * no variables column), so the caller lets the key through.
+ * (`data-holds-current`), then its first row (the narrow register browser
+ * opened on a page with no row of its own, #2403); the variables column its
+ * first row. Focusing a RAC row element moves the collection's focused key
+ * with it (its focus handler), so the arrows continue from there; it does not
+ * select, so the page stays put. Returns false when there is no such column,
+ * or it is not drawn (the variables column below the narrow breakpoint, the
+ * closed register browser), so the caller lets the key through.
  */
 export function focusBrowseColumn(column: "registers" | "variables"): boolean {
   const root = document.querySelector<HTMLElement>(
@@ -24,7 +25,8 @@ export function focusBrowseColumn(column: "registers" | "variables"): boolean {
       '[role="option"][data-selected], [role="row"][data-selected], [role="row"][aria-current]',
     ) ??
     (column === "registers"
-      ? root.querySelector<HTMLElement>('[role="row"][data-holds-current]')
+      ? (root.querySelector<HTMLElement>('[role="row"][data-holds-current]') ??
+        root.querySelector<HTMLElement>('[role="row"]'))
       : root.querySelector<HTMLElement>('[role="option"], [role="row"]'));
   if (!row) return false;
   row.focus();

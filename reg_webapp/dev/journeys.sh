@@ -76,9 +76,12 @@ WEBAPP_PROJECT=$root/conformance/cases/fixtures/webapp-dev/project_data.json
 # narrowing the register's variables, or a table address stops opening its register's
 # page with that chip on (#2316). The fixture's Familjer table holds one of
 # Hushållsregistret's five variables (Antal), so the chip must leave "1 of 5 shown": a
-# chip that filters nothing leaves 5 of 5.
+# chip that filters nothing leaves 5 of 5. Also fails if `/catalog` stops becoming `/`
+# (maintainer 2026-11-11, #2403).
 j_browse() {
-	visit /catalog && press row "Demoleverantören" && wait_url "**/catalog/demo" &&
+	visit /catalog && [ "$(ab get url)" = "$dev_url/" ] ||
+		fail "/catalog did not become / (maintainer 2026-11-11, #2403)" || return 1
+	press row "Demoleverantören" && wait_url "**/catalog/demo" &&
 		see listbox "Variables in Demoleverantören" &&
 		press row "Hushållsregistret" && wait_url "**/catalog/demo/hush" &&
 		see heading "Hushållsregistret" &&
@@ -99,7 +102,7 @@ j_browse() {
 # column's filter box stops narrowing its column (8 rows in Basregistret, 3 match
 # "in"), or the box keeps its text when another register opens.
 j_search() {
-	visit /catalog && fill searchbox "Search registers, variables" andra &&
+	visit / && fill searchbox "Search registers, variables" andra &&
 		press menuitem "Andra registret" && wait_url "**/catalog/demo2/reg" &&
 		see option "Kod, 2019" &&
 		no_tree 'searchbox "Search registers, variables".*: ' &&
@@ -165,16 +168,29 @@ j_order() {
 	shot
 }
 
-# J6 narrow (375 px). Fails if, where the columns stack, a register or variable can no
-# longer be reached by pointer, the trail loses its way back to the browse list, or the
-# folded search no longer opens and shows its results.
+# J6 phone (375 px): the phone path of browse and search (#2403). Fails if the search
+# field is not there on load (folded behind a button), a search result does not open
+# its page, the menu button stops showing the register browser or stops reporting it
+# open, choosing a register or a provider does not open its page with the browser
+# closed, the variables column is drawn, or the register page's filter box stops
+# narrowing its list (Hushållsregistret's five variables; "bransch" matches "Bransch"
+# only).
 j_narrow() {
-	visit /catalog && press row "Basregistret" && wait_url "**/catalog/demo/bas" &&
-		press link "Kön" && wait_url "**/catalog/demo/bas/kon" && see heading "Kön" &&
-		press link "Browse registers" && wait_url "**/catalog" &&
-		press button "Search registers, variables" &&
+	visit /catalog/demo/bas && see heading "Basregistret" &&
 		fill searchbox "Search registers, variables" andra &&
-		press menuitem "Andra registret" && wait_url "**/catalog/demo2/reg" && shot
+		press menuitem "Andra registret" && wait_url "**/catalog/demo2/reg" &&
+		see heading "Andra registret" &&
+		tree 'button "Browse registers" \[expanded=false' &&
+		press button "Browse registers" &&
+		tree 'button "Browse registers" \[expanded=true' &&
+		press row "Hushållsregistret" && wait_url "**/catalog/demo/hush" &&
+		see heading "Hushållsregistret" && no_tree 'row "Basregistret"' &&
+		no_tree 'listbox "Variables' &&
+		fill searchbox "Filter this register's variables" bransch && wait_text "1 of 5" &&
+		see link "Bransch" && no_tree 'link "Namn"' &&
+		press button "Browse registers" && press row "Demoleverantören" &&
+		wait_url "**/catalog/demo" && see heading "Demoleverantören" &&
+		no_tree 'row "Hushållsregistret"' && shot
 }
 
 # J7 steward-held view (paired fixture). Fails if the pairing is ignored (steward

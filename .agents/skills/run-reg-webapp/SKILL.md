@@ -61,7 +61,7 @@ summary line, then the page's console errors (`[error] …`) and uncaught except
 (`[pageerror] …`). Axe violations do not fail the run; judging them is the reviewer's
 job.
 
-- **`smoke`** captures `/catalog` as `01-root`, desktop only; not a substitute for the
+- **`smoke`** captures `/` as `01-home`, desktop only; not a substitute for the
   four widths.
 - **`shot`** captures `_<route>` per route × viewport; non-desktop captures get a
   `-<label>` suffix. `--all` is the four widths (375 / 768 / 1280 / 1920) the
