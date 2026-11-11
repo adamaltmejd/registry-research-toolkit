@@ -50,7 +50,9 @@
 #
 # smoke/shot/flows run agent-browser, pinned in reg_webapp/frontend/package.json, in a
 # browser session private to this invocation (closed on exit). It drives an
-# installed Google Chrome; with none, run `agent-browser install` once.
+# installed Google Chrome; with none, run `agent-browser install` once. They refuse
+# (exit 3) inside the Codex sandbox, where Chrome aborts at launch and macOS shows a
+# crash dialog per attempt; rendered checks run outside it.
 #
 # Ports are automatic (two of these never collide); pin with RUST_PORT /
 # FRONTEND_PORT if you need to know them up front. smoke/shot screenshots land in
@@ -120,6 +122,13 @@ preview)
 	exit 2
 	;;
 esac
+
+# Codex runs commands under seatbelt and sets CODEX_SANDBOX=seatbelt. Chrome cannot
+# register with the window server there, aborts, and leaves a crash dialog.
+if [ "${CODEX_SANDBOX:-}" = seatbelt ] && [ "$mode" != serve ] && [ "$mode" != preview ]; then
+	echo "dev: '$mode' drives Chrome, which cannot launch in the Codex sandbox; rendered checks run outside it (the rendered review and CI flows)" >&2
+	exit 3
+fi
 
 # The capture viewports: a named preset or a raw WxH, printed as "W H". The four
 # presets are the widths frontend/DESIGN.md designs for.
