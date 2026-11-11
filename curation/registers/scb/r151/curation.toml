@@ -1114,3 +1114,9 @@ kind = "set"
 subject = "var:sgrm"
 fields = { "label" = "Storleksgrupp rum (SgRm)" }
 evidence = "#2102 same-label cluster 'Storleksgrupp rum' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; SgMxRm's opdef says maximum number of rooms throughout; SgRm's 2007-2013 opdef says number of rooms but Sgrm's 2014-2015 opdef says maximum, so SgRm is qualified by its code."
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: ImputMan where key = 'v1810'"
+fields = { "variable" = "imputerad-manad" }
+evidence = "Candidate split, no succession edge (crates/DESIGN.md, one variable one description). SCB VarId 1810 (Imputerad) is a generic id shared by 20 variables. In Hotell, stugbyar och vandrarhem it sits on column ImputLogiInt 2007–2018 ('Kod för om logiintäkter är imputerade', 2016–2018 'Anger huruvida variabeln Logiintäkt har rapporterats eller ej') and on column ImputMan 2019–2024 ('Anger huruvida anläggningen har rapporterat aktuell månad eller ej. Objektsbortfall.'). Two different columns flagging different things: imputed lodging revenue versus a missing monthly report. Registerinformation.csv shows one row per column and year. Operator, #2322 curation under the maintainer's 2026-11-11 delegation.\ncatalog:variable_text:34709:13514:16071\ncatalog:variable_text:34709:17897:20089"

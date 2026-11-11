@@ -19834,3 +19834,9 @@ kind = "set"
 subject = "distansundervisning-gymnasieskolan: F16h where key = 'v44894'"
 fields = { "operational_definition" = "Vid undervisning på distans, i vilken grad tycker du att ni som skola hittat former för att tillgodose elevers behov av stöd?" }
 evidence = "Same copy error in the gymnasieskolan table (key v44894, column F16h)."
+
+[[statement]]
+kind = "set"
+subject = "doktorsexaminerades-villkor: F27 where key = 'v5078'"
+fields = { "variable" = "arbete-inom-universitet-hogskola" }
+evidence = "Candidate split, no succession edge (crates/DESIGN.md, one variable one description). SCB VarId 5078 (Arbete) is a generic id used by several surveys: Folkhögskoleuppföljningen 2006 column Arbete asks 'Hade du något arbete under vecka 14 ... (även om det bara avsåg en timme)?', while Doktorsexaminerades villkor 2018 column F27 asks 'Arbetar du inom universitet/högskola i ditt huvudsakliga arbete?'. A different question in a parallel table is a different variable. Registerinformation.csv shows one row per column and year. Operator, #2322 curation under the maintainer's 2026-11-11 delegation.\ncatalog:variable_text:60229:13149:13514\ncatalog:variable_text:60229:17532:17897"

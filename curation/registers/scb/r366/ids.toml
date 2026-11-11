@@ -77,6 +77,7 @@ public = "utbildningsanalyser"
 "arbete-efter-gymnasieskolan" = ["Ungdomar utan fullföljd gymnasieutbildning: F10"]
 "arbete-idag" = ["Lärarförsörjningen, icke aktiva lärare: F10"]
 "arbete-inom-amnesomradet-postdoktor" = ["Doktorsexaminerades villkor: F20_01"]
+"arbete-inom-universitet-hogskola" = ["Doktorsexaminerades villkor: F27"]
 "arbete-jamfort-skola" = ["Lärarförsörjningen, icke aktiva lärare: F20B"]
 "arbete-jamfort-tidigare-skolvasendet-lon" = ["Lärarförsörjningen, icke aktiva lärare: F20C"]
 "arbete-jamfort-skola-3" = ["Lärarförsörjningen, icke aktiva lärare: F20D"]

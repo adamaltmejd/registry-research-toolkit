@@ -3758,3 +3758,9 @@ kind = "set"
 subject = "release:nationella-prov-resultat-vartermin/r19991"
 fields = { "table" = "nationella-prov-resultat-kalenderar" }
 evidence = "Release '2024' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-kalenderar: PersonNr where key = 'v57' and release = 'r11223'"
+fields = { "operational_definition" = "12-siffrigt personnummer inklusive sekelsiffra." }
+evidence = "Registerinformation.csv, VarId 57, Kursdeltagare kalenderår 2016 (release r11223), column PersonNr: the operational definition is 'Den kommun som skolenheten uppgav. Härleds från det som rapporterats i vår- och/eller höstinsamlingen.', a municipality text copied from another column; SCB's export carries the same error in a single row. The same table's PersonNr in 2015 and 2017 has '12-siffrigt personnummer inklusive sekelsiffra.', restored here. Operator, #2322 curation under the maintainer's 2026-11-11 delegation."

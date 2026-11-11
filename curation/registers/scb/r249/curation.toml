@@ -5869,3 +5869,9 @@ kind = "set"
 subject = "release:nationella-prov-vartermin/r20006"
 fields = { "table" = "nationella-prov-kalenderar" }
 evidence = "Release '2024' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "elever-vartermin: PersonNr where key = 'v57' and release = 'r7254'"
+fields = { "operational_definition" = "" }
+evidence = "Registerinformation.csv, VarId 57, Elever vårtermin 2015 (release r7254), column PersonNr: the operational definition is 'Summering av poäng som eleven läst under det aktuella halvåret.', TPoang's text; SCB's export carries the same error in a single row. PersonNr in the other pupil tables and terms states no operational definition, so the copied text is cleared. Operator, #2322 curation under the maintainer's 2026-11-11 delegation."
