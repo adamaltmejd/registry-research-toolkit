@@ -1984,5 +1984,5 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:sjuktom"
-fields = { "description" = "Sista dagen i sjukfallet under sjuklöneperioden, det vill säga sjuklöneperiodens sista dag." }
+fields = { "description" = "Sista dagen i sjukfallet. 2022–2023 anges sjuklöneperiodens sista dag." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; råexporten har 2011–2018 en rad per kvartal där katalogen bara behållit den första, så kvartalsangivelsen beskriver kvartalsleveranserna och inte en betydelseskillnad. Registerinformation.csv:row=898489–898491 (2011), row=898498–898501 (2012), row=898555–898558 (2018).\ncatalog:variable_text:41820:15065:16436\ncatalog:variable_text:41820:16436:16801\ncatalog:variable_text:41820:17897:18993\ncatalog:variable_text:41820:18993:19723"

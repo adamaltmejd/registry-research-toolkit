@@ -4321,7 +4321,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:identitetsnummer-for-vardeomradet-literal-idvolokal"
-fields = { "description" = "Identitetsnummer för det värdeområde för lokaler som värderingsenheten tillhör. Värdeområdet anger lägets inverkan på värderingsenhetens värde. Förekommer för typkoder i 300-serien, 2014–2018 även i 500-serien." }
+fields = { "description" = "Identitetsnummer för det värdeområde för lokaler som värderingsenheten tillhör. Värdeområdet anger lägets inverkan på värderingsenhetens värde. 2013–2023 förekommer det för typkoder i 300-serien, 2014–2018 även i 500-serien." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2013 och 2019–2023 anger 300-serien. 2014–2018 års text är gemensam med IdVoBost och anger 300- och 500-serien; den tas inte med. Fältnamnsnoteringen tas bort.\ncatalog:variable_text:28219:12784:12785\ncatalog:variable_text:28219:15706:15707\ncatalog:variable_text:28219:16071:16072\ncatalog:variable_text:28219:17897:17898"
 
 [[statement]]
