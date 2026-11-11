@@ -616,7 +616,12 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   of columns under it; value sets have their own panel, so the facts name only the
   classification. The Description is the curated description; on a variable page
   without one it is the provider's wording: once when every period agrees, otherwise
-  each wording under its years. It sits under the facts, above the `Timeline`, on both
+  each wording under its years. On a group page it is the group's curated description,
+  else the one description every member states alike; with neither there is no
+  Description panel. A member shows its own curated description under its lane name
+  only where it differs from the group's; members' provider wordings are not on the
+  group page (the Operator's proposal under the maintainer's delegation, 2026-11-11,
+  #2322). It sits under the facts, above the `Timeline`, on both
   pages (new rule, proposed by the implementer: a group's description was prose under
   its `h1`). Timeline and
   facts read the one per-period list (`segments`): on a steward deployment its rows are

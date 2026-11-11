@@ -880,7 +880,7 @@ fn valuesets(p: &Pair, changes: &[HashChange]) -> Result<Section> {
     })
 }
 
-/// Provider and register names, descriptions and urls, keyed by pid.
+/// Provider, register and set names, descriptions and urls, keyed by pid.
 fn registers(p: &Pair) -> Result<Section> {
     // Fields stay separate (and NULL apart from text), so no value can mimic another.
     type Fields = Vec<(&'static str, Option<String>)>;
@@ -907,7 +907,19 @@ fn registers(p: &Pair) -> Result<Section> {
                 ))
             },
         )?;
-        Ok(providers.into_iter().chain(registers).collect())
+        let sets = query(
+            conn,
+            "SELECT s.pid, n.body, d.body FROM var_set s
+             JOIN text n ON n.id = s.name_text
+             LEFT JOIN text d ON d.id = s.description_text WHERE s.kind = 'set'",
+            |r| {
+                Ok((
+                    ("set", r.get::<_, String>(0)?),
+                    vec![("name", r.get(1)?), ("description", r.get(2)?)],
+                ))
+            },
+        )?;
+        Ok(providers.into_iter().chain(registers).chain(sets).collect())
     };
     let (old, new) = (load(&p.old)?, load(&p.new)?);
     let render = |f: Option<&Fields>| {

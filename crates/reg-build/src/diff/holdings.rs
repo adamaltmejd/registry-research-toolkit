@@ -31,7 +31,7 @@ const OCCURRENCE_TEXT: [(&str, &str); 4] = [
 
 /// Reader-visible text by kind, as SQL returning (natural key, body), after the
 /// occurrence text.
-const TEXT: [(&str, &str); 6] = [
+const TEXT: [(&str, &str); 8] = [
     (
         "variable label",
         "SELECT v.pid, x.body FROM variable v JOIN text x ON x.id = v.label_text",
@@ -51,6 +51,14 @@ const TEXT: [(&str, &str); 6] = [
     (
         "register description",
         "SELECT r.pid, x.body FROM register r JOIN text x ON x.id = r.description_text",
+    ),
+    (
+        "set name",
+        "SELECT s.pid, x.body FROM var_set s JOIN text x ON x.id = s.name_text WHERE s.kind = 'set'",
+    ),
+    (
+        "set description",
+        "SELECT s.pid, x.body FROM var_set s JOIN text x ON x.id = s.description_text WHERE s.kind = 'set'",
     ),
     (
         "mapping caveat",

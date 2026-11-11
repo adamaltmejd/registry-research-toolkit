@@ -93,12 +93,24 @@ pub fn items(catalog: &Catalog, ids: &Ids) -> Result<Vec<Item>, String> {
                 name.push_str(spelling);
             }
             let (label, definitions) = variable_texts(variable);
-            let description = variable
-                .description
-                .as_deref()
-                .filter(|description| !description.is_empty() && !definitions.contains(description))
-                .unwrap_or_default()
-                .to_owned();
+            // A group reads as one variable: a member without its own description is
+            // found by its groups' descriptions.
+            let mut description = variable.description.clone().unwrap_or_else(|| {
+                variable
+                    .sets
+                    .iter()
+                    .filter_map(|set| {
+                        catalog
+                            .set_presentation(ri, set)
+                            .into_iter()
+                            .find_map(|s| s.description.clone())
+                    })
+                    .collect::<Vec<_>>()
+                    .join("\n")
+            });
+            if definitions.contains(&description.as_str()) {
+                description.clear();
+            }
             items.push(Item {
                 kind: "variable",
                 entity_id: Some(ids.variable[&(ri, v)]),

@@ -2,7 +2,6 @@
 kind = "set"
 subject = "set:inkomst"
 fields.label = "Inkomstmått"
-fields.description = "Inkomst före och efter skatt för personer och hushåll."
 fields.axes = [{ id = "unit", label = "Enhet" }, { id = "measure", label = "Mått" }]
 evidence = "Synthetic income variants exercise presentation axes in authored order."
 
@@ -119,3 +118,10 @@ kind = "set"
 subject = "bas: Utbniva @2020..2022"
 fields.classification = "class/demo-utb/v2020-niva"
 evidence = "Utbildningsnivå follows the 2020 level edition from 2020."
+
+# A set description is its own statement with its own evidence, as a variable's is (#2322).
+[[statement]]
+kind = "set"
+subject = "set:inkomst"
+fields.description = "Inkomst före och efter skatt för personer och hushåll."
+evidence = "Synthetic income variants share one meaning: income before and after tax."

@@ -160,7 +160,7 @@ pub struct SetPresentation {
     pub provider: String,
     pub register: String,
     pub slug: String,
-    pub label: String,
+    pub label: Option<String>,
     pub description: Option<String>,
     pub axes: Vec<reg_frame::statement::SetAxis>,
     pub at: Locator,
@@ -530,10 +530,7 @@ pub fn apply(
                 provider: provider.clone(),
                 register: register.clone(),
                 slug: slug.clone(),
-                label: fields
-                    .label
-                    .clone()
-                    .ok_or("set-label: set requires label")?,
+                label: fields.label.clone(),
                 description: fields.description.clone(),
                 axes: fields.axes.clone().unwrap_or_default(),
                 at: at.clone(),

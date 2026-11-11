@@ -83,6 +83,25 @@ pub struct Catalog {
     pub classifications: Vec<reg_resolve::curation::apply::Classification>,
 }
 
+impl Catalog {
+    /// A register's set's presentation statements. Label, description and axes may each
+    /// come from its own statement; lock refuses two statements stating one field.
+    #[must_use]
+    pub fn set_presentation(
+        &self,
+        ri: usize,
+        slug: &str,
+    ) -> Vec<&reg_resolve::curation::apply::SetPresentation> {
+        let r = &self.registers[ri].register;
+        self.set_presentation
+            .iter()
+            .filter(|set| {
+                set.provider == r.provider && set.register == r.register && set.slug == slug
+            })
+            .collect()
+    }
+}
+
 /// A cell before interning: text, folded names and spellings are resolved to row ids
 /// once every body is known, so their ids too follow sort order.
 #[derive(Clone)]
@@ -807,12 +826,9 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                 )
             },
         );
-        let presentation = scope.and_then(|ri| {
-            catalog.set_presentation.iter().find(|set| {
-                let r = &catalog.registers[ri].register;
-                set.provider == r.provider && set.register == r.register && set.slug == name
-            })
-        });
+        let presentation = scope
+            .map(|ri| catalog.set_presentation(ri, &name))
+            .unwrap_or_default();
         let (label, description) = if scope.is_none() {
             let tag = catalog
                 .tags
@@ -821,10 +837,14 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
             (tag.label.clone(), Cell::Text(tag.definition.clone()))
         } else {
             (
-                presentation.map_or_else(|| name.clone(), |s| s.label.clone()),
                 presentation
-                    .and_then(|s| s.description.as_ref())
-                    .map_or(Cell::Null, |s| Cell::Text(s.clone())),
+                    .iter()
+                    .find_map(|s| s.label.clone())
+                    .unwrap_or_else(|| name.clone()),
+                presentation
+                    .iter()
+                    .find_map(|s| s.description.clone())
+                    .map_or(Cell::Null, Cell::Text),
             )
         };
         let set_id = id(i);
@@ -849,8 +869,8 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                 &statement_id,
             )?;
         }
-        if let Some(presentation) = presentation {
-            for (ord, axis) in presentation.axes.iter().enumerate() {
+        if let Some(axes) = presentation.iter().find(|s| !s.axes.is_empty()) {
+            for (ord, axis) in axes.axes.iter().enumerate() {
                 rows.push(
                     "var_set_axis",
                     vec![

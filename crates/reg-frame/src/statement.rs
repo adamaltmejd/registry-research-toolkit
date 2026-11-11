@@ -271,8 +271,10 @@ impl SetFields {
                     "set-fields: a set: subject accepts only label, description and axes".into(),
                 );
             }
-            if self.label.as_ref().is_none_or(|v| v.trim().is_empty()) {
-                return Err("set-label: a set: subject requires a nonblank label".into());
+            // Label, description and axes may each come from their own statement, with
+            // its own evidence; a set without a curated label is named by its slug.
+            if self.label.as_ref().is_some_and(|v| v.trim().is_empty()) {
+                return Err("set-label: a set label must not be blank".into());
             }
         } else if self.axes.is_some() {
             return Err("set-axes-subject: axes require a set: subject".into());
@@ -281,15 +283,17 @@ impl SetFields {
             return Err("set-facet-subject: facets require a var: subject".into());
         }
         if self.description.is_some() && matches!(subject, Address::Occurrence { .. }) {
-            return Err("description-subject: set description requires a var:, table: or release: subject; occurrence descriptions are not supported".into());
+            return Err("description-subject: set description requires a var:, set:, table: or release: subject; occurrence descriptions are not supported".into());
         }
-        if matches!(subject, Address::Variable(_))
+        if matches!(subject, Address::Variable(_) | Address::Set(_))
             && self
                 .description
                 .as_ref()
                 .is_some_and(|text| text.trim().is_empty())
         {
-            return Err("description-empty: a variable description must not be blank".into());
+            return Err(
+                "description-empty: a variable or set description must not be blank".into(),
+            );
         }
         Ok(())
     }
