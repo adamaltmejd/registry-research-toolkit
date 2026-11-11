@@ -1,4 +1,4 @@
-//! The one FTS5 query builder `search`, `search_facets` and `docs_search` share.
+//! The one FTS5 query builder `search` and `docs_search` share.
 
 use crate::Error;
 

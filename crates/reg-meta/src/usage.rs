@@ -169,14 +169,10 @@ impl Usage {
     }
 }
 
-/// A search's hits on the answered page: its `items`, or `search_facets'`
-/// `registers`, each with a paired steward group's.
+/// A search's hits on the answered page: its `items`, with a paired steward group's.
 fn hits(data: &Value) -> usize {
     let count = |value: &Value| value.as_array().map_or(0, Vec::len);
-    ["items", "registers"]
-        .iter()
-        .map(|key| count(&data[key]) + count(&data["steward"][key]))
-        .sum()
+    count(&data["items"]) + count(&data["steward"]["items"])
 }
 
 /// The refusal's code, as its error document names it.

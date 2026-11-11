@@ -20,17 +20,6 @@
   {
     "status": 200,
     "json": {
-      "/data/registers": [
-        {
-          "fqid": "demo/descriptions",
-          "variable_matches": 1
-        }
-      ]
-    }
-  },
-  {
-    "status": 200,
-    "json": {
       "/data/items/*/fqid": [
         "demo/descriptions/measure"
       ]
@@ -51,27 +40,6 @@
         "demo/descriptions/comparator"
       ],
       "/data/next_cursor": null
-    }
-  },
-  {
-    "status": 200,
-    "json": {
-      "/data/registers": [
-        {
-          "fqid": "demo/descriptions",
-          "variable_matches": 2,
-          "variables": [
-            {
-              "fqid": "demo/descriptions/comparator",
-              "name": "Vikt"
-            },
-            {
-              "fqid": "demo/descriptions/weighted",
-              "name": "Vikt"
-            }
-          ]
-        }
-      ]
     }
   }
 ]

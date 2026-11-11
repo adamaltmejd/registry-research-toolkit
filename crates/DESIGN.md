@@ -1371,8 +1371,8 @@ read-only. Reference browsing uses the catalog alone.
 shown is held, everything held is shown." There is no scope parameter. A register,
 table, variable or provider with no accepted placement is `not_found` by ref
 (`Catalog::connect_for_ref`, `serves`) and is left out of every list: `show`'s children
-and set members (a set's own page included), `schema` and `diff` lines, search hits and
-facets (filtered by public id and the requested interval before ranking, counts and
+and set members (a set's own page included), `schema` and `diff` lines, search hits
+(filtered by public id and the requested interval before ranking, counts and
 pagination), and graph neighbours. A set is served only while two or more of its members
 are held (maintainer 2026-11-11, #2410: "Groups where only a single member is held? …
 they should read as the plain variable instead"): a set of one held member is
@@ -2583,10 +2583,10 @@ Catalog rules are the order check's, listed in "The logical order": `fqid_unreso
 
 ## Search
 
-`search` and `search_facets` read the primary FTS5 index `search` (columns `name`: pid
+`search` reads the primary FTS5 index `search` (columns `name`: pid
 and delivered spellings; `label`: labels; `body`: definitions, register/table
 descriptions and document text), plus `search_description` for the curated variable
-description. Both use `search_item.id` as rowid. The builder indexes raw text under
+description. Both indexes use `search_item.id` as rowid. The builder indexes raw text under
 `unicode61 remove_diacritics 2`, which folds case and diacritics, and the reader applies
 no fold of its own: `lan` finds `län` (#2163). An exact-spelling index that ranked
 diacritic-exact matches first (`search_exact`, about 74 MB at 0.80.0) was dropped on the
@@ -2599,7 +2599,7 @@ returns one ranked list.
    inert and `ink` finds `inkomst`. A one-character token is a prefix term too:
    `prefix = '2 3'` only makes two- and three-character prefixes cheap. `q` over 200
    characters or holding a NUL is `invalid_parameter`; a `q` with no token returns no
-   items (`{registers: []}` for facets) without a query. `ops/fts.rs::query` is the one
+   items without a query. `ops/fts.rs::query` is the one
    implementation; `docs_search` shares it.
 2. **Rank.** Primary matches first, then description matches absent from the primary
    match set. Within each, `bm25(index, 10.0, 5.0, 1.0)` (name, label, body), ascending;
@@ -2635,20 +2635,13 @@ returns one ranked list.
    - document `{doc, title, heading, page}`: `doc` is the hash; `heading` and `page`
      come from the document's best `doc_fts` section for the same expression
      (`bm25(doc_fts)`, then `ord`), both `null` when no section matches.
-7. **Facets.** One `GROUP BY register_id` over the deduplicated matches with
-   `kind = 'variable'`, registers in pid order, each `{fqid, variable_matches}`. With
-   `register` (resolved as in 4), only that register, adding `variables`: every matched
-   variable `{fqid, name}` in pid order, `limit` ignored; `registers: []` when none
-   matches. Without it, `limit` adds `name` and the first `limit` matched variables in
-   pid order. With neither, counts only. A key a mode does not list is omitted, never
-   `null`.
 
 **Variable descriptions (#2039).** The one curated variable description is indexed in
 `search_description`, alongside the primary name, labels, definitions and operational
 definitions so AND queries can span source and curated text. A description equal to a
 primary definition or operational definition is not indexed twice. The separate index
 keeps the primary BM25 corpus, scores and ranks unchanged; only new matches follow,
-ranked with the same weights and ties. Facets count each variable once. Search hits keep
+ranked with the same weights and ties. Search hits keep
 their definition field, and `show` supplies the one description. `period` filters the
 variable's coverage hull, including gaps, rather than the wording's applicability; a
 dated minor change is stated in the description. The index and variable description
