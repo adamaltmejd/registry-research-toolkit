@@ -193,13 +193,15 @@ export function VariableList({
       label={label}
       className={className}
       renderName={renderName}
+      // There for any list, loaded or not, so it does not drop out and come
+      // back as another register loads; its count waits for the rows.
       filter={
-        rows && (
+        root !== null && (
           <FilterInput
             value={needle}
             onChange={(text) => setFilter({ root, text })}
-            total={rows.total}
-            shown={rows.shown}
+            total={rows?.total ?? 0}
+            shown={rows?.shown ?? null}
             label={`Filter ${label.toLowerCase()}`}
             placeholder={`Filter ${label.toLowerCase()}…`}
           />

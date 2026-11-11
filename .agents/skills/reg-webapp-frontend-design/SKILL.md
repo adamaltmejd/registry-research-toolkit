@@ -144,7 +144,6 @@ roles. No Tailwind, shadcn or a second token system.
   render prop into a ref) inside the one `onExpandedChange`, or Tab skips the tree.
 - Selection does not follow ←-to-parent, type-ahead or collapse. Selection drives the
   detail pane, so the brief states what collapse does to it.
-- A filter keeps its own expansion set; Escape restores the user's.
 - Inside a scroll container with sticky rows, focus rings are inset
   (`box-shadow: inset …`), or the sticky row covers them.
 - `text-transform` on a labelling element leaks into the accessible name.
