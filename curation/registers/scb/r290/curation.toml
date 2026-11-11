@@ -1924,3 +1924,33 @@ kind = "set"
 subject = "var:forsaljning-material-varor-trafik"
 fields = { "description" = "Försäljning av material och varor, varav den del som hör till trafik. Posten ingår i konto 37." }
 evidence = "Etiketten anger material och varor därav trafik; definitionen är kopierad från v39855.\n0.74.0 catalog, key v39856, releases r13666, r14535, r16251, r18240...; reg_meta.db:occurrence:322894,322976,323058"
+
+[[statement]]
+kind = "set"
+subject = "var:aktivering-arbete-anlaggningstillgangar"
+fields = { "description" = "Aktivering av eget arbete vid utveckling av anläggningstillgångar: motkonto som används när kriterierna för aktivering är uppfyllda enligt RKR R4 Materiella anläggningstillgångar. För kommuner avses konto 591 i senaste Kommun-Bas, för regioner konto 491 i senaste R-bas." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma post för kommuner och regioner; bara kontonumret följer kontoplanen.\ncatalog:variable_text:41881:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:bidrag-privata-aktorer-offentliga"
+fields = { "description" = "Bidrag och gåvor från privata aktörer, offentliga investeringsbidrag periodiserade över nyttjandetiden och övriga bidrag, redovisade under verksamhetens intäkter: konto 357 och 359 i senaste Kommun-Bas, från 2021 även konto 352." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma post; konto 352 (bidrag och gåvor från privata aktörer) läggs till 2021 och anges med år.\ncatalog:variable_text:41886:16801:18628\ncatalog:variable_text:41886:18628:18993\ncatalog:variable_text:41886:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:blankettyp"
+fields = { "description" = "Anger vilken typ av uppgifter blanketten avser: för kommuner externa utgifter, externa inkomster eller investeringar, för regioner kostnader och investeringar eller intäkter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; blankettyperna skiljer sig mellan kommuner och regioner. Hänvisningen till namnet i SQL tas bort.\ncatalog:variable_text:41891:16801:17897\ncatalog:variable_text:41891:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kalenderar"
+fields = { "description" = "Kalenderår, januari till och med december." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text med olika interpunktion.\ncatalog:variable_text:41954:16801:17897\ncatalog:variable_text:41954:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:rad"
+fields = { "description" = "Radnummer i enkäten som uppgiften avser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel, olika formulerad.\ncatalog:variable_text:41998:16801:17897\ncatalog:variable_text:41998:17897:20454"

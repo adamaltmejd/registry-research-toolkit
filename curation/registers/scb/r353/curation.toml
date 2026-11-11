@@ -679,3 +679,9 @@ kind = "set"
 subject = "var:utlsvbakg"
 fields = { "label" = "Utländsk/svensk bakgrund (detaljerad)" }
 evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (2 variables): judged different meaning, high confidence; UtlBakGr is a grouped coding and UtlSvBakg the detailed 11/12/21 coding, concurrent in 2019-2024."
+
+[[statement]]
+kind = "set"
+subject = "var:orgnr"
+fields = { "description" = "Organisationsnummer för elevens huvudman." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda åren anger huvudmannens organisationsnummer; den generella definitionen av organisationsnummer delas av många variabler och tas inte med.\ncatalog:variable_text:10746:18184:18185\ncatalog:variable_text:10746:18550:18551"

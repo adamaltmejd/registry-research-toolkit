@@ -28114,3 +28114,171 @@ subject = "individer-och-dodsbon: TTJLONU @2019-01-01..2019-12-31 where key = 'v
 fact = { "entity" = "occurrence", "fields" = { "definition" = "Kontant bruttolön.", "type" = "integer", "sensitive" = false, "identifier" = false } }
 evidence = "private:ev-3851"
 caveat = "SCB's Registerinformation export lists TTJLONU on IoT only for 2020-2024. The years 2011-2019 rest on SCB's LISA variable list, which documents TTJLONU_IoT for 2011-2024 with IoT as its base register (catalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A418), and on a delivery of IoT that carries the column under this name in those years. Definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "set"
+subject = "var:allman-pension-inklusive-delpension-individ"
+fields = { "description" = "Allmän pension inklusive delpension: summan av ålderspension (PALDP), efterlevandepension (PEFLEVP), barnpension (PBARN) och särskilt pensionstillägg (PSPT)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma summa; den senare texten anger variabelnamnen.\ncatalog:variable_text:37291:12053:17167\ncatalog:variable_text:37291:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsforsakringar-individ"
+fields = { "description" = "Ersättningar från arbetsmarknadsförsäkringar vid arbetslöshet och sjukdom: ersättning från Försäkringskassan som är inkomst av anställning, ersättning från arbetslöshetskassa, egen arbetsskadelivränta samordnad med förtidspension, rehabiliteringspenning och aktivitetsstöd samt egen arbetsskadelivränta som inte är pensionsgrundande." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma summa; stavfelet ”erbetsskadelivränta” rättat.\ncatalog:variable_text:37362:8766:17532\ncatalog:variable_text:37362:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-resor-till-fran-arbetet"
+fields = { "description" = "Avdrag för resor till och från arbetet (från 2017 enligt ruta 2.1 i deklarationen). Avdrag får bara göras för den del av kostnaderna som överstiger ett gränsbelopp: 8 000 kronor 2007–2009, 9 000 kronor 2010–2011 och 10 000 kronor 2012–2016." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma avdrag; gränsbeloppen anges för de år de är angivna.\ncatalog:variable_text:37409:2922:10227\ncatalog:variable_text:37409:10227:13879\ncatalog:variable_text:37409:13879:14245\ncatalog:variable_text:37409:14245:14610\ncatalog:variable_text:37409:14610:14975\ncatalog:variable_text:37409:14975:15340\ncatalog:variable_text:37409:15340:17167\ncatalog:variable_text:37409:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-alder"
+fields = { "description" = "Ålder för barn i familjen, härledd ur familjens sammansättning. 1979 anger variabeln vilken åldersgrupp familjens ett, två eller tre yngsta barn tillhör och används tillsammans med ANTB12." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; 1979 års avvikande indelning anges som fakta med år, stavfelet ”Vaiabeln” försvinner.\ncatalog:variable_text:37459:2922:3287\ncatalog:variable_text:37459:3287:3652\ncatalog:variable_text:37459:3652:4018\ncatalog:variable_text:37459:4018:4383\ncatalog:variable_text:37459:4383:4748\ncatalog:variable_text:37459:4748:5113\ncatalog:variable_text:37459:5113:5479\ncatalog:variable_text:37459:5479:5844\ncatalog:variable_text:37459:5844:6209\ncatalog:variable_text:37459:6209:6574"
+
+[[statement]]
+kind = "set"
+subject = "var:bkupos"
+fields = { "description" = "Positionstyp för optioner och terminer enligt kontrolluppgift från Skatteverket (KU33)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel i två tabeller.\ncatalog:variable_text:37542:10592:12784\ncatalog:variable_text:37542:12784:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:familjepost"
+fields = { "description" = "Markerar den person vars personnummer utgör familjeidentiteten i Registret över totalbefolkningen (RTB). Den personen får koden familjepost och övriga i familjen koden övriga." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; stavningen ”i hop” rättad.\ncatalog:variable_text:37774:2922:7670\ncatalog:variable_text:37774:7670:8035"
+
+[[statement]]
+kind = "set"
+subject = "var:familjestod-skattefritt"
+fields = { "description" = "Summan av skattefria ersättningar som bostadsstöd, barnbidrag, underhållsstöd och ekonomiskt bistånd. I summan ingår ekonomiskt bistånd, särskilt bostadstillägg, bostadstillägg, bostadsbidrag, familjepenning, allmänt barnbidrag, förlängt barnbidrag och flerbarnstillägg, äldreförsörjningsstöd och mottaget underhållsstöd. Dessutom ingår introduktionsersättning 2004–2011 och 2014–2016, jämställdhetsbonus 2008–2016, vårdnadsbidrag och SFI-bonus 2010–2016, bostadsersättning, etableringsersättning och etableringstillägg från 2011, boendetillägg från 2012 och mottaget underhållsbidrag 2012–2013 och från 2017 (simulerat belopp)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma summa; komponenterna ändras över åren och anges med år.\ncatalog:variable_text:37776:12418:13879\ncatalog:variable_text:37776:13879:14610\ncatalog:variable_text:37776:14610:14975\ncatalog:variable_text:37776:14975:15340\ncatalog:variable_text:37776:15340:16071\ncatalog:variable_text:37776:16071:17167\ncatalog:variable_text:37776:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fbnh"
+fields = { "description" = "Personnummer för familjens huvudman i familjepopulationen, för familjemedlemmar bosatta i samma församling. Huvudman är för sammanboende mannen och för barn fadern eller, om sådan saknas, modern. Skattemyndigheterna använder uppgiften bara som sorteringsbegrepp, och den avser samhörigheten under innevarande taxeringsår. Hemmaboende barn som har fyllt 18 år den 1 november får därför ett eget huvudmannabegrepp, och för barn som har egna barn eller är gifta bryts samhörigheten med föräldrarna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; den kortare texten är en del av den längre. Stavfelet ”sorteringsbegrpp” rättat.\ncatalog:variable_text:37785:-731:2922\ncatalog:variable_text:37785:4383:6940\ncatalog:variable_text:37785:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:formogenhetsskattepliktiga-forsakringar"
+fields = { "description" = "Förmögenhetsskattepliktiga försäkringar enligt kontrolluppgift med kod 430 från försäkringsbolag, understödsföreningar och andra pensions- och försäkringsutbetalare. 1991–1993 tas livförsäkringar (kapitalförsäkringar) upp till det försäkringstekniskt beräknade återköpsvärdet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma kontrolluppgift; värderingsregeln anges bara för 1991–1993 och anges med år.\ncatalog:variable_text:37839:7670:8766\ncatalog:variable_text:37839:10227:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstyp"
+fields = { "description" = "Typ av bostadshushåll, härledd ur hushållets sammansättning med avseende på civilstånd och barn. Från 2015 härleds den utifrån RTB men med en annan åldersgräns för barn än i RTB." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma härledda variabel; härledningen från RTB anges från 2015.\ncatalog:variable_text:37903:14975:15340\ncatalog:variable_text:37903:15340:16436\ncatalog:variable_text:37903:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kod-for-samtaxering"
+fields = { "description" = "Markerar skattskyldiga för vilka uppgifter från blanketten Uppgifter för samtaxering har registrerats. Blanketten skulle alltid fyllas i vid samtaxering, utom när makarna hade deklarationsnummer i direkt följd." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma markering; stavfelen i den äldre texten (”maktar”, ”matalsskrivna”) försvinner och den oklara meningen om icke mantalsskrivna tas inte med.\ncatalog:variable_text:38016:-731:365\ncatalog:variable_text:38016:365:2922\ncatalog:variable_text:38016:4748:6209"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Personens kön, härlett ur personnumrets näst sista siffra. Från 2014 ingår även personer med samordningsnummer och dödsbon; dödsbon får inget värde." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; populationstillägget 2014 anges med år.\ncatalog:variable_text:38039:2922:7305\ncatalog:variable_text:38039:7305:9496\ncatalog:variable_text:38039:9496:16071\ncatalog:variable_text:38039:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lonmark"
+fields = { "description" = "Härledd markering som visar lön 1 och lön 2 enligt kontrolluppgifterna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; den senare texten säger bara att den är härledd.\ncatalog:variable_text:38079:4018:4748\ncatalog:variable_text:38079:4748:6209"
+
+[[statement]]
+kind = "set"
+subject = "var:mantalsskrivning-andringsar"
+fields = { "description" = "Kalenderår då personens folkbokföringsuppgifter senast ändrades (till och med 1989 benämnt mantalsskrivningsuppgifter)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel under två VarId; begreppet mantalsskrivning byttes mot folkbokföring.\ncatalog:variable_text:38083:4018:7305\ncatalog:variable_text:38083:7305:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:pension-bidrag-skatteplikt-exkl-arbetsmarknadsforsakr-familj"
+fields = { "description" = "Summan av pensioner och andra skattepliktiga bidrag utom arbetsmarknadsförsäkringar, summerad över familjen enligt Registret över totalbefolkningen (RTB); samma belopp anges för alla familjemedlemmar. Summan består av allmän pension eller tilläggspension (TPENSA), privat pensionsförsäkring eller livränta (TPRIVL), inkomst som inte är pensionsgrundande (TOVR), periodiskt understöd (TPERU), vuxenstudiestöd (TVUXERS), delpension (PDEL), utbildningsbidrag för doktorander (TUTBDOK) och dagpenning från frivillig KFÖ (TKFO)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma summa; den senaste texten anger variabelnamnen. Familjens referensdag anges bara vissa år och tas inte med.\ncatalog:variable_text:38216:8401:10227\ncatalog:variable_text:38216:10227:14610\ncatalog:variable_text:38216:14975:17167\ncatalog:variable_text:38216:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:pensioner-bidrag-exkl-arbetsmarkn-individ"
+fields = { "description" = "Summan av pensioner och andra skattepliktiga bidrag utom arbetsmarknadsförsäkringar: allmän pension eller tilläggspension (TPENSA), privat pensionsförsäkring eller livränta (TPRIVL), inkomst som inte är pensionsgrundande (TOVR), periodiskt understöd (TPERU), vuxenstudiestöd (TVUXERS), delpension (PDEL), utbildningsbidrag för doktorander (TUTBDOK) och dagpenning från frivillig KFÖ (TKFO)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma summa; den senare texten anger variabelnamnen.\ncatalog:variable_text:38226:8766:17167\ncatalog:variable_text:38226:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:pensionsdebiteringskod"
+fields = { "description" = "Kod för vilken typ av pension personen har fått under året, härledd ur Skatteverkets taxeringsmaterial." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma kod; texterna anger härledningen respektive källan.\ncatalog:variable_text:38234:7670:8035\ncatalog:variable_text:38234:12053:12418\ncatalog:variable_text:38234:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-huvudman"
+fields = { "description" = "Personnummer för familjens huvudman, skapat utifrån RTB för folkbokförda och utifrån Skatteverkets uppgifter för ej folkbokförda. Huvudmannen avser familjemedlemmar bosatta i samma församling; för sammanboende är det mannen och för barn fadern eller, om sådan saknas, modern. Skattemyndigheterna använder uppgiften bara som sorteringsbegrepp, och den avser samhörigheten under innevarande taxeringsår. Hemmaboende barn som har fyllt 18 år den 1 november får därför ett eget huvudmannabegrepp, och för barn som har egna barn eller är gifta bryts samhörigheten med föräldrarna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; uppgiften om källorna anges från 1979–1980 och gäller variabeln (etiketten anger RTB och Skatteverket).\ncatalog:variable_text:38252:2922:3287\ncatalog:variable_text:38252:3287:3652\ncatalog:variable_text:38252:3652:4383\ncatalog:variable_text:38252:4383:4748\ncatalog:variable_text:38252:4748:5113"
+
+[[statement]]
+kind = "set"
+subject = "var:personnummer-huvudman-taxeringspopulation"
+fields = { "description" = "Personnummer för familjens huvudman i taxeringspopulationen, enligt uppgifter från Skatteverket. Huvudmannen avser familjemedlemmar bosatta i samma församling; för sammanboende är det mannen och för barn fadern eller, om sådan saknas, modern. Skattemyndigheterna använder uppgiften bara som sorteringsbegrepp, och den avser samhörigheten under innevarande taxeringsår. Hemmaboende barn som har fyllt 18 år den 1 november får därför ett eget huvudmannabegrepp, och för barn som har egna barn eller är gifta bryts samhörigheten med föräldrarna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; texterna är delar av samma längre text, och källan Skatteverket anges i flera år.\ncatalog:variable_text:38255:2922:3287\ncatalog:variable_text:38255:3287:3652\ncatalog:variable_text:38255:3652:4383\ncatalog:variable_text:38255:4383:4748\ncatalog:variable_text:38255:6209:6940\ncatalog:variable_text:38255:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:posttyp"
+fields = { "description" = "Typ av post: i taxeringsmaterialet vilken typ av deklarationspost som avses, i kontrolluppgiftstabellen vilken kontrolluppgiftsblankett som avses." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma posttypsvariabel; vad posten är följer tabellen.\ncatalog:variable_text:38274:365:7305\ncatalog:variable_text:38274:7305:9862\ncatalog:variable_text:38274:10592:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sammanlagd-skuld-vid-arets-slut"
+fields = { "description" = "Sammanlagd skuld vid årets slut enligt kontrolluppgift (KU25)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; den äldre texten säger bara ”Kontrolluppgift”, en generell text som delas av många variabler.\ncatalog:variable_text:38337:10592:10957\ncatalog:variable_text:38337:12784:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:sekvenssiffra"
+fields = { "description" = "Siffra som ger rätt sorteringsordning inom familjen för man, kvinna och barn, skapad med hjälp av familjeregistret i Registret över totalbefolkningen. 1998 används den för att sortera personerna i taxeringshushållet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma sorteringssiffra; 1998 avser den taxeringshushållet.\ncatalog:variable_text:38375:-731:7305\ncatalog:variable_text:38375:10227:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukpenning-anstallning"
+fields = { "description" = "Sjukpenning av anställning, det vill säga sjukpenning som grundas på inkomst av tjänst för vilken arbetsgivaren har betalat ATP-avgift, inklusive KAS. 1987–1988 avser variabeln i stället summan av alla ersättningar från den allmänna försäkringskassan som är pensionsgrundande inkomst av tjänst enligt kontrolluppgift: sjukpenning, föräldrapenning, havandeskapspenning, ersättning till smittbärare, dagpenning vid arbetsmarknadsutbildning, ersättning till ledsagare och dagpenning vid utbildning och tjänstgöring inom totalförsvaret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nRåexporten (tre likadana rader per år) har ATP-definitionen 1974–1986 och 1989 och den vidare summan av pensionsgrundande ersättningar 1987–1988; omfattningsändringen anges som fakta med år.\ncatalog:variable_text:38411:1461:6209\ncatalog:variable_text:38411:6209:6574\ncatalog:variable_text:38411:6574:6940"
+
+[[statement]]
+kind = "set"
+subject = "var:skattefri-sjukpenning-familj"
+fields = { "description" = "Summan av skattefri sjukpenning (ISJUK), skattefri frivillig pension (PFRISF) och särskilt pensionstillägg (PSPT), summerad över familjen enligt Registret över totalbefolkningen (RTB) den 31 december. Alla i familjen har samma belopp." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma summa; den senaste texten anger variabelnamnen.\ncatalog:variable_text:38438:4748:14610\ncatalog:variable_text:38438:14975:15340\ncatalog:variable_text:38438:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringskod"
+fields = { "description" = "Kod för fysiska personer och dödsbon som har medgetts grundavdrag. Till och med 1989 sattes koden av taxeringsnämnden genom förkryssning på deklarationsformuläret vid taxering i hemortskommunen, och den låg till grund för grundavdrag och skattereduktion. 1990–1995 visar koden om personen sambeskattas eller inte." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma kod; de periodvisa förklaringarna anges med år.\ncatalog:variable_text:38625:365:7305\ncatalog:variable_text:38625:7305:9496\ncatalog:variable_text:38625:9496:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:uthyrning-privatbostad-inkl-avdrag-individ"
+fields = { "description" = "Överskott vid uthyrning av privatbostad, inklusive det tillbakalagda avdraget. Avdraget är 12 000 kronor 2010, 18 000 kronor 2011, 21 000 kronor 2012–2013 och 40 000 kronor från 2014." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; avdragets storlek anges med år.\ncatalog:variable_text:38870:14610:14975\ncatalog:variable_text:38870:14975:15340\ncatalog:variable_text:38870:15340:15706\ncatalog:variable_text:38870:15706:16071\ncatalog:variable_text:38870:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandsk-forsakring"
+fields = { "description" = "Värdet på utländsk kapitalförsäkring eller pensionsförsäkring vid årets utgång, enligt kontrolluppgift 52. Kontrolluppgift behöver inte lämnas om försäkringens värde understiger 1 000 kronor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel i två tabeller.\ncatalog:variable_text:38871:11688:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:vuxenstudiestod-bidrag-ovriga-familj"
+fields = { "description" = "Utbetalt studiebidrag och barntillägg inom det särskilda vuxenstudiestödet (SVUX), summerat till familjenivå. Särskilt vuxenstudiestöd kan sökas av vuxna som studerar på grundskole- eller gymnasienivå eller på yrkesteknisk högskola (YTH) och som har förvärvsarbetat, haft egen rörelse eller jordbruk i minst fyra år; stödet är främst avsett för den som har kort utbildning och tar ledigt från arbetet. Till och med 1996 anges familjebeloppet för vuxenposterna och för 16–17-åringar som bildar egen familj, medan övriga 16–17-åringar har sin egen ersättning. Från 1997 summeras varje familjemedlems belopp till familjebeloppet enligt Registret över totalbefolkningen (RTB)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; familjesummeringens regel anges med år.\ncatalog:variable_text:38899:6209:6574\ncatalog:variable_text:38899:6574:6940\ncatalog:variable_text:38899:9862:12418"

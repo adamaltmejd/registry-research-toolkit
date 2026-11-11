@@ -1253,3 +1253,63 @@ kind = "set"
 subject = "var:sun2000niva-sv-far"
 fields = { "description" = "Faderns utbildningsnivå enligt SUN 2000, i tre grupper." }
 evidence = "Etikett, definition och kolumnnamn anger fadern; den operationella definitionen för 2013-2014 nämner modern och är en kopierad formulering.\n0.74.0 catalog, key v8074, releases r5572, r5606, r5607, r5610...; reg_meta.db:occurrence:215059,215110,215155"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg"
+fields = { "description" = "Elevens betyg på den gymnasiekurs som provet avser; vilken kurs det är anges i variabeln Kurs." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma betygsvariabel; kurslistan finns bara 2011–2013 och tas inte med.\ncatalog:variable_text:30002:15156:15887\ncatalog:variable_text:30002:15887:18262\ncatalog:variable_text:30002:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:inriktning-fristaende-gy"
+fields = { "description" = "Inriktning för fristående gymnasieskola. För skolenheter som inte är fristående anges ingen inriktning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; regeln för icke fristående skolor finns i de flesta år.\ncatalog:variable_text:30012:15156:15887\ncatalog:variable_text:30012:15887:16071\ncatalog:variable_text:30012:16801:16983"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "description" = "Kommun där skolan ligger." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma kommun för skolan; ”grundskolan” i en tabell 2018 är ett kopieringsfel från grundskolans motsvarande variabel.\ncatalog:variable_text:30016:16617:16983\ncatalog:variable_text:30016:17532:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Personens kön, härlett ur personnumret: udda näst sista siffra (position 11) ger man (1), jämn ger kvinna (2)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma härledning; den senare texten är bara kortare.\ncatalog:variable_text:30017:15156:18262\ncatalog:variable_text:30017:20089:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:laroplan"
+fields = { "description" = "Den läroplan som eleven följer, Lpf94 eller Gy2011. 2014 följer alla elever Gy2011." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; de senare texterna anger att eleverna följer Gy2011.\ncatalog:variable_text:30020:15156:15887\ncatalog:variable_text:30020:15887:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:nyinvandring"
+fields = { "description" = "Anger om eleven har invandrat till Sverige för första gången någon gång under de senaste fyra åren, baserat på första invandringsåret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; tidpunkten ”efter september 2014” gäller bara 2018 års text och följer av fyraårsregeln.\ncatalog:variable_text:30027:17713:18262\ncatalog:variable_text:30027:18444:18628\ncatalog:variable_text:30027:18993:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:obl-prov"
+fields = { "description" = "Anger om provet är obligatoriskt för eleven. Provet är obligatoriskt när kursen är den högsta avslutande kursen på elevens program och inriktning; från 2023 är det dessutom obligatoriskt när kursen är den inledande kursen för elever på yrkesprogram." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; regeln utvidgades 2023 och anges som fakta med år.\ncatalog:variable_text:30028:17897:18262\ncatalog:variable_text:30028:19539:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:provbet-ord"
+fields = { "description" = "Anger om eleven har genomfört det ordinarie nationella provet och har ett provbetyg inrapporterat, för den kurs som anges i variabeln Kurs. För elever som läser enligt Lpf94 (2011–2013) krävs att eleven har genomfört alla kursens delprov och har betyg på varje delprov och ett sammanvägt provbetyg." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; kurslistorna varierar mellan åren och tas inte med, Lpf94-regeln anges med år.\ncatalog:variable_text:30036:15156:15340\ncatalog:variable_text:30036:15340:15522\ncatalog:variable_text:30036:15522:15706\ncatalog:variable_text:30036:15887:16252\ncatalog:variable_text:30036:16252:16436\ncatalog:variable_text:30036:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:suppg"
+fields = { "description" = "Vilken skriftlig uppgift som valts till delprovet i kurser i svenska, svenska som andraspråk och engelska; vilken kurs det gäller anges i variabeln Kurs." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; kurslistan varierar mellan åren och tas inte med i detalj.\ncatalog:variable_text:30067:15156:15340\ncatalog:variable_text:30067:15340:15706\ncatalog:variable_text:30067:15706:15887\ncatalog:variable_text:30067:15887:16071\ncatalog:variable_text:30067:16071:16252\ncatalog:variable_text:30067:17897:18078"
+
+[[statement]]
+kind = "set"
+subject = "var:termin"
+fields = { "description" = "Den termin som uppgifterna avser, till exempel HT15 för höstterminen 2015 eller VT16 för vårterminen 2016." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; de enskilda åren anger bara sitt värde.\ncatalog:variable_text:30068:16617:16801\ncatalog:variable_text:30068:16801:16983\ncatalog:variable_text:30068:16983:18262"

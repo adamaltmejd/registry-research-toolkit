@@ -2678,3 +2678,27 @@ kind = "set"
 subject = "var:obligationer-fordran"
 fields = { "label" = "Obligationer, fordran (FKUORMV)" }
 evidence = "#2102 same-label cluster 'Obligationer, fordran' (3 variables): judged different meaning, medium confidence; FKUVP and FKUVPR are consecutive with identical opdefs (same variable over time); FKUORMV overlaps FKUVPR in the household table and no source says how it differs."
+
+[[statement]]
+kind = "set"
+subject = "var:bankkonto"
+fields = { "description" = "Fordran på bankmedel, det vill säga behållning på bankkonto, enligt kontrolluppgift från Skatteverket (KU20). I hushållstabellen är värdet summan för hushållets medlemmar. 1999–2005 finns kontrolluppgift endast för konton där årsräntan överstiger 100 kronor; från 2006 lämnas den för alla konton med en behållning på minst 10 000 kronor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått för individ och hushåll; hushållsvärdet är summan över medlemmarna.\ncatalog:variable_text:19603:10956:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:finansiella-tillgangar-marknadsvarde"
+fields = { "description" = "Summan av marknadsvärdet på samtliga finansiella tillgångar (härledd variabel). I hushållstabellen är värdet summan för hushållets medlemmar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått för individ och hushåll; hushållsvärdet är summan över medlemmarna.\ncatalog:variable_text:19638:10956:10957\ncatalog:variable_text:19638:13148:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoformogenhet-marknadsvarde"
+fields = { "description" = "Marknadsvärderad nettoförmögenhet: summan av tillgångar minus summan av skulder, som därför kan vara negativ (härledd variabel). I hushållstabellen är värdet summan för hushållets medlemmar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått för individ och hushåll; hushållsvärdet är summan över medlemmarna.\ncatalog:variable_text:19682:10956:10957\ncatalog:variable_text:19682:13148:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:reala-tillgangar-marknadsvarde"
+fields = { "description" = "Summan av marknadsvärdet på reala tillgångar (fastigheter och bostadsrätter), värderat för ägda andelar (härledd variabel). I hushållstabellen är värdet summan för hushållets medlemmar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått för individ och hushåll; hushållsvärdet är summan över medlemmarna.\ncatalog:variable_text:19707:10956:10957\ncatalog:variable_text:19707:13148:13149"

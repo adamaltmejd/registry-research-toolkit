@@ -3988,3 +3988,21 @@ kind = "set"
 subject = "terrangskotrar: AgNr where key = 'v2969' and release = 'r15115'"
 fields = { "operational_definition" = "Avser fordonets ägare" }
 evidence = "Registerinformation.csv, VarId 2969, Terrängskotrar 2008, column AgNr (one row): the operational definition is 'Anger terrängskoterns fabrikat', the make column's text; SCB's export carries the error. AgNr in Terrängskotrar has 'Avser fordonets ägare' in every other year 1980–2025, restored here. Operator, #2322 curation under the maintainer's 2026-11-11 delegation."
+
+[[statement]]
+kind = "set"
+subject = "var:agarnummer-agnr"
+fields = { "description" = "Personnummer eller organisationsnummer för fordonets ägare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel i alla fordonsslag; två förekomster med en annan kolumns operationalisering (Lastbilar 2015, Terrängskotrar 2008) är rättade på förekomstnivå.\ncatalog:variable_text:18792:4017:4018\ncatalog:variable_text:18792:10956:10957\ncatalog:variable_text:18792:14244:14245\ncatalog:variable_text:18792:16800:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:arsmod"
+fields = { "description" = "Fordonets årsmodell, antingen den faktiska eller en förmodad årsmodell. En förmodad årsmodell markeras med Ja i variabeln Årsmodell imputerad." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; övriga fordonsslag och terränghjulingar saknar bara tillägget om imputering, som även gäller dem (Årsmodell imputerad finns för terränghjulingar).\ncatalog:variable_text:18802:4017:4018\ncatalog:variable_text:18802:10956:10957\ncatalog:variable_text:18802:17896:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:arsmodell-imputerad-arsmod-imp"
+fields = { "description" = "Anger om fordonets årsmodell är imputerad. Vid imputering används i tur och ordning datum för första ibruktagande, tillverkningsår och datum då fordonet första gången registrerades i Vägtrafikregistret hos Transportstyrelsen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma markering; terränghjulingarnas text ”enkätsvar, förekomst” beskriver inte variabeln och tas inte med.\ncatalog:variable_text:18803:4017:4018\ncatalog:variable_text:18803:17896:17897"

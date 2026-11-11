@@ -4943,3 +4943,27 @@ kind = "set"
 subject = "release:halvarsvis/r15211"
 fields = { "table" = "kalenderar" }
 evidence = "Release 'Hela året 2003' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-foretaget"
+fields = { "description" = "Antal anställda i det företag eller den organisation där personen arbetar eller har arbetat, enligt uppgiftslämnarens svar, grupperat i storleksklasser (2010 i sju grupper)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; hänvisningen till relaterad information tas bort.\ncatalog:variable_text:46468:13149:13330\ncatalog:variable_text:46468:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:folkbokforingskommun"
+fields = { "description" = "Personens folkbokföringskommun enligt registeruppgift, i kommunindelningen den 1 januari: 2006 enligt 2005 års indelning, 2008 enligt 2008 års och 2010 enligt 2010 års indelning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; kommunindelningens år anges.\ncatalog:variable_text:46502:13149:13330\ncatalog:variable_text:46502:13879:14061\ncatalog:variable_text:46502:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:kalibreringsvikt"
+fields = { "description" = "Vikt för uppräkning till populationen, beräknad med ETOS, ett program för tvåfasurval. I kalenderårstabellen är det en helårsvikt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma vikt; i kalenderårstabellen anges att den är en helårsvikt.\ncatalog:variable_text:46521:9131:10592\ncatalog:variable_text:46521:10592:10773"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildning-betald-av-arbetsgivaren"
+fields = { "description" = "Anger om arbetsgivaren helt eller delvis har bekostat utbildningen, i form av arbetstid, kursavgifter, resor, böcker eller tekniska hjälpmedel. Det krävs för att utbildningen ska räknas som personalutbildning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; stavfelet ”kursavgiter” rättat.\ncatalog:variable_text:46739:9131:12418\ncatalog:variable_text:46739:13149:13330\ncatalog:variable_text:46739:14610:14791"

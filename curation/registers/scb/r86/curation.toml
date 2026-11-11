@@ -13521,3 +13521,9 @@ kind = "set"
 subject = "hushall-1999-2001: VK2642 where key = 'v41020' and unit = 'Antal  minuter'"
 fields = { "unit" = "kronor" }
 evidence = "Same class: unit Antal  minuter on an expenditure variable."
+
+[[statement]]
+kind = "set"
+subject = "var:evkomm1"
+fields = { "description" = "Markerar troligen om en kommentar skrevs in i inledningsintervjun. Vad koderna betyder är oklart." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda åren säger att kodernas innebörd är oklar; 2000 anger den troliga innebörden.\ncatalog:variable_text:33472:10957:11323\ncatalog:variable_text:33472:11323:11688"
