@@ -24,7 +24,7 @@ import {
   registerSubjectNames,
   segmentsRead,
 } from "./catalog_names";
-import { segmentYears } from "./catalog_period";
+import { segmentYears, sourcePeriodLabel } from "./catalog_period";
 import {
   chosenDatabase,
   databasesLine,
@@ -433,12 +433,20 @@ export function useVariableCoverage({
         ? [
             `Also removes ${listNames(
               emptiedTables.map((table) => {
-                const count = emptied.filter(
+                const going = emptied.filter(
                   (source) => source.table === table,
-                ).length;
-                return count > 1
-                  ? `${count} sources of ${tableName(table)}`
-                  : tableName(table);
+                );
+                // The table leaves only when none of its sources is left;
+                // otherwise name the sources that go by their years.
+                const kept = (draft?.sources ?? []).some(
+                  (source) => source.table === table && !going.includes(source),
+                );
+                if (!kept) return tableName(table);
+                const years = going
+                  .map((source) => sourcePeriodLabel(source.period))
+                  .filter(Boolean)
+                  .join(", ");
+                return `${going.length} ${going.length === 1 ? "source" : "sources"} of ${tableName(table)}${years ? ` (${years})` : ""}`;
               }),
             )} from the project${grouped ? " and from its panels" : ""}.`,
           ]
