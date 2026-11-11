@@ -190,6 +190,7 @@ export function TopBar({
           <Button
             ref={browserButtonRef}
             aria-label="Browse registers"
+            title="Browse registers"
             aria-expanded={browser.open}
             isInert={browser.inert}
             aria-controls={browser.controls}

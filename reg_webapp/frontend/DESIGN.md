@@ -390,11 +390,11 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   sticks to the top of the page above `breakpoint-narrow`. Below it the bar has two rows
   that scroll away with the page (#2403, maintainer decisions 2026-11-11): the logo,
   then the search field filling the row, always shown; under them the menu button and
-  the project banner. The button (three lines, named "Browse registers", with
-  `aria-expanded` and `aria-controls`; the name is the implementer's proposal) sits
-  under the logo, the banner fills the rest of the row. The button opens the register
-  browser and hides it again (see Browse columns). This replaces the "Search" button that unfolded the field
-  (maintainer ruling 2026-10-24). Below the breakpoint every text field is set at 1rem: iOS Safari
+  the project banner, which fills the rest of the row. The button is icon-only (three
+  lines), with "Browse registers" as its accessible name and tooltip, and
+  `aria-expanded` (`aria-controls` names the register column); it opens the register
+  browser and closes it again (see Browse columns). This replaces the "Search" button
+  that unfolded the field (maintainer ruling 2026-10-24). Below the breakpoint every text field is set at 1rem: iOS Safari
   zooms the page into a focused field under 16px and leaves it zoomed, cut off at the
   left.
 - **Browse columns (`ColumnList`):** a steward deployment shows only what the steward
@@ -453,21 +453,19 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   viewport below the top bar and scrolls its own list. Every item and group carries its
   in-project mark on the right when it has one. Below the single narrow breakpoint
   (`breakpoint-narrow`, 60rem: narrower, the two columns leave the detail pane under
-  400px, #2107) there is one column (#2403). The maintainer decided (2026-11-11) that
-  the second column is hidden below this breakpoint, that the menu button opens the
-  register browser and hides it again, and that choosing a provider or a register opens
-  its page. The rest of this paragraph is proposed and not yet confirmed: the second column is the variables column, never
-  drawn here, a register's variables being reached from its page, which has its own
-  filter box (see Column filter) (Operator proposal); the register browser is the
-  register column, shown in place of the page while open, closed by choosing an entry or
-  by Escape, which returns focus to the button (Operator proposal). Opening it moves
-  focus to the open page's row, or the first row; choosing a row is a press, Enter or
-  Space; the arrows passing a row open its page behind it, as above the breakpoint, and
-  leave it open; any other navigation (a link, a search result, the history) closes it;
-  and the catalog root, whose page is the register list, always shows it, its button
-  inert (implementer proposals). This
-  replaces the stacked columns and the "Browse registers" first crumb (#1824; its
-  removal is an Operator proposal). Do not mint new breakpoints.
+  400px, #2107) there is one column (#2403, maintainer decisions 2026-11-11). The
+  variables column is not drawn there: a register's variables are reached from its
+  page, which has its own filter box (see Column filter). The register column is the
+  register browser, shown in place of the page while open. The top bar's menu button
+  opens it and closes it again; choosing an entry opens that provider's, register's or
+  the classifications' page and closes it, and so does Escape, which returns focus to
+  the button. The button replaces the "Browse registers" first crumb (#1824) as the way
+  into the register list. Proposed by the implementer: opening it moves focus to the
+  open page's row, or the first row; choosing a row is a press, Enter or Space; the
+  arrows passing a row open its page behind it, as above the breakpoint, and leave it
+  open; any other navigation (a link, a search result, the history) closes it; and the
+  catalog root, whose page is the register list, always shows it, its button inert
+  there, since closing it would leave an empty page. Do not mint new breakpoints.
 - **Search.** The top-bar field searches and filters nothing (#2398, maintainer
   2026-11-11): typing never changes the browse columns or the open page. Its results, the
   command palette (RAC `Autocomplete`), open under it as you type once the text reaches

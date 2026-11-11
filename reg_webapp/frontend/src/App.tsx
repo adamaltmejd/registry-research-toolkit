@@ -99,12 +99,13 @@ export function App() {
   if (openAt !== null && openAt !== routeKey) setOpenAt(null);
   const browserOpen = isRoot || openAt === routeKey;
   const browserButton = useRef<HTMLButtonElement>(null);
+  /** Below the breakpoint, where the button is drawn. */
+  const narrow = () => browserButton.current?.offsetParent != null;
   /** Close the browser, focus returning to its button. Above the breakpoint
-   * the button is not drawn and the column is the page's own: nothing moves. */
+   * the column is the page's own: focus stays in it. */
   const closeBrowser = () => {
-    if (browserButton.current?.offsetParent == null) return;
     setOpenAt(null);
-    browserButton.current.focus();
+    if (narrow()) browserButton.current?.focus();
   };
   const toggleBrowser = () => {
     if (isRoot) return;
@@ -116,7 +117,7 @@ export function App() {
   /** The arrows open a row's page behind the open browser: it stays open
    * there. */
   const browseTo = (key: string) => {
-    if (browserOpen) setOpenAt(key);
+    if (browserOpen && narrow()) setOpenAt(key);
   };
 
   useEffect(() => {
