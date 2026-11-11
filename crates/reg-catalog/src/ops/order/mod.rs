@@ -1038,7 +1038,7 @@ fn serving(
 /// The parts of `gaps` (half-open day numbers, ascending) an order reports: all but the
 /// calendar years the request covers whole and `delivered` reaches on some day. Such a
 /// year reads as delivered, and no whole year fills its gap, so a finding or clip would
-/// name a year that comes (reg_webapp/frontend/DESIGN.md → Time, #2389; #2409).
+/// name a year that comes (`reg_webapp/frontend/DESIGN.md` → Time, #2389; #2409).
 pub(super) fn reported_gaps(
     gaps: &[(i64, i64)],
     requested: &[(i64, i64)],
