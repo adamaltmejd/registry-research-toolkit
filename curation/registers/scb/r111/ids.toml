@@ -439,6 +439,7 @@ public = "intradet-pa-arbetsmarknaden"
 "lilla-n-per-stratum" = ["Examinerade från yrkeshögskolan: LILLAN"]
 "lilla-n-per-stratum-2" = ["Inträdet på arbetsmarknaden bland gymnasieavgångna: Lillan1"]
 "lilla-n-per-stratum-lillan2" = ["Inträdet på arbetsmarknaden bland gymnasieavgångna: Lillan2"]
+"enkatlopnummer" = ["Inträdet på arbetsmarknaden bland högskoleexaminerade: UENR"]
 "lopnummer" = ["Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade: lopnr"]
 "antal-inkomna-svar-per-stratum-inklusive-overtackning" = ["Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade: m"]
 "manader-forsta-arbete" = ["Inträdet på arbetsmarknaden bland gymnasieavgångna: F02"]

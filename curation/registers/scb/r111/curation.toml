@@ -13461,17 +13461,29 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:lopnummer"
-fields = { "description" = "Löpnummer för personen. 2000–2002 ersätter det personens personnummer i det avidentifierade materialet. 2006–2010 är det ett internt nummer som används vid enkätutskick och avprickning av inkomna enkäter; 2008–2010 är det ett slumpmässigt tal." }
+fields = { "description" = "Löpnummer som ersätter personens personnummer i det avidentifierade materialet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma löpnummer; 2000–2002 anger att det ersätter personnumret, 2006–2010 hur det används i insamlingen.\ncatalog:variable_text:36788:11017:11048\ncatalog:variable_text:36788:13208:13239\ncatalog:variable_text:36788:13939:13970"
 
 [[statement]]
 kind = "set"
 subject = "var:scbid"
 fields = { "description" = "SCB:s identitetsnummer för individen. För gymnasieavgångna 2006–2014 används det internt vid enkätutskick och avbockning; för YH-examinerade 2019 är det ett unikt nummer för individen som ersätter personnumret." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma identitetsnummer; 2006–2014 anger hur det används i insamlingen, 2019 att det ersätter personnumret. Rättar ”identitesnummer”.\ncatalog:variable_text:36909:13208:13239\ncatalog:variable_text:36909:18078:18262"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nLöpnumret 2000–2002 ersätter personnumret; UENR 2006–2010 är utbrutet till enkatlopnummer.\ncatalog:variable_text:36788:11017:11048"
 
 [[statement]]
 kind = "set"
 subject = "var:svarsdatum"
 fields = { "description" = "Datum då personens enkätsvar registrerades som inkommet (avregistreringsdatum); processdata från insamlingen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; ”processdata” och ”processvariabel” säger samma sak.\ncatalog:variable_text:37021:17167:17348\ncatalog:variable_text:37021:19174:19358"
+
+[[statement]]
+kind = "set"
+subject = "intradet-hogskoleexaminerade: UENR where key = 'v2179'"
+fields = { "variable" = "enkatlopnummer" }
+evidence = "Candidate split, no succession edge (crates/DESIGN.md). SCB VarId 2179 (Löpnummer) carries two different identifiers: in Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade 2000–2002, column lopnr, a number that replaces the personnummer in the de-identified material ('Personnumret är avidentifierat och ersatt av ett löpnummer'); in the högskoleexaminerade table 2006–2010, column UENR, an internal number for survey dispatch and checking off returned questionnaires, from 2008 a random number. The 2000–2002 half keeps the id (its ledger anchor). Operator, #2322 curation under the maintainer's 2026-11-11 delegation.\ncatalog:variable_text:36788:11017:11048\ncatalog:variable_text:36788:13208:13239\ncatalog:variable_text:36788:13939:13970"
+
+[[statement]]
+kind = "set"
+subject = "var:enkatlopnummer"
+fields = { "description" = "Internt löpnummer för personen, som används vid enkätutskick och avprickning av inkomna enkäter. 2008–2010 är det ett slumpmässigt tal." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAndra halvan av delningen av lopnummer (UENR 2006–2010).\ncatalog:variable_text:36788:13208:13239\ncatalog:variable_text:36788:13939:13970"
