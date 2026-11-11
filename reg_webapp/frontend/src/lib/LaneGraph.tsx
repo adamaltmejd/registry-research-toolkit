@@ -207,7 +207,7 @@ export function LaneGraph({
   onToggle,
   focus = null,
   focusSpan = null,
-  hint = "Click a column to add it to your project.",
+  hint = "Click a column to add or remove its variable.",
   single = false,
 }: Props) {
   const [width, setWidth] = useState(0);

@@ -505,14 +505,33 @@ a.nameText {
 }
 
 /* On the name block, which stays pinned while a grown track scrolls; the
-   lane sets its height. */
-.graph[data-stacked] .name[data-row="table"]::before {
+   lane sets its height. The line is the table pill's border mix. Under it a
+   strip of the inset keeps scrolled spans from running past the line (#2408):
+   the name block paints over its lane's spans. */
+.graph[data-stacked] .name[data-row="table"] {
+  z-index: 1;
+}
+
+.graph[data-stacked] .name[data-row="table"]::before,
+.graph[data-stacked] .name[data-row="table"]::after {
   position: absolute;
+  top: 0;
+  left: 0;
+  height: var(--lane-guide);
+  content: "";
+}
+
+.graph[data-stacked] .name[data-row="table"]::after {
+  z-index: -1;
+  width: var(--space-4);
+  background: var(--surface);
+}
+
+.graph[data-stacked] .name[data-row="table"]::before {
   top: var(--space-1);
   left: var(--space-1);
   height: calc(var(--lane-guide) - var(--space-1) - var(--space-2));
-  border-left: 2px solid color-mix(in srgb, var(--cat-table) 40%, transparent);
-  content: "";
+  border-left: 2px solid color-mix(in srgb, var(--cat-table) 35%, transparent);
 }
 
 .run {

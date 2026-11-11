@@ -131,11 +131,15 @@ export function variableSpans({
             ? `In project, outside the study years (${sourceLabel}).`
             : relation && relation !== "same"
               ? `In project for ${sourceLabel}, which differs from the study years.`
-              : source
-                ? "in project, check to remove"
-                : inside
-                  ? "check to add"
-                  : "outside the years to add";
+              : !project
+                ? source
+                  ? "in project"
+                  : null
+                : source
+                  ? "in project, check to remove"
+                  : inside
+                    ? "check to add"
+                    : "outside the years to add";
     const selectable = !readOnly && !!project && (!!source || inside);
     const isSelected = selectable && selected.has(lane);
     const staged = isSelected ? (source ? "remove" : "add") : null;

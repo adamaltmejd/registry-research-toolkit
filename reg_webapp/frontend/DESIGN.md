@@ -880,7 +880,9 @@ Time is the axis every relation is drawn on.
   #2408, 2026-11-11): a variable's columns in one table are successive spellings that
   never overlap in time (`avgar` to 1989, `AvgAr` from 1990), drawn as successive
   column pills on that row; only columns delivered side by side in one file (a slot's
-  members, `ng2`–`ng5`) overlap, and each takes a row of its own. A steward's yearly
+  members, `ng2`–`ng5`) overlap, and each takes a row of its own; a later column joins
+  a row only where exactly one row can take it, since sharing a slot member's row would
+  read as its rename (new rule, proposed by the implementer). A steward's yearly
   files of one table are the same column delivered in several files, one box over their
   years with a gap where a year is not delivered (maintainer 2026-11-04). Spans are
   drawn at their real half-open dates, so school years abut instead of sharing a year
@@ -911,9 +913,10 @@ Time is the axis every relation is drawn on.
   Stacked below the breakpoint (variant C of the
   Operator's inline-timeline mock-up, maintainer, #2408, 2026-11-11), the variable's
   heading is set in `h3` with a rule above it, and each table is a block with a moss
-  guide line (`cat-table` at 40 %) down its left: the table pill and its delivered years
+  guide line (`cat-table` at 35 %, the table pill's border) down its left: the table pill and its delivered years
   on one line, the years at the right and wrapping between runs, and the spans on a
-  full-width track below, 16 px in, past the line. A lane's spans start just under its
+  full-width track below, 16 px in, past the line; a track that scrolls passes under a
+  `surface` strip of that inset, so no span runs past the line. A lane's spans start just under its
   name. A stacked graph that scrolls sideways with no span to tab to is itself a tab stop,
   a region named by the drawing, so a keyboard can scroll it (WCAG 2.1.1; Operator
   fold, #2408). Hovering or focusing a span
@@ -924,7 +927,7 @@ Time is the axis every relation is drawn on.
   maintainer ruling, 2026-11-10): no table name and no study-window note in a tooltip,
   and no table name on a span. The
   variables a succession reaches are further lanes in time order, with their arrows. A
-  line under the drawing says "Click a column to add it to your project." while a
+  line under the drawing says "Click a column to add or remove its variable." while a
   project is open; with none there is no line and no button at any width, since the top
   bar has the action ("yes", maintainer, dogfood 2026-11-05, #2319). There is no second
   graph on the page. While it loads the region is a `Skeleton`; a
@@ -1087,7 +1090,8 @@ grow new visual language meanwhile.
   `danger` "Remove from project", and the press is the confirmation, with no dialog
   (Operator, #2408, 2026-11-11). Where a removal takes a table's last variable, a line
   beside the buttons says so before the press ("Also removes Slutbetyg from the
-  project."), and describes the button. The caller omits the bar when nothing is staged.
+  project.", with "and from its panels" where the table is in one), and describes the
+  button. The caller omits the bar when nothing is staged.
 - **ProjectBanner:** the project's presence in the top bar — name, study window, source
   and column counts, the verdict, save state — on `accent-soft` with a 1 px `border`
   hairline and `rounded.sm`, the search field's box, with no leading bar (#2407,

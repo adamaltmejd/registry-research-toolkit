@@ -405,10 +405,14 @@ export function useVariableCoverage({
       ),
     ),
   );
+  // A source that goes leaves its panels too.
+  const grouped = emptied.some((source) =>
+    draft?.panels?.some((panel) => panel.members.includes(source.name)),
+  );
   const removalNote = emptied.length
     ? `Also removes ${listNames(
         emptied.map((source) => names.get(source.table) ?? source.name),
-      )} from the project.`
+      )} from the project${grouped ? " and from its panels" : ""}.`
     : null;
   const remove = () => {
     const current = projectStore.draft;

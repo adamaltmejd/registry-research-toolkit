@@ -108,7 +108,7 @@ export function columnRows(
     first(a) < first(b) ? -1 : first(a) > first(b) ? 1 : 0,
   )) {
     const days = column.segments.map(segmentDays);
-    const row = rows.find((placed) =>
+    const free = rows.filter((placed) =>
       placed.every((other) =>
         other.segments.every(
           (segment) =>
@@ -116,6 +116,10 @@ export function columnRows(
         ),
       ),
     );
+    // Only where one row takes it: after a slot's members, which row a
+    // later column continues is unknown, and sharing one would read as a
+    // rename of that member.
+    const row = free.length === 1 ? free[0] : undefined;
     if (row) row.push(column);
     else rows.push([column]);
   }
