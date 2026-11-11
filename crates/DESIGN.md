@@ -1216,7 +1216,12 @@ the order check's to state in its own tests; the rules that shape them:
   variable. Which keys join is the researcher's call; the catalog stores no identifier
   kind, so the order check does not compare panel members' keys.
 - A request partly outside availability is a clip (`period_clipped`), never silent and
-  never an error. Only availability empty across the whole request blocks.
+  never an error. Only availability empty across the whole request blocks. A gap inside
+  a calendar year the request covers whole and the binding delivers on some day is not
+  reported, by the logical check or the holdings stage (no `period_clipped`, no
+  `coverage_gap`, no clip when nothing else is missing): that year reads as delivered,
+  and no whole year fills the gap (frontend DESIGN.md → Time, #2389; #2409). A steward
+  order still lists only the delivered days as entries.
 - A table succession with no `at` is not followed: the check returns
   `table_succession_undated` naming the successor and clips the rest. No day is inferred
   from coverage (v4 §2.1); D's `link … at` supplies the day.
@@ -2365,10 +2370,14 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
   `physical_schema_missing`. Both block, located at the file's first binding.
   `reg-build holdings` already refuses such a name at publication
   (`holdings_filename_invalid`), so `file_name_unsafe` guards only a foreign artifact.
-- Non-blocking infos: `rows_unfiltered` (no period column and the request is narrower
-  than the delivery), `row_filter_widened` (the encoding's grain adds days around the
-  source's own request that no source asked for), `row_filter_union` (a source whose
-  days are narrower than its shared file's union). Each is located at the source. A
+- Non-blocking infos: `rows_unfiltered` (no period column, and the file holds days the
+  source did not request), `row_filter_widened` (the encoding's grain adds held days
+  around the source's own request that no source asked for), `row_filter_union` (a
+  source whose days are narrower than its shared file's union). Each is located at the
+  source and names the extra days, or the union, in plain words at their grain
+  (`July to December 2018`, `2017 to June 2018`, a school year as `2004/2005`, per the
+  frontend DESIGN.md Time rule, #2315, #2389); none names the physical file or its
+  delivery code, which are not the researcher's (#2409). A
   selected mapping's `caveat` is a `mapping_caveat` warning located at the binding over
   the selected days (the Operator's 2026-10-19 warn-not-hold call); an automatically
   added key's caveat is located at its source.
@@ -2459,7 +2468,10 @@ a steward server `validate` and `order` also run the holdings stage of
 steward `order` that succeeds carries the holdings stage's warnings with its own, and
 the order file's clips in place of the logical ones, each entry cut to its binding's
 delivered days and each row key to its table's: a `coverage_gap` is not listed as
-delivered (#2220).
+delivered (#2220). Each entry also carries the column name the held files use over its
+days, split where that name changes, as row keys already do: a held file can name a
+column otherwise than the catalog (`AvgAr` for `avgar`). Days several differently named
+columns deliver at once (a slot family's members) keep the catalog spelling (#2409).
 
 ### Project document 6.1.0
 

@@ -1,5 +1,9 @@
 import type { CatalogPeriod } from "./api";
-import { sourcePeriodIntervals } from "./reg_core";
+import {
+  type Interval,
+  overlapIntervals,
+  sourcePeriodIntervals,
+} from "./reg_core";
 
 /** Catalog periods are half-open; reg-core renders inclusive date intervals. */
 export function catalogLastDate(period: CatalogPeriod): string | null {
@@ -9,6 +13,22 @@ export function catalogLastDate(period: CatalogPeriod): string | null {
   return last.toISOString().slice(0, 10);
 }
 
+/** The part of a catalog period inside inclusive ISO `days` (ascending,
+ * disjoint), as catalog periods: a column cut to a source period (#2409). */
+export function catalogPeriodWithin(
+  period: CatalogPeriod,
+  days: readonly Interval[],
+): CatalogPeriod[] {
+  const last = catalogLastDate(period);
+  return overlapIntervals(
+    [[period.start ?? "0001-01-01", last ?? "9999-12-31"]],
+    days,
+  ).map(([first, end]) => {
+    const next = new Date(`${end}T00:00:00Z`);
+    next.setUTCDate(next.getUTCDate() + 1);
+    return { start: first, end: next.toISOString().slice(0, 10) };
+  });
+}
 /** Inclusive ISO days, null for an open end. */
 type Days = readonly [string | null, string | null];
 

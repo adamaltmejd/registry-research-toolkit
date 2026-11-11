@@ -279,6 +279,28 @@ export function coverageMarks(
   return { delivered, ticks };
 }
 
+/** The calendar years a source period's days fall in, one window per stretch,
+ * joined where the years meet: a date period draws on the years its first and
+ * last days fall in (`2005..2024-06-30` is 2005–2024, #2409). Null when it
+ * requests no dated days (`_default`, unset or refused). What the source card's
+ * thumbs rest on and its lanes are cut to; `sourcePeriodYears` stays the test of
+ * a period the thumbs wrote. */
+export function sourcePeriodYearWindows(
+  period: unknown,
+): ProjectStudyWindow[] | null {
+  const days = datedIntervals(period);
+  if (days === null || days.length === 0) return null;
+  const windows: ProjectStudyWindow[] = [];
+  for (const [first, last] of days) {
+    const from = Number(first.slice(0, 4));
+    const to = Number(last.slice(0, 4));
+    const prior = windows.at(-1);
+    if (prior && from <= prior.to + 1) prior.to = Math.max(prior.to, to);
+    else windows.push({ from, to });
+  }
+  return windows;
+}
+
 /** The years of `window` outside `covered`: what the window asks for that the
  * subject does not deliver. */
 export function uncoveredYears(

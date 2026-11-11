@@ -12,10 +12,9 @@ import { stewardDatabases } from "./databases";
 import { IssueLink, LocatedIssue } from "./Finding";
 import { focusAfterRemoval } from "./focus_after_removal";
 import styles from "./ProjectEditor.module.css";
-import { dataAxis } from "./period";
+import { dataAxis, sourcePeriodYearWindows } from "./period";
 import type { ProjectData } from "./project_data";
 import { type ProjectSnapshot, projectStore } from "./project_store";
-import { sourcePeriodYears } from "./reg_core";
 import { SourceCard } from "./SourceCard";
 import { tableYears } from "./study_window";
 import { Button } from "./ui/Button";
@@ -461,7 +460,11 @@ function Sources({
           return years ? [years.from, years.to] : [];
         }),
       ...draft.sources.flatMap(
-        (source) => sourcePeriodYears(source.period)?.flat() ?? [],
+        (source) =>
+          sourcePeriodYearWindows(source.period)?.flatMap(({ from, to }) => [
+            from,
+            to,
+          ]) ?? [],
       ),
     ],
     draft.window ?? null,

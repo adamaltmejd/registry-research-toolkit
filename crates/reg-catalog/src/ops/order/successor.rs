@@ -8,7 +8,7 @@ use reg_core::{Interval, IssueLevel, gaps, merge, overlap};
 use rusqlite::params;
 
 use super::window::{self, Outcome, Scope};
-use super::{Issue, OrderClip, Serving, day, interval, period, table_ref};
+use super::{Issue, OrderClip, Serving, day, interval, period, reported_intervals, table_ref};
 use crate::{Error, rows};
 
 pub(super) fn binding(scope: &Scope, b: usize, binding: &Binding) -> Result<Outcome, Error> {
@@ -179,7 +179,16 @@ fn finish(scope: &Scope, b: usize, binding: &Binding, out: &mut Outcome) {
     );
     // Ordinary per-hop checks already report local clips; this records the full
     // binding, including any gap between the predecessor's end and the edge's date.
-    if !gaps(scope.requested, ordered.clone()).is_empty() {
+    let removed = reported_intervals(
+        &gaps(scope.requested, ordered.clone()),
+        scope.requested,
+        &ordered,
+    );
+    // Reconstruct once so local and between-hop gaps have identical findings; a hop's
+    // own request can cut a year the whole binding's request holds.
+    out.findings.retain(|f| f.code != "period_clipped");
+    out.clip = None;
+    if !removed.is_empty() {
         out.clip = Some(OrderClip {
             source: scope.source.name.clone(),
             variable: binding.variable.clone(),
@@ -187,9 +196,7 @@ fn finish(scope: &Scope, b: usize, binding: &Binding, out: &mut Outcome) {
             requested: window::periods(scope.server, scope.requested),
             ordered: window::periods(scope.server, &ordered),
         });
-        // Reconstruct once so local and between-hop gaps have identical findings.
-        out.findings.retain(|f| f.code != "period_clipped");
-        for days in gaps(scope.requested, ordered) {
+        for days in removed {
             let mut finding = refusal(
                 scope,
                 b,

@@ -132,7 +132,7 @@ export function LocatedIssue({
 }: {
   issue: ValidationIssue;
   raw: string | null;
-  omitPlace?: readonly ("variable" | "table")[];
+  omitPlace?: readonly ("variable" | "table" | "period")[];
 }) {
   const place = issuePlace(issue, raw);
   const refs = issueRefs(issue, raw);
@@ -142,7 +142,7 @@ export function LocatedIssue({
   const successor = useCatalogName(issue.successor_fqid);
   const period = issue.period
     ? catalogPeriodLabel(issue.period)
-    : place.period === undefined
+    : place.period === undefined || omitPlace.includes("period")
       ? null
       : sourcePeriodLabel(place.period);
   return (

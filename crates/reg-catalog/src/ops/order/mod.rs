@@ -139,9 +139,10 @@ fn checked(
 }
 
 /// The logical order cut to what the steward's files deliver: the order file's clips
-/// replace the logical ones (they start from the same requests) and each entry keeps
-/// only its binding's delivered days, and each row key the days its table's entries keep,
-/// so a `coverage_gap` is not reported as delivered.
+/// replace the logical ones (they start from the same requests), each entry keeps only
+/// its binding's delivered days under the file column's own name ([`held_names`]), and
+/// each row key the days its table's entries keep, so a `coverage_gap` is not reported
+/// as delivered.
 fn delivered(
     server: &Server,
     order: &mut LogicalOrder,
@@ -156,17 +157,44 @@ fn delivered(
             .find(|c| c.source == entry.source && c.binding == entry.binding)
             .map(|c| reg_core::days::merge(c.ordered.iter().map(|p| p.days(open)).collect()))
     };
+    // The file column names each binding's days are delivered under.
+    let columns = |entry: &OrderEntry| -> Vec<((i64, i64), &str)> {
+        manifest
+            .files
+            .iter()
+            .flat_map(|file| &file.columns)
+            .flat_map(|column| column.refs.iter().map(move |r| (r, column.name.as_str())))
+            .filter(|(r, _)| {
+                r.source == entry.source
+                    && r.binding == Some(entry.binding)
+                    && r.table == entry.table
+                    && r.variable == entry.variable
+            })
+            .map(|(r, name)| (r.period.days(open), name))
+            .collect()
+    };
     order.entries = std::mem::take(&mut order.entries)
         .into_iter()
-        .flat_map(|entry| match ordered(&entry) {
-            None => vec![entry],
-            Some(days) => reg_core::days::overlap(&[entry.period.days(open)], &days)
-                .into_iter()
-                .map(|(lo, hi)| OrderEntry {
+        .flat_map(|entry| {
+            let whole = [entry.period.days(open)];
+            let mut days = match ordered(&entry) {
+                None => whole.to_vec(),
+                Some(days) => reg_core::days::overlap(&whole, &days),
+            };
+            let columns = columns(&entry);
+            // Only the days a file column delivers: a gap no clip reports (one inside
+            // a delivered requested year, #2409) is still not listed as delivered, and
+            // an entry no column delivers (an unheld successor) drops.
+            let delivered = reg_core::days::merge(columns.iter().map(|c| c.0).collect());
+            days = reg_core::days::overlap(&days, &delivered);
+            days.into_iter()
+                .flat_map(|piece| held_names(piece, &columns, &entry.spelling))
+                .map(|((lo, hi), spelling)| OrderEntry {
                     period: server.period(lo, hi),
+                    spelling,
                     ..entry.clone()
                 })
-                .collect(),
+                .collect::<Vec<_>>()
         })
         .collect();
     // A row identifier is delivered only over days some entry of its table is.
@@ -217,6 +245,44 @@ fn delivered(
         .map(|issue| NamedIssue::name(issue, &names))
         .collect();
     Ok(())
+}
+
+/// The stretches of `piece` by the file column name delivering them (#2409): a held
+/// file can name the column otherwise than the catalog (`AvgAr` for `avgar`), and the
+/// name can change between files. A stretch several differently named columns deliver
+/// at once (a slot family's members) keeps the catalog `spelling`. Adjacent stretches
+/// under one name join.
+fn held_names(
+    (lo, hi): (i64, i64),
+    columns: &[((i64, i64), &str)],
+    spelling: &str,
+) -> Vec<((i64, i64), String)> {
+    let mut cuts: Vec<i64> = columns
+        .iter()
+        .flat_map(|&((a, b), _)| [a, b])
+        .filter(|&d| lo < d && d < hi)
+        .chain([lo, hi])
+        .collect();
+    cuts.sort_unstable();
+    cuts.dedup();
+    let mut out: Vec<((i64, i64), String)> = Vec::new();
+    for window in cuts.windows(2) {
+        let (a, b) = (window[0], window[1]);
+        let names: BTreeSet<&str> = columns
+            .iter()
+            .filter(|&&((c, d), _)| c <= a && b <= d)
+            .map(|&(_, name)| name)
+            .collect();
+        let name = match names.len() {
+            1 => names.into_iter().next().expect("one name"),
+            _ => spelling,
+        };
+        match out.last_mut() {
+            Some(((_, end), last)) if *end == a && last == name => *end = b,
+            _ => out.push(((a, b), name.to_owned())),
+        }
+    }
+    out
 }
 
 /// The structurally valid project, or `project_invalid` with its issues.
@@ -405,7 +471,8 @@ pub struct OrderEntry {
     display_name: Option<String>,
     /// The requested period cut to what the table has; `{start: null, end: null}` for a timeless table.
     period: Period,
-    /// The exact column name.
+    /// The exact column name: on a steward server the name the steward's files use
+    /// over this period, else the catalog's.
     spelling: String,
     #[serde(rename = "type")]
     #[schema(required = true)]
@@ -965,6 +1032,51 @@ fn serving(
         }
     }
     Ok((serving, gone, ids))
+}
+
+/// The parts of `gaps` (half-open day numbers, ascending) an order reports: all but the
+/// calendar years the request covers whole and `delivered` reaches on some day. Such a
+/// year reads as delivered, and no whole year fills its gap, so a finding or clip would
+/// name a year that comes (`reg_webapp/frontend/DESIGN.md` → Time, #2389; #2409).
+pub(super) fn reported_gaps(
+    gaps: &[(i64, i64)],
+    requested: &[(i64, i64)],
+    delivered: &[(i64, i64)],
+) -> Vec<(i64, i64)> {
+    use reg_core::days::{covered, merge, minus, overlap};
+    let delivered = merge(delivered.to_vec());
+    let (Some(g0), Some(g1), Some(d0), Some(d1)) = (
+        gaps.first(),
+        gaps.last(),
+        delivered.first(),
+        delivered.last(),
+    ) else {
+        return gaps.to_vec();
+    };
+    let year = |d: i64| -> i32 { iso_day(d)[..4].parse().expect("an ISO year") };
+    let start = |y: i32| reg_core::iso_day_number(&format!("{y:04}-01-01"));
+    let first = year(g0.0).max(year(d0.0));
+    let last = year(g1.1 - 1).min(year(d1.1 - 1));
+    let quiet: Vec<(i64, i64)> = (first..=last)
+        .filter_map(|y| Some((start(y)?, start(y + 1)?)))
+        .filter(|&span| covered(&[span], requested) && !overlap(&[span], &delivered).is_empty())
+        .collect();
+    minus(gaps, &quiet)
+}
+
+/// [`reported_gaps`] over inclusive ISO intervals.
+pub(super) fn reported_intervals(
+    gaps: &[Interval],
+    requested: &[Interval],
+    delivered: &[Interval],
+) -> Vec<Interval> {
+    let days = |v: &[Interval]| -> Vec<(i64, i64)> {
+        v.iter().map(|(lo, hi)| (day(lo), day(hi) + 1)).collect()
+    };
+    reported_gaps(&days(gaps), &days(requested), &days(delivered))
+        .into_iter()
+        .map(|(lo, hi)| interval(lo, hi))
+        .collect()
 }
 
 /// The day number of an ISO day.

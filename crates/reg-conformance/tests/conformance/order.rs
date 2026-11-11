@@ -159,3 +159,29 @@ fn steward_only_slot_orders_paired_and_is_unresolved_base_only() {
     let got = json!({ "findings": without_nulls(&blocked["error"]["fields"]["findings"]) });
     assert!(json_eq(&got, &expected["base_only"]), "{got}");
 }
+
+#[test]
+fn steward_order_names_the_held_column() {
+    // Fails if a steward order's entries take the catalog's spelling (Id) instead of
+    // the column name the held file uses (Received_Id): the order cases run on the
+    // base catalog, whose spellings are the files' own.
+    let expected =
+        read_json(&reg_conformance::holdings_case().join("order-held-spelling.json")).unwrap();
+    let port = steward::paired().unwrap();
+    let (status, answer) = client::json(
+        port,
+        "POST",
+        "/api/project/order",
+        &[],
+        Some(&expected["project"]),
+    )
+    .unwrap();
+    assert_eq!(status, 200, "{answer}");
+    let got: Vec<Value> = answer["data"]["entries"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|e| json!({"variable": e["variable"], "period": e["period"], "spelling": e["spelling"]}))
+        .collect();
+    assert!(json_eq(&json!(got), &expected["entries"]), "{answer}");
+}

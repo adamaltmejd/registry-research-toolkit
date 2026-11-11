@@ -92,7 +92,7 @@
       "level": "info",
       "code": "rows_unfiltered",
       "path": "/sources/0",
-      "message": "Table \"Parent\" has no period column, so every row of its delivery 2018 is extracted",
+      "message": "Rows from July to December 2018 are included because this table has no year column.",
       "source": "p",
       "variable": null,
       "table": null,

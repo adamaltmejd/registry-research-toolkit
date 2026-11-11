@@ -135,3 +135,8 @@
 {"kind":"occurrence","provider":"demo","register":"typ","table":"","release":"y2020","column":"Belopp","source_key":"k2","label":"Belopp","dtype":"int"}
 {"kind":"occurrence","provider":"demo","register":"typ","table":"","release":"y2020","column":"Namn","source_key":"k3","label":"Namn","dtype":"char","length":20}
 {"kind":"occurrence","provider":"demo","register":"typ","table":"","release":"y2020","column":"Okand","source_key":"k4","label":"Okänd typ","dtype":"unspecified"}
+{"kind":"register","provider":"demo","register":"halv","name":"Halvårsregistret"}
+{"kind":"release","provider":"demo","register":"halv","table":"","release":"h2019","name":"Halv 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"halv","table":"","release":"h2020v","name":"Halv 2020 VT","from":"2020-01-01","to":"2020-06-30","grain":"half","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"halv","table":"","release":"h2019","column":"X","source_key":"k1","label":"X","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"halv","table":"","release":"h2020v","column":"X","source_key":"k1","label":"X","dtype":"int"}

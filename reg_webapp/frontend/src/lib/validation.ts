@@ -77,8 +77,8 @@ const TITLES: Readonly<Record<string, string>> = {
   held_key_ambiguous: "The row identifier is in more than one column",
   file_name_unsafe: "This table's file name cannot be used",
   physical_schema_missing: "This table has no single location",
-  rows_unfiltered: "Every year of this table is delivered",
-  row_filter_widened: "Rows are delivered for whole years around the request",
+  rows_unfiltered: "Some rows from other years are included",
+  row_filter_widened: "Some rows around these years are included",
   row_filter_union: "Tables sharing a file are delivered over all their years",
   // A steward with several databases: an order draws from one.
   database_required: "Choose a database",

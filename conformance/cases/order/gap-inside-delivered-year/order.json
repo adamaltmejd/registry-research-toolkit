@@ -1,0 +1,72 @@
+{
+  "catalog": {
+    "catalog_version": "dev",
+    "schema_version": "13"
+  },
+  "project": {
+    "name": "Order case",
+    "schema_version": "6.1.0",
+    "reg_meta_version": "0.81.5"
+  },
+  "entries": [
+    {
+      "source": "s",
+      "binding": 0,
+      "provider": "demo",
+      "register": "demo/halv",
+      "table": "demo/halv",
+      "table_name": "Halvårsregistret",
+      "variable": "demo/halv/x",
+      "variable_name": "X",
+      "display_name": null,
+      "period": {
+        "start": "2019-01-01",
+        "end": "2020-07-01"
+      },
+      "spelling": "X",
+      "type": "integer",
+      "length": null,
+      "value_set": null,
+      "classification": null
+    }
+  ],
+  "row_keys": [],
+  "clips": [
+    {
+      "source": "s",
+      "variable": "demo/halv/x",
+      "variable_name": "X",
+      "requested": [
+        {
+          "start": "2019-01-01",
+          "end": "2022-01-01"
+        }
+      ],
+      "ordered": [
+        {
+          "start": "2019-01-01",
+          "end": "2020-07-01"
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "level": "info",
+      "code": "period_clipped",
+      "path": "/sources/0/bindings/0",
+      "message": "There is no data on demo/halv/x in demo/halv for [2021-01-01, 2022-01-01). Those years will not be delivered.",
+      "source": "s",
+      "variable": "demo/halv/x",
+      "variable_name": "X",
+      "table": "demo/halv",
+      "table_name": "Halvårsregistret",
+      "period": {
+        "start": "2021-01-01",
+        "end": "2022-01-01"
+      },
+      "successor_fqid": null,
+      "successor_name": null
+    }
+  ]
+}

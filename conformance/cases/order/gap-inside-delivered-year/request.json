@@ -1,0 +1,21 @@
+{
+  "note": "`halv` delivers `X` for 2019 and the first half of 2020 only. Ordering 2019..2021 leaves out 2020-H2 and 2021, but only 2021 is reported: 2020 is a requested whole year with some delivery, so its second half is no gap a whole year fills (reg_webapp/frontend/DESIGN.md → Time, #2389; #2409). Fails if a `period_clipped` or the clip starts naming 2020-H2, or if the clip and the `period_clipped` over 2021 go. Oracle: the fixture's JSONL and the DESIGN.md rule.",
+  "fixture": "orders",
+  "project": {
+    "schema_version": "6.1.0",
+    "reg_meta_version": "0.81.5",
+    "name": "Order case",
+    "sources": [
+      {
+        "name": "s",
+        "table": "demo/halv",
+        "period": {"from": 2019, "to": 2021},
+        "bindings": [
+          {
+            "variable": "demo/halv/x"
+          }
+        ]
+      }
+    ]
+  }
+}
