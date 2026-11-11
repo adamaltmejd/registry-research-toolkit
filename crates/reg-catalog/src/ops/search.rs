@@ -29,29 +29,27 @@ const MATCHES: &str = "WITH matched AS (
       AND rowid NOT IN (SELECT rowid FROM search WHERE search MATCH ?1)
 )";
 
-pub const OPERATIONS: &[Operation] = &[
-    Operation {
-        name: "search",
-        paths: &["/api/search"],
-        tool: Some("search"),
-        description: "Search registers, tables, variables, codes and documents by text, best \
+pub const OPERATIONS: &[Operation] = &[Operation {
+    name: "search",
+    paths: &["/api/search"],
+    tool: Some("search"),
+    description: "Search registers, tables, variables, codes and documents by text, best \
             match first. `tag` keeps only that tag's variables. For exact column names use \
             `resolve`.",
-        params: &[
-            Param::required("q", Type::String),
-            Param::optional("type", Type::Enum(TYPES)),
-            Param::optional("register", Type::Ref),
-            Param::optional("period", Type::Period),
-            Param::optional("tag", Type::String),
-            Param::optional("limit", Type::Limit),
-            Param::optional("cursor", Type::Cursor),
-            Param::optional("steward_cursor", Type::Cursor),
-        ],
-        cache: Cache::Minute,
-        run: search,
-        result: component::<SearchPage>,
-    },
-];
+    params: &[
+        Param::required("q", Type::String),
+        Param::optional("type", Type::Enum(TYPES)),
+        Param::optional("register", Type::Ref),
+        Param::optional("period", Type::Period),
+        Param::optional("tag", Type::String),
+        Param::optional("limit", Type::Limit),
+        Param::optional("cursor", Type::Cursor),
+        Param::optional("steward_cursor", Type::Cursor),
+    ],
+    cache: Cache::Minute,
+    run: search,
+    result: component::<SearchPage>,
+}];
 
 #[derive(Serialize, ToSchema)]
 pub struct SearchPage {
