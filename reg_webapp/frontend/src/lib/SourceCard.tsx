@@ -1,11 +1,17 @@
 import { useRef, useState } from "react";
 import { columnInSource, columnRows, variableColumns } from "./add_columns";
-import { type CatalogSegment, errMessage, type RegisterShow } from "./api";
+import {
+  type CatalogPeriod,
+  type CatalogSegment,
+  errMessage,
+  type RegisterShow,
+} from "./api";
 import { catalogHref } from "./catalog";
 import {
   catalogLastDate,
+  catalogPeriodRuns,
   catalogPeriodWithin,
-  segmentYears,
+  inTableGrain,
   sourcePeriodLabel,
 } from "./catalog_period";
 import { LocatedIssue } from "./Finding";
@@ -231,7 +237,16 @@ export function SourceCard({
         .sort((a, b) => a.from - b.from);
       if (!segments.length) return;
       const spellings = drawn.map(({ column }) => column.spelling);
-      const years = segmentYears(drawn.flatMap(({ inProject }) => inProject));
+      // The text reads in the table's grain, as the delivery summary does
+      // (#2416); the drawing keeps the cut.
+      const yearsOf = (pieces: readonly { period: CatalogPeriod }[]) =>
+        catalogPeriodRuns(
+          inTableGrain(
+            pieces.map(({ period }) => period),
+            table?.period,
+          ),
+        ) ?? "";
+      const years = yearsOf(drawn.flatMap(({ inProject }) => inProject));
       spans.push({
         id: `${id}:${index}`,
         lane: id,
@@ -244,7 +259,7 @@ export function SourceCard({
           drawn.length > 1
             ? drawn.map(({ column, inProject }) => ({
                 name: column.spelling,
-                years: segmentYears(inProject),
+                years: yearsOf(inProject),
               }))
             : undefined,
         state: "in",

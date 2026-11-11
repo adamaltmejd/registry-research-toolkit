@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   catalogPeriodLabel,
   catalogPeriodRuns,
+  inTableGrain,
   sourcePeriodLabel,
 } from "./catalog_period";
 
@@ -33,6 +34,27 @@ describe("catalog period labels", () => {
         { start: "2014-10-15", end: "2014-10-16" },
       ]),
     ).toBe("2010–2012, 2014");
+  });
+});
+
+describe("delivered years in the table's grain", () => {
+  // #2416 (maintainer 2026-11-11): study years from 1981 cut SWECOV's
+  // Slutbetyg (school years 1972/1973–2023/2024) at 1 January 1981; the
+  // 1980/1981 file is delivered whole, so the piece reads from it. A
+  // calendar-year table cut the same way still reads in years.
+  it.each([
+    [
+      { start: "1972-07-01", end: "2024-07-01" },
+      { start: "1981-01-01", end: "1989-07-01" },
+      "1980/1981–1988/1989",
+    ],
+    [
+      { start: "1990-01-01", end: "2025-01-01" },
+      { start: "1991-01-01", end: "2024-01-01" },
+      "1991–2023",
+    ],
+  ])("in a table of %j reads %j as %s", (table, piece, expected) => {
+    expect(catalogPeriodRuns(inTableGrain([piece], table))).toBe(expected);
   });
 });
 

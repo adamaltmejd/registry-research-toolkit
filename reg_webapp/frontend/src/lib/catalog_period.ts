@@ -198,6 +198,36 @@ export function catalogPeriodRuns(
   return daysLabel(runs.map(catalogDays));
 }
 
+/** `pieces` of a table, cut to a project's days, in the table's own grain
+ * (DESIGN.md → Time). A table delivered in school years (its catalog period's
+ * dated bounds on 1 July) widens each piece to the school years its days fall
+ * in: the file of a school year cut at 1 January is delivered whole, so the
+ * piece reads `1980/1981–…`, not `1981–…` (#2416, maintainer 2026-11-11). Any
+ * other table's pieces, and open bounds, are returned as they are. */
+export function inTableGrain(
+  pieces: readonly CatalogPeriod[],
+  table: CatalogPeriod | undefined,
+): CatalogPeriod[] {
+  const bounds = table ? [table.start, table.end] : [];
+  const school =
+    bounds.some((bound) => bound !== null) &&
+    bounds.every((bound) => bound === null || bound.endsWith("-07-01"));
+  if (!school) return [...pieces];
+  // The 1 July on or before `day`, or on or after it.
+  const july = (day: string, after: boolean) => {
+    const year = Number(day.slice(0, 4));
+    const monthDay = day.slice(5);
+    if (monthDay === "07-01") return day;
+    const before = monthDay < "07-01";
+    const shift = after ? (before ? 0 : 1) : before ? -1 : 0;
+    return `${year + shift}-07-01`;
+  };
+  return pieces.map(({ start, end }) => ({
+    start: start === null ? null : july(start, false),
+    end: end === null ? null : july(end, true),
+  }));
+}
+
 /** The years of segments (or any items with a catalog period), joined: what a
  * drawing's year cells cannot say, such as school years. Empty when there are
  * no dated years. */

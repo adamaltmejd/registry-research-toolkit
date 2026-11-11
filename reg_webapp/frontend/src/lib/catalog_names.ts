@@ -1,5 +1,6 @@
 import {
   ApiError,
+  type CatalogPeriod,
   type CatalogSegment,
   type ClassFamilyRef,
   type Graph,
@@ -375,6 +376,21 @@ export function catalogNames(
     }
   }
   return names;
+}
+
+/** Each of `tables`' catalog period, from the register read that names it:
+ * the delivery summary writes a table's years in its grain (#2416). A table
+ * whose register has not landed is missing. */
+export function catalogTablePeriods(
+  tables: readonly string[],
+): Record<string, CatalogPeriod> {
+  return Object.fromEntries(
+    tables.flatMap((ref) => {
+      const register = registerRead(ref.split("/").slice(0, 2).join("/"));
+      const table = register.value?.tables.find((t) => t.fqid === ref);
+      return table ? [[ref, table.period] as const] : [];
+    }),
+  );
 }
 
 /** A single name and its read state, so pending names never look like failures. */
