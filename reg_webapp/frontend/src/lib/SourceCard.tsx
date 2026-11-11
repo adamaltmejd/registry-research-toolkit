@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { variableColumns } from "./add_columns";
+import { columnInSource, columnRows, variableColumns } from "./add_columns";
 import { type CatalogSegment, errMessage, type RegisterShow } from "./api";
 import { catalogHref } from "./catalog";
 import {
@@ -38,7 +38,7 @@ import {
   removeSource,
   setSourcePeriod,
 } from "./source_edits";
-import { columnYearRuns, tableYears } from "./study_window";
+import { columnDateRuns, tableYears } from "./study_window";
 import { Button } from "./ui/Button";
 import { ConfirmDialog } from "./ui/ConfirmDialog";
 import { EntityPill } from "./ui/EntityPill";
@@ -206,31 +206,49 @@ export function SourceCard({
         ...(binding.classification ? [binding.classification] : []),
       ]),
     ];
-    for (const column of columns) {
-      // A lane is in the project for its source's days only.
-      const inProject = within
-        ? column.segments.flatMap((segment) =>
-            catalogPeriodWithin(segment.period, within).map((period) => ({
-              period,
-            })),
-          )
-        : column.segments;
-      const runs = columnYearRuns(inProject, bounds, axis[0]);
-      if (!runs.length) continue;
-      const years = segmentYears(inProject);
+    // One row per run of the variable's columns, successive spellings on one
+    // row (#2408). A lane is in the project for its source's days only, so a
+    // column is drawn over those days and one outside them is not drawn.
+    columnRows(columns).forEach((row, index) => {
+      const drawn = row.flatMap((column) => {
+        const inProject = within
+          ? column.segments.flatMap((segment) =>
+              catalogPeriodWithin(segment.period, within).map((period) => ({
+                period,
+              })),
+            )
+          : column.segments;
+        return inProject.length ? [{ column, inProject }] : [];
+      });
+      const segments = drawn.flatMap(({ column, inProject }) =>
+        columnDateRuns(inProject, bounds, axis[0]).map((run) => ({
+          name: column.spelling,
+          ...run,
+        })),
+      );
+      if (!segments.length) return;
+      const spellings = drawn.map(({ column }) => column.spelling);
+      const years = segmentYears(drawn.flatMap(({ inProject }) => inProject));
       spans.push({
-        id: `${id}:${column.id}`,
+        id: `${id}:${index}`,
         lane: id,
-        name: column.spelling,
-        from: runs[0].from,
-        to: runs[runs.length - 1].to,
-        segments: runs.map((run) => ({ name: null, ...run })),
+        name: spellings.join(", "),
+        from: Math.min(...segments.map((segment) => segment.from)),
+        to: Math.max(...segments.map((segment) => segment.to)),
+        segments,
         years,
+        columns:
+          drawn.length > 1
+            ? drawn.map(({ column, inProject }) => ({
+                name: column.spelling,
+                years: segmentYears(inProject),
+              }))
+            : undefined,
         state: "in",
         blocked: elsewhere,
         selectable: false,
         accessibleName: [
-          column.spelling,
+          ...spellings,
           name,
           years,
           elsewhere ? "not in the chosen database" : "in project",
@@ -238,7 +256,7 @@ export function SourceCard({
           .filter(Boolean)
           .join(", "),
       });
-    }
+    });
     const pinned =
       !!binding.classification ||
       findings.some(
@@ -270,7 +288,9 @@ export function SourceCard({
                   key={column.id}
                   entity="column"
                   name={column.spelling}
-                  state={elsewhere ? "out" : "in"}
+                  state={
+                    !elsewhere && columnInSource(column, source) ? "in" : "out"
+                  }
                 />
               ))}
             </div>

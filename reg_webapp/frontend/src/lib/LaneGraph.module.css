@@ -301,11 +301,12 @@ a.nameText {
   border-color: var(--text);
 }
 
-/* Will be added: the selection wash, pine as text. A picked span that adds
-   nothing (a classification's version) is marked the same way. Its stroke
-   keeps the base 1 px, so it is its neighbours' size (#2321). */
-.span[data-staged="add"] .face,
-.span[data-selected] .face {
+/* Will be added: the selection wash, pine as text, on the columns the add
+   takes (#2408). A picked span that adds nothing (a classification's version)
+   is marked the same way. Its stroke keeps the base 1 px, so it is its
+   neighbours' size (#2321). */
+.segment[data-staged="add"] .face,
+.span[data-selected]:where(:not([data-staged])) .face {
   --tone-ink: var(--accent-ink);
   border-color: var(--accent);
   background: var(--accent-band);
@@ -313,7 +314,7 @@ a.nameText {
 }
 
 /* Will be removed: no longer filled, struck through. */
-.span[data-staged="remove"] .face {
+.segment[data-staged="remove"] .face {
   --tone-ink: var(--accent-ink);
   border-style: dashed;
   border-color: var(--accent);
@@ -433,6 +434,71 @@ a.nameText {
 .stackedCaption {
   margin: 0;
   color: var(--text);
-  font-size: var(--text-sm);
+  font-size: var(--text-h3);
   font-weight: 600;
+  line-height: 1.3;
+}
+
+.tipLine {
+  display: block;
+}
+
+/* A scroll box with no span to tab to takes focus itself. */
+.graph[data-scroll]:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring-inset);
+}
+
+/* ── Stacked (phones): variant C, #2408 ─────────────────────────────────────
+   A variable's heading in the h3 size under its rule; each table a block
+   with a moss guide line, its pill and years on one line and its spans full
+   width below. */
+
+.tableHead {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  max-width: 100%;
+}
+
+.laneYears {
+  display: none;
+}
+
+.graph[data-stacked] .name[data-row="heading"] {
+  padding-top: var(--space-2);
+}
+
+.graph[data-stacked] .name[data-row="heading"] .nameText {
+  font-size: var(--text-h3);
+}
+
+.graph[data-stacked] .name[data-row="table"] {
+  align-items: stretch;
+  padding-inline-start: var(--space-4);
+}
+
+.graph[data-stacked] .tableHead {
+  justify-content: space-between;
+  min-height: 24px;
+}
+
+.graph[data-stacked] .laneYears {
+  display: block;
+  flex: none;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.graph[data-stacked] .lane[data-row="table"]::before {
+  position: absolute;
+  top: var(--space-1);
+  bottom: var(--space-2);
+  left: var(--space-1);
+  border-left: 2px solid color-mix(in srgb, var(--cat-table) 40%, transparent);
+  content: "";
 }

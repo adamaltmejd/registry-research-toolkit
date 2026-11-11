@@ -18,6 +18,7 @@ import {
   sourcePeriodIntervals,
   studyWindowInterval,
 } from "./reg_core";
+import { removeBinding } from "./source_edits";
 
 export type TablePeriodMetadata = Pick<
   RegisterShow["tables"][number],
@@ -54,20 +55,76 @@ export function variableColumns(
   return [...columns.values()];
 }
 
-export function columnInProject(
+/** The project's source that binds `variable` in `table`: a project binds a
+ * variable once per table, whatever its columns there (reg-core `Binding`). */
+export function bindingSource(
   project: ProjectData | null,
   variable: string,
   table: string,
-): boolean {
-  return (
-    project?.sources.some(
-      (source) =>
-        source.table === table &&
-        source.bindings.some((binding) => binding.variable === variable),
-    ) ?? false
+): ProjectSource | undefined {
+  return project?.sources.find(
+    (source) =>
+      source.table === table &&
+      source.bindings.some((binding) => binding.variable === variable),
   );
 }
 
+/** Inclusive days of a segment, open ends as far as they go. */
+const segmentDays = (segment: CatalogSegment): Interval => [
+  segment.period.start ?? "0001-01-01",
+  catalogLastDate(segment.period) ?? "9999-12-31",
+];
+
+/** Whether a source's period takes any of the column's rows: a binding has
+ * no column, so the column is in the project only where its years meet the
+ * source's (#2408). An unbounded period takes every column. */
+export function columnInSource(
+  column: VariableColumn,
+  source: ProjectSource,
+): boolean {
+  const period = sourcePeriodIntervals(source.period);
+  if ("error" in period) return false;
+  if (period.intervals === null) return true;
+  const { intervals } = period;
+  return column.segments.some(
+    (segment) => overlapIntervals(intervals, [segmentDays(segment)]).length > 0,
+  );
+}
+
+/** A variable's columns in one table, as rows that never overlap in time:
+ * successive spellings share a row; columns delivered side by side in one
+ * file (a slot's members) take a row each (#2408). */
+export function columnRows(
+  columns: readonly VariableColumn[],
+): VariableColumn[][] {
+  const first = (column: VariableColumn) =>
+    column.segments.reduce(
+      (least, segment) =>
+        segmentDays(segment)[0] < least ? segmentDays(segment)[0] : least,
+      "9999-12-31",
+    );
+  const rows: VariableColumn[][] = [];
+  for (const column of columns.toSorted((a, b) =>
+    first(a) < first(b) ? -1 : first(a) > first(b) ? 1 : 0,
+  )) {
+    const days = column.segments.map(segmentDays);
+    const row = rows.find((placed) =>
+      placed.every((other) =>
+        other.segments.every(
+          (segment) =>
+            overlapIntervals(days, [segmentDays(segment)]).length === 0,
+        ),
+      ),
+    );
+    if (row) row.push(column);
+    else rows.push([column]);
+  }
+  return rows;
+}
+
+/** The whole years of a column's deliveries inside the add window: each
+ * delivery's calendar years, cut to the window, so an add writes years, never
+ * a date end (#2409), and keeps the gaps between deliveries. */
 function columnWindowOverlap(
   column: VariableColumn,
   window: ProjectStudyWindow,
@@ -77,10 +134,13 @@ function columnWindowOverlap(
   const intervals: Interval[] = [];
   if (requested === null) return { segments, intervals };
   for (const segment of column.segments) {
-    const start = segment.period.start ?? requested[0];
-    const end = catalogLastDate(segment.period) ?? requested[1];
+    const [start, end] = segmentDays(segment);
     if (start > end) continue;
-    const overlap = overlapIntervals([[start, end]], [requested]);
+    const years: Interval = [
+      `${start.slice(0, 4)}-01-01`,
+      `${end.slice(0, 4)}-12-31`,
+    ];
+    const overlap = overlapIntervals([years], [requested]);
     if (overlap.length > 0) {
       segments.push(segment);
       intervals.push(...overlap);
@@ -89,8 +149,9 @@ function columnWindowOverlap(
   return { segments, intervals: mergeIntervals(intervals) };
 }
 
-/** Exact delivered days in the add window, retaining gaps between deliveries.
- * Timeless tables are handled from their metadata, never inferred from open dates. */
+/** The whole years delivered in the add window, retaining gaps between
+ * deliveries. Timeless tables are handled from their metadata, never inferred
+ * from open dates. */
 export function columnWindowPeriod(
   column: VariableColumn,
   window: ProjectStudyWindow,
@@ -131,6 +192,34 @@ function sourceName(sources: readonly ProjectSource[], table: string): string {
   return name;
 }
 
+/** Take each variable out of its table's source: the binding goes, and the
+ * source with it when it was the last (with its panel memberships). Checked
+ * as `addColumns` is. */
+export function removeBindings(
+  project: ProjectData,
+  bindings: readonly { variable: string; table: string }[],
+): ProjectData {
+  let candidate = project;
+  for (const { variable, table } of bindings) {
+    const sourceIndex = candidate.sources.findIndex(
+      (source) => source.table === table,
+    );
+    const bindingIndex =
+      candidate.sources[sourceIndex]?.bindings.findIndex(
+        (binding) => binding.variable === variable,
+      ) ?? -1;
+    if (bindingIndex < 0) continue;
+    candidate = removeBinding(candidate, sourceIndex, bindingIndex);
+  }
+  const checked = checkProject(JSON.stringify(candidate));
+  if (!checked.ok)
+    throw new Error(
+      checked.issues.map((issue) => issue.message).join(" ") ||
+        "The variables could not be removed. Check the project and try again.",
+    );
+  return candidate;
+}
+
 /** Build and check a candidate before the caller sends it through the store. */
 export function addColumns(
   project: ProjectData,
@@ -158,7 +247,7 @@ export function addColumns(
       : columnWindowOverlap(column, window);
     if (!table.timeless && overlap.intervals.length === 0)
       throw new Error(
-        `${column.spelling} has no delivery in the years to add. Change the years or untick the column.`,
+        `${column.spelling} has no delivery in the years to add. Change the years.`,
       );
     const requested = byTable.get(column.table) ?? {
       segments: [],
