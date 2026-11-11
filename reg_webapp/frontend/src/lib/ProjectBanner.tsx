@@ -28,10 +28,10 @@ import { useRoute } from "./use_router";
 import { createProject } from "./window";
 import { type WindowBounds, windowBounds } from "./window_bounds";
 
-const GLYPHS: Record<Verdict, string> = {
+// A ready project shows no verdict in the box (#2417); /project still says it.
+const GLYPHS: Record<Exclude<Verdict, "ready">, string> = {
   checking: "",
   empty: "",
-  ready: "✓",
   warnings: "▲",
   problems: "✕",
   blocked: "✕",
@@ -92,7 +92,7 @@ export function ProjectBanner({
       (total, source) => total + source.bindings.length,
       0,
     ) ?? 0;
-  const words = (
+  const words = status !== "ready" && (
     <>
       <span aria-hidden="true">
         {GLYPHS[status]}
@@ -120,7 +120,7 @@ export function ProjectBanner({
             </span>
           )}
           <span className={styles.status} data-status={status}>
-            {(Object.keys(GLYPHS) as Verdict[]).map((value) => (
+            {(Object.keys(GLYPHS) as (keyof typeof GLYPHS)[]).map((value) => (
               <span key={value} className={styles.sizer} aria-hidden="true">
                 {GLYPHS[value]} {VERDICT_WORDS[value]}
               </span>
@@ -138,7 +138,7 @@ export function ProjectBanner({
                 {words}
               </Link>
             ) : (
-              <span className={styles.verdict}>{words}</span>
+              words && <span className={styles.verdict}>{words}</span>
             )}
           </span>
         </div>

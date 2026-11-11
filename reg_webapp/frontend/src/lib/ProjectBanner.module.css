@@ -92,6 +92,13 @@
 .sizer {
   visibility: hidden;
 }
+/* A ready project has no verdict (#2417): the slot keeps its width, so the box
+   keeps its size on a wide bar, but no height, so where the meta row wraps it
+   leaves no blank line. */
+.status[data-status="ready"] {
+  height: 0;
+  overflow: hidden;
+}
 /* A verdict with findings links to them: the shared `.link` look, in the
    verdict's hue. */
 a.verdict {
@@ -112,9 +119,6 @@ a.verdict {
 .status[data-status="database"],
 .status[data-status="unchecked"] {
   color: var(--text-muted);
-}
-.status[data-status="ready"] {
-  color: var(--ok);
 }
 .status[data-status="warnings"] {
   color: var(--warn);
