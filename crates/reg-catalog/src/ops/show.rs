@@ -2,7 +2,7 @@
 
 use std::collections::{BTreeMap, BTreeSet};
 
-use rusqlite::Connection;
+use rusqlite::{Connection, OptionalExtension};
 use serde::Serialize;
 use serde_json::Value;
 use utoipa::ToSchema;
@@ -18,7 +18,14 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     name: "show",
     paths: &["/api/catalog", "/api/catalog/{ref}"],
     tool: Some("show"),
-    description: "Describe a provider, register, table, variable, set or classification by id \
+    description: "Describe a provider,         .map(|register| {
+            let variables = served_variables(server, conn, extra.as_ref(), &register.fqid)?;
+            let tables: BTreeSet<&String> = variables.iter().flat_map(|v| &v.tables).collect();
+            Ok(ShowProviderRegister {
+                description: register_description(conn, extra.as_ref(), &register.fqid)?,
+                table_count: tables.len(),
+                variables: variables
+                    .into_iter(), table, variable, set or classification by id \
         or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's \
         whole `segments` list, so no `segments` call per member is needed). A classification \
         (`class/<family>`) or one of its versions lists its versions, each with its part \
@@ -241,8 +248,13 @@ pub struct ShowRegisterRef {
 pub struct ShowProviderRegister {
     fqid: String,
     name: String,
+    /// The register's description, as its own `show` carries it.
+    description: Option<String>,
     /// The periods its dated tables are delivered, merged, in start order. Gaps stay gaps.
     periods: Vec<Period>,
+    /// How many of its tables deliver a listed variable: the tables its own `show`
+    /// offers as a filter.
+    table_count: usize,
     variables: Vec<ShowProviderVariable>,
 }
 
@@ -486,8 +498,14 @@ fn provider(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
         .unwrap_or_default()
         .into_iter()
         .map(|register| {
+            let variables = served_variables(server, conn, extra.as_ref(), &register.fqid)?;
+            // The register page's table filter offers the served tables a served
+            // variable sits in (`served_variables` keeps only those memberships).
+            let tables: BTreeSet<&String> = variables.iter().flat_map(|v| &v.tables).collect();
             Ok(ShowProviderRegister {
-                variables: served_variables(server, conn, extra.as_ref(), &register.fqid)?
+                description: register_description(conn, extra.as_ref(), &register.fqid)?,
+                table_count: tables.len(),
+                variables: variables
                     .into_iter()
                     .map(|v| ShowProviderVariable {
                         fqid: v.fqid,
@@ -505,6 +523,30 @@ fn provider(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
         fqid: entity.pid.clone(),
         name,
         registers,
+    })
+}
+
+/// A register's description from the origin its own `show` reads: the reference row
+/// when both origins define the pid (`Catalog::connect_for_ref`), else the steward's.
+fn register_description(
+    conn: &Connection,
+    extra: Option<&Connection>,
+    register: &str,
+) -> Result<Option<String>, Error> {
+    let query = |conn: &Connection| -> Result<Option<Option<String>>, Error> {
+        Ok(conn
+            .query_row(
+                "SELECT d.body FROM register r LEFT JOIN text d ON d.id = r.description_text
+                 WHERE r.pid = ?",
+                [register],
+                |row| row.get(0),
+            )
+            .optional()?)
+    };
+    Ok(match (query(conn)?, extra) {
+        (Some(description), _) => description,
+        (None, Some(extra)) => query(extra)?.flatten(),
+        (None, None) => None,
     })
 }
 
