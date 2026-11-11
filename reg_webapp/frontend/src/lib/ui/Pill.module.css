@@ -91,6 +91,17 @@ a.pill:focus-visible {
   --tone-ink: var(--cat-type-ink);
 }
 
+/* A steward's database (#2110, maintainer 2026-11-11, approved in the held
+   summary mock-up): no entity hue, since a database is where a table is held,
+   not a catalog entity; `surface` and `border`, the name muted at weight 400. */
+.database {
+  --tone-ink: var(--text-muted);
+  border-color: var(--border);
+  background: var(--surface);
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
 /* The column pill: the name a researcher types in code, white with an ink
    outline, in mono (Typography). Three states: outlined, in the project
    (`accent` fill), outside the years to add (`viz-span-out` stroke,

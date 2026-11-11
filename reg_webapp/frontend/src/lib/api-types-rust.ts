@@ -1312,8 +1312,19 @@ export interface components {
             role: string;
             timeless: boolean;
         };
+        /** @description A variable's periods in a table, in one of the data holder's databases. */
+        ShowTableDatabase: {
+            periods: components["schemas"]["Period"][];
+            /** @description The database's id, as `steward_config.spaces` lists it. */
+            space: string;
+        };
         /** @description A variable in a table, over the periods it has in that table. */
         ShowTableVariable: {
+            /**
+             * @description On a data holder with several databases, those periods per database that holds
+             *     the variable here, in config order (`coverage`'s rule).
+             */
+            databases?: components["schemas"]["ShowTableDatabase"][];
             fqid: string;
             name: string;
             /** @description The periods its segments here cover, merged, in start order. Gaps stay gaps. */

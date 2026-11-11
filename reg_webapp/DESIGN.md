@@ -67,8 +67,10 @@ its scope and its `steward_config` branding (`/api/context`).
 ## Catalog pages
 
 Provider, register and classification pages read `catalog/{ref}`. A table has no page:
-its address reads the table, then renders its register's page with that table's chip on
-(#2316). A provider page draws each register from its `periods` (merged
+its address reads the table, then renders its register's page with that table's filter
+on (#2316). A register page also reads its `coverage` for its table rows, and a table's
+`show` (its variables' years, per database on a steward with several) on the first
+press of that table's filter (#2110). A provider page draws each register from its `periods` (merged
 spans of its dated tables), with its `description` and `table_count` (#2404). The generated OpenAPI types own the response shapes. An
 implicit table shares its register's FQID, so its canonical link opens the register.
 

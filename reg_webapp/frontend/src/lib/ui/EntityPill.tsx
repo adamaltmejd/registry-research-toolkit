@@ -9,6 +9,7 @@ const ENTITIES = {
   variable: { tone: "var", glyph: ENTITY_GLYPHS.column },
   group: { tone: "var", glyph: ENTITY_GLYPHS.column },
   column: { tone: "column", glyph: ENTITY_GLYPHS.column },
+  database: { tone: "database", glyph: ENTITY_GLYPHS.database },
 } as const satisfies Record<string, { tone: PillTone; glyph: unknown }>;
 
 export type Entity = keyof typeof ENTITIES;
@@ -18,7 +19,7 @@ export type Entity = keyof typeof ENTITIES;
  * a lane, a register's table filter, a project card and a value set; a column
  * pill wherever a column name is shown; a register's or variable's in a
  * search row; a register's table and variable counts on its provider's
- * page. The same size everywhere; only the hue and glyph differ.
+ * page; a table's database on its register's table rows. The same size everywhere; only the hue and glyph differ.
  */
 export function EntityPill({
   entity,

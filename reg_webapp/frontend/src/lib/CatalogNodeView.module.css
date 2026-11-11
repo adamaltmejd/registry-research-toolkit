@@ -64,30 +64,29 @@
   white-space: normal;
   overflow-wrap: anywhere;
 }
-/* The register's table chips: one wrapping row under the filter box and over
-   the variable list, flush with the box (DESIGN.md → FilterChip; #2407). */
-.tableFilter {
+/* A register's table row: its filter pill, then its database's pill where
+   it is held in one of several (#2110). */
+.tableRowName {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 6px;
-  min-inline-size: 0;
-  margin: 0;
-  padding: var(--space-3) var(--space-4);
-  border: 0;
+  gap: var(--space-1) var(--space-2);
+  min-width: 0;
 }
-.shown {
+/* A list heading's note: the Tables hint, the Variables count (#2110). */
+.note {
   color: var(--text-muted);
-  font-size: var(--text-sm);
+  font-size: var(--micro-label-size);
+  font-weight: 400;
+}
+.tableRowsLoading {
+  padding: var(--space-2) var(--space-4);
 }
 
 /* A register's or provider's list filter (#2403, #2407): first in the
-   panel, over the table chips and the list it filters, at a field's measure
+   panel, over the table rows and the list it filters, at a field's measure
    rather than the panel's width. */
 .listFilter {
   max-width: 28rem;
   padding: var(--space-3) var(--space-4);
-}
-.listFilter + .tableFilter {
-  padding-top: 0;
 }

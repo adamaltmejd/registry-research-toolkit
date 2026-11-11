@@ -1,9 +1,17 @@
 import type { PointerEvent, ReactNode } from "react";
 import styles from "./Pill.module.css";
 
-/** The pill hues: an entity's (register, table, variable, the white column)
- * and a column type's (identifier, every other type). #2391, #2399. */
-export type PillTone = "reg" | "table" | "var" | "column" | "id" | "type";
+/** The pill hues: an entity's (register, table, variable, the white column),
+ * a column type's (identifier, every other type), and a steward's database's
+ * (no hue). #2391, #2399, #2110. */
+export type PillTone =
+  | "reg"
+  | "table"
+  | "var"
+  | "column"
+  | "id"
+  | "type"
+  | "database";
 
 /** A column pill's state: outlined, in the project, or outside the years to
  * add. */

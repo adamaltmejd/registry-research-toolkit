@@ -1,13 +1,19 @@
-import { useMemo, useState } from "react";
-import type { Context, RegisterShow } from "./api";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
+import type { CatalogPeriod, Context, Coverage, RegisterShow } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { catalogHref, rankVariables, svCollator } from "./catalog";
-import { registerSubjectNames } from "./catalog_names";
-import { catalogPeriodLabel, segmentYears } from "./catalog_period";
+import { coverageRead, registerSubjectNames } from "./catalog_names";
+import { segmentYears } from "./catalog_period";
+import { type Space, stewardDatabases } from "./databases";
 import { FilterInput } from "./FilterInput";
 import { Highlight } from "./Highlight";
 import { dataAxis } from "./period";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
+import {
+  lensKeyId,
+  publishRegisterLens,
+  useRegisterLensOf,
+} from "./register_lens";
 import {
   datedYearRuns,
   studyWindow,
@@ -19,12 +25,58 @@ import { EmptyState } from "./ui/EmptyState";
 import { EntityPill } from "./ui/EntityPill";
 import { FilterChip } from "./ui/FilterChip";
 import { Panel } from "./ui/Panel";
+import { Skeleton } from "./ui/Skeleton";
+import { StatusRow } from "./ui/StatusRow";
 import { VariableRow, VariableRowList } from "./ui/VariableRow";
 import { useProject } from "./use_project";
+import { useCatalogRead } from "./use_store_read";
 import { windowBounds } from "./window_bounds";
 
+type Table = RegisterShow["tables"][number];
+
+/** A table row of the register page: the table's years in all its databases,
+ * and each database's on a steward with several. */
+interface TableRow {
+  table: Table;
+  spans: CatalogPeriod[];
+  databases: { space: Space; spans: CatalogPeriod[] }[];
+}
+
+/** The rows of the tables a variable is delivered in, by name, from the
+ * register's `coverage`; their databases in the steward's order. */
+function tableRows(
+  tables: readonly Table[],
+  coverage: Coverage,
+  databases: readonly Space[] | null,
+): TableRow[] {
+  return [...tables]
+    .sort((a, b) => svCollator.compare(a.name, b.name))
+    .map((table) => {
+      const held = coverage.tables.filter((t) => t.fqid === table.fqid);
+      return {
+        table,
+        spans: held.flatMap((t) => t.spans),
+        databases: (databases ?? []).flatMap((space) => {
+          const spans = held
+            .filter((t) => t.space === space.id)
+            .flatMap((t) => t.spans);
+          return spans.length > 0 ? [{ space, spans }] : [];
+        }),
+      };
+    });
+}
+
+/** A row's bar and its years in words, from its periods. */
+function bar(
+  periods: readonly CatalogPeriod[],
+  bounds: readonly [number, number],
+) {
+  const rows = periods.map((period) => ({ period }));
+  return { coverage: datedYearRuns(rows, bounds), years: segmentYears(rows) };
+}
+
 /** A register's page. A table's address renders it too, with that table's
- * chip on (`focus`): a table has no page of its own (maintainer, #2316). */
+ * filter on (`focus`): a table has no page of its own (maintainer, #2316). */
 export function RegisterView({
   node,
   focus,
@@ -54,38 +106,57 @@ export function RegisterView({
     study,
     bounds,
   );
+  const studyBlock = study ? ([study.from, study.to] as const) : null;
   const names = registerSubjectNames(node);
-  // The table chips (the archived variant lens, maintainer 2026-11-03): OR
-  // within the selection, a lens on the list only. A chip per table that
-  // delivers a variable, so no chip narrows the list to nothing; with one such
-  // table there is nothing to filter on, and a table address with no chip
-  // shows the whole list. The page is keyed by register and table address, so
-  // the selection starts afresh on each.
+  // The table filter (the archived variant lens, maintainer 2026-11-03; table
+  // timelines, #2110, maintainer 2026-11-11): OR within the selection, a lens
+  // on the lists only. A row per table that delivers a variable, so no filter
+  // narrows the list to nothing, and under it a row per database on a steward
+  // with several. It is offered when there are two things to filter by. The
+  // page is keyed by register and table address, so the selection starts
+  // afresh on each.
   const delivering = new Set(node.variables.flatMap((v) => v.tables));
-  const chipTables = [...node.tables]
-    .sort((a, b) => svCollator.compare(a.name, b.name))
-    .filter((table) => delivering.has(table.fqid));
+  const filterTables = node.tables.filter((table) =>
+    delivering.has(table.fqid),
+  );
+  const coverage = useCatalogRead(coverageRead, node.fqid);
+  const databases = stewardDatabases(context);
+  const rows = coverage.value
+    ? tableRows(filterTables, coverage.value, databases)
+    : null;
+  const filterable =
+    filterTables.length > 1 ||
+    (rows?.some((row) => row.databases.length > 1) ?? false);
   const [selected, setSelected] = useState<ReadonlySet<string>>(() =>
-    chipTables.length > 1 && focus !== null && delivering.has(focus)
+    filterTables.length > 1 && focus !== null && delivering.has(focus)
       ? new Set([focus])
       : new Set(),
   );
-  const chosen =
-    selected.size === 0
-      ? node.variables
-      : node.variables.filter((v) => v.tables.some((t) => selected.has(t)));
+  // The browse column narrows with the page (#2110, maintainer 2026-11-11).
+  useEffect(() => {
+    publishRegisterLens(node.fqid, selected);
+    return () => publishRegisterLens(null);
+  }, [node.fqid, selected]);
+  const lens = useRegisterLensOf(node, selected);
+  const chosen = lens.state === "on" ? lens.variables : node.variables;
   // The variable filter (#2403): the variables column's box, on the list the
-  // chips leave. The page is keyed by address, so it starts empty on each.
+  // table filter leaves. The page is keyed by address, so it starts empty on
+  // each.
   const [needle, setNeedle] = useState("");
   const shown = rankVariables(
     [...chosen].sort((a, b) => svCollator.compare(a.name, b.name)),
     needle,
   );
-  function toggleTable(fqid: string): void {
+  function toggle(key: string): void {
     const next = new Set(selected);
-    if (!next.delete(fqid)) next.add(fqid);
+    if (!next.delete(key)) next.add(key);
     setSelected(next);
   }
+  const chip = (key: string, pill: ReactNode) => (
+    <FilterChip isSelected={selected.has(key)} onChange={() => toggle(key)}>
+      {pill}
+    </FilterChip>
+  );
   return (
     <article className={styles.page}>
       <Definitions
@@ -93,8 +164,8 @@ export function RegisterView({
         title={node.name}
         description={node.description ?? undefined}
       />
-      {/* The list heads itself on its axis row (#2316); only the empty state
-          needs the panel's title. */}
+      {/* The lists head themselves on their axis rows (#2316); only the empty
+          state needs the panel's title. */}
       <Panel
         title={node.variables.length === 0 ? "Variables" : undefined}
         flush={node.variables.length > 0}
@@ -113,65 +184,163 @@ export function RegisterView({
                 placeholder="Filter variables…"
               />
             </div>
-            {/* The box first, then the table pills, flush with it, then the
-                list (#2407, maintainer decisions 2026-11-11). The pills have
-                no visible label: their glyph and pine "on" face carry it. */}
-            {chipTables.length > 1 && (
-              <fieldset className={styles.tableFilter}>
-                <legend className="visually-hidden">Filter by table</legend>
-                {chipTables.map((table) => (
-                  <FilterChip
-                    key={table.fqid}
-                    isSelected={selected.has(table.fqid)}
-                    onChange={() => toggleTable(table.fqid)}
-                  >
-                    <EntityPill
-                      entity="table"
-                      name={table.name}
-                      years={catalogPeriodLabel(table.period) ?? undefined}
-                    />
-                  </FilterChip>
-                ))}
-                {/* Mounted empty: a live region inserted with its first text
-                    is not announced. */}
-                <span className={styles.shown} aria-live="polite">
-                  {selected.size > 0
-                    ? `${chosen.length} of ${node.variables.length} shown`
+            {/* The box first, then the tables' timelines, then the variables
+                (#2110, maintainer 2026-11-11, arrangement Y). */}
+            {coverage.loading && filterTables.length > 1 ? (
+              <div className={styles.tableRowsLoading} aria-busy="true">
+                <Skeleton count={filterTables.length} />
+              </div>
+            ) : coverage.loading ? null : !rows ? (
+              filterTables.length > 1 && (
+                <StatusRow tone="error">
+                  The tables' years did not load. Reload the page to try again.
+                </StatusRow>
+              )
+            ) : (
+              filterable && (
+                <VariableRowList
+                  label="Tables"
+                  note={<span className={styles.note}>Click to filter</span>}
+                  axis={axis}
+                >
+                  {rows.flatMap(({ table, spans, databases: held }) => {
+                    const several = held.length > 1;
+                    return [
+                      <VariableRow
+                        key={table.fqid}
+                        name={
+                          <span className={styles.tableRowName}>
+                            {/* With one table, only its databases filter. */}
+                            {filterTables.length > 1 ? (
+                              chip(
+                                lensKeyId({
+                                  table: table.fqid,
+                                  database: null,
+                                }),
+                                <EntityPill entity="table" name={table.name} />,
+                              )
+                            ) : (
+                              <EntityPill entity="table" name={table.name} />
+                            )}
+                            {held.length === 1 && (
+                              <EntityPill
+                                entity="database"
+                                name={held[0].space.name}
+                              />
+                            )}
+                          </span>
+                        }
+                        {...bar(spans, bounds)}
+                        axis={axis}
+                        window={studyBlock}
+                      />,
+                      ...(several
+                        ? held.map(({ space, spans: years }) => (
+                            <VariableRow
+                              key={`${table.fqid}:${space.id}`}
+                              indent
+                              name={
+                                <span className={styles.tableRowName}>
+                                  {chip(
+                                    lensKeyId({
+                                      table: table.fqid,
+                                      database: space.id,
+                                    }),
+                                    <EntityPill
+                                      entity="database"
+                                      name={
+                                        <>
+                                          {space.name}
+                                          <span className="visually-hidden">
+                                            {` in ${table.name}`}
+                                          </span>
+                                        </>
+                                      }
+                                    />,
+                                  )}
+                                </span>
+                              }
+                              {...bar(years, bounds)}
+                              axis={axis}
+                              window={studyBlock}
+                            />
+                          ))
+                        : []),
+                    ];
+                  })}
+                </VariableRowList>
+              )
+            )}
+            {/* The list stays mounted through loading, a failed read and an
+                empty filter, so its count's live region is never inserted
+                with its first text (which is not announced). */}
+            <VariableRowList
+              label="Variables"
+              note={
+                <span className={styles.note} aria-live="polite">
+                  {lens.state === "on"
+                    ? `${chosen.length} of ${node.variables.length} variables shown`
                     : ""}
                 </span>
-              </fieldset>
-            )}
-            {/* Empty only through the filter: every chip's table delivers a
-                variable. */}
-            {shown.length === 0 ? (
-              <EmptyState
-                title={`No variables match “${needle.trim()}”.`}
-                description="Clear the filter to list them all."
-              />
-            ) : (
-              <VariableRowList label="Variables" axis={axis}>
-                {shown.map((variable) => {
-                  const coverage = variableYearRuns(
-                    variable,
-                    node.tables,
-                    bounds,
-                  );
+              }
+              axis={axis}
+            >
+              {lens.state !== "loading" &&
+                lens.state !== "failed" &&
+                shown.map((variable) => {
+                  // With a filter on, the bar draws only the selected tables'
+                  // and databases' years (#2110, maintainer 2026-11-11).
+                  const years =
+                    lens.state === "on"
+                      ? bar(lens.years.get(variable.fqid) ?? [], bounds)
+                      : {
+                          coverage: variableYearRuns(
+                            variable,
+                            node.tables,
+                            bounds,
+                          ),
+                          years: segmentYears(
+                            variablePeriods(variable, node.tables),
+                          ),
+                        };
                   return (
                     <VariableRow
                       key={variable.fqid}
                       name={<Highlight text={variable.name} needle={needle} />}
                       href={catalogHref(variable.fqid)}
                       inProject={bound.has(variable.fqid)}
-                      coverage={coverage}
-                      years={segmentYears(
-                        variablePeriods(variable, node.tables),
-                      )}
+                      {...years}
                       axis={axis}
-                      window={study ? [study.from, study.to] : null}
+                      window={studyBlock}
                     />
                   );
                 })}
-              </VariableRowList>
+            </VariableRowList>
+            {lens.state === "loading" ? (
+              <div className={styles.tableRowsLoading} aria-busy="true">
+                <Skeleton count={3} />
+              </div>
+            ) : lens.state === "failed" ? (
+              <StatusRow tone="error">
+                The years of{" "}
+                {lens.tables
+                  .map(
+                    (fqid) =>
+                      node.tables.find((table) => table.fqid === fqid)?.name ??
+                      fqid,
+                  )
+                  .join(", ")}{" "}
+                did not load. Reload the page to try again.
+              </StatusRow>
+            ) : (
+              shown.length === 0 && (
+                // Empty only through the box: every table row delivers a
+                // variable.
+                <EmptyState
+                  title={`No variables match “${needle.trim()}”.`}
+                  description="Clear the filter to list them all."
+                />
+              )
             )}
           </>
         )}

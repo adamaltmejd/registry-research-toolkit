@@ -18,6 +18,7 @@ import {
 import { catalogPeriodLabel } from "./catalog_period";
 import { FilterInput } from "./FilterInput";
 import { Highlight } from "./Highlight";
+import { useRegisterLens, useRegisterLensOf } from "./register_lens";
 import {
   type ColumnItem,
   ColumnList,
@@ -188,7 +189,8 @@ export function VariableList({
 }
 
 /** A register's variables, the filter's matches first; null without a
- * register. */
+ * register. While its page has a table filter on, only the variables that
+ * filter leaves (#2110, maintainer 2026-11-11). */
 function useRegisterColumn(
   registerFqid: string | null,
   selectedFqid: string | null,
@@ -197,9 +199,13 @@ function useRegisterColumn(
   const resource = useAsyncResource(registerFqid, (signal) =>
     sharedShow(registerFqid ?? "", signal),
   );
-  if (registerFqid === null) return null;
   const node = resource.data?.kind === "register" ? resource.data : null;
-  const variables = sortedVariables(node);
+  const lens = useRegisterLensOf(node, useRegisterLens(registerFqid));
+  if (registerFqid === null) return null;
+  // While the filter's years load, the whole list: the page says it is loading.
+  const variables = sortedVariables(
+    node && lens.state === "on" ? { variables: lens.variables } : node,
+  );
   const sets = node?.sets ?? [];
   const setOf = new Map(
     sets.flatMap((set) => set.members.map((member) => [member, set])),

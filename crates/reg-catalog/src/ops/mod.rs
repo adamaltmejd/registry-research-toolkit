@@ -100,7 +100,14 @@ impl Server {
 /// the placements of that pair that overlap them; `None` when none does (crates/DESIGN.md,
 /// "A steward deployment serves its holdings only"). `schema` lines and `show` row keys
 /// clip through it. `clip` stays a hull (one span per segment, gaps included) because
-/// those consumers need one span; `clip_each` keeps the gaps.
+/// those consumers need one span; `clip_each` keeps the gaps and names each span's
+/// database.
+/// A steward's database, as `clip_each` names it: its config order, then its id.
+pub(crate) type HeldSpace = (i64, String);
+
+/// A placed span, with its database on a steward with several.
+pub(crate) type HeldSpan = (Option<HeldSpace>, reg_core::days::Span);
+
 pub(crate) struct HeldClip<'c> {
     hull: rusqlite::Statement<'c>,
     each: rusqlite::Statement<'c>,
@@ -113,9 +120,16 @@ impl<'c> HeldClip<'c> {
                 "SELECT min(start), max(end) FROM holding_mapping
                  WHERE table_pid = ?1 AND variable_pid = ?2 AND start < ?4 AND ?3 < end",
             )?,
+            // A single-space steward states no space (`segments`' rule).
             each: holdings.prepare(
-                "SELECT start, end FROM holding_mapping
-                 WHERE table_pid = ?1 AND variable_pid = ?2 AND start < ?4 AND ?3 < end",
+                "SELECT m.start, m.end, s.ord, s.id
+                 FROM holding_mapping m
+                   JOIN holding_column c ON c.id = m.column_id
+                   JOIN holding_table h ON h.id = c.holding_id
+                   LEFT JOIN holding_space s ON s.id = h.space
+                     AND (SELECT count(*) FROM holding_space) > 1
+                 WHERE m.table_pid = ?1 AND m.variable_pid = ?2
+                   AND m.start < ?4 AND ?3 < m.end",
             )?,
         })
     }
@@ -137,22 +151,29 @@ impl<'c> HeldClip<'c> {
     }
 
     /// Every overlapping placement's intersection with the segment, so gaps between
-    /// disjoint placements survive (table variable periods).
+    /// disjoint placements survive (table variable periods), each with its database
+    /// (config order, id) on a steward with several.
     pub(crate) fn clip_each(
         &mut self,
         table: &str,
         variable: &str,
         (start, end): (i64, i64),
-    ) -> Result<Vec<(i64, i64)>, Error> {
-        let placed = self
-            .each
-            .query_map(rusqlite::params![table, variable, start, end], |row| {
-                Ok((row.get::<_, i64>(0)?, row.get::<_, i64>(1)?))
-            })?;
+    ) -> Result<Vec<HeldSpan>, Error> {
+        let placed =
+            self.each
+                .query_map(rusqlite::params![table, variable, start, end], |row| {
+                    let space: Option<i64> = row.get(2)?;
+                    Ok((
+                        (row.get::<_, i64>(0)?, row.get::<_, i64>(1)?),
+                        space
+                            .map(|ord| row.get(3).map(|id| (ord, id)))
+                            .transpose()?,
+                    ))
+                })?;
         let mut spans = Vec::new();
         for placement in placed {
-            let (first, last) = placement?;
-            spans.push((start.max(first), end.min(last)));
+            let ((first, last), space) = placement?;
+            spans.push((space, (start.max(first), end.min(last))));
         }
         Ok(spans)
     }
