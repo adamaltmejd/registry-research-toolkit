@@ -23,23 +23,14 @@
   pointer-events: none;
 }
 
-.current {
+/* The study years' light shade, and an add window's stronger band over it,
+   each 8 px past its bounds (DESIGN.md → Time, #2399). */
+.band {
   fill: var(--accent-soft);
 }
 
-/* The window band (ui/WindowBand, DESIGN.md → Time): the study window's
-   shade and bounds, and an add window's stronger band. */
-.band {
-  fill: var(--accent-bg);
-}
-
 .addBand {
-  fill: var(--accent-band);
-}
-
-.bound {
-  stroke: var(--accent);
-  stroke-width: 1.5;
+  fill: var(--accent-bg);
 }
 
 .rule {
@@ -146,6 +137,23 @@
   padding-bottom: var(--space-1);
 }
 
+/* A variable or group page's compact rows (#2399): a group member's 28 px
+   heading row, and a table's 36 px row headed by its pill, which keeps its
+   own width. */
+.name[data-row="heading"],
+.name[data-row="table"] {
+  justify-content: center;
+  gap: 2px;
+  padding-block: var(--space-1);
+}
+.name[data-row="heading"] {
+  min-height: var(--lane-heading-height);
+}
+.name[data-row="table"] {
+  align-items: flex-start;
+  min-height: var(--lane-row-height);
+}
+
 /* A group member's table under its heading row (maintainer ruling,
    2026-11-10, #2395). */
 .nested {
@@ -230,7 +238,6 @@ a.nameText {
 /* Its lane grows, so a long name and its line wrap instead of cutting
    members of one long name to the same few words. */
 .detailed > .nameText,
-.detailed > .titled > .nameText,
 .detailed > .sub {
   white-space: normal;
 }
@@ -270,22 +277,21 @@ a.nameText {
   cursor: not-allowed;
 }
 
+/* A segment holds its pill at the pill's own height, centred in the 24 px
+   target. */
 .segment {
   position: absolute;
   top: 0;
   bottom: 0;
+  display: flex;
+  align-items: center;
 }
 
-/* A ColumnChip stretched over its years: the span and the chip are one
-   object. */
+/* The column pill stretched over its years: the span and the pill are one
+   object (#2399). */
 .face {
-  display: flex;
-  box-sizing: border-box;
   width: 100%;
-  height: 100%;
-  align-items: center;
   overflow: hidden;
-  text-overflow: ellipsis;
   transition:
     background var(--duration-quick) var(--ease-standard),
     border-color var(--duration-quick) var(--ease-standard);
@@ -300,6 +306,7 @@ a.nameText {
    keeps the base 1 px, so it is its neighbours' size (#2321). */
 .span[data-staged="add"] .face,
 .span[data-selected] .face {
+  --tone-ink: var(--accent-ink);
   border-color: var(--accent);
   background: var(--accent-band);
   color: var(--accent-ink);
@@ -307,6 +314,7 @@ a.nameText {
 
 /* Will be removed: no longer filled, struck through. */
 .span[data-staged="remove"] .face {
+  --tone-ink: var(--accent-ink);
   border-style: dashed;
   border-color: var(--accent);
   background: var(--viz-span);
@@ -408,19 +416,6 @@ a.nameText {
   margin: 0;
   color: var(--text-muted);
   font-size: var(--text-sm);
-}
-
-/* A lane's kind pill and its name on one row: the name truncates, the pill
-   keeps its width. */
-.titled {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  min-width: 0;
-}
-
-.titled > :first-child {
-  flex: none;
 }
 
 /* The coverage row's caption when it names the variable: it heads the

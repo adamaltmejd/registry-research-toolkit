@@ -59,8 +59,8 @@
 .item {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0 var(--space-2);
+  align-items: center;
+  gap: 2px var(--space-2);
   padding: 5px var(--space-3);
   color: var(--text);
   outline: none;
@@ -72,7 +72,9 @@
   box-shadow: inset 3px 0 0 var(--accent);
 }
 .label {
+  display: flex;
   min-width: 0;
+  max-width: 100%;
   overflow-wrap: anywhere;
 }
 .detail {
@@ -80,7 +82,4 @@
   color: var(--text-muted);
   font-size: var(--text-sm);
   overflow-wrap: anywhere;
-}
-.type {
-  margin-left: auto;
 }

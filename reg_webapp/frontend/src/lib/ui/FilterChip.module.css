@@ -1,36 +1,46 @@
-/* Neutral at rest: the label before the chips names the dimension in text, never
-   hue. Padding and gap are the design system's 4px 9px / 6px. */
+/* The checkbox around a pill: the pill is the face (F1, #2399). Neutral at
+   rest, so the hue stays on the glyph alone and never competes with the pine
+   "on" state; the label before the chips names the dimension in text. */
 .chip {
+  position: relative;
   display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: var(--space-1) 9px;
-  border: 1px solid var(--border);
+  max-width: 100%;
+  min-width: 0;
   border-radius: var(--radius-sm);
-  background: var(--surface);
-  color: var(--text);
-  font-size: var(--text-sm);
   cursor: pointer;
   user-select: none;
+}
+.chip > :last-child {
+  border-color: var(--border);
+  background: var(--surface);
   transition:
     background var(--duration-quick) var(--ease-standard),
     border-color var(--duration-quick) var(--ease-standard);
 }
-.chip[data-hovered] {
+.chip[data-hovered] > :last-child {
   background: var(--surface-hover);
 }
-.chip[data-selected] {
+.chip[data-selected] > :last-child {
+  --tone-ink: var(--accent-ink);
   border-color: var(--accent);
   background: var(--accent-bg);
   color: var(--accent-ink);
-  font-weight: var(--heading-weight);
+}
+.chip[data-selected] > :last-child > span {
+  color: var(--accent-ink);
+}
+/* RAC's hidden input sits at the face's centre, not 1 px off its corner, so
+   a pointer at the input's position lands on the face. */
+.chip > :first-child {
+  top: 50%;
+  left: 50%;
 }
 .chip[data-focus-visible] {
   box-shadow: var(--focus-ring);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .chip {
+  .chip > :last-child {
     transition: none;
   }
 }

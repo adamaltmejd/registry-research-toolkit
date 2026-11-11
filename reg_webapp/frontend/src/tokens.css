@@ -174,15 +174,11 @@
   --gray-11: #f0f1ef;
   --gray-12: #fafaf8;
 
-  /* Categorical palette — node TYPE (register / variable / code / classification /
-     group), shown in a mixed list (search results, mentions, a project's sources)
-     and in a page's pill row; a homogeneous list carries no type mark at all
-     (DESIGN.md → Colors). */
+  /* Categorical palette — the entity pills' hues (DESIGN.md → Colors, #2399):
+     a register, a table, and a variable or variable group. */
   --cat-reg: #1f7a7a; /* teal — registers */
-  --cat-var: #4b4b9e; /* indigo — variables */
-  --cat-code: #9a6b1a; /* gold — value-set codes */
-  --cat-class: #7a3f8c; /* plum — classifications */
-  --cat-group: #2f6b3f; /* moss — variable groups */
+  --cat-var: #4b4b9e; /* indigo — variables and variable groups */
+  --cat-table: #2f6b3f; /* moss — tables */
   /* The column-type pills beside a kind pill (maintainer ruling 2026-11-10, quoted in PR #2391): an
      identifier, and every other column type. */
   --cat-id: #8a4b2c; /* sienna — identifiers */
@@ -225,16 +221,14 @@
   --accent-bg: #dcefe9; /* the in-project wash: selected rows, the study-window band */
   /* the add window's fill, stronger than accent-bg; text-muted on it still clears AA */
   --accent-band: #bfe0d4;
-  --accent-soft: #eaf5f1; /* the project banner's fill; the current lane in a graph */
+  --accent-soft: #eaf5f1; /* the project banner's fill; the study years' shade in a graph */
   --accent-ink: #0b5546; /* accent-coloured TEXT on bg/surface/accent-bg (8.7:1) */
 
   /* Categorical TEXT stops — each hue 85% toward black, so a type label clears AA
      on its own 10% tint. Literal (not color-mix) so DESIGN.md can pin them. */
   --cat-reg-ink: #1a6868;
   --cat-var-ink: #404086;
-  --cat-code-ink: #835b16;
-  --cat-class-ink: #683677;
-  --cat-group-ink: #285b36;
+  --cat-table-ink: #285b36;
   --cat-id-ink: #754025;
   --cat-type-ink: #42525f;
 
@@ -274,7 +268,7 @@
   --text-sm: 0.8125rem;
   --text-micro: 0.6875rem;
   --text-mono: 0.92em; /* identifiers inline: relative, steps down inside any level */
-  --text-column: 0.75rem; /* a column name in a ColumnChip or lane span */
+  --text-column: 0.75rem; /* a column name set beside a lane span */
   --text-axis: 0.625rem; /* axis years and lane headers */
   --control-line-height: 1.3;
   --selection-bar-width: 3px;
@@ -313,6 +307,8 @@
   --col-browse-fluid: clamp(var(--col-browse), 18vw, var(--col-browse-max));
   --col-list-fluid: clamp(var(--col-list), 16vw, var(--col-list-max));
   --lane-height: 58px; /* one lane in a LaneGraph */
+  --lane-heading-height: 28px; /* a group member's heading row, no track (#2399) */
+  --lane-row-height: 36px; /* a table's row on a variable or group page (#2399) */
   --content-max: 80rem; /* the AppShell canvas max-width */
 
   /* ── Elevation ───────────────────────────────────────────────────────── */

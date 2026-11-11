@@ -34,8 +34,8 @@ import {
 } from "./source_edits";
 import { columnYearRuns, tableYears } from "./study_window";
 import { Button } from "./ui/Button";
-import { ColumnChip } from "./ui/ColumnChip";
 import { ConfirmDialog } from "./ui/ConfirmDialog";
+import { EntityPill } from "./ui/EntityPill";
 import { Panel } from "./ui/Panel";
 import { Select } from "./ui/Select";
 import { NameSkeleton } from "./ui/Skeleton";
@@ -242,8 +242,9 @@ export function SourceCard({
           {!graph && (
             <div className={styles.columns}>
               {columns.map((column) => (
-                <ColumnChip
+                <EntityPill
                   key={column.id}
+                  entity="column"
                   name={column.spelling}
                   state={elsewhere ? "out" : "in"}
                 />
@@ -316,8 +317,10 @@ export function SourceCard({
           aria-busy={naming || undefined}
         >
           {register ?? shownName}
+          {/* The table's pill (#2399), only where two tables of one register
+              would share the heading (#2221). */}
           {register && sharedHeading && (
-            <span className={styles.headingTable}>{tableName}</span>
+            <EntityPill entity="table" name={tableName} />
           )}
         </span>
       }
@@ -347,9 +350,11 @@ export function SourceCard({
         {naming ? (
           shownName
         ) : (
-          <a className="link" href={catalogHref(source.table)}>
-            {tableName}
-          </a>
+          <EntityPill
+            entity="table"
+            name={tableName}
+            href={catalogHref(source.table)}
+          />
         )}
         {periodYears && (
           <span>

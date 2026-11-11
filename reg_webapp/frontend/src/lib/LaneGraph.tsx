@@ -21,6 +21,7 @@ import {
   COVERAGE_HEIGHT,
   type LaneEdgeKind,
   type LaneGeometry,
+  type LaneRow,
   type LaneSpanGeometryInput,
   labelWidth,
   laneGeometry,
@@ -29,7 +30,8 @@ import {
 } from "./lane_graph";
 import { coverageMarks } from "./period";
 import type { ProjectStudyWindow } from "./project_data";
-import { ColumnChip, type ColumnChipState } from "./ui/ColumnChip";
+import { EntityPill } from "./ui/EntityPill";
+import type { ColumnState } from "./ui/Pill";
 
 export interface LaneModel {
   id: string;
@@ -38,10 +40,9 @@ export interface LaneModel {
   sub?: { text: string; mono?: boolean } | null;
   /** The variable's own page; the name links there. */
   href?: string | null;
-  /** The version a classification page shows, on `accent-soft`. */
-  current?: boolean;
-  /** A kind pill before the name: a variable page's lanes are tables. */
-  pill?: ReactNode;
+  /** A group member's heading row (no track), or a table's row, its name
+   * drawn as the table pill (#2399); a plain lane when absent. */
+  row?: LaneRow;
   /** A row under another lane's heading row: a group member's table. */
   nested?: boolean;
   /** More about the lane under its name and line, in the name column: a
@@ -68,7 +69,7 @@ export interface LaneModel {
 export interface LaneSpanModel extends LaneSpanGeometryInput {
   /** "2015–2019", "2020–", or "year-independent". */
   years: string;
-  state: ColumnChipState;
+  state: ColumnState;
   /** A pending change to the project, shown until committed. */
   staged?: "add" | "remove" | null;
   /** In the project through a source the study window has moved off. */
@@ -162,10 +163,10 @@ function useHeights() {
 
 /**
  * Lanes over time (DESIGN.md → Time → LaneGraph): one lane per variable, each
- * column a span in the ColumnChip shape on one shared axis, relations as
- * arrows, solid for succession and dashed for a rename, the window as an
- * `accent-bg` band between `accent` bounds and an add window as a stronger
- * `accent-band` over it. The marks are one decorative SVG; the lanes and spans
+ * column a span, the column pill stretched over its years, on one shared
+ * axis, relations as arrows, solid for succession and dashed for a rename,
+ * the study window as a light `accent-soft` shade 8 px past its bounds and an
+ * add window as a stronger `accent-bg` over it (#2399). The marks are one decorative SVG; the lanes and spans
  * are HTML over it, so every span is a real checkbox in reading order, named with
  * its column, variable and years. Tab walks the spans lane by lane and Space
  * toggles one. On a variable page a coverage row heads the lanes, so the
@@ -466,8 +467,20 @@ function Marks({
     w && w[1] >= axis[0] && w[0] <= axis[1]
       ? run({ from: Math.max(w[0], axis[0]), to: Math.min(w[1], axis[1]) })
       : null;
-  const study = onAxis(window);
-  const add = onAxis(addWindow);
+  // A window's shade runs 8 px past its bounds, so it never sits tight on the
+  // spans' ends (maintainer, #2399, 2026-11-11), and stays on the drawing.
+  const shade = (w: [number, number] | null) => {
+    const r = onAxis(w);
+    if (!r) return null;
+    const from = Math.max(r.x - SHADE_PAD, 0);
+    return {
+      x: from,
+      width: Math.min(r.x + r.width + SHADE_PAD, width) - from,
+    };
+  };
+  const study = shade(window);
+  const add = shade(addWindow);
+  const rowOf = (id: string) => lanes.find((l) => l.id === id)?.row ?? "lane";
   const cy = geometry.coverageY;
   const marks =
     coverage && cy !== null
@@ -493,21 +506,10 @@ function Marks({
           <path d="M0,0 L8,4 L0,8 z" className={styles.arrowhead} />
         </marker>
       </defs>
-      {geometry.lanes.map((lane) =>
-        lanes.find((l) => l.id === lane.id)?.current ? (
-          <rect
-            key={lane.id}
-            className={styles.current}
-            x={0}
-            y={lane.y}
-            width={width}
-            height={lane.height}
-          />
-        ) : null,
-      )}
-      {/* The study window's shade, the add window's stronger band over it,
-          then the study window's bounds over both, so the study window reads
-          wherever an add window narrows or overreaches it (#1910). */}
+      {/* The study window's shade and the add window's stronger band over it,
+          so the study window reads wherever an add window narrows or
+          overreaches it (#1910). The thumbs mark the bounds; there are no
+          bound lines (maintainer, 2026-11-11). */}
       {study && (
         <rect
           className={styles.band}
@@ -526,17 +528,6 @@ function Marks({
           height={bottom - geometry.axisY}
         />
       )}
-      {study &&
-        [study.x, study.x + study.width].map((x) => (
-          <line
-            key={x}
-            className={styles.bound}
-            x1={x}
-            x2={x}
-            y1={geometry.axisY}
-            y2={bottom}
-          />
-        ))}
       {coverage && cy !== null && marks && (
         <g>
           {/* Where the band leaves coverage, its wash gives way to info-bg on
@@ -580,16 +571,27 @@ function Marks({
           />
         </g>
       )}
-      {geometry.lanes.map((lane) => (
-        <line
-          key={lane.id}
-          className={styles.rule}
-          x1={0}
-          x2={width}
-          y1={lane.y + lane.height}
-          y2={lane.y + lane.height}
-        />
-      ))}
+      {/* A divider between variables only, never between a variable's tables
+          (#2399): a heading row's above it, a plain lane's above and below. */}
+      {geometry.lanes.flatMap((lane) => {
+        const row = rowOf(lane.id);
+        const ys =
+          row === "table"
+            ? []
+            : row === "heading"
+              ? [lane.y]
+              : [lane.y, lane.y + lane.height];
+        return ys.map((y) => (
+          <line
+            key={`${lane.id}@${y}`}
+            className={styles.rule}
+            x1={0}
+            x2={width}
+            y1={y}
+            y2={y}
+          />
+        ));
+      })}
       <line
         className={styles.axis}
         x1={0}
@@ -760,45 +762,44 @@ function LaneText({
 }) {
   const subId = useId();
   const focusName = useFocusOnce(focus, top);
-  const name = lane.href ? (
-    <a
-      className={`link ${styles.nameText}`}
-      href={lane.href}
-      // Tab reads links only: the line under the name tells lanes of one
-      // name apart, so it describes the link.
-      aria-describedby={lane.sub ? subId : undefined}
-      // The name and its line truncate; two lanes can then read alike
-      // (SyssStat11, SyssStat19), so the whole of each is the hover text.
-      title={lane.name}
-    >
-      {lane.name}
-    </a>
-  ) : (
-    <span
-      ref={focusName}
-      className={styles.nameText}
-      title={lane.name}
-      // The focus target of a member's address, said in words.
-      tabIndex={focus ? -1 : undefined}
-      aria-current={focus ? "true" : undefined}
-    >
-      {lane.name}
-    </span>
-  );
+  const name =
+    lane.row === "table" ? (
+      // The table's name inside its pill, which cuts it with an ellipsis and
+      // the whole name as hover text (#2399).
+      <EntityPill entity="table" name={lane.name} />
+    ) : lane.href ? (
+      <a
+        className={`link ${styles.nameText}`}
+        href={lane.href}
+        // Tab reads links only: the line under the name tells lanes of one
+        // name apart, so it describes the link.
+        aria-describedby={lane.sub ? subId : undefined}
+        // The name and its line truncate; two lanes can then read alike
+        // (SyssStat11, SyssStat19), so the whole of each is the hover text.
+        title={lane.name}
+      >
+        {lane.name}
+      </a>
+    ) : (
+      <span
+        ref={focusName}
+        className={styles.nameText}
+        title={lane.name}
+        // The focus target of a member's address, said in words.
+        tabIndex={focus ? -1 : undefined}
+        aria-current={focus ? "true" : undefined}
+      >
+        {lane.name}
+      </span>
+    );
   return (
     <div
       ref={measure}
       className={`${styles.name} ${lane.detail || lane.wrap ? styles.detailed : ""} ${lane.nested ? styles.nested : ""}`}
+      data-row={lane.row}
       style={width ? { width } : undefined}
     >
-      {lane.pill ? (
-        <span className={styles.titled}>
-          {lane.pill}
-          {name}
-        </span>
-      ) : (
-        name
-      )}
+      {name}
       {lane.sub && (
         <span
           id={subId}
@@ -811,7 +812,12 @@ function LaneText({
       {lane.undelivered && lane.undelivered.length > 0 && (
         <span className={styles.undelivered}>
           {lane.undelivered.map((column) => (
-            <ColumnChip key={column} name={column} state="out" />
+            <EntityPill
+              key={column}
+              entity="column"
+              name={column}
+              state="out"
+            />
           ))}
           <span className={styles.sub}>never delivered</span>
         </span>
@@ -907,29 +913,32 @@ function Span({
     [focusInput],
   );
   const [open, setOpen] = useState(false);
-  // A span too narrow for its name, with the name beside it, carries its
-  // years where they fit, so the bar is not an empty box.
-  const showYears =
-    at.segments.length === 1 &&
-    labelWidth(
-      at.label === "inside" ? `${span.name} ${span.years}` : span.years,
-    ) <= at.width;
   // An unnamed series (an interrupted delivery) carries its name once, on its
   // widest part, so a one-year first delivery does not clip it.
   const widest = at.segments.reduce(
     (best, segment, i) => (segment.width > at.segments[best].width ? i : best),
     0,
   );
+  // A span with no column name (a classification version) carries its years
+  // where they fit, so the bar is not an empty box; a column span shows its
+  // name only (#2399).
+  const showYears =
+    !span.name &&
+    at.segments.length === 1 &&
+    labelWidth(span.years) <= at.width;
   const faces = at.segments.map((segment, i) => {
     const name =
       at.label !== "inside"
         ? ""
         : (segment.name ?? (i === widest ? span.name : ""));
     return (
-      <ColumnChip
+      // The column pill stretched over its years: the name only, since the
+      // axis gives the years (maintainer, #2399, 2026-11-11).
+      <EntityPill
         // Positional: the segments are rebuilt whole from the span.
         // oxlint-disable-next-line react/no-array-index-key
         key={i}
+        entity="column"
         name={name}
         years={showYears ? span.years : undefined}
         state={span.state}
@@ -972,7 +981,8 @@ function Span({
     "data-blocked": span.blocked || undefined,
   };
   // The tooltip opens only where the span's own text is cut off (maintainer,
-  // 2026-11-10, #2321): its years. The column name is never cut.
+  // 2026-11-10, #2321): its years, which a span no longer shows (#2399). The
+  // column name is never cut.
   const tipped = !!span.years && !showYears;
   const tip = tipped && (
     <Tooltip
@@ -1105,6 +1115,8 @@ function Picker({
     </RadioGroup>
   );
 }
+
+const SHADE_PAD = 8;
 
 const COARSE = "(pointer: coarse)";
 

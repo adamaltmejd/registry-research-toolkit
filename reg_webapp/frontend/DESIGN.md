@@ -65,16 +65,12 @@ colors:
   # label text uses the `-ink` stop (the hue 85% toward black).
   cat-reg: "#1f7a7a"
   cat-var: "#4b4b9e"
-  cat-code: "#9a6b1a"
-  cat-class: "#7a3f8c"
-  cat-group: "#2f6b3f"
+  cat-table: "#2f6b3f"
   cat-id: "#8a4b2c"
   cat-type: "#4e6070"
   cat-reg-ink: "#1a6868"
   cat-var-ink: "#404086"
-  cat-code-ink: "#835b16"
-  cat-class-ink: "#683677"
-  cat-group-ink: "#285b36"
+  cat-table-ink: "#285b36"
   cat-id-ink: "#754025"
   cat-type-ink: "#42525f"
   # Data-viz — marks of the time components (Timeline, VariableRow, LaneGraph).
@@ -160,6 +156,8 @@ spacing:
   col-list-max: 300px
   shell-max: 120rem
   lane-height: 58px
+  lane-heading-height: 28px
+  lane-row-height: 36px
 
 components:
   button-primary:
@@ -315,27 +313,27 @@ pure role remaps.
 - **Pine, the ownership colour (`accent` and its stops):** used for exactly one idea —
   this is yours, or this is where you are. Primary button fill (`accent-fg` text), the
   bar and count on a column item or group that has something in the project, the
-  selected row's bar, the focus ring, the study-window bounds. `accent-bg` is the wash:
-  selected variable rows, the study-window band, the active segment. `accent-band` is
-  one stop stronger and has one use: an add window that differs from the study window
-  (see Time). `accent-soft` is the project banner's fill and the picked version's lane
-  on a classification's page; a variable's or group's lanes have no fill (maintainer,
-  dogfood 2026-11-05, #2319). `accent-ink` is pine as text (in-project counts, window years on an axis).
+  selected row's bar, the focus ring, the banner's study-window bounds. `accent-bg` is
+  the wash: selected variable rows, the banner's study-window band, the active segment,
+  and on a `LaneGraph` an add window that differs from the study window (see Time).
+  `accent-band` is one stop stronger: a ticked span. `accent-soft` is the project
+  banner's fill and the study years' shade on a `LaneGraph`; no lane has a fill of its
+  own, a classification's picked version's neither (maintainer, dogfood 2026-11-05,
+  #2319; maintainer answer on #2399, 2026-11-11). `accent-ink` is pine as text (in-project counts, window years on an axis).
   Never use pine for a verdict, a type or decoration; `ok` is a verdict, `accent` is
   ownership.
 - **Status (`err`, `warn`, `info`, `ok` and their `-bg` tints):** the only other
   chromatic chrome, each paired with a glyph and text. A timeline marks no coding
   change ("Drop them", maintainer, dogfood 2026-11-05, #2319). Never use a `-bg` tint as a text color, and never use a status
   hue for emphasis, selection, or brand.
-- **Categorical (`cat-reg` teal, `cat-var` indigo, `cat-code` gold, `cat-class` plum,
-  `cat-group` moss; `cat-id` sienna, `cat-type` slate):** the `Pill` hues. A node kind's
-  appears in a MIXED list — palette results, mentions, a project's sources — and as the
-  kind pill on a page's pill row. `cat-id` is an identifier's Type pill and `cat-type`
-  every other column type's: three categories, kind, identifier and type, one hue each
-  (maintainer ruling 2026-11-10, quoted in PR #2391; the two hex values are proposed by
-  the implementer). Fill and border take the raw hue at a 10 % tint; label text takes
-  the `-ink` stop so every label clears AA. In a list where every item is the same type
-  (registers under Registers, variables within a group) there is no type mark at all.
+- **Categorical (`cat-reg` teal, `cat-table` moss, `cat-var` indigo; `cat-id` sienna,
+  `cat-type` slate):** the `Pill` hues. An entity's: a register teal, a table moss, a
+  variable and a variable group one indigo, told apart only by the kind pill's word
+  ("Variable", "Variable group"); a column has no hue, it is the white pill
+  (maintainer, #2399, approved 2026-11-11). `cat-id` is an identifier's Type pill and `cat-type` every other column
+  type's (maintainer ruling 2026-11-10, quoted in PR #2391). Fill and border take the
+  raw hue (10 % and 35 %), the glyph its `-ink` stop; the text is always `text`, on
+  every hued pill, and a pill link's underline is the text colour (maintainer, #2399, approved 2026-11-11).
 - **Graph marks:** `viz-edge-succession` (ink, solid) is a definition change;
   `viz-edge-rename` (muted, dashed) is a rename. Spans are `viz-span` with a
   `border-strong` stroke; outside the study window they take `viz-span-out` and
@@ -356,10 +354,10 @@ Two families, both self-hosted woff2 under the SIL Open Font License, never a CD
 
 Two kinds of name, never confused: a **variable name** is descriptive Swedish prose in
 the text face ("Disponibel inkomst per konsumtionsenhet, familj"); a **column name** is
-what the researcher types in code and is always a `ColumnChip` (`CDISPKE04H`): `column`
-style, uppercase as delivered, in an outlined `sm`-radius chip, optionally with its
-years inside. Never set a column name in the text face and never set a variable name in
-mono or in a chip.
+what the researcher types in code and is always a column pill (`EntityPill`,
+`CDISPKE04H`): mono, as delivered, in the white ink-outlined pill with the column glyph,
+optionally with its years inside. Never set a column name in the text face and never
+set a variable name in mono or in a column pill.
 
 Hierarchy is size and weight. Labels and headings are **sentence case with normal
 tracking**; nothing is underlined except a ghost button's label, which takes a 2 px
@@ -477,8 +475,9 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   lists ranked apart, the catalog's `items` and the steward's own `steward.items`: the
   palette lists the catalog's hits, then the steward's, each in the server's order, a
   place listed once. The two ranks never merge; a list that pages follows each list's
-  own cursor (`cursor`, `steward_cursor`) (#2110). Its results are a mixed list and
-  carry a `TypeTag`. It is a list under the field with no field of its own: the top-bar
+  own cursor (`cursor`, `steward_cursor`) (#2110). Its results are a mixed list: each
+  row's name is its entity pill (a register's, a variable's), its context beside it,
+  with no separate kind pill (S1, maintainer, #2399, approved 2026-11-11). It is a list under the field with no field of its own: the top-bar
   field is its one input, so focus stays there and the arrow keys move through the rows.
   No row is active until they reach one, so Enter never opens a row whose hits are still
   loading (new rule, proposed by the implementer).
@@ -615,8 +614,8 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   since the version before (maintainer, dogfood 2026-11-05, #2323; a correspondence
   table is #795). The picked version is the one a version address names, else the
   latest version that has started by the catalog's last year (maintainer ruling,
-  2026-11-05); it is local state, its part's lane on `accent-soft` and its span in the
-  group page's selected-span style. Pressing a span picks its version (maintainer
+  2026-11-05); it is local state, its span in the group page's selected-span style; its
+  lane has no fill (maintainer answer on #2399, 2026-11-11). Pressing a span picks its version (maintainer
   ruling, 2026-11-05), and a version address focuses that span (new rule, proposed by
   the implementer: picking does not change the URL, which would reload the page). Since
   one version is picked at a time, the spans are one radio group, not checkboxes: one
@@ -626,7 +625,7 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   curates them for readers. A register page shows under its `h1` only its description,
   as prose: the timeline shows the years and the chips the tables, so there is no Years
   or Tables row (#2316). It has no tables table: its tables are FilterChips above the
-  variable list, each with its period, a lens with OR within the selection, offered only
+  variable list, each the table's pill with its period (F1, maintainer, #2399, approved 2026-11-11), a lens with OR within the selection, offered only
   when two or more tables deliver variables (the archived variant chips, maintainer
   2026-11-03). A register page has no "Unplaced releases" panel (maintainer 2026-11-04).
   In steward mode a supplemental-only variable is selectable for a project like a
@@ -681,10 +680,15 @@ Time is the axis every relation is drawn on.
   shows no data, so its track stays the catalog's span and early years stay reachable. A
   new project starts at 2015 to the catalog's last year (the whole span when the catalog
   ends before 2015); a window set while browsing carries over instead. It shades every
-  `Timeline` and `LaneGraph` as an `accent-bg` band with `accent` bounds and
-  `accent-ink` years on the axis, and it looks the same everywhere, the banner included:
-  the bounds and the light shade are always drawn, also where an add window narrows
-  inside it (#1910). With no project open there is no band. That **window band** is the
+  `Timeline` and `LaneGraph` (a variable's, a group's, a classification's, a source
+  timeline) the same way: one continuous, lighter `accent-soft` shade from the coverage
+  row through the last lane, 8 px past each bound so it never sits tight on the spans'
+  ends, with no bound lines, and `accent-ink` years on the axis (maintainer, #2399,
+  approved 2026-11-11; the classification page and `/project` too, maintainer answer on
+  #2399, 2026-11-11). The shade stays drawn where an add window narrows inside it
+  (#1910). The banner keeps its `accent-bg` band between `accent` bounds. With no
+  project open there is no shade, no thumbs and no years to add: no column can be
+  picked then (maintainer, #2399, 2026-11-11). That **window band** is the
   one drawing of a period control: where the period is set (the banner's study window, a
   variable page's add window, a source's period on `/project`) the band is dragged by
   slim `accent` thumbs on its bounds, so it is clear what can be moved; all compose the
@@ -703,16 +707,16 @@ Time is the axis every relation is drawn on.
   (on release, or on each key press); there are no year fields and no Apply (maintainer
   ruling 2026-10-22). Where the add window differs from the study window inside the
   variable's availability it is a second encoding over the study window's: the stronger
-  `accent-band` between the thumbs, with no bounds of its own, running through every
-  lane; the study window's shade and bounds stay drawn, so a narrower add window shows
-  the study window is larger, and an add window that reaches past the study window
-  extends the stronger band beyond its bounds. There is no legend. A "Clear period"
+  `accent-bg` between the thumbs, padded 8 px as the shade is, running through every
+  lane; the study window's shade stays drawn, so a narrower add window shows the study
+  window is larger, and an add window that reaches past the study window extends the
+  stronger band beyond it (maintainer answer on #2399, 2026-11-11). There is no legend. A "Clear period"
   ghost action above the drawing drops the period, and shows only while it differs;
   thumbs that come to rest on the study window (inside the availability) drop the period
   rather than write one equal to it. Only the drawn windows' years without availability
   are `info-bg` (below); the add window's fill never means a narrowing. While an add
   window is drawn the axis years are its bounds in `accent-ink`; the study window's
-  bounds keep their rules, unlabelled. An add widens its source's period to the union
+  bounds are then unlabelled. An add widens its source's period to the union
   and never narrows it, so the add window raises no warning; a column already in the
   project whose source years differ from the study window says so in its accessible
   name, not in a tooltip (maintainer ruling, 2026-11-10, #2395) or a line under the
@@ -726,10 +730,11 @@ Time is the axis every relation is drawn on.
   that table's coverage, and one lane per binding. Each delivered column is a span of
   the years that table delivers it. A column available for part of the period is a
   shorter span, not a finding. The card is headed by the table's register, by name, with
-  the table's name as a link and "Years:" with the period's years under it. Where two
-  tables of one register would share that heading, the heading names its table on a
-  muted line under the register: the table's own name, never an invented label
-  (maintainer ruling, #2221). Every label on the card names the table by its catalog
+  the table's pill as a link and "Years:" with the period's years under it. Where two
+  tables of one register would share that heading, the heading names its table with
+  the table's pill under the register: the table's own name, never an invented label
+  (maintainer ruling, #2221; the pill only where a table name already shows, Operator,
+  #2399, 2026-11-11). Every label on the card names the table by its catalog
   name, as the page's findings do; the source's `name` (the file's join key) stands in
   only where the catalog has no name for the table. A stored period outside coverage
   widens the thumbs' bounds to their union; it is never clamped or rewritten on load. A
@@ -797,10 +802,11 @@ Time is the axis every relation is drawn on.
   delivery. On a variable page it is one drawing with the columns (#1833, maintainer
   ruling 2026-10-23): it is drawn as a `LaneGraph` headed by the coverage row (axis,
   then coverage with the period thumbs, then lanes), so the band runs through every
-  lane. The variable's columns are its lanes, one per table, each titled by a "Table"
-  kind pill (the `TypeTag` with its glyph) and the table's name, so a lane reads as one
-  of the variable's tables, not as another variable (#2319); labelled spans in the
-  `ColumnChip` shape. On a steward with several databases, the line under a table's
+  lane. The variable's columns are its lanes, one per table, a 36 px row headed by the
+  table's pill (the name inside it, cut with an ellipsis), so a lane reads as one of the
+  variable's tables, not as another variable (#2319); no divider runs between a
+  variable's tables. Its spans are column pills (variant A, maintainer, #2399, approved
+  2026-11-11). On a steward with several databases, the line under a table's
   name says which databases have it, by their `/api/context` names (#2343, #2344):
   "All databases" when every one has the same years, the names when those that have
   it share years, and each name with its years when they differ. The line wraps
@@ -821,14 +827,20 @@ Time is the axis every relation is drawn on.
   year is not delivered (maintainer 2026-11-04). A span's column name is never cut: it
   sits inside the widest delivered part when it fits there, with no list of the files
   it is delivered in: the lane already names the table (maintainer, dogfood 2026-11-05,
-  #2321). A span too narrow for the column name is a plain bar with the name beside
-  it: to the right, to the left at the axis end, else in a gap between its deliveries,
-  and only where no room is free over the bars at the track's end, never cut; the bar
-  carries the span's years where they fit. Stacked below the breakpoint, a lane's spans
-  start just under its name. Hovering or focusing a span shows a RAC `Tooltip` with no
-  delay only where the span's own text is cut off, which is its years (maintainer,
-  dogfood 2026-11-05, #2321; the strict reading, maintainer ruling, 2026-11-10): no
-  table name and no study-window note in a tooltip, and no table name on a span. The
+  #2321). A span is the column pill stretched over its years: the pill's height,
+  padding, font and column glyph, the column name only; the axis gives the years, which
+  stay in its accessible name (maintainer, #2399, approved 2026-11-11). Its 24 px slot
+  keeps the target size; the 21 px pill sits centred in it. A span too narrow for the
+  column name is a bare bar with the name beside it: to the right, to the left at the
+  axis end, else in a gap between its deliveries, and only where no room is free over
+  the bars at the track's end, never cut. Stacked below the breakpoint, a lane's spans
+  start just under its name, a table pill over its span. Hovering or focusing a span
+  shows a RAC `Tooltip` with no delay only where the span's own text is cut off, which
+  is its years: always on a column span, on a classification version's (a span with no
+  column name, which carries its years where they fit) only where they do not
+  (maintainer, dogfood 2026-11-05, #2321; the strict reading,
+  maintainer ruling, 2026-11-10): no table name and no study-window note in a tooltip,
+  and no table name on a span. The
   variables a succession reaches are further lanes in time order, with their arrows. A
   line under the drawing says "Click a column to add it to your project." while a
   project is open; with none there is no line and no button at any width, since the top
@@ -861,7 +873,12 @@ Time is the axis every relation is drawn on.
 - A **`LaneGraph`** draws a group or register as lanes (one per variable, in the group's
   member order), columns as spans, and relations as arrows: solid for succession, dashed
   for rename. A succession arrow between overlapping spans drops at the edge's effective
-  year. A group lane's title joins its varying facet values with a comma, falling back
+  year. On a group page each member is a 28 px heading row with no track, over its
+  tables' 36 px rows, indented 16 px and headed by their table pills (as on the variable
+  page); a divider runs between members only, never between a member's tables (variant
+  A, maintainer, #2399, approved 2026-11-11). A plain lane (a succession neighbour, a
+  classification's part, a `/project` column) keeps its 58 px and its rules above and
+  below. A group lane's title joins its varying facet values with a comma, falling back
   to the variable's name; it is no link, since the member's page is the group's. Its
   line under the name is plain words, never a slug: the variable's name under a facet
   title, or what tells two lanes of one name apart (their column names). A neighbour
@@ -883,7 +900,7 @@ Time is the axis every relation is drawn on.
   drawn inside it, so pressing it shifts nothing (maintainer, dogfood 2026-11-05,
   #2321). On `/project` a column's
   findings sit across its lane, under its spans. It shares the page's axis with the
-  `Timeline`. It draws the study window's band and, over it, an add window that differs,
+  `Timeline`. It draws the study years' shade and, over it, an add window that differs,
   as on the variable page, with the axis years on the add window's bounds when one is
   drawn. It has no legend: a span names its column, a tooltip adds the years it cuts,
   its accessible name carries its state, and each lane states its relations in words to
@@ -895,7 +912,8 @@ Time is the axis every relation is drawn on.
   on both pages (#2320, maintainer 2026-11-10; this overturns the 2026-11-04 group-page
   code timeline, PLAN §14): one entry per distinct code list, a disclosure titled by its
   first name ("and N more"), over the tables that use it, each table's name linking to
-  its register page then the column's `ColumnChip` and its years, which wrap (the column tells
+  its register page, as the linked table pill, then the column pill and its years,
+  which wrap between runs, never inside one (the column tells
   a group's members apart where they share a table; new rule, proposed by the
   implementer). Opened, it lists the list's names, then its codes (`ValueSetCodes`). A
   list of 20 codes or fewer opens at once, with no search field; a larger one opens on
@@ -961,7 +979,7 @@ Motion explains where things come from; state changes are near-instant.
 Behavior comes from React Aria Components (RAC, the sanctioned headless primitives
 dependency); visuals come from each component's CSS Module reading semantic roles. The
 target set, composed before anything new is styled: `Button`, `ProjectBanner`, `Search`,
-`ColumnList`, `ColumnChip`, `Pill` (`TypeTag`, `TypePill`), `FilterChip`, `VariableRow`,
+`ColumnList`, `Pill` (`EntityPill`, `TypeTag`, `TypePill`), `FilterChip`, `VariableRow`,
 `Timeline`, `LaneGraph`, `StatusRow`, `Definitions`, `Dialog`, `Skeleton`, `EmptyState`.
 The current `src/lib/ui/` primitives (`Panel`, `DataTable`, `Breadcrumbs`, …) are the
 stepping stones: they keep reading the same roles until each is replaced, and must not
@@ -1051,7 +1069,7 @@ grow new visual language meanwhile.
   the earlier findings would sit on the wrong card. A draft with no tables is "Empty"
   and is not checked. "What will be delivered" is the order the catalog would serve,
   shown only when the project can be ordered: per table its name and years, each column
-  as a `ColumnChip` (with its years only where they differ from the table's) beside the
+  as a column pill (with its years only where they differ from the table's) beside the
   variable's name, "Years not available" per column the period asks more of than the
   table has or the steward has data for (a year without data is not listed as
   delivered, #2220), and the "Row identifier" columns. There is no order-file download: the
@@ -1084,30 +1102,39 @@ grow new visual language meanwhile.
   list the selected row draws its own static bar, since the layout places rows where the
   moving bar cannot measure them. The unfiltered list's size decides, so a filter never
   switches a list between the two (that remounts it and drops focus).
-- **ColumnChip:** the one treatment for a column name (see Typography). Three states:
-  outlined, in project (`accent` fill), outside the study window (`viz-span-out`,
-  `text-muted`: `text-faint` fails AA for chip text, so the faint stroke carries the
-  signal). The same shape as a lane span, so the two read as one object.
-- **Pill (`ui/Pill`):** the one pill, built once (#2317): an optional glyph in its ink
-  (a 14 px box drawn at 12 px), the word, and years in micro mono `text-muted` where a
-  caller has them, in a `sm`-radius box of its hue (the categorical rule in Colors):
-  0.75 rem, line-height 1.4, padding 1 px 6 px. Every pill is that size, so a row of
-  them reads as one. Two callers fix the word and glyph per type:
-  - **TypeTag:** a node's kind. The label is fixed per type (Register, Table, Variable,
-    Code list, Classification, Variable group) and a caller passes only the type. In a
-    mixed list without a glyph; as the kind pill on a page's pill row with one: a table
-    for a register, one filled column of it for a variable, two for a variable group. A
-    table takes its register's hue: it is part of the register, and the word tells them
-    apart. A palette row shows a name and its `TypeTag`, never an identifier (maintainer
-    Q5, 2026-11-04).
-  - **TypePill:** a column's type, its glyph and the word, with its years only where the
-    type changes over time. The words are the catalog types in plain words ("Words";
-    #2071). An identifier takes `cat-id`, every other type `cat-type` (maintainer
-    ruling 2026-11-10, quoted in PR #2391).
-- **FilterChip:** a real checkbox behind an `sm`-radius face (padding 4 px 9 px),
-  `accent-bg` with an `accent` border and `accent-ink` text at weight 600 when on. A
-  LENS: toggling narrows what is shown, never the project. A strip is the facet's
-  `label` inline, then its chips, in one row with no box around it.
+- **Pill (`ui/Pill`):** the one pill, built once (#2317, #2399): a 12 px glyph (a
+  14 px box) in its hue's ink, the name, and years in micro mono `text-muted` where a
+  caller has them, in an `sm`-radius box: 0.75 rem at weight 500, line-height 1.4,
+  padding 1 px 6 px, 4 px from glyph to name, 20.8 px high. Every pill is that size: a
+  table pill, a column pill, a span and a filter differ only in colour and glyph
+  (maintainer, #2399, approved 2026-11-11). A hued pill's text is `text`, its hue on
+  fill, border and glyph only (Colors); a pill that is a link underlines its name in
+  the text colour. A long name ends in an ellipsis, the whole of it the accessible name
+  and hover text only when cut; a pill in a list of tables alone keeps its glyph.
+  Three callers fix the word and glyph:
+  - **EntityPill:** an entity by name. A table moss with the grid glyph; a register
+    teal with two stacked sheets; a variable and a variable group indigo with one
+    column in a frame; a column the white pill, mono, ink-outlined, the same glyph in
+    `text-muted`, in three states: outlined, in the project (`accent` fill), outside
+    the years to add (`viz-span-out`, `text-muted`: `text-faint` fails AA). Where an
+    entity is named: a table's row in a lane, a register's table filters, a project
+    card, a value set's tables, a search row (a register's or variable's), and every
+    column name, a lane span included.
+  - **TypeTag:** a page's kind pill, first in its pill row, the word at weight 400
+    (Register, Variable, Variable group), in the entity's hue and glyph. A variable and
+    a variable group share both; only the word tells them apart (maintainer, #2399,
+    2026-11-11). Never in a list: a list row's name is its entity pill.
+  - **TypePill:** a column's type, its glyph and the word at weight 400, with its years
+    only where the type changes over time. The words are the catalog types in plain
+    words ("Words"; #2071). An identifier takes `cat-id`, every other type `cat-type`
+    (maintainer ruling 2026-11-10, quoted in PR #2391).
+- **FilterChip:** a real checkbox whose face is the pill it filters by: a register's
+  table pill at the pill's size, neutral at rest (`surface`, `border`, the hue on the
+  glyph alone) and `accent-bg` with an `accent` border and `accent-ink` text when on, so
+  the entity hues never compete with the pine "on" state (F1, maintainer, #2399,
+  approved 2026-11-11). A LENS: toggling narrows what is shown, never the project. A
+  strip is the facet's `label` inline, then its chips, in one row with no box around
+  it.
 - **Timeline, VariableRow, LaneGraph:** see Time.
 - **StatusRow:** the status tint as fill, the status foreground as text and a 1 px
   border (`err-border` for error), `md` radius, `body-sm`, padding 6 px 10 px. The glyph

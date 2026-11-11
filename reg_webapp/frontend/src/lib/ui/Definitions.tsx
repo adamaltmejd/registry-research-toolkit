@@ -12,7 +12,7 @@ export interface Definition {
 interface Props {
   /** The page's kind pill, with its glyph, first in the pill row. A
    * classification's page has none (maintainer, #2317). */
-  kind?: Extract<NodeType, "register" | "variable" | "group">;
+  kind?: NodeType;
   /** More pills after the kind's on the same row: a variable's Type pills. */
   pills?: ReactNode;
   title: string;
@@ -42,7 +42,7 @@ export function Definitions({
     <header className={styles.head}>
       {(kind || pills) && (
         <div className={styles.pills}>
-          {kind && <TypeTag type={kind} glyph />}
+          {kind && <TypeTag type={kind} />}
           {pills}
         </div>
       )}

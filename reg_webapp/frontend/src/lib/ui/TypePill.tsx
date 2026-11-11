@@ -77,6 +77,7 @@ export function TypePill({
       // Drawn on a 12 px box, centred on the pill's 14 px one.
       glyph={<g transform="translate(1 1)">{GLYPHS[type]}</g>}
       years={years}
+      kind
     >
       {WORDS[type]}
     </Pill>

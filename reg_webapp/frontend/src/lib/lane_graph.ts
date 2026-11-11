@@ -43,8 +43,12 @@ interface LaneEdgeInput {
   year?: number | null;
 }
 
+/** A lane's row: the default lane, a group member's heading row with no
+ * track, or a table's row headed by its table pill (#2399). */
+export type LaneRow = "lane" | "heading" | "table";
+
 interface LaneGeometryInput {
-  lanes: readonly { id: string }[];
+  lanes: readonly { id: string; row?: LaneRow }[];
   spans: readonly LaneSpanGeometryInput[];
   edges: readonly LaneEdgeInput[];
   /** Inclusive first and last year of the axis. */
@@ -128,9 +132,12 @@ export interface LaneGeometry {
   }[];
 }
 
-// The lane metrics of the mockup: a 58 px lane (`--lane-height`) holding one
-// 24 px span, and a further 32 px for each further row.
-const LANE_HEIGHT = 58;
+// The lane metrics: a 58 px lane (`--lane-height`) holding one 24 px span, and
+// a further 32 px for each further row. A variable or group page's rows are
+// shorter (#2399): a 28 px heading row with no track
+// (`--lane-heading-height`) and a 36 px table row (`--lane-row-height`). The
+// span's slot keeps the 24 px target; the pill inside it is 21 px.
+const ROW_BASE: Record<LaneRow, number> = { lane: 58, heading: 28, table: 36 };
 export const SPAN_HEIGHT = 24;
 const ROW_STEP = 32;
 const AXIS_HEIGHT = 28;
@@ -147,7 +154,9 @@ const NAME_SPAN_GAP = 4;
 // IBM Plex Mono advances 0.6 em; the `column` type is 12 px. Set in mono, a
 // name's width follows from its length without measuring the DOM.
 const COLUMN_CHAR = 7.2;
-const LABEL_PAD = 14;
+// The column pill around the name: 6 px padding and a 1 px border each side,
+// then its 12 px glyph and the 4 px gap after it.
+const LABEL_PAD = 14 + 12 + 4;
 const LABEL_GAP = 4;
 const PACK_GAP = 6;
 const MIN_SPAN = 6;
@@ -156,8 +165,10 @@ const MIN_SPAN = 6;
 // grows past the graph's width to make room (#2310).
 const MIN_TARGET = 24;
 
-export function labelWidth(name: string): number {
-  return name.length * COLUMN_CHAR + LABEL_PAD;
+/** The room a span's text needs: a column name with its glyph, or a
+ * nameless span's years. */
+export function labelWidth(text: string): number {
+  return text.length * COLUMN_CHAR + LABEL_PAD;
 }
 
 /** Tick years at a step that keeps labels about 48 px apart. */
@@ -289,16 +300,17 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
   for (const lane of input.lanes) {
     const rows = rowsOf.get(lane.id) ?? 0;
     const name = input.nameHeights?.get(lane.id) ?? 0;
+    const base = ROW_BASE[lane.row ?? "lane"];
     // Stacked, the spans start right under the measured name.
     const top = stacked
       ? name > 0
         ? name + NAME_SPAN_GAP
         : STACKED_NAME_HEIGHT
-      : (LANE_HEIGHT - SPAN_HEIGHT) / 2;
+      : (base - SPAN_HEIGHT) / 2;
     const height =
       (stacked
         ? top + rows * ROW_STEP + 2
-        : Math.max(LANE_HEIGHT + (Math.max(rows, 1) - 1) * ROW_STEP, name)) +
+        : Math.max(base + (Math.max(rows, 1) - 1) * ROW_STEP, name)) +
       (input.below?.get(lane.id) ?? 0);
     lanes.push({ id: lane.id, y, height });
     laneTop.set(lane.id, y);
