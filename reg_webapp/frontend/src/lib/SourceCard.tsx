@@ -34,8 +34,8 @@ import {
 } from "./source_edits";
 import { columnYearRuns, tableYears } from "./study_window";
 import { Button } from "./ui/Button";
-import { ColumnChip } from "./ui/ColumnChip";
 import { ConfirmDialog } from "./ui/ConfirmDialog";
+import { EntityPill } from "./ui/EntityPill";
 import { Panel } from "./ui/Panel";
 import { Select } from "./ui/Select";
 import { NameSkeleton } from "./ui/Skeleton";
@@ -56,7 +56,6 @@ export function SourceCard({
   bounds,
   loading,
   loadError,
-  sharedHeading = false,
   onRemoved,
 }: {
   draft: ProjectData;
@@ -70,9 +69,6 @@ export function SourceCard({
   bounds: [number, number];
   loading: boolean;
   loadError: string | null;
-  /** Another table of the project has the same register heading: the
-   * heading then names this table too (maintainer ruling, #2221). */
-  sharedHeading?: boolean;
   onRemoved: () => void;
 }) {
   const source = draft.sources[sourceIndex];
@@ -242,8 +238,9 @@ export function SourceCard({
           {!graph && (
             <div className={styles.columns}>
               {columns.map((column) => (
-                <ColumnChip
+                <EntityPill
                   key={column.id}
+                  entity="column"
                   name={column.spelling}
                   state={elsewhere ? "out" : "in"}
                 />
@@ -315,9 +312,17 @@ export function SourceCard({
           className={styles.heading}
           aria-busy={naming || undefined}
         >
-          {register ?? shownName}
-          {register && sharedHeading && (
-            <span className={styles.headingTable}>{tableName}</span>
+          {/* The register heads the card; its table is the linked pill
+              under it (#2399), so two tables of one register read apart. */}
+          {register}
+          {naming ? (
+            shownName
+          ) : (
+            <EntityPill
+              entity="table"
+              name={tableName}
+              href={catalogHref(source.table)}
+            />
           )}
         </span>
       }
@@ -343,20 +348,11 @@ export function SourceCard({
           ))}
         </ul>
       )}
-      <p className={styles.meta}>
-        {naming ? (
-          shownName
-        ) : (
-          <a className="link" href={catalogHref(source.table)}>
-            {tableName}
-          </a>
-        )}
-        {periodYears && (
-          <span>
-            Years: <code>{periodYears}</code>
-          </span>
-        )}
-      </p>
+      {periodYears && (
+        <p className={styles.meta}>
+          Years: <code>{periodYears}</code>
+        </p>
+      )}
       {loading && (
         <div aria-busy="true">
           <StatusRow tone="info">Loading years…</StatusRow>

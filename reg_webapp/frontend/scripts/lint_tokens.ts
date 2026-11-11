@@ -255,6 +255,8 @@ const PROPERTY_OF: Record<string, string> = {
   "spacing.col-list-max": "--col-list-max",
   "spacing.shell-max": "--shell-max",
   "spacing.lane-height": "--lane-height",
+  "spacing.lane-heading-height": "--lane-heading-height",
+  "spacing.lane-row-height": "--lane-row-height",
   "spacing.content-max": "--content-max",
   "typography.display.fontWeight": "--display-weight",
   "typography.h1.fontWeight": "--display-weight",

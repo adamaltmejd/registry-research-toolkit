@@ -65,16 +65,12 @@ colors:
   # label text uses the `-ink` stop (the hue 85% toward black).
   cat-reg: "#1f7a7a"
   cat-var: "#4b4b9e"
-  cat-code: "#9a6b1a"
-  cat-class: "#7a3f8c"
-  cat-group: "#2f6b3f"
+  cat-table: "#2f6b3f"
   cat-id: "#8a4b2c"
   cat-type: "#4e6070"
   cat-reg-ink: "#1a6868"
   cat-var-ink: "#404086"
-  cat-code-ink: "#835b16"
-  cat-class-ink: "#683677"
-  cat-group-ink: "#285b36"
+  cat-table-ink: "#285b36"
   cat-id-ink: "#754025"
   cat-type-ink: "#42525f"
   # Data-viz — marks of the time components (Timeline, VariableRow, LaneGraph).
@@ -160,6 +156,8 @@ spacing:
   col-list-max: 300px
   shell-max: 120rem
   lane-height: 58px
+  lane-heading-height: 28px
+  lane-row-height: 36px
 
 components:
   button-primary:

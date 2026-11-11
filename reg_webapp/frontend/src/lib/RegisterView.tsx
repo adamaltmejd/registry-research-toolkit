@@ -14,6 +14,7 @@ import {
 } from "./study_window";
 import { Definitions } from "./ui/Definitions";
 import { EmptyState } from "./ui/EmptyState";
+import { EntityPill } from "./ui/EntityPill";
 import { FilterChip } from "./ui/FilterChip";
 import { Panel } from "./ui/Panel";
 import { VariableRow, VariableRowList } from "./ui/VariableRow";
@@ -102,12 +103,11 @@ export function RegisterView({
                     isSelected={selected.has(table.fqid)}
                     onChange={() => toggleTable(table.fqid)}
                   >
-                    {table.name}
-                    {catalogPeriodLabel(table.period) && (
-                      <span className={styles.period}>
-                        {catalogPeriodLabel(table.period)}
-                      </span>
-                    )}
+                    <EntityPill
+                      entity="table"
+                      name={table.name}
+                      years={catalogPeriodLabel(table.period) ?? undefined}
+                    />
                   </FilterChip>
                 ))}
                 {/* Mounted empty: a live region inserted with its first text

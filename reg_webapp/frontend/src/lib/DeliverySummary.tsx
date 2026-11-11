@@ -2,7 +2,7 @@ import type { CatalogPeriod, LogicalOrder } from "./api";
 import { catalogHref } from "./catalog";
 import { catalogPeriodRuns, periodsLess } from "./catalog_period";
 import styles from "./DeliverySummary.module.css";
-import { ColumnChip } from "./ui/ColumnChip";
+import { EntityPill } from "./ui/EntityPill";
 import { NameSkeleton } from "./ui/Skeleton";
 import { useCatalogNames, useCatalogNamesPending } from "./use_catalog_names";
 
@@ -168,7 +168,8 @@ export function DeliverySummary({
                     className={styles.column}
                     aria-busy={loadingName(column.variable) || undefined}
                   >
-                    <ColumnChip
+                    <EntityPill
+                      entity="column"
                       name={column.spelling}
                       years={
                         catalogPeriodRuns(column.periods) === years
@@ -210,7 +211,8 @@ export function DeliverySummary({
                         className={styles.column}
                         aria-busy={loadingName(column.variable) || undefined}
                       >
-                        <ColumnChip
+                        <EntityPill
+                          entity="column"
                           name={column.spelling}
                           years={
                             catalogPeriodRuns(column.periods) === years

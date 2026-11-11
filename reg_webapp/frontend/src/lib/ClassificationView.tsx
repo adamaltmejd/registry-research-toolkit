@@ -106,12 +106,10 @@ export function ClassificationView({
       };
     }),
   );
-  const pickedLane = version ? laneOf(version) : null;
   const lanes: LaneModel[] = [...new Set(versions.map(laneOf))].map((lane) => ({
     id: lane,
     name: lane,
     wrap: true,
-    current: lane === pickedLane,
   }));
   return (
     <article className={styles.page}>

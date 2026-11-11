@@ -1,55 +1,83 @@
-/* One pill (DESIGN.md → Components → Pill): a node's kind, a column's type and
-   an identifier are the same size and shape, each in its own `cat-*` hue: fill
-   the hue at 10% over `surface`, border at 35%, text the `-ink` stop. */
+/* One pill (DESIGN.md → Components → Pill, #2399): every entity, kind and type
+   pill, a lane span and a register's table filter share this size. A hued
+   pill takes its hue on fill (10 %), border (35 %) and glyph (the `-ink`
+   stop); its text is always `text` (maintainer, 2026-11-11). */
 .pill {
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
+  box-sizing: border-box;
+  max-width: 100%;
+  min-width: 0;
   padding: 1px 6px;
   border: 1px solid color-mix(in srgb, var(--tone-hue) 35%, transparent);
   border-radius: var(--radius-sm);
   background: color-mix(in srgb, var(--tone-hue) 10%, var(--surface));
-  color: var(--tone-ink);
+  color: var(--text);
   font-family: var(--font-ui);
   font-size: 0.75rem;
+  font-weight: 500;
   line-height: 1.4;
   white-space: nowrap;
+  vertical-align: middle;
 }
 
-/* The glyph: strokes in the pill's ink. */
+/* A page's kind pill ("Variable group"): the word, not a name. */
+.kind {
+  font-weight: 400;
+}
+
 .glyph {
   flex: none;
+  color: var(--tone-ink);
   fill: none;
   stroke: currentColor;
   stroke-width: 1.2;
 }
 
+.name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .years {
+  flex: none;
   color: var(--text-muted);
   font-family: var(--font-mono);
   font-size: var(--text-micro);
+  font-weight: 400;
   font-variant-numeric: tabular-nums;
+}
+
+/* A pill that opens its page: the name underlined in its own colour. */
+a.pill {
+  text-decoration: none;
+}
+a.pill .name {
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 2px;
+}
+a.pill:hover {
+  background: color-mix(in srgb, var(--tone-hue) 18%, var(--surface));
+}
+a.pill:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
 }
 
 .reg {
   --tone-hue: var(--cat-reg);
   --tone-ink: var(--cat-reg-ink);
 }
+.table {
+  --tone-hue: var(--cat-table);
+  --tone-ink: var(--cat-table-ink);
+}
 .var {
   --tone-hue: var(--cat-var);
   --tone-ink: var(--cat-var-ink);
-}
-.code {
-  --tone-hue: var(--cat-code);
-  --tone-ink: var(--cat-code-ink);
-}
-.class {
-  --tone-hue: var(--cat-class);
-  --tone-ink: var(--cat-class-ink);
-}
-.group {
-  --tone-hue: var(--cat-group);
-  --tone-ink: var(--cat-group-ink);
 }
 .id {
   --tone-hue: var(--cat-id);
@@ -58,4 +86,30 @@
 .type {
   --tone-hue: var(--cat-type);
   --tone-ink: var(--cat-type-ink);
+}
+
+/* The column pill: the name a researcher types in code, white with an ink
+   outline, in mono (Typography). Three states: outlined, in the project
+   (`accent` fill), outside the years to add (`viz-span-out` stroke,
+   `text-muted`: `text-faint` fails AA for pill text). */
+.column {
+  --tone-ink: var(--text-muted);
+  border-color: var(--border-strong);
+  background: var(--viz-span);
+  font-family: var(--font-mono);
+  font-weight: var(--column-weight);
+}
+.column[data-state="in"] {
+  --tone-ink: var(--accent-fg);
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+.column[data-state="in"] .years {
+  color: var(--accent-bg);
+}
+.column[data-state="out"] {
+  border-color: var(--viz-span-out);
+  background: transparent;
+  color: var(--text-muted);
 }

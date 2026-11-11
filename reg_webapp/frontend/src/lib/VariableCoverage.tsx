@@ -52,7 +52,6 @@ import { columnYearRuns, studyWindow } from "./study_window";
 import { AddBar } from "./ui/AddBar";
 import { Button } from "./ui/Button";
 import { StatusRow } from "./ui/StatusRow";
-import { TypeTag } from "./ui/TypeTag";
 import { useProject } from "./use_project";
 import { useCatalogRead, useDistinct } from "./use_store_read";
 import styles from "./VariableCoverage.module.css";
@@ -177,6 +176,9 @@ export function useVariableCoverage({
   focus?: string | null;
 }) {
   const { draft, raw } = useProject();
+  // Only a live project can take columns: without one there are no thumbs,
+  // no shading and no years to add (maintainer, #2399, 2026-11-11).
+  const live = allowAdd && draft !== null;
   const [selected, setSelected] = useState<ReadonlySet<string>>(
     () => new Set(),
   );
@@ -227,9 +229,11 @@ export function useVariableCoverage({
     bounds.min,
     bounds.max,
   );
-  const active = available
-    ? clampYearWindow(period ?? seed, available.from, available.to)
-    : seed;
+  // A period dragged before the project closed no longer applies.
+  const active =
+    live && available
+      ? clampYearWindow(period ?? seed, available.from, available.to)
+      : seed;
   const differs = !sameYearWindow(active, seed);
   const axis = dataAxis(
     [
@@ -383,7 +387,7 @@ export function useVariableCoverage({
       </p>
     ) : (
       <div ref={heading} tabIndex={-1} className={styles.timeline}>
-        {allowAdd && differs && (
+        {live && differs && (
           <div className={styles.header}>
             <Button
               variant="ghost"
@@ -398,8 +402,8 @@ export function useVariableCoverage({
         )}
         <span className="visually-hidden">
           {delivered && `Years ${delivered}.`}
-          {allowAdd && ` Years to add ${yearWindowLabel(active)}.`}
-          {allowAdd && outside.length > 0
+          {live && ` Years to add ${yearWindowLabel(active)}.`}
+          {live && outside.length > 0
             ? ` No delivery in ${outside.map(yearWindowLabel).join(", ")}.`
             : ""}
         </span>
@@ -430,13 +434,16 @@ export function useVariableCoverage({
                   // wraps, since a name cut off would hide a database.
                   sub: line ? { text: line } : null,
                   wrap: !!line,
-                  pill: <TypeTag type="table" glyph />,
+                  row: "table",
                   nested: !!subject.lane,
                   relations: neighbours.relations.get(id),
                 };
               });
               return subject.lane
-                ? [{ ...subject.lane, id: subject.fqid }, ...tables]
+                ? [
+                    { ...subject.lane, id: subject.fqid, row: "heading" },
+                    ...tables,
+                  ]
                 : tables;
             }),
             ...neighbours.lanes,
@@ -446,7 +453,7 @@ export function useVariableCoverage({
           axis={axis}
           window={study ? [study.from, study.to] : null}
           addWindow={
-            allowAdd && (differs || !study) ? [active.from, active.to] : null
+            live && (differs || !study) ? [active.from, active.to] : null
           }
           coverage={{
             covered: available,
@@ -460,7 +467,7 @@ export function useVariableCoverage({
                 : undefined,
           }}
           overlay={
-            allowAdd && available ? (
+            live && available ? (
               <PeriodThumbs
                 axis={axis}
                 selection={active}

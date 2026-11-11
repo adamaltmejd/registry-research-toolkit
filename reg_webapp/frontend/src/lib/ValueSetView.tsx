@@ -9,7 +9,7 @@ import type { CatalogSegment, ValueSetRef } from "./api";
 import styles from "./CatalogNodeView.module.css";
 import { catalogHref, SMALL_VALUE_SET } from "./catalog";
 import { catalogPeriodRuns } from "./catalog_period";
-import { ColumnChip } from "./ui/ColumnChip";
+import { EntityPill } from "./ui/EntityPill";
 import { Panel } from "./ui/Panel";
 import { TreeChevron } from "./ui/TreeChevron";
 import { ValueSetCodes } from "./ValueSetCodes";
@@ -117,10 +117,12 @@ function ValueSetEntry({
           <ul className={`${styles.plainList} ${valueStyles.coverage}`}>
             {[...uses].map(([key, { table, column, periods }]) => (
               <li key={key}>
-                <a className="link" href={catalogHref(table)}>
-                  {tableName(table)}
-                </a>{" "}
-                <ColumnChip name={column} />
+                <EntityPill
+                  entity="table"
+                  name={tableName(table)}
+                  href={catalogHref(table)}
+                />{" "}
+                <EntityPill entity="column" name={column} />
                 {/* Outside the chip, which never wraps: a long run of school
                     years wraps on a phone. */}
                 <TableYears periods={periods} />

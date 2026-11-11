@@ -16,7 +16,7 @@ import {
 import styles from "./CommandPalette.module.css";
 import { catalogHref, rankFilter } from "./catalog";
 import { router } from "./router";
-import { type NodeType, TypeTag } from "./ui/TypeTag";
+import { EntityPill } from "./ui/EntityPill";
 import { useAsyncResource } from "./use_async_resource";
 
 /** One palette row: where it goes and how it reads. */
@@ -26,7 +26,7 @@ interface Row {
   /** An action's context, in the text face. */
   detail: string | null;
   href: string;
-  type: NodeType | null;
+  type: "register" | "variable" | null;
 }
 
 /** What the palette offers besides the catalog: places in the app. Ranked with
@@ -266,13 +266,16 @@ function PaletteBody({ text, choose }: { text: string; choose: () => void }) {
 function PaletteItem({ row }: { row: Row }) {
   return (
     <MenuItem id={row.id} textValue={row.label} className={styles.item}>
-      <span className={styles.label}>{row.label}</span>
+      {/* A catalog row's name is its entity pill, so a register and a
+          variable read apart with no kind pill (S1, #2399). */}
+      <span className={styles.label}>
+        {row.type ? (
+          <EntityPill entity={row.type} name={row.label} />
+        ) : (
+          row.label
+        )}
+      </span>
       {row.detail && <span className={styles.detail}>{row.detail}</span>}
-      {row.type && (
-        <span className={styles.type}>
-          <TypeTag type={row.type} />
-        </span>
-      )}
     </MenuItem>
   );
 }

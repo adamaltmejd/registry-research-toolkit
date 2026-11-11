@@ -10,12 +10,11 @@
 .heading {
   display: inline-flex;
   flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-1);
+  max-width: 100%;
+  min-width: 0;
   overflow-wrap: anywhere;
-}
-/* The line that tells two tables of one register apart: the table's name. */
-.headingTable {
-  color: var(--text-muted);
-  font-weight: 400;
 }
 .heading:focus-visible {
   outline: none;
@@ -23,9 +22,6 @@
 }
 .meta {
   margin: 0 0 var(--space-3);
-}
-.meta a {
-  overflow-wrap: anywhere;
 }
 .controls > * {
   flex: 1 1 12rem;
