@@ -19862,7 +19862,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:avregkod"
-fields = { "description" = "Kod för granskning av enkätsvaret (svarstyp): svarande om personen har besvarat enkäten, bortfall om personen inte svarat eller tillhör övertäckningen." }
+fields = { "description" = "Kod för granskning av enkätsvaret (svarstyp). 2016 anger koden svarande om personen har besvarat enkäten och bortfall om personen inte svarat eller tillhör övertäckningen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna förklarar koden olika utförligt.\ncatalog:variable_text:60292:12418:12784\ncatalog:variable_text:60292:13514:13695\ncatalog:variable_text:60292:16801:17167"
 
 [[statement]]
@@ -19874,7 +19874,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:hjalpvariabel-1-distans"
-fields = { "description" = "Hjälpvariabel för kalibreringen av vikterna i undersökningarna om distansundervisning, som korsar bakgrundsvariabler. Vilka variabler den består av skiljer mellan tabeller och år: huvudman, programtyp och kön; huvudman och kön; stadium och kön; eller enbart huvudman." }
+fields = { "description" = "Hjälpvariabel i undersökningarna om distansundervisning, sammansatt av bakgrundsvariabler. Vilka variabler den består av skiljer mellan tabeller och år: huvudman, programtyp och kön; huvudman och kön; stadium och kön; eller enbart huvudman." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nEn hjälpvariabel för viktning vars indelning skiljer per tabell och år; indelningarna räknas upp i stället för att delas (historiska kodningar i en kolumn delar inte variabeln).\ncatalog:variable_text:60674:18262:18809\ncatalog:variable_text:60674:18809:19174"
 
 [[statement]]

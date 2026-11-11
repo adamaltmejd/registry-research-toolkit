@@ -1127,7 +1127,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:inkopt-kvantitet"
-fields = { "description" = "Övriga inköp inom landet av respektive bränsle som levererats under kvartalet för energiändamål, i naturliga mått. Med inköpt kvantitet avses kvantiteter som fakturerats av företag eller arbetsställen, även inom det egna företaget eller den egna koncernen." }
+fields = { "description" = "Övriga inköp inom landet av respektive bränsle som levererats under kvartalet. Med inköpt kvantitet avses kvantiteter som fakturerats av företag eller arbetsställen, även inom det egna företaget eller den egna koncernen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna är varianter av samma text om övriga inrikes inköp under kvartalet.\ncatalog:variable_text:13429:12784:13149\ncatalog:variable_text:13429:13149:13514\ncatalog:variable_text:13429:13514:16071\ncatalog:variable_text:13429:16071:16436\ncatalog:variable_text:13429:17167:17532"
 
 [[statement]]

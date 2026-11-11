@@ -638,7 +638,7 @@ evidence = "Definition (andel av de anställda) and operational definition (ANTU
 [[statement]]
 kind = "set"
 subject = "var:antutbr"
-fields = { "description" = "Antal utbildningsgrupper som arbetsstället ska svara för i Arbetskraftsbarometern. Utbildningsgrupperna är egna för undersökningen och bildas 2021–2022 utifrån SUN2000 och från 2023 utifrån SUN2020." }
+fields = { "description" = "Antal utbildningsgrupper på arbetsstället i Arbetskraftsbarometern. Utbildningsgrupperna är egna för undersökningen och bildas 2021–2022 utifrån SUN2000 och från 2023 utifrån SUN2020." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; klassifikationen som grupperna bygger på anges med år.\ncatalog:variable_text:10922:10592:18628\ncatalog:variable_text:10922:18628:19358\ncatalog:variable_text:10922:19358:19723"
 
 [[statement]]

@@ -5998,7 +5998,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:husnr"
-fields = { "description" = "Löpnummer för huset (byggnaden) inom fastigheten. I persontabellerna avser det 1985 faktiskt eller kyrkobokfört boende och 1990 faktiskt boende; för obebodda lägenheter avses det hus där lägenheten ligger. 1980 hämtas uppgiften från allmänna fastighetstaxeringen 1981 (AFT 81)." }
+fields = { "description" = "Löpnummer för huset (byggnaden) inom fastigheten. 1975 och 1985 avser det huset för det faktiska eller kyrkobokförda boendet, 1990 huset för det faktiska boendet; för obebodda lägenheter avses det hus där lägenheten ligger. 1980 hämtas uppgiften från allmänna fastighetstaxeringen 1981 (AFT 81)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; vilket boende som avses och källan 1980 anges som fakta. Rättar ”boende boende”.\ncatalog:variable_text:18308:-3653:-3287\ncatalog:variable_text:18308:3652:4018\ncatalog:variable_text:18308:5479:5844\ncatalog:variable_text:18308:7305:7670"
 
 [[statement]]

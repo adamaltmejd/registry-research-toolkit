@@ -4309,7 +4309,7 @@ evidence = "#2102 same-label cluster 'Total byggnadsyta' (2 variables): held in 
 [[statement]]
 kind = "set"
 subject = "var:fastighetsbeteckning"
-fields = { "description" = "Fastighetsbeteckning, uppbyggd av trakt, block och enhet; den är unik först tillsammans med kommunen. Avser fastigheten med tillhörande taxeringsenhet. För en taxeringsenhet anges den lägsta fastighetsbeteckningen. Från 2013 gäller att om taxeringsenheten består av flera fastigheter tilldelas värderingsenheterna en fastighetsbeteckning enligt en formel som tar hänsyn till antalet värderingsenheter, fastigheternas befolkning och, i 300-serien, om värderingsenheten har lägenheter." }
+fields = { "description" = "Fastighetsbeteckning, uppbyggd av trakt, block och enhet; den är unik först tillsammans med kommunen. 1998–2012 anges för en taxeringsenhet den lägsta fastighetsbeteckningen. Från 2013 gäller att om taxeringsenheten består av flera fastigheter tilldelas värderingsenheterna en fastighetsbeteckning enligt en formel som tar hänsyn till antalet värderingsenheter, fastigheternas befolkning och, i 300-serien, om värderingsenheten har lägenheter." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSCB-exporten (VarId 26) dokumenterar FastBet i flera rader per år: 1998–2012 med texten om den lägsta fastighetsbeteckningen för taxeringsenheten (katalogen visar den bara 2011–2012), 2013–2023 med formeln för värderingsenheter och 2017–2023 dessutom för fastigheten och för fastighet med tillhörande taxeringsenhet (Registerinformation.csv:row=352363, row=352375). Alla rader anges.\ncatalog:variable_text:28205:10227:10228\ncatalog:variable_text:28205:14975:14976\ncatalog:variable_text:28205:17167:17168"
 
 [[statement]]
@@ -4321,7 +4321,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:identitetsnummer-for-vardeomradet-literal-idvolokal"
-fields = { "description" = "Identitetsnummer för det värdeområde för lokaler som värderingsenheten tillhör. Värdeområdet anger lägets inverkan på värderingsenhetens värde. Förekommer bara för typkoder i 300-serien." }
+fields = { "description" = "Identitetsnummer för det värdeområde för lokaler som värderingsenheten tillhör. Värdeområdet anger lägets inverkan på värderingsenhetens värde. Förekommer för typkoder i 300-serien, 2014–2018 även i 500-serien." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2013 och 2019–2023 anger 300-serien. 2014–2018 års text är gemensam med IdVoBost och anger 300- och 500-serien; den tas inte med. Fältnamnsnoteringen tas bort.\ncatalog:variable_text:28219:12784:12785\ncatalog:variable_text:28219:15706:15707\ncatalog:variable_text:28219:16071:16072\ncatalog:variable_text:28219:17897:17898"
 
 [[statement]]
@@ -4333,7 +4333,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:juridisk-form"
-fields = { "description" = "Kod för ägarens juridiska form, enligt Standard för klassificering av juridiska enheter efter juridisk form; tilldelas av Skatteverket. Från 2013 hämtas koden i första hand från Företagsdatabasen (juridiska enheter). Ägare som enligt RTB avlidit högst året före taxeringsåret, och nummer som börjar på 161, får kod 91. FDB:s kod 10 kodas om till 0, och kod 0 ges också till nummer som börjar på 19 eller 20 och saknas i FDB; 2013–2014 får övriga kod 2. I tabellen över taxeringsenheter avser uppgiften den deklarationsansvarige ägaren." }
+fields = { "description" = "Kod för ägarens juridiska form, enligt klassificeringen av juridiska enheter efter juridisk form; tilldelas av Skatteverket. Från 2013 hämtas koden i första hand från Företagsdatabasen (juridiska enheter). Ägare som enligt RTB avlidit högst året före taxeringsåret, och nummer som börjar på 161, får då kod 91. FDB:s kod 10 kodas om till 0, och kod 0 ges också till nummer som börjar på 19 eller 20 och saknas i FDB; i fastighetstabellen får övriga kod 2. I tabellen över taxeringsenheter avser uppgiften den deklarationsansvarige ägaren." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna från 2013 beskriver härledningen, som anges som fakta med år.\ncatalog:variable_text:28229:10227:10228\ncatalog:variable_text:28229:15706:15707"
 
 [[statement]]

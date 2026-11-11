@@ -3786,7 +3786,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:betyg"
-fields = { "description" = "Betyg i den studievägskurs som anges i variablerna Studieväg och Kurs, enligt det mål- och kunskapsrelaterade betygssystemet." }
+fields = { "description" = "Betyg på kursen, i den studievägskurs som anges i variablerna Studieväg och Kurs. 1995–2016 avser betyget det mål- och kunskapsrelaterade betygssystemet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna är varianter av samma text.\ncatalog:variable_text:41364:8582:9312\ncatalog:variable_text:41364:9312:9862\ncatalog:variable_text:41364:9862:10043\ncatalog:variable_text:41364:14245:14426\ncatalog:variable_text:41364:16436:16617"
 
 [[statement]]
@@ -3828,7 +3828,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:provversion"
-fields = { "description" = "Version, det vill säga provets beteckning, av det nationella provet i svenska för invandrare. Resultat där en elev gjort delprov från olika provversioner ingår inte." }
+fields = { "description" = "Version, det vill säga provets beteckning, av det nationella provet i svenska för invandrare. 2009–2017 ingår inte resultat där en elev gjort delprov från olika provversioner." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna är varianter av samma text.\ncatalog:variable_text:41410:14426:14610\ncatalog:variable_text:41410:15706:15887\ncatalog:variable_text:41410:16071:16252\ncatalog:variable_text:41410:16801:16983\ncatalog:variable_text:41410:16983:17167\ncatalog:variable_text:41410:18444:19723\ncatalog:variable_text:41410:19723:19905"
 
 [[statement]]

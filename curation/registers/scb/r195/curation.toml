@@ -1978,11 +1978,11 @@ evidence = "r3774 (2009) lists lgrp twice: v15150 'Länsgrupp' (value set 9202, 
 [[statement]]
 kind = "set"
 subject = "var:sjukfrom"
-fields = { "description" = "Första dagen i sjukfallet (karensdagen); 2022–2023 anges sjuklöneperiodens första dag, dagen med karensavdrag. Uppgiften finns för sjukfall i vart och ett av årets kvartal." }
+fields = { "description" = "Första dagen i sjukfallet (karensdagen); 2022–2023 anges sjuklöneperiodens första dag, dagen med karensavdrag." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; råexporten har 2011–2018 en rad per kvartal (”Sjukfall under årets första … fjärde kvartal”) där katalogen bara behållit den första, så kvartalsangivelsen beskriver kvartalsleveranserna och inte en betydelseskillnad. Karensavdraget 2022–2023 anges med år; ”Variabeln betraktas som rådata” tas bort. Registerinformation.csv:row=898492–898494 (2011), row=898502–898505 (2012), row=898559–898562 (2018).\ncatalog:variable_text:41819:15065:16436\ncatalog:variable_text:41819:16436:16801\ncatalog:variable_text:41819:17897:18993\ncatalog:variable_text:41819:18993:19723"
 
 [[statement]]
 kind = "set"
 subject = "var:sjuktom"
-fields = { "description" = "Sista dagen i sjukfallet, sjuklöneperiodens sista dag. Uppgiften finns för sjukfall i vart och ett av årets kvartal." }
+fields = { "description" = "Sista dagen i sjukfallet under sjuklöneperioden, det vill säga sjuklöneperiodens sista dag." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; råexporten har 2011–2018 en rad per kvartal där katalogen bara behållit den första, så kvartalsangivelsen beskriver kvartalsleveranserna och inte en betydelseskillnad. Registerinformation.csv:row=898489–898491 (2011), row=898498–898501 (2012), row=898555–898558 (2018).\ncatalog:variable_text:41820:15065:16436\ncatalog:variable_text:41820:16436:16801\ncatalog:variable_text:41820:17897:18993\ncatalog:variable_text:41820:18993:19723"

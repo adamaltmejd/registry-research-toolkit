@@ -2643,7 +2643,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:euro-sympati"
-fields = { "description" = "Personens åsikt om att införa euron som valuta i Sverige, som svar på frågan ”Om vi idag skulle ha folkomröstning om att ersätta kronan som valuta, skulle du då rösta ja eller nej till att införa euron som valuta i Sverige?”" }
+fields = { "description" = "Personens åsikt om att införa euron som valuta i Sverige. 2000–2004 löd frågan: ”Om vi idag skulle ha folkomröstning om att ersätta kronan som valuta, skulle du då rösta ja eller nej till att införa euron som valuta i Sverige?”" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger frågenummer och blankett, som tas bort, och frågans ordalydelse, som behålls.\ncatalog:variable_text:47771:11078:11109\ncatalog:variable_text:47771:12173:12204\ncatalog:variable_text:47771:12539:12570\ncatalog:variable_text:47771:12723:12753\ncatalog:variable_text:47771:12904:12935\ncatalog:variable_text:47771:16740:16770"
 
 [[statement]]
@@ -2655,7 +2655,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:lopnummer-for-individ"
-fields = { "description" = "Internt löpnummer för varje urvalsperson, som används vid enkätutskick och avbockning. Numret tilldelas när ett nytt panelurval dras, och personen behåller det i alla tre undersökningsomgångar som personen ingår i." }
+fields = { "description" = "Internt löpnummer för varje urvalsperson, som används vid enkätutskick och avbockning. Från 2008 tilldelas numret när ett nytt panelurval dras, och personen behåller det i alla tre undersökningsomgångar som personen ingår i." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger att numret är internt och hur det behålls i panelen.\ncatalog:variable_text:47803:11078:11109\ncatalog:variable_text:47803:13634:13665\ncatalog:variable_text:47803:14000:14031"
 
 [[statement]]

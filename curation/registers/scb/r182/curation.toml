@@ -17441,7 +17441,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:hogskolekod"
-fields = { "description" = "Kod för lärosätet, en utbildningsanordnare med rätt att utfärda examina inom grundutbildning eller grund- och forskarutbildning, enligt den interna kodsättningen av lärosäten. För personalen hämtas den från registret över högskolans personal." }
+fields = { "description" = "Kod för lärosätet, en utbildningsanordnare med rätt att utfärda examina inom grundutbildning eller grund- och forskarutbildning. I ekonomitabellen 2021–2023 följer koden en intern kodsättning av lärosäten. För personalen hämtas den från registret över högskolans personal." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger källa och kodsättning.\ncatalog:variable_text:20525:12784:13149\ncatalog:variable_text:20525:16436:16801\ncatalog:variable_text:20525:18628:18993"
 
 [[statement]]
@@ -17465,13 +17465,13 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:larosate"
-fields = { "description" = "Lärosätet, det vill säga universitetet eller högskolan, angivet med namn. 2017 anges det i ekonomitabellens kolumn HSKod med den interna kodsättningen av lärosäten. 2021–2023 är det lärosätets namn under referensåret enligt Universitetskanslersämbetet." }
+fields = { "description" = "Lärosätet, det vill säga universitetet eller högskolan. 2017 anges lärosätet i ekonomitabellen med en kod enligt en intern kodsättning av lärosäten. 2021–2023 är det lärosätets namn under referensåret enligt Universitetskanslersämbetet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger kodsättningen 2017 och namnkällan från 2021.\ncatalog:variable_text:20692:12784:13149\ncatalog:variable_text:20692:17167:17532\ncatalog:variable_text:20692:18628:18993"
 
 [[statement]]
 kind = "set"
 subject = "var:lopnummer-anstallningar"
-fields = { "description" = "Löpnummer för individens tjänst: 1 om individen har en anställning, 1–9 om hen har flera. Urvalet görs per tjänst, så samma individ kan förekomma flera gånger, och löpnumret är unikt för varje tjänst." }
+fields = { "description" = "Löpnummer för individens tjänst: 1 om individen har en anställning, 1–9 om hen har flera. 2019 görs urvalet per tjänst, så samma individ kan förekomma flera gånger, och löpnumret är unikt för varje tjänst." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger att löpnumret avser tjänsten och att urvalet görs per tjänst.\ncatalog:variable_text:20700:16436:16801\ncatalog:variable_text:20700:17897:18262\ncatalog:variable_text:20700:18628:18993"
 
 [[statement]]

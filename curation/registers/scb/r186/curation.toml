@@ -754,5 +754,5 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:naringsgren"
-fields = { "description" = "Produktionsenhetens näringsgren enligt SNI, insamlad i respektive sektorsundersökning; femsiffrig kod. 2005–2007 finns den bara för arbetare och tjänstemän i privat sektor, för övriga anges 00." }
+fields = { "description" = "Produktionsenhetens näringsgren enligt SNI, från 2008 enligt SNI 2007. 2022–2024 är det en femsiffrig kod som samlas in i respektive sektorsundersökning. 2005–2007 finns den bara för arbetare och tjänstemän i privat sektor, för övriga anges 00." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; avgränsningen 2005–2007 anges med år.\ncatalog:variable_text:49589:12784:13879\ncatalog:variable_text:49589:13879:18993\ncatalog:variable_text:49589:18993:20089"

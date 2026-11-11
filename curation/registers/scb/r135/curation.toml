@@ -1006,7 +1006,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:imputkalla"
-fields = { "description" = "Värdets källa: om det är rapporterat av ett blankettundersökt företag, imputerat för ett företag som inte svarat, baserat på svar tidigare år eller baserat på Standardiserade räkenskapssammandrag (SRU), som avser mindre företag." }
+fields = { "description" = "Källan till värdet vid imputering. 2003–2016 anger den om värdet är rapporterat av ett blankettundersökt företag, imputerat för ett företag som inte svarat, baserat på svar tidigare år eller baserat på Standardiserade räkenskapssammandrag (SRU), som avser mindre företag. 2017–2024 sätts variabeln maskinellt." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2003–2016 räknar upp källorna. Den generella texten ”Variabeln sätts maskinellt” tas bort.\ncatalog:variable_text:40630:11688:12053\ncatalog:variable_text:40630:12053:17167\ncatalog:variable_text:40630:17167:20089"
 
 [[statement]]

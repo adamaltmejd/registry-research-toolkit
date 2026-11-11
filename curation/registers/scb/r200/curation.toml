@@ -11866,7 +11866,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:bransle-for-kraftvarmeproduktion"
-fields = { "description" = "Mängd bränsle för kraftvärmeproduktion vid värmeverk och annan värme (så kallad färdig värme), i respektive bränsles måttenhet." }
+fields = { "description" = "Mängd bränsle för kraftvärmeproduktion, i respektive bränsles måttenhet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna upprepar den med stavfel.\ncatalog:variable_text:11822:14245:17897\ncatalog:variable_text:11822:17897:18262\ncatalog:variable_text:11822:18262:20089"
 
 [[statement]]
@@ -11938,7 +11938,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:maxnetto"
-fields = { "description" = "Sammanlagd generatoreffekt max netto för vatten-, vind- och värmekraftstationer: den maximala effekt som kan utvinnas vid kontinuerlig drift i mer än 15 timmar efter avdrag för hjälpkraft, det vill säga den effekt som är möjlig att utnyttja." }
+fields = { "description" = "Sammanlagd generatoreffekt max netto för vatten-, vind- och värmekraftstationer. För vatten- och vindkraftstationer avses den maximala effekt som kan utvinnas vid kontinuerlig drift i mer än 15 timmar efter avdrag för hjälpkraft, det vill säga den effekt som är möjlig att utnyttja." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger stationstyp och, för industriföretagen, hur maxeffekten mäts. 2018–2021 års kolumnförklaring (Maxnethuv1) avser en annan kolumn.\ncatalog:variable_text:11906:14245:14610\ncatalog:variable_text:11906:17532:18993"
 
 [[statement]]
@@ -12058,7 +12058,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:leveranser-av-fjarrvarme-radnr"
-fields = { "description" = "Radnummer för leveranser av fjärrvärme. Raden anger mottagare av fjärrvärmen." }
+fields = { "description" = "Radnummer för leveranser av fjärrvärme. I elproduktions-, elhandels- och fjärrvärmeföretagens uppgifter 2009–2017 anger raden mottagare av fjärrvärmen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger radnummer och mottagare.\ncatalog:variable_text:11905:14245:17532\ncatalog:variable_text:11905:17532:20089"
 
 [[statement]]
@@ -12100,7 +12100,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:tillforsel-av-el-brutto-radnr"
-fields = { "description" = "Radnummer för tillförsel av el brutto. Raden anger vilken post av tillförd el uppgiften avser." }
+fields = { "description" = "Radnummer för tillförsel av el brutto." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; stavfel rättat.\ncatalog:variable_text:12204:14245:17532\ncatalog:variable_text:12204:17532:18262\ncatalog:variable_text:12204:18262:20089"
 
 [[statement]]
@@ -12160,13 +12160,13 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:rad"
-fields = { "description" = "Radnummer i gasföretagens blankett. Tillsammans med Tabell anger det vilken uppgift värdet i Kolumn1 eller Kolumn2 avser." }
+fields = { "description" = "Rad i gasföretagens blankett. Tillsammans med Tabell anger den vilken uppgift ett värde avser, till exempel försäljningsvärde, använd mängd av en energivara, antal uttagspunkter eller investeringar." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nMaintainer #2141 Q3 (2026-11-03): en registergemensam Rad-koordinat. De 144 texterna är definitionerna av de uppgifter som raden pekar ut (var och en delad med uppgiftens egen variabel) och tas inte med.\ncatalog:variable_text:12115:15706:16436"
 
 [[statement]]
 kind = "set"
 subject = "var:tabell"
-fields = { "description" = "Tabellnummer i gasföretagens blankett. Tillsammans med Rad anger det vilken uppgift värdet i Kolumn1 eller Kolumn2 avser." }
+fields = { "description" = "Tabell i gasföretagens blankett. Tillsammans med Rad anger den vilken uppgift ett värde avser, till exempel försäljningsvärde, använd mängd av en energivara, antal uttagspunkter eller investeringar." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nMaintainer #2141 Q3 (2026-11-03): en registergemensam Tabell-koordinat. De 145 texterna är definitionerna av de uppgifter som tabellen pekar ut (var och en delad med uppgiftens egen variabel) och tas inte med.\ncatalog:variable_text:12201:15706:16436"
 
 [[statement]]

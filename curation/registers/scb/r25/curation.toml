@@ -28160,7 +28160,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:fbnh"
-fields = { "description" = "Personnummer för familjens huvudman i familjepopulationen, för familjemedlemmar bosatta i samma församling. Huvudman är för sammanboende mannen och för barn fadern eller, om sådan saknas, modern. Skattemyndigheterna använder uppgiften bara som sorteringsbegrepp, och den avser samhörigheten under innevarande taxeringsår. Hemmaboende barn som har fyllt 18 år den 1 november får därför ett eget huvudmannabegrepp, och för barn som har egna barn eller är gifta bryts samhörigheten med föräldrarna." }
+fields = { "description" = "Personnummer för familjens huvudman i familjepopulationen, för familjemedlemmar bosatta i samma församling. Skattemyndigheterna använder uppgiften bara som sorteringsbegrepp, och den avser samhörigheten under innevarande taxeringsår. 1982–1989 är huvudman för sammanboende mannen och för barn fadern eller, om sådan saknas, modern; hemmaboende barn som har fyllt 18 år den 1 november får ett eget huvudmannabegrepp, och för barn som har egna barn eller är gifta bryts samhörigheten med föräldrarna." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; den kortare texten är en del av den längre. Stavfelet ”sorteringsbegrpp” rättat.\ncatalog:variable_text:37785:-731:2922\ncatalog:variable_text:37785:4383:6940\ncatalog:variable_text:37785:6940:7305"
 
 [[statement]]
@@ -28214,7 +28214,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:pensionsdebiteringskod"
-fields = { "description" = "Kod för vilken typ av pension personen har fått under året, härledd ur Skatteverkets taxeringsmaterial." }
+fields = { "description" = "Kod för vilken typ av pension personen har fått under året. Från 2014 hämtas den från Skatteverkets taxeringsmaterial." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma kod; texterna anger härledningen respektive källan.\ncatalog:variable_text:38234:7670:8035\ncatalog:variable_text:38234:12053:12418\ncatalog:variable_text:38234:16071:20089"
 
 [[statement]]

@@ -13461,7 +13461,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:lopnummer"
-fields = { "description" = "Löpnummer som ersätter personens personnummer i det avidentifierade materialet. Numret är ett slumpmässigt tal som används internt vid enkätutskick och avprickning av inkomna enkäter." }
+fields = { "description" = "Löpnummer som ersätter personens personnummer i det avidentifierade materialet. 2006–2010 (UENR) används numret internt vid enkätutskick och avprickning av inkomna enkäter; 2008–2010 är det ett slumpmässigt tal." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma löpnummer; 2000–2002 anger att det ersätter personnumret, 2006–2010 hur det används i insamlingen.\ncatalog:variable_text:36788:11017:11048\ncatalog:variable_text:36788:13208:13239\ncatalog:variable_text:36788:13939:13970"
 
 [[statement]]

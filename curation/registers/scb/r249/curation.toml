@@ -5879,7 +5879,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:ar-for-komvuxutbildning"
-fields = { "description" = "Det år personen studerade i komvux. I kursdeltagartabellerna kommer uppgiften från insamlingen av kursdeltagare under vår- och/eller hösttermin samma kalenderår." }
+fields = { "description" = "Det år personen studerade i komvux. I kursdeltagartabellen för kalenderår 2023 kommer uppgiften från insamlingen av kursdeltagare under vår- och/eller hösttermin samma kalenderår." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna är omformuleringar, en anger insamlingen.\ncatalog:variable_text:41456:18993:19358\ncatalog:variable_text:41456:19358:19539"
 
 [[statement]]
@@ -5933,7 +5933,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:niva-vuxenutbildning"
-fields = { "description" = "Nivå på studierna i vuxenutbildning inom Komvux, Statens skolor för vuxna (SSV) eller Nationellt centrum för flexibelt lärande (CFL). För kursdeltagare härleds den från variabeln Kurs i komvux. För elever bestäms den av kursen med flest förbrukade poäng (i läsårstabellerna 1997–2009 flest undervisningstimmar); från 2019 väljs, om eleven läst på flera nivåer, nivån med flest poäng och vid lika många poäng den högsta." }
+fields = { "description" = "Nivå på studierna i vuxenutbildning inom Komvux, Statens skolor för vuxna (SSV) eller Nationellt centrum för flexibelt lärande (CFL). För kursdeltagare härleds den från variabeln Kurs i komvux. För elever bestäms den utifrån elevens förbrukade poäng (i läsårstabellerna 1997–2009 utifrån den kurs där eleven förbrukat flest undervisningstimmar); från 2019 väljs, om eleven läst på flera nivåer, nivån med flest poäng och vid lika många poäng den högsta." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; härledningen per tabelltyp och regeln från 2019 anges med år.\ncatalog:variable_text:41510:3468:6390\ncatalog:variable_text:41510:8582:14245\ncatalog:variable_text:41510:14245:19358\ncatalog:variable_text:41510:19358:19539"
 
 [[statement]]
@@ -5975,7 +5975,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:skolkod"
-fields = { "description" = "Kod för skolan, en organisatorisk enhet på en adress där lärare och/eller elever finns. Position 1–4 anger kommun, position 5–7 rektorsområde och position 8 är löpnummer inom rektorsområdet; skolornas namn finns inte." }
+fields = { "description" = "Kod för skolan, en organisatorisk enhet på en adress där lärare och/eller elever finns. Till och med 1997 anger position 1–4 kommun, position 5–7 rektorsområde och position 8 löpnummer inom rektorsområdet, och skolornas namn finns inte." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; kodstrukturen anges i de äldsta tabellerna och gäller samma kod.\ncatalog:variable_text:41532:3468:6390\ncatalog:variable_text:41532:6574:8401\ncatalog:variable_text:41532:9496:9678"
 
 [[statement]]
@@ -6005,5 +6005,5 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:valid"
-fields = { "description" = "Om eleven eller kursdeltagaren genomgått validering, en strukturerad bedömning, dokumentation och erkännande av kunskaper och kompetens oberoende av hur de förvärvats. I elevtabellerna bestäms den utifrån elevens lästa poäng." }
+fields = { "description" = "Om eleven eller kursdeltagaren genomgått validering, en strukturerad bedömning, dokumentation och erkännande av kunskaper och kompetens oberoende av hur de förvärvats. I elevtabellerna bestäms den 2020 utifrån elevens förbrukade poäng och 2021–2024 utifrån elevens lästa poäng." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger härledningen i elevtabellerna.\ncatalog:variable_text:41563:18262:19358\ncatalog:variable_text:41563:19358:19539"
