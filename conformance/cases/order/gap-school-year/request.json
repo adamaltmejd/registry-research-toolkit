@@ -1,0 +1,21 @@
+{
+  "note": "`las` delivers `Betyg` for the school years 2019/2020 and 2020/2021. Ordering LA2019..LA2021 leaves out 2021/2022, and the order reports that school year whole: a request in school years is judged in school years (#2392). Fails if the `period_clipped` or the clip names January to June 2022 (the calendar-year reading, where 2021 has some delivery), or if the clip's `ordered` reaches past 2021-07-01. Oracle: the fixture's JSONL and crates/DESIGN.md → the clip rule.",
+  "fixture": "orders",
+  "project": {
+    "schema_version": "6.1.0",
+    "reg_meta_version": "0.81.5",
+    "name": "Order case",
+    "sources": [
+      {
+        "name": "s",
+        "table": "demo/las",
+        "period": {"from": "LA2019", "to": "LA2021"},
+        "bindings": [
+          {
+            "variable": "demo/las/betyg"
+          }
+        ]
+      }
+    ]
+  }
+}

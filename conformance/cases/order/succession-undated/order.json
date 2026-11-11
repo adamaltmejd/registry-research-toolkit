@@ -72,7 +72,7 @@
       "level": "info",
       "code": "period_clipped",
       "path": "/sources/0/bindings/0",
-      "message": "There is no data on demo/und/ink in demo/und/ett for 2018 to 2019. Those years will not be delivered.",
+      "message": "There is no data on demo/und/ink in demo/und/ett for 2018 to 2019. That part of the period will not be delivered.",
       "source": "s",
       "variable": "demo/und/ink",
       "variable_name": "Inkomst",

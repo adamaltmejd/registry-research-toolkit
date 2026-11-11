@@ -1221,10 +1221,13 @@ the order check's to state in its own tests; the rules that shape them:
   reported, by the logical check or the holdings stage (no `period_clipped`, no
   `coverage_gap`, no clip when nothing else is missing): that year reads as delivered,
   and no whole year fills the gap (frontend DESIGN.md → Time, #2389; #2409). A steward
-  order still lists only the delivered days as entries. A clip's `ordered` is its
-  `requested` less the reported gaps, so such a year (a 31 December snapshot included)
-  counts as ordered whole and `requested` less `ordered` names only years with no
-  delivery (#2392; maintainer, PR #2389, 2026-11-10: the server fixes the gaps).
+  order still lists only the delivered days as entries. The year is the request's unit:
+  a school year when every requested span starts and ends on 1 July, else a calendar
+  year. A unit the request covers whole that nothing delivers is reported whole, so a
+  missing 31 December snapshot names its year, not its day. A clip's `ordered` is its
+  `requested` less the reported gaps, so `requested` less `ordered` names exactly the
+  units the findings report (#2392; maintainer, PR #2389, 2026-11-10: the server fixes
+  the gaps).
 - Finding messages write their days in plain words at their grain: `2019`, `2018 to
   2019`, school years as `2004/2005`, months for a part year (`July to December 2018`),
   else days; an open end as `2019 onwards` or `every year through 2019`, and "any
@@ -1296,7 +1299,7 @@ and `sun2000niva`.
     "findings": [
       {"level": "info", "code": "period_clipped", "path": "/sources/0/bindings/1",
        "message": "There is no data on scb/lisa/sun2000niva in scb/lisa/individ for 2003.
-                  Those years will not be delivered.",
+                  That part of the period will not be delivered.",
        "source": "lisa", "variable": "scb/lisa/sun2000niva", "table": "scb/lisa/individ",
        "period": {"start": "2003-01-01", "end": "2004-01-01"}, "successor_fqid": null,
        "variable_name": "Utbildningsnivå", "table_name": "Individer", "successor_name": null},

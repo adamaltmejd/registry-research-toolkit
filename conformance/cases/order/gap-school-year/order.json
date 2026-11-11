@@ -1,0 +1,72 @@
+{
+  "catalog": {
+    "catalog_version": "dev",
+    "schema_version": "13"
+  },
+  "clips": [
+    {
+      "ordered": [
+        {
+          "end": "2021-07-01",
+          "start": "2019-07-01"
+        }
+      ],
+      "requested": [
+        {
+          "end": "2022-07-01",
+          "start": "2019-07-01"
+        }
+      ],
+      "source": "s",
+      "variable": "demo/las/betyg",
+      "variable_name": "Betyg"
+    }
+  ],
+  "entries": [
+    {
+      "binding": 0,
+      "classification": null,
+      "display_name": null,
+      "length": null,
+      "period": {
+        "end": "2021-07-01",
+        "start": "2019-07-01"
+      },
+      "provider": "demo",
+      "register": "demo/las",
+      "source": "s",
+      "spelling": "Betyg",
+      "table": "demo/las",
+      "table_name": "Läsårsregistret",
+      "type": "integer",
+      "value_set": null,
+      "variable": "demo/las/betyg",
+      "variable_name": "Betyg"
+    }
+  ],
+  "findings": [
+    {
+      "code": "period_clipped",
+      "level": "info",
+      "message": "There is no data on demo/las/betyg in demo/las for 2021/2022. That part of the period will not be delivered.",
+      "path": "/sources/0/bindings/0",
+      "period": {
+        "end": "2022-07-01",
+        "start": "2021-07-01"
+      },
+      "source": "s",
+      "successor_fqid": null,
+      "successor_name": null,
+      "table": "demo/las",
+      "table_name": "Läsårsregistret",
+      "variable": "demo/las/betyg",
+      "variable_name": "Betyg"
+    }
+  ],
+  "project": {
+    "name": "Order case",
+    "reg_meta_version": "0.81.5",
+    "schema_version": "6.1.0"
+  },
+  "row_keys": []
+}

@@ -878,7 +878,8 @@ fn clip(
                 )
         });
         // A gap inside a requested year the binding delivers in part is not reported
-        // (#2409), judged over the whole binding: its entries can split mid-year.
+        // (#2409), judged over the whole binding: its entries can split mid-year
+        // ([`reported_gaps`]).
         let gap =
             |f: &Issue| ["coverage_gap", "column_window_unavailable"].contains(&f.code.as_str());
         let mut kept = Vec::with_capacity(findings.len());
@@ -902,7 +903,10 @@ fn clip(
                     );
                     part.period = Some(server.period(sub.0, sub.1));
                 }
-                kept.push(part);
+                // Two pieces in one unit nothing delivers both report the unit.
+                if !kept.contains(&part) {
+                    kept.push(part);
+                }
             }
         }
         *findings = kept;
@@ -920,7 +924,7 @@ fn clip(
                 f.message.push_str(if held.is_empty() {
                     " Choose other years, or remove the variable from the project."
                 } else {
-                    " Those years will not be delivered."
+                    " That part of the period will not be delivered."
                 });
             }
         }

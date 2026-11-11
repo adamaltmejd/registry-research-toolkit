@@ -360,7 +360,7 @@ fn materialize(
                 scope.table,
                 Some(days),
                 format!(
-                    "There is no data on {} in {} for {}. Those years will not be delivered.",
+                    "There is no data on {} in {} for {}. That part of the period will not be delivered.",
                     variable.pid,
                     scope.table,
                     span(scope.server, days)
