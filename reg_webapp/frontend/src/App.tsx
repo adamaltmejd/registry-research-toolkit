@@ -89,15 +89,12 @@ export function App() {
   // this. It is open on the page it was opened on, and on each page the
   // arrows open as they pass its rows; any other navigation (a link, the
   // history, a search result) closes it, as do a press on a row and Escape.
-  // The catalog root's page is the register list, so there it is always
-  // shown and the button does nothing.
-  const isRoot = route.name === "root";
   const routeKey = route.name === "catalog-node" ? route.fqidPath : route.name;
   const [openAt, setOpenAt] = useState<string | null>(null);
   // Left behind by any other navigation (the history; a link, below), so the
   // history never reopens it.
   if (openAt !== null && openAt !== routeKey) setOpenAt(null);
-  const browserOpen = isRoot || openAt === routeKey;
+  const browserOpen = openAt === routeKey;
   const browserButton = useRef<HTMLButtonElement>(null);
   /** Below the breakpoint, where the button is drawn. */
   const narrow = () => browserButton.current?.offsetParent != null;
@@ -108,7 +105,6 @@ export function App() {
     if (narrow()) browserButton.current?.focus();
   };
   const toggleBrowser = () => {
-    if (isRoot) return;
     if (browserOpen) return closeBrowser();
     // Drawn first, so focus can move into it, onto the open page's row.
     flushSync(() => setOpenAt(routeKey));
@@ -151,7 +147,6 @@ export function App() {
             browser={{
               open: browserOpen,
               controls: REGISTER_BROWSER,
-              inert: isRoot,
               onToggle: toggleBrowser,
               onSearchChoose: () => setOpenAt(null),
             }}
@@ -170,7 +165,6 @@ export function App() {
           <div
             className={styles.body}
             data-browser-open={browserOpen || undefined}
-            data-root={isRoot || undefined}
           >
             <BrowseTree
               id={REGISTER_BROWSER}
@@ -236,10 +230,6 @@ function RoutedView({
       return (
         <Home config={stewardConfig(context)} brand={brandName(context)} />
       );
-    case "root":
-      // The variables column says to choose a register; the pane does not
-      // repeat it.
-      return <h1 className="visually-hidden">Data browser</h1>;
     case "catalog-node":
       return (
         <CatalogNodeView
@@ -262,7 +252,7 @@ function NotFound({ path }: { path: string }) {
         No page at <code>{path}</code>.
       </p>
       <p>
-        <a href="/catalog">Back to the data browser</a>
+        <a href="/">Back to the start page</a>
       </p>
     </article>
   );

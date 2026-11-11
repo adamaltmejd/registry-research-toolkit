@@ -1,6 +1,6 @@
 /**
  * A tiny hand-rolled, path-based client router (no routing-library dep). URLs
- * mirror the API: `/catalog` (root), `/catalog/scb/lisa` (register),
+ * mirror the API: `/catalog/scb/lisa` (register),
  * `/catalog/scb/lisa/kon` (variable), `/catalog/class/<slug>`. Navigation is
  * `history.pushState`; back/forward is `popstate`; internal `<a>` clicks are
  * intercepted so they don't full-reload.
@@ -11,13 +11,13 @@
  * dev server does the same (`appType: 'spa'`), so `bun run dev` deep-links work.
  */
 
-/** The parsed current route. `home` is `/` (the landing page, #675); `root` is
- * `/catalog` (the data browser); `catalog-node` carries the FQID path after
- * `/catalog/`; `project` is the authoring surface (A5.3c); `not-found` is
- * anything else. */
+/** The parsed current route. `home` is `/` (the landing page, #675);
+ * `catalog-node` carries the FQID path after `/catalog/`; `project` is the
+ * authoring surface (A5.3c); `not-found` is anything else. `/catalog` itself
+ * is no page: it is `home`, and the router rewrites the address to `/`
+ * (maintainer 2026-11-11, #2403). */
 export type Route =
   | { name: "home" }
-  | { name: "root" }
   | { name: "catalog-node"; fqidPath: string }
   | { name: "project" }
   | { name: "not-found"; path: string };
@@ -35,17 +35,25 @@ function safeDecode(segment: string): string | null {
   }
 }
 
+/** The data browser's old root page, retired (maintainer 2026-11-11, #2403):
+ * the browse columns stand beside every page, so it showed nothing of its own. */
+const CATALOG_ROOT = "/catalog";
+
+/** `/catalog`, with or without trailing slashes, becomes `/` in place: no
+ * reload and no new history entry, its query and hash dropped. A cold load
+ * reaches it through the edge's SPA fallback, a link through `navigate`. */
+function redirectCatalogRoot(): void {
+  if (window.location.pathname.replace(/\/+$/, "") === CATALOG_ROOT) {
+    window.history.replaceState(window.history.state, "", "/");
+  }
+}
+
 /** Parse a pathname into a route. Trailing slashes are tolerated; a malformed
  * percent-encoded segment routes to not-found (never throws). */
 export function parseRoute(pathname: string): Route {
   const path = pathname.replace(/\/+$/, "") || "/";
-  if (path === "/") {
-    // The landing/home page (#675) — split from the data browser at `/catalog`
-    // so `/` can carry a welcome + entry points instead of the provider list.
+  if (path === "/" || path === CATALOG_ROOT) {
     return { name: "home" };
-  }
-  if (path === "/catalog") {
-    return { name: "root" };
   }
   if (path === "/project") {
     return { name: "project" };
@@ -76,7 +84,7 @@ class Router {
    * query-independent catalog node and remounted the article around the leaf's
    * period card, dropping the researcher's keyboard focus to the document body
    * mid-Apply (Y-65). */
-  #pathname = window.location.pathname;
+  #pathname = (redirectCatalogRoot(), window.location.pathname);
   #route: Route = parseRoute(this.#pathname);
   /** The `?query` string (with leading `?`, or empty). DISTINCT from `route`,
    * which is keyed on the PATHNAME only: the resolution state lives in the query
@@ -115,6 +123,7 @@ class Router {
    * the route object, so everything keyed on it survives an Apply on the catalog
    * leaf's period control untouched. */
   private syncLocation(): void {
+    redirectCatalogRoot();
     const { pathname, search } = window.location;
     if (pathname === this.#pathname && search === this.#search) {
       return;

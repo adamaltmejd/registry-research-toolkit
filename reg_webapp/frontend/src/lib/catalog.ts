@@ -110,7 +110,7 @@ export function rankFilter<T>(
  * FQID can't produce a malformed URL — a no-op for today's ASCII slugs. `class`
  * and `class/<slug>` are valid FQID paths (the classification axis). */
 export function catalogHref(fqidPath: string): string {
-  return fqidPath ? `/catalog/${encodeFqid(fqidPath)}` : "/catalog";
+  return `/catalog/${encodeFqid(fqidPath)}`;
 }
 
 /** Segments of an FQID path (`scb/lisa/kon` → `["scb", "lisa", "kon"]`).

@@ -135,8 +135,14 @@ kbd.hint {
   .brand:has(.brandLogo) .brandName {
     display: none;
   }
+  /* A steward logo is an SVG with a viewBox and no size of its own: a set
+     height gives it its width, which a flex item shrinking to its content
+     could not (it measured 0x0). */
   .brandLogo {
     display: block;
+    width: auto;
+    height: var(--space-6);
+    max-width: none;
   }
   .search {
     flex: 1 1 0;

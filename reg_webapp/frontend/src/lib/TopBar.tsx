@@ -192,7 +192,6 @@ export function TopBar({
             aria-label="Browse registers"
             title="Browse registers"
             aria-expanded={browser.open}
-            isInert={browser.inert}
             aria-controls={browser.controls}
             onPress={browser.onToggle}
           >
@@ -211,8 +210,6 @@ export interface RegisterBrowserButton {
   open: boolean;
   /** The register column's id. */
   controls: string;
-  /** Shown for good: the catalog root's page is the register list. */
-  inert: boolean;
   onToggle: () => void;
   /** A search result was chosen: the browser closes; focus stays in the
    * field, as the palette leaves it. */

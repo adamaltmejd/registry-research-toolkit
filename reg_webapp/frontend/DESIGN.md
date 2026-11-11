@@ -463,9 +463,8 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   into the register list. Proposed by the implementer: opening it moves focus to the
   open page's row, or the first row; choosing a row is a press, Enter or Space; the
   arrows passing a row open its page behind it, as above the breakpoint, and leave it
-  open; any other navigation (a link, a search result, the history) closes it; and the
-  catalog root, whose page is the register list, always shows it, its button inert
-  there, since closing it would leave an empty page. Do not mint new breakpoints.
+  open; and any other navigation (a link, a search result, the history) closes it. Do
+  not mint new breakpoints.
 - **Search.** The top-bar field searches and filters nothing (#2398, maintainer
   2026-11-11): typing never changes the browse columns or the open page. Its results, the
   command palette (RAC `Autocomplete`), open under it as you type once the text reaches
@@ -474,8 +473,9 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   "Search filters in place" and its rules (#1827, #1828, #1830): the register column's
   filter and "matched on" lines, the other registers' matches under the open one, the
   count in the field and the page-wide Escape. The palette lists registers, variables
-  (with their register) and the app's places ("Go to the project", "Browse the data", "Go
-  to the start page"); classifications are browsed in the register column, not searched
+  (with their register) and the app's places ("Go to the project", "Go to the start page"; there
+  is no "Browse the data": the columns are always there on a wide screen, and the menu
+  button opens them on a narrow one, maintainer 2026-11-11, #2403); classifications are browsed in the register column, not searched
   (Operator 2026-11-04, maintainer 2026-11-05). Each kind is one request for its first
   four hits, and the palette follows no cursor. On a steward site the answer holds two
   lists ranked apart, the catalog's `items` and the steward's own `steward.items`: the
@@ -524,7 +524,10 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   `description`: what the site is and, for a deployment like SWECOV, what holds the
   data) in `text-muted`, with inline emphasis and `https` links (Operator lane brief
   2026-11-10, PR #2391; any other scheme stays text). The browse columns are beside it
-  and the project box is in the top bar, so there is no link into either.
+  and the project box is in the top bar, so there is no link into either. `/catalog`
+  is no page: it redirects here in place (`history.replaceState`, no reload, its query
+  and hash dropped), since the columns stand beside every page (maintainer 2026-11-11,
+  #2403). A cold load reaches it through the edge's SPA fallback.
 - **Detail pane:** breadcrumb path (the ancestors' names in the UI face, `text-muted`:
   the provider, then the register, each a link, ending at the page's parent, since the
   `h1` names the page itself; maintainer Q5, 2026-11-04), at every width (#2403). The

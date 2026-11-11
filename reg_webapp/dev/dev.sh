@@ -402,7 +402,7 @@ capture() {
 # The restored shell only. Entity-page smoke steps return in W2–W5.
 smoke() {
 	ab set viewport 1280 900 >/dev/null &&
-		ab open "$dev_url/catalog" >/dev/null && settled && capture 01-root || return 1
+		ab open "$dev_url/" >/dev/null && settled && capture 01-home || return 1
 	echo "smoke: OK"
 }
 

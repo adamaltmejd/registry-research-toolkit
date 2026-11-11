@@ -82,15 +82,10 @@
   .detail {
     padding: var(--space-4);
   }
-  /* The root's pane holds only its visually hidden h1, kept so the page
-     keeps its `main` landmark and its heading under the register list. */
-  .body[data-root] .detail {
-    padding: 0;
-  }
   /* Scoped under `.body` to outrank the column's own `display: flex`. */
   .body .list,
   .body:not([data-browser-open]) .browse,
-  .body[data-browser-open]:not([data-root]) .detail {
+  .body[data-browser-open] .detail {
     display: none;
   }
 }

@@ -76,9 +76,12 @@ WEBAPP_PROJECT=$root/conformance/cases/fixtures/webapp-dev/project_data.json
 # narrowing the register's variables, or a table address stops opening its register's
 # page with that chip on (#2316). The fixture's Familjer table holds one of
 # Hushållsregistret's five variables (Antal), so the chip must leave "1 of 5 shown": a
-# chip that filters nothing leaves 5 of 5.
+# chip that filters nothing leaves 5 of 5. Also fails if `/catalog` stops becoming `/`
+# (maintainer 2026-11-11, #2403).
 j_browse() {
-	visit /catalog && press row "Demoleverantören" && wait_url "**/catalog/demo" &&
+	visit /catalog && [ "$(ab get url)" = "$dev_url/" ] ||
+		fail "/catalog did not become / (maintainer 2026-11-11, #2403)" || return 1
+	press row "Demoleverantören" && wait_url "**/catalog/demo" &&
 		see listbox "Variables in Demoleverantören" &&
 		press row "Hushållsregistret" && wait_url "**/catalog/demo/hush" &&
 		see heading "Hushållsregistret" &&
@@ -99,7 +102,7 @@ j_browse() {
 # column's filter box stops narrowing its column (8 rows in Basregistret, 3 match
 # "in"), or the box keeps its text when another register opens.
 j_search() {
-	visit /catalog && fill searchbox "Search registers, variables" andra &&
+	visit / && fill searchbox "Search registers, variables" andra &&
 		press menuitem "Andra registret" && wait_url "**/catalog/demo2/reg" &&
 		see option "Kod, 2019" &&
 		no_tree 'searchbox "Search registers, variables".*: ' &&
