@@ -2634,7 +2634,8 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Period"
-            }
+            },
+            "description": "The requested days less the years with no delivery: a requested year delivered on\nsome day reads as ordered whole (#2392)."
           },
           "requested": {
             "type": "array",

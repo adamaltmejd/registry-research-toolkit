@@ -237,11 +237,7 @@ pub(super) fn row_keys(
                 };
                 if let Some((level, code, verb, tail)) = found {
                     let period = server.period(lo, hi);
-                    let over = format!(
-                        "[{}, {})",
-                        period.start.as_deref().unwrap_or("open"),
-                        period.end.as_deref().unwrap_or("open")
-                    );
+                    let over = super::words::plain(std::slice::from_ref(&period));
                     findings.push(Issue {
                         source: Some(source.name.clone()),
                         variable: Some(variable.clone()),
@@ -251,10 +247,7 @@ pub(super) fn row_keys(
                             level,
                             code,
                             format!("/sources/{index}"),
-                            format!(
-                                "Row key {variable} {verb} {} over {over}{tail}",
-                                s.table.pid
-                            ),
+                            format!("Row key {variable} {verb} {} for {over}{tail}", s.table.pid),
                         )
                     });
                 }

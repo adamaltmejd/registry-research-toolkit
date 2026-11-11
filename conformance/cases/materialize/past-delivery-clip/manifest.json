@@ -120,7 +120,7 @@
       "level": "warning",
       "code": "coverage_gap",
       "path": "/sources/0/bindings/0",
-      "message": "There is no data on demo/held/late in demo/held for [2021-01-01, 2022-01-01). Those years will not be delivered.",
+      "message": "There is no data on demo/held/late in demo/held for 2021. That part of the period will not be delivered.",
       "source": "l",
       "variable": "demo/held/late",
       "table": "demo/held",

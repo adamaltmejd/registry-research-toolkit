@@ -7,8 +7,8 @@ use reg_core::{Interval, IssueLevel, gaps, merge, next_iso_day, overlap};
 use rusqlite::{Connection, OptionalExtension, Row};
 
 use super::{
-    Issue, OrderClip, OrderEntry, OrderValueSet, Serving, day, interval, iso_day, period, refused,
-    reported_intervals, span,
+    Issue, OrderClip, OrderEntry, OrderValueSet, Serving, clip_ordered, day, days, interval,
+    iso_day, period, refused, reported_intervals, span, words,
 };
 use crate::ops::{Server, refs};
 use crate::{Code, Error, rows};
@@ -332,9 +332,9 @@ fn materialize(
             scope.table,
             Some(&requested),
             format!(
-                "{} is not available over {}.",
+                "{} is not available for {}.",
                 variable.pid,
-                span(scope.server, &requested)
+                words::plain_none(&[period(scope.server, &requested)])
             ),
         ));
         outcome.findings.extend(replaced(&at)?);
@@ -351,7 +351,7 @@ fn materialize(
             variable: variable.pid.clone(),
             variable_name: String::new(),
             requested: periods(scope.server, scope.requested),
-            ordered: periods(scope.server, &ordered),
+            ordered: clip_ordered(scope.server, &days(scope.requested), &days(&ordered)),
         });
         for days in &removed {
             outcome.findings.push(at.issue(
@@ -360,7 +360,7 @@ fn materialize(
                 scope.table,
                 Some(days),
                 format!(
-                    "There is no data on {} in {} for {}. Those years will not be delivered.",
+                    "There is no data on {} in {} for {}. That part of the period will not be delivered.",
                     variable.pid,
                     scope.table,
                     span(scope.server, days)
@@ -383,7 +383,7 @@ fn materialize(
             scope.table,
             Some(&days),
             format!(
-                "{} carries more than one classification version over {}; pin one with \
+                "{} carries more than one classification version for {}; pin one with \
                  \"classification\".",
                 variable.pid,
                 span(scope.server, &days)
@@ -419,12 +419,11 @@ fn type_differs(at: &Located, binding: &Binding, entries: &[OrderEntry]) -> Vec<
                     None,
                     format!(
                         "the project gives {} the type {}, but the catalog has {catalog} in \
-                         {} over [{}, {})",
+                         {} for {}",
                         e.variable,
                         stated.as_str(),
                         e.table,
-                        e.period.start.as_deref().unwrap_or("open"),
-                        e.period.end.as_deref().unwrap_or("open"),
+                        words::plain(std::slice::from_ref(&e.period)),
                     ),
                 );
                 issue.period = Some(e.period.clone());
@@ -556,7 +555,7 @@ fn windows(at: &Located, pieces: &[Piece]) -> Vec<Issue> {
         "ambiguous_window",
         &|t, p| {
             format!(
-                "{pid} has more than one form in {t} over {p} (name, type or codes differ); pick a shorter period or ask the maintainer"
+                "{pid} has more than one form in {t} for {p} (name, type or codes differ); pick a shorter period or ask the maintainer"
             )
         },
     );
@@ -564,19 +563,19 @@ fn windows(at: &Located, pieces: &[Piece]) -> Vec<Issue> {
         &|p| p.state == "preliminary",
         IssueLevel::Warning,
         "preliminary_data",
-        &|t, p| format!("{pid} in {t} over {p} is preliminary data: no final release covers it"),
+        &|t, p| format!("{pid} in {t} for {p} is preliminary data: no final release covers it"),
     );
     each(
         &|p| p.sensitive,
         IssueLevel::Warning,
         "variable_sensitive",
-        &|t, p| format!("{pid} is sensitive in {t} over {p}"),
+        &|t, p| format!("{pid} is sensitive in {t} for {p}"),
     );
     each(
         &|p| p.identifier,
         IssueLevel::Info,
         "identifier",
-        &|t, p| format!("{pid} is an identifier in {t} over {p}"),
+        &|t, p| format!("{pid} is an identifier in {t} for {p}"),
     );
     each(
         &|p| p.open && !scope.serving[p.serving].table.timeless,
@@ -584,7 +583,7 @@ fn windows(at: &Located, pieces: &[Piece]) -> Vec<Issue> {
         "coverage_end_unstated",
         &|t, p| {
             format!(
-                "{pid} in {t}: the provider states no end year, so data over {p} is not confirmed"
+                "{pid} in {t}: the provider states no end year, so data for {p} is not confirmed"
             )
         },
     );
@@ -668,7 +667,7 @@ fn editions(at: &Located, pieces: &[Piece]) -> Result<Vec<Issue>, Error> {
                 &s.table.pid,
                 Some(&days),
                 format!(
-                    "the preliminary and final releases of {} differ on {} over {}",
+                    "the preliminary and final releases of {} differ on {} for {}",
                     s.table.pid,
                     at.variable.pid,
                     span(scope.server, &days)
@@ -712,7 +711,7 @@ fn replaced(at: &Located) -> Result<Vec<Issue>, Error> {
             let days = at_start.map(|a| (iso_day(a).max(requested.0.clone()), requested.1.clone()));
             let from = at_start.map_or_else(
                 || "; the date is not stated".to_owned(),
-                |a| format!(" from {}", iso_day(a)),
+                |a| format!(" from {}", words::plain_start(&iso_day(a))),
             );
             let caveat = caveat.map_or_else(String::new, |c| format!(": {c}"));
             let mut issue = at.issue(
@@ -773,9 +772,13 @@ fn entries(at: &Located, binding: &Binding, pieces: &[Piece]) -> (Vec<OrderEntry
             scope.table,
             Some(&days),
             format!(
-                "{} changes form at {} ({})",
+                "{} changes form from {} ({})",
                 at.variable.pid,
-                boundaries.join(", "),
+                boundaries
+                    .iter()
+                    .map(|d| words::plain_start(d))
+                    .collect::<Vec<_>>()
+                    .join(", "),
                 spellings.join(" -> ")
             ),
         )

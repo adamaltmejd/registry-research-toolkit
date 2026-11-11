@@ -78,7 +78,7 @@
       "level": "warning",
       "code": "mapping_caveat",
       "path": "/sources/0",
-      "message": "demo/projected/id in demo/projected over [2018-01-01, 2019-01-01): Synthetic identifier caveat.",
+      "message": "demo/projected/id in demo/projected for 2018: Synthetic identifier caveat.",
       "source": "p",
       "variable": "demo/projected/id",
       "table": "demo/projected",

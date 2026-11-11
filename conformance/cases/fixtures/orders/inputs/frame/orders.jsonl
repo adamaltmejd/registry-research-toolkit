@@ -140,3 +140,8 @@
 {"kind":"release","provider":"demo","register":"halv","table":"","release":"h2020v","name":"Halv 2020 VT","from":"2020-01-01","to":"2020-06-30","grain":"half","edition":"final"}
 {"kind":"occurrence","provider":"demo","register":"halv","table":"","release":"h2019","column":"X","source_key":"k1","label":"X","dtype":"int"}
 {"kind":"occurrence","provider":"demo","register":"halv","table":"","release":"h2020v","column":"X","source_key":"k1","label":"X","dtype":"int"}
+{"kind":"register","provider":"demo","register":"las","name":"Läsårsregistret"}
+{"kind":"release","provider":"demo","register":"las","table":"","release":"la2019","name":"Läsår 2019/2020","from":"2019-07-01","to":"2020-06-30","grain":"span","edition":"final"}
+{"kind":"release","provider":"demo","register":"las","table":"","release":"la2020","name":"Läsår 2020/2021","from":"2020-07-01","to":"2021-06-30","grain":"span","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"las","table":"","release":"la2019","column":"Betyg","source_key":"k1","label":"Betyg","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"las","table":"","release":"la2020","column":"Betyg","source_key":"k1","label":"Betyg","dtype":"int"}

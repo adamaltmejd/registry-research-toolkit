@@ -98,7 +98,7 @@
       "level": "warning",
       "code": "mapping_caveat",
       "path": "/sources/0/bindings/0",
-      "message": "steward/slots/code in steward/slots over [2017-01-01, 2018-01-01): Earlier delivery uses the explicitly transcribed supplemental coding.",
+      "message": "steward/slots/code in steward/slots for 2017: Earlier delivery uses the explicitly transcribed supplemental coding.",
       "source": "s",
       "variable": "steward/slots/code",
       "table": "steward/slots",

@@ -8,7 +8,10 @@ use reg_core::{Interval, IssueLevel, gaps, merge, overlap};
 use rusqlite::params;
 
 use super::window::{self, Outcome, Scope};
-use super::{Issue, OrderClip, Serving, day, interval, period, reported_intervals, table_ref};
+use super::{
+    Issue, OrderClip, Serving, clip_ordered, day, days, interval, period, reported_intervals,
+    table_ref,
+};
 use crate::{Error, rows};
 
 pub(super) fn binding(scope: &Scope, b: usize, binding: &Binding) -> Result<Outcome, Error> {
@@ -194,7 +197,7 @@ fn finish(scope: &Scope, b: usize, binding: &Binding, out: &mut Outcome) {
             variable: binding.variable.clone(),
             variable_name: String::new(),
             requested: window::periods(scope.server, scope.requested),
-            ordered: window::periods(scope.server, &ordered),
+            ordered: clip_ordered(scope.server, &days(scope.requested), &days(&ordered)),
         });
         for days in removed {
             let mut finding = refusal(

@@ -21,6 +21,7 @@ mod materialize;
 mod rows;
 mod successor;
 mod window;
+mod words;
 
 pub(crate) use rows::StewardKeys;
 
@@ -234,8 +235,15 @@ fn delivered(
                 variable_name: names.of(Named::Variable, &c.variable)?,
                 source: c.source,
                 variable: c.variable,
+                ordered: clip_ordered(
+                    server,
+                    &c.requested
+                        .iter()
+                        .map(|p| p.days(server.open))
+                        .collect::<Vec<_>>(),
+                    &reg_core::days::merge(c.ordered.iter().map(|p| p.days(server.open)).collect()),
+                ),
                 requested: c.requested,
-                ordered: c.ordered,
             })
         })
         .collect::<Result<_, Error>>()?;
@@ -521,6 +529,8 @@ pub struct OrderClip {
     /// The variable's name.
     variable_name: String,
     requested: Vec<Period>,
+    /// The requested days less the years with no delivery: a requested year delivered on
+    /// some day reads as ordered whole (#2392).
     ordered: Vec<Period>,
 }
 
@@ -779,7 +789,7 @@ fn check_source(
             "table_succession_undated",
             format!("/sources/{index}"),
             format!(
-                "{continued} is continued by {successor} on no stated day, so {} is not \
+                "{continued} is continued by {successor} on no stated day, so its data for {} is not \
                  followed into {successor}",
                 span(server, &past)
             ),
@@ -1034,10 +1044,13 @@ fn serving(
     Ok((serving, gone, ids))
 }
 
-/// The parts of `gaps` (half-open day numbers, ascending) an order reports: all but the
-/// calendar years the request covers whole and `delivered` reaches on some day. Such a
-/// year reads as delivered, and no whole year fills its gap, so a finding or clip would
-/// name a year that comes (`reg_webapp/frontend/DESIGN.md` → Time, #2389; #2409).
+/// The parts of `gaps` (half-open day numbers, ascending) an order reports, in the
+/// request's unit: school years when every requested span starts and ends on 1 July,
+/// else calendar years. A unit the request covers whole and `delivered` reaches on some
+/// day reads as delivered, and no whole unit fills its gap, so a finding or clip would
+/// name a year that comes (`reg_webapp/frontend/DESIGN.md` → Time, #2389; #2409). A unit
+/// the request covers whole and nothing delivers is reported whole, so a gap of data
+/// held on one day of the year (a 31 December snapshot) names its year (#2392).
 pub(super) fn reported_gaps(
     gaps: &[(i64, i64)],
     requested: &[(i64, i64)],
@@ -1045,23 +1058,61 @@ pub(super) fn reported_gaps(
 ) -> Vec<(i64, i64)> {
     use reg_core::days::{covered, merge, minus, overlap};
     let delivered = merge(delivered.to_vec());
-    let (Some(g0), Some(g1), Some(d0), Some(d1)) = (
-        gaps.first(),
-        gaps.last(),
-        delivered.first(),
-        delivered.last(),
-    ) else {
-        return gaps.to_vec();
+    let school = !requested.is_empty()
+        && requested
+            .iter()
+            .all(|&(lo, hi)| iso_day(lo).ends_with("-07-01") && iso_day(hi).ends_with("-07-01"));
+    let (month_day, before) = if school {
+        ("07-01", "07")
+    } else {
+        ("01-01", "01")
     };
-    let year = |d: i64| -> i32 { iso_day(d)[..4].parse().expect("an ISO year") };
-    let start = |y: i32| reg_core::iso_day_number(&format!("{y:04}-01-01"));
-    let first = year(g0.0).max(year(d0.0));
-    let last = year(g1.1 - 1).min(year(d1.1 - 1));
-    let quiet: Vec<(i64, i64)> = (first..=last)
-        .filter_map(|y| Some((start(y)?, start(y + 1)?)))
-        .filter(|&span| covered(&[span], requested) && !overlap(&[span], &delivered).is_empty())
-        .collect();
-    minus(gaps, &quiet)
+    // The unit holding a day, as the year it starts in.
+    let unit = |d: i64| -> i32 {
+        let iso = iso_day(d);
+        let y: i32 = iso[..4].parse().expect("an ISO year");
+        if iso[5..7] < *before { y - 1 } else { y }
+    };
+    let start = |y: i32| reg_core::iso_day_number(&format!("{y:04}-{month_day}"));
+    // Only a unit at a gap's edge can be partly a gap; one inside is a gap whole.
+    let mut quiet = Vec::new();
+    let mut empty = Vec::new();
+    for &(lo, hi) in gaps {
+        for y in [unit(lo), unit(hi - 1)] {
+            let Some(span) = start(y).zip(start(y + 1)) else {
+                continue;
+            };
+            if !covered(&[span], requested) {
+                continue;
+            }
+            if overlap(&[span], &delivered).is_empty() {
+                empty.push(span);
+            } else {
+                quiet.push(span);
+            }
+        }
+    }
+    let mut reported = minus(gaps, &merge(quiet));
+    reported.extend(empty);
+    merge(reported)
+}
+
+/// An [`OrderClip`]'s `ordered`: the requested days (half-open day numbers) less the gaps an
+/// order reports ([`reported_gaps`]). A requested year `delivered` reaches on some day,
+/// such as a 31 December snapshot, reads as ordered whole, so `requested` less `ordered`
+/// names only the years with no delivery (#2392).
+pub(super) fn clip_ordered(
+    server: &Server,
+    requested: &[(i64, i64)],
+    delivered: &[(i64, i64)],
+) -> Vec<Period> {
+    use reg_core::days::{merge, minus};
+    let requested = merge(requested.to_vec());
+    let missing = minus(&requested, delivered);
+    minus(&requested, &reported_gaps(&missing, &requested, delivered))
+        .into_iter()
+        .map(|(lo, hi)| server.period(lo, hi))
+        .collect()
 }
 
 /// [`reported_gaps`] over inclusive ISO intervals.
@@ -1070,13 +1121,15 @@ pub(super) fn reported_intervals(
     requested: &[Interval],
     delivered: &[Interval],
 ) -> Vec<Interval> {
-    let days = |v: &[Interval]| -> Vec<(i64, i64)> {
-        v.iter().map(|(lo, hi)| (day(lo), day(hi) + 1)).collect()
-    };
     reported_gaps(&days(gaps), &days(requested), &days(delivered))
         .into_iter()
         .map(|(lo, hi)| interval(lo, hi))
         .collect()
+}
+
+/// Inclusive ISO intervals as half-open day numbers.
+pub(super) fn days(v: &[Interval]) -> Vec<(i64, i64)> {
+    v.iter().map(|(lo, hi)| (day(lo), day(hi) + 1)).collect()
 }
 
 /// The day number of an ISO day.
@@ -1094,12 +1147,7 @@ fn period(server: &Server, (lo, hi): &Interval) -> Period {
     server.period(day(lo), day(hi) + 1)
 }
 
-/// A period as messages write it, `[2019-01-01, 2020-01-01)`, `open` for a sentinel.
+/// An inclusive ISO interval in plain words ([`words::plain`]).
 fn span(server: &Server, interval: &Interval) -> String {
-    let p = period(server, interval);
-    format!(
-        "[{}, {})",
-        p.start.as_deref().unwrap_or("open"),
-        p.end.as_deref().unwrap_or("open")
-    )
+    words::plain(&[period(server, interval)])
 }

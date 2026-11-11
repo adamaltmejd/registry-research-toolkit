@@ -37,7 +37,7 @@
       "level": "info",
       "code": "coverage_end_unstated",
       "path": "/sources/0/bindings/0",
-      "message": "demo/opn/y in demo/opn: the provider states no end year, so data over [2019-01-01, 2021-01-01) is not confirmed",
+      "message": "demo/opn/y in demo/opn: the provider states no end year, so data for 2019 to 2020 is not confirmed",
       "source": "s",
       "variable": "demo/opn/y",
       "variable_name": "Värde",
