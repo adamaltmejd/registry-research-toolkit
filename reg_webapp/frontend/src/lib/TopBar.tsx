@@ -174,10 +174,12 @@ export function TopBar({
             popoverRef={popover}
             text={text}
             onChoose={() => {
-              // A row navigates and ends the search: the text clears. The
-              // navigation closes the narrow register browser (#2403).
+              // A row navigates and ends the search: the text clears, and the
+              // narrow register browser closes, also on a result for the page
+              // already open (#2403).
               setPalette(false);
               setText("");
+              browser.onSearchChoose();
             }}
           />
         </Autocomplete>
@@ -210,6 +212,9 @@ export interface RegisterBrowserButton {
   /** Shown for good: the catalog root's page is the register list. */
   inert: boolean;
   onToggle: () => void;
+  /** A search result was chosen: the browser closes; focus stays in the
+   * field, as the palette leaves it. */
+  onSearchChoose: () => void;
 }
 
 /** Three lines: the register browser's button. */

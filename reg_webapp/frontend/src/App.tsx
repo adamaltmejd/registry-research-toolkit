@@ -135,6 +135,7 @@ export function App() {
               controls: REGISTER_BROWSER,
               inert: isRoot,
               onToggle: toggleBrowser,
+              onSearchChoose: () => setOpenAt(null),
             }}
             browserButtonRef={browserButton}
           />
