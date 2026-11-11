@@ -1107,8 +1107,8 @@ grow new visual language meanwhile.
   page), and leads with its glyph: "▲ Has warnings" in `warn`, "✕ Has problems" or "✕
   Can't download yet" in `err`; not yet checked or in flight it is a plain `text-muted`
   "Checking" with no glyph; a draft with no tables yet is the same plain "Empty", never
-  an error, since nothing has gone wrong. A check that did not run (a rate limit, the network) is the same plain "Check did not run", never
-  "Has problems": it says nothing about the project. A database not yet chosen, when
+  an error, since nothing has gone wrong. A check that did not run (a rate limit, the
+  network) is the same plain "Check did not run", never "Has problems": it says nothing about the project. A database not yet chosen, when
   nothing else is wrong, is the same plain "Choose a database", never an error
   (maintainer, #2345), and links to /project. Its slot is as wide as the widest verdict,
   so the banner keeps one size while the check runs. A verdict /project explains (Has
@@ -1117,11 +1117,13 @@ grow new visual language meanwhile.
   to the verdict on /project, which takes focus; Checking and Empty stay plain text. A
   ready project shows no verdict in the box; /project still says "Ready to download"
   (maintainer, #2417, 2026-11-11: "Can we remove the big 'Ready to download' flag from
-  the project box? … We can just not do that."). The slot stays at its width, empty, so
-  the box does not resize when a check ends (new rule, proposed by the implementer).
-  Unsaved changes are a quiet `mono` `text-muted` "unsaved", never a status hue.
-  The study window, labelled "Study years", is the period picker: an inline two-thumb RAC `Slider` (no popover) bounded by the viewed catalog's first and last
-  year, drawn as the Timeline's study-window band (see Time: `accent-bg` between
+  the project box? … We can just not do that."), and the slot goes too: where the
+  verdict wraps to a line of its own (a narrow top bar), an empty slot left a blank line
+  under the counts, so there the box loses that line when a check ends (new rule,
+  proposed by the implementer). Unsaved changes are a quiet `mono` `text-muted`
+  "unsaved", never a status hue. The study window, labelled "Study years", is the
+  period picker: an inline two-thumb RAC `Slider` (no popover) bounded by the viewed
+  catalog's first and last year, drawn as the Timeline's study-window band (see Time: `accent-bg` between
   `accent` bounds, the thumbs on those bounds) on a `surface` strip, its years an
   `accent-ink` `mono` readout, with a "Clear" ghost action; the label, the readout and
   Clear keep one line. With no project open it is the same box, empty and on `surface`,
