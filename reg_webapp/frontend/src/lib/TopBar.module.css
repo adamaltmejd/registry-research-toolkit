@@ -105,21 +105,30 @@ kbd.hint {
   line-height: 1.3;
 }
 
-/* The folded field's "Search" button: below the narrow breakpoint only. */
-.searchToggle {
+/* The register browser's button: below the narrow breakpoint only. */
+.menu {
   display: none;
 }
 
-/* Below the narrow breakpoint the mark and the "Search" button share a row and
-   the banner takes the next. The button unfolds the field, which then takes
-   the first row's whole width in their place (maintainer ruling 2026-10-24). */
+/* Below the narrow breakpoint the bar is a grid of two rows (#2403,
+   maintainer 2026-11-11): the mark, then the search field filling the row;
+   under them the register browser's button, under the mark, then the banner
+   filling the row. The field is always shown. */
 @media (max-width: 60rem) {
   .topBar {
     position: static;
   }
+  .inner {
+    display: grid;
+    /* The brand's name wraps before it takes the field's room. */
+    grid-template-columns: fit-content(40%) minmax(0, 1fr);
+    padding: var(--space-2) var(--space-3);
+    gap: var(--space-2) var(--space-3);
+  }
   /* The register column is not beside the brand here, so its width is no
      cap. The steward's logo stands in for its long name (#1820). */
   .brand {
+    grid-area: 1 / 1;
     max-width: none;
   }
   .brand:has(.brandLogo) .brandName {
@@ -128,30 +137,17 @@ kbd.hint {
   .brandLogo {
     display: block;
   }
-  .inner {
-    padding: var(--space-2) var(--space-3);
-    gap: var(--space-2) var(--space-3);
-  }
-  .searchToggle {
-    display: block;
-    margin-left: auto;
-  }
   .search {
-    display: none;
-    flex: 1 1 0;
+    grid-area: 1 / 2;
     max-width: none;
   }
-  .inner[data-search-open] .search {
-    display: flex;
+  .menu {
+    display: block;
+    grid-area: 2 / 1;
   }
-  .inner[data-search-open] .brand,
-  .inner[data-search-open] .searchToggle {
-    display: none;
-  }
-  /* The banner, the row's last child; /project with no project has none,
-     and the "Search" button keeps its place. */
-  .inner > :last-child:not(.searchToggle) {
-    flex-basis: 100%;
+  /* The banner, the row's last child; /project with no project has none. */
+  .inner > :last-child:not(.menu) {
+    grid-area: 2 / 2;
     margin-left: 0;
   }
   /* A touch device has no shortcut or Esc key to show. */

@@ -30,8 +30,4 @@ export interface Column<Row = object> {
 export interface BreadcrumbItem {
   label: string;
   href: string;
-  /** Shown only below the narrow breakpoint: the way back to the register
-   * list where the columns stack ("Browse registers"). Above it the list is on
-   * screen. */
-  narrowOnly?: boolean;
 }

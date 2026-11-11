@@ -4,8 +4,8 @@ import styles from "./CatalogNodeView.module.css";
 import {
   catalogHref,
   leafSlug,
-  matchesFilter,
   rankFilter,
+  rankVariables,
   sortedRegisters,
   svCollator,
 } from "./catalog";
@@ -38,31 +38,6 @@ function sortedVariables(
   return [...(node?.variables ?? [])].sort((a, b) =>
     svCollator.compare(a.name, b.name),
   );
-}
-
-/** The rows the column's filter keeps (#2398), name and slug hits first; a
- * concept group's members also match on the group's name, so the group's row
- * stays when its own name matches. A group kept only through a member's name
- * reads as the group's name with nothing marked, so it ranks after every row
- * whose visible name matches. */
-function rankVariables(
-  variables: VariableRef[],
-  needle: string,
-  groupName: (fqid: string) => string | undefined = () => undefined,
-) {
-  const ranked = rankFilter(variables, needle, (row) => [
-    row.name,
-    leafSlug(row.fqid),
-    groupName(row.fqid),
-  ]);
-  const unmarked = (row: VariableRef) => {
-    const group = groupName(row.fqid);
-    return group !== undefined && !matchesFilter(needle, group);
-  };
-  return [
-    ...ranked.filter((row) => !unmarked(row)),
-    ...ranked.filter(unmarked),
-  ];
 }
 
 /** Names only, except where two variables of one register share a name: then

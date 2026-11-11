@@ -1,5 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { I18nProvider, RouterProvider } from "react-aria-components";
+import { flushSync } from "react-dom";
 import styles from "./App.module.css";
 import {
   brandName,
@@ -22,6 +23,7 @@ import { ProjectEditor } from "./lib/ProjectEditor";
 import { onNavClick, type Route, router } from "./lib/router";
 import { TopBar } from "./lib/TopBar";
 import { Breadcrumbs } from "./lib/ui/Breadcrumbs";
+import { focusBrowseColumn } from "./lib/ui/column_keys";
 import { StatusRow } from "./lib/ui/StatusRow";
 import { useAsyncResource } from "./lib/use_async_resource";
 import { useProjectCheck } from "./lib/use_project";
@@ -30,6 +32,9 @@ import { useCatalogRead } from "./lib/use_store_read";
 import { VariableList } from "./lib/VariableList";
 
 const useHref = (href: string) => href;
+
+/** The register column's id: the narrow register browser's button controls it. */
+const REGISTER_BROWSER = "register-browser";
 
 export function App() {
   const context = useAsyncResource("context", getContext);
@@ -79,6 +84,33 @@ export function App() {
     names.set(registerRef, register.value);
   const breadcrumbs = routeBreadcrumbs(route, names);
 
+  // Below the narrow breakpoint the register column is a browser the top
+  // bar's button shows in place of the page (#2403); above it CSS ignores
+  // this. Arriving at the catalog root shows it, since the root's page is the
+  // register list; the arrows passing a row open its page behind it and leave
+  // it open; a press on a row, a search result or Escape closes it.
+  const isRoot = route.name === "root";
+  const [browserOpen, setBrowserOpen] = useState(isRoot);
+  const [wasRoot, setWasRoot] = useState(isRoot);
+  if (isRoot !== wasRoot) {
+    setWasRoot(isRoot);
+    if (isRoot) setBrowserOpen(true);
+  }
+  const browserButton = useRef<HTMLButtonElement>(null);
+  /** Close the browser, focus returning to its button. Above the breakpoint
+   * the button is not drawn and the column is the page's own: nothing moves. */
+  const closeBrowser = () => {
+    if (browserButton.current?.offsetParent == null) return;
+    setBrowserOpen(false);
+    browserButton.current.focus();
+  };
+  const toggleBrowser = () => {
+    if (browserOpen) return closeBrowser();
+    // Drawn first, so focus can move into it, onto the open page's row.
+    flushSync(() => setBrowserOpen(true));
+    focusBrowseColumn("registers");
+  };
+
   useEffect(() => {
     document.addEventListener("click", onNavClick);
     return () => document.removeEventListener("click", onNavClick);
@@ -88,7 +120,17 @@ export function App() {
     <RouterProvider navigate={router.navigate} useHref={useHref}>
       <I18nProvider locale="en-US">
         <div className={styles.app}>
-          <TopBar context={context.data} validation={validation} />
+          <TopBar
+            context={context.data}
+            validation={validation}
+            browser={{
+              open: browserOpen,
+              controls: REGISTER_BROWSER,
+              onToggle: toggleBrowser,
+              onChoose: closeBrowser,
+            }}
+            browserButtonRef={browserButton}
+          />
           {context.error && (
             <StatusRow
               tone="error"
@@ -101,9 +143,15 @@ export function App() {
           )}
           <div
             className={styles.body}
-            data-narrow-shows={route.name === "root" ? "browse" : "detail"}
+            data-browser-open={browserOpen || undefined}
+            data-root={isRoot || undefined}
           >
-            <BrowseTree className={styles.browse} />
+            <BrowseTree
+              id={REGISTER_BROWSER}
+              className={styles.browse}
+              onChoose={closeBrowser}
+              onEscape={closeBrowser}
+            />
             {/* One instance on every route: opening a variable from a
               provider's list keeps focus in the column as it re-roots. */}
             <VariableList

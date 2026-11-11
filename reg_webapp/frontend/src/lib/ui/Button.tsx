@@ -19,6 +19,10 @@ type Props = {
   "aria-label"?: string;
   /** The id of visible text that says why an inert button refuses. */
   "aria-describedby"?: string;
+  /** A button that shows and hides a region: whether it is shown, and its
+   * id. */
+  "aria-expanded"?: boolean;
+  "aria-controls"?: string;
   /** Hover text for a pointer; never the only place a reason is given. */
   title?: string;
   /** For a caller that moves focus back to the button. */
@@ -44,6 +48,8 @@ export function Button({
   isBusy = false,
   "aria-label": ariaLabel,
   "aria-describedby": ariaDescribedBy,
+  "aria-expanded": ariaExpanded,
+  "aria-controls": ariaControls,
   title,
   ref,
   children,
@@ -54,6 +60,8 @@ export function Button({
       type={type}
       aria-label={ariaLabel}
       aria-describedby={ariaDescribedBy}
+      aria-expanded={ariaExpanded}
+      aria-controls={ariaControls}
       className={`${styles.button} ${styles[variant]}`}
       onPress={isInert ? undefined : onPress}
       render={(props) => (

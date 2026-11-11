@@ -387,12 +387,14 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   own, so there the brand is the steward's logo, with the full name as the link's
   accessible name (#1820, maintainer rulings 2026-10-23). Each steward supplies a logo
   (`stewards/<id>/logo.svg`), used in the compact header and as the favicon. The bar
-  sticks to the top of the page above `breakpoint-narrow`; below it the logo and a
-  "Search" button share a row, the banner takes the next, and both scroll away with the
-  page. The button unfolds the field, which takes the row's whole width in place of the
-  logo and the button, with focus in it; it stays open while it holds text, and folds
-  back on a blur or an Escape while empty, focus returning to the button (maintainer
-  ruling 2026-10-24). Below the breakpoint every text field is set at 1rem: iOS Safari
+  sticks to the top of the page above `breakpoint-narrow`. Below it the bar has two rows
+  that scroll away with the page (#2403, maintainer decisions 2026-11-11): the logo,
+  then the search field filling the row, always shown; under them the menu button and
+  the project banner. The button (three lines, named "Browse registers", with
+  `aria-expanded` and `aria-controls`; the name is the implementer's proposal) sits
+  under the logo, the banner fills the rest of the row. The button opens the register
+  browser and hides it again (see Browse columns). This replaces the "Search" button that unfolded the field
+  (maintainer ruling 2026-10-24). Below the breakpoint every text field is set at 1rem: iOS Safari
   zooms the page into a focused field under 16px and leaves it zoomed, cut off at the
   left.
 - **Browse columns (`ColumnList`):** a steward deployment shows only what the steward
@@ -451,15 +453,21 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   viewport below the top bar and scrolls its own list. Every item and group carries its
   in-project mark on the right when it has one. Below the single narrow breakpoint
   (`breakpoint-narrow`, 60rem: narrower, the two columns leave the detail pane under
-  400px, #2107) the columns stack, one at a time; the way back is the breadcrumb's first
-  crumb, "Browse registers", drawn as a `default` button on its own line above the trail
-  so it reads as an action, not a path segment (#1824). Every page's trail leads with it
-  below the breakpoint (and only there: beside the columns it would repeat them), and it
-  opens the register list. Below the breakpoint the variables column is not drawn, and
-  its filter box with it: a register's page lists its variables itself. The narrow mode
-  that showed the column's matches under the trail while the top-bar text filtered
-  (maintainer ruling 2026-11-05) went with that filter (#2398). Do not mint new
-  breakpoints.
+  400px, #2107) there is one column (#2403). The maintainer decided (2026-11-11) that
+  the second column is hidden below a certain width, that the menu button opens the
+  register browser and hides it again, and that choosing a provider or a register opens
+  its page. The rest of this paragraph is proposed and not yet confirmed: that width is
+  this breakpoint (Operator proposal); the second column is the variables column, never
+  drawn here, a register's variables being reached from its page, which has its own
+  filter box (see Column filter) (Operator proposal); the register browser is the
+  register column, shown in place of the page while open, closed by choosing an entry or
+  by Escape, which returns focus to the button (Operator proposal). Opening it moves
+  focus to the open page's row, or the first row; choosing a row is a press, Enter or
+  Space, and choosing a search result closes it too; the arrows passing a row open its
+  page behind it, as above the breakpoint, and leave it open; and arriving at the
+  catalog root, whose page is the register list, shows it (implementer proposals). This
+  replaces the stacked columns and the "Browse registers" first crumb (#1824; its
+  removal is an Operator proposal). Do not mint new breakpoints.
 - **Search.** The top-bar field searches and filters nothing (#2398, maintainer
   2026-11-11): typing never changes the browse columns or the open page. Its results, the
   command palette (RAC `Autocomplete`), open under it as you type once the text reaches
@@ -482,12 +490,11 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   No row is active until they reach one, so Enter never opens a row whose hits are still
   loading (new rule, proposed by the implementer).
   A second field in the popover showed the same text twice (maintainer report
-  2026-10-24). Choosing a row navigates and ends the search: the text clears and the
-  narrow field folds, so the brand comes back (new rule, proposed by the implementer: with
-  nothing filtered there is no state to put back, which the 2026-10-24 restore of the
-  pre-palette filter did). Below the breakpoint it is as wide as the unfolded field.
-  Escape closes the palette first, then clears the text, then folds the narrow field;
-  Tab, a press outside or focus leaving the field closes it, and typing opens it again.
+  2026-10-24). Choosing a row navigates and ends the search: the text clears (new rule,
+  proposed by the implementer: with nothing filtered there is no state to put back, which
+  the 2026-10-24 restore of the pre-palette filter did), and below the breakpoint the
+  register browser closes. Below the breakpoint the palette is as wide as the field.
+  Escape closes the palette first, then clears the text; Tab, a press outside or focus leaving the field closes it, and typing opens it again.
 - **Column filter.** The variables column has a filter box of its own (#2398, maintainer
   2026-11-11), in a row under the column's header and outside its scroll box, so the two
   columns' headers keep one height: `FilterInput`, reading "Filter variables…" ("Filter
@@ -507,19 +514,25 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   gets none, since the search finds registers. Matched text is underlined in `accent` at
   weight 600. Escape in the box clears it, and on an empty box does nothing; no Escape
   elsewhere on the page touches it (new rule, proposed by the implementer: the
-  page-wide Escape of #1827 cleared the top-bar filter, which is gone).
+  page-wide Escape of #1827 cleared the top-bar filter, which is gone). The register page
+  has the same box under the table chips, filtering the page's variable list, the rows
+  the chips leave (#2403, maintainer decisions 2026-11-11). It shows at every width, so on
+  wide screens the two boxes filter different lists (Operator proposal, not yet
+  confirmed). The same matching, marking and Escape; "Filter variables…" as its text and
+  "Filter this register's variables" as its name, apart from the column's. It belongs to
+  the page: it starts empty when another register opens. A filter that matches nothing
+  says so in an `EmptyState` in the list's place (implementer proposals).
 - **Home (`/`):** after the design system's Cover, with no hero, cards or counters: the
   product name in `display` type, the deployment's description (`steward.json`
   `description`: what the site is and, for a deployment like SWECOV, what holds the
   data) in `text-muted`, with inline emphasis and `https` links (Operator lane brief
   2026-11-10, PR #2391; any other scheme stays text). The browse columns are beside it
   and the project box is in the top bar, so there is no link into either.
-- **Detail pane:** breadcrumb path ("Browse registers" as a button below the breakpoint,
-  then the ancestors' names in the UI face, `text-muted`: the provider, then the
-  register, each a link, ending at the page's parent, since the `h1` names the page
-  itself; maintainer Q5, 2026-11-04). The names come from reads the browse columns
-  already make, so the trail fetches nothing of its own; an ancestor whose name has not
-  arrived is left out, never shown as its slug. A group page's trail skips the group
+- **Detail pane:** breadcrumb path (the ancestors' names in the UI face, `text-muted`:
+  the provider, then the register, each a link, ending at the page's parent, since the
+  `h1` names the page itself; maintainer Q5, 2026-11-04), at every width (#2403). The
+  names come from reads the browse columns already make, so the trail fetches nothing of
+  its own; an ancestor whose name has not arrived is left out, never shown as its slug. A group page's trail skips the group
   namespace. A classification page's one ancestor is the list of classifications, so its
   trail is "Classifications", on a version address too: that address renders the family
   page, whose `h1` already names the family (slice 3, Q4). The list itself

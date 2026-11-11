@@ -4,7 +4,8 @@ import styles from "./VariableRow.module.css";
 import { YearAxis, type YearSpan, YearTrack } from "./YearTrack";
 
 interface Props {
-  name: string;
+  /** The variable's name, or it with a filter's match marked. */
+  name: ReactNode;
   /** The row's own page; the name links there. */
   href: string;
   /** Something of this row is in the open project: the dot and the wash. */

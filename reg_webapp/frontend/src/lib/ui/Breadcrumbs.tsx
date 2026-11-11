@@ -7,10 +7,8 @@ import type { BreadcrumbItem } from "./types";
  * the `h1`, ending at the page's parent. Not RAC's `Breadcrumbs`: it makes the
  * last item the current page, inert and `aria-current`, and this trail's last
  * item is a link to the parent (the `h1` names the page itself). The separator
- * is generated content, so a screen reader reads only the names. A `narrowOnly`
- * item is the way back to the register list where the columns stack, drawn as
- * a default button on its own line (#1824). `busy` while an ancestor's name is
- * still loading.
+ * is generated content, so a screen reader reads only the names. `busy` while
+ * an ancestor's name is still loading.
  */
 export function Breadcrumbs({
   items,
@@ -26,18 +24,12 @@ export function Breadcrumbs({
     <nav
       aria-label="Breadcrumb"
       aria-busy={busy || undefined}
-      className={`${className ?? ""} ${items.every((item) => item.narrowOnly) ? styles.narrowOnly : ""}`}
+      className={className}
     >
       <ol className={styles.list}>
         {items.map((item) => (
-          <li
-            key={item.href}
-            className={`${styles.crumb} ${item.narrowOnly ? `${styles.narrowOnly} ${styles.back}` : ""}`}
-          >
-            <Link
-              href={item.href}
-              className={item.narrowOnly ? styles.backLink : styles.link}
-            >
+          <li key={item.href} className={styles.crumb}>
+            <Link href={item.href} className={styles.link}>
               {item.label}
             </Link>
           </li>

@@ -165,16 +165,29 @@ j_order() {
 	shot
 }
 
-# J6 narrow (375 px). Fails if, where the columns stack, a register or variable can no
-# longer be reached by pointer, the trail loses its way back to the browse list, or the
-# folded search no longer opens and shows its results.
+# J6 phone (375 px): the phone path of browse and search (#2403). Fails if the search
+# field is not there on load (folded behind a button), a search result does not open
+# its page, the menu button stops showing the register browser or stops reporting it
+# open, choosing a register or a provider does not open its page with the browser
+# closed, the variables column is drawn, or the register page's filter box stops
+# narrowing its list (Hushållsregistret's five variables; "bransch" matches "Bransch"
+# only).
 j_narrow() {
-	visit /catalog && press row "Basregistret" && wait_url "**/catalog/demo/bas" &&
-		press link "Kön" && wait_url "**/catalog/demo/bas/kon" && see heading "Kön" &&
-		press link "Browse registers" && wait_url "**/catalog" &&
-		press button "Search registers, variables" &&
+	visit /catalog/demo/bas && see heading "Basregistret" &&
 		fill searchbox "Search registers, variables" andra &&
-		press menuitem "Andra registret" && wait_url "**/catalog/demo2/reg" && shot
+		press menuitem "Andra registret" && wait_url "**/catalog/demo2/reg" &&
+		see heading "Andra registret" &&
+		tree 'button "Browse registers" \[expanded=false' &&
+		press button "Browse registers" &&
+		tree 'button "Browse registers" \[expanded=true' &&
+		press row "Hushållsregistret" && wait_url "**/catalog/demo/hush" &&
+		see heading "Hushållsregistret" && no_tree 'row "Basregistret"' &&
+		no_tree 'listbox "Variables' &&
+		fill searchbox "Filter this register's variables" bransch && wait_text "1 of 5" &&
+		see link "Bransch" && no_tree 'link "Namn"' &&
+		press button "Browse registers" && press row "Demoleverantören" &&
+		wait_url "**/catalog/demo" && see heading "Demoleverantören" &&
+		no_tree 'row "Hushållsregistret"' && shot
 }
 
 # J7 steward-held view (paired fixture). Fails if the pairing is ignored (steward
