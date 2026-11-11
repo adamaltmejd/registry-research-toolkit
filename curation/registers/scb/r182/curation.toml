@@ -17413,3 +17413,141 @@ kind = "set"
 subject = "var:v1261"
 fields = { "description" = "Belopp i tusental kronor för FoU-uppdrag till statliga civila myndigheter. Statliga civila myndigheter är mottagare av uppdraget, inte finansiär." }
 evidence = "Definitionen är \"uppdrag till Statliga civila myndigheter\" och övriga variabler i serien (v1021-v1271) anger mottagare; enhet 1000-tal kronor (KSEK).\n0.74.0 catalog, key v3561, releases r394; reg_meta.db:occurrence:135585"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "description" = "Individens ålder i hela år den 31 december referensåret, beräknad från personnumret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text med referensåret utskrivet.\ncatalog:variable_text:20130:16436:16801\ncatalog:variable_text:20130:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda"
+fields = { "description" = "Antal anställda personer. I företagssektorns tabell 2021 och 2023 hämtat från SAMU i november samma år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; källan SAMU anges bara 2021 och 2023 och skrivs med de åren.\ncatalog:variable_text:20165:17897:18262\ncatalog:variable_text:20165:18628:18993\ncatalog:variable_text:20165:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ar"
+fields = { "description" = "Referensår (kalenderår)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna skriver bara ut respektive referensår.\ncatalog:variable_text:20205:12784:13149\ncatalog:variable_text:20205:13514:13879\ncatalog:variable_text:20205:14245:14610\ncatalog:variable_text:20205:14975:15340\ncatalog:variable_text:20205:15706:16071\ncatalog:variable_text:20205:16436:16801\ncatalog:variable_text:20205:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:gastvistelse-i-sverige"
+fields = { "description" = "Om individen, med hemuniversitet i ett annat land än Sverige, vistades tillfälligt i Sverige under referensåret, till exempel som gästforskare, gästlärare eller gästdoktorand (1 = ja, 2 = nej)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga (F8 2015, F7 2017); stavfelet ”Sveirge” rättas.\ncatalog:variable_text:20462:16436:16801\ncatalog:variable_text:20462:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:hogskolekod"
+fields = { "description" = "Kod för lärosätet, en utbildningsanordnare med rätt att utfärda examina inom grundutbildning eller grund- och forskarutbildning, enligt den interna kodsättningen av lärosäten. För personalen hämtas den från registret över högskolans personal." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger källa och kodsättning.\ncatalog:variable_text:20525:12784:13149\ncatalog:variable_text:20525:16436:16801\ncatalog:variable_text:20525:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerad"
+fields = { "description" = "Om variabelvärdet för objektet är imputerat, det vill säga beräknat. I offentliga sektorns tabell 2019 kodad Y = ja, annars tom." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; kodningen anges bara 2019 för offentlig sektor och skrivs med det.\ncatalog:variable_text:20527:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Personens kön, härlett från personnumret; för högskolans personal hämtas personnumret från registret över högskolans personal." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger härledningen.\ncatalog:variable_text:20683:12784:13149\ncatalog:variable_text:20683:16436:16801\ncatalog:variable_text:20683:17167:17532\ncatalog:variable_text:20683:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:land"
+fields = { "description" = "Land där koncernen bedrivit FoU under referensåret eller under föregående referensår." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; skiljer bara i ett kommatecken.\ncatalog:variable_text:20689:17167:17532\ncatalog:variable_text:20689:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:larosate"
+fields = { "description" = "Lärosätet, det vill säga universitetet eller högskolan, angivet med namn. 2017 anges det i ekonomitabellens kolumn HSKod med den interna kodsättningen av lärosäten. 2021–2023 är det lärosätets namn under referensåret enligt Universitetskanslersämbetet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger kodsättningen 2017 och namnkällan från 2021.\ncatalog:variable_text:20692:12784:13149\ncatalog:variable_text:20692:17167:17532\ncatalog:variable_text:20692:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-anstallningar"
+fields = { "description" = "Löpnummer för individens tjänst: 1 om individen har en anställning, 1–9 om hen har flera. Urvalet görs per tjänst, så samma individ kan förekomma flera gånger, och löpnumret är unikt för varje tjänst." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger att löpnumret avser tjänsten och att urvalet görs per tjänst.\ncatalog:variable_text:20700:16436:16801\ncatalog:variable_text:20700:17897:18262\ncatalog:variable_text:20700:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-for-individ"
+fields = { "description" = "Löpnummer som används internt vid enkätutskick och avbockning. Från 2011 anger det vilken av individens tjänster som avses (värdet 1 eller 2); 2021–2023 består det av personnumret med en tilläggssiffra för tjänsten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna lägger till tjänstnumret och 2021–2023 års form, angivna med år.\ncatalog:variable_text:20701:12784:13149\ncatalog:variable_text:20701:14975:15340\ncatalog:variable_text:20701:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni-5-siffer"
+fields = { "description" = "Enhetens näringsgren enligt SNI på femsiffernivå, tilldelad av SCB för statistiska ändamål. I företagssektorns tabell 2021 och 2023 hämtad från SAMU i november samma år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; källan SAMU anges bara 2021 och 2023 och skrivs med de åren.\ncatalog:variable_text:20705:17897:18262\ncatalog:variable_text:20705:18628:18993\ncatalog:variable_text:20705:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr"
+fields = { "description" = "Personnummer för högskolans personal, hämtat från registret över högskolans personal." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDefinitionen är generisk (delas av 96 variabler); operationaliseringen anger källan. Anmärkningen 2015 om leveransen till uppdragsgivaren beskriver hanteringen, inte variabeln.\ncatalog:variable_text:20728:14975:15340\ncatalog:variable_text:20728:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:referensar"
+fields = { "description" = "Det kalenderår som de lämnade eller redovisade uppgifterna avser, det vill säga undersökningens referensår." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna är omformuleringar och stavfel (”Refernsår”).\ncatalog:variable_text:20828:12784:13149\ncatalog:variable_text:20828:16436:16801\ncatalog:variable_text:20828:17897:18262\ncatalog:variable_text:20828:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:regionindelning"
+fields = { "description" = "Region på NUTS3-nivå, skapad genom att länskoden nycklas till NUTS3. I företagssektorns tabell 2021 och 2023 tas länskoden från SAMU i november samma år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger härledningen, med stavfel (”geneom”, ”momenklaturen”).\ncatalog:variable_text:20830:17897:18262\ncatalog:variable_text:20830:18628:18993\ncatalog:variable_text:20830:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sektortillhorighet"
+fields = { "description" = "Enhetens institutionella sektor enligt Standard för klassificering av institutionella enheter efter institutionell sektor. I företagssektorns tabell 2021 och 2023 hämtad från SAMU i november samma år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; källan SAMU anges bara 2021 och 2023 och skrivs med de åren; standardens tidigare namn utelämnas.\ncatalog:variable_text:20857:17897:18262\ncatalog:variable_text:20857:18628:18993\ncatalog:variable_text:20857:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukskriven-hela-referenstid"
+fields = { "description" = "Om individen var sjukskriven, föräldraledig eller tjänstledig under hela referensåret (1 = ja, 2 = nej). Endast den som inte var det får enkätens övriga frågor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga (F1b 2015, F1a 2017); stavfelet ”föräldrarlediga” rättas.\ncatalog:variable_text:20860:16436:16801\ncatalog:variable_text:20860:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "description" = "Det stratum elementet tillhör i det stratifierade urvalet. För högskolans personal är stratum sammansatt av lärosäte (2005–2009 högskolegrupp), kön, tjänstekategori och vetenskapsområde, från 2013 forskningsämnesområde; konstnärliga högskolor och övriga enskilda utbildningsanordnare stratifieras på högskolegrupp. Små strata har slagits ihop, och kön = 0 betyder att ingen stratifiering på kön skett. Tjänstekategorin är den som används i undersökningen om arbetstidens fördelning, inte registrets." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; stratumets sammansättning för personalurvalet anges med år.\ncatalog:variable_text:20867:12053:12418\ncatalog:variable_text:20867:12784:13149\ncatalog:variable_text:20867:14975:15340\ncatalog:variable_text:20867:15706:16071\ncatalog:variable_text:20867:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandsvistelse-forska"
+fields = { "description" = "Antal veckor under referensåret som individen var utomlands och främst forskade, av det totala antalet veckor utomlands. 2015 besvarades frågan med ja, ja under mindre än en vecka eller nej; 2017 som antal veckor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; svarsformatet skiljer mellan omgångarna och anges med år.\ncatalog:variable_text:20981:16436:16801\ncatalog:variable_text:20981:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandsvistelse-studera"
+fields = { "description" = "Antal veckor under referensåret som individen var utomlands och främst studerade, av det totala antalet veckor utomlands. 2015 besvarades frågan med ja, ja under mindre än en vecka eller nej; 2017 som antal veckor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; svarsformatet skiljer mellan omgångarna och anges med år.\ncatalog:variable_text:20982:16436:16801\ncatalog:variable_text:20982:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandsvistelse-total"
+fields = { "description" = "Antal hela veckor som individen totalt forskade, undervisade eller studerade utanför Sverige under referensåret. 2015 besvarades frågan med ja, ja under mindre än en vecka eller nej; 2017 som antal veckor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; svarsformatet skiljer mellan omgångarna och anges med år.\ncatalog:variable_text:20983:16436:16801\ncatalog:variable_text:20983:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandsvistelse-undervisa"
+fields = { "description" = "Antal veckor under referensåret som individen var utomlands och främst undervisade, av det totala antalet veckor utomlands. 2015 besvarades frågan med ja, ja under mindre än en vecka eller nej; 2017 som antal veckor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; svarsformatet skiljer mellan omgångarna och anges med år.\ncatalog:variable_text:20984:16436:16801\ncatalog:variable_text:20984:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:vikt"
+fields = { "description" = "Kalibrerad vikt som tar hänsyn till varierande urvalssannolikheter och svarsfrekvenser i olika strata samt till hjälpinformation från register. 2017 anges vikten som antal objekt i populationen per stratum delat med antal objekt i urvalet per stratum." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2017 års beräkningsformel anges med år.\ncatalog:variable_text:21656:16436:16801\ncatalog:variable_text:21656:17167:17532"

@@ -14375,3 +14375,9 @@ kind = "set"
 subject = "deklarationsbilaga-k10: V0913 where key = 'v17984' and release = 'r1690'"
 fields = { "unit" = "Kronor (SEK)" }
 evidence = "Avyttringspris är ett belopp; tabellens övriga 80 beloppskolumner har enheten Kronor (SEK).\nold unit: 'Hektar'; Registerinformation.csv:row=189023 (r1690)"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr"
+fields = { "description" = "Personnummer för den skatteskyldige i bilaga K10 respektive för handelsbolagets delägare i bilaga N3A." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDefinitionen är generisk (delas av 96 variabler); operationaliseringen skiljer bara på vems nummer efter bilaga.\ncatalog:variable_text:50673:12418:13149"

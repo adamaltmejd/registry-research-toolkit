@@ -3764,3 +3764,81 @@ kind = "set"
 subject = "kursdeltagare-kalenderar: PersonNr where key = 'v57' and release = 'r11223'"
 fields = { "operational_definition" = "Skolenheten anger uppgiften i kolumn PersonNr i frågeformuläret." }
 evidence = "Registerinformation.csv, VarId 57, Kursdeltagare kalenderår 2016 (release r11223), column PersonNr: the operational definition is 'Den kommun som skolenheten uppgav. Härleds från det som rapporterats i vår- och/eller höstinsamlingen.', a municipality text copied from another column; SCB's export carries the same error in a single row. The same table's PersonNr has 'Skolenheten anger uppgiften i kolumn PersonNr i frågeformuläret.' in 2015 and no operational definition in 2017; the 2015 text is restored. Operator, #2322 curation under the maintainer's 2026-11-11 delegation."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "description" = "Ålder i hela år vid årets slut, beräknad som skillnaden mellan referensåret och födelseåret enligt personnumret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma operationalisering, den ena med tillägget ”Härleds från personnumret”.\ncatalog:variable_text:41359:9862:14426"
+
+[[statement]]
+kind = "set"
+subject = "var:ar"
+fields = { "description" = "Det verksamhetsår (kalenderår) som provresultatet hör till." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDefinitionen är generisk (delas av 67 variabler); operationaliseringarna är omformuleringar.\ncatalog:variable_text:41362:14426:15340\ncatalog:variable_text:41362:15340:15522\ncatalog:variable_text:41362:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-verkar"
+fields = { "description" = "Aktuellt verksamhetsår (kalenderår); i kursdeltagartabellerna året för SFI-studierna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDefinitionen är generisk (delas av 67 variabler); operationaliseringarna är omformuleringar.\ncatalog:variable_text:41363:14610:15340\ncatalog:variable_text:41363:17532:17713\ncatalog:variable_text:41363:18993:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:betyg"
+fields = { "description" = "Betyg i den studievägskurs som anges i variablerna Studieväg och Kurs, enligt det mål- och kunskapsrelaterade betygssystemet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna är varianter av samma text.\ncatalog:variable_text:41364:8582:9312\ncatalog:variable_text:41364:9312:9862\ncatalog:variable_text:41364:9862:10043\ncatalog:variable_text:41364:14245:14426\ncatalog:variable_text:41364:16436:16617"
+
+[[statement]]
+kind = "set"
+subject = "var:datum"
+fields = { "description" = "Datum då kursdeltagaren gjorde det nationella provet; har delproven gjorts vid olika tillfällen under terminen avses datum för det senaste delprovet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma operationalisering i två formuleringar.\ncatalog:variable_text:41365:14426:14610\ncatalog:variable_text:41365:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Personens kön, härlett från personnumret: udda elfte siffra ger man, jämn ger kvinna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma operationalisering med och utan kodregeln; stavfelen rättas.\ncatalog:variable_text:41388:9678:14610\ncatalog:variable_text:41388:17897:18444"
+
+[[statement]]
+kind = "set"
+subject = "var:kursslut"
+fields = { "description" = "Datum då kursdeltagaren avslutade den studievägskurs som anges i variablerna Studieväg och Kurs. Till och med 2009 betyder 1900-01-01 att kursen inte avslutats inom perioden (läsåret, terminen eller kalenderåret); från 2010 är fältet då tomt och kursen antas fortsätta." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; kodbytet för ej avslutad kurs 2010 anges som fakta med år.\ncatalog:variable_text:41390:8582:9862\ncatalog:variable_text:41390:9862:10043\ncatalog:variable_text:41390:14610:14791\ncatalog:variable_text:41390:14791:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:modersmal"
+fields = { "description" = "Kursdeltagarens modersmål som språkkod, uppgivet av kursdeltagaren till skolenheten vid inskrivningen i svenskundervisning för invandrare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger att uppgiften lämnas vid inskrivningen.\ncatalog:variable_text:41397:8582:9862\ncatalog:variable_text:41397:9862:10043\ncatalog:variable_text:41397:14610:14791\ncatalog:variable_text:41397:16436:16617\ncatalog:variable_text:41397:17167:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:orsak-kursavbrott-sfi"
+fields = { "description" = "Orsak till kursavslut eller kursavbrott/studieuppehåll i den studievägskurs som anges i variablerna Studieväg och Kurs. I kalenderårstabellerna från 2015 härleds den från vår- och/eller höstinsamlingen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna är varianter av samma text.\ncatalog:variable_text:41403:8582:9312\ncatalog:variable_text:41403:9312:9862\ncatalog:variable_text:41403:9862:10043\ncatalog:variable_text:41403:16071:16252\ncatalog:variable_text:41403:16436:16617"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr"
+fields = { "description" = "Kursdeltagarens personnummer, 12 siffror inklusive sekelsiffra, som skolenheten anger i frågeformuläret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; den generiska personnummerdefinitionen tas inte med, och 2016 års kopierade kommuntext är rättad på förekomstnivå.\ncatalog:variable_text:41406:8582:9862\ncatalog:variable_text:41406:9862:10043\ncatalog:variable_text:41406:14245:14426\ncatalog:variable_text:41406:14426:14610\ncatalog:variable_text:41406:16801:16983"
+
+[[statement]]
+kind = "set"
+subject = "var:provversion"
+fields = { "description" = "Version, det vill säga provets beteckning, av det nationella provet i svenska för invandrare. Resultat där en elev gjort delprov från olika provversioner ingår inte." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna är varianter av samma text.\ncatalog:variable_text:41410:14426:14610\ncatalog:variable_text:41410:15706:15887\ncatalog:variable_text:41410:16071:16252\ncatalog:variable_text:41410:16801:16983\ncatalog:variable_text:41410:16983:17167\ncatalog:variable_text:41410:18444:19723\ncatalog:variable_text:41410:19723:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:termin"
+fields = { "description" = "Den termin som provresultatet eller SFI-studierna avser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDefinitionen (ordningsnummer i elevens utbildning) är generisk (delas av 17 variabler); operationaliseringarna anger aktuell termin.\ncatalog:variable_text:41431:14245:14426\ncatalog:variable_text:41431:18993:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildning"
+fields = { "description" = "Antal år i skola i hemlandet, uppgivet av kursdeltagaren till skolenheten vid inskrivningen i svenskundervisning för invandrare. I kalenderårstabellerna gäller, om insamlingarna har olika värden, det värde som rapporterats för kursen med senaste kursstart." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger uppgiftskälla och regel.\ncatalog:variable_text:41437:8582:9862\ncatalog:variable_text:41437:9862:10043\ncatalog:variable_text:41437:14610:14791\ncatalog:variable_text:41437:17348:17532"

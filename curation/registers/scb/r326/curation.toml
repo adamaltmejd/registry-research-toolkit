@@ -900,3 +900,15 @@ kind = "set"
 subject = "var:utbkat"
 fields = { "label" = "Inriktning för pågående utbildning (utbildningsgrupp, 1-ställig kod)" }
 evidence = "#2102 same-label cluster 'Inriktning för pågående utbildning' (5 variables): judged different meaning, medium confidence; Kategorikod (4-digit) and Kategorikod_Kodad/UtbKat (1-digit, same code list, consecutive periods, Skolverket then MYH utbildningsgrupper) differ in granularity; KategoriNamn is the name; SunInr_KU is SUN."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear"
+fields = { "description" = "Födelseår, beräknat från de fyra första siffrorna i personnumret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna är omformuleringar.\ncatalog:variable_text:41241:14975:15340\ncatalog:variable_text:41241:15340:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Personens kön, härlett från näst sista siffran (position 11) i personnumret. För personer utan personnummer, eller där uppgiften saknas, samlas kön in från skolan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma operationalisering i två formuleringar.\ncatalog:variable_text:41255:13879:15340\ncatalog:variable_text:41255:15340:16801"

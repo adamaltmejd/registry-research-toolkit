@@ -744,3 +744,15 @@ kind = "set"
 subject = "var:utbildningsniva"
 fields = { "label" = "Utbildningsnivå (ensiffrig, grupperad)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå' (4 variables): judged different meaning, high confidence; Opdefs and periods separate SUN 2000 three-digit, an old-SUN one-digit grouping, the one-digit utbnv grouping and SUN 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "description" = "Kommun för arbetsgivarens geografiska placering, insamlad i respektive sektorsundersökning utom för landstingen (från 2020 regionerna)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; landstingen byter namn till regioner 2020.\ncatalog:variable_text:49584:12784:18262\ncatalog:variable_text:49584:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { "description" = "Produktionsenhetens näringsgren enligt SNI, insamlad i respektive sektorsundersökning; femsiffrig kod. 2005–2007 finns den bara för arbetare och tjänstemän i privat sektor, för övriga anges 00." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; avgränsningen 2005–2007 anges med år.\ncatalog:variable_text:49589:12784:13879\ncatalog:variable_text:49589:13879:18993\ncatalog:variable_text:49589:18993:20089"

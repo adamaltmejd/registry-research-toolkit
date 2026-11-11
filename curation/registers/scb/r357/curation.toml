@@ -1504,3 +1504,27 @@ kind = "set"
 subject = "var:muvagundz"
 fields = { "label" = "Imputerat: vägunderhåll" }
 evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; Opdefs: one imputation flag per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same Helårsboende flag, MBBOLANZ and MFBOLANZ flag the loan indicator and the loan amount."
+
+[[statement]]
+kind = "set"
+subject = "var:bordnr"
+fields = { "description" = "Löpnummer för individens ordningsnummer i kosthushållet; urvalspersonen har alltid nummer 1. Numret är ensiffrigt till och med 2020 och tvåsiffrigt från 2021 (urvalspersonen 01)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; formatbytet 2021 anges som fakta med år.\ncatalog:variable_text:13745:16436:16801\ncatalog:variable_text:13745:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsid"
+fields = { "description" = "Urvalshushållets identitet, ett nummer som sätts efter urvalsdragningen. Numret har 6 siffror till och med 2020 och 9 siffror från 2021." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; formatbytet 2021 anges som fakta med år.\ncatalog:variable_text:13760:16436:16801\ncatalog:variable_text:13760:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:nybyggnadsar"
+fields = { "description" = "År då byggnaden färdigställdes. Uppgiften baseras i första hand på slutbeviset från byggnadsnämnden i bygglovsärendet, men andra källor som kommuninvånarregister eller kommunens lokala kännedom kan användas. 2024 är den härledd med information från Fastighetstaxeringsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2024 anges härledningen från Fastighetstaxeringsregistret.\ncatalog:variable_text:13804:16436:16801\ncatalog:variable_text:13804:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:region-fyra-delar"
+fields = { "description" = "Region i fyra delar: Stor-Stockholm, Stor-Göteborg, övriga kommuner med mer än 75 000 invånare och övriga kommuner med under 75 000 invånare. Härledd från kosthushållsföreståndarens folkbokföringskommun i RTB den 31 december referensåret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; skiljer bara i ett mellanslag.\ncatalog:variable_text:13807:16436:16801\ncatalog:variable_text:13807:19723:20089"
