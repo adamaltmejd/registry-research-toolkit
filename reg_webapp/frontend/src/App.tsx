@@ -94,7 +94,8 @@ export function App() {
   const isRoot = route.name === "root";
   const routeKey = route.name === "catalog-node" ? route.fqidPath : route.name;
   const [openAt, setOpenAt] = useState<string | null>(null);
-  // Left behind by any other navigation, so the history never reopens it.
+  // Left behind by any other navigation (the history; a link, below), so the
+  // history never reopens it.
   if (openAt !== null && openAt !== routeKey) setOpenAt(null);
   const browserOpen = isRoot || openAt === routeKey;
   const browserButton = useRef<HTMLButtonElement>(null);
@@ -120,7 +121,23 @@ export function App() {
 
   useEffect(() => {
     document.addEventListener("click", onNavClick);
-    return () => document.removeEventListener("click", onNavClick);
+    // A link pressed anywhere but in the browser closes it, also one to the
+    // page already open, whose URL does not change.
+    const onLinkClick = (event: MouseEvent) => {
+      const target = event.target;
+      if (
+        target instanceof Element &&
+        target.closest("a[href]") &&
+        !target.closest(`#${REGISTER_BROWSER}`)
+      ) {
+        setOpenAt(null);
+      }
+    };
+    document.addEventListener("click", onLinkClick);
+    return () => {
+      document.removeEventListener("click", onNavClick);
+      document.removeEventListener("click", onLinkClick);
+    };
   }, []);
 
   return (
