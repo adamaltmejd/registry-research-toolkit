@@ -1254,3 +1254,9 @@ kind = "set"
 subject = "set:redovisningsmanad"
 fields = { "description" = "Den kalendermånad som de redovisade momsuppgifterna avser. I variabeln från 2004 betyder månad 13 en helårsredovisad momsuppgift, för deklarationer som avser helårsredovisat räkenskapsår; momsregistrets variabel avser 1999–2003." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda delar DEF; OP för redovisningsmanad 2004–2022 anger kalendermånad och månad 13 för helårsredovisning.\ncatalog:variable_text:46150:12418:12784\ncatalog:variable_text:46150:14975:19358\ncatalog:variable_text:46151:10592:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:sateskommun"
+fields = { "description" = "Kommun där styrelsen har sitt säte för aktiebolag med flera, där huvudkontoret ligger för handelsbolag och där innehavaren är skriven för enskilda firmor. Från 2011 hämtas uppgiften från juridiska enheten i Företagsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; från 2011 anges källan.\ncatalog:variable_text:46153:10592:14975\ncatalog:variable_text:46153:14975:17897\ncatalog:variable_text:46153:17897:19358"

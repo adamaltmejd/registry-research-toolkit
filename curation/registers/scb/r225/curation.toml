@@ -566,3 +566,51 @@ kind = "set"
 subject = "land-och-vattenarealer: SP_Geometry @2020..2023"
 fields = { "definition" = "Datatyp för geometri, SP_GEOMETRY" }
 evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope.\n\nSP_Geometry 2020–2023 is documented under VarId 16346 with areakm2's total-area definition; from 2024 under its own VarId as the geometry column. The correction is the column's own definition. The raw SCB export (Registerinformation.csv, current-scb-inputs 2026-03) carries this text itself; the reader places it faithfully.\ncatalog:occurrence:332055"
+
+[[statement]]
+kind = "set"
+subject = "var:areakm2"
+fields = { "description" = "Total areal land och vatten, summan av land- och vattenarealen. Arealen beräknas i GIS-programvara; till 2023 på hydrografiska data från Lantmäteriets nedladdningstjänst, från 2024 på den senast gällande Strandlinje." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; underlaget anges som Lantmäteriets hydrografiska data 2020–2023 och Strandlinje från 2024.\ncatalog:variable_text:42065:18262:18628\ncatalog:variable_text:42065:18628:19723\ncatalog:variable_text:42065:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:geometri"
+fields = { "description" = "Objektets geometri i datatypen SP_GEOMETRY. Från 2024 genereras den automatiskt i SQL Server, i koordinatsystemet SWEREF 99 TM." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDen avvikande texten kom från en annan kolumn i SCB:s export och är rättad på förekomsten. 2020–2023 hade totalarealens definition.\ncatalog:variable_text:42068:18262:18628\ncatalog:variable_text:42068:18628:19723\ncatalog:variable_text:42068:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:havso"
+fields = { "description" = "Havsöar, utom öar mellan hav och inlandsvatten (flodmynningar). Underlaget är Lantmäteriets hydrografiska data 2020 och den senast gällande Strandlinje från 2024." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; underlaget anges bara för 2020 och från 2024.\ncatalog:variable_text:42069:18262:18628\ncatalog:variable_text:42069:19358:19723\ncatalog:variable_text:42069:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:havsvatten"
+fields = { "description" = "Areal havsvatten från fastlandskusten ut till territorialgränsen. Underlaget är Lantmäteriets hydrografiska data 2020 och den senast gällande Strandlinje från 2024." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; underlaget anges bara för 2020 och från 2024.\ncatalog:variable_text:42070:18262:18628\ncatalog:variable_text:42070:18628:19723\ncatalog:variable_text:42070:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:landareal"
+fields = { "description" = "Landareal. Underlaget är Lantmäteriets hydrografiska data 2020 och den senast gällande Strandlinje från 2024." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; underlaget anges bara för 2020 och från 2024.\ncatalog:variable_text:42076:18262:18628\ncatalog:variable_text:42076:18628:19723\ncatalog:variable_text:42076:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:objekt-id"
+fields = { "description" = "Unikt löpnummer (heltal) för varje objekt och referensår, som skapas för samtliga objekt i registret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; från 2021 anges dessutom att numret är ett heltal som skapas med en SQL-sats.\ncatalog:variable_text:42079:18262:18628\ncatalog:variable_text:42079:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:sjonamn"
+fields = { "description" = "Namn på den av de fyra största insjöarna, Vänern, Vättern, Mälaren och Hjälmaren, som objektet tillhör." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition alla år; texten delas med storasjo, som har samma nyckel v2893.\ncatalog:variable_text:42083:18262:18628\ncatalog:variable_text:42083:18628:19723\ncatalog:variable_text:42083:19723:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:storasjo"
+fields = { "description" = "Markering av om objektet tillhör någon av de fyra största insjöarna: Vänern, Vättern, Mälaren och Hjälmaren." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition alla år; 2020 anger att objektet tillhör någon av sjöarna; samma nyckel v2893 som sjonamn.\ncatalog:variable_text:42084:18262:18628\ncatalog:variable_text:42084:18628:19723\ncatalog:variable_text:42084:19723:20819"

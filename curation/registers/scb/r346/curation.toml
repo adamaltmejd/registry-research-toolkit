@@ -472,3 +472,51 @@ kind = "set"
 subject = "set:antal-barn"
 fields = { "description" = "Antal hemmaboende barn i hushållet, oavsett ålder eller i åldern 0–5, 0–17 och 0–24 år. Som barn räknas personer som är kopplade till en eller flera vuxna i hushållet genom relationen biologisk, adoptiv, vårdnadshavare eller annan person. Uppgiften är härledd; från 2024 hämtas den från Befolkningsregistret." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF skiljer åldersgränserna; OP är gemensam för alla medlemmar och anger barnbegreppet och källan.\ncatalog:variable_text:33377:15340:19723\ncatalog:variable_text:33377:19723:20089\ncatalog:variable_text:33378:15340:19723\ncatalog:variable_text:33378:19723:20089\ncatalog:variable_text:33379:15340:19723\ncatalog:variable_text:33379:19723:20089\ncatalog:variable_text:33380:15340:19723\ncatalog:variable_text:33380:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkategori-bostad"
+fields = { "description" = "Kategori för den deklarationsansvariga ägaren till den fastighet där bostaden ligger, härledd av SCB. Från 2024 hämtas uppgiften från Bostadsbeståndet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 anger att uppgiften 2024 hämtas från Bostadsbestånd.\ncatalog:variable_text:33375:15340:16436\ncatalog:variable_text:33375:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "description" = "Personens ålder i antal år vid årets slut, härledd från personnumret. Från 2024 hämtas uppgiften från Befolkningsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 anger att uppgiften 2024 hämtas från Befolkningsregistret.\ncatalog:variable_text:33376:15340:19723\ncatalog:variable_text:33376:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsstallning"
+fields = { "description" = "Personens ställning i hushållet. Härledd variabel; från 2024 hämtas uppgiften från Befolkningsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 anger att uppgiften 2024 hämtas från Befolkningsregistret.\ncatalog:variable_text:33395:15340:19723\ncatalog:variable_text:33395:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstyp-bostadshushall"
+fields = { "description" = "Typ av bostadshushåll. Härledd variabel; från 2024 hämtas uppgiften från Befolkningsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 anger att uppgiften 2024 hämtas från Befolkningsregistret.\ncatalog:variable_text:33397:15340:19723\ncatalog:variable_text:33397:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Personens kön, härlett från personnumrets elfte siffra: udda siffra ger 1 (man), jämn siffra 2 (kvinna). Från 2024 hämtas uppgiften från Befolkningsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma härledning; W1 anger att uppgiften 2024 hämtas från Befolkningsregistret.\ncatalog:variable_text:33401:15340:19723\ncatalog:variable_text:33401:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:popdat"
+fields = { "description" = "Datum som uppgifterna avser, angivet som år, månad och dag. 2012–2014 är datumet den 31 december respektive år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W0–W2 anger formatet och datumet för sina år.\ncatalog:variable_text:33410:15340:15706\ncatalog:variable_text:33410:15706:16071\ncatalog:variable_text:33410:16071:16436\ncatalog:variable_text:33410:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utlsvbakg"
+fields = { "description" = "Om personen har utländsk eller svensk bakgrund. Härledd variabel; saknas förälders födelseland antas föräldern vara inrikes född om personen är inrikes född och utrikes född om personen är utrikes född. Från 2024 hämtas uppgiften från Befolkningsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition och härledning; W1 anger att uppgiften 2024 hämtas från Befolkningsregistret.\ncatalog:variable_text:33415:15340:19723\ncatalog:variable_text:33415:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yngstabarn"
+fields = { "description" = "Ålder på det yngsta hemmaboende barnet, blank om uppgiften är okänd. Härledd variabel; från 2024 hämtas uppgiften från Befolkningsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 anger att uppgiften 2024 hämtas från Befolkningsregistret.\ncatalog:variable_text:33416:15340:19723\ncatalog:variable_text:33416:19723:20089"

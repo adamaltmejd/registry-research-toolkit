@@ -575,3 +575,27 @@ kind = "set"
 subject = "set:kommun"
 fields = { "description" = "Den kommun där personen är folkbokförd eller där folkbildningsverksamheten ägt rum; för verksamhetsorten anges i vissa fall länet i stället." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda delar DEF; OP skiljer folkbokföringskommun från verksamhetens kommun, där ibland länet anges.\ncatalog:variable_text:51570:15340:20089\ncatalog:variable_text:51574:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:avd-unik"
+fields = { "description" = "Den avdelning inom studieförbundets verksamhet där personen deltagit i folkbildning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen varierar i ordval och saknas i deltagartabellen.\ncatalog:variable_text:51552:15340:15706\ncatalog:variable_text:51552:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt-unik"
+fields = { "description" = "Det distrikt inom studieförbundets verksamhet där personen deltagit i folkbildning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen varierar i ordval och saknas i deltagartabellen.\ncatalog:variable_text:51557:15340:15706\ncatalog:variable_text:51557:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kalenderar"
+fields = { "description" = "Kalenderår (januari till och med december) då folkbildningsverksamheten bedrevs." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen varierar bara i ordval.\ncatalog:variable_text:51569:15340:15706\ncatalog:variable_text:51569:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nyborjare"
+fields = { "description" = "Om personen är nybörjare inom folkbildningen, det vill säga inte deltagit i folkbildning under de tre föregående åren." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma regel alla år; texterna skiljer sig bara i vilka tre år som räknas.\ncatalog:variable_text:51580:15340:15706\ncatalog:variable_text:51580:15706:16071\ncatalog:variable_text:51580:16071:16436\ncatalog:variable_text:51580:16436:16801\ncatalog:variable_text:51580:16801:17167\ncatalog:variable_text:51580:17167:17532\ncatalog:variable_text:51580:17532:17897\ncatalog:variable_text:51580:17897:18262"

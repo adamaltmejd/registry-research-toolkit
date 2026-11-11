@@ -879,3 +879,129 @@ kind = "set"
 subject = "diverse: objektkod"
 fields = { "variable" = "objektkod-diverse" }
 evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nBeslut and Diverse each decode the column with their own code table (Beslutkod vs Diversekod), so a value means a different decision in each table. The Diverse column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:avdragsnummer"
+fields = { "description" = "Nummer som kopplar samman en återbetalning med det återkrav som återbetalningen avser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma innebörd i båda tabellerna; Aterbet säger dessutom att numret visar vilket återkrav återbetalningen avser.\ncatalog:variable_text:8072:12418:16071\ncatalog:variable_text:8072:16071:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beslut-galler-till-och-med-beslutgallertom"
+fields = { "description" = "Datum till och med vilket beslutet gäller. I tabellen Diverse gäller ett beslut så länge till och med-datum saknas; när ett nytt beslut fattas sätts datumet på det gamla beslutet till dagen före det nya beslutets från och med-datum." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; Diverse beskriver dessutom hur till och med-datum sätts, vilket anges för den tabellen.\ncatalog:variable_text:8080:10957:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsnummer"
+fields = { "description" = "Unikt nummer som arbetslöshetskassans system skapar för varje beslut och person. Numret håller ihop registreringar av samma beslut, så att systemet kan skilja en rättelse av registrerade uppgifter från ett nytt värde." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i alla tabeller; Beslut och Diverse förklarar syftet, Sparr hänvisar bara till kodtabellen.\ncatalog:variable_text:8084:10957:12123\ncatalog:variable_text:8084:12123:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutstyp"
+fields = { "description" = "Kod som tillsammans med objektkod och typkod anger vilket beslut som fattats, enligt kodtabellen Beslutkod." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: tabellen Beslut avkodas med Beslutkod; Diverse har egen kodtabell och egen variabel.\ncatalog:variable_text:8085:10957:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutstyp-diverse"
+fields = { "description" = "Kod som tillsammans med objektkod och typkod anger vilket beslut som fattats i tabellen Diverse, enligt kodtabellen Diversekod." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från beslutstyp: tabellen Diverse avkodas med Diversekod.\ncatalog:variable_text:8085:10957:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutstypkod"
+fields = { "description" = "Kod som tillsammans med objektkod och beslutstyp anger vilket beslut som fattats, enligt kodtabellen Beslutkod." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: tabellen Beslut avkodas med Beslutkod; Diverse har egen kodtabell och egen variabel.\ncatalog:variable_text:8086:10957:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutstypkod-diverse"
+fields = { "description" = "Kod som tillsammans med objektkod och beslutstyp anger vilket beslut som fattats i tabellen Diverse, enligt kodtabellen Diversekod." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från beslutstypkod: tabellen Diverse avkodas med Diversekod.\ncatalog:variable_text:8086:10957:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsvarde-beslutsvarde"
+fields = { "description" = "Värdebelopp som hör till beslutet. Ett beslut med data som anger ett värdebelopp lagras i något av fälten Beslutsvarde, Beslutsvarde2 och Beslutsvarde3, beroende på vilket beslut det är." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nTexterna skiljer sig bara i kodtabellshänvisningen (Beslutkod respektive Diversekod).\ncatalog:variable_text:8087:10957:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsvarde-beslutsvarde2"
+fields = { "description" = "Värde som hör direkt till beslutet, till exempel ett belopp eller ett antal timmar. Vilket av fälten Beslutsvarde, Beslutsvarde2 och Beslutsvarde3 som används beror på vilket beslut det är." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nTexterna skiljer sig bara i kodtabellshänvisningen (Beslutskod respektive Diversekod).\ncatalog:variable_text:8088:10957:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsvarde-beslutsvarde3"
+fields = { "description" = "Värde som hör direkt till beslutet, till exempel ett belopp eller ett antal timmar. Vilket av fälten Beslutsvarde, Beslutsvarde2 och Beslutsvarde3 som används beror på vilket beslut det är." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nTexterna skiljer sig bara i kodtabellshänvisningen (Beslutskod respektive Diversekod).\ncatalog:variable_text:8089:10957:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningsdagarskod"
+fields = { "description" = "Kod som anger om ersättningsdagarna avser normal eller förhöjd ersättning. Förhöjd ersättning upphörde 2006-12-31." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nUtbetalning hänvisar bara till kodtabellen; Aterkrav anger koderna, som beskrivningen bygger på.\ncatalog:variable_text:8100:10957:16071\ncatalog:variable_text:8100:16071:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningskod"
+fields = { "description" = "Kod för ersättningsslaget: arbetslöshetsersättning eller något av de övriga ersättningsslag, främst arbetsmarknadspolitiska åtgärder, som riksdagen beslutat att arbetslöshetskassorna ska administrera. Från 2003 beslutar kassorna bara om ersättningsperioder för arbetslöshetsersättning, och från 2010 betalar de bara ut arbetslöshetsersättning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma kod i perioder, utbetalningar och återkrav; Utbetalning lägger till årtalen 2003 och 2010; namnbytet i ASTAT och kodtabellshänvisningarna utelämnas.\ncatalog:variable_text:8103:10957:16071\ncatalog:variable_text:8103:16071:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningsnivakod"
+fields = { "description" = "Anger om personen haft karens eller arbetslöshetsersättning på inkomstrelaterad nivå eller med grundbelopp." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; Aterkrav listar koderna för inkomstrelaterad ersättning och grundersättning.\ncatalog:variable_text:8104:10957:16071\ncatalog:variable_text:8104:16071:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningsperiodnummer"
+fields = { "description" = "Nummer som identifierar en ersättningsperiod; varje ny ersättningsperiod som registreras får ett nytt nummer. I utbetalningar anger det vilken ersättningsperiod utbetalningen hör till." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma nummer; Utbetalning beskriver kopplingen till perioden i stället för hur numret skapas.\ncatalog:variable_text:8107:10957:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kassakortsvecka"
+fields = { "description" = "Veckonummer som utbetalningen avser, i återkrav veckan för den utbetalning som återkravet gäller. Den arbetssökande deklarerar dagsvis på kassakortet, och en utbetalningspost avser en vecka och ett ersättningsslag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma vecka; Utbetalning beskriver kassakortet och utbetalningsposten i detalj, Aterkrav gäller återkravets utbetalning.\ncatalog:variable_text:8123:10957:16071\ncatalog:variable_text:8123:16071:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:makuleringsdatum"
+fields = { "description" = "Datum då posten makulerats. Makulerade poster tas bort ur ASTAT, så datumet är alltid tomt, utom för spärrar: sedan 2006-01-26 sparas makulerade spärrar med makuleringsdatum från laddningsfilen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i alla tabeller; Sparr skiljer sig genom att makulerade rader sparas sedan 2006-01-26.\ncatalog:variable_text:8138:10957:12123\ncatalog:variable_text:8138:12123:13453\ncatalog:variable_text:8138:13453:16612\ncatalog:variable_text:8138:16612:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:objektkod"
+fields = { "description" = "Kod som tillsammans med beslutstyp och typkod anger vilket beslut som fattats, enligt kodtabellen Beslutkod." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: tabellen Beslut avkodas med Beslutkod; Diverse har egen kodtabell och egen variabel.\ncatalog:variable_text:8143:10957:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:objektkod-diverse"
+fields = { "description" = "Kod som tillsammans med beslutstyp och typkod anger vilket beslut som fattats i tabellen Diverse, enligt kodtabellen Diversekod." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från objektkod: tabellen Diverse avkodas med Diversekod.\ncatalog:variable_text:8143:10957:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:regdatum"
+fields = { "description" = "Datum för den senaste registreringen av posten. Datumet skapas automatiskt när en arbetslöshetskassa registrerar en uppgift om personen; för studier är det datum då studierna registrerats hos kassan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i alla tabeller utom att Studier anger registreringen av studierna; etiketten 'för deltidsveckan' stöds inte av någon text.\ncatalog:variable_text:8156:10957:12123\ncatalog:variable_text:8156:12123:13453\ncatalog:variable_text:8156:13453:13787\ncatalog:variable_text:8156:13787:15936\ncatalog:variable_text:8156:15936:16612\ncatalog:variable_text:8156:16612:17301"
+
+[[statement]]
+kind = "set"
+subject = "var:valuta"
+fields = { "description" = "Valuta som utbetalningen eller återbetalningen gjorts i, svenska kronor eller euro." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; Aterbet avser återbetalningar i stället för utbetalningar.\ncatalog:variable_text:8183:10957:12418\ncatalog:variable_text:8183:12418:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:veckodelens-id"
+fields = { "description" = "Unikt nummer för återkravets veckodel, som systemet skapar för varje återkrav, person och vecka." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda tabellerna beskriver samma nummer för återkravets veckodel med olika ord.\ncatalog:variable_text:8185:16071:2932897"

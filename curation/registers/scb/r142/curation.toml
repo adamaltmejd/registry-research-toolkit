@@ -970,3 +970,21 @@ kind = "set"
 subject = "set:elproduktion-med-vindkraft"
 fields = { "description" = "Elproduktion från vindkraft som gått in på elnätet, per elområde 1–4. Från 2024 hämtas uppgifterna från eSett Oy via API och egenanvändningen modellskattas." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nMedlemmarna delar DEF och skiljer sig bara i elområde enligt OP; eSett och modellskattning anges för 2024–2025.\ncatalog:variable_text:46046:19358:19723\ncatalog:variable_text:46046:19723:20454\ncatalog:variable_text:46047:19358:19723\ncatalog:variable_text:46047:19723:20454\ncatalog:variable_text:46048:19358:19723\ncatalog:variable_text:46048:19723:20454\ncatalog:variable_text:46049:19358:19723\ncatalog:variable_text:46049:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:abonnr"
+fields = { "description" = "Det utvalda företagets eller arbetsställets abonnentnummer hos nätföretaget. Numret identifierar elanvändarens mätpunkt och är ett stöd för uppgiftslämnaren." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; rättar 'Abonnentnummret'.\ncatalog:variable_text:45995:13149:15340\ncatalog:variable_text:45995:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:identitet-for-uppgiftslamnare"
+fields = { "description" = "Kontrollnummer för det uppgiftslämnande företaget. 2006–2017 sätts numret av SCB; från 2018 är det ett slumpmässigt genererat tal." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; från 2018 anges att numret är slumpmässigt genererat.\ncatalog:variable_text:46015:13149:17532\ncatalog:variable_text:46015:17532:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:karnkraft-kondens-netto"
+fields = { "description" = "Nettoproduktion av el från kärnkraft (kondens) som gått in på elnätet i elområde 3. Från 2024 hämtas uppgiften från eSett Oy via API." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2024 anger källan. Den allmänna förklaringen av kärnkraft utelämnas.\ncatalog:variable_text:46022:19358:19723\ncatalog:variable_text:46022:19723:20454"

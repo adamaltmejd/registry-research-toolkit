@@ -2884,3 +2884,75 @@ kind = "set"
 subject = "yrkesverksamma: Distriktskod @2016..2017"
 fields = { "definition" = "Distriktsindelningen baseras på en justerad version av den församlingsindelning som gällde den 31 december 1999." }
 evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope.\n\nIn Yrkesverksamma 2016–2017 Distriktskod is documented under VarId 65 with the SUN education-orientation definition, while its value set is the district set of every other Distriktskod occurrence. The correction is Distriktskod's own definition. The raw SCB export (Registerinformation.csv, current-scb-inputs 2026-03) carries this text itself; the reader places it faithfully.\ncatalog:occurrence:528953\ncatalog:occurrence:528918"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstallenummer-huvudsaklig-sysselsatttning"
+fields = { "description" = "Arbetsställenummer för den huvudsakliga sysselsättningen; tillsammans med organisationsnumret identifierar det arbetsstället. Från 2009 är numren 99980–99999 särskilda arbetsställenummer, som används när ett ordinarie arbetsställe inte kan anges." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 saknar 'inte' i meningen om särskilda arbetsställenummer, rättat efter W2, och 'särkilda' rättas.\ncatalog:variable_text:62337:12053:14245\ncatalog:variable_text:62337:14245:17897\ncatalog:variable_text:62337:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstallenummer-jobb-tva-i-november"
+fields = { "description" = "Arbetsställenummer för jobb två i november; tillsammans med organisationsnumret identifierar det arbetsstället. Från 2009 är numren 99980–99999 särskilda arbetsställenummer, som används när ett ordinarie arbetsställe inte kan anges." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 saknar 'inte' i meningen om särskilda arbetsställenummer, rättat efter W2, och 'särkilda' rättas.\ncatalog:variable_text:62338:12053:14245\ncatalog:variable_text:62338:14245:17897\ncatalog:variable_text:62338:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstallenummer-nast-storsta-forvarvskallan"
+fields = { "description" = "Arbetsställenummer för den näst största förvärvskällan under året; tillsammans med organisationsnumret identifierar det arbetsstället. Från 2009 är numren 99980–99999 särskilda arbetsställenummer, som används när ett ordinarie arbetsställe inte kan anges." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 saknar 'inte' i meningen om särskilda arbetsställenummer, rättat efter W2, och 'särkilda' rättas.\ncatalog:variable_text:62339:12053:14245\ncatalog:variable_text:62339:14245:17897\ncatalog:variable_text:62339:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstallenummer-ovrigt-jobb"
+fields = { "description" = "Arbetsställenummer för övrigt jobb; tillsammans med organisationsnumret identifierar det arbetsstället. Från 2009 är numren 99980–99999 särskilda arbetsställenummer, som används när ett ordinarie arbetsställe inte kan anges." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 saknar 'inte' i meningen om särskilda arbetsställenummer, rättat efter W2, och 'särkilda' rättas.\ncatalog:variable_text:62340:12053:14245\ncatalog:variable_text:62340:14245:17897\ncatalog:variable_text:62340:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstallenummer-storsta-forvarvskallan"
+fields = { "description" = "Arbetsställenummer för den största förvärvskällan under året; tillsammans med organisationsnumret identifierar det arbetsstället. Från 2009 är numren 99980–99999 särskilda arbetsställenummer, som används när ett ordinarie arbetsställe inte kan anges." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 saknar 'inte' i meningen om särskilda arbetsställenummer, rättat efter W2, och 'särkilda' rättas.\ncatalog:variable_text:62341:12053:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arblos"
+fields = { "description" = "Om personen under året fått ersättning från arbetslöshetskassa vid arbetslöshet eller arbetsmarknadsåtgärd." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W0 lägger till kodningen 1/0.\ncatalog:variable_text:62344:12053:14610\ncatalog:variable_text:62344:14610:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt"
+fields = { "description" = "Distrikt enligt distriktsindelningen, som baseras på en justerad version av den församlingsindelning som gällde den 31 december 1999." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDen avvikande texten kom från en annan kolumn i SCB:s export och är rättad på förekomsten. Yrkesverksamma 2016–2017 hade SUN-definitionen.\ncatalog:variable_text:62355:16436:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:forsamling"
+fields = { "description" = "Församling där personen var folkbokförd den 31 december, angiven som sexställig församlingskod." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W0 lägger till kodformatet.\ncatalog:variable_text:62364:11323:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:fortidpens"
+fields = { "description" = "Om personen under året haft ersättning i form av förtidspension. Från 2003 har det officiella begreppet förtidspension ersatts av sjukersättning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 lägger till begreppsbytet 2003, som anges som fakta med år.\ncatalog:variable_text:62365:12053:14245\ncatalog:variable_text:62365:14245:14610\ncatalog:variable_text:62365:14610:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:jobbbyte"
+fields = { "description" = "Om personen bytt arbetsgivare mellan två på varandra följande år, eller kommit in på (inflöde) eller lämnat (utflöde) arbetsmarknaden. Jobbyten hämtas från Företags och arbetsställens dynamik (FAD), medan värdena ej byte, inflöde och utflöde skapas i yrkesregistret; inflöde avser personer som inte var förvärvsarbetande första året men är det andra året, utflöde det omvända." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel i parallella tabeller; W2 ger den fullständiga härledningen, W0 en förkortad och W1 bara definitionen.\ncatalog:variable_text:62368:14245:15340\ncatalog:variable_text:62368:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "description" = "Län där personen var folkbokförd den 31 december, angivet som tvåställig länskod." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W0 lägger till kodformatet.\ncatalog:variable_text:62384:11323:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stud"
+fields = { "description" = "Om personen studerat under höstterminen, det vill säga varit registrerad i någon skolform under höstterminen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1–W2 anger att det avser registrering i skolformer, W0 kodningen 1/0.\ncatalog:variable_text:62428:11323:14245\ncatalog:variable_text:62428:14245:14610\ncatalog:variable_text:62428:14610:17167"

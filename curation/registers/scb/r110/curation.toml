@@ -1774,3 +1774,9 @@ kind = "set"
 subject = "set:utbildningsland"
 fields = { "description" = "Om personen har en universitets- eller högskoleutbildning från Sverige eller annat land, och landet där hen studerat; vid flera utbildningar gäller den högsta. Landet grupperas 2004 och 2009 i Sverige, övriga Norden, övriga EU27, övriga Europa, Afrika, Asien, Nordamerika samt Sydamerika inklusive Oceanien och okänt land, och 2015 och 2018 bara i Sverige och annat land." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nIndikatorn och landet finns alla fyra år; landgrupperingen ändras från 2015 enligt OP.\ncatalog:variable_text:32983:12418:12784\ncatalog:variable_text:33044:12418:12784\ncatalog:variable_text:33044:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-invandringsar"
+fields = { "description" = "Personens senaste invandringsår till Sverige, grupperat i fyraårsintervall: 2003–2006, 2007–2010 och 2011–2014 för 2015 och 2006–2009, 2010–2013 och 2014–2017 för 2018." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; grupperingen flyttas med undersökningsåret.\ncatalog:variable_text:33014:16436:16801\ncatalog:variable_text:33014:17532:17897"

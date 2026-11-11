@@ -2298,3 +2298,33 @@ kind = "set"
 subject = "set:valdistrikt"
 fields = { "description" = "Valdistrikt där urvalspersonen är röstberättigad, i Valmyndighetens regionala indelning, för ordinarie val och för omvalen 2011, som kod eller (2018) namn. De flesta valår avser uppgiften den röstlängd som fastställs 30 dagar före valdagen. Koden blir unik tillsammans med kommunkoden och är de flesta år fyrsiffrig." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSpråket rättat; röstlängden och fyrsiffrig kod anges för de flesta men inte alla valår, namnet bara 2018.\ncatalog:variable_text:10508:17532:17897\ncatalog:variable_text:10509:13149:13514\ncatalog:variable_text:10509:14610:14975\ncatalog:variable_text:10509:14975:15340\ncatalog:variable_text:10510:14975:15340\ncatalog:variable_text:10511:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:hregion"
+fields = { "description" = "Homogen region (H-region): kommungrupper efter folkmängd som ERU skapade på 1960-talet. Kommunen är den där urvalspersonen är röstberättigad enligt den röstlängd som fastställs 30 dagar före valdagen; uppgifterna för 2011 avser valet 2010." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 anger att 2011 års uppgifter avser 2010 års undersökning och val.\ncatalog:variable_text:10411:10227:10592\ncatalog:variable_text:10411:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:individuellt-lopnummer-urval-2010"
+fields = { "description" = "Individuellt löpnummer (UENR) som identifierar urvalspersonen. Uppgifterna för 2011 avser urvalet i 2010 års undersökning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2006 kallas det identitetsnummer och 2011 anges att det avser 2010 års urval.\ncatalog:variable_text:10412:11688:12053\ncatalog:variable_text:10412:13149:13514\ncatalog:variable_text:10412:14610:14975\ncatalog:variable_text:10412:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:population-2"
+fields = { "description" = "Om personen tillhör populationen röstberättigade svenska medborgare i Sverige i åldrarna 18–74 år, bestämt utifrån personnummer, undersökningsnummer och rösträttskod. I 2010 års undersökning identifierar variabeln urvalsdelen från Arbetskraftsundersökningen, och eftersom den innehåller utländska medborgare får även några utländska medborgare värdet 1." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 lägger till 2010 års avvikelse, som anges med år, och W2 att 2011 avser valet 2010.\ncatalog:variable_text:10460:7670:8035\ncatalog:variable_text:10460:14610:14975\ncatalog:variable_text:10460:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:population-4"
+fields = { "description" = "Om personen tillhör populationen röstberättigade svenska medborgare i landstingsfullmäktigevalen i åldrarna 18–74 år, bestämt utifrån personnummer, undersökningsnummer och rösträttskod. I 2010 års undersökning identifierar variabeln urvalsdelen från Arbetskraftsundersökningen, och eftersom den innehåller utländska medborgare får även några utländska medborgare värdet 1." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 lägger till 2010 års avvikelse, som anges med år; rättar 'landstingsfullmäktigvalen'.\ncatalog:variable_text:10462:7670:8035\ncatalog:variable_text:10462:14610:14975\ncatalog:variable_text:10462:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsdel-id-2010"
+fields = { "description" = "Nummer som identifierar vilken av undersökningens urvalsdelar personen tillhör. Undersökningen har fyra urvalsdelar, utom 1998 då den hade tre." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; antalet urvalsdelar skiljer 1998, och hänvisningen till värdemängden utelämnas.\ncatalog:variable_text:10501:7670:8035\ncatalog:variable_text:10501:10227:10592\ncatalog:variable_text:10501:14975:15340"

@@ -8441,3 +8441,159 @@ kind = "set"
 subject = "fek-slutdata-kommun: kgr598"
 fields = { "variable" = "totala-kostnader-kommun" }
 evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:aktiverat-arbete-for-egen-rakning"
+fields = { "description" = "Aktiverat arbete för egen räkning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: kommuntabellens värden på kommunnivå är egen variabel.\ncatalog:variable_text:17630:12053:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:aktiverat-arbete-for-egen-rakning-kommun"
+fields = { "description" = "Aktiverat arbete för egen räkning. Värdet på kommunnivå. 2020 aggregeras uppgifterna från de lokala verksamhetsenheterna med modellberäkning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från aktiverat-arbete-for-egen-rakning: FEK Slutdata (Kommun) anger värdet på kommunnivå, 2020 aggregerat från de lokala verksamhetsenheterna.\ncatalog:variable_text:17630:12053:18262\ncatalog:variable_text:17630:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:foradlingsvarde"
+fields = { "description" = "Förädlingsvärde, saldoposten i nationalräkenskapernas produktionskonto: det värde som genereras av varje enhet med produktionsaktivitet. För blankettundersökta företag beräknas det förenklat som produktionsvärde minus förbrukningsvärde; på lokal verksamhetsenhet beräknas det från variabler i det standardiserade räkenskapsutdraget (SRU)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: kommuntabellens värden på kommunnivå är egen variabel.\ncatalog:variable_text:17726:12053:13149\ncatalog:variable_text:17726:13149:13514\ncatalog:variable_text:17726:13514:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:foradlingsvarde-kommun"
+fields = { "description" = "Förädlingsvärde, saldoposten i nationalräkenskapernas produktionskonto: det värde som genereras av varje enhet med produktionsaktivitet. Värdet på kommunnivå. 2020 aggregeras uppgifterna från de lokala verksamhetsenheterna med modellberäkning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från foradlingsvarde: FEK Slutdata (Kommun) anger värdet på kommunnivå, 2020 aggregerat från de lokala verksamhetsenheterna.\ncatalog:variable_text:17726:12053:13149\ncatalog:variable_text:17726:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:forandring-lager-pagaende-arbete"
+fields = { "description" = "Förändring av lager och pågående arbete." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: kommuntabellens värden på kommunnivå är egen variabel.\ncatalog:variable_text:17727:9862:12053\ncatalog:variable_text:17727:12053:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:forandring-lager-pagaende-arbete-kommun"
+fields = { "description" = "Förändring av lager och pågående arbete. Värdet på kommunnivå. 2020 aggregeras uppgifterna från de lokala verksamhetsenheterna med modellberäkning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från forandring-lager-pagaende-arbete: FEK Slutdata (Kommun) anger värdet på kommunnivå, 2020 aggregerat från de lokala verksamhetsenheterna.\ncatalog:variable_text:17727:9862:12053\ncatalog:variable_text:17727:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:gemkalla"
+fields = { "description" = "Källa för företagsenhetens uppgifter: om företaget är blankettundersökt, om värdena hämtas från det standardiserade räkenskapsutdraget (SRU) eller om det är en underenhet i en kommissionärsenhet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; rättar 'räkenskaputdraget' och 'kommisionärsenhet'.\ncatalog:variable_text:17739:12053:13514\ncatalog:variable_text:17739:18262:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:ingar-i-undersokningen-industrins-forbrukning-av-inkopta"
+fields = { "description" = "Anger om företaget ingår i undersökningen Industrins förbrukning av inköpta varor och tjänster." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; tillägget att uppgiften hämtas från undersökningen säger samma sak.\ncatalog:variable_text:17747:12053:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ingar-i-undersokningen-industrins-varuproduktion"
+fields = { "description" = "Anger om företaget ingår i undersökningen Industrins varuproduktion." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; tillägget att uppgiften hämtas från undersökningen säger samma sak.\ncatalog:variable_text:17748:12053:12418\ncatalog:variable_text:17748:12418:12784\ncatalog:variable_text:17748:13514:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-av-handel"
+fields = { "description" = "Intäkter från försäljning av handelsvaror." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: kommuntabellens värden på kommunnivå är egen variabel.\ncatalog:variable_text:17751:12053:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-av-handel-kommun"
+fields = { "description" = "Intäkter från försäljning av handelsvaror. Värdet på kommunnivå. 2020 aggregeras uppgifterna från de lokala verksamhetsenheterna med modellberäkning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från intakter-av-handel: FEK Slutdata (Kommun) anger värdet på kommunnivå, 2020 aggregerat från de lokala verksamhetsenheterna.\ncatalog:variable_text:17751:12053:18262\ncatalog:variable_text:17751:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-av-industri"
+fields = { "description" = "Intäkter från industriverksamhet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: kommuntabellens värden på kommunnivå är egen variabel.\ncatalog:variable_text:17752:12053:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-av-industri-kommun"
+fields = { "description" = "Intäkter från industriverksamhet. Värdet på kommunnivå. 2020 aggregeras uppgifterna från de lokala verksamhetsenheterna med modellberäkning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från intakter-av-industri: FEK Slutdata (Kommun) anger värdet på kommunnivå, 2020 aggregerat från de lokala verksamhetsenheterna.\ncatalog:variable_text:17752:12053:18262\ncatalog:variable_text:17752:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-av-ovrigt"
+fields = { "description" = "Intäkter från övrig verksamhet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: kommuntabellens värden på kommunnivå är egen variabel.\ncatalog:variable_text:17753:12053:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-av-ovrigt-kommun"
+fields = { "description" = "Intäkter från övrig verksamhet. Värdet på kommunnivå. 2020 aggregeras uppgifterna från de lokala verksamhetsenheterna med modellberäkning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från intakter-av-ovrigt: FEK Slutdata (Kommun) anger värdet på kommunnivå, 2020 aggregerat från de lokala verksamhetsenheterna.\ncatalog:variable_text:17753:12053:18262\ncatalog:variable_text:17753:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:invenkat"
+fields = { "description" = "Anger om det finns en godkänd enkät från Investeringsenkäten för företaget." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; tillägget att uppgiften hämtas från Investeringsenkäten säger samma sak.\ncatalog:variable_text:17779:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:outlier"
+fields = { "description" = "Outlierkod för rapportenhet som inte är representativ för sitt stratum och därför bidrar endast med sitt eget värde vid summeringen. Från 2006 bidrar sådana enheter inte heller till imputeringsunderlaget. 2020–2023 sätts koden vid granskningen när extremvärden som kan påverka skattningarna av aggregaten identifieras; kod 1 eller 2 betyder att enhetens uppgifter inte bidrar till imputeringsunderlaget, och enheten hanteras särskilt bara om koden är skild från 0." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; senare år lägger till hur koden sätts och vad koderna betyder.\ncatalog:variable_text:17859:12053:13514\ncatalog:variable_text:17859:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-externa-kostnader"
+fields = { "description" = "Övriga externa kostnader." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: kommuntabellens värden på kommunnivå är egen variabel.\ncatalog:variable_text:17866:12053:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-externa-kostnader-kommun"
+fields = { "description" = "Övriga externa kostnader. Värdet på kommunnivå. 2020 aggregeras uppgifterna från de lokala verksamhetsenheterna med modellberäkning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från ovriga-externa-kostnader: FEK Slutdata (Kommun) anger värdet på kommunnivå, 2020 aggregerat från de lokala verksamhetsenheterna.\ncatalog:variable_text:17866:12053:18262\ncatalog:variable_text:17866:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsvarde"
+fields = { "description" = "Produktionsvärde. För blankettundersökta företag beräknas det förenklat som nettoomsättning + övriga rörelseintäkter + aktiverat arbete för egen räkning + förändring av lager och pågående arbeten − kostnader för handelsvaror; på lokal verksamhetsenhet beräknas det från variabler i de standardiserade räkenskapsutdragen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: kommuntabellens värden på kommunnivå är egen variabel.\ncatalog:variable_text:17894:9862:12053\ncatalog:variable_text:17894:12053:13149\ncatalog:variable_text:17894:13149:13514\ncatalog:variable_text:17894:13514:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsvarde-kommun"
+fields = { "description" = "Produktionsvärde. Värdet på kommunnivå. 2020 aggregeras uppgifterna från de lokala verksamhetsenheterna med modellberäkning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från produktionsvarde: FEK Slutdata (Kommun) anger värdet på kommunnivå, 2020 aggregerat från de lokala verksamhetsenheterna.\ncatalog:variable_text:17894:9862:12053\ncatalog:variable_text:17894:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:totala-intakter-mm"
+fields = { "description" = "Totala intäkter med mera." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: kommuntabellens värden på kommunnivå är egen variabel. Texten 'på kommunnivå' i tabellen för lokal verksamhetsenhet gäller kommuntabellen.\ncatalog:variable_text:17949:12053:18262\ncatalog:variable_text:17949:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:totala-intakter-mm-kommun"
+fields = { "description" = "Totala intäkter med mera. Värdet på kommunnivå. 2020 aggregeras uppgifterna från de lokala verksamhetsenheterna med modellberäkning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från totala-intakter-mm: FEK Slutdata (Kommun) anger värdet på kommunnivå, 2020 aggregerat från de lokala verksamhetsenheterna.\ncatalog:variable_text:17949:12053:18262\ncatalog:variable_text:17949:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:totala-kostnader"
+fields = { "description" = "Totala kostnader." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: kommuntabellens värden på kommunnivå är egen variabel.\ncatalog:variable_text:17950:12053:18262\ncatalog:variable_text:17950:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:totala-kostnader-kommun"
+fields = { "description" = "Totala kostnader. Värdet på kommunnivå. 2020 aggregeras uppgifterna från de lokala verksamhetsenheterna med modellberäkning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från totala-kostnader: FEK Slutdata (Kommun) anger värdet på kommunnivå, 2020 aggregerat från de lokala verksamhetsenheterna.\ncatalog:variable_text:17950:12053:18262\ncatalog:variable_text:17950:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:varde"
+fields = { "description" = "Värde för uppgiften, till exempel ett belopp eller ett antal minuter. Belopp anges i tusentals kronor, utom 2009, då de anges i kronor. Uppgifterna kan vara imputerade." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nRättad efter granskning: uppgifter som bara gäller vissa år anges med sina år, och det som texterna inte stöder är struket.\ncatalog:variable_text:17961:12053:14245\ncatalog:variable_text:17961:14245:14610"

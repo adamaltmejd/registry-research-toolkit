@@ -1428,3 +1428,9 @@ kind = "set"
 subject = "set:postort"
 fields = { "description" = "Postort för arbetsstället eller redovisningsenheten, alltså området med egen postadress, som inte alltid sammanfaller med kommuner eller andra indelningar. 2017 avser arbetsställets uppgift i stället fastighetspostnumret, Postens indelning med högst ett postnummer per fastighet och utan boxnummer." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nPostortsdefinitionen gäller arbetsställets varianter utom 2017, då PoAnst definieras som fastighetspostnummer.\ncatalog:variable_text:39063:13149:17167\ncatalog:variable_text:39063:17167:17532\ncatalog:variable_text:39078:12418:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:totalenergi"
+fields = { "description" = "Arbetsställets sammanlagda energianvändning i MWh, beräknad som summan av den rapporterade energianvändningen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 är en förkortad formulering.\ncatalog:variable_text:39074:12418:13879\ncatalog:variable_text:39074:13879:14245"

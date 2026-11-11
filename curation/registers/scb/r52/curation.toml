@@ -1090,3 +1090,15 @@ kind = "set"
 subject = "set:yrke-och-tjanst"
 fields = { "description" = "Den anställdes yrke eller tjänst: tjänstebenämning enligt myndighetens, universitetets eller högskolans lönesystem under mätmånaden, yrke enligt SSYK, översatt med nycklar från BESTA, tjänstebenämning och myndighetskod, och 1998–2003 Arbetsgivarverkets TNS-kod. I TNS-koden anger de tre första siffrorna yrket och den fjärde svårighetsgrad som ledarnivå, för nivå 3 och 4 även expert- eller specialistnivå; ju lägre nivå, desto högre svårighetsgrad." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF skiljer tjänstebenämning, TNS-kod och SSYK; OP anger översättningen och TNS-kodens uppbyggnad.\ncatalog:variable_text:49879:9496:20089\ncatalog:variable_text:49883:10227:12418\ncatalog:variable_text:49888:9496:18628\ncatalog:variable_text:49888:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "description" = "Ålder vid mättillfället, härledd från personnumret. 1996–2012 beräknas den som mättidens år och månad minus födelseår och födelsemånad; från 2013 avser mättillfället september." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; W1 anger september som mättillfälle. Rättar 'mättilfället'.\ncatalog:variable_text:49827:9496:15706\ncatalog:variable_text:49827:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:naturaformaner"
+fields = { "description" = "Summa naturaförmåner för anställningen, till exempel bil, drivmedel, lunch och bostadsförmån, hämtade ur myndighetens lönesystem." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 lägger till exempel. Rättar 'enventuella'.\ncatalog:variable_text:49853:9496:15706\ncatalog:variable_text:49853:15706:20089"

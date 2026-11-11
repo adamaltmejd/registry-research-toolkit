@@ -533,3 +533,9 @@ kind = "set"
 subject = "set:stratum"
 fields = { "description" = "Det stratum företaget tillhör i det stratifierade urvalet, i en indelning efter näringsgren och en efter storleksklass enligt antal anställda. Näringsgrenen anges på tvåsiffernivå, 2006–2007 enligt SNI 2002 och 2008–2011 enligt SNI 2007, och från 2015 som företagets branschtillhörighet. 2013–2014 är båda indelningarna skapade efter både storleksklass och branschtillhörighet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP 2013–2014 gäller båda medlemmarna och anger storleksklass och bransch; uppdelningen per medlem står 2006–2011 och från 2015.\ncatalog:variable_text:13290:13149:13879\ncatalog:variable_text:13290:13879:15340\ncatalog:variable_text:13290:15340:15706\ncatalog:variable_text:13290:15706:16071\ncatalog:variable_text:13290:16071:16436\ncatalog:variable_text:13290:16436:20089\ncatalog:variable_text:13316:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:styrkod-observation"
+fields = { "description" = "Kod som anger om observationen är godkänd eller icke godkänd, eller kommer från ett företag som saknar anställda eller helt saknar bonusutbetalningar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nRättar 'obervation' till 'observation'; texterna är i övrigt lika.\ncatalog:variable_text:13317:13149:14610\ncatalog:variable_text:13317:14610:14975"

@@ -5127,3 +5127,159 @@ kind = "set"
 subject = "fad-foretag: U"
 fields = { "variable" = "uppdelning-foretag" }
 evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nThe split-up flag is derived from shared employees for workplaces (FAD Arbetsställen) and from the FAD quotient for companies (FAD Företag): different unit and criterion. The company column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-ny"
+fields = { "description" = "Det år då arbetsstället startade enligt FAD:s kriterier. Arbetsställen klassas som kvarvarande eller nybildade genom att individer och grupper av individer följs mellan två år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; rättar 'arbetsstälen' och 'indvider'.\ncatalog:variable_text:47953:6209:13514\ncatalog:variable_text:47953:13514:14975\ncatalog:variable_text:47953:17532:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstalle-populationstyp"
+fields = { "description" = "Om arbetsstället har rörlig arbetskraft eller är ett fast arbetsställe, kodat utifrån vilken typ av arbetsställenummer som används i sysselsättningsregistret (RAMS)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition och härledning; W1 namnger registret, W2 är kortare.\ncatalog:variable_text:47954:5479:12053\ncatalog:variable_text:47954:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstallenummer"
+fields = { "description" = "Femsiffrigt nummer som tillsammans med organisationsnumret identifierar ett arbetsställe. Numret sätts av Företagsdatabasen i samråd med arbetsgivaren och används för företag med flera arbetsställen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna lägger till kodformat och hur numret sätts.\ncatalog:variable_text:47955:5479:12053\ncatalog:variable_text:47955:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstallenummer-astnr2"
+fields = { "description" = "Femsiffrigt nummer som tillsammans med organisationsnumret identifierar arbetsstället. Numret sätts av Företagsdatabasen i samråd med arbetsgivaren och används för företag med flera arbetsställen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna lägger till kodformat och hur numret sätts.\ncatalog:variable_text:47956:15706:16071\ncatalog:variable_text:47956:17897:18262\ncatalog:variable_text:47956:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:blankett"
+fields = { "description" = "Om den egna företagaren är enskild näringsidkare eller delägare i handelsbolag. Härleds från Räkenskapsutdrag (SRU), från 2009 även från Inkomst- och taxeringsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; från 2009 används även Inkomst och taxering.\ncatalog:variable_text:47974:12418:14245\ncatalog:variable_text:47974:14245:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:fad-arbetsstalle-id"
+fields = { "description" = "Löpnummer som identifierar arbetsstället i FAD-systemet. 2013 anges numret ha upp till sju siffror." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 (2013) anger antalet siffror.\ncatalog:variable_text:47989:6209:15706\ncatalog:variable_text:47989:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:fad-f-id"
+fields = { "description" = "Löpnummer som identifierar företaget i FAD-systemet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; bara formuleringen skiljer.\ncatalog:variable_text:47990:6209:15340\ncatalog:variable_text:47990:15340:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:foregaende-ars-arbetsstallenummer-foregastnr"
+fields = { "description" = "Om arbetsställenumret är imputerat från föregående år. Imputering görs när individen fått arbetsställenummer 99999 (anställd utan uppgift om arbetsställe) på kontrolluppgiften, och bara för individer som arbetar på samma företag och bor i samma kommun som föregående år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; rättar 'erhålligt'.\ncatalog:variable_text:48003:9862:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:ftgsni02"
+fields = { "description" = "Huvudsaklig näringsgren enligt Svensk näringsgrensindelning (SNI 2002) för det företag som arbetsstället tillhör." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nW0 är en generisk text delad med fyra variabler; W1 anger att näringsgrenen avser arbetsställets företag.\ncatalog:variable_text:48012:11688:12053\ncatalog:variable_text:48012:12053:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:hopslagning"
+fields = { "description" = "Om arbetsstället har ingått i en hopslagning mellan två år: antalet sysselsatta är minst 3 båda åren och andelen gemensamma sysselsatta är över 0,5 av år 1:s sysselsatta och högst 0,5 av år 2:s." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: arbetsställen och företag har olika kriterier; företagens hopslagning är egen variabel.\ncatalog:variable_text:48023:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:hopslagning-foretag"
+fields = { "description" = "Om företaget har ingått i en hopslagning mellan två år: FAD-kvoten föregående år är över 50 och årets FAD-kvot högst 50." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från hopslagning: företagen bedöms med FAD-kvoten.\ncatalog:variable_text:48023:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-inkomstkalla"
+fields = { "description" = "Det inkomstslag som individen har fått störst andel av sin inkomst från, det vill säga den inkomsttyp med högst belopp." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 och W2 anger att högsta beloppet eller andelen avgör.\ncatalog:variable_text:48024:8035:10957\ncatalog:variable_text:48024:10957:12053\ncatalog:variable_text:48024:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektorkod"
+fields = { "description" = "Sammanslagen kod för institutionell sektor, ägarkategori och juridisk form, hämtad från Företagsdatabasen (FDB, juridiska enheter). I individtabellen avser koden det företag där personen bedöms ha haft sin huvudsakliga sysselsättning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; individtabellen anger vilket företag koden avser. Rättar 'ägarkatergori'. Rad 330095 (Härledd utifrån uppgifter ur källregistret) hör till variabeln Sektorkod och utelämnas.\ncatalog:variable_text:48035:12053:17532\nRegisterinformation.csv:row=251076\nRegisterinformation.csv:row=251044\nRegisterinformation.csv:row=43792"
+
+[[statement]]
+kind = "set"
+subject = "var:jobbbyte"
+fields = { "description" = "Om personen har bytt jobb mellan två år. 1988 kodas 1 = arbetsgivarbyte, 2 = utflöde, 3 = inflöde och 4 = ej arbetsgivarbyte; från 2003 bygger variabeln på yrkesställning och visar om en person som varit sysselsatt två år i rad har bytt arbete." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; W0 anger koderna för 1988, W2 härledningen från 2003.\ncatalog:variable_text:48037:6574:6940\ncatalog:variable_text:48037:6940:12053\ncatalog:variable_text:48037:12053:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:peorgnr1"
+fields = { "description" = "Organisationsnummer för juridiska personer, eller personnummer för fysiska personer med näringsverksamhet, för året före mätåret. Organisationsnumret tilldelas av Bolagsverket, Skatteverket, Kammarkollegiet, Lantmäteriet, länsstyrelsen eller SCB beroende på bolagsform." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; rättar 'färe'.\ncatalog:variable_text:48106:6209:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:person-orgnr-2"
+fields = { "description" = "Organisationsnummer för juridiska personer, eller personnummer för fysiska personer med näringsverksamhet, för mätåret. Organisationsnumret tilldelas av Bolagsverket, Skatteverket, Kammarkollegiet, Lantmäteriet, länsstyrelsen eller SCB beroende på bolagsform." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W0 och W2 anger mät- respektive registeråret.\ncatalog:variable_text:48108:6209:10592\ncatalog:variable_text:48108:10957:11323\ncatalog:variable_text:48108:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:raks-etablgrad"
+fields = { "description" = "Markering för om individen är svagt etablerad på arbetsmarknaden, beroende på om individens inkomst ligger under eller över gränsvärdet i variabeln Gräns för individens etablering (Raks_EtablGrans)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 och W2 namnger gränsvariabeln.\ncatalog:variable_text:48123:12053:16801\ncatalog:variable_text:48123:16801:17532\ncatalog:variable_text:48123:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:raks-huvudanknytning"
+fields = { "description" = "Individens huvudsakliga anknytning till arbetsmarknaden, klassificerad utifrån konsoliderad tidsmarkering på kontrolluppgifter och deklarationer för näringsverksamhet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; rättar 'kontrolluppgfiter'.\ncatalog:variable_text:48125:12053:13879\ncatalog:variable_text:48125:13879:14245\ncatalog:variable_text:48125:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:samma-peorgnr-bada-aren"
+fields = { "description" = "Om företaget hade samma person-/organisationsnummer föregående år som under registeråret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; rättar 'respektiva'.\ncatalog:variable_text:48131:17532:17897\ncatalog:variable_text:48131:17897:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:sektorkod"
+fields = { "description" = "Kod för sektortillhörighet för det företag där personen bedöms ha haft sin huvudsakliga sysselsättning i november. Sektortillhörigheten härleds ur källregistret och aggregeras från sektor, ägarkategori och juridisk form; från 2018 är källregistret Företagsdatabasen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger de ingående variablerna och från 2018 källregistret. Rad 251076 (institutionell sektor från FDB) hör till variabeln Institutionell sektorkod och utelämnas.\ncatalog:variable_text:48133:5479:6209\ncatalog:variable_text:48133:17532:17897\ncatalog:variable_text:48133:17897:18993\nRegisterinformation.csv:row=324982\nRegisterinformation.csv:row=329869\nRegisterinformation.csv:row=330095\nRegisterinformation.csv:row=672554"
+
+[[statement]]
+kind = "set"
+subject = "var:startar-ftg-fad"
+fields = { "description" = "Det år då företaget startade enligt FAD:s kriterier. Företag och arbetsställen klassas som kvarvarande eller nybildade genom att individer och grupper av individer följs mellan två år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna växlar mellan arbetsställen och företag. Rättar 'arbetsstälen' och 'indvider'.\ncatalog:variable_text:48142:6209:6574\ncatalog:variable_text:48142:6574:6940\ncatalog:variable_text:48142:10592:12053\ncatalog:variable_text:48142:12053:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:status-for-egna-foretagare"
+fields = { "description" = "Om den egna företagaren är aktiv eller passiv. Aktiv är den som har ägnat verksamheten minst en tredjedel av arbetstiden i en vanlig heltidsanställning. Härleds från Inkomst- och taxeringsregistret och Räkenskapsutdrag (SRU)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger olika källregister. Rättar 'ägnat sig till'.\ncatalog:variable_text:48143:12418:13514\ncatalog:variable_text:48143:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:storleksindelning-av-foretaget"
+fields = { "description" = "Om företaget klassas som makro (3 eller fler sysselsatta båda åren) eller mikro (övriga), räknat på antalet som arbetar på företaget de två åren enligt RAMS och från 2022 även BAS." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2022 läggs BAS till som källa.\ncatalog:variable_text:48144:17532:17897\ncatalog:variable_text:48144:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:summerad-inkomst-ast"
+fields = { "description" = "Kontant bruttolön för anställning och nettoinkomst av näringsverksamhet för egenföretagare, summerat över året för alla med anknytning till arbetsstället. Anställningsinkomsterna hämtas till 2002 från Kontrolluppgiftsregistret, 2003–2018 från Lönesummestatistik och från 2019 från Jobbregistret (AGI eller KU); företagarinkomsterna till 2002 från Inkomst- och taxeringsregistret och därefter från Räkenskapsutdrag (SRU)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; källregistren byts 2003 och 2019.\ncatalog:variable_text:48147:5479:12053\ncatalog:variable_text:48147:12053:17897\ncatalog:variable_text:48147:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:uppdelning"
+fields = { "description" = "Om arbetsstället har ingått i en uppdelning mellan två år: antalet sysselsatta är minst 3 båda åren och andelen gemensamma sysselsatta är högst 0,5 av år 1:s sysselsatta och över 0,5 av år 2:s." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: arbetsställen och företag har olika kriterier; företagens uppdelning är egen variabel.\ncatalog:variable_text:48160:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:uppdelning-foretag"
+fields = { "description" = "Om företaget har ingått i en uppdelning mellan två år: årets FAD-kvot är över 50 och föregående års högst 50." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från uppdelning: företagen bedöms med FAD-kvoten.\ncatalog:variable_text:48160:18262:19358"

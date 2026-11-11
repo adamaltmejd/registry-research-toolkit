@@ -20460,3 +20460,147 @@ relation = "continues"
 object = "scb/linda/identitetsnummer-hushall"
 at = "2005-01-01.."
 evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nThe household id (VarId 4695) denotes three units: the tax household (BIDNRH 1968–1992 and 1998, BIDNRF 1991–1992), the RTB family (BIDNRF 1993–2004, and BIDNRH 1993–1997 by its own texts) and the dwelling household (BIDNRF from 2005, 'löpnummer för bostadshushåll enligt folkbokföringsuppgifter'). identitetsnummer-for-hushallet-bidnrh keeps the tax household, identitetsnummer-hushall the RTB family, and the dwelling household gets its own variable. BIDNRF continues from one unit to the next in 1993 and 2005.\nBIDNRF in the familjemedlemmar tables: RTB family to 2004, dwelling household from 2005."
+
+[[statement]]
+kind = "set"
+subject = "var:ar"
+fields = { "description" = "Kalenderår som uppgifterna avser. I tabellerna över yrke och lön är det löneuppgiftsåret, med samma värde för alla i årgången." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; W0–W11 förklarar att värdet är löneuppgiftsåret.\ncatalog:variable_text:43019:9131:9496\ncatalog:variable_text:43019:9496:9862\ncatalog:variable_text:43019:9862:10227\ncatalog:variable_text:43019:10227:10592\ncatalog:variable_text:43019:10592:10957\ncatalog:variable_text:43019:10957:11323\ncatalog:variable_text:43019:11323:11688\ncatalog:variable_text:43019:11688:12053\ncatalog:variable_text:43019:12053:12418\ncatalog:variable_text:43019:12418:12784\ncatalog:variable_text:43019:12784:13149\ncatalog:variable_text:43019:13149:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsforsakringar"
+fields = { "description" = "Summa ersättningar vid arbetslöshet och sjukdom. Från 2005 summeras ersättning från Försäkringskassan som räknas som inkomst av anställning, ersättning från arbetslöshetskassa, arbetsskadelivränta (egen, samordnad med förtidspension och egen ej pensionsgrundande) samt rehabiliteringspenning och aktivitetsstöd." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; summeringen anges från 2005. Rättar 'erbetsskadelivränta'.\ncatalog:variable_text:43026:8766:12784\ncatalog:variable_text:43026:12784:16801\ncatalog:variable_text:43026:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-resor-till-fran-arbetet"
+fields = { "description" = "Avdrag för resor till och från arbetet. Avdrag får bara göras för den del av kostnaden som överstiger ett visst belopp: 7 000 kronor 2000–2004 och 8 000 kronor 2007–2009." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger gränsbeloppet för enskilda år.\ncatalog:variable_text:43064:2922:8401\ncatalog:variable_text:43064:8401:11323\ncatalog:variable_text:43064:11323:11688\ncatalog:variable_text:43064:11688:12053\ncatalog:variable_text:43064:13514:13879\ncatalog:variable_text:43064:13879:14245\ncatalog:variable_text:43064:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:bant"
+fields = { "description" = "Antal personer i familjen enligt Registret över totalbefolkningen (RTB), där varje person ingår i endast en familj." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: familjemedlemstabellerna räknar RTB-familjen från 1993; taxeringshushållets antal är egen variabel.\ncatalog:variable_text:43102:8401:10592\ncatalog:variable_text:43102:11688:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:bant-taxeringshushall"
+fields = { "description" = "Antal personer i familjen, beräknat med hjälp av taxeringshushållet i Inkomst- och taxeringsregistret och Registret över totalbefolkningen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från bant: tabellerna med taxeringshushåll (och familjemedlemstabellen 1991–1992) räknar taxeringshushållet.\ncatalog:variable_text:43102:-731:8401"
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsbidrag-och-bostadstillagg"
+fields = { "description" = "Summan av bostadsbidrag och bostadstillägg. 1978–1982 avser uppgiften pensionärer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma summa; W0 (1978–1982) avgränsar till pensionärer.\ncatalog:variable_text:43175:2922:4748\ncatalog:variable_text:43175:15706:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:fackforeningsavgift-ku"
+fields = { "description" = "Under året betald avgift till arbetstagarorganisation. 2002–2004 hämtas uppgiften från Skatteverkets kontrolluppgifter (posttyp 60)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nW0 anger källan, W1 vad som mäts; samma begrepp. Rättar 'arbetstagarorgansisation'.\ncatalog:variable_text:43288:11688:12418\ncatalog:variable_text:43288:12784:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:familjestod-skattefritt"
+fields = { "description" = "Summan av skattefria ersättningar: bostadsstöd, barnbidrag, underhållsstöd och socialbidrag. Variabeln är konstruerad för att vara så jämförbar som möjligt över åren." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text, delad mellan definition och operationalisering.\ncatalog:variable_text:43296:7670:10957\ncatalog:variable_text:43296:10957:11688"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsemanad"
+fields = { "description" = "Personens födelsemånad med två siffror, härledd från personnumret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; rättar 'Födelsmånad'.\ncatalog:variable_text:43314:-731:8401\ncatalog:variable_text:43314:11688:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:formogenhetsskattepliktiga-forsakringar"
+fields = { "description" = "Förmögenhetsskattepliktiga försäkringar enligt kontrolluppgift (kod 430) från försäkringsbolag och andra pensions- och försäkringsutbetalare. 1991–1993 tas livförsäkringar (kapitalförsäkringar) upp till sitt tekniska återköpsvärde." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; W0 och W2 anger kontrolluppgiften, W0 även värderingen. Rättar 'Förmögenhetskattespliktiga'.\ncatalog:variable_text:43349:7670:8766\ncatalog:variable_text:43349:10227:12784\ncatalog:variable_text:43349:12784:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:forvarvsarbetande"
+fields = { "description" = "Om personen förvärvsarbetar, det vill säga har en arbetsinkomst som är större än basbeloppet för inkomståret. Skapad variabel." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i alla tabeller; bara formuleringen skiljer.\ncatalog:variable_text:43366:9496:11688\ncatalog:variable_text:43366:11688:12784\ncatalog:variable_text:43366:12784:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:handlaggande-skattekontor"
+fields = { "description" = "Kod för handläggande skattekontor. Koden identifierar kontoret bara tillsammans med variabeln Handläggande skattemyndighet (BHKSM)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; W2 anger skattemyndighetsvariabelns namn.\ncatalog:variable_text:43388:11323:12053\ncatalog:variable_text:43388:12418:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:identitetsnummer-for-hushallet-bidnrh"
+fields = { "description" = "LINDA-unikt, slumpmässigt tilldelat identitetsnummer för taxeringshushållet, härlett med hjälp av Inkomst- och taxeringsregistret och Registret över totalbefolkningen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nTaxeringshushållets id; 1993–1997 års rader med RTB:s familjebegrepp hör till identitetsnummer-hushall.\ncatalog:variable_text:43400:-731:1096\ncatalog:variable_text:43400:1096:8401"
+
+[[statement]]
+kind = "set"
+subject = "var:identitetsnummer-hushall"
+fields = { "description" = "LINDA-unikt identitetsnummer för familjen enligt RTB:s familjebegrepp." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: 1993–2004 RTB-familjen; taxeringshushållet 1991–1992 hör till identitetsnummer-for-hushallet-bidnrh och bostadshushållet från 2005 är egen variabel.\ncatalog:variable_text:43401:8401:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:identitetsnummer-bostadshushall"
+fields = { "description" = "Löpnummer för bostadshushållet enligt folkbokföringsuppgifterna i Befolkningsregistret. Ett unikt löpnummer skapas för varje dataanvändare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från identitetsnummer-hushall: bostadshushållet från 2005.\ncatalog:variable_text:43401:12784:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:kod-for-samtaxering"
+fields = { "description" = "Markering för skattskyldiga vars uppgifter registrerats från blanketten Uppgifter för samtaxering. Blanketten fylls i vid samtaxering utom när makarna har deklarationsnummer i direkt följd, och alltid för fysiska personer som inte är mantalsskrivna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; rättar 'maktar', 'matalsskrivna' och 'inbo skatt'.\ncatalog:variable_text:43482:-731:365\ncatalog:variable_text:43482:365:1096\ncatalog:variable_text:43482:1096:2922\ncatalog:variable_text:43482:4748:6209"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Personens kön, härlett från personnumret: 1 = man, 2 = kvinna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma härledning i alla tabeller; bara formuleringen skiljer.\ncatalog:variable_text:43506:-731:12784\ncatalog:variable_text:43506:12784:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:korrigerad-skatt"
+fields = { "description" = "Korrigerad skatt för 2003. Avgifter och skatter på näringsinkomst tillkommer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text i båda urvalen; rättar 'avssende'.\ncatalog:variable_text:43510:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:markering-gemensam-formogenhet"
+fields = { "description" = "Markering att beskattningsbar förmögenhet har beräknats gemensamt för föräldrar och hemmavarande barn. 1971–1977 sätts markeringen av taxeringsnämnden för alla familjemedlemmar som beräknas gemensamt; 1986–1991 härleds den från den beskattningsbara förmögenheten och gäller hemmavarande barn under 18 år som själva deklarerar och tillsammans med föräldrarna har en skattepliktig förmögenhet över 400 000 kronor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; härledningen ändras från taxeringsnämndens markering till härledning ur förmögenheten.\ncatalog:variable_text:43543:365:2922\ncatalog:variable_text:43543:5844:8035"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr"
+fields = { "description" = "Personnummer för individerna i LINDA, tilldelat av Skattemyndigheten. Hämtas från Registret över totalbefolkningen eller Inkomst- och taxeringsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp i alla tabeller; texterna växlar mellan 'och' och 'eller'. Rättar 'Personnumer'.\ncatalog:variable_text:43650:8035:8401\ncatalog:variable_text:43650:8401:9131\ncatalog:variable_text:43650:9131:9862\ncatalog:variable_text:43650:9862:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:posttyp"
+fields = { "description" = "Typ av deklarationspost. Från 2012 anger den om posten är huvudpost eller sambeskattningspost." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; W2 anger kodernas innebörd från 2012.\ncatalog:variable_text:43669:365:8401\ncatalog:variable_text:43669:8401:9131\ncatalog:variable_text:43669:15340:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:scbid"
+fields = { "description" = "LINDA-unikt löpnummer för individen. Till 1992 slumpades numret fram; i senare tabeller skapas ett nytt nummer för varje uppdrag eller dataleverans." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; operationaliseringarna anger hur numret skapas.\ncatalog:variable_text:43741:-731:-365\ncatalog:variable_text:43741:-365:0\ncatalog:variable_text:43741:0:8401\ncatalog:variable_text:43741:8401:10227\ncatalog:variable_text:43741:12784:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:skatt-hek"
+fields = { "description" = "Skatt enligt Hushållens ekonomi (HEK): summan av slutlig skatt (exklusive avdragsgilla skatter och avgifter) och eventuell sjömansskatt. Skapad variabel." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna upprepar den.\ncatalog:variable_text:43778:12053:12784\ncatalog:variable_text:43778:12784:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgoringsomfattning-tjomf"
+fields = { "description" = "Faktisk tjänstgöringstid i procent (0–100) av heltid. Uppgiften hämtas från olika undersökningar och register; i tabellen Panelurval – yrke och lön för 1997 avser den 1998." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 anger att 1997 års uppgift avser 1998. Rättar 'Tjänstgöringsonfattning'.\ncatalog:variable_text:43948:9131:17897"

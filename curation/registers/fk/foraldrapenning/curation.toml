@@ -241,18 +241,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 
 [[statement]]
 kind = "set"
-subject = "var:fall-from-datum"
-fields = { "description" = "Fallets första dag. Fallet är den sammanhängande perioden av föräldrapenningutbetalningar; i den äldre versionen (1993–2013) avser det den skattade ledigheten." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma betydelse; texterna anger fallet som sammanhängande period av utbetalningar respektive skattad ledighet.\ncatalog:variable_text:195:8401:15979\ncatalog:variable_text:195:16071:2932897"
-
-[[statement]]
-kind = "set"
-subject = "var:fall-tom-datum"
-fields = { "description" = "Fallets sista dag. Fallet är den sammanhängande perioden av föräldrapenningutbetalningar; i den äldre versionen (1993–2013) avser det den skattade ledigheten och datumet är den senast kända dagen." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma betydelse; den äldre versionen anger senast känd dag.\ncatalog:variable_text:197:8401:15979\ncatalog:variable_text:197:16071:2932897"
-
-[[statement]]
-kind = "set"
 subject = "var:omfattning"
 fields = { "description" = "Föräldrapenningens omfattning i delfallet. 1993–2013 anges den i decimaltal, från 2014 i heltal." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma betydelse; representationen byts från decimaltal till heltal 2014, en ändring i kodningen och inte i innebörden.\ncatalog:variable_text:200:8401:15979\ncatalog:variable_text:200:16071:2932897"

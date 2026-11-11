@@ -880,3 +880,15 @@ kind = "set"
 subject = "set:registeransvarig"
 fields = { "description" = "Den som ansvarar för registrering och uppdatering av uppgifterna: i Naturvårdsregistret den registrerande myndigheten, i Natura 2000-registret den som ansvarar för databasen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP delas av båda; OP skiljer registrerande myndighet och ansvarig databas.\ncatalog:variable_text:49529:18627:18628\ncatalog:variable_text:49558:19357:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:skyddstyp"
+fields = { "description" = "Typ av skyddat område eller instrument för formellt skydd enligt miljöbalken. Från referensdatum 2024-12-31 ingår inte Skogsstyrelsens skogliga biotopskyddsområden i registeruttaget; de levereras i stället direkt från Skogsstyrelsen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2024 lägger till att skogliga biotopskyddsområden inte längre ingår.\ncatalog:variable_text:49565:18627:18628\ncatalog:variable_text:49565:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:status-for-registerobjekt"
+fields = { "description" = "Registerobjektets status. Endast objekt med status Gällande ingår i det registeruttag som används i statistikproduktionen, och ett objekt som är gällande vid referensdatumet (31 december) har ett ursprungligt gällandedatum som är senast samma datum." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; endast referensdatumets år skiljer. Raderna 745668 och 745673 (beslutsdatum i Naturvårdsregistret och Natura 2000) hör till variabeln Beslutsdatum för skyddad natur och utelämnas.\ncatalog:variable_text:49567:18627:18628\ncatalog:variable_text:49567:19357:19358\ncatalog:variable_text:49567:20088:20089\nRegisterinformation.csv:row=768010\nRegisterinformation.csv:row=768128\nRegisterinformation.csv:row=768144"

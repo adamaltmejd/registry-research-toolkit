@@ -1682,3 +1682,21 @@ kind = "set"
 subject = "set:postnummer"
 fields = { "description" = "Postnummer för enhetens eget arbetsställe och för huvudarbetsstället, både för belägenhetsadressen (besöksadressen) och för postadressen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBelägenhets- och postadress samt egen enhet och huvudarbetsställe är axlarna; DEF skiljer adresstyperna.\ncatalog:variable_text:19062:10592:19358\ncatalog:variable_text:19063:10592:19358\ncatalog:variable_text:19094:10592:17167\ncatalog:variable_text:19094:17167:17897\ncatalog:variable_text:19094:17897:19358\ncatalog:variable_text:19130:10592:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bolagsstatus"
+fields = { "description" = "Om den juridiska enheten är i konkurs, likvidation, fusion eller rekonstruktion eller är avregistrerad. Gäller juridiska former som registreras hos Patent- och registreringsverket (till 2003) respektive Bolagsverket (från 2004)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; registrerande myndighet anges som PRV till 2003 och Bolagsverket från 2004.\ncatalog:variable_text:19070:10592:12418\ncatalog:variable_text:19070:12418:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:expimpkod"
+fields = { "description" = "Om företaget bedriver export och/eller import. Till 2021 anger variabeln om företaget finns i SCB:s export- och importregister." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma uppgift; operationaliseringen till 2021 anger registret som källa, 2022 verksamheten.\ncatalog:variable_text:19083:10592:18993\ncatalog:variable_text:19083:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:haetel"
+fields = { "description" = "Telefonnummer till den juridiska enhetens huvudarbetsställe." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma uppgift; 2017–2018 saknar preciseringen till huvudarbetsstället.\ncatalog:variable_text:19096:10592:17167\ncatalog:variable_text:19096:17167:17897\ncatalog:variable_text:19096:17897:19358"

@@ -1095,3 +1095,21 @@ kind = "set"
 subject = "set:personnrf"
 fields = { "description" = "Personnummer för personens föräldrar: mor och far, adoptivmor och adoptivfar, och i personakterna 1947–1967 förälder 2 (den förälder personakten avser) och förälder 1 (den andra föräldern). I versionen från 1961 hämtas mor och far i prioritetsordning från Registret över totalbefolkningen, personakter över avlidna 1961–1967 och SCB:s register över födda 1961–1997, adoptivföräldrarna från de två första, och folkbokförd förälder väljs före ej folkbokförd; mor och far med ofullständigt födelsedatum eller orimlig ålder (far under 14 eller över 80 år, mor under 13 eller över 60 år) tas bort. I versionen från 1947 hämtas uppgifterna ur personakterna. Förälder 1 innehåller en del felaktiga personnummer som slutar på 0000." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nKällordning, folkbokföringsval och ålderskontroll står bara i 1961 års OP; 1947 års versioner hämtas ur personakterna.\ncatalog:variable_text:18051:-3287:20454\ncatalog:variable_text:18052:-3287:20454\ncatalog:variable_text:18055:-8401:-3287\ncatalog:variable_text:18055:-3287:20454\ncatalog:variable_text:18056:-8401:-3287\ncatalog:variable_text:18056:-3287:20454\ncatalog:variable_text:18058:-8401:-731\ncatalog:variable_text:18059:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:indatum"
+fields = { "description" = "Datum när uppgifterna levererades till SCB från Riksarkivets byrå SVAR (Svensk arkivinformation)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i parallella tabeller; endast ett kommatecken skiljer.\ncatalog:variable_text:18025:-8401:-731"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Personens kön. I personakterna för 1947–1967 (för den avlidne respektive dennes barn) är uppgiften hämtad från äldre folkbokföringsmaterial som upprättades av pastorsämbetena; för folkbokförda personer härleds den från elfte siffran i personnumret, där udda siffra ger man och jämn siffra kvinna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp i parallella tabeller; källan skiljer mellan personakter och personnummer och anges per tabell.\ncatalog:variable_text:18046:-8401:-3287\ncatalog:variable_text:18046:-3287:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:syskonordnr"
+fields = { "description" = "Barnets ordningsnummer efter födelsetid i syskonskaran, räknat bland de barn som i Flergenerationsregistret har uppgift om samma biologiska far respektive samma biologiska mor. Uppgiften lämnas både för faderns och för moderns sida; saknas uppgift om föräldern kan barnet inte föras till syskonskaran." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nKolumnen dokumenteras med en rad för far och en för mor; samma mått, skilt bara i vilken förälder som avses.\ncatalog:variable_text:18061:-3287:20454\nRegisterinformation.csv:row=432760\nRegisterinformation.csv:row=432761"

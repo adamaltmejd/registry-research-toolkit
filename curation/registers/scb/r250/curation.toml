@@ -1357,3 +1357,75 @@ kind = "set"
 subject = "kursdeltagare-kalenderar: OrgNr"
 fields = { "variable" = "utbildningsanordnare-orgnr" }
 evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope.\n\nElever 2020–2023 gives the huvudman's organisation number; Kursdeltagare 2024 gives the utbildningsanordnare's number when it is not municipal: different organisations. The orgnr id stays with the huvudman column, which continues person-orgnr (existing link); the anordnare column gets its own id.\ncatalog:occurrence:311851\ncatalog:occurrence:312105"
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "description" = "Elevens ålder i antal år vid årets slut, beräknad från personnumret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition och härledning; operationaliseringen varierar bara i ordval.\ncatalog:variable_text:41291:10879:10880\ncatalog:variable_text:41291:14167:14168\ncatalog:variable_text:41291:15628:15629\ncatalog:variable_text:41291:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:avbrott-i-kurs"
+fields = { "description" = "Om eleven har avbrutit kursen. För elever anger variabeln om eleven avbrutit samtliga lästa kurser under terminen respektive kalenderåret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; elevtabellerna anger att det gäller samtliga kurser under terminen eller kalenderåret.\ncatalog:variable_text:41299:19723:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear"
+fields = { "description" = "Födelseår, som sätts utifrån de fyra första positionerna i personnumret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma härledning; texterna skiljer sig bara i 'elevens' respektive 'kursdeltagarens'.\ncatalog:variable_text:41303:18550:18551\ncatalog:variable_text:41303:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-rtb"
+fields = { "description" = "Elevens födelseland enligt definitionen i Registret över totalbefolkningen (RTB). För 2008–2023 sätts födelselandet till Sverige när uppgift saknas i RTB." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2008–2012 och 2013–2023 anger med olika ord att saknat födelseland sätts till Sverige.\ncatalog:variable_text:41304:10879:10880\ncatalog:variable_text:41304:14167:14168\ncatalog:variable_text:41304:15993:15994"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman"
+fields = { "description" = "Den typ av huvudman som ansvarar för skolan eller skolenheten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen säger skolan respektive skolenheten.\ncatalog:variable_text:41313:10879:10880\ncatalog:variable_text:41313:14167:14168\ncatalog:variable_text:41313:15993:15994"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Personens kön, härlett från personnumret: jämn elfte siffra kodas som kvinna, udda som man." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma härledning alla år; 2013–2017 beskriver regeln för elfte siffran.\ncatalog:variable_text:41319:10879:10880\ncatalog:variable_text:41319:15993:15994\ncatalog:variable_text:41319:17819:17820"
+
+[[statement]]
+kind = "set"
+subject = "var:orgnr"
+fields = { "description" = "Huvudmannens organisationsnummer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: Elever 2020–2023 anger huvudmannens nummer; utbildningsanordnarens nummer (Kursdeltagare 2024) är egen variabel, utbildningsanordnare-orgnr.\ncatalog:variable_text:41328:18550:18551"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsanordnare-orgnr"
+fields = { "description" = "Utbildningsanordnarens organisationsnummer, när anordnaren inte är kommunal." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från orgnr: Kursdeltagare 2024 anger utbildningsanordnarens nummer, inte huvudmannens.\ncatalog:variable_text:41328:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:provn"
+fields = { "description" = "Prövning, det vill säga bedömning av elevens kunskaper mot kursplanernas kunskapsmål och betygskriterierna. För elever bestäms uppgiften utifrån elevens lästa poäng." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; elevtabellerna anger härledning från lästa poäng, kalenderårstabellen insamlingsperioden.\ncatalog:variable_text:41335:19723:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-undervisning"
+fields = { "description" = "Om kursen bedrivits på dagtid, kvällstid (start efter klockan 18), på distans eller som ej schemalagd undervisning. För elever avses den kurs där eleven läst flest poäng." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma indelning; elevtabellerna avser kursen med flest poäng och skriver 'annan förläggning' för ej schemalagd undervisning.\ncatalog:variable_text:41351:19723:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsanordnare"
+fields = { "description" = "Typ av utbildningsanordnare för kursen: kommun, region, studieförbund, folkhögskola eller annan anordnare. För elever avses den kurs där eleven läst flest poäng." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma indelning; elevtabellerna avser kursen med flest poäng.\ncatalog:variable_text:41352:19723:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:valid"
+fields = { "description" = "Validering, det vill säga en strukturerad bedömning, dokumentation och erkännande av elevens kunskaper och kompetens oberoende av hur de förvärvats. För elever bestäms uppgiften utifrån elevens lästa poäng." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; elevtabellerna anger härledning från lästa poäng, kalenderårstabellen insamlingsperioden.\ncatalog:variable_text:41355:19723:19905"

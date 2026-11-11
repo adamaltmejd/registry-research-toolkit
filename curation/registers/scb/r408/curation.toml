@@ -1956,3 +1956,21 @@ kind = "set"
 subject = "set:sektortillhorighet"
 fields = { "description" = "Den institutionella sektor som företaget eller organisationen tillhör enligt Standard för institutionell sektorindelning 2014, detaljerad eller grupperad i fem kategorier. Den detaljerade uppgiften hämtas i första hand från SAMU-ramen för aktuellt kvartal, i andra hand från FDB för aktuell månad och i tredje hand från SAMU-ramen för föregående kvartal. 2024–2025 finns även uppgift om i vilken sektor organisationen har sin verksamhet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDetaljerad och grupperad sektor 2020–2025 med hämtordningen för den detaljerade; organisationens verksamhetssektor finns som slot 2024–2025.\ncatalog:variable_text:10872:18262:20454\ncatalog:variable_text:10901:19723:20454\ncatalog:variable_text:10909:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indagihuvuduppgiftkt"
+fields = { "description" = "Källtid för huvuduppgiften i AGI, det vill säga datumet för angivelsen från källan. Hämtas från AGI-fältet FromDat." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; rättar 'huvunduppgift' till 'huvuduppgift' från 2024.\ncatalog:variable_text:10809:18262:19723\ncatalog:variable_text:10809:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:indimputbas"
+fields = { "description" = "Anger om uppgiften om anställning är imputerad. Saknade uppgifter imputeras från månaden före eller två månader före." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma innebörd i båda tabellerna; skiljer bara i tempus ('har imputerats'/'imputeras').\ncatalog:variable_text:10817:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:referensperiod-manad"
+fields = { "description" = "Den månad uppgifterna avser. I tabellen Anställningar, period skapas den utifrån vilka månader arbetsgivardeklarationer har rapporterats in för." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i alla tabeller; periodtabellen lägger till hur månaden bestäms.\ncatalog:variable_text:10900:19723:20454"

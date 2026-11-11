@@ -360,3 +360,63 @@ kind = "set"
 subject = "beslut-om-omedelbart-omhandertagande-for-tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm: BESDATUM"
 fields = { "variable" = "beslutsdatum-omedelbart-omhandertagande" }
 evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nBESDATUM is the date of the administrative court's decision in LVM_ANSOK and the date of the decision on immediate custody in LVM_OMHTG: different decisions. The OMHTG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:besdatumn"
+fields = { "description" = "Datum för det beslut som posten gäller, i numeriskt format: i ansökningstabellen förvaltningsrättens beslut om vård enligt LVM, i tabellen om omedelbart omhändertagande beslutet om omhändertagandet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma kolumn i parallella tabeller; enheten följer tabellen och beskrivningen anger den per tabell, ingen delning.\ncatalog:variable_text:63703:8768:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsar-ar"
+fields = { "description" = "Det år då beslutet som posten gäller fattades: i ansökningstabellen förvaltningsrättens beslut om vård enligt LVM, i tabellen om omedelbart omhändertagande beslutet om omhändertagandet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma kolumn i parallella tabeller; enheten följer tabellen och beskrivningen anger den per tabell, ingen delning.\ncatalog:variable_text:63706:8768:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsdatum"
+fields = { "description" = "Datum för förvaltningsrättens beslut." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: ansökningstabellen anger förvaltningsrättens beslut; beslutet om omedelbart omhändertagande är egen variabel.\ncatalog:variable_text:63707:8768:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsdatum-omedelbart-omhandertagande"
+fields = { "description" = "Datum då beslutet om omedelbart omhändertagande enligt LVM fattades." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från beslutsdatum: ett annat beslut.\ncatalog:variable_text:63707:8768:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsedatum"
+fields = { "description" = "Födelsedatum för den person som tvångsvården, ansökan eller omhändertagandet gäller. I tabellen om omhändertaganden anges det i numeriskt format." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nRättad efter granskning: uppgifter som bara gäller vissa år anges med sina år, och det som texterna inte stöder är struket.\ncatalog:variable_text:63710:8766:8768\ncatalog:variable_text:63710:8768:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland"
+fields = { "description" = "Födelseland för den person som tvångsvården, ansökan eller omhändertagandet gäller." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma uppgift i parallella tabeller; tabellerna namnger personen efter händelsen.\ncatalog:variable_text:63711:8766:8768\ncatalog:variable_text:63711:8768:12784\ncatalog:variable_text:63711:12784:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:indikat"
+fields = { "description" = "Indikation för vård enligt 4 § LVM, som den anges i socialnämndens ansökan om vård respektive vid omedelbart omhändertagande." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma paragrafindikation i parallella tabeller för ansökan och omhändertagande.\ncatalog:variable_text:63714:8768:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Kön för den person som tvångsvården, ansökan eller omhändertagandet gäller." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma uppgift i parallella tabeller; tabellerna namnger personen efter händelsen.\ncatalog:variable_text:63715:8766:8768\ncatalog:variable_text:63715:8768:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr"
+fields = { "description" = "Personnummer för den person som tvångsvården, ansökan eller omhändertagandet gäller." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma uppgift i parallella tabeller; tabellerna namnger personen efter händelsen.\ncatalog:variable_text:63718:8766:8768\ncatalog:variable_text:63718:8768:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:pseudo"
+fields = { "description" = "Socialstyrelsens pseudonymiserade id-nummer för den person som tvångsvården, ansökan eller omhändertagandet gäller. I utskrivningstabellen är numret alfanumeriskt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma löpnummer i parallella tabeller; tabellerna namnger personen efter händelsen.\ncatalog:variable_text:63724:8766:8768\ncatalog:variable_text:63724:8768:2932897"

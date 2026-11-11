@@ -1852,3 +1852,21 @@ kind = "set"
 subject = "set:svensk-eller-utlandsk-bakgrund"
 fields = { "description" = "Om eleven har svensk eller utländsk bakgrund, härlett från elevens eget samt moderns och faderns födelseland enligt Befolkningsregistret. För variabeln Utländsk bakgrund sätts i vissa årgångar ett saknat födelseland till Sverige." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda medlemmarna har samma DEF och härledning i OP; regeln om saknat födelseland står bara i en OP-rad för utlandsk-bakgrund.\ncatalog:variable_text:29140:15340:15522\ncatalog:variable_text:29140:15706:15887\ncatalog:variable_text:29140:16436:16617\ncatalog:variable_text:29141:16436:16617"
+
+[[statement]]
+kind = "set"
+subject = "var:ar"
+fields = { "description" = "Kalenderår som uppgifterna avser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; bara formuleringen skiljer.\ncatalog:variable_text:29020:15340:15522\ncatalog:variable_text:29020:16801:16983"
+
+[[statement]]
+kind = "set"
+subject = "var:inlasdat"
+fields = { "description" = "Datum då uppgifterna lästes in i databasen. År 2012 anges även tidpunkt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; W0 (2012) har datum och tid, W1 bara datum.\ncatalog:variable_text:29042:15340:15522\ncatalog:variable_text:29042:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:termin"
+fields = { "description" = "Ordningsnummer för den aktuella terminen i elevens utbildning. De nationella proven i årskurs 6 genomförs under vårterminen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W0 skriver felaktigt årskurs 3 i en tabell över prov i årskurs 6.\ncatalog:variable_text:29135:15340:15522\ncatalog:variable_text:29135:17897:18078"

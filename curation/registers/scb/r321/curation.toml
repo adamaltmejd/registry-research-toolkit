@@ -11578,3 +11578,33 @@ kind = "set"
 subject = "var:anordnad-medborgardialog-regioner"
 fields = { "sets" = [] }
 evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope.\n\nFr26a asks kommuner 2020 whether they have decided to work with medborgardialoger, and regioner 2024 whether the region held any medborgardialog: different question and respondent. The regioner column gets its own id; the label of each half names its own question.\ncatalog:occurrence:391096\ncatalog:occurrence:391701"
+
+[[statement]]
+kind = "set"
+subject = "var:demrfinns"
+fields = { "description" = "Om kommunen eller landstinget har genomfört någon demokratiredovisning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; tabellerna avser kommunen respektive landstinget.\ncatalog:variable_text:45214:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-av-beslut-om-medborgardialoger-medbdiastrat"
+fields = { "description" = "Om kommunen eller landstinget har en strategi för genomförande av medborgardialoger." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga 2012; tabellerna avser kommunen respektive kommunen/landstinget.\ncatalog:variable_text:45253:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:medborgardialog-strategi"
+fields = { "description" = "Om kommunen har tagit beslut om att arbeta med medborgardialoger." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: kommunfrågan 2020 gäller beslut om medborgardialoger; regionfrågan 2024 om anordnad medborgardialog är egen variabel.\ncatalog:variable_text:45450:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:anordnad-medborgardialog-regioner"
+fields = { "description" = "Om regionen anordnade någon medborgardialog." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från medborgardialog-strategi: regionfrågan 2024 gäller om en medborgardialog anordnades, inte beslut om arbetet.\ncatalog:variable_text:45450:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:oppsam"
+fields = { "description" = "Om allmänheten hade närvarorätt till kommunens eller landstingets nämndsammanträden (öppna nämndsammanträden). 2012 avser frågan landstingens sammanträden under 2011." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; 2012 ställs den som en fråga om föregående år.\ncatalog:variable_text:45511:12053:12418\ncatalog:variable_text:45511:15340:15706"

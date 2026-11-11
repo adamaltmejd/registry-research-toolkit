@@ -1338,3 +1338,45 @@ kind = "set"
 subject = "set:naringsgren"
 fields = { "description" = "Produktionsenhetens näringsgren enligt SNI 2007, som kod eller grupperad för redovisning." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP anger SNI2007 och grupperingen.\ncatalog:variable_text:36169:18628:19358\ncatalog:variable_text:36170:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-rampopulation-per-stratum"
+fields = { "description" = "Antal objekt i urvalsramen inom stratumet: arbetsställeenheter i tabellen över arbetsställeenheter, organisationer i tabellen över juridiska enheter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; objekten är tabellens enhet, arbetsställeenheter respektive organisationer.\ncatalog:variable_text:36087:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svarande-per-stratum"
+fields = { "description" = "Antal svarande objekt i stratumet: arbetsställeenheter i tabellen över arbetsställeenheter, organisationer i tabellen över juridiska enheter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; objekten är tabellens enhet, arbetsställeenheter respektive organisationer.\ncatalog:variable_text:36088:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-enhet"
+fields = { "description" = "Typ av institutionell enhet: delsektor baserad på ägarkontroll enligt ÄGAR 2000." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; tabellen över juridiska enheter anger att variabeln är härledd och avser delsektor.\ncatalog:variable_text:36156:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "description" = "Kod för det län där arbetsstället eller organisationen är geografiskt placerad." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; objektet är tabellens enhet, arbetsställe respektive organisation.\ncatalog:variable_text:36158:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:namn-juridiska-enheten"
+fields = { "description" = "Den juridiska enhetens officiella namn: för en arbetsställeenhet namnet på den juridiska enhet den tillhör, annars den statliga myndighetens, regionens eller kommunens namn." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; tabellerna anger vilken juridisk enhet som avses för respektive enhetstyp.\ncatalog:variable_text:36168:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:nsamp"
+fields = { "description" = "Antal objekt i urvalet inom stratumet: arbetsställeenheter i tabellen över arbetsställeenheter, organisationer i tabellen över juridiska enheter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; objekten är tabellens enhet, arbetsställeenheter respektive organisationer.\ncatalog:variable_text:36171:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningsvikt"
+fields = { "description" = "Uppräkningsfaktor för uppräkning till riksnivå som kompenserar för objektsbortfall inom strata. Varje stratum har en egen vikt, antalet objekt i rampopulationen delat med antalet svarande." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; tabellerna beskriver syftet (bortfallskompensation) respektive beräkningen.\ncatalog:variable_text:36194:18628:19358"

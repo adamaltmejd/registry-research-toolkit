@@ -1207,3 +1207,9 @@ kind = "set"
 subject = "set:utgiftsomrade"
 fields = { "description" = "Det utgiftsområde i statsbudgeten som anslaget hör till, hämtat från budgetpropositionen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda delar DEF; OP anger budgetpropositionen som källa.\ncatalog:variable_text:51356:18993:20089\ncatalog:variable_text:51356:20089:20454\ncatalog:variable_text:51423:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:socioeconomics"
+fields = { "description" = "Funktionell uppdelning av de totala statliga budgetanslagen för FoU efter de socioekonomiska mål eller syften som staten eftersträvar, enligt Eurostats nomenklatur NABS 2007." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; rättar 'stften' till 'syften'.\ncatalog:variable_text:51422:18993:19358\ncatalog:variable_text:51422:19358:20454"

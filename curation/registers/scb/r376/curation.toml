@@ -274,3 +274,15 @@ kind = "set"
 subject = "var:trelandmedb"
 fields = { "description" = "Anger om deltagaren vid start i projektet klassificeras som tredjelandsmedborgare, det vill säga inte är unionsmedborgare (EES); statslösa personer med obestämd nationalitet ingår. Klassificeringen görs utifrån födelseland. Kod 1 är ja och 0 är nej." }
 evidence = "Definition, beskrivning och operationell definition i r19390 (2021-2027); värdemängd 4784.\n0.74.0 catalog, key v47922, releases r19390; reg_meta.db:occurrence:57149"
+
+[[statement]]
+kind = "set"
+subject = "var:anvfran"
+fields = { "description" = "Varifrån deltagaren har blivit anvisad till ESF-projektet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen är omformulerad mellan programperioderna.\ncatalog:variable_text:14975:16071:18628\ncatalog:variable_text:14975:18628:21184"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsomfattning"
+fields = { "description" = "Om deltagarens anställning är på heltid eller deltid." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen är omformulerad mellan programperioderna.\ncatalog:variable_text:14978:16071:18628\ncatalog:variable_text:14978:18628:21184"

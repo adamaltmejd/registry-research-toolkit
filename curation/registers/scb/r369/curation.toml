@@ -118,3 +118,15 @@ kind = "set"
 subject = "var:land-text"
 fields = { "label" = "Land (text)" }
 evidence = "#2102 same-label cluster 'Land' (2 variables): judged different meaning, high confidence; Land holds country codes; Land_Text holds the country name filled in automatically from the code (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsnamn"
+fields = { "description" = "Företagets namn, hämtat från Bisnode till 2017 och från Euro Group Register 2018." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; källan byts från Bisnode till Euro Group Register 2018.\ncatalog:variable_text:36201:13514:17532\ncatalog:variable_text:36201:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:orgnr"
+fields = { "description" = "Företagets eller myndighetens organisationsnummer, enligt Bisnodes register till 2017 och Euro Group Register 2018." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; källan byts från Bisnode till Euro Group Register 2018.\ncatalog:variable_text:36206:13514:17532\ncatalog:variable_text:36206:17532:17897"

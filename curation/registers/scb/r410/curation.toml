@@ -220,3 +220,9 @@ kind = "set"
 subject = "fasta-bruttoinvesteringar: namn @2024-01-01..2025-12-31 where key = 'v4042'"
 fields = { "variable" = "firmanamn-scbidnamn" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): SCBIDNAMN in lagerinvesteringar; namn in fasta-bruttoinvesteringar: same definition and code list, never concurrent under another spelling in one table; folded into firmanamn-scbidnamn."
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningsfaktor"
+fields = { "description" = "Uppräkningsfaktor (vikt). För lagerinvesteringar (2021–2025) är den urvalsvikten plus en undertäckningskoefficient; för fasta bruttoinvesteringar (2024–2025) designvikten multiplicerad med en justering för bortfall och, inom tillverkningsindustrin, för cut-off." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma kolumn i parallella tabeller; enheten följer tabellen och beskrivningen anger den per tabell, ingen delning.\ncatalog:variable_text:15028:18628:19723\ncatalog:variable_text:15028:19723:20454"

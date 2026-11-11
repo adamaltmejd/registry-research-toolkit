@@ -1716,3 +1716,27 @@ kind = "set"
 subject = "set:fiskedeltagande"
 fields = { "description" = "Om personen har fiskat på fritiden: 2016–2017 per enkätomgång, med fritidsfiske som allt fiske utan yrkesfiskelicens eller personlig fiskelicens, och året innan referensåret; från 2018 per period januari–april, maj–augusti och september–december, tillsammans med antal dagar i storleksintervall. 2021–2023 ställs frågan om januari–april i samtliga omgångar, frågan om maj–augusti i omgångarna maj–augusti och september–december och frågan om september–december bara i den omgången." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nLicensdefinitionen står för 2016–2017; vilka omgångar som får periodfrågorna står i OP 2021–2023.\ncatalog:variable_text:27945:17532:18628\ncatalog:variable_text:27945:18628:19723\ncatalog:variable_text:27948:16801:17532\ncatalog:variable_text:27949:16801:17532\ncatalog:variable_text:27957:17532:18628\ncatalog:variable_text:27957:18628:19723\ncatalog:variable_text:27958:17532:18628\ncatalog:variable_text:27958:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:aldgkon"
+fields = { "description" = "Gruppering efter kön och ålder, bildad från uppgifter i befolkningsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 anger att födelsedatum används.\ncatalog:variable_text:27919:16801:18628\ncatalog:variable_text:27919:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fiskedrag"
+fields = { "description" = "Antal fiskedrag (drag, flugor och krokar) som personen förlorat i vattnet vid fritidsfiske. År 2020 avser uppgiften aktuellt tertial." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått; referensperioden tertial anges bara 2020 och anges med år.\ncatalog:variable_text:27929:18262:18628\ncatalog:variable_text:27929:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-meter-fiskelina"
+fields = { "description" = "Antal meter fiskelina, den jämntjocka lina som används vid fiske med spö, som personen förlorat i vattnet vid fritidsfiske. År 2020 avser uppgiften aktuellt tertial." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått; referensperioden tertial anges bara 2020 och anges med år.\ncatalog:variable_text:27930:18262:18628\ncatalog:variable_text:27930:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:fiskat-januari-april-enkatomgang-januari-april"
+fields = { "description" = "Om personen fiskat under januari–april och i så fall antal dagar, i storleksintervall. Avser endast enkätomgången januari–april." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; endast citattecken skiljer.\ncatalog:variable_text:27956:17532:17897\ncatalog:variable_text:27956:17897:18628"

@@ -1356,3 +1356,27 @@ kind = "set"
 subject = "set:tjanstledighet"
 fields = { "description" = "Om och i vilken omfattning den anställde är tjänstledig: ledighetens omfattning, typ av tjänstledighet (till exempel föräldraledighet, 1996–2016), en ledighetsmarkering (1996–2007) och en av SCB härledd kod för tjänstledighet. Koden bygger 1996–2012 bland annat på ledighetsmarkeringen och ledighetens omfattning, och från 2013 bland annat på ledighetens omfattning och löneform, 2013–2016 även på ledighetstyp." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP för koden anger underlagen per period: 1996–2012, 2013–2016 och 2017–2024.\ncatalog:variable_text:49650:9496:20089\ncatalog:variable_text:49651:9496:13879\ncatalog:variable_text:49652:9496:17167\ncatalog:variable_text:49683:16801:17167\ncatalog:variable_text:49683:17167:20089\ncatalog:variable_text:49684:9496:15706\ncatalog:variable_text:49684:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:antal"
+fields = { "description" = "Hjälpvariabel för att summera antalet tjänster; alla poster har värdet 1." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; skiljer sig bara i formulering.\ncatalog:variable_text:49622:17167:17532\ncatalog:variable_text:49622:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetare-tjansteman"
+fields = { "description" = "Om den anställde är arbetare eller tjänsteman. Härleds från avtalsområdet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma härledning; rättar 'variablen'.\ncatalog:variable_text:49626:9496:15706\ncatalog:variable_text:49626:15706:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:lonepopulation"
+fields = { "description" = "Om anställningen ingår i lönepopulationen. Härleds utifrån bland annat ålder, avtal och lönebeteckning; från 2013 utifrån bland annat ålder, löneform och tjänstgöringsomfattning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; de angivna härledningsgrunderna skiljer sig före och från 2013. Hänvisningen till SM utelämnas.\ncatalog:variable_text:49654:9496:15706\ncatalog:variable_text:49654:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:nuts2"
+fields = { "description" = "Region enligt EU:s indelning för regionalstatistik (NUTS 2), härledd från län." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma härledning; skiljer sig bara i formulering.\ncatalog:variable_text:49660:14975:15706\ncatalog:variable_text:49660:15706:20089"
