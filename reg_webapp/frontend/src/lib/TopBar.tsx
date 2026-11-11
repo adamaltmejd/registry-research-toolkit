@@ -1,12 +1,12 @@
 import { useEffect, useEffectEvent, useRef, useState } from "react";
 import { Autocomplete, Input, SearchField } from "react-aria-components";
 import { flushSync } from "react-dom";
-import { brandName, type Context, stewardConfig } from "./api";
 import {
-  browseFilter,
-  useBrowseFilter,
-  useBrowseMatches,
-} from "./browse_filter";
+  brandName,
+  type Context,
+  SEARCH_MIN_QUERY_LENGTH,
+  stewardConfig,
+} from "./api";
 import { CommandPalette } from "./CommandPalette";
 import { ProjectBanner } from "./ProjectBanner";
 import { commandShortcutHint, isMacPlatform } from "./platform";
@@ -15,28 +15,6 @@ import { Button } from "./ui/Button";
 import type { ProjectCheck } from "./use_project";
 
 const mac = isMacPlatform();
-
-/** Input types that take no typed text: Escape on them is not about them. */
-const NON_TEXT_INPUTS = new Set([
-  "checkbox",
-  "radio",
-  "range",
-  "button",
-  "submit",
-  "reset",
-]);
-
-/** A text-entry element other than the search field itself. */
-function isOtherTextEntry(
-  target: EventTarget | null,
-  search: HTMLInputElement | null,
-): boolean {
-  if (!(target instanceof HTMLElement) || target === search) return false;
-  if (target instanceof HTMLInputElement) {
-    return !NON_TEXT_INPUTS.has(target.type);
-  }
-  return target instanceof HTMLTextAreaElement || target.isContentEditable;
-}
 
 /** The top bar (DESIGN.md → Layout): the brand (the deployment's name, or its
  * logo where the name does not fit), the one search bar and the project
@@ -58,21 +36,20 @@ export function TopBar({
   const field = useRef<HTMLDivElement>(null);
   const toggle = useRef<HTMLButtonElement>(null);
   const popover = useRef<HTMLElement>(null);
-  const filter = useBrowseFilter();
-  const matches = useBrowseMatches();
+  // The field's text: it searches, and filters nothing (#2398).
+  const [text, setText] = useState("");
   const [palette, setPalette] = useState(false);
-  // The filter as it stood when the palette opened: choosing a row puts it
-  // back, so text typed for the palette does not stay on the browse columns.
-  const beforePalette = useRef("");
-  const openPalette = () => {
-    beforePalette.current = browseFilter.value;
-    setPalette(true);
-  };
   // Below the narrow breakpoint the field is folded behind the "Search" button
-  // until it is opened; it stays open while it holds text, so an active filter
-  // is never hidden. Above the breakpoint CSS ignores this.
+  // until it is opened; it stays open while it holds text. Above the
+  // breakpoint CSS ignores this.
   const [opened, setOpened] = useState(false);
-  const searchOpen = opened || filter !== "";
+  const searchOpen = opened || text !== "";
+  // Typing opens the results once the text is long enough to search (#2398);
+  // a keystroke after Escape closed them opens them again.
+  const onInputChange = (next: string) => {
+    setText(next);
+    if (next.trim().length >= SEARCH_MIN_QUERY_LENGTH) setPalette(true);
+  };
 
   /** Unfold the field and move focus into it, in the user's own act. */
   const openSearch = () => {
@@ -99,11 +76,10 @@ export function TopBar({
 
   // ⌘K on macOS, Ctrl+K elsewhere, opens the palette from anywhere, seeded with
   // the bar's text; Shift+⌘K is a different chord. Focus moves to the bar first,
-  // so closing the palette returns it there. With the palette already open it
-  // only refocuses, keeping the filter a chosen row restores.
+  // so closing the palette returns it there.
   const onCommandK = useEffectEvent(() => {
     openSearch();
-    if (!palette) openPalette();
+    setPalette(true);
   });
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -114,38 +90,6 @@ export function TopBar({
         event.preventDefault();
         onCommandK();
       }
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
-
-  // Escape clears the filter from anywhere on the page (#1827), not only in the
-  // field. Whatever takes Escape itself handles it first and stops it or marks
-  // it handled: the field's own clear, a dialog, a popover, the palette. Escape
-  // typed in another text field (a period year, the project name) leaves the
-  // search alone: it is about that field, not the browse columns.
-  useEffect(() => {
-    const onKey = (event: KeyboardEvent) => {
-      if (
-        event.key !== "Escape" ||
-        isOtherTextEntry(event.target, input.current) ||
-        event.defaultPrevented ||
-        event.isComposing ||
-        event.altKey ||
-        event.ctrlKey ||
-        event.metaKey ||
-        event.shiftKey ||
-        browseFilter.value === ""
-      ) {
-        return;
-      }
-      browseFilter.set("");
-      // Focus is elsewhere, so the emptied field folds too, and a palette
-      // still open under it closes with it. Backstop: the only route to an open
-      // palette here is a window blur, where relatedTarget is null and no
-      // pointerdown fires.
-      setPalette(false);
-      setOpened(false);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -168,21 +112,25 @@ export function TopBar({
             )}
           </a>
         )}
-        {/* Text here filters both browse columns in place, never the open
-          page. Enter opens the palette under it, for registers, variables
-          and the app's places; the field stays the
-          palette's one input, so typing there goes on filtering the columns
-          too. Escape closes the palette first, then clears the text (here or
-          anywhere on the page, giving back the collapse state), then, below
-          the breakpoint, folds the field back behind the "Search" button. */}
-        <Autocomplete inputValue={filter} onInputChange={browseFilter.set}>
+        {/* The field searches and filters nothing (#2398): its results, the
+          palette, open under it as the text reaches the search minimum, and
+          on Enter or ⌘K, for registers, variables and the app's places; the
+          field is the palette's one input. Escape closes the palette first,
+          then clears the text, then, below the breakpoint, folds the field
+          back behind the "Search" button. */}
+        <Autocomplete
+          inputValue={text}
+          onInputChange={onInputChange}
+          // No row is active until the arrow keys reach one: the results open
+          // as you type, and Enter on an auto-focused first row opened a
+          // place ranked before the catalog's hits had landed.
+          disableAutoFocusFirst
+        >
           <SearchField
             ref={field}
             aria-label="Search registers, variables"
             className={styles.search}
-            onSubmit={() => {
-              if (!palette) openPalette();
-            }}
+            onSubmit={() => setPalette(true)}
             onBlur={(event) => {
               // simplify: focus inside the popover is not handled, because the
               // RAC Autocomplete menu uses virtual focus and is never tabbable;
@@ -196,7 +144,7 @@ export function TopBar({
               }
               const away = next !== null;
               if (palette && away) setPalette(false);
-              if (filter === "" && (!palette || away)) setOpened(false);
+              if (text === "" && (!palette || away)) setOpened(false);
             }}
           >
             <Input
@@ -218,11 +166,10 @@ export function TopBar({
                   return;
                 }
                 if (palette) {
-                  // Marked handled too: the page-wide Escape skips it.
                   event.preventDefault();
                   event.stopPropagation();
                   setPalette(false);
-                } else if (filter === "" && opened) {
+                } else if (text === "" && opened) {
                   event.preventDefault();
                   event.stopPropagation();
                   flushSync(() => setOpened(false));
@@ -230,27 +177,10 @@ export function TopBar({
                 }
               }}
             />
-            {filter === "" ? (
-              <kbd className={styles.hint} aria-hidden="true">
-                {commandShortcutHint(mac)}
-              </kbd>
-            ) : (
-              <span className={styles.hint}>
-                {/* How many registers the browse columns keep, never the
-                  palette's hits, so it names its noun. A live region that
-                  exists with the text, so a change in it is announced. */}
-                <span className={styles.count} aria-live="polite">
-                  {matches === null
-                    ? ""
-                    : matches === 1
-                      ? "1 register"
-                      : `${matches} registers`}
-                </span>
-                <kbd className={styles.key} aria-hidden="true">
-                  Esc
-                </kbd>
-              </span>
-            )}
+            {/* A touch device has neither key: CSS hides it there. */}
+            <kbd className={styles.hint} aria-hidden="true">
+              {text === "" ? commandShortcutHint(mac) : "Esc"}
+            </kbd>
           </SearchField>
           <CommandPalette
             isOpen={palette}
@@ -258,18 +188,17 @@ export function TopBar({
               setPalette(open);
               // Closed from outside the field (a press elsewhere, a row's
               // action, a scroll): an empty field folds with it.
-              if (!open && filter === "") setOpened(false);
+              if (!open && text === "") setOpened(false);
             }}
             triggerRef={field}
             popoverRef={popover}
-            text={filter}
+            text={text}
             onChoose={() => {
-              // A row navigates: the columns get back the filter they had
-              // before the palette (Operator 2026-10-24), and an empty narrow
-              // field folds away so the brand returns.
+              // A row navigates and ends the search: the text clears and the
+              // narrow field folds away, so the brand and the page return.
               setPalette(false);
-              browseFilter.set(beforePalette.current);
-              if (beforePalette.current === "") setOpened(false);
+              setText("");
+              setOpened(false);
             }}
           />
         </Autocomplete>

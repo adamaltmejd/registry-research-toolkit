@@ -201,7 +201,7 @@ printed console output alongside it.
   beside the column's `border` section rules.)
 
 Drive by hand where touched: a tree collapse with a child focused (Tab still enters the
-tree), a filter then Escape (expansion restored), an overlay under reduced motion, `⌘K`.
+tree), an overlay under reduced motion, `⌘K`.
 The frontend gate renders nothing app-level, and jsx-a11y (Oxlint) is a floor, not the
 axe audit.
 

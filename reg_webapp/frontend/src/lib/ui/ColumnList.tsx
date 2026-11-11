@@ -27,20 +27,20 @@ export interface ColumnItem {
   /** Unique across the list: a FQID, or `group:<key>`. */
   id: string;
   name: string;
-  /** The option's accessible name where `name` repeats across sections
-   * (another register's match); the visible text stays `name`. */
+  /** The option's accessible name where `name` alone does not tell rows
+   * apart (two variables of one name); the visible text stays `name`. */
   label?: string;
   href: string;
   /** Columns of this item in the open project; 0 shows no mark. */
   inProject: number;
-  /** Opens a page outside the list's register (another register's match,
-   * #1828): on click or Enter only, never as the arrow keys pass, so walking
-   * the list does not re-root it under the reader. */
+  /** Opens a page outside the list's root (a variable on a provider's page,
+   * under its register): on click or Enter only, never as the arrow keys pass,
+   * so walking the list does not re-root it under the reader. */
   leaves?: boolean;
 }
 
-/** A run of items under another register's header while the search bar holds
- * text (#1828). A flat list is one section with no label. */
+/** A run of items under a register's header (a provider's page). A flat list
+ * is one section with no label. */
 export interface ColumnSection {
   id: string;
   label: string | null;
@@ -59,10 +59,13 @@ interface Props {
   href?: string;
   /** Whose list it is (the open register's FQID): a change re-roots it. */
   root?: string;
+  /** The column's filter box (#2398), in a row of its own under the header so
+   * the two columns' headers keep one height; absent with no list. */
+  filter?: ReactNode;
   /** Null while the items load. */
   sections: readonly ColumnSection[] | null;
-  /** How many rows the list holds with no search. Over VIRTUALIZE_OVER it
-   * renders only the rows in view, searching or not, so a search never
+  /** How many rows the list holds with no filter. Over VIRTUALIZE_OVER it
+   * renders only the rows in view, filtered or not, so a filter never
    * switches it between the two and remounts it (focus would drop). */
   size: number;
   /** The item whose page is open, or null. */
@@ -73,9 +76,6 @@ interface Props {
   renderName: (item: ColumnItem) => ReactNode;
   /** Shown in place of the list when there are no items. */
   empty: string;
-  /** Shown above the list when the first run is empty but later ones are not
-   * (other registers' matches, #1828). */
-  notice?: string | null;
   /** Shown in place of the list when the items did not load. */
   error: string | null;
   className?: string;
@@ -127,13 +127,13 @@ export function ColumnList({
   subject,
   href,
   root,
+  filter,
   sections,
   size,
   selectedId,
   selectedExact,
   renderName,
   empty,
-  notice = null,
   error,
   className,
 }: Props) {
@@ -470,6 +470,7 @@ export function ColumnList({
           )}
         </span>
       </div>
+      {filter && <div className={styles.filter}>{filter}</div>}
       {/* The scroll box: the list and the column's one selection bar. */}
       <div
         ref={boxRef}
@@ -485,7 +486,6 @@ export function ColumnList({
           </p>
         ) : (
           <>
-            {notice !== null && <p className={styles.note}>{notice}</p>}
             {items?.length === 0 ? (
               <p className={styles.note}>{empty}</p>
             ) : virtual ? (

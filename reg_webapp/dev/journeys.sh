@@ -5,8 +5,8 @@
 # agent-browser session (fresh storage), clicks with the pointer, and asserts only
 # what the rendered page shows (text, roles and names, the URL) plus, in J5, the saved
 # project file. A click a journey cannot make is a suspected UI defect, never routed
-# around with keyboard input. Keys only enter text: `fill` types into a field, and J2
-# presses Enter in the search field to open its palette, as a user does. Layout, focus and the other widths are the rendered
+# around with keyboard input. Keys only enter text: `fill` types into a field, and the
+# search field's results open as it is typed in, as a user sees. Layout, focus and the other widths are the rendered
 # design review's. Names and values are the fixtures': webapp-dev
 # (conformance/cases/fixtures/webapp-dev) and the paired holdings fixture
 # (conformance/cases/holdings). Each journey's comment names the regression it catches.
@@ -92,17 +92,25 @@ j_browse() {
 		see heading "Antal personer" && shot
 }
 
-# J2 search. Fails if the header search stops filtering the register tree, the
-# palette stops finding a variable by name and opening its page, or the text typed in
-# the palette stays behind as the browse filter (Operator 2026-10-24).
+# J2 search. Fails if the top-bar field stops showing its results as text is typed
+# (#2398), a register opened from them lists fewer than all its variables (the text
+# stayed behind as a filter: Andra registret's "Kod" rows do not match "andra"), the
+# palette stops finding a variable by name and opening its page, the variables
+# column's filter box stops narrowing its column (8 rows in Basregistret, 3 match
+# "in"), or the box keeps its text when another register opens.
 j_search() {
 	visit /catalog && fill searchbox "Search registers, variables" andra &&
-		wait_text "Andra registret" && no_tree 'row "Demoleverantören"' &&
-		ab press Enter >/dev/null && see menuitem "Andra registret Register" &&
+		press menuitem "Andra registret Register" && wait_url "**/catalog/demo2/reg" &&
+		see option "Kod, 2019" &&
+		no_tree 'searchbox "Search registers, variables".*: ' &&
 		fill searchbox "Search registers, variables" kön &&
-		see menuitem "Kön Basregistret Variable" && press menuitem "Kön Basregistret Variable" &&
+		press menuitem "Kön Basregistret Variable" &&
 		wait_url "**/catalog/demo/bas/kon" && see heading "Kön" &&
-		tree 'searchbox "Search registers, variables".*: andra$' && shot
+		fill searchbox "Filter variables" in && wait_text "3 of 8" &&
+		see option "Inkomstmått" && no_tree 'option "Kön"' &&
+		press row "Hushållsregistret" && wait_url "**/catalog/demo/hush" &&
+		see option "Antal personer" &&
+		no_tree 'searchbox "Filter variables".*: ' && shot
 }
 
 # J3 open a variable. Fails if the variable page loses its lane per table or the
@@ -159,15 +167,14 @@ j_order() {
 
 # J6 narrow (375 px). Fails if, where the columns stack, a register or variable can no
 # longer be reached by pointer, the trail loses its way back to the browse list, or the
-# folded search no longer opens and filters.
+# folded search no longer opens and shows its results.
 j_narrow() {
 	visit /catalog && press row "Basregistret" && wait_url "**/catalog/demo/bas" &&
 		press link "Kön" && wait_url "**/catalog/demo/bas/kon" && see heading "Kön" &&
 		press link "Browse registers" && wait_url "**/catalog" &&
 		press button "Search registers, variables" &&
 		fill searchbox "Search registers, variables" andra &&
-		wait_text "Andra registret" && no_tree 'row "Demoleverantören"' &&
-		press row "Andra registret" && wait_url "**/catalog/demo2/reg" && shot
+		press menuitem "Andra registret Register" && wait_url "**/catalog/demo2/reg" && shot
 }
 
 # J7 steward-held view (paired fixture). Fails if the pairing is ignored (steward
@@ -185,8 +192,8 @@ j_steward() {
 	visit /catalog/demo/held && [ "$(ab get title)" = "Synthetic steward" ] ||
 		fail "the page title is not the steward's" || return 1
 	fill searchbox "Search registers, variables" position &&
-		wait_text "Second position" && see option "Second position, in Delivery slots" &&
-		fill searchbox "Search registers, variables" Late && wait_text "Late measure" &&
+		see menuitem "Second position Delivery slots Variable" &&
+		fill searchbox "Filter variables" Late && wait_text "Late measure" &&
 		press option "Late measure" && wait_url "**/catalog/demo/held/late" &&
 		tree 'image "Late, Late measure, Held reference metadata, 2019–2020' &&
 		open_project "$project" && wait_text "Can't download yet: 1 problem." &&
