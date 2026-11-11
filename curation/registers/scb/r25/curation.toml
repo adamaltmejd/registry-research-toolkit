@@ -28214,7 +28214,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:pensionsdebiteringskod"
-fields = { "description" = "Kod för vilken typ av pension personen har fått under året. Från 2014 hämtas den från Skatteverkets taxeringsmaterial." }
+fields = { "description" = "Kod för pensionsdebitering. 1991 härleds den ur vilken typ av pension som har utgått under året. Från 2014 hämtas den från Skatteverkets taxeringsmaterial." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma kod; texterna anger härledningen respektive källan.\ncatalog:variable_text:38234:7670:8035\ncatalog:variable_text:38234:12053:12418\ncatalog:variable_text:38234:16071:20089"
 
 [[statement]]

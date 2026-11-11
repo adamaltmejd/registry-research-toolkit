@@ -5933,7 +5933,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:niva-vuxenutbildning"
-fields = { "description" = "Nivå på studierna i vuxenutbildning inom Komvux, Statens skolor för vuxna (SSV) eller Nationellt centrum för flexibelt lärande (CFL). Den härleds från variabeln Kurs i komvux. För elever bestäms den 1996–2016 utifrån elevens förbrukade poäng, i läsårstabellerna 1997–2009 utifrån den kurs där eleven förbrukat flest undervisningstimmar. Har eleven läst på flera nivåer väljs 2019–2020 nivån där eleven förbrukat flest poäng och 2021–2024 nivån där eleven läst flest poäng; vid lika många poäng väljs den högsta nivån." }
+fields = { "description" = "Nivå på studierna i vuxenutbildning inom Komvux, Statens skolor för vuxna (SSV) eller Nationellt centrum för flexibelt lärande (CFL). För kursdeltagare härleds den från variabeln Kurs i komvux. För elever bestäms den 1996–2016 utifrån elevens förbrukade poäng, i läsårstabellerna 1997–2009 utifrån den kurs där eleven förbrukat flest undervisningstimmar, och 2008–2024 härleds den från variabeln Kurs i komvux. Har eleven läst på flera nivåer väljs 2019–2020 nivån där eleven förbrukat flest poäng och 2021–2024 nivån där eleven läst flest poäng; vid lika många poäng väljs den högsta nivån." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; härledningen per tabelltyp och regeln från 2019 anges med år.\ncatalog:variable_text:41510:3468:6390\ncatalog:variable_text:41510:8582:14245\ncatalog:variable_text:41510:14245:19358\ncatalog:variable_text:41510:19358:19539"
 
 [[statement]]
