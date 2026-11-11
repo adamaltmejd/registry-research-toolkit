@@ -112212,7 +112212,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:deltar-aktivt-sociala-natverk-internet"
-fields = { "description" = "Hur ofta urvalspersonen deltar aktivt i något socialt nätverk på internet, till exempel Facebook, Instagram eller Twitter. Med aktivt avses att bidra till diskussionen i nätverket eller forumet." }
+fields = { "description" = "Om urvalspersonen deltar aktivt i något socialt nätverk på internet, till exempel Facebook, Instagram eller Twitter. Med aktivt avses att bidra till diskussionen i nätverket eller forumet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nW1 är samma text med stavfel (”Har avses”, ”formuet”), som rättas.\ncatalog:variable_text:54565:16801:17532\ncatalog:variable_text:54565:17532:18628"
 
 [[statement]]
@@ -113172,8 +113172,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:mottaget-underhallsbidrag"
-fields = { "description" = "Mottaget obligatoriskt och frivilligt underhållsbidrag samt periodiska betalningar från hushållet, även om de bara görs en gång om året. Uppgiften avser hushållet." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nTvå varianter; tillägget om periodiska betalningar från hushållet motsäger att beloppet är mottaget och är utelämnat, liksom sambanden mellan variabelkoder. Justerad efter granskning: fakta anges med de år texterna anger dem.\ncatalog:variable_text:57242:18628:18993\ncatalog:variable_text:57242:18993:19723"
+fields = { "description" = "Mottaget obligatoriskt och frivilligt underhållsbidrag. Uppgiften avser hushållet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nTvå varianter; tillägget om periodiska betalningar från hushållet motsäger att beloppet är mottaget och är utelämnat, liksom sambanden mellan variabelkoder.\ncatalog:variable_text:57242:18628:18993\ncatalog:variable_text:57242:18993:19723"
 
 [[statement]]
 kind = "set"
