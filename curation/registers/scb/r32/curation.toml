@@ -5896,13 +5896,13 @@ evidence = "Material change in meaning, a separate variable (crates/DESIGN.md, o
 [[statement]]
 kind = "set"
 subject = "var:hiss"
-fields = { "description" = "Om hushållet har tillgång till hiss på samma våningsplan som bostaden. Uppgiften lämnas för två- och flerbostadshus; småbostadshus har en egen kod." }
+fields = { "description" = "Om hushållet har tillgång till hiss på samma våningsplan som bostaden. Uppgiften lämnas för två- och flerbostadshus." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad: 1985 års antal lägenheter som nås med hiss är en egen variabel; kvar är hushållsfrågan 1990.\ncatalog:variable_text:18302:7305:7670"
 
 [[statement]]
 kind = "set"
 subject = "var:antal-lagenheter-med-hiss"
-fields = { "description" = "Antal lägenheter i flerbostadshuset som kan nås med hiss, inklusive lägenheter i markplanet, enligt fastighetsblanketten." }
+fields = { "description" = "Antal lägenheter i flerbostadshuset som kan nås med hiss, inklusive lägenheter i markplanet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAndra halvan av delningen av hiss (AntLghHiss 1985).\ncatalog:variable_text:18302:5479:5844"
 
 [[statement]]
@@ -5986,7 +5986,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:fastnr"
-fields = { "description" = "Fastighetsnummer enligt blankettmaterialet: löpande numrering per distrikt eller kommun, i Stockholm enligt mantalslängdens registreringsnummer. Härleds ur FoB-blanketten och mantalslängden." }
+fields = { "description" = "Fastighetsnummer. 1960 och 1965 enligt blankettmaterialet, härlett ur FoB-blanketten och mantalslängden: löpande numrering per distrikt eller kommun, i Stockholm enligt mantalslängdens registreringsnummer. 1975 är det ett fastighetslöpnummer som är unikt inom kommunen och avser fastigheten där bostadslägenheten ligger, härlett ur FoB-blanketten och Registret över totalbefolkningen (RTB)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text 1960 och 1965, olika ordnad.\ncatalog:variable_text:18268:-3653:-3287\ncatalog:variable_text:18268:-1826:-1461"
 
 [[statement]]

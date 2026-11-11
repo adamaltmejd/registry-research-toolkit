@@ -260,5 +260,5 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:namn"
-fields = { "description" = "Namn, person- eller företagsnamn, på aktieägaren. Från 2020 dokumenteras kolumnen också för aktiebolagets företagsnamn." }
+fields = { "description" = "Person- eller företagsnamn. Från 2020 avser namnet i en del av uppgifterna enbart företagsnamn." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSCB-exporten (VarId 326) dokumenterar Namn 2020–2025 i två rader per år (person- eller företagsnamn och företagsnamn); den generiska definitionen (delad av 9 variabler) tas inte med.\ncatalog:variable_text:9002:17167:18262\ncatalog:variable_text:9002:18262:20454"

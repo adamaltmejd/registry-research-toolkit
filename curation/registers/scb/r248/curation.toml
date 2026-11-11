@@ -3804,7 +3804,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:kursslut"
-fields = { "description" = "Datum då kursdeltagaren avslutade den studievägskurs som anges i variablerna Studieväg och Kurs. Till och med 2009 betyder 1900-01-01 att kursen inte avslutats inom perioden (läsåret, terminen eller kalenderåret); från 2010 är fältet då tomt och kursen antas fortsätta." }
+fields = { "description" = "Datum då kursdeltagaren avslutade den studievägskurs som anges i variablerna Studieväg och Kurs. Till och med 2009 (i kalenderårstabellen till och med 2011) betyder 1900-01-01 att kursen inte avslutats inom perioden (läsåret, terminen eller kalenderåret). Från 2010 är fältet i stället tomt när kursen inte avslutats, och kursen antas då fortsätta nästa termin respektive nästa år." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; kodbytet för ej avslutad kurs 2010 anges som fakta med år.\ncatalog:variable_text:41390:8582:9862\ncatalog:variable_text:41390:9862:10043\ncatalog:variable_text:41390:14610:14791\ncatalog:variable_text:41390:14791:14975"
 
 [[statement]]
@@ -3822,7 +3822,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:personnr"
-fields = { "description" = "Kursdeltagarens personnummer, 12 siffror inklusive sekelsiffra, som skolenheten anger i frågeformuläret." }
+fields = { "description" = "Kursdeltagarens personnummer. 1993–2016 anges det av skolan i frågeformuläret; i kalenderårs- och provresultatfilerna 1997–2017 anges det med 12 siffror inklusive sekelsiffra." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; den generiska personnummerdefinitionen tas inte med, och 2016 års kopierade kommuntext är rättad på förekomstnivå.\ncatalog:variable_text:41406:8582:9862\ncatalog:variable_text:41406:9862:10043\ncatalog:variable_text:41406:14245:14426\ncatalog:variable_text:41406:14426:14610\ncatalog:variable_text:41406:16801:16983"
 
 [[statement]]

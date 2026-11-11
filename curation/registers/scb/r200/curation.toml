@@ -11980,7 +11980,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:inkopsvarde-bransle"
-fields = { "description" = "Inköpsvärde för bränsle, totalt för de olika bränsleslagen." }
+fields = { "description" = "Inköpsvärde för bränsle. För elproducerande industriföretag avser det det totala inköpsvärdet för de olika bränsleslagen; för elnätföretag avser det bränsle för värmeproduktion i värmeverk och annan värme (så kallad färdig värme)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nIndustriföretagen anger totalt inköpsvärde för olika bränsleslag; elnätföretagens kolumn anger från 2018 inköpsvärde för bränsle. Gruppens gemensamma text om mottagen värmemängd (delad av fyra kolumner) tas inte med.\ncatalog:variable_text:11879:14245:20089"
 
 [[statement]]
@@ -12112,7 +12112,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:verkningsgrad"
-fields = { "description" = "Verkningsgrad vid värmeproduktion vid värmeverk och annan värme (så kallad färdig värme), normalt 80–90 procent." }
+fields = { "description" = "Verkningsgrad vid värmeproduktion vid värmeverk och annan värme (så kallad färdig värme). För elnätföretagen anges den normalt till 80–90 procent." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; elnätföretagens text tillägger normalvärdet.\ncatalog:variable_text:12219:14245:17897"
 
 [[statement]]
@@ -12160,7 +12160,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:postnummer-padr"
-fields = { "description" = "Postnummer i företagsenhetens postadress." }
+fields = { "description" = "Postnummer i företagets postadress." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; rampopulationstexten är delad av tio variabler och tas inte med.\ncatalog:variable_text:12110:14245:17897"
 
 [[statement]]

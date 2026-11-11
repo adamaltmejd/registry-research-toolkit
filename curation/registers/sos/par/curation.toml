@@ -1718,5 +1718,5 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:typ"
-fields = { "description" = "Typ av rad i tvångsvårdsregistret: psykiatrisk vårdform, till exempel tvångsvård eller rättspsykiatrisk vård. 2011–2013 anger variabeln i filerna för avvikning, permission respektive yttre orsak att raden avser avvikning, permission eller en yttre orsakskod." }
+fields = { "description" = "Psykiatrisk vårdform för raden, till exempel tvångsvård eller rättspsykiatrisk vård. 2011–2013 kan variabeln i stället ange att raden avser avvikning eller permission, och 2012–2013 att raden avser en yttre orsakskod." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma kolumn TYP; i de separata filerna 2011–2013 är värdet radens typ.\ncatalog:variable_text:64087:14975:15340\ncatalog:variable_text:64087:15340:16071"

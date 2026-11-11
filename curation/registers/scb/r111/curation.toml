@@ -13467,7 +13467,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:scbid"
-fields = { "description" = "SCB:s identitetsnummer för individen, som ersätter personnumret och används internt vid enkätutskick och avprickning av inkomna enkäter." }
+fields = { "description" = "SCB:s identitetsnummer för individen. För gymnasieavgångna 2006–2014 används det internt vid enkätutskick och avbockning; för YH-examinerade 2019 är det ett unikt nummer för individen som ersätter personnumret." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma identitetsnummer; 2006–2014 anger hur det används i insamlingen, 2019 att det ersätter personnumret. Rättar ”identitesnummer”.\ncatalog:variable_text:36909:13208:13239\ncatalog:variable_text:36909:18078:18262"
 
 [[statement]]

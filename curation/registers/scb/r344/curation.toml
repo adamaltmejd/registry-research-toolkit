@@ -2006,7 +2006,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:personnr-far"
-fields = { "description" = "Personnummer för elevens biologiska far. Saknas uppgift om far i registret är fältet tomt." }
+fields = { "description" = "Personnummer för elevens far; i elevtabellen avses den biologiska fadern. I betygstabellen för årskurs 10 är fältet tomt när ingen uppgift om far har hittats i registret." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger att fadern är den biologiska och att saknad uppgift är tom.\ncatalog:variable_text:50019:12965:18184\ncatalog:variable_text:50019:18184:18185"
 
 [[statement]]

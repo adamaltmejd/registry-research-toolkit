@@ -5220,7 +5220,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:famtyp2"
-fields = { "description" = "Om barnet bor i en kärnfamilj, en ombildad familj med gemensamma barn, en ombildad familj med den enes och den andres barn, eller i en familj utan barn. En gruppering av Familjetyp, härledd från folkbokföringen och anpassad för Barnregistret. Från 2014 avser familj personer som bor i samma bostad och har relationer till varandra, eller på samma fastighet när uppgift om bostad saknas." }
+fields = { "description" = "Familjens sammansättning: kärnfamilj, ombildad familj med gemensamma barn, ombildad familj med den enes och den andres barn, eller ej barnfamilj. Härledd ur folkbokföringens uppgifter. Från 2014 är variabeln anpassad för Barnregistret och en gruppering av Familjetyp, och familj avser personer som bor i samma bostad och har relationer till varandra, eller på samma fastighet när uppgift om bostad saknas." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna lägger till härledning och familjebegrepp, det senare angivet från 2014.\ncatalog:variable_text:13577:10591:10592\ncatalog:variable_text:13577:10956:10957\ncatalog:variable_text:13577:16435:16436"
 
 [[statement]]

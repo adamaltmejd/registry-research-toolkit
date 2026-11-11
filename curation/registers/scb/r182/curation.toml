@@ -17501,7 +17501,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:regionindelning"
-fields = { "description" = "Region på NUTS3-nivå, skapad genom att länskoden nycklas till NUTS3. I företagssektorns tabell 2021 och 2023 tas länskoden från SAMU i november samma år." }
+fields = { "description" = "Indelning av riket i regioner. 2021 och 2023 skapas variabeln genom att länskoden nycklas till NUTS3-nivå; i företagssektorns tabell tas länskoden då från SAMU i november samma år." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger härledningen, med stavfel (”geneom”, ”momenklaturen”).\ncatalog:variable_text:20830:17897:18262\ncatalog:variable_text:20830:18628:18993\ncatalog:variable_text:20830:19358:19723"
 
 [[statement]]
@@ -17519,31 +17519,31 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:stratum"
-fields = { "description" = "Det stratum elementet tillhör i det stratifierade urvalet. För högskolans personal är stratum sammansatt av lärosäte (2005–2009 högskolegrupp), kön, tjänstekategori och vetenskapsområde, från 2013 forskningsämnesområde; konstnärliga högskolor och övriga enskilda utbildningsanordnare stratifieras på högskolegrupp. Små strata har slagits ihop, och kön = 0 betyder att ingen stratifiering på kön skett. Tjänstekategorin är den som används i undersökningen om arbetstidens fördelning, inte registrets." }
+fields = { "description" = "Det stratum elementet tillhör i det stratifierade urvalet. För högskolans personal är stratum sammansatt av lärosäte (2005–2009 högskolegrupp), kön, tjänstekategori och vetenskapsområde, från 2013 forskningsämnesområde. Från 2013 stratifieras konstnärliga högskolor och övriga enskilda utbildningsanordnare på högskolegrupp, och kön = 0 betyder att ingen stratifiering på kön skett. Från 2015 har små strata slagits ihop, och tjänstekategorin är den som används i undersökningen om arbetstidens fördelning vid universitet och högskolor, inte registrets." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; stratumets sammansättning för personalurvalet anges med år.\ncatalog:variable_text:20867:12053:12418\ncatalog:variable_text:20867:12784:13149\ncatalog:variable_text:20867:14975:15340\ncatalog:variable_text:20867:15706:16071\ncatalog:variable_text:20867:16436:16801"
 
 [[statement]]
 kind = "set"
 subject = "var:utlandsvistelse-forska"
-fields = { "description" = "Antal veckor under referensåret som individen var utomlands och främst forskade, av det totala antalet veckor utomlands. 2015 besvarades frågan med ja, ja under mindre än en vecka eller nej; 2017 som antal veckor." }
+fields = { "description" = "Om individen vistats utomlands för att främst forska. 2015 besvarat med ja, ja under mindre än en vecka eller nej; 2017 som antal veckor, av det totala antalet veckor utomlands, då individen främst forskade." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; svarsformatet skiljer mellan omgångarna och anges med år.\ncatalog:variable_text:20981:16436:16801\ncatalog:variable_text:20981:17167:17532"
 
 [[statement]]
 kind = "set"
 subject = "var:utlandsvistelse-studera"
-fields = { "description" = "Antal veckor under referensåret som individen var utomlands och främst studerade, av det totala antalet veckor utomlands. 2015 besvarades frågan med ja, ja under mindre än en vecka eller nej; 2017 som antal veckor." }
+fields = { "description" = "Om individen vistats utomlands för att främst studera. 2015 besvarat med ja, ja under mindre än en vecka eller nej; 2017 som antal veckor, av det totala antalet veckor utomlands, då individen främst studerade." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; svarsformatet skiljer mellan omgångarna och anges med år.\ncatalog:variable_text:20982:16436:16801\ncatalog:variable_text:20982:17167:17532"
 
 [[statement]]
 kind = "set"
 subject = "var:utlandsvistelse-total"
-fields = { "description" = "Antal hela veckor som individen totalt forskade, undervisade eller studerade utanför Sverige under referensåret. 2015 besvarades frågan med ja, ja under mindre än en vecka eller nej; 2017 som antal veckor." }
+fields = { "description" = "Om och hur länge individen forskade, undervisade eller studerade utanför Sverige. 2015 besvarades frågan med ja, ja under mindre än en vecka eller nej; 2017 anges antalet hela veckor totalt." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; svarsformatet skiljer mellan omgångarna och anges med år.\ncatalog:variable_text:20983:16436:16801\ncatalog:variable_text:20983:17167:17532"
 
 [[statement]]
 kind = "set"
 subject = "var:utlandsvistelse-undervisa"
-fields = { "description" = "Antal veckor under referensåret som individen var utomlands och främst undervisade, av det totala antalet veckor utomlands. 2015 besvarades frågan med ja, ja under mindre än en vecka eller nej; 2017 som antal veckor." }
+fields = { "description" = "Om individen vistats utomlands för att främst undervisa. 2015 besvarat med ja, ja under mindre än en vecka eller nej; 2017 som antal veckor, av det totala antalet veckor utomlands, då individen främst undervisade." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; svarsformatet skiljer mellan omgångarna och anges med år.\ncatalog:variable_text:20984:16436:16801\ncatalog:variable_text:20984:17167:17532"
 
 [[statement]]

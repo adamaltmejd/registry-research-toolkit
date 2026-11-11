@@ -2649,7 +2649,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:eurosympat-foregaende-undersokning"
-fields = { "description" = "Personens svar vid föregående undersökningsomgång (majundersökningen) på frågan ”Om vi idag skulle ha folkomröstning om att ersätta kronan som valuta, skulle du då rösta ja eller nej till att införa euron som valuta i Sverige?”" }
+fields = { "description" = "Personens svar vid föregående undersökning på frågan ”Om vi idag skulle ha folkomröstning om att ersätta kronan som valuta, skulle du då rösta ja eller nej till att införa euron som valuta i Sverige?” 2024 och 2025 avser föregående undersökning majundersökningen året före (maj 2023 respektive maj 2024)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2024 och 2025 anger vilken föregående omgång som avses.\ncatalog:variable_text:47772:15095:15126\ncatalog:variable_text:47772:19844:19875\ncatalog:variable_text:47772:20209:20240"
 
 [[statement]]
@@ -2661,7 +2661,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:omgnr"
-fields = { "description" = "Omgångsnummer för partisympatiundersökningen, som identifierar år och omgång. Numret har tre siffror: de två första anger året och den sista omgången." }
+fields = { "description" = "Omgångsnummer för partisympatiundersökningen, som identifierar år och omgång (2000–2006 angivet som år och månad). Från 2015 har numret tre siffror: de två första anger året och den sista omgången." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger numrets uppbyggnad med olika detaljgrad.\ncatalog:variable_text:47814:11078:11109\ncatalog:variable_text:47814:11262:11292\ncatalog:variable_text:47814:13453:13483\ncatalog:variable_text:47814:16740:16770"
 
 [[statement]]

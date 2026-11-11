@@ -1160,7 +1160,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:storleksgrupp-tomter-stugor"
-fields = { "description" = "Campinganläggningens storleksgrupp efter antal tomter och stugor: under 25, 25–50, 51–100, 101–250, 251–500 och över 500." }
+fields = { "description" = "Campinganläggningens storleksgrupp efter antal tomter och stugor. 2017–2018 är grupperna under 25, 25–50, 51–100, 101–250, 251–500 och över 500." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; operationaliseringarna anger grupperna och indelningsgrunden.\ncatalog:variable_text:34733:13879:17167\ncatalog:variable_text:34733:17167:17897\ncatalog:variable_text:34733:18262:18628"
 
 [[statement]]

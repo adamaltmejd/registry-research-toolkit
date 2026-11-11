@@ -19844,7 +19844,7 @@ evidence = "Candidate split, no succession edge (crates/DESIGN.md, one variable 
 [[statement]]
 kind = "set"
 subject = "var:arbete"
-fields = { "description" = "Om personen hade något arbete, även bara en timme, under undersökningens mätvecka, enligt enkätsvar." }
+fields = { "description" = "Om personen hade något arbete, enligt enkätsvar. I folkhögskoleuppföljningen 2006 avses arbete, även bara en timme, under vecka 14 (3–9 april 2006)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad: 2018 års fråga om arbete inom universitet eller högskola är en egen variabel; kvar är frågan om arbete under mätveckan.\ncatalog:variable_text:60229:13149:13514\ncatalog:variable_text:60229:13514:13695"
 
 [[statement]]
@@ -19880,19 +19880,19 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:hjalpvariabel-2-distans"
-fields = { "description" = "Hjälpvariabel för kalibreringen av vikterna i undersökningarna om distansundervisning, som korsar bakgrundsvariabler. Vilka variabler den består av skiljer mellan tabeller och år: kommuntyp, årskurs och kön; programtyp, årskurs och kön; eller stadium." }
+fields = { "description" = "Hjälpvariabel i undersökningarna om distansundervisning, sammansatt av bakgrundsvariabler. Vilka variabler den består av skiljer mellan tabeller och år: kommuntyp, årskurs och kön; programtyp, årskurs och kön; eller stadium." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nEn hjälpvariabel för viktning vars indelning skiljer per tabell och år; indelningarna räknas upp.\ncatalog:variable_text:60675:18262:19174"
 
 [[statement]]
 kind = "set"
 subject = "var:hjalpvariabel-3-distans"
-fields = { "description" = "Hjälpvariabel för kalibreringen av vikterna i undersökningarna om distansundervisning, som korsar bakgrundsvariabler. Vilka variabler den består av skiljer mellan tabeller och år: skolstorlek, programtyp och kön; kommuntyp, programtyp och kön; eller stadium och huvudman." }
+fields = { "description" = "Hjälpvariabel i undersökningarna om distansundervisning i grundskolan och gymnasieskolan, sammansatt av bakgrundsvariabler. Sammansättningen skiljer sig mellan tabeller och år: skolstorlek, programtyp och kön; kommuntyp, programtyp och kön; eller stadium och huvudman." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nEn hjälpvariabel för viktning vars indelning skiljer per tabell och år; indelningarna räknas upp.\ncatalog:variable_text:60676:18262:19174"
 
 [[statement]]
 kind = "set"
 subject = "var:hjalpvariabel-4-distans"
-fields = { "description" = "Hjälpvariabel för kalibreringen av vikterna i undersökningarna om distansundervisning, som korsar bakgrundsvariabler: i gymnasieskolans tabell skolstorlek, programtyp och kön, i grundskolans tabell stadium och kommuntyp." }
+fields = { "description" = "Hjälpvariabel i undersökningarna om distansundervisning, som bygger på skolstorlek, programtyp och kön i gymnasieskolans tabell och på stadium och kommuntyp i grundskolans tabell." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nEn hjälpvariabel för viktning vars indelning skiljer per tabell; indelningarna räknas upp.\ncatalog:variable_text:60677:18262:18809\ncatalog:variable_text:60677:18809:19174"
 
 [[statement]]

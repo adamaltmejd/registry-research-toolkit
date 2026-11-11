@@ -263,7 +263,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:tatortskod"
-fields = { "description" = "Kod för statistisk tätort, det vill säga sammanhängande bebyggelse med minst 200 invånare, enligt det register över tätorter som undersökningen själv producerar för respektive år. Tätorterna avgränsas med Registret över totalbefolkningen och företagsregistret kombinerade med Lantmäteriets adressregister (folkbokförda och anställda per adresskoordinat) samt Lantmäteriets fastighetskarta." }
+fields = { "description" = "Kod för statistisk tätort, det vill säga sammanhängande bebyggelse med minst 200 invånare, enligt det register över tätorter som undersökningen själv producerar för respektive år. 2020 avgränsades tätorterna med Registret över totalbefolkningen och företagsregistret (referenstidpunkt 2018-12-31) kombinerade med Lantmäteriets adressregister (folkbokförda och anställda per adresskoordinat) samt Lantmäteriets fastighetskarta (uttag januari 2019)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna skiljer i registrets årtal, och 2020 beskriver avgränsningen, som anges utan årtal.\ncatalog:variable_text:51692:7305:7670\ncatalog:variable_text:51692:9131:9496\ncatalog:variable_text:51692:10957:11323\ncatalog:variable_text:51692:12784:13149\ncatalog:variable_text:51692:14610:14975\ncatalog:variable_text:51692:16436:16801\ncatalog:variable_text:51692:17532:17897\ncatalog:variable_text:51692:18262:18628\ncatalog:variable_text:51692:19358:19723"
 
 [[statement]]

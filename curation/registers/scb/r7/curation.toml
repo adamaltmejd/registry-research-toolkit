@@ -4339,7 +4339,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:person-orgnr"
-fields = { "description" = "Person- eller organisationsnummer för taxeringsenhetens ägare, som kan vara en person eller en organisation. I tabellen över taxeringsenheter avser numret den deklarationsansvarige ägaren. Juridiska personer tilldelas organisationsnummer av Bolagsverket, Skatteverket, Kammarkollegiet, Lantmäteriet, en länsstyrelse eller SCB beroende på bolagsform; för fysiska personer används personnumret." }
+fields = { "description" = "Person- eller organisationsnummer för taxeringsenhetens ägare, som kan vara en person eller en organisation. I tabellen över taxeringsenheter avser numret 2013–2023 den deklarationsansvarige ägaren. Juridiska personer tilldelas organisationsnummer av Bolagsverket, Skatteverket, Kammarkollegiet, Lantmäteriet, en länsstyrelse eller SCB beroende på bolagsform; för fysiska personer används personnumret." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger ägare respektive deklarationsansvarig ägare.\ncatalog:variable_text:28284:10227:10228\ncatalog:variable_text:28284:15706:15707\ncatalog:variable_text:28284:17532:17533"
 
 [[statement]]

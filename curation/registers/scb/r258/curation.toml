@@ -20187,19 +20187,19 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:awshm"
-fields = { "description" = "Anger om företaget har tagit emot beställningar via en webbplats eller app från kunder i övriga EU, utom beställningar via EDI." }
+fields = { "description" = "Anger om företaget har tagit emot beställningar via en webbplats eller app från kunder i övriga EU. 2015 räknas beställningar via EDI inte med." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga alla år; 2013 års roterade definition är rättad på förekomstnivå.\ncatalog:variable_text:39371:15706:16071\ncatalog:variable_text:39371:16436:16801\ncatalog:variable_text:39371:17167:17532"
 
 [[statement]]
 kind = "set"
 subject = "var:awsww"
-fields = { "description" = "Anger om företaget har tagit emot beställningar via en webbplats eller app från kunder i Sverige, utom beställningar via EDI." }
+fields = { "description" = "Anger om företaget har tagit emot beställningar via en webbplats eller app från kunder i Sverige. 2015 räknas beställningar via EDI inte med." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga alla år; 2013 års roterade definition är rättad på förekomstnivå.\ncatalog:variable_text:39373:15706:16071\ncatalog:variable_text:39373:16436:16801\ncatalog:variable_text:39373:17167:17532"
 
 [[statement]]
 kind = "set"
 subject = "var:ehandel-bestallningar-webb-varlden"
-fields = { "description" = "Anger om företaget har tagit emot beställningar via en webbplats eller app från kunder i resten av världen, utom beställningar via EDI." }
+fields = { "description" = "Anger om företaget har tagit emot beställningar via en webbplats eller app från kunder i resten av världen. 2015 räknas beställningar via EDI inte med." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga alla år; 2013 års roterade definition är rättad på förekomstnivå.\ncatalog:variable_text:39678:15706:16071\ncatalog:variable_text:39678:16436:16801\ncatalog:variable_text:39678:17167:17532"
 
 [[statement]]

@@ -722,7 +722,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:dep"
-fields = { "description" = "Det departement myndigheten lyder under. Uppgiften hämtas från Ekonomistyrningsverkets myndighetsregister, 2000–2013 även från Fritzes författningssamling." }
+fields = { "description" = "Det departement myndigheten lyder under. 2000–2021 hämtas uppgiften från Ekonomistyrningsverkets myndighetsregister, 2000–2013 även från Fritzes författningssamling." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; uppgiftskällorna anges med år. Rättar ”mydigheten” och ”Ekonimistyrningsverkets”.\ncatalog:variable_text:40944:10957:16071\ncatalog:variable_text:40944:16071:18993\ncatalog:variable_text:40944:18993:20454"
 
 [[statement]]

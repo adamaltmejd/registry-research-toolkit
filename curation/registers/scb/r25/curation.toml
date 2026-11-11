@@ -28154,7 +28154,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:familjestod-skattefritt"
-fields = { "description" = "Summan av skattefria ersättningar som bostadsstöd, barnbidrag, underhållsstöd och ekonomiskt bistånd. I summan ingår ekonomiskt bistånd, särskilt bostadstillägg, bostadstillägg, bostadsbidrag, familjepenning, allmänt barnbidrag, förlängt barnbidrag och flerbarnstillägg, äldreförsörjningsstöd och mottaget underhållsstöd. Dessutom ingår introduktionsersättning 2004–2011 och 2014–2016, jämställdhetsbonus 2008–2016, vårdnadsbidrag och SFI-bonus 2010–2016, bostadsersättning, etableringsersättning och etableringstillägg från 2011, boendetillägg från 2012 och mottaget underhållsbidrag 2012–2013 och från 2017 (simulerat belopp)." }
+fields = { "description" = "Summan av skattefria ersättningar som bostadsstöd, barnbidrag, underhållsstöd och ekonomiskt bistånd. I summan ingår ekonomiskt bistånd, särskilt bostadstillägg, bostadstillägg, bostadsbidrag, familjepenning, allmänt barnbidrag, förlängt barnbidrag och flerbarnstillägg, äldreförsörjningsstöd och mottaget underhållsstöd (2012–2013 anges i stället mottaget underhållsbidrag). Dessutom ingår introduktionsersättning 2004–2011 och 2014–2016, jämställdhetsbonus 2008–2016, vårdnadsbidrag och SFI-bonus 2010–2016, bostadsersättning, etableringsersättning och etableringstillägg från 2011, boendetillägg från 2012 och från 2017 även mottaget underhållsbidrag (simulerat belopp)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma summa; komponenterna ändras över åren och anges med år.\ncatalog:variable_text:37776:12418:13879\ncatalog:variable_text:37776:13879:14610\ncatalog:variable_text:37776:14610:14975\ncatalog:variable_text:37776:14975:15340\ncatalog:variable_text:37776:15340:16071\ncatalog:variable_text:37776:16071:17167\ncatalog:variable_text:37776:17167:20089"
 
 [[statement]]
@@ -28184,7 +28184,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:kon"
-fields = { "description" = "Personens kön, härlett ur personnumrets näst sista siffra. Från 2014 ingår även personer med samordningsnummer och dödsbon; dödsbon får inget värde." }
+fields = { "description" = "Personens kön, härlett ur personnumret (näst sista siffran). Utöver folkbokförda finns personer med samordningsnummer och dödsbon; dödsbon får inget värde." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; populationstillägget 2014 anges med år.\ncatalog:variable_text:38039:2922:7305\ncatalog:variable_text:38039:7305:9496\ncatalog:variable_text:38039:9496:16071\ncatalog:variable_text:38039:16071:20089"
 
 [[statement]]
@@ -28244,13 +28244,13 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:sekvenssiffra"
-fields = { "description" = "Siffra som ger rätt sorteringsordning inom familjen för man, kvinna och barn, skapad med hjälp av familjeregistret i Registret över totalbefolkningen. 1998 används den för att sortera personerna i taxeringshushållet." }
+fields = { "description" = "Siffra som ger rätt sorteringsordning inom familjen för man, kvinna och barn. 1968–1989 skapad med hjälp av familjeregistret i Registret över totalbefolkningen; 1998 används den för att sortera personerna i taxeringshushållet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma sorteringssiffra; 1998 avser den taxeringshushållet.\ncatalog:variable_text:38375:-731:7305\ncatalog:variable_text:38375:10227:10592"
 
 [[statement]]
 kind = "set"
 subject = "var:sjukpenning-anstallning"
-fields = { "description" = "Sjukpenning av anställning, det vill säga sjukpenning som grundas på inkomst av tjänst för vilken arbetsgivaren har betalat ATP-avgift, inklusive KAS. 1987–1988 avser variabeln i stället summan av alla ersättningar från den allmänna försäkringskassan som är pensionsgrundande inkomst av tjänst enligt kontrolluppgift: sjukpenning, föräldrapenning, havandeskapspenning, ersättning till smittbärare, dagpenning vid arbetsmarknadsutbildning, ersättning till ledsagare och dagpenning vid utbildning och tjänstgöring inom totalförsvaret." }
+fields = { "description" = "Sjukpenning av anställning, det vill säga sjukpenning som grundas på inkomst av tjänst för vilken arbetsgivaren har betalat ATP-avgift, inklusive KAS. 1987–1988 avser variabeln i stället summan av ersättningar från den allmänna försäkringskassan som utgör pensionsgrundande inkomst av tjänst enligt kontrolluppgift; 1987 ingår sjukpenning, föräldrapenning, havandeskapspenning, ersättning till smittbärare, dagpenning vid arbetsmarknadsutbildning, ersättning till ledsagare och dagpenning vid utbildning och tjänstgöring inom totalförsvaret." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nRåexporten (tre likadana rader per år) har ATP-definitionen 1974–1986 och 1989 och den vidare summan av pensionsgrundande ersättningar 1987–1988; omfattningsändringen anges som fakta med år.\ncatalog:variable_text:38411:1461:6209\ncatalog:variable_text:38411:6209:6574\ncatalog:variable_text:38411:6574:6940"
 
 [[statement]]

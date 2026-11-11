@@ -4085,7 +4085,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:personnr-motsvarande-2"
-fields = { "description" = "Personnummer med 12 tecken enligt folkbokföringen. När personnumret är ofullständigt (de fyra sista siffrorna saknas) skapar SCB en motsvarande identitet med M för man eller K för kvinna, som följer personen genom hela registret. I tabellerna över sökande är numret det som erhållits från UHR, utan personnummerrättning; för skyddade personer anges ett alias-födelsedatum." }
+fields = { "description" = "Personnummer med 12 tecken enligt folkbokföringen. När personnumret är ofullständigt (de fyra sista siffrorna saknas) skapar SCB en motsvarande identitet med M för man eller K för kvinna, som följer personen genom hela registret. I tabellerna över sökande till internationella omgångar och i snabbstatistiken över sökande är numret det som erhållits från UHR, utan personnummerrättning; för skyddade personer anges ett alias-födelsedatum." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger SCB:s ersättningsnummer och, för sökandetabellerna, UHR:s nummer.\ncatalog:variable_text:33306:0:16801\ncatalog:variable_text:33306:16801:16953\ncatalog:variable_text:33306:16953:17348"
 
 [[statement]]
@@ -4097,5 +4097,5 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:vetomr"
-fields = { "description" = "Vetenskapsområde: ämnesområde som regeringen inrättat för tilldelning av resurser till forskning och utbildning på forskarnivå. Variabeln finns till och med 2010–2011, då den ersattes av forskningsämne. För forskarutbildningen grupperar den forskarutbildningsämnena efter högskolans egen klassificering; den infördes 1999 men har förts in bakåt i tiden. För personalen finns den 2001–2011 och hämtas från Konjunkturstatistik, löner för statlig sektor och undersökningen Personal vid universitet och högskolor." }
+fields = { "description" = "Vetenskapsområde: ämnesområde som regeringen inrättat för tilldelning av resurser till forskning och utbildning på forskarnivå. För forskarutbildningen grupperar den forskarutbildningsämnena efter högskolans egen klassificering; den infördes 1999 men har förts in bakåt i tiden, och den användes som grupperingsvariabel till och med 2010, då den 2011 ersattes av forskningsämne. För personalen finns den 2001–2011 och hämtas från Konjunkturstatistik, löner för statlig sektor och undersökningen Personal vid universitet och högskolor." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna beskriver användning och källa i doktorand- respektive personaltabellerna.\ncatalog:variable_text:33373:0:11323\ncatalog:variable_text:33373:11323:15340"
