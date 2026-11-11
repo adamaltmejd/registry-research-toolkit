@@ -309,23 +309,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/search/facets": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Per register, how many variables a search query matches. `register` or `provider` lists every match in that register, or in each of the provider's registers. */
-        get: operations["search_facets"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/segments/{ref}": {
         parameters: {
             query?: never;
@@ -524,11 +507,6 @@ export interface components {
         EvidenceSpelling: {
             kind: string;
             spelling: string;
-        };
-        /** @description A matched variable: its FQID and label. */
-        FacetVariable: {
-            fqid: string;
-            name: string;
         };
         /** @description The focus, its nodes and the relations between them. */
         Graph: {
@@ -900,22 +878,6 @@ export interface components {
             status: string;
             table: string;
             unit: string | null;
-        };
-        /**
-         * @description One register's matched variables. `name` and `variables` are present only in the
-         *     modes that list them, never `null`.
-         */
-        RegisterFacet: {
-            fqid: string;
-            name?: string;
-            /** Format: int64 */
-            variable_matches: number;
-            variables?: components["schemas"]["FacetVariable"][];
-        };
-        /** @description `search_facets`' result. */
-        RegisterFacets: {
-            registers: components["schemas"]["RegisterFacet"][];
-            steward?: components["schemas"]["StewardRegisterFacets"] | null;
         };
         RelatedDocument: {
             /** Format: int64 */
@@ -1397,10 +1359,6 @@ export interface components {
             name: string;
             /** @description How a researcher hands in an order. */
             order_instructions?: string | null;
-        };
-        StewardRegisterFacets: {
-            owner: string;
-            registers: components["schemas"]["RegisterFacet"][];
         };
         /** @description Matches in the data holder's own data, with their own count and cursor. */
         StewardSearchPage: {
@@ -2072,46 +2030,6 @@ export interface operations {
                 content: {
                     "application/json": {
                         data: components["schemas"]["SearchPage"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-            /** @description An error in `api/errors.toml` */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        error: components["schemas"]["Error"];
-                        meta: components["schemas"]["Meta"];
-                    };
-                };
-            };
-        };
-    };
-    search_facets: {
-        parameters: {
-            query: {
-                q: string;
-                register?: string;
-                provider?: string;
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Success */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        data: components["schemas"]["RegisterFacets"];
                         meta: components["schemas"]["Meta"];
                     };
                 };

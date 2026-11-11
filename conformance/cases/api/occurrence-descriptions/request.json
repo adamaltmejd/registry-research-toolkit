@@ -1,5 +1,5 @@
 {
-  "note": "Fails if the one curated description is omitted from compiled discovery/facets, source terms stop being indexed, the 2021 gap is excluded despite the variable hull, supplementary indexing reverses equal-label primary hits, or paging/facets duplicate a primary hit. The Source Longitudinal query pins an AND across source and curated text. The default and evidence show cases own the summary/provenance oracles; expected discovery values come from the descriptions source fixture.",
+  "note": "Fails if the one curated description is omitted from compiled discovery, source terms stop being indexed, the 2021 gap is excluded despite the variable hull, supplementary indexing reverses equal-label primary hits, or paging duplicates a primary hit. The Source Longitudinal query pins an AND across source and curated text. The default and evidence show cases own the summary/provenance oracles; expected discovery values come from the descriptions source fixture.",
   "fixture": "descriptions",
   "requests": [
     {
@@ -17,13 +17,6 @@
         "q": "Longitudinal",
         "type": "variable",
         "period": "2021"
-      }
-    },
-    {
-      "operation": "search_facets",
-      "path": "/api/search/facets",
-      "query": {
-        "q": "Revised"
       }
     },
     {
@@ -52,17 +45,9 @@
         "limit": 1
       },
       "cursor_from": [
-        4,
+        3,
         "/data/next_cursor"
       ]
-    },
-    {
-      "operation": "search_facets",
-      "path": "/api/search/facets",
-      "query": {
-        "q": "Vikt",
-        "register": "demo/descriptions"
-      }
     }
   ]
 }

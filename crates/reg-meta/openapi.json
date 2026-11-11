@@ -1160,94 +1160,6 @@
         }
       }
     },
-    "/api/search/facets": {
-      "get": {
-        "description": "Per register, how many variables a search query matches. `register` or `provider` lists every match in that register, or in each of the provider's registers.",
-        "operationId": "search_facets",
-        "parameters": [
-          {
-            "name": "q",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "register",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "provider",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "maximum": 200,
-              "minimum": 1
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "data",
-                    "meta"
-                  ],
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/RegisterFacets"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "An error in `api/errors.toml`",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "error",
-                    "meta"
-                  ],
-                  "properties": {
-                    "error": {
-                      "$ref": "#/components/schemas/Error"
-                    },
-                    "meta": {
-                      "$ref": "#/components/schemas/Meta"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/segments/{ref}": {
       "get": {
         "description": "A variable's columns over time: per table, column name and period one row, in time order, with the provider's wording and the form (type, value set, flags) where stated. A change of form or wording starts a new row. On a data holder's catalog, also its columns and files over the years it holds. A table ref with `variable` (up to 200 variables) lists those variables' rows in that table, in one list. `evidence=true` adds the deliveries behind each row and the curated values that replaced the provider's.",
@@ -2081,22 +1993,6 @@
             "type": "string"
           },
           "spelling": {
-            "type": "string"
-          }
-        }
-      },
-      "FacetVariable": {
-        "type": "object",
-        "description": "A matched variable: its FQID and label.",
-        "required": [
-          "fqid",
-          "name"
-        ],
-        "properties": {
-          "fqid": {
-            "type": "string"
-          },
-          "name": {
             "type": "string"
           }
         }
@@ -3406,57 +3302,6 @@
             "type": [
               "string",
               "null"
-            ]
-          }
-        }
-      },
-      "RegisterFacet": {
-        "type": "object",
-        "description": "One register's matched variables. `name` and `variables` are present only in the\nmodes that list them, never `null`.",
-        "required": [
-          "fqid",
-          "variable_matches"
-        ],
-        "properties": {
-          "fqid": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "variable_matches": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "variables": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FacetVariable"
-            }
-          }
-        }
-      },
-      "RegisterFacets": {
-        "type": "object",
-        "description": "`search_facets`' result.",
-        "required": [
-          "registers"
-        ],
-        "properties": {
-          "registers": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RegisterFacet"
-            }
-          },
-          "steward": {
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/StewardRegisterFacets"
-              },
-              {
-                "type": "null"
-              }
             ]
           }
         }
@@ -5134,24 +4979,6 @@
               "null"
             ],
             "description": "How a researcher hands in an order."
-          }
-        }
-      },
-      "StewardRegisterFacets": {
-        "type": "object",
-        "required": [
-          "owner",
-          "registers"
-        ],
-        "properties": {
-          "owner": {
-            "type": "string"
-          },
-          "registers": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RegisterFacet"
-            }
           }
         }
       },

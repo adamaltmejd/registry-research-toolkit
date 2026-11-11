@@ -73,24 +73,6 @@ filtered out before ranks, counts and paging; codes and documents are \
 shared and always match. Both cursors bind both component generations."""
 
 [[operation]]
-name = "search_facets"
-http = ["GET /api/search/facets"]
-params = { q = "string", register = "ref?", provider = "ref?", limit = "limit?" }
-result = "RegisterFacets: {registers: [{fqid, name?, variable_matches, variables?: [{fqid, name}]}]} in FQID order"
-errors = ["invalid_ref", "not_found", "retired_ref", "ambiguous_ref"]
-note = """Per register, the count of `search`'s `variable` hits for `q`, counted in one \
-`GROUP BY register_id` over the FTS match (schema §2.1): not cut by `limit` or the \
-depth-1000 bound. Registers with no match are absent. With `register`, the list holds \
-only that register and its entry adds `variables`: the matched variables (FQID and \
-name) in FQID order, never cut. With `provider`, the list holds only that provider's \
-registers, each with every match listed and its `name`. Without either, `limit` adds each register's first \
-`limit` matched variables, `variable_matches` still counting them all, and a listed \
-entry adds the register's `name`. Absent, it is counts only. No MCP tool: it feeds \
-the SPA's in-place register filter, and an agent narrows with `search`'s `register`. \
-Paired mode adds a separate `steward` group, and both groups count only held \
-variables."""
-
-[[operation]]
 name = "context"
 http = ["GET /api/context"]
 result = "Context"

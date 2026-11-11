@@ -1,7 +1,5 @@
-//! `search` and `search_facets`: one ranked FTS5 query over `search` and `search_item`
-//! (crates/DESIGN.md, "Search", rules 1-7).
-
-use std::collections::BTreeMap;
+//! `search`: one ranked FTS5 query over `search` and `search_item`
+//! (crates/DESIGN.md, "Search", rules 1-6).
 
 use rusqlite::{Connection, OptionalExtension, params};
 use serde::Serialize;
@@ -31,46 +29,27 @@ const MATCHES: &str = "WITH matched AS (
       AND rowid NOT IN (SELECT rowid FROM search WHERE search MATCH ?1)
 )";
 
-pub const OPERATIONS: &[Operation] = &[
-    Operation {
-        name: "search",
-        paths: &["/api/search"],
-        tool: Some("search"),
-        description: "Search registers, tables, variables, codes and documents by text, best \
+pub const OPERATIONS: &[Operation] = &[Operation {
+    name: "search",
+    paths: &["/api/search"],
+    tool: Some("search"),
+    description: "Search registers, tables, variables, codes and documents by text, best \
             match first. `tag` keeps only that tag's variables. For exact column names use \
             `resolve`.",
-        params: &[
-            Param::required("q", Type::String),
-            Param::optional("type", Type::Enum(TYPES)),
-            Param::optional("register", Type::Ref),
-            Param::optional("period", Type::Period),
-            Param::optional("tag", Type::String),
-            Param::optional("limit", Type::Limit),
-            Param::optional("cursor", Type::Cursor),
-            Param::optional("steward_cursor", Type::Cursor),
-        ],
-        cache: Cache::Minute,
-        run: search,
-        result: component::<SearchPage>,
-    },
-    Operation {
-        name: "search_facets",
-        paths: &["/api/search/facets"],
-        tool: None,
-        description: "Per register, how many variables a search query matches. `register` \
-            or `provider` lists every match in that register, or in each of the \
-            provider's registers.",
-        params: &[
-            Param::required("q", Type::String),
-            Param::optional("register", Type::Ref),
-            Param::optional("provider", Type::Ref),
-            Param::optional("limit", Type::Limit),
-        ],
-        cache: Cache::Minute,
-        run: search_facets,
-        result: component::<RegisterFacets>,
-    },
-];
+    params: &[
+        Param::required("q", Type::String),
+        Param::optional("type", Type::Enum(TYPES)),
+        Param::optional("register", Type::Ref),
+        Param::optional("period", Type::Period),
+        Param::optional("tag", Type::String),
+        Param::optional("limit", Type::Limit),
+        Param::optional("cursor", Type::Cursor),
+        Param::optional("steward_cursor", Type::Cursor),
+    ],
+    cache: Cache::Minute,
+    run: search,
+    result: component::<SearchPage>,
+}];
 
 #[derive(Serialize, ToSchema)]
 pub struct SearchPage {
@@ -142,49 +121,9 @@ pub enum SearchHit {
     },
 }
 
-/// `search_facets`' result.
-#[derive(Serialize, ToSchema)]
-pub struct RegisterFacets {
-    registers: Vec<RegisterFacet>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    steward: Option<StewardRegisterFacets>,
-}
-
-#[derive(Serialize, ToSchema)]
-pub struct StewardRegisterFacets {
-    owner: String,
-    registers: Vec<RegisterFacet>,
-}
-
-/// One register's matched variables. `name` and `variables` are present only in the
-/// modes that list them, never `null`.
-#[derive(Serialize, ToSchema)]
-pub struct RegisterFacet {
-    fqid: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[schema(nullable = false)]
-    name: Option<String>,
-    variable_matches: i64,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[schema(nullable = false)]
-    variables: Option<Vec<FacetVariable>>,
-}
-
-/// A matched variable: its FQID and label.
-#[derive(Serialize, ToSchema)]
-pub struct FacetVariable {
-    fqid: String,
-    name: String,
-}
-
 /// The register a `register` parameter names (rule 4).
 fn register(conn: &Connection, value: &str) -> Result<i64, Error> {
-    entity_of(conn, value, "register")
-}
-
-/// The entity of `kind` a parameter names.
-fn entity_of(conn: &Connection, value: &str, kind: &str) -> Result<i64, Error> {
-    Ok(refs::expect(conn, value, &[kind], &format!("not a {kind}"))?.id)
+    Ok(refs::expect(conn, value, &["register"], "not a register")?.id)
 }
 
 fn search(server: &Server, params: &Params) -> Result<Value, Error> {
@@ -552,162 +491,4 @@ fn document_hit(conn: &Connection, expression: &str, doc: i64) -> rusqlite::Resu
         heading,
         page,
     })
-}
-
-fn search_facets(server: &Server, params: &Params) -> Result<Value, Error> {
-    let expression = fts::query(params["q"])?;
-    let limit = params
-        .get("limit")
-        .is_some()
-        .then(|| super::limit(params))
-        .transpose()?;
-    // Steward mode serves only what the steward holds (maintainer 2026-11-04).
-    let held = server.catalog.steward().is_some();
-    let run = |conn: &Connection| -> Result<Vec<RegisterFacet>, Error> {
-        // A scope one origin lacks matches nothing there, once the other has it.
-        let mut scope = [None, None];
-        for (at, kind) in ["register", "provider"].into_iter().enumerate() {
-            scope[at] = match params
-                .get(kind)
-                .map(|r| entity_of(conn, r, kind))
-                .transpose()
-            {
-                Ok(id) => id,
-                Err(err) if server.catalog.steward().is_some() && err.kind() == Code::NotFound => {
-                    server.catalog.connect_for_ref(params[kind])?;
-                    return Ok(vec![]);
-                }
-                Err(err) => return Err(err),
-            };
-        }
-        let [register, provider] = scope;
-        if held {
-            server.catalog.attach_holdings(conn)?;
-        }
-        match &expression {
-            None => Ok(vec![]),
-            Some(expression) => facets(conn, expression, register, provider, limit, held),
-        }
-    };
-    let registers = run(&server.catalog.connect()?)?;
-    let steward = server
-        .catalog
-        .connect_holdings()?
-        .map(|extra| {
-            Ok::<_, Error>(StewardRegisterFacets {
-                owner: server.catalog.steward().expect("admitted pair").owner,
-                registers: run(&extra)?,
-            })
-        })
-        .transpose()?;
-    Ok(serde_json::to_value(RegisterFacets { registers, steward }).expect("facets serialize"))
-}
-
-/// Rule 7: each register's matched variables, counted; with `register` that register's
-/// every match listed, with `provider` each of its registers' every match and name;
-/// else with `limit` its first `limit` and its name.
-fn facets(
-    conn: &Connection,
-    expression: &str,
-    register: Option<i64>,
-    provider: Option<i64>,
-    limit: Option<usize>,
-    held: bool,
-) -> Result<Vec<RegisterFacet>, Error> {
-    let held_scope = if held {
-        // Uncorrelated, like `search_filter`'s: no index leads with `variable_pid`.
-        " AND v.pid IN (SELECT variable_pid FROM held.holding_mapping)"
-    } else {
-        ""
-    };
-    // The provider's parameter is the query's last: ?3 in the count, ?4 in the list.
-    let scope = |at: u8| {
-        format!(
-            "{held_scope} AND (?{at} IS NULL OR i.register_id IN \
-             (SELECT id FROM register WHERE provider_id = ?{at}))"
-        )
-    };
-    let counted = scope(3);
-    let mut registers: Vec<(i64, RegisterFacet)> = rows(
-        conn,
-        &format!(
-            "{MATCHES}
-             SELECT r.id, r.pid, n.body, m.matches
-             FROM (SELECT i.register_id AS id, COUNT(*) AS matches
-                   FROM matched m JOIN search_item i ON i.id = m.id
-                     JOIN variable v ON v.id = i.entity_id
-                   WHERE i.kind = 'variable'
-                     AND (?2 IS NULL OR i.register_id = ?2){counted}
-                   GROUP BY i.register_id) m
-               JOIN register r ON r.id = m.id
-               JOIN text n ON n.id = r.name_text
-             ORDER BY r.pid"
-        ),
-        params![expression, register, provider],
-        |row| {
-            Ok((
-                row.get(0)?,
-                RegisterFacet {
-                    fqid: row.get(1)?,
-                    name: row.get(2)?,
-                    variable_matches: row.get(3)?,
-                    variables: None,
-                },
-            ))
-        },
-    )?;
-    // A named register or provider lists every match; otherwise `limit` per register,
-    // or none.
-    let listed = match (register.or(provider), limit) {
-        (Some(_), _) => Some(i64::MAX),
-        (None, Some(limit)) => Some(i64::try_from(limit).expect("a limit fits")),
-        (None, None) => None,
-    };
-    let listing = scope(4);
-    let Some(listed) = listed else {
-        for (_, facet) in &mut registers {
-            facet.name = None;
-        }
-        return Ok(registers.into_iter().map(|(_, facet)| facet).collect());
-    };
-    let mut variables: BTreeMap<i64, Vec<FacetVariable>> = BTreeMap::new();
-    let rows = rows(
-        conn,
-        &format!(
-            "{MATCHES}
-             SELECT register_id, pid, label FROM (
-               SELECT i.register_id, v.pid, l.body AS label,
-                      ROW_NUMBER() OVER (PARTITION BY i.register_id ORDER BY v.pid) AS n
-               FROM matched m JOIN search_item i ON i.id = m.id
-                 JOIN variable v ON v.id = i.entity_id
-                 JOIN text l ON l.id = v.label_text
-               WHERE i.kind = 'variable'
-                 AND (?2 IS NULL OR i.register_id = ?2){listing})
-             WHERE n <= ?3
-             ORDER BY register_id, pid"
-        ),
-        params![expression, register, listed, provider],
-        |row| {
-            Ok((
-                row.get::<_, i64>(0)?,
-                FacetVariable {
-                    fqid: row.get(1)?,
-                    name: row.get(2)?,
-                },
-            ))
-        },
-    )?;
-    for (id, variable) in rows {
-        variables.entry(id).or_default().push(variable);
-    }
-    Ok(registers
-        .into_iter()
-        .map(|(id, mut facet)| {
-            if register.is_some() {
-                facet.name = None;
-            }
-            facet.variables = Some(variables.remove(&id).unwrap_or_default());
-            facet
-        })
-        .collect())
 }
