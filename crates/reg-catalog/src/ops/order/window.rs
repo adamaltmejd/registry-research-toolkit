@@ -8,7 +8,7 @@ use rusqlite::{Connection, OptionalExtension, Row};
 
 use super::{
     Issue, OrderClip, OrderEntry, OrderValueSet, Serving, day, interval, iso_day, period, refused,
-    span,
+    reported_intervals, span,
 };
 use crate::ops::{Server, refs};
 use crate::{Code, Error, rows};
@@ -340,7 +340,11 @@ fn materialize(
         outcome.findings.extend(replaced(&at)?);
         return Ok(outcome);
     }
-    let removed = gaps(scope.requested, ordered.clone());
+    let removed = reported_intervals(
+        &gaps(scope.requested, ordered.clone()),
+        scope.requested,
+        &ordered,
+    );
     if !removed.is_empty() {
         outcome.clip = Some(OrderClip {
             source: scope.source.name.clone(),

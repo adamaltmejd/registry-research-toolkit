@@ -23,7 +23,7 @@ use reg_core::project::{ColumnType, ExtractFormat, ProjectData};
 use rusqlite::Connection;
 use serde_json::Value;
 
-use super::{Issue, LogicalOrder, OrderEntry, check, project};
+use super::{Issue, LogicalOrder, OrderEntry, check, project, reported_gaps};
 use crate::holdings::Steward;
 use crate::ops::{Params, Server, iso_day};
 use crate::{Code, Error, rows};
@@ -800,7 +800,9 @@ fn gaps(
             ),
         );
     }
-    let rest = minus(&missing, &contested);
+    // A gap inside a requested year this entry delivers in part is not reported (#2409);
+    // a contested cell still blocks.
+    let rest = reported_gaps(&minus(&missing, &contested), &[days], &covered);
     for piece in overlap(&rest, &windowed) {
         issue(
             IssueLevel::Warning,
@@ -872,7 +874,7 @@ fn clip(
                 || merge(std::mem::take(requested)),
                 |c| merge(c.requested.iter().map(|p| p.days(open)).collect()),
             );
-        if asked != held {
+        if !reported_gaps(&minus(&asked, &held), &asked, &held).is_empty() {
             let periods = |days: &[Days]| days.iter().map(|&(a, z)| server.period(a, z)).collect();
             clips.push(Clip {
                 source: source.clone(),

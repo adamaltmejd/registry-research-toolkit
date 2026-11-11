@@ -1216,7 +1216,12 @@ the order check's to state in its own tests; the rules that shape them:
   variable. Which keys join is the researcher's call; the catalog stores no identifier
   kind, so the order check does not compare panel members' keys.
 - A request partly outside availability is a clip (`period_clipped`), never silent and
-  never an error. Only availability empty across the whole request blocks.
+  never an error. Only availability empty across the whole request blocks. A gap inside
+  a calendar year the request covers whole and the binding delivers on some day is not
+  reported, by the logical check or the holdings stage (no `period_clipped`, no
+  `coverage_gap`, no clip when nothing else is missing): that year reads as delivered,
+  and no whole year fills the gap (frontend DESIGN.md → Time, #2389; #2409). A steward
+  order still lists only the delivered days as entries.
 - A table succession with no `at` is not followed: the check returns
   `table_succession_undated` naming the successor and clips the rest. No day is inferred
   from coverage (v4 §2.1); D's `link … at` supplies the day.
