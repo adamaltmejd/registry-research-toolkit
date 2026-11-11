@@ -64,8 +64,8 @@
   white-space: normal;
   overflow-wrap: anywhere;
 }
-/* The register's table chips: the facet label inline, then its chips, one
-   wrapping row over the variable list (DESIGN.md → FilterChip). */
+/* The register's table chips: one wrapping row under the filter box and over
+   the variable list, flush with the box (DESIGN.md → FilterChip; #2407). */
 .tableFilter {
   display: flex;
   flex-wrap: wrap;
@@ -76,23 +76,18 @@
   padding: var(--space-3) var(--space-4);
   border: 0;
 }
-/* A floated legend is an ordinary flex item, not one drawn on the border. */
-.tableFilter > legend {
-  float: left;
-  padding: 0;
-  margin-right: var(--space-1);
-}
 .shown {
   color: var(--text-muted);
   font-size: var(--text-sm);
 }
 
-/* The register page's variable filter (#2403): under the table chips, over
-   the list it filters, at a field's measure rather than the panel's width. */
-.variableFilter {
+/* A register's or provider's list filter (#2403, #2407): first in the
+   panel, over the table chips and the list it filters, at a field's measure
+   rather than the panel's width. */
+.listFilter {
   max-width: 28rem;
   padding: var(--space-3) var(--space-4);
 }
-.tableFilter + .variableFilter {
+.listFilter + .tableFilter {
   padding-top: 0;
 }

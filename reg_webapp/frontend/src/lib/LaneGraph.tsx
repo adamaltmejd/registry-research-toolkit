@@ -330,7 +330,7 @@ export function LaneGraph({
                 style={{
                   top: geometry.coverageY,
                   height: COVERAGE_HEIGHT,
-                  width: geometry.trackX - 16,
+                  width: geometry.nameWidth,
                 }}
                 aria-hidden="true"
               >
@@ -369,7 +369,7 @@ export function LaneGraph({
                     >
                       <LaneName
                         lane={lane}
-                        width={geometry.stacked ? width : geometry.trackX - 16}
+                        width={geometry.stacked ? width : geometry.nameWidth}
                         // Stacked, every lane's spans start under its measured
                         // name; beside the track only a detail grows the lane.
                         onHeight={

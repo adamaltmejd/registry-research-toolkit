@@ -1,7 +1,7 @@
-/* The project banner (DESIGN.md → components.project-banner): accent-soft fill, a
-   3px accent leading bar, md radius, no shadow. Two blocks side by side — the
-   project summary and the study window — that wrap one above the other when the
-   row is narrow. */
+/* The project banner (DESIGN.md → components.project-banner): accent-soft fill,
+   the search field's box (a 1px `border`, sm radius, no leading bar; #2407),
+   no shadow. Two blocks side by side — the project summary and the study
+   window — that wrap one above the other when the row is narrow. */
 .banner {
   box-sizing: border-box;
   display: flex;
@@ -12,8 +12,7 @@
   max-width: 100%;
   padding: var(--space-2) var(--space-3);
   border: 1px solid var(--border);
-  border-left: 3px solid var(--accent);
-  border-radius: var(--radius);
+  border-radius: var(--radius-sm);
   background: var(--accent-soft);
   color: var(--text);
 }
@@ -125,16 +124,17 @@ a.verdict {
   color: var(--err);
 }
 
-/* No project yet: the banner's box, empty and untinted with a `border`
-   leading bar, holding the one button that starts a project. */
+/* No project yet: the banner's box, empty and untinted, holding the one
+   button that starts a project; the search field's height (2.75rem, #2407). */
 .empty {
   box-sizing: border-box;
   display: flex;
   align-items: center;
-  padding: var(--space-2) var(--space-3);
+  min-height: 2.75rem;
+  padding: 0 var(--space-1);
   border: 1px solid var(--border);
-  border-left: 3px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
 }
 .empty[data-hidden] {
   visibility: hidden;
@@ -189,10 +189,7 @@ a.verdict {
 }
 
 @media (max-width: 60rem) {
-  .banner {
-    flex: 1 1 100%;
-  }
-  /* Here the banner has a row of its own: a hidden box would leave it empty. */
+  /* Here the menu button has the row to itself: no empty box beside it. */
   .empty[data-hidden] {
     display: none;
   }

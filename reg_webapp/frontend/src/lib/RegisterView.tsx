@@ -103,9 +103,22 @@ export function RegisterView({
           <EmptyState title="This register lists no variables." />
         ) : (
           <>
+            <div className={styles.listFilter}>
+              <FilterInput
+                value={needle}
+                onChange={setNeedle}
+                total={chosen.length}
+                shown={shown.length}
+                label="Filter this register's variables"
+                placeholder="Filter variables…"
+              />
+            </div>
+            {/* The box first, then the table pills, flush with it, then the
+                list (#2407, maintainer decisions 2026-11-11). The pills have
+                no visible label: their glyph and pine "on" face carry it. */}
             {chipTables.length > 1 && (
               <fieldset className={styles.tableFilter}>
-                <legend className="micro-label">Tables</legend>
+                <legend className="visually-hidden">Filter by table</legend>
                 {chipTables.map((table) => (
                   <FilterChip
                     key={table.fqid}
@@ -128,16 +141,6 @@ export function RegisterView({
                 </span>
               </fieldset>
             )}
-            <div className={styles.variableFilter}>
-              <FilterInput
-                value={needle}
-                onChange={setNeedle}
-                total={chosen.length}
-                shown={shown.length}
-                label="Filter this register's variables"
-                placeholder="Filter variables…"
-              />
-            </div>
             {/* Empty only through the filter: every chip's table delivers a
                 variable. */}
             {shown.length === 0 ? (

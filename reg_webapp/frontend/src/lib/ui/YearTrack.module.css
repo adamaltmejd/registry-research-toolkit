@@ -23,8 +23,14 @@
     inset 1px 0 0 var(--accent),
     inset -1px 0 0 var(--accent);
 }
+/* On an in-project row's `accent-bg` wash the window takes the stronger
+   `accent-band` with 1.5px pine bounds, so it stays readable where the two
+   greens merge (#2407, maintainer decisions 2026-11-11). */
 .bar[data-in-project] .window {
-  background: var(--surface);
+  background: var(--accent-band);
+  box-shadow:
+    inset 1.5px 0 0 var(--accent),
+    inset -1.5px 0 0 var(--accent);
 }
 .segment {
   position: absolute;

@@ -1,6 +1,6 @@
 /* The checkbox around a pill: the pill is the face (F1, #2399). Neutral at
    rest, so the hue stays on the glyph alone and never competes with the pine
-   "on" state; the label before the chips names the dimension in text. */
+   "on" state; the group's hidden name names the dimension (#2407). */
 .chip {
   position: relative;
   display: inline-flex;
