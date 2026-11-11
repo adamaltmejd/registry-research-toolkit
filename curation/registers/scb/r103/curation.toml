@@ -1322,20 +1322,8 @@ evidence = "RPU är en bokstavskod som inte finns i etiketten.\ncatalog:variable
 [[statement]]
 kind = "set"
 subject = "var:utbildningsinriktning-hogst-prioriterad-andra-halvaret"
-fields = { "sets" = ["utbildningsinriktning"] }
-evidence = "RPU och SUN är källkoder som inte finns i etiketten; 3 kommer från källkolumnen.\ncatalog:variable_text:41521:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsinriktning-hogst-prioriterad-andra-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "RPU och SUN är källkoder som inte finns i etiketten; 3 kommer från källkolumnen.\ncatalog:variable_text:41521:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:rpusuninr-3-vt"
-fields = { "sets" = ["utbildningsinriktning"] }
-evidence = "Id:t använder igenkännbara källstammar; variabeln avser utbildningsinriktning under vårterminen.\ncatalog:occurrence:423093\ncatalog:variable_text:41522:19723:20089"
 
 [[statement]]
 kind = "set"

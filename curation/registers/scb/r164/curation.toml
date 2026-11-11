@@ -1214,12 +1214,6 @@ evidence = "Fr17sei är en opak frågekod; källan anger yrke för anställda oc
 [[statement]]
 kind = "set"
 subject = "var:fr18"
-fields = { "sets" = ["civilstand"] }
-evidence = "Frågekoden är opak, men källans civilståndsdefinition stämmer inte entydigt med svarskategorierna.\ncatalog:valueset:4968\ncatalog:variable_text:40997:20209:20240"
-
-[[statement]]
-kind = "set"
-subject = "var:fr18"
 fields = { "tags" = ["family-household"] }
 evidence = "Frågekoden är opak, men källans civilståndsdefinition stämmer inte entydigt med svarskategorierna.\ncatalog:valueset:4968\ncatalog:variable_text:40997:20209:20240"
 

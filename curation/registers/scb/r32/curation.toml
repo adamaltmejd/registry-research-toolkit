@@ -2702,12 +2702,6 @@ evidence = "Länskod för arbetsställe.\ncatalog:variable_text:11289:7305:7670"
 [[statement]]
 kind = "set"
 subject = "var:lanbokstavkod"
-fields = { "sets" = ["lan"] }
-evidence = "Länsbokstav i bilregistreringsnummer ingår i kandidaten.\ncatalog:variable_text:11290:-3653:-3287"
-
-[[statement]]
-kind = "set"
-subject = "var:lanbokstavkod"
 fields = { "tags" = ["geography"] }
 evidence = "Länsbokstav i bilregistreringsnummer ingår i kandidaten.\ncatalog:variable_text:11290:-3653:-3287"
 
