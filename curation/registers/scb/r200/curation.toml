@@ -11826,3 +11826,9 @@ kind = "set"
 subject = "var:vissa-rorelsekostnader-samt-inkopt-el"
 fields = { "description" = "Energimängd i MWh som hör till rubriken Vissa rörelsekostnader samt inköpt el." }
 evidence = "Etikett och enhet MWh i alla årgångar 2009-2018.\n0.74.0 catalog, key v35429, releases r12656, r13860, r13861, r13862...; reg_meta.db:occurrence:30537,30605,30673"
+
+[[statement]]
+kind = "set"
+subject = "elnatforetag-nat: bruttoprod"
+fields = { "operational_definition" = "Elproduktion brutto vid vatten-, vind- och värmekraftstationer." }
+evidence = "Registerinformation.csv, VarId 35303, Elnätföretag (nät) 2009–2024 (all 19 versions): the operational definition of bruttoprod is word for word egenforbr's text 'Egenförbrukning av el för vatten-, vind- och värmekraftstationer.', copied from the own-use column. The label and definition say Elproduktion brutto, MWh, and the other two tables' bruttoprod rows give the station types (Vattenkraftstationer, Vindkraftstationer). Corrected to gross production for the same station types. Operator, #2322 curation under the maintainer's 2026-11-11 delegation."
