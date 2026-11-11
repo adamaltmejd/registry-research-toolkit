@@ -1016,6 +1016,11 @@ function Span({
           {span.name}
         </span>
       )}
+      {at.beside.map((name) => (
+        <span key={name.x} className={styles.outside} style={{ left: name.x }}>
+          {name.text}
+        </span>
+      ))}
     </>
   );
   const attributes = {

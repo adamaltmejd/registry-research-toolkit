@@ -97,6 +97,9 @@ export interface PlacedSpan {
   label: "inside" | "right" | "left";
   /** Where a name set beside the span starts, from the span's left edge. */
   labelX: number;
+  /** A span over several column names: those too wide for their parts, set
+   * beside it, each `x` from the span's left edge. */
+  beside: { text: string; x: number }[];
 }
 
 interface PlacedLane {
@@ -280,10 +283,47 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
         if (!best || segment.width > best.width) widest.set(name, segment);
       }
       // Several column names (one variable's spellings in one table, #2408):
-      // each sits inside its widest part. simplify: a name too wide for its
-      // parts is left to the tooltip and the accessible name; set it beside
-      // the span if a short-lived spelling turns up on a real lane.
+      // each sits inside its widest part; one too wide for its parts is set
+      // beside the span, never cut (maintainer 2026-11-04): before it the names
+      // left of the first that fits, after it the rest, each side moving to
+      // the other where the track has no room.
       const several = widest.size > 1;
+      const beside: PlacedSpan["beside"] = [];
+      if (several) {
+        const fitting = [...widest].filter(
+          ([name, segment]) => labelWidth(name) <= segment.width,
+        );
+        const firstFit = Math.min(...fitting.map(([, segment]) => segment.x));
+        let before: string[] = [];
+        let after: string[] = [];
+        for (const [name, segment] of widest) {
+          if (labelWidth(name) <= segment.width) continue;
+          (segment.x < firstFit ? before : after).push(name);
+        }
+        const text = (names: string[]) => names.join(", ");
+        if (
+          before.length &&
+          left - LABEL_GAP - labelWidth(text(before)) < trackX
+        ) {
+          after = [...before, ...after];
+          before = [];
+        }
+        if (
+          after.length &&
+          left + width + LABEL_GAP + labelWidth(text(after)) > trackEnd &&
+          left - LABEL_GAP - labelWidth(text([...before, ...after])) >= trackX
+        ) {
+          before = [...before, ...after];
+          after = [];
+        }
+        if (before.length)
+          beside.push({
+            text: text(before),
+            x: -LABEL_GAP - labelWidth(text(before)),
+          });
+        if (after.length)
+          beside.push({ text: text(after), x: width + LABEL_GAP });
+      }
       const room = Math.max(...segments.map((segment) => segment.width));
       // A span with no name (a classification version, named in its tooltip)
       // needs no label room and may touch its neighbour: a yearly series
@@ -307,10 +347,15 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
               : gap
                 ? ["right", gap.from + LABEL_GAP]
                 : ["right", Math.max(trackX, trackEnd - need) - left];
-      const start = Math.min(left, left + labelX);
+      const start = Math.min(
+        left,
+        left + labelX,
+        ...beside.map((name) => left + name.x),
+      );
       const end = Math.max(
         left + width,
         label === "inside" ? left : left + labelX + need,
+        ...beside.map((name) => left + name.x + labelWidth(name.text)),
       );
       let row = rowEnds.findIndex((rowEnd) => rowEnd + packGap <= start);
       if (row < 0) {
@@ -333,6 +378,7 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
         segments,
         label,
         labelX,
+        beside,
       });
     }
     // A lane with no spans (a group member's heading row) keeps no span row.
