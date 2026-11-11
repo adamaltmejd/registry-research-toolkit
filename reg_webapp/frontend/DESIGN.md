@@ -454,10 +454,9 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   in-project mark on the right when it has one. Below the single narrow breakpoint
   (`breakpoint-narrow`, 60rem: narrower, the two columns leave the detail pane under
   400px, #2107) there is one column (#2403). The maintainer decided (2026-11-11) that
-  the second column is hidden below a certain width, that the menu button opens the
+  the second column is hidden below this breakpoint, that the menu button opens the
   register browser and hides it again, and that choosing a provider or a register opens
-  its page. The rest of this paragraph is proposed and not yet confirmed: that width is
-  this breakpoint (Operator proposal); the second column is the variables column, never
+  its page. The rest of this paragraph is proposed and not yet confirmed: the second column is the variables column, never
   drawn here, a register's variables being reached from its page, which has its own
   filter box (see Column filter) (Operator proposal); the register browser is the
   register column, shown in place of the page while open, closed by choosing an entry or
@@ -518,8 +517,7 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   page-wide Escape of #1827 cleared the top-bar filter, which is gone). The register page
   has the same box under the table chips, filtering the page's variable list, the rows
   the chips leave (#2403, maintainer decisions 2026-11-11). It shows at every width, so on
-  wide screens the two boxes filter different lists (Operator proposal, not yet
-  confirmed). The same matching, marking and Escape; "Filter variables…" as its text and
+  wide screens the two boxes filter different lists (maintainer 2026-11-11, #2403). The same matching, marking and Escape; "Filter variables…" as its text and
   "Filter this register's variables" as its name, apart from the column's. It belongs to
   the page: it starts empty when another register opens. A filter that matches nothing
   says so in an `EmptyState` in the list's place (implementer proposals).
