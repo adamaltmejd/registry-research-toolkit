@@ -2179,3 +2179,21 @@ kind = "set"
 subject = "var:utbildningsniva-sun2020niva"
 fields = { "label" = "Utbildningsnivå (SUN 2020)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Codes separate members: SUNGrov F/G/K/L/U (opdef: grov gruppering till fyra nivåer), SUN*Niva 3-digit codes, SUN*Niva_Det 7 aggregate codes (FG, FO, KE...), SUNNiva 1-7, ISCED2011Niva ISCED codes, KXSunkat previous-year three groups. SUNNiva's 'andra siffran' opdef is missing from its samtliga occurrences, and 'äldre SUN-version' is not in the text, so it uses the code."
+
+[[statement]]
+kind = "set"
+subject = "var:arsversion"
+fields = { "description" = "Produktionsåret (versionsåret) för den version av Utbildningsregistret som uppgifterna kommer från." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition alla år, olika formulerad.\ncatalog:variable_text:60069:9862:13879\ncatalog:variable_text:60069:13879:14975\ncatalog:variable_text:60069:14975:18628\ncatalog:variable_text:60069:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Personens kön: är personnumrets näst sista siffra udda är det en man, annars en kvinna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition och härledning båda perioderna.\ncatalog:variable_text:60111:9862:17167\ncatalog:variable_text:60111:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr"
+fields = { "description" = "Personens personnummer, identitetsbegrepp för personer som tilldelas av folkbokföringsmyndigheten (Skatteverket). Personnumret består av födelsetid (8 siffror), födelsenummer (3 siffror) och en kontrollsiffra." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; Skattemyndigheten heter Skatteverket.\ncatalog:variable_text:60115:6756:9862\ncatalog:variable_text:60115:9862:20089"

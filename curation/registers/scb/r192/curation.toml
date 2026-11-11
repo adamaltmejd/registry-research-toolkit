@@ -662,3 +662,9 @@ kind = "set"
 subject = "var:skollkv"
 fields = { "label" = "Antal övriga skolledare (kvinnor)" }
 evidence = "#2102 same-label cluster 'Antal övriga skolledare' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: SkollMan counts male other school leaders, SkollKv female; the 2004-2008 SkollKv occurrences carry no opdef, so 'kvinnor' rests on the other years and the male counterpart."
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-for-individ"
+fields = { "description" = "Informationslöst löpnummer för individen, eleven eller läraren beroende på tabell, som används internt vid enkätutskick och avprickning. 2009 numreras eleverna respektive lärarna inom varje skola." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger vem numret avser och 2009 års numrering per skola.\ncatalog:variable_text:51666:10879:10880\ncatalog:variable_text:51666:12706:12707\ncatalog:variable_text:51666:14532:14533"

@@ -712,3 +712,45 @@ kind = "set"
 subject = "konjunkturstatistik-loner-for-statlig-sektor: LNrS where key = 'v30943' and release = 'r7360'"
 fields = { "operational_definition" = "Visar om en myndighet har fler redovisningsenheter." }
 evidence = "Registerinformation.csv, VarId 30943, Konjunkturstatistik, löner för statlig sektor 2000 (release r7360), column LNrS: the operational definition is 'Hur gammal var du när du invandrade till Sverige (första gången)?', a survey question from another register; SCB's export carries the same error in its single row. The same column 2001–2011 has 'Visar om en myndighet har fler redovisningsenheter.', restored here. Operator, #2322 curation under the maintainer's 2026-11-11 delegation."
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "description" = "Personens ålder i år vid den angivna mätmånaden, beräknad ur personnumret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition alla år, olika formulerad.\ncatalog:variable_text:40937:10957:16071\ncatalog:variable_text:40937:16071:17897\ncatalog:variable_text:40937:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:dep"
+fields = { "description" = "Det departement myndigheten lyder under. Uppgiften hämtas från Ekonomistyrningsverkets myndighetsregister, 2000–2013 även från Fritzes författningssamling." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; uppgiftskällorna anges med år. Rättar ”mydigheten” och ”Ekonimistyrningsverkets”.\ncatalog:variable_text:40944:10957:16071\ncatalog:variable_text:40944:16071:18993\ncatalog:variable_text:40944:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Personens kön, härlett ur den näst sista siffran i personnumret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; skillnaden är bara ”personnummer” och ”personnumret”.\ncatalog:variable_text:40952:10957:16071\ncatalog:variable_text:40952:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:loneform"
+fields = { "description" = "Om anställningen har månadslön eller annan löneform, till exempel tim-, dag- eller veckolön. 2006–2015 kodas 1 för månadslön och 2 för annan löneform. Variabeln finns från september 2006." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; koderna 2006–2015 och startpunkten anges som fakta.\ncatalog:variable_text:40956:13149:16801\ncatalog:variable_text:40956:16801:18262\ncatalog:variable_text:40956:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-myndighet"
+fields = { "description" = "Informationslöst löpnummer för myndigheten. 2000–2012 skapas det efter den ordning myndigheten kommer med i undersökningen, 2013 utifrån myndighetens organisationsnummer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; hur numret skapas ändrades 2013 och anges med år.\ncatalog:variable_text:40960:10957:15340\ncatalog:variable_text:40960:15340:15706\ncatalog:variable_text:40960:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-myndighet-redovisningsenhet"
+fields = { "description" = "Informationslöst löpnummer för myndighetens redovisningsenhet, som visar om myndigheten har flera redovisningsenheter. En redovisningsenhet kan vara en del av en myndighet, till exempel ett departement under Regeringskansliet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; 2000 års kopierade operationalisering är rättad på förekomstnivå.\ncatalog:variable_text:40961:10957:11323\ncatalog:variable_text:40961:11323:15340\ncatalog:variable_text:40961:15340:15706\ncatalog:variable_text:40961:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstledighet"
+fields = { "description" = "Kod för tjänstledighet, härledd ur tjänstgöringsomfattningen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2013 års hänvisning till kravspecifikationen beskriver dokumentationen och tas bort.\ncatalog:variable_text:40982:10957:15706\ncatalog:variable_text:40982:15706:16071"

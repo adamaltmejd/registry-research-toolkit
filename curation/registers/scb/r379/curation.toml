@@ -1025,3 +1025,27 @@ kind = "set"
 subject = "var:startdatum"
 fields = { "label" = "Startdatum (StartDat)" }
 evidence = "#2102 same-label cluster 'Startdatum' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; InskrDat and StartDat are concurrent in barn-individ; InskrDat's opdef varies by year (2014 enrolment in any pedagogisk verksamhet, later current unit plus comparison with earlier years) so 'jämförelse' is not true of every occurrence; no single documented difference holds, so the column code is the qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:inskrivningstid"
+fields = { "description" = "Tider som barnet är inskrivet att vistas i verksamheten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; råexporten har 2014–2018 flera rader per år med både ”verksamheten” och ”förskolan”, 2019–2021 bara ”förskolan”, vilket är text från förskoleregistret och inte en ändrad betydelse.\ncatalog:variable_text:10625:16358:16359\ncatalog:variable_text:10625:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Personens kön, härlett ur den näst sista siffran i personnumret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; ”härleds” och ”skapas” säger samma sak.\ncatalog:variable_text:10629:16358:16359\ncatalog:variable_text:10629:16723:16724"
+
+[[statement]]
+kind = "set"
+subject = "var:person-orgnr"
+fields = { "description" = "Organisationsnummer för verksamheten. För juridiska personer tilldelas organisationsnummer av Bolagsverket, Skatteverket, Kammarkollegiet, Lantmäteriet, en länsstyrelse eller SCB beroende på bolagsform. För fysiska personer med näringsverksamhet används personnumret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; barntabellen 2019–2024 skriver ”förskolans” i stället för ”verksamhetens”, samma enhet.\ncatalog:variable_text:10635:16358:16359\ncatalog:variable_text:10635:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr"
+fields = { "description" = "Personnummer för barnet eller personalen, beroende på tabell. Personnumret tilldelas av Skatteverket och består av födelsetid (8 siffror), födelsenummer (3 siffror) och en kontrollsiffra." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen anger barnets respektive personalens personnummer per tabell. Skattemyndigheten heter Skatteverket.\ncatalog:variable_text:10636:16358:16359\ncatalog:variable_text:10636:18184:18185"

@@ -978,3 +978,51 @@ kind = "set"
 subject = "returravara: antanst @2020-01-01..2024-12-31 where key = 'v2478'"
 fields = { "variable" = "antal-anstallda" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Anst in industrins-varuproduktion; AntAnst in returravara: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (Both say employees counted at the rapportenhet (aggregated from LVE); returravara has no opdef); folded into antal-anstallda."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda"
+fields = { "description" = "Antal anställda vid rapportenheten (undersökningsenheten), som kan vara ett helt företag, ett arbetsställe eller en grupp av arbetsställen. 2004–2016 avses antalet vid urvalstillfället; från 2017 summeras antalet anställda på de lokala verksamhetsenheterna (LVE) till rapportenheten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; beräkningen före och från 2017 anges som fakta med år.\ncatalog:variable_text:40616:12418:17167\ncatalog:variable_text:40616:17167:18262\ncatalog:variable_text:40616:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:blankett"
+fields = { "description" = "Markerar om värdet kommer från ett enkätundersökt företag, som fått en blankett utskickad och ingår i enkätpopulationen, eller om värdet har modellskattats." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; den generella texten ”Variabeln sätts maskinellt”, som delas av flera processvariabler, tas bort.\ncatalog:variable_text:40618:12418:17167\ncatalog:variable_text:40618:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:blstatus"
+fields = { "description" = "Blankettens status: inkommen, avprickad, granskad, accepterad eller ej utskickad, eller att uppgiften baseras på uppgifter från SRU. 2004–2016 ska blankettstatus i det slutliga observationsregistret vara ej inkommen, accepterad eller baserad på uppgifter från SRU." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; regeln för det slutliga observationsregistret är angiven 2004–2016 och anges med år.\ncatalog:variable_text:40619:12418:17167\ncatalog:variable_text:40619:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:delpop"
+fields = { "description" = "Anger om värdet kommer från ett blankettundersökt företag, och i så fall om företaget har svarat på enkäten eller om värdet är imputerat, om värdet kommer från en ej utskickad blankett och är imputerat, eller om det härstammar från SRU-uppgifter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text alla år; rättar ”blanketundersökt” och ”imputeratas”.\ncatalog:variable_text:40624:12418:15706\ncatalog:variable_text:40624:15706:18628\ncatalog:variable_text:40624:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputkalla"
+fields = { "description" = "Värdets källa: om det är rapporterat av ett blankettundersökt företag, imputerat för ett företag som inte svarat, baserat på svar tidigare år eller baserat på Standardiserade räkenskapssammandrag (SRU), som avser mindre företag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2003–2016 räknar upp källorna. Den generella texten ”Variabeln sätts maskinellt” tas bort.\ncatalog:variable_text:40630:11688:12053\ncatalog:variable_text:40630:12053:17167\ncatalog:variable_text:40630:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kontrollnr-redovisningsenh"
+fields = { "description" = "Kontrollnummer för företagets redovisningsenhet, ett informationslöst nummer. 2003–2016 är det sexsiffrigt; från 2017 sätts det maskinellt från en lista över oanvända nummer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; de olika uppgifterna om numret anges med år. Rättar ”6-siifrigt”.\ncatalog:variable_text:40633:11688:12053\ncatalog:variable_text:40633:12053:17167\ncatalog:variable_text:40633:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:omraknad"
+fields = { "description" = "Om redovisningsperioden har räknats om för att avse ett helt kalenderår." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition alla år; den generella texten ”Variabeln sätts maskinellt” tas bort.\ncatalog:variable_text:40654:11688:12053\ncatalog:variable_text:40654:12053:17167\ncatalog:variable_text:40654:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:prodvarde"
+fields = { "description" = "Produktionsvärde per vara, i tusental kronor (KSEK)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition alla år; 2002 års beskrivning av undersökningens upplägg delas av flera mängdvariabler och anges bara det året, och blankettavsnittet 2013–2016 beskriver blanketten, så båda lämnas bort.\ncatalog:variable_text:40661:11688:12053\ncatalog:variable_text:40661:12053:15706\ncatalog:variable_text:40661:15706:17167"

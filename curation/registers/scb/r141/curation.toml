@@ -827,3 +827,9 @@ kind = "set"
 subject = "var:kvot"
 fields = { "label" = "Differenspost (Kvot)" }
 evidence = "#2102 same-label cluster 'Differenspost' (4 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; No opdefs; units differ (SVINN kubikmeter and kubikmeter/ton, Differens_Procent Procent, Differens ton, Kvot Kvot); Differens and Kvot are concurrent 2024-26, so codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:scb-nummer"
+fields = { "description" = "SCB-nummer som identifierar uppgiftslämnaren, ett informationslöst identitetsbegrepp. Numret sätts av insamlingspersonalen och är produktspecifikt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma kolumn och operationalisering; från 2024 dokumenteras den under SCB:s generella SCB-id-definition (ny VarId), utan ändrad betydelse.\ncatalog:variable_text:45981:17532:19723\ncatalog:variable_text:45981:19723:20454"

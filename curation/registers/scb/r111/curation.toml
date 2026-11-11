@@ -13373,3 +13373,105 @@ kind = "set"
 subject = "var:studier-utomlands-utanfor-europa"
 fields = { "description" = "Anger om personen har studerat utomlands utanför Europa. År 2000: 1 = ja inom Europa, 2 = ja utanför Europa, 3 = nej. År 2002: landskod." }
 evidence = "2000 (fr23a/b): 1 ja inom Europa, 2 ja utanför, 3 nej (#4151); 2002 (fr21inom/utom): country code (#1161). Dated change."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsuppgifter-initiativ"
+fields = { "description" = "I vilken utsträckning personens arbetsuppgifter under mätveckan ställde krav på att ta egna initiativ." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga alla år; mätveckans datum och variabelnamn tas bort.\ncatalog:variable_text:36371:12478:12509\ncatalog:variable_text:36371:13208:13239\ncatalog:variable_text:36371:13939:13970"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsuppgifter-service"
+fields = { "description" = "I vilken utsträckning personens arbetsuppgifter under mätveckan ställde krav på att vara serviceinriktad." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga alla år; mätveckans datum och variabelnamn tas bort.\ncatalog:variable_text:36382:12478:12509\ncatalog:variable_text:36382:13208:13239\ncatalog:variable_text:36382:13939:13970"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsuppgifter-skriftlig-presentation"
+fields = { "description" = "I vilken utsträckning personens arbetsuppgifter under mätveckan ställde krav på att göra skriftliga presentationer. 2017 avser frågan i stället de ordinarie arbetsuppgifterna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga alla år; mätveckans datum och frågenummer tas bort, och 2017 års ändrade referens anges med år.\ncatalog:variable_text:36383:11017:11048\ncatalog:variable_text:36383:11747:11778\ncatalog:variable_text:36383:12478:12509\ncatalog:variable_text:36383:13208:13239\ncatalog:variable_text:36383:13939:13970\ncatalog:variable_text:36383:14669:14700\ncatalog:variable_text:36383:15796:15826\ncatalog:variable_text:36383:17167:17348"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsuppgifter-utrustning"
+fields = { "description" = "I vilken utsträckning personens arbetsuppgifter under mätveckan ställde krav på att använda utrustning, till exempel verktyg, maskiner och material." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga alla år; mätveckans datum tas bort.\ncatalog:variable_text:36387:11017:11048\ncatalog:variable_text:36387:12478:12509\ncatalog:variable_text:36387:13208:13239\ncatalog:variable_text:36387:13939:13970"
+
+[[statement]]
+kind = "set"
+subject = "var:fardighetstraning-initiativ"
+fields = { "description" = "Hur personen bedömer den färdighetsträning hen fick i den avslutade gymnasieutbildningen när det gäller att ta egna initiativ." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga alla år; avgångsårets läsår och variabelnamn tas bort.\ncatalog:variable_text:36539:12478:12509\ncatalog:variable_text:36539:13208:13239\ncatalog:variable_text:36539:13939:13970"
+
+[[statement]]
+kind = "set"
+subject = "var:fardighetstraning-service"
+fields = { "description" = "Hur personen bedömer den färdighetsträning hen fick i den avslutade gymnasieutbildningen när det gäller att vara serviceinriktad." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga alla år; avgångsårets läsår och variabelnamn tas bort.\ncatalog:variable_text:36549:12478:12509\ncatalog:variable_text:36549:13208:13239\ncatalog:variable_text:36549:13939:13970"
+
+[[statement]]
+kind = "set"
+subject = "var:fardighetstraning-sjalvstandig"
+fields = { "description" = "Hur personen bedömer den färdighetsträning hen fick i den avslutade gymnasieutbildningen när det gäller att arbeta självständigt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga alla år; avgångsårets läsår och variabelnamn tas bort.\ncatalog:variable_text:36550:12478:12509\ncatalog:variable_text:36550:13208:13239\ncatalog:variable_text:36550:13939:13970"
+
+[[statement]]
+kind = "set"
+subject = "var:fardighetstraning-skriftlig-presentation"
+fields = { "description" = "Hur personen bedömer den färdighetsträning hen fick i den avslutade utbildningen när det gäller att göra skriftliga presentationer. 2013 och 2017 frågas högskolestuderande hur nöjda eller missnöjda de är med färdighetsträningen under sina universitets- eller högskolestudier." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; avgångsårets läsår och frågenummer tas bort, och 2013–2017 års frågeformulering anges med år. Rättar ”at göra”.\ncatalog:variable_text:36552:11017:11048\ncatalog:variable_text:36552:12478:12509\ncatalog:variable_text:36552:13208:13239\ncatalog:variable_text:36552:13939:13970\ncatalog:variable_text:36552:14669:14700\ncatalog:variable_text:36552:15796:15826\ncatalog:variable_text:36552:17167:17348"
+
+[[statement]]
+kind = "set"
+subject = "var:fardighetstraning-utrustning"
+fields = { "description" = "Hur personen bedömer den färdighetsträning hen fick i den avslutade utbildningen när det gäller att använda utrustning, till exempel verktyg och maskiner." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga alla år; avgångsårets läsår tas bort.\ncatalog:variable_text:36556:11017:11048\ncatalog:variable_text:36556:12478:12509\ncatalog:variable_text:36556:13208:13239\ncatalog:variable_text:36556:13939:13970"
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasiebetyg"
+fields = { "description" = "Gymnasiebetyg för personer som avslutat gymnasieskolan. 2008–2010 är betyget grupperat i 0–12,09, 12,10–15,40 och 15,41–20,00 poäng." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; grupperingen 2008–2010 anges med år. Rättar ”utbldning”.\ncatalog:variable_text:36639:12478:12509\ncatalog:variable_text:36639:13208:13239\ncatalog:variable_text:36639:13939:13970"
+
+[[statement]]
+kind = "set"
+subject = "var:har-din-arbetsuppgifter-forandrats"
+fields = { "description" = "Om den YH-examinerades arbetsuppgifter har förändrats jämfört med arbetsuppgifterna före YH-utbildningen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga 2019 och 2022; frågenumren tas bort.\ncatalog:variable_text:36646:18078:18262\ncatalog:variable_text:36646:19174:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "description" = "Den kommun personen är folkbokförd i, enligt den regionala indelningen i kommuner. 2006 avses kommunen där personen bodde i mars 2006." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger folkbokföringskommun respektive boendekommun i mars 2006.\ncatalog:variable_text:36762:11747:11778\ncatalog:variable_text:36762:13208:13239\ncatalog:variable_text:36762:13939:13970"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Personens kön, härlett ur personnumrets näst sista (elfte) siffra: udda siffra kodas som man, jämn som kvinna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; härledningen anges i olika detalj per tabell. Rättar ”ojämt”.\ncatalog:variable_text:36765:11747:11778\ncatalog:variable_text:36765:17167:17348\ncatalog:variable_text:36765:18078:18262\ncatalog:variable_text:36765:19174:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "description" = "Det län personen är folkbokförd i, som kod enligt den regionala indelningen i län; i tabellen över högskolestuderande 2017 som länsnamn i klartext." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger folkbokföringslän och klartext 2017.\ncatalog:variable_text:36779:13208:13239\ncatalog:variable_text:36779:13939:13970\ncatalog:variable_text:36779:17167:17348"
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer"
+fields = { "description" = "Löpnummer som ersätter personens personnummer i det avidentifierade materialet. Numret är ett slumpmässigt tal som används internt vid enkätutskick och avprickning av inkomna enkäter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma löpnummer; 2000–2002 anger att det ersätter personnumret, 2006–2010 hur det används i insamlingen.\ncatalog:variable_text:36788:11017:11048\ncatalog:variable_text:36788:13208:13239\ncatalog:variable_text:36788:13939:13970"
+
+[[statement]]
+kind = "set"
+subject = "var:scbid"
+fields = { "description" = "SCB:s identitetsnummer för individen, som ersätter personnumret och används internt vid enkätutskick och avprickning av inkomna enkäter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma identitetsnummer; 2006–2014 anger hur det används i insamlingen, 2019 att det ersätter personnumret. Rättar ”identitesnummer”.\ncatalog:variable_text:36909:13208:13239\ncatalog:variable_text:36909:18078:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:svarsdatum"
+fields = { "description" = "Datum då personens enkätsvar registrerades som inkommet (avregistreringsdatum); processdata från insamlingen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; ”processdata” och ”processvariabel” säger samma sak.\ncatalog:variable_text:37021:17167:17348\ncatalog:variable_text:37021:19174:19358"

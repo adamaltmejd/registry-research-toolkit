@@ -5892,3 +5892,189 @@ kind = "set"
 subject = "lagenhet-och-hushall: AntLghHiss where key = 'v42211'"
 fields = { "variable" = "antal-lagenheter-med-hiss" }
 evidence = "Material change in meaning, a separate variable (crates/DESIGN.md, one variable one description). SCB VarId 42211 (Hiss) covers two measures: FoB 1985 column AntLghHiss in Individ and Lägenhet och hushåll is the number of apartments reachable by lift, from the property form ('På fastighetsblanketten frågades efter hur många lägenheter som kan nås med hiss inkl. lägenheter i markplanet'), while FoB 1990 column Hiss asks the household whether it has a lift on the same floor (1=Ja, 2=Nej, 0=Småbostadshus). All raw rows for each column-year agree. Operator, #2322 curation under the maintainer's 2026-11-11 delegation.\ncatalog:variable_text:18302:5479:5844\ncatalog:variable_text:18302:7305:7670"
+
+[[statement]]
+kind = "set"
+subject = "var:hiss"
+fields = { "description" = "Om hushållet har tillgång till hiss på samma våningsplan som bostaden. Uppgiften lämnas för två- och flerbostadshus; småbostadshus har en egen kod." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad: 1985 års antal lägenheter som nås med hiss är en egen variabel; kvar är hushållsfrågan 1990.\ncatalog:variable_text:18302:7305:7670"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter-med-hiss"
+fields = { "description" = "Antal lägenheter i flerbostadshuset som kan nås med hiss, inklusive lägenheter i markplanet, enligt fastighetsblanketten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAndra halvan av delningen av hiss (AntLghHiss 1985).\ncatalog:variable_text:18302:5479:5844"
+
+[[statement]]
+kind = "set"
+subject = "var:agarkat"
+fields = { "description" = "Kategori av fastighetsägare för den bostad personen eller hushållet bor i; lägenheterna grupperas efter vem som äger fastigheten. 1980 hämtas uppgiften från allmänna fastighetstaxeringen 1981 (AFT 81)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; källan för 1980 anges som fakta med år.\ncatalog:variable_text:18069:-3653:-3287\ncatalog:variable_text:18069:3652:4018"
+
+[[statement]]
+kind = "set"
+subject = "var:anhoriga"
+fields = { "description" = "Antal andra anhöriga till bostadsföreståndaren (hushållsföreståndaren) och/eller dennes maka, härlett ur FoB-blanketten. Bostadsföreståndare är den som hyr, äger eller på annat sätt förfogar över lägenheten i dess helhet; i bestående äktenskap har mannen generellt räknats som bostadsföreståndare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition alla år; 1970 heter bostadsföreståndaren hushållsföreståndare.\ncatalog:variable_text:18073:-3653:-3287\ncatalog:variable_text:18073:-1826:-1461\ncatalog:variable_text:18073:0:365"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-lagenheter"
+fields = { "description" = "Antal lägenheter i huset. 1960–1970 härleds uppgiften ur FoB-blanketten, 1980 hämtas den från allmänna fastighetstaxeringen 1981 (AFT 81)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; uppgiftskällan anges som fakta med år.\ncatalog:variable_text:18120:-3653:-3287\ncatalog:variable_text:18120:3652:4018\ncatalog:variable_text:18120:5479:5844"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-vaningsplan"
+fields = { "description" = "Antal våningsplan i huset. 1990 härleds uppgiften ur FoB-blanketten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; uppgiftskällan 1990 anges med år.\ncatalog:variable_text:18124:-3653:-3287\ncatalog:variable_text:18124:7305:7670"
+
+[[statement]]
+kind = "set"
+subject = "var:antbbbfmaka"
+fields = { "description" = "Antal barnbarn i hushållet till bostadsföreståndaren (hushållsföreståndaren) och/eller dennes maka, härlett ur FoB-blanketten. Bostadsföreståndare är den som hyr, äger eller på annat sätt förfogar över lägenheten i dess helhet; i bestående äktenskap har mannen generellt räknats som bostadsföreståndare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition alla år, olika formulerad.\ncatalog:variable_text:18155:-3653:-3287\ncatalog:variable_text:18155:-1826:-1461\ncatalog:variable_text:18155:0:365"
+
+[[statement]]
+kind = "set"
+subject = "var:antforaldbfmaka"
+fields = { "description" = "Antal föräldrar till bostadsföreståndaren (hushållsföreståndaren) och/eller dennes maka, härlett ur FoB-blanketten. Bostadsföreståndare är den som hyr, äger eller på annat sätt förfogar över lägenheten i dess helhet; i bestående äktenskap har mannen generellt räknats som bostadsföreståndare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition alla år; skillnaderna gäller bara beskrivningen av bostadsföreståndare.\ncatalog:variable_text:18168:-3653:-3287\ncatalog:variable_text:18168:-1826:-1461\ncatalog:variable_text:18168:0:365"
+
+[[statement]]
+kind = "set"
+subject = "var:bebodd-obebodd"
+fields = { "description" = "Härledd markering om lägenheten är bebodd eller obebodd." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; bostad och lägenhet avser samma sak.\ncatalog:variable_text:18210:-3653:-3287\ncatalog:variable_text:18210:3652:4018\ncatalog:variable_text:18210:7305:7670"
+
+[[statement]]
+kind = "set"
+subject = "var:bfvigselar"
+fields = { "description" = "Bostadsföreståndarens vigselår, härlett ur FoB-blanketten och mantalslängden. 1965 anges för gift person året då äktenskapet ingicks, för änka, änkling eller skild året då äktenskapet upplöstes, och blankt för ogift samt för gift och förut gift utan känt vigselår. Bostadsföreståndare är den som hyr, äger eller på annat sätt förfogar över lägenheten i dess helhet; i bestående äktenskap har mannen generellt räknats som bostadsföreståndare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; kodningsregeln är dokumenterad bara för 1965 och anges med år.\ncatalog:variable_text:18221:-3653:-3287\ncatalog:variable_text:18221:-1826:-1461"
+
+[[statement]]
+kind = "set"
+subject = "var:distrikt"
+fields = { "description" = "Bostadsdistrikt: uppbördsdistrikt i Stockholm, stadsdel i Göteborg, valdistrikt eller del av valdistrikt i övriga landet. Uppgifterna har levererats till SCB från en annan myndighet, och SCB har ingen beskrivning av kodernas betydelse." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; texterna skiljer sig bara i en bisats om att uppgiften inte använts i SCB:s verksamhet.\ncatalog:variable_text:18245:-3653:-3287\ncatalog:variable_text:18245:-1826:-1461"
+
+[[statement]]
+kind = "set"
+subject = "var:dubblett"
+fields = { "description" = "Härledd markering om posten har dubbletter. I lägenhets- och hushållstabellen avser det dubbletter på de identifierande variablerna: 1960 Lan, Kommun, Församling, Distrikt, FastNr, Ursprung, LghNr, HhTyp och LghNrKompl; 1965 Lan, Kommun, Församling, Distrikt, FastNr, HusNr och LghNr." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma markering; lägenhetstabellen anger vilka variabler dubbletterna avser, olika 1960 och 1965.\ncatalog:variable_text:18246:-3653:-3287\ncatalog:variable_text:18246:-1826:-1461"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "description" = "Fastighetsbeteckning för bostadens fastighet: fastighetens alfabetiska beteckning, uppbyggd av trakt, block och enhet och unik tillsammans med kommunen. Den avser 1980 och i lägenhetstabellen 1985 faktiskt eller kyrkobokfört boende, i persontabellen 1985 kyrkobokfört boende och 1990 faktiskt boende. För obebodda lägenheter avses den fastighet där lägenheten ligger. Härleds ur FoB-blanketten, Registret över totalbefolkningen (RTB) och ett fastighetsregister." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; vilket boende som avses och vilket fastighetsregister som används varierar per år och tabell och anges som fakta.\ncatalog:variable_text:18265:3652:4018\ncatalog:variable_text:18265:5479:5844\ncatalog:variable_text:18265:7305:7670"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetslopnr"
+fields = { "description" = "SCB-internt löpnummer för bostadens fastighet, i stället för den officiella fastighetsbeteckningen; unikt inom kommunen. Det avser 1970–1980 och i lägenhetstabellen 1985 kyrkobokfört eller faktiskt boende, i persontabellen 1985 kyrkobokfört boende och 1990 faktiskt boende. För obebodda lägenheter avses den fastighet där lägenheten ligger. Härleds ur FoB-blanketten, 1970 tillsammans med länsdatakontorens kameralband och senare år i regel med Registret över totalbefolkningen (RTB)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition alla år; vilket boende som avses och uppgiftskällan varierar och anges som fakta. Rättar den ofullständiga meningen 1975. Lägenhetstabellen 1975 har två texter (FoB-blanketten respektive FoB-blanketten och RTB, kyrkobokfört/faktiskt boende), Registerinformation.csv:row=611742–611747; båda täcks.\ncatalog:variable_text:18266:0:365\ncatalog:variable_text:18266:1826:2191\ncatalog:variable_text:18266:3652:4018\ncatalog:variable_text:18266:5479:5844\ncatalog:variable_text:18266:7305:7670"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetstyp"
+fields = { "description" = "Om fastigheten är en jordbruksfastighet eller inte. 1980 hämtas uppgiften från allmänna fastighetstaxeringen 1981 (AFT 81)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; källan 1980 anges med år.\ncatalog:variable_text:18267:-3653:-3287\ncatalog:variable_text:18267:3652:4018"
+
+[[statement]]
+kind = "set"
+subject = "var:fastnr"
+fields = { "description" = "Fastighetsnummer enligt blankettmaterialet: löpande numrering per distrikt eller kommun, i Stockholm enligt mantalslängdens registreringsnummer. Härleds ur FoB-blanketten och mantalslängden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text 1960 och 1965, olika ordnad.\ncatalog:variable_text:18268:-3653:-3287\ncatalog:variable_text:18268:-1826:-1461"
+
+[[statement]]
+kind = "set"
+subject = "var:hhtillhorig"
+fields = { "description" = "Hushållstillhörighet: indelning i bostadshushåll, kollektivhushåll och andra privata hushåll. Används bland annat för att urskilja obebodda bostadslägenheter. Härleds ur FoB-blanketten, 1980–1990 även ur Registret över totalbefolkningen (RTB)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma indelning alla år; uppgiftskällan 1980–1990 anges med år.\ncatalog:variable_text:18294:0:365\ncatalog:variable_text:18294:3652:4018"
+
+[[statement]]
+kind = "set"
+subject = "var:husnr"
+fields = { "description" = "Löpnummer för huset (byggnaden) inom fastigheten. I persontabellerna avser det 1985 faktiskt eller kyrkobokfört boende och 1990 faktiskt boende; för obebodda lägenheter avses det hus där lägenheten ligger. 1980 hämtas uppgiften från allmänna fastighetstaxeringen 1981 (AFT 81)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; vilket boende som avses och källan 1980 anges som fakta. Rättar ”boende boende”.\ncatalog:variable_text:18308:-3653:-3287\ncatalog:variable_text:18308:3652:4018\ncatalog:variable_text:18308:5479:5844\ncatalog:variable_text:18308:7305:7670"
+
+[[statement]]
+kind = "set"
+subject = "var:kok"
+fields = { "description" = "Typ av köksutrymme i lägenheten. 1980 hämtas uppgiften från allmänna fastighetstaxeringen 1981 (AFT 81)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; källan 1980 anges med år.\ncatalog:variable_text:18317:-3653:-3287\ncatalog:variable_text:18317:3652:4018\ncatalog:variable_text:18317:5479:5844"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunblock-fob"
+fields = { "description" = "Kommunblock för kyrkobokfört boende, härlett ur den gällande kommunindelningen. För obebodda lägenheter avses det kommunblock där lägenheten ligger." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i båda tabellerna; lägenhetstabellens regel för obebodda lägenheter läggs till.\ncatalog:variable_text:18320:0:365"
+
+[[statement]]
+kind = "set"
+subject = "var:kvalgrupp"
+fields = { "description" = "Lägenhetens kvalitetsgrupp, indelad på grundval av uppgifterna om lägenhetens utrustning. Härleds ur FoB-blanketten, 1980 ur allmänna fastighetstaxeringen 1981 (AFT 81)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; källan 1980 anges med år.\ncatalog:variable_text:18327:-3653:-3287\ncatalog:variable_text:18327:3652:4018"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetslopnummer"
+fields = { "description" = "Löpnummer för lägenhets- och hushållstillhörighet. Löpnumret avgränsar ett hushåll och är unikt för varje hushåll: alla personer som tillhör samma hushåll har samma lägenhetslöpnummer. Härledd variabel." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; familjetabellen 1990 anger bara uppgiftskällorna.\ncatalog:variable_text:18331:-3653:-3287\ncatalog:variable_text:18331:7305:7670"
+
+[[statement]]
+kind = "set"
+subject = "var:lghnr"
+fields = { "description" = "Lägenhetsnummer: löpnummer för lägenheten inom huset. 1990 avser det i person- och familjetabellerna faktiskt boende. Uppgiften hämtas 1960 från FoB-blanketten och 1980 från allmänna fastighetstaxeringen 1981 (AFT 81)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; källan och vilket boende som avses anges med år.\ncatalog:variable_text:18336:-3653:-3287\ncatalog:variable_text:18336:3652:4018\ncatalog:variable_text:18336:7305:7670"
+
+[[statement]]
+kind = "set"
+subject = "var:personer-65-w-ar"
+fields = { "description" = "Antal personer i hushållet som är 65 år eller äldre. Härleds ur FoB-blanketten tillsammans med mantalslängden (1965), länsdatakontorens kameralband (1970) eller Registret över totalbefolkningen (RTB) (1975–1980)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition alla år; uppgiftskällan anges med år och ”65- w år” skrivs ut.\ncatalog:variable_text:18387:-1826:-1461\ncatalog:variable_text:18387:0:365\ncatalog:variable_text:18387:1826:2191"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr"
+fields = { "description" = "Personnummer, identitetsbegrepp för personer som är folkbokförda och tilldelas av Skatteverket. I persontabellen avser det personen själv, och 1975 förekommer ogiltiga personnummer; i lägenhets- och hushållstabellen 1975 avser det hushållsföreståndarens (bostadsinnehavarens) personnummer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen anger per tabell vems personnummer det är. Lägenhetstabellens 1975 motsvarar personnummer-bostadsforestandare 1965–1970 under en annan VarId; den kopplingen lämnas till identitetsgranskning.\ncatalog:variable_text:18388:-3653:-3287\ncatalog:variable_text:18388:1826:2191"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-huvudman"
+fields = { "description" = "Personnummer för den person som var huvudman i familjen, för familjemedlemmar bosatta i samma församling. För gifta makar är mannen huvudman, för barn under 18 år någon av föräldrarna. Skattemyndigheterna använder uppgiften endast som sorteringsbegrepp, och den avser samhörigheten under innevarande taxeringsår. Huvudmannens personnummer används för att föra samman personer till familjer (RTB-familj)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text 1975–1985 och 1990, olika ordnad.\ncatalog:variable_text:18389:1826:2191\ncatalog:variable_text:18389:7305:7670"
+
+[[statement]]
+kind = "set"
+subject = "var:personnummer-bostadsforestandare"
+fields = { "description" = "Bostadsföreståndarens (hushållsföreståndarens) personnummer, härlett ur FoB-blanketten tillsammans med mantalslängden (1965) eller länsdatakontorens kameralband (1970). Bostadsföreståndare är den av de boende som hyr, äger eller på annat sätt förfogar över lägenheten i dess helhet; i bestående äktenskap har mannen generellt räknats som bostadsföreståndare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; uppgiftskällan anges med år.\ncatalog:variable_text:18390:-1826:-1461\ncatalog:variable_text:18390:0:365"
+
+[[statement]]
+kind = "set"
+subject = "var:storklastatort"
+fields = { "description" = "Storleksklass (antal invånare) för den tätort personen eller hushållet bor i, härledd ur SCB:s tätortsavgränsning. 1960 avses med tätort hussamlingar med minst 200 invånare där avståndet mellan husen inte överstiger 200 meter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; tätortsdefinitionen är angiven för 1960 och anges med år.\ncatalog:variable_text:18448:-3653:-3287\ncatalog:variable_text:18448:0:365"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsdistrikt"
+fields = { "description" = "Indelning i distrikt för taxeringssyfte. Uppgifterna har levererats till SCB från en annan myndighet och har inte använts i SCB:s verksamhet; SCB har ingen beskrivning av kodernas betydelse." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text i båda tabellerna.\ncatalog:variable_text:18463:0:365"
+
+[[statement]]
+kind = "set"
+subject = "var:tidningomr"
+fields = { "description" = "Det tidningsspridningsområde personen eller hushållet (eller den obebodda lägenheten) tillhör. Tidningsspridningsområden är områden där befolkningen huvudsakligen läser samma tidning. Härledd variabel." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; tabellerna anger person respektive hushåll. Den generella texten om administrativa indelningar tas bort.\ncatalog:variable_text:18465:-3653:-3287"
+
+[[statement]]
+kind = "set"
+subject = "var:ursprung"
+fields = { "description" = "Teknisk, härledd variabel som anger om personen ingår i flerfamiljs- eller enfamiljsmassan. Den användes i statistikproduktionen för att ta fram tabeller." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text i båda tabellerna, olika formulerad.\ncatalog:variable_text:18491:-3653:-3287"

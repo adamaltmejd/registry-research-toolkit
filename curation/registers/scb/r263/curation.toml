@@ -154,3 +154,9 @@ kind = "set"
 subject = "var:beskrivnsv"
 fields = { "description" = "Delkostnadsslag för respektive hustyp i byggkostnadsindex. Enligt SCB hade BeskrivnSV och NamnSV samma innehåll 2023-2024; från 2025 anger BeskrivnSV en numrering 1-6 och NamnSV kostnadsslagets namn." }
 evidence = "Operationell definition i r18613 och r19032 respektive r19740 och r20280.\n0.74.0 catalog, key v46007, releases r18613, r19032, r19740, r20280; reg_meta.db:occurrence:42855,42868,42881"
+
+[[statement]]
+kind = "set"
+subject = "var:namnsv"
+fields = { "description" = "Namnet i klartext på delkostnadsslaget, det vill säga vilken delkostnad som avses, för respektive hustyp." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; jämförelsen med BeskrivnSV är motsägelsefull mellan åren (samma värdemängd 2023–2024, numrering 1–6 i BeskrivnSV 2025–2026) och beskriver en annan variabel, så den lämnas bort.\ncatalog:variable_text:13281:19358:20089\ncatalog:variable_text:13281:20089:20819"

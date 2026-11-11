@@ -8776,3 +8776,15 @@ kind = "set"
 subject = "var:gronfoderobargadareal-dar-80"
 fields = { "description" = "Ekologisk obärgad areal stråsäd till grönfoder, i hektar. Arealen är en delmängd av den totala obärgade arealen till grönfoder." }
 evidence = "Definitionen är \"Obärgad areal stråsäd till grönfoder\"; frasen \"för tröskning\" i den operationella definitionen är en kopierad formulering, enligt samma bedömning som för karnfroobargadareal-dar-23. Nyckel v45787, kolumn GronfoderObargadAreal_Dar_80.\n0.74.0 catalog, key v45787, releases r17533, r18588, r18589, r18590...; reg_meta.db:occurrence:438913,439419,439921"
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-3"
+fields = { "description" = "Obärgad areal havre till grönfoder." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; rättar ”gröfoder” 2019.\ncatalog:variable_text:49144:16801:17897\ncatalog:variable_text:49144:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:gronfoderobargadareal-501"
+fields = { "description" = "Obärgad areal blandsäd av baljväxter och stråsäd till grönfoder." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; rättar ”gröfoder” 2019.\ncatalog:variable_text:49150:16801:17897\ncatalog:variable_text:49150:17897:18262"

@@ -364,3 +364,21 @@ kind = "set"
 subject = "var:installerad-effekt-solceller-storre-an-1000-kw"
 fields = { "label" = "Installerad effekt (anläggningar större än 1000 kW, EffektXL)" }
 evidence = "#2102 same-label cluster 'Installerad effekt' (8 variables): judged different meaning, medium confidence; Size classes by installed kW per opdef; EffektMer and EffektXL share the same threshold (större än 1000 kW) over adjacent periods so they get one label."
+
+[[statement]]
+kind = "set"
+subject = "var:effektmellan"
+fields = { "description" = "Den sammanlagda installerade effekten i elnätet från de solcellsanläggningar som var för sig har en installerad effekt mellan 20 och 1000 kW." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen anger storleksklassen. Rättar ”effekteten”.\ncatalog:variable_text:49912:16801:17167\ncatalog:variable_text:49912:17167:18262\ncatalog:variable_text:49912:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:effektmer"
+fields = { "description" = "Den sammanlagda installerade effekten i elnätet från de solcellsanläggningar som var för sig har en installerad effekt större än 1000 kW." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen anger storleksklassen. Rättar ”effekteten”.\ncatalog:variable_text:49913:16801:17167\ncatalog:variable_text:49913:17167:17532\ncatalog:variable_text:49913:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:effektmindre"
+fields = { "description" = "Den sammanlagda installerade effekten i elnätet från de solcellsanläggningar som var för sig har en installerad effekt mindre än 20 kW." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen anger storleksklassen. Rättar ”effekteten”.\ncatalog:variable_text:49914:16801:17167\ncatalog:variable_text:49914:17167:17532\ncatalog:variable_text:49914:18262:19723"
