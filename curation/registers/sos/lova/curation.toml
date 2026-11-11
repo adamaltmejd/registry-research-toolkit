@@ -2908,3 +2908,33 @@ kind = "set"
 subject = "var:yrkeskod"
 fields = { "description" = "Tvåställig bokstavskod för legitimationsyrke (22 yrken). I tabellerna med examensuppgifter ingår även socionom (SO), och i examenstabellen är fältet tomt för övriga. I förteckningen över legitimationer och specialbevis förekommer bara SJ, LK och TL, eftersom bara de yrkena har specialiteter." }
 evidence = "One code, differing coverage per table: A_LOVA row 210 and A_LOVA_HOSP row 212 '22 legitimationsyrkena'; A_LOVA_EXAMEN row 211 '..., plus socionom. I övrigt tomt.'; A_LOVA_STYR_EXAMENSKODER row 213 'Legitimationsyrkena plus socionom (SO)'; A_LOVA_STYR_LEG_SPEC_EXAM_KOD row 214 'SJ, LK, TL. Inga leg andra har specialiteter'. Same variable, no conflict in meaning. The letter-code expansions (SJ, LK, TL) are deliberately not spelled out because no codebook is in the sources.\ncatalog/source/Socialstyrelsen/Metadata_Förteckning legitimerade omsorgs- och vårdyrkesgruppers arbetsmarknadsstatus (LOVA)_web_klar.xlsx: 'Metadata - Variabelnivå' rows 210-214."
+
+[[statement]]
+kind = "set"
+subject = "set:examen"
+fields = { "description" = "Personens examen inom grundläggande högskoleutbildning, som kod eller klartext, eller grovt grupperad efter ämne. Dessutom finns Socialstyrelsens egen kod för sjuksköterskors specialistexamen, som oftast överensstämmer med SUN 2000-inriktningen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nKatalogtexterna ger examen som kod och klartext, grov gruppering efter ämnen och SoS-koden för specialistexamen.\ncatalog:variable_text:63521:9131:2932897\ncatalog:variable_text:63522:9131:2932897\ncatalog:variable_text:63523:9131:2932897\ncatalog:variable_text:63527:9131:2932897\ncatalog:variable_text:63601:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:larosate"
+fields = { "description" = "Den högskola där den aktuella examen avlagts." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda katalogtexterna avser högskolan för aktuell examen; tillägget Tom i en text är oklart och utelämnas.\ncatalog:variable_text:63534:9131:2932897\ncatalog:variable_text:63580:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildnings-eller-specialitetsklassificering"
+fields = { "description" = "Kod för personens aktuella legitimation, specialitet eller examen, även grupperad till en enskild typ av legitimation eller bevis och till grupper inom en yrkeskategori." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nTexterna talar om legitimations-, specialitets- och examenskod och om specialbevis grupperade till typ och yrkeskategori, inte om specialistbevis.\ncatalog:variable_text:63582:9131:2932897\ncatalog:variable_text:63584:9131:2932897\ncatalog:variable_text:63585:9131:2932897\ncatalog:variable_text:63620:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsinriktning"
+fields = { "description" = "Inriktningen för personens högsta avslutade utbildning enligt Svensk utbildningsklassifikation, SUN 2000 eller SUN 2020." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF för SUN2000 anger Svensk utbildningsklassifikation; båda medlemmarna avser högsta avslutade utbildning.\ncatalog:variable_text:63621:9131:2932897\ncatalog:variable_text:63622:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:yrkesstallning"
+fields = { "description" = "Om personen i november var sjöman, anställd (utom sjöman), företagare eller företagare i eget aktiebolag, eller saknar kontrolluppgift, som kod eller klartext." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda delar katalogtexten med värdena; benämningarna anger november och kod respektive klartext.\ncatalog:variable_text:63655:9131:2932897\ncatalog:variable_text:63656:9131:2932897"

@@ -3918,3 +3918,27 @@ kind = "set"
 subject = "var:kdatumursp"
 fields = { "description" = "Anger ursprunget till kvalitetsmärkningen av adressplats och byggnad, det vill säga vilken källa märkningen kommer från: Lantmäteriet (Lägenhetsprojektet, batch, fix eller konvertering), kommun, Posten eller Skatteverket. Märkningens datum finns i KDATUM." }
 evidence = "Etikett, definition och kodlistan #5388 anger ursprung; KDATUM (v29380) är den separata datumkolumnen. Bara operationaliseringen för byggnadsinformation i r20262 säger 'Datum för kvalitetsmärkning för ursprung', ett skrivfel.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=351437 (r17678)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=351617 (r20262)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=184634 (r17678)"
+
+[[statement]]
+kind = "set"
+subject = "set:geografiska-koordinater"
+fields = { "description" = "Nordlig och östlig koordinat i meter, i SWEREF 99 TM och i lokalt system. SWEREF-koordinaterna finns för fastighet och för adressplats och byggnadspunkt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nNord/öst, referenssystem och objekt är axlarna; DEF och OP anger meter och SWEREF 99 TM eller lokalt system.\ncatalog:variable_text:17376:16800:16801\ncatalog:variable_text:17377:16800:16801\ncatalog:variable_text:17378:16800:16801\ncatalog:variable_text:17395:16800:16801\ncatalog:variable_text:17396:16800:16801\ncatalog:variable_text:17397:16800:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:kommun"
+fields = { "description" = "Kommunen enligt den regionala indelningen i kommuner, som kommunnamn och som de två sista siffrorna i den fyrsiffriga kommunkoden; hela koden fås tillsammans med länskoden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nKod och namn delar definitionen; OP anger att komkod är de två sista siffrorna och kompletteras med länskod.\ncatalog:variable_text:17340:16800:16801\ncatalog:variable_text:17340:20453:20454\ncatalog:variable_text:17341:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:kvalitetsmarkningens-datum"
+fields = { "description" = "Datum för kvalitetsmärkningen av en uppgift i fastighets-, adress-, byggnads- och lägenhetsuppgifterna, med en variabel per uppgift, till exempel adressplats, postnummer, nybyggnadsår, byggnadstyp, bostadsarea, antal rum och lägenhetsnummer. Från 2020 levereras datumet för total lokalarea, senast kopplade typkod och värdeår endast som tomma värden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nUppgifterna är slots; alla delar DEF och OP namnger uppgiften, med NULL från 2020 för tre av dem.\ncatalog:variable_text:17211:16800:16801\ncatalog:variable_text:17213:16800:16801\ncatalog:variable_text:17216:16800:16801\ncatalog:variable_text:17241:16800:16801\ncatalog:variable_text:17265:16800:16801\ncatalog:variable_text:17267:16800:16801\ncatalog:variable_text:17273:16800:16801\ncatalog:variable_text:17285:16800:16801\ncatalog:variable_text:17331:16800:16801\ncatalog:variable_text:17334:16800:16801\ncatalog:variable_text:17337:16800:16801\ncatalog:variable_text:17350:16800:16801\ncatalog:variable_text:17350:20453:20454\ncatalog:variable_text:17351:16800:16801\ncatalog:variable_text:17364:16800:16801\ncatalog:variable_text:17366:16800:16801\ncatalog:variable_text:17368:16800:16801\ncatalog:variable_text:17388:16800:16801\ncatalog:variable_text:17409:16800:16801\ncatalog:variable_text:17414:16800:16801\ncatalog:variable_text:17418:16800:16801\ncatalog:variable_text:17457:16800:16801\ncatalog:variable_text:17459:16800:16801\ncatalog:variable_text:17468:16800:16801\ncatalog:variable_text:17473:16800:16801\ncatalog:variable_text:17500:16800:16801\nRegisterinformation.csv:row=184633"
+
+[[statement]]
+kind = "set"
+subject = "set:nybyggnadsar"
+fields = { "description" = "Byggnadens nybyggnadsår, dels enligt kommunens uppgift (tidigare hämtad från fastighetstaxeringen), dels i SCB:s version där kommunens uppgift kompletterats med SCB:s nybyggnadsstatistik." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda delar definitionen; OP skiljer kommunens uppgift från SCB:s kompletterade version.\ncatalog:variable_text:17379:16800:16801\ncatalog:variable_text:17443:16800:16801\ncatalog:variable_text:17443:19722:19723"

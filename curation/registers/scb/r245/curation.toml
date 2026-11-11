@@ -1401,3 +1401,63 @@ kind = "set"
 subject = "var:valdistriktsnamn"
 fields = { "label" = "Valdistrikt (namn)" }
 evidence = "#2102 same-label cluster 'Valdistrikt' (3 variables): judged different meaning, medium confidence; valdistrikt is a four-digit code unique with municipality code, llkkdddd an eight-digit code with county and municipality, valdistnamn the name."
+
+[[statement]]
+kind = "set"
+subject = "set:alder"
+fields = { "description" = "Personens ålder i antal hela år vid årets slut, ogrupperad och (1999–2014) grupperad i åldersgrupper. 1999, 2004, 2014, 2019 och 2024 härleds åldern ur personnumret för personer som inte finns i Registret över totalbefolkningen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF anger ålder i antal år vid årets slut; grupperingen finns 1999–2014; härledningen ur personnummer anges för alla år utom 2009.\ncatalog:variable_text:14787:10592:10957\ncatalog:variable_text:14787:12418:12784\ncatalog:variable_text:14787:14245:14610\ncatalog:variable_text:14787:16071:16436\ncatalog:variable_text:14787:19723:20089\ncatalog:variable_text:14788:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetskraftsstatus"
+fields = { "description" = "Personens arbetskraftsstatus, i definitionen från oktober 2007 och i den tidigare svenska definitionen till och med september 2007, samt anknytningsgrad till arbetsmarknaden enligt AKU från 2007. En version för tabellframställning härleds från arbetskraftsstatus och uppgifterna om studier. Anknytningsgraden saknar värde för personer som tillhör andra urval än AKU-urvalet, och 2009 och 2014 är graderna 11 och 12 omkodade till 1." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBara anknytningsgraden knyts till AKU; tabellversionen härleds ur arbetskraftsstatus och stud/studheldel; omkodningen anges 2009 och 2014.\ncatalog:variable_text:14791:10592:10957\ncatalog:variable_text:14791:14245:14610\ncatalog:variable_text:14792:10592:10957\ncatalog:variable_text:14793:10592:10957\ncatalog:variable_text:14794:10592:10957\ncatalog:variable_text:14794:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:fodelseland"
+fields = { "description" = "Personens födelseland enligt Registret över totalbefolkningen (RTB), och födelselandet grupperat i världsdelar eller landgrupper, som kod och som klartext. 2004, 2014, 2019 och 2024 kompletteras uppgifterna med Flergenerationsregistret för att täcka så många personer som möjligt; 1999 kompletteras födelselandet med RTB 1998 för poster som inte matchat mot RTB 1999." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nKompletteringen med Flergenerationsregistret står för 2004, 2014, 2019 och 2024, kompletteringen med RTB 1998 för 1999; för 2009 anges ingen komplettering.\ncatalog:variable_text:14806:10592:10957\ncatalog:variable_text:14806:12418:12784\ncatalog:variable_text:14806:14245:14610\ncatalog:variable_text:14807:17897:18262\ncatalog:variable_text:14808:10592:10957\ncatalog:variable_text:14808:12418:12784\ncatalog:variable_text:14808:14245:14610\ncatalog:variable_text:14809:10592:10957\ncatalog:variable_text:14809:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:forstagangsvaljare"
+fields = { "description" = "Om personen är förstagångsväljare, det vill säga har fyllt 18 år sedan det senaste valet av ett visst slag: allmänna val, val till Europaparlamentet eller (2004) den senaste nationella folkomröstningen. Variabeln bestäms av födelsedatum." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nValtyperna är slots; DEF definierar förstagångsväljare efter ålder sedan respektive föregående val, och OP anger födelsedatumintervall.\ncatalog:variable_text:14805:12418:12784\ncatalog:variable_text:14810:10592:10957\ncatalog:variable_text:14810:12418:12784\ncatalog:variable_text:14810:14245:14610\ncatalog:variable_text:14810:16071:16436\ncatalog:variable_text:14811:10592:10957\ncatalog:variable_text:14811:12418:12784\ncatalog:variable_text:14811:14245:14610\ncatalog:variable_text:14811:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "set:kommungrupp"
+fields = { "description" = "Kommungrupp för personens kommun enligt Sveriges Kommuner och Regioners indelning av kommuner i nio grupper efter bland annat befolkningsstorlek, pendlingsmönster och näringslivsstruktur. 2004 och 2009 används 2005 års indelning, 2014 2011 års, 2019 2017 års och 2024 2023 års. 2004–2014 avses kommunen där personen är röstberättigad enligt röstlängden som fastställs 30 dagar före valdagen, och grupperna anges som kod och som namn; 2019 och 2024 anges de med namn eller klartext." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF ger nio grupper; OP anger version per år och röstlängden bara för 2005- och 2011-versionerna; kod finns bara 2004–2014.\ncatalog:variable_text:14819:16071:16436\ncatalog:variable_text:14820:16071:16436\ncatalog:variable_text:14822:17897:18262\ncatalog:variable_text:14822:19723:20089\ncatalog:variable_text:14823:17897:18262\ncatalog:variable_text:14824:19723:20089\ncatalog:variable_text:14825:12418:12784\ncatalog:variable_text:14826:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:medborgarskapsland"
+fields = { "description" = "Personens prioriterade medborgarskapsland, grupperat i världsdelar eller landgrupper (kod och klartext) enligt Registret över totalbefolkningen, samt om personen är svensk medborgare. Svenskt medborgarskap härleds ur rösträtten i röstlängden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nLand, världsdelsgrupp och svensk/utländsk är grupperingar av medborgarskapet; OP anger RTB respektive röstlängden som källa.\ncatalog:variable_text:14835:17897:18262\ncatalog:variable_text:14836:10592:10957\ncatalog:variable_text:14836:14245:14610\ncatalog:variable_text:14837:14245:14610\ncatalog:variable_text:14839:10592:10957\ncatalog:variable_text:14839:12418:12784\ncatalog:variable_text:14864:10592:10957\ncatalog:variable_text:14864:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:rostande-i-europaparlamentsval"
+fields = { "description" = "Om personen röstade i Europaparlamentsvalet. 2004, 2009 och 2014 finns också en variant för kalibreringssteget i valdeltagandeundersökningen, som fördelar röstande och ej röstande efter län." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nrostat-europaparlamentsval anger om personen röstat 1999–2024; erost (2004, 2009, 2014) används i kalibreringssteget och fördelar röstande och ej röstande efter län.\ncatalog:variable_text:14802:12418:12784\ncatalog:variable_text:14802:14245:14610\ncatalog:variable_text:14852:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "set:sammanraknad-forvarvsinkomst"
+fields = { "description" = "Personens sammanräknade förvärvsinkomst, det vill säga inkomst av tjänst och näringsverksamhet enligt deklarationen, som belopp och som kvintilgrupp. Kvintilgränserna beräknas på hela befolkningen över 18 år; 1999–2014 avser inkomsten året två år före valet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBelopp och kvintilgrupp avser samma inkomst; OP anger kvintilgränser för befolkningen 18+ och inkomstår två år före valåret.\ncatalog:variable_text:14813:10592:10957\ncatalog:variable_text:14813:12418:12784\ncatalog:variable_text:14813:14245:14610\ncatalog:variable_text:14813:16071:16436\ncatalog:variable_text:14813:17897:18262\ncatalog:variable_text:14855:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "set:upprakningsvikt"
+fields = { "description" = "Vikter som räknar upp urvalet, som designvikt och som kalibrerad vikt, för AKU-urvalet och för RTB-urvalet. AKU-vikterna räknar upp till svenska medborgare folkbokförda i Sverige 18–74 år och är 0 för personer i andra urval; RTB-vikterna räknar upp till de röstberättigade, den kalibrerade till de röstberättigade i Europaparlamentsvalet. De kalibrerade vikterna tar hänsyn till urvalssannolikheter i olika strata och till hjälpinformation om röstberättigade efter åldersgrupp och kön; AKU-vikten tar även hänsyn till svarsfrekvenser och kompenserar för bortfall, och RTB-vikten använder även rösträttsgrupper och antal röstande." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP för kvikt-aku nämner svarsfrekvenser och bortfall, för kvikt-rtb rösträttsgrupper och antal röstande; dvikt-rtb räknar upp till röstberättigad befolkning, kvikt-rtb till Europaparlamentsvalet.\ncatalog:variable_text:14800:10592:10957\ncatalog:variable_text:14800:14245:14610\ncatalog:variable_text:14801:10592:10957\ncatalog:variable_text:14801:14245:14610\ncatalog:variable_text:14829:10592:10957\ncatalog:variable_text:14829:14245:14610\ncatalog:variable_text:14830:10592:10957\ncatalog:variable_text:14830:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:valdistrikt"
+fields = { "description" = "Valdistriktet där personen är röstberättigad enligt röstlängden som fastställs 30 dagar före valdagen, enligt Valmyndighetens indelning. Det anges som fyrsiffrig distriktskod som blir unik tillsammans med kommunkoden, som fullständig kod med län och kommun (llkkdddd) och som namn." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nKodformerna och namnet delar definitionen; OP anger röstlängden och att fyrsiffrig kod kräver kommunkod.\ncatalog:variable_text:14875:17897:18262\ncatalog:variable_text:14876:14245:14610\ncatalog:variable_text:14877:19723:20089"

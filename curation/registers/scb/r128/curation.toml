@@ -2728,3 +2728,75 @@ kind = "set"
 subject = "foretag-kuagg: AntUtrikes @1996..2017 where key = 'v6121'"
 fields = { "unit" = "Kontrolluppgifter" }
 evidence = "Definitionen av AntUtrikes är 'Antal kontrolluppgifter ...' i alla utgåvor 1996-2018 och enheten för 2018 är Kontrolluppgifter. Ingen SCB-text för kolumnen anger personer; enheten 'antal personer' 1996-2017 strider mot definitionen.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=395685 (r4882)"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-agi-och-kontrolluppgifter"
+fields = { "description" = "Antal AGI/KU som genererats vid arbetsstället respektive antal kontrolluppgifter vid företaget, summerat av SCB. För arbetsstället räknas 2010–2018 kontrolluppgifter och från 2019 AGI/KU." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF skiljer arbetsställe från företag; OP anger att antalet per arbetsställe avser kontrolluppgifter 2010–2018 och AGI/KU från 2019.\ncatalog:variable_text:45800:9496:14610\ncatalog:variable_text:45800:14610:17897\ncatalog:variable_text:45800:17897:20089\ncatalog:variable_text:45803:9496:14610\ncatalog:variable_text:45803:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:bilersattning"
+fields = { "description" = "Om bilersättning har utgått med belopp enligt schablon, antal AGI/KU med sådan ersättning och 1997–2018 antal körda kilometer med skattepliktig milersättning vid bilförmån. För 2020–2023 finns även versioner med felaktiga värden som inte längre används." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF anger schablonersättningen, antalet AGI/KU och kilometer med milersättning; OP markerar de felaktiga versionerna 2020–2023.\ncatalog:variable_text:45802:9862:14610\ncatalog:variable_text:45802:14610:15340\ncatalog:variable_text:45802:15340:17897\ncatalog:variable_text:45805:9496:14610\ncatalog:variable_text:45805:14610:17532\ncatalog:variable_text:45805:17532:18628\ncatalog:variable_text:45805:18628:20089\ncatalog:variable_text:45818:18262:19723\ncatalog:variable_text:45840:9496:14610\ncatalog:variable_text:45840:14975:15340\ncatalog:variable_text:45841:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:bilforman"
+fields = { "description" = "Beloppet av skattepliktig bilförmån, det belopp de anställda betalat till arbetsgivaren för förmånen och antal månader med förmånen. 2010–2011 och från 2015 anges beloppen som summa per företag eller organisation (organisationsnummer); 2010–2011 skapas summan av SCB ur Skatteverkets uppgifter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF ger de tre måtten; summeringen per organisationsnummer anges 2010–2011 och från 2015 för de två beloppen, Skatteverket som källa 2010–2011.\ncatalog:variable_text:45804:9862:14610\ncatalog:variable_text:45804:14975:15340\ncatalog:variable_text:45842:9496:14610\ncatalog:variable_text:45842:14610:15340\ncatalog:variable_text:45842:16071:17532\ncatalog:variable_text:45843:9862:14610\ncatalog:variable_text:45843:14610:15340\ncatalog:variable_text:45843:16071:17532"
+
+[[statement]]
+kind = "set"
+subject = "set:bostadsforman"
+fields = { "description" = "Om förmån av fri bostad har utgått och antal AGI/kontrolluppgifter med sådan förmån, totalt och för bostäder belägna på småhusenhet. Antalen är 2010–2024 summerade per företag eller organisation. För 2019–2023 finns även versioner med felaktiga värden för vissa personer, som inte längre används." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF ger förmån och antal, totalt och småhusenhet; OP 2010–2024 säger summa per företag/organisation skapad på SCB; fel-varianterna 2019–2023 används inte längre.\ncatalog:variable_text:45806:9496:14610\ncatalog:variable_text:45806:14610:17532\ncatalog:variable_text:45806:17532:17897\ncatalog:variable_text:45806:17897:20089\ncatalog:variable_text:45819:17897:19723\ncatalog:variable_text:45820:10227:14610\ncatalog:variable_text:45820:14610:17532\ncatalog:variable_text:45820:17532:17897\ncatalog:variable_text:45820:17897:20089\ncatalog:variable_text:45821:17897:18262\ncatalog:variable_text:45845:9496:14610\ncatalog:variable_text:45845:14975:15340\ncatalog:variable_text:45846:17897:19723\ncatalog:variable_text:45847:10227:14610\ncatalog:variable_text:45847:14975:15340\ncatalog:variable_text:45848:17897:19723\nRegisterinformation.csv:row=204134"
+
+[[statement]]
+kind = "set"
+subject = "set:forman-som-pension"
+fields = { "description" = "Om personen till följd av tidigare anställning har någon typ av förmån som pension, och antal AGI/KU med sådan förmån; för 2022 finns även versioner med felaktiga värden som inte längre används." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF skiljer förekomst från antal AGI/KU; OP anger att fel-varianterna innehåller felaktiga värden och inte används.\ncatalog:variable_text:45824:17532:17897\ncatalog:variable_text:45824:17897:20089\ncatalog:variable_text:45825:18993:19358\ncatalog:variable_text:45863:17532:20089\ncatalog:variable_text:45897:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:formaner"
+fields = { "description" = "Värdet av andra skattepliktiga förmåner än kontant lön som ligger till grund för arbetsgivaravgifter eller särskild skatt: det sammanlagda värdet, även summerat per arbetsställe, och värdet av skattepliktig bränsleförmån. Bränsleförmånen och den ena variabeln för det sammanlagda värdet är 2010–2011 och 2015–2024 summerade per företag eller organisation. Summan per arbetsställe bildas 2010–2024 av SCB ur uppgifter från Skatteverket, och 2010–2011 kommer även övriga förmånsuppgifter från Skatteverket." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSummering per företag/organisationsnummer anges för bränsleförmån och en av de två totalvariablerna 2010–2011 och 2015–2024, inte för den andra totalvariabeln.\ncatalog:variable_text:45849:9862:14610\ncatalog:variable_text:45849:14610:15340\ncatalog:variable_text:45849:15340:17532\ncatalog:variable_text:45864:12053:14610\ncatalog:variable_text:45864:14610:15340\ncatalog:variable_text:45865:14610:15340\ncatalog:variable_text:45865:16071:17532\ncatalog:variable_text:45918:10592:14610\ncatalog:variable_text:45918:14610:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:institutionell-sektor"
+fields = { "description" = "Vilken sektor det företag som personen är kopplad till tillhör: företaget som lämnat kontrolluppgift för personen eller företaget där personen bedöms ha haft sin huvudsakliga sysselsättning. Den sammanslagna sektorkoden bygger på institutionell sektor, ägarkategori och juridisk form från Företagsdatabasen (FDB); från 2014 finns även en klassificering enligt Standard för klassificering av institutionella enheter efter institutionell sektor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF för InstKod anger företaget bakom kontrolluppgiften och de tre delvariablerna från FDB; institutionell-sektor och sektorkod avser företaget för huvudsaklig sysselsättning.\ncatalog:variable_text:45874:16071:20089\ncatalog:variable_text:45875:11323:11688\ncatalog:variable_text:45876:14610:15340\ncatalog:variable_text:45911:17532:17897\ncatalog:variable_text:45911:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:kontant-bruttolon"
+fields = { "description" = "Summan av kontant bruttolön, semesterersättning, provision med mera, summerad per arbetsställe eller per företag (organisationsnummer), och antalet personer som fått kontant bruttolön från företaget. Lönesumman kommer ursprungligen från Skatteverket." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nLoneink summeras 2010–2011 per företag/organisation och 2011–2024 per arbetsställe, uppgiften kommer från Skatteverket; antperslon är antalet personer med kontant bruttolön, en egen slot i gruppen.\ncatalog:variable_text:45826:9496:14610\ncatalog:variable_text:45826:14610:20089\ncatalog:variable_text:45889:9496:14610\ncatalog:variable_text:45889:14610:15340\ncatalog:variable_text:45889:16071:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:kostnadsersattningar"
+fields = { "description" = "Kostnadsersättningar som betalats ut utöver lön, och 2019–2024 även övriga kostnadsersättningar, det vill säga andra än bilersättning och traktamente. 2010–2011 kommer uppgiften från Skatteverket och summeras per företag eller organisation av SCB; 2015–2024 summeras värdet per organisationsnummer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSumman och delposten övriga kostnadsersättningar är slots; Skatteverket och SCB:s summering anges 2010–2011, summering per organisationsnummer 2015–2024.\ncatalog:variable_text:45885:9496:14610\ncatalog:variable_text:45885:14610:15340\ncatalog:variable_text:45885:16071:17532\ncatalog:variable_text:45894:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:pensionsutbetalningar"
+fields = { "description" = "Pension som en person fått utbetald från utbetalaren: utbetald pension enligt kontrolluppgift (1996–2002) och tjänstepension." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF för pensionsutbetalning och tjanstepension anger båda utbetalda pensionsbelopp; penskod är en kod för grundavdragsberäkning.\ncatalog:variable_text:45898:9496:12053\ncatalog:variable_text:45919:9496:14610\ncatalog:variable_text:45919:14610:15340\ncatalog:variable_text:45919:16071:17532"
+
+[[statement]]
+kind = "set"
+subject = "set:resekostnadsersattning"
+fields = { "description" = "Om resekostnadsersättning motsvarande utlägg har gjorts (1996–2009 och 2011–2018), och det sammanlagda beloppet av ersättning eller förmån för utomlands bosatta för resa till och från Sverige vid anställningens början och slut samt bostad i Sverige under anställningstiden (1997 och 2000–2024). Beloppet är 2010–2011 och 2015–2024 summerat per företag eller organisation." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF ger reseers 1996–2009 och 2011–2018 med ordet gjorts, beloppet 1997 och 2000–2024; summering per organisation anges 2010–2011 och 2015–2024.\ncatalog:variable_text:45856:9862:10227\ncatalog:variable_text:45856:14610:15340\ncatalog:variable_text:45856:16071:17532\ncatalog:variable_text:45907:9496:14610\ncatalog:variable_text:45907:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:traktamente"
+fields = { "description" = "Ersättning från arbetsgivaren för de ökade levnadskostnaderna under en tjänsteresa (logi, högre måltidskostnader och småutgifter). Till och med 2018 anges inrikes och utrikes traktamente enligt schablon var för sig, både som antal kontrolluppgifter med sådan ersättning och som om sådan ersättning har utgått; från 2019 anges antal arbetsgivardeklarationer eller kontrolluppgifter med traktamente totalt. Från 2010 är antalen summerade per företag eller organisation. Varianterna med felaktiga värden (2020–2023) innehåller fel för vissa personer och används inte längre." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF 1996–2018 ger antal och indikator per inrikes/utrikes, DEF/OP 2019–2024 antal AGI/KU; summering per företag står i OP från 2010.\ncatalog:variable_text:45807:9496:14610\ncatalog:variable_text:45807:14610:17532\ncatalog:variable_text:45807:17532:17897\ncatalog:variable_text:45812:9496:14610\ncatalog:variable_text:45812:14610:17532\ncatalog:variable_text:45812:17532:17897\ncatalog:variable_text:45830:17897:20089\ncatalog:variable_text:45831:18262:19723\ncatalog:variable_text:45920:17897:20089\ncatalog:variable_text:45921:18262:19723\ncatalog:variable_text:45922:9496:14610\ncatalog:variable_text:45922:14975:15340\ncatalog:variable_text:45923:9496:14610\ncatalog:variable_text:45923:14975:15340"

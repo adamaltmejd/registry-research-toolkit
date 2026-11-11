@@ -1558,3 +1558,45 @@ kind = "set"
 subject = "var:osys"
 fields = { "description" = "Sysselsättningsgrad. För 2013-2017 härleds den ur överenskommen sysselsättningsgrad, där även timavlönade får en beräknad grad. Från 2018 är den faktisk sysselsättningsgrad, härledd ur överenskommen sysselsättningsgrad och tjänstledighetsomfattning. För åren före 2013 saknar SCB:s metadata beskrivning." }
 evidence = "Operationell definition r5346-r11907 (2013-2017): härleds från överenskommen sysselsättningsgrad för månadsavlönade, timavlönade får en beräknad grad. r13128-r19908 (2018-2024): härleds från överenskommen sysselsättningsgrad och tjänstledighetsomfattning, resultatet blir faktisk sysselsättningsgrad. Årgångarna r1569-r4677 (1996-2012) har ingen operationell definition.\n0.74.0 catalog, key v5717, releases r1088, r11166, r11907, r13128...; reg_meta.db:occurrence:446377,446417,446457"
+
+[[statement]]
+kind = "set"
+subject = "set:alder"
+fields = { "description" = "Personens ålder, härledd ur personnumret, i år eller grupperad i åldersgrupper. Från 2013 avser ettårsåldern åldern vid mättillfället i november." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAlla härleds ur personnumret; mättillfället i november anges bara för ålder i år från 2013.\ncatalog:variable_text:49748:12418:15706\ncatalog:variable_text:49748:15706:20089\ncatalog:variable_text:49750:9496:15706\ncatalog:variable_text:49750:15706:17167\nRegisterinformation.csv:row=978145"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetade-timmar"
+fields = { "description" = "Antal arbetade timmar: totalt (1996–2007 faktiskt arbetade timmar i undersökningsmånaden för månadsavlönade), för timavlönade (då månaden före undersökningsmånaden) och antal övertidstimmar. Från 2019 mäter arbetad tid den tid som ägnas åt produktion: avtalad tid plus plustid, som övertid, mertid och arbetad tid under jour och beredskap, minus frånvaro." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF 1996–1998 och 2004–2007 och OP 1999–2003 anger faktiskt arbetade timmar för månadsavlönade; produktionsdefinitionen står i OP 2019–2024.\ncatalog:variable_text:49755:9496:10592\ncatalog:variable_text:49755:10592:12418\ncatalog:variable_text:49755:13879:17897\ncatalog:variable_text:49755:17897:20089\ncatalog:variable_text:49756:9496:10592\ncatalog:variable_text:49757:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:lon"
+fields = { "description" = "Lönen för anställningen i olika mått: fast kontant lön, timlön för timavlönade, grundlön och summa fasta lönetillägg under mätmånaden, totalt utbetald lön (inte uppräknad till heltid) och månadslön. Grundlönen beräknas från 2013 ur fast kontant lön eller timlön beroende på löneform. Månadslönen är grundlön plus rörliga lönetillägg, uppräknade till heltid när tjänstgöringen inte är heltid, utan övertidsersättning; från 2016 anges i definitionen även naturaförmåner. Månadslönen finns också grupperad i intervall (2004–2012)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nMätmånad står i DEF för grundlön och fasta tillägg; grundlönens härledning står i OP från 2013; manadslon-DEF 2016–2024 nämner naturaförmåner.\ncatalog:variable_text:49768:9496:20089\ncatalog:variable_text:49769:9496:20089\ncatalog:variable_text:49772:9496:15706\ncatalog:variable_text:49772:15706:20089\ncatalog:variable_text:49781:16801:20089\ncatalog:variable_text:49782:9496:15706\ncatalog:variable_text:49782:15706:16801\ncatalog:variable_text:49783:12418:15706\ncatalog:variable_text:49812:9496:20089\ncatalog:variable_text:49820:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:overenskommen-arbetstidsomfattning"
+fields = { "description" = "Den arbetstid som avtalats för anställningen: avtalad veckoarbetstid (2021–2024 anges 38 timmar och 15 minuter som 3825), överenskommen sysselsättningsgrad för månadsavlönade (2004–2012 enligt anställningsbeviset och nollutfylld för timavlönade), överenskommen sysselsättningsgrad utan hänsyn till tjänstledighetens omfattning och en indelning i heltid, deltid och övriga. Från 2018 kodas heltid när den överenskomna sysselsättningsgraden för månadsanställda är 100 och deltid när den är lägre." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nFormatet 3825 anges 2021–2024 och anställningsbeviset 2004–2012; heltids- och deltidsregeln står i OP 2018–2024.\ncatalog:variable_text:49752:10592:15340\ncatalog:variable_text:49752:15340:15706\ncatalog:variable_text:49752:15706:17532\ncatalog:variable_text:49752:17532:18628\ncatalog:variable_text:49752:18628:20089\ncatalog:variable_text:49762:10592:17167\ncatalog:variable_text:49762:18628:20089\ncatalog:variable_text:49808:9496:9862\ncatalog:variable_text:49808:12418:15706\ncatalog:variable_text:49809:17532:19358\ncatalog:variable_text:49809:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:regional-tillhorighet"
+fields = { "description" = "Regional indelning i län (1996–2024) och enligt EU:s geografiska indelning för regionalstatistik (NUTS, från 1999). NUTS härleds ur länskoden, enligt NUTS2 till och med 2016 och enligt NUTS1 från 2017." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nNUTS härleds ur länskoden och står som slot bredvid län; NUTS2 1999–2016, NUTS1 2017–2024.\ncatalog:variable_text:49776:9496:20089\ncatalog:variable_text:49786:10592:15706\ncatalog:variable_text:49786:15706:17167\ncatalog:variable_text:49786:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:rorliga-lonetillagg"
+fields = { "description" = "Rörliga lönetillägg i kronor under mätmånaden, totalt och per slag: tillägg för obekväm arbetstid, jour och beredskap, tantiem (t.o.m. 2004) och övriga rörliga tillägg (t.o.m. 2007). Summan härleds som tantiem, OB, jour, beredskap och övriga tillägg, och en version är uppräknad till heltid utifrån tjänstgöringsomfattningen. Bredvid finns tillägg för övertid och ersättning för förskjuten arbetstid (från 2008, för tid som enligt tidigare schema skulle varit fritid), som inte ingår i summan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP-summan 1996–2024 omfattar tantiem, OB, jour, beredskap och övriga; övertid och förskjuten arbetstid har egna DEF men ingår inte i summan.\ncatalog:variable_text:49764:9496:20089\ncatalog:variable_text:49771:13879:17897\ncatalog:variable_text:49771:17897:19358\ncatalog:variable_text:49771:19358:20089\ncatalog:variable_text:49774:9496:20089\ncatalog:variable_text:49787:9496:20089\ncatalog:variable_text:49791:9496:13879\ncatalog:variable_text:49793:9496:15706\ncatalog:variable_text:49793:15706:20089\ncatalog:variable_text:49794:9496:15706\ncatalog:variable_text:49794:15706:19358\ncatalog:variable_text:49794:19358:20089\ncatalog:variable_text:49810:9496:12784\ncatalog:variable_text:49811:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:tjanstledighet"
+fields = { "description" = "Tjänstledighet för anställningen: kod för grund för ledighet, tjänstledighetens omfattning i procent (0–100) och en av SCB härledd kod för om den anställde är tjänstledig. Den härledda koden bygger 1996–2012 bland annat på ledighetsmarkering och ledighetens omfattning, 2013–2016 bland annat på omfattning, ledighetstyp och löneform, och från 2017 på omfattning och löneform." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP för SCB-koden anger ledighetsmarkering och omfattning 1996–2012, omfattning, ledighetstyp och löneform 2013–2016, omfattning och löneform 2017–2024.\ncatalog:variable_text:49815:16801:17167\ncatalog:variable_text:49816:16801:17167\ncatalog:variable_text:49816:17167:19358\ncatalog:variable_text:49816:19358:20089\ncatalog:variable_text:49818:9496:15706\ncatalog:variable_text:49818:15706:16801\ncatalog:variable_text:49819:9496:20089"

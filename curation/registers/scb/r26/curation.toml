@@ -4959,3 +4959,123 @@ kind = "assert"
 subject = "jobbregistret: PersonNr @2018-01-01..2018-12-31 where key = 'v57' and release = 'r13657'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Personnummer", "definition" = "Identitetsbegrepp för personer. Tilldelas av Skattemyndigheten.", "type" = "text", "length" = 12, "sensitive" = false, "identifier" = true } }
 evidence = "private:ev-3794"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-anstallda-pa-foretaget"
+fields = { "description" = "Antal anställda på företaget, från olika källor: enligt Sysselsättningsregistret (anställda med sin huvudsakliga sysselsättning på företaget), enligt FDB och enligt kontrolluppgifter (antal personer som fått kontant ersättning från arbetsgivaren för utfört arbete). För 1985–1995 finns också en storleksklass efter antal anställda." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF för varje medlem anger källan: Sysselsättningsregistret, FDB, kontrolluppgift; anstallda-storleksklass DEF anger storleksklassindelning 1985–1995.\ncatalog:variable_text:47906:5479:9496\ncatalog:variable_text:47907:5479:12053\ncatalog:variable_text:47907:12053:12418\ncatalog:variable_text:47908:5479:5844\ncatalog:variable_text:47909:5844:6209\ncatalog:variable_text:47909:12053:12418\ncatalog:variable_text:47909:17897:18993\ncatalog:variable_text:47910:5479:18993\nRegisterinformation.csv:row=473025"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-sysselsatta-pa-arbetsstallet"
+fields = { "description" = "Antal sysselsatta på arbetsstället, totalt och fördelat på kön och utbildningsnivå (förgymnasial, gymnasial, kort och lång eftergymnasial), summerat från Sysselsättningsregistret. Särskilda varianter avser året före registeråret och registeråret (år 1 och år 2), fasta arbetsställen (2019–2021) och, 2020–2021, antalet personer placerade på arbetsstället i arbetsställeregistret respektive sysselsättningsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF anger antal sysselsatta per kön och utbildning; OP anger summering från Sysselsättningsregistret, år 1 och år 2, fasta arbetsställen och summeringen per register 2020–2021.\ncatalog:variable_text:47921:5479:12053\ncatalog:variable_text:47921:12053:18993\ncatalog:variable_text:47922:5479:12053\ncatalog:variable_text:47922:12053:18993\ncatalog:variable_text:47923:5479:12053\ncatalog:variable_text:47923:12053:18993\ncatalog:variable_text:47924:5479:12053\ncatalog:variable_text:47924:12053:18993\ncatalog:variable_text:47925:5479:12053\ncatalog:variable_text:47925:12053:18993\ncatalog:variable_text:47926:5479:12053\ncatalog:variable_text:47926:12053:18993\ncatalog:variable_text:47927:5479:12053\ncatalog:variable_text:47927:12053:18993\ncatalog:variable_text:47928:5479:12053\ncatalog:variable_text:47928:12053:18993\ncatalog:variable_text:47929:5479:12053\ncatalog:variable_text:47929:12053:18993\ncatalog:variable_text:47930:5479:12053\ncatalog:variable_text:47930:12053:18993\ncatalog:variable_text:47936:5479:12053\ncatalog:variable_text:47936:12053:18993\ncatalog:variable_text:47937:6209:17897\ncatalog:variable_text:47937:17897:19358\ncatalog:variable_text:47938:6209:17897\ncatalog:variable_text:47938:17897:19358\ncatalog:variable_text:47939:17897:18993\ncatalog:variable_text:47940:17897:18993\ncatalog:variable_text:47943:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-sysselsatta-pa-foretaget"
+fields = { "description" = "Antal sysselsatta på företaget, avseende den huvudsakliga sysselsättningen, räknat från Sysselsättningsregistret. Varianter summeras från RAMS arbetsställen respektive RAMS individer (2006–2021), och två variabler avser år 1 och år 2 (2016–2022)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP anger antal sysselsatta enligt Sysselsättningsregistret; OP för antal-sysselsatta och antal-sysselsatta-syssreg anger summering från RAMS arbetsställen respektive individer; år 1 och år 2 har egna DEF.\ncatalog:variable_text:47933:13149:18993\ncatalog:variable_text:47934:16801:19358\ncatalog:variable_text:47935:16801:19358\ncatalog:variable_text:47941:5844:6209\ncatalog:variable_text:47941:16436:16801\ncatalog:variable_text:47941:17897:18993\ncatalog:variable_text:47942:5479:5844\ncatalog:variable_text:47944:13149:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsloshetsersattning"
+fields = { "description" = "Personens inkomst under året föranledd av arbetslöshet: summan och andelen av den totala inkomsten (1992–2021), samt en kod för om personen fått ersättning från arbetslöshetskassa (1997–2021, enligt Lönesummestatistik, Individer - sociala KU). Från 2000 avser summan ersättning från arbetslöshetskassa eller arbetslöshetsförsäkring i hundratal kronor, och andelen är summan delad med den totala inkomsten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nInnehåll och enhet för summan och andelens beräkning står bara i OP från 2000; DEF gäller 1992–2021, koden 1997–2021.\ncatalog:variable_text:47960:9862:18993\ncatalog:variable_text:48028:8035:10957\ncatalog:variable_text:48028:10957:12053\ncatalog:variable_text:48028:12784:13149\ncatalog:variable_text:48114:8035:10957\ncatalog:variable_text:48114:10957:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsstallets-naringsgren"
+fields = { "description" = "Huvudsaklig näringsgren enligt Svensk näringsgrensindelning (SNI) för arbetsstället, i de flesta variabler från 2002 för det arbetsställe där personen anses ha bedrivit sin huvudsakliga sysselsättning. Variablerna skiljer sig i SNI-version (SNI 69, SNI 92, SNI 2002, SNI 2007 och en grov indelning 1985–1988) och i om koden är satt för statistiska ändamål; FAD-varianterna avser 2019–2022 registeråret och en variant (2013, 2019–2022) året före registeråret. 1998 beskrivs SNI 92-koden också som företagets näringsgren. I varianten på cfarnr (2019) har varje cfarnr bara en SNI-kod." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nFAD-varianterna anger bara registeråret; året före gäller föregående års variant; 1998 har SNI 92 både arbetsställets och företagets beskrivning.\ncatalog:variable_text:47967:13514:13879\ncatalog:variable_text:47967:14245:17532\ncatalog:variable_text:47968:17897:18262\ncatalog:variable_text:48089:5479:8766\ncatalog:variable_text:48090:17897:18262\ncatalog:variable_text:48092:6940:11688\ncatalog:variable_text:48093:5479:6940\ncatalog:variable_text:48094:15706:16071\ncatalog:variable_text:48096:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:foretagets-fad-klassificering"
+fields = { "description" = "Företagets klassificering i FAD som kvarvarande, nytt (nybildat) eller nedlagt, som tas fram genom att följa individer och grupper av individer under ett årpar. Företag kan också klassificeras som sammanslagna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda delar DEF; OP anger metoden med individer under ett årpar och klasserna kvarvarande, nybildade, nedlagda och sammanslagna.\ncatalog:variable_text:48044:6209:17167\ncatalog:variable_text:48045:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:foretagstyp"
+fields = { "description" = "Om företaget har ett eller flera arbetsställen, härlett ur antalet arbetsställen som företaget har. Två FAD-varianter avser registeråret respektive föregående år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAlla fyra delar DEF och OP; ftgtyp1 och ftgtyp2 avser enligt etikett och OP föregående år respektive registeråret.\ncatalog:variable_text:48016:5479:18993\ncatalog:variable_text:48017:15706:16071\ncatalog:variable_text:48017:17897:19358\ncatalog:variable_text:48018:15706:16071\ncatalog:variable_text:48018:17897:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:forvarvsinkomst-i-raks"
+fields = { "description" = "Inkomst under året föranledd av anställning och näringsverksamhet, som summa i hundratal kronor och som andel av den totala inkomsten. Summan är kontant bruttolön plus nettoinkomst av näringsverksamhet när den är positiv; är nettoinkomsten noll eller negativ ingår bara bruttolönen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF anger summa och andel av inkomst av anställning och näringsverksamhet; OP för raks-forvink ger beräkningen och enheten.\ncatalog:variable_text:48117:8035:10957\ncatalog:variable_text:48117:10957:18993\ncatalog:variable_text:48124:8035:10957\ncatalog:variable_text:48124:16436:16801\ncatalog:variable_text:48124:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:gemensamma-sysselsatta"
+fields = { "description" = "Sysselsatta som finns på samma arbetsställe eller företag (inom samma FAD-id) båda åren i ett årpar: antalet (1987–2022) och, från 2019, kvoter där de gemensamma delas med de sysselsatta året före registeråret respektive under registeråret. Från 2020 finns även andelarna av de sysselsatta år t respektive t-1 och en indikator för om kvoten i FAD är 50 både föregående år och registeråret. Antalet härleds från RAMS individer och 2022 även från Befolkningens arbetsmarknadsstatus (BAS)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF anger antalet 1987–2022, kvot1/kvot2 från 2019 och andelarna och indikatorn från 2020.\ncatalog:variable_text:47918:6209:10592\ncatalog:variable_text:47918:18993:19358\ncatalog:variable_text:48055:18262:19358\ncatalog:variable_text:48056:18262:19358\ncatalog:variable_text:48057:18262:19358\ncatalog:variable_text:48058:17897:19358\ncatalog:variable_text:48059:17897:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:geografisk-kommun"
+fields = { "description" = "Kommunkod enligt den administrativa indelningen av Sverige, för olika enheter: kommunen där personen var folkbokförd den 31/12, kommunen där det arbetsställe ligger där personen anses ha sin huvudsakliga sysselsättning (registeråret eller året före) och kommunen för företagets säte." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nFolkbokföringskommun, arbetsställets kommun (även året före registeråret) och företagets säte är slots för olika enheter; alla anges som kommunkod.\ncatalog:variable_text:47966:17897:19358\ncatalog:variable_text:48048:5479:13879\ncatalog:variable_text:48048:15340:17532\ncatalog:variable_text:48049:5479:17532\ncatalog:variable_text:48049:17897:18993\ncatalog:variable_text:48050:18993:19358\ncatalog:variable_text:48051:5479:10957\ncatalog:variable_text:48051:10957:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:geografiskt-lan"
+fields = { "description" = "Länskod enligt den administrativa indelningen av Sverige, för olika enheter: länet där personen var folkbokförd den 31/12, länet där det arbetsställe ligger där personen anses ha sin huvudsakliga sysselsättning och länet för företagets säte." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP anger län för folkbokföring 31/12, arbetsställets belägenhet och företagets säte.\ncatalog:variable_text:48060:5479:13879\ncatalog:variable_text:48060:15340:17532\ncatalog:variable_text:48061:5479:17532\ncatalog:variable_text:48062:5479:10957\ncatalog:variable_text:48062:10957:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:inkomst-av-arbetsmarknadspolitiska-atgarder"
+fields = { "description" = "Inkomst under året föranledd av arbetsmarknadspolitiska åtgärder, som summa i hundratal kronor och som andel av den totala inkomsten. Från 2000 avser den utbildningsbidrag, aktivitetsstöd och utvecklingsersättning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSumma och andel 1992–2021, hundratal kronor alla år; ersättningsformerna anges bara i OP 2000–2021.\ncatalog:variable_text:48120:8035:10957\ncatalog:variable_text:48120:10957:18993\ncatalog:variable_text:48127:8035:10957\ncatalog:variable_text:48127:10957:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:inkomst-av-ekonomiskt-bistand"
+fields = { "description" = "Individualiserad inkomst under året av ekonomiskt bistånd, från 2000 socialbidrag, äldreförsörjningsstöd och introduktionsstöd till nyanlända, som summa och som andel av den totala inkomsten. Summan anges i hundratal kronor, för 2008 i tusental kronor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nErsättningsformerna anges i OP från 2000; hundratal kronor 1992–2007 och 2009–2021, tusental 2008.\ncatalog:variable_text:48115:8035:10957\ncatalog:variable_text:48115:10957:18993\ncatalog:variable_text:48122:8035:10957\ncatalog:variable_text:48122:10957:13879\ncatalog:variable_text:48122:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "set:inkomst-av-enskild-naringsverksamhet"
+fields = { "description" = "Personens deklarerade inkomst av enskild näringsverksamhet under året: inkomst av aktiv näringsverksamhet 1985–2006, nettoinkomst av näringsverksamhet 2004–2021 och 2007–2021 överskott och underskott var för sig. Från 2004 summeras uppgifterna ur registret Räkenskapsutdrag (SRU)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAktiv inkomst 1985–2006 och nettoinkomst 2004–2021 överlappar 2004–2006 och står som parallella slots; SRU anges för alla från 2004.\ncatalog:variable_text:47980:13514:16801\ncatalog:variable_text:47981:13514:16801\ncatalog:variable_text:48026:5479:12418\ncatalog:variable_text:48026:12418:13514\ncatalog:variable_text:48027:12418:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:inkomst-foranledd-av-studier"
+fields = { "description" = "Inkomst under året föranledd av studier, det vill säga ersättning från studier, som summa i hundratal kronor och som andel av den totala inkomsten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF anger summa och andel; OP anger ersättning från studier i hundratal kronor och andelen som summan delad med total inkomst.\ncatalog:variable_text:48031:8035:10957\ncatalog:variable_text:48031:14975:15706\ncatalog:variable_text:48119:8035:10957\ncatalog:variable_text:48119:10957:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:inkomst-vid-foraldraledighet-och-narstaendevard"
+fields = { "description" = "Inkomst under året föranledd av föräldraledighet och vård av närstående, som summa i hundratal kronor och som andel av den totala inkomsten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF anger summa och andel; OP anger summeringen, enheten och andelen som summan delad med total inkomst.\ncatalog:variable_text:48121:8035:10957\ncatalog:variable_text:48121:10957:18993\ncatalog:variable_text:48128:8035:10957\ncatalog:variable_text:48128:10957:16801\ncatalog:variable_text:48128:17897:18993\nRegisterinformation.csv:row=174872"
+
+[[statement]]
+kind = "set"
+subject = "set:inkomst-vid-sjukdom-arbetsskada-och-rehabilitering"
+fields = { "description" = "Inkomst under året föranledd av sjukdom, arbetsskada och rehabilitering, det vill säga ersättning vid dessa: summan i hundratal kronor och andelen av den totala inkomsten, beräknad som summan delad med den totala inkomsten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSumman i hundratal kronor och andelen (OP 2000–2021) är två slots av samma inkomst.\ncatalog:variable_text:48030:8035:10957\ncatalog:variable_text:48030:12053:13514\ncatalog:variable_text:48030:13514:13879\ncatalog:variable_text:48118:8035:10957\ncatalog:variable_text:48118:10957:18993\nRegisterinformation.csv:row=173952"
+
+[[statement]]
+kind = "set"
+subject = "set:lone-eller-foretagarinkomst"
+fields = { "description" = "Personens kontanta bruttolön från anställning eller nettoinkomst av näringsverksamhet för egenföretagare, för året, per månad (2019–2021) eller i november, från alla anställningar eller bara från det arbetsställe som valts för personen, med eller utan företagarinkomst; därtill summan av skattepliktiga förmåner, bilförmåner och drivmedelsersättning. Lön kommer till 2018 från kontrolluppgifter och Lönesummestatistik, från 2019 från arbetsgivardeklarationer på individnivå (AGI) eller KU; företagarinkomst kommer från Räkenskapsutdrag (SRU), 1997–2003 från Inkomst- och taxeringsregistret. Månadsvärdena 2019–2021 är för KU-lön årslönen delad med antalet arbetade månader och för företagarinkomst årsinkomsten delad med tolv. Företagarinkomsten i november finns även uppräknad med faktorn 1,6, så att företagande prioriteras före anställning vid val av arbetsställe." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP ger lönemåtten och källorna per år; förmånerna (forman) behålls som eget slot enligt Operatorns beslut; IoT anges i OP 1997–2003.\ncatalog:variable_text:47962:17897:18993\ncatalog:variable_text:47963:17897:18993\ncatalog:variable_text:47964:17897:18993\ncatalog:variable_text:48007:9862:14610\ncatalog:variable_text:48007:14610:17897\ncatalog:variable_text:48007:18262:18993\ncatalog:variable_text:48063:5479:9862\ncatalog:variable_text:48063:9862:10957\ncatalog:variable_text:48063:10957:12418\ncatalog:variable_text:48063:12418:17897\ncatalog:variable_text:48064:17897:18993\ncatalog:variable_text:48076:5479:17897\ncatalog:variable_text:48077:17897:18993\ncatalog:variable_text:48078:12053:16801\ncatalog:variable_text:48080:17897:18993\ncatalog:variable_text:48161:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:sysselsattningsstatus"
+fields = { "description" = "Skattad sysselsättningsstatus (förvärvsarbete) i november, där personer klassas som sysselsatta eller inte med kontrolluppgifter, inkomstuppgifter och AKU-uppgifter; som förvärvsarbete räknas inkomstbringande arbete i genomsnitt minst en timme per vecka under november. Från 2019 görs klassningen huvudsakligen med arbetsgivardeklarationer på individnivå (AGI), och personen räknas som förvärvsarbetande vid en utbetalning på minst 99 kronor i november eller deklarerad aktiv näringsverksamhet. Varianter avser samhörig person (1985–1996), jobbet, en allmän status (1985) och den gamla avgränsning som användes 1985–1993." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF anger klassificering av skattad sysselsättning i november med entimmesgränsen och från 2019 99-kronorsgränsen; OP anger KU, inkomst- och AKU-uppgifter respektive AGI; varianterna framgår av DEF och OP.\ncatalog:variable_text:48020:8401:8766\ncatalog:variable_text:48152:5844:17897\ncatalog:variable_text:48153:17897:18993\ncatalog:variable_text:48154:5479:9862\ncatalog:variable_text:48155:5479:5844\ncatalog:variable_text:48156:10227:12784\ncatalog:variable_text:48156:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:val-av-arbetsstalle"
+fields = { "description" = "Vilket arbetsställe som väljs för en person med mer än en uppgift om arbetsställe. Valet görs i första hand efter kontrolluppgifternas månadsmarkering och därefter efter högst löne- eller företagarinkomst; från 2019 jämförs beloppen i november enligt AGI, KU och SRU, med uppräknad företagarinkomst. Från 2004 finns också valt arbetsställe när arbetsställenumret (CFAR) pekar på två eller flera arbetsställen, och 2019–2021 en prioriteringsordning mellan arbetsställena för personer som fått pengar från Försäkringskassan och kan vara tillfälligt frånvarande, efter var personen senast fick en utbetalning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nvaltast beskriver valet och dess prioritering 1997–2021; valt-arbetsstalle (2004–2021) CFAR-dubbletter; priovaltast (2019–2021) är kvar som slot för prioriteringsordningen.\ncatalog:variable_text:48111:17897:18993\ncatalog:variable_text:48173:12418:18993\ncatalog:variable_text:48174:9862:10957\ncatalog:variable_text:48174:10957:17897\ncatalog:variable_text:48174:17897:18262"

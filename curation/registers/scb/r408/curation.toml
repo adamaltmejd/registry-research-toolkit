@@ -1944,3 +1944,15 @@ kind = "set"
 subject = "var:strsektor"
 fields = { "label" = "Institutionell sektor (grupperad)" }
 evidence = "#2102 same-label cluster 'Institutionell sektor' (2 variables): judged different meaning, high confidence; Opdefs: detailed institutional sector (Sektor) versus the grouping into five categories (StrSektor)."
+
+[[statement]]
+kind = "set"
+subject = "set:kon-och-konsfordelning"
+fields = { "description" = "Personens kön, härlett ur personnumrets näst sista siffra (udda för man, jämn för kvinna); 2024–2025 härleds det ur personnumret utom för imputerade sjukfall. 2024–2025 finns även andelen kvinnor respektive män i företaget eller organisationen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nKon OP ger personnumrets siffra och imputeringsundantaget 2024–2025; andelarna på organisationsnivå 2024–2025 behålls som slot enligt Operatörens beslut.\ncatalog:variable_text:10776:19723:20454\ncatalog:variable_text:10777:19723:20454\ncatalog:variable_text:10884:18262:18628\ncatalog:variable_text:10884:19723:20454\nRegisterinformation.csv:row=17319"
+
+[[statement]]
+kind = "set"
+subject = "set:sektortillhorighet"
+fields = { "description" = "Den institutionella sektor som företaget eller organisationen tillhör enligt Standard för institutionell sektorindelning 2014, detaljerad eller grupperad i fem kategorier. Den detaljerade uppgiften hämtas i första hand från SAMU-ramen för aktuellt kvartal, i andra hand från FDB för aktuell månad och i tredje hand från SAMU-ramen för föregående kvartal. 2024–2025 finns även uppgift om i vilken sektor organisationen har sin verksamhet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDetaljerad och grupperad sektor 2020–2025 med hämtordningen för den detaljerade; organisationens verksamhetssektor finns som slot 2024–2025.\ncatalog:variable_text:10872:18262:20454\ncatalog:variable_text:10901:19723:20454\ncatalog:variable_text:10909:18262:20454"

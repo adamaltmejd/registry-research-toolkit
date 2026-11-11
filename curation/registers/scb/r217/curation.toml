@@ -553,3 +553,33 @@ kind = "set"
 subject = "var:uuid"
 fields = { "label" = "Objekt-ID (UUID)" }
 evidence = "#2102 same-label cluster 'Objekt-ID' (2 variables): judged different meaning, high confidence; OBJECTID is a running number per object in the register, UUID a unique id per object and reference year; concurrent columns."
+
+[[statement]]
+kind = "set"
+subject = "set:kommun"
+fields = { "description" = "Kommun enligt den regionala indelningen i kommuner, som kod och som namn. Gränserna är Lantmäteriets detaljerade kommungränser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nKod och namn delar definitionen; båda hämtas ur Lantmäteriets detaljerade kommungränser.\ncatalog:variable_text:13263:17532:18262\ncatalog:variable_text:13263:18993:19358\ncatalog:variable_text:13263:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:lage-i-tatort"
+fields = { "description" = "Om en byggnad respektive en strandlinje ligger inom en tätort enligt SCB:s statistiska tätortsindelning. För byggnader räknas antingen alla byggnader som fanns vid referenstidpunkten eller nya byggnader under referensåret; vilken tätortsversion som används (2018, 2020, 2023) varierar mellan åren." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nByggnad och strandlinje är slots av samma tätortsläge; byggnadstexterna skiljer alla byggnader vid referenstidpunkten och nya byggnader under året, och tätortsversionerna 2018, 2020 och 2023 anges.\ncatalog:variable_text:13245:17532:17897\ncatalog:variable_text:13245:17897:18262\ncatalog:variable_text:13245:18262:18628\ncatalog:variable_text:13245:18628:18993\ncatalog:variable_text:13245:18993:19358\ncatalog:variable_text:13245:19358:19723\ncatalog:variable_text:13269:17532:18262\ncatalog:variable_text:13269:18262:19358\ncatalog:variable_text:13269:19358:19723\nRegisterinformation.csv:row=766829\nRegisterinformation.csv:row=773149\nRegisterinformation.csv:row=773166\nRegisterinformation.csv:row=773479\nRegisterinformation.csv:row=773752"
+
+[[statement]]
+kind = "set"
+subject = "set:lage-inom-skyddad-natur"
+fields = { "description" = "Om en byggnad respektive en strandlinje ligger inom formellt skyddad natur enligt naturvårdsregistret (registret Skyddad natur). För byggnader räknas antingen alla byggnader som fanns vid referenstidpunkten eller nya byggnader under referensåret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nByggnad och strandlinje är slots; båda bygger på naturvårdsregistret, och byggnads-OP skiljer befintliga och nya byggnader.\ncatalog:variable_text:13246:17532:17897\ncatalog:variable_text:13246:17897:18262\ncatalog:variable_text:13246:18262:18628\ncatalog:variable_text:13246:18628:18993\ncatalog:variable_text:13246:18993:19358\ncatalog:variable_text:13246:19358:19723\ncatalog:variable_text:13270:17532:19723\nRegisterinformation.csv:row=766831\nRegisterinformation.csv:row=773153\nRegisterinformation.csv:row=773461\nRegisterinformation.csv:row=773485\nRegisterinformation.csv:row=773758"
+
+[[statement]]
+kind = "set"
+subject = "set:lan"
+fields = { "description" = "Län enligt den regionala indelningen i län, som kod och som namn. Gränserna är Lantmäteriets detaljerade länsgränser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nKod och namn delar definitionen; båda hämtas ur Lantmäteriets detaljerade länsgränser.\ncatalog:variable_text:13265:17532:18262\ncatalog:variable_text:13265:18993:19358\ncatalog:variable_text:13265:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:strandtyp"
+fields = { "description" = "Om en byggnad ligger inom 100 meter från havsstrand respektive inlandsstrand. En byggnad som ligger inom 100 meter från båda räknas enbart till havsstrand. Strandtypen tas fram ur Lantmäteriets hydrografidata efter GIS-bearbetning av den senast gällande strandlinjen; antingen räknas alla byggnader vid referenstidpunkten eller nya byggnader under referensåret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nHavs- och inlandsstrand är slots; OP för båda anger 100-metersgränsen, prioritering av havsstrand och Lantmäteriets hydrografi.\ncatalog:variable_text:13261:17532:18262\ncatalog:variable_text:13261:18262:18628\ncatalog:variable_text:13261:18628:18993\ncatalog:variable_text:13261:18993:19723\ncatalog:variable_text:13262:17532:17897\ncatalog:variable_text:13262:17897:18262\ncatalog:variable_text:13262:18262:18628\ncatalog:variable_text:13262:18628:18993\ncatalog:variable_text:13262:18993:19723\nRegisterinformation.csv:row=766833\nRegisterinformation.csv:row=767099\nRegisterinformation.csv:row=767105\nRegisterinformation.csv:row=773157\nRegisterinformation.csv:row=773161\nRegisterinformation.csv:row=773467\nRegisterinformation.csv:row=773473\nRegisterinformation.csv:row=773740\nRegisterinformation.csv:row=773746\nRegisterinformation.csv:row=773764\nRegisterinformation.csv:row=773770"

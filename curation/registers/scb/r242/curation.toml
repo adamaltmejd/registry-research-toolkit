@@ -2208,3 +2208,93 @@ kind = "set"
 subject = "var:valdistriktsnamn"
 fields = { "label" = "Valdistrikt (namn)" }
 evidence = "#2102 same-label cluster 'Valdistrikt' (4 variables): judged different meaning, high confidence; Opdefs: district code for the ordinary election (llkkdddd continues it), code for the 2011 re-elections, and a name column."
+
+[[statement]]
+kind = "set"
+subject = "set:alder"
+fields = { "description" = "Personens ålder i antal år vid valårets slut (31 december), i år och grupperad. För omvalen 2011 finns en version med ålder vid slutet av 2011 vid sidan av den som avser det ordinarie valet 2010. För personer utanför registret över totalbefolkningen beräknas åldern från personnumret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF för samtliga avser ålder vid årets slut eller dess gruppering; ordinarie val och omval 2011 är axeln enligt OP.\ncatalog:variable_text:10376:7670:8035\ncatalog:variable_text:10376:14975:15340\ncatalog:variable_text:10377:7670:8035\ncatalog:variable_text:10377:14975:15340\ncatalog:variable_text:10378:14975:15340\ncatalog:variable_text:10379:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:alder-och-kon"
+fields = { "description" = "Härledd gruppering av kön och ålder. Från 2002 finns grupperingar för kalibrering av valdeltagandet i riksdagsvalet bland alla svenska medborgare boende i Sverige och utomlands och bland medborgare boende i Sverige 18–74 år, och för skattning av valdeltagandet i kommun- och landstingsfullmäktigevalen, där även medborgarskap ingår, med versioner för omvalen 2011. Åldern avser 31 december 1991 i 1991 års uppgifter, och i 2011 års uppgifter 31 december 2010 för valen 2010 och 31 december 2011 för omvalen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAldgkon 1991–1998 säger bara gruppering av kön och ålder; aldgkon1/2 kalibrering i riksdagsval från 2002, kommun- och landstingsvarianterna skattning med medborgarskap; referensdagen står bara för 1991 och 2011.\ncatalog:variable_text:10380:7670:8035\ncatalog:variable_text:10380:8766:9131\ncatalog:variable_text:10380:10227:10592\ncatalog:variable_text:10381:11688:12053\ncatalog:variable_text:10381:14975:15340\ncatalog:variable_text:10382:11688:12053\ncatalog:variable_text:10382:14975:15340\ncatalog:variable_text:10429:11688:12053\ncatalog:variable_text:10429:14975:15340\ncatalog:variable_text:10430:14975:15340\ncatalog:variable_text:10431:11688:12053\ncatalog:variable_text:10431:14975:15340\ncatalog:variable_text:10432:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:designvikt"
+fields = { "description" = "Designvikt som räknar upp urvalet till populationen: för RTB-urvalet till den röstberättigade befolkningen, beräknad för alla urvalsdelar, och för svarande i AKU till svenska medborgare folkbokförda i Sverige 18–74 år. I AKU-vikten får personer som tillhör andra urval värdet 0." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda DEF anger en designvikt som räknar upp urvalet; urvalet (RTB eller AKU) är axeln; OP för dvikt-aku anger värdet 0 för andra urval.\ncatalog:variable_text:10391:7670:8035\ncatalog:variable_text:10391:14610:15340\ncatalog:variable_text:10394:7670:8035\ncatalog:variable_text:10394:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:fodelseland"
+fields = { "description" = "Personens födelseland enligt registret över totalbefolkningen (RTB), och födelseländerna grupperade i världsdelar eller landgrupper som kod och som namn. Uppgifterna kompletteras med Flergenerationsregistret för att täcka så många personer som möjligt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF avser födelseland enligt RTB respektive gruppering i världsdelar; kod och namn är axeln; OP anger komplettering från Flergenerationsregistret.\ncatalog:variable_text:10400:7670:8035\ncatalog:variable_text:10400:14610:15340\ncatalog:variable_text:10401:17532:17897\ncatalog:variable_text:10402:13149:13514\ncatalog:variable_text:10402:14610:14975\ncatalog:variable_text:10402:14975:15340\ncatalog:variable_text:10403:7670:8035\ncatalog:variable_text:10403:13149:13514\ncatalog:variable_text:10403:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:forstagangsvaljare"
+fields = { "description" = "Om personen är förstagångsväljare, definierat efter ålder som att personen har fyllt 18 sedan det föregående valet: sedan de senaste allmänna valen respektive sedan det senaste valet till Europaparlamentet. Varje valår avgränsas förstagångsväljarna av ett intervall av födelsedatum." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda medlemmarnas definitioner anger åldersgränsen 18 sedan föregående val; de operationella texterna ger ett födelsedatumintervall per valår.\ncatalog:variable_text:10404:7670:8035\ncatalog:variable_text:10404:8766:9131\ncatalog:variable_text:10404:10227:10592\ncatalog:variable_text:10404:11688:12053\ncatalog:variable_text:10404:13149:13514\ncatalog:variable_text:10404:14610:14975\ncatalog:variable_text:10404:14975:15340\ncatalog:variable_text:10404:16071:16436\ncatalog:variable_text:10404:17532:17897\ncatalog:variable_text:10405:10227:10592\ncatalog:variable_text:10405:11688:12053\ncatalog:variable_text:10405:13149:13514\ncatalog:variable_text:10405:14610:14975\ncatalog:variable_text:10405:14975:15340\ncatalog:variable_text:10405:16071:16436\ncatalog:variable_text:10405:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:kalibrerad-vikt"
+fields = { "description" = "Kalibrerade vikter som tar hänsyn till varierande urvalssannolikheter i olika strata och till hjälpinformation, en per val: riksdagsval, landstingsfullmäktigval och kommunfullmäktigval, även omvalen 2011. Vikterna för hela urvalet räknar upp till samtliga röstberättigade; vikterna för svarande i AKU (svenska medborgare folkbokförda i Sverige, 18–74 år) kompenserar även för bortfall, och i den allmänna AKU-vikten får personer i andra urval värdet 0. En reviderad vikt för 2010 års kommunval räknar upp till faktiskt antal röstberättigade i Örebro kommuns nordöstra valkrets, för jämförelse med omvalet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAlla DEF beskriver kalibrerade vikter; medlemmarna skiljer sig i val, omval 2011 och om vikten avser hela urvalet eller AKU-svarande; revideringen framgår av OP för kvikt-ko10-rev.\ncatalog:variable_text:10413:14975:15340\ncatalog:variable_text:10414:14975:15340\ncatalog:variable_text:10415:7670:8035\ncatalog:variable_text:10415:14610:14975\ncatalog:variable_text:10415:14975:15340\ncatalog:variable_text:10416:7670:8035\ncatalog:variable_text:10416:14610:14975\ncatalog:variable_text:10416:14975:15340\ncatalog:variable_text:10417:14975:15340\ncatalog:variable_text:10434:7670:8035\ncatalog:variable_text:10434:14610:14975\ncatalog:variable_text:10434:14975:15340\ncatalog:variable_text:10435:7670:8035\ncatalog:variable_text:10435:14610:14975\ncatalog:variable_text:10435:14975:15340\ncatalog:variable_text:10436:14610:14975\ncatalog:variable_text:10436:14975:15340\ncatalog:variable_text:10437:14975:15340\ncatalog:variable_text:10438:14975:15340\ncatalog:variable_text:10439:14610:14975\ncatalog:variable_text:10439:14975:15340\nRegisterinformation.csv:row=330042"
+
+[[statement]]
+kind = "set"
+subject = "set:kommungrupp"
+fields = { "description" = "Sveriges Kommuner och Regioners indelning av kommuner i nio grupper efter strukturella egenskaper som befolkningsstorlek, pendlingsmönster och näringslivsstruktur, för den kommun där urvalspersonen är röstberättigad enligt röstlängden som fastställs 30 dagar före valdagen. Indelningen finns i 2005, 2011 och 2017 års version, var och en som kod och som namn." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nGemensam DEF för alla sex; OP skiljer på version (2005, 2011, 2017) och på kod eller namn.\ncatalog:variable_text:10419:16071:16436\ncatalog:variable_text:10420:16071:16436\ncatalog:variable_text:10423:17532:17897\ncatalog:variable_text:10424:17532:17897\ncatalog:variable_text:10425:10227:10592\ncatalog:variable_text:10425:14975:15340\ncatalog:variable_text:10426:10227:10592\ncatalog:variable_text:10426:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:lanstillhorighet"
+fields = { "description" = "Län där urvalspersonen är röstberättigad enligt röstlängden som fastställs 30 dagar före valdagen, för ordinarie val och för omvalen 2011, som kod eller namn. Två härledda grupperingar av länen finns också, med och utan Gotland." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP för lan, lan11, ll och lansnamn anger röstlängdens län; grupperingarna är härledda indelningar av samma län.\ncatalog:variable_text:10409:7670:8035\ncatalog:variable_text:10409:14610:14975\ncatalog:variable_text:10409:14975:15340\ncatalog:variable_text:10410:7670:8035\ncatalog:variable_text:10410:14975:15340\ncatalog:variable_text:10440:7670:8035\ncatalog:variable_text:10440:14975:15340\ncatalog:variable_text:10441:14975:15340\ncatalog:variable_text:10442:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:medborgarskap"
+fields = { "description" = "Urvalspersonens medborgarskap: prioriterat medborgarskapsland och dess gruppering i världsdel eller landgrupp (kod eller namn), om personen är svensk medborgare och om personen bytt till svenskt medborgarskap. Världsdelen härleds ur Registret över totalbefolkningen 1991–2006 och från 2014; 2011 avser medborgarskapsland och världsdel ordinarie val 2010, justerade efter kontroll mot rösträtten enligt röstlängden. Svenskt medborgarskap härleds ur rösträtten, för ordinarie val och för omvalet 2011. Naturaliserad svensk medborgare härleds ur medborgarskapsdatum, födelsedatum, födelseland och medborgarskapsland." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nRTB-härledningen anges 1991–2006, 2014, 2018 och 2022, inte 2010–2011; 2011 avser ordinarie val 2010 justerat mot röstlängden.\ncatalog:variable_text:10447:17532:17897\ncatalog:variable_text:10448:11688:12053\ncatalog:variable_text:10448:13149:13514\ncatalog:variable_text:10448:14610:14975\ncatalog:variable_text:10448:14975:15340\ncatalog:variable_text:10449:7670:8035\ncatalog:variable_text:10449:11688:12053\ncatalog:variable_text:10449:13149:13514\ncatalog:variable_text:10449:14975:15340\ncatalog:variable_text:10451:7670:8035\ncatalog:variable_text:10451:14975:15340\ncatalog:variable_text:10452:7670:8035\ncatalog:variable_text:10452:13149:13514\ncatalog:variable_text:10452:14610:14975\ncatalog:variable_text:10452:14975:15340\ncatalog:variable_text:10496:7670:8035\ncatalog:variable_text:10496:14610:14975\ncatalog:variable_text:10496:14975:15340\ncatalog:variable_text:10497:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:orsak-till-att-inte-vilja-arbeta"
+fields = { "description" = "Främsta anledningen till att urvalspersonen inte vill ha arbete; personer i andra urval än AKU-urvalet saknar värde. Den ena versionen avser personer utan arbete." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda delar DEF-frågan; etiketten för uarbejvillskal avgränsar till personer utan arbete; OP om missing för andra urval är generisk och utelämnad.\ncatalog:variable_text:10396:10227:10592\ncatalog:variable_text:10396:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "set:rostratt"
+fields = { "description" = "Rösträttskod som anger i vilka allmänna val urvalspersonen är röstberättigad, det vill säga vilken grupp av röstberättigade personen tillhör. 2002 och 2014–2022 bestäms gruppen enligt den röstlängd som fastställs 30 dagar före valdagen, och i 2011 års uppgifter, för valet 2010 och omvalet 2011, enligt den preliminära röstlängd som fastställs 30 dagar före valdagen. Koden finns för ordinarie val och för omvalet 2011." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nRöstlängden 30 dagar före valdagen anges 2002 och 2014–2022, den preliminära röstlängden för 2011 års uppgifter om valet 2010 och omvalet 2011; 2006 anges ingen röstlängd.\ncatalog:variable_text:10475:14975:15340\ncatalog:variable_text:10476:11688:12053\ncatalog:variable_text:10476:13149:13514\ncatalog:variable_text:10476:14610:14975\ncatalog:variable_text:10476:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:sammanraknad-forvarvsinkomst"
+fields = { "description" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen, som belopp eller som kvintilgrupp. För kvintilgruppen beräknas kvintilgränserna för hela Sveriges befolkning över 18 år, och inkomsten avser året två år före valet till och med valet 2014 och året före valet 2018 och 2022." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nKvintilgränser och inkomstår anges bara i kvintilgruppens OP per valår.\ncatalog:variable_text:10407:7670:8035\ncatalog:variable_text:10407:8766:9131\ncatalog:variable_text:10407:10227:10592\ncatalog:variable_text:10407:11688:12053\ncatalog:variable_text:10407:13149:13514\ncatalog:variable_text:10407:14610:14975\ncatalog:variable_text:10407:14975:15340\ncatalog:variable_text:10407:16071:16436\ncatalog:variable_text:10407:17532:17897\ncatalog:variable_text:10407:18993:19358\ncatalog:variable_text:10479:7670:8035"
+
+[[statement]]
+kind = "set"
+subject = "set:svarande-i-aku"
+fields = { "description" = "Uppgifter om svar i AKU-delen av urvalet: om urvalspersonen är svarande (1) eller bortfall (0), antal svarande i personens stratum och, från 1998, andel svarande för vart och ett av de tre år som AKU-urvalet drogs, räknat på det totala antalet svarande. Personer i andra urval än AKU-urvalet får värdet 0." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSvarsstatus, antal per stratum och andel per urvalsår är slots av samma AKU-svar; andelen finns från 1998 och värdet 0 för andra urval anges för alla tre.\ncatalog:variable_text:10443:7670:8035\ncatalog:variable_text:10443:14610:15340\ncatalog:variable_text:10495:7670:8035\ncatalog:variable_text:10495:8766:9131\ncatalog:variable_text:10507:10227:10592"
+
+[[statement]]
+kind = "set"
+subject = "set:valdeltagande"
+fields = { "description" = "Om urvalspersonen har röstat i riksdagsvalet, landstingsfullmäktigvalet eller kommunfullmäktigvalet, i ordinarie val och i omvalen 2011. I undersökningen 2011 avser de ordinarie valen och kalibreringen 2010 års val. Kalibreringsvarianterna fördelar röstande och ej röstande efter län, för landstingsvalet efter landsting (en variant med Örebro län uppdelat på Örebro kommuns nordöstra valkrets och övriga länet)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP 2011 anger 2010 års val för ordinarie variabler och kalibrering, omvalen avser 2011; lrost-DEF fördelar efter landsting.\ncatalog:variable_text:10418:14975:15340\ncatalog:variable_text:10433:7670:8035\ncatalog:variable_text:10433:14610:14975\ncatalog:variable_text:10433:14975:15340\ncatalog:variable_text:10446:7670:8035\ncatalog:variable_text:10446:14610:14975\ncatalog:variable_text:10446:14975:15340\ncatalog:variable_text:10470:7670:8035\ncatalog:variable_text:10470:14975:15340\ncatalog:variable_text:10471:7670:8035\ncatalog:variable_text:10471:14975:15340\ncatalog:variable_text:10472:14975:15340\ncatalog:variable_text:10473:14975:15340\ncatalog:variable_text:10474:7670:8035\ncatalog:variable_text:10474:14975:15340\ncatalog:variable_text:10477:11688:12053\ncatalog:variable_text:10477:14610:14975\ncatalog:variable_text:10477:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:valdistrikt"
+fields = { "description" = "Valdistrikt där urvalspersonen är röstberättigad, i Valmyndighetens regionala indelning, för ordinarie val och för omvalen 2011, som kod eller (2018) namn. De flesta valår avser uppgiften den röstlängd som fastställs 30 dagar före valdagen. Koden blir unik tillsammans med kommunkoden och är de flesta år fyrsiffrig." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSpråket rättat; röstlängden och fyrsiffrig kod anges för de flesta men inte alla valår, namnet bara 2018.\ncatalog:variable_text:10508:17532:17897\ncatalog:variable_text:10509:13149:13514\ncatalog:variable_text:10509:14610:14975\ncatalog:variable_text:10509:14975:15340\ncatalog:variable_text:10510:14975:15340\ncatalog:variable_text:10511:17532:17897"

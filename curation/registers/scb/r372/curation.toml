@@ -1664,3 +1664,21 @@ kind = "set"
 subject = "juridiska-enheter: aeant @1999-01-01..2022-12-31 where key = 'v17484'"
 fields = { "variable" = "antal-arbetsstallen" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): JEAEAnt in arbetsstalleenheter; AEAnt in juridiska-enheter: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (One member states the count is of arbetsställen belonging to the juridisk enhet; the other has no opdef); folded into antal-arbetsstallen."
+
+[[statement]]
+kind = "set"
+subject = "set:a-region"
+fields = { "description" = "A-region, Arbetsmarknadsstyrelsens kommungrupper från 1960-talet, för enhetens eget arbetsställe eller företag och för huvudarbetsstället. Den härleds ur arbetsställets kommunkod, företagets kommunsäteskod eller huvudarbetsställets kommunkod." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nEnhetens egen och huvudarbetsställets A-region är slots; OP anger kommunkoden som grund.\ncatalog:variable_text:19044:10592:19358\ncatalog:variable_text:19090:10592:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-anstallda"
+fields = { "description" = "Antal anställda vid mättillfället, för arbetsstället och för den juridiska enheten, samt storleksklass efter antal anställda. Som anställd räknas den som arbetsgivaren ska redovisa A-skatt för och som till och med 2020 beräknas ha en årsinkomst över ett prisbasbelopp, från 2021 en månadsinkomst över 1 000 kr. För företag med ett arbetsställe hämtas antalet från kontrolluppgifter (från 2020 månatliga arbetsgivardeklarationer), för flerarbetsställeföretag från en årlig enkät; den juridiska enhetens antal summeras över dess arbetsställen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nEnhetsnivå och storleksklass är axlarna; DEF anger inkomstgränsen före och från 2021 och OP källorna.\ncatalog:variable_text:19048:10592:17897\ncatalog:variable_text:19048:17897:18628\ncatalog:variable_text:19049:10592:19358\ncatalog:variable_text:19050:18628:19358\ncatalog:variable_text:19051:18628:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:postnummer"
+fields = { "description" = "Postnummer för enhetens eget arbetsställe och för huvudarbetsstället, både för belägenhetsadressen (besöksadressen) och för postadressen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBelägenhets- och postadress samt egen enhet och huvudarbetsställe är axlarna; DEF skiljer adresstyperna.\ncatalog:variable_text:19062:10592:19358\ncatalog:variable_text:19063:10592:19358\ncatalog:variable_text:19094:10592:17167\ncatalog:variable_text:19094:17167:17897\ncatalog:variable_text:19094:17897:19358\ncatalog:variable_text:19130:10592:19358"

@@ -1737,3 +1737,69 @@ kind = "set"
 subject = "var:period-ppi-period"
 fields = { "label" = "Period PPI (Period)" }
 evidence = "#2102 same-label cluster 'Period PPI' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; PeriodId (2013-2026) and Period (2017-2027) are concurrent in ppi over 2017-2026, and PeriodId gains a 14th code (13=Period 0 i PPI) from 2023 that Period lacks."
+
+[[statement]]
+kind = "set"
+subject = "set:baspris"
+fields = { "description" = "Ett produkterbjudandes baspris i svensk valuta, det pris som tjänar som bas för indexberäkningen (till exempel priset i fjärde kvartalet året före mätåret). Baspriset räknas om med en kvalitetsjustering när en produkt byts ut mot en med annan kvalitet; det omräknade baspriset är det som används i indexberäkningen efter justeringen. Variablerna finns för producentprisindex (2001–2012), tjänsteprisindex (2012–2013) och som omräknat baspris (2007–2026)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF för baspris anger aktuellt baspris som räknas om vid substitutioner; DEF och OP för omraknat-baspris anger kvalitetsjusteringen och användningen i indexberäkningen.\ncatalog:variable_text:47595:15340:16436\ncatalog:variable_text:47596:11323:15706\ncatalog:variable_text:47690:13514:16071\ncatalog:variable_text:47690:16071:17532\ncatalog:variable_text:47690:17897:20819"
+
+[[statement]]
+kind = "set"
+subject = "set:kn4"
+fields = { "description" = "Fyrsiffrig varukod enligt Kombinerade nomenklaturen, EU:s varuklassificering för statistik över utrikeshandeln och tullsatser, som kod och klartext. Nomenklaturen kommer från Tullverket." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nKod och namn delar DEF och OP; kn4namn OP anger klartexter för de fyrsiffriga koderna.\ncatalog:variable_text:47661:15706:18262\ncatalog:variable_text:47661:18262:18993\ncatalog:variable_text:47662:18993:20819"
+
+[[statement]]
+kind = "set"
+subject = "set:kn8"
+fields = { "description" = "Åttasiffrig varukod (tullnummer) enligt Kombinerade nomenklaturen, EU:s varuklassificering för statistik över utrikeshandeln och tullsatser, som kod och som klartextbeskrivning. Koden uppdateras årligen och nomenklaturen kommer från Tullverket. I prisindex 2001–2012 fastställs det specifika produkterbjudandet inom en urvalsdragen KN8-kod i samråd med uppgiftslämnaren." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP anger KN och Tullverket för kod och beskrivning; kn8kod DEF anger tullnummer och årlig uppdatering; stat-id OP 2001–2012 anger hur produkterbjudandet fastställs.\ncatalog:variable_text:47663:15706:18262\ncatalog:variable_text:47663:18262:18993\ncatalog:variable_text:47663:18993:20819\ncatalog:variable_text:47664:15706:17532\ncatalog:variable_text:47732:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "set:kvalitetsjusteringsmetod"
+fields = { "description" = "Hur kvalitetsskillnaden mellan den gamla och den nya produkten vid ett produktbyte justerar baspriset, för konsumentprisindex respektive producentprisindex. I konsumentprisindex (från 2014) används hedonisk regression för kläder och skor, MCR för datorer, datortillbehör och mobiltelefoner, och för övriga produkter subjektiv kvalitetsvärdering, direkt jämförelse utan kvalitetsjustering eller inget produktbyte alls när produkten är slutsåld. I producentprisindex (2001–2012) anges metoden av handläggaren efter information från uppgiftslämnaren." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda delar DEF; OP för KPI-varianten 2014–2026 räknar upp metoderna och OP för PPI-varianten anger hur metoden registreras.\ncatalog:variable_text:47672:14610:16071\ncatalog:variable_text:47672:16071:20089\ncatalog:variable_text:47672:20089:20819\ncatalog:variable_text:47673:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "set:prisindexniva"
+fields = { "description" = "Prisnivå i förhållande till en referenstidpunkt, som indexserier med olika bas och valuta. Basen är ett fast år (till exempel 1980, 2005, 2010, 2015, 2020 eller 2021 = 100), föregående år, december eller fjärde kvartalet föregående år, eller två år tillbaka för år-till-årindex och år-till-månadsindex; några serier beräknas i euro i stället för kronor, och reviderat index räknas med priskorrigeringar och uppdaterade vikter. Index med bas 1980 är det kedjeindex som utgör konsumentprisindex; sedan 2004 beräknas det som produkten av alla år-till-årindex från 2003 och det senaste år-till-månadsindexet. Varuindex (2001–2012) är ett produkterbjudandes valutajusterade pris delat med baspriset i december föregående år, gånger 100." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBaserna och valutorna följer medlemmarnas definitioner; metodbytet 2004 för 1980-serien och varuindexets formel står i de operationella texterna.\ncatalog:variable_text:47591:16071:20819\ncatalog:variable_text:47592:16071:17167\ncatalog:variable_text:47592:17167:20819\ncatalog:variable_text:47614:11323:15340\ncatalog:variable_text:47623:18993:20819\ncatalog:variable_text:47641:18993:20819\ncatalog:variable_text:47642:15706:17167\ncatalog:variable_text:47643:13514:16071\ncatalog:variable_text:47643:16071:16436\ncatalog:variable_text:47643:17897:20819\ncatalog:variable_text:47644:16071:16436\ncatalog:variable_text:47645:15706:16071\ncatalog:variable_text:47645:16071:16436\ncatalog:variable_text:47646:15706:20819\ncatalog:variable_text:47647:18993:20819\ncatalog:variable_text:47648:18993:20819\ncatalog:variable_text:47649:17167:18262\ncatalog:variable_text:47649:18262:20819\ncatalog:variable_text:47650:16071:20819\ncatalog:variable_text:47651:15340:16071\ncatalog:variable_text:47652:15706:17167\ncatalog:variable_text:47654:16071:17167\ncatalog:variable_text:47654:17167:20819\ncatalog:variable_text:47700:15706:17167\ncatalog:variable_text:47740:15706:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:prissignal"
+fields = { "description" = "Kod för prisets eller produktens status jämfört med föregående månad eller kvartal, för PPI och TPI: till exempel ändrat pris eller kvantitet, samma pris, varubyte (kvalitetsjusterat), ingen transaktion, bortfall eller utgången produkt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAlla tre delar DEF om prisets status; OP räknar upp koderna 01, 11, 21, 55, 56, 57 och 99.\ncatalog:variable_text:47666:15706:16801\ncatalog:variable_text:47667:17167:17532\ncatalog:variable_text:47702:16071:16436\ncatalog:variable_text:47702:17897:18993\ncatalog:variable_text:47702:19358:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:produkterbjudandevikt"
+fields = { "description" = "Produkterbjudandets vikt inom produktgruppen i indexberäkningen, beräknad med tillgänglig statistik; ett produkterbjudande är en given produkt eller tjänst så som den säljs av ett givet företag. Varianterna är vikten själv, den normerade vikten (vikten delad med den totala vikten för alla produkterbjudanden i produktgruppen), den reviderade vikten för reviderade index och, 2001–2012, PPI:s vägningstal i miljoner kronor, beräknat från industrins varuproduktion och utrikeshandeln med varor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF för proderbjvikt, normvikt och proderbjviktrev anger vikt, normerad vikt och reviderad vikt; fv-vikt DEF och OP anger vägningstal i Mkr och dess underlag.\ncatalog:variable_text:47621:11323:15706\ncatalog:variable_text:47686:14610:16071\ncatalog:variable_text:47686:16071:20819\ncatalog:variable_text:47703:14610:15340\ncatalog:variable_text:47703:15340:16436\ncatalog:variable_text:47703:17897:20819\ncatalog:variable_text:47704:14610:17167\ncatalog:variable_text:47704:17167:17897\nRegisterinformation.csv:row=940983"
+
+[[statement]]
+kind = "set"
+subject = "set:produktgrupp"
+fields = { "description" = "Den produktgrupp inom vilken ett index beräknas, som kod, namn och beskrivning. Inom PPI följer produktgrupperna SPIN/SNI-indelningen: en SPIN-kod på någon nivå eller en sammanvägd klass med flera SPIN-koder, 2007–2011 en femsiffrig SPIN-kod eller NR-produktgrupp. Produktgruppsnamnen (BeskrivnSv, NamnSV) avser i stället grupper som ligger under en Coicop-klass." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSPIN-texterna gäller beskrivnsv/namnsv och pg (femsiffrig 2007–2011); Coicop-namnen är en slot med annan indelning.\ncatalog:variable_text:47713:15706:17167\ncatalog:variable_text:47713:17167:17897\ncatalog:variable_text:47713:18628:18993\ncatalog:variable_text:47716:13514:15340\ncatalog:variable_text:47721:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "set:produktgruppsvikt"
+fields = { "description" = "Produktgruppens vikt i beräkningen av aggregerade index, det vill säga dess vikt i en högre aggregering, beräknad med tillgänglig statistik. I KPI (från 2014) fördelas nationalräkenskapernas hushållskonsumtion per Coicop-grupp på de underliggande produktgrupperna med hjälp av bland annat HUT. Den reviderade vikten används för reviderade index när produktgruppen ligger under en annan produktgrupp; branschproduktgruppsvikt finns 2007–2013." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP för produktgruppsvikt anger vikten i högre aggregering och KPI-underlaget; viktrev DEF anger användning vid reviderade index; branschproduktgruppsvikt har bara en namndefinition.\ncatalog:variable_text:47602:13514:14610\ncatalog:variable_text:47723:13514:14610\ncatalog:variable_text:47724:15340:16071\ncatalog:variable_text:47725:16071:16436\ncatalog:variable_text:47742:14610:17167\ncatalog:variable_text:47742:17167:17897\ncatalog:variable_text:47742:18262:20819"
+
+[[statement]]
+kind = "set"
+subject = "set:produktpris"
+fields = { "description" = "Produkterbjudandets pris vid en prisobservation, i flera led: observerat pris utan justering, ordinarie pris (skiljer sig vid rea eller kampanj och används bara vid subjektiv kvalitetsjustering) och beräknat pris i kronor, det kvantitetsjusterade och vid behov valutaomräknade pris som används i indexberäkningen. För 2001–2012 finns pris i svenska kronor och i utländsk valuta, för 2012–2013 prisnotering." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF för varje medlem anger vilket pris den avser; OP för beraknat-pris anger kvantitetsjusteringen och valutaomräkningen.\ncatalog:variable_text:47597:13514:14610\ncatalog:variable_text:47597:16071:17532\ncatalog:variable_text:47618:11323:15706\ncatalog:variable_text:47620:11323:15706\ncatalog:variable_text:47688:13514:16071\ncatalog:variable_text:47691:13514:20819\ncatalog:variable_text:47701:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:rapporteringsvaluta"
+fields = { "description" = "Den valuta som uppgiftslämnaren rapporterar produktens pris i och som ligger till grund för värdet i kronor. Valutan justeras vid behov till standardiserade valutabeteckningar (2001–2012)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF för båda anger valutan som priset bygger på; OP för rapporteringsvaluta anger rapporteringen från uppgiftslämnaren och standardiseringen.\ncatalog:variable_text:47729:11323:15706\ncatalog:variable_text:47729:15706:17167\ncatalog:variable_text:47729:17167:17532\ncatalog:variable_text:47739:15340:16436"

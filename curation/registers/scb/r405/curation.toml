@@ -6902,3 +6902,99 @@ kind = "set"
 subject = "var:barnsyss"
 fields = { "description" = "Barnets sysselsättning. Till och med 2016: om barnet går i skolan (1 = ja, 2 = nej). Från 2017: vilken skolform barnet går i (grundskola, gymnasium, annan utbildning, slutat skolan)." }
 evidence = "Code lists: 2012-2016 ja/nej (#10815), 2017-2019 skolform (#2899). Dated change."
+
+[[statement]]
+kind = "set"
+subject = "set:annan-utbildning"
+fields = { "description" = "Om barnet går en annan utbildning än grundskola och gymnasieskola, och i så fall vilken, som text." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF för annan ger indikatorn och för utbtypa textsvaret om vilken utbildning.\ncatalog:variable_text:12282:13879:15340\ncatalog:variable_text:12282:15340:16436\ncatalog:variable_text:12733:13879:16436"
+
+[[statement]]
+kind = "set"
+subject = "set:arskurs"
+fields = { "description" = "Vilken årskurs barnet går i, härledd från frågorna om barnet går i skolan, i grundskola eller gymnasium och vilken årskurs. En variabel avser enbart årskurs i grundskolan och ställs till dem som går där; den sammanställda variabeln har 2014–2015 egna koder för gymnasiet och för barn som inte går i skolan eller går annan utbildning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF för alla tre anger barnets årskurs; utbtypar avgränsas till grundskolan och härledningen anges i OP.\ncatalog:variable_text:12630:13879:15706\ncatalog:variable_text:12630:15706:16071\ncatalog:variable_text:12630:16071:16801\ncatalog:variable_text:12630:16801:18262\ncatalog:variable_text:12655:19358:19723\ncatalog:variable_text:12734:14975:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:barnets-alder"
+fields = { "description" = "Hur gammal barnet är. 2013–2014 lämnades uppgiften av den vuxna intervjupersonen i ULF, 2016–2019 härleds den från personnumret och 2023 avser den åldern den 31 december insamlingsåret, härledd från födelseåret. 2023 finns också en indelning i äldre och yngre barn som styrde vilka frågor som visades; den som fyller 15 under året räknas som äldre om födelsedagen infaller före 21 augusti." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP anger uppgiftslämnare 2013–2014, härledning från personnummer 2016–2019 och födelseår 2023; aldgrp-OP ger gränsen 21 augusti.\ncatalog:variable_text:12279:19358:19723\ncatalog:variable_text:12280:19358:19723\ncatalog:variable_text:12314:13879:15706\ncatalog:variable_text:12314:15706:16071\ncatalog:variable_text:12314:16071:16436\ncatalog:variable_text:12314:16801:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:barnets-familje-och-boendetyp"
+fields = { "description" = "Hur barnet bor: 2008–2019 med båda föräldrarna, med mamma eller pappa eller ungefär hälften av tiden hos vardera, och 2023 till exempel hela tiden med båda föräldrarna, mest hos mamma eller mest hos pappa. För barn med skilda föräldrar anger den intervjuade föräldern 2008–2019 om barnet bor hos henne eller honom hela eller en del av tiden. Familjetypen härleds 2013 och 2016–2019 från förälderns uppgifter i ULF (2016–2019 ULF/SILC) och justeras efter barnets egen uppfattning. 2008–2019 anges också hushållstypen för hushåll med barn under 18 år, härledd från ULF:s hushållskartläggning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nbabotid 2023 och familjetyp, boende och hushållstyp 2008–2019 enligt DEF; förälderns uppgift och barnets kontroll tidsbinds till de OP-år som anger dem.\ncatalog:variable_text:12286:19358:19723\ncatalog:variable_text:12293:13879:15706\ncatalog:variable_text:12293:15706:16071\ncatalog:variable_text:12294:13879:15706\ncatalog:variable_text:12294:15706:16071\ncatalog:variable_text:12294:16801:18262\ncatalog:variable_text:12297:13879:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:bostadskommun"
+fields = { "description" = "Kommun vid urvalsdragningen: 2023 den kommun där barnet är folkbokfört, 2008–2019 den kommun där den förälder som intervjuats i ULF/SILC är folkbokförd. Barnet ingår i Barn-ULF genom att bo minst halva tiden med den föräldern." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF skiljer förälderns och barnets folkbokföringskommun; OP förklarar att urvalet går via föräldern i ULF/SILC.\ncatalog:variable_text:12300:13879:16436\ncatalog:variable_text:12300:16436:18262\ncatalog:variable_text:12301:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:eget-rum"
+fields = { "description" = "Om barnet har eget rum. Barn som bor växelvis hos sina föräldrar får en egen fråga om de har eget rum hos båda, hos en av dem eller inget; en härledd variabel kombinerar de två frågorna till ja eller nej, och 2023 räknas eget rum hos minst en förälder som ja." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nGemensam DEF för room-varianterna; OP beskriver frågan för växelvis boende och härledningen av room-h och ekrum.\ncatalog:variable_text:12379:19358:19723\ncatalog:variable_text:12609:13879:15706\ncatalog:variable_text:12609:15706:16436\ncatalog:variable_text:12610:14245:16436\ncatalog:variable_text:12611:16801:17167\ncatalog:variable_text:12611:17167:18262\ncatalog:variable_text:12612:16801:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:foraldrars-kontroll-av-barnets-vistelse"
+fields = { "description" = "Hur noga barnets föräldrar är med att veta var barnet är när det inte är hemma, och (2008–2015) om barnet tycker att man hemma vill veta för mycket, lagom eller för lite om vad det gör. Till och med 2012 gällde frågan att föräldrarna vet vart barnet går eller vem det ska vara tillsammans med, och 2008 att barnet berättar det; frågan ändrades något 2009 och omformulerades 2013 och 2017. 2016–2019 svarar barnet, om det är olika hos mamma och pappa, för hemmet hos den förälder som intervjuats i ULF/SILC. 2023 ställs frågan inte vid indirekt intervju." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP 2016–2019 säger bara att det är olika hos mamma och pappa; revetavar 2023 anger att frågan inte ställs vid indirekt intervju.\ncatalog:variable_text:12565:13879:16801\ncatalog:variable_text:12571:14245:14610\ncatalog:variable_text:12571:14610:16801\ncatalog:variable_text:12571:16801:18262\ncatalog:variable_text:12608:19358:19723\ncatalog:variable_text:12694:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "set:internettid"
+fields = { "description" = "Antal timmar barnet använder internet en vanlig vardag och under helgen. 2016–2019 summerar helgvariabeln timmarna för lördag och söndag, medan 2023 års helgvariabel avser timmar per dag en lördag eller söndag. 2009–2012 frågades om tid vid datorn för mail, chatt och surf." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF för alla fyra anger timmar på internet, vardag eller helg; helgens summering och de äldre formuleringarna framgår av DEF och OP.\ncatalog:variable_text:12394:19358:19723\ncatalog:variable_text:12395:19358:19723\ncatalog:variable_text:12404:16801:18262\ncatalog:variable_text:12405:14245:14610\ncatalog:variable_text:12405:14610:16801\ncatalog:variable_text:12405:16801:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:kon"
+fields = { "description" = "Kön för barnet (2008–2019) och för den andra föräldern, det vill säga make, maka eller sambo till den förälder som svarat i ULF (2016–2019). Uppgifterna är bakgrundsuppgifter från ULF; barnets kön lämnades 2016–2019 av föräldern. 2023 anges kön från urvalsfilen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nTexten för kön 2023 anger inte vems kön; föräldern som uppgiftslämnare anges bara för barnets kön 2016–2019.\ncatalog:variable_text:12317:13879:15706\ncatalog:variable_text:12317:15706:16071\ncatalog:variable_text:12317:16801:18262\ncatalog:variable_text:12500:19358:19723\ncatalog:variable_text:12501:16801:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:kontantmarginal"
+fields = { "description" = "Om barnet har råd med en tillfällig utgift till i morgon, till exempel ett biobesök: 100 kronor till och med 2014 och 200 kronor från 2015. Från 2014 är frågan uppdelad, först om barnet själv har pengarna och sedan, som följdfråga, om det kan få dem av sina föräldrar; 2013 ingick båda i samma fråga." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP för alla sex anger kontantmarginal; beloppshöjningen och uppdelningen i egen och föräldrars hjälp anges i OP.\ncatalog:variable_text:12341:16071:16436\ncatalog:variable_text:12342:16436:16801\ncatalog:variable_text:12342:16801:18262\ncatalog:variable_text:12343:16436:18262\ncatalog:variable_text:12372:19358:19723\ncatalog:variable_text:12373:19358:19723\ncatalog:variable_text:12377:13879:15706\ncatalog:variable_text:12377:15706:16071\ncatalog:variable_text:12377:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "set:skolform"
+fields = { "description" = "Om barnet går i grundskolan eller gymnasieskolan. 2008–2014 finns en indikator för vardera skolformen, härledd från frågan om barnet går i grundskola, gymnasiet eller annan utbildning. Från 2012 finns en sammanslagen variabel som 2012–2015 ställs till alla skolbarn och har svaret annan utbildning; 2016–2019 ställs frågan till 15–18-åringar och övriga skolbarn räknas till grundskolan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\ngrskol och gymn 2008–2014 härleds ur BFUTBTYP; den sammanslagna frågan finns från 2012, kod 3 annan utbildning tas bort 2016, då frågan begränsas till 15–18 år.\ncatalog:variable_text:12436:13879:15340\ncatalog:variable_text:12436:15340:16436\ncatalog:variable_text:12437:13879:15340\ncatalog:variable_text:12437:15340:16436\ncatalog:variable_text:12633:15340:15706\ncatalog:variable_text:12633:15706:16436\ncatalog:variable_text:12633:16436:16801\ncatalog:variable_text:12633:16801:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:statistiska-vikter"
+fields = { "description" = "Vikter för skattningar från barnintervjuerna. 2008–2019 finns en vikt för uppräkning till antalet barn i populationen, beräknad med samma metod alla år, och en hushållsvikt som grundas på antalet föräldrar barnet bor med. 2012 finns en vikt för intervjuerna efter barnets ålder och kön och föräldrarnas ålder, kön, civilstånd, utbildningsnivå, födelseland och region. 2023 finns en designvikt (1 delat med urvalssannolikheten) och en kalibreringsvikt som med hjälpinformation justerats för bortfall, båda för uppräkning till antalet barn i urvalsramen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\n2012 års vikt viktar efter barnets ålder och kön samt föräldrarnas ålder, kön, civilstånd, utbildning, födelseland och region; övriga vikter enligt sina DEF/OP per år.\ncatalog:variable_text:12321:13879:16436\ncatalog:variable_text:12321:16436:18262\ncatalog:variable_text:12324:13879:18262\ncatalog:variable_text:12329:15340:15706\ncatalog:variable_text:12340:19358:19723\ncatalog:variable_text:12613:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:sysselsattningsstatus"
+fields = { "description" = "Sysselsättning för barnet och dess föräldrar. För barnet anges om det går i skolan och i så fall i grundskola eller gymnasieskola (2008–2019), härlett från frågorna om skolgång. För den förälder som svarat i ULF och dennes make, maka eller sambo anges huvudsaklig sysselsättning (arbetar, arbetslös, studerar, pensionerad eller annan) 2009–2019, och 2023 för bofadern och bomodern en hierarkisk klassificering där sysselsatt går före arbetslös, studerande, pensionär och sjuk. En hjälpvariabel för kalibreringen 2023 anger om minst en boförälder arbetar eller studerar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBarnets skolgång behålls som slot enligt Operatörens beslut; ULF-föräldrarna 2009–2019 och boföräldrarnas klassificering 2023 enligt OP; hjälpvariabeln följer OP (minst en boförälder).\ncatalog:variable_text:12306:13879:15340\ncatalog:variable_text:12306:15340:16436\ncatalog:variable_text:12306:16436:16801\ncatalog:variable_text:12306:16801:18262\ncatalog:variable_text:12307:14245:18262\ncatalog:variable_text:12308:14245:18262\ncatalog:variable_text:12318:15340:18262\ncatalog:variable_text:12319:19358:19723\ncatalog:variable_text:12320:19358:19723\ncatalog:variable_text:12751:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:tid-for-hushallssysslor"
+fields = { "description" = "Hur många timmar i veckan barnet brukar hjälpa till hemma med hushållssysslor. 2013–2014 ställdes frågan bara till 13–18-åringar och 2016–2019 till dem som svarat ja på tidigare frågor om hushållssysslor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda DEF anger timmar per vecka med hushållssysslor; selektionerna anges i OP.\ncatalog:variable_text:12474:19358:19723\ncatalog:variable_text:12483:13879:16071\ncatalog:variable_text:12483:16071:16436\ncatalog:variable_text:12483:16801:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:tid-for-tv-och-dataspel"
+fields = { "description" = "Ungefär hur många timmar barnet spelar spel en vanlig vardag och en helg; till och med 2013 dataspel eller tv-spel, från 2014 spel på dator, mobil eller tv. 2016–2019 räknas måndag till torsdag som vanlig vardag. För helgen 2016–2019 summeras timmarna för lördag och söndag (fredag kväll räknas inte), medan helgfrågan 2023 avser timmar per dag en lördag eller söndag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nFrågeformuleringen per år står i DEF för vardagsvariabeln; måndag–torsdag och helgsummeringen står i OP 2016–2019.\ncatalog:variable_text:12410:14245:14610\ncatalog:variable_text:12410:14610:16801\ncatalog:variable_text:12410:16801:18262\ncatalog:variable_text:12425:19358:19723\ncatalog:variable_text:12426:19358:19723\ncatalog:variable_text:12434:16801:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:tid-for-tv-och-film"
+fields = { "description" = "Ungefär hur många timmar barnet tittar på tv-program, serier eller film en vanlig vardag och en helg. Vardagsfrågan gällde 2008 tv eller video, 2009–2013 tv, dvd eller dator och från 2014 tv, dator eller mobil. 2016–2019 avser frågorna tid då barnet verkligen tittar, inte när tv:n står på medan barnet gör annat, och biobesök ingår inte; helgtimmarna för lördag och söndag summeras då, medan helgfrågan 2023 avser timmar per dag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nFrågeformuleringarna per år står i DEF; avgränsningen mot bakgrunds-tv och bio och summeringen av helgen anges bara 2016–2019; 2023 per dag.\ncatalog:variable_text:12411:14245:14610\ncatalog:variable_text:12411:14610:16801\ncatalog:variable_text:12411:16801:18262\ncatalog:variable_text:12431:19358:19723\ncatalog:variable_text:12432:19358:19723\ncatalog:variable_text:12729:13879:14245\ncatalog:variable_text:12730:16801:18262"

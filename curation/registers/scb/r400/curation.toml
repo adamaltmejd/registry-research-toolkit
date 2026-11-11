@@ -538,3 +538,45 @@ kind = "set"
 subject = "var:typomrade-tatort-nivafaktor-fore-flytt"
 fields = { "label" = "Typområden (TYKO) (tätort och nivåfaktor, före flytt)" }
 evidence = "#2102 same-label cluster 'Typområden (TYKO)' (4 variables): judged different meaning, high confidence; Opdefs: Tyko/TykoG are based on tätort size and nivåfaktor, TykoUSK/TykoUSKG on stadsdelsområde; the G columns refer to the property before the move."
+
+[[statement]]
+kind = "set"
+subject = "set:bostadsarea"
+fields = { "description" = "Bostadsarean för den fastighet där personen är folkbokförd, var folkbokförd vid händelsen eller är folkbokförd efter flyttidpunkten, eller för fastigheten där personen var folkbokförd före flytten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda delar DEF; OP skiljer fastigheten vid och efter händelsen från fastigheten före flytt.\ncatalog:variable_text:51430:19723:20089\ncatalog:variable_text:51431:19723:20088\ncatalog:variable_text:51431:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:fastighetsbeteckning"
+fields = { "description" = "Beteckning, uppbyggd av trakt, block och enhet och unik i kombination med kommun, för den fastighet där personen är folkbokförd, var folkbokförd vid en händelse (födelse, dödsfall, invandring, utvandring eller efter en inrikes flyttning) eller var folkbokförd före flytten. Hämtas från Befolkningsregistret (RTB) och skrivs fram till den regionala indelningen 1 januari året efter produktionsomgången." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda delar DEF; OP skiljer händelserna och före flytt, anger RTB och framskrivningen.\ncatalog:variable_text:51433:19723:20089\ncatalog:variable_text:51436:19723:20088\ncatalog:variable_text:51436:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:forsamling-stockholm"
+fields = { "description" = "Tvåställig församlingskod (NYKO-prefix), enbart för Stockholms kommun, för den fastighet där personen är folkbokförd, var folkbokförd vid en händelse (födelse, dödsfall, invandring, utvandring eller efter en inrikes flyttning) eller var folkbokförd före flytten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda delar DEF; OP anger NYKO-prefix för Stockholm och skiljer händelserna från före flytt.\ncatalog:variable_text:51443:19723:20088\ncatalog:variable_text:51443:20088:20089\ncatalog:variable_text:51444:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:kommun"
+fields = { "description" = "Den kommun där personen är folkbokförd, var folkbokförd vid en händelse (födelse, dödsfall, invandring, utvandring eller efter en inrikes flyttning) eller var folkbokförd före flytten. Hämtas från Befolkningsregistret (RTB) och skrivs fram till den regionala indelningen 1 januari året efter produktionsomgången." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda delar DEF; OP skiljer händelserna och före flytt, anger RTB och framskrivningen.\ncatalog:variable_text:51449:19723:20088\ncatalog:variable_text:51449:20088:20089\ncatalog:variable_text:51450:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:lan"
+fields = { "description" = "Det län där personen är folkbokförd, var folkbokförd vid en händelse (födelse, dödsfall, invandring, utvandring eller efter en inrikes flyttning) eller var folkbokförd före flytten. Hämtas från Befolkningsregistret (RTB) och skrivs fram till den regionala indelningen 1 januari året efter produktionsomgången." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda delar DEF; OP skiljer händelserna och före flytt, anger RTB och framskrivningen.\ncatalog:variable_text:51454:19723:20088\ncatalog:variable_text:51454:20088:20089\ncatalog:variable_text:51455:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:nyckelkodsomrade"
+fields = { "description" = "NYKO, kommunens egen hierarkiska indelning för planering, för den fastighet där personen är folkbokförd, var folkbokförd vid en händelse (födelse, dödsfall, invandring eller utvandring) eller var folkbokförd före respektive efter en flytt. Hämtas från Geografidatabasen och skrivs fram till indelningen 1 januari året efter produktionsomgången." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP anger fastigheten per händelse och före/efter flyttidpunkten; inrikes flytt står inte.\ncatalog:variable_text:51459:19723:20089\ncatalog:variable_text:51460:19723:20088\ncatalog:variable_text:51460:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:typomrade"
+fields = { "description" = "TYKO för den fastighet där personen är folkbokförd, var folkbokförd vid en händelse (födelse, invandring, utvandring eller efter en flytt) eller var folkbokförd före flytten, härlett från fastighetens hustyp, juridiska form och byggår. Två indelningar finns: med storleken på tätorten och nivåfaktorn i det lokala området vid fastighetstaxeringen, eller med stadsdelsområde." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP säger efter flyttidpunkten, inte inrikes; tätort/nivåfaktor respektive stadsdelsområde skiljer tyko från tykousk.\ncatalog:variable_text:51464:19723:20088\ncatalog:variable_text:51464:20088:20089\ncatalog:variable_text:51465:19723:20088\ncatalog:variable_text:51465:20088:20089\ncatalog:variable_text:51466:19723:20089\ncatalog:variable_text:51467:19723:20089"

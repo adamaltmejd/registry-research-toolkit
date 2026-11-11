@@ -1060,3 +1060,33 @@ kind = "set"
 subject = "lonestrukturstatistik-statlig-sektor: Grundlon where key = 'v15936' and release = 'r6029'"
 fields = { "spelling" = "lon1in" }
 evidence = "r6029 (2014) lists Grundlon twice: key v27263 (Avtalad grundlön) and key v15936 (Lön exklusive fasta och rörliga tillägg). Key v15936 is lon1in in 2008-2012 and 2015-2024, and no lon1in is listed in 2014. The v15936 row (CVID 373086) sits between Foraldrapenningtillagg and Myndkod, where lon1in sits in 2012.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=502194 (r6029)"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsstallets-geografiska-lage"
+fields = { "description" = "Kommun och län där arbetsstället ligger; länet är de två första siffrorna i kommunkoden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF: kommun resp. län för arbetsställets belägenhet; OP: länet härleds ur kommunkoden.\ncatalog:variable_text:49839:9496:20089\ncatalog:variable_text:49841:9496:15706\ncatalog:variable_text:49841:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:populationstillhorighet"
+fields = { "description" = "Om anställningen ingår i en population: sysselsättningspopulationen (från 2009; från 2013 alla anställningar i statlig sektor den 1 september utom tjänstlediga och utlandsanställda), lönepopulationen eller den population Arbetsgivarverket fastställer (1996–2005). Lönepopulationen utgår från 2013 från sysselsättningspopulationen men utesluter personer under 18 år och från 65 år (från 2023 69 år), arvodesanställningar, tjänstgöringsomfattning under 5 procent och månadslön under 12 000 kronor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF skiljer de tre populationerna; OP ger avgränsningarna och åldersgränsens ändring 2023.\ncatalog:variable_text:49846:9496:9862\ncatalog:variable_text:49846:10592:15706\ncatalog:variable_text:49846:15706:19358\ncatalog:variable_text:49846:19358:20089\ncatalog:variable_text:49864:9496:13149\ncatalog:variable_text:49874:14245:15706\ncatalog:variable_text:49874:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:tjanstgoringsomfattning"
+fields = { "description" = "Tjänstgöringstid i förhållande till heltid: den omfattning Arbetsgivarverket fastställer (1996–2013) och den faktiska omfattningen, som härleds ur den. Från 2013 tar den faktiska omfattningen hänsyn till tjänstledighet (50 procent tjänstledighet vid 50 procents tjänstgöring ger 25 procent), och saknas rapporterad omfattning för en anställd med lön beräknas den ur medellönen för yrke och kön." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF skiljer AgV-omfattning och faktisk omfattning; OP anger härledningen och ändringen 2013.\ncatalog:variable_text:49856:9496:16071\ncatalog:variable_text:49881:9496:15706\ncatalog:variable_text:49881:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsniva"
+fields = { "description" = "Nivån på personens genomförda utbildning enligt Svensk utbildningsnomenklatur (SUN): 1996–2000 enligt SUN, 2001–2015 enligt SUN 2000 med hela den tresiffriga nivåkoden, 2016–2019 enligt SUN 2000 och från 2020 enligt SUN 2020. Det finns också en ensiffrig nivåindelning som är jämförbar med nivåerna före år 2000, 2012–2015 i sju nivåer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nVersionerna följer DEF-åren; den äldre ensiffriga indelningen finns 2012–2024 men antalet sju nivåer anges bara 2012–2015.\ncatalog:variable_text:49869:16801:18262\ncatalog:variable_text:49870:15340:16801\ncatalog:variable_text:49870:16801:18262\ncatalog:variable_text:49887:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:yrke-och-tjanst"
+fields = { "description" = "Den anställdes yrke eller tjänst: tjänstebenämning enligt myndighetens, universitetets eller högskolans lönesystem under mätmånaden, yrke enligt SSYK, översatt med nycklar från BESTA, tjänstebenämning och myndighetskod, och 1998–2003 Arbetsgivarverkets TNS-kod. I TNS-koden anger de tre första siffrorna yrket och den fjärde svårighetsgrad som ledarnivå, för nivå 3 och 4 även expert- eller specialistnivå; ju lägre nivå, desto högre svårighetsgrad." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF skiljer tjänstebenämning, TNS-kod och SSYK; OP anger översättningen och TNS-kodens uppbyggnad.\ncatalog:variable_text:49879:9496:20089\ncatalog:variable_text:49883:10227:12418\ncatalog:variable_text:49888:9496:18628\ncatalog:variable_text:49888:18628:20089"

@@ -2824,3 +2824,57 @@ kind = "set"
 subject = "var:statusssyk-egf"
 fields = { "description" = "Anger från vilket jobb yrkesuppgiften för egna företagare hämtats och om den är imputerad: koderna 1-5 anger källan (förvärvsarbetande respektive yrkesverksamma jobb 1 och 2, eller övriga), 6 att uppgift saknas, 11-15 och 30 att yrket är imputerat." }
 evidence = "Värdemängd 3438 (2010-2024) och operationell definition om koppling till organisationsnumret enligt RAMS.\n0.74.0 catalog, key v37800, releases r10090, r11760, r13031, r13905...; reg_meta.db:occurrence:517535,517590,517645"
+
+[[statement]]
+kind = "set"
+subject = "set:naringsgren"
+fields = { "description" = "Femställig kod för den huvudsakliga verksamheten på det arbetsställe där personen haft sin huvudsakliga sysselsättning i november eller sin största förvärvskälla under året, enligt Standard för svensk näringsgrensindelning (SNI) 1992 (2001), 2002 (2001–2010) eller 2007 (från 2008)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF skiljer huvudsaklig sysselsättning och största förvärvskälla; OP anger femställig SNI-kod med standardversion per variabel och år.\ncatalog:variable_text:62346:18993:20089\ncatalog:variable_text:62347:11323:11688\ncatalog:variable_text:62348:11688:14610\ncatalog:variable_text:62376:18993:20089\ncatalog:variable_text:62377:11323:11688\ncatalog:variable_text:62378:11688:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:sektortillhorighet"
+fields = { "description" = "Sektor för det företag som hör till personens huvudsakliga sysselsättning (2001–2015 i november) eller största förvärvskälla, som sektor eller sektorkod. Sektorkoden för största förvärvskällan 2009–2015 är skapad utifrån sektor, ägarkategori och juridisk form; 2024 består sektorkoden för huvudsaklig sysselsättning av tre siffror som tas fram ur sektor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nNovember anges i definitionerna 2001–2015; härledningen av sektorkoden 2009–2015 och den tresiffriga koden 2024 står i texterna; under året anges inte.\ncatalog:variable_text:62380:18993:20089\ncatalog:variable_text:62381:11323:16801\ncatalog:variable_text:62403:18993:20089\ncatalog:variable_text:62406:19723:20089\ncatalog:variable_text:62407:14245:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:sysselsattningsstatus"
+fields = { "description" = "Personens ställning på arbetsmarknaden. Till och med 2021 skattas sysselsättningsstatus i november, där inkomstbringande arbete i genomsnitt minst en timme per vecka räknas som förvärvsarbete; från 2022 klassas arbetsmarknadsstatus hierarkiskt som sysselsatt, arbetslös, studerande, pensionär eller sjuk, även i grov gruppering, med en markering för den som blivit sysselsatt genom arbetsinkomst från Danmark, Finland, Island eller Norge. Yrkesverksam under året avser inkomstbringande arbete på sammanlagt minst ett prisbasbelopp." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF ger novemberstatus 2001–2021, arbetsmarknadsstatus och nordisk inkomst 2022–2024 och yrkesverksam med prisbasbelopp; OP ger hierarkin och den nordiska regeln.\ncatalog:variable_text:62335:18993:20089\ncatalog:variable_text:62336:18993:20089\ncatalog:variable_text:62436:18993:20089\ncatalog:variable_text:62437:11323:18993\ncatalog:variable_text:62459:11323:17897\ncatalog:variable_text:62459:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsinriktning"
+fields = { "description" = "Fyrställig kod för inriktningen på personens genomförda utbildning enligt Svensk utbildningsnomenklatur, SUN 2000 eller från 2019 SUN 2020. I SUN 2020-varianten avses den högsta utbildningen till och med vårterminen aktuellt år, och inriktningen kopplas till den nivå som valts som högsta enligt Utbildningsregistrets prioriteringsregler." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nFyra positioner och SUN anges för alla; högsta utbildning och prioriteringsreglerna anges bara för SUN 2020-varianten.\ncatalog:variable_text:62430:16801:18262\ncatalog:variable_text:62433:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsniva"
+fields = { "description" = "Nivån för personens genomförda utbildning enligt Svensk utbildningsnomenklatur, SUN 2000 eller från 2019 SUN 2020, antingen som fullständig tresiffrig nivåkod eller aggregerad till sju nivåer som är jämförbara med den äldre SUN-kodens nivåindelning. I SUN 2020-varianten med sju nivåer avser nivån den högsta utbildningen till och med vårterminen aktuellt år, vald enligt Utbildningsregistrets prioriteringsregler." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF anger nivån för genomförd utbildning; högsta utbildning, vårterminen och prioriteringsreglerna står bara i OP för SUN2020Niva_Old.\ncatalog:variable_text:62431:16801:17897\ncatalog:variable_text:62432:11323:16801\ncatalog:variable_text:62435:17897:20089\ncatalog:variable_text:62448:11323:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:yrke"
+fields = { "description" = "Personens yrke enligt Standard för svensk yrkesklassificering (SSYK), på 3- eller 4-siffernivå, för den huvudsakliga sysselsättningen (2001–2015 under november), den största och näst största förvärvskällan under året, jobb två i november och övrigt jobb, samt från 2010 för egna företagare. För sysselsättningen, förvärvskällorna och jobben kodas yrket från 2016 enligt SSYK 2012, för jobb två i november på 3-siffernivå redan från 2014. Yrkesuppgiften hämtas från befintliga register och Yrkesregistrets egen enkät; från 2019 härleds yrket för en del egna företagare från bland annat företagsnamn, näringsgren, utbildning och yrkesbevis." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nNovember anges bara i DEF 2001–2015; SSYK 2012 följer av medlemmarnas namn, medan 1996 års standard bara anges för två medlemmar och därför utelämnas.\ncatalog:variable_text:62382:16801:17897\ncatalog:variable_text:62382:17897:20089\ncatalog:variable_text:62383:17897:20089\ncatalog:variable_text:62392:11323:14245\ncatalog:variable_text:62392:14245:16071\ncatalog:variable_text:62393:17897:20089\ncatalog:variable_text:62398:16801:17897\ncatalog:variable_text:62398:17897:20089\ncatalog:variable_text:62411:11323:16801\ncatalog:variable_text:62412:16801:17897\ncatalog:variable_text:62412:17897:20089\ncatalog:variable_text:62413:11323:16801\ncatalog:variable_text:62414:11323:16801\ncatalog:variable_text:62415:11323:16801\ncatalog:variable_text:62416:11323:16801\ncatalog:variable_text:62417:16801:17897\ncatalog:variable_text:62420:11323:16801\ncatalog:variable_text:62421:11323:16801\ncatalog:variable_text:62449:14610:17897\ncatalog:variable_text:62449:17897:20089\ncatalog:variable_text:62450:14610:17897\ncatalog:variable_text:62450:17897:20089\ncatalog:variable_text:62451:16801:17897\ncatalog:variable_text:62451:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:yrkesstallning"
+fields = { "description" = "Personens yrkesställning som sjöman, anställd, företagare eller företagare i eget aktiebolag, utifrån arbetsstället för den huvudsakliga sysselsättningen, den största eller näst största förvärvskällan under året eller jobb två i november. För kombinatörer, personer med flera kontrolluppgifter och mer än en yrkesställning under året, kombineras yrkesställningarna. Från 2022 bestäms den huvudsakliga yrkesställningen i november, när personen både har ersättning för arbete enligt AGI och ett verksamt företag, genom att jämföra ersättningen med företagarinkomsten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF skiljer arbetsställena och kombinatörer; OP ger värdena, kombinationsregeln och AGI-jämförelsen 2022–2024.\ncatalog:variable_text:62454:18993:20089\ncatalog:variable_text:62455:11323:20089\ncatalog:variable_text:62456:12053:20089\ncatalog:variable_text:62457:12053:20089\ncatalog:variable_text:62458:11323:20089\ncatalog:variable_text:62460:12418:14245\ncatalog:variable_text:62460:14245:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:yrkesuppgiftens-kalla"
+fields = { "description" = "Kod för vilken källa yrkesuppgiften kommer från, för den huvudsakliga sysselsättningen i november, den största eller näst största förvärvskällan under året, jobb två i november, övrigt jobb och yrket för egna företagare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP anger källan för yrkesuppgiften per jobb; från 2019 sätts en kod per källa.\ncatalog:variable_text:62369:14610:20089\ncatalog:variable_text:62370:11323:14245\ncatalog:variable_text:62370:14245:17532\ncatalog:variable_text:62370:17897:20089\ncatalog:variable_text:62371:11323:17897\ncatalog:variable_text:62371:17897:20089\ncatalog:variable_text:62372:11323:17897\ncatalog:variable_text:62372:17897:20089\ncatalog:variable_text:62391:11323:20089\ncatalog:variable_text:62423:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:yrkesuppgiftens-matar"
+fields = { "description" = "Årtal då yrkesuppgiften är aktuell, för den huvudsakliga sysselsättningen i november, den största eller näst största förvärvskällan under året, jobb två i november, övrigt jobb och yrket för egna företagare. Från 2019 sätts årtalet efter vilken bruttotabell yrket hämtas från." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF ger aktualitetsår per jobb; OP för alla 2019–2024 anger bruttotabellen.\ncatalog:variable_text:62387:14610:17897\ncatalog:variable_text:62387:17897:20089\ncatalog:variable_text:62388:11323:14245\ncatalog:variable_text:62388:14245:17532\ncatalog:variable_text:62388:17897:20089\ncatalog:variable_text:62389:11323:17897\ncatalog:variable_text:62389:17897:20089\ncatalog:variable_text:62390:11323:14245\ncatalog:variable_text:62390:14245:17532\ncatalog:variable_text:62390:17897:20089\ncatalog:variable_text:62396:11323:14245\ncatalog:variable_text:62396:14245:17532\ncatalog:variable_text:62396:17897:20089\ncatalog:variable_text:62422:11323:17897\ncatalog:variable_text:62422:17897:20089\nRegisterinformation.csv:row=630634"

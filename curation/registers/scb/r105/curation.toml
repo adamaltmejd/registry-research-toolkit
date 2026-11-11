@@ -3217,3 +3217,111 @@ kind = "set"
 subject = "deltagarregister: Hemkommun_VT where key = 'v6809'"
 fields = { "variable" = "hemkommun-vt" }
 evidence = "Deltagarregister 2020 (r16349) lists Hemkommun_VT under key v6809; 2017-2019 and 2021-2024 list the same column under key v36. The 2020 and 2021 operational texts are identical (municipality before the start of the spring term) and both use value set #13.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=960060 (r16349)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=960244 (r18321)"
+
+[[statement]]
+kind = "set"
+subject = "set:brister-i-svenska-spraket"
+fields = { "description" = "Om deltagaren är utrikes född och har brister i svenska språket. 2005–2019 avsåg kategorin invandrade, det vill säga personer med utländskt medborgarskap eller födda utomlands, med brister i svenska för vilka grundschablon eller förstärkningsbidrag söktes." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda avser invandrade med språkbrister; OP 2005–2019 anger den äldre definitionen med utländskt medborgarskap och bidrag.\ncatalog:variable_text:18575:12784:16071\ncatalog:variable_text:18575:16071:18262\ncatalog:variable_text:18696:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:deltagarnas-aldersfordelning"
+fields = { "description" = "Deltagarnas ålder i grupperna under 18, 18–24, 25–29, 30–45, 46–60 och över 60 år, där åldern är den som uppnås senast under det kalenderår kursen börjar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nÅldersgrupperna är slots; alla delar OP om ålder uppnådd under kursens startår.\ncatalog:variable_text:18521:12784:13879\ncatalog:variable_text:18522:12784:13879\ncatalog:variable_text:18523:12784:13879\ncatalog:variable_text:18524:12784:13879\ncatalog:variable_text:18527:12784:13879\ncatalog:variable_text:18528:12784:13879\nRegisterinformation.csv:row=531267"
+
+[[statement]]
+kind = "set"
+subject = "set:deltagarveckor"
+fields = { "description" = "Deltagarveckor vid folkhögskolan, totalt och 2005–2017 uppdelat på heltids- och deltidsstudier. En deltagarvecka är antal kursdagar gånger antal deltagare delat med fem; vid deltid multipliceras resultatet med graden av deltagande, till och med 2013 med 0,75 eller 0,50 och från 2014 även med 0,25." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nFormeln anges för totalen; deltidsfaktorerna är 0,75 och 0,50 2005–2013 och 0,75, 0,50 och 0,25 2014–2019.\ncatalog:variable_text:18545:12784:17167\ncatalog:variable_text:18549:12784:13514\ncatalog:variable_text:18549:16071:18262\ncatalog:variable_text:18598:12784:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:distansstudier"
+fields = { "description" = "Om kursen helt eller delvis genomförs på distans och hur många kursdagar på distans den omfattar. En kursdag på distans är en dag med planerat studiearbete på distans; 2018–2021 anges även om kursen har ett upplägg där deltagaren studerar på egen hand med handledning via exempelvis internet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDistansmarkering, distansdagar och distansupplägg är slots; DEF och OP definierar distans.\ncatalog:variable_text:18550:17532:18993\ncatalog:variable_text:18551:12784:18262\ncatalog:variable_text:18551:18262:20089\ncatalog:variable_text:18552:12784:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:eftergymnasial-utbildning-i-folkhogskolan"
+fields = { "description" = "Om deltagaren under terminen fått intyg om genomförd eftergymnasial utbildning (2005–2016 uppnådd eftergymnasial examen), och 2009–2019 uppnådd eftergymnasial behörighet på lång kurs på eftergymnasial nivå." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nIntyg och uppnådd nivå delar begreppet; DEF och OP anger intyg, examen och kursnivå.\ncatalog:variable_text:18533:14245:14610\ncatalog:variable_text:18533:14610:15706\ncatalog:variable_text:18608:12784:17167\ncatalog:variable_text:18608:17167:18262\ncatalog:variable_text:18608:18262:18628\ncatalog:variable_text:18608:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:funktionsnedsattning"
+fields = { "description" = "Deltagarens funktionsnedsättning: 2005–2017 en variabel per typ, till exempel rörelsehinder, synskada, hörselskada, dövhet, utvecklingsstörning, psykiskt eller medicinskt funktionshinder, dyslexi och Aspergers eller DAMP, från 2018 typ av funktionsnedsättning i en variabel. 2024 anges också om deltagaren har funktionsnedsättning, beskrivet som flera funktionsnedsättningar som innebär anpassning av studierna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nTypvariablerna 2005–2017, funk-ned 2018–2024; 2024-variabeln definieras som har funktionsnedsättning med OP om flera funktionsnedsättningar som kräver anpassning. Revisorns kod för flera stöds inte av texterna.\ncatalog:variable_text:18573:17532:20089\ncatalog:variable_text:18574:12784:16071\ncatalog:variable_text:18574:16071:17532\ncatalog:variable_text:18576:12784:14975\ncatalog:variable_text:18576:16071:17532\ncatalog:variable_text:18577:12784:14975\ncatalog:variable_text:18577:16071:17532\ncatalog:variable_text:18578:12784:16071\ncatalog:variable_text:18578:16071:17532\ncatalog:variable_text:18579:12784:16071\ncatalog:variable_text:18579:16071:17532\ncatalog:variable_text:18580:12784:16071\ncatalog:variable_text:18580:16071:17532\ncatalog:variable_text:18581:12784:16071\ncatalog:variable_text:18581:16071:17532\ncatalog:variable_text:18582:12784:16071\ncatalog:variable_text:18582:16071:17532\ncatalog:variable_text:18583:12784:16071\ncatalog:variable_text:18583:16071:17532\ncatalog:variable_text:18584:12784:16071\ncatalog:variable_text:18584:16071:17532\ncatalog:variable_text:18585:12784:13514\ncatalog:variable_text:18585:16071:17532\ncatalog:variable_text:18586:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:grundlaggande-hogskolebehorighet"
+fields = { "description" = "Om deltagaren uppnått grundläggande behörighet till högskolestudier. 2017–2024 avser det behörighet uppnådd under terminen med utfärdat intyg, vilket kräver att både omfattnings- och innehållskrav är uppfyllda; behörigheten kan uppnås på allmän kurs på gymnasienivå och på särskild kurs. Från 2017 anges även behörighet uppnådd efter gymnasieutbildning, och 2009–2019 antalet kursdeltagare som uppnått behörigheten på lång allmän kurs (minst 15 dagar) på gymnasienivå." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nIntyg och krav står i OP för grundlbeh 2017–2024; beh och antgrund har egna år.\ncatalog:variable_text:18532:14245:18262\ncatalog:variable_text:18538:17167:20089\ncatalog:variable_text:18592:12784:17167\ncatalog:variable_text:18592:17167:18262\ncatalog:variable_text:18592:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:gymnasiebehorighet"
+fields = { "description" = "Om deltagaren under terminen eller kursen uppnått behörighet till studier i gymnasieskolan eller på gymnasienivå. 2017–2019 avser det grundskolekompetens och behörighet på allmän kurs, särskild kurs eller studiemotiverande folkhögskolekurs; från 2020 anges vilken typ av behörighet till gymnasieskolan som uppnåtts." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda avser gymnasiebehörighet; OP för beh-gy skiljer 2017–2019 från 2020–2024.\ncatalog:variable_text:18539:17167:18262\ncatalog:variable_text:18539:18262:20089\ncatalog:variable_text:18596:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:hemkommun"
+fields = { "description" = "Kommun där personen är folkbokförd, för pedagogisk personal och för eleverna. För eleverna finns folkbokföringskommunen per hösttermin och vårtermin; från 2020 avser den perioden före terminsstart och används för att beräkna ersättning till regionerna för elever som studerar i en annan region. 2018 finns även kommunen där personen bor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAlla medlemmar anger folkbokföringskommun; tidpunkt före terminsstart och ersättningsändamålet anges för HT/VT bara 2020–2024; HKommun 2018 avser kommunen där personen bor; pedagogisk personal enligt medlemmens etikett.\ncatalog:variable_text:18599:14245:20089\ncatalog:variable_text:18600:18262:18628\ncatalog:variable_text:18600:18628:20089\ncatalog:variable_text:18601:18262:18628\ncatalog:variable_text:18601:18628:20089\ncatalog:variable_text:18602:17532:17713"
+
+[[statement]]
+kind = "set"
+subject = "set:internatboende"
+fields = { "description" = "Om deltagaren bor på internat under utbildningen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda avser internatboende; OP om lång kurs är generisk.\ncatalog:variable_text:18606:17532:20089\ncatalog:variable_text:18607:12784:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:invandrarstatus"
+fields = { "description" = "Om deltagaren räknas som invandrad. 2005–2019 avses deltagare med utländskt medborgarskap eller född utomlands; 2018 avses personer födda i utlandet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda avser invandrarstatus; DEF och OP ger olika definitioner för respektive år.\ncatalog:variable_text:18609:12784:13514\ncatalog:variable_text:18609:13879:14975\ncatalog:variable_text:18610:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:nyborjarstatus"
+fields = { "description" = "Om eleven är nybörjare, det vill säga inte har läst kursformen tidigare: allmän kurs på grundskolenivå (från 2017), allmän kurs på gymnasienivå (2017–2019) eller särskild kurs (från 2020), samt från 2021 om eleven är nyinskriven, det vill säga inte registrerad någon tidigare termin. Från 2020 bestäms uppgiften ur tidigare insamlingar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nKursformernas år följer definitionerna; att uppgiften bestäms ur tidigare insamlingar anges från 2020 för nybörjare och 2021–2024 för nyinskrivna.\ncatalog:variable_text:18635:17167:18262\ncatalog:variable_text:18635:18262:18628\ncatalog:variable_text:18636:17167:18262\ncatalog:variable_text:18637:18262:18628\ncatalog:variable_text:18637:18628:18993\ncatalog:variable_text:18638:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:skolkommun"
+fields = { "description" = "Kommunen där folkhögskolan eller skolenheten ligger, som kod och från 2022 i klartext. Från 2018 bestäms koden för skolenhetens kommun ur de fyra första positionerna i skolkoden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nKlartexten finns 2022–2024; härledningen ur skolkoden anges bara för kodvariabeln för skola/skolenhet från 2018.\ncatalog:variable_text:18656:17167:17532\ncatalog:variable_text:18656:17532:20089\ncatalog:variable_text:18657:14245:20089\ncatalog:variable_text:18658:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:skollan"
+fields = { "description" = "Länet där folkhögskolan eller skolenheten ligger, som kod och från 2022 i klartext. Från 2017 tas länskoden fram ur de två första positionerna i kommunkoden där skolan ligger, 2022–2024 även ur koden för folkhögskolan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nHärledningen står bara i OP för skollan 2017–2024, inte för Län 2009–2024.\ncatalog:variable_text:18632:14245:20089\ncatalog:variable_text:18659:17167:17713\ncatalog:variable_text:18659:18993:19174\ncatalog:variable_text:18659:19358:19539\ncatalog:variable_text:18660:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:studieomfattning"
+fields = { "description" = "Studiernas omfattning: om kursen genomförs på heltid eller deltid, där heltid är minst 20 timmar planerat studiearbete per vecka. Deltid anges som 0,75 och 0,50, från 2014 även 0,25; nivåerna definieras av genomsnittligt antal timmar per kursdag (4, 3, 2 och 1) och i definitionen från 2017 av timmar per vecka (minst 15, minst 10 och under 10 för deltid). Därtill timmar per vecka vid deltidsstudier (2005–2017), omfattning för distansdeltagare enligt huvudmannens norm för heltid (2018–2021) och deltidsstudier i procent av heltid (2024)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\n0,25 finns i OP från 2014; definitionen per kursdag står 2005–2019 och per vecka 2017–2024, så ingen bestämd övergångsgräns anges.\ncatalog:variable_text:18546:19723:20089\ncatalog:variable_text:18548:12784:17167\ncatalog:variable_text:18639:17532:18993\ncatalog:variable_text:18640:12784:16071\ncatalog:variable_text:18640:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsbakgrund"
+fields = { "description" = "Utbildningsbakgrund för sökande till och deltagare på folkhögskolan (2005–2023), med en egen variabel per kategori 2005–2019: ej grundskolekompetens, grundskolekompetens, påbörjat, 2-årigt eller 3-årigt gymnasium och högre utbildning; 2017–2019 är 3-årigt gymnasium uppdelat på högskoleförberedande och yrkesinriktning, och 2018–2019 finns även utländsk gymnasieutbildning som inte är högskoleförberedande. 2018–2019 anges dessa tre kategorier som antal deltagare. Från 2017 finns också det program och den inriktning där eleven avslutat sina gymnasiestudier och typen av gymnasieexamen (yrkesexamen eller högskoleförberedande) uppnådd efter komvux, och från 2018 antal år i skola i hemlandet. Högsta utbildningens nivå anges enligt SUN 2000 som detaljerad kod (2009–2024) och i sju nivåer (2009–2019), och enligt SUN 2020 detaljerat och i sju nivåer (2020–2024); sjunivåindelningen är jämförbar bakåt med den äldre SUN-koden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBeskrivningen följer medlemmarnas texter; fakta som bara gäller vissa år eller medlemmar anges med dem.\ncatalog:variable_text:18594:17167:18262\ncatalog:variable_text:18595:17167:17532\ncatalog:variable_text:18595:17532:18262\ncatalog:variable_text:18597:17167:18262\ncatalog:variable_text:18667:14245:17532\ncatalog:variable_text:18667:17532:17897\ncatalog:variable_text:18667:18262:20089\ncatalog:variable_text:18668:14245:17167\ncatalog:variable_text:18668:17167:18262\ncatalog:variable_text:18670:18262:20089\ncatalog:variable_text:18671:18262:20089\ncatalog:variable_text:18679:17167:20089\ncatalog:variable_text:18683:12784:19723\ncatalog:variable_text:18684:12784:13879\ncatalog:variable_text:18685:12784:13879\ncatalog:variable_text:18686:12784:13879\ncatalog:variable_text:18687:17532:17713\ncatalog:variable_text:18689:12784:13879\ncatalog:variable_text:18690:12784:13879\ncatalog:variable_text:18691:12784:13879\ncatalog:variable_text:18694:17532:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsinriktning"
+fields = { "description" = "Inriktningen för personens högsta utbildning enligt Svensk utbildningsnomenklatur, som fyrställig kod i SUN 2000 (2009–2021) och SUN 2020 (2020–2024). SUN 2000-koden avser högsta utbildningen till och med vårterminen aktuellt år enligt Utbildningsregistrets prioriteringsregler." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda OP anger den fyrställiga koden för högsta utbildningens inriktning; vårterminen och prioriteringsreglerna anges bara för SUN 2000.\ncatalog:variable_text:18666:14245:18262\ncatalog:variable_text:18666:18262:18993\ncatalog:variable_text:18669:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:yrkeshogskolebehorighet"
+fields = { "description" = "Om kursdeltagaren uppnått behörighet till yrkeshögskolan. 2005–2019 anges den för deltagare på lång kurs (minst 15 dagar) på gymnasial nivå, och 2013–2019 anges även antalet sådana kursdeltagare som uppnått behörigheten. Från 2017 avses behörighet som uppnåtts under terminen med utfärdat intyg, vilket kräver att både omfattnings- och innehållskrav är uppfyllda; den kan uppnås på allmän kurs på gymnasienivå och på särskild kurs, och uppnår deltagaren samtidigt grundläggande behörighet till högskolestudier anges bara den." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nLång kurs med kursnivå 2 anges 2005–2016 och i texten för 2013–2019 (YrkesUtb 2013–2014, YrkesBeh 2015–2019); terminsdefinitionen med intyg gäller 2017–2024.\ncatalog:variable_text:18540:15706:16071\ncatalog:variable_text:18540:16071:16436\ncatalog:variable_text:18541:12784:16436\ncatalog:variable_text:18541:17167:18262\ncatalog:variable_text:18541:18262:20089"

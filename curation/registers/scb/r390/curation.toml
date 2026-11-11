@@ -1704,3 +1704,15 @@ kind = "set"
 subject = "var:f03b-0"
 fields = { "label" = "Antal fiskedagar (F03b_01, januari i omgången januari-april)" }
 evidence = "#2102 same-label cluster 'Antal fiskedagar' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; F03b_01-04 opdefs give the month only for enkätomgång januari-april; the other rounds' months are not in the text. F2b, F2d and F2f have identical opdefs and code lists, so only the spelling separates them."
+
+[[statement]]
+kind = "set"
+subject = "set:boenderegion"
+fields = { "description" = "Region där personen bor, i en indelning i regioner (åtta 2016–2017, sex från 2018), i inland eller kust, och om personen bor i ett storstadsområde (Stockholm, Göteborg, Malmö)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nIndelningarna är slots för boenderegionen; OP anger antal regioner per år.\ncatalog:variable_text:27935:16801:17167\ncatalog:variable_text:27935:17167:17532\ncatalog:variable_text:27935:17532:19723\ncatalog:variable_text:27968:16801:19723\ncatalog:variable_text:28004:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:fiskedeltagande"
+fields = { "description" = "Om personen har fiskat på fritiden: 2016–2017 per enkätomgång, med fritidsfiske som allt fiske utan yrkesfiskelicens eller personlig fiskelicens, och året innan referensåret; från 2018 per period januari–april, maj–augusti och september–december, tillsammans med antal dagar i storleksintervall. 2021–2023 ställs frågan om januari–april i samtliga omgångar, frågan om maj–augusti i omgångarna maj–augusti och september–december och frågan om september–december bara i den omgången." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nLicensdefinitionen står för 2016–2017; vilka omgångar som får periodfrågorna står i OP 2021–2023.\ncatalog:variable_text:27945:17532:18628\ncatalog:variable_text:27945:18628:19723\ncatalog:variable_text:27948:16801:17532\ncatalog:variable_text:27949:16801:17532\ncatalog:variable_text:27957:17532:18628\ncatalog:variable_text:27957:18628:19723\ncatalog:variable_text:27958:17532:18628\ncatalog:variable_text:27958:18628:19723"

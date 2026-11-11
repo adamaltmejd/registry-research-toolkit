@@ -1065,3 +1065,15 @@ kind = "set"
 subject = "var:utlbakgr2"
 fields = { "label" = "Utländsk/svensk bakgrund (uppgift saknas som egen kod)" }
 evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (3 variables): judged different meaning, medium confidence; UtlBakGr sets a missing birth country to Sverige and has no missing code; Utl_BakG and UtlBakGr2 share an identical opdef and a value set with an 'Uppgift saknas' code."
+
+[[statement]]
+kind = "set"
+subject = "set:huvudmannatyp"
+fields = { "description" = "Huvudman för fritidshemmet respektive skolenheten, som även omfattar fritidshem." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda delar definitionen; OP skiljer fritidshemmets och skolenhetens huvudman.\ncatalog:variable_text:28026:14167:14168\ncatalog:variable_text:28026:16723:16724\ncatalog:variable_text:28026:18184:18185\ncatalog:variable_text:28028:15628:15629"
+
+[[statement]]
+kind = "set"
+subject = "set:skolkommun"
+fields = { "description" = "Kommunen där fritidshemmet ligger." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAlla fyra delar definitionen och OP om fritidshemmets kommun.\ncatalog:variable_text:28025:14532:14533\ncatalog:variable_text:28034:19280:19281\ncatalog:variable_text:28052:17819:17820"

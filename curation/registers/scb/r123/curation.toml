@@ -15362,3 +15362,285 @@ kind = "set"
 subject = "arbetsmiljoundersokningen-2015: enbers where key = 'v6771'"
 fields = { "variable" = "overtid-enbart-med-ersattning" }
 evidence = "survey-2: Arbetsmiljöundersökningen column enbers, key v6771 2005-2017 and v32699 2019-2021, same table, no overlap. The 2017 operational definition of v6771 ('Arbetar enbart övertid som ger ersättning', Registerinformation.csv:row=983470, r12574) equals v32699's definition (row=252123, r15136). Codes 1=Ja, 2=Nej in both; v6771 adds 8=Vet ej, 9=Partiellt bortfall. Only the enbers occurrences move; HUOTERS (AKU, Arbetsorsakade besvär) stays. Maintainer ruling 2026-11-04 (#2073): a difference only in non-response or missing codes does not block a fold."
+
+[[statement]]
+kind = "set"
+subject = "set:alder"
+fields = { "description" = "Urvalspersonens ålder i år, 2001–2021 beräknad vid angiven mätmånad och 2024 vid insamlingens start. Åldern anges i ettårsklasser, 16–64 år 2005–2019 och 16–74 år 2021." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nMätmånad anges 2001–2021, insamlingens start 2024; ettårsklasserna 16–64 och 16–74 år står i OP 2005–2019 och 2021.\ncatalog:variable_text:10946:19723:20089\ncatalog:variable_text:10947:11323:11688\ncatalog:variable_text:10947:12784:13149\ncatalog:variable_text:10947:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-understallda"
+fields = { "description" = "Antal personer som är underställda personen: direkt eller indirekt underställda, som antal eller i intervall, och från 2011 enbart direkt underställda. De härledda varianterna bygger på frågan om personen är arbetsledare eller chef och sätts till noll underställda för den som inte är det. 2017–2021 ställs frågorna om antal underställda till dem som har i uppgift att leda och fördela arbetet åt andra anställda." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nHärledda varianter utgår från arbetsledare (1997–2003) och chef (2005–2021); dirunder finns från 2011; selektionsfrågan T8 gäller de direkta frågorna 2017–2021.\ncatalog:variable_text:10970:13514:13879\ncatalog:variable_text:10970:14245:14610\ncatalog:variable_text:10970:17167:17532\ncatalog:variable_text:11056:12784:13149\ncatalog:variable_text:11056:13514:13879\ncatalog:variable_text:11056:14975:15340\ncatalog:variable_text:11056:17167:17532\ncatalog:variable_text:11070:14975:15340\ncatalog:variable_text:11070:17167:17532\ncatalog:variable_text:11438:9862:10227\ncatalog:variable_text:11438:11323:11688\ncatalog:variable_text:11439:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "set:anvandning-av-arbetsutrustning"
+fields = { "description" = "Om personen arbetar minst en fjärdedel av arbetstiden med olika slags arbetsutrustning, en variabel per typ: till exempel handhållna motordrivna maskiner, handverktyg, lyftanordningar, mobila maskiner eller arbetsfordon, stationära maskiner eller processystem, stegar och ställningar samt trycksatta anordningar. 1997–2021 ställdes separata frågor om handhållna eller släpbara, rörliga och stationära maskiner; 2024 är det en fråga med åtta svarsalternativ där flera svar är möjliga, däribland att inget av dem används." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAlla DEF frågar om utrustning minst en fjärdedel av arbetstiden; frågeformen skiljer mellan de äldre separata frågorna och 2024 års flervalsfråga.\ncatalog:variable_text:11016:19723:20089\ncatalog:variable_text:11017:19723:20089\ncatalog:variable_text:11018:19723:20089\ncatalog:variable_text:11019:19723:20089\ncatalog:variable_text:11020:19723:20089\ncatalog:variable_text:11021:19723:20089\ncatalog:variable_text:11022:19723:20089\ncatalog:variable_text:11023:19723:20089\ncatalog:variable_text:11135:9862:10227\ncatalog:variable_text:11135:12784:13149\ncatalog:variable_text:11316:9862:10227\ncatalog:variable_text:11316:12784:13149\ncatalog:variable_text:11390:9862:10227\ncatalog:variable_text:11390:12784:13149\ncatalog:variable_text:11390:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "set:arbete-fram-till-pension"
+fields = { "description" = "Personens bedömning av om hen kommer att kunna arbeta fram till pensionsåldern i sitt nuvarande yrke. 2001 och 2003 finns även till vilken ålder personen bedömer sig kunna arbeta. 2001–2021 ställdes frågorna endast till personer 50–64 år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nJa/nej-frågan om pensionsåldern i yrket finns 2001–2024; åldersfrågan bara 2001 och 2003; urvalet 50–64 år anges 2001–2021.\ncatalog:variable_text:10945:11323:11688\ncatalog:variable_text:10980:11323:11688\ncatalog:variable_text:10980:12784:13149\ncatalog:variable_text:10980:13514:13879\ncatalog:variable_text:10980:14975:15340\ncatalog:variable_text:11209:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsbelastning"
+fields = { "description" = "Personens upplevda arbetsbelastning, mätt med flera frågor: om arbetet innebär för stor arbetsbelastning, om hen har alldeles för mycket eller för lite att göra, om hen ibland måste dra in på luncher, arbeta över eller ta med jobb hem, om det vissa tider är så stressigt att hen inte hinner tänka på annat än arbetet, och om belastningen ökat eller minskat jämfört med fem år sedan i yrket." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF för de sex medlemmarna är olika frågor om arbetsbelastningens storlek och förändring.\ncatalog:variable_text:11037:12784:13149\ncatalog:variable_text:11037:13514:13879\ncatalog:variable_text:11080:9862:10227\ncatalog:variable_text:11080:12784:13149\ncatalog:variable_text:11080:13514:13879\ncatalog:variable_text:11145:9862:10227\ncatalog:variable_text:11145:12784:13149\ncatalog:variable_text:11255:9862:10227\ncatalog:variable_text:11255:12784:13149\ncatalog:variable_text:11395:19723:20089\ncatalog:variable_text:11396:12784:13149\ncatalog:variable_text:11396:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsformaga-nedsatt-av-funktionsnedsattning"
+fields = { "description" = "Personens bedömning av om hens funktionsnedsättning gör att arbetsförmågan är nedsatt. 2017–2021 ställs frågan till den som uppgett att hen har en funktionsnedsättning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga 2015–2024; selektionen på funktionsnedsättning anges bara 2017, 2019 och 2021.\ncatalog:variable_text:11266:16436:16801\ncatalog:variable_text:11266:17167:17532\ncatalog:variable_text:11266:18628:18993\ncatalog:variable_text:11267:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsledar-och-chefsstallning"
+fields = { "description" = "Om det hör till personens arbetsuppgifter att leda och fördela arbetet åt andra anställda (1997–2021). 2024 frågas i stället om personen har en chefsbefattning med personalansvar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nFrågan om att leda och fördela arbetet ställs 1997–2021, frågan om chefsbefattning med personalansvar 2024; att de inte är samma sak står inte i texterna och utelämnas.\ncatalog:variable_text:10992:9862:10227\ncatalog:variable_text:10992:12784:13149\ncatalog:variable_text:10992:13514:13879\ncatalog:variable_text:11062:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetstid-vid-dator-och-bildskarm"
+fields = { "description" = "Hur stor del av arbetstiden personen arbetar med en viss utrustning: datautrustning och bildskärm (1997–2003), dator (2005–2021), bärbar dator (2005–2013), surfplatta eller smartphone (2015–2021) och dator eller bildskärm (2024). Frågan om dator ställs till dem som använder persondator i arbetet, om bärbar dator 2011–2013 till dem som använder en sådan och om surfplatta 2017–2021 till dem som använder surfplatta eller smartphone. 2005–2021 finns även hur länge personen som längst arbetar vid datorn i ett sträck en vanlig arbetsdag; ett avbrott på tio minuter eller mer bryter sträcket." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAndelsfrågorna skiljer sig i utrustning och år; urvalet anges bara för dator, bärbar dator 2011–2013 och surfplatta 2017–2021; sträckfrågan 2005–2021 är ett tidsmått vid datorn.\ncatalog:variable_text:10996:12784:13149\ncatalog:variable_text:10996:14975:15340\ncatalog:variable_text:10999:16436:16801\ncatalog:variable_text:10999:17167:17532\ncatalog:variable_text:11000:12784:13149\ncatalog:variable_text:11000:14975:15340\ncatalog:variable_text:11051:9862:10227\ncatalog:variable_text:11065:9862:10227\ncatalog:variable_text:11218:12784:13149\ncatalog:variable_text:11218:14975:15340\ncatalog:variable_text:11413:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetstidens-forlaggning"
+fields = { "description" = "När personen arbetar i huvudsysslan: uteslutande dagtid på vardagar, enbart dagtid eller enbart vardagar, skift eller annat schema med olika tider på dygnet, delade turer, kvälls- och nattarbete (om det förekommer och om det sker minst hälften av arbetsdagarna) och lördags- och söndagsarbete. Flera variabler härleds från motsvarande frågor i AKU; 2024 anges i stället om personen arbetat obekväma arbetstider (kvällar, nätter och helger) de senaste tre månaderna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP beskriver arbetstidens förläggning per tid på dygnet och veckan, flera härledda från AKU; obtider är 2024 års samlade fråga.\ncatalog:variable_text:10981:12784:13149\ncatalog:variable_text:10981:14975:15340\ncatalog:variable_text:10981:17897:18262\ncatalog:variable_text:10983:12784:13149\ncatalog:variable_text:10983:17167:17532\ncatalog:variable_text:10984:14975:15340\ncatalog:variable_text:10987:14975:15340\ncatalog:variable_text:10988:14975:15340\ncatalog:variable_text:11014:9862:10227\ncatalog:variable_text:11067:16436:16801\ncatalog:variable_text:11067:17167:17532\ncatalog:variable_text:11210:12784:13149\ncatalog:variable_text:11211:18628:18993\ncatalog:variable_text:11212:12784:13149\ncatalog:variable_text:11213:12784:13149\ncatalog:variable_text:11213:17897:18262\ncatalog:variable_text:11223:12784:13149\ncatalog:variable_text:11223:17167:17532\ncatalog:variable_text:11223:17897:18262\ncatalog:variable_text:11224:14975:15340\ncatalog:variable_text:11261:12784:13149\ncatalog:variable_text:11262:18628:18993\ncatalog:variable_text:11263:12784:13149\ncatalog:variable_text:11263:17167:17532\ncatalog:variable_text:11264:17167:17532\ncatalog:variable_text:11272:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:atgardade-arbetsmiljobrister"
+fields = { "description" = "Personens bedömning av om arbetsmiljöbrister på arbetsplatsen åtgärdas så snart man kan begära (2003–2021) eller, 2024, på ett bra sätt. Därtill om de risker som noterades när arbetsplatsen undersökte arbetsmiljön har åtgärdats (2005–2021); den frågan ställs 2011–2021 bara till chefer, skyddsombud och ledamöter i arbetsmiljökommitté som svarat att arbetsplatsen har undersökt arbetsmiljön." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF ger de två bedömningsfrågorna med år och riskfrågan som eget slot; selektionen står i OP 2011–2021.\ncatalog:variable_text:10993:12053:12418\ncatalog:variable_text:10993:12784:13149\ncatalog:variable_text:11028:19723:20089\ncatalog:variable_text:11330:12784:13149\ncatalog:variable_text:11330:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:besvar-i-axlar-och-armar"
+fields = { "description" = "Smärta i axlar eller armar kopplad till arbetet: 1997–2021 om personen de tre senaste månaderna haft ont i axlar eller armar efter arbetet, 2024 hur ofta personen på grund av arbetet har besvär (smärta, värk, obehag) där." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAxlararm ställs 1997–2021, besvaxlararmar 2024 med en annan frågeformulering; etikettupprepningen i förslaget är struken.\ncatalog:variable_text:11033:9862:10227\ncatalog:variable_text:11033:12784:13149\ncatalog:variable_text:11033:13514:13879\ncatalog:variable_text:11044:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:besvar-i-hander-och-handleder"
+fields = { "description" = "Om personen de tre senaste månaderna haft ont i handleder eller händer efter arbetet (1997–2021), eller hur ofta hen på grund av arbetet har besvär (smärta, värk, obehag) i händerna (2024)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nFrågan om ont efter arbetet ställs 1997–2021, frågan om hur ofta besvär på grund av arbetet 2024.\ncatalog:variable_text:11045:19723:20089\ncatalog:variable_text:11134:9862:10227\ncatalog:variable_text:11134:12784:13149\ncatalog:variable_text:11134:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "set:besvar-i-hofter-och-ben"
+fields = { "description" = "Om personen de senaste tre månaderna efter arbetet haft ont i höfter, ben, knän eller fötter (1997–2021). 2024 frågas i stället hur ofta personen på grund av arbetet har besvär (smärta, värk, obehag) där." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nFrågan 1997–2021 gäller ont efter arbetet senaste tre månaderna; 2024 byts den mot hur ofta besvär på grund av arbetet.\ncatalog:variable_text:11046:19723:20089\ncatalog:variable_text:11148:9862:10227\ncatalog:variable_text:11148:12784:13149\ncatalog:variable_text:11148:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "set:besvar-i-nedre-ryggen"
+fields = { "description" = "Om personen de tre senaste månaderna haft ont i nedre delen av ryggen efter arbetet (1997–2021), eller hur ofta hen på grund av arbetet har besvär (smärta, värk, obehag) där (2024)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nFrågan om ont efter arbetet ställs 1997–2021, frågan om hur ofta besvär på grund av arbetet 2024.\ncatalog:variable_text:11047:19723:20089\ncatalog:variable_text:11319:9862:10227\ncatalog:variable_text:11319:12053:12418\ncatalog:variable_text:11319:12784:13149\ncatalog:variable_text:11319:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "set:besvar-i-ovre-ryggen-och-nacken"
+fields = { "description" = "Om personen de senaste tre månaderna efter arbetet haft ont i övre delen av ryggen eller nacken (1997–2021). 2024 frågas i stället hur ofta personen på grund av arbetet har besvär (smärta, värk, obehag) där." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nFrågan om ont efter arbetet ställs 1997–2021, frågan om hur ofta besvär på grund av arbetet 2024.\ncatalog:variable_text:11048:19723:20089\ncatalog:variable_text:11320:9862:10227\ncatalog:variable_text:11320:12784:13149\ncatalog:variable_text:11320:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "set:datorutrustning-i-arbetet"
+fields = { "description" = "Vilka slags datautrustning personen använder i arbetet, en variabel per typ: till exempel persondator, bärbar dator, surfplatta eller smartphone, bildskärm, kassaapparat ansluten till dator, utrustning för datoriserad kontroll eller mätning, datastyrning av produktionsprocesser, programmerbar verktygsmaskin och annan datautrustning, med ett öppet svar om vilken. Två härledda variabler anger om personen använder någon datautrustning alls och om hen arbetar med datoriserade produktionsprocesser (verktygsmaskiner, datastyrning eller kontroll- och mätutrustning)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF för varje medlem frågar om en typ av datautrustning; data och prodtyp är härledda ur dessa svar.\ncatalog:variable_text:10956:9862:10227\ncatalog:variable_text:10976:9862:10227\ncatalog:variable_text:10976:12784:13149\ncatalog:variable_text:10976:13514:13879\ncatalog:variable_text:11034:9862:10227\ncatalog:variable_text:11050:9862:10227\ncatalog:variable_text:11064:11323:11688\ncatalog:variable_text:11178:9862:10227\ncatalog:variable_text:11193:9862:10227\ncatalog:variable_text:11219:12784:13149\ncatalog:variable_text:11219:14975:15340\ncatalog:variable_text:11278:11323:11688\ncatalog:variable_text:11278:12053:12418\ncatalog:variable_text:11305:11323:11688\ncatalog:variable_text:11305:12053:12418\ncatalog:variable_text:11306:9862:10227\ncatalog:variable_text:11402:16436:16801\ncatalog:variable_text:11402:17167:17532\ncatalog:variable_text:11479:9862:10227"
+
+[[statement]]
+kind = "set"
+subject = "set:ensamarbete"
+fields = { "description" = "Om personen arbetar ensam och riskerar att hamna i otrygga eller hotfulla situationer. 2007–2021 frågas om personen ibland arbetar ensam, och 2017–2021 avser frågan de tre senaste månaderna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nEnsamarbete 2007–2021 har ibland i frågan och tre månader 2017–2021; ensamriskotrygg 2024 saknar ibland.\ncatalog:variable_text:11084:13514:13879\ncatalog:variable_text:11084:14975:15340\ncatalog:variable_text:11084:17167:17532\ncatalog:variable_text:11085:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:ensidigt-upprepade-arbetsrorelser"
+fields = { "description" = "Om arbetet innebär ensidigt upprepade arbetsrörelser, om det vissa tider kräver att personen enbart upprepar samma rörelser eller moment minst två gånger per minut eller många gånger i timmen, hur stor del av arbetstiden det sker (2024), om rörelserna upplevs som påfrestande ensidiga eller behagligt omväxlande och om de ökat eller minskat jämfört med för fem år sedan i yrket eller förändrats. 2005–2013 ställs frågan om ökning eller minskning bara till dem som arbetat minst fem år i sitt nuvarande arbete, och frågan om förändring 1997–2003 avser dem som arbetat minst fem år i samma yrke. Två härledda variabler (2001–2013) anger andelen av arbetstiden med upprepade moment som dessutom är enkla att utföra, respektive enkla och styrda." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nFemårsvillkoret står i OP för ökat/minskat 2005–2013 och i benämningen på förändringsfrågan 1997–2003; inget villkor anges för 1997 års ökat/minskat-fråga; de härledda variablerna finns 2001–2013.\ncatalog:variable_text:11082:11323:11688\ncatalog:variable_text:11082:12053:12418\ncatalog:variable_text:11082:12784:13149\ncatalog:variable_text:11082:13514:13879\ncatalog:variable_text:11082:14975:15340\ncatalog:variable_text:11086:9862:10227\ncatalog:variable_text:11086:12784:13149\ncatalog:variable_text:11086:14975:15340\ncatalog:variable_text:11241:9862:10227\ncatalog:variable_text:11253:11323:11688\ncatalog:variable_text:11253:12053:12418\ncatalog:variable_text:11253:12784:13149\ncatalog:variable_text:11253:13514:13879\ncatalog:variable_text:11253:14975:15340\ncatalog:variable_text:11315:9862:10227\ncatalog:variable_text:11315:12784:13149\ncatalog:variable_text:11317:12784:13149\ncatalog:variable_text:11317:14975:15340\ncatalog:variable_text:11332:9862:10227\ncatalog:variable_text:11415:19723:20089\ncatalog:variable_text:11447:9862:10227\ncatalog:variable_text:11447:13514:13879\ncatalog:variable_text:11448:12784:13149\ncatalog:variable_text:11448:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:foretagshalsovardens-arbetsmiljobedomning"
+fields = { "description" = "Om företagshälsovården har bedömt personens arbetsmiljö: om någon från företagshälsovården de senaste 12 månaderna varit på arbetsplatsen, om den på annat sätt (till exempel vid besök eller telefonkontakt) bedömt personens arbetssituation, och en härledd variabel som anger om något av detta skett. Från 2011 ställs frågorna till personer som har tillgång till företagshälsovård genom arbetet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF för fhvbesok och fhvbedom ger de två frågorna och den tredje är härledd ur dem; selektionen anges i OP 2011–2021.\ncatalog:variable_text:11091:12784:13149\ncatalog:variable_text:11091:14975:15340\ncatalog:variable_text:11092:12784:13149\ncatalog:variable_text:11092:13514:13879\ncatalog:variable_text:11092:14975:15340\ncatalog:variable_text:11106:12784:13149\ncatalog:variable_text:11106:13514:13879\ncatalog:variable_text:11106:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:foretagshalsovardens-insatsomraden"
+fields = { "description" = "Inom vilka områden företagshälsovården gjorde insatser på personens arbetsplats, en variabel per område: tungt eller påfrestande arbete, stress, sociala relationer, rehabiliteringsfrågor, teknisk utrustning, sjukfrånvaro, missbruksproblem, arbetsorganisationen och annan insats. 2011–2013 ställs frågan till dem som svarat att företagshälsovården besökt arbetsplatsen eller bedömt arbetssituationen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nGemensam DEF för alla nio; varje medlem är ett svarsalternativ; selektionen anges i OP för 2011–2013.\ncatalog:variable_text:11108:12053:12418\ncatalog:variable_text:11108:13514:13879\ncatalog:variable_text:11108:14975:15340\ncatalog:variable_text:11110:13514:13879\ncatalog:variable_text:11111:13514:13879\ncatalog:variable_text:11112:13514:13879\ncatalog:variable_text:11113:13514:13879\ncatalog:variable_text:11114:13514:13879\ncatalog:variable_text:11115:13514:13879\ncatalog:variable_text:11116:13514:13879\ncatalog:variable_text:11117:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "set:fortsatt-enkatmedverkan"
+fields = { "description" = "Om den intervjuade efter telefonintervjun går med på att svara på en enkät: 1997–2013 om man får skicka en webbenkät med ytterligare frågor om arbetsmiljön, 2017–2021 om personen kan tänka sig att svara på en enkät." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF 1997–2013 nämner arbetsmiljöfrågor och webbenkät; DEF 2017–2021 frågar bara om personen kan svara på en enkät.\ncatalog:variable_text:11123:9862:10227\ncatalog:variable_text:11123:11323:11688\ncatalog:variable_text:11123:13514:13879\ncatalog:variable_text:11403:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "set:fysisk-anstrangning-i-arbetet"
+fields = { "description" = "Om arbetet är kroppsligt ansträngande, om personen vissa tider tar i mer med kroppen än vid vanlig rörelse och så mycket att andningen blir snabbare, och om arbetet upplevs som påfrestande tungt eller fysiskt mycket lätt (1997–2021). 2024 frågas i stället hur stor del av arbetstiden arbetet är så ansträngande att pulsen ökar. Andra variabler gäller förändring: om de kroppsliga ansträngningarna ökat eller minskat jämfört med för fem år sedan i yrket (2005–2013) och om de tunga arbetsmomenten ökat eller minskat (1997), båda för den som arbetat minst fem år i yrket, samt hur mycket tunga moment det fanns i tidigare yrke jämfört med nuvarande, på tre- eller femgradig skala." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nJämförelsen med fem år sedan står bara för kropplus 2005–2013; tunga-momenten-okat 1997 har bara selektionen fem år i yrket; tidfysisktanstr finns bara 2024.\ncatalog:variable_text:10989:9862:10227\ncatalog:variable_text:10989:12784:13149\ncatalog:variable_text:11206:12784:13149\ncatalog:variable_text:11206:14975:15340\ncatalog:variable_text:11207:12784:13149\ncatalog:variable_text:11207:14975:15340\ncatalog:variable_text:11208:9862:10227\ncatalog:variable_text:11208:12784:13149\ncatalog:variable_text:11368:9862:10227\ncatalog:variable_text:11368:12784:13149\ncatalog:variable_text:11417:19723:20089\ncatalog:variable_text:11430:10592:10957\ncatalog:variable_text:11431:9862:10227"
+
+[[statement]]
+kind = "set"
+subject = "set:fysisk-trotthet-efter-arbetet"
+fields = { "description" = "Om personen är uttröttad i kroppen efter arbetsdagens slut (1997–2021), och 2024 hur ofta personen är fysiskt uttröttad efter arbetsdagens slut." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nFrågan 1997–2021 gäller om det händer, frågan 2024 hur ofta.\ncatalog:variable_text:11131:19723:20089\ncatalog:variable_text:11475:9862:10227\ncatalog:variable_text:11475:12784:13149\ncatalog:variable_text:11475:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "set:hjalpmedel-vid-datorarbete"
+fields = { "description" = "Vilka typer av utrustning personen använder i arbetet med datorn, en variabel per typ. 1997–2003 avses tangentbord, datormus (den utrustning personen i huvudsak använder), rullboll, pekplatta, styrpinne eller liknande i en gemensam variabel, streckkodsläsare och annat hjälpmedel, 2001–2003 med ett öppet svar om vilket. 2015–2021 avses vilka typer personen använder regelbundet: tangentbord, datormus, rullmus, pekplatta, styrpinne, pekskärm och annat; 2017–2021 ställs frågorna om rullmus, pekplatta, styrpinne, pekskärm och annat till dem som använder stationär eller bärbar dator. 1999–2013 anges om datormus är den utrustning personen använder mest." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nRullboll, streckko och annat finns 1997–2003, öppet svar 2001–2003; pcrull, pekplatta, styrpinne, pcskarm och pcannat 2015–2021 med selektion enligt T13 2017–2021 (inte för tangentbord och datormus); datormus-frågan 1999–2013.\ncatalog:variable_text:10957:9862:10227\ncatalog:variable_text:10974:9862:10227\ncatalog:variable_text:10974:16436:16801\ncatalog:variable_text:10975:16436:16801\ncatalog:variable_text:10975:17167:17532\ncatalog:variable_text:10977:16436:16801\ncatalog:variable_text:10977:17167:17532\ncatalog:variable_text:10978:9862:10227\ncatalog:variable_text:10978:16436:16801\ncatalog:variable_text:11066:10592:10957\ncatalog:variable_text:11066:12784:13149\ncatalog:variable_text:11066:13514:13879\ncatalog:variable_text:11279:11323:11688\ncatalog:variable_text:11279:12053:12418\ncatalog:variable_text:11295:16436:16801\ncatalog:variable_text:11295:17167:17532\ncatalog:variable_text:11296:16436:16801\ncatalog:variable_text:11296:17167:17532\ncatalog:variable_text:11297:16436:16801\ncatalog:variable_text:11297:17167:17532\ncatalog:variable_text:11318:9862:10227\ncatalog:variable_text:11398:9862:10227"
+
+[[statement]]
+kind = "set"
+subject = "set:hot-mot-anstallningen"
+fields = { "description" = "Om det förekommer hot om uppsägning eller påtvingad kortare arbetstid i personens arbete. I en av versionerna redovisas egna företagare separat." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga i alla DEF; OP för permitte05 anger att företagare särredovisas.\ncatalog:variable_text:11298:9862:10227\ncatalog:variable_text:11298:12784:13149\ncatalog:variable_text:11298:13514:13879\ncatalog:variable_text:11299:13514:13879\ncatalog:variable_text:11299:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:inflytande-over-arbetet"
+fields = { "description" = "Om personen kan bestämma sin arbetstakt, delvis bestämma när arbetsuppgifter ska göras, inom vissa gränser bestämma sina arbetstider och är med och beslutar om uppläggningen av arbetet (från 2003), samt om hen upplever arbetet som bundet eller fritt och inflytandet som för litet eller för stort; frågorna ställdes 1997–2021. Ett härlett index (2001–2021) bygger på fyra frågor om kontroll och inflytande, 2005 och 2011–2015 frågorna om uppläggning, när uppgifter görs, arbetstakt och inflytande. 2024 ställs i stället en fråga om personen kan påverka sin arbetssituation." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nIndexets fyra komponenter namnges i formeln 2011–2015 och genom frågenumren 2005 (E34, E33, E8, E111); 2007 och 2009 stämmer numren inte med variablernas, övriga år anges bara fyra frågor.\ncatalog:variable_text:11039:9862:10227\ncatalog:variable_text:11039:12784:13149\ncatalog:variable_text:11039:13514:13879\ncatalog:variable_text:11040:12053:12418\ncatalog:variable_text:11040:12784:13149\ncatalog:variable_text:11054:9862:10227\ncatalog:variable_text:11054:12784:13149\ncatalog:variable_text:11093:9862:10227\ncatalog:variable_text:11093:12784:13149\ncatalog:variable_text:11159:9862:10227\ncatalog:variable_text:11159:12784:13149\ncatalog:variable_text:11159:13514:13879\ncatalog:variable_text:11172:11323:11688\ncatalog:variable_text:11172:12053:12418\ncatalog:variable_text:11172:12784:13149\ncatalog:variable_text:11172:14975:15340\ncatalog:variable_text:11172:17167:17532\ncatalog:variable_text:11252:19723:20089\ncatalog:variable_text:11411:9862:10227\ncatalog:variable_text:11411:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "set:inkomstgrupp"
+fields = { "description" = "Personens inkomstgrupp utifrån variabeln CSFVI. 2015–2021 delas inkomsten in i tre grupper (låg, mellan och hög) med fasta beloppsgränser som ändras mellan åren; 2024 hämtas CSFVI från Inkomst- och taxeringsregistret (IOT) och gränserna bygger på kvartiler för den förvärvsarbetande befolkningen 16–64 år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\n2015–2021 anges tre grupper med beloppsgränser i csfvi (olika 2015, 2017–2019 och 2021); IOT och kvartilerna anges bara för 2024. Auditorns utskrivning av CSFVI stöds inte av texterna och togs inte med.\ncatalog:variable_text:11160:19723:20089\ncatalog:variable_text:11161:16436:16801\ncatalog:variable_text:11161:17167:17532\ncatalog:variable_text:11161:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:koncentrationskrav-i-arbetet"
+fields = { "description" = "Om arbetet kräver personens hela uppmärksamhet och koncentration." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga i båda DEF.\ncatalog:variable_text:11136:19723:20089\ncatalog:variable_text:11183:9862:10227\ncatalog:variable_text:11183:12784:13149\ncatalog:variable_text:11183:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "set:krankande-sarbehandling-i-arbetet"
+fields = { "description" = "Om personen utsätts för kränkande särbehandling i arbetet. 1997–2021 frågades om personlig förföljelse genom elaka ord och handlingar från chefer eller arbetskamrater; 2024 om kränkande särbehandling på arbetsplatsen det senaste året, med en variabel per svarsalternativ: av chefer, av kollegor, av andra personer (till exempel kunder, patienter eller elever) eller nej." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF för mobbing och för 2024 års flervalsfråga avser båda kränkande behandling på arbetet; 2024 års alternativ framgår av OP.\ncatalog:variable_text:11250:9862:10227\ncatalog:variable_text:11250:12053:12418\ncatalog:variable_text:11250:12784:13149\ncatalog:variable_text:11336:19723:20089\ncatalog:variable_text:11337:19723:20089\ncatalog:variable_text:11338:19723:20089\ncatalog:variable_text:11339:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:mojlighet-att-vaxla-mellan-sittande-och-staende"
+fields = { "description" = "Om personen enkelt kan växla mellan sittande och stående arbetsställning, till exempel med ett höj- och sänkbart skrivbord, på kontoret eller i hemmet. Frågan om kontoret ställs 2017–2021 till dem som arbetar minst en fjärdedel av tiden i kontorsmiljö; frågan om hemmet ställs till dem som har skrivbordsarbete minst en fjärdedel av arbetstiden och utfört det helt eller delvis hemma de senaste tre månaderna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF för alla tre frågar om möjlighet att växla arbetsställning, på kontor eller hemma; selektionerna anges i OP.\ncatalog:variable_text:11144:18628:18993\ncatalog:variable_text:11174:16436:16801\ncatalog:variable_text:11174:17167:17532\ncatalog:variable_text:11478:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:nuvarande-arbetsformaga"
+fields = { "description" = "Personens nuvarande arbetsförmåga som poängtal, där arbetsförmågan när den var som bäst motsvarar 10 (2024 på en skala där 0 betyder att personen inte alls kan arbeta), och om personen med hänsyn till sin ålder har svårt att klara sina nuvarande arbetsuppgifter. Åldersfrågan ställs bara till personer 50–64 år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nPoängfrågan och åldersfrågan är två slots; skalans nolla anges bara 2024 och åldersurvalet i OP för stammbra.\ncatalog:variable_text:11269:13514:13879\ncatalog:variable_text:11269:14975:15340\ncatalog:variable_text:11270:19723:20089\ncatalog:variable_text:11388:11323:11688\ncatalog:variable_text:11388:12784:13149\ncatalog:variable_text:11388:13514:13879\ncatalog:variable_text:11388:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:olust-infor-arbetet"
+fields = { "description" = "Om det händer att personen känner olust inför arbetsdagen (1997–2021); 2024 frågas hur ofta." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nFrågan om det händer ställs 1997–2021, frågan om hur ofta 2024.\ncatalog:variable_text:11275:9862:10227\ncatalog:variable_text:11275:12784:13149\ncatalog:variable_text:11275:13514:13879\ncatalog:variable_text:11276:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:orsaker-till-sjuknarvaro"
+fields = { "description" = "Anledningar till att personen arbetat trots att hen var sjuk, en variabel per anledning: att ingen annan kan göra jobbet, att inte vilja belasta arbetskamraterna, att det är bra för hälsan, att hen tycker om arbetet, att hålla kontakten med arbetskamraterna, att inte vilja ses som lat eller improduktiv, rädsla att förlora arbetet, att inte ha råd att vara sjukskriven, stolthet i att inte vara sjukskriven och annan anledning. Flera svar är möjliga; 2017–2021 ställs frågan till dem som arbetat trots sjukdom mer än en gång de senaste 12 månaderna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nGemensam fråga i alla DEF, en medlem per svarsalternativ i två frågeversioner; selektionen anges i OP 2017–2021.\ncatalog:variable_text:11005:19723:20089\ncatalog:variable_text:11006:19723:20089\ncatalog:variable_text:11007:19723:20089\ncatalog:variable_text:11008:19723:20089\ncatalog:variable_text:11009:19723:20089\ncatalog:variable_text:11010:19723:20089\ncatalog:variable_text:11011:19723:20089\ncatalog:variable_text:11012:19723:20089\ncatalog:variable_text:11013:19723:20089\ncatalog:variable_text:11351:16436:16801\ncatalog:variable_text:11351:17167:17532\ncatalog:variable_text:11351:18628:18993\ncatalog:variable_text:11352:16436:16801\ncatalog:variable_text:11352:17167:17532\ncatalog:variable_text:11352:18628:18993\ncatalog:variable_text:11353:16436:16801\ncatalog:variable_text:11353:17167:17532\ncatalog:variable_text:11353:18628:18993\ncatalog:variable_text:11354:16436:16801\ncatalog:variable_text:11354:17167:17532\ncatalog:variable_text:11354:18628:18993\ncatalog:variable_text:11355:16436:16801\ncatalog:variable_text:11355:17167:17532\ncatalog:variable_text:11355:18628:18993\ncatalog:variable_text:11356:16436:16801\ncatalog:variable_text:11356:17167:17532\ncatalog:variable_text:11356:18628:18993\ncatalog:variable_text:11357:16436:16801\ncatalog:variable_text:11357:17167:17532\ncatalog:variable_text:11357:18628:18993\ncatalog:variable_text:11358:16436:16801\ncatalog:variable_text:11358:17167:17532\ncatalog:variable_text:11358:18628:18993\ncatalog:variable_text:11360:16436:16801\ncatalog:variable_text:11360:17167:17532\ncatalog:variable_text:11360:18628:18993\ncatalog:variable_text:11361:16436:16801\ncatalog:variable_text:11361:17167:17532\ncatalog:variable_text:11361:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:overensstammelse-mellan-krav-och-kompetens"
+fields = { "description" = "Hur kraven i arbetet stämmer med personens kunskaper och färdigheter (2015–2021) eller kompetens (2024), och om arbetsuppgifterna stämmer med hens utbildning (2005–2021, bara personer under 30 år)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nKravfrågan byter formulering 2024; utbildningsfrågan är en slot som ställs 2005–2021 till personer under 30 år.\ncatalog:variable_text:11202:19723:20089\ncatalog:variable_text:11203:16436:16801\ncatalog:variable_text:11203:17167:17532\ncatalog:variable_text:11452:12784:13149\ncatalog:variable_text:11452:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:overtidsarbete"
+fields = { "description" = "Om en anställd haft övertid eller mertid i huvudsysslan: om personen haft övertid med eller utan ersättning i tid eller pengar, om hen enbart har övertid som ger ersättning, antal övertids- och mertidstimmar totalt och om hen arbetat minst fem respektive tio timmars övertid i referensveckan. Flera variabler härleds från frågorna i AKU; 2003 frågades i stället hur ofta personen vanligtvis arbetar utöver ordinarie arbetstid." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP beskriver övertid per ersättningsform och timmar, härledda från AKU; overtid-frekvens är 2003 års frekvensfråga.\ncatalog:variable_text:11152:18628:18993\ncatalog:variable_text:11284:12784:13149\ncatalog:variable_text:11284:17167:17532\ncatalog:variable_text:11284:17897:18262\ncatalog:variable_text:11285:12053:12418\ncatalog:variable_text:11287:18628:18993\ncatalog:variable_text:11288:12784:13149\ncatalog:variable_text:11288:17897:18262\ncatalog:variable_text:11289:12784:13149\ncatalog:variable_text:11289:17897:18262\ncatalog:variable_text:11290:12784:13149\ncatalog:variable_text:11291:14975:15340\ncatalog:variable_text:11292:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:risk-for-ofrivillig-forflyttning"
+fields = { "description" = "Om det förekommer risk att personen mot sin vilja förflyttas till annat arbete. 2007 och 2009 finns också en version där företagare redovisas separat, och 2005 en särskild version av variabeln; från 2011 är huvudvariabeln härledd till enbart ja- och nej-svar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAlla delar frågan; annatarb05 (2007, 2009) särredovisar företagarna, annatarb05-3851 är 2005-versionen, och OP från 2011 anger härledning till ja/nej.\ncatalog:variable_text:10958:9862:10227\ncatalog:variable_text:10958:12784:13149\ncatalog:variable_text:10958:13514:13879\ncatalog:variable_text:10958:14975:15340\ncatalog:variable_text:10959:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "set:sittande-arbete"
+fields = { "description" = "Om personen ibland arbetar i sittande ställning, hur länge hen som längst sitter i ett sträck en vanlig arbetsdag, och hur stor del av arbetstiden hen sitter stilla i samma position." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF för de tre medlemmarna är frågor om förekomst, längsta sträck och andel tid sittande.\ncatalog:variable_text:11349:11323:11688\ncatalog:variable_text:11349:12784:13149\ncatalog:variable_text:11350:11323:11688\ncatalog:variable_text:11350:12784:13149\ncatalog:variable_text:11350:13514:13879\ncatalog:variable_text:11350:14975:15340\ncatalog:variable_text:11420:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:sjuknarvaro"
+fields = { "description" = "Om personen arbetat trots att hen ansett sig vara för sjuk för att arbeta: hur många månader under de senaste 12 månaderna det hänt att hen gått till arbetet fast hen borde ha sjukanmält sig, eller 2024 om det hänt någon gång det senaste året." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda DEF frågar om sjuknärvaro, som antal månader eller förekomst.\ncatalog:variable_text:11004:19723:20089\ncatalog:variable_text:11359:11323:11688\ncatalog:variable_text:11359:12784:13149\ncatalog:variable_text:11359:13514:13879\ncatalog:variable_text:11359:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:somnsvarigheter"
+fields = { "description" = "Om personen de senaste tre månaderna haft svårt att sova. Till och med 2013 avsåg frågan sömnsvårigheter för att tankar på jobbet hållit personen vaken; från 2015 avser den sömnsvårigheter i allmänhet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF för sovsvari anger arbetsrelaterade sömnsvårigheter 1997–2013, DEF för sovsvari15 sömnsvårigheter i allmänhet 2015–2021.\ncatalog:variable_text:11380:9862:10227\ncatalog:variable_text:11380:12784:13149\ncatalog:variable_text:11380:13514:13879\ncatalog:variable_text:11381:16436:16801\ncatalog:variable_text:11381:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "set:stod-for-prioritering-av-arbetsuppgifter"
+fields = { "description" = "Om personen kan få hjälp av chef eller arbetsledare att prioritera arbetsuppgifterna, till exempel besked om vad som ska göras först när hen har för mycket att göra." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda DEF frågar om chefens hjälp med prioritering.\ncatalog:variable_text:11147:19723:20089\ncatalog:variable_text:11303:11323:11688\ncatalog:variable_text:11303:12784:13149\ncatalog:variable_text:11303:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "set:stod-och-hjalp-i-arbetet"
+fields = { "description" = "Om personen kan få stöd och uppmuntran från chefer och från arbetskamrater när arbetet känns besvärligt och råd eller hjälp vid svåra arbetsuppgifter (1997–2021), om hen upplever för lite eller för mycket stöd från kamrater och chefer (1997–2013), och om hen ibland måste klara sig själv utan hjälp i kritiska situationer (1997–2005). Ett härlett stödindex (2001–2021) kombinerar stödet från chef och från arbetskamrater. 2024 ställs i stället frågan om personen får hjälp och stöd av sina arbetskollegor om hen ber om det." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nÅren följer DEF: cheferst, kamratst och hjälp 1997–2021, stodhjal 1997–2013, kritik95 1997–2005, stodindex 2001–2021, stodarbetskollegor 2024.\ncatalog:variable_text:11058:9862:10227\ncatalog:variable_text:11058:12784:13149\ncatalog:variable_text:11058:13514:13879\ncatalog:variable_text:11146:9862:10227\ncatalog:variable_text:11146:12784:13149\ncatalog:variable_text:11146:13514:13879\ncatalog:variable_text:11175:9862:10227\ncatalog:variable_text:11175:12053:12418\ncatalog:variable_text:11175:12784:13149\ncatalog:variable_text:11175:13514:13879\ncatalog:variable_text:11205:9862:10227\ncatalog:variable_text:11205:12784:13149\ncatalog:variable_text:11391:19723:20089\ncatalog:variable_text:11392:9862:10227\ncatalog:variable_text:11392:12784:13149\ncatalog:variable_text:11392:13514:13879\ncatalog:variable_text:11393:11323:11688\ncatalog:variable_text:11393:12053:12418\ncatalog:variable_text:11393:12784:13149\ncatalog:variable_text:11393:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:tankar-pa-arbetet-under-ledighet"
+fields = { "description" = "Om det händer att personen inte kan koppla av tankarna från arbetet när hen är ledig (1997–2021). 2024 frågas i stället om personen kan koppla bort tankar om arbetet efter arbetsdagens slut." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga 1997–2021 under två variabelnamn; 2024 ersätts den av frågan om att koppla bort tankarna efter arbetsdagens slut.\ncatalog:variable_text:11177:10592:10957\ncatalog:variable_text:11177:12784:13149\ncatalog:variable_text:11177:13514:13879\ncatalog:variable_text:11196:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:typ-av-kontorsarbetsplats"
+fields = { "description" = "Vilken typ av arbetsplats personen har när hen arbetar i kontorsmiljö (2024: på kontoret). 2017–2019 ställs frågan till dem som arbetar minst en fjärdedel av arbetstiden i kontorsmiljö; 2021 till dem som arbetar minst en fjärdedel av arbetstiden med skrivbordsarbete och de senaste tre månaderna har utfört skrivbordsarbete i kontorsmiljö utanför hemmet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nFrågetexterna 2015–2024 och selektionerna 2017–2019 respektive 2021 (E65 och E71).\ncatalog:variable_text:11192:16436:16801\ncatalog:variable_text:11192:17167:17532\ncatalog:variable_text:11192:18628:18993\ncatalog:variable_text:11437:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:uppdrag-i-arbetsmiljoarbetet"
+fields = { "description" = "Om personen har något uppdrag eller någon uppgift i arbetsmiljöarbetet på arbetsplatsen, och om hen deltar som skyddsombud i det systematiska arbetsmiljöarbetet (SAM). Från 2011 besvaras skyddsombudsfrågan endast av chefer, skyddsombud och ledamöter i arbetsmiljökommitté vars arbetsplats har undersökt arbetsmiljöns risker." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF för uppdrage och uppdragarbetsmiljo frågar om uppdrag i arbetsmiljöarbetet, för samskydd om rollen som skyddsombud; selektionen anges i OP.\ncatalog:variable_text:11335:12784:13149\ncatalog:variable_text:11335:14975:15340\ncatalog:variable_text:11442:19723:20089\ncatalog:variable_text:11443:11323:11688\ncatalog:variable_text:11443:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildning-och-kompetensutveckling-i-arbetet"
+fields = { "description" = "Om personen de senaste 12 månaderna fått utbildning på betald arbetstid (1997–2021) och i så fall hur många dagar (till 2013), och 2024 om personen det senaste året fått kompetensutveckling på jobbet, till exempel kurs eller utbildning. 1997 frågas också om personen fått den utbildning som krävs för att klara jobbet, ställt till dem vars jobb kräver återkommande utbildning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nUtbildning på betald arbetstid 1997–2021, antal dagar 1997–2013, kompetensutveckling 2024; fattater 1997 behålls som slot (misfit överkörd) med sin filterfråga.\ncatalog:variable_text:11090:9862:10227\ncatalog:variable_text:11181:19723:20089\ncatalog:variable_text:11453:9862:10227\ncatalog:variable_text:11453:12784:13149\ncatalog:variable_text:11453:14975:15340\ncatalog:variable_text:11455:9862:10227\ncatalog:variable_text:11455:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "set:vriden-arbetsstallning"
+fields = { "description" = "Om personen arbetar i vriden ställning: 1997–2021 om hen ibland arbetar i vriden ställning, 2024 hur stor del av arbetstiden. 2005–2021 finns också frågan om hen i arbetet böjer eller vrider sig på samma sätt många gånger i timmen flera timmar samma dag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nJa/nej-frågan 1997–2021, andel av arbetstiden 2024, den upprepade böj/vrid-frågan 2005–2021.\ncatalog:variable_text:11423:19723:20089\ncatalog:variable_text:11495:9862:10227\ncatalog:variable_text:11495:12784:13149\ncatalog:variable_text:11495:13514:13879\ncatalog:variable_text:11497:12784:13149\ncatalog:variable_text:11497:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:yrke-i-huvudsysslan"
+fields = { "description" = "Vilket yrke personen har i sin huvudsyssla, kodat enligt Standard för svensk yrkesklassificering (SSYK) på en- till fyrsiffernivå, samt 2024 svaret på frågan om vilket yrke personen har. 2001 och 2003 är yrket på två- och tresiffernivå en bakgrundsvariabel från AKU, och 2021 härleds de grövre nivåerna från fyrsiffernivån. 2024 avser yrket enligt SSYK 2012 personer med arbete som huvudsaklig sysselsättning; det hämtas initialt från Yrkesregistret men kodas också utifrån enkätsvaren." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAKU-bakgrundstexten gäller bara två- och tresiffervariablerna 2001 och 2003; 2021 skapas grövre nivåer från fyrsiffernivån; 2024 års SSYK 2012-variabler och frågan Vilket är ditt yrke.\ncatalog:variable_text:11154:12784:13149\ncatalog:variable_text:11154:18628:18993\ncatalog:variable_text:11155:11323:11688\ncatalog:variable_text:11156:12784:13149\ncatalog:variable_text:11156:18628:18993\ncatalog:variable_text:11157:11323:11688\ncatalog:variable_text:11382:19723:20089\ncatalog:variable_text:11386:18628:18993\ncatalog:variable_text:11494:19723:20089\ncatalog:variable_text:11498:13514:13879\ncatalog:variable_text:11498:18628:18993"

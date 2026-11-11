@@ -838,3 +838,21 @@ kind = "set"
 subject = "var:areal-bete-betehektar-fjarde-skorden"
 fields = { "description" = "Areal (hektar) betad återväxt som räknas som fjärde skördeomgången." }
 evidence = "Operationell definition \"efter tredjeskörd\" (2016-2023) och \"efter fjärdeskörd\" (r19813). Samma förskjutning gäller kolumnerna Andra och Tredje skörden (förstasskörd/andraskörd före 2024, andraskörd/tredjeskörd 2024), så den är en ändrad formulering för alla tre och inte belagd som ändrat mått; definitionen \"andra skörden\" är gemensam för de tre kolumnerna.\n0.74.0 catalog, key v15175, releases r15816, r16354, r16356, r16359...; reg_meta.db:occurrence:438408,438451,438496"
+
+[[statement]]
+kind = "set"
+subject = "set:betesareal"
+fields = { "description" = "Vallareal som betas: betesvall, uppdelad på ekologisk och konventionell odling, och areal där återväxten betas efter en viss skörd. Variablerna för andra, tredje och fjärde skörden avser 2016–2022 bete efter första, andra och tredje skörden, och 2024 bete efter andra, tredje och fjärde skörden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF skiljer betesvall (ekologisk/konventionell) och betad återväxt; OP visar att skördenumret i variablerna förskjuts mellan 2016–2022 och 2024.\ncatalog:variable_text:48968:16801:19358\ncatalog:variable_text:48968:19723:20089\ncatalog:variable_text:48969:16801:19358\ncatalog:variable_text:48969:19723:20089\ncatalog:variable_text:48980:16801:19358\ncatalog:variable_text:48981:16801:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:outnyttjad-vallareal"
+fields = { "description" = "Vallareal som inte utnyttjas: areal som varken skördas eller betas, och areal där återväxten efter en viss skörd inte tillvaratas. Variablerna för andra, tredje och fjärde skörden avser 2016–2022 återväxten efter första, andra och tredje skörden, och 2024 efter andra, tredje och fjärde skörden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP: vallareal som varken skördas eller betas resp. återväxt som inte tillvaratas; skördenumret förskjuts mellan 2016–2022 och 2024.\ncatalog:variable_text:48977:16801:19358\ncatalog:variable_text:48977:19723:20089\ncatalog:variable_text:48978:16801:19358\ncatalog:variable_text:48978:19723:20089\ncatalog:variable_text:48983:16801:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:produktionsomrade"
+fields = { "description" = "Det produktionsområde som odlingen ligger i, enligt indelningen av Sverige i 8 produktionsområden, som används i skattningarna, eller i 18 produktionsområden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF delas; OP skiljer 8-indelningen (används i skattningarna) och 18-indelningen.\ncatalog:variable_text:48992:16801:17532\ncatalog:variable_text:48992:17532:17897\ncatalog:variable_text:48995:16801:19358"
