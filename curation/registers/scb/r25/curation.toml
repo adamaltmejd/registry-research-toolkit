@@ -4527,12 +4527,6 @@ evidence = "Variabeln mäter ett skatteavdrag.\ncatalog:variable_text:30581:7670
 [[statement]]
 kind = "set"
 subject = "var:avdrag-realisationsforlust-kapital"
-fields = { "sets" = ["forlustavdrag"] }
-evidence = "Källkolumnen KF har olika ägare i observerade perioder.\ncatalog:occurrence:256813\ncatalog:occurrence:260216"
-
-[[statement]]
-kind = "set"
-subject = "var:avdrag-realisationsforlust-kapital"
 fields = { "tags" = ["taxation"] }
 evidence = "Källkolumnen KF har olika ägare i observerade perioder.\ncatalog:occurrence:256813\ncatalog:occurrence:260216"
 
