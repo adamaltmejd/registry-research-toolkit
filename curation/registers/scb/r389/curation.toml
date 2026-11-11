@@ -554,8 +554,8 @@ evidence = "Den grövre SUN-kodningen avser personens utbildningsnivå.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:suninriktning-kod"
-fields = { "sets" = ["utbildningsinriktning"] }
-evidence = "Kodningen avser utbildningens inriktning.\ncatalog:variable_text:33999:16436:18993\ncatalog:variable_text:33999:18993:20089"
+fields = { "sets" = [] }
+evidence = "#2322 group audit: kodningen avser utbildningens (programmets) inriktning, inte den studerandes högsta genomförda utbildning som SUN2000Inr och SUN2020Inr; den ingår därför inte i gruppen Utbildningsinriktning, som Utbildningens nivå inte ingår i gruppen för den studerandes nivå.\ncatalog:variable_text:33999:16436:18993\ncatalog:variable_text:33999:18993:20089"
 
 [[statement]]
 kind = "set"
@@ -602,8 +602,8 @@ evidence = "Utbildningens nivå är ett utbildningsmått och ingår inte i grupp
 [[statement]]
 kind = "set"
 subject = "var:utbildningsinriktning-kod"
-fields = { "sets" = ["utbildningsinriktning"] }
-evidence = "Kodningen avser utbildningens inriktning.\ncatalog:variable_text:34003:16436:20089"
+fields = { "sets" = [] }
+evidence = "#2322 group audit: kodningen avser utbildningens (programmets) inriktning, inte den studerandes högsta genomförda utbildning som SUN2000Inr och SUN2020Inr; den ingår därför inte i gruppen Utbildningsinriktning, som Utbildningens nivå inte ingår i gruppen för den studerandes nivå.\ncatalog:variable_text:34003:16436:20089"
 
 [[statement]]
 kind = "set"
