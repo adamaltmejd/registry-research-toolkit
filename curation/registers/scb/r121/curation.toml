@@ -93942,3 +93942,9 @@ kind = "set"
 subject = "var:bsadel40"
 fields = { "description" = "Antal bosättningsår i Sverige för sjuk- och aktivitetsersättning, räknat i 40-delar. Värdet är antalet bosättningsår i Sverige delat med 40." }
 evidence = "SCB:s etikett och definition (v26989) är avkortade vid 'sjuk- och aktivitetsers'. Samma nyckel och kolumn BSADEL40 i FASIT har operationaliseringen 'Värdet motsvarar antal 40-delar, alltså antalet bosättningsår i Sverige/40', och registret skriver ut 'sjuk- och aktivitetsersättning' i närliggande nycklar.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=191653 (r15604)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=858898 (r11725)"
+
+[[statement]]
+kind = "set"
+subject = "var:afa04"
+fields = { "description" = "Underlag för beräkning av fastighetsskatt för hyreshus med skattesatsen 0,4 procent. Avser fastighetsavgiften." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSamma definition alla år; operationaliseringen anger fastighetsavgift (2008–2010) och saknas 2011–2012.\ncatalog:variable_text:21676:13879:14610:14975"
