@@ -174,11 +174,10 @@ export function TopBar({
             popoverRef={popover}
             text={text}
             onChoose={() => {
-              // A row navigates and ends the search: the text clears, and the
-              // narrow register browser closes on the page it opened (#2403).
+              // A row navigates and ends the search: the text clears. The
+              // navigation closes the narrow register browser (#2403).
               setPalette(false);
               setText("");
-              browser.onChoose();
             }}
           />
         </Autocomplete>
@@ -189,6 +188,7 @@ export function TopBar({
             ref={browserButtonRef}
             aria-label="Browse registers"
             aria-expanded={browser.open}
+            isInert={browser.inert}
             aria-controls={browser.controls}
             onPress={browser.onToggle}
           >
@@ -207,9 +207,9 @@ export interface RegisterBrowserButton {
   open: boolean;
   /** The register column's id. */
   controls: string;
+  /** Shown for good: the catalog root's page is the register list. */
+  inert: boolean;
   onToggle: () => void;
-  /** A search result was chosen: the browser closes. */
-  onChoose: () => void;
 }
 
 /** Three lines: the register browser's button. */

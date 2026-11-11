@@ -72,9 +72,12 @@
   .body {
     grid-template-columns: minmax(0, 1fr);
   }
+  /* Open, it fills the viewport under the bar, as the page it stands in
+     for would. */
   .browse {
     position: static;
     height: auto;
+    min-height: calc(100dvh - var(--top-bar-height, 0px));
   }
   .detail {
     padding: var(--space-4);

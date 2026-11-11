@@ -86,29 +86,36 @@ export function App() {
 
   // Below the narrow breakpoint the register column is a browser the top
   // bar's button shows in place of the page (#2403); above it CSS ignores
-  // this. Arriving at the catalog root shows it, since the root's page is the
-  // register list; the arrows passing a row open its page behind it and leave
-  // it open; a press on a row, a search result or Escape closes it.
+  // this. It is open on the page it was opened on, and on each page the
+  // arrows open as they pass its rows; any other navigation (a link, the
+  // history, a search result) closes it, as do a press on a row and Escape.
+  // The catalog root's page is the register list, so there it is always
+  // shown and the button does nothing.
   const isRoot = route.name === "root";
-  const [browserOpen, setBrowserOpen] = useState(isRoot);
-  const [wasRoot, setWasRoot] = useState(isRoot);
-  if (isRoot !== wasRoot) {
-    setWasRoot(isRoot);
-    if (isRoot) setBrowserOpen(true);
-  }
+  const routeKey = route.name === "catalog-node" ? route.fqidPath : route.name;
+  const [openAt, setOpenAt] = useState<string | null>(null);
+  // Left behind by any other navigation, so the history never reopens it.
+  if (openAt !== null && openAt !== routeKey) setOpenAt(null);
+  const browserOpen = isRoot || openAt === routeKey;
   const browserButton = useRef<HTMLButtonElement>(null);
   /** Close the browser, focus returning to its button. Above the breakpoint
    * the button is not drawn and the column is the page's own: nothing moves. */
   const closeBrowser = () => {
     if (browserButton.current?.offsetParent == null) return;
-    setBrowserOpen(false);
+    setOpenAt(null);
     browserButton.current.focus();
   };
   const toggleBrowser = () => {
+    if (isRoot) return;
     if (browserOpen) return closeBrowser();
     // Drawn first, so focus can move into it, onto the open page's row.
-    flushSync(() => setBrowserOpen(true));
+    flushSync(() => setOpenAt(routeKey));
     focusBrowseColumn("registers");
+  };
+  /** The arrows open a row's page behind the open browser: it stays open
+   * there. */
+  const browseTo = (key: string) => {
+    if (browserOpen) setOpenAt(key);
   };
 
   useEffect(() => {
@@ -126,8 +133,8 @@ export function App() {
             browser={{
               open: browserOpen,
               controls: REGISTER_BROWSER,
+              inert: isRoot,
               onToggle: toggleBrowser,
-              onChoose: closeBrowser,
             }}
             browserButtonRef={browserButton}
           />
@@ -149,6 +156,7 @@ export function App() {
             <BrowseTree
               id={REGISTER_BROWSER}
               className={styles.browse}
+              onBrowse={browseTo}
               onChoose={closeBrowser}
               onEscape={closeBrowser}
             />

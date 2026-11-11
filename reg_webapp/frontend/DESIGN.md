@@ -463,9 +463,10 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   register column, shown in place of the page while open, closed by choosing an entry or
   by Escape, which returns focus to the button (Operator proposal). Opening it moves
   focus to the open page's row, or the first row; choosing a row is a press, Enter or
-  Space, and choosing a search result closes it too; the arrows passing a row open its
-  page behind it, as above the breakpoint, and leave it open; and arriving at the
-  catalog root, whose page is the register list, shows it (implementer proposals). This
+  Space; the arrows passing a row open its page behind it, as above the breakpoint, and
+  leave it open; any other navigation (a link, a search result, the history) closes it;
+  and the catalog root, whose page is the register list, always shows it, its button
+  inert (implementer proposals). This
   replaces the stacked columns and the "Browse registers" first crumb (#1824; its
   removal is an Operator proposal). Do not mint new breakpoints.
 - **Search.** The top-bar field searches and filters nothing (#2398, maintainer

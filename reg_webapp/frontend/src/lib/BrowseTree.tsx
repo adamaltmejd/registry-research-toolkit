@@ -148,11 +148,15 @@ function browseNodes(
 export function BrowseTree({
   id,
   className,
+  onBrowse,
   onChoose,
   onEscape,
 }: {
   id?: string;
   className?: string;
+  /** The selection (the arrows, or a press) is about to open this row's
+   * page. */
+  onBrowse?: (key: string) => void;
   /** A row was pressed (pointer, Enter or Space; not the arrows passing it):
    * the narrow register browser closes on it (#2403). */
   onChoose?: () => void;
@@ -216,7 +220,10 @@ export function BrowseTree({
     if (keys === "all") return;
     const [key] = keys;
     const href = key === undefined ? undefined : hrefs.get(String(key));
-    if (href !== undefined && key !== currentKey) router.navigate(href);
+    if (href !== undefined && key !== currentKey) {
+      onBrowse?.(String(key));
+      router.navigate(href);
+    }
   }
 
   // The register row stays selected on a page under it (a variable, a group),
