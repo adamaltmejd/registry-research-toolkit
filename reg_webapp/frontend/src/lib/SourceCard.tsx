@@ -220,12 +220,15 @@ export function SourceCard({
           : column.segments;
         return inProject.length ? [{ column, inProject }] : [];
       });
-      const segments = drawn.flatMap(({ column, inProject }) =>
-        columnDateRuns(inProject, bounds, axis[0]).map((run) => ({
-          name: column.spelling,
-          ...run,
-        })),
-      );
+      // In date order, so a spelling that returns draws its changes.
+      const segments = drawn
+        .flatMap(({ column, inProject }) =>
+          columnDateRuns(inProject, bounds, axis[0]).map((run) => ({
+            name: column.spelling,
+            ...run,
+          })),
+        )
+        .sort((a, b) => a.from - b.from);
       if (!segments.length) return;
       const spellings = drawn.map(({ column }) => column.spelling);
       const years = segmentYears(drawn.flatMap(({ inProject }) => inProject));

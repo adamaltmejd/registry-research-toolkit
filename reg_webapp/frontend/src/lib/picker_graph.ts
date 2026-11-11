@@ -141,28 +141,31 @@ export function variableSpans({
     const staged = isSelected ? (source ? "remove" : "add") : null;
     return columnRows(every.map((part) => part.drawn)).flatMap(
       (row, index): LaneSpanModel[] => {
-        const segments = row.flatMap((column): LaneSpanSegment[] => {
-          const part = parts.get(column.id);
-          if (!part) return [];
-          const state: ColumnState = source
-            ? part.taken
-              ? "in"
-              : readOnly
+        // In date order, so a spelling that returns draws its changes.
+        const segments = row
+          .flatMap((column): LaneSpanSegment[] => {
+            const part = parts.get(column.id);
+            if (!part) return [];
+            const state: ColumnState = source
+              ? part.taken
+                ? "in"
+                : readOnly
+                  ? "default"
+                  : "out"
+              : readOnly || part.inside
                 ? "default"
-                : "out"
-            : readOnly || part.inside
-              ? "default"
-              : "out";
-          return columnDateRuns(column.segments, catalogBounds, axis[0]).map(
-            (run) => ({
-              name: column.spelling,
-              ...run,
-              state,
-              // The columns the staged change takes in or out.
-              staged: staged === "add" ? part.inside : part.taken,
-            }),
-          );
-        });
+                : "out";
+            return columnDateRuns(column.segments, catalogBounds, axis[0]).map(
+              (run) => ({
+                name: column.spelling,
+                ...run,
+                state,
+                // The columns the staged change takes in or out.
+                staged: staged === "add" ? part.inside : part.taken,
+              }),
+            );
+          })
+          .sort((a, b) => a.from - b.from);
         if (!segments.length) return [];
         const spellings = row.map((column) => column.spelling);
         const years = segmentYears(row.flatMap((column) => column.segments));
