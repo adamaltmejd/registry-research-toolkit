@@ -213,11 +213,17 @@ function tickYears(axis: [number, number], pxPerYear: number): number[] {
 export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
   const [first, last] = input.axis;
   const axisYears = Math.max(last + 1 - first, 1);
-  // Keyed on the years alone, never on which spans are pickable, so the track
-  // keeps its scale while an add window moves.
+  // Keyed on the dates alone, never on which spans are pickable, so the track
+  // keeps its scale while an add window moves. Spans are drawn at their dates
+  // (#2408), so a term is half a year. simplify: floored at a month, which
+  // caps the grown track at 288 px a year; lift it if a shorter pickable
+  // span turns up on a lane.
   const shortest = Math.min(
     ...input.spans.map((span) =>
-      Math.max(Math.min(span.to, last + 1) - Math.max(span.from, first), 1),
+      Math.max(
+        Math.min(span.to, last + 1) - Math.max(span.from, first),
+        1 / 12,
+      ),
     ),
   );
   const fluid = ([min, share, max]: readonly [number, number, number]) =>
