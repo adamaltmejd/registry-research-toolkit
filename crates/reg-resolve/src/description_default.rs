@@ -4,7 +4,9 @@
 //! A variable without a curated description whose used occurrences state several
 //! provider wordings, one of which contains every other, takes that wording as its
 //! description. Curated > rule: this runs after curation, only where none applied.
-//! Provenance records the value as rule `description-default`.
+//! Group members are left alone (maintainer 2026-11-11): a group page would show the
+//! default on some lanes and not others. Provenance records the value as rule
+//! `description-default`.
 
 use std::cmp::Reverse;
 use std::collections::BTreeMap;
@@ -46,7 +48,7 @@ pub fn apply(resolved: &mut Resolved) {
     }
     for (variable, keys) in wordings {
         let target = &mut resolved.variables[variable];
-        if target.description.is_some() || keys.len() < 2 {
+        if target.description.is_some() || !target.sets.is_empty() || keys.len() < 2 {
             continue;
         }
         // Only the longest key can contain every other.

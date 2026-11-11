@@ -359,9 +359,10 @@ classification bindings. Accepting one requires reviewed curation and a premise 
   never derives them from provenance. Occurrence descriptions are not a field: source
   wording stays in occurrence labels, definitions and operational definitions. A
   variable has one optional curated `description`, owned by `var:<id>` and stored in
-  `variable.description_text`. An occurrence description setter is a located
-  `description-subject` refusal; different descriptions for one variable are refused,
-  not selected by period or precedence. Table and release descriptions remain fields of
+  `variable.description_text` (where none is curated, the default rule below may fill
+  it). An occurrence description setter is a located `description-subject` refusal;
+  different descriptions for one variable are refused, not selected by period or
+  precedence. Table and release descriptions remain fields of
   those entities. No fact gets a second semantic home. A value-set override chooses the
   occurrence's own set while retaining its source population alternatives as evidence.
   Unsupported entity/field combinations are located refusals. Type corrections that
@@ -397,11 +398,13 @@ classification bindings. Accepting one requires reviewed curation and a premise 
   latest one's text is shown, then the smallest. Silent years do not block the fold.
   Wordings that genuinely differ, including a partial fold (one wording inside two
   different longer ones), get no default; the reader keeps splitting them by years and
-  they are curated. Scope (maintainer 2026-11-11): only variables with several wordings;
-  a single wording stays the reader's provider fallback. Curated > rule: the rule runs
-  after curation and only where no curated description applied. Provenance records the
-  value as a variable override on `description`, rule `description-default`, so a
-  reader can tell it from a curated statement.
+  they are curated. Scope (maintainer 2026-11-11): only variables with several wordings,
+  a single wording staying the reader's provider fallback; and no group members, since a
+  group page would show the default on some lanes and not others. Curated > rule: the
+  rule runs after curation and only where no curated description applied. The artifact
+  records the value as a variable override on `description`, rule
+  `description-default`; `show` serves it as the `description` without its origin (open
+  question: whether a reader should mark it).
 - Curated values beat rules, which beat source values. Losing source values remain
   evidence in the existing `statement`/`override` tables; every curated winner carries
   statement file, line, evidence and caveat. Segment evidence names its statement.
@@ -2653,9 +2656,10 @@ returns one ranked list.
      come from the document's best `doc_fts` section for the same expression
      (`bm25(doc_fts)`, then `ord`), both `null` when no section matches.
 
-**Variable descriptions (#2039).** The one curated variable description is indexed in
-`search_description`, alongside the primary name, labels, definitions and operational
-definitions so AND queries can span source and curated text. A description equal to a
+**Variable descriptions (#2039).** The one variable description (curated, else the
+default rule's) is indexed in `search_description`, alongside the primary name, labels,
+definitions and operational definitions so AND queries can span source and curated
+text. A description equal to a
 primary definition or operational definition is not indexed twice. The separate index
 keeps the primary BM25 corpus, scores and ranks unchanged; only new matches follow,
 ranked with the same weights and ties. Search hits keep

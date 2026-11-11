@@ -20,3 +20,5 @@
 {"kind":"occurrence","provider":"demo","register":"descriptions","table":"main","column":"Partial","source_key":"partial","from":"2015-01-01","to":"2015-12-31","label":"Partial","definition":"Sector."}
 {"kind":"occurrence","provider":"demo","register":"descriptions","table":"main","column":"Partial","source_key":"partial","from":"2016-01-01","to":"2016-12-31","label":"Partial","definition":"Sector of the main income."}
 {"kind":"occurrence","provider":"demo","register":"descriptions","table":"main","column":"Partial","source_key":"partial","from":"2017-01-01","to":"2017-12-31","label":"Partial","definition":"Sector of the main employment."}
+{"kind":"occurrence","provider":"demo","register":"descriptions","table":"main","column":"Grouped","source_key":"grouped","from":"2015-01-01","to":"2015-12-31","label":"Grouped","definition":"Identity concept."}
+{"kind":"occurrence","provider":"demo","register":"descriptions","table":"main","column":"Grouped","source_key":"grouped","from":"2016-01-01","to":"2016-12-31","label":"Grouped","definition":"Identity concept. Assigned by the tax agency."}

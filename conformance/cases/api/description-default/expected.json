@@ -28,5 +28,21 @@
       "/data/items/1/wording": "Sector of the main income.",
       "/data/items/2/wording": "Sector of the main employment."
     }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/fqid": "demo/descriptions/grouped"
+    },
+    "keys": {
+      "/data": [
+        "fqid",
+        "kind",
+        "name",
+        "period",
+        "register",
+        "sets"
+      ]
+    }
   }
 ]
