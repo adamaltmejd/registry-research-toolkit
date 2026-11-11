@@ -2,7 +2,7 @@
 //! census of the artifact (and, on a steward pair, of its holdings file). Failure
 //! messages carry public ids and counts, never row content.
 
-use std::collections::{HashMap, HashSet};
+use std::collections::{BTreeSet, HashMap, HashSet};
 use std::time::Duration;
 
 use rusqlite::Connection;
@@ -28,6 +28,22 @@ struct Sampled {
     /// The segments of the tables serving the period, each clipped to its serving
     /// window: (table pid, variable pid, start, end, exact spelling).
     spans: Vec<(String, String, i64, i64, String)>,
+    /// On a steward pair, the placements of the sampled database's files in the
+    /// serving tables; `None` on the global catalog.
+    held: Option<Vec<Held>>,
+}
+
+/// One `holding_mapping` row as the census reads it: the file column named `name`, of
+/// holding table `holding` (a projection of `parent`), places `variable` of `table`
+/// over `[start, end)`.
+struct Held {
+    table: String,
+    variable: String,
+    start: i64,
+    end: i64,
+    name: String,
+    holding: i64,
+    parent: Option<i64>,
 }
 
 /// A segment as the census reads it.
@@ -49,7 +65,10 @@ fn sampled_whole_table_orders_agree_with_census() {
     // when repeated orders serialize different bytes, or when the MCP `order` tool
     // answers a different document than HTTP. On a steward pair it also
     // fails when validate accepts a binding the holdings place on no day of the period
-    // (or leave a contested day unplaced), or refuses one they place.
+    // (or leave a contested day unplaced), or refuses one they place, and the spelling
+    // an entry must carry is the held file column's name at its start: the one name the
+    // database's files place it under, else the catalog's (crates/DESIGN.md,
+    // "Project semantic validation", #2409).
     let artifact = artifact();
     let (sampled, open_start) = census(&artifact.base(), artifact.holdings().as_ref());
     let blocked = sampled.iter().filter(|t| t.blocked).count();
@@ -118,7 +137,7 @@ fn check(port: u16, table: &Sampled, open_start: i64) -> Result<(), String> {
             Some(start) => reg_core::iso_day_number(start).ok_or("an unparsed entry start")?,
         };
         // A set: a steward may hold one column in several files.
-        let spellings: Vec<&str> = table
+        let catalog: BTreeSet<&str> = table
             .spans
             .iter()
             .filter(|(t, v, lo, hi, _)| {
@@ -128,9 +147,25 @@ fn check(port: u16, table: &Sampled, open_start: i64) -> Result<(), String> {
                     && at < *hi
             })
             .map(|span| span.4.as_str())
-            .collect::<std::collections::BTreeSet<_>>()
-            .into_iter()
             .collect();
+        let spellings: Vec<&str> = match &table.held {
+            None => catalog.into_iter().collect(),
+            Some(held) => {
+                let names = held_names(held, entry, at);
+                if names.is_empty() {
+                    return Err(format!(
+                        "entry {number} of {} ({}) starts on a day no file places it",
+                        entries.len(),
+                        entry["variable"]
+                    ));
+                }
+                if names.len() == 1 {
+                    names
+                } else {
+                    catalog.into_iter().collect()
+                }
+            }
+        };
         if spellings.len() != 1 || entry["spelling"] != spellings[0] {
             return Err(format!(
                 "entry {number} of {} ({}) has no single census spelling at its start",
@@ -140,6 +175,32 @@ fn check(port: u16, table: &Sampled, open_start: i64) -> Result<(), String> {
         }
     }
     Ok(())
+}
+
+/// The file column names placing `entry`'s variable of its table on day `at`, read from
+/// the holdings alone. A projection's placement is left out where its parent places the
+/// same day: the server orders the parent's column there
+/// (crates/reg-catalog/src/ops/order/materialize.rs, `placements`).
+fn held_names<'a>(held: &'a [Held], entry: &Value, at: i64) -> Vec<&'a str> {
+    let covering: Vec<&Held> = held
+        .iter()
+        .filter(|p| {
+            entry["table"] == p.table.as_str()
+                && entry["variable"] == p.variable.as_str()
+                && p.start <= at
+                && at < p.end
+        })
+        .collect();
+    covering
+        .iter()
+        .filter(|p| {
+            p.parent
+                .is_none_or(|parent| !covering.iter().any(|q| q.holding == parent))
+        })
+        .map(|p| p.name.as_str())
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect()
 }
 
 /// The MCP `order` tool answers the HTTP document. The fixture tier replays only
@@ -296,6 +357,13 @@ fn census(db: &Connection, holdings: Option<&Connection>) -> (Vec<Sampled>, i64)
         {
             blocked = unheld(holdings, &in_space, &variables, &segments);
         }
+        let held = holdings.map(|h| {
+            let tables: BTreeSet<&str> = segments.iter().map(|s| s.table.as_str()).collect();
+            tables
+                .into_iter()
+                .flat_map(|table| placements(h, table, &in_space))
+                .collect()
+        });
         sampled.push(Sampled {
             label: space
                 .as_ref()
@@ -308,6 +376,7 @@ fn census(db: &Connection, holdings: Option<&Connection>) -> (Vec<Sampled>, i64)
                 .into_iter()
                 .map(|s| (s.table, s.variable, s.start, s.end, s.exact))
                 .collect(),
+            held,
         });
     }
     assert!(!sampled.is_empty(), "the artifact has no table to sample");
@@ -475,6 +544,29 @@ fn unheld(holdings: &Connection, space: &str, variables: &[String], segments: &[
         }
     }
     contested || !held.values().all(|&h| h)
+}
+
+/// Every placement the tables of database `space` make in table `pid`.
+fn placements(holdings: &Connection, pid: &str, space: &str) -> Vec<Held> {
+    rows(
+        holdings,
+        "SELECT m.table_pid, m.variable_pid, m.start, m.end, c.name, h.id, h.projection_of
+         FROM holding_mapping m JOIN holding_column c ON c.id = m.column_id
+         JOIN holding_table h ON h.id = c.holding_id
+         WHERE m.table_pid = ?1 AND h.space = ?2",
+        [pid, space],
+        |r| {
+            Ok(Held {
+                table: r.get(0)?,
+                variable: r.get(1)?,
+                start: r.get(2)?,
+                end: r.get(3)?,
+                name: r.get(4)?,
+                holding: r.get(5)?,
+                parent: r.get(6)?,
+            })
+        },
+    )
 }
 
 /// The variables the tables of database `space` place in table `pid`.
