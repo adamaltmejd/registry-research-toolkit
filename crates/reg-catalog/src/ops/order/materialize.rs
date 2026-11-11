@@ -235,6 +235,15 @@ fn build(
             &mut findings,
         )?;
     }
+    // Per source, every day it requested of any table: a file's rows outside these are
+    // extra, whichever file serves the rest.
+    let mut asked: BTreeMap<usize, Vec<Days>> = BTreeMap::new();
+    for (&(s, _), (_, requested, _)) in &bindings {
+        asked.entry(s).or_default().extend(requested);
+    }
+    for days in asked.values_mut() {
+        *days = merge(std::mem::take(days));
+    }
     not_in_database(
         held,
         server,
@@ -296,7 +305,14 @@ fn build(
             &mut draft,
             &mut findings,
         )?;
-        let row_filter = row_filter(server, &holding, &draft, &project.sources, &mut findings);
+        let row_filter = row_filter(
+            server,
+            &holding,
+            &draft,
+            &asked,
+            &project.sources,
+            &mut findings,
+        );
         let mut columns: Vec<(ColumnKey, Column)> = Vec::new();
         for (column_id, (key, role, mut refs)) in std::mem::take(&mut draft.columns) {
             let stored = stored(held, column_id)?;
@@ -1121,56 +1137,71 @@ fn widen(encoding: Encoding, (lo, hi): Days) -> Days {
 /// encoding's grain, with a bound omitted where it cuts no held day; none when that
 /// covers every held day. A table without a period column is extracted whole, which
 /// is reported when the request is narrower; sources sharing a filtered file are told
-/// that each of its columns is extracted over the union.
+/// that each of its columns is extracted over the union. The findings name the extra
+/// days, never the physical file or its delivery code (#2409).
 fn row_filter(
     server: &Server,
     holding: &Holding,
     draft: &Draft,
+    asked: &BTreeMap<usize, Vec<Days>>,
     sources: &[reg_core::project::Source],
     findings: &mut Vec<Issue>,
 ) -> Option<RowFilter> {
     let union = merge(draft.days.values().flatten().copied().collect());
-    let info = |s: usize, code: &str, message: String| Issue {
-        source: Some(sources[s].name.clone()),
-        ..Issue::new(IssueLevel::Info, code, format!("/sources/{s}"), message)
+    let spans = |days: &[Days]| {
+        days.iter()
+            .map(|&d| span(server, d))
+            .collect::<Vec<_>>()
+            .join(", ")
+    };
+    let mut info = |s: usize, code: &str, message: String| {
+        let issue = Issue {
+            source: Some(sources[s].name.clone()),
+            ..Issue::new(IssueLevel::Info, code, format!("/sources/{s}"), message)
+        };
+        // Two files of one source can add the same days.
+        if !findings.contains(&issue) {
+            findings.push(issue);
+        }
     };
     let Some((_, column, encoding)) = &holding.period_column else {
-        for (s, days) in &draft.days {
-            if !minus(&holding.held, days).is_empty() {
-                findings.push(info(
+        for s in draft.days.keys() {
+            let extra = minus(&holding.held, &asked[s]);
+            if !extra.is_empty() {
+                info(
                     *s,
                     "rows_unfiltered",
                     format!(
-                        "Table {:?} has no period column, so every row of its \
-                         delivery {} is extracted",
-                        holding.label,
-                        holding.delivery.as_deref().unwrap_or("(timeless)")
+                        "Rows from {} are included because this table has no year column.",
+                        spans(&extra)
                     ),
-                ));
+                );
             }
         }
         return None;
     };
     let encoding = Encoding::parse(encoding).expect("an admitted encoding");
     let widened = merge(union.iter().map(|&d| widen(encoding, d)).collect());
-    // A source is told when the grain adds days around its own request that no source
-    // asked for; days another source asked for are `row_filter_union`'s.
+    // A source is told when the grain adds held days around its own request that no
+    // source asked for; days another source asked for are `row_filter_union`'s.
     for (s, days) in &draft.days {
         let around = merge(days.iter().map(|&d| widen(encoding, d)).collect());
-        if !minus(&around, &union).is_empty() {
-            findings.push(info(
+        let extra = overlap(&minus(&minus(&around, &union), &asked[s]), &holding.held);
+        if !extra.is_empty() {
+            let unit = match encoding {
+                Encoding::Year => "year",
+                Encoding::Yyyymm => "month",
+                Encoding::Date | Encoding::Yyyymmdd => "day",
+            };
+            info(
                 *s,
                 "row_filter_widened",
                 format!(
-                    "Rows of table {:?} are filtered on {column:?} at its {} precision, \
-                     so the filter covers whole units around the request",
-                    holding.label,
-                    serde_json::to_value(encoding)
-                        .expect("serializes")
-                        .as_str()
-                        .unwrap_or("")
+                    "Rows from {} are included because this table's rows are selected \
+                     by whole {unit}.",
+                    spans(&extra)
                 ),
-            ));
+            );
         }
     }
     let ranges = overlap(&widened, &holding.held);
@@ -1179,20 +1210,15 @@ fn row_filter(
     if draft.days.len() > 1 {
         for (s, days) in &draft.days {
             if *days != union {
-                findings.push(info(
+                info(
                     *s,
                     "row_filter_union",
                     format!(
-                        "Several sources share table {:?}; every column of its file \
-                         is extracted over the union of their periods, {}",
-                        holding.label,
-                        union
-                            .iter()
-                            .map(|&d| span(server, d))
-                            .collect::<Vec<_>>()
-                            .join(", ")
+                        "This table shares its file with another table of the project, so \
+                         its columns are delivered for {}.",
+                        spans(&union)
                     ),
-                ));
+                );
             }
         }
     }

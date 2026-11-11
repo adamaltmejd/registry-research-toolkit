@@ -2365,10 +2365,12 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
   `physical_schema_missing`. Both block, located at the file's first binding.
   `reg-build holdings` already refuses such a name at publication
   (`holdings_filename_invalid`), so `file_name_unsafe` guards only a foreign artifact.
-- Non-blocking infos: `rows_unfiltered` (no period column and the request is narrower
-  than the delivery), `row_filter_widened` (the encoding's grain adds days around the
-  source's own request that no source asked for), `row_filter_union` (a source whose
-  days are narrower than its shared file's union). Each is located at the source. A
+- Non-blocking infos: `rows_unfiltered` (no period column, and the file holds days the
+  source did not request), `row_filter_widened` (the encoding's grain adds held days
+  around the source's own request that no source asked for), `row_filter_union` (a
+  source whose days are narrower than its shared file's union). Each is located at the
+  source and names the extra days, or the union, as periods; none names the physical
+  file or its delivery code, which are not the researcher's (#2409). A
   selected mapping's `caveat` is a `mapping_caveat` warning located at the binding over
   the selected days (the Operator's 2026-10-19 warn-not-hold call); an automatically
   added key's caveat is located at its source.
@@ -2459,7 +2461,10 @@ a steward server `validate` and `order` also run the holdings stage of
 steward `order` that succeeds carries the holdings stage's warnings with its own, and
 the order file's clips in place of the logical ones, each entry cut to its binding's
 delivered days and each row key to its table's: a `coverage_gap` is not listed as
-delivered (#2220).
+delivered (#2220). Each entry also carries the column name the held files use over its
+days, split where that name changes, as row keys already do: a held file can name a
+column otherwise than the catalog (`AvgAr` for `avgar`). Days several differently named
+columns deliver at once (a slot family's members) keep the catalog spelling (#2409).
 
 ### Project document 6.1.0
 

@@ -138,7 +138,7 @@
     {
       "code": "row_filter_union",
       "level": "info",
-      "message": "Several sources share table \"Visits\"; every column of its file is extracted over the union of their periods, [2017-01-01, 2018-07-01)",
+      "message": "This table shares its file with another table of the project, so its columns are delivered for [2017-01-01, 2018-07-01).",
       "path": "/sources/0",
       "period": null,
       "source": "a",
@@ -149,7 +149,7 @@
     {
       "code": "row_filter_widened",
       "level": "info",
-      "message": "Rows of table \"Visits\" are filtered on \"Year\" at its year precision, so the filter covers whole units around the request",
+      "message": "Rows from [2018-07-01, 2019-01-01) are included because this table's rows are selected by whole year.",
       "path": "/sources/0",
       "period": null,
       "source": "a",
@@ -160,7 +160,7 @@
     {
       "code": "row_filter_union",
       "level": "info",
-      "message": "Several sources share table \"Visits\"; every column of its file is extracted over the union of their periods, [2017-01-01, 2018-07-01)",
+      "message": "This table shares its file with another table of the project, so its columns are delivered for [2017-01-01, 2018-07-01).",
       "path": "/sources/1",
       "period": null,
       "source": "b",

@@ -4,7 +4,7 @@
       "level": "info",
       "code": "rows_unfiltered",
       "path": "/sources/0",
-      "message": "Table \"Owners\" has no period column, so every row of its delivery 2017..2019 is extracted",
+      "message": "Rows from [2019-01-01, 2020-01-01) are included because this table has no year column.",
       "source": "a"
     },
     {

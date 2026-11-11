@@ -1,13 +1,6 @@
 {
   "findings": [
     {
-      "level": "info",
-      "code": "rows_unfiltered",
-      "path": "/sources/0",
-      "message": "Table \"Owners\" has no period column, so every row of its delivery 2017..2019 is extracted",
-      "source": "a"
-    },
-    {
       "level": "error",
       "code": "mapping_missing",
       "path": "/sources/0/bindings/0",
