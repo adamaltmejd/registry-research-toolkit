@@ -1322,20 +1322,8 @@ evidence = "RPU är en bokstavskod som inte finns i etiketten.\ncatalog:variable
 [[statement]]
 kind = "set"
 subject = "var:utbildningsinriktning-hogst-prioriterad-andra-halvaret"
-fields = { "sets" = ["utbildningsinriktning"] }
-evidence = "RPU och SUN är källkoder som inte finns i etiketten; 3 kommer från källkolumnen.\ncatalog:variable_text:41521:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildningsinriktning-hogst-prioriterad-andra-halvaret"
 fields = { "tags" = ["education"] }
 evidence = "RPU och SUN är källkoder som inte finns i etiketten; 3 kommer från källkolumnen.\ncatalog:variable_text:41521:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:rpusuninr-3-vt"
-fields = { "sets" = ["utbildningsinriktning"] }
-evidence = "Id:t använder igenkännbara källstammar; variabeln avser utbildningsinriktning under vårterminen.\ncatalog:occurrence:423093\ncatalog:variable_text:41522:19723:20089"
 
 [[statement]]
 kind = "set"
@@ -2962,3 +2950,99 @@ kind = "set"
 subject = "var:huvudman"
 fields = { "description" = "Huvudman för den högst prioriterade utbildning som personen deltog i under höstterminen. Uppgiften hämtas från respektive källregister (Skolverkets elevregister, Universitets- och högskoleregistret, Folkhögskolan hösttermin och myndigheten för kvalificerad yrkesutbildning, senare Myndigheten för yrkeshögskolan), och källornas koder översätts till ett gemensamt värdeförråd." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; myndighetens namn byter och 2008 års text har ett dubblerat ord.\ncatalog:variable_text:48275:11323:12784\ncatalog:variable_text:48275:12784:13149\ncatalog:variable_text:48275:13149:13514\ncatalog:variable_text:48275:13879:14245\ncatalog:variable_text:48275:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:adoptivfaderns-utbildningsniva"
+fields = { "description" = "Adoptivfaderns högsta fullföljda utbildningsnivå enligt Svensk utbildningsnomenklatur (SUN), uttryckt i de gamla SUN-nivåerna (MIS 1996:1), det vill säga den andra positionen i den femställiga SUN-koden. Nivån härleds till och med 2018 ur den treställiga nivåkoden i SUN 2000 (MIS 2000:1) och från 2019 ur den treställiga nivåkoden i SUN 2020. 1999–2002 finns också adoptivfaderns utbildningsnivå enligt SUN 2000." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna är adoptivfaderns utbildningsnivå; härledningen och dess byte 2019 anges.\ncatalog:variable_text:48369:10592:12053\ncatalog:variable_text:48369:12784:14245\ncatalog:variable_text:48369:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:adoptivmoderns-utbildningsniva"
+fields = { "description" = "Adoptivmoderns högsta fullföljda utbildningsnivå enligt Svensk utbildningsnomenklatur (SUN), uttryckt i de gamla SUN-nivåerna (MIS 1996:1), det vill säga den andra positionen i den femställiga SUN-koden. Nivån härleds till och med 2018 ur den treställiga nivåkoden i SUN 2000 (MIS 2000:1) och från 2019 ur den treställiga nivåkoden i SUN 2020. 1999–2002 finns också adoptivmoderns utbildningsnivå enligt SUN 2000." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna är adoptivmoderns utbildningsnivå; härledningen och dess byte 2019 anges.\ncatalog:variable_text:48370:10592:12053\ncatalog:variable_text:48370:12784:13149\ncatalog:variable_text:48370:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:alder"
+fields = { "description" = "Personens ålder vid årets slut (31 december), i antal år och i åldersgrupper. Åldersgrupperna är ettårsklasser till och med 29 år, femårsklassen 30–34 år och därefter tioårsklasser (2010 femårsklasser efter 29 år); 1998–1999 finns också en indelning med ettårsklasser till och med 15 år, femårsklasser 16–24 år och därefter tioårsklasser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nÅlder i år och två grupperingar av samma ålder vid årets slut.\ncatalog:variable_text:48227:10227:12053\ncatalog:variable_text:48228:10227:10957\ncatalog:variable_text:48229:10227:13149\ncatalog:variable_text:48229:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:faderns-fodelseursprung"
+fields = { "description" = "Faderns födelseland, som landkod och grupperat i född i Sverige eller född utomlands. Grupperingen härleds från födelselandet för biologisk far eller adoptivfar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nKod och gruppering av samma födelseland.\ncatalog:variable_text:48256:10592:13149\ncatalog:variable_text:48263:10592:12053\ncatalog:variable_text:48263:12053:13149"
+
+[[statement]]
+kind = "set"
+subject = "set:faderns-utbildningsniva"
+fields = { "description" = "Den biologiska faderns högsta fullföljda utbildningsnivå enligt Svensk utbildningsnomenklatur (SUN): som treställig nivåkod enligt SUN 2000 (2001–2018) och SUN 2020 (2019–2024), som tvåsiffrig nivå (2000) och aggregerad till de gamla SUN-nivåerna (MIS 1996:1) (1999–2024), det vill säga den andra positionen i den femställiga SUN-koden; 2016–2018 skapas den aggregerade nivån i stället ur den treställiga nivåkoden enligt SUN 2000." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna skiljer sig i SUN-version och nivåindelning; den aggregerade nivån bygger på den femställiga koden utom 2016–2018 (W3).\ncatalog:variable_text:48364:10957:11323\ncatalog:variable_text:48366:10957:14245\ncatalog:variable_text:48366:16801:17897\ncatalog:variable_text:48375:17897:20089\ncatalog:variable_text:48377:17897:20089\ncatalog:variable_text:48378:10592:10957\ncatalog:variable_text:48396:12053:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:fodelseursprung"
+fields = { "description" = "Personens födelseland: som födelseland enligt definitionen i Registret över totalbefolkningen (RTB) och grupperat i född i Sverige eller född utomlands (1999–2024). 1995–1997 anges i stället födelseland eller län: för personer födda i Sverige före 1948 länet där personen föddes, för födda från 1948 länet där modern var folkbokförd vid födelsen (eller födelselänet om modern inte var folkbokförd), och för utrikes födda födelselandet enligt den då gällande indelningen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna anger samma födelseursprung som kod, gruppering och, för 1995–1997, födelseland eller län.\ncatalog:variable_text:48253:10592:12784\ncatalog:variable_text:48258:9131:10227\ncatalog:variable_text:48260:10592:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:moderns-utbildningsniva"
+fields = { "description" = "Moderns högsta fullföljda utbildningsnivå enligt Svensk utbildningsnomenklatur (SUN): som treställig nivåkod enligt SUN 2000 (2001–2018) och SUN 2020 (2019–2024), som tvåsiffrig nivå (2000) och aggregerad till de gamla SUN-nivåerna (MIS 1996:1), det vill säga den andra positionen i den femställiga SUN-koden (1999–2024). För den treställiga SUN 2000-koden och de gamla nivåerna avses den biologiska modern." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBeskriver moderns nivå per kod och år (W0, W1, W2, W4); 'biologiska' begränsas till de mått vars texter säger det (W2, W4).\ncatalog:variable_text:48355:10957:11323\ncatalog:variable_text:48356:17897:20089\ncatalog:variable_text:48357:10592:10957\ncatalog:variable_text:48358:10957:15340\ncatalog:variable_text:48359:17897:20089\ncatalog:variable_text:48399:11323:14245"
+
+[[statement]]
+kind = "set"
+subject = "set:naringsgren-huvudsaklig-sysselsattning"
+fields = { "description" = "Näringsgren för den huvudsakliga verksamhet som bedrivs på det arbetsställe där personen anses ha haft sin huvudsakliga sysselsättning i november, enligt Svensk näringsgrensindelning: SNI 92 på femsiffernivå (1998–2001) och tvåsiffernivå (1998), SNI 2002 på femsiffernivå (2002–2007), SNI 2007 på femsiffernivå (2008–2020), och grupperad i 10 branscher enligt SNI 92/2002 (2000–2007) och SNI 2007 (2008–2020)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar klassificerar samma arbetsställes verksamhet; de skiljer sig i SNI-version och detaljnivå.\ncatalog:variable_text:48240:10957:11323\ncatalog:variable_text:48240:12053:13149\ncatalog:variable_text:48241:13879:14245\ncatalog:variable_text:48297:10227:11688\ncatalog:variable_text:48297:11688:13149\ncatalog:variable_text:48298:10227:10592\ncatalog:variable_text:48299:14610:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:nationell-bakgrund"
+fields = { "description" = "Klassificering efter om personen och/eller personens föräldrar är födda i Sverige eller inte, härledd från personens eget födelseland och föräldrarnas födelseländer. Den ena versionen räknar med både biologiska föräldrar och adoptivföräldrar, utom 2006–2009 då den anges vara härledd från de biologiska föräldrarna; den andra (1999–2002) räknar bara med de biologiska föräldrarna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nUndantaget 2006–2009 för m0 (W1) anges.\ncatalog:variable_text:48388:10227:13149\ncatalog:variable_text:48388:13149:13514\ncatalog:variable_text:48389:10592:12053"
+
+[[statement]]
+kind = "set"
+subject = "set:skolkommun"
+fields = { "description" = "Kommunen där skolan eller skolenheten är belägen, för utbildning under höstterminen. Kommunkoden hämtas från samma källregister som personens uppgift om studiedeltagande under höstterminen: 1995–1997 separat för gymnasieskola, Komvux och (1995) högskola, från 1999 för den högst prioriterade utbildning personen deltagit i. 2005–2011 är källregistren Skolverkets elevregister, Universitets- och högskoleregistret, folkhögskolornas uppgifter för höstterminen och KY-myndigheten, från 2010 YH-myndigheten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nKällregistren räknas bara upp för m5 2005–2011 (W4–W6); principen om samma källregister gäller alla år (W0–W3).\ncatalog:variable_text:48321:9496:10227\ncatalog:variable_text:48322:9496:10227\ncatalog:variable_text:48323:10592:12053\ncatalog:variable_text:48324:9131:9496\ncatalog:variable_text:48325:9131:9496\ncatalog:variable_text:48326:12053:12784\ncatalog:variable_text:48326:12784:13879\ncatalog:variable_text:48326:13879:14245\ncatalog:variable_text:48326:14610:15340\ncatalog:variable_text:48327:9131:9496"
+
+[[statement]]
+kind = "set"
+subject = "set:studiedeltagande"
+fields = { "description" = "Personens deltagande i utbildning. 1995–1997 anges deltagande efter utbildningsform: gymnasieskola, Komvux, högskola på grundnivå och forskarutbildning under höstterminen, gymnasieskola, Komvux och högskola på grundnivå under vårterminen (1997), arbetsmarknadsutbildning (1996–1997) och kvalificerad yrkesutbildning (1997). Från 1995 anges också den högst prioriterade utbildning personen deltagit i under höstterminen, från 2001 även under vårterminen och under hela året. Den högst prioriterade utbildningen hämtas från flera källregister, bland annat Skolverkets elevregister, Universitets- och högskoleregistret, folkhögskolornas uppgifter, CSN, KY- eller YH-myndigheten och Arbetsförmedlingen (tidigare Arbetsmarknadsstyrelsen), från 2012 även SFI; källkoderna översätts till ett gemensamt värdeförråd." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna anger deltagande i utbildning, per utbildningsform och termin eller som högst prioriterad utbildning under termin eller år.\ncatalog:variable_text:48230:9496:10227\ncatalog:variable_text:48266:9131:10227\ncatalog:variable_text:48268:9131:9496\ncatalog:variable_text:48269:9862:10227\ncatalog:variable_text:48270:9496:10227\ncatalog:variable_text:48273:9131:10227\ncatalog:variable_text:48274:9862:10227\ncatalog:variable_text:48282:9496:10227\ncatalog:variable_text:48283:9131:9496\ncatalog:variable_text:48284:9862:10227\ncatalog:variable_text:48289:9862:10227\ncatalog:variable_text:48328:10227:12784\ncatalog:variable_text:48328:15340:16436\ncatalog:variable_text:48328:18628:20089\ncatalog:variable_text:48329:12784:13879\ncatalog:variable_text:48331:12784:13149\ncatalog:variable_text:48332:9131:9496\ncatalog:variable_text:48390:9496:10227"
+
+[[statement]]
+kind = "set"
+subject = "set:studiemedelsbidrag"
+fields = { "description" = "Bidragsdelen av studiemedlen: det bidragsbelopp som beviljats för studierna (2001–2024) och den bidragsdel som betalats ut under respektive kalenderhalvår (1996–1997 under höstterminen)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna är bidragsdelen av studiemedel, beviljat respektive utbetalt.\ncatalog:variable_text:48333:11323:20089\ncatalog:variable_text:48345:9131:9496\ncatalog:variable_text:48345:9496:10227"
+
+[[statement]]
+kind = "set"
+subject = "set:studiemedelsmottagande"
+fields = { "description" = "Studiemedel som personen fått. 1995–1997 anges studiemedel efter typ av studier: folkhögskolestudier, gymnasiestudier, vuxenstudier, högskolestudier, utlandsstudier och (1995) studier i Sverige, för högskole- och utlandsstudier 1996–1997 under höstterminen, samt 1996–1997 studiemedel under höstterminen totalt. 1995–2024 finns en markering för utbetalt lån och/eller bidrag i studiemedel från CSN, härledd från studiemedlens lån- och bidragsdel." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna anger mottagna studiemedel, efter typ av studier eller som en samlad markering för utbetalning från CSN.\ncatalog:variable_text:48334:9131:10227\ncatalog:variable_text:48335:9131:10227\ncatalog:variable_text:48336:9131:9496\ncatalog:variable_text:48337:9131:10227\ncatalog:variable_text:48338:9496:10227\ncatalog:variable_text:48339:9131:10227\ncatalog:variable_text:48340:9131:9496\ncatalog:variable_text:48340:9496:10227\ncatalog:variable_text:48346:9496:10227\ncatalog:variable_text:48348:9496:10227"
+
+[[statement]]
+kind = "set"
+subject = "set:sysselsattningsstatus"
+fields = { "description" = "Om personen klassificeras som sysselsatt (förvärvsarbetande) i november. Till och med 2018 räknas som förvärvsarbete inkomstbringande arbete i genomsnitt en timme per vecka under november, skattat 1997 med hjälp av kontrolluppgifter, inkomstuppgifter och AKU-uppgifter och 2005–2011 enligt den registerbaserade arbetsmarknadsstatistiken (RAMS). 2019–2021 krävs en utbetalning på minst 99 kronor i november eller deklarerad aktiv näringsverksamhet. Från 2022 är personen sysselsatt om minst ett kriterium är uppfyllt: en utbetalning i november av ersättning för arbete som är underlag för arbetsgivaravgifter enligt arbetsgivardeklarationen på individnivå (AGI), att personen antas driva ett verksamt företag som enskild näringsidkare eller delägare i handels- eller kommanditbolag, att personen antas vara tillfälligt frånvarande från arbetet, eller att personen klassificeras som sysselsatt utifrån inkomst från ett annat nordiskt land under referensåret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla tre medlemmar är sysselsättningsstatus i november; kriterierna byts 2019 och 2022 och anges med år.\ncatalog:variable_text:48281:18993:20089\ncatalog:variable_text:48380:9862:10227\ncatalog:variable_text:48380:10227:12784\ncatalog:variable_text:48380:12784:13149\ncatalog:variable_text:48381:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsinriktning"
+fields = { "description" = "Inriktningen för personens högsta fullföljda utbildning enligt Svensk utbildningsnomenklatur (SUN): enligt SUN 2000 (2000–2018) och SUN 2020 (2019–2024). För 1998–1999 finns utbildningsinriktningen som första siffran i SUN-koden, som visar utbildningens innehåll och inriktning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMåttet 1998–1999 (W5) knyts inte längre till högsta fullföljda utbildning, som dess formulering inte nämner.\ncatalog:variable_text:48360:10957:12784\ncatalog:variable_text:48373:17897:20089\ncatalog:variable_text:48395:10227:10957"
+
+[[statement]]
+kind = "set"
+subject = "set:yngsta-barnets-alder"
+fields = { "description" = "Ålder vid årets slut för personens yngsta hemmaboende barn, i år (2002–2024) och grupperad i åldersgrupper (1999–2024), där grupperingen är ett aggregat av åldern." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nÅlder och åldersgrupp för samma barn.\ncatalog:variable_text:48402:10592:10957\ncatalog:variable_text:48403:11688:17897"

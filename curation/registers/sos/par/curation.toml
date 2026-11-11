@@ -1690,3 +1690,21 @@ kind = "set"
 subject = "var:lopnr-oppenvardskontakt"
 fields = { "description" = "Unikt internt löpnummer för varje vårdkontakt (i tvångsvården för varje period med psykiatrisk vårdform). Externa beställare kan vid behov få variabeln pseudonymiserad med en ärendeunik nyckel." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma löpnummerkolumn IDNR; vad som numreras följer delregistret.\ncatalog:variable_text:64057:-2192:9862\ncatalog:variable_text:64057:19723:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:alder"
+fields = { "description" = "Patientens ålder i år: vid utskrivning från slutenvård (om utskrivningsdatum saknas, vid inrapporteringsdatum) eller vid öppenvårdskontakt, och vid årets sista dag, beräknad från födelsedatum och utskrivnings- eller kontaktårets sista dag (om utskrivningsår saknas, året för sista inrapporteringsdatum)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna är patientens ålder; axeln är tidpunkt (vårdtillfället eller årets slut).\ncatalog:variable_text:63979:-2192:9862\ncatalog:variable_text:63979:9862:14610\ncatalog:variable_text:63979:14610:2932897\ncatalog:variable_text:63980:-2192:9862\ncatalog:variable_text:63980:9862:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:besoksdatum"
+fields = { "description" = "Datum för vårdtillfällets början: det datum då patienten skrivs in i slutenvård eller datum för öppenvårdskontakten, både som alfanumeriskt datum och som SAS-datum." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna är samma datum; axeln är bara formatet.\ncatalog:variable_text:64024:-2192:9862\ncatalog:variable_text:64024:9862:2932897\ncatalog:variable_text:64048:-2192:9862\ncatalog:variable_text:64048:9862:14610\ncatalog:variable_text:64048:14610:16436"
+
+[[statement]]
+kind = "set"
+subject = "set:fodelsetid"
+fields = { "description" = "Patientens födelsedatum, som alfanumeriskt datum och som SAS-datum, och från 2015 även födelseåret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar anger patientens födelsetid; axlarna är format och detaljnivå (datum eller år).\ncatalog:variable_text:64037:-2192:14610\ncatalog:variable_text:64037:14610:16436\ncatalog:variable_text:64038:16436:2932897\ncatalog:variable_text:64039:-2192:2932897\ncatalog:variable_text:64040:16436:19723\ncatalog:variable_text:64040:19723:2932897"

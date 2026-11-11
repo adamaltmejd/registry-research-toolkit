@@ -932,3 +932,33 @@ kind = "set"
 subject = "var:lopnummer"
 fields = { "description" = "Unikt löpnummer för observationen, satt maskinellt när inkomna uppgifter laddas till databasen. 1996 är det numret på den rad där uppgifterna lagras i registret." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma löpnummer; 1996 års kolumn RadNr beskrivs som radnummer.\ncatalog:variable_text:49722:9496:9862\ncatalog:variable_text:49722:10227:12418\ncatalog:variable_text:49722:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:alder"
+fields = { "description" = "Personens ålder, härledd från personnumret, i år och i åldersgrupper. Från 2018 avser åldern mätperioden (september)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nÅlder och åldersgrupp härleds båda från personnumret.\ncatalog:variable_text:49697:9496:17532\ncatalog:variable_text:49697:17532:20089\ncatalog:variable_text:49698:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:anstallningsform"
+fields = { "description" = "Om anställningen är på heltid eller deltid, härlett från tjänstgöringsomfattningen, och, 2022–2024, om den är en tillsvidare- eller tidsbegränsad anställning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nOförändrad: anställningstypen (W2) är en annan aspekt av samma anställning och stannar enligt regeln 2026-11-11 som eget axelvärde.\ncatalog:variable_text:49699:9496:16071\ncatalog:variable_text:49699:16071:20089\ncatalog:variable_text:49700:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:geografisk-tillhorighet"
+fields = { "description" = "Kommun och län för den anställdes arbetsställe, som kommunkod och länkod enligt respektive års regionala indelning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nKommun och län för samma arbetsställe, med samma tidsregel för indelningen.\ncatalog:variable_text:49711:9496:11688\ncatalog:variable_text:49711:11688:12053\ncatalog:variable_text:49711:17167:20089\ncatalog:variable_text:49713:9496:11688\ncatalog:variable_text:49713:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:lonesumma"
+fields = { "description" = "Lönesummor per lönekomponent, härledda från insamlade lönekomponenter och arbetstidsvariabler: grundlön, skift- och OB-tillägg, jour- och beredskapsersättning samt förmåner, förmåner (från 2015), helglön (ersättning för förlorad lön vid helgdagar) och den totala lönesumman." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna är summor av olika lönekomponenter med samma härledning.\ncatalog:variable_text:49705:9496:12418\ncatalog:variable_text:49717:16436:20089\ncatalog:variable_text:49718:9496:12418\ncatalog:variable_text:49719:9496:12418\ncatalog:variable_text:49720:9496:12418\ncatalog:variable_text:49721:9496:12418"
+
+[[statement]]
+kind = "set"
+subject = "set:manadslon"
+fields = { "description" = "Månadslön omräknad till heltid, per lönekomponent och härledd från insamlade lönekomponenter och arbetstidsvariabler: grundlön, skift- och OB-tillägg, jour- och beredskapsersättning samt förmåner, förmåner (från 2014) och totallön." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna är heltidsmånadsbelopp för olika lönekomponenter med samma härledning.\ncatalog:variable_text:49723:9496:12418\ncatalog:variable_text:49724:16071:16436\ncatalog:variable_text:49725:16436:20089\ncatalog:variable_text:49726:9496:12418\ncatalog:variable_text:49727:9496:12418\ncatalog:variable_text:49728:9496:12418"

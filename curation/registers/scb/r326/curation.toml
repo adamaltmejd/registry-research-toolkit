@@ -912,3 +912,21 @@ kind = "set"
 subject = "var:kon"
 fields = { "description" = "Personens kön, härlett från näst sista siffran (position 11) i personnumret. För personer utan personnummer, eller där uppgiften saknas, samlas kön in från skolan." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma operationalisering i två formuleringar.\ncatalog:variable_text:41255:13879:15340\ncatalog:variable_text:41255:15340:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:fullfoljd-utbildning"
+fields = { "description" = "Om eleven har fullföljt utbildningen: under referensåret, eller är kvar i en utbildning som fullföljs efter referensåret, samt ett resultat härlett från dessa uppgifter (fullföljd, avbruten eller pågående). För 2007–2011 innebär fullföljd att eleven fått slutbetyg eller intyg efter en genomgången hel utbildning; vissa utbildningar fortsätter året efter och kan därför inte fullföljas under kalenderåret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna avser fullföljande under eller efter referensåret och det härledda resultatet; slutbetygsdefinitionen anges bara för FullF 2007–2011.\ncatalog:variable_text:41246:15340:16801\ncatalog:variable_text:41247:15340:15706\ncatalog:variable_text:41247:15706:16071\ncatalog:variable_text:41247:16071:16801\ncatalog:variable_text:41248:13514:15340\ncatalog:variable_text:41263:15340:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:statlig-tillsyn"
+fields = { "description" = "Statliga stödformer för utbildningen: om skolan eller utbildningen står under statlig tillsyn, och vilken eller vilka stödformer som finns enligt myndighetsbeslut, av tre typer: studiestöd, statsbidrag och tillsyn, där tillsyn är en ekonomisk tillsyn som reglerar momsredovisning. Stödformen bygger till och med 2011 på beslut från Skolverket och från 2012 på beslut från Myndigheten för yrkeshögskolan, som kopplas till utbildningen via dess kod." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nTillsynsmarkeringen ingår i stödformen enligt W1; källmyndigheten byter från Skolverket (2008–2011) till Myndigheten för yrkeshögskolan (2012–2015).\ncatalog:variable_text:41285:13514:15340\ncatalog:variable_text:41286:13879:15340\ncatalog:variable_text:41286:15340:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsstart"
+fields = { "description" = "Datum då kursen eller den kompletterande utbildningen startade." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna är startdatum, för olika årgångar (kursstart 2001–2006, startdatum 2012–2015).\ncatalog:variable_text:41256:11323:13514\ncatalog:variable_text:41270:15340:16801"

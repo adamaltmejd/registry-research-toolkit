@@ -4006,3 +4006,111 @@ kind = "set"
 subject = "var:arsmodell-imputerad-arsmod-imp"
 fields = { "description" = "Anger om fordonets årsmodell är imputerad. Vid imputering används i tur och ordning datum för första ibruktagande, tillverkningsår och datum då fordonet första gången registrerades i Vägtrafikregistret hos Transportstyrelsen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma markering; terränghjulingarnas text ”enkätsvar, förekomst” beskriver inte variabeln och tas inte med.\ncatalog:variable_text:18803:4017:4018\ncatalog:variable_text:18803:17896:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:agarbytesdatum"
+fields = { "description" = "Datum då fordonet bytte ägare, ett mått per ägarled: fordonets ägare, föregående ägare, nästföregående ägare och administrativa ägare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla texter har samma definition och skiljer sig bara i vilket ägarled de avser.\ncatalog:variable_text:18828:4017:4018\ncatalog:variable_text:18829:15705:15706\ncatalog:variable_text:18831:4017:4018\ncatalog:variable_text:18831:16800:16801\ncatalog:variable_text:18832:4017:4018\ncatalog:variable_text:18832:16800:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:agarens-naringsgren"
+fields = { "description" = "Bransch som fordonets ägare är verksam inom, när ägaren är en juridisk person, klassificerad enligt SNI. Ett mått per ägarled (ägare, föregående ägare, nästföregående ägare och, enligt SNI 2007 från 2016, administrativ ägare) och per SNI-version (SNI 69, SNI 92, SNI 2002 och SNI 2007)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nTexterna har samma operationella definition och skiljer sig i ägarled och SNI-version; den generiska meningen om produktionsenhetens näringsgren är utelämnad.\ncatalog:variable_text:18933:12417:12418\ncatalog:variable_text:18933:14974:14975\ncatalog:variable_text:18933:16070:16071\ncatalog:variable_text:18934:12417:12418\ncatalog:variable_text:18934:16435:16436\ncatalog:variable_text:18935:12417:12418\ncatalog:variable_text:18936:14244:14245\ncatalog:variable_text:18936:14974:14975\ncatalog:variable_text:18937:17166:17167\ncatalog:variable_text:18938:14244:14245\ncatalog:variable_text:18939:14244:14245\ncatalog:variable_text:18939:14974:14975\ncatalog:variable_text:18939:16435:16436\ncatalog:variable_text:18940:4017:4018\ncatalog:variable_text:18940:10956:10957\ncatalog:variable_text:18941:10591:10592\ncatalog:variable_text:18942:10591:10592\ncatalog:variable_text:18943:14609:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:agarkategori"
+fields = { "description" = "Om fordonets ägare är en fysisk eller juridisk person, med en finare indelning för juridiska personer. Ett mått per ägarled: ägare, föregående ägare, nästföregående ägare och, från 2016, administrativ ägare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSamma definition i alla texter; de skiljer sig bara i ägarled.\ncatalog:variable_text:18789:4017:4018\ncatalog:variable_text:18789:14974:14975\ncatalog:variable_text:18790:10591:10592\ncatalog:variable_text:18791:10591:10592\ncatalog:variable_text:18791:14974:14975\ncatalog:variable_text:18796:17166:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:bransleforbrukning"
+fields = { "description" = "Fordonets bränsleförbrukning vid blandad körning, mätt enligt NEDC eller, från 2017, enligt WLTP (Worldwide Harmonised Light Vehicle Test Procedure). Ett mått per drivmedel (drivmedel 1 är fordonets huvudsakliga drivmedel, därtill drivmedel 2 och 3) samt viktade värden: ett viktat NEDC-värde och viktade WLTP-värden per drivmedel. NEDC-värdena anges i m3/10 km för metan, kg/10 km för vätgas och liter/10 km (liter/mil) för övriga drivmedel, WLTP-värdena i liter/100 km." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nTexterna skiljer sig i mätmetod, drivmedel och viktning; enheterna liter/mil och l/10 km är samma enhet, och 1/10km är en felskrivning för l/10 km.\ncatalog:variable_text:18809:13148:13149\ncatalog:variable_text:18810:14244:14245\ncatalog:variable_text:18810:17531:17532\ncatalog:variable_text:18811:16070:16071\ncatalog:variable_text:18811:19357:19358\ncatalog:variable_text:18812:15705:15706\ncatalog:variable_text:18812:20453:20454\ncatalog:variable_text:18813:17531:17532\ncatalog:variable_text:18814:17531:17532\ncatalog:variable_text:18815:17531:17532\ncatalog:variable_text:18816:17531:17532\ncatalog:variable_text:18817:17531:17532\ncatalog:variable_text:18818:17531:17532\ncatalog:variable_text:18819:14244:14245\ncatalog:variable_text:18819:17531:17532\ncatalog:variable_text:18819:18992:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:bullerniva"
+fields = { "description" = "Fordonets bullernivå vid körning, i dB, ett mått per drivmedel: drivmedel 1 (fordonets huvudsakliga drivmedel), drivmedel 2 och drivmedel 3." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSamma definition och enhet; texterna skiljer sig bara i drivmedel.\ncatalog:variable_text:18821:14244:14245\ncatalog:variable_text:18821:14609:14610\ncatalog:variable_text:18863:16070:16071\ncatalog:variable_text:18864:16070:16071\ncatalog:variable_text:18864:17166:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:drivmedel"
+fields = { "description" = "Bränsle som fordonet kan framdrivas av: det huvudsakliga drivmedlet, det andra (alternativa) drivmedlet och det tredje drivmedlet. Gruppen innehåller också en drivmedelskombination, som anger om fordonet kan drivas av någon kombination av drivmedel (från 2015), och fordonets drivmedel grupperat efter vad som redovisas i den officiella statistiken (från 2024, för vissa fordonsslag och för terrängskotrar)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nTexterna delar definitionen bränsle som fordonet kan framdrivas av och skiljer sig i vilket drivmedel de avser, kombination eller gruppering för officiell statistik.\ncatalog:variable_text:18837:17531:17532\ncatalog:variable_text:18838:4017:4018\ncatalog:variable_text:18838:14974:14975\ncatalog:variable_text:18839:10956:10957\ncatalog:variable_text:18839:14974:14975\ncatalog:variable_text:18840:20088:20089\ncatalog:variable_text:18840:20453:20454\ncatalog:variable_text:18841:16070:16071\ncatalog:variable_text:18842:20453:20454\ncatalog:variable_text:18843:16800:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:effektnorm"
+fields = { "description" = "Den norm enligt vilken fordonets motoreffekt är uppmätt, ett mått per drivmedel (drivmedel 1, 2 och 3)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla texter har samma definition och skiljer sig bara i drivmedel.\ncatalog:variable_text:18844:17531:17532\ncatalog:variable_text:18845:14244:14245\ncatalog:variable_text:18845:16070:16071\ncatalog:variable_text:18847:16435:16436\ncatalog:variable_text:18848:16070:16071\ncatalog:variable_text:18849:16070:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:fordonsfabrikat"
+fields = { "description" = "Fordonets fabrikat (tillverkare), för personbilar, lastbilar, motorcyklar, terrängskotrar och EU-mopeder (från 2014) samt, 1999–2013, för mopeder klass I." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nTexterna anger fabrikat och skiljer sig bara i fordonsslag.\ncatalog:variable_text:18858:4017:4018\ncatalog:variable_text:18858:16435:16436\ncatalog:variable_text:18859:10956:10957"
+
+[[statement]]
+kind = "set"
+subject = "set:fordonskategori"
+fields = { "description" = "Den fordonskategori som fordonet är indelat i, enligt de EU-reglerade fordonskategorierna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna har samma definition; Hjul 2005–2007 och FKatEU från 2008 är samma uppgift i olika kolumner.\ncatalog:variable_text:18866:14244:14245\ncatalog:variable_text:18866:14609:14610\ncatalog:variable_text:18868:13148:13149"
+
+[[statement]]
+kind = "set"
+subject = "set:fordonsmodell"
+fields = { "description" = "Fordonets modell, i två klassningar: en finare klassning av bil- och motorcykelmodell (statkod) och en grövre klassning av bilmodell (topkod)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nTexterna delar definitionen fordonets modell och skiljer sig i klassningens finhet.\ncatalog:variable_text:18967:4017:4018\ncatalog:variable_text:18967:11322:11323\ncatalog:variable_text:18976:4017:4018\ncatalog:variable_text:18976:11322:11323"
+
+[[statement]]
+kind = "set"
+subject = "set:karosserikod"
+fields = { "description" = "Kod för fordonets karosseri som beskriver fordonstyp: den huvudsakliga karosserikoden, en kompletterande karosserikod och, från 2012, ett ytterligare tillägg till karosserikoden. För mopeder anger karosserikoden vilken typ av moped det är." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nTexterna beskriver huvudsaklig, kompletterande och tilläggskod för karosseri; mopedkoden är samma kod för mopeder.\ncatalog:variable_text:18882:4017:4018\ncatalog:variable_text:18882:14974:14975\ncatalog:variable_text:18883:15705:15706\ncatalog:variable_text:18884:14609:14610\ncatalog:variable_text:18884:14974:14975\ncatalog:variable_text:18885:15705:15706\ncatalog:variable_text:18886:14609:14610\ncatalog:variable_text:18887:15705:15706"
+
+[[statement]]
+kind = "set"
+subject = "set:koldioxidutslapp"
+fields = { "description" = "Fordonets koldioxidutsläpp i g/km, mätt enligt NEDC (New European Driving Cycle) eller, från 2017, enligt WLTP (Worldwide Harmonised Light Vehicles Test Procedure). Ett mått per drivmedel (drivmedel 1 är fordonets huvudsakliga drivmedel, därtill drivmedel 2 och 3) och körsätt: blandad körning och, för NEDC från 2017, stads- och landsvägskörning; därtill viktade värden vid blandad körning, enligt NEDC och enligt WLTP per drivmedel. Gruppen innehåller också specifikt koldioxidutsläpp för tunga fordon som omfattas av kraven i 2017/2400/EU (från 2019): ett beräknat värde från EU-kommissionens verktyg VECTO som bygger på bland annat en genomsnittlig nyttolast och avser grundfordonet om fordonet är byggt i flera steg." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nTexterna skiljer sig i mätmetod, drivmedel, körsätt och viktning; det specifika utsläppet för tunga fordon beskrivs separat eftersom det är beräknat och saknar angiven enhet.\ncatalog:variable_text:18824:14244:14245\ncatalog:variable_text:18824:14974:14975\ncatalog:variable_text:18825:15705:15706\ncatalog:variable_text:18825:16070:16071\ncatalog:variable_text:18826:17531:17532\ncatalog:variable_text:18826:18992:18993\ncatalog:variable_text:18889:17531:17532\ncatalog:variable_text:18890:17531:17532\ncatalog:variable_text:18891:17531:17532\ncatalog:variable_text:18892:17531:17532\ncatalog:variable_text:18893:14244:14245\ncatalog:variable_text:18893:14974:14975\ncatalog:variable_text:18894:16070:16071\ncatalog:variable_text:18895:17531:17532\ncatalog:variable_text:18896:17531:17532\ncatalog:variable_text:18897:17531:17532\ncatalog:variable_text:18898:17531:17532\ncatalog:variable_text:18899:17531:17532\ncatalog:variable_text:18899:18992:18993\ncatalog:variable_text:18900:17531:17532\ncatalog:variable_text:18901:17531:17532\ncatalog:variable_text:18901:18992:18993\ncatalog:variable_text:18966:18261:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:kvaveoxid-och-kolvateutslapp"
+fields = { "description" = "Fordonets utsläpp av kväveoxider och kolväten (NOxHC), ett mått per drivmedel: drivmedel 1 (fordonets huvudsakliga drivmedel) och drivmedel 2. Värden med enheten g/km eller g/kWh beskrivs i avgasdirektiv 70/220, värden i mg/km eller mg/kWh i avgasdirektiv 715/2007." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSamma definition för båda drivmedlen.\ncatalog:variable_text:18911:16800:16801\ncatalog:variable_text:18912:16800:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:kvaveoxidutslapp"
+fields = { "description" = "Fordonets utsläpp av kväveoxider, ett mått per drivmedel (drivmedel 1 är fordonets huvudsakliga drivmedel, därtill drivmedel 2 och, för WLTP, drivmedel 3) och mätning: NOx enligt avgasdirektiv 70/220 (g/km eller g/kWh) eller 715/2007 (mg/km eller mg/kWh), NOx (4) enligt avgasdirektiv 595/2009 och, från 2017, kväveoxidutsläpp mätt enligt WLTP (Worldwide Harmonised Light Vehicles Test Procedure)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nTexterna skiljer sig i drivmedel och i vilken norm eller testmetod utsläppet anges enligt.\ncatalog:variable_text:18913:16800:16801\ncatalog:variable_text:18914:16800:16801\ncatalog:variable_text:18915:17531:17532\ncatalog:variable_text:18916:17531:17532\ncatalog:variable_text:18944:16800:16801\ncatalog:variable_text:18945:16800:16801\ncatalog:variable_text:18946:17531:17532"
+
+[[statement]]
+kind = "set"
+subject = "set:miljobilsklassning"
+fields = { "description" = "Om fordonet uppfyller kraven i olika miljöklassningar: miljöbilsklassning (från 2008), supermiljöbil enligt förordning (2011:1590) (från 2015) och klimatbonusbil enligt förordning (2017:1334) om klimatbonusbilar (från 2018). Klimatbonusbil omfattar nya personbilar registrerade från och med den 1 juli 2018 som har inga eller mycket låga koldioxidutsläpp, upp till 60 g/km 2018–2019 och upp till 70 g/km från 2020, eller kan drivas med annat gasbränsle än gasol, till exempel vätgas, metangas eller gengas; bilen får inte ha varit påställd tidigare, i Sverige eller utomlands, och ska uppfylla utsläppskraven för Euro 5 eller Euro 6." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna anger var sin miljöklassning av fordonet; gränsen för klimatbonusbil ändrades från 60 till 70 g/km 2020.\ncatalog:variable_text:18888:17896:17897\ncatalog:variable_text:18888:18627:18628\ncatalog:variable_text:18925:14244:14245\ncatalog:variable_text:18969:16800:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:motoreffekt"
+fields = { "description" = "Fordonets motorstyrka i kW, ett mått per drivmedel (drivmedel 1, 2 och 3), samt, från 2019, effekten för en elmotor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nTexterna anger motorstyrka per drivmedel; elmotorns effekt är samma slags mått för elfordon.\ncatalog:variable_text:18846:18261:18262\ncatalog:variable_text:18929:4017:4018\ncatalog:variable_text:18930:14244:14245\ncatalog:variable_text:18930:14974:14975\ncatalog:variable_text:18931:14244:14245\ncatalog:variable_text:18932:16070:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:partikelutslapp"
+fields = { "description" = "Fordonets partikelutsläpp, ett mått per drivmedel (drivmedel 1 är fordonets huvudsakliga drivmedel, därtill drivmedel 2 och 3) och mätning: partikelvärde enligt avgasdirektiv 70/220 (g/km eller g/kWh) eller 715/2007 (mg/km eller mg/kWh), och partikelmassa, Part massa (4), enligt avgasdirektiv 595/2009 för drivmedel 1 och 2." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nTexterna skiljer sig i drivmedel och i vilket avgasdirektiv värdet beskrivs i.\ncatalog:variable_text:18947:16800:16801\ncatalog:variable_text:18948:16800:16801\ncatalog:variable_text:18949:14244:14245\ncatalog:variable_text:18950:16070:16071\ncatalog:variable_text:18951:14244:14245\ncatalog:variable_text:18952:16070:16071\ncatalog:variable_text:18953:16070:16071\ncatalog:variable_text:18954:16070:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:tankvolym"
+fields = { "description" = "Fordonets tankvolym i liter, ett mått per drivmedel: drivmedel 1 (fordonets huvudsakliga drivmedel), drivmedel 2 och drivmedel 3." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSamma definition och enhet; texterna skiljer sig bara i drivmedel.\ncatalog:variable_text:18970:13148:13149\ncatalog:variable_text:18970:16070:16071\ncatalog:variable_text:18971:16070:16071\ncatalog:variable_text:18972:16070:16071"

@@ -685,3 +685,9 @@ kind = "set"
 subject = "var:orgnr"
 fields = { "description" = "Organisationsnummer för elevens huvudman." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda åren anger huvudmannens organisationsnummer; den generella definitionen av organisationsnummer delas av många variabler och tas inte med.\ncatalog:variable_text:10746:18184:18185\ncatalog:variable_text:10746:18550:18551"
+
+[[statement]]
+kind = "set"
+subject = "set:foraldrars-utbildningsniva"
+fields = { "description" = "Utbildningsnivå enligt Svensk utbildningsnomenklatur (SUN) för modern, fadern och föräldrarna tillsammans, skapad ur uppgifter om biologisk mor och far i Befolkningsregistret och deras utbildningsnivå i Utbildningsregistret; för föräldrarna tillsammans väljs den högsta av de två föräldrarnas nivå. Varje mått finns detaljerat och grupperat, enligt SUN 2000 och, från 2020, SUN 2020." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla wordings har samma källa och härledning; de skiljer sig bara i förälder, SUN-version och gruppering.\ncatalog:variable_text:10756:18184:18185\ncatalog:variable_text:10757:18550:18551\ncatalog:variable_text:10758:18184:18185\ncatalog:variable_text:10759:18550:18551\ncatalog:variable_text:10759:18915:18916\ncatalog:variable_text:10760:18184:18185\ncatalog:variable_text:10761:18184:18185\ncatalog:variable_text:10762:18184:18185\ncatalog:variable_text:10763:18184:18185\ncatalog:variable_text:10764:18550:18551\ncatalog:variable_text:10765:18550:18551\ncatalog:variable_text:10766:18550:18551\ncatalog:variable_text:10767:18550:18551"

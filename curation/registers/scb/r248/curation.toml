@@ -3842,3 +3842,69 @@ kind = "set"
 subject = "var:utbildning"
 fields = { "description" = "Antal år i skola i hemlandet, uppgivet av kursdeltagaren till skolenheten vid inskrivningen i svenskundervisning för invandrare. I kalenderårstabellerna gäller, om insamlingarna har olika värden, det värde som rapporterats för kursen med senaste kursstart." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger uppgiftskälla och regel.\ncatalog:variable_text:41437:8582:9862\ncatalog:variable_text:41437:9862:10043\ncatalog:variable_text:41437:14610:14791\ncatalog:variable_text:41437:17348:17532"
+
+[[statement]]
+kind = "set"
+subject = "set:fodelseland"
+fields = { "description" = "Kursdeltagarens födelseland enligt Registret över totalbefolkningen (RTB). För 1997–2011 avser uppgiften RTB den 31 december; för den som saknas där hämtas födelselandet från RTB den 30 september samma år. För 1997 finns uppgiften också som länskod och län i klartext." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla tre är födelseland enligt RTB; läns­formen är etikettens.\ncatalog:variable_text:41369:9862:10227\ncatalog:variable_text:41370:9862:10227\ncatalog:variable_text:41372:9678:10227\ncatalog:variable_text:41372:10227:10408\ncatalog:variable_text:41372:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "set:grund-for-bosattning"
+fields = { "description" = "Kursdeltagarens grund för bosättning enligt Migrationsverkets klassningskod, som kod och grupperad. Den grupperade uppgiften avser för 1997–2012 Registret över totalbefolkningen den 31 december; för den som saknas där hämtas den från registret ett år tidigare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSamma kod, ogrupperad och grupperad.\ncatalog:variable_text:41374:9678:10957\ncatalog:variable_text:41375:9862:10227\ncatalog:variable_text:41375:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "set:kommunalforbund"
+fields = { "description" = "Det kommunalförbund som skolenheten eventuellt tillhör, som kod och som namn i klartext." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nKod och namn för samma kommunalförbund.\ncatalog:variable_text:41382:14245:14610\ncatalog:variable_text:41382:14610:20089\ncatalog:variable_text:41383:14610:15340\ncatalog:variable_text:41384:14610:18993\ncatalog:variable_text:41384:18993:19174\ncatalog:variable_text:41385:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:kommungrupp"
+fields = { "description" = "Kommungruppen där skolenheten ligger, enligt Sveriges Kommuner och Regioners indelning av kommunerna i nio grupper efter strukturella egenskaper som bland annat befolkningsstorlek, pendlingsmönster och näringslivsstruktur. Indelningen finns i 2017 och 2023 års version och i klartext; 2023 års version härleds från uppgiften om kommun." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSamma indelning i två versioner och klartext.\ncatalog:variable_text:41380:19358:20089\ncatalog:variable_text:41386:17532:19358\ncatalog:variable_text:41387:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:kommuntillhorighet"
+fields = { "description" = "Kommun enligt den regionala indelningen i kommuner, dels elevens hemkommun, dels kommunen där skolan eller skolenheten ligger (skolkommun), som kod och i klartext. Hemkommunen är för 1993–2009 den kommun som skolan uppgav att eleven bor i, där den senaste uppgiften från vår- eller höstinsamlingen väljs; för 2010–2024 är den kommunen där personen är folkbokförd, i vissa år 2015–2019 den kommun där personen bor enligt skolenhetens uppgift." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är en kommunkod; hem- eller skolkommun är axeln.\ncatalog:variable_text:41376:8582:9862\ncatalog:variable_text:41376:9862:10043\ncatalog:variable_text:41376:14245:14426\ncatalog:variable_text:41376:14610:15706\ncatalog:variable_text:41376:15706:15887\ncatalog:variable_text:41376:16436:16617\ncatalog:variable_text:41376:16801:16983\ncatalog:variable_text:41377:17167:17348\ncatalog:variable_text:41377:17897:18078\ncatalog:variable_text:41381:14426:15706\ncatalog:variable_text:41381:15706:15887\ncatalog:variable_text:41381:15887:16071\ncatalog:variable_text:41422:8582:13695\ncatalog:variable_text:41422:17713:17897\ncatalog:variable_text:41425:17897:18078\ncatalog:variable_text:41426:18628:20089\ncatalog:variable_text:41429:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:kursklassificering"
+fields = { "description" = "Den kurs inom svenskundervisning för invandrare (sfi) som personen var registrerad på, och kurskategori eller typ av kurs (2007–2008). Från 2002 gäller en ny kursplan; deltagare som börjat enligt den gamla fortsatte enligt den. För 2012–2016 finns också kurstypen: om kursen ges enligt den gamla skollagen (startad före den 1 juli 2012) eller den nya, härledd ur betyget (G eller VG ger gammal skollag, A–F ny)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla tre klassificerar sfi-kursen; kurstypen är härledd ur betyget.\ncatalog:variable_text:41389:9678:9862\ncatalog:variable_text:41389:9862:10043\ncatalog:variable_text:41389:11688:11869\ncatalog:variable_text:41392:15340:15522\ncatalog:variable_text:41392:15522:15706\ncatalog:variable_text:41434:13695:14061"
+
+[[statement]]
+kind = "set"
+subject = "set:lanstillhorighet"
+fields = { "description" = "Länet där skolan eller skolenheten ligger, som kod enligt den regionala indelningen i län och i klartext. Länskoden tas fram ur de två första positionerna i skolenhetskoden (2014) eller i skolkommunens kommunkod (2019–2024)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla fyra anger skolans län, som kod eller text.\ncatalog:variable_text:41393:14426:15706\ncatalog:variable_text:41393:15706:15887\ncatalog:variable_text:41393:15887:16071\ncatalog:variable_text:41393:16071:16252\ncatalog:variable_text:41394:9862:10957\ncatalog:variable_text:41394:10957:11323\ncatalog:variable_text:41394:17532:17713\ncatalog:variable_text:41394:17713:17897\ncatalog:variable_text:41427:9678:14426\ncatalog:variable_text:41427:17897:18078\ncatalog:variable_text:41427:18262:20089\ncatalog:variable_text:41428:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:nationella-provresultat"
+fields = { "description" = "Resultat på de nationella proven i komvux i svenska för invandrare: ett sammanvägt provbetyg utifrån de fyra delproven, där det lägsta värdet sätts vid blandade betyg på delproven (2009–2019), och resultatet på vart och ett av delproven hörförståelse, läsförståelse, skriftlig produktion och muntlig interaktion och produktion. Delproven redovisas som betyg 2009–2021 och som poäng 2022–2024: 0 eller 2 för kurs B, C och D, utom 0, 1 eller 2 för skriftlig produktion i kurs D och för muntlig interaktion och produktion i kurs C och D; 9 betyder att eleven inte deltog i delprovet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är resultat på samma prov; delprov och övergången från betyg till poäng 2022 är axlarna.\ncatalog:variable_text:41407:14426:14610\ncatalog:variable_text:41407:14610:14791\ncatalog:variable_text:41412:14426:18993\ncatalog:variable_text:41413:14426:18993\ncatalog:variable_text:41414:14426:15340\ncatalog:variable_text:41415:14426:18993\ncatalog:variable_text:41416:18993:19723\ncatalog:variable_text:41417:18993:19723\ncatalog:variable_text:41418:18993:19723\ncatalog:variable_text:41419:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:skoltillhorighet"
+fields = { "description" = "Skolan eller skolenheten, det vill säga en administrativ enhet på en adress där lärare och/eller elever finns, inte en byggnad eller fastighet. Den identifieras med skolkod (1993–2013), som skolans identitetsnummer, ett femsiffrigt löpnummer ur skolregistret som är skolans unika identitet (1995–2013), och från 2013 som skolenhetskod." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla fyra identifierar samma organisatoriska enhet; kodsystemet byts 2013.\ncatalog:variable_text:41420:15887:16436\ncatalog:variable_text:41421:9312:9862\ncatalog:variable_text:41421:9862:10043\ncatalog:variable_text:41421:14610:14791\ncatalog:variable_text:41423:15706:19723\ncatalog:variable_text:41424:8582:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:typ-av-utbildningsanordnare"
+fields = { "description" = "Den typ av utbildningsanordnare där kursdeltagaren läser den studievägskurs som framgår av studieväg och kurs." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna har samma text och etikett; den beskriver vad koden avser men inte kodlistan.\ncatalog:variable_text:41435:16436:20089\ncatalog:variable_text:41438:9312:9862\ncatalog:variable_text:41438:10043:10227"
+
+[[statement]]
+kind = "set"
+subject = "set:undervisningstimmar"
+fields = { "description" = "Antal undervisningstimmar om 60 minuter som kursdeltagaren har varit närvarande på den aktuella kursen under perioden. Från 2022 redovisas timmarna i klassrummet och timmarna via distans- eller fjärrundervisning var för sig." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSamma timmått; från 2022 uppdelat på klassrum och distans.\ncatalog:variable_text:41367:18993:20089\ncatalog:variable_text:41368:18993:20089\ncatalog:variable_text:41436:8582:9862\ncatalog:variable_text:41436:9862:10043"

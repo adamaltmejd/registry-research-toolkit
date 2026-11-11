@@ -1168,3 +1168,33 @@ kind = "set"
 subject = "var:svarsstatus"
 fields = { "description" = "Svarsstatus för månadsenkäten: om den skickats ut, inkommit, registrerats med hårda fel, registrerats med mjuka fel eller registrerats felfritt, även för webbblanketter och textfilsinlämning." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen finns i en del år och skiljer bara i ett mellanslag.\ncatalog:variable_text:34734:13514:16801\ncatalog:variable_text:34734:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:anlaggningstyp"
+fields = { "description" = "Typ av inkvarteringsanläggning, en klassificering av alla anläggningar i inkvarteringsregistret, till exempel hotell, stugby och vandrarhem och från 2017 även SCR-ansluten campinganläggning och övrig camping." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna är samma klassificering av anläggningar.\ncatalog:variable_text:34680:13879:16801\ncatalog:variable_text:34680:16801:17897\ncatalog:variable_text:34680:17897:20089\ncatalog:variable_text:34681:13879:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:baddkapacitet"
+fields = { "description" = "Anläggningens bäddkapacitet: antal tillgängliga bäddar till försäljning på öppna anläggningar, totalt alla dagar, fredag–söndag inklusive röda dagar och måndag–torsdag exklusive röda dagar; anläggningens maximala antal bäddar (fysisk kapacitet); högsta antal utnyttjade extrabäddar; och storleksgrupp efter antal bäddar respektive maximalt antal bäddar (1–19, 20–49, 50–99, 100–199 och 200 eller fler)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar mäter anläggningens bäddar; de skiljer sig i veckodagar, kapacitetsbegrepp och gruppering.\ncatalog:variable_text:34696:13514:17897\ncatalog:variable_text:34696:17897:20089\ncatalog:variable_text:34697:13514:20089\ncatalog:variable_text:34698:13514:17897\ncatalog:variable_text:34698:17897:20089\ncatalog:variable_text:34704:13514:20089\ncatalog:variable_text:34716:13514:17897\ncatalog:variable_text:34726:13514:16071\ncatalog:variable_text:34726:16071:16801\ncatalog:variable_text:34727:13514:17897\ncatalog:variable_text:34727:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:belagda-baddar"
+fields = { "description" = "Antal belagda, det vill säga uthyrda, bäddar på hotell, stugbyar och vandrarhem: totalt alla dagar, fredag–söndag inklusive röda dagar och måndag–torsdag exklusive röda dagar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar räknar belagda bäddar; de skiljer sig i veckodagar.\ncatalog:variable_text:34682:13514:13879\ncatalog:variable_text:34682:13879:15706\ncatalog:variable_text:34682:17167:20089\ncatalog:variable_text:34683:13514:20089\ncatalog:variable_text:34684:13514:20089\ncatalog:variable_text:34685:13879:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:gaster-efter-resenarskategori"
+fields = { "description" = "Antal rum som bokas av gäster i varje resenärskategori: affärs- och uppdragsresenärer, som betalar ordinarie pris (inklusive eventuell företagsrabatt); fritidsresenärer, dels gäster som ofta inte betalar ordinarie pris och reser främst över helger och under sommaren, dels fullt betalande privatgäster på säsongsberoende hotell som fjällhotell; gruppgäster, som betalar enligt grupprislista; och konferensgäster, som betalar enligt konferensprislista och bor och konfererar på hotellet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar räknar bokade rum; de skiljer sig i resenärskategori.\ncatalog:variable_text:34674:13514:18262\ncatalog:variable_text:34674:18262:20089\ncatalog:variable_text:34705:13514:20089\ncatalog:variable_text:34707:13514:18262\ncatalog:variable_text:34707:18262:20089\ncatalog:variable_text:34711:13514:17897\ncatalog:variable_text:34711:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:rumskapacitet"
+fields = { "description" = "Anläggningens rumskapacitet: antal tillgängliga rum till försäljning på öppna anläggningar, totalt alla dagar, fredag–söndag inklusive röda dagar och måndag–torsdag exklusive röda dagar; anläggningens maximala antal rum (fysisk kapacitet, gäller inte vandrarhem); och storleksgrupp efter antal rum respektive maximalt antal rum (vandrarhem, 1–49 och 50–149 rum, för antal rum 2007–2013 också 150 eller fler rum)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nKlassen 150 eller fler rum finns bara i m5:s kodlista 2007–2013 (W7); W5 slutar vid 50–149 rum.\ncatalog:variable_text:34699:13514:20089\ncatalog:variable_text:34700:13514:20089\ncatalog:variable_text:34703:13514:17897\ncatalog:variable_text:34703:17897:20089\ncatalog:variable_text:34717:13514:17897\ncatalog:variable_text:34728:13514:17897\ncatalog:variable_text:34728:17897:18628\ncatalog:variable_text:34729:13514:16071\ncatalog:variable_text:34729:16071:16801"

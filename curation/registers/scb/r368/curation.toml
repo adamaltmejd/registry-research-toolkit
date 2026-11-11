@@ -1246,3 +1246,45 @@ kind = "set"
 subject = "var:utlbakgr"
 fields = { "description" = "Om personen har utländsk eller svensk bakgrund. Svensk bakgrund har den som är född i Sverige och har högst en förälder född utrikes; utländsk bakgrund har den som är född utrikes eller vars båda föräldrar är födda utrikes. Saknas förälderns födelseland antas föräldern vara född i samma land som personen (inrikes eller utrikes). Saknas födelseland för både personen och föräldrarna anges Uppgift saknas. Uppgiften hämtas från Befolkningsregistret i en fast prioritetsordning mellan flera tidpunkter (årsskiftet, halvårsskiftet eller ett kvartalsskifte); ordningen har ändrats mellan åren." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition och härledning; texterna skiljer sig bara i vilka referenstidpunkter i Befolkningsregistret som prövas och i vilken ordning, vilket sammanfattas utan att räkna upp varje års ordning.\ncatalog:variable_text:41233:16436:16617\ncatalog:variable_text:41233:16617:16801\ncatalog:variable_text:41233:16983:19539\ncatalog:variable_text:41233:19539:19723\ncatalog:variable_text:41233:19723:19905"
+
+[[statement]]
+kind = "set"
+subject = "set:delkomponent-till-disponibel-inkomst"
+fields = { "description" = "Den biologiska faderns respektive moderns disponibla inkomst enligt 2004 års definition, som utgör en delkomponent vid beräkning av familjens disponibla inkomst. Skapad från Inkomst- och taxeringsregistret och Befolkningsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna är samma inkomstbegrepp; de skiljer sig bara i förälder.\ncatalog:variable_text:41180:16801:16983\ncatalog:variable_text:41180:16983:18444\ncatalog:variable_text:41181:16801:16983\ncatalog:variable_text:41181:16983:18444"
+
+[[statement]]
+kind = "set"
+subject = "set:fodelseland"
+fields = { "description" = "Det land där personen, den biologiska modern och den biologiska fadern är födda, enligt definitionen i Registret över totalbefolkningen (RTB), samt 2016 födelseländer grupperade i världsdelar eller landgrupper. Uppgiften hämtas från Befolkningsregistret; vilken tidpunkt i registret som används i första hand varierar mellan åren (årsskiftet, halvårsskiftet eller, 2024, 30 juni)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är födelseland; de skiljer sig i person och gruppering.\ncatalog:variable_text:41186:16436:16617\ncatalog:variable_text:41186:16617:16801\ncatalog:variable_text:41186:16983:19539\ncatalog:variable_text:41186:19539:19723\ncatalog:variable_text:41186:19723:19905\ncatalog:variable_text:41187:16436:16617\ncatalog:variable_text:41187:16617:16983\ncatalog:variable_text:41187:16983:19539\ncatalog:variable_text:41187:19539:19723\ncatalog:variable_text:41187:19723:19905\ncatalog:variable_text:41188:16801:16983\ncatalog:variable_text:41189:16436:16617\ncatalog:variable_text:41189:16617:16801\ncatalog:variable_text:41189:16983:19539\ncatalog:variable_text:41189:19539:19723\ncatalog:variable_text:41189:19723:19905"
+
+[[statement]]
+kind = "set"
+subject = "set:foraldrars-arbetsmarknadsstatus"
+fields = { "description" = "Den biologiska faderns och moderns situation på arbetsmarknaden: arbetsmarknadsstatus (2023–2024), en klassificering utifrån situationen på arbetsmarknaden, och skattad sysselsättningsstatus i november (2018–2023), där inkomstbringande arbete i genomsnitt en timme per vecka under november räknas som förvärvsarbete. Skapad från Yrkesregistret och Befolkningsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar klassificerar förälderns ställning på arbetsmarknaden; de skiljer sig i förälder och klassificering.\ncatalog:variable_text:41169:19539:19723\ncatalog:variable_text:41169:19723:19905\ncatalog:variable_text:41170:19539:19723\ncatalog:variable_text:41170:19723:19905\ncatalog:variable_text:41226:17713:19539\ncatalog:variable_text:41227:17713:19539"
+
+[[statement]]
+kind = "set"
+subject = "set:foraldrars-sektortillhorighet"
+fields = { "description" = "Sektorkod för det företag där den biologiska fadern respektive modern bedöms ha haft sin huvudsakliga sysselsättning i november, skapad från Yrkesregistret och Befolkningsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna är samma sektorkod; de skiljer sig bara i förälder.\ncatalog:variable_text:41214:16801:16983\ncatalog:variable_text:41214:16983:18444\ncatalog:variable_text:41215:16801:16983\ncatalog:variable_text:41215:16983:18444"
+
+[[statement]]
+kind = "set"
+subject = "set:foraldrars-socioekonomiska-gruppering"
+fields = { "description" = "Den biologiska faderns och moderns socioekonomiska grupp, en registerbaserad indelning som härleds från yrkeskoden: 2016 som yrkesbaserad socioekonomisk gruppering baserad på ISCO-88 (COM), 2017–2020 som europeisk socioekonomisk gruppering (ESeG) baserad på ISCO-08 med viss hänsyn till yrkesklassificeringen SSYK 2012." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är yrkesbaserad socioekonomisk gruppering av föräldrarna; de skiljer sig i förälder och indelning.\ncatalog:variable_text:41183:17167:18444\ncatalog:variable_text:41184:17167:18444\ncatalog:variable_text:41234:16801:16983\ncatalog:variable_text:41234:16983:17167\ncatalog:variable_text:41235:16801:16983\ncatalog:variable_text:41235:16983:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:foraldrars-utbildningsniva"
+fields = { "description" = "Utbildningsnivå enligt Svensk utbildningsnomenklatur för den biologiska fadern, för den biologiska modern och för föräldrarna, det vill säga den högsta av faderns och moderns nivå. Skapad från Utbildningsregistret och Befolkningsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är utbildningsnivå enligt SUN; föräldrarnas nivå är den högsta av de två föräldrarnas.\ncatalog:variable_text:41185:16436:16617\ncatalog:variable_text:41185:16617:16801\ncatalog:variable_text:41185:16983:19539\ncatalog:variable_text:41185:19539:19723\ncatalog:variable_text:41185:19723:19905\ncatalog:variable_text:41191:16436:16617\ncatalog:variable_text:41191:16617:16801\ncatalog:variable_text:41191:16983:19539\ncatalog:variable_text:41191:19539:19723\ncatalog:variable_text:41191:19723:19905\ncatalog:variable_text:41221:16436:16617\ncatalog:variable_text:41221:16617:16801\ncatalog:variable_text:41221:16983:19539\ncatalog:variable_text:41221:19539:19723\ncatalog:variable_text:41221:19723:19905"
+
+[[statement]]
+kind = "set"
+subject = "set:invandringsdatum"
+fields = { "description" = "Datum för personens senaste och tidigaste invandring till Sverige, enligt Befolkningsregistret. Värdet 0 betyder att personen inte har något invandringsdatum registrerat." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna är invandringsdatum; de skiljer sig i senaste eller första invandringen.\ncatalog:variable_text:41216:16436:16617\ncatalog:variable_text:41216:16617:16801\ncatalog:variable_text:41216:16801:16983\ncatalog:variable_text:41216:16983:19539\ncatalog:variable_text:41216:19539:19723\ncatalog:variable_text:41216:19723:19905\ncatalog:variable_text:41229:16436:20270"

@@ -580,3 +580,21 @@ kind = "set"
 subject = "var:typ-av-undervisning"
 fields = { "description" = "Anger om kursen bedrevs på dagtid, på kvällstid (kursen startade efter klockan 18) eller som ej schemalagd undervisning. I elevtabellen avses den kurs där eleven har avverkat flest poäng." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; i elevtabellen gäller den elevens kurs med flest poäng.\ncatalog:variable_text:50968:10043:11869"
+
+[[statement]]
+kind = "set"
+subject = "set:studieomfattning-i-poang"
+fields = { "description" = "Studiernas omfattning i poäng: kursens eller ämnets CSN-poäng, som studiestödet bedöms efter; de poäng som elevens kurser totalt omfattar, även utanför läsåret; och de poäng som eleven läst eller avverkat på kursen under det aktuella läsåret eller halvåret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla tre är poängmått för studierna; totalt, under perioden och för studiestöd.\ncatalog:variable_text:50947:10043:11869\ncatalog:variable_text:50960:10043:10227\ncatalog:variable_text:50967:10043:10227"
+
+[[statement]]
+kind = "set"
+subject = "set:typ-av-utbildningsanordnare"
+fields = { "description" = "Vem som anordnar utbildningen: huvudmannen för skolan eller skolenheten, och typen av utbildningsanordnare (kommun, landsting, studieförbund, folkhögskola eller annan anordnare) för kursen eller för den kurs där eleven avverkat flest poäng." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nHuvudman och typ av anordnare anger båda vem som driver utbildningen.\ncatalog:variable_text:50951:10043:11869\ncatalog:variable_text:50969:10043:11869"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsatgard"
+fields = { "description" = "Om personen har fått någon speciell utbildningsåtgärd i Statens skolor för vuxna (SSV), och i en bredare variant också i Komvux eller inom Nationellt centrum för flexibelt lärande (CFL)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSamma uppgift om utbildningsåtgärd, för SSV eller bredare.\ncatalog:variable_text:50970:10043:11869\ncatalog:variable_text:50971:10043:10227\ncatalog:variable_text:50971:10227:10408"

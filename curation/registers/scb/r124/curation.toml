@@ -6247,3 +6247,237 @@ kind = "set"
 subject = "var:vaxter-djur-orsak-besvar"
 fields = { "description" = "Om växter eller djur (biologiska ämnen) är en orsak till de besvär urvalspersonen nämnt, i frågan Vad var det som orsakade de besvär du nämnt? 2014–2016 ställs frågan endast till den som på grund av arbetet under de senaste 12 månaderna haft besvär med hörseln, allergi, hudöverkänslighet, sömnbesvär, oro, ångest, depression eller nervösa besvär, eller inget av dessa besvär." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga alla år; frågenummer tas bort och 2014–2016 års filter anges med år.\ncatalog:variable_text:11790:11323:12784\ncatalog:variable_text:11790:12784:13514\ncatalog:variable_text:11790:13879:14245\ncatalog:variable_text:11790:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "set:allergi-astma-och-hudbesvar"
+fields = { "description" = "Besvär med allergi, astma eller huden. 2001–2016 frågades separat om allergibesvär på grund av arbetet under de senaste 12 månaderna (snuva, astma eller dylikt, ej hud), om hudöverkänslighet (eksem, klåda, sveda, rodnad, nässelutslag) och om besvären satt i huden; från 2018 är det en gemensam fråga om allergi, astma eller hudbesvär någon gång under de senaste 12 månaderna på grund av olyckshändelse eller andra förhållanden i arbetet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nDe äldre separata frågorna om allergi, hudöverkänslighet och hud som besvärsställe samlas från 2018 i en gemensam fråga; åren anges.\ncatalog:variable_text:11500:17532:17897\ncatalog:variable_text:11501:11323:12784\ncatalog:variable_text:11652:11323:12784\ncatalog:variable_text:11653:11323:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsanpassning-pa-grund-av-besvar"
+fields = { "description" = "Förändringar i arbetet som personen numera har på grund av besvär till följd av arbetet: förändrade arbetsuppgifter, nedgång i ordinarie arbetstid (sjukskrivning eller sjukfrånvaro inte inräknad) och, från 2014, omplacering inom samma företag. 2001–2003 finns också svaren både förändrade arbetsuppgifter och nedgång i arbetstid respektive varken det ena eller det andra." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna är svarsalternativen på samma fråga om anpassning av arbetet på grund av besvären, med år för de alternativ som bara finns vissa år.\ncatalog:variable_text:11558:11323:12418\ncatalog:variable_text:11567:16071:16436\ncatalog:variable_text:11570:16071:16436\ncatalog:variable_text:11570:17532:17897\ncatalog:variable_text:11636:11323:12784\ncatalog:variable_text:11636:17532:17897\ncatalog:variable_text:11642:11323:12418\ncatalog:variable_text:11687:11323:12418"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsplatsatgarder-mot-besvar"
+fields = { "description" = "Åtgärder som vidtagits på den arbetsplats där besvären uppstod, för att besvären ska lindras, inte förvärras eller återkomma eller för att andra inte ska drabbas av liknande besvär: om åtgärder vidtagits (2001–2016) och vilka. Varje åtgärd är en egen variabel, till exempel förändringar i den fysiska arbetsmiljön, arbetsmetoderna eller arbetsorganisationen och skyddsutrustning (2001–2016), personlig stöttning (från 2014) och avlastning eller nya arbetsverktyg och hjälpmedel (från 2018); 2014–2016 finns också svaren annat, vet ej, vill ej svara och kombinationer av svar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar gäller frågan om och vilka åtgärder som vidtagits på arbetsplatsen; svarsalternativen skiljer sig mellan perioderna och anges med år.\ncatalog:variable_text:11553:11323:12784\ncatalog:variable_text:11554:17532:17897\ncatalog:variable_text:11555:17532:17897\ncatalog:variable_text:11556:17532:17897\ncatalog:variable_text:11641:11323:12784\ncatalog:variable_text:11641:16071:16436\ncatalog:variable_text:11676:11323:12784\ncatalog:variable_text:11681:11323:12784\ncatalog:variable_text:11730:11323:12784\ncatalog:variable_text:11744:11323:12784\ncatalog:variable_text:11768:11323:12784\ncatalog:variable_text:11779:16071:16436\ncatalog:variable_text:11797:16071:16436\ncatalog:variable_text:11798:16071:16436\ncatalog:variable_text:11799:16071:16436\ncatalog:variable_text:11800:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsskadeanmalan"
+fields = { "description" = "Om en arbetsskadeanmälan, där omständigheterna kring skadan beskrivs på en särskild blankett, har gjorts till Försäkringskassan med anledning av besvären. Från 2018 skiljs anmälan för besvär av andra förhållanden i arbetet än arbetsolycka från anmälan för varje arbetsolycka, en variabel per olycka från den senaste till den nionde." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSamtliga medlemmar gäller om en arbetsskadeanmälan gjorts till Försäkringskassan; från 2018 delas de upp efter besvärsorsak och olycka.\ncatalog:variable_text:11505:12418:12784\ncatalog:variable_text:11507:11323:12053\ncatalog:variable_text:11508:12053:12418\ncatalog:variable_text:11600:17532:17897\ncatalog:variable_text:11690:17532:17897\ncatalog:variable_text:11691:17532:17897\ncatalog:variable_text:11698:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsstallningar-som-besvarsorsak"
+fields = { "description" = "Om påfrestande arbetsställningar orsakade de besvär personen uppgett. Från 2018 avser det besvär av andra förhållanden i arbetet än olyckshändelse. Orsaken omfattar då också långvarigt stillasittande." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nDen äldre frågan om vad som orsakade besvären och den nyare frågan om orsak till besvär av andra förhållanden än olyckshändelse gäller samma orsak.\ncatalog:variable_text:11544:11323:12784\ncatalog:variable_text:11616:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:besvar-i-hela-kroppen"
+fields = { "description" = "Besvär i hela kroppen eller större delen av den. 2001–2016 är det svaret på var i kroppen personen har eller hade besvär; från 2018 avser det besvär i hela eller större delen av kroppen någon gång under de senaste 12 månaderna på grund av olyckshändelse eller andra förhållanden i arbetet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nDen äldre frågan om var i kroppen besvären satt och den nyare frågan om arbetsorsakade besvär under 12 månader gäller samma kroppsdel; skillnaden i fråga anges med år.\ncatalog:variable_text:11645:17532:17897\ncatalog:variable_text:11646:11323:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:besvar-till-foljd-av-arbetsolycka"
+fields = { "description" = "Om besvären till följd av arbetet berodde på en arbetsolycka. 2001–2016 skiljs olyckor som inträffade tidigare än året före mättillfället från olyckor året före mättillfället eller senare, och 2014–2016 finns också svaren nej, vet ej och vill ej svara samt kombinationer av svar. Från 2018 avser det besvär någon gång under de senaste tolv månaderna till följd av en eller flera olyckshändelser i arbetet, oavsett om besvären varit tillfälliga eller bestående och även besvär som förvärrats av en olyckshändelse, samt antalet arbetsolyckor bakom besvären." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna är svaren på frågan om besvären berodde på arbetsolycksfall (2001–2016) och de nyare frågorna om besvär efter olyckshändelser i arbetet (från 2018).\ncatalog:variable_text:11539:11323:12784\ncatalog:variable_text:11539:16071:16436\ncatalog:variable_text:11540:16071:16436\ncatalog:variable_text:11545:16071:16436\ncatalog:variable_text:11574:16071:16436\ncatalog:variable_text:11586:16071:16436\ncatalog:variable_text:11587:16071:16436\ncatalog:variable_text:11686:16071:16436\ncatalog:variable_text:11699:17532:17897\ncatalog:variable_text:11719:17532:17897\ncatalog:variable_text:11729:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:bildskarmsarbete-som-besvarsorsak"
+fields = { "description" = "Om arbete vid bildskärm eller dator orsakade de besvär personen uppgett. Från 2018 avser det besvär av andra förhållanden i arbetet än olyckshändelse." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nDen äldre frågan om vad som orsakade besvären och den nyare frågan om orsak till besvär av andra förhållanden än olyckshändelse gäller samma orsak.\ncatalog:variable_text:11536:17532:17897\ncatalog:variable_text:11593:11323:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:blodbesvar"
+fields = { "description" = "Besvär i blodet eller de blodbildande organen. 2001–2016 är det svaret på var i kroppen personen har eller hade besvär; från 2018 avser det besvär i blodet eller de blodbildande organen någon gång under de senaste 12 månaderna på grund av olyckshändelse eller andra förhållanden i arbetet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nDen äldre frågan om var i kroppen besvären satt och den nyare frågan om arbetsorsakade besvär under 12 månader gäller samma kroppsdel; skillnaden i fråga anges med år.\ncatalog:variable_text:11594:17532:17897\ncatalog:variable_text:11595:11323:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:brostbesvar"
+fields = { "description" = "Besvär i bröstet. 2001–2016 är det svaret på var i kroppen personen har eller hade besvär; från 2018 avser det besvär i bröstet någon gång under de senaste 12 månaderna på grund av olyckshändelse eller andra förhållanden i arbetet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nDen äldre frågan om var i kroppen besvären satt och den nyare frågan om arbetsorsakade besvär under 12 månader gäller samma kroppsdel; skillnaden i fråga anges med år.\ncatalog:variable_text:11596:17532:17897\ncatalog:variable_text:11597:11323:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:buk-och-backenbesvar"
+fields = { "description" = "Besvär i buken eller bäckenet. 2001–2016 är det svaret på var i kroppen personen har eller hade besvär, med buk och bäcken (2001–2010; 2014–2016 buk och/eller bäcken) skilt från mage, tarmar och övriga bukorgan; från 2018 är det en gemensam variabel för besvär i buk, mage, tarmar eller övriga bukorgan någon gång under de senaste 12 månaderna på grund av olyckshändelse eller andra förhållanden i arbetet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar gäller besvär i buk, bäcken eller bukorgan; den äldre uppdelningen och den nyare sammanslagna frågan anges med år.\ncatalog:variable_text:11568:16071:16436\ncatalog:variable_text:11571:11323:12784\ncatalog:variable_text:11618:17532:17897\ncatalog:variable_text:11675:11323:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:buller-som-besvarsorsak"
+fields = { "description" = "Om buller orsakade de besvär personen uppgett. 2014–2016 ställs frågan bara till personer som på grund av arbetet under de senaste 12 månaderna haft besvär med hörseln, allergi, hudöverkänslighet, sömnbesvär, oro, ångest eller depression eller nervösa besvär, eller inget av dessa besvär. Från 2018 avser det besvär av andra förhållanden i arbetet än olyckshändelse, och orsaken omfattar då också stimmig miljö." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nLägger till urvalsvillkoret 2014–2016 (W4).\ncatalog:variable_text:11606:17532:17897\ncatalog:variable_text:11619:11323:12784\ncatalog:variable_text:11619:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "set:fardolyckor-och-tillhorande-besvar"
+fields = { "description" = "Om besvären till följd av arbetet berodde på en olycka på väg till eller från arbetet, uppdelat efter när olyckan inträffade: tidigare än året före mättillfället respektive året före mättillfället eller senare. 2014–2016 finns också en sammanfattande variabel för färdolycka oavsett tidpunkt samt svaren nej, vet ej, vill ej svara och kombinationer av svar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna är svaren på samma fråga om besvär efter olycka till eller från arbetet, uppdelade efter olyckans tidpunkt och svarsalternativ.\ncatalog:variable_text:11569:16071:16436\ncatalog:variable_text:11588:16071:16436\ncatalog:variable_text:11589:16071:16436\ncatalog:variable_text:11590:16071:16436\ncatalog:variable_text:11591:16071:16436\ncatalog:variable_text:11632:16071:16436\ncatalog:variable_text:11633:11323:12053\ncatalog:variable_text:11633:14610:14975\ncatalog:variable_text:11781:11323:12053\ncatalog:variable_text:11781:16071:16436\ncatalog:variable_text:11781:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:franvarotid-till-foljd-av-besvar"
+fields = { "description" = "Hur länge besvär till följd av arbetet har hållit personen borta från arbetet. 2001–2016 är det den sammanlagda tiden under de senaste 12 månaderna med sjukfrånvaro och/eller sjukersättning eller aktivitetsersättning till följd av besvären, 2014–2016 också uppdelat på besvär efter arbetsolycksfall, efter olycka på väg till eller från arbetet och av andra orsaker än arbetsolycksfall; 2018–2022 den sammanlagda frånvaron under de senaste 12 månaderna till följd av besvär som orsakats av arbetet. 2001–2022 finns också hur länge personen hade varit sjukskriven innan en rehabiliteringsutredning gjordes." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna mäter frånvarotid till följd av besvären, totalt, per orsak och före rehabiliteringsutredning; 12-månadersfönstret anges bara för frånvaromåtten (W0–W6), inte för m5 (W7).\ncatalog:variable_text:11547:16071:16436\ncatalog:variable_text:11548:16071:16436\ncatalog:variable_text:11549:16071:16436\ncatalog:variable_text:11550:11323:12784\ncatalog:variable_text:11754:17532:17897\ncatalog:variable_text:11766:11323:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:handbesvar"
+fields = { "description" = "Besvär i fingrar, hand eller handled. 2001–2016 är det svaret på var i kroppen personen har eller hade besvär; från 2018 avser det besvär i fingrar, hand eller handled någon gång under de senaste 12 månaderna på grund av olyckshändelse eller andra förhållanden i arbetet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nDen äldre frågan om var i kroppen besvären satt och den nyare frågan om arbetsorsakade besvär under 12 månader gäller samma kroppsdel; skillnaden i fråga anges med år.\ncatalog:variable_text:11635:17532:17897\ncatalog:variable_text:11644:11323:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:hjart-och-karlbesvar"
+fields = { "description" = "Besvär i hjärta eller kärlsystem. 2001–2016 är det svaret på var i kroppen personen har eller hade besvär; från 2018 avser det besvär i hjärta eller kärlsystem någon gång under de senaste 12 månaderna på grund av olyckshändelse eller andra förhållanden i arbetet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nDen äldre frågan om var i kroppen besvären satt och den nyare frågan om arbetsorsakade besvär under 12 månader gäller samma kroppsdel; skillnaden i fråga anges med år.\ncatalog:variable_text:11525:17532:17897\ncatalog:variable_text:11648:11323:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:hoft-ben-och-fotbesvar"
+fields = { "description" = "Besvär i höfter, ben eller fötter. 2001–2016 är det svaret på var i kroppen personen har eller hade besvär, separat för höftled, ben och knän och för tår, fot och fotled; från 2018 är det en gemensam variabel för besvär i höfter, bäcken, ben, knä, fötter eller tår någon gång under de senaste 12 månaderna på grund av olyckshändelse eller andra förhållanden i arbetet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nDen äldre uppdelade frågan om var besvären satt och den nyare sammanslagna frågan gäller samma kroppsdelar.\ncatalog:variable_text:11526:17532:17897\ncatalog:variable_text:11561:11323:12784\ncatalog:variable_text:11638:11323:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:horselbesvar"
+fields = { "description" = "Besvär med hörseln till följd av arbetet under de senaste 12 månaderna. Från 2018 anges det som hörselnedsättning, tinnitus eller ljudöverkänslighet någon gång under de senaste 12 månaderna på grund av olyckshändelse eller andra förhållanden i arbetet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna gäller arbetsorsakade hörselbesvär under 12 månader; frågeformuleringen ändras 2018.\ncatalog:variable_text:11527:17532:17897\ncatalog:variable_text:11649:11323:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:hot-och-vald-som-besvarsorsak"
+fields = { "description" = "Om hot eller våld orsakade de besvär personen uppgett. Från 2018 avser det besvär av andra förhållanden i arbetet än olyckshändelse." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nDen äldre frågan om vad som orsakade besvären och den nyare frågan om orsak till besvär av andra förhållanden än olyckshändelse gäller samma orsak.\ncatalog:variable_text:11650:17532:17897\ncatalog:variable_text:11651:11323:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:huvud-och-ansiktsbesvar"
+fields = { "description" = "Besvär i huvudet eller ansiktet. 2001–2016 är det svaret på var i kroppen personen har eller hade besvär; från 2018 avser det besvär i huvudet och/eller ansiktet någon gång under de senaste 12 månaderna på grund av olyckshändelse eller andra förhållanden i arbetet. Från 2018 redovisas huvudvärk dessutom separat." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nDen äldre frågan om var i kroppen besvären satt och den nyare frågan om arbetsorsakade besvär under 12 månader gäller samma kroppsdel; skillnaden i fråga anges med år.\ncatalog:variable_text:11528:17532:17897\ncatalog:variable_text:11529:17532:17897\ncatalog:variable_text:11654:11323:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:kemiska-produkter-som-besvarsorsak"
+fields = { "description" = "Om kemiska eller tekniska produkter (i fast, flytande eller gasform) orsakade de besvär personen uppgett. 2014–2016 ställs frågan bara till personer som på grund av arbetet under de senaste 12 månaderna haft besvär med hörseln, allergi, hudöverkänslighet, sömnbesvär, oro, ångest eller depression eller nervösa besvär, eller inget av dessa besvär. Från 2018 avser det besvär av andra förhållanden i arbetet än olyckshändelse." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nLägger till urvalsvillkoret 2014–2016 (W4).\ncatalog:variable_text:11608:17532:17897\ncatalog:variable_text:11662:11323:12784\ncatalog:variable_text:11662:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "set:krankande-sarbehandling-som-besvarsorsak"
+fields = { "description" = "Om kränkande särbehandling i arbetet orsakade de besvär personen uppgett: 2001–2016 som mobbning eller trakasserier, från 2018 uppdelat på kränkande särbehandling från chefen och från arbetskamrater, och då för besvär av andra förhållanden i arbetet än olyckshändelse." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nDen äldre orsaken mobbning eller trakasserier och de nyare orsakerna kränkande särbehandling från chef och arbetskamrater gäller samma slags orsak.\ncatalog:variable_text:11610:17532:17897\ncatalog:variable_text:11611:17532:17897\ncatalog:variable_text:11678:11323:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:lung-och-luftvagsbesvar"
+fields = { "description" = "Besvär i lungor eller luftvägar. 2001–2016 är det svaret på var i kroppen personen har eller hade besvär; från 2018 avser det besvär i lungor eller luftvägar någon gång under de senaste 12 månaderna på grund av olyckshändelse eller andra förhållanden i arbetet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nDen äldre frågan om var i kroppen besvären satt och den nyare frågan om arbetsorsakade besvär under 12 månader gäller samma kroppsdel; skillnaden i fråga anges med år.\ncatalog:variable_text:11673:11323:12784\ncatalog:variable_text:11674:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:minskade-besvar-efter-forandring"
+fields = { "description" = "Om besvären till följd av arbetet har minskat efter en förändring: efter att personen fått förändrade arbetsuppgifter (2001–2003 förändrade arbetsuppgifter eller nedgång i ordinarie arbetstid, 2004–2010 förändrade arbetsuppgifter, 2014–2016 den förändring personen uppgett) och till följd av de åtgärder som vidtagits på arbetsplatsen (2004–2016)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna gäller alla om besvären minskat efter en förändring; vilken förändring som avses anges med år.\ncatalog:variable_text:11578:12418:12784\ncatalog:variable_text:11579:16071:16436\ncatalog:variable_text:11580:11323:12418\ncatalog:variable_text:11677:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:nack-axel-och-armbesvar"
+fields = { "description" = "Besvär i nacke, axel eller arm. 2001–2016 är det svaret på var i kroppen personen har eller hade besvär, separat för hals och nacke och för axel och arm; från 2018 är det en gemensam variabel för besvär i nacke, axel eller arm någon gång under de senaste 12 månaderna på grund av olyckshändelse eller andra förhållanden i arbetet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nDen äldre uppdelade frågan om var besvären satt och den nyare sammanslagna frågan gäller samma kroppsdelar.\ncatalog:variable_text:11557:11323:12784\ncatalog:variable_text:11679:17532:17897\ncatalog:variable_text:11680:11323:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:ogon-och-synbesvar"
+fields = { "description" = "Besvär i ögonen. 2001–2016 är det svaret på var i kroppen personen har eller hade besvär; från 2018 avser det besvär i ögonen eller synen någon gång under de senaste 12 månaderna på grund av olyckshändelse eller andra förhållanden i arbetet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nDen äldre frågan om var i kroppen besvären satt och den nyare frågan om arbetsorsakade besvär under 12 månader gäller samma kroppsdel; skillnaden i fråga anges med år.\ncatalog:variable_text:11688:17532:17897\ncatalog:variable_text:11689:11323:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:ovrig-eller-okand-besvarsorsak"
+fields = { "description" = "Svar på frågan om vad som orsakade de besvär personen uppgett, när ingen av de uppräknade orsakerna angetts: annan orsak, med en beskrivning av den andra orsaken (2014–2016 och från 2018), vet ej (2001–2016) och vill ej svara (2014–2016). Frågan om annan orsak ställs 2014–2016 bara till personer som på grund av arbetet under de senaste 12 månaderna haft besvär med hörseln, allergi, hudöverkänslighet, sömnbesvär, oro, ångest eller depression eller nervösa besvär, eller inget av dessa besvär. Från 2018 avser det besvär av andra förhållanden i arbetet än olyckshändelse." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nUrvalsvillkoret står i W3 för m0 2014–2016 och anges bara för den frågan och de åren.\ncatalog:variable_text:11518:11323:12784\ncatalog:variable_text:11518:16071:16436\ncatalog:variable_text:11598:17532:17897\ncatalog:variable_text:11599:17532:17897\ncatalog:variable_text:11601:17532:17897\ncatalog:variable_text:11732:16071:16436\ncatalog:variable_text:11734:16071:16436\ncatalog:variable_text:11793:11323:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:ovriga-besvar"
+fields = { "description" = "Arbetsorsakade besvär under de senaste 12 månaderna som inte hör till de uppräknade typerna. 2001–2016 anges om personen till följd av arbetet inte haft något av de uppräknade problemen (hörseln, allergi, hudöverkänslighet, sömnbesvär, oro, ångest, depression eller nervösa besvär). Från 2018 anges annat besvär, med en beskrivning, någon gång under de senaste 12 månaderna på grund av olyckshändelse eller andra förhållanden i arbetet; 2022 tillkommer svaren inga andra besvär, vet ej och vill ej svara samt en kontroll av att ingen typ av besvär angetts." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna är de svar på frågan om typ av arbetsorsakade besvär som inte anger en uppräknad typ.\ncatalog:variable_text:11517:17532:17897\ncatalog:variable_text:11523:18993:19358\ncatalog:variable_text:11562:17532:17897\ncatalog:variable_text:11657:18993:19358\ncatalog:variable_text:11658:11323:12784\ncatalog:variable_text:11791:18993:19358\ncatalog:variable_text:11801:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:psykiska-besvar"
+fields = { "description" = "Psykiska besvär. 2001–2016 anges psykiska besvär som inte kan lokaliseras, som svar på var i kroppen personen har eller hade besvär, och 2014–2016 också besvär med oro, ångest, depression eller nervösa besvär. Från 2018 skiljs oro eller ångest från symtom på depression eller utmattningssyndrom, för besvär någon gång under de senaste 12 månaderna på grund av olyckshändelse eller andra förhållanden i arbetet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar gäller psykiska besvär; frågornas indelning skiljer sig mellan perioderna och anges med år.\ncatalog:variable_text:11502:16071:16436\ncatalog:variable_text:11731:17532:17897\ncatalog:variable_text:11747:11323:12784\ncatalog:variable_text:11780:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:ryggbesvar"
+fields = { "description" = "Besvär i ryggen utom nacken. 2001–2016 är det svaret på var i kroppen personen har eller hade besvär; från 2018 avser det besvär i ryggen utom nacken någon gång under de senaste 12 månaderna på grund av olyckshändelse eller andra förhållanden i arbetet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nDen äldre frågan om var i kroppen besvären satt och den nyare frågan om arbetsorsakade besvär under 12 månader gäller samma kroppsdel; skillnaden i fråga anges med år.\ncatalog:variable_text:11750:17532:17897\ncatalog:variable_text:11751:11323:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:sjukfranvaro-vid-arbetsrelaterade-besvar"
+fields = { "description" = "Sjukfrånvaro i samband med besvär till följd av arbetet. 2001–2016 anges om personen under de senaste 12 månaderna varit sjukskriven eller haft sjukbidrag eller förtidspension på hel- eller deltid till följd av besvären, och om personen varit sjukfrånvarande helt eller delvis 4 veckor eller mer i en följd och/eller sjukskriven vid sex eller fler tillfällen. Gruppen anger också om frånvaro från arbetet under referensveckan (mätveckan) berodde på besvären, totalt och efter orsak: arbetsolycksfall, olycka på väg till eller från arbetet och andra förhållanden i arbetet än arbetsolycksfall. 2014–2016 finns också en variabel, härledd från AKU och AOB, om personen har besvär och/eller var frånvarande under referensveckan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna mäter sjukfrånvaro kopplad till arbetsorsakade besvär, under 12 månader och under referensveckan, totalt och efter orsak.\ncatalog:variable_text:11551:11323:12784\ncatalog:variable_text:11552:16071:16436\ncatalog:variable_text:11581:16071:16436\ncatalog:variable_text:11639:17532:17897\ncatalog:variable_text:11759:12418:12784\ncatalog:variable_text:11760:11323:12784\ncatalog:variable_text:11761:11323:12784\ncatalog:variable_text:11762:11323:12418\ncatalog:variable_text:11763:11323:12418\ncatalog:variable_text:11764:11323:12418\ncatalog:variable_text:11765:11323:12418"
+
+[[statement]]
+kind = "set"
+subject = "set:skal-till-utebliven-arbetsskadeanmalan"
+fields = { "description" = "Skälen till att ingen arbetsskadeanmälan gjorts för besvären, till exempel att personen inte kände till att arbetsskador ska anmälas, att besvären inte var så allvarliga, att det inte lönar sig, rädsla att stöta sig med arbetsgivaren eller att personen avvaktar besvärens utveckling eller utredning. Varje skäl är en egen variabel 2003–2004 och 2014–2016; 2006–2016 finns skälet också som en enda variabel. 2014–2016 finns dessutom det huvudsakliga skälet, kombinationer av skäl, en beskrivning av andra skäl och svaren vet ej och vill ej svara; vet ej finns även 2003." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna är svaren på frågan om varför ingen arbetsskadeanmälan gjorts, som enskilda skäl, som en sammanfattande kod och som huvudsakligt skäl.\ncatalog:variable_text:11510:16071:16436\ncatalog:variable_text:11511:16071:16436\ncatalog:variable_text:11512:16071:16436\ncatalog:variable_text:11513:16071:16436\ncatalog:variable_text:11514:16071:16436\ncatalog:variable_text:11515:13149:13514\ncatalog:variable_text:11625:12053:12784\ncatalog:variable_text:11626:16071:16436\ncatalog:variable_text:11627:12418:12784\ncatalog:variable_text:11628:12053:12784\ncatalog:variable_text:11629:12053:12784\ncatalog:variable_text:11630:12053:12784\ncatalog:variable_text:11631:12053:12784\ncatalog:variable_text:11655:16071:16436\ncatalog:variable_text:11659:16071:16436\ncatalog:variable_text:11660:16071:16436\ncatalog:variable_text:11752:16071:16436\ncatalog:variable_text:11753:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "set:smitta-som-besvarsorsak"
+fields = { "description" = "Om smitta orsakade de besvär personen uppgett. Från 2018 avser det besvär av andra förhållanden i arbetet än olyckshändelse. Orsaken anges då som smittämnen, till exempel bakterier eller virus." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nDen äldre frågan om vad som orsakade besvären och den nyare frågan om orsak till besvär av andra förhållanden än olyckshändelse gäller samma orsak.\ncatalog:variable_text:11613:17532:17897\ncatalog:variable_text:11769:11323:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:somnbesvar"
+fields = { "description" = "Sömnbesvär till följd av arbetet under de senaste 12 månaderna. Från 2018 anges det som sömnstörningar någon gång under de senaste 12 månaderna på grund av olyckshändelse eller andra förhållanden i arbetet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna gäller arbetsorsakade sömnbesvär under 12 månader; frågeformuleringen ändras 2018.\ncatalog:variable_text:11775:12418:12784\ncatalog:variable_text:11776:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:temperaturforhallanden-som-besvarsorsak"
+fields = { "description" = "Om besvärliga temperaturförhållanden orsakade de besvär personen uppgett. Från 2018 avser det besvär av andra förhållanden i arbetet än olyckshändelse. Orsaken omfattar då också drag eller liknande." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nDen äldre frågan om vad som orsakade besvären och den nyare frågan om orsak till besvär av andra förhållanden än olyckshändelse gäller samma orsak.\ncatalog:variable_text:11592:17532:17897\ncatalog:variable_text:11663:11323:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:tidpunkt-for-arbetsskadeanmalan"
+fields = { "description" = "När en arbetsskadeanmälan om besvären till följd av arbetet gjordes till Försäkringskassan. 2001–2016 anges om anmälan gjorts under de senaste 12 månaderna och om den skett efter det senaste årsskiftet. Från 2018 anges för varje arbetsolycka, från den senaste till den nionde, vilket år anmälan gjordes. 2022 anges för besvär av andra förhållanden i arbetet än arbetsolycka om anmälan, gjord av personen själv eller arbetsgivaren, skedde under undersökningsåret, året före, tidigare än året före eller året efter, samt svaren vet ej och vill ej svara." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar anger tidpunkten för en arbetsskadeanmälan till Försäkringskassan, med olika indelning per period.\ncatalog:variable_text:11504:11323:12053\ncatalog:variable_text:11506:11323:12784\ncatalog:variable_text:11541:18993:19358\ncatalog:variable_text:11542:18993:19358\ncatalog:variable_text:11543:18993:19358\ncatalog:variable_text:11607:18993:19358\ncatalog:variable_text:11617:18993:19358\ncatalog:variable_text:11709:17532:17897\ncatalog:variable_text:11710:17532:17897\ncatalog:variable_text:11717:17532:17897\ncatalog:variable_text:11792:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:tung-hantering-som-besvarsorsak"
+fields = { "description" = "Om tung manuell hantering orsakade de besvär personen uppgett. Från 2018 avser det besvär av andra förhållanden i arbetet än olyckshändelse." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nDen äldre frågan om vad som orsakade besvären och den nyare frågan om orsak till besvär av andra förhållanden än olyckshändelse gäller samma orsak.\ncatalog:variable_text:11783:17532:17897\ncatalog:variable_text:11784:11323:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:upprepade-arbetsmoment-som-besvarsorsak"
+fields = { "description" = "Om korta, upprepade arbetsmoment orsakade de besvär personen uppgett. Från 2018 avser det besvär av andra förhållanden i arbetet än olyckshändelse." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nDen äldre frågan om vad som orsakade besvären och den nyare frågan om orsak till besvär av andra förhållanden än olyckshändelse gäller samma orsak.\ncatalog:variable_text:11666:17532:17897\ncatalog:variable_text:11786:11323:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:vibrationer-som-besvarsorsak"
+fields = { "description" = "Om vibrationer orsakade de besvär personen uppgett. Från 2018 avser det besvär av andra förhållanden i arbetet än olyckshändelse." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nDen äldre frågan om vad som orsakade besvären och den nyare frågan om orsak till besvär av andra förhållanden än olyckshändelse gäller samma orsak.\ncatalog:variable_text:11794:11323:12784\ncatalog:variable_text:11795:17532:17897"

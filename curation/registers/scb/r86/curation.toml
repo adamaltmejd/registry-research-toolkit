@@ -13527,3 +13527,45 @@ kind = "set"
 subject = "var:evkomm1"
 fields = { "description" = "Markerar troligen om en kommentar skrevs in i inledningsintervjun. Vad koderna betyder är oklart." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda åren säger att kodernas innebörd är oklar; 2000 anger den troliga innebörden.\ncatalog:variable_text:33472:10957:11323\ncatalog:variable_text:33472:11323:11688"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-barn"
+fields = { "description" = "Antal barn i hushållet: hemmaboende barn oavsett ålder (1999–2001) och barn 0–19 år. Antalet barn 0–19 år avser för 2003–2012 kosthushållet och härleds för 2021 ur Registret över totalbefolkningen och de uppgifter om hushållets sammansättning som hushållet lämnat vid insamlingen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda räknar barn i hushållet; åldersavgränsningen skiljer dem.\ncatalog:variable_text:33419:10592:11688\ncatalog:variable_text:33420:10592:11688\ncatalog:variable_text:33420:12053:14610\ncatalog:variable_text:33420:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsinkomst"
+fields = { "description" = "Summan av lön, företagarinkomst, sjukpenning, föräldrapenning och ersättning i samband med militärtjänstgöring. Den finns för urvalspersonen och för personerna 2–8 (1999) samt som egna variabler för inkomståren 2000, 2001 och 2002." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla wordings har samma definition; medlemmarna skiljer sig bara i person och inkomstår.\ncatalog:variable_text:33435:10592:10957\ncatalog:variable_text:33436:10957:11323\ncatalog:variable_text:33436:11323:11688\ncatalog:variable_text:33437:11323:11688\ncatalog:variable_text:33438:10592:10957\ncatalog:variable_text:33439:10592:10957\ncatalog:variable_text:33440:10592:10957\ncatalog:variable_text:33441:10592:10957\ncatalog:variable_text:33442:10592:10957\ncatalog:variable_text:33443:10592:10957\ncatalog:variable_text:33444:10592:10957\ncatalog:variable_text:33736:10957:11323"
+
+[[statement]]
+kind = "set"
+subject = "set:disponibel-inkomst"
+fields = { "description" = "Hushållets disponibla inkomst: summan av hushållsmedlemmarnas inkomster plus skattepliktiga och skattefria transfereringar minus skatt och negativa transfereringar, redovisad på varje individ i hushållet. För 2021 avser den kosthushållet enligt 2004 års definition och är summan av alla inkomster och positiva transfereringar (till exempel barn-, social- och bostadsbidrag) minus slutlig skatt, hämtad per individ ur Inkomst- och taxeringsregistret och summerad för hushållet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla tre är hushållets disponibla inkomst; 2021 års text anger källa och hushållsbegrepp.\ncatalog:variable_text:33469:18628:18993\ncatalog:variable_text:33470:12053:13149\ncatalog:variable_text:33493:10592:11688\ncatalog:variable_text:33493:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "set:fodelseland"
+fields = { "description" = "Personens födelseland: om personen är född i Sverige (1) eller utomlands (2), och födelselandet omkodat till en kod med två tecken (2000–2001)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda anger födelseland, grovt och som landkod.\ncatalog:variable_text:33477:10592:11688\ncatalog:variable_text:33486:10957:11323\ncatalog:variable_text:33486:11323:11688"
+
+[[statement]]
+kind = "set"
+subject = "set:hushallets-personantal"
+fields = { "description" = "Antal personer i hushållet: totalt i kosthushållet (2003–2012), i undersökningens hushåll och i hushållet enligt Registret över totalbefolkningen (1999–2001), och för 2021 härlett ur registret och hushållets egna uppgifter vid insamlingen. Gruppen innehåller också antalet vuxna, där vuxna är de som fyllt 20 år eller mer under året samt gifta och sammanboende oavsett ålder." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar räknar hushållets personer; antalet vuxna är en delmängd.\ncatalog:variable_text:33427:12053:14610\ncatalog:variable_text:33428:10592:11688\ncatalog:variable_text:33429:10592:11688\ncatalog:variable_text:33447:18628:18993\ncatalog:variable_text:33448:12053:14610\ncatalog:variable_text:33448:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:konsumtionsenheter"
+fields = { "description" = "Hushållets antal konsumtionsenheter: summan av vikter som tar hänsyn till hushållets sammansättning. Två skalor förekommer. 2004 års skala (enligt SOU 2002:73) ger 1,00 för första vuxen, 0,51 för andra vuxen, 0,60 för ytterligare vuxen, 0,52 för första barnet 0–19 år och 0,42 för varje ytterligare barn; den gäller för 1999–2001, 2012 och 2021 (2021 för kosthushållet). För 2003–2012 finns också en skala med 1,0 för ensamboende, 1,58 för sammanboende (0,58 för andra vuxen), 1,12 för ensamstående med delat boende, 0,61 för ytterligare vuxen och 0,48 per barn 0–19 år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nLägger till 1999–2001, som W1 anger enligt 2004 års definition.\ncatalog:variable_text:33668:12053:14610\ncatalog:variable_text:33669:10592:11688\ncatalog:variable_text:33669:15340:15706\ncatalog:variable_text:33670:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:upplatelseform"
+fields = { "description" = "Hur hushållet förfogar över sin bostad: om det hyr eller äger den, är inneboende, har tjänstebostad eller andelslägenhet (1999–2012), och för 2021 upplåtelseformen, härledd ur boendeform och typ av kontrakt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda anger hushållets förfogande över bostaden.\ncatalog:variable_text:33487:10592:11688\ncatalog:variable_text:33487:12053:14610\ncatalog:variable_text:33810:18628:18993"

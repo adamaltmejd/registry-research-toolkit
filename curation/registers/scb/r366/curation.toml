@@ -19930,3 +19930,183 @@ kind = "set"
 subject = "var:vikt"
 fields = { "description" = "Kalibrerad vikt som tar hänsyn till varierande urvalssannolikheter och svarsfrekvenser i olika strata och till hjälpinformation från register, till exempel elevregistret för gymnasieskolan och befolkningsregistret." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna upprepar den och 2018 anger vilka register.\ncatalog:variable_text:61406:13514:13695\ncatalog:variable_text:61406:16071:16436\ncatalog:variable_text:61406:16801:17167\ncatalog:variable_text:61406:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:alder"
+fields = { "description" = "Personens ålder i år vid olika tidpunkter: år 2005, vid årets slut, vid avslutad utbildning (beräknad från folkbokföringsuppgift och examensår) och, enligt enkätsvar, när personen fick sitt arbete; i övrigt härledd från personnummer eller födelsedatum. Åldern finns också grupperad, bland annat i grupperna 18–24 och 25–34 år, och som födelseår." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna är ålder eller åldersgrupp vid olika tidpunkter i olika undersökningar; tidpunkten och härledningen tas ur respektive formulering.\ncatalog:variable_text:60151:12784:13149\ncatalog:variable_text:60152:16617:16801\ncatalog:variable_text:60153:17532:17897\ncatalog:variable_text:60154:16617:16801\ncatalog:variable_text:60155:12784:13149\ncatalog:variable_text:60156:16071:16436\ncatalog:variable_text:60157:16801:17167\ncatalog:variable_text:60158:16071:16436\ncatalog:variable_text:60427:16617:16801\ncatalog:variable_text:60540:12418:12784\ncatalog:variable_text:60546:12418:12784\ncatalog:variable_text:60659:16617:16801\ncatalog:variable_text:60659:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:andel-distansundervisning"
+fields = { "description" = "Hur stor andel av undervisningen som varit på distans för eleverna under de veckor då skolan hade distansundervisning, per termin: våren 2020 från mitten av mars, hösten 2020, våren 2021, hösten 2021 och våren 2022." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar ställer samma fråga och skiljer sig bara i termin.\ncatalog:variable_text:60160:18262:18444\ncatalog:variable_text:60163:18444:18809\ncatalog:variable_text:60163:18809:19174\ncatalog:variable_text:60164:18444:18809\ncatalog:variable_text:60164:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "set:anstallningsform"
+fields = { "description" = "Personens anställningsform enligt enkätsvar, bland annat tillsvidareanställning eller tidsbegränsad anställning: under en angiven mätvecka, i den nuvarande eller senaste huvudsakliga anställningen inom skolväsendet eller förskolan, eller i den anställning personen ser som sin huvudsakliga utifrån till exempel inkomst, arbetstimmar eller anställningstid (för anställda vid bemanningsföretag anställningen där). Gruppen innehåller också anställningsformen i fritext när svaret var annan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna är samma typ av enkätfråga om anställningsform i olika undersökningar; de skiljer sig i vilken anställning och tidpunkt frågan gäller.\ncatalog:variable_text:60186:11323:11688\ncatalog:variable_text:60186:12418:12784\ncatalog:variable_text:60186:13149:13514\ncatalog:variable_text:60187:16617:16801\ncatalog:variable_text:60188:12784:13149\ncatalog:variable_text:60189:12418:12784\ncatalog:variable_text:61338:13514:13695\ncatalog:variable_text:61338:16617:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:anvandning-av-tillhandahallna-motesverktyg"
+fields = { "description" = "Vilka digitala mötesverktyg skolan använder: ett mötesverktyg som tillhandahålls av skolan eller huvudmannen och används av alla lärare, flera sådana verktyg som lärarna kan välja mellan (till exempel Google Meet eller Microsoft Teams), eller valfria mötesverktyg som lärarna själva tillhandahåller (till exempel gratisversioner). För varje slag anges om det använts våren 2020 från mars, hösten 2020 och våren 2021, eller inte under någon av perioderna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är svarsalternativ till tre frågor om mötesverktyg, uppdelade på period.\ncatalog:variable_text:60204:18262:18809\ncatalog:variable_text:60206:18262:18809\ncatalog:variable_text:60359:18262:18444\ncatalog:variable_text:60365:18262:18809\ncatalog:variable_text:60385:18262:18809\ncatalog:variable_text:60429:18262:18809\ncatalog:variable_text:60430:18262:18809\ncatalog:variable_text:60431:18262:18809\ncatalog:variable_text:61390:18262:18809"
+
+[[statement]]
+kind = "set"
+subject = "set:arbete-under-matveckan"
+fields = { "description" = "Personens arbete under en angiven mätvecka enligt enkätsvar: vilket arbete personen hade, som fritext och som yrkeskod kodad från fritextsvaret, och om personen arbetade minst en timme under veckan. Frågan om minst en timmes arbete ställs bara till dem som inte har arbete som huvudsaklig sysselsättning; 2015 räknas den som är tillfälligt frånvarande, till exempel på grund av semester, sjukdom, föräldraledighet eller tjänstledighet för studier, men räknar med att gå tillbaka, som att ha arbetat." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna avser arbete under mätveckan: typ av arbete, dess yrkeskod och om personen arbetat alls; förtydligandet om tillfällig frånvaro finns bara i 2015 års formulering.\ncatalog:variable_text:60245:12784:13149\ncatalog:variable_text:60263:12784:13149\ncatalog:variable_text:60925:11323:11688\ncatalog:variable_text:60925:12784:13149\ncatalog:variable_text:60925:16617:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:bredband-eller-datavolym-till-elever"
+fields = { "description" = "Om skolan vid behov har ordnat bredband hemma hos elever, köpt mobilt bredband eller köpt datavolym till elevers telefoner, per period: före mars 2020, våren 2020 från mars, hösten 2020 och våren 2021, eller inte under någon av dessa perioder. En senare undersökning frågar om samma sak vid undervisning på distans, för perioderna våren 2020–våren 2021, hösten 2021 och januari–mars 2022, inte under någon period från våren 2020 till mars 2022, eller vet inte." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är svarsalternativ till samma fråga om bredband och datavolym, i två undersökningar med olika periodindelning.\ncatalog:variable_text:60754:18262:18809\ncatalog:variable_text:60992:18262:18809\ncatalog:variable_text:60993:18262:18809\ncatalog:variable_text:60994:18262:18809\ncatalog:variable_text:60995:18262:18809\ncatalog:variable_text:61230:18809:19174\ncatalog:variable_text:61231:18809:19174\ncatalog:variable_text:61232:18809:19174\ncatalog:variable_text:61233:18809:19174\ncatalog:variable_text:61234:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "set:bruttoveckor-distansundervisning"
+fields = { "description" = "Antalet veckor då minst en undervisningsgrupp eller klass i elevgruppen hade undervisning på distans minst två dagar under veckan, för våren 2020, hösten, våren och hela läsåret, både som antal och grupperat. I de grupperade versionerna kodas saknad uppgift som 0; i antalet för våren 2020 kodas saknad uppgift som 88." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar har samma definition av bruttovecka och skiljer sig i period och i antal mot gruppering; kodningen av saknade uppgifter tas ur W3–W8.\ncatalog:variable_text:60326:18444:19174\ncatalog:variable_text:60327:18444:19174\ncatalog:variable_text:60328:18444:19174\ncatalog:variable_text:60688:18444:18809\ncatalog:variable_text:60863:18444:18809\ncatalog:variable_text:61415:18262:18444\ncatalog:variable_text:61416:18262:18444\ncatalog:variable_text:61419:18444:18809"
+
+[[statement]]
+kind = "set"
+subject = "set:dator-eller-surfplatta-till-elever"
+fields = { "description" = "Om skolan har lånat ut eller gett bärbar dator eller surfplatta till alla elever respektive till enstaka elever, per period: före mars 2020, våren 2020 från mars, hösten 2020 och våren 2021, eller inte under någon av dessa perioder." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är svarsalternativ till två frågor (alla elever, enstaka elever), uppdelade på period.\ncatalog:variable_text:60752:18262:18809\ncatalog:variable_text:60753:18262:18809\ncatalog:variable_text:60855:18262:18809\ncatalog:variable_text:60856:18262:18809\ncatalog:variable_text:60857:18262:18809\ncatalog:variable_text:60858:18262:18809\ncatalog:variable_text:60859:18262:18809\ncatalog:variable_text:60860:18262:18809\ncatalog:variable_text:60861:18262:18809\ncatalog:variable_text:60862:18262:18809"
+
+[[statement]]
+kind = "set"
+subject = "set:digital-dokumentdelning-med-elever"
+fields = { "description" = "Om skolan använder digitala verktyg för att dela dokument med eleverna, till exempel en lärplattform, per period: före mars 2020, våren 2020 från mars, hösten 2020 och våren 2021, eller inte under någon av dessa perioder; och i vilken grad lärarna har använt samarbetsytor för att dela dokument med eleverna, i närundervisning och eventuell distansundervisning, för samma terminer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna är svar på två frågor om dokumentdelning med elever (om verktyg används, i vilken grad samarbetsytor använts), uppdelade på period.\ncatalog:variable_text:60207:18262:18809\ncatalog:variable_text:60208:18262:18809\ncatalog:variable_text:60209:18262:18809\ncatalog:variable_text:60210:18262:18809\ncatalog:variable_text:60433:18262:18809\ncatalog:variable_text:60452:18262:18444\ncatalog:variable_text:60453:18444:18809\ncatalog:variable_text:60454:18262:18444\ncatalog:variable_text:60455:18444:18809"
+
+[[statement]]
+kind = "set"
+subject = "set:digital-kommunikation-med-elever"
+fields = { "description" = "Om skolan använder digitala verktyg för att kommunicera med eleverna, till exempel lärplattform eller e-post, per period: före mars 2020, våren 2020 från mars, hösten 2020 och våren 2021, eller inte under någon av dessa perioder." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är svarsalternativ till samma fråga, uppdelade på period.\ncatalog:variable_text:60205:18262:18444\ncatalog:variable_text:60211:18262:18809\ncatalog:variable_text:61403:18262:18809\ncatalog:variable_text:61404:18262:18809\ncatalog:variable_text:61405:18262:18809"
+
+[[statement]]
+kind = "set"
+subject = "set:distansundervisning-via-motesverktyg"
+fields = { "description" = "I vilken omfattning eleverna vid undervisning på distans har följt undervisningen live via ett mötesverktyg, åtskilda från lärarna i rum men inte i tid, per termin: våren 2020 från mitten av mars, hösten 2020, våren 2021, hösten 2021 och våren 2022." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar ställer samma fråga och skiljer sig bara i termin.\ncatalog:variable_text:60346:18444:18809\ncatalog:variable_text:60346:18809:19174\ncatalog:variable_text:60347:18444:18809\ncatalog:variable_text:60347:18809:19174\ncatalog:variable_text:60392:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "set:erbjuden-distansundervisning"
+fields = { "description" = "Om skolan har erbjudit undervisning på distans till elever som varit hemma på grund av sjukdomssymtom, karantän eller andra skäl, per termin: våren 2020 från mitten av mars, hösten 2020, våren 2021, hösten 2021 och våren 2022." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar ställer samma fråga och skiljer sig bara i termin.\ncatalog:variable_text:60380:18444:18809\ncatalog:variable_text:60380:18809:19174\ncatalog:variable_text:60381:18809:19174\ncatalog:variable_text:60382:18444:18809\ncatalog:variable_text:60382:18809:19174\ncatalog:variable_text:60383:18809:19174\ncatalog:variable_text:60521:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "set:fortbildning-i-digitala-verktyg"
+fields = { "description" = "Om lärarna har fått fortbildning i att använda digitala verktyg, till exempel mötesverktyg, som stöd för att genomföra undervisning på distans, per period. I en undersökning är perioderna våren 2020 från mars, hösten 2020 och våren 2021, eller inte under någon av dessa perioder; i en senare undersökning våren 2020–våren 2021, hösten 2021 och januari–mars 2022, inte under någon period från våren 2020 till mars 2022, eller vet inte." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är svarsalternativ till samma stödfråga i två undersökningar med olika periodindelning.\ncatalog:variable_text:60360:18262:18444\ncatalog:variable_text:60592:18262:18809\ncatalog:variable_text:60593:18262:18809\ncatalog:variable_text:60594:18262:18809\ncatalog:variable_text:60595:18809:19174\ncatalog:variable_text:60596:18809:19174\ncatalog:variable_text:60597:18809:19174\ncatalog:variable_text:60598:18809:19174\ncatalog:variable_text:60599:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "set:fortbildning-i-distanspedagogik"
+fields = { "description" = "Om lärarna har fått fortbildning i pedagogik vid undervisning på distans som stöd för att genomföra undervisning på distans, per period. I en undersökning är perioderna våren 2020 från mars, hösten 2020 och våren 2021, eller inte under någon av dessa perioder; i en senare undersökning våren 2020–våren 2021, hösten 2021 och januari–mars 2022, inte under någon period från våren 2020 till mars 2022, eller vet inte." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är svarsalternativ till samma stödfråga i två undersökningar med olika periodindelning.\ncatalog:variable_text:60361:18262:18444\ncatalog:variable_text:60600:18809:19174\ncatalog:variable_text:60601:18809:19174\ncatalog:variable_text:60602:18809:19174\ncatalog:variable_text:60603:18809:19174\ncatalog:variable_text:60604:18809:19174\ncatalog:variable_text:60605:18262:18809\ncatalog:variable_text:60606:18262:18809\ncatalog:variable_text:60607:18262:18809"
+
+[[statement]]
+kind = "set"
+subject = "set:hybridsituation-i-undervisningen"
+fields = { "description" = "Hur ofta det under perioder med närundervisning har förekommit en hybridsituation i åtminstone någon klass, hösten 2021 och våren 2022. Frågan ställs till dem som svarat ja på fråga F13a för samma termin." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nLägger till urvalsvillkoret från W1 och W3.\ncatalog:variable_text:60743:18809:19174\ncatalog:variable_text:60744:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "set:larares-placering-vid-distansundervisning"
+fields = { "description" = "Var lärarna undervisade: under perioder med undervisning på distans om de huvudsakligen undervisade från skolans lokaler eller hemifrån (våren 2020 från mitten av mars, hösten 2020 och våren 2021), och under perioder med närundervisning om de har kunnat undervisa hemifrån på grund av sjukdomssymtom, karantän eller andra skäl (våren 2020 från mitten av mars, hösten 2020, våren 2021, hösten 2021 och våren 2022)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna är två frågor om lärarnas undervisningsplats, vid distans- respektive närundervisning, uppdelade på termin.\ncatalog:variable_text:60526:18262:18444\ncatalog:variable_text:60527:18444:18809\ncatalog:variable_text:60530:18262:18444\ncatalog:variable_text:60531:18444:18809\ncatalog:variable_text:60874:18444:18809\ncatalog:variable_text:60874:18809:19174\ncatalog:variable_text:60875:18444:18809\ncatalog:variable_text:60875:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "set:lopande-moten-i-personalgruppen"
+fields = { "description" = "Om lärarna har fått löpande möten i personalgruppen för att lära av varandra som stöd för att genomföra undervisning på distans, per period. I en undersökning är perioderna våren 2020 från mars, hösten 2020 och våren 2021, eller inte under någon av dessa perioder; i en senare undersökning våren 2020–våren 2021, hösten 2021 och januari–mars 2022, inte under någon period från våren 2020 till mars 2022, eller vet inte." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är svarsalternativ till samma stödfråga i två undersökningar med olika periodindelning.\ncatalog:variable_text:60362:18262:18444\ncatalog:variable_text:60891:18809:19174\ncatalog:variable_text:60892:18809:19174\ncatalog:variable_text:60893:18809:19174\ncatalog:variable_text:60894:18809:19174\ncatalog:variable_text:60895:18809:19174\ncatalog:variable_text:60896:18262:18809\ncatalog:variable_text:60897:18262:18809\ncatalog:variable_text:60898:18262:18809"
+
+[[statement]]
+kind = "set"
+subject = "set:lopande-stod-for-digitala-verktyg"
+fields = { "description" = "Om lärarna har fått löpande stöd för att använda digitala verktyg, till exempel av en lektor eller lärare med ansvar för digitalisering eller en IKT-pedagog, som stöd för att genomföra undervisning på distans, per period. I en undersökning är perioderna våren 2020 från mars, hösten 2020 och våren 2021, eller inte under någon av dessa perioder; i en senare undersökning våren 2020–våren 2021, hösten 2021 och januari–mars 2022, inte under någon period från våren 2020 till mars 2022, eller vet inte." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är svarsalternativ till samma stödfråga i två undersökningar med olika periodindelning.\ncatalog:variable_text:60363:18262:18444\ncatalog:variable_text:60899:18809:19174\ncatalog:variable_text:60900:18809:19174\ncatalog:variable_text:60901:18809:19174\ncatalog:variable_text:60902:18809:19174\ncatalog:variable_text:60903:18809:19174\ncatalog:variable_text:60905:18262:18809\ncatalog:variable_text:60906:18262:18809\ncatalog:variable_text:60907:18262:18809"
+
+[[statement]]
+kind = "set"
+subject = "set:nettoveckor-distansundervisning"
+fields = { "description" = "Antalet veckor med undervisning på distans omräknat till heltid, för elever i elevgrupper där alla undervisningsgrupper eller klasser hade ungefär lika mycket distansundervisning. Måttet finns per termin (våren 2020, hösten 2020, våren 2021, hösten 2021, våren 2022) och per läsår (2020/21, 2021/22), både som antal veckor och grupperat." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar har samma definition av nettovecka och skiljer sig i period och i antal mot gruppering.\ncatalog:variable_text:60329:18444:18809\ncatalog:variable_text:60329:18809:19174\ncatalog:variable_text:60330:18444:18809\ncatalog:variable_text:60331:18444:18809\ncatalog:variable_text:60331:18809:19174\ncatalog:variable_text:60864:18444:18809\ncatalog:variable_text:60864:18809:19174\ncatalog:variable_text:60865:18444:18809\ncatalog:variable_text:61417:18262:18444\ncatalog:variable_text:61418:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "set:organisering-av-distansundervisning"
+fields = { "description" = "Hur skolan organiserade undervisningen på distans för respektive studieår, enligt det svarsalternativ som stämmer bäst, per termin: våren 2020 från mitten av mars, hösten 2020, våren 2021, hösten 2021 och våren 2022." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar ställer samma fråga och skiljer sig bara i termin.\ncatalog:variable_text:60333:18444:18809\ncatalog:variable_text:60333:18809:19174\ncatalog:variable_text:60334:18444:18809\ncatalog:variable_text:60334:18809:19174\ncatalog:variable_text:60691:18262:18444"
+
+[[statement]]
+kind = "set"
+subject = "set:perioder-med-distansundervisning"
+fields = { "description" = "Elever i elevgrupper där minst en undervisningsgrupp eller klass hade undervisning på distans minst två dagar under en vecka, per termin (våren 2020, hösten 2020, våren 2021, hösten 2021, våren 2022) och per läsår (2020/21, 2021/22); för våren 2020 anges antalet sådana elever. Varje period finns också i en intervallversion; för våren 2020, hösten 2020, hösten 2021, våren 2022 och läsåret 2021/22 skiljer den mellan säker och kanske distansundervisning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAntalet elever för våren 2020 (W14) namnges som eget mått; säker/kanske begränsas till de intervallversioner vars formuleringar säger det (W2, W5, W10, W13, W15).\ncatalog:variable_text:60337:18809:19174\ncatalog:variable_text:60338:18809:19174\ncatalog:variable_text:60339:18444:18809\ncatalog:variable_text:60340:18444:18809\ncatalog:variable_text:60341:18444:18809\ncatalog:variable_text:60343:18809:19174\ncatalog:variable_text:60344:18809:19174\ncatalog:variable_text:60348:18809:19174\ncatalog:variable_text:60349:18809:19174\ncatalog:variable_text:60350:18262:18444\ncatalog:variable_text:60351:18262:18444\ncatalog:variable_text:60352:18444:18809"
+
+[[statement]]
+kind = "set"
+subject = "set:stod-for-utveckling-av-distanspedagogik"
+fields = { "description" = "Om lärarna har fått löpande stöd för att utveckla pedagogiken vid undervisning på distans, till exempel av en lektor eller lärare med ansvar för digitalisering eller en IKT-pedagog, per period. I en undersökning är perioderna våren 2020 från mars, hösten 2020 och våren 2021, eller inte under någon av dessa perioder; i en senare undersökning våren 2020–våren 2021, hösten 2021 och januari–mars 2022, inte under någon period från våren 2020 till mars 2022, eller vet inte." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är svarsalternativ till samma stödfråga i två undersökningar med olika periodindelning.\ncatalog:variable_text:60364:18262:18444\ncatalog:variable_text:60904:18809:19174\ncatalog:variable_text:60908:18809:19174\ncatalog:variable_text:60909:18809:19174\ncatalog:variable_text:60910:18809:19174\ncatalog:variable_text:60911:18809:19174\ncatalog:variable_text:61385:18262:18809\ncatalog:variable_text:61386:18262:18809\ncatalog:variable_text:61387:18262:18809"
+
+[[statement]]
+kind = "set"
+subject = "set:tillgang-till-dator-eller-bredband-pa-skolan"
+fields = { "description" = "Om skolan vid behov har ordnat så att elever fick komma till skolan och använda dator eller bredband där, per period: före mars 2020, våren 2020 från mars, hösten 2020 och våren 2021, eller inte under någon av dessa perioder. En senare undersökning frågar om samma sak vid undervisning på distans, för perioderna våren 2020–våren 2021, hösten 2021 och januari–mars 2022, inte under någon period från våren 2020 till mars 2022, eller vet inte." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är svarsalternativ till samma fråga i två undersökningar med olika periodindelning.\ncatalog:variable_text:60372:18262:18809\ncatalog:variable_text:60373:18262:18809\ncatalog:variable_text:60374:18262:18809\ncatalog:variable_text:60375:18262:18809\ncatalog:variable_text:60376:18262:18444\ncatalog:variable_text:60377:18809:19174\ncatalog:variable_text:60378:18809:19174\ncatalog:variable_text:60379:18809:19174\ncatalog:variable_text:61228:18809:19174\ncatalog:variable_text:61229:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "set:undantag-for-elever-som-inte-klarar-distansundervisning"
+fields = { "description" = "Om skolan har gjort undantag från undervisning på distans för enstaka elever som visat sig inte klara av undervisning på distans, per termin: hösten 2021 och våren 2022." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar ställer samma fråga och skiljer sig bara i termin.\ncatalog:variable_text:61346:18809:19174\ncatalog:variable_text:61347:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "set:undantag-fran-distansundervisning-bristande-svenska"
+fields = { "description" = "Om skolan har gjort undantag från undervisning på distans för enstaka elever med bristande kunskaper i svenska, per termin: våren 2020 från mitten av mars, hösten 2020, våren 2021, hösten 2021 och våren 2022." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar ställer samma fråga och skiljer sig bara i termin.\ncatalog:variable_text:60511:18444:18809\ncatalog:variable_text:60511:18809:19174\ncatalog:variable_text:60515:18262:18444\ncatalog:variable_text:60517:18444:18809\ncatalog:variable_text:60517:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "set:undantag-fran-distansundervisning-extra-anpassningar"
+fields = { "description" = "Om skolan har gjort undantag från undervisning på distans för enstaka elever i behov av extra anpassningar, per termin: våren 2020, hösten 2020, våren 2021, hösten 2021 och våren 2022." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar ställer samma fråga och skiljer sig bara i termin.\ncatalog:variable_text:60514:18262:18444\ncatalog:variable_text:61342:18444:18809\ncatalog:variable_text:61342:18809:19174\ncatalog:variable_text:61343:18444:18809\ncatalog:variable_text:61343:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "set:undantag-fran-distansundervisning-sarskilt-stod"
+fields = { "description" = "Om skolan har gjort undantag från undervisning på distans för enstaka elever i behov av särskilt stöd, per termin: våren 2020 från mitten av mars, hösten 2020, våren 2021, hösten 2021 och våren 2022." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar ställer samma fråga och skiljer sig bara i termin.\ncatalog:variable_text:60513:18262:18444\ncatalog:variable_text:61344:18444:18809\ncatalog:variable_text:61344:18809:19174\ncatalog:variable_text:61345:18444:18809\ncatalog:variable_text:61345:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "set:undantag-fran-distansundervisning-sociala-skal"
+fields = { "description" = "Om skolan har gjort undantag från undervisning på distans för enstaka elever av sociala skäl, till exempel hemförhållanden, per termin: våren 2020, hösten 2020, våren 2021, hösten 2021 och våren 2022." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nTar bort det dubbla kommatecknet; innehållet följer W0–W4.\ncatalog:variable_text:60512:18444:18809\ncatalog:variable_text:60512:18809:19174\ncatalog:variable_text:60516:18262:18444\ncatalog:variable_text:60518:18444:18809\ncatalog:variable_text:60518:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "set:variation-i-distansundervisning-mellan-klasser-och-program"
+fields = { "description" = "Om eleverna i respektive studieår har fått lika mycket undervisning på distans eller om det har varierat mycket mellan olika program eller klasser, per termin: våren 2020 från mitten av mars, hösten 2020, våren 2021, hösten 2021 och våren 2022. För hösten 2021 och våren 2022 finns frågan också i formen om klasserna i en årskurs fått ungefär lika mycket distansundervisning eller om det varierat mycket mellan klasserna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar ställer samma fråga och skiljer sig i termin; den andra frågeformen finns i W2/W5 för 2021–2022.\ncatalog:variable_text:60335:18262:18444\ncatalog:variable_text:60336:18444:18809\ncatalog:variable_text:60336:18809:19174\ncatalog:variable_text:60345:18444:18809\ncatalog:variable_text:60345:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "set:veckoarbetstid"
+fields = { "description" = "Personens arbetstid per vecka enligt enkätsvar: antalet timmar personen arbetar en normal vecka (2006 med alla betalda arbeten), det genomsnittliga antalet timmar per vecka i det huvudsakliga och i ett andra arbete, och om personen arbetar heltid eller deltid. För timmarna per vecka 2018 betyder 777 bortfall, 888 uppgift saknas och 990 att frågan inte ska besvaras." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nInga fynd under a/b; heltid/deltid (W3) behålls som ett axelvärde enligt Operatörens regel, så nuvarande text står kvar.\ncatalog:variable_text:60192:11323:11688\ncatalog:variable_text:60192:13149:13514\ncatalog:variable_text:60671:16617:16801\ncatalog:variable_text:61399:17532:17897\ncatalog:variable_text:61400:17532:17897"

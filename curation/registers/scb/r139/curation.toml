@@ -1135,3 +1135,33 @@ kind = "set"
 subject = "var:leveranser-hemmamarknad"
 fields = { "description" = "Mängd av respektive bränsle som levererats till hemmamarknaden under kvartalet, i naturliga mått." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDefinitionen är generisk och talar om värde; operationaliseringarna 2005–2014 anger levererad mängd i naturliga mått, vilket beskrivningen följer.\ncatalog:variable_text:13437:12784:13149\ncatalog:variable_text:13437:13149:13514\ncatalog:variable_text:13437:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:bransleforbrukning"
+fields = { "description" = "Förbrukningen av varje enskilt bränsle, i naturliga mått: totalt under aktuellt kvartal och uppdelat efter vad bränslet gick till, nämligen produktion av elenergi (separat för industri och värmeverk), fjärrvärme vid enbart värmeproduktion, fjärrvärme respektive elenergi vid kraftvärmeproduktion och hetvatten som levereras vidare till ett annat företag eller arbetsställe." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar anger förbrukad mängd bränsle i naturliga mått; de skiljer sig bara i vilken produktion förbrukningen avser.\ncatalog:variable_text:13393:12784:13149\ncatalog:variable_text:13393:16071:16436\ncatalog:variable_text:13394:13149:13514\ncatalog:variable_text:13394:13514:16071\ncatalog:variable_text:13395:13514:16071\ncatalog:variable_text:13396:12784:13149\ncatalog:variable_text:13396:13149:13514\ncatalog:variable_text:13397:12784:13149\ncatalog:variable_text:13398:12784:13149\ncatalog:variable_text:13412:13149:13514\ncatalog:variable_text:13412:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:branslelager"
+fields = { "description" = "Den mängd av varje bränsle, i naturliga mått, som finns i lager vid ingången respektive vid utgången av aktuellt kvartal." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nIngående och utgående lager mäter samma mängd vid kvartalets början och slut; definitionen 'Lagervärde av färdiga produkter föregående kvartal' för ingående lager stämmer inte med den operationella texten och används inte.\ncatalog:variable_text:13428:12784:13149\ncatalog:variable_text:13428:13149:13514\ncatalog:variable_text:13456:12784:13149\ncatalog:variable_text:13456:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:bransleslag"
+fields = { "description" = "Typ av bränsle, angiven som en tvåsiffrig bränslekod och som bränslets benämning i klartext, i kortform (från 2020) och i en mer detaljerad beskrivning (2012 och från 2020). Övriga bränslen, med bränslekod över 90, anges i en egen klartextvariabel. Klartexten kan också beskriva olika typer av produktion, användning och leveranser av värme, hetvatten och ånga." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna är kod och klartext för samma bränsleslag; rådataraderna visar att klartextkolumnen i en del tabeller avser värmeproduktion i stället.\ncatalog:variable_text:13399:12784:17897\ncatalog:variable_text:13400:16801:20454\ncatalog:variable_text:13405:15340:15706\ncatalog:variable_text:13406:16801:17532\ncatalog:variable_text:13406:18262:20454\ncatalog:variable_text:13409:15340:15706\ncatalog:variable_text:13410:12784:17532\ncatalog:variable_text:13449:13149:13514\ncatalog:variable_text:13450:12784:13149\ncatalog:variable_text:13454:15340:15706\ncatalog:variable_text:13454:17167:17532\ncatalog:variable_text:13454:18262:20454\nRegisterinformation.csv:row=963534\nRegisterinformation.csv:row=963506"
+
+[[statement]]
+kind = "set"
+subject = "set:importerad-kvantitet"
+fields = { "description" = "Importerad kvantitet av stenkol, koks respektive petroleumprodukter under aktuellt kvartal, i naturliga mått." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna har samma ordalydelse om importerad kvantitet per bränsle och kvartal.\ncatalog:variable_text:13427:12784:13149\ncatalog:variable_text:13427:13149:13514\ncatalog:variable_text:13427:18262:18993\ncatalog:variable_text:13432:12784:13514\ncatalog:variable_text:13432:18262:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:land-for-import-export"
+fields = { "description" = "Det land som bränslen importeras från eller exporteras till, angivet som landkod och som landnamn." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nKod och namn för samma land, enligt samma ordalydelse.\ncatalog:variable_text:13435:12784:14975\ncatalog:variable_text:13435:14975:17167\ncatalog:variable_text:13436:14245:14975\ncatalog:variable_text:13436:17167:20454"

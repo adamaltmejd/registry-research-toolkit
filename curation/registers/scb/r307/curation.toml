@@ -1152,3 +1152,21 @@ kind = "set"
 subject = "var:personnr"
 fields = { "description" = "Barnets personnummer i barntabellen och personalens i personaltabellen. Personnumret består av födelsetid (8 siffror), födelsenummer (3 siffror) och en kontrollsiffra." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDefinitionen är generisk; operationaliseringarna skiljer på barnets och personalens nummer efter tabell och anger personnumrets delar.\ncatalog:variable_text:19917:16358:16359\ncatalog:variable_text:19917:16723:16724"
+
+[[statement]]
+kind = "set"
+subject = "set:avdelningens-aldersinriktning"
+fields = { "description" = "Anger om barnet går på en småbarnsavdelning, där alla barn är tre år eller yngre, respektive en storbarnsavdelning, där alla barn är mellan 4 och 5 år. Till och med 2018 anges om barnet är inskrivet på en sådan avdelning; från 2019 bestäms det utifrån barnets ålder." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna är avdelningstyp efter barnens ålder; bytet 2019 från inskrivning till ålder anges för båda.\ncatalog:variable_text:19925:16358:16359\ncatalog:variable_text:19925:18184:18185\ncatalog:variable_text:19928:17089:17090\ncatalog:variable_text:19928:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "set:inskrivningens-startdatum"
+fields = { "description" = "Datum då barnet skrevs in: på nuvarande förskola och, som inskrivningsdatum, 2014 i förskolan och från 2018 på nuvarande enhet i annan pedagogisk verksamhet. Inskrivningsdatumet tas från 2018 fram genom jämförelse med tidigare årgångar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nm1 avser 2014 förskolan (W1) och från 2018 annan pedagogisk verksamhet (W2).\ncatalog:variable_text:19926:16723:16724\ncatalog:variable_text:19927:16358:16359\ncatalog:variable_text:19927:17819:17820"
+
+[[statement]]
+kind = "set"
+subject = "set:kommuntillhorighet"
+fields = { "description" = "Kommunkod för barnets folkbokföringskommun respektive för kommunen där förskolan är placerad, samt förskolekommunens kommungrupp enligt Sveriges Kommuner och Landstings kommungruppsindelning 2011 (2014–2016, för en del uppgifter arbetsställekommunens), 2017 (2017–2022) och Sveriges Kommuner och Regioners indelning 2023 (2023–2024, verksamhetskommunens)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna anger barnets eller förskolans kommun; kommungruppen är samma kommun klassad efter SKL:s/SKR:s indelning, med indelningsversion efter år.\ncatalog:variable_text:19903:16358:16359\ncatalog:variable_text:19910:16358:16359\ncatalog:variable_text:19910:17454:17455\ncatalog:variable_text:19910:19645:19646\ncatalog:variable_text:19952:16358:16359\ncatalog:variable_text:19952:17819:17820"
