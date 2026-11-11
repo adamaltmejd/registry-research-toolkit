@@ -56,6 +56,7 @@ export function SourceCard({
   bounds,
   loading,
   loadError,
+  sharedHeading = false,
   onRemoved,
 }: {
   draft: ProjectData;
@@ -69,6 +70,9 @@ export function SourceCard({
   bounds: [number, number];
   loading: boolean;
   loadError: string | null;
+  /** Another table of the project has the same register heading: the
+   * heading then names this table too (maintainer ruling, #2221). */
+  sharedHeading?: boolean;
   onRemoved: () => void;
 }) {
   const source = draft.sources[sourceIndex];
@@ -312,17 +316,11 @@ export function SourceCard({
           className={styles.heading}
           aria-busy={naming || undefined}
         >
-          {/* The register heads the card; its table is the linked pill
-              under it (#2399), so two tables of one register read apart. */}
-          {register}
-          {naming ? (
-            shownName
-          ) : (
-            <EntityPill
-              entity="table"
-              name={tableName}
-              href={catalogHref(source.table)}
-            />
+          {register ?? shownName}
+          {/* The table's pill (#2399), only where two tables of one register
+              would share the heading (#2221). */}
+          {register && sharedHeading && (
+            <EntityPill entity="table" name={tableName} />
           )}
         </span>
       }
@@ -348,11 +346,22 @@ export function SourceCard({
           ))}
         </ul>
       )}
-      {periodYears && (
-        <p className={styles.meta}>
-          Years: <code>{periodYears}</code>
-        </p>
-      )}
+      <p className={styles.meta}>
+        {naming ? (
+          shownName
+        ) : (
+          <EntityPill
+            entity="table"
+            name={tableName}
+            href={catalogHref(source.table)}
+          />
+        )}
+        {periodYears && (
+          <span>
+            Years: <code>{periodYears}</code>
+          </span>
+        )}
+      </p>
       {loading && (
         <div aria-busy="true">
           <StatusRow tone="info">Loading years…</StatusRow>

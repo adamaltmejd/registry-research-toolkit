@@ -2,6 +2,7 @@
    rest, so the hue stays on the glyph alone and never competes with the pine
    "on" state; the label before the chips names the dimension in text. */
 .chip {
+  position: relative;
   display: inline-flex;
   max-width: 100%;
   min-width: 0;
@@ -9,31 +10,37 @@
   cursor: pointer;
   user-select: none;
 }
-.chip > span {
+.chip > :last-child {
   border-color: var(--border);
   background: var(--surface);
   transition:
     background var(--duration-quick) var(--ease-standard),
     border-color var(--duration-quick) var(--ease-standard);
 }
-.chip[data-hovered] > span {
+.chip[data-hovered] > :last-child {
   background: var(--surface-hover);
 }
-.chip[data-selected] > span {
+.chip[data-selected] > :last-child {
   --tone-ink: var(--accent-ink);
   border-color: var(--accent);
   background: var(--accent-bg);
   color: var(--accent-ink);
 }
-.chip[data-selected] > span > span {
+.chip[data-selected] > :last-child > span {
   color: var(--accent-ink);
+}
+/* RAC's hidden input sits at the face's centre, not 1 px off its corner, so
+   a pointer at the input's position lands on the face. */
+.chip > :first-child {
+  top: 50%;
+  left: 50%;
 }
 .chip[data-focus-visible] {
   box-shadow: var(--focus-ring);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .chip > span {
+  .chip > :last-child {
     transition: none;
   }
 }

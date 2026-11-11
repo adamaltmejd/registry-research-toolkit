@@ -497,6 +497,11 @@ function Sources({
               names={names}
               segments={segments}
               table={tables.find((table) => table.fqid === source.table)}
+              sharedHeading={draft.sources.some(
+                (other) =>
+                  other.table !== source.table &&
+                  registerOf(other.table) === registerOf(source.table),
+              )}
               axis={axis}
               bounds={bounds}
               loading={

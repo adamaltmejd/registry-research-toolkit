@@ -5,6 +5,8 @@
   font-weight: var(--heading-weight);
 }
 .coverage {
+  display: grid;
+  gap: var(--space-1);
   padding-bottom: var(--space-2);
   color: var(--text-muted);
   font-size: var(--text-sm);
@@ -29,4 +31,9 @@
   margin-bottom: var(--space-3);
   font-size: var(--text-sm);
   overflow-wrap: anywhere;
+}
+
+/* A table's years wrap between runs, never inside one. */
+.run {
+  white-space: nowrap;
 }

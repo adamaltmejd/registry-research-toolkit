@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import {
   Button,
   Disclosure,
@@ -154,11 +154,19 @@ function ValueSetEntry({
 
 function TableYears({ periods }: { periods: CatalogSegment["period"][] }) {
   const years = catalogPeriodRuns(periods);
+  // Wraps between runs, never inside one ("1991–1992").
   return (
     years && (
       <>
         {" "}
-        <code>{years}</code>
+        <code>
+          {years.split(", ").map((run, i) => (
+            <Fragment key={run}>
+              {i > 0 && ", "}
+              <span className={valueStyles.run}>{run}</span>
+            </Fragment>
+          ))}
+        </code>
       </>
     )
   );

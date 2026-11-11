@@ -100,11 +100,11 @@ j_browse() {
 # "in"), or the box keeps its text when another register opens.
 j_search() {
 	visit /catalog && fill searchbox "Search registers, variables" andra &&
-		press menuitem "Andra registret Register" && wait_url "**/catalog/demo2/reg" &&
+		press menuitem "Andra registret" && wait_url "**/catalog/demo2/reg" &&
 		see option "Kod, 2019" &&
 		no_tree 'searchbox "Search registers, variables".*: ' &&
 		fill searchbox "Search registers, variables" kön &&
-		press menuitem "Kön Basregistret Variable" &&
+		press menuitem "Kön Basregistret" &&
 		wait_url "**/catalog/demo/bas/kon" && see heading "Kön" &&
 		fill searchbox "Filter variables" in && wait_text "3 of 8" &&
 		see option "Inkomstmått" && no_tree 'option "Kön"' &&
@@ -174,7 +174,7 @@ j_narrow() {
 		press link "Browse registers" && wait_url "**/catalog" &&
 		press button "Search registers, variables" &&
 		fill searchbox "Search registers, variables" andra &&
-		press menuitem "Andra registret Register" && wait_url "**/catalog/demo2/reg" && shot
+		press menuitem "Andra registret" && wait_url "**/catalog/demo2/reg" && shot
 }
 
 # J7 steward-held view (paired fixture). Fails if the pairing is ignored (steward
@@ -192,7 +192,7 @@ j_steward() {
 	visit /catalog/demo/held && [ "$(ab get title)" = "Synthetic steward" ] ||
 		fail "the page title is not the steward's" || return 1
 	fill searchbox "Search registers, variables" position &&
-		see menuitem "Second position Delivery slots Variable" &&
+		see menuitem "Second position Delivery slots" &&
 		fill searchbox "Filter variables" Late && wait_text "Late measure" &&
 		press option "Late measure" && wait_url "**/catalog/demo/held/late" &&
 		tree 'image "Late, Late measure, Held reference metadata, 2019–2020' &&

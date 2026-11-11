@@ -9,8 +9,11 @@
   box-sizing: border-box;
   max-width: 100%;
   min-width: 0;
+  /* One line plus padding and border, so a nameless span keeps the size. */
+  min-height: calc(1.4em + 4px);
   padding: 1px 6px;
-  border: 1px solid color-mix(in srgb, var(--tone-hue) 35%, transparent);
+  border: 1px solid;
+  border-color: color-mix(in srgb, var(--tone-hue) 35%, transparent);
   border-radius: var(--radius-sm);
   background: color-mix(in srgb, var(--tone-hue) 10%, var(--surface));
   color: var(--text);
@@ -93,6 +96,7 @@ a.pill:focus-visible {
    (`accent` fill), outside the years to add (`viz-span-out` stroke,
    `text-muted`: `text-faint` fails AA for pill text). */
 .column {
+  --tone-hue: var(--border-strong);
   --tone-ink: var(--text-muted);
   border-color: var(--border-strong);
   background: var(--viz-span);
