@@ -1080,7 +1080,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "set:parti"
-fields = { "description" = "Politiskt parti vid val till Europaparlamentet, för avgivna röster eller tillsatta mandat: som sifferkod, som partinamn i klartext eller förkortat, där de största partierna särskiljs och övriga partier redovisas i en grupp." }
+fields = { "description" = "Politiskt parti vid val till Europaparlamentet, för avgivna röster eller tillsatta mandat, angivet som sifferkod, som partinamn i klartext eller som förkortat partinamn. I den förkortade formen redovisas mindre partier utanför riksdagen som en grupp; 2009 anges den som sifferkod där de sju största partierna särskiljs, övriga partier redovisas i en grupp och blanka och ogiltiga röster särskiljs." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i kod, namn och förkortning; alla rader i exporten är lästa.\ncatalog:variable_text:14942:9131:9496\ncatalog:variable_text:14943:9131:9496\ncatalog:variable_text:14948:9131:9496\ncatalog:variable_text:14948:10592:10957\ncatalog:variable_text:14948:14245:14610"
 
 [[statement]]

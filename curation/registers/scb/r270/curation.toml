@@ -1813,5 +1813,5 @@ evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst' (2 variab
 [[statement]]
 kind = "set"
 subject = "set:position-i-politiskt-organ"
-fields = { "description" = "Den förtroendevaldas position i nämnden, angiven som kod eller i klartext; klartexten är något mer detaljerad än koden." }
+fields = { "description" = "Den förtroendevaldas position i nämnden, angiven som kod eller i klartext. 2007 är klartexten något mer detaljerad än koden." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i kod eller klartext.\ncatalog:variable_text:20073:13514:13879\ncatalog:variable_text:20074:12053:12418\ncatalog:variable_text:20074:13514:13879"

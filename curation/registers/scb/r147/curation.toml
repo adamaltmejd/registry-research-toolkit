@@ -831,7 +831,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "set:djurbestandets-storlek"
-fields = { "description" = "Djurbeståndet på gården: antal djur av respektive djurslag, antal djurenheter och om lantbrukaren kryssat i att det inte finns några djur på gården. Antal djur är förtryckt från Lantbruksregistret och godkänt eller ändrat av lantbrukaren." }
+fields = { "description" = "Djurbeståndet på gården: antal djur av respektive djurslag, antal djurenheter och om lantbrukaren kryssat i att det inte finns några djur på gården. Från 2015 är antal djur förtryckt från det preliminära Lantbruksregistret och godkänt eller ändrat av lantbrukaren." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna är antal djur, djurenheter och kryssrutan för inga djur.\ncatalog:variable_text:28508:14061:14426\ncatalog:variable_text:28508:16617:16983\ncatalog:variable_text:28508:17713:18078\ncatalog:variable_text:28520:14061:14426\ncatalog:variable_text:28529:16617:16983"
 
 [[statement]]
