@@ -1457,3 +1457,9 @@ kind = "set"
 subject = "var:fodelsedatum-numerisk"
 fields = { "label" = "Födelsedatum (numeriskt)" }
 evidence = "#2102 same-label cluster 'Födelsedatum' (2 variables): judged different meaning, medium confidence; FODDAT och FODDATN är samtidiga kolumner i samma tabell; N-suffixet anger numeriskt format (pid: numerisk)."
+
+[[statement]]
+kind = "set"
+subject = "var:varunr"
+fields = { "description" = "Varunummer för den expedierade varan. Varunumret är ett sexsiffrigt samnordiskt nummer som identifierar en läkemedelsvara eller en handelsvara (till exempel förbrukningsartiklar och hjälpmedel, som börjar med Y i ATC-koden) och är i de allra flesta fall unikt för en viss styrka, läkemedelsform, förpackningsstorlek och förpackningstyp. Samma varunummer kan förekomma för flera förpackningar, till exempel vid parallellimport, och numret kan ändras över tid. Licensläkemedel har gruppvarunummer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text i båda tabellerna; den ena har en extra parentes om handelsvaror.\ncatalog:variable_text:63492:12965:2932897"
