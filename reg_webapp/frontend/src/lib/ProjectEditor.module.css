@@ -60,6 +60,11 @@
   gap: var(--space-3);
   min-width: 0;
 }
+/* A ready check with nothing to show: cancel the editor column's gap, so the
+   section's empty live region does not double the space above Tables. */
+.silent {
+  margin-top: calc(-1 * var(--space-4));
+}
 .check:focus-visible {
   outline: none;
   box-shadow: var(--focus-ring);

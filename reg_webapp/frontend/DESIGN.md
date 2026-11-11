@@ -1135,10 +1135,10 @@ grow new visual language meanwhile.
   takes focus; Checking and Empty stay plain text. A ready project shows no verdict in
   the box (maintainer, #2417, 2026-11-11: "Can we remove the big 'Ready to download'
   flag from the project box? … We can just not do that."). Its slot keeps its
-  width but takes no height, so where the verdict would wrap to a line of its own (a
-  narrow top bar) there is no blank line, and there the box loses that line when a check
-  ends (maintainer, follow-up to #2417, 2026-11-11: "Good that the project box does not
-  change size."). Unsaved changes are a quiet `mono` `text-muted` "unsaved", never a
+  width but takes no height (maintainer, follow-up to #2417, 2026-11-11: "Good that the
+  project box does not change size."), so where the verdict would wrap to a line of its
+  own (a narrow top bar) there is no blank line, and there the box loses that line when
+  a check ends. Unsaved changes are a quiet `mono` `text-muted` "unsaved", never a
   status hue. The study window, labelled "Study years", is the period picker: an
   inline two-thumb RAC `Slider` (no popover) bounded by the viewed catalog's first and
   last year, drawn as the Timeline's study-window band (see Time: `accent-bg` between
@@ -1186,8 +1186,9 @@ grow new visual language meanwhile.
   the count of problems, or "Has problems" for a file that fails the structure check,
   whose problems are listed in full under it. A ready project shows no verdict, as in
   the box (maintainer, follow-up to #2417, 2026-11-11: "Drop ready to download also on
-  project page"): the row stays as an empty live region with no height, so the next
-  verdict lands in a region the page already had. A check that did not run is an `err`
+  project page"). The row stays as an empty live region and the section takes no
+  space, so the next verdict lands in a region the page already had (new rule, proposed
+  by the implementer). A check that did not run is an `err`
   row with Retry. While a newer check runs, the verdict, its list and "What will be
   delivered" keep the previous check's answer (not a check that did not run)
   with `aria-busy`; the banner's plain `text-muted` "Checking" shows in its place only

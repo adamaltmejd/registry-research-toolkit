@@ -300,13 +300,17 @@ function Check({
   const warnings = issues.filter((issue) => issue.level === "warning").length;
   // An empty project has no verdict, but Download still needs its reason.
   if (verdict === "empty" && !needsDatabase) return null;
+  // A ready project with nothing listed shows nothing here (#2417): the
+  // section stays for its live region but is no named landmark and takes no
+  // space in the editor's column.
+  const silent = verdict === "ready" && !needsDatabase && listed.length === 0;
   return (
     <section
       id="project-checks"
       tabIndex={-1}
-      aria-label="Check"
+      aria-label={silent ? undefined : "Check"}
       aria-busy={busy || verdict === "checking" || undefined}
-      className={styles.check}
+      className={`${styles.check}${silent ? ` ${styles.silent}` : ""}`}
     >
       {needsDatabase && (
         <StatusRow tone="info" id={DATABASE_REASON}>
