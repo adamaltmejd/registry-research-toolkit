@@ -1104,21 +1104,23 @@ grow new visual language meanwhile.
   hairline and `rounded.sm`, the search field's box, with no leading bar (#2407,
   maintainer decisions 2026-11-11). The name is `h3`, the counts `mono` ("1
   table, 2 columns"). The verdict is the project page's, in the same words (see Project
-  page), and leads with its glyph: "✓ Ready to download" in `ok`, "▲ Has warnings" in
-  `warn`, "✕ Has problems" or "✕ Can't download yet" in `err`; not yet checked or in
-  flight it is a plain `text-muted` "Checking" with no glyph; a draft with no tables yet
-  is the same plain "Empty", never an error, since nothing has gone wrong. A check that
-  did not run (a rate limit, the network) is the same plain "Check did not run", never
+  page), and leads with its glyph: "▲ Has warnings" in `warn`, "✕ Has problems" or "✕
+  Can't download yet" in `err`; not yet checked or in flight it is a plain `text-muted`
+  "Checking" with no glyph; a draft with no tables yet is the same plain "Empty", never
+  an error, since nothing has gone wrong. A check that did not run (a rate limit, the network) is the same plain "Check did not run", never
   "Has problems": it says nothing about the project. A database not yet chosen, when
   nothing else is wrong, is the same plain "Choose a database", never an error
   (maintainer, #2345), and links to /project. Its slot is as wide as the widest verdict,
   so the banner keeps one size while the check runs. A verdict /project explains (Has
   warnings, Has problems, Can't download yet with their findings, Check did not run with
   Retry, Choose a database) is a link, in its status hue with the link's `accent` rule,
-  to the verdict on /project, which takes focus; Ready to download and Checking stay
-  plain text. Unsaved changes are a quiet `mono` `text-muted` "unsaved", never a status
-  hue. The study window, labelled "Study years", is the period picker: an inline
-  two-thumb RAC `Slider` (no popover) bounded by the viewed catalog's first and last
+  to the verdict on /project, which takes focus; Checking and Empty stay plain text. A
+  ready project shows no verdict in the box; /project still says "Ready to download"
+  (maintainer, #2417, 2026-11-11: "Can we remove the big 'Ready to download' flag from
+  the project box? … We can just not do that."). The slot stays at its width, empty, so
+  the box does not resize when a check ends (new rule, proposed by the implementer).
+  Unsaved changes are a quiet `mono` `text-muted` "unsaved", never a status hue.
+  The study window, labelled "Study years", is the period picker: an inline two-thumb RAC `Slider` (no popover) bounded by the viewed catalog's first and last
   year, drawn as the Timeline's study-window band (see Time: `accent-bg` between
   `accent` bounds, the thumbs on those bounds) on a `surface` strip, its years an
   `accent-ink` `mono` readout, with a "Clear" ghost action; the label, the readout and
