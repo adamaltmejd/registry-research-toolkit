@@ -352,6 +352,17 @@ pub fn finalize(
                 }
             }
         }
+        for (vi, variable) in resolved.variables.iter().enumerate() {
+            if variable.default_description {
+                result.values.push(FinalValue {
+                    subject: Subject::Variable(ri, vi),
+                    field: "description".into(),
+                    value: variable.description.clone(),
+                    source_value: None,
+                    origin: Origin::Rule(crate::description_default::RULE),
+                });
+            }
+        }
     }
     // One variable-level membership value can be reached through several selected occurrences.
     result

@@ -1,0 +1,22 @@
+{
+  "note": "Fails if the builder's default description does not fold contained provider wordings into the longest one, shows a spelling other than the latest occurrence's, folds wordings that genuinely differ, or reaches a group member. Folded (descriptions.jsonl lines 17–19) states 'Identity concept.' in 2015 and the longer wording in 2016 and 2017, the 2017 one with other spacing, case and no final stop: its description is the 2017 text. Partial (lines 20–22) has 'Sector.' inside two different longer wordings: it gets no description and its segments keep three wordings. Grouped (lines 23–24) folds like Folded but is a member of set analysis: it gets no description (maintainer 2026-11-11). Expected values come from the fixture and the rule in crates/DESIGN.md (#2322).",
+  "fixture": "descriptions",
+  "requests": [
+    {
+      "operation": "show",
+      "path": "/api/catalog/demo/descriptions/folded"
+    },
+    {
+      "operation": "show",
+      "path": "/api/catalog/demo/descriptions/partial"
+    },
+    {
+      "operation": "segments",
+      "path": "/api/segments/demo/descriptions/partial"
+    },
+    {
+      "operation": "show",
+      "path": "/api/catalog/demo/descriptions/grouped"
+    }
+  ]
+}

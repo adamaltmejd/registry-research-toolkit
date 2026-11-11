@@ -52,3 +52,9 @@ kind = "set"
 subject = "var:measure"
 fields.tags = ["timing"]
 evidence = "The timing tag is independent of the analysis picking unit."
+
+[[statement]]
+kind = "set"
+subject = "var:grouped"
+fields.sets = ["analysis"]
+evidence = "A group member whose wordings fold keeps no default description."
