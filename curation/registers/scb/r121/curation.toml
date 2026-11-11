@@ -93952,8 +93952,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:angivet-ar-vxgivar3"
-fields = { "description" = "Det tredje året som anges i ansökan om återbetalning för värmeleveranser." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\n2019–2021 anger värmeleveranser; 2017–2018 samma ansökan utan att typen nämns. Samma tabell båda perioderna.\ncatalog:variable_text:21826:17167:17897\ncatalog:variable_text:21826:17897:18993"
+fields = { "description" = "Det tredje året som anges i ansökan om återbetalning. 2019–2021 avser ansökan värmeleveranser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\n2019–2021 anger värmeleveranser; 2017–2018 samma ansökan utan att typen nämns. Samma tabell båda perioderna.\ncatalog:variable_text:21826:17167:17897\ncatalog:variable_text:21826:17897:18993\nRaw-row check: värmeleveranser is stated only 2019–2021 (Registerinformation.csv:row=390012); 2017–2018 say only the third stated year (row=863430)."
 
 [[statement]]
 kind = "set"
@@ -94045,11 +94045,6 @@ subject = "var:avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-92"
 fields = { "description" = "Avdrag för skatt på bränsle som förbrukats för framställning av skattepliktig elektrisk kraft, lågbeskattad omärkt olja, enligt punktskattedeklarationen för olja, gasol m.m." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOljetypen står i definitionen 2007–2013 och i operationaliseringen 2017–2023; samma sak.\ncatalog:variable_text:22376:13514:16071\ncatalog:variable_text:22376:16071:17167\ncatalog:variable_text:22376:17167:19723"
 
-[[statement]]
-kind = "set"
-subject = "var:avdr-for-skatt-pa-bransle-metallurgiska-processer-v712-116-3"
-fields = { "description" = "Avdrag för skatt på bränsle som förbrukats eller sålts för förbrukning i metallurgiska processer eller i processer för framställning av andra mineraliska ämnen än metaller (mineralogiska processer), gasol för motorfordon m.m., enligt punktskattedeklarationen för olja, gasol m.m." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBränsletypen står i definitionen 2007–2013 och i operationaliseringen 2017–2023; förkortningarna skrivs ut.\ncatalog:variable_text:22450:13514:16071\ncatalog:variable_text:22450:16071:17167\ncatalog:variable_text:22450:17167:19723"
 
 [[statement]]
 kind = "set"
@@ -94066,8 +94061,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:person-orgnr"
-fields = { "description" = "Identitetsbegrepp för juridiska enheter. För juridiska personer tilldelas organisationsnummer av Bolagsverket, Skatteverket, Kammarkollegiet, Lantmäteriet, en länsstyrelse eller SCB beroende på bolagsform. För fysiska personer med näringsverksamhet används personnumret. Numret avser den enhet tabellen gäller: företaget, fåmansbolaget, handelsbolaget eller delägaren." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i alla tabeller; operationaliseringen anger vilken enhet numret gäller per tabell. Rättar ”organsiationsnummer”.\ncatalog:variable_text:25916:10957:11688\ncatalog:variable_text:25916:11688:12053\ncatalog:variable_text:25916:12784:16436\ncatalog:variable_text:25916:17897:19723"
+fields = { "description" = "Identitetsbegrepp för juridiska enheter. För juridiska personer tilldelas organisationsnummer av Bolagsverket, Skatteverket, Kammarkollegiet, Lantmäteriet, en länsstyrelse eller SCB beroende på bolagsform. För fysiska personer med näringsverksamhet används personnumret. Beroende på tabell avser numret företaget, fåmansbolaget (bilaga K10), handelsbolaget (bilaga N3B) eller, i tabellen Handelsbolag, delägarens personnummer (2002 och 2004 företagets organisationsnummer)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i alla tabeller; operationaliseringen anger vilken enhet numret gäller per tabell. Rättar ”organsiationsnummer”.\ncatalog:variable_text:25916:10957:11688\ncatalog:variable_text:25916:11688:12053\ncatalog:variable_text:25916:12784:16436\ncatalog:variable_text:25916:17897:19723\nRaw-row check: in table Handelsbolag the column is the partner's personnummer ('Anger delägarens personnummer'), except 2002 and 2004, which say företagets organisationsnummer."
 
 [[statement]]
 kind = "set"
