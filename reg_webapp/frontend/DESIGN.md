@@ -494,7 +494,12 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   columns' headers keep one height: `FilterInput`, reading "Filter variables…" ("Filter
   classifications…" on the classification pages), with its "12 of 740" count of rows
   while it holds text. It filters that column only, never the open page, by name and slug
-  with `rankFilter` (exact, then prefix, then other hits; a group's row counts once). It
+  with `rankFilter` (exact, then prefix, then other hits; a group's row counts once). A
+  group stays when its own name or a member's matches; one kept only through a member
+  reads as its name with nothing marked, so it comes after every row whose name matches
+  (new rule, proposed by the implementer). The box is there for every list, however
+  short, so the list does not shift as registers change (new rule, proposed by the
+  implementer). It
   belongs to the list's root: opening another register, a provider or the
   classifications empties it, and opening a variable or group within the list keeps it.
   A provider's page and the classifications list get it too (new rule, proposed by the
