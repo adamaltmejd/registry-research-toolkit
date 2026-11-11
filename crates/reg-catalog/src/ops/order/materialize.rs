@@ -846,14 +846,28 @@ fn clip(
         let path = format!("/sources/{s}/bindings/{b}");
         let held = merge(std::mem::take(holds));
         let source = &sources[s].name;
-        let asked = order
-            .clips
-            .iter()
-            .find(|c| &c.source == source && &c.variable == variable)
-            .map_or_else(
-                || merge(std::mem::take(requested)),
-                |c| merge(c.requested.iter().map(|p| p.days(open)).collect()),
-            );
+        // The source's own request, not the logical entries: those are already cut to
+        // catalog coverage, and the logical check may have left that cut unreported.
+        let stated = match sources[s].period.items() {
+            Ok(Some(items)) => Some(merge(
+                items
+                    .iter()
+                    .map(|(lo, hi)| (super::day(lo), super::day(hi) + 1))
+                    .collect(),
+            )),
+            Ok(None) => Some(vec![open]),
+            Err(_) => None,
+        };
+        let asked = stated.unwrap_or_else(|| {
+            order
+                .clips
+                .iter()
+                .find(|c| &c.source == source && &c.variable == variable)
+                .map_or_else(
+                    || merge(std::mem::take(requested)),
+                    |c| merge(c.requested.iter().map(|p| p.days(open)).collect()),
+                )
+        });
         // A gap inside a requested year the binding delivers in part is not reported
         // (#2409), judged over the whole binding: its entries can split mid-year.
         let gap =
