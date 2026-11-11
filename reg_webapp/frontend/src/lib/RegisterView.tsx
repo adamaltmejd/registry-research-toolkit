@@ -259,44 +259,23 @@ export function RegisterView({
                 </VariableRowList>
               )
             )}
-            {lens.state === "loading" ? (
-              <div className={styles.tableRowsLoading} aria-busy="true">
-                <Skeleton count={3} />
-              </div>
-            ) : lens.state === "failed" ? (
-              <StatusRow tone="error">
-                The years of{" "}
-                {lens.tables
-                  .map(
-                    (fqid) =>
-                      node.tables.find((table) => table.fqid === fqid)?.name ??
-                      fqid,
-                  )
-                  .join(", ")}{" "}
-                did not load. Reload the page to try again.
-              </StatusRow>
-            ) : shown.length === 0 ? (
-              // Empty only through the box: every table row delivers a
-              // variable.
-              <EmptyState
-                title={`No variables match “${needle.trim()}”.`}
-                description="Clear the filter to list them all."
-              />
-            ) : (
-              <VariableRowList
-                label="Variables"
-                note={
-                  // Mounted empty: a live region inserted with its first
-                  // text is not announced.
-                  <span className={styles.note} aria-live="polite">
-                    {lens.state === "on"
-                      ? `${chosen.length} of ${node.variables.length} variables shown`
-                      : ""}
-                  </span>
-                }
-                axis={axis}
-              >
-                {shown.map((variable) => {
+            {/* The list stays mounted through loading, a failed read and an
+                empty filter, so its count's live region is never inserted
+                with its first text (which is not announced). */}
+            <VariableRowList
+              label="Variables"
+              note={
+                <span className={styles.note} aria-live="polite">
+                  {lens.state === "on"
+                    ? `${chosen.length} of ${node.variables.length} variables shown`
+                    : ""}
+                </span>
+              }
+              axis={axis}
+            >
+              {lens.state !== "loading" &&
+                lens.state !== "failed" &&
+                shown.map((variable) => {
                   // With a filter on, the bar draws only the selected tables'
                   // and databases' years (#2110, maintainer 2026-11-11).
                   const years =
@@ -324,7 +303,32 @@ export function RegisterView({
                     />
                   );
                 })}
-              </VariableRowList>
+            </VariableRowList>
+            {lens.state === "loading" ? (
+              <div className={styles.tableRowsLoading} aria-busy="true">
+                <Skeleton count={3} />
+              </div>
+            ) : lens.state === "failed" ? (
+              <StatusRow tone="error">
+                The years of{" "}
+                {lens.tables
+                  .map(
+                    (fqid) =>
+                      node.tables.find((table) => table.fqid === fqid)?.name ??
+                      fqid,
+                  )
+                  .join(", ")}{" "}
+                did not load. Reload the page to try again.
+              </StatusRow>
+            ) : (
+              shown.length === 0 && (
+                // Empty only through the box: every table row delivers a
+                // variable.
+                <EmptyState
+                  title={`No variables match “${needle.trim()}”.`}
+                  description="Clear the filter to list them all."
+                />
+              )
             )}
           </>
         )}
