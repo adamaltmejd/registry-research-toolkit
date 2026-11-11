@@ -5079,3 +5079,51 @@ kind = "set"
 subject = "set:val-av-arbetsstalle"
 fields = { "description" = "Vilket arbetsställe som väljs för en person med mer än en uppgift om arbetsställe. Valet görs i första hand efter kontrolluppgifternas månadsmarkering och därefter efter högst löne- eller företagarinkomst; från 2019 jämförs beloppen i november enligt AGI, KU och SRU, med uppräknad företagarinkomst. Från 2004 finns också valt arbetsställe när arbetsställenumret (CFAR) pekar på två eller flera arbetsställen, och 2019–2021 en prioriteringsordning mellan arbetsställena för personer som fått pengar från Försäkringskassan och kan vara tillfälligt frånvarande, efter var personen senast fick en utbetalning." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nvaltast beskriver valet och dess prioritering 1997–2021; valt-arbetsstalle (2004–2021) CFAR-dubbletter; priovaltast (2019–2021) är kvar som slot för prioriteringsordningen.\ncatalog:variable_text:48111:17897:18993\ncatalog:variable_text:48173:12418:18993\ncatalog:variable_text:48174:9862:10957\ncatalog:variable_text:48174:10957:17897\ncatalog:variable_text:48174:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:hopslagning-foretag"
+fields = { "label" = "Hopslagning (företag)" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nThe merger flag is derived from shared employees for workplaces (FAD Arbetsställen) and from the FAD quotient for companies (FAD Företag): different unit and criterion. The company column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:hopslagning-foretag"
+fields = { "tags" = ["business"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nThe merger flag is derived from shared employees for workplaces (FAD Arbetsställen) and from the FAD quotient for companies (FAD Företag): different unit and criterion. The company column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:hopslagning-foretag"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nThe merger flag is derived from shared employees for workplaces (FAD Arbetsställen) and from the FAD quotient for companies (FAD Företag): different unit and criterion. The company column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "fad-foretag: H"
+fields = { "variable" = "hopslagning-foretag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nThe merger flag is derived from shared employees for workplaces (FAD Arbetsställen) and from the FAD quotient for companies (FAD Företag): different unit and criterion. The company column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:uppdelning-foretag"
+fields = { "label" = "Uppdelning (företag)" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nThe split-up flag is derived from shared employees for workplaces (FAD Arbetsställen) and from the FAD quotient for companies (FAD Företag): different unit and criterion. The company column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:uppdelning-foretag"
+fields = { "tags" = ["business"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nThe split-up flag is derived from shared employees for workplaces (FAD Arbetsställen) and from the FAD quotient for companies (FAD Företag): different unit and criterion. The company column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:uppdelning-foretag"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nThe split-up flag is derived from shared employees for workplaces (FAD Arbetsställen) and from the FAD quotient for companies (FAD Företag): different unit and criterion. The company column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "fad-foretag: U"
+fields = { "variable" = "uppdelning-foretag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nThe split-up flag is derived from shared employees for workplaces (FAD Arbetsställen) and from the FAD quotient for companies (FAD Företag): different unit and criterion. The company column gets its own variable."

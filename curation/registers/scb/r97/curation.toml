@@ -31698,3 +31698,159 @@ kind = "set"
 subject = "set:yrkesstallning"
 fields = { "description" = "Om personen är företagare eller anställd. En variant (1975, 1996–2000 och 2003–2013) anger också om personen är förvärvsarbetande och delar in de anställda i statlig, kommunal och privat sektor; den härleds i första hand från yrkesställning och SEI-kod och annars från arbetsgivarnas kontrolluppgifter. 1975 finns även en yrkesställning utifrån arbetsstället för personens huvudsakliga verksamhet, bestämd från företagsnamn från enkät eller, vid bortfall, deklarationen. 2008–2013 finns varianter för personer med arbetsinkomst och för personer med arbetsinkomst över ett basbelopp, som räknas som förvärvsarbetande." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nIndelningen i förvärvsarbetande och sektor samt SEI/KUARB-härledningen anges bara för Yrkesställning och anställningens art; 1975 års variabel och arbetsinkomstvarianterna har egna definitioner.\ncatalog:variable_text:32645:1826:2191\ncatalog:variable_text:32646:1826:2191\ncatalog:variable_text:32646:14245:16071\ncatalog:variable_text:32647:13879:16071\ncatalog:variable_text:32648:13879:14245\ncatalog:variable_text:32648:14245:14610\ncatalog:variable_text:32648:14610:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:barnbidrag-hushall"
+fields = { "label" = "Barnbidrag, summa för hushållet" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:barnbidrag-hushall"
+fields = { "tags" = ["transfers"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:barnbidrag-hushall"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: IBARNBZ"
+fields = { "variable" = "barnbidrag-hushall" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:boende-ranta-bostadsratt-hushall"
+fields = { "label" = "Boende - Ränta, bostadsrätt, summa för hushållet" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:boende-ranta-bostadsratt-hushall"
+fields = { "tags" = ["finance", "housing"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:boende-ranta-bostadsratt-hushall"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: KASKUBRZ"
+fields = { "variable" = "boende-ranta-bostadsratt-hushall" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: WKABR"
+fields = { "variable" = "boende-ranta-bostadsratt-hushall" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:boende-ranta-eget-hem-hushall"
+fields = { "label" = "Boende - Ränta, eget hem, summa för hushållet" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:boende-ranta-eget-hem-hushall"
+fields = { "tags" = ["finance", "housing"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:boende-ranta-eget-hem-hushall"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: KASKUEGZ"
+fields = { "variable" = "boende-ranta-eget-hem-hushall" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: WKAEG"
+fields = { "variable" = "boende-ranta-eget-hem-hushall" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:boende-ranta-totalt-hushall"
+fields = { "label" = "Boende - Ränta, totalt, summa för hushållet" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:boende-ranta-totalt-hushall"
+fields = { "tags" = ["finance", "housing"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:boende-ranta-totalt-hushall"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: KASKUBOZ"
+fields = { "variable" = "boende-ranta-totalt-hushall" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: IBTPSZ @1996..2008"
+fields = { "variable" = "sarskilt-bostadstillagg-pensionarer-hushall" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable. IBTPSZ 2009– is already its own variable, summa-sarskilt-bostadstillagg-ibtpsz, which also covers sjuk- och aktivitetsersättning; the 1996–2008 rows (pensioners only) get their own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-bostadsbidrag-hushall"
+fields = { "label" = "Summa bostadsbidrag, summa för hushållet" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-bostadsbidrag-hushall"
+fields = { "tags" = ["transfers"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-bostadsbidrag-hushall"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: IBOTOTZ"
+fields = { "variable" = "summa-bostadsbidrag-hushall" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-bostadstillagg-pensionarer-hushall"
+fields = { "label" = "Särskilt bostadstillägg för pensionärer, summa för hushållet" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable. IBTPSZ 2009– is already its own variable, summa-sarskilt-bostadstillagg-ibtpsz, which also covers sjuk- och aktivitetsersättning; the 1996–2008 rows (pensioners only) get their own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-bostadstillagg-pensionarer-hushall"
+fields = { "tags" = ["transfers"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable. IBTPSZ 2009– is already its own variable, summa-sarskilt-bostadstillagg-ibtpsz, which also covers sjuk- och aktivitetsersättning; the 1996–2008 rows (pensioners only) get their own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilt-bostadstillagg-pensionarer-hushall"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable. IBTPSZ 2009– is already its own variable, summa-sarskilt-bostadstillagg-ibtpsz, which also covers sjuk- och aktivitetsersättning; the 1996–2008 rows (pensioners only) get their own variable."

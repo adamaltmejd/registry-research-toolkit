@@ -1,13 +1,6 @@
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-kommun: kgr528"
-fields = { "variable" = "sociala-kostnader-personalkostnader" }
-evidence = "private:ev-0157"
-caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
-
-[[statement]]
-kind = "set"
 subject = "fek-slutdata-lokal: lgr528"
 fields = { "variable" = "sociala-kostnader-personalkostnader" }
 evidence = "private:ev-0158"
@@ -18,13 +11,6 @@ kind = "set"
 subject = "fek-slutdata-verksamhetsenhet: vgr528"
 fields = { "variable" = "sociala-kostnader-personalkostnader" }
 evidence = "private:ev-0159"
-caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-kommun: kgr6101"
-fields = { "variable" = "medelantal-anstallda" }
-evidence = "private:ev-0160"
 caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
 
 [[statement]]
@@ -43,23 +29,9 @@ caveat = "Calculation or input-source descriptions vary between delivery levels 
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-kommun: kgr512"
-fields = { "variable" = "kostnader-loner-ersattningar" }
-evidence = "private:ev-0163"
-caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
-
-[[statement]]
-kind = "set"
 subject = "fek-slutdata-verksamhetsenhet: vgr512"
 fields = { "variable" = "kostnader-loner-ersattningar" }
 evidence = "private:ev-0164"
-caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-kommun: khar002_jmf"
-fields = { "variable" = "forbrukningsvarde" }
-evidence = "private:ev-0165"
 caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
 
 [[statement]]
@@ -74,13 +46,6 @@ kind = "set"
 subject = "fek-slutdata-verksamhetsenhet: vhar002_jmf"
 fields = { "variable" = "forbrukningsvarde" }
 evidence = "private:ev-0167"
-caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-kommun: khar001_jmf"
-fields = { "variable" = "produktionsvarde" }
-evidence = "private:ev-0168"
 caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
 
 [[statement]]
@@ -106,13 +71,6 @@ caveat = "Calculation or input-source descriptions vary between delivery levels 
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-kommun: khar400_jmf"
-fields = { "variable" = "nettoomsattning-justerad-merchanting" }
-evidence = "private:ev-0172"
-caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
-
-[[statement]]
-kind = "set"
 subject = "fek-slutdata-lokal: lhar400_jmf where key = 'v5028'"
 fields = { "variable" = "nettoomsattning-justerad-merchanting" }
 evidence = "private:ev-0173"
@@ -127,13 +85,6 @@ caveat = "Calculation or input-source descriptions vary between delivery levels 
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-kommun: khar500_jmf"
-fields = { "variable" = "summa-ravaror-handelsvaror-merchanting" }
-evidence = "private:ev-0175"
-caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
-
-[[statement]]
-kind = "set"
 subject = "fek-slutdata-lokal: lhar500_jmf where key = 'v5619'"
 fields = { "variable" = "summa-ravaror-handelsvaror-merchanting" }
 evidence = "private:ev-0176"
@@ -144,13 +95,6 @@ kind = "set"
 subject = "fek-slutdata-verksamhetsenhet: vhar500_jmf"
 fields = { "variable" = "summa-ravaror-handelsvaror-merchanting" }
 evidence = "private:ev-0177"
-caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-kommun: khar003_jmf"
-fields = { "variable" = "foradlingsvarde" }
-evidence = "private:ev-0178"
 caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
 
 [[statement]]
@@ -218,13 +162,6 @@ caveat = "Calculation or input-source descriptions vary between delivery levels 
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-kommun: kgr400"
-fields = { "variable" = "nettoomsattning" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/fek.toml:1517\n\n2026-10-13 one-register batch (#1579). Native family 168.4256 in reg_meta 0.49.0: one exported name (Nettoomsättning) and one definition across these literal columns; the spellings are per delivery level or nonconcurrent renames, never co-delivered in one edition. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted."
-caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
-
-[[statement]]
-kind = "set"
 subject = "fek-slutdata-lokal: lgr400"
 fields = { "variable" = "nettoomsattning" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/fek.toml:1517\n\n2026-10-13 one-register batch (#1579). Native family 168.4256 in reg_meta 0.49.0: one exported name (Nettoomsättning) and one definition across these literal columns; the spellings are per delivery level or nonconcurrent renames, never co-delivered in one edition. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted."
@@ -246,13 +183,6 @@ caveat = "Calculation or input-source descriptions vary between delivery levels 
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-kommun: kgr527"
-fields = { "variable" = "ovriga-personalkostnader" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/fek.toml:1528\n\n2026-10-13 one-register batch (#1579). Native family 168.4273 in reg_meta 0.49.0: one exported name (Övriga personalkostnader) and one definition across these literal columns; the spellings are per delivery level or nonconcurrent renames, never co-delivered in one edition. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted."
-caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
-
-[[statement]]
-kind = "set"
 subject = "fek-slutdata-lokal: lgr527"
 fields = { "variable" = "ovriga-personalkostnader" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/fek.toml:1528\n\n2026-10-13 one-register batch (#1579). Native family 168.4273 in reg_meta 0.49.0: one exported name (Övriga personalkostnader) and one definition across these literal columns; the spellings are per delivery level or nonconcurrent renames, never co-delivered in one edition. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted."
@@ -264,12 +194,6 @@ subject = "fek-slutdata-verksamhetsenhet: vgr527"
 fields = { "variable" = "ovriga-personalkostnader" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/fek.toml:1528\n\n2026-10-13 one-register batch (#1579). Native family 168.4273 in reg_meta 0.49.0: one exported name (Övriga personalkostnader) and one definition across these literal columns; the spellings are per delivery level or nonconcurrent renames, never co-delivered in one edition. Reviewed source-native quantity identity retains original column spellings, units, storage, calculation methods, population and delivery level. No statistical equivalence or unit conversion is asserted."
 caveat = "Calculation or input-source descriptions vary between delivery levels or years for this source-native quantity. Original methods, imputation notes and units remain on their deliveries; matching quantity identity does not establish statistical comparability."
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-kommun: kgr555"
-fields = { "variable" = "ovriga-rorelsekostnader" }
-evidence = "private:ev-0182"
 
 [[statement]]
 kind = "set"
@@ -285,12 +209,6 @@ evidence = "private:ev-0184"
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-kommun: kgr509"
-fields = { "variable" = "forandring-lager-pagaende-arbete" }
-evidence = "private:ev-0185"
-
-[[statement]]
-kind = "set"
 subject = "fek-slutdata-lokal: lgr509"
 fields = { "variable" = "forandring-lager-pagaende-arbete" }
 evidence = "private:ev-0186"
@@ -300,12 +218,6 @@ kind = "set"
 subject = "fek-slutdata-verksamhetsenhet: vgr509"
 fields = { "variable" = "forandring-lager-pagaende-arbete" }
 evidence = "private:ev-0187"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-kommun: kgr401"
-fields = { "variable" = "ovriga-rorelseintakter" }
-evidence = "private:ev-0188"
 
 [[statement]]
 kind = "set"
@@ -321,12 +233,6 @@ evidence = "private:ev-0190"
 
 [[statement]]
 kind = "set"
-subject = "fek-slutdata-kommun: kgr530"
-fields = { "variable" = "ovriga-externa-kostnader" }
-evidence = "private:ev-0191"
-
-[[statement]]
-kind = "set"
 subject = "fek-slutdata-lokal: lgr530"
 fields = { "variable" = "ovriga-externa-kostnader" }
 evidence = "private:ev-0192"
@@ -336,12 +242,6 @@ kind = "set"
 subject = "fek-slutdata-verksamhetsenhet: vgr530"
 fields = { "variable" = "ovriga-externa-kostnader" }
 evidence = "private:ev-0193"
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-kommun: kgr402"
-fields = { "variable" = "aktiverat-arbete-for-egen-rakning" }
-evidence = "private:ev-0194"
 
 [[statement]]
 kind = "set"
@@ -8037,3 +7937,507 @@ kind = "set"
 subject = "set:urvalsstratum"
 fields = { "description" = "Det stratum företaget tillhör i det stratifierade urvalet (2003–2023), satt efter företagsenhetens eller verksamhetsenhetens bransch, och en storleksgrupp som anger om företaget ingår i ett totalräknat stratum och därmed har urvalssannolikhet och uppräkningsfaktor 1. I storleksgruppen 2012–2021 anges bara om sannolikheten skiljer sig från 1, inte dess värde." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nStratumkoden och totalräkningsindikatorn är slots av samma urvalsdesign; anmärkningen om sannolikhetens värde gäller Storleksgrupp_gem 2012–2021.\ncatalog:variable_text:17916:7305:20089\ncatalog:variable_text:17917:15340:18993\ncatalog:variable_text:17954:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:aktiverat-arbete-for-egen-rakning-kommun"
+fields = { "label" = "Aktiverat arbete för egen räkning, kommunnivå" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:aktiverat-arbete-for-egen-rakning-kommun"
+fields = { "tags" = ["business"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:aktiverat-arbete-for-egen-rakning-kommun"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kgr402"
+fields = { "variable" = "aktiverat-arbete-for-egen-rakning-kommun" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:foradlingsvarde-kommun"
+fields = { "label" = "Förädlingsvärde, kommunnivå" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:foradlingsvarde-kommun"
+fields = { "tags" = ["business"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:foradlingsvarde-kommun"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: khar003_jmf"
+fields = { "variable" = "foradlingsvarde-kommun" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:forandring-lager-pagaende-arbete-kommun"
+fields = { "label" = "Förändring av lager och pågående arbete, kommunnivå" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:forandring-lager-pagaende-arbete-kommun"
+fields = { "tags" = ["business"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:forandring-lager-pagaende-arbete-kommun"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kgr509"
+fields = { "variable" = "forandring-lager-pagaende-arbete-kommun" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:forbrukningsvarde-kommun"
+fields = { "label" = "Förbrukningsvärde, kommunnivå" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:forbrukningsvarde-kommun"
+fields = { "tags" = ["business"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:forbrukningsvarde-kommun"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: khar002_jmf"
+fields = { "variable" = "forbrukningsvarde-kommun" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-av-handel-kommun"
+fields = { "label" = "Intäkter av handel, kommunnivå" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-av-handel-kommun"
+fields = { "tags" = ["business", "trade"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-av-handel-kommun"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kgr422"
+fields = { "variable" = "intakter-av-handel-kommun" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-av-industri-kommun"
+fields = { "label" = "Intäkter av industri, kommunnivå" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-av-industri-kommun"
+fields = { "tags" = ["business"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-av-industri-kommun"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kgr423"
+fields = { "variable" = "intakter-av-industri-kommun" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-av-ovrigt-kommun"
+fields = { "label" = "Intäkter av övrigt, kommunnivå" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-av-ovrigt-kommun"
+fields = { "tags" = ["business"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-av-ovrigt-kommun"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kgr429"
+fields = { "variable" = "intakter-av-ovrigt-kommun" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-loner-ersattningar-kommun"
+fields = { "label" = "Kostnader för löner och andra ersättningar, kommunnivå" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-loner-ersattningar-kommun"
+fields = { "tags" = ["business"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:kostnader-loner-ersattningar-kommun"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kgr512"
+fields = { "variable" = "kostnader-loner-ersattningar-kommun" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:medelantal-anstallda-kommun"
+fields = { "label" = "Medelantal anställda, kommunnivå" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:medelantal-anstallda-kommun"
+fields = { "tags" = ["employment"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:medelantal-anstallda-kommun"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kgr6101"
+fields = { "variable" = "medelantal-anstallda-kommun" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoomsattning-kommun"
+fields = { "label" = "Nettoomsättning, kommunnivå" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoomsattning-kommun"
+fields = { "tags" = ["business"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoomsattning-kommun"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kgr400"
+fields = { "variable" = "nettoomsattning-kommun" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoomsattning-justerad-merchanting-kommun"
+fields = { "label" = "Nettoomsättning (justerad för merchanting), kommunnivå" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoomsattning-justerad-merchanting-kommun"
+fields = { "tags" = ["business"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:nettoomsattning-justerad-merchanting-kommun"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: khar400_jmf"
+fields = { "variable" = "nettoomsattning-justerad-merchanting-kommun" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-externa-kostnader-kommun"
+fields = { "label" = "Övriga externa kostnader, kommunnivå" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-externa-kostnader-kommun"
+fields = { "tags" = ["business"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-externa-kostnader-kommun"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kgr530"
+fields = { "variable" = "ovriga-externa-kostnader-kommun" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-personalkostnader-kommun"
+fields = { "label" = "Övriga personalkostnader, kommunnivå" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-personalkostnader-kommun"
+fields = { "tags" = ["business"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-personalkostnader-kommun"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kgr527"
+fields = { "variable" = "ovriga-personalkostnader-kommun" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-rorelseintakter-kommun"
+fields = { "label" = "Övriga rörelseintäkter, kommunnivå" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-rorelseintakter-kommun"
+fields = { "tags" = ["business"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-rorelseintakter-kommun"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kgr401"
+fields = { "variable" = "ovriga-rorelseintakter-kommun" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-rorelsekostnader-kommun"
+fields = { "label" = "Övriga rörelsekostnader, kommunnivå" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-rorelsekostnader-kommun"
+fields = { "tags" = ["business"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-rorelsekostnader-kommun"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kgr555"
+fields = { "variable" = "ovriga-rorelsekostnader-kommun" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsvarde-kommun"
+fields = { "label" = "Produktionsvärde, kommunnivå" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsvarde-kommun"
+fields = { "tags" = ["business"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsvarde-kommun"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: khar001_jmf"
+fields = { "variable" = "produktionsvarde-kommun" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:sociala-kostnader-personalkostnader-kommun"
+fields = { "label" = "Sociala kostnader och andra personalkostnader, kommunnivå" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:sociala-kostnader-personalkostnader-kommun"
+fields = { "tags" = ["business"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:sociala-kostnader-personalkostnader-kommun"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kgr528"
+fields = { "variable" = "sociala-kostnader-personalkostnader-kommun" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-ravaror-handelsvaror-merchanting-kommun"
+fields = { "label" = "Summa råvaror och handelsvaror (justerat för merchanting), kommunnivå" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-ravaror-handelsvaror-merchanting-kommun"
+fields = { "tags" = ["business"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-ravaror-handelsvaror-merchanting-kommun"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: khar500_jmf"
+fields = { "variable" = "summa-ravaror-handelsvaror-merchanting-kommun" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsatta-rams-kommun"
+fields = { "label" = "Sysselsatta (RAMS), kommunnivå" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsatta-rams-kommun"
+fields = { "tags" = ["employment"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsatta-rams-kommun"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: khar6103"
+fields = { "variable" = "sysselsatta-rams-kommun" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:totala-intakter-mm-kommun"
+fields = { "label" = "Totala intäkter mm, kommunnivå" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:totala-intakter-mm-kommun"
+fields = { "tags" = ["business"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:totala-intakter-mm-kommun"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kgr498"
+fields = { "variable" = "totala-intakter-mm-kommun" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:totala-kostnader-kommun"
+fields = { "label" = "Totala kostnader, kommunnivå" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:totala-kostnader-kommun"
+fields = { "tags" = ["business"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:totala-kostnader-kommun"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-kommun: kgr598"
+fields = { "variable" = "totala-kostnader-kommun" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."

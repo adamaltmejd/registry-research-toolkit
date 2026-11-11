@@ -342,3 +342,21 @@ kind = "set"
 subject = "var:utskrivtill"
 fields = { "tags" = ["social-care"] }
 evidence = "Variabeln beskriver destination eller situation vid utskrivning från LVM-vård.\ncatalog:valueset:3150\ncatalog:variable_text:57003:12784:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsdatum-omedelbart-omhandertagande"
+fields = { "label" = "Beslutsdatum (omedelbart omhändertagande)" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nBESDATUM is the date of the administrative court's decision in LVM_ANSOK and the date of the decision on immediate custody in LVM_OMHTG: different decisions. The OMHTG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:beslutsdatum-omedelbart-omhandertagande"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nBESDATUM is the date of the administrative court's decision in LVM_ANSOK and the date of the decision on immediate custody in LVM_OMHTG: different decisions. The OMHTG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "beslut-om-omedelbart-omhandertagande-for-tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm: BESDATUM"
+fields = { "variable" = "beslutsdatum-omedelbart-omhandertagande" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nBESDATUM is the date of the administrative court's decision in LVM_ANSOK and the date of the decision on immediate custody in LVM_OMHTG: different decisions. The OMHTG column gets its own variable."

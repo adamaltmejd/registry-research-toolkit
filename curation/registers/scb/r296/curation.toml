@@ -1803,3 +1803,27 @@ kind = "set"
 subject = "set:rapporteringsvaluta"
 fields = { "description" = "Den valuta som uppgiftslämnaren rapporterar produktens pris i och som ligger till grund för värdet i kronor. Valutan justeras vid behov till standardiserade valutabeteckningar (2001–2012)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF för båda anger valutan som priset bygger på; OP för rapporteringsvaluta anger rapporteringen från uppgiftslämnaren och standardiseringen.\ncatalog:variable_text:47729:11323:15706\ncatalog:variable_text:47729:15706:17167\ncatalog:variable_text:47729:17167:17532\ncatalog:variable_text:47739:15340:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-kpi"
+fields = { "label" = "Produktgrupp (KPI)" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nProdGrpKod (VarId 23614) holds SPIN-based product-group codes in PPI and TPI, and KPI's own product codes ('Egendefinierade produktkoder') in KPI: different classifications in parallel tables. The KPI column gets its own variable; the id anchor moves to PPI."
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-kpi"
+fields = { "tags" = ["business"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nProdGrpKod (VarId 23614) holds SPIN-based product-group codes in PPI and TPI, and KPI's own product codes ('Egendefinierade produktkoder') in KPI: different classifications in parallel tables. The KPI column gets its own variable; the id anchor moves to PPI."
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-kpi"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nProdGrpKod (VarId 23614) holds SPIN-based product-group codes in PPI and TPI, and KPI's own product codes ('Egendefinierade produktkoder') in KPI: different classifications in parallel tables. The KPI column gets its own variable; the id anchor moves to PPI."
+
+[[statement]]
+kind = "set"
+subject = "konsumentprisindex-kpi: ProdGrpKod where key = 'v23614'"
+fields = { "variable" = "produktgrupp-kpi" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nProdGrpKod (VarId 23614) holds SPIN-based product-group codes in PPI and TPI, and KPI's own product codes ('Egendefinierade produktkoder') in KPI: different classifications in parallel tables. The KPI column gets its own variable; the id anchor moves to PPI."

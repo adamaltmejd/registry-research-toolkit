@@ -20366,3 +20366,97 @@ kind = "set"
 subject = "set:yrkesstallning"
 fields = { "description" = "Om personen är anställd eller företagare. Varianterna skiljer sig i vilka personer som klassas: alla med arbetsinkomst, eller förvärvsarbetande, det vill säga personer vars arbetsinkomst är större än ett basbelopp." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP anger anställd eller företagare; DEF och OP skiljer avgränsningen arbetsinkomst > 0 från arbetsinkomst > basbeloppet.\ncatalog:variable_text:44149:9496:12784\ncatalog:variable_text:44150:2922:8401\ncatalog:variable_text:44150:8401:12784\ncatalog:variable_text:44150:12784:17897\ncatalog:variable_text:44151:12784:13514\ncatalog:variable_text:44151:13514:13879\ncatalog:variable_text:44151:13879:14610\ncatalog:variable_text:44151:14610:14975\ncatalog:variable_text:44151:14975:15340\ncatalog:variable_text:44151:15340:15706\ncatalog:variable_text:44151:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:bant-taxeringshushall"
+fields = { "label" = "Antal personer i taxeringshushållet" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nBANT counts the persons of the tax household (taxeringshushåll, from the income and taxation register) in the 'inklusive taxeringshushåll' tables 1968–1998 and in Panelurval inkl. familjemedlemmar 1991–1992, and the persons of the RTB family in the familjemedlemmar tables from 1993: different units, in parallel tables 1993–1998. The tax-household count gets its own variable; bant keeps the RTB family (anchor dated into its own years)."
+
+[[statement]]
+kind = "set"
+subject = "var:bant-taxeringshushall"
+fields = { "tags" = ["family-household"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nBANT counts the persons of the tax household (taxeringshushåll, from the income and taxation register) in the 'inklusive taxeringshushåll' tables 1968–1998 and in Panelurval inkl. familjemedlemmar 1991–1992, and the persons of the RTB family in the familjemedlemmar tables from 1993: different units, in parallel tables 1993–1998. The tax-household count gets its own variable; bant keeps the RTB family (anchor dated into its own years)."
+
+[[statement]]
+kind = "set"
+subject = "var:bant-taxeringshushall"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nBANT counts the persons of the tax household (taxeringshushåll, from the income and taxation register) in the 'inklusive taxeringshushåll' tables 1968–1998 and in Panelurval inkl. familjemedlemmar 1991–1992, and the persons of the RTB family in the familjemedlemmar tables from 1993: different units, in parallel tables 1993–1998. The tax-household count gets its own variable; bant keeps the RTB family (anchor dated into its own years)."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BANT"
+fields = { "variable" = "bant-taxeringshushall" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nBANT counts the persons of the tax household (taxeringshushåll, from the income and taxation register) in the 'inklusive taxeringshushåll' tables 1968–1998 and in Panelurval inkl. familjemedlemmar 1991–1992, and the persons of the RTB family in the familjemedlemmar tables from 1993: different units, in parallel tables 1993–1998. The tax-household count gets its own variable; bant keeps the RTB family (anchor dated into its own years)."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BANT"
+fields = { "variable" = "bant-taxeringshushall" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nBANT counts the persons of the tax household (taxeringshushåll, from the income and taxation register) in the 'inklusive taxeringshushåll' tables 1968–1998 and in Panelurval inkl. familjemedlemmar 1991–1992, and the persons of the RTB family in the familjemedlemmar tables from 1993: different units, in parallel tables 1993–1998. The tax-household count gets its own variable; bant keeps the RTB family (anchor dated into its own years)."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: BANT @1991..1992"
+fields = { "variable" = "bant-taxeringshushall" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nBANT counts the persons of the tax household (taxeringshushåll, from the income and taxation register) in the 'inklusive taxeringshushåll' tables 1968–1998 and in Panelurval inkl. familjemedlemmar 1991–1992, and the persons of the RTB family in the familjemedlemmar tables from 1993: different units, in parallel tables 1993–1998. The tax-household count gets its own variable; bant keeps the RTB family (anchor dated into its own years)."
+
+[[statement]]
+kind = "set"
+subject = "var:identitetsnummer-bostadshushall"
+fields = { "label" = "Identitetsnummer för bostadshushållet" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nThe household id (VarId 4695) denotes three units: the tax household (BIDNRH 1968–1992 and 1998, BIDNRF 1991–1992), the RTB family (BIDNRF 1993–2004, and BIDNRH 1993–1997 by its own texts) and the dwelling household (BIDNRF from 2005, 'löpnummer för bostadshushåll enligt folkbokföringsuppgifter'). identitetsnummer-for-hushallet-bidnrh keeps the tax household, identitetsnummer-hushall the RTB family, and the dwelling household gets its own variable. BIDNRF continues from one unit to the next in 1993 and 2005."
+
+[[statement]]
+kind = "set"
+subject = "var:identitetsnummer-bostadshushall"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nThe household id (VarId 4695) denotes three units: the tax household (BIDNRH 1968–1992 and 1998, BIDNRF 1991–1992), the RTB family (BIDNRF 1993–2004, and BIDNRH 1993–1997 by its own texts) and the dwelling household (BIDNRF from 2005, 'löpnummer för bostadshushåll enligt folkbokföringsuppgifter'). identitetsnummer-for-hushallet-bidnrh keeps the tax household, identitetsnummer-hushall the RTB family, and the dwelling household gets its own variable. BIDNRF continues from one unit to the next in 1993 and 2005."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: BIDNRF @1991..1992"
+fields = { "variable" = "identitetsnummer-for-hushallet-bidnrh" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nThe household id (VarId 4695) denotes three units: the tax household (BIDNRH 1968–1992 and 1998, BIDNRF 1991–1992), the RTB family (BIDNRF 1993–2004, and BIDNRH 1993–1997 by its own texts) and the dwelling household (BIDNRF from 2005, 'löpnummer för bostadshushåll enligt folkbokföringsuppgifter'). identitetsnummer-for-hushallet-bidnrh keeps the tax household, identitetsnummer-hushall the RTB family, and the dwelling household gets its own variable. BIDNRF continues from one unit to the next in 1993 and 2005."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: BIDNRF @2005..2018"
+fields = { "variable" = "identitetsnummer-bostadshushall" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nThe household id (VarId 4695) denotes three units: the tax household (BIDNRH 1968–1992 and 1998, BIDNRF 1991–1992), the RTB family (BIDNRF 1993–2004, and BIDNRH 1993–1997 by its own texts) and the dwelling household (BIDNRF from 2005, 'löpnummer för bostadshushåll enligt folkbokföringsuppgifter'). identitetsnummer-for-hushallet-bidnrh keeps the tax household, identitetsnummer-hushall the RTB family, and the dwelling household gets its own variable. BIDNRF continues from one unit to the next in 1993 and 2005."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: BIDNRF @2005..2018"
+fields = { "variable" = "identitetsnummer-bostadshushall" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nThe household id (VarId 4695) denotes three units: the tax household (BIDNRH 1968–1992 and 1998, BIDNRF 1991–1992), the RTB family (BIDNRF 1993–2004, and BIDNRH 1993–1997 by its own texts) and the dwelling household (BIDNRF from 2005, 'löpnummer för bostadshushåll enligt folkbokföringsuppgifter'). identitetsnummer-for-hushallet-bidnrh keeps the tax household, identitetsnummer-hushall the RTB family, and the dwelling household gets its own variable. BIDNRF continues from one unit to the next in 1993 and 2005."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BIDNRH @1993..1997"
+fields = { "variable" = "identitetsnummer-hushall" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nThe household id (VarId 4695) denotes three units: the tax household (BIDNRH 1968–1992 and 1998, BIDNRF 1991–1992), the RTB family (BIDNRF 1993–2004, and BIDNRH 1993–1997 by its own texts) and the dwelling household (BIDNRF from 2005, 'löpnummer för bostadshushåll enligt folkbokföringsuppgifter'). identitetsnummer-for-hushallet-bidnrh keeps the tax household, identitetsnummer-hushall the RTB family, and the dwelling household gets its own variable. BIDNRF continues from one unit to the next in 1993 and 2005."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BIDNRH @1993..1997"
+fields = { "variable" = "identitetsnummer-hushall" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nThe household id (VarId 4695) denotes three units: the tax household (BIDNRH 1968–1992 and 1998, BIDNRF 1991–1992), the RTB family (BIDNRF 1993–2004, and BIDNRH 1993–1997 by its own texts) and the dwelling household (BIDNRF from 2005, 'löpnummer för bostadshushåll enligt folkbokföringsuppgifter'). identitetsnummer-for-hushallet-bidnrh keeps the tax household, identitetsnummer-hushall the RTB family, and the dwelling household gets its own variable. BIDNRF continues from one unit to the next in 1993 and 2005."
+
+[[statement]]
+kind = "link"
+subject = "var:identitetsnummer-hushall"
+relation = "continues"
+object = "scb/linda/identitetsnummer-for-hushallet-bidnrh"
+at = "1993-01-01.."
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nThe household id (VarId 4695) denotes three units: the tax household (BIDNRH 1968–1992 and 1998, BIDNRF 1991–1992), the RTB family (BIDNRF 1993–2004, and BIDNRH 1993–1997 by its own texts) and the dwelling household (BIDNRF from 2005, 'löpnummer för bostadshushåll enligt folkbokföringsuppgifter'). identitetsnummer-for-hushallet-bidnrh keeps the tax household, identitetsnummer-hushall the RTB family, and the dwelling household gets its own variable. BIDNRF continues from one unit to the next in 1993 and 2005.\nBIDNRF in Panelurval av befolkningen inkl. familjemedlemmar: tax household 1991–1992, RTB family from 1993."
+
+[[statement]]
+kind = "link"
+subject = "var:identitetsnummer-bostadshushall"
+relation = "continues"
+object = "scb/linda/identitetsnummer-hushall"
+at = "2005-01-01.."
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nThe household id (VarId 4695) denotes three units: the tax household (BIDNRH 1968–1992 and 1998, BIDNRF 1991–1992), the RTB family (BIDNRF 1993–2004, and BIDNRH 1993–1997 by its own texts) and the dwelling household (BIDNRF from 2005, 'löpnummer för bostadshushåll enligt folkbokföringsuppgifter'). identitetsnummer-for-hushallet-bidnrh keeps the tax household, identitetsnummer-hushall the RTB family, and the dwelling household gets its own variable. BIDNRF continues from one unit to the next in 1993 and 2005.\nBIDNRF in the familjemedlemmar tables: RTB family to 2004, dwelling household from 2005."

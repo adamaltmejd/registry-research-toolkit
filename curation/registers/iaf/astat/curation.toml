@@ -807,3 +807,75 @@ kind = "set"
 subject = "var:version"
 fields = { "tags" = ["employment", "transfers"] }
 evidence = "ASTAT är arbetslöshetsförsäkringens databas: a-kassornas medlemskap, beslut, ersättningsperioder och utbetalningar.\nASTAT-dokumentation, uppdaterad 2026-07-29, https://www.iaf.se/globalassets/statistik/databaserna/astatdokumentation.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:beslutstyp-diverse"
+fields = { "label" = "Beslutstyp (Diverse)" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nBeslut and Diverse each decode the column with their own code table (Beslutkod vs Diversekod), so a value means a different decision in each table. The Diverse column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:beslutstyp-diverse"
+fields = { "tags" = ["employment", "transfers"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nBeslut and Diverse each decode the column with their own code table (Beslutkod vs Diversekod), so a value means a different decision in each table. The Diverse column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:beslutstyp-diverse"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nBeslut and Diverse each decode the column with their own code table (Beslutkod vs Diversekod), so a value means a different decision in each table. The Diverse column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "diverse: typ"
+fields = { "variable" = "beslutstyp-diverse" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nBeslut and Diverse each decode the column with their own code table (Beslutkod vs Diversekod), so a value means a different decision in each table. The Diverse column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:beslutstypkod-diverse"
+fields = { "label" = "Beslutstypkod (Diverse)" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nBeslut and Diverse each decode the column with their own code table (Beslutkod vs Diversekod), so a value means a different decision in each table. The Diverse column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:beslutstypkod-diverse"
+fields = { "tags" = ["employment", "transfers"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nBeslut and Diverse each decode the column with their own code table (Beslutkod vs Diversekod), so a value means a different decision in each table. The Diverse column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:beslutstypkod-diverse"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nBeslut and Diverse each decode the column with their own code table (Beslutkod vs Diversekod), so a value means a different decision in each table. The Diverse column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "diverse: typkod"
+fields = { "variable" = "beslutstypkod-diverse" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nBeslut and Diverse each decode the column with their own code table (Beslutkod vs Diversekod), so a value means a different decision in each table. The Diverse column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:objektkod-diverse"
+fields = { "label" = "Objektkod (Diverse)" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nBeslut and Diverse each decode the column with their own code table (Beslutkod vs Diversekod), so a value means a different decision in each table. The Diverse column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:objektkod-diverse"
+fields = { "tags" = ["employment", "transfers"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nBeslut and Diverse each decode the column with their own code table (Beslutkod vs Diversekod), so a value means a different decision in each table. The Diverse column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:objektkod-diverse"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nBeslut and Diverse each decode the column with their own code table (Beslutkod vs Diversekod), so a value means a different decision in each table. The Diverse column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "diverse: objektkod"
+fields = { "variable" = "objektkod-diverse" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nBeslut and Diverse each decode the column with their own code table (Beslutkod vs Diversekod), so a value means a different decision in each table. The Diverse column gets its own variable."
