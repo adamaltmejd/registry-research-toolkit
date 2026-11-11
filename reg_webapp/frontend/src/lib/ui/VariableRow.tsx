@@ -13,12 +13,15 @@ export interface RowCount {
 }
 
 interface Props {
-  /** The variable's name, or it with a filter's match marked. */
+  /** The variable's name, or it with a filter's match marked; on a register's
+   * table row, its filter pills. */
   name: ReactNode;
-  /** The row's own page; the name links there. */
-  href: string;
+  /** The row's own page; the name links there. A table row has none. */
+  href?: string;
   /** Something of this row is in the open project: the dot and the wash. */
-  inProject: boolean;
+  inProject?: boolean;
+  /** A table's row for one of its databases, set in under the table's. */
+  indent?: boolean;
   /** The years delivered, merged and ordered; empty draws a bare track. */
   coverage: readonly YearRun[];
   /** The delivered years in words (`segmentYears`). */
@@ -40,13 +43,16 @@ interface Props {
  * and a thin `YearTrack` on the pane's axis with the study window as an
  * `accent-bg` block, so a row that does not cover the window shows before it
  * is added. A provider's register row adds the register's description under
- * the name and its counts as pills (#2404). Never a table row: the list's one
- * header is its axis, with the counts' headings where the rows carry counts.
+ * the name and its counts as pills (#2404). A register's table row carries its
+ * filter pills for a name, no link and no project mark (#2110). Never a table
+ * row in the HTML sense: the list's one header is its axis, with the counts'
+ * headings where the rows carry counts.
  */
 export function VariableRow({
   name,
   href,
-  inProject,
+  inProject = false,
+  indent = false,
   coverage,
   years,
   axis,
@@ -57,10 +63,14 @@ export function VariableRow({
   return (
     <li className={styles.row} data-in-project={inProject || undefined}>
       <InProjectDot inProject={inProject} />
-      <div className={styles.head}>
-        <a className={`link ${styles.name}`} href={href}>
-          {name}
-        </a>
+      <div className={styles.head} data-indent={indent || undefined}>
+        {href === undefined ? (
+          name
+        ) : (
+          <a className={`link ${styles.name}`} href={href}>
+            {name}
+          </a>
+        )}
         {inProject && <span className="visually-hidden">, in the project</span>}
         {description && <p className={styles.description}>{description}</p>}
       </div>
@@ -100,11 +110,14 @@ export function VariableRow({
  * count between them (#2404). */
 export function VariableRowList({
   label,
+  note,
   axis,
   counts,
   children,
 }: {
   label: string;
+  /** Muted words after the heading: a hint, or a filter's live count. */
+  note?: ReactNode;
   axis: YearSpan;
   /** A column heading per count the rows carry, between the names and the
    * bars on wide screens. Decorative: each count's pill names its word. */
@@ -115,9 +128,12 @@ export function VariableRowList({
   return (
     <div className={`${styles.rows} ${counts ? styles.withCounts : ""}`}>
       <div className={styles.axisRow}>
-        <h2 id={labelId} className={`micro-label ${styles.label}`}>
-          {label}
-        </h2>
+        <div className={styles.label}>
+          <h2 id={labelId} className="micro-label">
+            {label}
+          </h2>
+          {note}
+        </div>
         {counts && (
           <div
             className={`${styles.counts} ${styles.countHeadings}`}

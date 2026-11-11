@@ -78,12 +78,13 @@ ready() {
 WEBAPP_PROJECT=$root/conformance/cases/fixtures/webapp-dev/project_data.json
 
 # J1 browse page types. Fails if a provider, register or variable route stops
-# dispatching to its page, the trail stops naming the ancestors, a table chip stops
-# narrowing the register's variables, or a table address stops opening its register's
-# page with that chip on (#2316). The fixture's Familjer table holds one of
-# Hushållsregistret's five variables (Antal), so the chip must leave "1 of 5 shown": a
-# chip that filters nothing leaves 5 of 5. Also fails if `/catalog` stops becoming `/`
-# (maintainer 2026-11-11, #2403).
+# dispatching to its page, the trail stops naming the ancestors, a table row's pill
+# stops narrowing the register's variables and the browse column's (#2110), or a table
+# address stops opening its register's page with that table's filter on (#2316). The
+# fixture's Familjer table holds one of Hushållsregistret's five variables (Antal), so
+# the filter must leave "1 of 5 variables shown" and the column must lose "Bransch": a
+# filter that narrows nothing leaves 5 of 5. Also fails if `/catalog` stops becoming
+# `/` (maintainer 2026-11-11, #2403).
 j_browse() {
 	visit /catalog && [ "$(ab get url)" = "$dev_url/" ] ||
 		fail "/catalog did not become / (maintainer 2026-11-11, #2403)" || return 1
@@ -91,11 +92,15 @@ j_browse() {
 		see listbox "Variables in Demoleverantören" &&
 		press row "Hushållsregistret" && wait_url "**/catalog/demo/hush" &&
 		see heading "Hushållsregistret" &&
-		tree 'checkbox "Familjer 2021–2022" \[checked=false' &&
-		press checkbox "Familjer 2021–2022" && wait_text "1 of 5 shown" &&
-		tree 'checkbox "Familjer 2021–2022" \[checked=true' &&
-		visit /catalog/demo/hush/fam && see heading "Hushållsregistret" &&
-		tree 'checkbox "Familjer 2021–2022" \[checked=true' && wait_text "1 of 5 shown" &&
+		tree 'checkbox "Familjer" \[checked=false' &&
+		press checkbox "Familjer" && wait_text "1 of 5 variables shown" &&
+		tree 'checkbox "Familjer" \[checked=true' || return 1
+	if ab find role option text --name "Bransch" --exact >/dev/null 2>&1; then
+		fail "the browse column kept a variable the table filter leaves out (#2110)"
+		return 1
+	fi
+	visit /catalog/demo/hush/fam && see heading "Hushållsregistret" &&
+		tree 'checkbox "Familjer" \[checked=true' && wait_text "1 of 5 variables shown" &&
 		see link "Demoleverantören" &&
 		press link "Antal personer" && wait_url "**/catalog/demo/hush/antal" &&
 		see heading "Antal personer" && shot

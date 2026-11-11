@@ -187,6 +187,8 @@ export type ProviderShow = Extract<ShowNode, { kind: "provider" }>;
 
 export type RegisterShow = Extract<ShowNode, { kind: "register" }>;
 
+export type TableShow = Extract<ShowNode, { kind: "table" }>;
+
 /** A variable's shared metadata. */
 export type VariableShow = Extract<ShowNode, { kind: "variable" }>;
 
@@ -223,6 +225,17 @@ export function getShow(
     undefined,
     options,
   );
+}
+
+/** `coverage` for a register: each table's years, once per database on a
+ * steward with several. */
+export type Coverage = RustSchemas["Coverage"];
+
+export function getCoverage(
+  ref: string,
+  options?: { signal?: AbortSignal },
+): Promise<Coverage> {
+  return rustGet<Coverage>(`/coverage/${encodeFqid(ref)}`, undefined, options);
 }
 
 // ── Project surface (the Rust server) ──────────────────────────────────────────

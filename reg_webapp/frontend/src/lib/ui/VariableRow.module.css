@@ -77,10 +77,22 @@
   overflow-wrap: anywhere;
 }
 
-/* The list's heading, over the names. */
+/* The list's heading, over the names, and its note after it (#2110). */
 .label {
+  display: flex;
+  flex-wrap: wrap;
   grid-column: 2;
+  align-items: baseline;
+  gap: 0 var(--space-2);
+  min-width: 0;
+}
+.label > h2 {
   margin: 0;
+}
+
+/* A database's row under its table's, set in by the pill's glyph and gap. */
+.head[data-indent] {
+  padding-left: var(--space-4);
 }
 
 .bar {

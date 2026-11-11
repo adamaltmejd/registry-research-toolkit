@@ -532,11 +532,9 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   elsewhere on the page touches it (new rule, proposed by the implementer: the
   page-wide Escape of #1827 cleared the top-bar filter, which is gone). Every filter box
   has a 1 px `border`, `rounded.sm` (#2407, maintainer decisions 2026-11-11). The
-  register page has the same box first in its list's panel, then the table chips, then
-  the list: the box filters the page's variable list, the rows the chips leave (#2403;
-  order: #2407, maintainer decisions 2026-11-11, variant B). The chips have no visible
-  label ("Tables" is gone, #2407); the group's hidden name is "Filter by table" (new
-  rule, proposed by the implementer). A provider's page has the same box over its
+  register page has the same box first in its list's panel, then the table rows, then
+  the variable list: the box filters the page's variable list, the rows the table
+  filter leaves (#2403; order: #2110, maintainer decisions 2026-11-11, arrangement Y). A provider's page has the same box over its
   register list, reading "Filter registers…", named "Filter this provider's registers",
   matching by name and slug (#2407, maintainer decisions 2026-11-11; the name and its
   empty state "No registers match …" are proposed by the implementer). It shows at every width, so on
@@ -624,9 +622,10 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   facts read the one per-period list (`segments`): on a steward deployment its rows are
   the files and columns the steward has, over the years it has them. A table has no page
   of its own (maintainer, dogfood 2026-11-05, #2316): its address (a project card, the
-  palette, a link) renders its register's page with that table's chip on, one route and
-  one page, not a redirect; where no chip names it (it delivers no variable, or it is
-  the register's only delivering table) the page shows the whole list. A
+  palette, a link) renders its register's page with that table's filter on, one route
+  and one page, not a redirect; where no table row filters by it (it delivers no
+  variable, or it is the register's only delivering table) the page shows the whole
+  list. A
   classification's page shows its codes and its versions, and no variables (maintainer
   review 2026-11-05, point 5): the classification's name as `h1`, then Publisher and
   Description as definitions, only when stated. One unframed `LaneGraph` with no
@@ -661,11 +660,32 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   group", maintainer comment on #2310, 2026-11-05). Placement caveats are steward
   working notes, not shown until the steward
   curates them for readers. A register page shows under its `h1` only its description,
-  as prose: the timeline shows the years and the chips the tables, so there is no Years
-  or Tables row (#2316). It has no tables table: its tables are FilterChips under the
-  filter box and above the variable list (#2407), each the table's pill with its period (F1, maintainer, #2399, approved 2026-11-11), a lens with OR within the selection, offered only
-  when two or more tables deliver variables (the archived variant chips, maintainer
-  2026-11-03). A register page has no "Unplaced releases" panel (maintainer 2026-11-04).
+  as prose: the timelines show the years and the tables, so there is no Years or
+  Tables definition (#2316). Its tables are a `VariableRow` list of their own between
+  the filter box and the variables, headed "Tables" with the muted note "Click to
+  filter", on the variables' axis, each row's bar the table's years from the register's
+  `coverage`, gaps kept (åk 9's 2020–2021), and its name its table pill as a
+  `FilterChip`, so no table is listed twice (#2110, maintainer decisions 2026-11-11,
+  arrangement Y, heading option 2). The rows are the tables that deliver a variable, by
+  name; a lens with OR within the selection, offered when there are two things to
+  filter by: two such tables, or one held in several databases (the archived variant
+  chips, maintainer 2026-11-03; the one-table rule, new rule, proposed by the
+  implementer). On a steward with several databases a table held in one shows that
+  database's pill after its own, plain; a table held in several has a row per database
+  under its row, set in 16 px, the database's pill its filter (#2110). With a filter on,
+  "N of M variables shown" sits after the Variables heading as a live region mounted
+  empty, the Tables note stays, and each variable's bar draws only the selected tables'
+  and databases' years; with none, a variable's bar is its years in every table, as
+  before (#2110, maintainer decisions 2026-11-11). The browse column's list of the
+  register's variables narrows with the page's filter while the page is open (#2110,
+  maintainer 2026-11-11); leaving the page clears it (new rule, proposed by the
+  implementer: a filter the column kept on another page would hide variables with no
+  visible cause). The page reads a table's variables' years (`show` at the table, or for
+  an implicit table, whose address is its register's, its `segments`) on its first press
+  only, never on load (maintainer 2026-11-11: "lazy per table"); until they land the
+  variable list is a skeleton, never rows the selection may not keep (new rule, proposed
+  by the implementer). Table rows carry no in-project mark (maintainer decisions
+  2026-11-11). A register page has no "Unplaced releases" panel (maintainer 2026-11-04).
   In steward mode a supplemental-only variable is selectable for a project like a
   reference variable: `order` and `validate` read the composed steward view
   (crates/DESIGN.md, "Three questions, three scopes").
@@ -946,9 +966,11 @@ Time is the axis every relation is drawn on.
 
 - A **`VariableRow`** repeats its list's axis as a thin bar (`ui/YearTrack`), so a
   variable that does not cover the window is visible before it is added. It is one
-  read-only row of a register's variable list, or of a provider's register list (the
-  register's years as one span), never a table row: the in-project dot and wash, the
-  name in the text face as a link to its page, and the bar with the study window block.
+  read-only row of a register's variable list, of its table list (a table's years, its
+  filter pills for a name, no link and no project mark, #2110), or of a provider's
+  register list (the register's years as one span), never an HTML table row: the
+  in-project dot and wash, the name in the text face as a link to its page, and the bar
+  with the study window block.
   The block is `accent-bg` between 1 px `accent` bounds; on an in-project row, whose
   wash is `accent-bg` too, it is `accent-band` between 1.5 px `accent` bounds (#2407,
   maintainer decisions 2026-11-11, variant C).
@@ -1247,7 +1269,10 @@ grow new visual language meanwhile.
     entity is named: a table's row in a lane, a register's table filters, a project
     card, a value set's tables, a search row (a register's or variable's), a register's
     table and variable counts on its provider's page (#2404), and every column name,
-    a lane span included.
+    a lane span included. A steward's database is a cylinder on `surface` with a
+    `border` stroke and its name in `text-muted` at weight 400, no entity hue (a
+    database is where a table is held, not a catalog entity): on a register's table
+    rows (#2110, maintainer 2026-11-11, the approved held-summary mock-up).
   - **TypeTag:** a page's kind pill, first in its pill row, the word at weight 400
     (Register, Variable, Variable group), in the entity's hue and glyph. A variable and
     a variable group share both; only the word tells them apart (maintainer, #2399,
@@ -1257,12 +1282,11 @@ grow new visual language meanwhile.
     words ("Words"; #2071). An identifier takes `cat-id`, every other type `cat-type`
     (maintainer ruling 2026-11-10, quoted in PR #2391).
 - **FilterChip:** a real checkbox whose face is the pill it filters by: a register's
-  table pill at the pill's size, neutral at rest (`surface`, `border`, the hue on the
+  table or database pill at the pill's size, which it keeps when on (#2110), neutral at rest (`surface`, `border`, the hue on the
   glyph alone) and `accent-bg` with an `accent` border and `accent-ink` text when on, so
   the entity hues never compete with the pine "on" state (F1, maintainer, #2399,
-  approved 2026-11-11). A LENS: toggling narrows what is shown, never the project. A
-  strip is the facet's `label` inline, then its chips, in one row with no box around
-  it.
+  approved 2026-11-11). A LENS: toggling narrows what is shown, never the project. On a
+  register page each chip is its table row's name (Time → VariableRow).
 - **Timeline, VariableRow, LaneGraph:** see Time.
 - **StatusRow:** the status tint as fill, the status foreground as text and a 1 px
   border (`err-border` for error), `md` radius, `body-sm`, padding 6 px 10 px. The glyph

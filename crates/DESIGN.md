@@ -1908,7 +1908,11 @@ serve a variable if any space holds it. `/api/context` `steward_config.spaces` l
 gives each held row its `space` id only when the steward has more than one space.
 `coverage` then lists a table once per space that holds it, with that space's `space` id
 and spans, in config order, so a catalog page can name the databases that hold each
-delivery before a project chooses one; a single-space steward's coverage is unchanged.
+delivery before a project chooses one; a single-space steward's coverage is unchanged. `show`
+at a table gives each variable's years there per database the same way (`databases`, in
+config order; absent on a single-space steward), so the register page can filter its
+variables by database with one read per table, on a press (#2110, maintainer
+2026-11-11).
 
 An order names its database in the project's optional `linkage.database` (project
 document 6.1.0). The holdings stage of `materialize_order`, which `validate` and `order`

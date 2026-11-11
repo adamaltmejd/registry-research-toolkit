@@ -3,13 +3,16 @@ import {
   type CatalogPeriod,
   type CatalogSegment,
   type ClassFamilyRef,
+  type Coverage,
   type Graph,
+  getCoverage,
   getGraph,
   getSegments,
   getShow,
   type RegisterShow,
   type RootChild,
   type ShowNode,
+  type TableShow,
 } from "./api";
 import { registerOfPath } from "./catalog";
 
@@ -271,6 +274,23 @@ export function tableSegmentsReads(
       reads[key(variable)] as Read<CatalogSegment[]>,
     ]),
   );
+}
+
+/** A register's tables' years, once per database on a steward with several: the
+ * register page's table rows (#2110). */
+export function coverageRead(ref: string): Read<Coverage> {
+  return read(`coverage:${ref}`, () => getCoverage(ref));
+}
+
+/** A table's `show`: each of its variables' years in it, per database on a steward
+ * with several. Read when the register page's table filter first names it (#2110,
+ * maintainer 2026-11-11: read per table, on a press). */
+export function tableShowRead(ref: string): Read<TableShow> {
+  return read(`table:${ref}`, async () => {
+    const node = await getShow(ref);
+    if (node.kind !== "table") throw new Error(`${ref} is not a table`);
+    return node;
+  });
 }
 
 const graphKey = (ref: string) => `graph:${ref}`;
