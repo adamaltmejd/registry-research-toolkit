@@ -162,6 +162,18 @@ pub struct ShowTableVariable {
     name: String,
     /// The periods its segments here cover, merged, in start order. Gaps stay gaps.
     periods: Vec<Period>,
+    /// On a data holder with several databases, those periods per database that holds
+    /// the variable here, in config order (`coverage`'s rule).
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    databases: Vec<ShowTableDatabase>,
+}
+
+/// A variable's periods in a table, in one of the data holder's databases.
+#[derive(Serialize, ToSchema)]
+pub struct ShowTableDatabase {
+    /// The database's id, as `steward_config.spaces` lists it.
+    space: String,
+    periods: Vec<Period>,
 }
 
 #[derive(Serialize, ToSchema)]
@@ -842,28 +854,50 @@ fn table_variables(
         found.extend(spans(extra)?);
     }
     let mut held = extra.as_ref().map(HeldClip::new).transpose()?;
-    let mut spans_of: BTreeMap<String, Vec<reg_core::days::Span>> = BTreeMap::new();
+    type Span = reg_core::days::Span;
+    let mut spans_of: BTreeMap<String, Vec<Span>> = BTreeMap::new();
+    let mut by_space: BTreeMap<String, BTreeMap<(i64, String), Vec<Span>>> = BTreeMap::new();
     for (fqid, start, end) in found {
         if !server.catalog.serves_in(&fqid, pid) {
             continue;
         }
         let days = match held.as_mut() {
             Some(held) => held.clip_each(pid, &fqid, (start, end))?,
-            None => vec![(start, end)],
+            None => vec![(None, (start, end))],
         };
-        if !days.is_empty() {
-            spans_of.entry(fqid).or_default().extend(days);
+        for (space, days) in days {
+            if let Some(space) = space {
+                by_space
+                    .entry(fqid.clone())
+                    .or_default()
+                    .entry(space)
+                    .or_default()
+                    .push(days);
+            }
+            spans_of.entry(fqid.clone()).or_default().push(days);
         }
     }
+    let periods = |spans: Vec<Span>| -> Vec<Period> {
+        reg_core::days::merge(spans)
+            .into_iter()
+            .map(|(start, end)| server.period(start, end))
+            .collect()
+    };
     let names = refs::names(server, spans_of.keys().map(String::as_str))?;
     spans_of
         .into_iter()
         .map(|(fqid, spans)| {
             Ok(ShowTableVariable {
                 name: names.of(refs::Named::Variable, &fqid)?,
-                periods: reg_core::days::merge(spans)
+                periods: periods(spans),
+                databases: by_space
+                    .remove(&fqid)
+                    .unwrap_or_default()
                     .into_iter()
-                    .map(|(start, end)| server.period(start, end))
+                    .map(|((_, space), spans)| ShowTableDatabase {
+                        space,
+                        periods: periods(spans),
+                    })
                     .collect(),
                 fqid,
             })
