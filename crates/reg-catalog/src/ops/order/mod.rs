@@ -183,11 +183,10 @@ fn delivered(
             };
             let columns = columns(&entry);
             // Only the days a file column delivers: a gap no clip reports (one inside
-            // a delivered requested year, #2409) is still not listed as delivered.
-            if !columns.is_empty() {
-                let delivered = reg_core::days::merge(columns.iter().map(|c| c.0).collect());
-                days = reg_core::days::overlap(&days, &delivered);
-            }
+            // a delivered requested year, #2409) is still not listed as delivered, and
+            // an entry no column delivers (an unheld successor) drops.
+            let delivered = reg_core::days::merge(columns.iter().map(|c| c.0).collect());
+            days = reg_core::days::overlap(&days, &delivered);
             days.into_iter()
                 .flat_map(|piece| held_names(piece, &columns, &entry.spelling))
                 .map(|((lo, hi), spelling)| OrderEntry {

@@ -800,9 +800,7 @@ fn gaps(
             ),
         );
     }
-    // A gap inside a requested year this entry delivers in part is not reported (#2409);
-    // a contested cell still blocks.
-    let rest = reported_gaps(&minus(&missing, &contested), &[days], &covered);
+    let rest = minus(&missing, &contested);
     for piece in overlap(&rest, &windowed) {
         issue(
             IssueLevel::Warning,
@@ -840,13 +838,47 @@ fn clip(
     order: &LogicalOrder,
     sources: &[reg_core::project::Source],
     bindings: &mut Bindings,
-    findings: &mut [Issue],
+    findings: &mut Vec<Issue>,
 ) -> Vec<Clip> {
     let open = server.open;
     let mut clips = Vec::new();
     for (&(s, b), (variable, requested, holds)) in bindings.iter_mut() {
         let path = format!("/sources/{s}/bindings/{b}");
         let held = merge(std::mem::take(holds));
+        let source = &sources[s].name;
+        let asked = order
+            .clips
+            .iter()
+            .find(|c| &c.source == source && &c.variable == variable)
+            .map_or_else(
+                || merge(std::mem::take(requested)),
+                |c| merge(c.requested.iter().map(|p| p.days(open)).collect()),
+            );
+        // A gap inside a requested year the binding delivers in part is not reported
+        // (#2409), judged over the whole binding: its entries can split mid-year.
+        let gap =
+            |f: &Issue| ["coverage_gap", "column_window_unavailable"].contains(&f.code.as_str());
+        let mut kept = Vec::with_capacity(findings.len());
+        for f in std::mem::take(findings) {
+            let Some(piece) = (f.path == path && gap(&f))
+                .then(|| f.period.as_ref().map(|p| p.days(open)))
+                .flatten()
+            else {
+                kept.push(f);
+                continue;
+            };
+            for sub in reported_gaps(&[piece], &asked, &held) {
+                let mut part = f.clone();
+                if sub != piece {
+                    part.message = part
+                        .message
+                        .replace(&span(server, piece), &span(server, sub));
+                    part.period = Some(server.period(sub.0, sub.1));
+                }
+                kept.push(part);
+            }
+        }
+        *findings = kept;
         for f in findings.iter_mut().filter(|f| f.path == path) {
             // A gap says what the researcher can do only here, where its level is
             // decided: nothing when other years are delivered, else change the request.
@@ -865,15 +897,6 @@ fn clip(
                 });
             }
         }
-        let source = &sources[s].name;
-        let asked = order
-            .clips
-            .iter()
-            .find(|c| &c.source == source && &c.variable == variable)
-            .map_or_else(
-                || merge(std::mem::take(requested)),
-                |c| merge(c.requested.iter().map(|p| p.days(open)).collect()),
-            );
         if !reported_gaps(&minus(&asked, &held), &asked, &held).is_empty() {
             let periods = |days: &[Days]| days.iter().map(|&(a, z)| server.period(a, z)).collect();
             clips.push(Clip {
