@@ -1819,9 +1819,36 @@
           ],
           "type": "object"
         },
+        "ShowTableDatabase": {
+          "description": "A variable's periods in a table, in one of the data holder's databases.",
+          "properties": {
+            "periods": {
+              "items": {
+                "$ref": "#/$defs/Period"
+              },
+              "type": "array"
+            },
+            "space": {
+              "description": "The database's id, as `steward_config.spaces` lists it.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "space",
+            "periods"
+          ],
+          "type": "object"
+        },
         "ShowTableVariable": {
           "description": "A variable in a table, over the periods it has in that table.",
           "properties": {
+            "databases": {
+              "description": "On a data holder with several databases, those periods per database that holds\nthe variable here, in config order (`coverage`'s rule).",
+              "items": {
+                "$ref": "#/$defs/ShowTableDatabase"
+              },
+              "type": "array"
+            },
             "fqid": {
               "type": "string"
             },
