@@ -3962,3 +3962,51 @@ kind = "set"
 subject = "var:person-orgnr"
 fields = { "label" = "Person-/organisationsnummer (antagna, PeOrgNr_HT)" }
 evidence = "#2102 same-label cluster 'Person-/organisationsnummer' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Both are 'Huvudmannens organisationsnummer'; only the table (antagna vs sökande) and spelling separate them, and the 'höstterminen' reading of HT is not in any text."
+
+[[statement]]
+kind = "set"
+subject = "set:foraldrarnas-utbildningsniva"
+fields = { "description" = "Utbildningsnivå enligt Svensk utbildningsnomenklatur (SUN 2000 eller SUN 2020) för den sökandes biologiska mor, biologiska far eller föräldrarna, där den förälder med högst nivå väljs. Varianterna skiljer sig i detaljnivå: detaljerad, ensiffrig nivå eller grupperad. Uppgiften om förälder hämtas från Befolkningsregistret och utbildningsnivån från Utbildningsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP skiljer mor, far och föräldrarnas högsta nivå, SUN 2000/2020 och detaljnivå; RTB och UREG som källor i OP. Antal nivåer utelämnas eftersom etiketter och OP anger olika tal.\ncatalog:variable_text:30238:12965:13149\ncatalog:variable_text:30238:16252:16436\ncatalog:variable_text:30239:13695:13879\ncatalog:variable_text:30242:17713:17897\ncatalog:variable_text:30245:12965:13149\ncatalog:variable_text:30245:16252:16436\ncatalog:variable_text:30246:13695:13879\ncatalog:variable_text:30248:17713:17897\ncatalog:variable_text:30249:16617:16801\ncatalog:variable_text:30250:16617:16801\ncatalog:variable_text:30250:17713:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:kommun"
+fields = { "description" = "Kommun kopplad till den sökande eleven: hemkommunen där eleven är folkbokförd, vid ansökan eller när eleven börjat gymnasiet, eller skolkommunen, det vill säga kommunen för skolan eleven sökt till, valt eller antagits till eller där eleven är registrerad. 1993 avser hemkommunen den kommun eller gymnasieregion där eleven är folkbokförd. För vald utbildning kan skolkommunen i stället avse ett samverkansområde." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nHemkommun och skolkommun är två slots enligt OP; gymnasieregion knyts till 1993 och samverkansområde till utbort utan år.\ncatalog:variable_text:30141:17348:17532\ncatalog:variable_text:30142:17348:17532\ncatalog:variable_text:30164:8401:8766\ncatalog:variable_text:30165:16252:16436\ncatalog:variable_text:30213:17348:17532\ncatalog:variable_text:30214:17348:17532\ncatalog:variable_text:30262:8947:9131\ncatalog:variable_text:30272:14061:14245\ncatalog:variable_text:30272:16617:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:meritvarde"
+fields = { "description" = "Summan av den sökandes bästa betyg i slutbetyget från grundskolan, där bokstavsbetygen ersätts med poäng (MVG=20, VG=15, G=10, eller A=20, B=17,5, C=15, D=12,5, E=10). Varianterna avser de 16 bästa betygen samt betyg i moderna språk som språkval (högst 320), de 17 bästa betygen inklusive moderna språk (högst 340) och de 16 bästa betygen exklusive moderna språk. Värdet 0 eller blankt innebär att eleven inte fått kunskapsrelaterade betyg eller att uppgift saknas." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nGemensam DEF; OP skiljer 16 och 17 betyg och moderna språk inkluderade eller ej, med maxvärden, poängskalor och betydelsen av 0 eller blankt.\ncatalog:variable_text:30180:11869:12053\ncatalog:variable_text:30180:13330:13514\ncatalog:variable_text:30180:13695:13879\ncatalog:variable_text:30180:14061:14245\ncatalog:variable_text:30180:14426:14610\ncatalog:variable_text:30180:14791:14975\ncatalog:variable_text:30180:15156:15340\ncatalog:variable_text:30180:15522:15706\ncatalog:variable_text:30180:15887:16071\ncatalog:variable_text:30180:16252:16436\ncatalog:variable_text:30181:16617:16801\ncatalog:variable_text:30181:17348:17532\ncatalog:variable_text:30181:17713:17897\ncatalog:variable_text:30183:17348:17532\ncatalog:variable_text:30184:17348:17532"
+
+[[statement]]
+kind = "set"
+subject = "set:skola"
+fields = { "description" = "Kod för skola kopplad till den sökande: gymnasieskolan som eleven sökt till (i äldre årgångar i 1:a till 6:e hand), skolan där eleven slutligt antagits och grundskolan där eleven fick sitt slutbetyg i årskurs 9, som skolkod eller skolans identitetsnummer. För sökalternativen 1986–1993 finns inga klartexter till koderna; skolidentiteter skapas inte för skolenheter som tillkommit efter vårterminen 2013." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF skiljer skolkod och skolidentitet; OP skiljer sökt hand, slutligt antagen, sökt gymnasieskola och årskurs 9, anger att klartexter saknas 1986–1993 och att inga nya skolidentiteter skapas från hösten 2013.\ncatalog:variable_text:30196:5844:8766\ncatalog:variable_text:30198:5479:8766\ncatalog:variable_text:30199:5844:8401\ncatalog:variable_text:30200:5844:8766\ncatalog:variable_text:30201:5844:8766\ncatalog:variable_text:30202:5844:8766\ncatalog:variable_text:30203:5844:8766\ncatalog:variable_text:30204:17348:17532\ncatalog:variable_text:30204:19174:19358\ncatalog:variable_text:30205:12965:13149\ncatalog:variable_text:30206:12965:13149\ncatalog:variable_text:30210:11869:12053\ncatalog:variable_text:30210:12965:13149\ncatalog:variable_text:30211:17348:17532\ncatalog:variable_text:30211:19174:19358\ncatalog:variable_text:30212:12965:13149"
+
+[[statement]]
+kind = "set"
+subject = "set:skolenhet"
+fields = { "description" = "Skolenhetskod kopplad till den sökande: skolenheten för vald utbildning, skolenheten i gymnasieskolan där eleven är antagen och skolenheten där eleven fick sitt slutbetyg i årskurs 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nGemensam DEF; OP skiljer val av utbildning, antagen och årskurs 9.\ncatalog:variable_text:30207:15887:16071\ncatalog:variable_text:30208:17348:17532\ncatalog:variable_text:30208:19174:19358\ncatalog:variable_text:30209:17713:17897\ncatalog:variable_text:30209:19174:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:studievag-i-gymnasieskolan"
+fields = { "description" = "Studievägskod för den sökandes gymnasieutbildning: för sökt utbildning eller utbildningsgren (1985–1993 i 1:a till 6:e hand), för utbildningsgrenen eleven slutligt antagits till (1985–1993), vid ansökan och på höstterminen. Koden på höstterminen och en av koderna för sökt utbildning avser elever som läser enligt Gy2011." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nGy2011 står för stvkod-ht och studievag-gymnasieskolan (sökt utbildning), inte för stvkod-ans eller stvkod-utb.\ncatalog:variable_text:30114:5479:8766\ncatalog:variable_text:30115:5479:8766\ncatalog:variable_text:30116:5479:8766\ncatalog:variable_text:30117:5479:8766\ncatalog:variable_text:30118:5479:8766\ncatalog:variable_text:30119:5479:8766\ncatalog:variable_text:30224:11869:12053\ncatalog:variable_text:30224:15156:15340\ncatalog:variable_text:30225:5479:8766"
+
+[[statement]]
+kind = "set"
+subject = "set:utlandsk-eller-svensk-bakgrund"
+fields = { "description" = "Om den sökande har svensk eller utländsk bakgrund, i tre eller fyra kategorier, härlett från elevens och föräldrarnas födelseland enligt Befolkningsregistret. Saknas elevens födelseland antas eleven vara född i Sverige i varianten med fyra kategorier, medan varianten med tre kategorier då lämnas blank." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP anger härledning från eget och föräldrarnas födelseland i RTB; OP skiljer hantering av saknat födelseland mellan utlsvbakg och utlbakgr.\ncatalog:variable_text:30273:12965:13149\ncatalog:variable_text:30274:16252:16436\ncatalog:variable_text:30274:16983:17167\ncatalog:variable_text:30275:16983:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:valutfall"
+fields = { "description" = "Vilket av elevens sökalternativ som eleven slutligt antagits till, uttryckt som rangnumret för det val som motsvarar den studieväg eleven är intagen på. Uppgiften härleds ur rangordningen av elevens val av gymnasieprogram och studievägen i gymnasieskolan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP för båda medlemmarna anger sökalternativet eleven antagits till; härledningen ur rangordning och studieväg står i OP för valutfall. Antagen-DEF delas med 6 icke-medlemmar och utelämnas.\ncatalog:variable_text:30078:5479:8766\ncatalog:variable_text:30276:8947:9131\ncatalog:variable_text:30276:17348:17532"

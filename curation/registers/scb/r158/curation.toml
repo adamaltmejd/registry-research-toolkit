@@ -868,3 +868,15 @@ kind = "set"
 subject = "var:totarea-scb"
 fields = { "label" = "Areal (beräknad av SCB, TotArea_SCB)" }
 evidence = "#2102 same-label cluster 'Areal' (6 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; AreaHa_SCB and TotArea_SCB have opdef 'SCB:s beräkning av areal ... GIS'; the other four have 'objektets totala areal i hektar, enligt uppgift i registret' and are concurrent or overlapping, so column codes separate them."
+
+[[statement]]
+kind = "set"
+subject = "set:natura-2000-omradestyp"
+fields = { "description" = "Typ av Natura 2000-område som numerisk kod: SPA, särskilda skyddsområden för vissa fågelarter enligt fågeldirektivet; SCI, områden av gemenskapsintresse för andra arter av växter och djur och för naturtyper enligt art- och habitatdirektivet; eller överlappande SPA och SCI. 2021–2022 finns SPA och SCI också som egna variabler där värde 1 anger områdestypen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF/OP delas och definierar SPA och SCI; 2021–2022 anger OP värde 1 för respektive typ.\ncatalog:variable_text:49559:18992:18993\ncatalog:variable_text:49559:20088:20089\ncatalog:variable_text:49566:18992:18993\ncatalog:variable_text:49571:18627:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:registeransvarig"
+fields = { "description" = "Den som ansvarar för registrering och uppdatering av uppgifterna: i Naturvårdsregistret den registrerande myndigheten, i Natura 2000-registret den som ansvarar för databasen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP delas av båda; OP skiljer registrerande myndighet och ansvarig databas.\ncatalog:variable_text:49529:18627:18628\ncatalog:variable_text:49558:19357:19358"

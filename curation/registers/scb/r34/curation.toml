@@ -24413,3 +24413,9 @@ kind = "set"
 subject = "var:disponibel-inkomst-inkl-nordisk"
 fields = { "tags" = ["income"] }
 evidence = "Inkomstvariabel i LISA, som DispInkHB04.\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A764"
+
+[[statement]]
+kind = "set"
+subject = "set:sektortillhorighet"
+fields = { "description" = "Vilken sektor de företag som är knutna till personens sysselsättning tillhör. Koden finns för företaget där personen bedöms ha haft sin huvudsakliga sysselsättning i november, sett via arbetsställe, företag, individen som förvärvsarbetande enligt RAMS eller enligt SReg, och för företagen bakom den största, näst största och tredje största förvärvskällan, med separata versioner från 2019. För förvärvskällorna skapas koden utifrån sektor, ägarkategori och juridisk form; för 2003 finns även en version enligt den justerade RAMS-metod som infördes 2004." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF skiljer huvudsaklig sysselsättning i november från förvärvskällorna och anger hur koden skapas; den justerade metoden gäller årgång 2003.\ncatalog:variable_text:44306:7305:18993\ncatalog:variable_text:44306:19358:19723\ncatalog:variable_text:44825:7305:9131\ncatalog:variable_text:44825:9131:18993\ncatalog:variable_text:44826:7305:17897\ncatalog:variable_text:44827:19358:19723\ncatalog:variable_text:44828:7305:17897\ncatalog:variable_text:44829:19358:19723\ncatalog:variable_text:44830:7305:17897\ncatalog:variable_text:44831:19358:19723\ncatalog:variable_text:44832:7305:18993\ncatalog:variable_text:44833:12053:12418"

@@ -11392,3 +11392,165 @@ kind = "set"
 subject = "var:kundvalsysgy"
 fields = { "description" = "Anger om kommunen har något valfrihetssystem för gymnasieskolan utöver vad lagstiftningen kräver." }
 evidence = "Label, definition and opdef agree: valfrihetssystem för gymnasieskolan; the medborgarkontor opdef belongs to the neighbouring variable MEDBKONT (v28617)."
+
+[[statement]]
+kind = "set"
+subject = "set:anvandning-av-sociala-medier"
+fields = { "description" = "Om kommunen eller regionen (tidigare landstinget) använder sociala medier för kontakter med medborgarna, ett ja eller nej per syfte: få kontakt med medborgarna, informera dem, ge dem möjlighet att påverka politiska beslut och annat syfte (anges i klartext). En egen variabel anger att sociala medier inte används för någon sådan kontakt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP för alla medlemmar anger ja per syfte eller nej till all användning, för kommun och landsting/region 2012, 2016 och 2020.\ncatalog:variable_text:45150:18262:18628\ncatalog:variable_text:45350:18262:18628\ncatalog:variable_text:45351:18262:18628\ncatalog:variable_text:45352:18262:18628\ncatalog:variable_text:45353:18262:18628\ncatalog:variable_text:45355:18262:18628\ncatalog:variable_text:45356:18262:18628\ncatalog:variable_text:45357:18262:18628\ncatalog:variable_text:45417:16801:17167\ncatalog:variable_text:45418:16801:17167\ncatalog:variable_text:45419:16801:17167\ncatalog:variable_text:45421:16801:17167\ncatalog:variable_text:45602:16801:17167\ncatalog:variable_text:45603:16801:17167\ncatalog:variable_text:45604:16801:17167\ncatalog:variable_text:45605:16801:17167\ncatalog:variable_text:45641:15340:15706\ncatalog:variable_text:45642:15340:15706\ncatalog:variable_text:45643:15340:15706\ncatalog:variable_text:45644:15340:15706\nRegisterinformation.csv:row=899281"
+
+[[statement]]
+kind = "set"
+subject = "set:brukarkooperativ"
+fields = { "description" = "Om det finns brukarkooperativ inom organisationens ansvarsområde och hur många: 2008 inom landstingets, 2012 inom kommunens. 2012 anges förekomst och antal per område, till exempel äldreomsorg, förskola, grundskola, gymnasieskola, individ- och familjeomsorg, funktionsnedsättning och ARBF; 2003 och 2008 anges vilket område kooperativen finns inom." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP anger landstinget 2008 och kommunen 2012; områdesvariablerna med antal finns bara 2012, områdesvariabeln koopomr 2003 och 2008.\ncatalog:variable_text:45149:12053:12418\ncatalog:variable_text:45149:13879:14245\ncatalog:variable_text:45163:13879:14245\ncatalog:variable_text:45163:15340:15706\ncatalog:variable_text:45178:15340:15706\ncatalog:variable_text:45179:15340:15706\ncatalog:variable_text:45426:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "set:brukarrepresentation"
+fields = { "description" = "Om kommunen eller regionen (tidigare landstinget) har system med brukarrepresentation utöver delegering till självförvaltningsorgan, ett ja eller nej per ansvarsområde: förskola, grundskola, gymnasieskola, äldreomsorg, individ- och familjeomsorg, omsorg om personer med funktionsnedsättning, hälso- och sjukvård och annat område (med fritextsvar). En egen variabel anger att organisationen inte har något sådant system." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF delas av alla 40; OP anger ja/nej per ansvarsområde, fritext för annat område och avsaknad av system.\ncatalog:variable_text:45181:18262:18628\ncatalog:variable_text:45182:18262:18628\ncatalog:variable_text:45184:16801:17167\ncatalog:variable_text:45185:18262:18628\ncatalog:variable_text:45186:19723:20089\ncatalog:variable_text:45187:18262:18628\ncatalog:variable_text:45188:13879:14245\ncatalog:variable_text:45189:16801:17167\ncatalog:variable_text:45190:16801:17167\ncatalog:variable_text:45192:19723:20089\ncatalog:variable_text:45193:13879:14245\ncatalog:variable_text:45193:15340:15706\ncatalog:variable_text:45292:16801:17167\ncatalog:variable_text:45294:16801:17167\ncatalog:variable_text:45305:16801:17167\ncatalog:variable_text:45320:19723:20089\ncatalog:variable_text:45334:19723:20089\ncatalog:variable_text:45336:19723:20089\ncatalog:variable_text:45338:19723:20089\ncatalog:variable_text:45339:19723:20089\ncatalog:variable_text:45340:19723:20089\ncatalog:variable_text:45341:19723:20089\ncatalog:variable_text:45342:19723:20089\ncatalog:variable_text:45592:18262:18628\ncatalog:variable_text:45592:19723:20089\ncatalog:variable_text:45593:19723:20089\ncatalog:variable_text:45599:18262:18628\ncatalog:variable_text:45599:19723:20089\nRegisterinformation.csv:row=899486"
+
+[[statement]]
+kind = "set"
+subject = "set:debattforum-pa-webbplats"
+fields = { "description" = "Om kommunen eller landstinget har ett debattforum på sin webbplats där allmänheten kan läsa och skriva inlägg." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP är samma för alla tre; medlemmarna är olika enkätomgångar.\ncatalog:variable_text:45695:16801:17167\ncatalog:variable_text:45696:16801:17167\ncatalog:variable_text:45697:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "set:folkinitiativ-till-folkomrostning"
+fields = { "description" = "Folkinitiativ om folkomröstning som kommit in från invånarna i kommunen eller regionen (tidigare landstinget) under mandatperioden: om något initiativ kommit in, hur många, och hur många som lett till beslut om folkomröstning. I undersökningen 2012 finns även uppgifterna för initiativ som kommit in sedan den 1 januari 2011." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP skiljer förekomst, antal inkomna och antal som lett till beslut, per mandatperiod; 2012 års variabler avser även tiden sedan 2011.\ncatalog:variable_text:45141:19723:20089\ncatalog:variable_text:45142:16801:17167\ncatalog:variable_text:45145:19723:20089\ncatalog:variable_text:45146:16801:17167\ncatalog:variable_text:45147:18262:18628\ncatalog:variable_text:45229:13879:14245\ncatalog:variable_text:45230:15340:15706\ncatalog:variable_text:45231:12053:12418\ncatalog:variable_text:45231:13879:14245\ncatalog:variable_text:45231:15340:15706\ncatalog:variable_text:45232:15340:15706\ncatalog:variable_text:45233:12053:12418\ncatalog:variable_text:45233:13879:14245\ncatalog:variable_text:45234:15340:15706\ncatalog:variable_text:45235:15340:15706\ncatalog:variable_text:45238:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:folkomrostningar"
+fields = { "description" = "Om det förekommit någon folkomröstning i kommunen eller regionen (tidigare landstinget) under mandatperioden, och i så fall hur många." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP skiljer förekomst från antal folkomröstningar under mandatperioden för kommun, landsting och region.\ncatalog:variable_text:45243:12053:12418\ncatalog:variable_text:45243:13879:14245\ncatalog:variable_text:45243:15340:15706\ncatalog:variable_text:45244:12053:12418\ncatalog:variable_text:45244:13879:14245\ncatalog:variable_text:45244:15340:15706\ncatalog:variable_text:45246:18262:18628\ncatalog:variable_text:45363:18262:18628\ncatalog:variable_text:45365:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:fullmaktigesammantraden"
+fields = { "description" = "Antal sammanträden som kommun-, landstings- eller regionfullmäktige har haft." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP anger antal fullmäktigesammanträden för alla medlemmar; medlemmarna är olika enkätomgångar och organisationstyper.\ncatalog:variable_text:45627:12053:12418\ncatalog:variable_text:45627:13879:14245\ncatalog:variable_text:45630:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:genomforda-medborgarundersokningar"
+fields = { "description" = "Om kommunen eller landstinget har genomfört någon medborgarundersökning. Folkomröstningar räknas inte." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP är samma för alla; medlemmarna är olika enkätomgångar.\ncatalog:variable_text:45375:16801:17167\ncatalog:variable_text:45376:16801:17167\ncatalog:variable_text:45380:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "set:inkomna-e-forslag"
+fields = { "description" = "Antal e-förslag till kommunen eller regionen: hur många som kommit in under året, hur många som behandlats av fullmäktige, nämnd eller annat politiskt organ, och hur många som bifallits." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP skiljer antal inkomna, behandlade och bifallna e-förslag 2020 och 2024.\ncatalog:variable_text:45139:18262:18628\ncatalog:variable_text:45144:18262:18628\ncatalog:variable_text:45272:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:inkomna-medborgarforslag"
+fields = { "description" = "Antal medborgarförslag till kommunen eller regionen (tidigare landstinget): inkomna förslag, förslag som behandlats av fullmäktige och förslag som behandlats och bifallits." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP skiljer antal inkomna, behandlade och bifallna medborgarförslag för kommun, landsting och region.\ncatalog:variable_text:45138:16801:17167\ncatalog:variable_text:45140:18262:18628\ncatalog:variable_text:45261:19723:20089\ncatalog:variable_text:45265:18262:18628\ncatalog:variable_text:45267:19723:20089\ncatalog:variable_text:45268:18262:18628\ncatalog:variable_text:45269:19723:20089\ncatalog:variable_text:45393:18262:18628\ncatalog:variable_text:45394:16801:17167\ncatalog:variable_text:45444:12053:12418\ncatalog:variable_text:45445:12053:12418\ncatalog:variable_text:45445:13879:14245\ncatalog:variable_text:45446:12053:12418\ncatalog:variable_text:45446:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "set:klagomalshantering"
+fields = { "description" = "Om organisationen har fastställda rutiner för att samla in och hantera klagomål på sin service, som ja eller nej eller som om rutinerna gäller alla eller vissa förvaltningar, och 2008 och 2012 om allmänheten kan lämna synpunkter eller klagomål på servicen via organisationens webbplats." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP anger fastställda klagomålsrutiner och 2008 och 2012 möjligheten att klaga via webbplatsen.\ncatalog:variable_text:45399:18262:18628\ncatalog:variable_text:45690:13879:14245\ncatalog:variable_text:45690:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "set:medborgarforslag-pa-webbplats"
+fields = { "description" = "Om kommunen eller regionen (tidigare landstinget) på sin webbplats ger allmänheten information om medborgarförslag och möjlighet att följa hanteringen av inlämnade förslag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF delas av alla; OP skiljer information om medborgarförslag från möjligheten att följa hanteringen.\ncatalog:variable_text:45317:16801:17167\ncatalog:variable_text:45354:18262:18628\ncatalog:variable_text:45423:16801:17167\ncatalog:variable_text:45609:19723:20089\ncatalog:variable_text:45691:13879:14245\ncatalog:variable_text:45692:15340:15706\ncatalog:variable_text:45693:15340:15706\ncatalog:variable_text:45694:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "set:medborgarkontor"
+fields = { "description" = "Om kommunen eller regionen (tidigare landstinget) har medborgarkontor, som fysiskt kontor eller i form av webbportal eller callcenter/kundtjänst. En egen variabel anger att organisationen saknar medborgarkontor; 2003 och 2008 anges även antalet medborgarkontor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF delas av alla; OP skiljer fysiskt kontor, webbportal/callcenter, inget kontor och antal 2003 och 2008.\ncatalog:variable_text:45313:16801:17167\ncatalog:variable_text:45325:18262:18628\ncatalog:variable_text:45325:19723:20089\ncatalog:variable_text:45326:18262:18628\ncatalog:variable_text:45326:19723:20089\ncatalog:variable_text:45335:18262:18628\ncatalog:variable_text:45337:18262:18628\ncatalog:variable_text:45372:19723:20089\ncatalog:variable_text:45387:19723:20089\ncatalog:variable_text:45447:12053:12418\ncatalog:variable_text:45448:15340:15706\ncatalog:variable_text:45449:15340:15706\ncatalog:variable_text:45454:12053:12418\ncatalog:variable_text:45454:15340:15706\ncatalog:variable_text:45455:18262:18628\ncatalog:variable_text:45457:16801:17167\ncatalog:variable_text:45458:19723:20089\ncatalog:variable_text:45600:18262:18628\ncatalog:variable_text:45600:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:meddelandefunktion-pa-webbplats"
+fields = { "description" = "Om allmänheten via kommunens eller landstingets webbplats kan skicka meddelanden till förtroendevalda i fullmäktige, till exempel genom utlagda e-postadresser. Från 2020 avser det regionfullmäktige." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP nämner kommunen och landstinget med kommun- och landstingsfullmäktige, från 2020 regionfullmäktige; kodningen 0/1 för 2024 är självklar för en ja/nej-variabel och utelämnas.\ncatalog:variable_text:45713:16801:17167\ncatalog:variable_text:45714:12053:12418\ncatalog:variable_text:45714:13879:14245\ncatalog:variable_text:45714:15340:15706\ncatalog:variable_text:45714:18262:18628\ncatalog:variable_text:45714:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:medel-for-demokratifragor"
+fields = { "description" = "Om kommunen eller regionen (tidigare landstinget) har avsatt särskilda medel för arbete med demokratifrågor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP är samma för alla; medlemmarna är olika enkätomgångar och organisationstyper.\ncatalog:variable_text:45466:12053:12418\ncatalog:variable_text:45469:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:mojlighet-att-lamna-medborgarforslag"
+fields = { "description" = "Om allmänheten kan lämna in medborgarförslag till kommunen eller regionen (tidigare landstinget) och när möjligheten infördes, samt om möjligheten har tagits bort eller aldrig funnits." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP anger möjligheten att lämna medborgarförslag; etiketterna anger när den infördes och två DEF gäller borttagen eller aldrig funnen möjlighet.\ncatalog:variable_text:45162:19723:20089\ncatalog:variable_text:45452:19723:20089\ncatalog:variable_text:45492:19723:20089\ncatalog:variable_text:45493:18262:18628\ncatalog:variable_text:45498:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "set:offentliga-utfragningar"
+fields = { "description" = "Om kommunen anordnat någon offentlig utfrågning (hearing), 2003 och 2008 även om landstinget gjort det. 2012 och 2016 avser frågan medborgardialog i form av offentlig utfrågning, och då finns också separata variabler för utfrågning via webbplatsen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP 2003 och 2008 gäller kommun och landsting; 2012 och 2016 anger OP medborgardialog och DEF hearing, och webbplatsvarianterna finns 2012 och 2016.\ncatalog:variable_text:45505:16801:17167\ncatalog:variable_text:45508:12053:12418\ncatalog:variable_text:45509:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:organ-for-demokratifragor"
+fields = { "description" = "Om kommunen eller regionen (tidigare landstinget) har något politiskt organ som särskilt arbetar med demokratifrågor, och 2024 vilket organ det är, som kod och i klartext." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP anger förekomst av politiskt organ; 2024 års DEF anger vilket organ, som kod och i klartext.\ncatalog:variable_text:45514:19723:20089\ncatalog:variable_text:45516:19723:20089\ncatalog:variable_text:45517:19723:20089\ncatalog:variable_text:45548:12053:12418\ncatalog:variable_text:45553:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:politisk-majoritet"
+fields = { "description" = "Om respektive parti har egen majoritet eller ingår i den politiska majoritet som styr kommunen eller landstinget, ett ja eller nej per parti: riksdagspartierna (Sverigedemokraterna från 2012) och annat parti, till exempel ett lokalt parti, med partinamnet i klartext. 2003 och 2008 finns även den kombination av partier som bildar den faktiska majoriteten och, för landstinget, om lokala partier eller andra partier än riksdagspartierna ingår i den. Riksdagspartiernas variabler bygger 2003–2020 (Sverigedemokraternas 2016–2020) på enkätfrågan om vilket parti eller vilken kombination av partier som bildade det politiska styret direkt efter valet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nEnkätfrågan står för de övriga riksdagspartierna 2003–2020 men för Sverigedemokraterna bara 2016 och 2020.\ncatalog:variable_text:45220:12053:12418\ncatalog:variable_text:45276:18262:18628\ncatalog:variable_text:45276:19723:20089\ncatalog:variable_text:45277:19723:20089\ncatalog:variable_text:45439:13879:14245\ncatalog:variable_text:45440:12053:12418\ncatalog:variable_text:45441:12053:12418\ncatalog:variable_text:45441:15340:15706\ncatalog:variable_text:45538:19723:20089\ncatalog:variable_text:45539:12053:12418\ncatalog:variable_text:45539:13879:14245\ncatalog:variable_text:45539:15340:15706\ncatalog:variable_text:45539:16801:17167\ncatalog:variable_text:45539:19723:20089\ncatalog:variable_text:45540:12053:12418\ncatalog:variable_text:45540:13879:14245\ncatalog:variable_text:45540:15340:15706\ncatalog:variable_text:45540:16801:17167\ncatalog:variable_text:45540:18262:18628\ncatalog:variable_text:45540:19723:20089\ncatalog:variable_text:45541:12053:12418\ncatalog:variable_text:45541:13879:14245\ncatalog:variable_text:45541:15340:15706\ncatalog:variable_text:45541:16801:17167\ncatalog:variable_text:45541:18262:18628\ncatalog:variable_text:45541:19723:20089\ncatalog:variable_text:45542:12053:12418\ncatalog:variable_text:45542:13879:14245\ncatalog:variable_text:45542:15340:15706\ncatalog:variable_text:45542:16801:17167\ncatalog:variable_text:45542:18262:18628\ncatalog:variable_text:45542:19723:20089\ncatalog:variable_text:45543:12053:12418\ncatalog:variable_text:45543:13879:14245\ncatalog:variable_text:45543:15340:15706\ncatalog:variable_text:45543:16801:17167\ncatalog:variable_text:45543:18262:18628\ncatalog:variable_text:45543:19723:20089\ncatalog:variable_text:45544:12053:12418\ncatalog:variable_text:45544:13879:14245\ncatalog:variable_text:45544:15340:15706\ncatalog:variable_text:45544:16801:17167\ncatalog:variable_text:45544:18262:18628\ncatalog:variable_text:45544:19723:20089\ncatalog:variable_text:45545:15340:15706\ncatalog:variable_text:45545:16801:17167\ncatalog:variable_text:45545:18262:18628\ncatalog:variable_text:45545:19723:20089\ncatalog:variable_text:45546:12053:12418\ncatalog:variable_text:45546:13879:14245\ncatalog:variable_text:45546:15340:15706\ncatalog:variable_text:45546:16801:17167\ncatalog:variable_text:45546:18262:18628\ncatalog:variable_text:45546:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:professionella-namnder-och-styrelser"
+fields = { "description" = "Om organisationen har professionella, det vill säga opolitiska, nämnder eller styrelser, och hur många. För 2003 avses nämnder och styrelser där minst hälften av ledamöterna utsetts på professionella grunder och inte efter partipolitisk tillhörighet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF delas av alla; OP skiljer ja/nej från antal och definierar professionella nämnder 2003.\ncatalog:variable_text:45281:16801:17167\ncatalog:variable_text:45316:16801:17167\ncatalog:variable_text:45564:15340:15706\ncatalog:variable_text:45655:15340:15706\ncatalog:variable_text:45656:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "set:rad-for-sarskilda-fokusgrupper"
+fields = { "description" = "Om kommunen eller regionen (tidigare landstinget) använde sig av råd eller kommittéer med särskilda grupper av medborgare under året före undersökningen, ett ja eller nej per grupp: ungdomar, äldre, nationella minoriteter, personer med funktionsnedsättning, personer med utländsk bakgrund, interreligiösa råd och annan grupp (med fritextsvar). En egen variabel anger att inga sådana råd användes; 2003 och 2008 anges i stället vilken fokusgrupp organisationen riktar in sig på." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF delas av medlemmarna; OP anger ja/nej per grupp för åren 2011, 2015, 2019 och 2023, fritext, inga råd och vilken fokusgrupp 2003 och 2008.\ncatalog:variable_text:45228:12053:12418\ncatalog:variable_text:45283:18262:18628\ncatalog:variable_text:45283:19723:20089\ncatalog:variable_text:45284:18262:18628\ncatalog:variable_text:45284:19723:20089\ncatalog:variable_text:45286:18262:18628\ncatalog:variable_text:45286:19723:20089\ncatalog:variable_text:45288:18262:18628\ncatalog:variable_text:45288:19723:20089\ncatalog:variable_text:45290:18262:18628\ncatalog:variable_text:45290:19723:20089\ncatalog:variable_text:45293:19723:20089\ncatalog:variable_text:45296:19723:20089\ncatalog:variable_text:45298:19723:20089\ncatalog:variable_text:45300:19723:20089\ncatalog:variable_text:45388:19723:20089\ncatalog:variable_text:45389:19723:20089\ncatalog:variable_text:45398:18262:18628\ncatalog:variable_text:45460:15340:15706\ncatalog:variable_text:45461:15340:15706\ncatalog:variable_text:45462:15340:15706\ncatalog:variable_text:45463:15340:15706\ncatalog:variable_text:45464:15340:15706\ncatalog:variable_text:45465:15340:15706\ncatalog:variable_text:45566:16801:17167\ncatalog:variable_text:45568:18262:18628\ncatalog:variable_text:45568:19723:20089\ncatalog:variable_text:45569:19723:20089\ncatalog:variable_text:45570:16801:17167\ncatalog:variable_text:45572:19723:20089\ncatalog:variable_text:45573:19723:20089\ncatalog:variable_text:45574:16801:17167\ncatalog:variable_text:45576:19723:20089\ncatalog:variable_text:45577:19723:20089\ncatalog:variable_text:45580:19723:20089\ncatalog:variable_text:45581:16801:17167\ncatalog:variable_text:45583:16801:17167\ncatalog:variable_text:45584:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:sammantradeskalendarium-pa-webbplats"
+fields = { "description" = "Om kommunen eller landstinget på sin webbplats ger allmänheten tillgång till ett kalendarium över fullmäktiges kommande sammanträden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP är samma för alla tre; medlemmarna är olika enkätomgångar.\ncatalog:variable_text:45687:16801:17167\ncatalog:variable_text:45705:16801:17167\ncatalog:variable_text:45706:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "set:sammantradesprotokoll-pa-webbplats"
+fields = { "description" = "Om kommunen eller landstinget på sin webbplats ger allmänheten tillgång till protokoll från fullmäktiges sammanträden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP är samma för alla tre; medlemmarna är olika enkätomgångar.\ncatalog:variable_text:45689:16801:17167\ncatalog:variable_text:45717:16801:17167\ncatalog:variable_text:45718:12053:12418\ncatalog:variable_text:45718:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "set:sandningar-av-sammantraden"
+fields = { "description" = "Om det förekom TV-, radio- eller webbsändningar från något eller några av fullmäktiges sammanträden i kommunen eller landstinget." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP är samma för alla medlemmar; de är olika enkätomgångar.\ncatalog:variable_text:45665:16801:17167\ncatalog:variable_text:45666:16801:17167\ncatalog:variable_text:45671:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "set:sjalvforvaltningsorgan-med-driftuppdrag"
+fields = { "description" = "Om kommunen eller landstinget har självförvaltningsorgan med uppdrag att helt eller delvis sköta driften av en viss anläggning eller institution enligt kommunallagen 7 kap. 18 §, och hur många sådana organ det finns." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF delas av båda; OP skiljer förekomst från antal.\ncatalog:variable_text:45638:12053:12418\ncatalog:variable_text:45639:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "set:tjanstegarantier-och-servicedeklarationer"
+fields = { "description" = "Om kommunen eller landstinget har tjänstegarantier eller servicedeklarationer som redovisar organisationens service, med avseende på tillgänglighet och kvalitet, inom dess förvaltningar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP är samma för alla; medlemmarna är olika enkätomgångar.\ncatalog:variable_text:45660:18262:18628\ncatalog:variable_text:45661:16801:17167\ncatalog:variable_text:45664:12053:12418\ncatalog:variable_text:45664:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "set:valfrihetssystem"
+fields = { "description" = "Om kommunen eller landstinget har någon form av valfrihetssystem (kund- eller brukarval) utöver vad lagstiftningen kräver, totalt och per område: förskola, grundskola, gymnasieskola, äldreomsorg, individ- och familjeomsorg, omsorg om personer med funktionsnedsättning och annat område. 2003 och 2008 anges i stället vilket område systemet gäller." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF delas av alla; etiketterna anger områdena 2012 och OP 2003 och 2008 anger område för kund- eller brukarvalssystem.\ncatalog:variable_text:45427:15340:15706\ncatalog:variable_text:45433:15340:15706\ncatalog:variable_text:45435:12053:12418\ncatalog:variable_text:45435:13879:14245\ncatalog:variable_text:45436:13879:14245"

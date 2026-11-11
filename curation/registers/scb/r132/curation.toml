@@ -1416,3 +1416,15 @@ kind = "set"
 subject = "var:naringsgren-arbetsstalle"
 fields = { "label" = "Näringsgren för arbetsställe (Ng2002)" }
 evidence = "#2102 same-label cluster 'Näringsgren för arbetsställe' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Ng2002's 2007 opdef says 'Äldre standard än Ng2002', indicating Ng and Ng2002 use different classification versions; Ng2002 has no code list to compare."
+
+[[statement]]
+kind = "set"
+subject = "set:postnummer"
+fields = { "description" = "Belägenhetsadressens (besöksadressens) och redovisningsenhetens postnummer 2004–2005, och arbetsställets postnummer 2006–2024, 2006–2016 och 2018–2024 angivet som fastighetspostnummer (högst ett per fastighet och utan boxnummer)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nFastighetspostnummer anges 2006–2016 och 2018–2024; 2017 har bara den generiska postortstexten.\ncatalog:variable_text:38998:12418:13149\ncatalog:variable_text:39061:12418:13149\ncatalog:variable_text:39062:13149:17167\ncatalog:variable_text:39062:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "set:postort"
+fields = { "description" = "Postort för arbetsstället eller redovisningsenheten, alltså området med egen postadress, som inte alltid sammanfaller med kommuner eller andra indelningar. 2017 avser arbetsställets uppgift i stället fastighetspostnumret, Postens indelning med högst ett postnummer per fastighet och utan boxnummer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nPostortsdefinitionen gäller arbetsställets varianter utom 2017, då PoAnst definieras som fastighetspostnummer.\ncatalog:variable_text:39063:13149:17167\ncatalog:variable_text:39063:17167:17532\ncatalog:variable_text:39078:12418:13149"

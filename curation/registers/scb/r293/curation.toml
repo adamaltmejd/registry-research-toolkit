@@ -1177,3 +1177,33 @@ kind = "set"
 subject = "set:utgiftsomrade"
 fields = { "label" = "Utgiftsområde" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:anslagsnamn"
+fields = { "description" = "Namnet på anslaget; från 2019 hämtat från budgetpropositionen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF ger namn på anslag; källan budgetpropositionen står bara i OP 2019–2022.\ncatalog:variable_text:51349:14610:14975\ncatalog:variable_text:51349:17897:18628\ncatalog:variable_text:51349:18628:18993\ncatalog:variable_text:51353:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:anslagsnummer"
+fields = { "description" = "Anslagets nummer i statsbudgeten, hämtat från budgetpropositionen och från 2023 från den beslutade statsbudgeten; 2023 och 2025 ingår även anslag som tillkommit i beslutade ändringsbudgetar. 2010 består numret av två siffror för utgiftsområde, två för politikområde och två för löpnummer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nÄndringsbudgetarna nämns bara 2023 och 2025; nummeruppbyggnaden står i OP för nr2010.\ncatalog:variable_text:51350:18628:18993\ncatalog:variable_text:51352:18993:19358\ncatalog:variable_text:51352:19358:19723\ncatalog:variable_text:51352:19723:20089\ncatalog:variable_text:51352:20089:20454\ncatalog:variable_text:51397:13514:13879\ncatalog:variable_text:51398:14610:14975\ncatalog:variable_text:51399:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:departement"
+fields = { "description" = "Förkortning för det departement som förfogar över anslaget; från 2021 hämtad från höstens budgetproposition." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDefinitionen delas av alla tre; budgetpropositionen anges för 2021–2025, inte för 2007.\ncatalog:variable_text:51354:13514:13879\ncatalog:variable_text:51355:18628:18993\ncatalog:variable_text:51367:18993:20089\ncatalog:variable_text:51367:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:statliga-budgetanslag-till-fou"
+fields = { "description" = "Medel för forskning och utveckling (FoU) till alla samhällssektorer i den beslutade statsbudgeten, preliminära eller slutliga; de slutliga inkluderar anvisade medel i beslutade ändringsbudgetar. 2021–2022 anges myndighetens prognos för egen och utlagd FoU finansierad av direkta statsanslag, i tusentals kronor. Från 2023 skattas FoU-medlen i varje anslag med FoU-koefficienter härledda från undersökningarna om FoU i offentlig sektor och i universitets- och högskolesektorn." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF skiljer preliminära och slutliga anslag (inkl. ändringsbudgetar); OP ger prognosmetoden 2021–2022 och koefficientmetoden 2023–2025.\ncatalog:variable_text:51358:13514:13879\ncatalog:variable_text:51359:18628:18993\ncatalog:variable_text:51360:17897:18628\ncatalog:variable_text:51366:18993:19358\ncatalog:variable_text:51400:19358:19723\ncatalog:variable_text:51400:19723:20089\ncatalog:variable_text:51421:19358:19723\ncatalog:variable_text:51421:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:utgiftsomrade"
+fields = { "description" = "Det utgiftsområde i statsbudgeten som anslaget hör till, hämtat från budgetpropositionen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda delar DEF; OP anger budgetpropositionen som källa.\ncatalog:variable_text:51356:18993:20089\ncatalog:variable_text:51356:20089:20454\ncatalog:variable_text:51423:18628:18993"

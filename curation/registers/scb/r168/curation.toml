@@ -7977,3 +7977,63 @@ subject = "fek-juridisk-enhet: PeOrgNr @2022..2023 where key = 'v56'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Person-/organisationsnummer", "definition" = "Identitetsbegrepp för juridiska enheter. För juridiska personer tilldelas organisationsnummer av Bolagsverket, Skatteverket, Kammarkollegiet, Lantmäteriet, Länsstyrelse eller SCB, beroende på bolagsform. För fysiska personer med näringsverksamhet används personnumret.", "type" = "text", "length" = 12, "sensitive" = false, "identifier" = true } }
 evidence = "private:ev-3901"
 caveat = "The delivery carries the number pseudonymised as a serial number. Label, definition and length follow SCB's documentation of PeOrgNr (key v56) on FEK Slutdata (företagsenhet), 2022-2023."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-anstallda"
+fields = { "description" = "Antal anställda i företaget: aktuellt antal vid mättillfället (anställda med A-skatt och beräknad årsinkomst över ett prisbasbelopp), samma mått inklusive ombordanställda och säsongsarbetare, medelantal anställda omräknat till heltidspersoner på årsbasis, och storleksklass efter antal anställda. 2023 finns antalet även för företagsenhet, lokal och verksamhetsenhet. Från 2023 är arbetsgivardeklarationer på individnivå huvudkälla för medelantalet, 2020–2022 kom det från årsredovisningar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nMåtten är varianter av antalet anställda per mätpunkt, storleksklass och enhetsnivå; källbytet för medelantalet står i OP 2020–2023.\ncatalog:variable_text:17631:12053:12418\ncatalog:variable_text:17631:12418:12784\ncatalog:variable_text:17640:12053:13514\ncatalog:variable_text:17640:13514:18993\ncatalog:variable_text:17641:18993:19723\ncatalog:variable_text:17642:19358:19723\ncatalog:variable_text:17644:18993:19723\ncatalog:variable_text:17815:9862:12053\ncatalog:variable_text:17815:12053:17167\ncatalog:variable_text:17815:18262:19358\ncatalog:variable_text:17815:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-sysselsatta"
+fields = { "description" = "Antal sysselsatta, 2003–2021 enligt RAMS och 2023 för företagsenhet, lokal enhet och verksamhetsenhet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nRAMS-varianten finns 2003–2021 utan angiven enhet; 2023 finns antalet för företagsenhet, lokal och verksamhetsenhet. Imputeringstexten är generisk och utelämnad.\ncatalog:variable_text:17649:19358:19723\ncatalog:variable_text:17948:12053:18262\ncatalog:variable_text:17948:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:bruttoinvesteringar-byggnader-markanlaggningar-och-mark"
+fields = { "description" = "Företagets bruttoinvesteringar i byggnader, markanläggningar och mark för företagsenhet, verksamhetsenhet, lokal och kommun, och för köpta sådana tillgångar för företagsenhet, verksamhetsenhet och lokal. Utom för kommun samlas uppgifterna in genom en kombination av register och egen insamling." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nTotalposten finns för fyra enheter och köpta tillgångar för tre; kombinationen register och egen insamling anges för alla utom kommunvariabeln. Imputeringsnoteringen delas med över 240 andra variabler och utelämnas som generisk.\ncatalog:variable_text:17670:17167:18262\ncatalog:variable_text:17670:18262:18993\ncatalog:variable_text:17677:13514:18993\ncatalog:variable_text:17679:13514:18993\ncatalog:variable_text:17681:13514:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:kostnader-for-ravaror-och-handelsvaror"
+fields = { "description" = "Företagets kostnader för inköpta råvaror och handelsvaror, och samma summa justerad för merchanting. Justeringen är en förenklad beräkning för de blankettundersökta företagen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOjusterad och merchantingjusterad summa är slots; OP beskriver justeringen.\ncatalog:variable_text:17935:9862:12053\ncatalog:variable_text:17935:12053:18993\ncatalog:variable_text:17943:12053:18993\ncatalog:variable_text:17944:12053:13514\ncatalog:variable_text:17944:13514:18262\ncatalog:variable_text:17944:18262:18628\ncatalog:variable_text:17944:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:loner-och-andra-ersattningar"
+fields = { "description" = "Företagets löner och andra ersättningar till personalen, och kostnader för löner och andra ersättningar. För kostnaderna är arbetsgivardeklarationer på individnivå (AGI) från 2023 huvudkälla." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda posterna finns 2003–2023; att AGI är huvudkälla från FEK2023 anges bara för kostnadsposten.\ncatalog:variable_text:17800:9862:12053\ncatalog:variable_text:17800:12053:18262\ncatalog:variable_text:17800:18262:18628\ncatalog:variable_text:17800:19358:19723\ncatalog:variable_text:17812:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:nettoomsattning"
+fields = { "description" = "Företagets nettoomsättning, och samma belopp justerat för merchanting. Justeringen är en förenklad beräkning för de blankettundersökta företagen, från 2020 baserad på det administrativa materialet SRU." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP för den justerade varianten anger förenklad beräkning och från 2020 det administrativa materialet SRU; utskrivningen av SRU finns inte i texterna.\ncatalog:variable_text:17853:9862:12053\ncatalog:variable_text:17853:12053:18262\ncatalog:variable_text:17853:18262:18993\ncatalog:variable_text:17854:12053:13514\ncatalog:variable_text:17854:13514:18262\ncatalog:variable_text:17854:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:ovriga-rorelseintakter"
+fields = { "description" = "Företagets övriga rörelseintäkter och övriga intäkter (2003–2023), och 2022–2023 även övriga rörelseintäkter inklusive lagerförändring och aktiverat arbete." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nTre resultatposter som slots: övriga rörelseintäkter och övriga intäkter 2003–2023, summaposten med lagerförändring och aktiverat arbete 2022–2023.\ncatalog:variable_text:17738:18993:19723\ncatalog:variable_text:17869:12053:18993\ncatalog:variable_text:17878:12053:18262\ncatalog:variable_text:17878:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:ovriga-rorelsekostnader"
+fields = { "description" = "Företagets övriga kostnader (2003–2023). Från 2007 finns också övriga rörelsekostnader, det vill säga övriga kostnader som härrör från företagets produktion, som en egen post." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nÖvriga kostnader finns 2003–2023 i två versioner; övriga rörelsekostnader (2007–2023) definieras som övriga kostnader från produktionen och finns parallellt.\ncatalog:variable_text:17873:12053:13514\ncatalog:variable_text:17879:13514:17167\ncatalog:variable_text:17879:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:sociala-och-andra-personalkostnader"
+fields = { "description" = "Sociala kostnader och andra personalkostnader: kostnader för övriga sociala avgifter 2003–2006 (för företagsenhet, verksamhetsenhet och kommun) och sociala kostnader och andra personalkostnader 2007–2023. De senare hämtas 2007–2015 från Market Manager Partner och 2016–2019 från årsredovisningar och fördelas på kommunerna med modellberäkning; från 2020 kompletteras med inköpt bokslutsdata för aktiebolag. För 2003–2006 finns även ett imputerat värde för övriga personalkostnader, där föregående års värde eller branschens medelvärde används när uppgift i SRU saknas eller underkänts." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nKällbytena 2007–2015, 2016–2019 och från 2020 står i operationella texterna; imputeringsregeln för IMP_527; den generella imputeringsmeningen (239 icke-medlemmar) är utelämnad.\ncatalog:variable_text:17742:12053:13514\ncatalog:variable_text:17793:12053:13514\ncatalog:variable_text:17794:12053:13514\ncatalog:variable_text:17880:12053:12784\ncatalog:variable_text:17880:12784:13514\ncatalog:variable_text:17915:13514:16801\ncatalog:variable_text:17915:16801:18262\ncatalog:variable_text:17915:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:urvalsstratum"
+fields = { "description" = "Det stratum företaget tillhör i det stratifierade urvalet (2003–2023), satt efter företagsenhetens eller verksamhetsenhetens bransch, och en storleksgrupp som anger om företaget ingår i ett totalräknat stratum och därmed har urvalssannolikhet och uppräkningsfaktor 1. I storleksgruppen 2012–2021 anges bara om sannolikheten skiljer sig från 1, inte dess värde." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nStratumkoden och totalräkningsindikatorn är slots av samma urvalsdesign; anmärkningen om sannolikhetens värde gäller Storleksgrupp_gem 2012–2021.\ncatalog:variable_text:17916:7305:20089\ncatalog:variable_text:17917:15340:18993\ncatalog:variable_text:17954:12053:13514"

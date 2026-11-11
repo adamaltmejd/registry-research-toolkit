@@ -5458,3 +5458,267 @@ kind = "set"
 subject = "var:hutbsunnivamor"
 fields = { "description" = "Moderns genomförda utbildning, härledd från Utbildningsregistret, kodad efter SUN-nivå 1-7 (1 förgymnasial utbildning kortare än 9 år till 7 forskarutbildning); * anger att uppgift saknas. Avser biologisk mor, eller adoptivmor om det finns en (adoptivmor väljs i första hand). Trots etiketten 'nivå och inriktning' innehåller kolumnen enligt kodlistan bara nivå." }
 evidence = "Som HUtbSunNivaFar: kodlistan #9143 har bara nivåer; operationaliseringen anger biologisk mor eller adoptivmor.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=673986 (r4954)"
+
+[[statement]]
+kind = "set"
+subject = "set:alder-vid-arets-slut"
+fields = { "description" = "Personens ålder i hela år vid årets slut." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF delas av båda; OP anger bara namnbytet till AlderSlut 2022 och härledning ur personnumret 2003–2021.\ncatalog:variable_text:51011:9862:12053\ncatalog:variable_text:51011:12053:18993\ncatalog:variable_text:51011:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-barn"
+fields = { "description" = "Antal hemmaboende barn i familjen i en viss åldersgrupp: 0–3, 4–6, 7–10, 11–15, 16–17 och, från 2005, 18–19 samt 20 år eller äldre; 1997–2004 i stället 18 år och äldre. Antalet härleds ur barnen i familjen enligt Registret över totalbefolkningen (RTB); 1997–2004 räknas för 18 år och äldre biologiska, adoptiv- och övriga barn som är kopplade till familjeidentiteten i Befolkningsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF/OP skiljer åldersgrupperna; OP anger härledning ur RTB-familjen och 18+-variantens avgränsning 1997–2004.\ncatalog:variable_text:51014:9862:16071\ncatalog:variable_text:51014:18993:19358\ncatalog:variable_text:51015:9862:18993\ncatalog:variable_text:51015:18993:19358\ncatalog:variable_text:51016:12784:18993\ncatalog:variable_text:51016:18993:19358\ncatalog:variable_text:51017:9862:16071\ncatalog:variable_text:51017:18993:19358\ncatalog:variable_text:51053:9862:16071\ncatalog:variable_text:51053:16071:18993\ncatalog:variable_text:51053:18993:19358\ncatalog:variable_text:51054:12784:16071\ncatalog:variable_text:51054:16071:18993\ncatalog:variable_text:51054:18993:19358\ncatalog:variable_text:51055:9862:12053\ncatalog:variable_text:51056:9862:16071\ncatalog:variable_text:51056:16071:18993\ncatalog:variable_text:51056:18993:19358\nRegisterinformation.csv:row=684767\nRegisterinformation.csv:row=684772"
+
+[[statement]]
+kind = "set"
+subject = "set:arbete-inom-etablering"
+fields = { "description" = "Om personen under tiden med fastställd etableringsplan (EPA) haft en aktivitet som klassas som anställning och antal timmar per vecka med anställning, summerat över aktiviteterna i den senast fastställda planen (2010–2019), samt om personen under året haft någon form av arbete som aktivitet inom etableringsprogrammet (2018–2023)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nTimmarna är timmar per vecka summerade över planens aktiviteter enligt den operationella definitionen 2010–2019.\ncatalog:variable_text:50998:14610:16071\ncatalog:variable_text:50998:16071:18262\ncatalog:variable_text:51022:14610:15706\ncatalog:variable_text:51022:15706:18262\ncatalog:variable_text:51102:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsforberedande-insatser-enligt-etableringsplan"
+fields = { "description" = "Om personen under tiden med fastställd etableringsplan (EPA) haft en aktivitet som klassas som arbetsförberedande insats, och antalet timmar per vecka med sådana insatser, summerat över aktiviteterna i den plan som är fastställd i slutet av uppföljningsperioden (2010–2019)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP 2010–2019 anger timmar per vecka summerade över planens aktiviteter, för den plan som gäller i slutet av uppföljningsperioden.\ncatalog:variable_text:50999:14610:16071\ncatalog:variable_text:50999:16071:18262\ncatalog:variable_text:51023:14610:15706\ncatalog:variable_text:51023:15706:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsloshetens-varaktighet"
+fields = { "description" = "Hur länge personen varit arbetslös: om personen är långtidsarbetslös, antal sammanhängande dagar utan arbete och om personen varit utan arbete i mer än 6, 12 eller 24 månader, de senare för öppet arbetslösa och arbetslösa i program under den senaste inskrivningsperioden (från 2016). Långtidsarbetslös är den som varit arbetslös i minst sex månader om personen är 25 år eller äldre, och i minst 100 dagar om personen är yngre; från 2022 avser det öppen arbetslöshet under den senaste inskrivningsperioden. Två äldre versioner av långtidsarbetslöshet innehåller felaktiga värden för vissa personer och används inte längre." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF skiljer långtidsarbetslöshet, antal dagar och tröskelvariablerna; OP ger definitionen, dess ändring 2022 och de felaktiga versionerna.\ncatalog:variable_text:50982:16801:19723\ncatalog:variable_text:50983:9862:18993\ncatalog:variable_text:50983:18993:19723\ncatalog:variable_text:50989:16801:19723\ncatalog:variable_text:50990:16801:19723\ncatalog:variable_text:50991:16801:19723\ncatalog:variable_text:51196:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsmarknadspolitiska-program-enligt-etableringsplan"
+fields = { "description" = "Om personen under tiden med fastställd etableringsplan (EPA) haft en aktivitet som klassas som arbetsmarknadspolitiskt program, och antalet timmar per vecka med sådana program, summerat över aktiviteterna i den plan som är fastställd i slutet av uppföljningsperioden (2010–2019)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP 2010–2019 anger timmar per vecka summerade över planens aktiviteter, för den plan som gäller i slutet av uppföljningsperioden.\ncatalog:variable_text:51000:14610:16071\ncatalog:variable_text:51000:16071:18262\ncatalog:variable_text:51024:14610:15706\ncatalog:variable_text:51024:15706:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:biologiskt-eller-adoptivt-foraldraskap"
+fields = { "description" = "Om personens far respektive mor är biologisk förälder eller adoptivförälder, härlett ur Flergenerationsregistret och från 2022 ur förälderns personnummer och adoptivförälderns personnummer i RTB och Flergenerationsregistret. T.o.m. 2021 väljs en adoptivförälder alltid före en biologisk." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF delas; OP anger källor per period och att adoptivföräldern väljs först 1997–2021.\ncatalog:variable_text:50972:9862:18993\ncatalog:variable_text:50972:18993:19723\ncatalog:variable_text:50973:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:boendeform"
+fields = { "description" = "Personens boende efter taxeringsenhet och ägarkategori, härlett ur Fastighetstaxeringsregistret, som detaljerad kod och som grupperad kod." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF/OP: boform och typ av boende skapas ur taxeringsenhet och ägarkategori; de grupperade varianterna grupperar koderna.\ncatalog:variable_text:51075:9862:16436\ncatalog:variable_text:51076:9862:16436\ncatalog:variable_text:51320:16436:18993\ncatalog:variable_text:51320:18993:19723\ncatalog:variable_text:51321:16436:17167\ncatalog:variable_text:51321:17167:18993\ncatalog:variable_text:51321:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:bostadens-belagenhet"
+fields = { "description" = "Var personens bostad ligger, härlett ur folkbokföringen i RTB och geografidatabasen: SAMS-område (Small Areas for Market Statistics, homogena bostadsområden med ungefär tusen invånare) t.o.m. 2016 och DeSO (demografiska statistikområden) från 2017, samt länet där personen är folkbokförd." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF: bostadens belägenhet och län; OP anger SAMS 1997–2016, DeSO från 2017 och län för folkbokföringen.\ncatalog:variable_text:51059:9862:16436\ncatalog:variable_text:51059:16436:17167\ncatalog:variable_text:51059:17167:18993\ncatalog:variable_text:51087:18993:19723\ncatalog:variable_text:51195:9862:12053\ncatalog:variable_text:51195:12053:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:bostadsersattning"
+fields = { "description" = "Bostadsersättning från Försäkringskassan, som personer som är nya i Sverige kan få utöver etableringsersättning, som bearbetat och obearbetat belopp. 2022–2023 summeras årsbeloppet ur Försäkringskassans månatliga utbetalningar på individnivå, och minusbelopp kan förekomma." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF gäller båda 2011–2023; summeringen och minusbeloppen står för båda 2022–2023 (minusbelopp även för det obearbetade beloppet 2020).\ncatalog:variable_text:51077:14975:18993\ncatalog:variable_text:51077:18993:19723\ncatalog:variable_text:51078:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:civilstand"
+fields = { "description" = "Personens familjerättsliga ställning, till exempel ogift, gift, skild, änka eller änkling, för personen själv och för fadern och modern. Föräldrarnas civilstånd avser i första hand adoptivföräldern, annars den biologiska föräldern; 1997–2021 härleds det från Befolkningsregistret och 2022–2023 via förälderns personnummer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP 1997–2021 anger Befolkningsregistret och OP 2022–2023 förälderns personnummer; båda prioriterar adoptivföräldern.\ncatalog:variable_text:51082:18993:19358\ncatalog:variable_text:51083:18993:19358\ncatalog:variable_text:51084:9862:18993\ncatalog:variable_text:51085:9862:18993\ncatalog:variable_text:51086:9862:18993\ncatalog:variable_text:51086:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:deltagarstallning-i-etablering"
+fields = { "description" = "Personens ställning i etableringsuppdraget: om personen är kvar i etablering den 31 december, har lämnat etablering per 31 december eller (2010–2019) är ny i etablering under året. Ny är den som haft ett första samtal (inskriven) eller fått ett beslut relaterat till etableringsuppdraget (EEM, EEP, EPA). Från 2022 härleds kvar och lämnat ur datum för första start och datum för lämnad etablering." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF skiljer kvar, lämnat och ny; OP anger mättidpunkt, kriterier för ny och härledningen från 2022.\ncatalog:variable_text:51106:14610:18993\ncatalog:variable_text:51106:18993:19723\ncatalog:variable_text:51107:14610:18993\ncatalog:variable_text:51107:18993:19723\ncatalog:variable_text:51108:14610:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:disponibel-inkomst-i-forhallande-till-levnadsniva"
+fields = { "description" = "Familjens disponibla inkomst i förhållande till skälig levnadsnivå, för personen och för fadern och modern (t.o.m. 2021 i första hand adoptivföräldern), härledd ur Inkomst- och taxeringsregistret. T.o.m. 2021 beräknas levnadsnivån utifrån en riksnorm för varje år, med hänsyn till hyra och årets basbelopp. Från 2022 fördelas ekonomiskt bistånd på familjemedlemmar över 18 år, och måttet anges i procent: 134 betyder att inkomsten är 34 procent högre än levnadsnivån för en familj av den storleken och sammansättningen. Från 2020 ingår nordiska inkomster." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAlla år härleds ur IoT; riksnormen, hyra och basbelopp anges t.o.m. 2021, biståndsfördelningen och procentangivelsen 2022–2023, nordiska inkomster från 2020.\ncatalog:variable_text:51089:18993:19358\ncatalog:variable_text:51090:18993:19358\ncatalog:variable_text:51091:18993:19358\ncatalog:variable_text:51092:9862:16071\ncatalog:variable_text:51093:9862:16071\ncatalog:variable_text:51093:16071:18993\ncatalog:variable_text:51094:9862:16071\ncatalog:variable_text:51094:16071:18993\nRegisterinformation.csv:row=473291"
+
+[[statement]]
+kind = "set"
+subject = "set:ekonomiskt-bistand"
+fields = { "description" = "Ekonomiskt bistånd från socialnämnden, det vill säga försörjningsstöd och bistånd till livsföringen i övrigt: utbetalt belopp till individen under året, i kronor och i hundratal kronor, och antal månader med bistånd för personen, fadern och modern. Beloppet fördelas lika mellan sökande och medsökande i hushållet, från 2013 de som är 16 år eller äldre och tidigare de som är 18 år eller äldre. Antalet månader är familjebaserat, så alla i familjen har samma antal; för fadern och modern avses i första hand adoptivföräldern, annars den biologiska. Uppgifterna härleds ur Socialstyrelsens register och rapportering till SCB." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBelopp i kronor och hundratal kronor och månadsvariablerna är slots av samma bistånd; fördelningsregeln och familjebaseringen står i OP; adoptivföräldern väljs i första hand enligt föräldravariablernas OP.\ncatalog:variable_text:51144:9862:15706\ncatalog:variable_text:51144:15706:18993\ncatalog:variable_text:51144:18993:19723\ncatalog:variable_text:51199:9862:15340\ncatalog:variable_text:51274:9862:18993\ncatalog:variable_text:51275:9862:16801\ncatalog:variable_text:51275:18993:19723\ncatalog:variable_text:51276:9862:19723\nRegisterinformation.csv:row=316211\nRegisterinformation.csv:row=652182"
+
+[[statement]]
+kind = "set"
+subject = "set:ersattning-fran-arbetsloshetskassa"
+fields = { "description" = "Ersättning från arbetslöshetskassa vid arbetslöshet, för personen och för fadern och modern (i första hand adoptivföräldern), samt 2003–2006 vid arbetslivsutveckling (ALU). Beloppen anges i hundratal kronor för personen 1997–2010 och för modern 2011–2013; 2022–2023 avser personens ersättning inkomståret oavsett år för händelsen. Föräldrarnas uppgifter härleds ur Inkomst- och taxeringsregistret och Befolkningsregistret; moderns ersättning 2018–2019 innehåller felaktiga värden för vissa personer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nEnheten hundratal kronor anges för personen 1997–2010 och modern 2011–2013, inkomstårsregeln 2022–2023; föräldrarnas härledning och felvärdena 2018–2019 står i operationella texterna.\ncatalog:variable_text:50994:12053:13514\ncatalog:variable_text:50995:9862:14975\ncatalog:variable_text:50995:14975:18993\ncatalog:variable_text:50995:18993:19723\ncatalog:variable_text:50996:9862:18262\ncatalog:variable_text:50997:9862:14975\ncatalog:variable_text:50997:14975:16071\ncatalog:variable_text:50997:17532:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:etableringsersattning"
+fields = { "description" = "Utbetald etableringsersättning från Försäkringskassan under året, för personer som är nya i Sverige. 2022–2023 är årsbeloppet summan av månadsbeloppen; minusbelopp kan förekomma 2022–2023 och, för den ena variabeln, 2020." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSummeringen anges för båda 2022–2023, minusbelopp för båda 2022–2023 och för etablersattning-belopp 2020.\ncatalog:variable_text:51118:14975:18993\ncatalog:variable_text:51118:18993:19723\ncatalog:variable_text:51120:14975:18262\ncatalog:variable_text:51120:18262:18628\ncatalog:variable_text:51120:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:etableringslots-som-aktivitet"
+fields = { "description" = "Om personen haft etableringslots under tiden med fastställd etableringsplan (EPA) (2010–2019), och summan av antalet timmar per vecka med lots i den senast fastställda planen (2010–2015)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nIndikator och timmar som slots; timmarna är summan av timmar per vecka för aktiviteterna i planen.\ncatalog:variable_text:51001:14610:16071\ncatalog:variable_text:51001:16071:18262\ncatalog:variable_text:51025:14610:15706\ncatalog:variable_text:51025:15706:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:familjestallning"
+fields = { "description" = "Personens relation till andra personer i familjen, till exempel gift eller barn, härledd ur folkbokföringen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF delas av båda; OP anger bara fältnamn i RTB och STATIV.\ncatalog:variable_text:51128:9862:12053\ncatalog:variable_text:51128:12053:18993\ncatalog:variable_text:51128:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:fodelseland"
+fields = { "description" = "Land där personen, modern eller fadern är född, som landnamn, ISO-kod (1997) eller enligt definitionen i Registret över totalbefolkningen (RTB). För ISO-koden räknas sedan 1947 barn födda utomlands som födda i Sverige om modern vid födelsen var folkbokförd i Sverige, och landet anges med det namn det hade vid födelsen. För föräldrarna avses adoptivföräldern i första hand om sådan finns, annars den biologiska föräldern." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\n1947-regeln och namnprincipen står bara i OP för fodelseland-iso 1997 och knyts därför till den; adoptionsregeln står för båda föräldrarna.\ncatalog:variable_text:51134:9862:10227\ncatalog:variable_text:51135:9862:18993\ncatalog:variable_text:51135:18993:19723\ncatalog:variable_text:51136:9862:19723\ncatalog:variable_text:51137:18993:19358\ncatalog:variable_text:51139:9862:17897\ncatalog:variable_text:51139:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:forvarvsinkomst-och-arbetsrelaterade-ersattningar"
+fields = { "description" = "Summan av kontant bruttolön, inkomst av näringsverksamhet och arbetsrelaterade ersättningar som sjukpenning, havandeskapspenning, föräldrapenning, tillfällig föräldrapenning, skattepliktig arbetsskadeersättning, närståendepenning och rehabiliteringsersättning. Redovisas bara när kontant bruttolön eller inkomst av näringsverksamhet är större än noll. Varianterna skiljer sig i om bara aktiv näringsverksamhet räknas och om underskott ingår." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP delar summeringen och villkoret; skillnaden aktiv/all näringsverksamhet och inkl./exkl. underskott framgår av DEF, OP och benämningarna.\ncatalog:variable_text:51146:12418:14610\ncatalog:variable_text:51146:14610:15706\ncatalog:variable_text:51146:15706:18993\ncatalog:variable_text:51147:12053:12418\ncatalog:variable_text:51147:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "set:grund-for-bosattning"
+fields = { "description" = "Migrationsverkets klassningskod för grund för bosättning, det vill säga den senaste klassningen vid beslut om uppehållstillstånd, för personen själv, modern eller fadern. 1997–2010 finns koden ogrupperad och grupperad i nio grupper; klassgrupperna finns 1997–2023, för 1997–2010 bakåtkodade från koden. För föräldrarna härleds uppgiften från Registret över migrations- och asylstatistik och Befolkningsregistret, med adoptivföräldern i första hand och annars den biologiska." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOgrupperad kod och niogruppering finns 1997–2010, klassgrupperna 1997–2023 med bakåtkodning genom nyckling mot GFBKod för 1997–2010.\ncatalog:variable_text:51151:18993:19358\ncatalog:variable_text:51152:18993:19358\ncatalog:variable_text:51153:9862:11688\ncatalog:variable_text:51153:12053:12418\ncatalog:variable_text:51153:14975:18993\ncatalog:variable_text:51154:9862:11688\ncatalog:variable_text:51154:14975:18993\ncatalog:variable_text:51157:9862:14975\ncatalog:variable_text:51158:9862:14975\ncatalog:variable_text:51159:9862:11688\ncatalog:variable_text:51159:14975:18993\ncatalog:variable_text:51161:18993:19723\ncatalog:variable_text:51162:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:grundskolans-belagenhet"
+fields = { "description" = "Det område där den grundskola ligger som personen slutförde sin grundskoleutbildning vid. Till och med 2016 anges SAMS-område och från 2017 DeSO (demografiska statistikområden), härlett från geografidatabasen; 2022–2023 härleds DeSO även med folkbokföringen enligt RTB." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP anger SAMS 1998–2016 och DeSO 2017–2021 ur geografidatabasen; desogrund 2022–2023 härleds ur DeSO och folkbokföring enligt RTB.\ncatalog:variable_text:51060:10227:14610\ncatalog:variable_text:51060:14610:16436\ncatalog:variable_text:51060:16436:17167\ncatalog:variable_text:51060:17167:18993\ncatalog:variable_text:51088:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:gymnasiebehorighet"
+fields = { "description" = "Om eleven är behörig till gymnasieskolans nationella program, för elever som avslutat grundskolan under vårterminen aktuellt år. Fram till 2011 krävdes lägst godkänt i svenska eller svenska som andraspråk, engelska och matematik; från hösten 2011 krävs godkänt i totalt åtta ämnen för yrkesprogram och tolv för högskoleförberedande program, och eleven räknas som behörig om eleven är behörig till minst ett sådant program." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda avser behörighet för vårens grundskoleavgångna; DEF 1998–2011 och OP 2011–2023 beskriver de skärpta kraven från hösten 2011.\ncatalog:variable_text:51057:10227:15340\ncatalog:variable_text:51165:14975:18993\ncatalog:variable_text:51165:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:gymnasieskolans-belagenhet"
+fields = { "description" = "Det område där personens gymnasieskola ligger, antingen skolan eleven är inskriven på aktuellt år eller skolan där eleven avslutade sina gymnasiestudier under våren. Till och med 2016 anges SAMS-område och från 2017 DeSO (demografiska statistikområden), härlett från geografidatabasen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP skiljer inskriven och avgången elev; OP anger SAMS till 2016 och DeSO från 2017.\ncatalog:variable_text:51061:17167:18628\ncatalog:variable_text:51061:18628:18993\ncatalog:variable_text:51063:18993:19723\ncatalog:variable_text:51064:18993:19723\ncatalog:variable_text:51065:16436:17167\ncatalog:variable_text:51243:9862:14610\ncatalog:variable_text:51243:14610:16436\ncatalog:variable_text:51244:9862:14610\ncatalog:variable_text:51244:14610:16436\ncatalog:variable_text:51244:16436:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:hinder-for-aktivitet-enligt-etableringsplan"
+fields = { "description" = "Om personen haft hinder att delta i någon aktivitet under sin tid med fastställd etableringsplan (EPA), och det summerade antalet timmar med hinder inom den senast fastställda planen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDe två DEF ger markering och timsumma; OP är generisk text om fastställd plan som delas av många variabler och utelämnas.\ncatalog:variable_text:51026:14610:15706\ncatalog:variable_text:51026:15706:18262\ncatalog:variable_text:51166:14610:16071\ncatalog:variable_text:51166:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:inkomst-fran-arbetsmarknadspolitiska-atgarder"
+fields = { "description" = "Inkomst under året vid deltagande i arbetsmarknadspolitiska åtgärder och program: den skattepliktiga ersättningen (från 2003, 2012–2021 främst aktivitetsstöd) och den summerade inkomsten av åtgärderna i två versioner. Den ena, i kronor och där minusbelopp kan förekomma, omfattar aktivitetsstöd, från 1998 även utvecklingsersättning och från 2011 även bostadsersättning, etableringsersättning och etableringstillägg. Den andra summerar 1997–2004 och 2006–2012 skattefri och skattepliktig ersättning och omfattar 2022–2023 samma fem ersättningar, i hundratal kronor. Den skattepliktiga ersättningen anges 2012–2021 i hundratal kronor, och från 2022 härleds den och den andra summan ur Försäkringskassans månatliga leveranser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSummeringen av skattefri och skattepliktig ersättning anges bara för Summa inkomst 1997–2004 och 2006–2012; komponenterna 1997–2023 anges för den obearbetade summan och 2022–2023 för Summa inkomst.\ncatalog:variable_text:51100:12053:15340\ncatalog:variable_text:51100:15340:18993\ncatalog:variable_text:51100:18993:19358\ncatalog:variable_text:51176:9862:10227\ncatalog:variable_text:51176:10227:14975\ncatalog:variable_text:51176:14975:19723\ncatalog:variable_text:51297:9862:12784\ncatalog:variable_text:51297:12784:13149\ncatalog:variable_text:51297:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:inskrivning-vid-arbetsformedlingen"
+fields = { "description" = "Om personen var inskriven vid Arbetsförmedlingen 31/12 eller någon gång under året, antal dagar som personen, modern eller fadern var inskriven under året, och antal dagar personen varit inskriven totalt (2022–2023 räknat från 1991). För föräldrarna härleds uppgiften ur Arbetsförmedlingens register och Befolkningsregistret (från 2022 Registret över totalbefolkningen), med adoptivföräldern i första hand och annars den biologiska. 2022–2023 ingår bara folkbokförda personer, så uppgifterna är inte jämförbara med Arbetsförmedlingens publicerade siffror." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nRäkning från 1991 och jämförbarhetsförbehållet står i OP 2022–2023; föräldrauppgiften härleds ur AF-registret och Befolkningsregistret/RTB.\ncatalog:variable_text:50976:9862:18993\ncatalog:variable_text:50976:18993:19723\ncatalog:variable_text:50977:18993:19358\ncatalog:variable_text:50978:18993:19358\ncatalog:variable_text:50979:9862:12053\ncatalog:variable_text:50980:9862:18993\ncatalog:variable_text:50981:9862:12053\ncatalog:variable_text:50981:18993:19723\ncatalog:variable_text:51181:9862:18993\ncatalog:variable_text:51181:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:institutionell-sektor"
+fields = { "description" = "Företagets institutionella sektor enligt Standard för klassificering av institutionella enheter efter institutionell sektor. 2003 och 2014–2021 är det en sammanslagen kod för sektor, ägare och juridisk form; 2014–2021 anger de sex första positionerna samhällssektor, sjunde och åttonde ägarkontroll och nionde och tionde juridisk form. 2022–2023 hämtas uppgiften via BAS från Företagsdatabasen (FDB)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDen sammanslagna koden anges 2003 (ägarkategori) och 2014–2021 (positioner med ägarkontroll); BAS/FDB anges 2022–2023.\ncatalog:variable_text:51182:9862:16071\ncatalog:variable_text:51182:16071:18993\ncatalog:variable_text:51182:18993:19723\ncatalog:variable_text:51183:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "set:loneinkomst"
+fields = { "description" = "Summerad kontant bruttolön under året, 1997–2021 inklusive semesterersättning, provision med mera. 2003–2018 bygger uppgiften på arbetsgivarnas kontrolluppgifter till Skatteverket, 2019–2021 på inkomsterna från anställningar utan inkomst från eget företagande och 2022–2023 på kontant bruttolön och underlagen för arbetsgivaravgifter i arbetsgivardeklarationerna på individnivå (AGI). 2003–2021 anges den i hundratal kronor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSemesterersättning och provision anges bara för kontant bruttolön 1997–2021; Löneinkomst 2022–2023 är summan av AGI ruta 011 och underlagen för arbetsgivaravgifter.\ncatalog:variable_text:51192:9862:12053\ncatalog:variable_text:51192:12053:17897\ncatalog:variable_text:51192:17897:18993\ncatalog:variable_text:51198:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:ovrig-inkomst"
+fields = { "description" = "Summan av yrkes- och arbetsskadelivränta, arbetsskadelivränta som efterlevandeförmån, bostadsbidrag och bostadstillägg fördelade på individen, handikappersättning samt underhållsstöd eller bidragsförskott; från 2019 ingår även merkostnadsersättning. Anges i hundratal kronor. Varianterna avser olika perioder och summeras från Kontrolluppgiftsregistret och IoT, från 2016 från variabler i LISA." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAlla tre delar DEF; OP listar samma komponenter per period, merkostnadsersättning tillkommer 2019 och källan blir LISA 2016–2017 respektive 2018.\ncatalog:variable_text:51222:17532:17897\ncatalog:variable_text:51222:17897:19723\ncatalog:variable_text:51298:9862:12784\ncatalog:variable_text:51299:12418:13514\ncatalog:variable_text:51299:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "set:ovrig-utbildning-inom-etablering"
+fields = { "description" = "Om personen haft en aktivitet som klassas som övriga studier under sin tid med fastställd etableringsplan (EPA) och summan av antalet timmar per vecka med övriga studier i den senast fastställda planen (2010–2019), samt om personen under året haft någon form av reguljär utbildning som aktivitet inom etableringsprogrammet (2018–2023)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nIndikator och timmar under etableringsplanen 2010–2019, utbildning inom etableringsprogrammet 2018–2023; timmarna avser timmar per vecka i planen.\ncatalog:variable_text:51003:14610:16071\ncatalog:variable_text:51003:16071:18262\ncatalog:variable_text:51028:14610:15706\ncatalog:variable_text:51028:15706:18262\ncatalog:variable_text:51116:17532:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:ovriga-aktiviteter-inom-etablering"
+fields = { "description" = "Om personen haft en aktivitet som klassas som övriga aktiviteter under sin tid med fastställd etableringsplan (EPA) och antalet timmar per vecka med sådana aktiviteter, summerat inom den senast fastställda planen (2010–2019), samt övriga aktiviteter inom etableringsuppdraget (från 2018; 2018–2021 beskrivet som deltagande i andra program som inte ingår i övriga aktiviteter)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nEPA-variablerna 2010–2019 med timmar per vecka enligt OP; programvariabeln 2018–2023 med den avvikande OP-beskrivningen 2018–2021 knuten till sina år.\ncatalog:variable_text:51002:14610:16071\ncatalog:variable_text:51002:16071:18262\ncatalog:variable_text:51027:14610:15706\ncatalog:variable_text:51027:15706:18262\ncatalog:variable_text:51110:17532:18993\ncatalog:variable_text:51110:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:samhallsorientering-inom-etablering"
+fields = { "description" = "Om personen haft samhällsorientering under sin tid med fastställd etableringsplan (EPA), antal timmar per vecka med samhällsorientering summerat över aktiviteterna i den senast fastställda planen samt första och senaste startdatum (2010–2019), och om personen under året haft samhällsorientering, det vill säga kurs om hur det svenska samhället fungerar, inom etableringsprogrammet (från 2018)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nEPA-variablerna gäller 2010–2019; förklaringen av samhällsorientering som kurs om det svenska samhället står bara i etabl-samhorg (2018–2023).\ncatalog:variable_text:51004:14610:16071\ncatalog:variable_text:51004:16071:18262\ncatalog:variable_text:51029:14610:15706\ncatalog:variable_text:51029:15706:18262\ncatalog:variable_text:51112:17532:19723\ncatalog:variable_text:51145:14610:15340\ncatalog:variable_text:51246:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:sammanraknad-forvarvsinkomst"
+fields = { "description" = "Beräknad inkomst av tjänst och näringsverksamhet i deklarationen, för personen själv, modern eller fadern; 1997–2021 avses för föräldrarna adoptivföräldern i första hand, annars den biologiska. För personen, och 2022–2023 för föräldrarna, beräknas inkomst av tjänst från deklarerade delbelopp och läggs till inkomst av näringsverksamhet. Personens belopp anges i hundratal kronor, föräldrarnas 2022–2023; 2022–2023 finns även varianter i kronor och negativa värden kan förekomma. För personen ingår 2022–2023 inkomst av passiv näringsverksamhet både här och i den summerade kapitalinkomsten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nEnhet och delbeloppsberäkning anges för personen alla år men för föräldrarna bara 2022–2023; passiv näringsverksamhet nämns i personens variabler 2022–2023.\ncatalog:variable_text:51237:9862:18993\ncatalog:variable_text:51237:18993:19723\ncatalog:variable_text:51238:18993:19723\ncatalog:variable_text:51239:9862:18993\ncatalog:variable_text:51239:18993:19723\ncatalog:variable_text:51240:18993:19723\ncatalog:variable_text:51241:9862:18993\ncatalog:variable_text:51241:18993:19723\ncatalog:variable_text:51242:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:senaste-invandringsar"
+fields = { "description" = "År för den senaste invandringen till Sverige för personen själv, modern eller fadern, skapat utifrån invandringsdatum i Registret över totalbefolkningen (RTB). För föräldrarna avses adoptivföräldern i första hand, annars den biologiska." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF delas av person, mor och far; OP anger RTB som källa och adoptivförälder före biologisk.\ncatalog:variable_text:51245:9862:13514\ncatalog:variable_text:51245:13514:18628\ncatalog:variable_text:51245:18628:18993\ncatalog:variable_text:51245:18993:19723\ncatalog:variable_text:51247:18993:19358\ncatalog:variable_text:51248:18993:19358\ncatalog:variable_text:51249:9862:18993\ncatalog:variable_text:51250:9862:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:sjukfall"
+fields = { "description" = "Fall med sjukpenning, förebyggande sjukpenning, arbetsskadesjukpenning och rehabiliteringsersättning under året: antal fall, startade och avslutade fall, utbetalda brutto- och nettodagar och utbetalt belopp för händelser under året, samt markering och startdatum för fall som påbörjats före året. Bruttodagar räknas som hela dagar oavsett omfattning; nettodagar är bruttodagar gånger omfattningen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP delar ersättningsslagen; nettodagarnas OP 2022–2023 beskriver arbetade timmar och motsäger DEF, så den bortses från.\ncatalog:variable_text:51257:9862:15340\ncatalog:variable_text:51257:18993:19358\ncatalog:variable_text:51258:17167:18993\ncatalog:variable_text:51258:18993:19358\ncatalog:variable_text:51259:12053:12418\ncatalog:variable_text:51259:18993:19358\ncatalog:variable_text:51260:9862:18993\ncatalog:variable_text:51260:18993:19723\ncatalog:variable_text:51261:12053:14610\ncatalog:variable_text:51261:18993:19358\ncatalog:variable_text:51262:9862:16071\ncatalog:variable_text:51263:9862:15340\ncatalog:variable_text:51264:17167:18993\ncatalog:variable_text:51264:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:start-for-etableringsdeltagande"
+fields = { "description" = "Datum när personens etablering startade: inskrivningsdatum för etableringsuppdraget på Arbetsförmedlingen (2010–2023), startdatum för deltagarperioden inom etableringsuppdraget (2018–2023) och startdatum för beslutet om rätt till etableringsplan (EPA-beslut), per 31/12 respektive för det första bifallet (2010–2019). Inskrivningsdatum finns bara för personer i etableringsuppdraget och startdatum för deltagarperioden 2018–2021 bara för deltagare i etableringsprogrammet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBegränsningen till deltagare i etableringsprogrammet anges bara 2018–2021; inskrivningsdatumets begränsning till etableringsuppdraget anges för alla år 2010–2023.\ncatalog:variable_text:51103:17532:18993\ncatalog:variable_text:51103:18993:19723\ncatalog:variable_text:51105:14610:15340\ncatalog:variable_text:51105:18993:19723\ncatalog:variable_text:51284:14610:18262\ncatalog:variable_text:51286:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:status-efter-avslutad-etablering"
+fields = { "description" = "Personens status en dag respektive 90 dagar efter att personen senast lämnade etableringsuppdraget, utifrån sökandekategori och avaktualiseringsorsak. Avser personer som lämnat uppdraget och inte är tillbaka vid mättillfället, som 2010–2014 var 31/12 och 2015–2021 31/3 året efter referensåret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda delar DEF; OP skiljer en dag och 90 dagar och anger mättillfällets ändring 2015.\ncatalog:variable_text:51114:14610:16436\ncatalog:variable_text:51114:16436:18993\ncatalog:variable_text:51114:18993:19723\ncatalog:variable_text:51115:14610:16436\ncatalog:variable_text:51115:16436:18993\ncatalog:variable_text:51115:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:studiedeltagande-under-hostterminen"
+fields = { "description" = "Personens studier under höstterminen: om personen studerat och vilken som är den högst prioriterade utbildning personen deltagit i. Uppgiften bygger på Registret över befolkningens studiedeltagande, med källor som Skolverkets elevregister, Universitets- och högskoleregistret, folkhögskolor, CSN, YH-myndigheten och Arbetsförmedlingen, vars koder översätts till ett gemensamt värdeförråd." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF ger markering och högst prioriterad utbildning; OP anger att markeringen härleds ur studiedeltagandet och listar källregistren.\ncatalog:variable_text:51291:9862:12053\ncatalog:variable_text:51291:12053:16801\ncatalog:variable_text:51291:16801:18993\ncatalog:variable_text:51291:18993:19723\ncatalog:variable_text:51292:9862:18993\ncatalog:variable_text:51292:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:studievag-i-gymnasieskolan"
+fields = { "description" = "Den studieväg eleven inleder sina gymnasiestudier på, för elever som studerar vid gymnasiet aktuellt år, eller studievägen för gymnasieutbildningen hos elever som avslutade sina gymnasiestudier under våren aktuellt år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF skiljer studievägen vid start och för utbildningen; OP anger populationerna studerande respektive avgångna under våren.\ncatalog:variable_text:51294:9862:12053\ncatalog:variable_text:51294:12053:19723\ncatalog:variable_text:51295:9862:18993\ncatalog:variable_text:51295:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:tidpunkt-for-flyktingmottagning"
+fields = { "description" = "År (från 1997) och datum (från 2010) för personens flyktingmottagning i en kommun; från 2014 härleds året ur mottagningsdatumet. Varianterna märkta felaktiga uppgifter (2023) innehåller felaktiga värden för vissa personer och används inte längre." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nÅren följer definitionerna; härledningen ur datumet anges 2014–2023; felvarianterna finns 2023.\ncatalog:variable_text:51207:9862:16071\ncatalog:variable_text:51207:16071:16436\ncatalog:variable_text:51207:16436:18993\ncatalog:variable_text:51207:18993:19723\ncatalog:variable_text:51208:19358:19723\ncatalog:variable_text:51209:14610:19723\ncatalog:variable_text:51210:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:tidpunkt-for-mottagningsgrundande-uppehallstillstandsbeslut"
+fields = { "description" = "År och datum för det beslut om uppehållstillstånd som föranledde personens mottagning i en kommun; året härleds ur beslutsdatumet. Uppgiften finns bara för kommunmottagna och avser beslutet närmast före mottagningen, så den ändras inte om ett nytt beslut om uppehållstillstånd tas. Varianterna märkta felaktiga uppgifter innehåller felaktiga värden för vissa personer och används inte längre." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF ger år och datum för beslutet; OP anger härledningen, att uppgiften bara gäller kommunmottagna och inte ändras vid nya beslut, samt de felaktiga varianterna.\ncatalog:variable_text:51067:13879:16071\ncatalog:variable_text:51067:16071:18993\ncatalog:variable_text:51067:18993:19723\ncatalog:variable_text:51068:19358:19723\ncatalog:variable_text:51069:14610:18993\ncatalog:variable_text:51069:18993:19723\ncatalog:variable_text:51070:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsniva"
+fields = { "description" = "Nivån för personens högsta genomförda utbildning, och för moderns eller faderns, enligt Svensk utbildningsnomenklatur (SUN), som fullständig tresiffrig nivåkod eller aggregerad till sju nivåer jämförbara med den äldre nivåindelningen. Personens nivå anges enligt SUN 2000 1997–2018 och enligt SUN 2020 2019–2023, föräldrarnas enligt SUN 2000 2000–2014 och enligt SUN 2020 2022–2023. 2000–2021 härleds föräldrarnas nivå från Utbildningsregistret och Befolkningsregistret, med adoptivföräldern i första hand och annars den biologiska. 2010–2023 finns även utbildningsnivån per 31/12 för nyinvandrade som skrivs in på Arbetsförmedlingen och ingår i etableringen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSUN-versionen och åren följer av medlemmarnas namn och DEF-år; adoptivregeln och källorna anges 2000–2021.\ncatalog:variable_text:51117:14610:19723\ncatalog:variable_text:51123:16436:18993\ncatalog:variable_text:51301:16436:18993\ncatalog:variable_text:51302:16801:17897\ncatalog:variable_text:51303:9862:12053\ncatalog:variable_text:51303:12053:16801\ncatalog:variable_text:51303:16801:17897\ncatalog:variable_text:51304:10957:16436\ncatalog:variable_text:51305:10957:16436\ncatalog:variable_text:51307:18993:19723\ncatalog:variable_text:51309:18993:19358\ncatalog:variable_text:51331:9862:12053\ncatalog:variable_text:51331:12053:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:utlandsk-eller-svensk-bakgrund"
+fields = { "description" = "Om personen eller personens make, maka, partner eller sambo har utländsk eller svensk bakgrund, härlett från eget och föräldrarnas födelseland enligt riktlinjerna i MIS 2002:3, i en rekommenderad och en alternativ indelning. Saknas förälderns födelseland antas föräldern vara inrikes född om personen är inrikes född och utrikes född om personen är utrikes född. För sambo anges uppgiften bara vid gemensamma barn." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF skiljer personen, alternativ indelning och make/partner/sambo; OP ger MIS 2002:3 och antagandet vid saknat födelseland.\ncatalog:variable_text:51332:9862:12053\ncatalog:variable_text:51332:12053:18993\ncatalog:variable_text:51333:9862:18993\ncatalog:variable_text:51333:18993:19723\ncatalog:variable_text:51334:9862:18993\ncatalog:variable_text:51334:18993:19723"

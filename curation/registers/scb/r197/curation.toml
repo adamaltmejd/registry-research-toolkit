@@ -2298,3 +2298,99 @@ kind = "set"
 subject = "allmannyttiga-bostadsforetag: vhylok @2007-01-01..2015-12-31 where key = 'v16587'"
 fields = { "variable" = "intakter-lokaler-v1020" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): V1020 in bostadsrattsforeningar, privatagda-flerbostadshus; VHYLOK in allmannyttiga-bostadsforetag: same definition and code list, never concurrent under another spelling in one table; opdef difference is wording only (All say gross income before rent loss and rebates incl. estimated rent loss; extra text only says garage/parking rent is excluded or what premises are covered); folded into intakter-lokaler-v1020."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-lagenheter"
+fields = { "description" = "Totalt antal lägenheter för allmännyttiga bostadsföretag (2007, 2012–2013 och 2015 genomsnittet av antalet den 1 januari och den 31 december), för bostadsrättsföreningar och privatägda flerbostadshus (2007–2013 och 2015) och i varianterna A11, A91 och A92 (2013 och 2015)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nGenomsnittet 1 januari och 31 december anges för BOSF 2007 och 2012–2013, 2015; texterna säger inte att varianterna är blanketter.\ncatalog:variable_text:34291:13514:13879\ncatalog:variable_text:34291:13879:15340\ncatalog:variable_text:34291:15340:16071\ncatalog:variable_text:34292:13514:13879\ncatalog:variable_text:34292:13879:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-lokaler"
+fields = { "description" = "Antal lokaler, för allmännyttiga bostadsföretag och för bostadsrättsföreningar och privatägda flerbostadshus. För allmännyttan avses 2007 och från 2012 genomsnittet av antalet lokaler den 1 januari och den 31 december. För bostadsrättsföreningar och privatägda flerbostadshus avses från 2012 lokaler som hyrs ut; gemensamma utrymmen som förråd och gemensamhetslokal samt garage räknas inte." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nGenomsnittet anges i OP 2007 och 2012–2015; uthyrningsbara lokaler och undantagen i OP från 2012.\ncatalog:variable_text:34376:13514:13879\ncatalog:variable_text:34376:13879:15340\ncatalog:variable_text:34376:15340:15706\ncatalog:variable_text:34376:15706:16071\ncatalog:variable_text:34378:13514:13879\ncatalog:variable_text:34378:13879:14245\ncatalog:variable_text:34378:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:bostadsintakter"
+fields = { "description" = "Bruttointäkter för bostäder, före avdrag för hyresbortfall och rabatter, avseende varmhyror (inklusive värme). I den ena varianten ska uppskattat hyres- och avgiftsbortfall ingå i beloppet, i vissa versioner även hyresvärdet av egen bostad och annan fri bostad." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBortfall och hyresvärde av egen bostad står bara i OP för intakter-bostader-v1010.\ncatalog:variable_text:34339:13514:13879\ncatalog:variable_text:34339:14245:16071\ncatalog:variable_text:34340:13514:13879\ncatalog:variable_text:34340:14610:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:bostadsyta"
+fields = { "description" = "Total bostadsyta för värderingsenheten eller taxeringsenheten, för allmännyttiga bostadsföretag (genomsnittet den 1 januari och den 31 december) och för bostadsrättsföreningar och privatägda flerbostadshus." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF är gemensam; OP skiljer blanketterna.\ncatalog:variable_text:34400:13514:16071\ncatalog:variable_text:34401:13514:13879\ncatalog:variable_text:34401:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:fastighetsskatt"
+fields = { "description" = "Fastighetsskatt summerad över fastighetstyper som bostäder, lokaler och industri- och elproduktionsenheter; 2012–2015 omfattar den kommunal fastighetsavgift och fastighetsskatt för taxeringsenheten. En variant avser fastighetsskatten som driftkostnad för uthyrningsobjekt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF ger fastighetstyperna; fastighetsavgiften anges bara i OP 2012–2013 och 2015; fsk-DEF avser uthyrningsobjekt.\ncatalog:variable_text:34319:13514:15340\ncatalog:variable_text:34319:15340:15706\ncatalog:variable_text:34326:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:finansiella-intakter"
+fields = { "description" = "Finansiella intäkter, dels som summa enligt resultaträkningen, dels som ränteintäkter och andra finansiella intäkter utan uttag ur fond, valutakursvinst och räntebidrag. Summan omfattar 2012–2015 resultat från värdepapper, aktier och andelar som är anläggningstillgångar samt övriga finansiella intäkter som ränteintäkter och realisationsvinster." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSumma och delpost som slots 2007–2015; summans innehåll anges i OP för 2012, 2013 och 2015.\ncatalog:variable_text:34387:13514:15340\ncatalog:variable_text:34387:15340:16071\ncatalog:variable_text:34395:13514:15340\ncatalog:variable_text:34395:15340:15706\ncatalog:variable_text:34395:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:hushallselintakter"
+fields = { "description" = "Intäkter för hushållsel som räknats bort från de redovisade intäkterna. 2012 redovisas de inte men samlas in för att dras av; 2013 och 2015 dras beloppet, när det ingår i bostadsintäkterna, från dessa och läggs på övriga intäkter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF gemensam för alla år; OP 2012 anger insamling för avdrag, OP 2013 och 2015 att beloppet flyttas från bointäkter till övriga intäkter.\ncatalog:variable_text:34333:15340:15706\ncatalog:variable_text:34333:15706:16071\ncatalog:variable_text:34334:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:hushallselkostnader"
+fields = { "description" = "Kostnader för hushållsel: om de ingår i redovisad kostnad för fastighetsel och beloppet. Ingår de dras beloppet från fastighetsel och läggs på övriga driftkostnader." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP är gemensamma för ja/nej-frågan och beloppet.\ncatalog:variable_text:34332:15706:16071\ncatalog:variable_text:34337:15340:15706\ncatalog:variable_text:34337:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:intaktsreduktioner-och-hyresbortfall"
+fields = { "description" = "Intäktsreduktioner för bostäder och för lokaler, det vill säga avgiftsbortfall från bostadsrätter och hyresbortfall från hyresrätter, övriga intäktsreduktioner (till exempel garage eller bilplatser) och summan av dem. Därtill hyresbortfall för bostäder, för uthyrningsbara men ej uthyrda lokaler och för övriga uthyrningsbara men ej uthyrda objekt, och från 2009 det totala hyresbortfallet för de tre. Bortfall på grund av ombyggnad eller att objektet av annan anledning inte hyrs ut ingår inte i hyresbortfallet för lokaler, övrigt och totalt, och från 2012 inte heller för bostäder. Från 2012 ingår bortfall på grund av hyresrabatter i hyresbortfallet för bostäder, outhyrda lokaler, övrigt och totalt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nÄgarformuleringen är struken; Summa (bostäder, lokaler, övrigt) och hyresbortfall totalt (bostäder, outhyrda lokaler, övrigt) skiljs åt, och hyresrabatter och ombyggnad knyts till de variabler och år som anger dem.\ncatalog:variable_text:34352:13514:15340\ncatalog:variable_text:34352:15340:16071\ncatalog:variable_text:34353:15340:15706\ncatalog:variable_text:34354:15340:16071\ncatalog:variable_text:34356:13514:15340\ncatalog:variable_text:34356:15340:16071\ncatalog:variable_text:34357:15340:16071\ncatalog:variable_text:34358:15340:16071\ncatalog:variable_text:34359:13514:15340\ncatalog:variable_text:34359:15340:15706\ncatalog:variable_text:34360:13879:16071\ncatalog:variable_text:34417:13514:13879\ncatalog:variable_text:34417:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:kommunregion"
+fields = { "description" = "Kommunens region i en indelning i fem: Stor-Stockholm, Stor-Göteborg, Stor-Malmö, kommuner utanför storstadsområdena med mer än 75 000 invånare och övriga kommuner." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP är gemensamma; medlemmarna skiljer blanketterna.\ncatalog:variable_text:34367:13514:13879\ncatalog:variable_text:34367:14975:16071\ncatalog:variable_text:34368:13514:14245\ncatalog:variable_text:34368:14975:15706\ncatalog:variable_text:34368:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:lokalintakter"
+fields = { "description" = "Bruttointäkter för lokaler, före avdrag för hyresbortfall och rabatter; uppskattat hyresbortfall ingår. Från 2012 ingår inte hyresintäkter för garage- och bilplatser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP för båda medlemmarna anger bruttointäkter inklusive uppskattat hyresbortfall.\ncatalog:variable_text:34347:13514:13879\ncatalog:variable_text:34347:13879:14610\ncatalog:variable_text:34347:14610:15340\ncatalog:variable_text:34347:15340:15706\ncatalog:variable_text:34347:15706:16071\ncatalog:variable_text:34414:14245:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:lokalyta"
+fields = { "description" = "Total lokalyta för värderingsenheten eller taxeringsenheten, för allmännyttiga bostadsföretag (genomsnittet den 1 januari och den 31 december) och för bostadsrättsföreningar och privatägda flerbostadshus. Från 2012 avses uthyrningsbar lokalyta; gemensamma utrymmen som inte hyrs ut och garage räknas inte." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF är gemensam; OP anger avgränsningen och genomsnittet för allmännyttan.\ncatalog:variable_text:34403:13514:13879\ncatalog:variable_text:34403:13879:14245\ncatalog:variable_text:34403:15340:16071\ncatalog:variable_text:34405:13514:13879\ncatalog:variable_text:34405:13879:14245\ncatalog:variable_text:34405:15340:15706\ncatalog:variable_text:34405:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:ovriga-rorelseintakter"
+fields = { "description" = "Övriga intäkter än för bostäder, lokaler och garage- och bilplatser, till exempel serviceavgifter, kabel-tv och el- och vattenavgifter från hyresgästerna; 2008–2011 avser en variant bruttointäkter utan räntebidrag. En variant avser rörelsens sidointäkter utanför förvaltningen av de egna fastigheterna. Räntebidrag ingår inte, och från 2012 inte heller intäkter från fastighetsförsäljning; ränteintäkter och andra finansiella intäkter ingår för bostadsrättsföreningar och privatägda flerbostadshus 2007–2011 men inte därefter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nFastighetsförsäljningsundantaget står i OP från 2012; ovvint och v1040 (2008–2011) beskrivs som egna slots.\ncatalog:variable_text:34348:13514:13879\ncatalog:variable_text:34348:14245:14610\ncatalog:variable_text:34348:15340:16071\ncatalog:variable_text:34350:13514:13879\ncatalog:variable_text:34350:14610:15340\ncatalog:variable_text:34350:15340:15706\ncatalog:variable_text:34350:15706:16071\ncatalog:variable_text:34384:15340:16071\ncatalog:variable_text:34415:13879:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:ovriga-statliga-stod-och-bidrag"
+fields = { "description" = "Statliga bidrag och stöd: alla former oavsett om de redovisas i resultat- eller balansräkningen, till exempel investeringsbidrag, och annat statligt stöd, till exempel skattereduktion." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF ger båda varianterna med exemplen; mottagaren anges inte och är struken.\ncatalog:variable_text:34290:13514:14610\ncatalog:variable_text:34290:14610:15340\ncatalog:variable_text:34345:13514:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:taxeringsvarde"
+fields = { "description" = "Totalt taxeringsvärde för taxeringsenheten, bestämt vid fastighetstaxeringen och avsett som grund för beräkning av skatt; fastighetens hela taxeringsvärde redovisas. 2012–2013 och 2015 avser det företagets eller föreningens totala taxeringsvärde. För 2008–2011 finns även föreningens taxeringsvärde för 2007." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF anger totalt värde för taxeringsenheten vid fastighetstaxering; OP 2012–2015 företagets eller föreningens totala värde; foreningens-taxeringsvarde avser 2007 års värde.\ncatalog:variable_text:34324:13879:15340\ncatalog:variable_text:34396:13514:15340\ncatalog:variable_text:34396:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "set:totalyta"
+fields = { "description" = "Total yta, det vill säga bostadsyta plus lokalyta, i varianterna A91/Y91 (2007–2013 och 2015), TOYF (2008–2013 och 2015) och Y92 (2013 och 2015). För A91 från 2012 och för Y92 avser ytan taxeringsenheten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAlla tre delar definitionen bostads- och lokalyta; taxeringsenheten anges bara för A91 2012–2015 och Y92.\ncatalog:variable_text:34407:13514:15340\ncatalog:variable_text:34407:15340:16071\ncatalog:variable_text:34408:13879:16071"

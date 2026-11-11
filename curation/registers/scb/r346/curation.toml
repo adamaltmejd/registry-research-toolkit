@@ -466,3 +466,9 @@ kind = "set"
 subject = "set:bostadstyp"
 fields = { "label" = "Bostadstyp" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-barn"
+fields = { "description" = "Antal hemmaboende barn i hushållet, oavsett ålder eller i åldern 0–5, 0–17 och 0–24 år. Som barn räknas personer som är kopplade till en eller flera vuxna i hushållet genom relationen biologisk, adoptiv, vårdnadshavare eller annan person. Uppgiften är härledd; från 2024 hämtas den från Befolkningsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF skiljer åldersgränserna; OP är gemensam för alla medlemmar och anger barnbegreppet och källan.\ncatalog:variable_text:33377:15340:19723\ncatalog:variable_text:33377:19723:20089\ncatalog:variable_text:33378:15340:19723\ncatalog:variable_text:33378:19723:20089\ncatalog:variable_text:33379:15340:19723\ncatalog:variable_text:33379:19723:20089\ncatalog:variable_text:33380:15340:19723\ncatalog:variable_text:33380:19723:20089"

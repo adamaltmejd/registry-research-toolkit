@@ -922,3 +922,51 @@ kind = "set"
 subject = "var:windeo-elomrade-4"
 fields = { "label" = "Vindkraft (elområde 4)" }
 evidence = "#2102 same-label cluster 'Vindkraft' (4 variables): judged different meaning, high confidence; One column per elområde (1-4) per the opdefs."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsstallets-naringsgren"
+fields = { "description" = "Arbetsställets näringsgren enligt SNI, i två kodningsversioner: SNI 2007 och en äldre variabel som 2012–2013 kodas enligt SNI 2002." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda delar DEF; OP anger SNI 2007 för naringsgren-arbetsstalle och SNI 2002 för ng 2012–2013; ng:s OP 2011 om kontrollnummer gäller inte näringsgren och utelämnas.\ncatalog:variable_text:46036:14975:15340\ncatalog:variable_text:46036:15340:15706\ncatalog:variable_text:46036:15706:16071\ncatalog:variable_text:46037:14975:15340\ncatalog:variable_text:46037:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:elproduktion-med-gasturbinkraft"
+fields = { "description" = "El som producerats med gasturbin, per elområde (elområde 3 och 4). Från 2024 kommer uppgifterna i Excelfiler från Energiföretagen Sverige." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nMedlemmarna delar DEF och skiljer sig bara i elområde enligt OP; källan Energiföretagen Sverige anges för 2024–2025.\ncatalog:variable_text:46009:19358:19723\ncatalog:variable_text:46009:19723:20454\ncatalog:variable_text:46010:19358:19723\ncatalog:variable_text:46010:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:elproduktion-med-industriellt-mottryck"
+fields = { "description" = "El som producerats genom industriellt mottryck, där el och värme produceras samtidigt i en industriell anläggning, per elområde 1–4. Från 2024 kommer uppgifterna i Excelfiler från Energiföretagen Sverige." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nMedlemmarna delar DEF och skiljer sig bara i elområde enligt OP; källan anges för 2024–2025.\ncatalog:variable_text:46030:19358:19723\ncatalog:variable_text:46030:19723:20454\ncatalog:variable_text:46031:19358:19723\ncatalog:variable_text:46031:19723:20454\ncatalog:variable_text:46032:19358:19723\ncatalog:variable_text:46032:19723:20454\ncatalog:variable_text:46033:19358:19723\ncatalog:variable_text:46033:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:elproduktion-med-kondenskraft"
+fields = { "description" = "El från kondenskraft, värmekraftverk som enbart producerar el och inte tar till vara spillvärmen, per elområde (elområde 3 och 4). Från 2024 kommer uppgifterna i Excelfiler från Energiföretagen Sverige." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nMedlemmarna delar DEF och skiljer sig bara i elområde enligt OP; källan anges för 2024–2025.\ncatalog:variable_text:46024:19358:19723\ncatalog:variable_text:46024:19723:20454\ncatalog:variable_text:46025:19358:19723\ncatalog:variable_text:46025:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:elproduktion-med-kraftvarme-for-fjarrvarme"
+fields = { "description" = "El som produceras samtidigt som värme i kraftvärmeverk (mottryck), per elområde 1–4. Från 2024 kommer uppgifterna i Excelfiler från Energiföretagen Sverige." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nMedlemmarna delar DEF och skiljer sig bara i elområde enligt OP; källan anges för 2024–2025.\ncatalog:variable_text:46026:19358:19723\ncatalog:variable_text:46026:19723:20454\ncatalog:variable_text:46027:19358:19723\ncatalog:variable_text:46027:19723:20454\ncatalog:variable_text:46028:19358:19723\ncatalog:variable_text:46028:19723:20454\ncatalog:variable_text:46029:19358:19723\ncatalog:variable_text:46029:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:elproduktion-med-solkraft"
+fields = { "description" = "Elproduktion från nätanslutna solcellsanläggningar som gått in på elnätet, per elområde 1–4. Från 2024 hämtas uppgifterna från eSett Oy via API och egenanvändningen modellskattas." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nMedlemmarna delar DEF och skiljer sig bara i elområde enligt OP; eSett och modellskattning anges för 2024–2025.\ncatalog:variable_text:46042:19358:19723\ncatalog:variable_text:46042:19723:20454\ncatalog:variable_text:46043:19358:19723\ncatalog:variable_text:46043:19723:20454\ncatalog:variable_text:46044:19358:19723\ncatalog:variable_text:46044:19723:20454\ncatalog:variable_text:46045:19358:19723\ncatalog:variable_text:46045:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:elproduktion-med-vattenkraft"
+fields = { "description" = "Nettoproduktion av el från vattenkraft, inklusive pumpkraft, som gått in på elnätet, per elområde 1–4. Från 2024 hämtas uppgifterna från eSett Oy via API; från 2025 modellskattas egenanvändningen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nMedlemmarna delar DEF och skiljer sig bara i elområde enligt OP; eSett anges från 2024 och modellskattad egenanvändning bara för 2025.\ncatalog:variable_text:46011:19358:19723\ncatalog:variable_text:46011:19723:20089\ncatalog:variable_text:46011:20089:20454\ncatalog:variable_text:46012:19358:19723\ncatalog:variable_text:46012:19723:20089\ncatalog:variable_text:46012:20089:20454\ncatalog:variable_text:46013:19358:19723\ncatalog:variable_text:46013:19723:20089\ncatalog:variable_text:46013:20089:20454\ncatalog:variable_text:46014:19358:19723\ncatalog:variable_text:46014:19723:20089\ncatalog:variable_text:46014:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:elproduktion-med-vindkraft"
+fields = { "description" = "Elproduktion från vindkraft som gått in på elnätet, per elområde 1–4. Från 2024 hämtas uppgifterna från eSett Oy via API och egenanvändningen modellskattas." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nMedlemmarna delar DEF och skiljer sig bara i elområde enligt OP; eSett och modellskattning anges för 2024–2025.\ncatalog:variable_text:46046:19358:19723\ncatalog:variable_text:46046:19723:20454\ncatalog:variable_text:46047:19358:19723\ncatalog:variable_text:46047:19723:20454\ncatalog:variable_text:46048:19358:19723\ncatalog:variable_text:46048:19723:20454\ncatalog:variable_text:46049:19358:19723\ncatalog:variable_text:46049:19723:20454"

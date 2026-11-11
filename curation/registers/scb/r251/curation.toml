@@ -802,3 +802,21 @@ kind = "set"
 subject = "release:kursdeltagare/r14226"
 fields = { "table" = "kursdeltagare-lasar" }
 evidence = "Release '2006/2007' is a läsår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "set:skolans-geografiska-lage"
+fields = { "description" = "Kommun och län där skolan eller skolenheten ligger. Länet tas fram ur de två första positionerna i kommunkoden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nKommun och län är slots för skolans läge; OP anger att länet härleds ur kommunkoden.\ncatalog:variable_text:13935:11869:12234\ncatalog:variable_text:13935:12234:12418\ncatalog:variable_text:13936:11869:12053\ncatalog:variable_text:13936:12234:12418"
+
+[[statement]]
+kind = "set"
+subject = "set:studiepoang"
+fields = { "description" = "Poängomfattning för elevens kurser: totalt, uppdelat på grundläggande, gymnasial och påbyggnadsnivå (2003), och poäng som avverkats under det aktuella läsåret eller halvåret. Därtill kursens CSN-poäng, som studiestödet från Centrala studiestödsnämnden bedöms efter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nTotal, nivåvis och avverkad poäng delar definitionen Poängomfattning; CSN-poäng är kursens poäng enligt studiestödet.\ncatalog:variable_text:13906:11869:13695\ncatalog:variable_text:13928:11869:12053\ncatalog:variable_text:13929:12234:12600\ncatalog:variable_text:13930:12234:12600\ncatalog:variable_text:13931:12234:12600\ncatalog:variable_text:13938:11869:12053"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsatgard"
+fields = { "description" = "Om personen har fått någon speciell utbildningsåtgärd i vuxenutbildningen: i Komvux, Statens skolor för vuxna (SSV) eller Nationellt centrum för flexibelt lärande (CFL), med en egen variabel för CFL. Koderna för CFL saknar förklaring." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nVux-variabeln täcker Komvux, SSV och CFL och CFL-variabeln enbart CFL; OP för båda anger att CFL-koderna saknar förklaring.\ncatalog:variable_text:13941:11869:13695\ncatalog:variable_text:13942:11869:12965\ncatalog:variable_text:13942:12965:13149"

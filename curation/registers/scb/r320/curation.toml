@@ -1810,3 +1810,45 @@ kind = "set"
 subject = "var:sunniva-old-far"
 fields = { "label" = "Faderns utbildningsnivå (SUN 2000, äldre indelning i sju nivåer)" }
 evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Several SUN codings: 3-digit SUN 2000, 6-level, 3-level (renamed to Sun2000Niva_Far_Omkodad), old 7-level, grouped SUN 2000, SUN 2020 and grouped SUN 2020."
+
+[[statement]]
+kind = "set"
+subject = "set:faderns-utbildningsniva"
+fields = { "description" = "Utbildningsnivån för elevens biologiska far, klassificerad enligt Svensk utbildningsnomenklatur (SUN 2000 eller SUN 2020). För flera varianter anges fadern enligt Befolkningsregistret, och för SUN 2020-varianterna utbildningen enligt Utbildningsregistret. Varianterna skiljer sig i detaljnivå: detaljerad nivå, gruppering i sex eller tre nivåer och en äldre indelning i sju nivåer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBiologisk far anges för alla varianter; Befolkningsregistret bara för sun2000/sun2020-varianterna och Utbildningsregistret bara för SUN 2020; 6, 3 och 7 nivåer enligt OP.\ncatalog:variable_text:29109:15340:15522\ncatalog:variable_text:29109:15706:15887\ncatalog:variable_text:29109:16071:16252\ncatalog:variable_text:29110:16436:16617\ncatalog:variable_text:29114:19723:19905\ncatalog:variable_text:29118:15340:15522\ncatalog:variable_text:29119:15340:15522\ncatalog:variable_text:29120:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "set:fodelseland"
+fields = { "description" = "Land där eleven, elevens biologiska mor respektive biologiska far är född, i klartext." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF skiljer elev, mor och far; OP anger klartext och biologisk förälder.\ncatalog:variable_text:29037:15340:15522\ncatalog:variable_text:29037:16071:16252\ncatalog:variable_text:29038:15340:15522\ncatalog:variable_text:29038:16071:16252\ncatalog:variable_text:29039:15340:15522\ncatalog:variable_text:29039:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "set:invandringsdatum"
+fields = { "description" = "Datum för elevens tidigaste respektive senaste invandring till Sverige; det tidigaste beräknas ur Befolkningsregistret. Värdet 0 innebär att eleven inte har invandrat." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBefolkningsregistret anges bara för tidigaste invandringsdatum; värdet 0 anges för båda.\ncatalog:variable_text:29088:15340:15522\ncatalog:variable_text:29136:15706:15887\ncatalog:variable_text:29136:16436:16617\ncatalog:variable_text:29136:16801:16983\ncatalog:variable_text:29136:19723:19905"
+
+[[statement]]
+kind = "set"
+subject = "set:moderns-utbildningsniva"
+fields = { "description" = "Utbildningsnivån för elevens biologiska mor, klassificerad enligt Svensk utbildningsnomenklatur (SUN 2000 eller SUN 2020). Nivån finns ogrupperad och grupperad i sex nivåer, i tre nivåer eller, enligt en äldre indelning, i sju nivåer. För SUN 2020 hämtas modern från Befolkningsregistret och hennes utbildning från Utbildningsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAlla avser biologisk mor enligt SUN; grupperingarna 6, 3 och 7 nivåer står i OP; källregistren anges uttryckligen bara för SUN 2020-varianterna.\ncatalog:variable_text:29101:15340:15522\ncatalog:variable_text:29101:15706:15887\ncatalog:variable_text:29102:19723:19905\ncatalog:variable_text:29103:15340:15522\ncatalog:variable_text:29104:16436:16617\ncatalog:variable_text:29106:15706:15887\ncatalog:variable_text:29107:15340:15522\ncatalog:variable_text:29108:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "set:provresultat-i-engelska"
+fields = { "description" = "Elevens resultat på provet i engelska i årskurs 6: betyg, resultat eller poäng på varje delprov samt det sammanvägda provbetyget. Delprov A prövar muntlig förmåga, delprov B receptiv förmåga (läsa, i vissa omgångar även lyssna) och delprov C skriftlig förmåga; poäng redovisas för delproven B1a–B1c (läsförståelse) och B2a–B2b (hörförståelse)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelprovens innehåll står i OP med varierande namn; B beskrivs ibland bara som Läsa; texterna säger inte att provet är nationellt.\ncatalog:variable_text:29021:15706:15887\ncatalog:variable_text:29021:16071:16252\ncatalog:variable_text:29021:17167:17348\ncatalog:variable_text:29023:15706:15887\ncatalog:variable_text:29023:16071:16252\ncatalog:variable_text:29023:17167:17348\ncatalog:variable_text:29023:17532:17713\ncatalog:variable_text:29033:15706:15887\ncatalog:variable_text:29033:16071:16252\ncatalog:variable_text:29034:15340:15522\ncatalog:variable_text:29034:19723:19905\ncatalog:variable_text:29035:15340:15522\ncatalog:variable_text:29035:19723:19905\ncatalog:variable_text:29036:15340:15522\ncatalog:variable_text:29036:19723:19905\ncatalog:variable_text:29068:15340:15522\ncatalog:variable_text:29069:15340:15522\ncatalog:variable_text:29070:15340:15522\ncatalog:variable_text:29071:15340:15522\ncatalog:variable_text:29072:15340:15522\ncatalog:variable_text:29078:15706:15887\nRegisterinformation.csv:row=992016"
+
+[[statement]]
+kind = "set"
+subject = "set:provresultat-i-svenska"
+fields = { "description" = "Elevens resultat på provet i svenska eller svenska som andraspråk i årskurs 6: betyg, resultat eller poäng på varje delprov samt det sammanvägda provbetyget. Delprov A prövar muntlig förmåga, B läsförståelse och C skrivande; i vissa omgångar redovisas B och C sammantaget som läsförståelse. D är en berättande och E en argumenterande skrivuppgift." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelprovens innehåll står i OP; det sammantagna delprovet BC avser läsförståelse; texterna säger inte att provet är nationellt.\ncatalog:variable_text:29022:15706:15887\ncatalog:variable_text:29022:16071:16252\ncatalog:variable_text:29083:15706:15887\ncatalog:variable_text:29122:15706:15887\ncatalog:variable_text:29122:16071:16252\ncatalog:variable_text:29124:15340:15522\ncatalog:variable_text:29125:15340:15522\ncatalog:variable_text:29126:15706:15887\ncatalog:variable_text:29126:16071:16252\ncatalog:variable_text:29128:15340:15522\ncatalog:variable_text:29129:19723:19905\ncatalog:variable_text:29130:19723:19905\ncatalog:variable_text:29131:15340:15522\ncatalog:variable_text:29134:15340:15522\ncatalog:variable_text:29134:19723:19905\nRegisterinformation.csv:row=992017"
+
+[[statement]]
+kind = "set"
+subject = "set:svensk-eller-utlandsk-bakgrund"
+fields = { "description" = "Om eleven har svensk eller utländsk bakgrund, härlett från elevens eget samt moderns och faderns födelseland enligt Befolkningsregistret. För variabeln Utländsk bakgrund sätts i vissa årgångar ett saknat födelseland till Sverige." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda medlemmarna har samma DEF och härledning i OP; regeln om saknat födelseland står bara i en OP-rad för utlandsk-bakgrund.\ncatalog:variable_text:29140:15340:15522\ncatalog:variable_text:29140:15706:15887\ncatalog:variable_text:29140:16436:16617\ncatalog:variable_text:29141:16436:16617"

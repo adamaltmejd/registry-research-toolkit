@@ -1762,3 +1762,15 @@ kind = "set"
 subject = "var:hussyk1"
 fields = { "description" = "Anger om personens yrke i huvudsysslan kräver högskoleutbildning (1), inte kräver högskoleutbildning (2) eller är okänt (3). Variabeln är ingen SSYK-kod på ensiffernivå." }
 evidence = "Column yrkgrp, opdef 'Beskriver om man har ett yrke som kräver högskoleutbildning eller inte eller om personens yrke är okänt', value set #12364 has three codes. The label/definition 'Yrke på 1-siffernivå' does not fit a 3-code list."
+
+[[statement]]
+kind = "set"
+subject = "set:fodelseland"
+fields = { "description" = "Personens födelseland, grupperat som född i Sverige eller utrikes född, eller i världsdelar och landgrupper (till exempel Norden, övriga Europa, Afrika och Asien). En variant följer definitionen i Registret över totalbefolkningen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP anger grupperingarna; fodelseland-rtb följer RTB.\ncatalog:variable_text:32978:16436:16801\ncatalog:variable_text:32979:12418:12784\ncatalog:variable_text:32980:14245:14610\ncatalog:variable_text:32980:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsland"
+fields = { "description" = "Om personen har en universitets- eller högskoleutbildning från Sverige eller annat land, och landet där hen studerat; vid flera utbildningar gäller den högsta. Landet grupperas 2004 och 2009 i Sverige, övriga Norden, övriga EU27, övriga Europa, Afrika, Asien, Nordamerika samt Sydamerika inklusive Oceanien och okänt land, och 2015 och 2018 bara i Sverige och annat land." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nIndikatorn och landet finns alla fyra år; landgrupperingen ändras från 2015 enligt OP.\ncatalog:variable_text:32983:12418:12784\ncatalog:variable_text:33044:12418:12784\ncatalog:variable_text:33044:16436:16801"

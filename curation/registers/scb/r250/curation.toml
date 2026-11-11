@@ -1297,3 +1297,51 @@ kind = "set"
 subject = "release:kursdeltagare/r20031"
 fields = { "table" = "kursdeltagare-kalenderar" }
 evidence = "Release '2024' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-kurser"
+fields = { "description" = "Antal kurser som eleven gått i anpassad komvux, på grundläggande respektive gymnasial nivå." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP anger summeringen av kurser per nivå.\ncatalog:variable_text:41296:19723:20089\ncatalog:variable_text:41297:19723:19905\ncatalog:variable_text:41297:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:hemkommun"
+fields = { "description" = "Kommunen där eleven är folkbokförd, vid ansökningstillfället eller vid insamlingen, i vissa versioner enligt Registret över totalbefolkningen (RTB). Saknas uppgiften sätts i de flesta versioner den kommun där eleven går i skola. 2024 finns även folkbokföringskommun." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP-raderna anger folkbokföring vid ansökan eller insamling, RTB i två av fyra och skolkommunen som reserv i tre av fyra; folkbokföringskommun finns 2024.\ncatalog:variable_text:41305:19723:20089\ncatalog:variable_text:41309:10879:10880\ncatalog:variable_text:41309:13071:13072\ncatalog:variable_text:41309:14167:14168\ncatalog:variable_text:41309:17454:17455"
+
+[[statement]]
+kind = "set"
+subject = "set:huvudkurs"
+fields = { "description" = "Huvudkursen eleven läst i anpassad komvux, som kod och klartext, bestämd utifrån den inrapporterade kurskoden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF är gemensam; OP skiljer kod och klartext.\ncatalog:variable_text:41311:19723:19905\ncatalog:variable_text:41312:19723:19905\ncatalog:variable_text:41312:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:poangomfattning"
+fields = { "description" = "Summan av de poäng eleven läst i anpassad komvux under kalenderåret eller halvåret, totalt och på grundläggande respektive gymnasial nivå." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP anger summeringen och nivåerna.\ncatalog:variable_text:41332:19723:19905\ncatalog:variable_text:41333:19723:19905\ncatalog:variable_text:41334:19723:19905"
+
+[[statement]]
+kind = "set"
+subject = "set:skolkommun"
+fields = { "description" = "Kommunen där skolan eller skolenheten ligger, som kod eller klartext. För variabeln Kommun (skolkommun) tas koden fram ur de fyra första positionerna i skolkoden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAlla avser kommunen där skolan eller skolenheten är belägen; härledningen ur skolkoden anges bara för skolkommun-kod.\ncatalog:variable_text:41339:19723:20089\ncatalog:variable_text:41340:10879:10880\ncatalog:variable_text:41340:14167:14168\ncatalog:variable_text:41340:15628:15629\ncatalog:variable_text:41340:15993:15994\ncatalog:variable_text:41341:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:skollan"
+fields = { "description" = "Länet där skolenheten ligger, som kod eller klartext, härlett från de två första positionerna i skolkommunens kod." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF är gemensam; OP anger härledningen och klartexten.\ncatalog:variable_text:41342:19723:20089\ncatalog:variable_text:41344:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:studieniva"
+fields = { "description" = "Nivån på elevens studier: i vuxenutbildning inom Komvux, Statens skolor för vuxna eller Nationellt centrum för flexibelt lärande, i anpassad utbildning grundläggande eller gymnasial nivå och i särvux grundsärskole-, träningsskole- eller gymnasiesärskolenivå. I vuxenutbildningen väljs, om eleven läst på flera nivåer, den med flest poäng och vid lika många poäng den högsta." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nPoängregeln och Komvux/SSV/CFL står bara för niva-vuxenutbildning; nivåerna för anpassad utbildning och särvux står i deras egna texter.\ncatalog:variable_text:41326:19723:19905\ncatalog:variable_text:41348:19645:19646\ncatalog:variable_text:41349:10879:10880\ncatalog:variable_text:41349:14167:14168\ncatalog:variable_text:41349:15628:15629"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningstimmar"
+fields = { "description" = "Antal undervisningstimmar eleven hade under mätveckan, den vecka som omfattar den 15 oktober eller närliggande vardag: totalt, skolförlagd och arbetsplatsförlagd utbildning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF är gemensam; OP anger mätveckan och uppdelningen.\ncatalog:variable_text:41292:16723:16724\ncatalog:variable_text:41293:16723:16724\ncatalog:variable_text:41294:16723:16724\ncatalog:variable_text:41354:10879:10880\ncatalog:variable_text:41354:14167:14168"

@@ -521,3 +521,15 @@ kind = "set"
 subject = "var:stratum-storleksklass-antal-anstallda"
 fields = { "label" = "Stratum (storleksklass, antal anställda)" }
 evidence = "#2102 same-label cluster 'Stratum' (2 variables): judged different meaning, high confidence; Opdef: SGrStratum is by company size class (employees), BGrStratum by main industry (SNI two-digit)."
+
+[[statement]]
+kind = "set"
+subject = "set:lonebelopp"
+fields = { "description" = "Den anställdes lön uppdelad på lönedelar: grundlön med fasta lönetillägg och prestationslön under mätmånaden (2006–2019), övertidsersättning, skift- och OB-tillägg samt jour- och beredskapsersättning med förmåner (2006–2018), och bonusar och andra ersättningar som inte utgår varje löneperiod (2006–2024). Bonusar avser kontanta ersättningar under kalenderåret, till exempel trettonde månadslön, tantiem, vinstandel eller provision; betalningar till sparprogram ingår inte. Därtill summa lön enligt kontrolluppgifter (2006–2024)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nMätmånad står bara i DEF för grundlön och prestationslön; åren följer varje medlems DEF; bonus-OP ger exemplen och kontant kalenderår.\ncatalog:variable_text:13291:13149:17897\ncatalog:variable_text:13291:17897:20089\ncatalog:variable_text:13293:13149:16071\ncatalog:variable_text:13293:16071:18262\ncatalog:variable_text:13297:13149:20089\ncatalog:variable_text:13301:13149:17897\ncatalog:variable_text:13302:13149:17897\ncatalog:variable_text:13308:13149:17897\ncatalog:variable_text:13312:13149:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:stratum"
+fields = { "description" = "Det stratum företaget tillhör i det stratifierade urvalet, i en indelning efter näringsgren och en efter storleksklass enligt antal anställda. Näringsgrenen anges på tvåsiffernivå, 2006–2007 enligt SNI 2002 och 2008–2011 enligt SNI 2007, och från 2015 som företagets branschtillhörighet. 2013–2014 är båda indelningarna skapade efter både storleksklass och branschtillhörighet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP 2013–2014 gäller båda medlemmarna och anger storleksklass och bransch; uppdelningen per medlem står 2006–2011 och från 2015.\ncatalog:variable_text:13290:13149:13879\ncatalog:variable_text:13290:13879:15340\ncatalog:variable_text:13290:15340:15706\ncatalog:variable_text:13290:15706:16071\ncatalog:variable_text:13290:16071:16436\ncatalog:variable_text:13290:16436:20089\ncatalog:variable_text:13316:16436:20089"

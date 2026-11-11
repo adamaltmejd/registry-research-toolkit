@@ -563,3 +563,15 @@ kind = "set"
 subject = "var:kon-kon-pnr"
 fields = { "label" = "Kön (Kon_PNR)" }
 evidence = "#2102 same-label cluster 'Kön' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Both have the opdef 'Härlett från personnummer' and codes 1=Man, 2=Kvinna, so 'från personnummer' does not separate them; Kon in deltagare also has missing/unknown codes. Kon_PNR (2012-2020, stuv-2012) is followed by Kon (2020-, stuv-2020)."
+
+[[statement]]
+kind = "set"
+subject = "set:alder"
+fields = { "description" = "Personens ålder i antal år vid årets slut, eller grupperad i sex åldersgrupper: 0–12, 13–19, 20–24, 25–44, 45–64 samt 65 år och äldre (2012: 0–14 och 15–19 i stället för 0–12 och 13–19)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP ger ålder vid årets slut och sex grupper, med andra gränser 2012.\ncatalog:variable_text:51545:15340:18262\ncatalog:variable_text:51546:18262:20089\ncatalog:variable_text:51547:15340:15706\ncatalog:variable_text:51547:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:kommun"
+fields = { "description" = "Den kommun där personen är folkbokförd eller där folkbildningsverksamheten ägt rum; för verksamhetsorten anges i vissa fall länet i stället." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda delar DEF; OP skiljer folkbokföringskommun från verksamhetens kommun, där ibland länet anges.\ncatalog:variable_text:51570:15340:20089\ncatalog:variable_text:51574:15340:15706"

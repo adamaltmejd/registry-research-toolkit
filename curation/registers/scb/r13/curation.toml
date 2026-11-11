@@ -1230,3 +1230,27 @@ kind = "set"
 subject = "var:naringsgren-vid-momsdeklarationens-matchning-mot-fdb"
 fields = { "label" = "Näringsgren (vid momsdeklarationens matchning mot FDB)" }
 evidence = "#2102 same-label cluster 'Näringsgren' (4 variables): judged different meaning, medium confidence; Sni92 and Sni2002 are explicit SNI versions; Ng1 is the näringsgren from the FDB match when the declaration arrived (SNI 2002 to 2006, SNI 2007 after); Ng0 is the näringsgren valid in January of the year (opdefs)."
+
+[[statement]]
+kind = "set"
+subject = "set:export"
+fields = { "description" = "Omsättning av varor och tjänster till utlandet, uppdelad på varor och tjänster och på mottagarland inom eller utanför EU (EG); tjänster till utlandet redovisas 1999–2006 utan uppdelning. Därtill trepartsförsäljning av varor till annat EU-land (från 2007) och överföring av varor till annat EG-land (1999–2006), där varan inte omsätts utan senare tas tillbaka till Sverige. Total export (2008–2022) är summan av export av varor till annat EG-land, export av varor utanför EG och tjänster till EG-länder respektive till land utanför EU." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP anger omsättning av varor och tjänster inom och utanför EG/EU per ruta (M21–M24 1999–2006, M35–M40 2007–2022); export-oms OP ger summan M35+M36+M39+M40.\ncatalog:variable_text:46088:13879:19358\ncatalog:variable_text:46089:13514:13879\ncatalog:variable_text:46089:13879:14245\ncatalog:variable_text:46103:10592:13149\ncatalog:variable_text:46103:13149:13514\ncatalog:variable_text:46105:10592:13514\ncatalog:variable_text:46109:10592:13514\ncatalog:variable_text:46118:13514:13879\ncatalog:variable_text:46118:13879:14245\ncatalog:variable_text:46122:13514:13879\ncatalog:variable_text:46122:14975:19358\ncatalog:variable_text:46124:13514:13879\ncatalog:variable_text:46124:13879:14245\ncatalog:variable_text:46125:13514:13879\ncatalog:variable_text:46125:13879:14245\nRegisterinformation.csv:row=270606"
+
+[[statement]]
+kind = "set"
+subject = "set:momspliktig-omsattning"
+fields = { "description" = "Två varianter av omsättningen inom Sverige: den momspliktiga omsättningen och den inrikes skattepliktiga omsättningen exklusive moms, som räknas fram ur redovisad utgående moms: momsen för 25, 12 och 6 procent delad med respektive skattesats och till och med 2006 med tillägg för marginalbeskattad omsättning minus dess beskattningsunderlag. Båda finns i en version för 1999–2006 och en för 2007–2022." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nExklusive moms och beräkningen ur utgående moms anges bara för omsättning i Sverige; den andra varianten definieras bara som momspliktig omsättning inom Sverige.\ncatalog:variable_text:46094:13514:19358\ncatalog:variable_text:46098:13149:13514\ncatalog:variable_text:46144:10592:11323\ncatalog:variable_text:46144:11323:12784\ncatalog:variable_text:46145:13514:13879\ncatalog:variable_text:46145:13879:14610\ncatalog:variable_text:46145:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:naringsgren"
+fields = { "description" = "Enhetens näringsgren enligt Svensk näringsgrensindelning (SNI). Variablerna skiljer sig i hur koden bestäms: satt av SCB för statistiska ändamål (från 2008 den huvudsakliga), hämtad från FDB när momsdeklarationen inkom och matchades mot FDB, eller den som gällde i januari aktuellt år. Koderna följer SNI 92, SNI 2002 eller SNI 2007 beroende på variabel och år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF anger klassificering av näringsgren; OP skiljer mellan statistisk näringsgren, FDB-matchning och januarivärde samt anger SNI92, SNI2002 och SNI2007 per variabel och år.\ncatalog:variable_text:46137:10592:10957\ncatalog:variable_text:46138:11323:11688\ncatalog:variable_text:46138:11688:13514\ncatalog:variable_text:46138:13514:13879\ncatalog:variable_text:46139:13879:14975\ncatalog:variable_text:46139:14975:17897\ncatalog:variable_text:46139:17897:19358\ncatalog:variable_text:46140:13514:14975\ncatalog:variable_text:46140:14975:15340\ncatalog:variable_text:46141:11323:11688\ncatalog:variable_text:46141:11688:12053\ncatalog:variable_text:46142:10592:10957\ncatalog:variable_text:46142:13514:14975\nRegisterinformation.csv:row=351874\nRegisterinformation.csv:row=849811"
+
+[[statement]]
+kind = "set"
+subject = "set:redovisningsmanad"
+fields = { "description" = "Den kalendermånad som de redovisade momsuppgifterna avser. I variabeln från 2004 betyder månad 13 en helårsredovisad momsuppgift, för deklarationer som avser helårsredovisat räkenskapsår; momsregistrets variabel avser 1999–2003." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda delar DEF; OP för redovisningsmanad 2004–2022 anger kalendermånad och månad 13 för helårsredovisning.\ncatalog:variable_text:46150:12418:12784\ncatalog:variable_text:46150:14975:19358\ncatalog:variable_text:46151:10592:12418"

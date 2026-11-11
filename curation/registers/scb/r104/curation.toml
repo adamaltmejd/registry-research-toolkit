@@ -1314,3 +1314,45 @@ kind = "set"
 subject = "var:flyttat"
 fields = { "description" = "Anger om eleven bytt skola under läsåret och när. 2002-2007 anges tidpunkten för flytten (2002-2005 som ÅÅMM, 2006 som MMDD). Från 2008 anges i stället en kod för när flytten skedde, till exempel före läsårets start eller före respektive efter en gränsdag under året. Kodlistan och gränsdagarna skiljer sig mellan tabellerna, se värdemängden för respektive tabell." }
 evidence = "Opdef per table: elevpanel-6 2002-2005 'flyttidpunkt enligt ÅÅMM', 2006 'i form av MMDD'; elevpanel-7 2008-2012 'Härleds från insamlad flyttidpunkt' with value set #5857 (before school start, before/after 1 Feb, after school year); elevpanel-6 2008 #10829 and elevpanel-8 2015-2020 #5851 use 1 Jan/31 Mar boundaries. The categories are a coarser coding of the same fact (when the pupil left the school), so one variable with a dated description."
+
+[[statement]]
+kind = "set"
+subject = "set:atgardsprogram"
+fields = { "description" = "Om eleven har haft åtgärdsprogram, det vill säga program för pedagogiskt stöd som enligt grundskoleförordningen ska upprättas för elever som bedöms behöva stöd för att klara undervisningsmålen. Uppgiften gäller elever som enligt svarskoden ingick i insamlingen; en version avser den aktuella vårterminen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda delar definitionen; OP skiljer förekomst enligt grundskoleförordningen kap 5 från förekomst den aktuella vårterminen.\ncatalog:variable_text:14418:13149:13330\ncatalog:variable_text:14418:13879:14061\ncatalog:variable_text:14419:13879:14061\ncatalog:variable_text:14419:16436:16617"
+
+[[statement]]
+kind = "set"
+subject = "set:fodelseland"
+fields = { "description" = "Elevens födelseland enligt Registret över totalbefolkningen (RTB), och en gruppering i född i Sverige eller född utomlands som härleds därifrån. Eleven identifieras via personnummer från de klasslistor över elever i årskurs 3 våren 2002 som utvalda rektorsområden skickade in." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nFödelseland och inrikes/utrikes född delar OP om klasslistorna; grupperingen härleds ur RTB:s födelseland.\ncatalog:variable_text:14447:11688:11869\ncatalog:variable_text:14447:13879:14061\ncatalog:variable_text:14447:15706:15887\ncatalog:variable_text:14447:16436:16617\ncatalog:variable_text:14448:11688:11869"
+
+[[statement]]
+kind = "set"
+subject = "set:skolkommun"
+fields = { "description" = "Kommunen där elevens skola eller skolenhet ligger: skolkommunen under den aktuella vårterminen och, vid flytt, kommunen för den skola eleven flyttat eller ska flytta till. I vissa insamlingar kommer uppgiften om flytt från blanketten eller från uppföljande kontakt med skolan eller kommunen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nKällan för flyttuppgiften anges i en av fyra texter för nykommun och knyts därför till vissa insamlingar.\ncatalog:variable_text:14461:11688:11869\ncatalog:variable_text:14461:13879:14061\ncatalog:variable_text:14461:15706:15887\ncatalog:variable_text:14461:16071:16252\ncatalog:variable_text:14472:16436:16617"
+
+[[statement]]
+kind = "set"
+subject = "set:skoltillhorighet"
+fields = { "description" = "Elevens skola, angiven som skolkod, skolenhetskod eller skolans identitetsnummer, dels för den aktuella skolan, dels för skolan eleven flyttat till. Skola och skolenhet är administrativa enheter med lärare eller elever på en adress, inte byggnader. Aktuell skola avser oftast skolan den aktuella vårterminen, i vissa insamlingar skolenheten eleven fanns vid den 15 oktober 2013 (urvalets skola), och hämtas ur urvalet, grundskolans elevregister, individ- eller gruppregistret, tidigare insamlingar eller den aktuella insamlingen; skolkod och skolidentitet efter flytt kommer från blanketten eller uppföljande kontakt med skolan eller kommunen. I en insamling anges skolkoden för skolenheter där den nuvarande skolenhetskoden kan kopplas till en tidigare skolkod." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nKällan blankett eller uppföljande kontakt anges bara för skolkod och skolidentitet efter flytt, inte för skolenhet efter flytt.\ncatalog:variable_text:14460:16071:16252\ncatalog:variable_text:14462:12784:12965\ncatalog:variable_text:14462:13879:14061\ncatalog:variable_text:14463:11688:11869\ncatalog:variable_text:14468:12784:12965\ncatalog:variable_text:14468:13879:14061\ncatalog:variable_text:14469:15706:15887\ncatalog:variable_text:14470:16071:16252\ncatalog:variable_text:14470:16436:16617\ncatalog:variable_text:14471:11688:11869\ncatalog:variable_text:14471:14975:15156\ncatalog:variable_text:14471:16071:16252\nRegisterinformation.csv:row=673644\nRegisterinformation.csv:row=967038"
+
+[[statement]]
+kind = "set"
+subject = "set:stod-och-specialundervisning"
+fields = { "description" = "Om eleven har deltagit i särskild undervisningsgrupp eller specialundervisning på annat sätt enligt grundskoleförordningen, och om eleven fått stödundervisning, det vill säga minst en av åtgärderna särskild undervisningsgrupp, anpassad studiegång eller specialundervisning på annat sätt. Uppgiften gäller elever som enligt svarskoden ingick i insamlingen, i vissa omgångar den aktuella vårterminen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nÅtgärderna och svarskodsurvalet anges för alla tre; skolans bedömning anges bara för en text och är utelämnad.\ncatalog:variable_text:14467:11688:11869\ncatalog:variable_text:14467:13879:14061\ncatalog:variable_text:14467:16436:16617\ncatalog:variable_text:14473:11688:11869\ncatalog:variable_text:14473:13149:13330\ncatalog:variable_text:14473:13879:14061\ncatalog:variable_text:14473:15706:15887\ncatalog:variable_text:14473:16436:16617\ncatalog:variable_text:14475:11688:11869\ncatalog:variable_text:14475:13879:14061\ncatalog:variable_text:14475:15706:15887\ncatalog:variable_text:14475:16436:16617"
+
+[[statement]]
+kind = "set"
+subject = "set:svarsstatus"
+fields = { "description" = "Status för skolans svar i varje insamlingsomgång, per årskurs från 3 till 9: om och vad skolan svarat och om eleven därför hanteras som svar, bortfall eller övertäckning. Koden avser insamlingen den aktuella vårterminen men omfattar även elever som fallit bort tidigare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nÅrskurserna är slots; alla delar definitionen och OP om svar, bortfall och övertäckning.\ncatalog:variable_text:14478:15706:15887\ncatalog:variable_text:14478:17897:18078\ncatalog:variable_text:14479:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "set:upprakningstal"
+fields = { "description" = "Uppräkningsvikt för eleven, en variabel per årskurs från 3 till 9, kalibrerad för den aktuella insamlingsomgången, samt en elevvikt som avser årskurs 3, 4, 5 eller 7. Totaler skattas genom att summera observerade värden multiplicerade med vikten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nÅrskursvikterna beskrivs som kalibrerade vikter för insamlingsomgången; elevvikten beskrivs bara som uppräkningsvikt för årskurs 3, 4, 5 eller 7; skattningen av totaler står i DEF.\ncatalog:variable_text:14485:11688:11869\ncatalog:variable_text:14485:13879:14061\ncatalog:variable_text:14485:16071:16252\ncatalog:variable_text:14486:14245:14426\ncatalog:variable_text:14486:14610:14791\ncatalog:variable_text:14486:15340:15522\ncatalog:variable_text:14489:14975:15156"
