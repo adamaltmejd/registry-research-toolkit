@@ -5534,3 +5534,27 @@ kind = "set"
 subject = "var:kundnr"
 fields = { "description" = "Företagets kundnummer hos Jordbruksverket, det som används när man söker stöd." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; den senare texten preciserar kundnumret.\ncatalog:variable_text:42720:12418:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:ovriga-vaxtslag-areal"
+fields = { "description" = "Arealen i hektar för andra eller övriga växtslag. Andra växtslag omfattar 1990–2010 trädgårdsväxter, spånadslin, huvudkål och jordgubbar med mera på friland, foderrotfrukter i växtföljd samt övriga jordbruksväxter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nInnehållslistan läses som uppräkning, inte som exempel på trädgårdsväxter, och gäller bara andra växtslag (W0), inte övriga växtslag (W2).\ncatalog:variable_text:42532:7305:10227\ncatalog:variable_text:42533:10227:10957\ncatalog:variable_text:42533:13514:13879\ncatalog:variable_text:42534:10592:10957\ncatalog:variable_text:42758:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "set:stodomrade"
+fields = { "description" = "Geografisk indelning i stödområden för ekonomiskt stöd till jordbrukare: enligt den aktuella indelningen och enligt indelningarna för 2014 och 2015." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla tre medlemmarna är samma regionala stödindelning; axeln är vilket års indelning som används.\ncatalog:variable_text:42792:12784:16071\ncatalog:variable_text:42793:16436:16801\ncatalog:variable_text:42793:16801:17897\ncatalog:variable_text:42794:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:tradgardsareal"
+fields = { "description" = "Jordbruksföretagets trädgårdsodling, mätt som areal: total frilandsareal i hektar, det vill säga arealen för företagets trädgårdsväxter på friland, trädgårdsareal i hektar, och den totala växthusytan i kvadratmeter (från 2000)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar mäter ytan för företagets trädgårdsodling; axlarna är friland, trädgård totalt och växthus.\ncatalog:variable_text:42647:16071:17167\ncatalog:variable_text:42647:17167:17532\ncatalog:variable_text:42647:17897:20454\ncatalog:variable_text:42701:10592:10957\ncatalog:variable_text:42798:10957:11323\ncatalog:variable_text:42826:14975:15340\ncatalog:variable_text:42826:15340:16071\ncatalog:variable_text:42826:16071:20454\ncatalog:variable_text:42827:10957:11323\ncatalog:variable_text:42833:7305:10957"
+
+[[statement]]
+kind = "set"
+subject = "set:uppgiftskalla"
+fields = { "description" = "Den källa som lämnat eller bekräftat uppgifterna, angiven som den undersökning och det år uppgifterna kommer från; i en del årgångar anger den när företaget första gången förekommer i lantbruksregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna anger uppgiftskälla; de två texterna går att förena som källa och år för uppgiften respektive företagets första förekomst.\ncatalog:variable_text:42707:12418:12784\ncatalog:variable_text:42707:16436:17167\ncatalog:variable_text:42707:17167:17532\ncatalog:variable_text:42747:16436:17167\ncatalog:variable_text:42747:17167:17532"

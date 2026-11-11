@@ -4099,3 +4099,105 @@ kind = "set"
 subject = "var:vetomr"
 fields = { "description" = "Vetenskapsområde: ämnesområde som regeringen inrättat för tilldelning av resurser till forskning och utbildning på forskarnivå. För forskarutbildningen grupperar den forskarutbildningsämnena efter högskolans egen klassificering; den infördes 1999 men har förts in bakåt i tiden, och den användes som grupperingsvariabel till och med 2010, då den 2011 ersattes av forskningsämne. För personalen finns den 2001–2011 och hämtas från Konjunkturstatistik, löner för statlig sektor och undersökningen Personal vid universitet och högskolor." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna beskriver användning och källa i doktorand- respektive personaltabellerna.\ncatalog:variable_text:33373:0:11323\ncatalog:variable_text:33373:11323:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:aktivitetsperiod"
+fields = { "description" = "Tidpunkten för doktorandens aktivitet: kalenderår, termin (vår eller höst, det vill säga kalenderhalvår) och år och termin kombinerat, för de perioder då doktoranden var aktiv eller nollaktiv. För 2001–2022 finns år och termin också för de terminer då doktoranden hade en aktivitet på minst en procent." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla tre anger samma tidpunkt i olika upplösning.\ncatalog:variable_text:33187:365:20089\ncatalog:variable_text:33196:365:11323\ncatalog:variable_text:33196:11323:13514\ncatalog:variable_text:33336:365:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:alder"
+fields = { "description" = "Personens ålder i hela år, härledd ur kalenderår och personnummer eller motsvarande, vid årets slut (31 december), vid läsårets mitt och vid terminsstart, samt grupperingar av åldern vid årets slut och vid läsårets mitt. Åldern avser händelsen i respektive uppgift: antagning, examen, aktivitet eller försörjning. Ålder vid läsårets mitt räknas vid kalenderårets slut för händelser under hösten och vid föregående kalenderårs slut för händelser under våren; från 2019 räknas doktorandernas ålder vid årets slut på samma sätt efter termin." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är samma ålder vid olika referenstidpunkter eller grupperad.\ncatalog:variable_text:33157:0:365\ncatalog:variable_text:33157:365:730\ncatalog:variable_text:33157:730:17897\ncatalog:variable_text:33157:17897:20089\ncatalog:variable_text:33158:0:365\ncatalog:variable_text:33158:365:730\ncatalog:variable_text:33158:730:20089\ncatalog:variable_text:33159:12784:13695\ncatalog:variable_text:33160:0:17897\ncatalog:variable_text:33160:17897:20089\ncatalog:variable_text:33161:0:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:ansokningsprioritet"
+fields = { "description" = "Den prioritetsordning i vilken den sökande har valt utbildningen, där 01 är val i första hand, 02 i andra hand och så vidare; ett mått för ansökan till kurs och ett för ansökan till program." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSamma kod för kurs- och programansökan.\ncatalog:variable_text:33308:12784:14426\ncatalog:variable_text:33308:14426:14610\ncatalog:variable_text:33308:16801:16953\ncatalog:variable_text:33309:12784:12965\ncatalog:variable_text:33309:12965:13149\ncatalog:variable_text:33309:14791:14975\ncatalog:variable_text:33309:16801:16953\ncatalog:variable_text:33309:19509:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:ansokningstidpunkt"
+fields = { "description" = "Tidpunkten som ansökan avser: kalenderår och termin (höst- eller vårtermin), för ansökan till kurs, för ansökan till program och för ansökan utan uppdelning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är år eller termin för en ansökan; kurs/program är axeln.\ncatalog:variable_text:33186:12965:13149\ncatalog:variable_text:33188:12965:13149\ncatalog:variable_text:33189:12965:13149\ncatalog:variable_text:33334:12784:19539\ncatalog:variable_text:33334:19539:19723\ncatalog:variable_text:33335:12784:12965\ncatalog:variable_text:33335:12965:13149\ncatalog:variable_text:33337:12784:12965"
+
+[[statement]]
+kind = "set"
+subject = "set:anstallningskategori"
+fields = { "description" = "Indelning av anställningar för personal vid universitet och högskolor i kategorier efter tjänste- eller anställningsbenämning, i flera klassifikationsversioner: 1995 års; 2001 års, då fyra nya kategorier infördes och vissa benämningar flyttades till en annan kategori, införd bakåt till 1995; 2008 års, där lokalvårdare ingår i teknisk personal; och den aktuella klassifikationen, också införd bakåt till 1995. Från 2012 heter tjänstekategori anställningskategori och klassificeringen görs utifrån anställningsbenämning. Gruppen innehåller också personalgruppen: forskande och undervisande personal (UF), teknisk och administrativ personal (TA) eller doktorander, härledd ur samma benämning; TA-personal klassas som UF-personal om den anställde i oktober har haft forskande eller undervisande arbetsuppgifter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nKategoriversionerna och personalgruppen härleds alla ur den anställdes benämning; versionerna är axeln.\ncatalog:variable_text:33170:9131:11323\ncatalog:variable_text:33171:9131:13879\ncatalog:variable_text:33172:13879:15340\ncatalog:variable_text:33173:9131:15340\ncatalog:variable_text:33173:15340:19723\ncatalog:variable_text:33304:9131:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:anstallningsomfattning"
+fields = { "description" = "Anställningens omfattning i procent av heltid: anställningens omfattning och tjänstledighetens omfattning (0–100 procent), båda 2019–2023, och den faktiska tjänstgöringstiden i förhållande till heltid, som för 1995–2000 är anställningens omfattning reducerad med tjänstledighetens omfattning. För 2001–2019 hämtades uppgifterna om anställningens och tjänstledighetens omfattning via undersökningen Konjunkturstatistik, löner för statlig sektor, medan lärosäten som rapporterade via Excel själva angav tjänstgöringsomfattningen; från 2020 anger uppgiftslämnarna dessa uppgifter och SCB beräknar tjänstgöringsomfattningen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla tre är procentmått på anställningens omfattning, där tjänstgöringen är anställning minus tjänstledighet.\ncatalog:variable_text:33321:17897:19723\ncatalog:variable_text:33348:9131:11323\ncatalog:variable_text:33348:11323:18262\ncatalog:variable_text:33348:18262:19723\ncatalog:variable_text:33349:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:antagningsomgang"
+fields = { "description" = "Antagningsomgången vid ansökan, för ansökan till kurs, till program och utan uppdelning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSamma uppgift, uppdelad på kurs och program; texterna är i övrigt etikettnära men entydiga.\ncatalog:variable_text:33178:15126:15340\ncatalog:variable_text:33179:15126:15340\ncatalog:variable_text:33180:15126:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:antagningstidpunkt"
+fields = { "description" = "Tidpunkten för doktorandens antagning till forskarutbildning: datum, kalenderår, termin (vår eller höst) och år och termin, samt år och termin för den första antagningen till forskarutbildning oberoende av högskola och ämne. År och termin härleds för vissa år ur antagningsdatum och för andra ur studiernas starttermin; från hösten 2002 används utbildningens starttermin. Före hösten 1998 sparades bara doktorandens första antagning, utom vid radikalt byte av ämnesinriktning då också den nya antagningen sparades; från hösten 1998 ingår samtliga antagningar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är antagningens tidpunkt i olika upplösning eller för första antagningen.\ncatalog:variable_text:33183:0:20089\ncatalog:variable_text:33190:0:20089\ncatalog:variable_text:33197:0:20089\ncatalog:variable_text:33200:0:365\ncatalog:variable_text:33200:365:20089\ncatalog:variable_text:33338:0:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:doktorandnyborjartidpunkt"
+fields = { "description" = "Tidpunkten då doktoranden för första gången rapporterades med en aktivitet om minst en procent, oberoende av högskola och ämne, uttryckt som kalenderår, som år och termin (kalenderhalvår) och som läsår (höst och vår, betecknat med båda årtalen). Ingen nybörjartidpunkt finns för doktorander som var aktiva före 1971." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSamma tidpunkt i tre upplösningar.\ncatalog:variable_text:33195:0:20089\ncatalog:variable_text:33300:0:20089\ncatalog:variable_text:33301:0:365\ncatalog:variable_text:33301:365:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:examenstidpunkt"
+fields = { "description" = "Tidpunkten för examen, hämtad ur datum för utfärdat utbildningsbevis: datum, kalenderår, termin (vår eller höst) och år och termin, samt år och termin för doktorandens första doktorsexamen, första licentiatexamen och första forskarexamen (licentiat- eller doktorsexamen) och läsåret för den första forskarexamen. Före hösten 1998 kom datumet in via blankett och då lagrades bara år och termin. Tidpunkten för första examen kan också avse en äldre examen, utfärdad i huvudsak före 1970, som inte finns i examensregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är examenstidpunkt i olika upplösning eller för första examen av ett slag.\ncatalog:variable_text:33191:0:16801\ncatalog:variable_text:33191:16801:20089\ncatalog:variable_text:33194:0:13514\ncatalog:variable_text:33194:13514:13879\ncatalog:variable_text:33194:13879:19358\ncatalog:variable_text:33201:0:20089\ncatalog:variable_text:33202:0:20089\ncatalog:variable_text:33203:0:20089\ncatalog:variable_text:33213:0:20089\ncatalog:variable_text:33280:0:20089\ncatalog:variable_text:33339:0:20089\ncatalog:variable_text:33340:7305:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:forskningsamne"
+fields = { "description" = "Ämnet för forskning eller forskarutbildning, i flera indelningar. Standard för svensk indelning av forskningsämnen, fastställd av Högskoleverket och SCB 2010 och införd 2011, finns på 1-, 3- och 5-siffernivå och, för anställda med forskande och undervisande uppgifter, som 42 forskningsämnesgrupper och sex forskningsämnesområden (naturvetenskap, teknik, medicin och hälsovetenskap, lantbruksvetenskap och veterinärmedicin, samhällsvetenskap samt humaniora och konst). Det äldre nationella forskningsämnet, fastställt av SCB:s programråd för forskningsstatistik, infört våren 1999 och påfört bakåt i tiden, finns på 2-, 3- och 4-siffernivå och för personalen 2001–2011; det ersattes som grupperingsvariabel av forskningsämne 2011. Dessutom finns högskolans eget forskarutbildningsämne och forskarexamensämne som kod och text; koden är bara unik i kombination med högskolan, eftersom det inte finns någon nationell standard för forskarutbildningsämnen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar klassificerar ämnet; de skiljer sig i standard, nivå och om koden är nationell eller lokal.\ncatalog:variable_text:33235:0:16801\ncatalog:variable_text:33236:0:20089\ncatalog:variable_text:33237:0:20089\ncatalog:variable_text:33238:15340:19723\ncatalog:variable_text:33239:11323:19723\ncatalog:variable_text:33268:0:16801\ncatalog:variable_text:33269:0:20089\ncatalog:variable_text:33270:0:20089\ncatalog:variable_text:33271:0:16801\ncatalog:variable_text:33292:0:20089\ncatalog:variable_text:33293:0:20089\ncatalog:variable_text:33294:0:20089\ncatalog:variable_text:33295:11323:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:kon"
+fields = { "description" = "Personens kön, härlett ur personnumrets näst sista siffra: udda siffra är man och jämn siffra kvinna. Det finns som bokstavskod (M eller K) och som sifferkod (1/2)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSamma kön i två kodningar.\ncatalog:variable_text:33260:0:9131\ncatalog:variable_text:33260:9131:11323\ncatalog:variable_text:33260:11323:11504\ncatalog:variable_text:33261:0:730"
+
+[[statement]]
+kind = "set"
+subject = "set:lasar"
+fields = { "description" = "Läsåret, som börjar under hösten ett kalenderår och slutar under våren följande kalenderår, härlett ur termin och kalenderår. Det finns som kod med 6 positioner (höstterminens årtal följt av de två sista siffrorna i vårterminens årtal) och med 4 positioner (höstterminens årtal)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSamma läsår i två kodlängder; positionsbeskrivningarna avgör vilken som är vilken.\ncatalog:variable_text:33279:0:365\ncatalog:variable_text:33279:365:730\ncatalog:variable_text:33281:0:365\ncatalog:variable_text:33281:365:730"
+
+[[statement]]
+kind = "set"
+subject = "set:sokalternativ"
+fields = { "description" = "Sökalternativ vid ansökan till kurs respektive program: en kod som sätts av högskolorna och som saknar klartext. Ansökan gick via VHS till och med 2012 och via UHR från 2011." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSamma kod för kurs- och programansökan.\ncatalog:variable_text:33317:12784:12965\ncatalog:variable_text:33317:12965:13149\ncatalog:variable_text:33317:15126:15156\ncatalog:variable_text:33318:12784:12965\ncatalog:variable_text:33318:12965:13149\ncatalog:variable_text:33318:15126:15156\ncatalog:variable_text:33318:16983:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:studieaktivitet"
+fields = { "description" = "Doktorandens aktivitet i forskarutbildningsämnet under kalenderhalvåret: aktivitetsprocenten, alltså den aktivitet doktoranden haft i ämnet under halvåret; aktivitetsgraden, där aktivitetsprocent 1–100 delas in i fyra intervall; och status som aktiv eller inte, där aktiv kräver en aktivitet om minst en procent i ämnet under kalenderhalvåret. Gruppen innehåller också en motsvarande aktivitetsstatus för forskarskola (2001–2022) och om doktoranden var aktiv före 1971, påfört från det tidigare systemet med 1970 års material som utgångspunkt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar mäter doktorandens aktivitet som procent, grupp eller status.\ncatalog:variable_text:33152:365:20089\ncatalog:variable_text:33153:365:20089\ncatalog:variable_text:33154:11323:13879\ncatalog:variable_text:33154:13879:19358\ncatalog:variable_text:33155:0:20089\ncatalog:variable_text:33156:365:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsinriktning"
+fields = { "description" = "Utbildningens inriktning enligt Svensk utbildningsnomenklatur (SUN), en standard för att klassificera enskilda utbildningar och aggregera dem till större grupper. Forskarutbildnings- och examensämnen som lärosätena rapporterar kodas enligt SUN 2020 med huvudinriktning (1 och 2 positioner), ämnesinriktning (3 positioner) och specificering (4 positioner). Dessutom finns inriktningen enligt SUN 2000 på 3-siffernivå (2005–2008) och SUN-inriktning enligt både 2000 och 2020 års nomenklatur." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är SUN-inriktningen; nivå och nomenklaturversion är axlarna.\ncatalog:variable_text:33324:7305:20089\ncatalog:variable_text:33325:7305:20089\ncatalog:variable_text:33328:0:365\ncatalog:variable_text:33329:0:365\ncatalog:variable_text:33330:0:365\ncatalog:variable_text:33330:14245:20454\ncatalog:variable_text:33331:0:365\ncatalog:variable_text:33360:12784:13695"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsprogram"
+fields = { "description" = "Utbildningsprogrammet, som högskolans egen programkod, som det program ansökan avser (2007–2008) och som en indelning av programmen efter vilken examen utbildningen leder till. Indelningen efter examen byggde 2006–2008 på yrkesexamina fastställda 1993 (SFS 1993:100 och SFS 1993:221) och kodas från 2009 manuellt efter en värdemängd fastställd av UKÄ och SCB." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla tre anger programmet, i lokal kod eller i nationell indelning efter examen.\ncatalog:variable_text:33248:12965:13149\ncatalog:variable_text:33368:13695:13879\ncatalog:variable_text:33369:12784:13330\ncatalog:variable_text:33369:13330:13514\ncatalog:variable_text:33369:14245:20454"

@@ -926,3 +926,27 @@ kind = "set"
 subject = "var:valdistrikt"
 fields = { "description" = "Valdistrikt enligt den regionala indelning som fastställs av Valmyndigheten. Saknad uppgift anges 2003 som xxxx9999 och 2004–2017 som xxxxRest. Från 2016 hämtas uppgiften via digitala kartor eller gränser från Valmyndigheten." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; giltiga kodintervall per år tas bort, och koden för saknad uppgift och hämtningssättet anges med år.\ncatalog:variable_text:28504:12053:12054\ncatalog:variable_text:28504:12418:12419\ncatalog:variable_text:28504:14975:14976\ncatalog:variable_text:28504:16801:16802\ncatalog:variable_text:28504:17532:17533"
+
+[[statement]]
+kind = "set"
+subject = "set:forsamlingstillhorighet"
+fields = { "description" = "Församling enligt den regionala indelningen i församlingar, i tre former: enligt aktuell indelning; enligt den frysta indelningen 2000-01-01, före kyrkans omorganisation i samband med att kyrkan skildes från staten; och, enbart för Stockholms kommun, som en tvåställig församlingskod (00, 01–42) som används tillsammans med kommun- och NYKO-kod." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla tre medlemmarna är församlingstillhörighet; axeln är vilken indelning som avses (aktuell, fryst 2000 eller Stockholms tvåställiga kod).\ncatalog:variable_text:28463:12053:12054\ncatalog:variable_text:28463:13514:13515\ncatalog:variable_text:28464:12053:12054\ncatalog:variable_text:28464:16801:16802\ncatalog:variable_text:28465:12053:12054\ncatalog:variable_text:28465:16801:16802"
+
+[[statement]]
+kind = "set"
+subject = "set:postnummeromrade"
+fields = { "description" = "Område enligt Postens administrativa indelning för posthantering, modifierad så att varje fastighet har högst ett postnummer och inga boxnummer förekommer (fastighetspostnummer); kopplingen mellan fastighet och postnummer skapas utifrån adressens postnummer, och saknad uppgift kodas Restf (2003: 99999). Postnummerområdet finns också i en gammal version, som 2016–2017 avser föregående år. Från 2007 finns även postadressens postnummer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna är postnummer för adressen; axeln är fastighetspostnummer i aktuell eller gammal version och postadressens omodifierade postnummer.\ncatalog:variable_text:28485:13514:13515\ncatalog:variable_text:28486:12053:12054\ncatalog:variable_text:28486:12418:12419\ncatalog:variable_text:28486:14975:14976\ncatalog:variable_text:28486:16801:16802\ncatalog:variable_text:28487:15706:15707\ncatalog:variable_text:28488:12784:12785\ncatalog:variable_text:28488:16071:16072\ncatalog:variable_text:28488:16801:16802"
+
+[[statement]]
+kind = "set"
+subject = "set:smaortstillhorighet"
+fields = { "description" = "Tillhörighet till småort enligt SCB:s regionala indelning i småorter: sammanhängande bebyggelse med högst 150 meter mellan husen och 50–199 invånare. SCB avgränsar småorterna med registret över totalbefolkningen samkört med koordinatsatta fastigheter eller adresser och Lantmäteriets fastighetskarta. Till och med 2017 kodas glesbygd 0000 och tätort 9999; från 2018 har koderna prefixet S, med en delvis ny definition och metod från 2015 års småorter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna är samma småortskod i kolumnen Smaort; axeln är bara avgränsningsår och kodformat.\ncatalog:variable_text:28497:12053:12054\ncatalog:variable_text:28497:13149:13150\ncatalog:variable_text:28497:15340:15341\ncatalog:variable_text:28497:17167:17168\ncatalog:variable_text:28497:17532:17533\ncatalog:variable_text:28498:18993:18994"
+
+[[statement]]
+kind = "set"
+subject = "set:tatortstillhorighet"
+fields = { "description" = "Tillhörighet till tätort enligt SCB:s regionala indelning i tätorter: sammanhängande bebyggelse med minst 200 invånare. Enligt den äldre definitionen, använd 2003–2016, får det vara högst 200 meter mellan husen och glesbygd kodas 0000; från 2017 har koderna prefixet T och T0000 betyder ej tätort, med en delvis ny definition och metod från 2015 års tätorter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna är tätortskoden i kolumnen Tatort; axeln är definitionen före och efter omläggningen.\ncatalog:variable_text:28500:17167:17168\ncatalog:variable_text:28500:18262:18263\ncatalog:variable_text:28501:12053:12054\ncatalog:variable_text:28501:13149:13150\ncatalog:variable_text:28501:14975:14976"

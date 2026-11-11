@@ -668,3 +668,21 @@ kind = "set"
 subject = "var:lopnummer-for-individ"
 fields = { "description" = "Informationslöst löpnummer för individen, eleven eller läraren beroende på tabell, som används internt vid enkätutskick och avprickning. 2009 numreras eleverna respektive lärarna inom varje skola." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger vem numret avser och 2009 års numrering per skola.\ncatalog:variable_text:51666:10879:10880\ncatalog:variable_text:51666:12706:12707\ncatalog:variable_text:51666:14532:14533"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-elever"
+fields = { "description" = "Antal elever på grundskolenivå respektive gymnasienivå, uppdelat på behöriga och övriga elever (1999–2013). Behöriga elever uppfyller villkoren i förordningen om statsbidrag till utbildning av svenska barn och ungdomar (SFS 1994:519): 30 § för elever som får handledning vid distansstudier och 33 § för elever som får kompletterande svenskundervisning. Övriga elever uppfyller inte villkoren." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna räknar elever efter nivå och behörighet; de två texterna per medlem gäller distansstudier respektive kompletterande svenskundervisning.\ncatalog:variable_text:51651:10879:10880\ncatalog:variable_text:51652:10879:10880\ncatalog:variable_text:51654:10879:10880\ncatalog:variable_text:51655:10879:10880"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-ovriga-skolledare"
+fields = { "description" = "Antal övriga skolledare, utöver rektorer, vid skolan (2013 skolenheten), separat för män och kvinnor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSamma antal uppdelat på kön.\ncatalog:variable_text:51643:10879:10880\ncatalog:variable_text:51643:15993:15994\ncatalog:variable_text:51672:10879:10880\ncatalog:variable_text:51672:15993:15994"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-rektorer"
+fields = { "description" = "Antal rektorer vid skolan (2013 skolenheten), separat för män och kvinnor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSamma antal uppdelat på kön.\ncatalog:variable_text:51644:10879:10880\ncatalog:variable_text:51644:15993:15994\ncatalog:variable_text:51669:10879:10880\ncatalog:variable_text:51669:15993:15994"

@@ -7017,3 +7017,129 @@ kind = "set"
 subject = "var:personnr"
 fields = { "description" = "Personnummer, identitetsbegrepp för personer som tilldelas av Skatteverket (tidigare Skattemyndigheten). Fram till 2010 samlades det in från skolorna i undersökningen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; insamlingssättet till och med 2010 anges som fakta med år. Källnoteringen för förskolans personal tas bort.\ncatalog:variable_text:42281:3103:10773\ncatalog:variable_text:42281:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "set:befattningskod-pedagogisk-personal"
+fields = { "description" = "Befattningskoden för en tjänst inom den pedagogiska personalen, utgående från de koder Sveriges Kommuner och Landsting använder, kompletterade med koder satta av specialskolemyndigheten. Varje rad motsvarar en tjänst, så en person med flera tjänster förekommer flera gånger; ett mått avser personens prioriterade tjänst. Koden är tresiffrig 1978–1991 och fyrsiffrig från 1991; för 1978–1980 saknas förklaringar till koderna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är samma befattningskod; axlarna är kodlängd över tid och om tjänsten eller den prioriterade tjänsten avses.\ncatalog:variable_text:42167:9312:13330\ncatalog:variable_text:42167:14791:15887\ncatalog:variable_text:42168:7851:9312\ncatalog:variable_text:42169:13330:14791\ncatalog:variable_text:42169:14791:15887\ncatalog:variable_text:42170:3103:3834\ncatalog:variable_text:42170:3834:7486\ncatalog:variable_text:42171:7486:7851"
+
+[[statement]]
+kind = "set"
+subject = "set:huvudmannakategori"
+fields = { "description" = "Typ av huvudman, dels för skolan, dels för läraren, även för lärarens prioriterade tjänst. 2007–2010 hämtas huvudmannatypen från Skolregistret med hjälp av skolkoden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nKällan Skolregistret begränsad till 2007–2010 (W1, W4).\ncatalog:variable_text:42182:7851:14061\ncatalog:variable_text:42182:14061:14791\ncatalog:variable_text:42182:17713:20270\ncatalog:variable_text:42201:13330:14061\ncatalog:variable_text:42201:14061:14426\ncatalog:variable_text:42284:13330:13695\ncatalog:variable_text:42284:13695:14791\ncatalog:variable_text:42284:14791:20270"
+
+[[statement]]
+kind = "set"
+subject = "set:inriktning-fristaende-skola"
+fields = { "description" = "Inriktningen för en fristående skola eller skolenhet, för skolor generellt, för fristående grundskola och för fristående gymnasieskola. Uppgiften hämtas från Skolregistret med hjälp av skolkoden och från 2013 från Skolenhetsregistret med hjälp av skolenhetskoden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är fristående skolors inriktning; axeln är skolform, och bytet av källregister 2013 är en angiven ändring.\ncatalog:variable_text:42188:13330:14061\ncatalog:variable_text:42188:14061:14791\ncatalog:variable_text:42188:15887:20270\ncatalog:variable_text:42189:10773:13330\ncatalog:variable_text:42190:10773:13330\ncatalog:variable_text:42190:13330:13695\ncatalog:variable_text:42190:15887:20270"
+
+[[statement]]
+kind = "set"
+subject = "set:kommun"
+fields = { "description" = "Den kommun där skolan, från 2013 skolenheten, är belägen, enligt den regionala indelningen i kommuner och tagen från skolkodens fyra första positioner; för tjänsten och för lärarens prioriterade tjänst." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna är skolans kommun; axeln är om tjänsten eller den prioriterade tjänsten avses.\ncatalog:variable_text:42193:9312:10773\ncatalog:variable_text:42193:10773:12234\ncatalog:variable_text:42193:14791:15887\ncatalog:variable_text:42193:15887:20270\ncatalog:variable_text:42194:13330:14791\ncatalog:variable_text:42194:14791:15887\ncatalog:variable_text:42194:15887:20270"
+
+[[statement]]
+kind = "set"
+subject = "set:lan"
+fields = { "description" = "Det län där skolan, från 2010 skolenheten (för den prioriterade tjänsten från 2013), är belägen, enligt den regionala indelningen i län; till och med 2010 tas det från skolkodens två första positioner. Finns för tjänsten och för lärarens prioriterade tjänst." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSkolkodsregeln står bara till och med 2010 (W0, W1); skolenheten från 2010 för m0 (W2) och från 2013 för m1 (W5).\ncatalog:variable_text:42198:9312:12600\ncatalog:variable_text:42198:14791:15706\ncatalog:variable_text:42198:15706:15887\ncatalog:variable_text:42199:13330:14791\ncatalog:variable_text:42199:14791:15887\ncatalog:variable_text:42199:15887:20270"
+
+[[statement]]
+kind = "set"
+subject = "set:landsting-och-region"
+fields = { "description" = "Landstinget, från 2020 regionen, för en skola med landstingskommunal eller regionkommunal huvudman, angivet enligt Rikets indelning som huvudmannens län." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna anger samma landstings- eller regionkod för huvudmannen; axeln är bara benämningen före och från 2020.\ncatalog:variable_text:42200:10773:14791\ncatalog:variable_text:42200:14791:18444\ncatalog:variable_text:42290:18444:20270"
+
+[[statement]]
+kind = "set"
+subject = "set:pedagogisk-utbildning"
+fields = { "description" = "Personens pedagogiska utbildning: om personen har en lärarexamen, skapat ur uppgifter om befattning och högsta utbildning från Universitets- och högskoleregistret och registret över befolkningens utbildning, och typen av pedagogisk utbildning, härledd ur koder enligt Svensk utbildningsnomenklatur (SUN). Uppgiften finns även för den prioriterade tjänsten respektive den prioriterade lärarutbildningen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar beskriver personens lärar- eller pedagogiska utbildning; axlarna är om examen eller utbildningstyp anges och om den prioriterade tjänsten avses.\ncatalog:variable_text:42274:9312:13330\ncatalog:variable_text:42274:14426:14791\ncatalog:variable_text:42275:7486:9312\ncatalog:variable_text:42276:13330:13695\ncatalog:variable_text:42276:14791:20270\ncatalog:variable_text:42277:8947:9312\ncatalog:variable_text:42277:9312:12600"
+
+[[statement]]
+kind = "set"
+subject = "set:skolform"
+fields = { "description" = "Den skolform (undervisningsinriktning) tjänsten avser, skapad ur verksamhetstypen i SCB:s skolregister, från 2015 skolenhetsregistret; för tjänsten och för personens prioriterade tjänst. Därtill finns typen av särskola och en äldre kodlista för 1978–1994." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar klassar skolform; axlarna är tjänst eller prioriterad tjänst, särskoleform och kodlista.\ncatalog:variable_text:42286:14061:14791\ncatalog:variable_text:42291:10773:16617\ncatalog:variable_text:42291:16617:20270\ncatalog:variable_text:42299:9312:10773\ncatalog:variable_text:42299:16617:20270\ncatalog:variable_text:42308:13330:14061\ncatalog:variable_text:42308:14791:16252\ncatalog:variable_text:42308:16252:20270\ncatalog:variable_text:42309:3103:8947"
+
+[[statement]]
+kind = "set"
+subject = "set:tjanstgoringsniva"
+fields = { "description" = "Den nivå eller position en person tjänstgör på. Åren 1978–1998 anges nivån för var och en av personens första till sjätte tjänst, utan rangordning mellan tjänsterna; därefter för tjänsten och, från 2013, för den prioriterade tjänsten, och då bara för personer som är i tjänst. För personer som inte är i tjänst anges från 2014 nivån för de tjänstlediga tjänsterna, med en rad per tjänstledig tjänst." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar anger tjänstgöringsnivån; axlarna är tjänstens ordningsnummer, prioriterad tjänst och om personen är i tjänst eller tjänstledig.\ncatalog:variable_text:42208:10408:14791\ncatalog:variable_text:42208:14791:20270\ncatalog:variable_text:42285:15887:20270\ncatalog:variable_text:42312:3103:9312\ncatalog:variable_text:42328:9312:9678\ncatalog:variable_text:42329:9312:10408\ncatalog:variable_text:42330:9312:10408\ncatalog:variable_text:42331:9312:10408\ncatalog:variable_text:42332:9312:10408\ncatalog:variable_text:42333:9312:10408\ncatalog:variable_text:42334:3103:9312\ncatalog:variable_text:42335:3103:9312\ncatalog:variable_text:42336:3103:9312\ncatalog:variable_text:42337:3103:9312\ncatalog:variable_text:42338:3103:9312\ncatalog:variable_text:42339:16252:17348"
+
+[[statement]]
+kind = "set"
+subject = "set:tjanstgoringsomfattning"
+fields = { "description" = "Faktisk tjänstgöringstid i procent av heltid. Omfattningen anges för aktuell tjänst, skola (från 2013 skolenhet) och skolform; 1994–1998 uppdelad på skolform (grundskola, gymnasieskola, komvux, särskola, svenska för invandrare, specialskola, särvux och folkhögskola), där de två sista positionerna är decimaler (02400 betyder 24 procent); som total oavsett skolform (1995–1998); och 2013–2020 som personens totala omfattning i länet och verksamhetsformen. 1994–1995 finns även omfattningen på respektive tjänst i förhållande till den största möjliga omfattningen på tjänsten, med en decimal (308 betyder 30,8 procent av heltid), samt i timmar: antalet timmar som motsvarar en heltidstjänst och summan av tjänstgöringstimmar för respektive tjänst. 2010–2011 finns omfattningen i grundskolan respektive gymnasieskolan i det redovisade ämnet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna mäter tjänstgöringens omfattning; de skiljer sig i skolform, nivå (tjänst, län, totalt) och i procent eller timmar.\ncatalog:variable_text:42209:10773:15887\ncatalog:variable_text:42209:15887:20270\ncatalog:variable_text:42210:9312:10408\ncatalog:variable_text:42210:14791:15156\ncatalog:variable_text:42211:9312:10408\ncatalog:variable_text:42211:14791:15156\ncatalog:variable_text:42212:9312:10408\ncatalog:variable_text:42213:15706:18628\ncatalog:variable_text:42214:9312:10408\ncatalog:variable_text:42215:9312:10408\ncatalog:variable_text:42216:9312:10408\ncatalog:variable_text:42217:9312:10408\ncatalog:variable_text:42218:9678:10408\ncatalog:variable_text:42218:10408:10773\ncatalog:variable_text:42219:9312:9678\ncatalog:variable_text:42357:8947:9312\ncatalog:variable_text:42358:8947:9312\ncatalog:variable_text:42359:8947:9312\ncatalog:variable_text:42360:8947:9312\ncatalog:variable_text:42361:8947:9312\ncatalog:variable_text:42362:8947:9312\ncatalog:variable_text:42363:8947:9312\ncatalog:variable_text:42364:8947:9312\ncatalog:variable_text:42365:8947:9312\ncatalog:variable_text:42366:8947:9312\ncatalog:variable_text:42367:8947:9312"
+
+[[statement]]
+kind = "set"
+subject = "set:tjanstgoringstid"
+fields = { "description" = "Antalet tjänstgöringstimmar som är arbetade eller inplanerade under läsåret: totalt för personens tjänster och för var och en av personens första till sjätte tjänst, utan rangordning mellan tjänsterna (1978–1998). För 1978–1994 anges dessutom de timmar personen tjänstgör tillfälligt i samband med respektive tjänst, och för 1980–1992 det totala antalet fastställda tjänstgöringstimmar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är timtal för tjänstgöring; axlarna är tjänstens ordningsnummer, total eller per tjänst och ordinarie eller tillfälliga timmar.\ncatalog:variable_text:42293:8947:9312\ncatalog:variable_text:42293:9312:10408\ncatalog:variable_text:42322:3103:8947\ncatalog:variable_text:42323:3103:8947\ncatalog:variable_text:42324:3103:8947\ncatalog:variable_text:42325:3103:8947\ncatalog:variable_text:42326:3103:8947\ncatalog:variable_text:42327:3103:8947\ncatalog:variable_text:42340:3103:10408\ncatalog:variable_text:42341:3103:10408\ncatalog:variable_text:42342:3103:10408\ncatalog:variable_text:42343:3103:10408\ncatalog:variable_text:42344:3103:10408\ncatalog:variable_text:42345:3103:10408\ncatalog:variable_text:42368:3834:8217"
+
+[[statement]]
+kind = "set"
+subject = "set:undervisning-i-engelska"
+fields = { "description" = "Personens undervisning i engelska, i två mått: den årskursnivå undervisningen sker på och hur stor andel av personens tjänsteomfattning den utgör. Båda finns för undervisning i allmänhet, för undervisning av personer med hörselskada och för undervisning av personer med hörselskada och utvecklingsstörning. Från 2018 avser årskursnivån för båda dessa grupper, och andelen för personer med hörselskada och utvecklingsstörning, undervisning i Specialskolan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSpecialskolan anges från 2018 bara för m1, m2 och m5 (W2, W4, W8); m4 (W6) nämner den inte.\ncatalog:variable_text:42114:15887:20270\ncatalog:variable_text:42115:15887:17713\ncatalog:variable_text:42115:17713:20270\ncatalog:variable_text:42116:15887:17713\ncatalog:variable_text:42116:17713:20270\ncatalog:variable_text:42223:15887:20270\ncatalog:variable_text:42224:15887:20270\ncatalog:variable_text:42225:15887:17713\ncatalog:variable_text:42225:17713:20270"
+
+[[statement]]
+kind = "set"
+subject = "set:undervisning-i-kommunikation"
+fields = { "description" = "Personens undervisning i ämnesområdet kommunikation, i två mått: den årskursnivå undervisningen sker på och hur stor andel av personens tjänsteomfattning den utgör. Måtten finns för undervisning i allmänhet (från 2016; årskursnivån från 2018 i grundsärskolans träningsskola eller i särskild utbildning för vuxna) och för undervisning av hörselskadade personer med utvecklingsstörning (från 2013, från 2018 i Specialskolan)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar beskriver undervisning i kommunikation; axlarna är mått och elevgrupp.\ncatalog:variable_text:42127:16983:17713\ncatalog:variable_text:42127:17713:20270\ncatalog:variable_text:42128:15887:17713\ncatalog:variable_text:42128:17713:20270\ncatalog:variable_text:42236:16983:20270\ncatalog:variable_text:42237:15887:17713\ncatalog:variable_text:42237:17713:20270"
+
+[[statement]]
+kind = "set"
+subject = "set:undervisning-i-moderna-sprak"
+fields = { "description" = "Personens undervisning i moderna språk, bland annat franska, spanska och tyska, i två mått: den årskursnivå undervisningen sker på och hur stor andel av personens tjänsteomfattning den utgör. Måtten finns för moderna språk, för övriga moderna språk och för undervisning i Specialskolan av personer med hörselskada. För moderna språk avser måtten 2013–2018 undervisning i Specialskolan och från 2018 undervisning i allmänhet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar beskriver undervisning i moderna språk; axlarna är mått, språkgrupp och elevgrupp, och avgränsningen till Specialskolan före 2018 är en angiven ändring.\ncatalog:variable_text:42131:15887:17713\ncatalog:variable_text:42131:17713:20270\ncatalog:variable_text:42132:15887:20270\ncatalog:variable_text:42138:15887:20270\ncatalog:variable_text:42240:15887:17713\ncatalog:variable_text:42240:17713:20270\ncatalog:variable_text:42241:15887:20270\ncatalog:variable_text:42247:15887:20270"
+
+[[statement]]
+kind = "set"
+subject = "set:undervisning-i-ovriga-bilaga-4-amnen"
+fields = { "description" = "Personens undervisning i övriga så kallade bilaga 4-ämnen, det vill säga ämnen som inte specificeras särskilt på annat sätt i undersökningen: den årskursnivå undervisningen sker på, hur stor andel av personens tjänsteomfattning den utgör och, från 2015, vilka ämnen det gäller, som första, andra och tredje huvudsakliga ämne." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar beskriver undervisning i övriga bilaga 4-ämnen; axlarna är mått och ämnets ordning.\ncatalog:variable_text:42109:15887:16617\ncatalog:variable_text:42109:16617:20270\ncatalog:variable_text:42173:16617:20270\ncatalog:variable_text:42220:15887:16617\ncatalog:variable_text:42220:16617:20270\ncatalog:variable_text:42389:16617:20270\ncatalog:variable_text:42390:16617:20270"
+
+[[statement]]
+kind = "set"
+subject = "set:undervisning-i-rorelse-och-drama"
+fields = { "description" = "Personens undervisning i rörelse och drama, i två mått: den årskursnivå undervisningen sker på och hur stor andel av personens tjänsteomfattning den utgör. Måtten finns för undervisning i allmänhet och för undervisning av personer med utvecklingsstörning, där årskursnivån från 2018 avser undervisning i Specialskolan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar beskriver undervisning i rörelse och drama; axlarna är mått och elevgrupp.\ncatalog:variable_text:42141:15887:20270\ncatalog:variable_text:42142:15887:17713\ncatalog:variable_text:42142:17713:20270\ncatalog:variable_text:42251:15887:20270\ncatalog:variable_text:42252:15887:20270"
+
+[[statement]]
+kind = "set"
+subject = "set:undervisning-i-svenska"
+fields = { "description" = "Personens undervisning i svenska, i två mått: den årskursnivå undervisningen sker på och hur stor andel av personens tjänsteomfattning den utgör. Båda finns för undervisning i allmänhet, för undervisning av hörselskadade personer och för undervisning av hörselskadade personer med utvecklingsstörning; från 2017 eller 2018 avser de två senare undervisning i Specialskolan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar beskriver undervisning i svenska; axlarna är mått och elevgrupp.\ncatalog:variable_text:42150:15887:20270\ncatalog:variable_text:42151:15887:16983\ncatalog:variable_text:42151:17348:20270\ncatalog:variable_text:42152:15887:17713\ncatalog:variable_text:42152:17713:20270\ncatalog:variable_text:42260:15887:20270\ncatalog:variable_text:42261:15887:17713\ncatalog:variable_text:42261:17713:20270\ncatalog:variable_text:42262:15887:17713\ncatalog:variable_text:42262:17713:20270"
+
+[[statement]]
+kind = "set"
+subject = "set:undervisning-i-teckensprak"
+fields = { "description" = "Personens undervisning i teckenspråk, i två mått: den årskursnivå undervisningen sker på och hur stor andel av personens tjänsteomfattning den utgör. Båda finns för undervisning i allmänhet, för undervisning av hörande personer, av personer med hörselskada och av personer med hörselskada och utvecklingsstörning; från 2018 avser de två senare undervisning i Specialskolan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar beskriver undervisning i teckenspråk; axlarna är mått och elevgrupp.\ncatalog:variable_text:42153:15887:20270\ncatalog:variable_text:42154:15887:20270\ncatalog:variable_text:42155:15887:17713\ncatalog:variable_text:42155:17713:20270\ncatalog:variable_text:42156:15887:17713\ncatalog:variable_text:42156:17713:20270\ncatalog:variable_text:42263:15887:20270\ncatalog:variable_text:42264:15887:20270\ncatalog:variable_text:42265:15887:17713\ncatalog:variable_text:42265:17713:20270\ncatalog:variable_text:42266:15887:17713\ncatalog:variable_text:42266:17713:20270"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsinriktning"
+fields = { "description" = "Inriktningen för personens högsta utbildning till och med vårterminen aktuellt år, som fullständig fyrsiffrig inriktningskod enligt Svensk utbildningsnomenklatur (SUN). Inriktningen kopplas till den utbildningsnivå som valts som personens högsta enligt Utbildningsregistrets prioriteringsregler. Koden finns enligt SUN 2000 och, från 2020, enligt SUN 2020, som SCB fastställde våren 2019; SUN 2000-koden saknar värden från årgång 2022." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna är högsta utbildningens inriktning; axeln är SUN-versionen.\ncatalog:variable_text:42315:15887:18444\ncatalog:variable_text:42315:18444:19539\ncatalog:variable_text:42315:19539:20270\ncatalog:variable_text:42317:18444:20270"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsniva"
+fields = { "description" = "Nivån för personens högsta utbildning till och med vårterminen aktuellt år, som fullständig tresiffrig nivåkod enligt Svensk utbildningsnomenklatur (SUN). Den högsta utbildningen väljs enligt Utbildningsregistrets prioriteringsregler, som bygger på antaganden om kvaliteten i de källregister registret bygger på. Koden finns enligt SUN 2000 och, från 2020, enligt SUN 2020, som SCB fastställde våren 2019; SUN 2000-koden saknar värden från årgång 2022." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna är högsta utbildningens nivå; axeln är SUN-versionen.\ncatalog:variable_text:42316:15887:18444\ncatalog:variable_text:42316:18444:19539\ncatalog:variable_text:42316:19539:20270\ncatalog:variable_text:42318:18444:20270"
+
+[[statement]]
+kind = "set"
+subject = "set:yrkesamne"
+fields = { "description" = "Det yrkesämne eller den kategori av yrkesämne läraren huvudsakligen undervisar i, på gymnasiet och på gymnasiesärskolan (från 2014): som första, andra och tredje huvudsakliga yrkesämne, de två senare när läraren undervisar i mer än ett respektive två yrkesämnen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar anger lärarens huvudsakliga yrkesämne; axlarna är skolform och ämnets ordning.\ncatalog:variable_text:42184:15887:16252\ncatalog:variable_text:42185:16252:20270\ncatalog:variable_text:42401:16252:16617\ncatalog:variable_text:42401:16617:17348\ncatalog:variable_text:42402:15887:16617\ncatalog:variable_text:42402:16617:20270\ncatalog:variable_text:42403:15887:16617\ncatalog:variable_text:42403:16617:20270\ncatalog:variable_text:42404:16252:20270\ncatalog:variable_text:42405:16252:20270"

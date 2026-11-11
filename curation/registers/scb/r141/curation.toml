@@ -833,3 +833,9 @@ kind = "set"
 subject = "var:scb-nummer"
 fields = { "description" = "SCB-nummer som identifierar uppgiftslämnaren, ett informationslöst identitetsbegrepp. Numret sätts av insamlingspersonalen och är produktspecifikt." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma kolumn och operationalisering; från 2024 dokumenteras den under SCB:s generella SCB-id-definition (ny VarId), utan ändrad betydelse.\ncatalog:variable_text:45981:17532:19723\ncatalog:variable_text:45981:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:referensmanad"
+fields = { "description" = "Den månad under året som uppgiften avser, undersökningsmånaden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna anger månaden; Triton och SIV är interna systemnamn och utelämnade.\ncatalog:variable_text:45966:17532:19358\ncatalog:variable_text:45966:19358:19723\ncatalog:variable_text:45966:19723:20454\ncatalog:variable_text:45986:13879:17532"

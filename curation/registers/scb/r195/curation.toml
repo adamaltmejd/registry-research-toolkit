@@ -1986,3 +1986,39 @@ kind = "set"
 subject = "var:sjuktom"
 fields = { "description" = "Sista dagen i sjukfallet. 2022–2023 anges sjuklöneperiodens sista dag." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; råexporten har 2011–2018 en rad per kvartal där katalogen bara behållit den första, så kvartalsangivelsen beskriver kvartalsleveranserna och inte en betydelseskillnad. Registerinformation.csv:row=898489–898491 (2011), row=898498–898501 (2012), row=898555–898558 (2018).\ncatalog:variable_text:41820:15065:16436\ncatalog:variable_text:41820:16436:16801\ncatalog:variable_text:41820:17897:18993\ncatalog:variable_text:41820:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-anstallda"
+fields = { "description" = "Aktuellt antal anställda: personer som är anställda vid mättillfället, för vilka arbetsgivaren ska redovisa A-skatt och som beräknas ha en årlig arbetsinkomst över ett prisbasbelopp. Antal anställda i Företagsdatabasen (FDB) beräknas huvudsakligen från två källor beroende på om företaget har ett eller flera arbetsställen. Gruppen innehåller antalet anställda på arbetsstället och på företaget, för företaget också summerat från den juridiska enhetens samtliga arbetsställen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla wordings har samma definition av anställd; de skiljer sig i om antalet avser arbetsställe eller företag.\ncatalog:variable_text:41732:13149:15065\ncatalog:variable_text:41733:13149:14245\ncatalog:variable_text:41733:14245:15065\ncatalog:variable_text:41734:13149:13514\ncatalog:variable_text:41735:13149:15065\ncatalog:variable_text:41736:13149:15065\ncatalog:variable_text:41737:13149:14245\ncatalog:variable_text:41737:14245:15065\ncatalog:variable_text:41737:15065:18993\ncatalog:variable_text:41738:13149:14245\ncatalog:variable_text:41738:14245:15065"
+
+[[statement]]
+kind = "set"
+subject = "set:referensmanad"
+fields = { "description" = "Den månad som de lämnade uppgifterna avser, 2006–2011 angiven som en av årets tolv månader och från 2011 som månad i kvartalet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna anger samma referensmånad; kodningen ändrades 2011.\ncatalog:variable_text:41814:13149:15065\ncatalog:variable_text:41814:15065:19723\ncatalog:variable_text:41815:13149:15065"
+
+[[statement]]
+kind = "set"
+subject = "set:sjukdagar"
+fields = { "description" = "Antal sjukdagar i ett sjukfall: alla kalenderdagar i sjukfallet, från 2011 räknat från sjuklöneperiodens första dag (karensdagen, från 2022 dagen med karensavdrag) till dess sista dag, inklusive lördagar, söndagar och helgdagar. Gruppen innehåller det totala antalet, antalet för kvinnor och för män (uppräknat till kvartalssiffra och oviktat), antalet heldagar och deldagar och antalet glappdagar: dagar då individen kommit tillbaka till arbetet efter en sjukfrånvaro och sedan insjuknar igen i samma symptom inom fem arbetsdagar, så att det räknas till samma sjukfrånvaro. Den innehåller också sjukfallets längd för dagarna 1–14, beräknad från sjukperiodens start- och slutdatum." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar räknar dagar i ett sjukfall, totalt eller uppdelat efter kön, vikt och typ av dag.\ncatalog:variable_text:41744:16436:19723\ncatalog:variable_text:41745:16436:19723\ncatalog:variable_text:41747:15065:19723\ncatalog:variable_text:41748:15065:19723\ncatalog:variable_text:41749:13149:15065\ncatalog:variable_text:41749:15065:18993\ncatalog:variable_text:41749:18993:19723\ncatalog:variable_text:41764:13149:15065\ncatalog:variable_text:41765:15706:16801\ncatalog:variable_text:41769:15065:16801\ncatalog:variable_text:41770:16436:19723\ncatalog:variable_text:41817:13149:15065\ncatalog:variable_text:41818:14245:15065\ncatalog:variable_text:41818:15065:18993\ncatalog:variable_text:41818:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:sjukfallsantal"
+fields = { "description" = "Markeringar för sjukfall som gör att sjukfallen kan summeras: för alla sjukfall och för sjukfall där individen är kvinna respektive man. 2006–2011 räknas markeringen upp till kvartalssiffra för objekt som svarar för bara en månad i kvartalet; därefter innehåller den, för kvinnor och män från 2011 och för alla sjukfall från 2020, en vikt som justerar för ej inkomna månader. Det finns också oviktade markeringar för kvinnor och män." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSamma markering för summering av sjukfall, totalt och per kön, viktad och oviktad.\ncatalog:variable_text:41766:13149:15065\ncatalog:variable_text:41766:15065:18993\ncatalog:variable_text:41768:13149:15065\ncatalog:variable_text:41768:18262:18993\ncatalog:variable_text:41788:16436:19723\ncatalog:variable_text:41789:16436:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:upprakningsvikt"
+fields = { "description" = "Uppräkningsvikter för företagen: en vikt som tilldelas efter om företaget lämnat uppgifter för en, två eller tre månader i aktuellt kvartal, och en vikt för företag i storleksklass 1 som kompenserar för den cut-off som görs, satt vid varje urval två gånger per år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna är vikter för uppräkning av företagens uppgifter.\ncatalog:variable_text:41760:18628:19723\ncatalog:variable_text:41828:15065:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:urvalsstratum"
+fields = { "description" = "Det urvalsstratum som objektet tillhör, en stratumbeteckning som skapas i urvalsarbetet. I beteckningen stratam (2011–2023) har den totalundersökta delen fyra siffror och urvalsdelen fem, där de fyra första siffrorna anger stratum och den femte vilken månad i kvartalet uppgifterna avser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSiffersystemet står bara för stratam (W0) och begränsas dit.\ncatalog:variable_text:41823:15065:19723\ncatalog:variable_text:41824:13149:15065\ncatalog:variable_text:41824:15065:18993\ncatalog:variable_text:41824:18993:19723\ncatalog:variable_text:41825:13149:15065\ncatalog:variable_text:41832:13149:13514"

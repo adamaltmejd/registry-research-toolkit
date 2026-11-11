@@ -1528,3 +1528,27 @@ kind = "set"
 subject = "var:region-fyra-delar"
 fields = { "description" = "Region i fyra delar: Stor-Stockholm, Stor-Göteborg, övriga kommuner med mer än 75 000 invånare och övriga kommuner med under 75 000 invånare. Härledd från kosthushållsföreståndarens folkbokföringskommun i RTB den 31 december referensåret." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; skiljer bara i ett mellanslag.\ncatalog:variable_text:13807:16436:16801\ncatalog:variable_text:13807:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:hushallsstorlek"
+fields = { "description" = "Hushållets storlek: antalet personer i hushållet och antalet barn i åldern 0–19 år, härledda ur registeruppgift (RTB) och hushållets egna uppgifter om sin sammansättning. Till och med 2020 lämnades hushållets uppgifter i en intervju, från 2021 vid insamlingen från hushållet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna har samma härledning, register plus hushållets uppgifter; insamlingssättet skiljer sig före och efter 2021.\ncatalog:variable_text:13736:16436:16801\ncatalog:variable_text:13736:18628:18993\ncatalog:variable_text:13737:16436:16801\ncatalog:variable_text:13737:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:hushallsvikt"
+fields = { "description" = "Vikter för uppräkning av hushållen till populationen. Den okalibrerade hushållsvikten beräknas ur antalet svarande objekt och antalet objekt per stratum (stora N) och uppräkningstalet från individ till hushåll, som härleds ur hushållets storlek och stratum. Den kalibrerade hushållsvikten utgår från den okalibrerade och kalibreras mot bakgrundsvariabler; 2021–2024 är dessa åldersklass, kön, boendeform, familjetyp och disponibel inkomst." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nDe tre medlemmarna är stegen i samma viktberäkning: uppräkningstal, okalibrerad och kalibrerad vikt.\ncatalog:variable_text:13763:16436:16801\ncatalog:variable_text:13763:18628:18993\ncatalog:variable_text:13764:16436:16801\ncatalog:variable_text:13824:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:imputeringsstatus"
+fields = { "description" = "Markeringar för om en uppgift om hushållets boende eller utgifter är imputerad eller inte, en markering per uppgift: bland annat bostadsarea, antal rum, kökstyp, hyreskontrakt, årshyra, bostadslån, ränteutgifter, amortering, uppvärmningsutgifter per energislag, hushållsel, vatten och avlopp, sophämtning och sotning samt skattereduktionerna för ombyggnation och för underhåll och reparation." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla wordings är samma mening, imputerad eller inte, och skiljer sig bara i vilken variabel markeringen gäller.\ncatalog:variable_text:13766:16436:16801\ncatalog:variable_text:13767:16436:16801\ncatalog:variable_text:13769:16436:16801\ncatalog:variable_text:13775:16436:16801\ncatalog:variable_text:13790:16436:16801\ncatalog:variable_text:13792:16436:16801\ncatalog:variable_text:13795:16436:16801\ncatalog:variable_text:13796:16436:16801\ncatalog:variable_text:13797:16436:16801\ncatalog:variable_text:13798:16436:16801\ncatalog:variable_text:13798:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:skatteeffekt-av-boendet"
+fields = { "description" = "Minskning eller ökning av hushållets skatt som beror på hur hushållet förfogar över sin bostad. Den samlade skatteeffekten omfattar skattereduktion för underskott av kapital som avser bostaden och för underhåll och reparation, hushållets fastighetsavgift för bostaden och eventuell ränta på uppskovsbelopp efter försäljning av tidigare bostad; gruppen innehåller också skattereduktionerna för ränteutgifter för bostaden, för ombyggnation eller installation och för underhåll och reparation var för sig. Den samlade skatteeffekten och reduktionen för ränteutgifter härleds ur intervjusvar och registeruppgifter, reduktionerna för ombyggnation och för underhåll 2024 ur egen insamling i kombination med registeruppgifter om skattereduktion." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nKällan anges per mått: intervjusvar och register för totalen och ränteutgifterna (W0, W3, W4), egen insamling och register för ombyggnation och underhåll 2024 (W2, W6).\ncatalog:variable_text:13810:16436:16801\ncatalog:variable_text:13811:16436:16801\ncatalog:variable_text:13811:19723:20089\ncatalog:variable_text:13812:16436:16801\ncatalog:variable_text:13812:19723:20089\ncatalog:variable_text:13813:16436:16801\ncatalog:variable_text:13813:19723:20089"

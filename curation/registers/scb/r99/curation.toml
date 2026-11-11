@@ -646,3 +646,15 @@ kind = "set"
 subject = "var:lopnr"
 fields = { "description" = "Internt löpnummer som används vid enkätutskick och avbockning. Från 2011 får arbetsstället ett eget löpnummer för varje utbildningsgrupp som det ska svara för." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma interna löpnummer; från 2011 anges att det sätts per utbildningsgrupp.\ncatalog:variable_text:10930:10592:14975\ncatalog:variable_text:10930:14975:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-arbetsstallen-i-urvalsdesignen"
+fields = { "description" = "Arbetsställenas fördelning i urvalsdesignen: totalt antal arbetsställen i urvalsramen, antal arbetsställen i urvalet utom de som hamnar i säkert stratum, och antal arbetsställen i säkert stratum. I säkert stratum hamnar arbetsställen som har minst 90 procents chans att komma med i urvalet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna är tre delar av samma urvalsdesign; ANTURV = ANTOBS − ANTSOBS och definitionen av säkert stratum anges i formuleringarna.\ncatalog:variable_text:10920:10592:19723\ncatalog:variable_text:10921:10592:14975\ncatalog:variable_text:10921:14975:16801\ncatalog:variable_text:10921:16801:19723\ncatalog:variable_text:10940:10592:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsgrupp"
+fields = { "description" = "Gruppering av utbildningar, skapad av Prognosinstitutet vid SCB, där varje grupp definieras med inriktning och nivå enligt SUN2000, från 2022 enligt SUN2020. Grupperingen finns som kod (ett internt identifikationsnummer för gruppen) och som namn i klartext." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nKod och namn beskriver samma utbildningsgrupp; bytet från SUN2000 till SUN2020 2022 anges för båda.\ncatalog:variable_text:10943:14975:15340\ncatalog:variable_text:10943:15340:16801\ncatalog:variable_text:10943:18993:19723\ncatalog:variable_text:10944:10592:18993\ncatalog:variable_text:10944:18993:19723"

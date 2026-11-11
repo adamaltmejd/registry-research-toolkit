@@ -1049,3 +1049,33 @@ kind = "set"
 subject = "var:personnr"
 fields = { "description" = "Personnummer för barnet eller personalen, beroende på tabell. Personnumret tilldelas av Skatteverket och består av födelsetid (8 siffror), födelsenummer (3 siffror) och en kontrollsiffra." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen anger barnets respektive personalens personnummer per tabell. Skattemyndigheten heter Skatteverket.\ncatalog:variable_text:10636:16358:16359\ncatalog:variable_text:10636:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "set:kommungruppsindelning"
+fields = { "description" = "Verksamhetskommunens grupp enligt Sveriges Kommuner och Landstings (från 2023 Sveriges Kommuner och Regioners) kommungruppsindelning. 2014–2016 används 2011 års indelning, 2017–2022 2017 års indelning och från 2023 2023 års indelning; i 2017 och 2023 års indelningar delas kommunerna in i nio grupper efter strukturella egenskaper som befolkningsstorlek, pendlingsmönster och näringslivsstruktur." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna indelar verksamhetskommunen (personalfilen arbetsställekommunen) efter SKL/SKR:s kommungruppsindelning; versionsbytena 2017 och 2023 är verkliga ändringar, nio grupper anges bara för 2017 och 2023 års indelningar.\ncatalog:variable_text:10627:16358:16359\ncatalog:variable_text:10627:17454:17455\ncatalog:variable_text:10627:18184:18185\ncatalog:variable_text:10627:19645:19646\ncatalog:variable_text:10628:18550:18551\ncatalog:variable_text:10628:19645:19646"
+
+[[statement]]
+kind = "set"
+subject = "set:kommuntillhorighet"
+fields = { "description" = "Kommunkod för barnets folkbokföringskommun respektive för kommunen där verksamheten är placerad." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna anger kommun för två roller: barnets folkbokföring och verksamhetens placering.\ncatalog:variable_text:10621:16358:16359\ncatalog:variable_text:10668:16358:16359"
+
+[[statement]]
+kind = "set"
+subject = "set:lanstillhorighet"
+fields = { "description" = "Länskod för länet där verksamheten respektive arbetsstället är beläget, härledd ur de två första siffrorna i kommunkoden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna är län för verksamhetens/arbetsställets placering och härleds på samma sätt ur kommunkoden.\ncatalog:variable_text:10630:16358:16359\ncatalog:variable_text:10631:16358:16359"
+
+[[statement]]
+kind = "set"
+subject = "set:startdatum-for-inskrivning"
+fields = { "description" = "Datum då barnet skrevs in i annan pedagogisk verksamhet. Startdatum avser inskrivningen på nuvarande enhet. Inskrivningsdatum avser 2014 inskrivningen i annan pedagogisk verksamhet, 2018 inskrivningen oavsett huvudman och från 2019 inskrivningen på nuvarande enhet; från 2018 tas det fram genom jämförelse med tidigare årgångar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSkillnaden mellan medlemmarna anges per år, eftersom inskrivningsdatum från 2019 också avser nuvarande enhet (W4).\ncatalog:variable_text:10643:16723:16724\ncatalog:variable_text:10644:16358:16359\ncatalog:variable_text:10644:17819:17820\ncatalog:variable_text:10644:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "set:typ-av-tjanst"
+fields = { "description" = "Typ av tjänst som personen innehar: en variabel för tjänst som chef (2016 benämnd förskolechef, 2017–2018 chef inom annan pedagogisk verksamhet) och en för tjänst som resurs- eller stödpersonal." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna anger en tjänstetyp enligt samma definition; axeln är vilken tjänst.\ncatalog:variable_text:10615:16358:16359\ncatalog:variable_text:10615:17089:17090\ncatalog:variable_text:10615:17454:17455\ncatalog:variable_text:10639:16358:16359"

@@ -6007,3 +6007,69 @@ kind = "set"
 subject = "var:valid"
 fields = { "description" = "Om eleven eller kursdeltagaren genomgått validering, en strukturerad bedömning, dokumentation och erkännande av kunskaper och kompetens oberoende av hur de förvärvats. I elevtabellerna bestäms den 2020 utifrån elevens förbrukade poäng och 2021–2024 utifrån elevens lästa poäng." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger härledningen i elevtabellerna.\ncatalog:variable_text:41563:18262:19358\ncatalog:variable_text:41563:19358:19539"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-kurser-per-utbildningsniva"
+fields = { "description" = "Antal kurser eleven har gått inom kommunal vuxenutbildning, Statens skolor för vuxna eller Nationellt centrum för flexibelt lärande, per nivå: grundläggande nivå, för vuxna som saknar kunskaper som normalt uppnås i grundskolan; gymnasial nivå, motsvarande gymnasieskolan; och påbyggnadsutbildning, yrkesutbildning som ska leda till arbete." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla tre är antal kurser; axeln är utbildningsnivå.\ncatalog:variable_text:41448:10043:10408\ncatalog:variable_text:41448:14610:14791\ncatalog:variable_text:41448:16617:16801\ncatalog:variable_text:41449:10043:10408\ncatalog:variable_text:41449:14610:14791\ncatalog:variable_text:41449:16617:16801\ncatalog:variable_text:41450:10043:10408\ncatalog:variable_text:41450:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "set:huvudkurs"
+fields = { "description" = "Den huvudkurs eleven har läst i komvux, som kod och i klartext, bestämd utifrån den inrapporterade kurskoden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nKod och klartext för samma uppgift.\ncatalog:variable_text:41478:18444:19358\ncatalog:variable_text:41478:19358:19539\ncatalog:variable_text:41479:18262:18809\ncatalog:variable_text:41479:18993:19358\ncatalog:variable_text:41479:19358:19539"
+
+[[statement]]
+kind = "set"
+subject = "set:kurs"
+fields = { "description" = "Kurskod för den kurs eleven har läst i komvux eller var registrerad på." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna anger kursen; skillnaden är insamlingen uppgiften kommer från.\ncatalog:variable_text:41491:15887:18628\ncatalog:variable_text:41492:3468:6390\ncatalog:variable_text:41492:17167:17348"
+
+[[statement]]
+kind = "set"
+subject = "set:kursbetyg"
+fields = { "description" = "Betyg på kursen i komvux." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna är kursbetyget med samma definition.\ncatalog:variable_text:41463:3468:6390\ncatalog:variable_text:41464:15887:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:kursens-avslutsstatus"
+fields = { "description" = "Om eleven har avbrutit kursen respektive om kursen är avslutad, det vill säga slutförd, eller inte. Avbrottsmarkeringen avser under en del år om eleven har avbrutit samtliga lästa kurser under terminen eller året, och härleds 2015 ur datum för avbrott." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAvbrott och avslut är två sidor av samma status för kursen.\ncatalog:variable_text:41457:3468:6390\ncatalog:variable_text:41457:8582:10227\ncatalog:variable_text:41457:10592:10773\ncatalog:variable_text:41457:14245:14426\ncatalog:variable_text:41457:16436:16617\ncatalog:variable_text:41457:16617:16801\ncatalog:variable_text:41457:17167:17348\ncatalog:variable_text:41457:19358:19539\ncatalog:variable_text:41459:3468:6390\ncatalog:variable_text:41459:18993:19174\ncatalog:variable_text:41459:19174:19358\ncatalog:variable_text:41459:19358:19539"
+
+[[statement]]
+kind = "set"
+subject = "set:skollan"
+fields = { "description" = "Länet där skolan eller skolenheten ligger, som kod och i klartext; koden tas fram ur de två första positionerna i skolkommunens kommunkod." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nKod och klartext för samma län.\ncatalog:variable_text:41535:10043:10592\ncatalog:variable_text:41535:17167:19174\ncatalog:variable_text:41535:19174:19358\ncatalog:variable_text:41536:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:tidigare-utbildningsniva"
+fields = { "description" = "Personens högsta genomförda utbildningsnivå enligt Svensk utbildningsnomenklatur (SUN): enligt SUN 2000 och SUN 2020, också med tvåställig nivå, och i en grov indelning i sju nivåer anpassade till det svenska utbildningssystemet och jämförbara bakåt med den äldre SUN-kodens nivåindelning. För 1995–1997 avses tidigare utbildning än den personen söker till eller studerar vid." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar klassar personens tidigare utbildning; axlarna är SUN-version och detaljnivå.\ncatalog:variable_text:41539:13879:16436\ncatalog:variable_text:41539:16436:17167\ncatalog:variable_text:41540:17897:18993\ncatalog:variable_text:41541:18993:20089\ncatalog:variable_text:41542:10043:16436\ncatalog:variable_text:41542:16436:17167\ncatalog:variable_text:41542:17167:17348\ncatalog:variable_text:41542:18993:19358\ncatalog:variable_text:41542:19358:19723\ncatalog:variable_text:41548:9312:10043\ncatalog:variable_text:41549:9678:10043\ncatalog:variable_text:41561:15887:17532"
+
+[[statement]]
+kind = "set"
+subject = "set:typ-av-utbildningsanordnare"
+fields = { "description" = "Typ av anordnare för kursen eleven har läst: kommun, landsting (region), studieförbund, folkhögskola eller annan anordnare. När eleven har läst flera kurser avses under en del år den kurs där eleven läst flest poäng." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna har samma kategorier; regeln om flest poäng anges för m1 vissa år.\ncatalog:variable_text:41557:15887:18628\ncatalog:variable_text:41557:18628:20089\ncatalog:variable_text:41559:10043:10227\ncatalog:variable_text:41559:18262:18628\ncatalog:variable_text:41559:18628:18809\ncatalog:variable_text:41559:19358:19539"
+
+[[statement]]
+kind = "set"
+subject = "set:undervisningstimmar"
+fields = { "description" = "Undervisningstimmar i komvux: elevens summerade kurstimmar på grundläggande nivå, gymnasial nivå och påbyggnadskurser, de lärarledda undervisningstimmar eleven har genomfört, totalt eller för en angiven kurs, och för 1979–1987 det totala antal undervisningstimmar som kursen omfattar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är antal undervisningstimmar; axlarna är nivå och om timmarna avser eleven eller kursen.\ncatalog:variable_text:41452:10043:10408\ncatalog:variable_text:41452:10592:12418\ncatalog:variable_text:41452:12418:12600\ncatalog:variable_text:41452:13879:14061\ncatalog:variable_text:41453:10043:10408\ncatalog:variable_text:41453:10592:10773\ncatalog:variable_text:41453:10773:10957\ncatalog:variable_text:41453:13879:14061\ncatalog:variable_text:41454:10043:10408\ncatalog:variable_text:41454:10592:10773\ncatalog:variable_text:41454:10773:10957\ncatalog:variable_text:41454:13879:14061\ncatalog:variable_text:41458:6574:8401\ncatalog:variable_text:41458:8582:10227\ncatalog:variable_text:41558:3468:6390"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningens-poangomfattning"
+fields = { "description" = "Poäng i komvux: kursens totala poängomfattning, summan av poäng eleven har tagit per nivå (grundläggande, gymnasial och påbyggnadsutbildning), de poäng eleven har läst eller förbrukat under halvåret, läsåret eller kalenderåret, från 2018 angivna som förbrukade verksamhetspoäng, och totalt antal poäng enligt slutbetyget. 1997–2007 finns också ämnets eller kursens CSN-poäng, som studiestödet bedöms efter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna mäter kursers eller elevers poäng; de skiljer sig i nivå, referensperiod och poängskala.\ncatalog:variable_text:41465:10043:13879\ncatalog:variable_text:41517:10043:10227\ncatalog:variable_text:41517:10592:10773\ncatalog:variable_text:41517:12600:12784\ncatalog:variable_text:41517:16436:16617\ncatalog:variable_text:41517:16617:17532\ncatalog:variable_text:41517:17532:17897\ncatalog:variable_text:41518:17897:18262\ncatalog:variable_text:41519:17897:18262\ncatalog:variable_text:41520:10592:16436\ncatalog:variable_text:41521:10592:20089\ncatalog:variable_text:41522:10592:20089\ncatalog:variable_text:41553:15156:15340\ncatalog:variable_text:41553:15340:15522\ncatalog:variable_text:41554:10043:10227\ncatalog:variable_text:41554:10592:10773\ncatalog:variable_text:41554:12600:12784\ncatalog:variable_text:41554:14245:14426\ncatalog:variable_text:41554:16436:16617\ncatalog:variable_text:41554:16983:17532\ncatalog:variable_text:41554:17532:18628\ncatalog:variable_text:41554:18628:18809\ncatalog:variable_text:41554:19358:19539"
+
+[[statement]]
+kind = "set"
+subject = "set:yrkespaket"
+fields = { "description" = "Yrkespaket i komvux, som kod och i klartext. Ett yrkespaket är en specifik kombination av kurser på gymnasial nivå, utformad av Skolverket i samråd med branschkunniga, som ska motsvara kompetenskraven för ett yrkesområde." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nKod och klartext för samma uppgift.\ncatalog:variable_text:41565:18628:18809\ncatalog:variable_text:41565:19358:19539\ncatalog:variable_text:41566:18262:18628\ncatalog:variable_text:41566:18628:18809"

@@ -1501,3 +1501,39 @@ kind = "set"
 subject = "var:specialavtal-specialbostad"
 fields = { "description" = "Om lägenheten hyrs ut med specialavtal, till exempel möblerad, som tjänstebostad eller hyresfri; från 2010 även som specialbostad. Sådana lägenheter ingår inte i undersökningens resultat och gallras bort i granskningen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; frågan utvidgades 2010 med specialbostad.\ncatalog:variable_text:32742:13514:14610\ncatalog:variable_text:32742:14610:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:garage-bilplats-i-hyran"
+fields = { "description" = "Om kostnader för garage eller bilplats ingår i hyran, för undersökningsåret (år 0) och för året efter undersökningsåret (år 1). 2007–2009 omfattar uppgiften även schabloner för bilplats, kallgarage, varmgarage och motorvärmare i anslutning till bilplats, angivna för undersökningsåret, januari undersökningsåret och januari året efter undersökningsåret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nTexterna skiljer sig bara i vilket år uppgiften avser; RAW-raderna för GARAGE 2007–2009 lägger till schablonerna.\ncatalog:variable_text:32684:14610:16071\ncatalog:variable_text:32685:13514:14610\ncatalog:variable_text:32709:14610:15340\ncatalog:variable_text:32709:15340:16071\nRegisterinformation.csv:row=315358\nRegisterinformation.csv:row=292445\nRegisterinformation.csv:row=315359"
+
+[[statement]]
+kind = "set"
+subject = "set:hushallsel-i-hyran"
+fields = { "description" = "Om kostnader för hushållsel ingår i hyran, för undersökningsåret (år 0) och för året efter undersökningsåret (år 1). 2007–2009 omfattar uppgiften även en schablon för hushållsel som ingår i hyran, angiven för undersökningsåret, januari undersökningsåret och januari året efter undersökningsåret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nTexterna skiljer sig bara i vilket år uppgiften avser; RAW-raden för STROM 2007–2009 lägger till schablonen.\ncatalog:variable_text:32686:13514:14610\ncatalog:variable_text:32710:14610:15340\ncatalog:variable_text:32710:15340:16071\ncatalog:variable_text:32746:14610:16071\nRegisterinformation.csv:row=292446\nRegisterinformation.csv:row=315363\nRegisterinformation.csv:row=315362"
+
+[[statement]]
+kind = "set"
+subject = "set:hyresbelopp"
+fields = { "description" = "Lägenhetens hyra per månad vid olika tidpunkter: i januari undersökningsåret, i januari året efter undersökningsåret, i december året före undersökningsåret och efter hyresförhandlingen (nyförhandlad hyra, den hyra som började gälla efter förhandlingen), samt 2007 för var och en av undersökningsårets månader, inklusive kostnader för bränsle men exklusive hyra för avgiftsbelagd bilplats. 2008–2013 finns också en alternativ hyra, som anges om hyran ändrats under undersökningsåret respektive året efter till en annan hyra än januarihyran. Från 2018 finns decemberhyran och den nyförhandlade hyran även justerade (imputerade och/eller med tillägg eller avdrag av schablonbelopp), och årshyran härleds ur de två justerade månadshyrorna. Uppgiften avser hyror, inte bostadsrättsavgifter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna är samma hyra vid olika tidpunkter, som alternativ, justerad eller årssumma; texten om inflyttningsfärdiga hus och bostadsrättsinnehavares årsavgifter i W2/W3 är generisk och strider mot att HIB bara omfattar hyror, så den är utelämnad.\ncatalog:variable_text:32665:17532:18993\ncatalog:variable_text:32665:18993:20454\ncatalog:variable_text:32687:13879:16071\ncatalog:variable_text:32688:13879:16071\ncatalog:variable_text:32689:13879:16071\ncatalog:variable_text:32690:17532:19723\ncatalog:variable_text:32690:19723:20454\ncatalog:variable_text:32691:17532:19723\ncatalog:variable_text:32691:19723:20454\ncatalog:variable_text:32692:16801:18262\ncatalog:variable_text:32693:13514:13879\ncatalog:variable_text:32693:13879:16071\ncatalog:variable_text:32694:16801:18262\ncatalog:variable_text:32695:13514:13879\ncatalog:variable_text:32696:13514:13879\ncatalog:variable_text:32697:13514:13879\ncatalog:variable_text:32698:13514:13879\ncatalog:variable_text:32699:13514:13879\ncatalog:variable_text:32700:13514:13879\ncatalog:variable_text:32701:13514:13879\ncatalog:variable_text:32702:13514:13879\ncatalog:variable_text:32703:13514:13879\ncatalog:variable_text:32704:13514:13879\ncatalog:variable_text:32705:13514:13879\ncatalog:variable_text:32706:13514:13879\ncatalog:variable_text:32707:13514:13879\nRegisterinformation.csv:row=302000\nRegisterinformation.csv:row=427704"
+
+[[statement]]
+kind = "set"
+subject = "set:hyresforhandling"
+fields = { "description" = "Om förhandlingen om ny månadshyra är klar, 2008–2013 angivet för undersökningsåret och för året efter undersökningsåret. Gruppen innehåller också en kommentar om förhandlingen av ny hyra (2021)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nTexterna anger samma uppgift för olika år; kommentaren är fritext om samma förhandling.\ncatalog:variable_text:32678:16801:20454\ncatalog:variable_text:32679:18628:18993\ncatalog:variable_text:32680:13879:16071\ncatalog:variable_text:32681:13879:15706\ncatalog:variable_text:32681:15706:16071\nRegisterinformation.csv:row=666121\nRegisterinformation.csv:row=665624"
+
+[[statement]]
+kind = "set"
+subject = "set:ombyggnad-storre-forandring"
+fields = { "description" = "Om lägenheten under undersökningsåret har genomgått ombyggnad eller större förändring: en kod för stor förändring, förekomst av ombyggnad eller större förändring (från 2018) och typ av åtgärd vid ombyggnaden eller förändringen (från 2018)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna beskriver samma händelse som kod, förekomst och typ av åtgärd.\ncatalog:variable_text:32675:17532:20454\ncatalog:variable_text:32676:17532:18262\ncatalog:variable_text:32677:13514:16436\ncatalog:variable_text:32677:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:uppvarmning-i-hyran"
+fields = { "description" = "Om kostnader för uppvärmning ingår i hyran, för undersökningsåret och för året efter undersökningsåret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nTexterna skiljer sig bara i vilket år uppgiften avser.\ncatalog:variable_text:32669:14610:16071\ncatalog:variable_text:32711:14610:15340\ncatalog:variable_text:32711:15340:16071\ncatalog:variable_text:32749:13514:14610\nRegisterinformation.csv:row=315366\nRegisterinformation.csv:row=315367"
