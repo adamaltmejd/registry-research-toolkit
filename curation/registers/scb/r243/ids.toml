@@ -41,7 +41,6 @@ public = "allmanna-val-valresultat"
 "landstingskod-lan" = ["Regionfullmäktige- /landstingsfullmäktigeval: ll @ 2006-01-01"]
 "landstingsvalkrets-kod" = ["Regionfullmäktige- /landstingsfullmäktigeval: LT_valkretskod @ 1973-01-01"]
 "landstingsvalkrets-namn" = ["Regionfullmäktige- /landstingsfullmäktigeval: LT_valkretsnamn @ 1976-01-01"]
-"landstingsvalkrets-ovr-antmand" = ["Regionfullmäktige- /landstingsfullmäktigeval: Ovr_antmand # v16238"]
 "lanssnamn" = ["Röstberättigade i allmänna val: lanssnamn"]
 "lt-valkretsnamn" = ["Regionfullmäktige- /landstingsfullmäktigeval: valkretsnamn @ 1973-01-01"]
 "ltnamn" = ["Regionfullmäktige- /landstingsfullmäktigeval: ltnamn @ 2022-01-01"]
