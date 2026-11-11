@@ -201,8 +201,11 @@ export function removeBindings(
 ): ProjectData {
   let candidate = project;
   for (const { variable, table } of bindings) {
+    // Two sources can share a table: the one that binds the variable.
     const sourceIndex = candidate.sources.findIndex(
-      (source) => source.table === table,
+      (source) =>
+        source.table === table &&
+        source.bindings.some((binding) => binding.variable === variable),
     );
     const bindingIndex =
       candidate.sources[sourceIndex]?.bindings.findIndex(

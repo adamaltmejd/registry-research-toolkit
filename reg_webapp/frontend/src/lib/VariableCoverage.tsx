@@ -581,7 +581,7 @@ export function useVariableCoverage({
               ? "error"
               : classificationWarning
                 ? "info"
-                : added
+                : done
                   ? "ok"
                   : null
           }
