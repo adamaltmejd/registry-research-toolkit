@@ -4,6 +4,7 @@ import { type CatalogSegment, errMessage, type RegisterShow } from "./api";
 import { catalogHref } from "./catalog";
 import {
   catalogLastDate,
+  catalogPeriodWithin,
   segmentYears,
   sourcePeriodLabel,
 } from "./catalog_period";
@@ -16,7 +17,11 @@ import {
   type LaneSpanModel,
 } from "./LaneGraph";
 import { PeriodThumbs } from "./PeriodThumbs";
-import { sameYearWindow, uncoveredYears } from "./period";
+import {
+  sameYearWindow,
+  sourcePeriodYearWindows,
+  uncoveredYears,
+} from "./period";
 import type { ProjectData, ProjectStudyWindow } from "./project_data";
 import { projectStore } from "./project_store";
 import {
@@ -24,6 +29,7 @@ import {
   overlapIntervals,
   sourcePeriodIntervals,
   sourcePeriodYears,
+  studyWindowInterval,
 } from "./reg_core";
 import styles from "./SourceCard.module.css";
 import {
@@ -95,9 +101,12 @@ export function SourceCard({
     label: string;
   } | null>(null);
   const [dragging, setDragging] = useState<ProjectStudyWindow | null>(null);
-  const stored = sourcePeriodYears(source.period);
+  // Any dated period rests the thumbs on its years, a date period's too
+  // (#2409); only whole years are what the thumbs write.
+  const stored = sourcePeriodYearWindows(source.period);
+  const wholeYears = sourcePeriodYears(source.period);
   const hull = stored
-    ? { from: stored[0][0], to: stored[stored.length - 1][1] }
+    ? { from: stored[0].from, to: stored[stored.length - 1].to }
     : null;
   const covered = tableYears(table, bounds);
   const timeless = table?.timeless === true;
@@ -140,6 +149,14 @@ export function SourceCard({
     }
   }
 
+  const period = sourcePeriodIntervals(source.period);
+  // The days the source asks for, or the dragged window's while a thumb
+  // moves; null (every day) for a year-independent source.
+  const within = dragging
+    ? [studyWindowInterval(dragging)].filter((days) => days !== null)
+    : "intervals" in period
+      ? period.intervals
+      : null;
   const spans: LaneSpanModel[] = [];
   const lanes: LaneModel[] = source.bindings.map((binding, bindingIndex) => {
     const id = binding.variable;
@@ -163,7 +180,6 @@ export function SourceCard({
     const elsewhere = findings.some(
       (issue) => issue.code === "not_in_database",
     );
-    const period = sourcePeriodIntervals(source.period);
     const candidates = [
       ...new Set(
         onTable
@@ -191,9 +207,17 @@ export function SourceCard({
       ]),
     ];
     for (const column of columns) {
-      const runs = columnYearRuns(column.segments, bounds, axis[0]);
+      // A lane is in the project for its source's days only.
+      const inProject = within
+        ? column.segments.flatMap((segment) =>
+            catalogPeriodWithin(segment.period, within).map((period) => ({
+              period,
+            })),
+          )
+        : column.segments;
+      const runs = columnYearRuns(inProject, bounds, axis[0]);
       if (!runs.length) continue;
-      const years = segmentYears(column.segments);
+      const years = segmentYears(inProject);
       spans.push({
         id: `${id}:${column.id}`,
         lane: id,
@@ -295,7 +319,7 @@ export function SourceCard({
                   key={issueId(issue)}
                   issue={issue}
                   raw={raw}
-                  omitPlace={["variable", "table"]}
+                  omitPlace={["variable", "table", "period"]}
                 />
               ))}
             </ul>
@@ -341,7 +365,7 @@ export function SourceCard({
               key={issueId(issue)}
               issue={issue}
               raw={raw}
-              omitPlace={["table"]}
+              omitPlace={["table", "period"]}
             />
           ))}
         </ul>
@@ -409,15 +433,11 @@ export function SourceCard({
       ) : loading ? null : (
         <LaneList label={`Columns of ${tableName}`} lanes={lanes} />
       )}
-      {stored && Array.isArray(source.period) && (
+      {graph && stored && wholeYears?.length !== 1 && (
         <p className={styles.note}>
-          Moving a thumb replaces these years with one span.
-        </p>
-      )}
-      {!stored && !unbounded && (
-        <p className={styles.note}>
-          The year thumbs cannot express this period. Change it in
-          project_data.json and open the file again.
+          {wholeYears
+            ? "Moving a thumb replaces these years with one span."
+            : "Moving a thumb replaces this period with whole years."}
         </p>
       )}
       {error && (

@@ -4856,7 +4856,7 @@
               "type": "string"
             },
             "spelling": {
-              "description": "The exact column name: on a steward server the name the held files use over\nthis period, else the catalog's.",
+              "description": "The exact column name: on a steward server the name the steward's files use\nover this period, else the catalog's.",
               "type": "string"
             },
             "table": {

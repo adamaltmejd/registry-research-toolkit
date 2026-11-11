@@ -765,8 +765,9 @@ Time is the axis every relation is drawn on.
   drawn whole as the **source timeline**: a `LaneGraph` headed by the coverage row of
   the source's table, its period as the window band with the same thumbs, bounded by
   that table's coverage, and one lane per binding. Each delivered column is a span of
-  the years that table delivers it. A column available for part of the period is a
-  shorter span, not a finding. The card is headed by the table's register, by name, with
+  the years that table delivers it within the source's period (the dragged window's
+  while a thumb moves), not the column's whole coverage (Operator proposal, #2409). A
+  column available for part of the period is a shorter span, not a finding. The card is headed by the table's register, by name, with
   the table's pill as a link and "Years:" with the period's years under it. Where two
   tables of one register would share that heading, the heading names its table with
   the table's pill under the register: the table's own name, never an invented label
@@ -776,8 +777,11 @@ Time is the axis every relation is drawn on.
   only where the catalog has no name for the table. A stored period outside coverage
   widens the thumbs' bounds to their union; it is never clamped or rewritten on load. A
   comma-list period rests the thumbs on its outer years and a line under the drawing
-  says a move makes it one span; a term period is shown as text with plain `LaneList`
-  rows. A timeless source has no "Years:" line and no thumbs. A dated table with
+  says a move makes it one span. Any other dated period (a date, a term, a month) rests
+  the thumbs on the years its first and last days fall in, and the line says a move
+  makes it whole years; the card never asks the researcher to edit the file (Operator
+  proposal, #2409). The card's findings carry no "Years:" line of their own unless the
+  finding has its own period: the card already states them. A timeless source has no "Years:" line and no thumbs. A dated table with
   `_default` has no "Years:" line either, but has thumbs seeded from table coverage so its
   missing period can be repaired; it writes only when a thumb rests. Every source card
   shares the page's one axis. The lanes are the card's columns: no list repeats them
@@ -795,7 +799,7 @@ Time is the axis every relation is drawn on.
   ambiguity finding, using named versions from segments on this table overlapping the
   source period, plus "Not pinned" to clear it. A stored pin outside those candidates
   remains named and marked "not delivered in this period". Versions use a scrolling
-  listbox, never chips. These controls also appear in plain rows for term periods.
+  listbox, never chips. These controls also appear in plain rows where the drawing is not shown (the table did not load, or the period is invalid).
 
 - A variable whose **availability is narrower** than the window is information, not a
   warning: the uncovered part of the window is drawn `info-bg` on the coverage row. The

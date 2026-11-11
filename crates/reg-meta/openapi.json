@@ -2821,7 +2821,7 @@
           },
           "spelling": {
             "type": "string",
-            "description": "The exact column name."
+            "description": "The exact column name: on a steward server the name the steward's files use\nover this period, else the catalog's."
           },
           "table": {
             "type": "string",

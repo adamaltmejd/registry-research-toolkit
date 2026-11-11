@@ -466,8 +466,8 @@ pub struct OrderEntry {
     display_name: Option<String>,
     /// The requested period cut to what the table has; `{start: null, end: null}` for a timeless table.
     period: Period,
-    /// The exact column name: on a steward server the name the held files use over
-    /// this period, else the catalog's.
+    /// The exact column name: on a steward server the name the steward's files use
+    /// over this period, else the catalog's.
     spelling: String,
     #[serde(rename = "type")]
     #[schema(required = true)]

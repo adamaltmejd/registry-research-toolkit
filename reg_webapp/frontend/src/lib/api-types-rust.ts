@@ -718,7 +718,10 @@ export interface components {
             register: string;
             /** @description The project source's name. */
             source: string;
-            /** @description The exact column name. */
+            /**
+             * @description The exact column name: on a steward server the name the steward's files use
+             *     over this period, else the catalog's.
+             */
             spelling: string;
             /** @description The table that serves the period. */
             table: string;
