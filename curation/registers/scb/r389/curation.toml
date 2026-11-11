@@ -806,13 +806,13 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "set:utbildningsinriktning"
-fields = { "description" = "Inriktningen för utbildningen enligt Svensk utbildningsnomenklatur (SUN 2000 eller SUN 2020): för personens högsta genomförda utbildning den fyrsiffriga inriktningskoden, kopplad till den nivå som valts som högsta enligt Utbildningsregistret, och för utbildningen den indelning som Myndigheten för yrkeshögskolan gjort som en lokal utvidgning av SUN:s inriktningsmodul." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i om inriktningen avser personens högsta utbildning eller utbildningen, och i SUN-version.\ncatalog:variable_text:40794:16436:20089\ncatalog:variable_text:40797:18262:20089\ncatalog:variable_text:40800:16436:18993\ncatalog:variable_text:40800:18993:20089\ncatalog:variable_text:40804:16436:20089"
+fields = { "description" = "Inriktningen för personens genomförda utbildning enligt Svensk utbildningsnomenklatur (SUN). Variablerna skiljer sig i version: SUN 2000 (2015–2024) eller SUN 2020 (2020–2024). För SUN 2000 är det den fyrsiffriga inriktningskoden för den högsta utbildningen, kopplad till den nivå som valts som högsta enligt Utbildningsregistrets prioriteringsregler." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nPersonens utbildningsinriktning i två SUN-versioner; programmets inriktningskoder togs ur gruppen (identitetsfix) efter granskningen.\ncatalog:variable_text:40794:16436:20089\ncatalog:variable_text:40797:18262:20089"
 
 [[statement]]
 kind = "set"
 subject = "set:studietakt"
-fields = { "description" = "Utbildningens studietakt, ograderad och grupperad, enligt Myndigheten för yrkeshögskolans administrativa register." }
+fields = { "description" = "Utbildningens studietakt, ogrupperad eller grupperad, enligt Myndigheten för yrkeshögskolans administrativa register." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i gruppering.\ncatalog:variable_text:40791:16436:20089\ncatalog:variable_text:40792:16801:17532"
 
 [[statement]]

@@ -825,7 +825,7 @@ evidence = "#2102 same-label cluster 'Kalibreringsvikt' (2 variables): judged di
 [[statement]]
 kind = "set"
 subject = "set:kalibreringsvikt"
-fields = { "description" = "Kalibrerat uppräkningstal (vikt) för uppräkning av gårdarna till populationen i tabellerna över användning av gödselmedel: en vikt för tabeller för riket, län och åtta produktionsområden och en för tabeller efter storleksgrupp (hektar åker)." }
+fields = { "description" = "Kalibrerat uppräkningstal (vikt) för uppräkning till populationen i tabellerna över användning av gödselmedel: en vikt för tabeller för riket, län och åtta produktionsområden och en för tabeller efter storleksgrupp (hektar åker)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i vilka tabeller vikten gäller; alla rader i exporten är lästa.\ncatalog:variable_text:28563:17713:18078\ncatalog:variable_text:28563:18809:19174"
 
 [[statement]]

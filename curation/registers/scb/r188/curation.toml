@@ -494,11 +494,11 @@ evidence = "v19318 is listed under Intrastat Varde in every release 1999-2026; v
 [[statement]]
 kind = "set"
 subject = "set:varugrupp-sitc"
-fields = { "description" = "Varans produktgrupp enligt SITC (Standard International Trade Classification), FN:s klassificering av produkter, härledd från Kombinerade nomenklaturen (KN) på åttasiffernivå. Variablerna skiljer sig i nivå: den detaljerade koden på upp till femsiffernivå eller koden på tresiffernivå." }
+fields = { "description" = "Varans produktgrupp enligt SITC (Standard International Trade Classification), FN:s klassificering av produkter, härledd från Kombinerade nomenklaturen (KN) på åttasiffernivå. Variablerna skiljer sig i nivå: den detaljerade koden på upp till femsiffernivå eller koden på tresiffernivå. Från 2017 avser variablerna SITC rev3/rev4, och tresiffervarianten är då avsedd för volymutveckling." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i SITC-nivå.\ncatalog:variable_text:61641:12784:17167\ncatalog:variable_text:61642:10592:13514"
 
 [[statement]]
 kind = "set"
 subject = "set:handelsland"
-fields = { "description" = "Det land som är varans avsändningsland vid import och bestämmelseland vid export, angivet med en landskod med två bokstäver. För Extrastat avses bara handel med länder utanför EU." }
+fields = { "description" = "Varans handelsland. 1999–2016 anges det som landskod med två bokstäver för det land som är varans avsändningsland vid import och bestämmelseland vid export; från 2017 som indelning i länder. För Extrastat avses bara handel med länder utanför EU." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna är samma landsindelning före och från 2017.\ncatalog:variable_text:61632:17167:20819\ncatalog:variable_text:61633:10592:10957\ncatalog:variable_text:61633:10957:11688"

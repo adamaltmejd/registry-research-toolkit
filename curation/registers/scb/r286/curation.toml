@@ -423,5 +423,5 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "set:parti"
-fields = { "description" = "Det parti som den nominerade kandidaten nominerats för, som kod, namn eller kortnamn. En person kan nomineras för flera partier; där personen bara förekommer en gång väljs för valda det parti kandidaten fått mandat för efter dubbelvalsavveckling." }
+fields = { "description" = "Det parti som den nominerade kandidaten nominerats för, som partikod, riksdagspartikod, namn eller kortnamn. Från 2019 anger kortnamnet riksdagspartiets namn i klartext och övriga partier som \"Övriga partier\". En person kan nomineras för flera partier; där personen bara förekommer en gång väljs för valda det parti kandidaten fått mandat för efter dubbelvalsavveckling och för ej valda parti enligt vissa kriterier." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i kod, namn och kortnamn.\ncatalog:variable_text:14893:9131:9496\ncatalog:variable_text:14893:17897:18262\ncatalog:variable_text:14894:17897:18262"
