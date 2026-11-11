@@ -2036,12 +2036,6 @@ evidence = "Variabeln avser pensionsutbetalning.\ncatalog:variable_text:39111:94
 [[statement]]
 kind = "set"
 subject = "var:penskod"
-fields = { "sets" = ["pensionsutbetalningar"] }
-evidence = "Pensionskoden hör till kandidatgruppen.\ncatalog:valueset:6607\ncatalog:variable_text:39112:9496:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:penskod"
 fields = { "tags" = ["transfers"] }
 evidence = "Pensionskoden hör till kandidatgruppen.\ncatalog:valueset:6607\ncatalog:variable_text:39112:9496:12053"
 
