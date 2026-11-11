@@ -12111,12 +12111,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 
 [[statement]]
 kind = "set"
-subject = "var:verkningsgrad"
-fields = { "description" = "Verkningsgrad vid värmeproduktion vid värmeverk och annan värme (så kallad färdig värme). För elnätföretagen anges den normalt till 80–90 procent." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; elnätföretagens text tillägger normalvärdet.\ncatalog:variable_text:12219:14245:17897"
-
-[[statement]]
-kind = "set"
 subject = "var:vissa-rorelseintakter-radnr"
 fields = { "description" = "Radnummer för vissa rörelseintäkter. Raden anger vilken intäktspost uppgiften avser." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger radnummer för beskrivningen av intäkterna.\ncatalog:variable_text:12220:14245:17532\ncatalog:variable_text:12220:17532:18262\ncatalog:variable_text:12220:18262:20089"

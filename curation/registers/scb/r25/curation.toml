@@ -28184,7 +28184,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:kon"
-fields = { "description" = "Personens kön, härlett ur personnumret (näst sista siffran). Utöver folkbokförda finns personer med samordningsnummer och dödsbon; dödsbon får inget värde." }
+fields = { "description" = "Personens kön, härlett ur personnumret (näst sista siffran). Från 2014 ingår utöver folkbokförda även personer med samordningsnummer samt dödsbon; dödsbon får inget värde i variabeln." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; populationstillägget 2014 anges med år.\ncatalog:variable_text:38039:2922:7305\ncatalog:variable_text:38039:7305:9496\ncatalog:variable_text:38039:9496:16071\ncatalog:variable_text:38039:16071:20089"
 
 [[statement]]
@@ -28250,7 +28250,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:sjukpenning-anstallning"
-fields = { "description" = "Sjukpenning av anställning, det vill säga sjukpenning som grundas på inkomst av tjänst för vilken arbetsgivaren har betalat ATP-avgift, inklusive KAS. 1987–1988 avser variabeln i stället summan av ersättningar från den allmänna försäkringskassan som utgör pensionsgrundande inkomst av tjänst enligt kontrolluppgift; 1987 ingår sjukpenning, föräldrapenning, havandeskapspenning, ersättning till smittbärare, dagpenning vid arbetsmarknadsutbildning, ersättning till ledsagare och dagpenning vid utbildning och tjänstgöring inom totalförsvaret." }
+fields = { "description" = "Sjukpenning av anställning, det vill säga sjukpenning som grundas på inkomst av tjänst för vilken arbetsgivaren har betalat ATP-avgift, inklusive KAS. För 1987–1988 beskrivs variabeln också som summan av ersättningar från den allmänna försäkringskassan som utgör pensionsgrundande inkomst av tjänst enligt kontrolluppgift; 1987 ingår då sjukpenning, föräldrapenning, havandeskapspenning, ersättning till smittbärare, dagpenning vid arbetsmarknadsutbildning, ersättning till ledsagare och dagpenning vid utbildning och tjänstgöring inom totalförsvaret." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nRåexporten (tre likadana rader per år) har ATP-definitionen 1974–1986 och 1989 och den vidare summan av pensionsgrundande ersättningar 1987–1988; omfattningsändringen anges som fakta med år.\ncatalog:variable_text:38411:1461:6209\ncatalog:variable_text:38411:6209:6574\ncatalog:variable_text:38411:6574:6940"
 
 [[statement]]
