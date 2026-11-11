@@ -17524,30 +17524,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 
 [[statement]]
 kind = "set"
-subject = "var:utlandsvistelse-forska"
-fields = { "description" = "Om individen vistats utomlands för att främst forska. 2015 besvarat med ja, ja under mindre än en vecka eller nej; 2017 som antal veckor, av det totala antalet veckor utomlands, då individen främst forskade." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; svarsformatet skiljer mellan omgångarna och anges med år.\ncatalog:variable_text:20981:16436:16801\ncatalog:variable_text:20981:17167:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:utlandsvistelse-studera"
-fields = { "description" = "Om individen vistats utomlands för att främst studera. 2015 besvarat med ja, ja under mindre än en vecka eller nej; 2017 som antal veckor, av det totala antalet veckor utomlands, då individen främst studerade." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; svarsformatet skiljer mellan omgångarna och anges med år.\ncatalog:variable_text:20982:16436:16801\ncatalog:variable_text:20982:17167:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:utlandsvistelse-total"
-fields = { "description" = "Om och hur länge individen forskade, undervisade eller studerade utanför Sverige. 2015 besvarades frågan med ja, ja under mindre än en vecka eller nej; 2017 anges antalet hela veckor totalt." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; svarsformatet skiljer mellan omgångarna och anges med år.\ncatalog:variable_text:20983:16436:16801\ncatalog:variable_text:20983:17167:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:utlandsvistelse-undervisa"
-fields = { "description" = "Om individen vistats utomlands för att främst undervisa. 2015 besvarat med ja, ja under mindre än en vecka eller nej; 2017 som antal veckor, av det totala antalet veckor utomlands, då individen främst undervisade." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; svarsformatet skiljer mellan omgångarna och anges med år.\ncatalog:variable_text:20984:16436:16801\ncatalog:variable_text:20984:17167:17532"
-
-[[statement]]
-kind = "set"
 subject = "var:vikt"
 fields = { "description" = "Kalibrerad vikt som tar hänsyn till varierande urvalssannolikheter och svarsfrekvenser i olika strata samt till hjälpinformation från register. 2017 anges vikten som antal objekt i populationen per stratum delat med antal objekt i urvalet per stratum." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2017 års beräkningsformel anges med år.\ncatalog:variable_text:21656:16436:16801\ncatalog:variable_text:21656:17167:17532"

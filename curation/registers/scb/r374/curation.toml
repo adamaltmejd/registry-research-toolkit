@@ -2955,12 +2955,6 @@ evidence = "C4 opdef (row=522509 (r14841)) gives the percentage split of course 
 
 [[statement]]
 kind = "set"
-subject = "var:c6flag"
-fields = { "description" = "Flagga för typ av utbildningsanordnare. 2010 anger den om företaget anlitat någon extern utbildningsanordnare. 2015 anger den om, och i så fall hur många, av de listade typerna av utbildningsanordnare som bidrog med flest kurstimmar på betald arbetstid under referensåret." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma frågeblock; 2015 års formulering följer omgångens nya fråga om de tre anordnare som gav flest kurstimmar, angiven som fakta med år.\ncatalog:variable_text:14003:14610:14975\ncatalog:variable_text:14003:16436:16801"
-
-[[statement]]
-kind = "set"
 subject = "var:insamlingsmetod"
 fields = { "description" = "Hur uppgifterna samlades in. Skapad variabel med två värden 2010 och ett värde 2015." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; antalet värden per omgång anges med år.\ncatalog:variable_text:14040:14610:14975\ncatalog:variable_text:14040:16436:16801"

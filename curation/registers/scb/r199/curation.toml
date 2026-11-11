@@ -1487,7 +1487,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:man"
-fields = { "description" = "Månad från vilken den alternativa månadshyran gäller, om hyran under undersökningsåret ändrats till en annan än januarihyran. 2012–2013 dokumenteras kolumnen också för en hyresändring året efter undersökningsåret." }
+fields = { "description" = "Månad från vilken den alternativa månadshyran gäller, om hyran under undersökningsåret ändrats till en annan än januarihyran. 2012–2013 kan ändringen också avse året efter undersökningsåret." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSCB-exporten dokumenterar Man0 2012–2013 i två rader (ändring under undersökningsåret och året efter); katalogen visar bara den andra. Båda anges.\ncatalog:variable_text:32725:13879:15340\ncatalog:variable_text:32725:15340:16071"
 
 [[statement]]

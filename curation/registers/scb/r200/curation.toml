@@ -11980,7 +11980,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:inkopsvarde-bransle"
-fields = { "description" = "Inköpsvärde för bränsle. För elproducerande industriföretag avser det det totala inköpsvärdet för de olika bränsleslagen; för elnätföretag avser det bränsle för värmeproduktion i värmeverk och annan värme (så kallad färdig värme)." }
+fields = { "description" = "Inköpsvärde för bränsle. För elproducerande industriföretag avses det totala inköpsvärdet för de olika bränsleslagen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nIndustriföretagen anger totalt inköpsvärde för olika bränsleslag; elnätföretagens kolumn anger från 2018 inköpsvärde för bränsle. Gruppens gemensamma text om mottagen värmemängd (delad av fyra kolumner) tas inte med.\ncatalog:variable_text:11879:14245:20089"
 
 [[statement]]
@@ -12174,3 +12174,9 @@ kind = "set"
 subject = "var:bruttoprod"
 fields = { "description" = "Elproduktion brutto, i MWh, vid vatten-, vind- och värmekraftstationer." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått i alla tabeller; elnätföretagens operationalisering (egenforbr:s text, felet finns i SCB-exporten) är rättad på occurrence-nivå.\ncatalog:variable_text:11833:14245:14610\ncatalog:variable_text:11833:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:verkningsgrad"
+fields = { "description" = "Verkningsgrad vid värmeproduktion vid värmeverk och annan värme (så kallad färdig värme). För elnätföretagen anges den normalt till 80–90 procent." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått i båda tabellerna. Exportens värmevärdesrader för samma kolumn hör till syskonvariabeln varmevarde-vid-varmeproduktion (befintlig rolluppdelning) och tas inte med.\ncatalog:variable_text:12219:14245:17897"
