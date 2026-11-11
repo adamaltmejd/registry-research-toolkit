@@ -68,6 +68,12 @@ open_project() {
 	ab upload 'input[type=file]' "$1" >/dev/null || fail "could not open $1"
 }
 shot() { ab screenshot --full "$out_dir/$journey.png" >/dev/null || fail "could not save the screenshot"; }
+# /project says the project is ready: its check ended with "What will be delivered"
+# (shown for ready or warnings) and no verdict row (a ready project shows none, #2417).
+ready() {
+	see heading "What will be delivered" &&
+		no_tree "Has warnings|Has problems|Can.t download yet|Check did not run|Checking"
+}
 
 WEBAPP_PROJECT=$root/conformance/cases/fixtures/webapp-dev/project_data.json
 
@@ -149,14 +155,14 @@ j_classification() {
 # the added column (the file's contract is reg-core's validator's).
 j_order() {
 	local saved=$out_dir/order-project_data.json
-	open_project "$WEBAPP_PROJECT" && wait_text "Ready to download." &&
+	open_project "$WEBAPP_PROJECT" && ready &&
 		visit /catalog/demo/hush/antal &&
 		press checkbox "Antal, Antal personer, Familjer, 2021–2022, check to add" &&
 		press button "Add 1 variable to project" &&
 		tree 'checkbox "Antal, Antal personer, Familjer, 2021–2022, in project, check to remove"' &&
 		visit /project && ab reload >/dev/null && settled &&
 		see heading "Hushållsregistret" && see link "Antal personer" &&
-		wait_text "Ready to download." || return 1
+		ready || return 1
 	local ref
 	ref=$(ab snapshot -i | sed -n 's/.*button "Download project_data.json" \[ref=\(e[0-9]*\)\].*/\1/p')
 	[ -n "$ref" ] || fail "no Download project_data.json button" || return 1
