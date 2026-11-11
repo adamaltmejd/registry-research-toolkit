@@ -69,6 +69,9 @@ interface LaneGeometryInput {
   /** The primary pointer is a finger: a graph whose spans would be under 24 px
    * beside the names stacks at any width, to take the 24 px floor. */
   touch?: boolean;
+  /** A lane carries an action beside its name (the /project source card's
+   * Remove): the gutter keeps its full width, so name and action fit. */
+  actions?: boolean;
 }
 
 interface PlacedSegment {
@@ -155,6 +158,11 @@ const NAME_GAP = [8, 0.02, 16] as const;
 // 450 px. Margin below the 478 px a 961 px window with a classic scrollbar
 // leaves, so the browse columns never stand beside a stacked graph.
 const MIN_TRACK = 320;
+// A gutter that holds a lane's name and its action (Remove) does not narrow,
+// and stacks under the track it always had.
+const ACTION_NAME_WIDTH = [230, 0, 230] as const;
+const ACTION_NAME_GAP = [16, 0, 16] as const;
+const ACTION_MIN_TRACK = 360;
 // Stacked, the room a two-line lane name keeps until it is measured.
 const STACKED_NAME_HEIGHT = 54;
 // Stacked, the least room between a measured name and its spans.
@@ -201,14 +209,17 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
   );
   const fluid = ([min, share, max]: readonly [number, number, number]) =>
     Math.min(Math.max(input.width * share, min), max);
-  const nameGap = fluid(NAME_GAP);
-  const besideTrack = input.width - fluid(NAME_WIDTH) - nameGap;
+  const [nameSpec, gapSpec, minTrack] = input.actions
+    ? [ACTION_NAME_WIDTH, ACTION_NAME_GAP, ACTION_MIN_TRACK]
+    : [NAME_WIDTH, NAME_GAP, MIN_TRACK];
+  const nameGap = fluid(gapSpec);
+  const besideTrack = input.width - fluid(nameSpec) - nameGap;
   // Under a finger, a graph whose shortest span would be under 24 px beside
   // the names stacks, as on a phone, and grows its track there.
   const stacked =
-    besideTrack < MIN_TRACK ||
+    besideTrack < minTrack ||
     (!!input.touch && (besideTrack / axisYears) * shortest < MIN_TARGET);
-  const nameWidth = stacked ? 0 : fluid(NAME_WIDTH);
+  const nameWidth = stacked ? 0 : fluid(nameSpec);
   const trackX = stacked ? 0 : nameWidth + nameGap;
   const pxPerYear = Math.max(
     Math.max(input.width - trackX, 1) / axisYears,

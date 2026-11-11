@@ -230,6 +230,7 @@ export function LaneGraph({
           below,
           nameHeights,
           touch,
+          actions: lanes.some((lane) => lane.action !== undefined),
         })
       : null;
   // A single-pick graph that scrolls keeps its picked span in view (a classification's

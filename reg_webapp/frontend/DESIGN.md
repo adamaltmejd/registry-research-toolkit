@@ -876,6 +876,10 @@ Time is the axis every relation is drawn on.
   track (#2407, maintainer decisions 2026-11-11). Under a 320 px track, a graph under
   about 450 px, the names stack over their spans; the margin keeps a 961 px window
   with a classic scrollbar on the gutter view (new rule, proposed by the implementer).
+  A graph whose lanes carry an action beside the name (the /project source card's
+  Remove) keeps the full 230 + 16 px gutter and stacks under a 360 px track, so name
+  and action still fit (new rule, proposed by the implementer: the compact gutter cut
+  "Antal personer" to "Anta…" beside Remove).
   Stacked below the breakpoint, a lane's spans
   start just under its name, a table pill over its span. Hovering or focusing a span
   shows a RAC `Tooltip` with no delay only where the span's own text is cut off, which
