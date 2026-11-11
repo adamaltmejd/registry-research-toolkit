@@ -5872,12 +5872,6 @@ evidence = "Release '2024' is a kalenderår delivery. Maintainer ruling 2026-11-
 
 [[statement]]
 kind = "set"
-subject = "elever-vartermin: PersonNr where key = 'v57' and release = 'r7254'"
-fields = { "operational_definition" = "" }
-evidence = "Registerinformation.csv, VarId 57, Elever vårtermin 2015 (release r7254), column PersonNr: the operational definition is 'Summering av poäng som eleven läst under det aktuella halvåret.', TPoang's text; SCB's export carries the same error in a single row. PersonNr in the other pupil tables and terms states no operational definition, so the copied text is cleared. Operator, #2322 curation under the maintainer's 2026-11-11 delegation."
-
-[[statement]]
-kind = "set"
 subject = "var:ar"
 fields = { "description" = "Aktuellt verksamhetsår (kalenderår); i elevtabellen för läsåret 2003/2004 höstterminens verksamhetsår." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDefinitionen är generisk (delas av 67 variabler); läsårstabellens precisering anges för den tabellen.\ncatalog:variable_text:41455:3468:6390\ncatalog:variable_text:41455:12234:12600"
@@ -5946,7 +5940,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 kind = "set"
 subject = "var:personnr"
 fields = { "description" = "Personnummer för eleven eller kursdeltagaren." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; den generiska personnummerdefinitionen (delad av 96 variabler) tas inte med, och vårterminen 2015 års kopierade operationalisering är rensad på förekomstnivå.\ncatalog:variable_text:41516:3468:6390\ncatalog:variable_text:41516:8582:18993\ncatalog:variable_text:41516:18993:19174"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; den generiska personnummerdefinitionen (delad av 96 variabler) tas inte med. Vårterminen 2015 års operationalisering är TPoang:s text (exportfel) och står kvar som källtext.\ncatalog:variable_text:41516:3468:6390\ncatalog:variable_text:41516:8582:18993\ncatalog:variable_text:41516:18993:19174"
 
 [[statement]]
 kind = "set"
