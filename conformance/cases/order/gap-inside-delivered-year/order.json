@@ -45,7 +45,7 @@
       "ordered": [
         {
           "start": "2019-01-01",
-          "end": "2020-07-01"
+          "end": "2021-01-01"
         }
       ]
     }
@@ -55,7 +55,7 @@
       "level": "info",
       "code": "period_clipped",
       "path": "/sources/0/bindings/0",
-      "message": "There is no data on demo/halv/x in demo/halv for [2021-01-01, 2022-01-01). Those years will not be delivered.",
+      "message": "There is no data on demo/halv/x in demo/halv for 2021. Those years will not be delivered.",
       "source": "s",
       "variable": "demo/halv/x",
       "variable_name": "X",

@@ -37,7 +37,7 @@
       "level": "warning",
       "code": "preliminary_data",
       "path": "/sources/0/bindings/0",
-      "message": "demo/pre/mat in demo/pre over [2020-01-01, 2021-01-01) is preliminary data: no final release covers it",
+      "message": "demo/pre/mat in demo/pre for 2020 is preliminary data: no final release covers it",
       "source": "s",
       "variable": "demo/pre/mat",
       "variable_name": "Mätvärde",

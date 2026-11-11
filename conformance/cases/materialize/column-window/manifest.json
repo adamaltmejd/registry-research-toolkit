@@ -88,7 +88,7 @@
     {
       "code": "column_window_unavailable",
       "level": "warning",
-      "message": "The column for demo/keyed/score in demo/keyed/visits does not cover [2018-01-01, 2019-01-01). Those years will not be delivered.",
+      "message": "The column for demo/keyed/score in demo/keyed/visits does not cover 2018. Those years will not be delivered.",
       "path": "/sources/0/bindings/0",
       "period": {
         "end": "2019-01-01",

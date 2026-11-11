@@ -11,7 +11,7 @@
       "level": "error",
       "code": "mapping_missing",
       "path": "/sources/0/bindings/0",
-      "message": "demo/owners/first in demo/owners cannot be ordered for [2018-01-01, 2019-01-01): it is not clear whether its column there holds this variable or another one. Leave out those years.",
+      "message": "demo/owners/first in demo/owners cannot be ordered for 2018: it is not clear whether its column there holds this variable or another one. Leave out those years.",
       "source": "a",
       "variable": "demo/owners/first",
       "variable_name": "First owner",

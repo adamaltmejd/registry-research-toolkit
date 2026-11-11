@@ -94,7 +94,7 @@
       "level": "warning",
       "code": "binding_type_differs",
       "path": "/sources/0/bindings/0",
-      "message": "the project gives demo/typ/belopp the type text, but the catalog has integer in demo/typ over [2020-01-01, 2021-01-01)",
+      "message": "the project gives demo/typ/belopp the type text, but the catalog has integer in demo/typ for 2020",
       "source": "s",
       "variable": "demo/typ/belopp",
       "variable_name": "Belopp",

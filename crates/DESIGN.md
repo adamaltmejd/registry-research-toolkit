@@ -1221,7 +1221,15 @@ the order check's to state in its own tests; the rules that shape them:
   reported, by the logical check or the holdings stage (no `period_clipped`, no
   `coverage_gap`, no clip when nothing else is missing): that year reads as delivered,
   and no whole year fills the gap (frontend DESIGN.md → Time, #2389; #2409). A steward
-  order still lists only the delivered days as entries.
+  order still lists only the delivered days as entries. A clip's `ordered` is its
+  `requested` less the reported gaps, so such a year (a 31 December snapshot included)
+  counts as ordered whole and `requested` less `ordered` names only years with no
+  delivery (#2392; maintainer, PR #2389, 2026-11-10: the server fixes the gaps).
+- Finding messages write their days in plain words at their grain: `2019`, `2018 to
+  2019`, school years as `2004/2005`, months for a part year (`July to December 2018`),
+  else days; an open end as `2019 onwards` or `every year through 2019`, and "any
+  year" where a message says the days have no data (#2415). The `period` field carries
+  the exact days.
 - A table succession with no `at` is not followed: the check returns
   `table_succession_undated` naming the successor and clips the rest. No day is inferred
   from coverage (v4 §2.1); D's `link … at` supplies the day.
@@ -1287,13 +1295,13 @@ and `sun2000niva`.
     ],
     "findings": [
       {"level": "info", "code": "period_clipped", "path": "/sources/0/bindings/1",
-       "message": "There is no data on scb/lisa/sun2000niva in scb/lisa/individ for
-                  [2003-01-01, 2004-01-01). Those years will not be delivered.",
+       "message": "There is no data on scb/lisa/sun2000niva in scb/lisa/individ for 2003.
+                  Those years will not be delivered.",
        "source": "lisa", "variable": "scb/lisa/sun2000niva", "table": "scb/lisa/individ",
        "period": {"start": "2003-01-01", "end": "2004-01-01"}, "successor_fqid": null,
        "variable_name": "Utbildningsnivå", "table_name": "Individer", "successor_name": null},
       {"level": "info", "code": "form_change", "path": "/sources/0/bindings/0",
-       "message": "scb/lisa/dispink changes form at 2004-01-01 (DispInk -> DispInk04)",
+       "message": "scb/lisa/dispink changes form from 2004 (DispInk -> DispInk04)",
        "source": "lisa", "variable": "scb/lisa/dispink", "table": "scb/lisa/individ",
        "period": {"start": "2003-01-01", "end": "2007-01-01"}, "successor_fqid": null,
        "variable_name": "Disponibel inkomst", "table_name": "Individer", "successor_name": null}
@@ -1321,7 +1329,7 @@ Request: source `lisa`, period `2018..2020`, bindings `kommun` and `dispink`.
     "fields": {
       "findings": [
         {"level": "error", "code": "ambiguous_window", "path": "/sources/0/bindings/0",
-         "message": "two variables claim the column 'kommun' in scb/lisa/individ over [2019-01-01, 2020-01-01)",
+         "message": "two variables claim the column 'kommun' in scb/lisa/individ for 2019",
          "source": "lisa", "variable": "scb/lisa/kommun", "table": "scb/lisa/individ",
          "period": {"start": "2019-01-01", "end": "2020-01-01"}, "successor_fqid": null,
          "variable_name": "Kommun", "table_name": "Individer", "successor_name": null}

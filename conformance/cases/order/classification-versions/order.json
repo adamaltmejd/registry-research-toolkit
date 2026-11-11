@@ -80,7 +80,7 @@
       "level": "warning",
       "code": "classification_version_ambiguous",
       "path": "/sources/0/bindings/0",
-      "message": "demo/pins/kod carries more than one classification version over [2018-01-01, 2020-01-01); pin one with \"classification\".",
+      "message": "demo/pins/kod carries more than one classification version for 2018 to 2019; pin one with \"classification\".",
       "source": "s",
       "variable": "demo/pins/kod",
       "variable_name": "Code",

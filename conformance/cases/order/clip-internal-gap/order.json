@@ -79,7 +79,7 @@
       "level": "info",
       "code": "period_clipped",
       "path": "/sources/0/bindings/0",
-      "message": "There is no data on demo/gap/x in demo/gap for [2017-01-01, 2018-01-01). Those years will not be delivered.",
+      "message": "There is no data on demo/gap/x in demo/gap for 2017. Those years will not be delivered.",
       "source": "s",
       "variable": "demo/gap/x",
       "variable_name": "X",

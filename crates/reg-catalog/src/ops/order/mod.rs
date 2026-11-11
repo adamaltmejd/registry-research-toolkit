@@ -21,6 +21,7 @@ mod materialize;
 mod rows;
 mod successor;
 mod window;
+mod words;
 
 pub(crate) use rows::StewardKeys;
 
@@ -234,8 +235,15 @@ fn delivered(
                 variable_name: names.of(Named::Variable, &c.variable)?,
                 source: c.source,
                 variable: c.variable,
+                ordered: clip_ordered(
+                    server,
+                    &c.requested
+                        .iter()
+                        .map(|p| p.days(server.open))
+                        .collect::<Vec<_>>(),
+                    &reg_core::days::merge(c.ordered.iter().map(|p| p.days(server.open)).collect()),
+                ),
                 requested: c.requested,
-                ordered: c.ordered,
             })
         })
         .collect::<Result<_, Error>>()?;
@@ -521,6 +529,8 @@ pub struct OrderClip {
     /// The variable's name.
     variable_name: String,
     requested: Vec<Period>,
+    /// The requested days less the years with no delivery: a requested year delivered on
+    /// some day reads as ordered whole (#2392).
     ordered: Vec<Period>,
 }
 
@@ -779,7 +789,7 @@ fn check_source(
             "table_succession_undated",
             format!("/sources/{index}"),
             format!(
-                "{continued} is continued by {successor} on no stated day, so {} is not \
+                "{continued} is continued by {successor} on no stated day, so its data for {} is not \
                  followed into {successor}",
                 span(server, &past)
             ),
@@ -1064,19 +1074,39 @@ pub(super) fn reported_gaps(
     minus(gaps, &quiet)
 }
 
+/// An [`OrderClip`]'s `ordered`: the requested days (half-open day numbers) less the gaps an
+/// order reports ([`reported_gaps`]). A requested year `delivered` reaches on some day,
+/// such as a 31 December snapshot, reads as ordered whole, so `requested` less `ordered`
+/// names only the years with no delivery (#2392).
+pub(super) fn clip_ordered(
+    server: &Server,
+    requested: &[(i64, i64)],
+    delivered: &[(i64, i64)],
+) -> Vec<Period> {
+    use reg_core::days::{merge, minus};
+    let requested = merge(requested.to_vec());
+    let missing = minus(&requested, delivered);
+    minus(&requested, &reported_gaps(&missing, &requested, delivered))
+        .into_iter()
+        .map(|(lo, hi)| server.period(lo, hi))
+        .collect()
+}
+
 /// [`reported_gaps`] over inclusive ISO intervals.
 pub(super) fn reported_intervals(
     gaps: &[Interval],
     requested: &[Interval],
     delivered: &[Interval],
 ) -> Vec<Interval> {
-    let days = |v: &[Interval]| -> Vec<(i64, i64)> {
-        v.iter().map(|(lo, hi)| (day(lo), day(hi) + 1)).collect()
-    };
     reported_gaps(&days(gaps), &days(requested), &days(delivered))
         .into_iter()
         .map(|(lo, hi)| interval(lo, hi))
         .collect()
+}
+
+/// Inclusive ISO intervals as half-open day numbers.
+pub(super) fn days(v: &[Interval]) -> Vec<(i64, i64)> {
+    v.iter().map(|(lo, hi)| (day(lo), day(hi) + 1)).collect()
 }
 
 /// The day number of an ISO day.
@@ -1094,12 +1124,7 @@ fn period(server: &Server, (lo, hi): &Interval) -> Period {
     server.period(day(lo), day(hi) + 1)
 }
 
-/// A period as messages write it, `[2019-01-01, 2020-01-01)`, `open` for a sentinel.
+/// An inclusive ISO interval in plain words ([`words::plain`]).
 fn span(server: &Server, interval: &Interval) -> String {
-    let p = period(server, interval);
-    format!(
-        "[{}, {})",
-        p.start.as_deref().unwrap_or("open"),
-        p.end.as_deref().unwrap_or("open")
-    )
+    words::plain(&[period(server, interval)])
 }

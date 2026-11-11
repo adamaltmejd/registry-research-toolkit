@@ -75,7 +75,7 @@
       "level": "info",
       "code": "identifier",
       "path": "/sources/0/bindings/0",
-      "message": "demo/held/id is an identifier in demo/held over [2017-01-01, 2018-01-01)",
+      "message": "demo/held/id is an identifier in demo/held for 2017",
       "source": "k",
       "variable": "demo/held/id",
       "table": "demo/held",

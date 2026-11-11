@@ -76,7 +76,7 @@
       "level": "info",
       "code": "period_clipped",
       "path": "/sources/0/bindings/0",
-      "message": "There is no data on demo/imp/ink in demo/imp for [2016-01-01, 2017-01-01). Those years will not be delivered.",
+      "message": "There is no data on demo/imp/ink in demo/imp for 2016. Those years will not be delivered.",
       "source": "s",
       "variable": "demo/imp/ink",
       "variable_name": "Inkomst",
