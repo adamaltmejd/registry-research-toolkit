@@ -1,6 +1,8 @@
-/** Projection of 5.1 catalog segments onto the variable page's first lane. */
+/** Projection of 5.1 catalog segments onto the variable page's lanes. */
 import {
-  columnInProject,
+  bindingSources,
+  columnInSource,
+  columnRows,
   columnWindowPeriod,
   type VariableColumn,
 } from "./add_columns";
@@ -8,11 +10,27 @@ import type { Graph, VariableShow } from "./api";
 import { catalogHref } from "./catalog";
 import { segmentYears, sourcePeriodLabel } from "./catalog_period";
 import { inDatabase, type Space } from "./databases";
-import type { LaneEdgeModel, LaneModel, LaneSpanModel } from "./LaneGraph";
-import { periodWindowRelation } from "./period";
+import type {
+  LaneEdgeModel,
+  LaneModel,
+  LaneSpanModel,
+  LaneSpanSegment,
+} from "./LaneGraph";
+import { periodCoverageUnion, periodWindowRelation } from "./period";
 import type { ProjectData, ProjectStudyWindow } from "./project_data";
-import { columnYearRuns, studyWindow } from "./study_window";
+import { columnDateRuns, columnYearRuns, studyWindow } from "./study_window";
+import type { ColumnState } from "./ui/Pill";
 
+const RANK: Record<ColumnState, number> = { out: 0, default: 1, in: 2 };
+
+/**
+ * A variable's spans, one lane per table and one row per run of its columns
+ * there (#2408): a project binds the variable once per table, so a lane is
+ * picked whole. Pressing any of its spans stages the variable's add, which
+ * takes every column of that table inside the years to add, or, once it is in
+ * the project, its removal. Successive spellings share a row; columns
+ * delivered side by side take a row each (`columnRows`).
+ */
 export function variableSpans({
   columns,
   variable,
@@ -26,6 +44,7 @@ export function variableSpans({
   readOnly = false,
   database = null,
   notInDatabase = new Set(),
+  tableName = (table) => names.get(table) ?? "Table name unavailable",
 }: {
   columns: readonly VariableColumn[];
   variable: Pick<VariableShow, "fqid" | "name">;
@@ -34,9 +53,10 @@ export function variableSpans({
   selection: ProjectStudyWindow;
   axis: [number, number];
   catalogBounds: [number, number];
-  /** Span ids, `idPrefix` included. */
+  /** Lane ids (`idPrefix` and table) staged for a change. */
   selected: ReadonlySet<string>;
   idPrefix?: string;
+  /** Shows each column's "in project" state, with nothing to pick. */
   readOnly?: boolean;
   /** The database the project names: a span draws that database's years, and
    * a column it lacks draws its own years as outside it (#2344). */
@@ -44,38 +64,78 @@ export function variableSpans({
   /** The tables whose binding of this variable the project's check says the
    * database lacks over its years (`not_in_database`). */
   notInDatabase?: ReadonlySet<string>;
+  /** How the accessible name names a table. */
+  tableName?: (table: string) => string;
 }): LaneSpanModel[] {
   const study = studyWindow(project);
-  return columns.flatMap((all) => {
-    const column = { ...all, segments: inDatabase(all.segments, database) };
-    const absent = column.segments.length === 0;
-    const drawn = absent ? all : column;
-    const eras = columnYearRuns(drawn.segments, catalogBounds, axis[0]);
-    if (!eras.length) return [];
-    const first = eras[0].from;
-    const last = eras[eras.length - 1].to;
-    const source = project?.sources.find(
-      (entry) =>
-        entry.table === column.table &&
-        entry.bindings.some((binding) => binding.variable === variable.fqid),
+  const tables = [...new Set(columns.map((column) => column.table))];
+  return tables.flatMap((table) => {
+    const lane = `${idPrefix}${table}`;
+    const sources = bindingSources(project, variable.fqid, table);
+    const source = sources.at(0);
+    // The years the project takes the variable for here: the union of its
+    // sources' periods when it splits the table into several.
+    // simplify: periodCoverageUnion lets a later period win over `_default`;
+    // take `_default` first if a split table ever pairs one with a dated source.
+    const period = source
+      ? sources
+          .slice(1)
+          .reduce(
+            (union, next) => periodCoverageUnion(union, next.period),
+            source.period,
+          )
+      : undefined;
+    const parts = new Map(
+      columns
+        .filter((column) => column.table === table)
+        .map((all) => {
+          const column = {
+            ...all,
+            segments: inDatabase(all.segments, database),
+          };
+          const absent = column.segments.length === 0;
+          const drawn = absent ? all : column;
+          return [
+            all.id,
+            {
+              drawn,
+              absent,
+              inside: !absent && columnWindowPeriod(column, selection) !== null,
+              taken: sources.some((source) => columnInSource(drawn, source)),
+            },
+          ];
+        }),
     );
-    const inside = !absent && columnWindowPeriod(column, selection) !== null;
+    const every = [...parts.values()];
+    const absent = every.every((part) => part.absent);
+    const inside = every.some((part) => part.inside);
     // Whether a committed binding can be ordered from the database turns on
     // its requested years, its other column names and its successor: the
     // project's check decides, and the page shows its verdict.
-    const unusable = !!source && notInDatabase.has(column.table);
-    const relation = source
-      ? periodWindowRelation(
-          source.period,
-          study,
-          eras.map((era) => [`${era.from}-01-01`, `${era.to}-12-31`]),
-        )
-      : null;
-    const sourceLabel = sourcePeriodLabel(source?.period);
-    // How a committed column stands to the study window and the project's
+    const unusable = !!source && notInDatabase.has(table);
+    const relation =
+      period !== undefined
+        ? periodWindowRelation(
+            period,
+            study,
+            every.flatMap((part) =>
+              columnYearRuns(part.drawn.segments, catalogBounds, axis[0]).map(
+                (era): [string, string] => [
+                  `${era.from}-01-01`,
+                  `${era.to}-12-31`,
+                ],
+              ),
+            ),
+          )
+        : null;
+    const sourceLabel = sourcePeriodLabel(period);
+    // How a committed binding stands to the study window and the project's
     // database, in its accessible name.
-    const note =
-      unusable && database
+    const note = readOnly
+      ? source
+        ? "in project"
+        : "read only"
+      : unusable && database
         ? `In project, not in ${database.name} for its years.`
         : absent && database
           ? source
@@ -85,70 +145,90 @@ export function variableSpans({
             ? `In project, outside the study years (${sourceLabel}).`
             : relation && relation !== "same"
               ? `In project for ${sourceLabel}, which differs from the study years.`
-              : null;
-    const years = segmentYears(drawn.segments);
-    const id = `${idPrefix}${column.id}`;
-    const span: LaneSpanModel = {
-      id,
-      lane: `${idPrefix}${column.table}`,
-      name: column.spelling,
-      tableRef: column.table,
-      from: first,
-      to: last,
-      segments: eras.map((era) => ({ name: null, ...era })),
-      years,
-      state: source ? "in" : inside ? "default" : "out",
-      selectable: !!project && !source && inside,
-      isSelected: inside && selected.has(id),
-      staged: inside && selected.has(id) && !source ? "add" : null,
-      blocked: relation === "disjoint" || unusable,
-      accessibleName: `${[
-        column.spelling,
-        variable.name,
-        names.get(column.table) ?? "Table name unavailable",
-        years,
-        note ??
-          (source
-            ? "in project"
-            : inside
-              ? "click to select"
-              : "outside the years to add"),
-      ]
-        .filter(Boolean)
-        .join(", ")}`,
-    };
-    return [
-      readOnly
-        ? readOnlySpan(span, !!source, variable.name, names.get(column.table))
-        : span,
-    ];
+              : !project
+                ? source
+                  ? "in project"
+                  : null
+                : source
+                  ? "in project, check to remove"
+                  : inside
+                    ? "check to add"
+                    : "outside the years to add";
+    const selectable = !readOnly && !!project && (!!source || inside);
+    const isSelected = selectable && selected.has(lane);
+    const staged = isSelected ? (source ? "remove" : "add") : null;
+    return columnRows(every.map((part) => part.drawn)).flatMap(
+      (row, index): LaneSpanModel[] => {
+        // In date order, so a spelling that returns draws its changes.
+        const segments = row
+          .flatMap((column): LaneSpanSegment[] => {
+            const part = parts.get(column.id);
+            if (!part) return [];
+            const state: ColumnState = source
+              ? part.taken
+                ? "in"
+                : readOnly
+                  ? "default"
+                  : "out"
+              : readOnly || part.inside
+                ? "default"
+                : "out";
+            return columnDateRuns(column.segments, catalogBounds, axis[0]).map(
+              (run) => ({
+                name: column.spelling,
+                ...run,
+                state,
+                // The columns the staged change takes in or out.
+                staged: staged === "add" ? part.inside : part.taken,
+              }),
+            );
+          })
+          .sort((a, b) => a.from - b.from);
+        if (!segments.length) return [];
+        const spellings = row.map((column) => column.spelling);
+        const years = segmentYears(row.flatMap((column) => column.segments));
+        return [
+          {
+            id: `${lane}#${index}`,
+            lane,
+            name: spellings.join(", "),
+            tableRef: table,
+            from: Math.min(...segments.map((segment) => segment.from)),
+            to: Math.max(...segments.map((segment) => segment.to)),
+            segments,
+            years,
+            columns:
+              row.length > 1
+                ? row.map((column) => ({
+                    name: column.spelling,
+                    years: segmentYears(column.segments),
+                  }))
+                : undefined,
+            state: segments.reduce<ColumnState>(
+              (best, segment) =>
+                segment.state && RANK[segment.state] > RANK[best]
+                  ? segment.state
+                  : best,
+              "out",
+            ),
+            selectable,
+            isSelected: readOnly ? undefined : isSelected,
+            staged,
+            blocked: !readOnly && (relation === "disjoint" || unusable),
+            accessibleName: [
+              ...spellings,
+              variable.name,
+              tableName(table),
+              years,
+              note,
+            ]
+              .filter(Boolean)
+              .join(", "),
+          },
+        ];
+      },
+    );
   });
-}
-
-/** A span that shows its "in project" state but cannot be ticked. */
-function readOnlySpan(
-  span: LaneSpanModel,
-  inProject: boolean,
-  variableName: string,
-  tableName = "Table name unavailable",
-): LaneSpanModel {
-  return {
-    ...span,
-    state: inProject ? "in" : "default",
-    selectable: false,
-    isSelected: undefined,
-    staged: null,
-    blocked: false,
-    accessibleName: `${[
-      span.name,
-      variableName,
-      tableName,
-      span.years,
-      inProject ? "in project" : "read only",
-    ]
-      .filter(Boolean)
-      .join(", ")}`,
-  };
 }
 
 /** One-hop succession on the coverage drawing; API subjects are the newer end. */
@@ -223,18 +303,8 @@ export function successionLanes({
       selection: { from: axis[0], to: axis[1] },
       selected: new Set(),
       idPrefix: `${fqid}|`,
-    }).map((span): LaneSpanModel => {
-      const inside = columnInProject(
-        project,
-        fqid,
-        span.lane.slice(fqid.length + 1),
-      );
-      return readOnlySpan(
-        span,
-        inside,
-        node.name,
-        tableNames.get(span.lane.slice(fqid.length + 1)),
-      );
+      readOnly: true,
+      tableName: (table) => tableNames.get(table) ?? "Table name unavailable",
     });
     byVariable.set(fqid, projected);
     spans.push(...projected);

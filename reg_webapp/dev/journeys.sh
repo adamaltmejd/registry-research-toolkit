@@ -144,16 +144,16 @@ j_classification() {
 }
 
 # J5 build an order and save it. Fails if opening a project file stops reaching the
-# catalog check, a column ticked on a variable page is not added to the project, the
+# catalog check, a variable ticked on its page is not added to the project, the
 # draft does not survive a reload, or the saved project_data.json loses the project or
 # the added column (the file's contract is reg-core's validator's).
 j_order() {
 	local saved=$out_dir/order-project_data.json
 	open_project "$WEBAPP_PROJECT" && wait_text "Ready to download." &&
 		visit /catalog/demo/hush/antal &&
-		press checkbox "Antal, Antal personer, Familjer, 2021–2022, click to select" &&
-		press button "Add 1 column to project" &&
-		tree 'image "Antal, Antal personer, Familjer, 2021–2022, in project"' &&
+		press checkbox "Antal, Antal personer, Familjer, 2021–2022, check to add" &&
+		press button "Add 1 variable to project" &&
+		tree 'checkbox "Antal, Antal personer, Familjer, 2021–2022, in project, check to remove"' &&
 		visit /project && ab reload >/dev/null && settled &&
 		see heading "Hushållsregistret" && see link "Antal personer" &&
 		wait_text "Ready to download." || return 1

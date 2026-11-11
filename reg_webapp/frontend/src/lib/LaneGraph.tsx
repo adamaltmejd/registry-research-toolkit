@@ -1,4 +1,6 @@
 import {
+  type CSSProperties,
+  Fragment,
   type ReactNode,
   useCallback,
   useEffect,
@@ -22,6 +24,7 @@ import {
   type LaneEdgeKind,
   type LaneGeometry,
   type LaneRow,
+  type LaneSegment,
   type LaneSpanGeometryInput,
   labelWidth,
   laneGeometry,
@@ -40,6 +43,9 @@ export interface LaneModel {
   sub?: { text: string; mono?: boolean } | null;
   /** The variable's own page; the name links there. */
   href?: string | null;
+  /** A table row's delivered years, beside its pill where the lanes stack
+   * (variant C, #2408). */
+  years?: string;
   /** A group member's heading row (no track), or a table's row, its name
    * drawn as the table pill (#2399); a plain lane when absent. */
   row?: LaneRow;
@@ -66,11 +72,23 @@ export interface LaneModel {
   below?: ReactNode;
 }
 
+/** A part of a span: one column's run, drawn in its own state, and marked
+ * when the staged change takes it in or out. */
+export interface LaneSpanSegment extends LaneSegment {
+  state?: ColumnState;
+  staged?: boolean;
+}
+
 export interface LaneSpanModel extends LaneSpanGeometryInput {
+  segments?: LaneSpanSegment[];
   /** "2015–2019", "2020–", or "year-independent". */
   years: string;
+  /** A span over several columns: each one's name and years, for its
+   * tooltip, in place of `name` and `years`. */
+  columns?: { name: string; years: string }[];
   state: ColumnState;
-  /** A pending change to the project, shown until committed. */
+  /** A pending change to the project, shown until committed: the "+" of an
+   * add, the "−" of a removal (#2408). */
   staged?: "add" | "remove" | null;
   /** In the project through a source the study window has moved off. */
   blocked?: boolean;
@@ -189,7 +207,7 @@ export function LaneGraph({
   onToggle,
   focus = null,
   focusSpan = null,
-  hint = "Click a column to add it to your project.",
+  hint = "Click a column to add or remove its variable.",
   single = false,
 }: Props) {
   const [width, setWidth] = useState(0);
@@ -272,6 +290,8 @@ export function LaneGraph({
     opened.current = true;
     node.scrollLeft = Math.max(latest - node.clientWidth + 16, 0);
   }, [latest]);
+  const scrolls = !!geometry && geometry.contentWidth > width;
+  const pickable = !!onToggle && spans.some((span) => span.selectable);
   const spansByLane = new Map<string, LaneSpanModel[]>();
   for (const span of spans) {
     spansByLane.set(span.lane, [...(spansByLane.get(span.lane) ?? []), span]);
@@ -290,7 +310,12 @@ export function LaneGraph({
         data-stacked={geometry?.stacked || undefined}
         // A name wider than the track, or a stacked track grown to its spans'
         // least width, scrolls inside the graph, never the page.
-        data-scroll={(geometry && geometry.contentWidth > width) || undefined}
+        data-scroll={scrolls || undefined}
+        // With no span to tab to, the scroll box itself takes focus, so a
+        // keyboard can scroll it (WCAG 2.1.1; axe scrollable-region-focusable).
+        {...(scrolls && !pickable
+          ? { tabIndex: 0, role: "region", "aria-label": label }
+          : {})}
       >
         {geometry && (
           <>
@@ -362,11 +387,16 @@ export function LaneGraph({
                     <li
                       key={lane.id}
                       className={styles.lane}
-                      style={{
-                        top: placed.y,
-                        height: placed.height,
-                        width: geometry.contentWidth,
-                      }}
+                      data-row={lane.row}
+                      style={
+                        {
+                          top: placed.y,
+                          height: placed.height,
+                          width: geometry.contentWidth,
+                          // A stacked table row's guide line runs its height.
+                          "--lane-guide": `${placed.height}px`,
+                        } as CSSProperties
+                      }
                     >
                       <LaneName
                         lane={lane}
@@ -426,9 +456,7 @@ export function LaneGraph({
           </>
         )}
       </div>
-      {hint && spans.some((s) => s.selectable) && (
-        <p className={styles.hint}>{hint}</p>
-      )}
+      {hint && pickable && <p className={styles.hint}>{hint}</p>}
     </div>
   );
 }
@@ -628,7 +656,8 @@ function Marks({
               : ""
           }`}
           d={edge.d}
-          markerEnd={`url(#${marker})`}
+          // A rename hop under a span is a dash, no arrow.
+          markerEnd={edge.kind === "succession" ? `url(#${marker})` : undefined}
         />
       ))}
     </svg>
@@ -766,8 +795,22 @@ function LaneText({
   const name =
     lane.row === "table" ? (
       // The table's name inside its pill, which cuts it with an ellipsis and
-      // the whole name as hover text (#2399).
-      <EntityPill entity="table" name={lane.name} />
+      // the whole name as hover text (#2399); stacked, its years beside it
+      // (variant C, #2408).
+      <span className={styles.tableHead}>
+        <EntityPill entity="table" name={lane.name} />
+        {lane.years && (
+          <span className={styles.laneYears} aria-hidden="true">
+            {lane.years.split(", ").map((run, i) => (
+              // oxlint-disable-next-line react/no-array-index-key
+              <Fragment key={i}>
+                {i > 0 && ", "}
+                <span className={styles.run}>{run}</span>
+              </Fragment>
+            ))}
+          </span>
+        )}
+      </span>
     ) : lane.href ? (
       <a
         className={`link ${styles.nameText}`}
@@ -914,12 +957,6 @@ function Span({
     [focusInput],
   );
   const [open, setOpen] = useState(false);
-  // An unnamed series (an interrupted delivery) carries its name once, on its
-  // widest part, so a one-year first delivery does not clip it.
-  const widest = at.segments.reduce(
-    (best, segment, i) => (segment.width > at.segments[best].width ? i : best),
-    0,
-  );
   // A span with no column name (a classification version) carries its years
   // where they fit, so the bar is not an empty box; a column span shows its
   // name only (#2399).
@@ -928,10 +965,9 @@ function Span({
     at.segments.length === 1 &&
     labelWidth(span.years) <= at.width;
   const faces = at.segments.map((segment, i) => {
-    const name =
-      at.label !== "inside"
-        ? ""
-        : (segment.name ?? (i === widest ? span.name : ""));
+    // Each name sits once, in its widest part (`laneGeometry`), so a
+    // one-year first delivery does not clip it.
+    const name = segment.label;
     return (
       // The column pill stretched over its years: the name only, since the
       // axis gives the years (maintainer, #2399, 2026-11-11).
@@ -942,11 +978,16 @@ function Span({
         entity="column"
         name={name}
         years={showYears ? span.years : undefined}
-        state={span.state}
+        state={span.segments?.[i]?.state ?? span.state}
         className={styles.face}
       />
     );
   });
+  // The parts the staged change takes in or out are marked, not the span's
+  // other columns; its glyph leads the span (#2408).
+  const marked = at.segments.map(
+    (_, i) => !!span.staged && (span.segments?.[i]?.staged ?? true),
+  );
   const body = (
     <>
       {at.segments.map((segment, i) => (
@@ -954,6 +995,7 @@ function Span({
           // oxlint-disable-next-line react/no-array-index-key
           key={i}
           className={styles.segment}
+          data-staged={marked[i] ? (span.staged ?? undefined) : undefined}
           style={{ left: segment.x, width: segment.width }}
         >
           {faces[i]}
@@ -961,7 +1003,7 @@ function Span({
       ))}
       {span.staged && (
         <span className={styles.glyph} aria-hidden="true">
-          {span.staged === "add" ? "✓" : "−"}
+          {span.staged === "add" ? "+" : "−"}
         </span>
       )}
       {span.blocked && !span.staged && (
@@ -974,6 +1016,11 @@ function Span({
           {span.name}
         </span>
       )}
+      {at.beside.map((name) => (
+        <span key={name.x} className={styles.outside} style={{ left: name.x }}>
+          {name.text}
+        </span>
+      ))}
     </>
   );
   const attributes = {
@@ -984,7 +1031,7 @@ function Span({
   // The tooltip opens only where the span's own text is cut off (maintainer,
   // 2026-11-10, #2321): its years, which a span no longer shows (#2399). The
   // column name is never cut.
-  const tipped = !!span.years && !showYears;
+  const tipped = (!!span.years || !!span.columns) && !showYears;
   const tip = tipped && (
     <Tooltip
       triggerRef={face}
@@ -1000,7 +1047,15 @@ function Span({
       {/* A span without a column name (a classification version) says its
           label, or else its years, in the UI face. */}
       <span>
-        {span.name ? (
+        {span.columns ? (
+          span.columns.map((column, i) => (
+            // oxlint-disable-next-line react/no-array-index-key
+            <span key={i} className={styles.tipLine}>
+              <code>{column.name}</code>
+              {column.years && `, ${column.years}`}
+            </span>
+          ))
+        ) : span.name ? (
           <>
             <code>{span.name}</code>
             {span.years && `, ${span.years}`}

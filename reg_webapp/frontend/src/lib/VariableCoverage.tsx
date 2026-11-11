@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
 import {
   addColumns,
-  columnInProject,
+  bindingSources,
   columnWindowPeriod,
+  removeBindings,
   type TablePeriodMetadata,
   type VariableColumn,
   variableColumns,
@@ -23,7 +24,7 @@ import {
   registerSubjectNames,
   segmentsRead,
 } from "./catalog_names";
-import { segmentYears } from "./catalog_period";
+import { segmentYears, sourcePeriodLabel } from "./catalog_period";
 import {
   chosenDatabase,
   databasesLine,
@@ -184,7 +185,8 @@ export function useVariableCoverage({
   );
   const [period, setPeriod] = useState<ProjectStudyWindow | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [added, setAdded] = useState(false);
+  const [done, setDone] = useState<"added" | "removed" | null>(null);
+  const added = done === "added";
   const heading = useRef<HTMLDivElement>(null);
   const bounds = windowBounds(context);
   const catalogBounds: [number, number] = [bounds.min, bounds.max];
@@ -206,13 +208,26 @@ export function useVariableCoverage({
       variableColumns(subject.segments),
     ]),
   );
-  const columns = subjects.flatMap((subject) =>
-    (columnsOf.get(subject.fqid) ?? []).map((column) => ({
-      id: `${prefix(subject)}${column.id}`,
+  // What is picked is a variable in a table, its lane (#2408): a project
+  // binds a variable once per table, so a press stages every column of that
+  // table inside the years to add, or, once bound, the binding's removal.
+  const bindings = subjects.flatMap((subject) => {
+    const columns = columnsOf.get(subject.fqid) ?? [];
+    return [...new Set(columns.map((column) => column.table))].map((table) => ({
+      key: `${prefix(subject)}${table}`,
       subject,
-      column,
-    })),
-  );
+      table,
+      columns: columns.filter((column) => column.table === table),
+      sources: bindingSources(draft, subject.fqid, table),
+    }));
+  });
+  const inWindow = (
+    binding: (typeof bindings)[number],
+    window: ProjectStudyWindow,
+  ) =>
+    binding.columns.filter(
+      (column) => columnWindowPeriod(offered(column), window) !== null,
+    );
   const runs = columnYearRuns(
     subjects.flatMap((subject) => subject.segments),
     catalogBounds,
@@ -252,11 +267,14 @@ export function useVariableCoverage({
     study,
     catalogBounds,
   );
-  const picked = columns.filter(
-    ({ id, subject, column }) =>
-      selected.has(id) &&
-      columnWindowPeriod(offered(column), active) !== null &&
-      !columnInProject(draft, subject.fqid, column.table),
+  const adds = bindings.filter(
+    (binding) =>
+      selected.has(binding.key) &&
+      binding.sources.length === 0 &&
+      inWindow(binding, active).length > 0,
+  );
+  const removes = bindings.filter(
+    (binding) => selected.has(binding.key) && binding.sources.length > 0,
   );
   const spansOf = new Map(
     subjects.map((subject) => [
@@ -313,13 +331,14 @@ export function useVariableCoverage({
     setSelected(
       (previous) =>
         new Set(
-          columns
+          bindings
             .filter(
-              ({ id, column }) =>
-                previous.has(id) &&
-                columnWindowPeriod(offered(column), next ?? seed) !== null,
+              (binding) =>
+                previous.has(binding.key) &&
+                (binding.sources.length > 0 ||
+                  inWindow(binding, next ?? seed).length > 0),
             )
-            .map(({ id }) => id),
+            .map(({ key }) => key),
         ),
     );
   };
@@ -332,32 +351,31 @@ export function useVariableCoverage({
         issue.code === "classification_version_ambiguous" &&
         subjects.some((subject) => subject.fqid === issue.variable),
     );
+  // The bar's buttons and the checked spans go after committing.
+  const committed = (outcome: "added" | "removed", keys: Set<string>) => {
+    setSelected(
+      (previous) => new Set([...previous].filter((key) => !keys.has(key))),
+    );
+    setError(null);
+    setDone(outcome);
+    heading.current?.focus();
+  };
   const add = () => {
     const current = projectStore.draft;
-    if (!allowAdd || !current || picked.length === 0) return;
+    if (!allowAdd || !current || adds.length === 0) return;
     try {
       if (!tables)
         throw new Error(
           "Table availability is not loaded. Reload the page and try again.",
         );
-      // A project binds a variable once per table, so ticking one span adds the
-      // variable's years in every column and file of that table inside the
-      // window; each variable is added on top of the one before.
+      // Each variable is added on top of the one before, with the years of
+      // every column of its picked tables inside the window.
       let candidate = current;
       const picks: string[] = [];
       for (const subject of subjects) {
-        const adding = columns
-          .filter(
-            ({ subject: owner, column }) =>
-              owner === subject &&
-              picked.some(
-                (pick) =>
-                  pick.subject === subject &&
-                  pick.column.table === column.table,
-              ) &&
-              columnWindowPeriod(offered(column), active) !== null,
-          )
-          .map(({ column }) => offered(column));
+        const adding = adds
+          .filter((binding) => binding.subject === subject)
+          .flatMap((binding) => inWindow(binding, active).map(offered));
         if (adding.length) {
           candidate = addColumns(
             candidate,
@@ -371,24 +389,104 @@ export function useVariableCoverage({
       }
       projectStore.updateField("sources", candidate.sources);
       reportPicks(picks);
-      setSelected(new Set());
-      setError(null);
-      setAdded(true);
-      // The add bar and the selected checkboxes disappear after committing.
-      heading.current?.focus();
+      committed("added", new Set(adds.map(({ key }) => key)));
     } catch (cause) {
-      setError(`Columns were not added. ${errMessage(cause)}`);
+      setError(`Not added to the project. ${errMessage(cause)}`);
+    }
+  };
+  // A source whose every variable is staged to go leaves the project with
+  // them; the bar says so before the press (Operator, #2408).
+  const emptied = [
+    ...new Set(removes.flatMap(({ sources }) => sources)),
+  ].filter((source) =>
+    source.bindings.every((binding) =>
+      removes.some(
+        (staged) =>
+          staged.sources.includes(source) &&
+          staged.subject.fqid === binding.variable,
+      ),
+    ),
+  );
+  // A source that goes leaves its panels too.
+  const grouped = emptied.some((source) =>
+    draft?.panels?.some((panel) => panel.members.includes(source.name)),
+  );
+  // The source's name (the file's join key) stands in where the catalog has
+  // no name for the table.
+  const tableName = (table: string) =>
+    names.get(table) ??
+    draft?.sources.find((source) => source.table === table)?.name ??
+    table;
+  // A table the project splits into several sources: a removal takes the
+  // variable from each, and the bar says how many (Operator, #2408).
+  const spread = removes
+    .filter(({ sources }) => sources.length > 1)
+    .map(
+      ({ subject, table, sources }) =>
+        `Removes ${subject.name} from ${sources.length} sources of ${tableName(table)}.`,
+    );
+  const emptiedTables = [...new Set(emptied.map((source) => source.table))];
+  const removalNote =
+    [
+      ...spread,
+      ...(emptied.length
+        ? [
+            `Also removes ${listNames(
+              emptiedTables.map((table) => {
+                const going = emptied.filter(
+                  (source) => source.table === table,
+                );
+                // The table leaves only when none of its sources is left;
+                // otherwise name the sources that go by their years.
+                const kept = (draft?.sources ?? []).some(
+                  (source) => source.table === table && !going.includes(source),
+                );
+                if (!kept) return tableName(table);
+                const years = going
+                  .map((source) => sourcePeriodLabel(source.period))
+                  .filter(Boolean)
+                  .join(", ");
+                return `${going.length} ${going.length === 1 ? "source" : "sources"} of ${tableName(table)}${years ? ` (${years})` : ""}`;
+              }),
+            )} from the project${grouped ? " and from its panels" : ""}.`,
+          ]
+        : []),
+    ].join(" ") || null;
+  const remove = () => {
+    const current = projectStore.draft;
+    if (!allowAdd || !current || removes.length === 0) return;
+    try {
+      const candidate = removeBindings(
+        current,
+        removes.map(({ subject, table }) => ({
+          variable: subject.fqid,
+          table,
+        })),
+      );
+      // A source that goes takes its panel memberships with it.
+      projectStore.updateField({
+        sources: candidate.sources,
+        panels: candidate.panels,
+      });
+      committed("removed", new Set(removes.map(({ key }) => key)));
+    } catch (cause) {
+      setError(`Not removed from the project. ${errMessage(cause)}`);
     }
   };
   return {
-    graph: !context ? null : columns.length === 0 ? (
+    graph: !context ? null : bindings.length === 0 ? (
       <p className={styles.hint}>
         No years recorded for this {subjects.length > 1 ? "group" : "variable"}.
       </p>
     ) : (
       <div ref={heading} tabIndex={-1} className={styles.timeline}>
-        {live && differs && (
-          <div className={styles.header}>
+        {/* Its row is kept while it is hidden, so nothing moves when it
+            shows (#2408); hidden, it is neither a tab stop nor read. */}
+        {live && (
+          <div
+            className={styles.header}
+            style={differs ? undefined : { visibility: "hidden" }}
+          >
             <Button
               variant="ghost"
               onPress={() => {
@@ -422,14 +520,15 @@ export function useVariableCoverage({
                 ),
               ].map((table): LaneModel => {
                 const id = `${prefix(subject)}${table}`;
-                const line = databasesLine(
-                  subject.segments.filter((segment) => segment.table === table),
-                  databases,
-                  database,
+                const onTable = subject.segments.filter(
+                  (segment) => segment.table === table,
                 );
+                const line = databasesLine(onTable, databases, database);
+                const own = inDatabase(onTable, database);
                 return {
                   id,
                   name: names.get(table) ?? "Table name unavailable",
+                  years: segmentYears(own.length ? own : onTable),
                   // Which databases have the table's rows (#2344): the line
                   // wraps, since a name cut off would hide a database.
                   sub: line ? { text: line } : null,
@@ -483,13 +582,16 @@ export function useVariableCoverage({
           onToggle={
             allowAdd
               ? (id) => {
+                  // A span stands for its lane: the variable in that table.
+                  const lane = spans.find((span) => span.id === id)?.lane;
+                  if (!lane) return;
                   setSelected((previous) => {
                     const next = new Set(previous);
-                    if (next.has(id)) next.delete(id);
-                    else next.add(id);
+                    if (next.has(lane)) next.delete(lane);
+                    else next.add(lane);
                     return next;
                   });
-                  setAdded(false);
+                  setDone(null);
                   setError(null);
                 }
               : undefined
@@ -521,16 +623,18 @@ export function useVariableCoverage({
               ? "error"
               : classificationWarning
                 ? "info"
-                : added
+                : done
                   ? "ok"
                   : null
           }
           live="status"
         >
           {error ??
-            (added ? (
+            (done === "removed" ? (
+              "Removed from project."
+            ) : added ? (
               <>
-                Added columns to project.
+                Added to project.
                 {classificationWarning && (
                   <>
                     {" "}
@@ -544,10 +648,25 @@ export function useVariableCoverage({
               </>
             ) : null)}
         </StatusRow>
-        {picked.length > 0 && <AddBar count={picked.length} onAdd={add} />}
+        {(adds.length > 0 || removes.length > 0) && (
+          <AddBar
+            adds={new Set(adds.map(({ subject }) => subject.fqid)).size}
+            removes={removes.length > 0}
+            note={removalNote}
+            onAdd={add}
+            onRemove={remove}
+          />
+        )}
       </>
     ),
   };
+}
+
+/** "A", "A and B", "A, B and C". */
+function listNames(items: readonly string[]): string {
+  return items.length < 2
+    ? (items[0] ?? "")
+    : `${items.slice(0, -1).join(", ")} and ${items.at(-1)}`;
 }
 
 /** One page's succession merged over its variables' graphs: a neighbour two

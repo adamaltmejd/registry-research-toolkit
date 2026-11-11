@@ -64,6 +64,57 @@ export function columnYearRuns(
   }));
 }
 
+/** A date's place on a drawing's axis, in years: 1 July 1990 is about 1990.5. */
+function axisPosition(date: string): number {
+  const year = Number(date.slice(0, 4));
+  const start = Date.UTC(year, 0, 1);
+  const day = Date.parse(`${date}T00:00:00Z`) - start;
+  return year + day / (Date.UTC(year + 1, 0, 1) - start);
+}
+
+const DAY = 86_400_000;
+
+/** Where a lane draws segments: half-open spans of axis positions at their
+ * real dates, so a school year and the next one abut instead of sharing a
+ * year cell (#2408). A one-day period (a 31 December snapshot) has no length
+ * to draw and takes its calendar year, as its text does (DESIGN.md → Time).
+ * Open ends are drawn to the catalog bounds, as `columnYearRuns` draws them. */
+export function columnDateRuns(
+  segments: readonly Pick<CatalogSegment, "period">[],
+  bounds: readonly [number, number],
+  axisStart = bounds[0],
+): { from: number; to: number }[] {
+  const eras = segments
+    .map(({ period: { start, end } }) => {
+      if (
+        start !== null &&
+        end !== null &&
+        Date.parse(`${end}T00:00:00Z`) - Date.parse(`${start}T00:00:00Z`) <= DAY
+      ) {
+        const year = Number(start.slice(0, 4));
+        return { from: year, to: year + 1 };
+      }
+      return {
+        from:
+          start !== null
+            ? axisPosition(start)
+            : end === null
+              ? axisStart
+              : bounds[0],
+        to: end !== null ? axisPosition(end) : bounds[1] + 1,
+      };
+    })
+    .filter((era) => era.from < era.to)
+    .sort((a, b) => a.from - b.from || a.to - b.to);
+  const runs: { from: number; to: number }[] = [];
+  for (const era of eras) {
+    const last = runs.at(-1);
+    if (last && era.from <= last.to) last.to = Math.max(last.to, era.to);
+    else runs.push({ ...era });
+  }
+  return runs;
+}
+
 /** A list row's delivered years (`VariableRow`): `columnYearRuns` less the
  * year-independent segments (both ends null, a timeless table's), which have
  * no dated years, so the row draws a bare track and they do not stretch the

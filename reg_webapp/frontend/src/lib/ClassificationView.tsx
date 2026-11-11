@@ -4,7 +4,7 @@ import styles from "./CatalogNodeView.module.css";
 import { catalogPeriodLabel } from "./catalog_period";
 import { LaneGraph, type LaneModel, type LaneSpanModel } from "./LaneGraph";
 import { dataAxis } from "./period";
-import { columnYearRuns, datedYearRuns, studyWindow } from "./study_window";
+import { columnDateRuns, datedYearRuns, studyWindow } from "./study_window";
 import { Definitions } from "./ui/Definitions";
 import { Panel } from "./ui/Panel";
 import { useProject } from "./use_project";
@@ -74,7 +74,7 @@ export function ClassificationView({
     // version's start that stretched the axis: ICD-10 does not run into
     // ICD-11's 2027. An undated version (ATC) spans the axis and ends at its
     // end, never past it (DESIGN.md → Time, year-independent spans).
-    columnYearRuns(
+    columnDateRuns(
       [v],
       [
         bounds[0],
