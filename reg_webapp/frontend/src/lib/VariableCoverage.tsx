@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import {
   addColumns,
-  bindingSource,
+  bindingSources,
   columnWindowPeriod,
   removeBindings,
   type TablePeriodMetadata,
@@ -218,7 +218,7 @@ export function useVariableCoverage({
       subject,
       table,
       columns: columns.filter((column) => column.table === table),
-      source: bindingSource(draft, subject.fqid, table),
+      sources: bindingSources(draft, subject.fqid, table),
     }));
   });
   const inWindow = (
@@ -270,11 +270,11 @@ export function useVariableCoverage({
   const adds = bindings.filter(
     (binding) =>
       selected.has(binding.key) &&
-      !binding.source &&
+      binding.sources.length === 0 &&
       inWindow(binding, active).length > 0,
   );
   const removes = bindings.filter(
-    (binding) => selected.has(binding.key) && binding.source,
+    (binding) => selected.has(binding.key) && binding.sources.length > 0,
   );
   const spansOf = new Map(
     subjects.map((subject) => [
@@ -335,7 +335,8 @@ export function useVariableCoverage({
             .filter(
               (binding) =>
                 previous.has(binding.key) &&
-                (binding.source || inWindow(binding, next ?? seed).length > 0),
+                (binding.sources.length > 0 ||
+                  inWindow(binding, next ?? seed).length > 0),
             )
             .map(({ key }) => key),
         ),
@@ -396,12 +397,13 @@ export function useVariableCoverage({
   // A source whose every variable is staged to go leaves the project with
   // them; the bar says so before the press (Operator, #2408).
   const emptied = [
-    ...new Set(removes.flatMap(({ source }) => (source ? [source] : []))),
+    ...new Set(removes.flatMap(({ sources }) => sources)),
   ].filter((source) =>
     source.bindings.every((binding) =>
       removes.some(
         (staged) =>
-          staged.source === source && staged.subject.fqid === binding.variable,
+          staged.sources.includes(source) &&
+          staged.subject.fqid === binding.variable,
       ),
     ),
   );
@@ -409,11 +411,39 @@ export function useVariableCoverage({
   const grouped = emptied.some((source) =>
     draft?.panels?.some((panel) => panel.members.includes(source.name)),
   );
-  const removalNote = emptied.length
-    ? `Also removes ${listNames(
-        emptied.map((source) => names.get(source.table) ?? source.name),
-      )} from the project${grouped ? " and from its panels" : ""}.`
-    : null;
+  // The source's name (the file's join key) stands in where the catalog has
+  // no name for the table.
+  const tableName = (table: string) =>
+    names.get(table) ??
+    draft?.sources.find((source) => source.table === table)?.name ??
+    table;
+  // A table the project splits into several sources: a removal takes the
+  // variable from each, and the bar says how many (Operator, #2408).
+  const spread = removes
+    .filter(({ sources }) => sources.length > 1)
+    .map(
+      ({ subject, table, sources }) =>
+        `Removes ${subject.name} from ${sources.length} sources of ${tableName(table)}.`,
+    );
+  const emptiedTables = [...new Set(emptied.map((source) => source.table))];
+  const removalNote =
+    [
+      ...spread,
+      ...(emptied.length
+        ? [
+            `Also removes ${listNames(
+              emptiedTables.map((table) => {
+                const count = emptied.filter(
+                  (source) => source.table === table,
+                ).length;
+                return count > 1
+                  ? `${count} sources of ${tableName(table)}`
+                  : tableName(table);
+              }),
+            )} from the project${grouped ? " and from its panels" : ""}.`,
+          ]
+        : []),
+    ].join(" ") || null;
   const remove = () => {
     const current = projectStore.draft;
     if (!allowAdd || !current || removes.length === 0) return;

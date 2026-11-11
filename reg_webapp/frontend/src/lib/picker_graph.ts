@@ -1,6 +1,6 @@
 /** Projection of 5.1 catalog segments onto the variable page's lanes. */
 import {
-  bindingSource,
+  bindingSources,
   columnInSource,
   columnRows,
   columnWindowPeriod,
@@ -16,7 +16,7 @@ import type {
   LaneSpanModel,
   LaneSpanSegment,
 } from "./LaneGraph";
-import { periodWindowRelation } from "./period";
+import { periodCoverageUnion, periodWindowRelation } from "./period";
 import type { ProjectData, ProjectStudyWindow } from "./project_data";
 import { columnDateRuns, columnYearRuns, studyWindow } from "./study_window";
 import type { ColumnState } from "./ui/Pill";
@@ -71,7 +71,20 @@ export function variableSpans({
   const tables = [...new Set(columns.map((column) => column.table))];
   return tables.flatMap((table) => {
     const lane = `${idPrefix}${table}`;
-    const source = bindingSource(project, variable.fqid, table);
+    const sources = bindingSources(project, variable.fqid, table);
+    const source = sources.at(0);
+    // The years the project takes the variable for here: the union of its
+    // sources' periods when it splits the table into several.
+    // simplify: periodCoverageUnion lets a later period win over `_default`;
+    // take `_default` first if a split table ever pairs one with a dated source.
+    const period = source
+      ? sources
+          .slice(1)
+          .reduce(
+            (union, next) => periodCoverageUnion(union, next.period),
+            source.period,
+          )
+      : undefined;
     const parts = new Map(
       columns
         .filter((column) => column.table === table)
@@ -88,7 +101,7 @@ export function variableSpans({
               drawn,
               absent,
               inside: !absent && columnWindowPeriod(column, selection) !== null,
-              taken: !!source && columnInSource(drawn, source),
+              taken: sources.some((source) => columnInSource(drawn, source)),
             },
           ];
         }),
@@ -100,21 +113,22 @@ export function variableSpans({
     // its requested years, its other column names and its successor: the
     // project's check decides, and the page shows its verdict.
     const unusable = !!source && notInDatabase.has(table);
-    const relation = source
-      ? periodWindowRelation(
-          source.period,
-          study,
-          every.flatMap((part) =>
-            columnYearRuns(part.drawn.segments, catalogBounds, axis[0]).map(
-              (era): [string, string] => [
-                `${era.from}-01-01`,
-                `${era.to}-12-31`,
-              ],
+    const relation =
+      period !== undefined
+        ? periodWindowRelation(
+            period,
+            study,
+            every.flatMap((part) =>
+              columnYearRuns(part.drawn.segments, catalogBounds, axis[0]).map(
+                (era): [string, string] => [
+                  `${era.from}-01-01`,
+                  `${era.to}-12-31`,
+                ],
+              ),
             ),
-          ),
-        )
-      : null;
-    const sourceLabel = sourcePeriodLabel(source?.period);
+          )
+        : null;
+    const sourceLabel = sourcePeriodLabel(period);
     // How a committed binding stands to the study window and the project's
     // database, in its accessible name.
     const note = readOnly

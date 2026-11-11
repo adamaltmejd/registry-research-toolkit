@@ -55,14 +55,15 @@ export function variableColumns(
   return [...columns.values()];
 }
 
-/** The project's source that binds `variable` in `table`: a project binds a
- * variable once per table, whatever its columns there (reg-core `Binding`). */
-export function bindingSource(
+/** The project's sources that bind `variable` in `table`. A binding has no
+ * column, so a source binds the variable whatever its columns there (reg-core
+ * `Binding`); two sources of one table can each bind it. */
+export function bindingSources(
   project: ProjectData | null,
   variable: string,
   table: string,
-): ProjectSource | undefined {
-  return project?.sources.find(
+): ProjectSource[] {
+  return (project?.sources ?? []).filter(
     (source) =>
       source.table === table &&
       source.bindings.some((binding) => binding.variable === variable),
@@ -196,27 +197,31 @@ function sourceName(sources: readonly ProjectSource[], table: string): string {
   return name;
 }
 
-/** Take each variable out of its table's source: the binding goes, and the
- * source with it when it was the last (with its panel memberships). Checked
- * as `addColumns` is. */
+/** Take each variable out of every source of its table that binds it: the
+ * binding goes, and a source with it when it was the last (with its panel
+ * memberships). Checked as `addColumns` is. */
 export function removeBindings(
   project: ProjectData,
   bindings: readonly { variable: string; table: string }[],
 ): ProjectData {
   let candidate = project;
   for (const { variable, table } of bindings) {
-    // Two sources can share a table: the one that binds the variable.
-    const sourceIndex = candidate.sources.findIndex(
-      (source) =>
-        source.table === table &&
-        source.bindings.some((binding) => binding.variable === variable),
-    );
-    const bindingIndex =
-      candidate.sources[sourceIndex]?.bindings.findIndex(
-        (binding) => binding.variable === variable,
-      ) ?? -1;
-    if (bindingIndex < 0) continue;
-    candidate = removeBinding(candidate, sourceIndex, bindingIndex);
+    // Two sources of one table can each bind the variable.
+    for (;;) {
+      const sourceIndex = candidate.sources.findIndex(
+        (source) =>
+          source.table === table &&
+          source.bindings.some((binding) => binding.variable === variable),
+      );
+      if (sourceIndex < 0) break;
+      candidate = removeBinding(
+        candidate,
+        sourceIndex,
+        candidate.sources[sourceIndex].bindings.findIndex(
+          (binding) => binding.variable === variable,
+        ),
+      );
+    }
   }
   const checked = checkProject(JSON.stringify(candidate));
   if (!checked.ok)
