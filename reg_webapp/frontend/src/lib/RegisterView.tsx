@@ -210,9 +210,17 @@ export function RegisterView({
                         key={table.fqid}
                         name={
                           <span className={styles.tableRowName}>
-                            {chip(
-                              lensKeyId({ table: table.fqid, database: null }),
-                              <EntityPill entity="table" name={table.name} />,
+                            {/* With one table, only its databases filter. */}
+                            {filterTables.length > 1 ? (
+                              chip(
+                                lensKeyId({
+                                  table: table.fqid,
+                                  database: null,
+                                }),
+                                <EntityPill entity="table" name={table.name} />,
+                              )
+                            ) : (
+                              <EntityPill entity="table" name={table.name} />
                             )}
                             {held.length === 1 && (
                               <EntityPill
@@ -231,23 +239,27 @@ export function RegisterView({
                             <VariableRow
                               key={`${table.fqid}:${space.id}`}
                               indent
-                              name={chip(
-                                lensKeyId({
-                                  table: table.fqid,
-                                  database: space.id,
-                                }),
-                                <EntityPill
-                                  entity="database"
-                                  name={
-                                    <>
-                                      {space.name}
-                                      <span className="visually-hidden">
-                                        in {table.name}
-                                      </span>
-                                    </>
-                                  }
-                                />,
-                              )}
+                              name={
+                                <span className={styles.tableRowName}>
+                                  {chip(
+                                    lensKeyId({
+                                      table: table.fqid,
+                                      database: space.id,
+                                    }),
+                                    <EntityPill
+                                      entity="database"
+                                      name={
+                                        <>
+                                          {space.name}
+                                          <span className="visually-hidden">
+                                            {` in ${table.name}`}
+                                          </span>
+                                        </>
+                                      }
+                                    />,
+                                  )}
+                                </span>
+                              }
                               {...bar(years, bounds)}
                               axis={axis}
                               window={studyBlock}

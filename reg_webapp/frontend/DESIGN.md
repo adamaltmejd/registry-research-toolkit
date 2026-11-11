@@ -668,7 +668,8 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   `FilterChip`, so no table is listed twice (#2110, maintainer decisions 2026-11-11,
   arrangement Y, heading option 2). The rows are the tables that deliver a variable, by
   name; a lens with OR within the selection, offered when there are two things to
-  filter by: two such tables, or one held in several databases (the archived variant
+  filter by: two such tables, or one held in several databases, where only its database
+  rows filter (the archived variant
   chips, maintainer 2026-11-03; the one-table rule, new rule, proposed by the
   implementer). On a steward with several databases a table held in one shows that
   database's pill after its own, plain; a table held in several has a row per database
