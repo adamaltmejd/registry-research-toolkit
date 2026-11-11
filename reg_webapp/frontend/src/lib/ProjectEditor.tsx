@@ -281,7 +281,6 @@ function Check({
         : busy
           ? "checking"
           : "blocked";
-  const words = VERDICT_WORDS[verdict];
   const structural = project.draft === null;
   // While the select and the row above the verdict say what `database_required`
   // and `database_unknown` say, in the page's words, neither finding is listed
@@ -316,7 +315,7 @@ function Check({
       )}
       {verdict === "empty" ? null : verdict === "checking" ? (
         // The verdict word, plain as in the banner: no glyph, no tone.
-        <p className={styles.checking}>{words}</p>
+        <p className={styles.checking}>{VERDICT_WORDS.checking}</p>
       ) : validation.error && !structural ? (
         <StatusRow
           tone="error"
@@ -325,26 +324,22 @@ function Check({
         >
           The check did not run ({validation.error}). Retry, or reload the page.
         </StatusRow>
-      ) : verdict === "database" ? null : (
+      ) : verdict === "database" ? null : verdict === "ready" ? (
+        // A ready project shows no verdict (#2417): the row stays as an empty
+        // live region, so a later verdict lands in a region the page had.
+        <StatusRow tone={null} live="status" />
+      ) : (
         <StatusRow
-          tone={
-            verdict === "ready"
-              ? "ok"
-              : verdict === "warnings"
-                ? "warn"
-                : "error"
-          }
+          tone={verdict === "warnings" ? "warn" : "error"}
           live="status"
         >
-          {verdict === "ready"
-            ? `${words}.`
-            : verdict === "warnings"
-              ? `${words}: ${count(warnings, "warning")}. Review ${warnings === 1 ? "it" : "them"} before you download.`
-              : structural
-                ? `${words}: this file is not a project_data.json the site can read. Fix the ${count(problems, "problem")} below and open it again.`
-                : problems === 0
-                  ? `${words}.`
-                  : `${words}: ${count(problems, "problem")}. Fix ${problems === 1 ? "it" : "them"} below.`}
+          {verdict === "warnings"
+            ? `${VERDICT_WORDS[verdict]}: ${count(warnings, "warning")}. Review ${warnings === 1 ? "it" : "them"} before you download.`
+            : structural
+              ? `${VERDICT_WORDS[verdict]}: this file is not a project_data.json the site can read. Fix the ${count(problems, "problem")} below and open it again.`
+              : problems === 0
+                ? `${VERDICT_WORDS[verdict]}.`
+                : `${VERDICT_WORDS[verdict]}: ${count(problems, "problem")}. Fix ${problems === 1 ? "it" : "them"} below.`}
         </StatusRow>
       )}
       {listed.length > 0 && !["checking", "empty"].includes(verdict) && (

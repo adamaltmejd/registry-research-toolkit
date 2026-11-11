@@ -124,10 +124,11 @@ export function projectVerdict(
     : "ready";
 }
 
-export const VERDICT_WORDS: Record<Verdict, string> = {
+// A ready project has no verdict words: neither the box nor /project shows one
+// (#2417).
+export const VERDICT_WORDS: Record<Exclude<Verdict, "ready">, string> = {
   checking: "Checking",
   empty: "Empty",
-  ready: "Ready to download",
   warnings: "Has warnings",
   problems: "Has problems",
   blocked: "Can't download yet",

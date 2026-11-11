@@ -274,7 +274,8 @@ instructions come from `/api/context`, never from code.
   | Column, variable                                                  | binding                                |
   | Check                                                             | draft check, catalog check             |
   | Years not available                                               | period adjustments, clips              |
-  | Ready to download, Has warnings, Has problems, Can't download yet | valid, warnings, errors, order blocked |
+  | Has warnings, Has problems, Can't download yet                    | warnings, errors, order blocked        |
+  | (nothing: a ready project shows no verdict)                       | valid, ready                           |
   | Check did not run                                                 | check failed, error, unchecked         |
   | Database                                                          | linkage space, schema, category        |
 
@@ -1132,20 +1133,20 @@ grow new visual language meanwhile.
   yet with their findings, Check did not run with Retry, Choose a database) is a link,
   in its status hue with the link's `accent` rule, to the verdict on /project, which
   takes focus; Checking and Empty stay plain text. A ready project shows no verdict in
-  the box; /project still says "Ready to download" (maintainer, #2417, 2026-11-11: "Can
-  we remove the big 'Ready to download' flag from the project box? … We can just not do
-  that."). Its slot keeps its width but takes no height, so where the verdict would wrap
-  to a line of its own (a narrow top bar) there is no blank line, and there the box
-  loses that line when a check ends (new rule, proposed by the implementer). Unsaved
-  changes are a quiet `mono` `text-muted` "unsaved", never a status hue. The study
-  window, labelled "Study years", is the period picker: an inline two-thumb RAC `Slider`
-  (no popover) bounded by the viewed catalog's first and last year, drawn as the
-  Timeline's study-window band (see Time: `accent-bg` between `accent` bounds, the
-  thumbs on those bounds) on a `surface` strip, its years an `accent-ink` `mono`
-  readout, with a "Clear" ghost action; the label, the readout and Clear keep one line.
-  With no project open it is the same box, empty and on `surface`, holding a `default`
-  "Create a project" Button, which starts a project and opens it, and nothing in the
-  catalog is tinted.
+  the box (maintainer, #2417, 2026-11-11: "Can we remove the big 'Ready to download'
+  flag from the project box? … We can just not do that."). Its slot keeps its
+  width but takes no height, so where the verdict would wrap to a line of its own (a
+  narrow top bar) there is no blank line, and there the box loses that line when a check
+  ends (maintainer, follow-up to #2417, 2026-11-11: "Good that the project box does not
+  change size."). Unsaved changes are a quiet `mono` `text-muted` "unsaved", never a
+  status hue. The study window, labelled "Study years", is the period picker: an
+  inline two-thumb RAC `Slider` (no popover) bounded by the viewed catalog's first and
+  last year, drawn as the Timeline's study-window band (see Time: `accent-bg` between
+  `accent` bounds, the thumbs on those bounds) on a `surface` strip, its years an
+  `accent-ink` `mono` readout, with a "Clear" ghost action; the label, the readout and
+  Clear keep one line. With no project open it is the same box, empty and on `surface`,
+  holding a `default` "Create a project" Button, which starts a project and opens it,
+  and nothing in the catalog is tinted.
 - **Findings** (the project check's) are `StatusRow`s in their level's tone, set under
   what they concern: a column's under its lane, a source's at the top of its card. Each
   names its place in the catalog's words, never an FQID. Its title holds the stable code
@@ -1181,11 +1182,14 @@ grow new visual language meanwhile.
   not know shows its own error and leaves the card's other columns their years, and
   adding or removing a column reloads no other (#2232). There is one check and no button
   for it: WASM on every edit, then `order` 350 ms after the last edit WASM accepted. The
-  verdict is one `StatusRow`: "Ready to download", "Has warnings" with the count, "Can't
-  download yet" with the count of problems, or "Has problems" for a file that fails the
-  structure check, whose problems are listed in full under it; a check that did not run
-  is an `err` row with Retry. While a newer check runs, the verdict, its list and "What
-  will be delivered" keep the previous check's answer (not a check that did not run)
+  verdict is one `StatusRow`: "Has warnings" with the count, "Can't download yet" with
+  the count of problems, or "Has problems" for a file that fails the structure check,
+  whose problems are listed in full under it. A ready project shows no verdict, as in
+  the box (maintainer, follow-up to #2417, 2026-11-11: "Drop ready to download also on
+  project page"): the row stays as an empty live region with no height, so the next
+  verdict lands in a region the page already had. A check that did not run is an `err`
+  row with Retry. While a newer check runs, the verdict, its list and "What will be
+  delivered" keep the previous check's answer (not a check that did not run)
   with `aria-busy`; the banner's plain `text-muted` "Checking" shows in its place only
   when there is none, or when a table or column was added, removed or moved since, so
   the earlier findings would sit on the wrong card. A draft with no tables is "Empty"
