@@ -1218,7 +1218,7 @@ evidence = "Värdemängden består av anställdaklasser; definitionen anger urva
 [[statement]]
 kind = "set"
 subject = "set:naringsgren"
-fields = { "description" = "Produktionsenhetens näringsgren eller bransch: näringsgren enligt Svensk näringsgrensindelning, 1998–2008 enligt SNI 2002 och från 2009 enligt SNI 2007, branschbeteckning 2000–2014 enligt IPI:s beräkningsbranscher för utvinning av mineral, tillverkningsindustri och försörjning av el, gas, värme och kyla (SNI B–D), och branschgrupper för redovisningsändamål." }
+fields = { "description" = "Produktionsenhetens näringsgren eller bransch: näringsgren enligt Svensk näringsgrensindelning (AktSni92 1998–2008 enligt SNI 2002, AktSni07 och CU_BranschText enligt SNI 2007, AL2UndEjU 1998–2010 enligt SNI 2007), branschbeteckning 2000–2014 enligt IPI:s beräkningsbranscher för utvinning av mineral, tillverkningsindustri och försörjning av el, gas, värme och kyla (SNI B–D), och branschgrupper för redovisningsändamål." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i SNI-version och i om det är näringsgren, bransch eller branschgrupp; alla rader i exporten är lästa.\ncatalog:variable_text:41583:10957:14245\ncatalog:variable_text:41584:14245:16436\ncatalog:variable_text:41616:14245:16436\ncatalog:variable_text:41617:10227:14245\ncatalog:variable_text:41618:10227:10957"
 
 [[statement]]
