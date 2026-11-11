@@ -699,7 +699,14 @@ Time is the axis every relation is drawn on.
   server's to stop reporting (maintainer, PR #2389, 2026-11-10). Text that states
   delivered years (a list row's, a lane's, a fact's) is read from the catalog periods,
   not from the drawing's year cells, so a school-year register reads `1972/1973–2023/2024`
-  beside its bar (maintainer, PR #2389, 2026-11-10: fold). A source period on `/project`
+  beside its bar (maintainer, PR #2389, 2026-11-10: fold). On `/project`, the years a
+  table delivers (the delivery summary, a source card's lanes) read in the table's grain,
+  which wins over the cut piece's own alignment: in a school-year table, a piece cut by
+  the study years starts or ends at the school year the cut falls in, since that year's
+  file is delivered whole, so study years 1981–2024 on Avgångsår read
+  `avgar 1980/1981–1988/1989` and `AvgAr 1989/1990–2023/2024`, not `1981–1989`; a
+  calendar-year table still reads in years (maintainer, #2416, 2026-11-11). The drawing
+  keeps the cut. A source period on `/project`
   that the thumbs cannot write (a term, quarter, month or day, hand-written in the file)
   reads exactly, in words: `autumn 2019`, `spring 2020`, `2019 Q3`, `February 2020`,
   `15 October 2019` (maintainer, PR #2389, 2026-11-10). A period with no dated

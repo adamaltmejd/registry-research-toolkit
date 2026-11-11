@@ -1,4 +1,10 @@
-import { catalogNameRead, catalogNames, type Read } from "./catalog_names";
+import type { CatalogPeriod } from "./api";
+import {
+  catalogNameRead,
+  catalogNames,
+  catalogTablePeriods,
+  type Read,
+} from "./catalog_names";
 import { useCatalogRead, useDistinct } from "./use_store_read";
 
 const readNames = (refs: readonly string[]) =>
@@ -23,4 +29,11 @@ export function useCatalogNamesPending(
   refs: readonly string[],
 ): ReadonlySet<string> {
   return new Set(useCatalogRead(readPending, useDistinct(refs)));
+}
+
+/** Each table's catalog period, once its register read lands. */
+export function useTablePeriods(
+  tables: readonly string[],
+): Readonly<Record<string, CatalogPeriod>> {
+  return useCatalogRead(catalogTablePeriods, useDistinct(tables));
 }

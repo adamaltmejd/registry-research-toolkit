@@ -1,10 +1,14 @@
 import type { CatalogPeriod, LogicalOrder } from "./api";
 import { catalogHref } from "./catalog";
-import { catalogPeriodRuns, periodsLess } from "./catalog_period";
+import { catalogPeriodRuns, inTableGrain, periodsLess } from "./catalog_period";
 import styles from "./DeliverySummary.module.css";
 import { EntityPill } from "./ui/EntityPill";
 import { NameSkeleton } from "./ui/Skeleton";
-import { useCatalogNames, useCatalogNamesPending } from "./use_catalog_names";
+import {
+  useCatalogNames,
+  useCatalogNamesPending,
+  useTablePeriods,
+} from "./use_catalog_names";
 
 type Entry = LogicalOrder["entries"][number];
 
@@ -43,6 +47,9 @@ export function DeliverySummary({
   ]);
   const names = new Map([...ordered, ...useCatalogNames(refs)]);
   const pending = useCatalogNamesPending(refs);
+  const tablePeriods = useTablePeriods(
+    order.entries.map((entry) => entry.table),
+  );
   // A name still loading is a placeholder, not a link; only a settled miss
   // says the name is unavailable.
   const loadingName = (ref: string) => pending.has(ref) && !names.has(ref);
@@ -114,9 +121,16 @@ export function DeliverySummary({
               else rowKeys.set(id, { ...column, periods: [rowKey.period] });
             }
           }
-          const years = catalogPeriodRuns(
-            group.entries.map((entry) => entry.period),
-          );
+          // Every period here is cut to the study years; it reads in the
+          // table's grain, as delivered (#2416).
+          const yearsOf = (periods: readonly CatalogPeriod[]) =>
+            catalogPeriodRuns(inTableGrain(periods, tablePeriods[group.table]));
+          const years = yearsOf(group.entries.map((entry) => entry.period));
+          // A column's own years only where they differ from the table's.
+          const ownYears = (periods: readonly CatalogPeriod[]) => {
+            const own = yearsOf(periods);
+            return own === years ? undefined : (own ?? undefined);
+          };
           // A table can serve one column over several stretches: one row per
           // column, with all its years. A column whose name changes between
           // stretches keeps a row per name.
@@ -171,11 +185,7 @@ export function DeliverySummary({
                     <EntityPill
                       entity="column"
                       name={column.spelling}
-                      years={
-                        catalogPeriodRuns(column.periods) === years
-                          ? undefined
-                          : (catalogPeriodRuns(column.periods) ?? undefined)
-                      }
+                      years={ownYears(column.periods)}
                     />
                     {variableLink(column.variable)}
                   </li>
@@ -192,9 +202,7 @@ export function DeliverySummary({
                       >
                         {variableName(clip.variable)}{" "}
                         <span className={styles.years}>
-                          {catalogPeriodRuns(
-                            periodsLess(clip.requested, clip.ordered),
-                          )}
+                          {yearsOf(periodsLess(clip.requested, clip.ordered))}
                         </span>
                       </li>
                     ))}
@@ -214,11 +222,7 @@ export function DeliverySummary({
                         <EntityPill
                           entity="column"
                           name={column.spelling}
-                          years={
-                            catalogPeriodRuns(column.periods) === years
-                              ? undefined
-                              : (catalogPeriodRuns(column.periods) ?? undefined)
-                          }
+                          years={ownYears(column.periods)}
                         />
                         {variableLink(column.variable)}
                       </li>
