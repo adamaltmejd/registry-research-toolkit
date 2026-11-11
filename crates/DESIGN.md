@@ -385,6 +385,23 @@ classification bindings. Accepting one requires reviewed curation and a premise 
   semantics; correcting an occurrence's operational definition does not create a second
   curated variable description. Identity questions require review before splitting
   variables or assigning relation dates.
+- **Default description (proposed; #2322, maintainer 2026-11-10 and 2026-11-11).** The
+  builder, not the reader or the SPA, settles one description per variable. Without a
+  curated one, a variable whose used occurrences state two or more provider wordings,
+  one of which contains every other, takes that longest wording as its description, so
+  a wording that only extends another is not shown as a second period. An occurrence's
+  wording is its published definition and operational definition, one per line, the one
+  dropped when the other contains it; wordings compare by `reg_core::wording_key`
+  (whitespace collapsed, case folded, trailing punctuation dropped), the same key the
+  reader uses to deduplicate provider texts. Among occurrences with the winning key the
+  latest one's text is shown, then the smallest. Silent years do not block the fold.
+  Wordings that genuinely differ, including a partial fold (one wording inside two
+  different longer ones), get no default; the reader keeps splitting them by years and
+  they are curated. Scope (maintainer 2026-11-11): only variables with several wordings;
+  a single wording stays the reader's provider fallback. Curated > rule: the rule runs
+  after curation and only where no curated description applied. Provenance records the
+  value as a variable override on `description`, rule `description-default`, so a
+  reader can tell it from a curated statement.
 - Curated values beat rules, which beat source values. Losing source values remain
   evidence in the existing `statement`/`override` tables; every curated winner carries
   statement file, line, evidence and caveat. Segment evidence names its statement.
@@ -1007,10 +1024,10 @@ Rules:
 - **Catalog selection is configuration**: one catalog per process, chosen at start.
 
 **Curated by default, evidence on request (maintainer, 2026-11-02).** A variable's
-`show` summary returns its name, the one optional curated `description`, register,
-coverage hull (`period`), and its sets (groups) and tags when it has any. Detailed
-coverage spans and gaps remain the `coverage` facet; its tables and column names are
-`segments` rows. The description combines meaning, measurement and derivation; `texts`,
+`show` summary returns its name, the one optional `description` (curated, else the
+default rule's), register, coverage hull (`period`), and its sets (groups) and tags when
+it has any. Detailed coverage spans and gaps remain the `coverage` facet; its tables and
+column names are `segments` rows. The description combines meaning, measurement and derivation; `texts`,
 source spellings and a promoted top-level `definition` are not summary fields.
 
 **One per-period list (maintainer, 2026-11-04).** `segments` is the variable's one list

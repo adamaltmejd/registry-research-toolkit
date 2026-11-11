@@ -119,40 +119,6 @@ fn source_row(server: &Server, row: &Row<'_>) -> rusqlite::Result<SourceRow> {
     })
 }
 
-fn normalized_text(text: &str) -> String {
-    reg_core::normalized_search_query(text)
-        .trim_end_matches(|c: char| c.is_whitespace() || reg_core::is_punctuation(c))
-        .to_owned()
-}
-
-// Compare normalized wording but retain the provider's original display strings.
-fn provider_texts<'a>(
-    definition: Option<&'a str>,
-    operational: Option<&'a str>,
-) -> Vec<(&'static str, &'a str)> {
-    let definition = definition.filter(|text| !text.trim().is_empty());
-    let operational = operational.filter(|text| !text.trim().is_empty());
-    match (definition, operational) {
-        (Some(definition), Some(operational)) => {
-            let d = normalized_text(definition);
-            let o = normalized_text(operational);
-            if d.contains(&o) {
-                vec![("definition", definition)]
-            } else if o.contains(&d) {
-                vec![("operational_definition", operational)]
-            } else {
-                vec![
-                    ("definition", definition),
-                    ("operational_definition", operational),
-                ]
-            }
-        }
-        (Some(text), None) => vec![("definition", text)],
-        (None, Some(text)) => vec![("operational_definition", text)],
-        (None, None) => Vec::new(),
-    }
-}
-
 /// A used occurrence's provider wording: its table, `[start, end)` and its distinct
 /// source texts (definition, operational definition), one per line; `None` when the
 /// source is silent. Source values, never a curated correction (design §2.4).
@@ -175,18 +141,11 @@ pub(super) fn wordings(conn: &Connection, variable: i64) -> Result<Vec<Wording>,
         |row| {
             let definition: Option<String> = row.get(8)?;
             let operational: Option<String> = row.get(9)?;
-            let texts = provider_texts(definition.as_deref(), operational.as_deref());
             Ok(Wording {
                 table: row.get(1)?,
                 start: row.get(2)?,
                 end: row.get(3)?,
-                text: (!texts.is_empty()).then(|| {
-                    texts
-                        .iter()
-                        .map(|(_, text)| *text)
-                        .collect::<Vec<_>>()
-                        .join("\n")
-                }),
+                text: reg_core::provider_wording(definition.as_deref(), operational.as_deref()),
             })
         },
     )?)
@@ -208,7 +167,7 @@ pub(super) fn load(
     let mut grouped: Vec<(ProviderText, Vec<reg_core::days::Span>)> = Vec::new();
     let mut source_only = Vec::new();
     for row in rows {
-        let texts = provider_texts(
+        let texts = reg_core::provider_texts(
             row.definition.as_deref(),
             row.operational_definition.as_deref(),
         );
@@ -218,7 +177,7 @@ pub(super) fn load(
         }
         for (field, text) in texts {
             let index = *text_indices
-                .entry(normalized_text(text))
+                .entry(reg_core::wording_key(text))
                 .or_insert_with(|| {
                     grouped.push((
                         ProviderText {

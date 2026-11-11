@@ -117,6 +117,60 @@ impl Form {
     }
 }
 
+/// A provider wording's comparison key: [`normalized_search_query`] without trailing
+/// whitespace or punctuation, so "Sektor." and "sektor" compare equal.
+#[must_use]
+pub fn wording_key(text: &str) -> String {
+    normalized_search_query(text)
+        .trim_end_matches(|c: char| c.is_whitespace() || is_punctuation(c))
+        .to_owned()
+}
+
+/// An occurrence's distinct provider texts, each tagged with its field: the definition
+/// and the operational definition, or only the one that contains the other (by
+/// [`wording_key`]). Blank texts are silent. The originals are kept for display.
+#[must_use]
+pub fn provider_texts<'a>(
+    definition: Option<&'a str>,
+    operational: Option<&'a str>,
+) -> Vec<(&'static str, &'a str)> {
+    let definition = definition.filter(|text| !text.trim().is_empty());
+    let operational = operational.filter(|text| !text.trim().is_empty());
+    match (definition, operational) {
+        (Some(definition), Some(operational)) => {
+            let d = wording_key(definition);
+            let o = wording_key(operational);
+            if d.contains(&o) {
+                vec![("definition", definition)]
+            } else if o.contains(&d) {
+                vec![("operational_definition", operational)]
+            } else {
+                vec![
+                    ("definition", definition),
+                    ("operational_definition", operational),
+                ]
+            }
+        }
+        (Some(text), None) => vec![("definition", text)],
+        (None, Some(text)) => vec![("operational_definition", text)],
+        (None, None) => Vec::new(),
+    }
+}
+
+/// An occurrence's provider wording: its [`provider_texts`], one per line; `None` when
+/// the source is silent.
+#[must_use]
+pub fn provider_wording(definition: Option<&str>, operational: Option<&str>) -> Option<String> {
+    let texts = provider_texts(definition, operational);
+    (!texts.is_empty()).then(|| {
+        texts
+            .iter()
+            .map(|(_, text)| *text)
+            .collect::<Vec<_>>()
+            .join("\n")
+    })
+}
+
 /// The search query normalizer: split on whitespace, join with one space, case fold.
 #[must_use]
 pub fn normalized_search_query(s: &str) -> String {

@@ -1,0 +1,32 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/fqid": "demo/descriptions/folded",
+      "/data/description": "Identity concept.  Assigned by the Tax Agency"
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/fqid": "demo/descriptions/partial"
+    },
+    "keys": {
+      "/data": [
+        "fqid",
+        "kind",
+        "name",
+        "period",
+        "register"
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/0/wording": "Sector.",
+      "/data/items/1/wording": "Sector of the main income.",
+      "/data/items/2/wording": "Sector of the main employment."
+    }
+  }
+]

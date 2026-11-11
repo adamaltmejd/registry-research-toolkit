@@ -2123,6 +2123,7 @@ pub(super) fn resolve_catalog(
             let mut resolved =
                 reg_resolve::resolve(&source, &ledger, &sets, variables, classifications)?;
             reg_resolve::curation::apply_metadata(&mut resolved, metadata)?;
+            reg_resolve::description_default::apply(&mut resolved);
             Ok(resolved)
         })
         .collect()

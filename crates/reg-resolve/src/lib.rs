@@ -33,6 +33,7 @@
 //!   anchor reaches gets a proposed id from its folded spelling.
 
 pub mod curation;
+pub mod description_default;
 pub mod provenance;
 
 mod f1;
@@ -247,8 +248,11 @@ pub struct Variable {
     pub tags: BTreeSet<String>,
     pub facets: BTreeMap<String, reg_frame::statement::MemberFacet>,
     pub facets_at: Option<Locator>,
-    /// One curated account of the variable's meaning, independent of source wording.
+    /// One curated account of the variable's meaning, independent of source wording;
+    /// else the default rule's folded provider wording ([`description_default`]).
     pub description: Option<String>,
+    /// Whether `description` is the default rule's, not curated.
+    pub default_description: bool,
     pub pinned: bool,
     pub source_key: String,
     pub fold: String,
@@ -1242,6 +1246,7 @@ pub(crate) fn resolve_located(
             facets_at: None,
             tags: BTreeSet::new(),
             description: None,
+            default_description: false,
             slug: if *assigned {
                 key.clone()
             } else {
