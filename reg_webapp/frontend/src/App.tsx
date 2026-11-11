@@ -9,12 +9,10 @@ import {
   stewardConfig,
 } from "./lib/api";
 import { BrowseTree } from "./lib/BrowseTree";
-import { useBrowseFiltering } from "./lib/browse_filter";
 import { CatalogNodeView } from "./lib/CatalogNodeView";
 import {
   registerOfPath,
   routeBreadcrumbs,
-  SHOW_MATCHING_REGISTERS_LABEL,
   trailAncestors,
   unqualifiedCatalogPath,
 } from "./lib/catalog";
@@ -66,24 +64,12 @@ export function App() {
     (route.fqidPath === "class" || route.fqidPath.startsWith("class/"))
       ? route.fqidPath
       : null;
-  const searching = useBrowseFiltering();
-  // A table address renders its register's page (#2316): a list page here, and
-  // its trail ends at the provider, as the register's own does.
+  // A table address renders its register's page (#2316): its trail ends at the
+  // provider, as the register's own does.
   const tablePage = useCatalogRead(
     isTablePathRead,
     route.name === "catalog-node" ? route.fqidPath : null,
   );
-  // A page whose list the variables column filters: a provider's, a register's
-  // (at its own or a table's address), or the list of classifications. Below the
-  // narrow breakpoint, where that column is hidden, such a page shows the
-  // column's matches instead while the search holds text.
-  const listPage =
-    route.name === "catalog-node" &&
-    (providerFqid !== null ||
-      classPath === "class" ||
-      tablePage ||
-      (registerFqid !== null &&
-        unqualifiedCatalogPath(route.fqidPath).split("/").length === 2));
   const [providerRef = null, registerRef = null] = trailAncestors(route);
   const provider = useCatalogRead(ancestorNameRead, providerRef);
   const register = useCatalogRead(ancestorNameRead, registerRef);
@@ -91,11 +77,7 @@ export function App() {
   if (providerRef && provider.value) names.set(providerRef, provider.value);
   if (registerRef && register.value && !tablePage)
     names.set(registerRef, register.value);
-  const breadcrumbs = routeBreadcrumbs(route, names).map((crumb) =>
-    searching && crumb.narrowOnly
-      ? { ...crumb, label: SHOW_MATCHING_REGISTERS_LABEL }
-      : crumb,
-  );
+  const breadcrumbs = routeBreadcrumbs(route, names);
 
   useEffect(() => {
     document.addEventListener("click", onNavClick);
@@ -119,13 +101,7 @@ export function App() {
           )}
           <div
             className={styles.body}
-            data-narrow-shows={
-              route.name === "root"
-                ? "browse"
-                : searching && listPage
-                  ? "list"
-                  : "detail"
-            }
+            data-narrow-shows={route.name === "root" ? "browse" : "detail"}
           >
             <BrowseTree className={styles.browse} />
             {/* One instance on every route: opening a variable from a

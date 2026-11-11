@@ -14,9 +14,6 @@ import type { BreadcrumbItem } from "./ui/types";
  * screen and the crumb is hidden (DESIGN.md → Layout). */
 const BROWSE_REGISTERS_LABEL = "Browse registers";
 
-/** The same crumb while the search holds text: the matches are in that list. */
-export const SHOW_MATCHING_REGISTERS_LABEL = "Show matching registers";
-
 /** Swedish labels sort with å, ä and ö after z, case- and accent-blind
  * otherwise (DESIGN.md → Swedish text). */
 export const svCollator = new Intl.Collator("sv", { sensitivity: "base" });

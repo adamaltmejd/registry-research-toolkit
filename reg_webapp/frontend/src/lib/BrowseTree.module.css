@@ -22,27 +22,6 @@
   composes: name from "./ui/ColumnList.module.css";
 }
 
-/* The row's text: the name, and under it the filter's "matched on" line. */
-.label {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-}
-
-/* A row the filter keeps only through what it lists says so on its own line,
-   the count in accent-ink (DESIGN.md → ColumnList → Filter state). */
-.matchedOn {
-  color: var(--text-muted);
-  font-size: var(--text-micro);
-  font-weight: var(--body-weight);
-  white-space: nowrap;
-}
-.matchedOn b {
-  color: var(--accent-ink);
-  font-weight: var(--column-weight);
-}
-
 /* The DOM is flat: every row is a sibling, so depth is `data-level` and RAC's
    `--tree-item-level`, never nesting. */
 .row {

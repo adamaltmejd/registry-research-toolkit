@@ -400,33 +400,6 @@ export async function search(
   return (await searchGet<{ data: SearchPage }>("/search", q, options)).data;
 }
 
-export type RegisterFacet = RustSchemas["RegisterFacet"];
-export type RegisterFacets = RustSchemas["RegisterFacets"];
-
-/** Per register, how many of its variables match `q` (#1785): every match, no
- * paging, before concept groups fold. A register without a match is absent.
- * With `register`, only that register, and its entry lists every matched
- * variable (#1788); with `provider`, each of its registers, every match
- * listed; without either, `limit` lists each register's first `limit` and
- * names the register (#1828). */
-export async function searchFacets(
-  q: string,
-  options?: {
-    signal?: AbortSignal;
-    register?: string;
-    provider?: string;
-    limit?: number;
-  },
-): Promise<RegisterFacets> {
-  return (
-    await searchGet<{ data: RustSchemas["RegisterFacets"] }>(
-      "/search/facets",
-      q,
-      options,
-    )
-  ).data;
-}
-
 /** A provider of the catalog root, with its registers. */
 export type RootChild = RootShow["providers"][number];
 

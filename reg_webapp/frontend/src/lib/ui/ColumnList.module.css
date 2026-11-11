@@ -37,6 +37,12 @@
   white-space: nowrap;
 }
 
+/* The variables column's filter box (#2398): a row of its own under the header,
+   outside the scroll box, so it stays while the list scrolls. */
+.filter {
+  padding: var(--space-2) var(--space-3);
+}
+
 .note {
   margin: 0;
   padding: var(--space-3);

@@ -77,25 +77,13 @@
   border-color: var(--accent);
   box-shadow: var(--focus-ring);
 }
-/* While the field holds text, focused or not, it says it is filtering: an
-   `accent` border with an `accent-bg` halo. Room on the right for the count and
-   the Esc hint. */
-.search:not([data-empty]) .searchInput {
-  padding-right: 9rem;
-  border-color: var(--accent);
-  box-shadow: 0 0 0 2px var(--accent-bg);
-}
-.search:not([data-empty]) .searchInput[data-focused] {
-  box-shadow: var(--focus-ring);
-}
 /* Escape clears the field; the browser's own cancel glyph would be a second,
    unstyled way to do it. */
 .searchInput::-webkit-search-cancel-button {
   display: none;
 }
 /* The hint, inside the field's trailing edge; a click on it lands on the input
-   beneath. Empty: the palette shortcut. With text: the match count in `accent-ink`
-   and an Esc key. */
+   beneath. Empty: the palette shortcut; with text, the Esc key that clears it. */
 .hint {
   position: absolute;
   top: 50%;
@@ -106,8 +94,7 @@
   pointer-events: none;
   transform: translateY(-50%);
 }
-kbd.hint,
-.key {
+kbd.hint {
   padding: 1px 5px;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
@@ -116,13 +103,6 @@ kbd.hint,
   font-family: var(--font-mono);
   font-size: var(--text-micro);
   line-height: 1.3;
-}
-.count {
-  color: var(--accent-ink);
-  font-family: var(--font-mono);
-  font-size: var(--text-micro);
-  font-weight: 500;
-  white-space: nowrap;
 }
 
 /* The folded field's "Search" button: below the narrow breakpoint only. */
@@ -175,14 +155,10 @@ kbd.hint,
     margin-left: 0;
   }
   /* A touch device has no shortcut or Esc key to show. */
-  kbd.hint,
-  .key {
+  kbd.hint {
     display: none;
   }
   .searchInput {
     padding-right: var(--space-3);
-  }
-  .search:not([data-empty]) .searchInput {
-    padding-right: 6rem;
   }
 }
