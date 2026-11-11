@@ -18,14 +18,7 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     name: "show",
     paths: &["/api/catalog", "/api/catalog/{ref}"],
     tool: Some("show"),
-    description: "Describe a provider,         .map(|register| {
-            let variables = served_variables(server, conn, extra.as_ref(), &register.fqid)?;
-            let tables: BTreeSet<&String> = variables.iter().flat_map(|v| &v.tables).collect();
-            Ok(ShowProviderRegister {
-                description: register_description(conn, extra.as_ref(), &register.fqid)?,
-                table_count: tables.len(),
-                variables: variables
-                    .into_iter(), table, variable, set or classification by id \
+    description: "Describe a provider, register, table, variable, set or classification by id \
         or name (a set only by `set/<provider>/<register>/<slug>`; it carries each member's \
         whole `segments` list, so no `segments` call per member is needed). A classification \
         (`class/<family>`) or one of its versions lists its versions, each with its part \

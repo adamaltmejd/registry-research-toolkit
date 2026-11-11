@@ -963,15 +963,19 @@ Time is the axis every relation is drawn on.
   maintainer 2026-11-11, variant A): the register's description under the name in
   muted `body-sm`, as long as it runs and cut only past about four lines (the full
   text is on the register page), and nothing where it has none; then a table count
-  and a variable count as table and variable `EntityPill`s. On wide screens each count
-  has its own column between the names and the bars, headed "Tables" and "Variables"
-  on the axis row, the pill showing the number alone; below `breakpoint-narrow` the
-  two pills sit under the description with their words ("2 tables", "258
-  variables"). The word stays in each pill's accessible name at every width, and the
+  and a variable count as table and variable `EntityPill`s. On a list at least 40rem
+  wide each count has its own column between the names and the bars, headed "Tables"
+  and "Variables" on the axis row, the pill showing the number alone. A narrower list
+  stacks as the narrow rows do, with the two pills under the description and their
+  words ("2 tables", "258 variables"). The list's own width decides, not the viewport's
+  (the approved mock-up's 640 px pane), so just above `breakpoint-narrow`, where the
+  pane is narrow, the names keep their measure; below it the pane is always narrower
+  than 40rem. The word stays in each pill's accessible name at every width, and the
   headings are decorative. The dot, pills and bar sit on the name's line. The table
   count is the tables the register page offers as its table filter, counted on one
-  table too (implementer proposals: the headings' words, the four-line cut, the
-  single-table count). Assistive technology reads "Delivered <years>", an open end as "from 1952" or "through
+  table too (implementer proposals: the headings' words, the four-line cut, the 40rem
+  list width, the single-table count).
+  Assistive technology reads "Delivered <years>", an open end as "from 1952" or "through
   1990" as the period says it, never the axis bound ("No dated delivery." for a bare
   track) and, when bound, ", in the project"; the axis is decorative. Adding starts from
   the variable page, where the coverage `LaneGraph`, add window and add bar show which

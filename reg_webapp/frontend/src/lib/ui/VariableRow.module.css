@@ -114,6 +114,8 @@
 .count {
   min-width: 0;
 }
+/* `.visually-hidden`, here a module rule so narrow screens can show the word
+   again. */
 .countWord {
   position: absolute;
   width: 1px;
@@ -148,10 +150,42 @@
     grid-row: 2;
     grid-column: 2;
   }
+}
+
+/* A provider's list stacks by its own width, not the viewport's: below a
+   40rem list (the approved mock-up's 640 px pane, #2404) the bar on top, then
+   the name and description, then the counts with their words. Below
+   `breakpoint-narrow` the pane is always narrower than that, so the two rules
+   agree there; between them only this list stacks. */
+.withCounts {
+  container: variable-rows / inline-size;
+}
+@container variable-rows (max-width: 40rem) {
+  .axisRow,
+  .row {
+    grid-template-columns: 6px minmax(0, 1fr);
+  }
+  .bar {
+    grid-row: 1;
+    grid-column: 2;
+  }
+  .axisRow .bar {
+    grid-row: 2;
+  }
+  .label {
+    grid-row: 1;
+  }
+  .dot {
+    grid-row: 2;
+    grid-column: 1;
+  }
+  .head {
+    grid-row: 2;
+    grid-column: 2;
+  }
   .withCounts .row > .bar {
     margin-top: 0;
   }
-  /* The counts under the name, each with its word. */
   .counts {
     display: flex;
     align-self: auto;
@@ -162,11 +196,11 @@
   }
   .countWord {
     position: static;
-    color: var(--text-muted);
-    font-weight: 400;
     width: auto;
     height: auto;
     clip-path: none;
+    color: var(--text-muted);
+    font-weight: 400;
   }
   .countHeadings {
     display: none;

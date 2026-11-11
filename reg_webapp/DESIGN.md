@@ -69,7 +69,7 @@ its scope and its `steward_config` branding (`/api/context`).
 Provider, register and classification pages read `catalog/{ref}`. A table has no page:
 its address reads the table, then renders its register's page with that table's chip on
 (#2316). A provider page draws each register from its `periods` (merged
-spans of its dated tables). The generated OpenAPI types own the response shapes. An
+spans of its dated tables), with its `description` and `table_count` (#2404). The generated OpenAPI types own the response shapes. An
 implicit table shares its register's FQID, so its canonical link opens the register.
 
 Catalog periods are half-open ISO date intervals. The frontend adapts the exclusive end

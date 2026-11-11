@@ -39,7 +39,9 @@ interface Props {
  * name in the text face (no FQID: the page already says where the rows live),
  * and a thin `YearTrack` on the pane's axis with the study window as an
  * `accent-bg` block, so a row that does not cover the window shows before it
- * is added. Never a table row: the list's one header is its axis.
+ * is added. A provider's register row adds the register's description under
+ * the name and its counts as pills (#2404). Never a table row: the list's one
+ * header is its axis, with the counts' headings where the rows carry counts.
  */
 export function VariableRow({
   name,
@@ -94,7 +96,8 @@ export function VariableRow({
 
 /** The list a pane's VariableRows sit in, under the axis their bars share:
  * its first and last year over the bars' column, beside `label` as the
- * section's heading over the names (DESIGN.md → Time; #2316). */
+ * section's heading over the names (DESIGN.md → Time; #2316), and a heading per
+ * count between them (#2404). */
 export function VariableRowList({
   label,
   axis,
