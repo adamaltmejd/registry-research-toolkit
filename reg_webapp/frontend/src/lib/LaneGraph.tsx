@@ -1,4 +1,6 @@
 import {
+  type CSSProperties,
+  Fragment,
   type ReactNode,
   useCallback,
   useEffect,
@@ -386,11 +388,15 @@ export function LaneGraph({
                       key={lane.id}
                       className={styles.lane}
                       data-row={lane.row}
-                      style={{
-                        top: placed.y,
-                        height: placed.height,
-                        width: geometry.contentWidth,
-                      }}
+                      style={
+                        {
+                          top: placed.y,
+                          height: placed.height,
+                          width: geometry.contentWidth,
+                          // A stacked table row's guide line runs its height.
+                          "--lane-guide": `${placed.height}px`,
+                        } as CSSProperties
+                      }
                     >
                       <LaneName
                         lane={lane}
@@ -795,7 +801,13 @@ function LaneText({
         <EntityPill entity="table" name={lane.name} />
         {lane.years && (
           <span className={styles.laneYears} aria-hidden="true">
-            {lane.years}
+            {lane.years.split(", ").map((run, i) => (
+              // oxlint-disable-next-line react/no-array-index-key
+              <Fragment key={i}>
+                {i > 0 && ", "}
+                <span className={styles.run}>{run}</span>
+              </Fragment>
+            ))}
           </span>
         )}
       </span>
@@ -972,11 +984,10 @@ function Span({
     );
   });
   // The parts the staged change takes in or out are marked, not the span's
-  // other columns, and its glyph leads the first of them (#2408).
+  // other columns; its glyph leads the span (#2408).
   const marked = at.segments.map(
     (_, i) => !!span.staged && (span.segments?.[i]?.staged ?? true),
   );
-  const glyphAt = marked.indexOf(true);
   const body = (
     <>
       {at.segments.map((segment, i) => (
@@ -988,13 +999,13 @@ function Span({
           style={{ left: segment.x, width: segment.width }}
         >
           {faces[i]}
-          {i === glyphAt && (
-            <span className={styles.glyph} aria-hidden="true">
-              {span.staged === "add" ? "+" : "−"}
-            </span>
-          )}
         </span>
       ))}
+      {span.staged && (
+        <span className={styles.glyph} aria-hidden="true">
+          {span.staged === "add" ? "+" : "−"}
+        </span>
+      )}
       {span.blocked && !span.staged && (
         <span className={styles.glyph} aria-hidden="true">
           ✕

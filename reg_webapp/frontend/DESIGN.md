@@ -748,12 +748,23 @@ Time is the axis every relation is drawn on.
   lane; the study window's shade stays drawn, so a narrower add window shows the study
   window is larger, and an add window that reaches past the study window extends the
   stronger band beyond it (maintainer answer on #2399, 2026-11-11). There is no legend. A "Clear period"
-  ghost action above the drawing drops the period, and shows only while it differs;
-  thumbs that come to rest on the study window (inside the availability) drop the period
+  ghost action above the drawing drops the period, and shows only while it differs; its
+  row is kept while it is hidden, so the drawing never moves when it shows (maintainer,
+  #2408, 2026-11-11); thumbs that come to rest on the study window (inside the availability) drop the period
   rather than write one equal to it. Only the drawn windows' years without availability
   are `info-bg` (below); the add window's fill never means a narrowing. While an add
   window is drawn the axis years are its bounds in `accent-ink`; the study window's
-  bounds are then unlabelled. An add widens its source's period to the union
+  bounds are then unlabelled. **Adding is by variable** ("I don't think most users will
+  understand the difference between columns and variables so adding should be by
+  variable", maintainer, #2408, 2026-11-11): a project binds a variable once per table,
+  so pressing any span of a variable's table lane stages that variable there, every
+  column of it in that table inside the years to add marked "+" in the selection wash,
+  and only those. Pressing a lane the project already binds stages its removal: the
+  columns it takes are marked "−" and struck through (#2408, 2026-11-11). An add writes
+  whole years: the years to add cut to the calendar years the variable is delivered in
+  that table, gaps between deliveries kept, never a date end, so a school-year column
+  added for 2005–2025 writes `2005..2024` (#2409, Operator proposal, not yet confirmed).
+  An add widens its source's period to the union
   and never narrows it, so the add window raises no warning; a column already in the
   project whose source years differ from the study window says so in its accessible
   name, not in a tooltip (maintainer ruling, 2026-11-10, #2395) or a line under the
@@ -764,10 +775,12 @@ Time is the axis every relation is drawn on.
 - A **source period** is set on `/project`, on the source's card, where the source is
   drawn whole as the **source timeline**: a `LaneGraph` headed by the coverage row of
   the source's table, its period as the window band with the same thumbs, bounded by
-  that table's coverage, and one lane per binding. Each delivered column is a span of
-  the years that table delivers it within the source's period (the dragged window's
-  while a thumb moves), not the column's whole coverage (Operator proposal, #2409). A
-  column available for part of the period is a shorter span, not a finding. The card is headed by the table's register, by name, with
+  that table's coverage, and one lane per binding. Its columns are drawn as on the
+  variable page, one row per run of the variable's columns, each column over the
+  days that table delivers it within the source's period (the dragged window's while
+  a thumb moves), not the column's whole coverage (Operator proposal, #2409; rows,
+  #2408). A column the period does not reach is not drawn. A column available for
+  part of the period is a shorter span, not a finding. The card is headed by the table's register, by name, with
   the table's pill as a link and "Years:" with the period's years under it. Where two
   tables of one register would share that heading, the heading names its table with
   the table's pill under the register: the table's own name, never an invented label
@@ -863,9 +876,18 @@ Time is the axis every relation is drawn on.
   (`not_in_database`): that turns on its years, its other column names and its
   successor, so the page shows the check's verdict rather than its own (new rules, proposed by the implementer for
   #2343 and #2344).
-  One span per column name on a table: a steward's yearly files of one table are the
-  same column delivered in several files, one box over their years with a gap where a
-  year is not delivered (maintainer 2026-11-04). A span's column name is never cut: it
+  One row per variable and table ("Maybe they should always share a row?", maintainer,
+  #2408, 2026-11-11): a variable's columns in one table are successive spellings that
+  never overlap in time (`avgar` to 1989, `AvgAr` from 1990), drawn as successive
+  column pills on that row; only columns delivered side by side in one file (a slot's
+  members, `ng2`–`ng5`) overlap, and each takes a row of its own. A steward's yearly
+  files of one table are the same column delivered in several files, one box over their
+  years with a gap where a year is not delivered (maintainer 2026-11-04). Spans are
+  drawn at their real half-open dates, so school years abut instead of sharing a year
+  cell; a one-day period (a 31 December snapshot) takes its calendar year, as its text
+  does (#2408, 2026-11-11). Where a row joins several spellings, each name sits in its
+  own widest part, and its tooltip lists each column with its years (new rule, proposed
+  by the implementer). A span's column name is never cut: it
   sits inside the widest delivered part when it fits there, with no list of the files
   it is delivered in: the lane already names the table (maintainer, dogfood 2026-11-05,
   #2321). A span is the column pill stretched over its years: the pill's height,
@@ -884,8 +906,15 @@ Time is the axis every relation is drawn on.
   Remove) keeps the full 230 + 16 px gutter and stacks under a 360 px track, so name
   and action still fit (new rule, proposed by the implementer: the compact gutter cut
   "Antal personer" to "Anta…" beside Remove).
-  Stacked below the breakpoint, a lane's spans
-  start just under its name, a table pill over its span. Hovering or focusing a span
+  Stacked below the breakpoint (variant C of the
+  Operator's inline-timeline mock-up, maintainer, #2408, 2026-11-11), the variable's
+  heading is set in `h3` with a rule above it, and each table is a block with a moss
+  guide line (`cat-table` at 40 %) down its left: the table pill and its delivered years
+  on one line, the years at the right and wrapping between runs, and the spans on a
+  full-width track below, 16 px in, past the line. A lane's spans start just under its
+  name. A stacked graph that scrolls sideways with no span to tab to is itself a tab stop,
+  a region named by the drawing, so a keyboard can scroll it (WCAG 2.1.1; Operator
+  fold, #2408). Hovering or focusing a span
   shows a RAC `Tooltip` with no delay only where the span's own text is cut off, which
   is its years: always on a column span, on a classification version's (a span with no
   column name, which carries its years where they fit) only where they do not
@@ -938,8 +967,8 @@ Time is the axis every relation is drawn on.
   title, or what tells two lanes of one name apart (their column names). A neighbour
   lane's name opens the variable, with the register on its line when it differs from the
   page's; that line also describes the link. A read-only neighbour lane still shows its
-  columns' "in project" state. A span is a checkbox for the add bar, and hovering it
-  highlights its edges. Spans stay pressable (#2310, after the maintainer ruling "Graph
+  columns' "in project" state. A span is a checkbox for the add bar (adding or removing
+  its lane's variable, above), and hovering it highlights its edges. Spans stay pressable (#2310, after the maintainer ruling "Graph
   everywhere", 2026-11-05; the mechanics are new rules, proposed by the implementer):
   stacked below the breakpoint, and at any width where the primary pointer is a finger
   (`pointer: coarse`) and its spans would be smaller beside the names (it then stacks
@@ -1050,9 +1079,13 @@ grow new visual language meanwhile.
   `surface` with a `border-strong` hairline and `sm` radius. Text uses `body-sm`; focus
   uses the shared ring. Options use plain names, and the overlay uses `--z-popover`.
   Type and classification controls compose this shared primitive.
-- **AddBar:** the shared sticky bottom bar for staged columns on the variable page. Its
-  one `primary` button reads "Add N columns to project". The caller omits it when
-  nothing is selected.
+- **AddBar:** the shared sticky bottom bar for a staged change on the variable or group
+  page. Its `primary` button reads "Add N variables to project", counting variables, not
+  columns (Operator proposal, #2408, not yet confirmed); a staged removal adds the
+  `danger` "Remove from project", and the press is the confirmation, with no dialog
+  (Operator, #2408, 2026-11-11). Where a removal takes a table's last variable, a line
+  beside the buttons says so before the press ("Also removes Slutbetyg from the
+  project."), and describes the button. The caller omits the bar when nothing is staged.
 - **ProjectBanner:** the project's presence in the top bar — name, study window, source
   and column counts, the verdict, save state — on `accent-soft` with a 1 px `border`
   hairline and `rounded.sm`, the search field's box, with no leading bar (#2407,

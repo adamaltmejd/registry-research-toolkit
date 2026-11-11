@@ -95,6 +95,8 @@
 /* As wide as the drawing (its width is set inline), so a lane's name and
    below block can stay pinned while a grown track scrolls. */
 .lane {
+  /* Its height, set inline: a stacked table row's guide line runs it. */
+  --lane-guide: 0px;
   position: absolute;
   left: 0;
 }
@@ -475,6 +477,7 @@ a.nameText {
 }
 
 .graph[data-stacked] .name[data-row="table"] {
+  overflow: visible;
   align-items: stretch;
   padding-inline-start: var(--space-4);
 }
@@ -484,21 +487,34 @@ a.nameText {
   min-height: 24px;
 }
 
+.graph[data-stacked] .tableHead > :first-child {
+  flex: none;
+  max-width: 60%;
+}
+
+/* Runs wrap between them, never inside one. */
 .graph[data-stacked] .laneYears {
   display: block;
-  flex: none;
+  flex: 1 1 0;
+  min-width: 0;
+  text-align: right;
   color: var(--text-muted);
   font-family: var(--font-mono);
   font-size: var(--text-micro);
   font-variant-numeric: tabular-nums;
-  white-space: nowrap;
 }
 
-.graph[data-stacked] .lane[data-row="table"]::before {
+/* On the name block, which stays pinned while a grown track scrolls; the
+   lane sets its height. */
+.graph[data-stacked] .name[data-row="table"]::before {
   position: absolute;
   top: var(--space-1);
-  bottom: var(--space-2);
   left: var(--space-1);
+  height: calc(var(--lane-guide) - var(--space-1) - var(--space-2));
   border-left: 2px solid color-mix(in srgb, var(--cat-table) 40%, transparent);
   content: "";
+}
+
+.run {
+  white-space: nowrap;
 }
