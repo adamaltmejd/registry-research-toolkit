@@ -362,8 +362,9 @@ classification bindings. Accepting one requires reviewed curation and a premise 
   `variable.description_text` (where none is curated, the default rule below may fill
   it). An occurrence description setter is a located `description-subject` refusal;
   different descriptions for one variable are refused, not selected by period or
-  precedence. Table and release descriptions remain fields of
-  those entities. No fact gets a second semantic home. A value-set override chooses the
+  precedence. A set has one optional curated `description` the same way, owned by
+  `set:<slug>` and stored in `var_set.description_text` (#2322). Table and release
+  descriptions remain fields of those entities. No fact gets a second semantic home. A value-set override chooses the
   occurrence's own set while retaining its source population alternatives as evidence.
   Unsupported entity/field combinations are located refusals. Type corrections that
   change the family participate in F6 and ambiguity resolution. Corrected conflict
@@ -846,8 +847,8 @@ release assets are left unchanged.
 - **Release diff.** `reg-build diff OLD NEW [--json] [-n N]` compares a current-schema
   NEW with an OLD of the same or an older schema by natural key (pid, table name, meta
   key), never by row id, in eight sections: schema (`sqlite_master`), meta, row counts
-  per table, ids (added, removed, kind changed, moved, retired), provider and register
-  names, table names, roles, cadences and spans, per-variable segments, label and
+  per table, ids (added, removed, kind changed, moved, retired), provider, register
+  and set names and descriptions, table names, roles, cadences and spans, per-variable segments, label and
   definition runs, value sets (including shared-hash sentinel changes and the codes
   added and removed where only a segment's value-set hash changed). Findings are not in
   the catalog; compare two builds' `--findings` files for those. Text shows at most `N`
@@ -2621,7 +2622,9 @@ Catalog rules are the order check's, listed in "The logical order": `fqid_unreso
 `search` reads the primary FTS5 index `search` (columns `name`: pid
 and delivered spellings; `label`: labels; `body`: definitions, register/table
 descriptions and document text), plus `search_description` for the curated variable
-description. Both indexes use `search_item.id` as rowid. The builder indexes raw text under
+description; a variable without one is indexed there by the curated descriptions of the
+sets it belongs to, so a group is found by its description (#2322). Both indexes use
+`search_item.id` as rowid. The builder indexes raw text under
 `unicode61 remove_diacritics 2`, which folds case and diacritics, and the reader applies
 no fold of its own: `lan` finds `län` (#2163). An exact-spelling index that ranked
 diacritic-exact matches first (`search_exact`, about 74 MB at 0.80.0) was dropped on the
@@ -2732,7 +2735,10 @@ different families.
 Variable membership is curated with `set sets` and `set tags` and emitted through the
 existing membership storage. A register's `set:<slug>` subject gives an existing set its
 `label`, optional `description` and ordered `axes = [{id, label}]`. These use the same
-statements, resolution, locks and provenance as other curated fields. Set labels and
+statements, resolution, locks and provenance as other curated fields. Each may be its
+own statement with its own evidence, as a variable's description is (#2322): two
+statements stating one field of one set conflict at lock with both locations, and a
+blank label or description refuses. A set without a curated label is named by its slug. Set labels and
 descriptions occupy `var_set.name_text` and `description_text`; ordered axes occupy
 `var_set_axis`. A variable's `facets = {axis = {value, label}}` supplies its coordinate
 in its one set, in `var_set_member_facet`; omitted labels default to the value. An

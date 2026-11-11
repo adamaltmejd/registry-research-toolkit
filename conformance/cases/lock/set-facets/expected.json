@@ -1,11 +1,11 @@
 {
   "undeclared": {
     "code": "set-axis-undeclared",
-    "line": 15
+    "line": 14
   },
   "nonmember": {
     "code": "set-facet-nonmember",
-    "line": 15
+    "line": 14
   },
   "stale": {
     "label": "Inkomstmått",
@@ -19,19 +19,19 @@
       },
       {
         "code": "set-axis-undeclared",
-        "location": "registers/demo/bas/curation.toml:line=15"
+        "location": "registers/demo/bas/curation.toml:line=14"
       },
       {
         "code": "set-axis-undeclared",
-        "location": "registers/demo/bas/curation.toml:line=27"
+        "location": "registers/demo/bas/curation.toml:line=26"
       },
       {
         "code": "set-axis-undeclared",
-        "location": "registers/demo/bas/curation.toml:line=39"
+        "location": "registers/demo/bas/curation.toml:line=38"
       },
       {
         "code": "set-axis-undeclared",
-        "location": "registers/demo/bas/curation.toml:line=51"
+        "location": "registers/demo/bas/curation.toml:line=50"
       }
     ]
   }
