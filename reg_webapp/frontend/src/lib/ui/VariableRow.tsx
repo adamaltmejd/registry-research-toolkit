@@ -1,7 +1,16 @@
 import { type ReactNode, useId } from "react";
 import type { YearRun } from "../study_window";
+import { type Entity, EntityPill } from "./EntityPill";
 import styles from "./VariableRow.module.css";
 import { YearAxis, type YearSpan, YearTrack } from "./YearTrack";
+
+/** A count on a row, as its entity's pill: "4 tables". */
+export interface RowCount {
+  entity: Entity;
+  count: number;
+  /** The word after the number, in the count's number ("1 table"). */
+  word: string;
+}
 
 interface Props {
   /** The variable's name, or it with a filter's match marked. */
@@ -18,6 +27,10 @@ interface Props {
   axis: YearSpan;
   /** The study window, as a block on the track; null draws none. */
   window: YearSpan | null;
+  /** Under the name, cut at about four lines (a provider's register row). */
+  description?: string | null;
+  /** One per heading in the list's `counts`, in its order. */
+  counts?: readonly RowCount[];
 }
 
 /**
@@ -26,7 +39,9 @@ interface Props {
  * name in the text face (no FQID: the page already says where the rows live),
  * and a thin `YearTrack` on the pane's axis with the study window as an
  * `accent-bg` block, so a row that does not cover the window shows before it
- * is added. Never a table row: the list's one header is its axis.
+ * is added. A provider's register row adds the register's description under
+ * the name and its counts as pills (#2404). Never a table row: the list's one
+ * header is its axis, with the counts' headings where the rows carry counts.
  */
 export function VariableRow({
   name,
@@ -36,6 +51,8 @@ export function VariableRow({
   years,
   axis,
   window,
+  description,
+  counts,
 }: Props) {
   return (
     <li className={styles.row} data-in-project={inProject || undefined}>
@@ -45,7 +62,25 @@ export function VariableRow({
           {name}
         </a>
         {inProject && <span className="visually-hidden">, in the project</span>}
+        {description && <p className={styles.description}>{description}</p>}
       </div>
+      {counts && (
+        <div className={styles.counts}>
+          {counts.map(({ entity, count, word }) => (
+            <span key={entity} className={styles.count}>
+              <EntityPill
+                entity={entity}
+                name={
+                  <>
+                    {count}
+                    <span className={styles.countWord}> {word}</span>
+                  </>
+                }
+              />
+            </span>
+          ))}
+        </div>
+      )}
       <span className={styles.bar}>
         <YearTrack
           coverage={coverage}
@@ -61,23 +96,40 @@ export function VariableRow({
 
 /** The list a pane's VariableRows sit in, under the axis their bars share:
  * its first and last year over the bars' column, beside `label` as the
- * section's heading over the names (DESIGN.md → Time; #2316). */
+ * section's heading over the names (DESIGN.md → Time; #2316), and a heading per
+ * count between them (#2404). */
 export function VariableRowList({
   label,
   axis,
+  counts,
   children,
 }: {
   label: string;
   axis: YearSpan;
+  /** A column heading per count the rows carry, between the names and the
+   * bars on wide screens. Decorative: each count's pill names its word. */
+  counts?: readonly string[];
   children: ReactNode;
 }) {
   const labelId = useId();
   return (
-    <div className={styles.rows}>
+    <div className={`${styles.rows} ${counts ? styles.withCounts : ""}`}>
       <div className={styles.axisRow}>
         <h2 id={labelId} className={`micro-label ${styles.label}`}>
           {label}
         </h2>
+        {counts && (
+          <div
+            className={`${styles.counts} ${styles.countHeadings}`}
+            aria-hidden="true"
+          >
+            {counts.map((heading) => (
+              <span key={heading} className="micro-label">
+                {heading}
+              </span>
+            ))}
+          </div>
+        )}
         <YearAxis axis={axis} className={styles.bar} />
       </div>
       <ul className={styles.list} aria-labelledby={labelId}>

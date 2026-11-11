@@ -4575,9 +4575,17 @@
           "fqid",
           "name",
           "periods",
+          "table_count",
           "variables"
         ],
         "properties": {
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The register's description, as its own `show` carries it."
+          },
           "fqid": {
             "type": "string"
           },
@@ -4590,6 +4598,11 @@
               "$ref": "#/components/schemas/Period"
             },
             "description": "The periods its dated tables are delivered, merged, in start order. Gaps stay gaps."
+          },
+          "table_count": {
+            "type": "integer",
+            "description": "How many of its tables deliver a listed variable: the tables its own `show`\noffers as a filter.",
+            "minimum": 0
           },
           "variables": {
             "type": "array",

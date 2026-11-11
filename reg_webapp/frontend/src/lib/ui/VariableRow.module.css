@@ -4,8 +4,24 @@
 .rows {
   --variable-row-columns: 6px minmax(0, 1fr) minmax(6rem, 10rem);
 }
+/* Dot | name | the counts | year bar (a provider's register list, #2404).
+   Every row has the same counts at the same width, so the column lines up. */
+.withCounts {
+  --variable-row-columns: 6px minmax(0, 1fr) max-content minmax(6rem, 10rem);
+}
+/* A described row is several lines tall: its dot, pills and bar stay on the
+   name's line. */
+.withCounts .row {
+  align-items: start;
+}
+.withCounts .row > .dot {
+  margin-top: 8px;
+}
+.withCounts .row > .bar {
+  margin-top: 6px;
+}
 
-/* Dot | name | year bar. */
+/* Dot | name | year bar (with counts: the counts before the bar). */
 .axisRow,
 .row {
   display: grid;
@@ -68,7 +84,45 @@
 }
 
 .bar {
-  grid-column: 3;
+  grid-column: -2;
+}
+
+/* The description: muted small text, cut only past about four lines (#2404,
+   maintainer 2026-11-11). */
+.description {
+  display: -webkit-box;
+  max-width: 60ch;
+  margin: var(--space-1) 0 0;
+  overflow: hidden;
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.45;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+}
+
+/* Wide: each count in its own fixed column under its heading, the pill
+   showing only the number (its word stays in the accessible name). */
+.counts {
+  display: grid;
+  grid-auto-columns: 5.5rem;
+  grid-auto-flow: column;
+  gap: var(--space-3);
+  align-self: start;
+}
+.count {
+  min-width: 0;
+}
+/* `.visually-hidden`, here a module rule so narrow screens can show the word
+   again. */
+.countWord {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 /* Narrow (#1826): the year bar on top, then the name with its dot; the axis
@@ -95,6 +149,61 @@
   .head {
     grid-row: 2;
     grid-column: 2;
+  }
+}
+
+/* A provider's list stacks by its own width, not the viewport's: below a
+   40rem list (the approved mock-up's 640 px pane, #2404) the bar on top, then
+   the name and description, then the counts with their words. Below
+   `breakpoint-narrow` the pane is always narrower than that, so the two rules
+   agree there; between them only this list stacks. */
+.withCounts {
+  container: variable-rows / inline-size;
+}
+@container variable-rows (max-width: 40rem) {
+  .axisRow,
+  .row {
+    grid-template-columns: 6px minmax(0, 1fr);
+  }
+  .bar {
+    grid-row: 1;
+    grid-column: 2;
+  }
+  .axisRow .bar {
+    grid-row: 2;
+  }
+  .label {
+    grid-row: 1;
+  }
+  .dot {
+    grid-row: 2;
+    grid-column: 1;
+  }
+  .head {
+    grid-row: 2;
+    grid-column: 2;
+  }
+  .withCounts .row > .bar {
+    margin-top: 0;
+  }
+  .counts {
+    display: flex;
+    align-self: auto;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-2);
+    grid-row: 3;
+    grid-column: 2;
+  }
+  .countWord {
+    position: static;
+    width: auto;
+    height: auto;
+    clip-path: none;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+  .countHeadings {
+    display: none;
   }
 }
 

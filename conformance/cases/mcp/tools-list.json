@@ -1586,6 +1586,13 @@
         "ShowProviderRegister": {
           "description": "A provider's register with its variables, so the provider alone lists every\nvariable of its registers.",
           "properties": {
+            "description": {
+              "description": "The register's description, as its own `show` carries it.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
             "fqid": {
               "type": "string"
             },
@@ -1599,6 +1606,11 @@
               },
               "type": "array"
             },
+            "table_count": {
+              "description": "How many of its tables deliver a listed variable: the tables its own `show`\noffers as a filter.",
+              "minimum": 0,
+              "type": "integer"
+            },
             "variables": {
               "items": {
                 "$ref": "#/$defs/ShowProviderVariable"
@@ -1610,6 +1622,7 @@
             "fqid",
             "name",
             "periods",
+            "table_count",
             "variables"
           ],
           "type": "object"

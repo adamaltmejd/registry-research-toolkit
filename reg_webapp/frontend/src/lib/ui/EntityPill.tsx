@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { ENTITY_GLYPHS } from "./entity_glyphs";
 import { type ColumnState, Pill, type PillTone } from "./Pill";
 
@@ -16,7 +17,8 @@ export type Entity = keyof typeof ENTITIES;
  * A catalog entity by name (DESIGN.md → Components → Pill): a table pill in
  * a lane, a register's table filter, a project card and a value set; a column
  * pill wherever a column name is shown; a register's or variable's in a
- * search row. The same size everywhere; only the hue and glyph differ.
+ * search row; a register's table and variable counts on its provider's
+ * page. The same size everywhere; only the hue and glyph differ.
  */
 export function EntityPill({
   entity,
@@ -27,8 +29,9 @@ export function EntityPill({
   className,
 }: {
   entity: Entity;
-  /** Empty for a lane span too narrow to hold it. */
-  name: string;
+  /** Empty for a lane span too narrow to hold it; a count's number with its
+   * word (a provider's register row). */
+  name: ReactNode;
   href?: string;
   /** Already formatted ("2015–2019", "2020–"). */
   years?: string;

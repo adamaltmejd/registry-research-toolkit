@@ -9,7 +9,9 @@
         {
           "fqid": "demo/reg2",
           "name": "Andra registret",
+          "description": "Register med två tabeller.",
           "periods": [{"start": "2019-01-01", "end": "2021-01-01"}],
+          "table_count": 2,
           "variables": [
             {
               "fqid": "demo/reg2/inkomstbrutto",
@@ -36,7 +38,9 @@
         {
           "fqid": "demo/reg3",
           "name": "Tredje registret",
+          "description": null,
           "periods": [{"start": "2018-01-01", "end": "2021-01-01"}],
+          "table_count": 1,
           "variables": [
             {
               "fqid": "demo/reg3/kon",

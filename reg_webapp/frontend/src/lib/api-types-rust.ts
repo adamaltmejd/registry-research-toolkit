@@ -1242,10 +1242,17 @@ export interface components {
          *     variable of its registers.
          */
         ShowProviderRegister: {
+            /** @description The register's description, as its own `show` carries it. */
+            description?: string | null;
             fqid: string;
             name: string;
             /** @description The periods its dated tables are delivered, merged, in start order. Gaps stay gaps. */
             periods: components["schemas"]["Period"][];
+            /**
+             * @description How many of its tables deliver a listed variable: the tables its own `show`
+             *     offers as a filter.
+             */
+            table_count: number;
             variables: components["schemas"]["ShowProviderVariable"][];
         };
         /**

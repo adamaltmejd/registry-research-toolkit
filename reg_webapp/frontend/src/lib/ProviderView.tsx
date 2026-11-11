@@ -16,7 +16,8 @@ import { windowBounds } from "./window_bounds";
 
 /** A provider's registers as the register page lists its variables: one row
  * per register, its years as one span on the page's axis, under the panel's
- * one heading, with the register page's filter box over them (#2407). */
+ * one heading, with the register page's filter box over them (#2407). Each row
+ * describes its register and counts its tables and variables (#2404). */
 export function ProviderView({
   node,
   context,
@@ -81,7 +82,11 @@ export function ProviderView({
                 description="Clear the filter to list them all."
               />
             ) : (
-              <VariableRowList label="Registers" axis={axis}>
+              <VariableRowList
+                label="Registers"
+                axis={axis}
+                counts={["Tables", "Variables"]}
+              >
                 {shown.map(({ register, years }) => (
                   <VariableRow
                     key={register.fqid}
@@ -96,6 +101,22 @@ export function ProviderView({
                     )}
                     axis={axis}
                     window={study ? [study.from, study.to] : null}
+                    description={register.description}
+                    counts={[
+                      {
+                        entity: "table",
+                        count: register.table_count,
+                        word: register.table_count === 1 ? "table" : "tables",
+                      },
+                      {
+                        entity: "variable",
+                        count: register.variables.length,
+                        word:
+                          register.variables.length === 1
+                            ? "variable"
+                            : "variables",
+                      },
+                    ]}
                   />
                 ))}
               </VariableRowList>
