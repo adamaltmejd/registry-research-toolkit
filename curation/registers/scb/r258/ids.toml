@@ -150,6 +150,7 @@ public = "it-anvandning"
 "app-kant-ej-begransning" = ["Befolkningens IT-användning: E5c @ 2018-01-01"]
 "arbetskraftsstatus-aldre" = ["Befolkningens IT-användning: AKStatus"]
 "arsverken-programvaruutv-ovriga" = ["IT-användning i företag: UTVSUP"]
+"stratum-befolkning" = ["Befolkningens IT-användning: Stratum"]
 "webbforsaljning-kostnad-for-hog-jamfort-med-nytta" = ["IT-användning i företag: AWS_OCOST"]
 "juridiska-problem" = ["IT-användning i företag: AWS_OLF"]
 "logistikproblem" = ["IT-användning i företag: AWS_OLOG"]

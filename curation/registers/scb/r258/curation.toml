@@ -20205,7 +20205,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:stratum"
-fields = { "description" = "Det stratum som urvalsenheten tillhör i det stratifierade urvalet. I undersökningen av befolkningens IT-användning 2007–2010 kommer stratum från den ordinarie arbetskraftsundersökningen (AKU). I undersökningen av företagens IT-användning bildas strata efter företagsenhetens branschgrupp, storleksklass och region enligt NUTS, med huvudsaklig näringsgren, medelantal anställda och läge på läns- eller regionnivå som allokeringsvariabler; 2021–2022 bildas strata för en del av populationen enbart efter branschgrupp och storleksklass." }
+fields = { "description" = "Det stratum som företagsenheten tillhör i det stratifierade urvalet. Strata bildas efter företagsenhetens branschgrupp, storleksklass och region enligt NUTS, med huvudsaklig näringsgren, medelantal anställda och läge på läns- eller regionnivå som allokeringsvariabler. 2021–2022 finns även strata som bildas enbart efter branschgrupp och storleksklass, med näringsgren och medelantal anställda som allokeringsvariabler." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSCB-exporten dokumenterar stratum 2021–2022 i två rader per år med olika population (Registerinformation.csv:row=567495, row=567499): en med och en utan regional indelning enligt NUTS; katalogen visar bara den första. Stavfelet ”antällda” rättat.\ncatalog:variable_text:40490:13514:14975\ncatalog:variable_text:40490:18628:20454"
 
 [[statement]]
@@ -20243,3 +20243,15 @@ kind = "set"
 subject = "var:webbplats-produktkatalog"
 fields = { "description" = "Anger om företagets webbplats erbjuder en beskrivning av varor eller tjänster med prisinformation." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga under två VarId, olika formulerad.\ncatalog:variable_text:40603:15706:16071\ncatalog:variable_text:40603:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: Stratum where key = 'v462'"
+fields = { "variable" = "stratum-befolkning" }
+evidence = "Candidate split, no succession edge (crates/DESIGN.md). SCB VarId 462 (Stratum) is a generic sampling-stratum id used by two surveys with different units: Befolkningens IT-användning 2007–2010, column Stratum, a person's stratum taken from the ordinary AKU ('Kommer från ordinarie AKU'), and IT-användning i företag 2021–2025, column stratum, an enterprise's stratum formed by branschgrupp, storleksklass and NUTS region. The enterprise half keeps the id (its ledger anchor). Operator, #2322 curation under the maintainer's 2026-11-11 delegation.\ncatalog:variable_text:40490:13514:14975\ncatalog:variable_text:40490:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum-befolkning"
+fields = { "description" = "Det stratum som personen tillhör i det stratifierade urvalet; stratum kommer från den ordinarie arbetskraftsundersökningen (AKU)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAndra halvan av delningen av stratum (befolkningsundersökningen 2007–2010).\ncatalog:variable_text:40490:13514:14975"
