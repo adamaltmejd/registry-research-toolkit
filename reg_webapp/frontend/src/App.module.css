@@ -72,8 +72,9 @@
     grid-template-columns: minmax(0, 1fr);
   }
   /* The register page lists its variables itself, so the stacked layout has
-     no second column. */
-  .list {
+     no second column. Scoped under `.body` to outrank the column's own
+     `display: flex`. */
+  .body .list {
     display: none;
   }
   .browse {

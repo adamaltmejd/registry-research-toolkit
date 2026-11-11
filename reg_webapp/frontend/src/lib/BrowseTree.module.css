@@ -96,7 +96,7 @@
 }
 
 /* The Classifications row sits below the providers under the list's section
-   rule, the one over another register's matches in the variables column
+   rule, the one over each register's section of a provider's variables list
    (maintainer review of the classification pages, 2026-11-05, point 1). */
 .separated {
   composes: sectionRule from "./ui/ColumnList.module.css";

@@ -161,7 +161,7 @@
   border-top: 1px solid var(--border);
 }
 
-/* Another register's header over its matches (#1828): the browse tree's group
+/* A register's header over its section of a provider's list: the browse tree's group
    row (the text face at the label size and column weight, muted), sticky, with
    the section rule above it dividing it from the run before. */
 .register {

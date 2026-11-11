@@ -118,7 +118,14 @@ export function TopBar({
           field is the palette's one input. Escape closes the palette first,
           then clears the text, then, below the breakpoint, folds the field
           back behind the "Search" button. */}
-        <Autocomplete inputValue={text} onInputChange={onInputChange}>
+        <Autocomplete
+          inputValue={text}
+          onInputChange={onInputChange}
+          // No row is active until the arrow keys reach one: the results open
+          // as you type, and Enter on an auto-focused first row opened a
+          // place ranked before the catalog's hits had landed.
+          disableAutoFocusFirst
+        >
           <SearchField
             ref={field}
             aria-label="Search registers, variables"
