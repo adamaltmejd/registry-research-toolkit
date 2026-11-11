@@ -69,6 +69,9 @@ interface LaneGeometryInput {
   /** The primary pointer is a finger: a graph whose spans would be under 24 px
    * beside the names stacks at any width, to take the 24 px floor. */
   touch?: boolean;
+  /** A lane carries an action beside its name (the /project source card's
+   * Remove): the gutter keeps its full width, so name and action fit. */
+  actions?: boolean;
 }
 
 interface PlacedSegment {
@@ -99,6 +102,8 @@ interface PlacedLane {
 export interface LaneGeometry {
   /** True when the lane names sit above their spans instead of beside them. */
   stacked: boolean;
+  /** The names' gutter beside the track; 0 when stacked. */
+  nameWidth: number;
   /** Where the track begins and how wide it is. */
   trackX: number;
   trackWidth: number;
@@ -143,10 +148,21 @@ const ROW_STEP = 32;
 const AXIS_HEIGHT = 28;
 // The Timeline's plot: a 12 px coverage bar centred in a 40 px row.
 export const COVERAGE_HEIGHT = 40;
-// Above this width the names take the `--col-list` column beside the track.
-const NAME_WIDTH = 230;
-const NAME_GAP = 16;
-const MIN_TRACK = 360;
+// Beside the track the names take a gutter that narrows with the graph, so the
+// 493 px timeline of a pane at the breakpoint keeps a 350 px track (#2407,
+// maintainer decisions 2026-11-11): 27 % of the width between 120 and 230 px,
+// then a 2 % gap between 8 and 16 px.
+const NAME_WIDTH = [120, 0.27, 230] as const;
+const NAME_GAP = [8, 0.02, 16] as const;
+// Under this track the names stack over their spans: a graph under about
+// 450 px. Margin below the 478 px a 961 px window with a classic scrollbar
+// leaves, so the browse columns never stand beside a stacked graph.
+const MIN_TRACK = 320;
+// A gutter that holds a lane's name and its action (Remove) does not narrow,
+// and stacks under the track it always had.
+const ACTION_NAME_WIDTH = [230, 0, 230] as const;
+const ACTION_NAME_GAP = [16, 0, 16] as const;
+const ACTION_MIN_TRACK = 360;
 // Stacked, the room a two-line lane name keeps until it is measured.
 const STACKED_NAME_HEIGHT = 54;
 // Stacked, the least room between a measured name and its spans.
@@ -191,13 +207,20 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
       Math.max(Math.min(span.to, last) + 1 - Math.max(span.from, first), 1),
     ),
   );
-  const besideTrack = input.width - NAME_WIDTH - NAME_GAP;
+  const fluid = ([min, share, max]: readonly [number, number, number]) =>
+    Math.min(Math.max(input.width * share, min), max);
+  const [nameSpec, gapSpec, minTrack] = input.actions
+    ? [ACTION_NAME_WIDTH, ACTION_NAME_GAP, ACTION_MIN_TRACK]
+    : [NAME_WIDTH, NAME_GAP, MIN_TRACK];
+  const nameGap = fluid(gapSpec);
+  const besideTrack = input.width - fluid(nameSpec) - nameGap;
   // Under a finger, a graph whose shortest span would be under 24 px beside
   // the names stacks, as on a phone, and grows its track there.
   const stacked =
-    besideTrack < MIN_TRACK ||
+    besideTrack < minTrack ||
     (!!input.touch && (besideTrack / axisYears) * shortest < MIN_TARGET);
-  const trackX = stacked ? 0 : NAME_WIDTH + NAME_GAP;
+  const nameWidth = stacked ? 0 : fluid(nameSpec);
+  const trackX = stacked ? 0 : nameWidth + nameGap;
   const pxPerYear = Math.max(
     Math.max(input.width - trackX, 1) / axisYears,
     stacked && Number.isFinite(shortest) ? MIN_TARGET / shortest : 0,
@@ -478,6 +501,7 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
 
   return {
     stacked,
+    nameWidth,
     trackX,
     trackWidth,
     height: y,

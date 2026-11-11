@@ -73,13 +73,29 @@
     grid-template-columns: minmax(0, 1fr);
   }
   /* Open, it fills the viewport under the bar, as the page it stands in
-     for would. */
-  .browse {
+     for would, with no side rule: there is no column beside it (#2407). */
+  .body .browse {
     position: static;
     height: auto;
     min-height: calc(100dvh - var(--top-bar-height, 0px));
+    border-right: 0;
   }
+  /* One centred reading column, as wide inside its padding as the pane is
+     where the columns first show (60rem + 1px less both columns' least
+     widths, less its own padding there), so the content keeps its width
+     across the breakpoint (#2407, maintainer decisions 2026-11-11). */
   .detail {
+    max-width: calc(
+      60rem +
+      1px -
+      var(--col-browse) -
+      var(--col-list) -
+      2 *
+      var(--space-5) +
+      2 *
+      var(--space-4)
+    );
+    margin-inline: auto;
     padding: var(--space-4);
   }
   /* Scoped under `.body` to outrank the column's own `display: flex`. */

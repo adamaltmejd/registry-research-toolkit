@@ -183,7 +183,6 @@ export function TopBar({
             }}
           />
         </Autocomplete>
-        <span className={styles.rowBreak} aria-hidden="true" />
         {/* Below the breakpoint only (CSS): it shows the register column in
           place of the page, and hides it again (#2403). */}
         <span className={styles.menu}>

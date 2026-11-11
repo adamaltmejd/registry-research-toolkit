@@ -295,7 +295,7 @@
   --space-5: 1.5rem; /* detail-pane padding */
   --space-6: 2rem; /* between major sections in a pane */
   --radius-sm: 3px; /* controls, chips, column chips, lane spans, inputs */
-  --radius: 4px; /* banner, dialogs, status rows */
+  --radius: 4px; /* dialogs, status rows, panels */
   --col-browse: 220px; /* first browse column: registers grouped by provider */
   --col-browse-max: 340px; /* the first column's width on a wide screen */
   --col-list: 200px; /* second browse column */

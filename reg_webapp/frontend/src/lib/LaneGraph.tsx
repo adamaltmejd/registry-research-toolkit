@@ -230,6 +230,7 @@ export function LaneGraph({
           below,
           nameHeights,
           touch,
+          actions: lanes.some((lane) => lane.action !== undefined),
         })
       : null;
   // A single-pick graph that scrolls keeps its picked span in view (a classification's
@@ -330,7 +331,7 @@ export function LaneGraph({
                 style={{
                   top: geometry.coverageY,
                   height: COVERAGE_HEIGHT,
-                  width: geometry.trackX - 16,
+                  width: geometry.nameWidth,
                 }}
                 aria-hidden="true"
               >
@@ -369,7 +370,7 @@ export function LaneGraph({
                     >
                       <LaneName
                         lane={lane}
-                        width={geometry.stacked ? width : geometry.trackX - 16}
+                        width={geometry.stacked ? width : geometry.nameWidth}
                         // Stacked, every lane's spans start under its measured
                         // name; beside the track only a detail grows the lane.
                         onHeight={

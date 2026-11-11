@@ -182,7 +182,7 @@ components:
   project-banner:
     backgroundColor: "{colors.accent-soft}"
     textColor: "{colors.text}"
-    rounded: "{rounded.md}"
+    rounded: "{rounded.sm}"
   column-chip:
     backgroundColor: "{colors.viz-span}"
     textColor: "{colors.text}"
@@ -307,7 +307,9 @@ pure role remaps.
   be read (3.2:1, below WCAG AA for text).
 - **Rules:** `border` is the hairline between rows and columns. `border-strong` is an
   ink hairline used only for a section rule inside the detail pane, a default button's
-  or field's border, a column chip's stroke and the axis of a graph. A rule or divider
+  or a `Select`'s border, a column chip's stroke and the axis of a graph. A text field
+  (the search field, every filter box) takes `border` (#2407, maintainer decisions
+  2026-11-11). A rule or divider
   in a list or browse column is always `border`, one shared rule (`.sectionRule`) in
   both columns (maintainer review of the classification pages, 2026-11-05, point 1).
 - **Pine, the ownership colour (`accent` and its stops):** used for exactly one idea —
@@ -390,7 +392,14 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   sticks to the top of the page above `breakpoint-narrow`. Below it the bar has two rows
   that scroll away with the page (#2403, maintainer decisions 2026-11-11): the logo,
   then the search field filling the row, always shown; under them the menu button and
-  the project banner, which fills the rest of the row. The button is icon-only (three
+  the project banner, which fills the rest of the row. The logo and the button are
+  both 32 px (`spacing.6`) and share one column, so the field and the banner share both
+  edges (#2407, maintainer decisions 2026-11-11, variant B of the narrow top-bar
+  mock-ups); the button sits at the top of its row, centred on the empty box and level
+  with an open banner's first line. At every width the field and the banner are one
+  box style: a 1 px `border`, `rounded.sm`, no leading bar; an open project keeps its
+  `accent-soft` fill (#2407). The field and the empty box are one height, the column
+  header's 2.75rem (new rule, proposed by the implementer). The button is icon-only (three
   lines), with "Browse registers" as its accessible name and tooltip, and
   `aria-expanded` (`aria-controls` names the register column); it opens the register
   browser and closes it again (see Browse columns). This replaces the "Search" button
@@ -463,8 +472,16 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   into the register list. Proposed by the implementer: opening it moves focus to the
   open page's row, or the first row; choosing a row is a press, Enter or Space; the
   arrows passing a row open its page behind it, as above the breakpoint, and leave it
-  open; and any other navigation (a link, a search result, the history) closes it. Do
-  not mint new breakpoints.
+  open; and any other navigation (a link, a search result, the history) closes it. The
+  open browser has no side rule: there is no column beside it (#2407, maintainer
+  decisions 2026-11-11). So the browse columns show only from 961 px, always beside a
+  `Timeline` with its names in the gutter (see Time), and below the breakpoint the
+  detail pane is one centred column, capped at the content width it has where the
+  columns first show (493 px at 961 px, inside its padding), so a timeline keeps its
+  width from 960 to 961 px and the content only moves right as the columns appear
+  (#2407, maintainer decisions 2026-11-11). The pane keeps its 16 px narrow padding and
+  the cap is measured inside it (new rule, proposed by the implementer: the mock-up's
+  24 px padding from 481 px would mint a breakpoint). Do not mint new breakpoints.
 - **Search.** The top-bar field searches and filters nothing (#2398, maintainer
   2026-11-11): typing never changes the browse columns or the open page. Its results, the
   command palette (RAC `Autocomplete`), open under it as you type once the text reaches
@@ -512,9 +529,16 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   gets none, since the search finds registers. Matched text is underlined in `accent` at
   weight 600. Escape in the box clears it, and on an empty box does nothing; no Escape
   elsewhere on the page touches it (new rule, proposed by the implementer: the
-  page-wide Escape of #1827 cleared the top-bar filter, which is gone). The register page
-  has the same box under the table chips, filtering the page's variable list, the rows
-  the chips leave (#2403, maintainer decisions 2026-11-11). It shows at every width, so on
+  page-wide Escape of #1827 cleared the top-bar filter, which is gone). Every filter box
+  has a 1 px `border`, `rounded.sm` (#2407, maintainer decisions 2026-11-11). The
+  register page has the same box first in its list's panel, then the table chips, then
+  the list: the box filters the page's variable list, the rows the chips leave (#2403;
+  order: #2407, maintainer decisions 2026-11-11, variant B). The chips have no visible
+  label ("Tables" is gone, #2407); the group's hidden name is "Filter by table" (new
+  rule, proposed by the implementer). A provider's page has the same box over its
+  register list, reading "Filter registers…", named "Filter this provider's registers",
+  matching by name and slug (#2407, maintainer decisions 2026-11-11; the name and its
+  empty state "No registers match …" are proposed by the implementer). It shows at every width, so on
   wide screens the two boxes filter different lists (maintainer 2026-11-11, #2403). The same matching, marking and Escape; "Filter variables…" as its text and
   "Filter this register's variables" as its name, apart from the column's. It belongs to
   the page: it starts empty when another register opens. A filter that matches nothing
@@ -637,8 +661,8 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   working notes, not shown until the steward
   curates them for readers. A register page shows under its `h1` only its description,
   as prose: the timeline shows the years and the chips the tables, so there is no Years
-  or Tables row (#2316). It has no tables table: its tables are FilterChips above the
-  variable list, each the table's pill with its period (F1, maintainer, #2399, approved 2026-11-11), a lens with OR within the selection, offered only
+  or Tables row (#2316). It has no tables table: its tables are FilterChips under the
+  filter box and above the variable list (#2407), each the table's pill with its period (F1, maintainer, #2399, approved 2026-11-11), a lens with OR within the selection, offered only
   when two or more tables deliver variables (the archived variant chips, maintainer
   2026-11-03). A register page has no "Unplaced releases" panel (maintainer 2026-11-04).
   In steward mode a supplemental-only variable is selectable for a project like a
@@ -846,7 +870,17 @@ Time is the axis every relation is drawn on.
   keeps the target size; the 21 px pill sits centred in it. A span too narrow for the
   column name is a bare bar with the name beside it: to the right, to the left at the
   axis end, else in a gap between its deliveries, and only where no room is free over
-  the bars at the track's end, never cut. Stacked below the breakpoint, a lane's spans
+  the bars at the track's end, never cut. Beside the track the names take a compact
+  gutter that narrows with the graph: 27 % of its width between 120 and 230 px, then a
+  gap of 2 % between 8 and 16 px, so the 493 px graph of a pane at 961 px keeps a 350 px
+  track (#2407, maintainer decisions 2026-11-11). Under a 320 px track, a graph under
+  about 450 px, the names stack over their spans; the margin keeps a 961 px window
+  with a classic scrollbar on the gutter view (new rule, proposed by the implementer).
+  A graph whose lanes carry an action beside the name (the /project source card's
+  Remove) keeps the full 230 + 16 px gutter and stacks under a 360 px track, so name
+  and action still fit (new rule, proposed by the implementer: the compact gutter cut
+  "Antal personer" to "Anta…" beside Remove).
+  Stacked below the breakpoint, a lane's spans
   start just under its name, a table pill over its span. Hovering or focusing a span
   shows a RAC `Tooltip` with no delay only where the span's own text is cut off, which
   is its years: always on a column span, on a classification version's (a span with no
@@ -869,6 +903,9 @@ Time is the axis every relation is drawn on.
   read-only row of a register's variable list, or of a provider's register list (the
   register's years as one span), never a table row: the in-project dot and wash, the
   name in the text face as a link to its page, and the bar with the study window block.
+  The block is `accent-bg` between 1 px `accent` bounds; on an in-project row, whose
+  wash is `accent-bg` too, it is `accent-band` between 1.5 px `accent` bounds (#2407,
+  maintainer decisions 2026-11-11, variant C).
   The list's one header is the bars' axis (`YearAxis`): its first year over the bars'
   start and its last over their end, in the `axis` type (maintainer 2026-11-05), with
   the list's name ("Variables", "Registers") on the same row over the names as the
@@ -1014,7 +1051,8 @@ grow new visual language meanwhile.
   nothing is selected.
 - **ProjectBanner:** the project's presence in the top bar — name, study window, source
   and column counts, the verdict, save state — on `accent-soft` with a 1 px `border`
-  hairline and a 3 px `accent` leading bar. The name is `h3`, the counts `mono` ("1
+  hairline and `rounded.sm`, the search field's box, with no leading bar (#2407,
+  maintainer decisions 2026-11-11). The name is `h3`, the counts `mono` ("1
   table, 2 columns"). The verdict is the project page's, in the same words (see Project
   page), and leads with its glyph: "✓ Ready to download" in `ok`, "▲ Has warnings" in
   `warn`, "✕ Has problems" or "✕ Can't download yet" in `err`; not yet checked or in
@@ -1034,8 +1072,8 @@ grow new visual language meanwhile.
   year, drawn as the Timeline's study-window band (see Time: `accent-bg` between
   `accent` bounds, the thumbs on those bounds) on a `surface` strip, its years an
   `accent-ink` `mono` readout, with a "Clear" ghost action; the label, the readout and
-  Clear keep one line. With no project open it is the same box, empty and untinted with
-  a `border` leading bar, holding a `default` "Create a project" Button, which starts a
+  Clear keep one line. With no project open it is the same box, empty and on `surface`,
+  holding a `default` "Create a project" Button, which starts a
   project and opens it, and nothing in the catalog is tinted.
 - **Findings** (the project check's) are `StatusRow`s in their level's tone, set under
   what they concern: a column's under its lane, a source's at the top of its card. Each
