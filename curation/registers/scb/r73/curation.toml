@@ -2206,3 +2206,21 @@ kind = "set"
 subject = "var:husform"
 fields = { "description" = "Husform för varje delobjekt i projektet. Den härledda kolumnen B_FHusform anger i stället projektets vanligaste husform." }
 evidence = "Etiketten anger per delobjekt; beskrivningen av projektets vanligaste husform hör till B_FHusform.\n0.74.0 catalog, key v21064, releases r11718, r12059, r12060, r12061...; reg_meta.db:occurrence:397657,397800,397943"
+
+[[statement]]
+kind = "set"
+subject = "set:uppvarmningssystem"
+fields = { "description" = "Uppvärmningen av hustypen i projektet: det huvudsakliga uppvärmningssystemet, som ursprungligt svar och härlett, annat uppvärmningssystem i klartext, förekomst av kompletterande uppvärmningsanläggning och vilken den är i klartext, samt om de flesta av lägenheterna i projektet har ytterligare uppvärmningssystem (1) eller inte (0)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna är huvudsystemet, kompletterande uppvärmning och fritextsvar.\ncatalog:variable_text:47468:13514:19358\ncatalog:variable_text:47468:19358:20089\ncatalog:variable_text:47576:13514:19358\ncatalog:variable_text:47576:19358:20089\ncatalog:variable_text:47577:13514:20089\ncatalog:variable_text:47578:13514:20089\ncatalog:variable_text:47579:19358:20089\ncatalog:variable_text:47586:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:energislag"
+fields = { "description" = "Energislaget i värmeanläggningen för hustypen i projektet: det huvudsakliga energislaget per hustyp och det mest förekommande i projektet (det som har flest lägenheter), annat energislag i klartext, förekomst av kompletterande energislag och vilket det är i klartext, samt om de flesta av lägenheterna i projektet har ytterligare energislag (1) eller inte (0)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna är huvudenergislaget, kompletterande energislag och fritextsvar.\ncatalog:variable_text:47486:13514:19723\ncatalog:variable_text:47486:19723:20089\ncatalog:variable_text:47487:13514:20089\ncatalog:variable_text:47488:13514:20089\ncatalog:variable_text:47489:19358:20089\ncatalog:variable_text:47490:13514:20089\ncatalog:variable_text:47498:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-vaningsplan"
+fields = { "description" = "Antal våningsplan för hustypen: för flerbostadshus, för gruppbyggda småhus, det mest förekommande antalet i projektet (det som har flest lägenheter) och annat svar i klartext." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i hustyp och härledning.\ncatalog:variable_text:47448:13514:17167\ncatalog:variable_text:47448:17167:20089\ncatalog:variable_text:47449:13514:20089\ncatalog:variable_text:47450:13514:17167\ncatalog:variable_text:47450:17167:18628\ncatalog:variable_text:47450:18628:20089\ncatalog:variable_text:47581:13514:20089"

@@ -1940,3 +1940,9 @@ kind = "set"
 subject = "var:mpot-obargadareal"
 fields = { "description" = "Obärgad areal höst-/vinterpotatis, totalt, i hektar." }
 evidence = "Definition, etikett och enhet är desamma 2016-2023; den operationella definitionen i r19820 (2024) beskriver en annan post (\"Totala mängden ...\", höst-/vinterpotatis respektive total areal) och är en kopierad formulering.\n0.74.0 catalog, key v15074, releases r16385, r16464, r17552, r17555...; reg_meta.db:occurrence:437647,437748,437849"
+
+[[statement]]
+kind = "set"
+subject = "set:partiellt-bortfall"
+fields = { "description" = "Partiellt bortfall i uppgifterna om potatisodling, per slag: färskpotatis, höst- och vinterpotatis och stärkelsepotatis, totalt eller för certifierad ekologisk odling, ekologisk odling under omställning och därav ekologisk potatis." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i potatisslag och odlingsform.\ncatalog:variable_text:48869:16801:17532\ncatalog:variable_text:48869:17532:19358\ncatalog:variable_text:48876:16801:19358\ncatalog:variable_text:48890:16801:19358\ncatalog:variable_text:48900:16801:19358\ncatalog:variable_text:48907:16801:19358\ncatalog:variable_text:48907:19723:20089\ncatalog:variable_text:48923:16801:19358\ncatalog:variable_text:48923:19723:20089\ncatalog:variable_text:48936:16801:19358\ncatalog:variable_text:48943:16801:19358\ncatalog:variable_text:48946:16801:19358"

@@ -1165,3 +1165,9 @@ kind = "set"
 subject = "var:totlgh"
 fields = { "label" = "Antal lägenheter totalt (netto, ombyggnad)" }
 evidence = "#2102 same-label cluster 'Antal lägenheter totalt' (4 variables): judged different meaning, medium confidence; TotLgh is the net total in the ombyggnad table (tillkommande minus borttagna, opdef); AntLgh and TotAntLgh follow each other in the rivning table; PaborjadeLgh (påbörjade, decoded from the name) runs beside TotAntLgh."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-bostadslagenheter"
+fields = { "description" = "Antal lägenheter i ombyggnad och rivning: lägenheter totalt, före ombyggnaden, tillkommande och borttagna lägenheter samt nettotillskottet, det vill säga antalet tillkommande minus antalet borttagna lägenheter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna är antalen totalt, före, tillkommande, borttagna och netto.\ncatalog:variable_text:46392:10592:15340\ncatalog:variable_text:46423:10592:16801\ncatalog:variable_text:46423:16801:17532\ncatalog:variable_text:46423:17532:18993\ncatalog:variable_text:46442:10592:20089\ncatalog:variable_text:46443:10592:20089\ncatalog:variable_text:46444:10592:20089\ncatalog:variable_text:46445:16801:18262\ncatalog:variable_text:46445:18262:18993"

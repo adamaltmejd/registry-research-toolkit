@@ -490,3 +490,15 @@ kind = "set"
 subject = "var:fakturerat-varde"
 fields = { "description" = "Varornas fakturerade värde. Från 2019 anger SCB att det fakturerade värdet räknas om till statistiskt värde med särskilda omräkningsfaktorer." }
 evidence = "v19318 is listed under Intrastat Varde in every release 1999-2026; v19317's operational definition from the 2019 release on: 'Fakturerat värde är omräknat till statistiskt värde med hjälp av speciella omräkningsfaktorer' (2011-2018: statistical value from a separate survey every 5-7 years). Maintainer ruling 2026-11-04 (#2073)."
+
+[[statement]]
+kind = "set"
+subject = "set:varugrupp-sitc"
+fields = { "description" = "Varans produktgrupp enligt SITC (Standard International Trade Classification), FN:s klassificering av produkter, härledd från Kombinerade nomenklaturen (KN) på åttasiffernivå. Variablerna skiljer sig i nivå: den detaljerade koden på upp till femsiffernivå eller koden på tresiffernivå." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i SITC-nivå.\ncatalog:variable_text:61641:12784:17167\ncatalog:variable_text:61642:10592:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:handelsland"
+fields = { "description" = "Det land som är varans avsändningsland vid import och bestämmelseland vid export, angivet med en landskod med två bokstäver. För Extrastat avses bara handel med länder utanför EU." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna är samma landsindelning före och från 2017.\ncatalog:variable_text:61632:17167:20819\ncatalog:variable_text:61633:10592:10957\ncatalog:variable_text:61633:10957:11688"

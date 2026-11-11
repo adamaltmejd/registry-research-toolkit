@@ -830,3 +830,27 @@ kind = "set"
 subject = "var:ripartikod"
 fields = { "label" = "Parti (riksdagspartikod)" }
 evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; Party code, party name, short name, and a second code list with different labels (column Ripartikod, riksdag party list)."
+
+[[statement]]
+kind = "set"
+subject = "set:landsting"
+fields = { "description" = "Det landsting (län) där nomineringen till landstingsfullmäktige har skett, angivet som kod enligt Rikets indelning eller som namn." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i kod eller namn.\ncatalog:variable_text:10347:7670:8035\ncatalog:variable_text:10347:10227:10592\ncatalog:variable_text:10347:13149:13514\ncatalog:variable_text:10348:7670:8035\ncatalog:variable_text:10348:10227:10592"
+
+[[statement]]
+kind = "set"
+subject = "set:lan"
+fields = { "description" = "Det län där nomineringen till kommunfullmäktige har skett, angivet som kod eller som namn." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i kod eller namn.\ncatalog:variable_text:10346:7670:8035\ncatalog:variable_text:10346:10227:10592\ncatalog:variable_text:10346:13149:13514\ncatalog:variable_text:10346:17897:18262\ncatalog:variable_text:10351:13149:13514\ncatalog:variable_text:10351:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:sammanraknad-forvarvsinkomst"
+fields = { "description" = "Den nominerades sammanräknade förvärvsinkomst, det vill säga beräknad inkomst av tjänst och näringsverksamhet i deklarationen, för inkomståret före valet, och kvintilgruppen efter den, där kvintilgränserna är beräknade för hela Sveriges befolkning över 18 år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna är beloppet och dess kvintilgrupp.\ncatalog:variable_text:10339:7670:8035\ncatalog:variable_text:10339:8766:9131\ncatalog:variable_text:10339:10227:10592\ncatalog:variable_text:10339:11688:12053\ncatalog:variable_text:10339:13149:13514\ncatalog:variable_text:10339:14610:14975\ncatalog:variable_text:10339:16071:16436\ncatalog:variable_text:10339:17532:18262\ncatalog:variable_text:10339:18993:19358\ncatalog:variable_text:10366:7670:8035"
+
+[[statement]]
+kind = "set"
+subject = "set:kommunvalkrets"
+fields = { "description" = "Kommunvalkrets, den regionala indelning för vilken ledamöter och ersättare utses vid kommunfullmäktigeval, angiven som valkretsens nummer eller namn i klartext. Numret är unikt först tillsammans med kommunkoden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i nummer eller namn.\ncatalog:variable_text:10342:7670:8035\ncatalog:variable_text:10342:11688:12053\ncatalog:variable_text:10342:13149:13514\ncatalog:variable_text:10342:17897:18262\ncatalog:variable_text:10343:7670:8035\ncatalog:variable_text:10343:10227:10592"

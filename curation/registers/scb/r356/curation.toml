@@ -737,3 +737,15 @@ kind = "set"
 subject = "var:sv-ej-de"
 fields = { "description" = "Markering för om eleven deltog i alla delprov i det nationella provet i svenska i årskurs 5: 0 = deltagit, 1 = ej deltagit. Etiketten säger 'undervisning', men SCB:s operationella definition avser deltagande i delproven." }
 evidence = "Opdef (Registerinformation.csv:row=981387) 'Om eleven har deltagit i alla delproven i svenska sätts värdet Deltagit, annars Ej deltagit'; identical pattern for En_Ej_De (row=981385) and Ma_Ej_De (row=981386); value set #11246. Medium: the label wording is SCB's."
+
+[[statement]]
+kind = "set"
+subject = "set:foraldrars-utbildningsniva"
+fields = { "description" = "Elevens biologiska moders, biologiska faders eller föräldrarnas utbildningsnivå enligt Svensk utbildningsnomenklatur (SUN 2000), där föräldern hämtas från Befolkningsregistret och utbildningsnivån från Utbildningsregistret. Föräldrarnas utbildningsnivå är den högsta av moderns och faderns. Variablerna skiljer sig i förälder och i indelning: fullständig nivå, sju nivåer, den äldre indelningen i sju nivåer eller grupperad i tre nivåer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarnas texter skiljer sig i förälder och gruppering.\ncatalog:variable_text:28963:13879:14245\ncatalog:variable_text:28974:14245:14610\ncatalog:variable_text:28974:14610:14975\ncatalog:variable_text:29002:13879:14245\ncatalog:variable_text:29004:14245:14610\ncatalog:variable_text:29005:14245:14610\ncatalog:variable_text:29005:14610:14975\ncatalog:variable_text:29006:14245:14975\ncatalog:variable_text:29007:13879:14245\ncatalog:variable_text:29009:14245:14610\ncatalog:variable_text:29010:14245:14610\ncatalog:variable_text:29010:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:provresultat-matematik"
+fields = { "description" = "Elevens resultat på delproven och gruppuppgiften i provet i matematik. Delprovens innehåll skiljer sig mellan åren: 2008 var delprov B mätning, C geometriska former, D tal och mönster och E räkning; 2009–2010 var delprov A miniräknare och räknesätten, B längd, area och skala, C tid och statistik och D räknemetoder." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna är delproven A–E och gruppuppgiften; delprovens innehåll byts 2009.\ncatalog:variable_text:28983:14245:14975\ncatalog:variable_text:28985:13879:14245\ncatalog:variable_text:28985:14245:14975\ncatalog:variable_text:28987:13879:14245\ncatalog:variable_text:28987:14245:14975\ncatalog:variable_text:28989:13879:14245\ncatalog:variable_text:28989:14245:14975\ncatalog:variable_text:28992:13879:14245\ncatalog:variable_text:28994:13879:14245"

@@ -796,3 +796,27 @@ kind = "set"
 subject = "var:fodelseland-varldsdel"
 fields = { "label" = "Födelseland, världsdel/landgrupp (FodelseLand_Varldsdel/FodelseLand_Varldsdel_Flergen)" }
 evidence = "#2102 fold: the label names every folded column. FodelseLand_Varldsdel (2015-19) and FodelseLand_Varldsdel_Flergen (2020-) in konst-och-kulturutbildningar: same definition, opdef and code list, adjacent at 2020."
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsniva"
+fields = { "description" = "Nivån för personens högsta genomförda utbildning enligt Svensk utbildningsnomenklatur (SUN), där den högsta utbildningen väljs enligt Utbildningsregistrets prioriteringsregler. Variablerna skiljer sig i SUN-version (SUN 2000 eller SUN 2020) och i indelning: nivåkoden eller det grövre aggregatet i sju nivåer, som är anpassat till det svenska utbildningssystemet och jämförbart med den äldre SUN-nivåindelningen. Till och med 2021 anges nivån som första positionen av SUN 2000-koden, från 2022 som den tresiffriga SUN 2020-koden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i SUN-version och indelning; nivåkoden byts 2022.\ncatalog:variable_text:40795:16436:18262\ncatalog:variable_text:40796:16436:18262\ncatalog:variable_text:40798:18628:18993\ncatalog:variable_text:40798:18993:20089\ncatalog:variable_text:40799:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsinriktning"
+fields = { "description" = "Inriktningen för utbildningen enligt Svensk utbildningsnomenklatur (SUN 2000 eller SUN 2020): för personens högsta genomförda utbildning den fyrsiffriga inriktningskoden, kopplad till den nivå som valts som högsta enligt Utbildningsregistret, och för utbildningen den indelning som Myndigheten för yrkeshögskolan gjort som en lokal utvidgning av SUN:s inriktningsmodul." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i om inriktningen avser personens högsta utbildning eller utbildningen, och i SUN-version.\ncatalog:variable_text:40794:16436:20089\ncatalog:variable_text:40797:18262:20089\ncatalog:variable_text:40800:16436:18993\ncatalog:variable_text:40800:18993:20089\ncatalog:variable_text:40804:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:studietakt"
+fields = { "description" = "Utbildningens studietakt, ograderad och grupperad, enligt Myndigheten för yrkeshögskolans administrativa register." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i gruppering.\ncatalog:variable_text:40791:16436:20089\ncatalog:variable_text:40792:16801:17532"
+
+[[statement]]
+kind = "set"
+subject = "set:alder"
+fields = { "description" = "Ålder i antal år vid årets slut, beräknad som skillnaden mellan referensåret och födelseåret enligt personnumret, i antal år eller grupperad i åldersklasser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i gruppering.\ncatalog:variable_text:40759:16436:16801\ncatalog:variable_text:40759:16801:17167\ncatalog:variable_text:40760:16436:20089"

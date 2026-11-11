@@ -413,3 +413,15 @@ kind = "set"
 subject = "var:ripartikod"
 fields = { "label" = "Parti (Ripartikod)" }
 evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; pnamn_kort is a short name, partinamn the name, partikod a code list with full party names; Ripartikod is a second code list with no opdef difference, so raw column code."
+
+[[statement]]
+kind = "set"
+subject = "set:sammanraknad-forvarvsinkomst"
+fields = { "description" = "Den nominerades sammanräknade förvärvsinkomst, det vill säga beräknad inkomst av tjänst och näringsverksamhet i deklarationen, för ett inkomstår före valet, och kvintilgruppen efter den, där kvintilgränserna är beräknade för hela Sveriges befolkning över 18 år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna är beloppet och dess kvintilgrupp.\ncatalog:variable_text:14886:9131:9496\ncatalog:variable_text:14886:10592:10957\ncatalog:variable_text:14886:12418:12784\ncatalog:variable_text:14886:14245:14610\ncatalog:variable_text:14886:16071:16436\ncatalog:variable_text:14886:19723:20089\ncatalog:variable_text:14900:9131:9496"
+
+[[statement]]
+kind = "set"
+subject = "set:parti"
+fields = { "description" = "Det parti som den nominerade kandidaten nominerats för, som kod, namn eller kortnamn. En person kan nomineras för flera partier; där personen bara förekommer en gång väljs för valda det parti kandidaten fått mandat för efter dubbelvalsavveckling." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i kod, namn och kortnamn.\ncatalog:variable_text:14893:9131:9496\ncatalog:variable_text:14893:17897:18262\ncatalog:variable_text:14894:17897:18262"

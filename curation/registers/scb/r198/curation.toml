@@ -775,3 +775,15 @@ kind = "set"
 subject = "var:yta"
 fields = { "label" = "Bostadsarea (i byggnadsprojektet)" }
 evidence = "#2102 same-label cluster 'Bostadsarea' (2 variables): judged different meaning, high confidence; Opdefs: LghAreor is the area according to the building permit, Yta the area in the building project; they coexist 2007-2015."
+
+[[statement]]
+kind = "set"
+subject = "set:agarkategori"
+fields = { "description" = "Byggherrens ägarkategori: om ägaren är en fysisk eller juridisk person, med en finare indelning för juridiska personer. Variablerna är en detaljerad och en grov indelning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig bara i indelningens detaljnivå.\ncatalog:variable_text:12240:13514:14610\ncatalog:variable_text:12240:18628:20089\ncatalog:variable_text:12241:13149:13514\ncatalog:variable_text:12241:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:fardigstallandetidpunkt"
+fields = { "description" = "Den månad och det år då huset färdigställdes. Ett nybyggt hus anses färdigställt den månad då minst tre fjärdedelar av lägenheterna i huset kunnat tas i bruk; för gruppbebyggelse av småhus gäller tre fjärdedelar av husen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna är år och månad.\ncatalog:variable_text:12242:13514:14610\ncatalog:variable_text:12242:18628:20089\ncatalog:variable_text:12250:13514:14610"

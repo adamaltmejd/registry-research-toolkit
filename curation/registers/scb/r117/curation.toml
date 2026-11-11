@@ -2042,3 +2042,9 @@ kind = "set"
 subject = "var:vo"
 fields = { "label" = "Gymnasieprogram, Vård- och omsorgsprogrammet (VO)" }
 evidence = "#2102 same-label cluster 'Gymnasieprogram' (19 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; All 19 columns share one 129-code list in which each column's code maps to the program named in the proposal (e.g. BA=Bygg- och anläggningsprogrammet, IN=Industritekniska programmet); opdef 'enligt Skolverkets riksprislista'."
+
+[[statement]]
+kind = "set"
+subject = "set:utjamningsar"
+fields = { "description" = "Det år som utjämningen gäller: i den kommunalekonomiska utjämningen det år som påverkar kommunens eller landstingets (regionens) utfall, och i LSS-utjämningen det år för vilket kommunen betalar en utjämningsavgift till eller får ett utjämningsbidrag från staten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i utjämningssystem.\ncatalog:variable_text:41100:13514:16436\ncatalog:variable_text:41101:19358:19723\ncatalog:variable_text:41102:13879:16071\ncatalog:variable_text:41102:17532:19358\ncatalog:variable_text:41102:19358:19723\ncatalog:variable_text:41102:19723:20089\ncatalog:variable_text:41102:20089:20454\ncatalog:variable_text:41102:20454:20819"

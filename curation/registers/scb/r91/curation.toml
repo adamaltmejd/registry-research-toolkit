@@ -652,3 +652,9 @@ kind = "set"
 subject = "var:naringsgren-sni-92"
 fields = { "label" = "Näringsgren (SNI 92)" }
 evidence = "#2102 same-label cluster 'Näringsgren' (2 variables): judged different meaning, high confidence; SNI 92 vs SNI 2007 classification versions with different code lists."
+
+[[statement]]
+kind = "set"
+subject = "set:styrkod"
+fields = { "description" = "Kod för granskning och rättning av företagets uppgifter, för arbetare eller tjänstemän: om uppgifterna är bortfall, godkända, felaktiga eller upprättade eller om någon variabel har imputerats. Koderna anger till exempel om blanketten inte inkommit, om den godkänts maskinellt eller manuellt, om företaget saknar anställda eller om det är övertäckning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig bara i personalkategori.\ncatalog:variable_text:40899:10957:12053\ncatalog:variable_text:40899:13879:14245\ncatalog:variable_text:40899:17167:20454\ncatalog:variable_text:40900:10957:12053\ncatalog:variable_text:40900:13879:14245\ncatalog:variable_text:40900:17167:20454"

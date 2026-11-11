@@ -360,3 +360,15 @@ kind = "set"
 subject = "var:aktuellt-antal-anstallda-offentlig-forvaltning"
 fields = { "label" = "Aktuellt antal anställda (offentlig förvaltning)" }
 evidence = "#2102 same-label cluster 'Aktuellt antal anställda' (3 variables): judged different meaning, medium confidence; Opdefs: syssa98 avser näringslivet and syssa02 avser offentlig förvaltning, concurrent from 2006; SyssA (2005-2007) has only the generic opdef and is qualified by code."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-anstallda"
+fields = { "description" = "Aktuellt antal anställda vid mättillfället enligt Företagsdatabasen (FDB): personer för vilka arbetsgivaren är skyldig att redovisa A-skatt och vars årliga arbetsinkomst beräknas överstiga ett prisbasbelopp. Antalet beräknas huvudsakligen från två källor beroende på om företaget har ett eller flera arbetsställen. Variablerna avser alla anställda, näringslivet eller offentlig förvaltning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna delar definitionen och skiljer sig i sektor.\ncatalog:variable_text:41861:12784:13514\ncatalog:variable_text:41862:18993:20089\ncatalog:variable_text:41863:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:naringsgren"
+fields = { "description" = "Den näringsgren som arbetsstället tillhör, enligt Svensk näringsgrensindelning på femsiffernivå: SNI 2002 till och med 2021, från 2022 SNI 2007 i den ena variabeln." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna har samma definition; SNI-versionen byts 2022 i den ena.\ncatalog:variable_text:41877:12784:13514\ncatalog:variable_text:41878:18993:20089"

@@ -364,3 +364,9 @@ kind = "set"
 subject = "var:undersokningsomgang-asv"
 fields = { "label" = "Undersökningsomgång (Asv)" }
 evidence = "#2102 same-label cluster 'Undersökningsomgång' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; ArB occurs in the outhyrda-allmännyttiga table and ArP in the privatägda table; Asv (2008-09) sits in privatägda beside ArP with no text."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-bostadslagenheter"
+fields = { "description" = "Antalet lägenheter i taxeringsenheten, eller antalet outhyrda lägenheter, beroende på klassificeringen av lägenhetsbeståndet; 2006–2009 som antal per lägenhetstyp." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna är samma antal med olika indelning.\ncatalog:variable_text:46353:14975:15340\ncatalog:variable_text:46353:17897:18262\ncatalog:variable_text:46354:13149:13514"

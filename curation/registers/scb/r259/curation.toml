@@ -630,3 +630,9 @@ kind = "set"
 subject = "foretagens-utgifter-for-it: Ar where key = 'v98'"
 fields = { "unit" = "År" }
 evidence = "Etiketten är Referensår; ett år anges inte i minuter. Enheten är densamma i alla tre årgångar, så rättelsen vilar på etikett och definition.\nold unit: 'Antal  minuter'; Registerinformation.csv:row=819875 (r14899); Registerinformation.csv:row=820155 (r17600); Registerinformation.csv:row=559783 (r18566)"
+
+[[statement]]
+kind = "set"
+subject = "set:egen-personals-arbete-med-programvaruutveckling"
+fields = { "description" = "Företagets egna personal som arbetade med utveckling av programvara, till exempel systemerare eller programmerare, under föregående kalenderår: om företaget hade sådan personal, hur många årsverken den utförde och hur stor andel av dessa årsverken, i procent, som avsåg utveckling med karaktär av investering, utveckling för annans räkning eller kundspecifik anpassning av befintlig programvara (konsultverksamhet) respektive övriga relaterade uppgifter som underhåll, support och reparation." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna är en följd av enkätfrågor om samma personal: förekomst, årsverken och andelar per arbetsuppgift.\ncatalog:variable_text:18995:17532:18628\ncatalog:variable_text:18995:18628:18993\ncatalog:variable_text:18996:17532:17897\ncatalog:variable_text:18996:17897:18628\ncatalog:variable_text:18996:18628:18993\ncatalog:variable_text:18999:17532:18628\ncatalog:variable_text:18999:18628:18993\ncatalog:variable_text:19001:17532:17897\ncatalog:variable_text:19001:17897:18628\ncatalog:variable_text:19001:18628:18993\ncatalog:variable_text:19009:17532:18628\ncatalog:variable_text:19009:18628:18993"

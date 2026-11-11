@@ -439,3 +439,9 @@ subject = "var:regionala-statistikomraden-kod"
 fields = { "description" = "Kod för regionalt statistikområde (RegSO) i formatet 0114R001, från 2020. Områdets namn finns i en egen variabel." }
 evidence = "Etiketten anger kod i detta format; den operationella definitionen anger RegSO-kod.\n0.74.0 catalog, key v41253, releases r17845, r18443, r18973, r19658; reg_meta.db:occurrence:421268,421280,421292"
 
+
+[[statement]]
+kind = "set"
+subject = "set:alder"
+fields = { "description" = "Personens ålder i antal år vid årets slut, härledd från personnumret, och grupperingar av den: tre grupper (0–19, 20–64 och 65 år och äldre; 2023 i en av variablerna 0–19, 20–65 och 66 år och äldre) och fem klasser för personer i arbetsför ålder (20–24, 25–34, 35–44, 45–54 och 55–64 år; 2023 i en av variablerna 55–65 år)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna är åldern och dess grupperingar; gränserna skiljer sig mellan variablerna och 2023.\ncatalog:variable_text:48180:9862:18993\ncatalog:variable_text:48180:18993:19358\ncatalog:variable_text:48180:19358:19723\ncatalog:variable_text:48181:18993:19358\ncatalog:variable_text:48181:19358:19723\ncatalog:variable_text:48182:19358:19723\ncatalog:variable_text:48183:19358:19723\ncatalog:variable_text:48184:9862:13149"
