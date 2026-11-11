@@ -1990,3 +1990,27 @@ kind = "set"
 subject = "betyg-ak10: Antal_Ettor where key = 'v30653'"
 fields = { "variable" = "antal-ettor" }
 evidence = "In r12522 (2012/2013) key v30653 sits on two columns, Antal_Ettor and Betyg. Betyg carries v30653's own text in every release 2012-2024. The Antal_Ettor row has the counting operational text of v3594 (number of subjects with grade F), and Antal_Ettor is v3594's column in 2005-2011.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=929163 (r12522)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=992502 (r12522)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=409441 (r12524)"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Personens kön, härlett från personnumrets elfte siffra: udda siffra för man (1), jämn siffra för kvinna (2)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna beskriver samma härledning med olika ord.\ncatalog:variable_text:49992:12965:18184\ncatalog:variable_text:49992:18184:18185\ncatalog:variable_text:49992:18550:18551"
+
+[[statement]]
+kind = "set"
+subject = "var:lasar"
+fields = { "description" = "Det läsår som uppgifterna avser. Ett läsår börjar på hösten ett kalenderår och slutar på våren följande kalenderår. I elevtabellen bestäms läsåret av när insamlingen från skolenheterna gjordes." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger per tabell hur läsåret bestäms.\ncatalog:variable_text:49994:12965:18184\ncatalog:variable_text:49994:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-far"
+fields = { "description" = "Personnummer för elevens biologiska far. Saknas uppgift om far i registret är fältet tomt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger att fadern är den biologiska och att saknad uppgift är tom.\ncatalog:variable_text:50019:12965:18184\ncatalog:variable_text:50019:18184:18185"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-mor"
+fields = { "description" = "Personnummer för elevens biologiska mor. Saknas uppgift om mor i registret är fältet tomt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger att modern är den biologiska och att saknad uppgift är tom.\ncatalog:variable_text:50020:12965:18184\ncatalog:variable_text:50020:18184:18185"

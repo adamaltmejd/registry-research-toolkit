@@ -1708,3 +1708,87 @@ kind = "set"
 subject = "var:pgaturest"
 fields = { "label" = "Ytterligare specificering av enhetens postadress gatudel (PGaturest)" }
 evidence = "#2102 same-label cluster 'Ytterligare specificering av enhetens postadress gatudel' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; GatuRest and PGaturest share both opdef wordings; the registration wording is on only some GatuRest occurrences, so codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:agarkontroll"
+fields = { "description" = "Kod för vem som äger eller kontrollerar den juridiska enheten, enligt Standard för klassificering av institutionella enheter efter ägarkontroll. Standarden hette tidigare Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2019 års operationalisering lägger bara till att koden gäller den juridiska enheten.\ncatalog:variable_text:17506:10592:17897\ncatalog:variable_text:17506:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-kontrolluppgifter"
+fields = { "description" = "Antal kontrolluppgifter som lämnats in för enheten. I tabellen över juridiska enheter avser antalet den juridiska enheten totalt, i tabellen över administrativa enheter AST-enheten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått på två enhetsnivåer; texterna anger vilken enhet antalet gäller per tabell.\ncatalog:variable_text:17520:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:benamning"
+fields = { "description" = "Enhetens benämning, det namn som används i dagligt tal. För en lokal verksamhetsenhet är benämningen oftast densamma som arbetsställets; när ett arbetsställe har flera lokala verksamhetsenheter är den ofta kopplad till näringsgren. En verksamhetsenhets benämning sätts oftast efter kontakt med den juridiska enheten och finns främst för verksamhetsenheter i företagsenheter med mer än en verksamhetsenhet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna beskriver benämningen per enhetstyp (arbetsställe, lokal verksamhetsenhet, verksamhetsenhet).\ncatalog:variable_text:17536:10592:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:boksldat"
+fields = { "description" = "Den juridiska enhetens bokslutsdatum, angivet som månad och dag. Uppgiften kommer ursprungligen från årsredovisningar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; 2019 års version anger bara att uppgiften gäller den juridiska enheten.\ncatalog:variable_text:17539:10592:17897\ncatalog:variable_text:17539:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:cfar-nummer"
+fields = { "description" = "CFAR-nummer, SCB:s identitetsbegrepp för arbetsställen i Företagsdatabasen. Numret är ett informationslöst löpnummer som SCB skapar. Det följer arbetsstället över tiden och behålls även om arbetsstället går över till en ny juridisk enhet, förutsatt att verksamheten bedrivs på samma adress, är i stort sett oförändrad och merparten av de anställda är kvar. I tabellen över lokala verksamhetsenheter avser numret det arbetsställe som den lokala verksamhetsenheten är kopplad till." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i alla tabeller; operationaliseringarna anger per tabell vilket arbetsställe numret gäller. Rättar ”arbetställe” och tar bort tabellnyckelnoteringen.\ncatalog:variable_text:17542:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:epost"
+fields = { "description" = "Enhetens e-postadress. För juridiska enheter kan adressen komma från olika källor, till exempel Skatteverket, SCB:s undersökning Kontroll av uppgifter i SCB:s Företagsdatabas eller telefonkontakt med enheten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; operationaliseringarna anger enhet och, för juridiska enheter, källor.\ncatalog:variable_text:17543:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:fasttaxar"
+fields = { "description" = "Året som taxeringsvärdet för enhetens fastigheter avser, för företagsenheten respektive den juridiska enheten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text för två enhetsnivåer; rättar ”tillhör för”.\ncatalog:variable_text:17544:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsenhetsnummer"
+fields = { "description" = "Identitetsnummer för den företagsenhet som enheten tillhör (i tabellen över företagsenheter företagsenhetens eget nummer). En företagsenhet är en organisatorisk enhet som producerar varor eller tjänster och består av en eller flera juridiska enheter. Numret är ett löpnummer som SCB tilldelar när företagsenheten bildas." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i alla tabeller; operationaliseringarna anger per tabell vilken företagsenhet numret gäller. Tabellnyckelnoteringen tas bort.\ncatalog:variable_text:17553:10592:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:lon-enligt-kontrolluppgifterna"
+fields = { "description" = "Summa lön enligt kontrolluppgifter från Skatteverket, det vill säga summan av alla löner som den juridiska enheten betalat ut. Lönesumman redovisas på den juridiska enheten; i tabellen över administrativa enheter har alla AST-enheter värdet noll." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått; texterna anger att lönesumman bara finns på juridisk enhet och är noll för AST-enheter.\ncatalog:variable_text:17576:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:omsar"
+fields = { "description" = "Det kalenderår som enhetens uppgift om årsomsättning avser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i alla tabeller och år; operationaliseringarna anger bara enhet.\ncatalog:variable_text:17591:10592:16071\ncatalog:variable_text:17591:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:person-orgnr"
+fields = { "description" = "Organisationsnummer för den juridiska enhet som enheten tillhör; i tabellen över juridiska enheter enhetens eget nummer, enligt registreringen av firman. Juridiska personer tilldelas organisationsnummer av Bolagsverket, Skatteverket, Kammarkollegiet, Lantmäteriet, en länsstyrelse eller SCB beroende på bolagsform. För fysiska personer med näringsverksamhet används personnumret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i alla tabeller; operationaliseringarna anger per tabell vilken juridisk enhet numret gäller. Tabellnyckelnoteringen tas bort.\ncatalog:variable_text:17594:10592:10957\ncatalog:variable_text:17594:16801:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:sektortillhorighet"
+fields = { "description" = "Kod för vilken institutionell sektor enheten (den juridiska enheten respektive företagsenheten) tillhör, enligt Standard för klassificering av institutionella enheter efter institutionell sektor. SCB härleder sektorn bland annat utifrån juridisk form och ägarkontroll. Standarden hette tidigare Standard för klassificering av institutionella enheter med avseende på institutionell sektortillhörighet, ägarkategori och juridisk form." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text för två enhetsnivåer.\ncatalog:variable_text:17612:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:telefonnummer"
+fields = { "description" = "Enhetens telefonnummer (arbetsställets respektive den juridiska enhetens). Numren samlas in dels från en kommersiell aktör, dels från SCB:s undersökning Kontroll av uppgifter i SCB:s Företagsdatabas." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text för två enhetsnivåer.\ncatalog:variable_text:17613:10592:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsenhetens-identitetsnummer"
+fields = { "description" = "Identitetsnummer för verksamhetsenheten (i tabellen över lokala verksamhetsenheter den verksamhetsenhet som den lokala enheten ingår i). En verksamhetsenhet är en uppdelning av företagsenheten efter näringsgren. Numret är ett löpnummer som SCB tilldelar när verksamhetsenheten bildas." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger enhet per tabell. Tabellnyckelnoteringen tas bort.\ncatalog:variable_text:17615:10592:17897"

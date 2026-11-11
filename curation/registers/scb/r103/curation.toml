@@ -2956,3 +2956,9 @@ kind = "set"
 subject = "var:studiemedel-lan-stmlanht"
 fields = { "label" = "Studiemedel, lån (utbetalt per kalenderhalvår, STMLANHT)" }
 evidence = "#2102 same-label cluster 'Studiemedel, lån' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; STMLAN/StmLan and STMLANHT/StmLanHT share opdef 'lånedel utbetald under respektive kalenderhalvår'; STMLHT opdef is 'Studielån under höstterminen'; Lan is 'Lånebelopp ... som beviljats' in studiemedel-erhallet."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman"
+fields = { "description" = "Huvudman för den högst prioriterade utbildning som personen deltog i under höstterminen. Uppgiften hämtas från respektive källregister (Skolverkets elevregister, Universitets- och högskoleregistret, Folkhögskolan hösttermin och myndigheten för kvalificerad yrkesutbildning, senare Myndigheten för yrkeshögskolan), och källornas koder översätts till ett gemensamt värdeförråd." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; myndighetens namn byter och 2008 års text har ett dubblerat ord.\ncatalog:variable_text:48275:11323:12784\ncatalog:variable_text:48275:12784:13149\ncatalog:variable_text:48275:13149:13514\ncatalog:variable_text:48275:13879:14245\ncatalog:variable_text:48275:14610:20089"

@@ -443,3 +443,9 @@ kind = "set"
 subject = "foretagens-utlandska-handelskrediter: StallnRad201 where key = 'v3100'"
 fields = { "definition" = "Leverantörsskulder till övriga företag, utland, ställning aktuellt kvartal." }
 evidence = "Nyckeln v3100 heter 'Leverantörsskulder till övriga företag, utland, ställning aktuellt kvartal', och grannkolumnen StallnRad200 (v3099) har definitionen 'ställning aktuellt kvartal'. Definitionen för v3100 i alla 60 rader är i stället 'omvärdering under kvartalet', ordagrant texten för OmvRad201 (v3095). Kopieringsfel i definitionen.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=364591 (r3038)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=33997 (r2091)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=33996 (r2091)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=33995 (r2091)"
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer-urvalsenheter"
+fields = { "description" = "Löpnummer som identifierar företagen i urvalet. Ett företag behåller sitt löpnummer mellan åren, och nya företag får nya löpnummer i urvalsprocessen. Numret har 2–5 siffror till och med 2013 och 2–6 siffror 2014–2021." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; längden och regeln om behållna nummer anges som fakta med år.\ncatalog:variable_text:32790:9862:16071\ncatalog:variable_text:32790:16071:18993\ncatalog:variable_text:32790:18993:20454"

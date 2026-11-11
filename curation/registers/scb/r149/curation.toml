@@ -215,3 +215,9 @@ kind = "set"
 subject = "var:kadmiumandel-av-fosforinnehallet"
 fields = { "description" = "Kadmiumandel i försåld fosfor, gram per ton fosfor." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger komponenten men måttet är en andel med enheten gram per ton fosfor.\ncatalog:variable_text:12800:12965:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "description" = "Kod för län." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition alla år; 2015–2018 anger bara vilket års regionala indelning som används, vilket inte ändrar variabeln.\ncatalog:variable_text:19812:12965:16617\ncatalog:variable_text:19812:16617:16983\ncatalog:variable_text:19812:16983:17713"

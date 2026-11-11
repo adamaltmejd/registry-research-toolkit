@@ -6975,3 +6975,45 @@ subject = "tjansteregistret: Sfatim where key = 'v38251'"
 fields = { "unit" = "Antal timmar" }
 evidence = "Etiketten anger tjänstgöringstimmar, inte dagar. Enheten är densamma i alla fyra årgångar (r12632, r12637, r12638, r13269), så rättelsen vilar på etiketten.\nold unit: 'Dagar'; Registerinformation.csv:row=444729 (r13269); Registerinformation.csv:row=444706 (r12638); Registerinformation.csv:row=444713 (r12637); Registerinformation.csv:row=444721 (r12632)"
 
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "description" = "Personens ålder i hela år vid årets slut, beräknad från personnumret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger härledning, och lärarprognostabellen anger bara källan för förskolans personal, vilket tas bort.\ncatalog:variable_text:42108:9312:12600\ncatalog:variable_text:42108:14791:15706\ncatalog:variable_text:42108:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:antaktar"
+fields = { "description" = "Antal år som personen har funnits med i registret, räknat som antal årgångar där personnumret förekommer. För förskolan finns uppgiften inte." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna beskriver räkningen på två sätt och lärarprognostabellen att förskolan saknas.\ncatalog:variable_text:42165:10773:12600\ncatalog:variable_text:42165:14061:15706\ncatalog:variable_text:42165:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieforbund-id"
+fields = { "description" = "Identitet för det gymnasieförbund som skolan tillhör, hämtad med hjälp av skolkoden från Skolregistret, från 2010 Skolenhetsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; källregistrets namn byttes, vilket anges med år.\ncatalog:variable_text:42179:13330:14061\ncatalog:variable_text:42179:14061:14791\ncatalog:variable_text:42179:14791:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:hemspraksundervisning"
+fields = { "description" = "Hemspråksundervisning: vilken typ av undervisning läraren har och i vilken skolform, till exempel språk, typ av undervisning eller timmar. Koderna saknar ytterligare förklaring." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; skillnaden är ett mellanslag och att den sista meningen saknas 1993–1994.\ncatalog:variable_text:42180:3468:4929\ncatalog:variable_text:42180:4929:5660\ncatalog:variable_text:42180:8582:8947"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Personens kön, härlett från personnumrets näst sista siffra: udda siffra för man (1), jämn siffra för kvinna (2)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna beskriver samma härledning med olika ord. Källnoteringen för förskolans personal tas bort.\ncatalog:variable_text:42195:9312:10773\ncatalog:variable_text:42195:12600:14791\ncatalog:variable_text:42195:14791:15706\ncatalog:variable_text:42195:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:lasar"
+fields = { "description" = "Det läsår som uppgifterna avser. Ett läsår börjar på hösten ett kalenderår och slutar på våren följande kalenderår." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2006 års text anger bara läsåret 2006/07.\ncatalog:variable_text:42202:13330:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr"
+fields = { "description" = "Personnummer, identitetsbegrepp för personer som tilldelas av Skatteverket (tidigare Skattemyndigheten). Fram till 2010 samlades det in från skolorna i undersökningen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; insamlingssättet till och med 2010 anges som fakta med år. Källnoteringen för förskolans personal tas bort.\ncatalog:variable_text:42281:3103:10773\ncatalog:variable_text:42281:15706:15887"

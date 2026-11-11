@@ -262,3 +262,9 @@ kind = "set"
 subject = "var:rkon"
 fields = { "label" = "Kön relationsperson (RKon)" }
 evidence = "#2102 same-label cluster 'Kön relationsperson' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The \"härlett från personnummer\" opdef appears only on 2023- occurrences of kon, so it is dropped; both share the 1=Man/2=Kvinna code list and are told apart by column."
+
+[[statement]]
+kind = "set"
+subject = "var:kvartal-period"
+fields = { "description" = "Det kvartal som beräkningarna avser, vilket också är det kvartal då företaget registrerades." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma innebörd i båda texterna, sammanslagna.\ncatalog:variable_text:46281:15706:17167\ncatalog:variable_text:46281:17167:20454"
