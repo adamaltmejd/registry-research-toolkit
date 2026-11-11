@@ -1368,7 +1368,11 @@ table, variable or provider with no accepted placement is `not_found` by ref
 (`Catalog::connect_for_ref`, `serves`) and is left out of every list: `show`'s children
 and set members (a set's own page included), `schema` and `diff` lines, search hits and
 facets (filtered by public id and the requested interval before ranking, counts and
-pagination), and graph neighbours. Classifications, value sets, codes and documents are
+pagination), and graph neighbours. A set is served only while two or more of its members
+are held (maintainer 2026-11-11, #2410: "Groups where only a single member is held? …
+they should read as the plain variable instead"): a set of one held member is
+`not_found` by ref and absent from its register's `sets` and its member's `sets`, so the
+member reads as a plain variable. Classifications, value sets, codes and documents are
 shared and always served. Every `period` and a table's `spans` are the years held, and
 `coverage` reports them per table; a table's releases are the provider's and are left
 out. `segments` rows are the accepted placements: the held column name, the `file` it is

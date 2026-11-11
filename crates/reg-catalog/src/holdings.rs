@@ -44,6 +44,10 @@ pub(crate) struct Possession {
     /// (variable, table) pairs a placement names: a variable held in one table is
     /// not held in another table the steward holds through other columns.
     pairs: HashSet<(String, String)>,
+    /// The sets with two or more held members. A set of one held member is not a
+    /// group to the steward's reader, so that member reads as a plain variable
+    /// (maintainer 2026-11-11, #2410).
+    sets: HashSet<String>,
 }
 
 impl Possession {
@@ -102,6 +106,28 @@ impl Possession {
                 *spans = reg_core::days::merge(std::mem::take(spans));
             }
         }
+        // A set's members, by public id, from either origin: a pid both define keeps
+        // the union of their members.
+        let mut members: HashMap<String, HashSet<String>> = HashMap::new();
+        for origin in ["main", "held"] {
+            let mut query = conn.prepare(&format!(
+                "SELECT s.pid, v.pid FROM {origin}.var_set s
+                   JOIN {origin}.var_set_member m ON m.set_id = s.id
+                   JOIN {origin}.variable v ON v.id = m.variable_id
+                 WHERE s.kind = 'set'"
+            ))?;
+            for row in query.query_map([], |r| Ok((r.get(0)?, r.get(1)?)))? {
+                let (set, variable): (String, String) = row?;
+                if possession.variables.contains_key(&variable) {
+                    members.entry(set).or_default().insert(variable);
+                }
+            }
+        }
+        possession.sets = members
+            .into_iter()
+            .filter(|(_, held)| held.len() >= 2)
+            .map(|(set, _)| set)
+            .collect();
         Ok(possession)
     }
 
@@ -351,19 +377,17 @@ impl Catalog {
     }
 
     /// Whether this deployment serves the entity: always outside steward mode; in
-    /// steward mode only what the steward holds. A set is served with its register.
-    /// Value sets, classifications and documents are not possession claims
-    /// (crates/DESIGN.md, "Three questions, three scopes") and are always served.
+    /// steward mode only what the steward holds. A set is served when two or more of
+    /// its members are held (#2410). Value sets, classifications and documents are not
+    /// possession claims (crates/DESIGN.md, "Three questions, three scopes") and are
+    /// always served.
     #[must_use]
     pub fn serves(&self, kind: &str, pid: &str) -> bool {
         let Some(held) = self.holdings.as_ref().map(|h| &h.possession) else {
             return true;
         };
         match kind {
-            "set" => pid
-                .strip_prefix("set/")
-                .and_then(|rest| rest.rsplit_once('/'))
-                .is_some_and(|(register, _)| held.registers.contains_key(register)),
+            "set" => held.sets.contains(pid),
             kind => held.of(kind).is_none_or(|map| map.contains_key(pid)),
         }
     }

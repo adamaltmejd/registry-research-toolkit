@@ -534,13 +534,13 @@ fn register(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
         union_by_fqid(&mut tags, steward_tags, |t| &t.fqid);
     }
     // Steward mode lists only what the steward holds (`Catalog::serves`); a set
-    // keeps its held members and goes when none is held.
+    // keeps its held members and goes when fewer than two are held (#2410).
     tables.retain(|t| server.catalog.serves("table", &t.fqid));
     for set in &mut sets {
         set.members
             .retain(|member| server.catalog.serves("variable", member));
     }
-    sets.retain(|set| !set.members.is_empty());
+    sets.retain(|set| server.catalog.serves("set", &set.fqid));
     // Unplaced names are the provider's releases, not the steward's files
     // (maintainer 2026-11-04), so a steward deployment serves none.
     let unplaced = if server.catalog.steward().is_some() {
@@ -1175,7 +1175,10 @@ fn variable(
         register,
         period: server.hull("variable", &entity.pid, start, end),
         description,
-        sets: memberships(conn, entity.id, "set")?,
+        sets: memberships(conn, entity.id, "set")?
+            .into_iter()
+            .filter(|set| server.catalog.serves("set", &set.fqid))
+            .collect(),
         tags: memberships(conn, entity.id, "tag")?,
         evidence: include_evidence
             .then(|| show_evidence::load(server, conn, entity))
@@ -1279,8 +1282,7 @@ fn set(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Erro
 }
 
 /// A set's members with their descriptions, facets and per-period lists; in steward
-/// mode only the held members, each over its held columns and years (`not_found` when
-/// none is held).
+/// mode only the held members, each over its held columns and years.
 fn set_members(
     server: &Server,
     conn: &Connection,

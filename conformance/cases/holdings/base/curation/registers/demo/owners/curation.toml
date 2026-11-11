@@ -1,0 +1,37 @@
+# Two sets for the steward read rule (#2410): the steward holds both members of
+# `rivals` (Owners.Shared) but only `id` of `lone` (Gamma is held nowhere).
+[[statement]]
+kind = "set"
+subject = "set:rivals"
+fields.label = "Rival owners"
+evidence = "Synthetic set whose members the steward both holds."
+
+[[statement]]
+kind = "set"
+subject = "var:first"
+fields.sets = ["rivals"]
+evidence = "Synthetic owner measures form one picking unit."
+
+[[statement]]
+kind = "set"
+subject = "var:second"
+fields.sets = ["rivals"]
+evidence = "Synthetic owner measures form one picking unit."
+
+[[statement]]
+kind = "set"
+subject = "set:lone"
+fields.label = "Lone group"
+evidence = "Synthetic set of which the steward holds one member."
+
+[[statement]]
+kind = "set"
+subject = "var:third"
+fields.sets = ["lone"]
+evidence = "Synthetic set of which the steward holds one member."
+
+[[statement]]
+kind = "set"
+subject = "var:id"
+fields.sets = ["lone"]
+evidence = "Synthetic set of which the steward holds one member."

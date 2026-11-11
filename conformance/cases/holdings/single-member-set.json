@@ -1,0 +1,20 @@
+{
+  "note": "Authored from base/curation/registers/demo/owners/curation.toml and steward/holdings.toml: Owners.Shared holds first and second, Owners.Id holds id, and nothing holds third (Gamma). On the steward, lone (third, id) has one held member, so it is not a set there: absent from the register's sets and from id's sets, and its address is not_found. rivals (first, second) stays a set. The base catalog serves both, with every member.",
+  "register": "demo/owners",
+  "member": "demo/owners/id",
+  "lone": "set/demo/owners/lone",
+  "paired": {
+    "register_sets": [
+      {"fqid": "set/demo/owners/rivals", "members": ["demo/owners/first", "demo/owners/second"]}
+    ],
+    "member_sets": [],
+    "lone_code": "not_found"
+  },
+  "base_only": {
+    "register_sets": [
+      {"fqid": "set/demo/owners/lone", "members": ["demo/owners/id", "demo/owners/third"]},
+      {"fqid": "set/demo/owners/rivals", "members": ["demo/owners/first", "demo/owners/second"]}
+    ],
+    "member_sets": ["set/demo/owners/lone"]
+  }
+}
