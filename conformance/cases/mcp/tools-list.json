@@ -4781,6 +4781,7 @@
           "description": "A requested variable that covers less than the requested period.",
           "properties": {
             "ordered": {
+              "description": "The requested days less the years with no delivery: a requested year delivered on\nsome day reads as ordered whole (#2392).",
               "items": {
                 "$ref": "#/$defs/Period"
               },

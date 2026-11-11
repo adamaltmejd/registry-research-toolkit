@@ -673,6 +673,10 @@ export interface components {
         };
         /** @description A requested variable that covers less than the requested period. */
         OrderClip: {
+            /**
+             * @description The requested days less the years with no delivery: a requested year delivered on
+             *     some day reads as ordered whole (#2392).
+             */
             ordered: components["schemas"]["Period"][];
             requested: components["schemas"]["Period"][];
             source: string;
