@@ -11,7 +11,11 @@ use super::refs::{self, Entity};
 use super::segments::{self, Segment};
 use super::shape::{self, Release, ValueSetRef};
 use super::show_evidence::{self, VariableEvidence};
-use super::{Cache, HeldClip, Operation, Param, Params, Period, Server, Type, component, flag};
+use reg_core::days::Span;
+
+use super::{
+    Cache, HeldClip, HeldSpace, Operation, Param, Params, Period, Server, Type, component, flag,
+};
 use crate::{Error, rows};
 
 pub const OPERATIONS: &[Operation] = &[Operation {
@@ -854,9 +858,8 @@ fn table_variables(
         found.extend(spans(extra)?);
     }
     let mut held = extra.as_ref().map(HeldClip::new).transpose()?;
-    type Span = reg_core::days::Span;
     let mut spans_of: BTreeMap<String, Vec<Span>> = BTreeMap::new();
-    let mut by_space: BTreeMap<String, BTreeMap<(i64, String), Vec<Span>>> = BTreeMap::new();
+    let mut by_space: BTreeMap<String, BTreeMap<HeldSpace, Vec<Span>>> = BTreeMap::new();
     for (fqid, start, end) in found {
         if !server.catalog.serves_in(&fqid, pid) {
             continue;

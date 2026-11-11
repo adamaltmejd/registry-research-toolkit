@@ -102,6 +102,12 @@ impl Server {
 /// clip through it. `clip` stays a hull (one span per segment, gaps included) because
 /// those consumers need one span; `clip_each` keeps the gaps and names each span's
 /// database.
+/// A steward's database, as `clip_each` names it: its config order, then its id.
+pub(crate) type HeldSpace = (i64, String);
+
+/// A placed span, with its database on a steward with several.
+pub(crate) type HeldSpan = (Option<HeldSpace>, reg_core::days::Span);
+
 pub(crate) struct HeldClip<'c> {
     hull: rusqlite::Statement<'c>,
     each: rusqlite::Statement<'c>,
@@ -152,16 +158,18 @@ impl<'c> HeldClip<'c> {
         table: &str,
         variable: &str,
         (start, end): (i64, i64),
-    ) -> Result<Vec<(Option<(i64, String)>, (i64, i64))>, Error> {
-        let placed = self
-            .each
-            .query_map(rusqlite::params![table, variable, start, end], |row| {
-                let space: Option<i64> = row.get(2)?;
-                Ok((
-                    (row.get::<_, i64>(0)?, row.get::<_, i64>(1)?),
-                    space.map(|ord| row.get(3).map(|id| (ord, id))).transpose()?,
-                ))
-            })?;
+    ) -> Result<Vec<HeldSpan>, Error> {
+        let placed =
+            self.each
+                .query_map(rusqlite::params![table, variable, start, end], |row| {
+                    let space: Option<i64> = row.get(2)?;
+                    Ok((
+                        (row.get::<_, i64>(0)?, row.get::<_, i64>(1)?),
+                        space
+                            .map(|ord| row.get(3).map(|id| (ord, id)))
+                            .transpose()?,
+                    ))
+                })?;
         let mut spans = Vec::new();
         for placement in placed {
             let ((first, last), space) = placement?;
