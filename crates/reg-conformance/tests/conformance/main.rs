@@ -18,4 +18,5 @@ mod materialize;
 mod mcp;
 mod order;
 mod origin;
+mod steward_view;
 mod usage;

@@ -249,12 +249,12 @@ pub fn expect(
 /// A set's members this deployment serves, as `(variable row id, fqid)` in fqid
 /// order: the variables a set ref stands for in `graph` and `docs_related`, which
 /// answer it with the union of its members' answers, so a group page reads its
-/// members in one request (#2232).
+/// members in one request (#2232). A set ref reaches here through
+/// `Catalog::connect_for_ref`, so in steward mode two or more of them are served.
 ///
 /// # Errors
 ///
-/// `not_found` in steward mode when the steward serves none of them, as `show` answers
-/// such a set.
+/// A database read error.
 pub fn set_members(
     server: &Server,
     conn: &Connection,
@@ -268,9 +268,6 @@ pub fn set_members(
         |row| Ok((row.get(0)?, row.get(1)?)),
     )?;
     members.retain(|(_, fqid)| server.catalog.serves("variable", fqid));
-    if server.catalog.steward().is_some() && members.is_empty() {
-        return Err(Error::not_found(&set.pid));
-    }
     Ok(members)
 }
 
