@@ -886,7 +886,9 @@ Time is the axis every relation is drawn on.
   drawn at their real half-open dates, so school years abut instead of sharing a year
   cell; a one-day period (a 31 December snapshot) takes its calendar year, as its text
   does (#2408, 2026-11-11). Where a row joins several spellings, each name sits in its
-  own widest part, and its tooltip lists each column with its years (new rule, proposed
+  own widest part, or, too wide for it, beside the row (before it the names left of the
+  first that fits, after it the rest), never cut; its tooltip lists each column with
+  its years (new rule, proposed
   by the implementer). A span's column name is never cut: it
   sits inside the widest delivered part when it fits there, with no list of the files
   it is delivered in: the lane already names the table (maintainer, dogfood 2026-11-05,
