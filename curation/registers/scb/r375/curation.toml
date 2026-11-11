@@ -6046,3 +6046,15 @@ kind = "set"
 subject = "var:bl2314"
 fields = { "description" = "Skulder till intresseföretag, i kronor." }
 evidence = "Etikett och definition anger skulder till intresseföretag; den operationella definitionen (räntebärande skulder till koncernföretag) är samma text som för bl2332 och är en kopia.\n0.74.0 catalog, key v40777, releases r14735, r14796, r14798, r14799...; reg_meta.db:occurrence:127964,128100,128236"
+
+[[statement]]
+kind = "set"
+subject = "set:bokslutsdispositioner"
+fields = { "description" = "Företagets bokslutsdispositioner i resultaträkningen: totala bokslutsdispositioner (överavskrivningar inklusive upplösning, förändring av periodiseringsfond och övriga bokslutsdispositioner) och delposterna skillnad mellan bokförd avskrivning och avskrivning enligt plan, förändring av periodiseringsfond, återföring av skatteutjämningsreserv, övriga bokslutsdispositioner och därav koncernbidrag. Uppgifterna kan vara beräknade (imputerade)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna är totalen och dess delposter.\ncatalog:variable_text:19183:9862:12053\ncatalog:variable_text:19225:9862:12053\ncatalog:variable_text:19287:9862:12053\ncatalog:variable_text:19360:9862:12053\ncatalog:variable_text:19440:9862:12053\ncatalog:variable_text:19522:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "set:arets-resultat"
+fields = { "description" = "Företagets årets resultat, i resultaträkningen eller i balansräkningen. Uppgifterna kan vara beräknade (imputerade)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i räkning.\ncatalog:variable_text:19315:9862:12053\ncatalog:variable_text:19321:9862:10227\ncatalog:variable_text:19321:10227:10592"

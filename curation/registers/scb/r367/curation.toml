@@ -9366,3 +9366,15 @@ kind = "set"
 subject = "var:lonperper"
 fields = { "label" = "Månadslön (lonperper)" }
 evidence = "#2102 same-label cluster 'Månadslön' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; lonman and lonperper share the definition; lonperper's opdef is the survey question 'nuvarande lön före skatt ...' and nothing in the evidence mentions a time unit ('per angiven tidsenhet' is not in any opdef), so lonperper is labelled by its code."
+
+[[statement]]
+kind = "set"
+subject = "set:biaktivitet"
+fields = { "description" = "Den aktivitet som pågick samtidigt med huvudaktiviteten, kodad efter 1990 eller 2000 års kodlista; 2000–2001 finns den också aggregerad och omkodad för att stämma överens med 1990–1991 års indelning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i kodlista och aggregering.\ncatalog:variable_text:52032:7486:7851\ncatalog:variable_text:52032:11139:11504\ncatalog:variable_text:52032:14791:15156\ncatalog:variable_text:52033:11139:11504\ncatalog:variable_text:52034:11139:11504"
+
+[[statement]]
+kind = "set"
+subject = "set:alder"
+fields = { "description" = "Ålder i antal år vid årets slut, härledd från personnumret, för urvalspersonen och för övriga personer i undersökningen, och grupperingar av urvalspersonens ålder (till exempel under 20, 20–34, 35–49, 50–64 och 65 år och äldre, eller under 20, 20–24, 25–44, 45–64 och 65 år och äldre)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i person och gruppering.\ncatalog:variable_text:51947:18628:18993\ncatalog:variable_text:51948:11139:11504\ncatalog:variable_text:51948:14791:15156\ncatalog:variable_text:51955:11139:11504\ncatalog:variable_text:51955:14791:15156\ncatalog:variable_text:51956:7486:7851\ncatalog:variable_text:51958:7486:7851"

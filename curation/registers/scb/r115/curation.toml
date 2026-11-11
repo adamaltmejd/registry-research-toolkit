@@ -881,3 +881,9 @@ kind = "set"
 subject = "set:total-kommunal-skattesats"
 fields = { "label" = "Total kommunal skattesats" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:skatteunderlag"
+fields = { "description" = "Det kommunala skatteunderlaget i kronor, levererat av Skatteverket. Från 2018 anges det som beskattningsbar förvärvsinkomst två år före året t (fastställd förvärvsinkomst minskad med grundavdrag och sjöinkomstavdrag). Variablerna avser hela skatteunderlaget eller skatteunderlaget för medlemmar i Svenska kyrkan, och anger det i kronor, tusentals kronor eller miljoner kronor, för föregående år eller som procentuell förändring mot föregående år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i population, enhet och år; begreppet enligt de operationella definitionerna.\ncatalog:variable_text:41145:17532:17897\ncatalog:variable_text:41145:17897:18628\ncatalog:variable_text:41146:16801:17532\ncatalog:variable_text:41146:17532:19723\ncatalog:variable_text:41146:19723:20819\ncatalog:variable_text:41147:16801:17532\ncatalog:variable_text:41151:13514:15340\ncatalog:variable_text:41152:13514:15340\ncatalog:variable_text:41153:13514:15340\ncatalog:variable_text:41154:13514:15340\ncatalog:variable_text:41158:13514:15340"

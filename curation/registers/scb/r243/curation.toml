@@ -1360,12 +1360,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefi
 
 [[statement]]
 kind = "set"
-subject = "var:landstingsvalkrets-ovr-antmand"
-fields = { "sets" = ["landstingsvalkretsnamn"] }
-evidence = "Despite the Ovr_antmand column name, both occurrences explicitly define a landsting constituency code requiring a county-code prefix (r15, r17). This meets the fixed inclusion.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:20927\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:20971"
-
-[[statement]]
-kind = "set"
 subject = "var:lt-valkretsnamn"
 fields = { "sets" = ["landstingsvalkretsnamn"] }
 evidence = "Historical occurrences explicitly measure landsting constituency names for mandates (r6, r21), satisfying inclusion. The later explicitly regional occurrence (r22) is excluded from that support. Single-group shipping guard: retain the approved group and remove the other membership: regionvalkretsnamn\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:20642\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:21118\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:21163"
@@ -1554,12 +1548,6 @@ evidence = "#2102 same-label cluster 'Landstingsvalkrets' (3 variables): judged 
 kind = "set"
 subject = "var:landstingsvalkrets-namn"
 fields = { "label" = "Landstingsvalkrets (namn)" }
-evidence = "#2102 same-label cluster 'Landstingsvalkrets' (3 variables): judged different meaning, medium confidence; Opdefs: code and name for assigned seats, and Ovr_antmand, a code for obtained seats."
-
-[[statement]]
-kind = "set"
-subject = "var:landstingsvalkrets-ovr-antmand"
-fields = { "label" = "Landstingsvalkrets (kod, erhållna mandat)" }
 evidence = "#2102 same-label cluster 'Landstingsvalkrets' (3 variables): judged different meaning, medium confidence; Opdefs: code and name for assigned seats, and Ovr_antmand, a code for obtained seats."
 
 [[statement]]
@@ -1813,3 +1801,81 @@ kind = "set"
 subject = "var:utbildningsniva-aggregat-grov-text-2"
 fields = { "description" = "Grov utbildningsnivå enligt SUN 2020, i klartext." }
 evidence = "Grov level aggregated from SUN 2020 levels (same register, same columns)."
+
+[[statement]]
+kind = "set"
+subject = "regionfullmaktigeval: Ovr_antmand where key = 'v16238'"
+fields = { "variable" = "none" }
+evidence = "In the 2002 and 2006 regional council election releases SCB documents column Ovr_antmand twice: under v25478 'Antal mandat - Övriga partier' (seats for parties other than C, FP, KD, MP, M, S and V) and under v16238 'Landstingsvalkrets' (constituency code). The column name, its integer type (the constituency code columns are two-character text) and every other release (1973-2022, v25478 only) show it is the seat count, already resolved as antal-mandat-ovriga in the same table-years. The v16238 rows are a documentation slip; withholding them loses no coverage. Replaces the earlier landstingsvalkrets-ovr-antmand variable, which read only the v16238 rows.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=479820 (2002, v16238 Landstingsvalkrets under Ovr_antmand)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=541044 (2002, v16238)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=222214 (2002, v25478 Antal mandat - Övriga partier under Ovr_antmand)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=609067 (2002, v25478)\ncatalog:occurrence:28930\ncatalog:occurrence:28974"
+
+[[statement]]
+kind = "set"
+subject = "set:landsting-och-region"
+fields = { "description" = "Landstinget, från 2022 regionen, angivet som kod enligt Rikets indelning eller som namn i klartext. Beroende på tabell avser det landstinget eller regionen där mandatet tillsatts, där rösten avgivits eller där de röstberättigade bor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i kod eller namn och i vilken roll området har (mandat, avgiven röst, bostad); alla rader i exporten är lästa.\ncatalog:variable_text:10557:2191:2557\ncatalog:variable_text:10558:1096:1461\ncatalog:variable_text:10558:4383:4748\ncatalog:variable_text:10559:2191:2557\ncatalog:variable_text:10560:2191:2557\ncatalog:variable_text:10560:13149:13514\ncatalog:variable_text:10560:14610:14975\ncatalog:variable_text:10561:11688:12053\ncatalog:variable_text:10567:18993:19358\ncatalog:variable_text:10581:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:valdistrikt"
+fields = { "description" = "Valdistrikt, den regionala indelning som fastställs av Valmyndigheten, angivet som kod eller som namn i klartext. Beroende på tabell avser det valdistriktet för avgivna röster eller det valdistrikt där personen är röstberättigad." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i kod eller namn och i om distriktet gäller avgivna röster eller röstberättigade; alla rader i exporten är lästa.\ncatalog:variable_text:10608:8766:9131\ncatalog:variable_text:10608:17897:18262\ncatalog:variable_text:10609:2191:2557\ncatalog:variable_text:10609:14610:14975\ncatalog:variable_text:10610:14610:14975\ncatalog:variable_text:10610:16436:16801\ncatalog:variable_text:10610:17897:18262\ncatalog:variable_text:10611:2191:2557"
+
+[[statement]]
+kind = "set"
+subject = "set:landstingsvalkretsnamn"
+fields = { "description" = "Landstingsvalkrets, från 2022 regionvalkrets, angiven som kod eller som namn i klartext. Beroende på tabell avser den valkretsen för erhållna eller tillsatta mandat, för avgivna röster eller för röstberättigade personer. Valkretskoden är unik först tillsammans med länskoden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i kod eller namn och i valkretsens roll; alla rader i exporten är lästa.\ncatalog:variable_text:10562:1096:1461\ncatalog:variable_text:10562:11688:12053\ncatalog:variable_text:10563:2191:2557\ncatalog:variable_text:10563:8766:9131\ncatalog:variable_text:10566:1096:1461\ncatalog:variable_text:10566:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:kommunvalkretsnamn"
+fields = { "description" = "Kommunvalkrets, den regionala indelning för vilken ledamöter och ersättare utses vid kommunfullmäktigeval, angiven som kod eller som namn i klartext. Beroende på tabell avser den valkretsen för avgivna röster, för erhållna, fördelade eller tillsatta mandat eller för röstberättigade personer. Valkretskoden är unik först tillsammans med kommunkoden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i kod eller namn och i valkretsens roll; alla rader i exporten är lästa.\ncatalog:variable_text:10551:1096:1461\ncatalog:variable_text:10551:2191:2557\ncatalog:variable_text:10551:8766:9131\ncatalog:variable_text:10551:14610:14975\ncatalog:variable_text:10552:2191:2557\ncatalog:variable_text:10552:11688:12053\ncatalog:variable_text:10552:13149:13514\ncatalog:variable_text:10552:17897:18262\ncatalog:variable_text:10553:1096:1461"
+
+[[statement]]
+kind = "set"
+subject = "set:riksdagsvalkrets"
+fields = { "description" = "Riksdagsvalkrets, den regionala indelning för vilken ledamöter och ersättare utses vid riksdagsval, angiven som kod eller som namn i klartext. Beroende på tabell avser den valkretsen för avgivna röster, för erhållna eller tillsatta mandat eller för röstberättigade." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i kod eller namn och i valkretsens roll; alla rader i exporten är lästa.\ncatalog:variable_text:10585:2191:2557\ncatalog:variable_text:10586:4383:4748\ncatalog:variable_text:10586:10227:10592\ncatalog:variable_text:10586:16071:16436\ncatalog:variable_text:10587:1096:1461\ncatalog:variable_text:10587:6574:6940\ncatalog:variable_text:10587:8766:9131"
+
+[[statement]]
+kind = "set"
+subject = "set:mandatantal"
+fields = { "description" = "Antal erhållna mandat i riksdagen, landstingsfullmäktige eller kommunfullmäktige: totalt per parti och valkrets, eller för ett visst parti (Socialdemokraterna, Moderaterna, Centerpartiet, Folkpartiet, från 2018 Liberalerna, Kristdemokraterna, Miljöpartiet, Vänsterpartiet, Sverigedemokraterna och Ny demokrati) eller för övriga partier tillsammans." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i parti; summan per parti och valkrets ingår.\ncatalog:variable_text:10528:1096:1461\ncatalog:variable_text:10529:1096:1461\ncatalog:variable_text:10530:1096:1461\ncatalog:variable_text:10531:17532:17897\ncatalog:variable_text:10531:17897:18262\ncatalog:variable_text:10531:18993:19358\ncatalog:variable_text:10532:1096:1461\ncatalog:variable_text:10532:8766:9131\ncatalog:variable_text:10533:1096:1461\ncatalog:variable_text:10534:1096:1461\ncatalog:variable_text:10534:2191:2557\ncatalog:variable_text:10535:1096:1461\ncatalog:variable_text:10536:1096:1461\ncatalog:variable_text:10537:14610:14975\ncatalog:variable_text:10538:1096:1461\ncatalog:variable_text:10541:11688:12053\ncatalog:variable_text:10541:13149:13514\ncatalog:variable_text:10541:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:kommun"
+fields = { "description" = "Kommun, angiven som kod eller som namn i klartext. Beroende på tabell avser den kommunen där rösten avgivits, där mandaten erhållits eller tillsatts, eller där personen är röstberättigad (boendekommun)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i kod eller namn; kommunens roll beror på tabellen, enligt alla rader i exporten.\ncatalog:variable_text:10549:1096:1461\ncatalog:variable_text:10549:2191:2557\ncatalog:variable_text:10549:4383:4748\ncatalog:variable_text:10549:8766:9131\ncatalog:variable_text:10549:11688:12053\ncatalog:variable_text:10549:13149:13514\ncatalog:variable_text:10549:16071:16436\ncatalog:variable_text:10549:16436:16801\ncatalog:variable_text:10549:17897:18262\ncatalog:variable_text:10550:1096:1461\ncatalog:variable_text:10550:2191:2557\ncatalog:variable_text:10550:11688:12053\ncatalog:variable_text:10550:13149:13514\ncatalog:variable_text:10550:14610:14975\ncatalog:variable_text:10550:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "set:giltiga-roster"
+fields = { "description" = "Antal giltiga röster som registrerats vid valet: summan av de giltiga rösterna per parti, rösterna för ett visst parti (bland annat Socialdemokraterna, Moderaterna, Centerpartiet, Folkpartiet, från 2018 Liberalerna, Kristdemokraterna, Miljöpartiet, Vänsterpartiet, Sverigedemokraterna, Ny demokrati, Sveriges Kommunistiska Parti och Arbetarepartiet Kommunisterna) eller rösterna för övriga partier tillsammans." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i parti; summan ingår.\ncatalog:variable_text:10515:8766:9131\ncatalog:variable_text:10515:10227:10592\ncatalog:variable_text:10516:3287:3652\ncatalog:variable_text:10517:2191:2557\ncatalog:variable_text:10518:2191:2557\ncatalog:variable_text:10519:2191:2557\ncatalog:variable_text:10520:17532:18262\ncatalog:variable_text:10521:4383:4748\ncatalog:variable_text:10522:2191:2557\ncatalog:variable_text:10523:7670:8035\ncatalog:variable_text:10524:2191:2557\ncatalog:variable_text:10525:14610:14975\ncatalog:variable_text:10526:2191:2557\ncatalog:variable_text:10527:2191:2557\ncatalog:variable_text:10548:2191:2557\ncatalog:variable_text:10573:2191:2557"
+
+[[statement]]
+kind = "set"
+subject = "set:sammanraknad-forvarvsinkomst"
+fields = { "description" = "Den sammanräknade förvärvsinkomsten, det vill säga beräknad inkomst av tjänst och näringsverksamhet i deklarationen, för inkomståret före valet, och kvintilgruppen efter den, där kvintilgränserna är beräknade för hela Sveriges befolkning över 18 år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna är beloppet och dess kvintilgrupp.\ncatalog:variable_text:10547:17532:17897\ncatalog:variable_text:10547:18993:19358\ncatalog:variable_text:10590:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "set:personroster"
+fields = { "description" = "Antal personröster, totalt eller för kvinnor respektive män." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i kön.\ncatalog:variable_text:10577:11688:12053\ncatalog:variable_text:10578:11688:12053\ncatalog:variable_text:10579:11688:12053\ncatalog:variable_text:10579:14610:14975\ncatalog:variable_text:10579:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:parti"
+fields = { "description" = "Politiskt parti, för avgivna röster eller tillsatta mandat: som sifferkod, som partinamn i klartext eller förkortat, där de åtta största partierna särskiljs och övriga partier redovisas i en grupp, i vissa tabeller med blanka och ogiltiga röster särskilda." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i kod, namn och förkortning; alla rader i exporten är lästa.\ncatalog:variable_text:10574:8766:9131\ncatalog:variable_text:10574:11688:12053\ncatalog:variable_text:10575:11688:12053\ncatalog:variable_text:10580:8766:9131\ncatalog:variable_text:10580:11688:12053\ncatalog:variable_text:10580:13149:13514\ncatalog:variable_text:10580:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:lan"
+fields = { "description" = "Län, angivet som kod eller som namn i klartext. Beroende på tabell avser det länet där rösten avgivits eller länet där personen är röstberättigad (boendelän)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i kod eller namn; länets roll beror på tabellen, enligt alla rader i exporten.\ncatalog:variable_text:10555:1096:1461\ncatalog:variable_text:10555:7670:8035\ncatalog:variable_text:10555:11688:12053\ncatalog:variable_text:10555:16071:16436\ncatalog:variable_text:10555:17897:18262\ncatalog:variable_text:10556:8766:9131\ncatalog:variable_text:10556:11688:12053\ncatalog:variable_text:10556:14610:14975\ncatalog:variable_text:10556:16071:16436\ncatalog:variable_text:10556:17897:18262\ncatalog:variable_text:10565:17532:17897"

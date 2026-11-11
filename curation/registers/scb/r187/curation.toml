@@ -1214,3 +1214,21 @@ kind = "set"
 subject = "var:urvalsstorlek-samustkl"
 fields = { "description" = "Anställdaklass för företagsenheten i SCB:s samordnade urvalssystem; kodlistan anger storleksklasserna." }
 evidence = "Värdemängden består av anställdaklasser; definitionen anger urvalsstorlek.\n0.74.0 catalog, key v5181, releases r14985, r14986, r3591, r3592...; reg_meta.db:occurrence:315386,315905,315409"
+
+[[statement]]
+kind = "set"
+subject = "set:naringsgren"
+fields = { "description" = "Produktionsenhetens näringsgren eller bransch: näringsgren enligt Svensk näringsgrensindelning, SNI 2002 (AktSni92, 1998–2008) eller SNI 2007 (AktSni07 2009–2014 och CU_BranschText 2017–2021; för AL2UndEjU 1998–2010 anges SNI 2007, och 2009 både SNI 2002 och SNI 2007), branschbeteckning 2000–2014 enligt IPI:s beräkningsbranscher för utvinning av mineral, tillverkningsindustri och försörjning av el, gas, värme och kyla (SNI B–D), och branschgrupper för redovisningsändamål." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i SNI-version och i om det är näringsgren, bransch eller branschgrupp; alla rader i exporten är lästa.\ncatalog:variable_text:41583:10957:14245\ncatalog:variable_text:41584:14245:16436\ncatalog:variable_text:41616:14245:16436\ncatalog:variable_text:41617:10227:14245\ncatalog:variable_text:41618:10227:10957"
+
+[[statement]]
+kind = "set"
+subject = "set:upprakningsfaktor"
+fields = { "description" = "Uppräkningstal (vikt) som observationerna multipliceras med när totaler skattas. Från 2017 är det urvalsvikten plus en undertäckningskoefficient; 2015–2016 anges en undertäckningskoefficient för företag som inte ingår i ramen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna är uppräkningstalet före och från 2015.\ncatalog:variable_text:41646:16436:17167\ncatalog:variable_text:41646:17167:18993\ncatalog:variable_text:41647:10227:10957"
+
+[[statement]]
+kind = "set"
+subject = "set:lagervarde"
+fields = { "description" = "Företagets lager och dess värdering: lager av insatsprodukter, produkter i arbete, färdiga produkter av egen tillverkning och främmande produkter (handelsvaror), värderade till anskaffningsvärde, återanskaffningsvärde, tillverkningskostnad eller försäljningsvärde. 1998–2014 finns också påläggsbeloppet mellan tillverknings- och försäljningsvärde och ingående lager av färdiga produkter från föregående kvartal. Från 2015 räknas lagret av insatsprodukter och handelsvaror om från anskaffningsvärde till återanskaffningsvärde genom prisdeflatering, som värde vid kvartalets slut." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i lagerslag och värderingsgrund; omräkningen till återanskaffningsvärde från 2015.\ncatalog:variable_text:41572:10227:16436\ncatalog:variable_text:41572:16436:18993\ncatalog:variable_text:41573:16436:18993\ncatalog:variable_text:41581:17167:18993\ncatalog:variable_text:41582:17167:18993\ncatalog:variable_text:41588:10227:16436\ncatalog:variable_text:41589:16436:16801\ncatalog:variable_text:41589:16801:17167\ncatalog:variable_text:41591:10227:16436\ncatalog:variable_text:41591:16436:18993\ncatalog:variable_text:41592:16436:18993\ncatalog:variable_text:41596:10227:16436\ncatalog:variable_text:41598:10227:16436\ncatalog:variable_text:41628:10227:16436\ncatalog:variable_text:41629:10227:16436\ncatalog:variable_text:41640:10227:16436\ncatalog:variable_text:41641:10227:16436"

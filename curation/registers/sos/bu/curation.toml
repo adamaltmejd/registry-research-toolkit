@@ -984,3 +984,9 @@ kind = "set"
 subject = "bu-barn-19602013: mfodland @1960-01-01..2013-12-31 where key = 'n:mfodland'"
 fields = { "variable" = "fodelselandnamnmor" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): FODELSELANDNAMNMOR in bu-barn-pnrq0; MFODLAND in bu-barn-19602013: same definition and code list, never concurrent under another spelling in one table; folded into fodelselandnamnmor."
+
+[[statement]]
+kind = "set"
+subject = "set:fodelsedatum"
+fields = { "description" = "Barnets eller den ungas födelsedatum." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna har samma definition och skiljer sig i lagringsform.\ncatalog:variable_text:62477:17532:2932897\ncatalog:variable_text:62478:-3653:11323\ncatalog:variable_text:62478:11323:16436"

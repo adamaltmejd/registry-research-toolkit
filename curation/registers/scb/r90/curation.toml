@@ -636,3 +636,9 @@ kind = "set"
 subject = "set:sjuklon"
 fields = { "label" = "Sjuklön" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "set:landsting-region"
+fields = { "description" = "Landstinget, från 2020 regionen, angivet som kod eller som namn. Landstingskoden 1999–2017 följer Rikets indelning; från 2021 är regionkoden den kod som läggs upp i insamlingssystemet i början av varje år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i kod eller namn och i benämning före och från 2020.\ncatalog:variable_text:40919:17532:18262\ncatalog:variable_text:40920:10592:14610\ncatalog:variable_text:40921:10592:17532\ncatalog:variable_text:40924:18262:18628\ncatalog:variable_text:40924:18628:20454"

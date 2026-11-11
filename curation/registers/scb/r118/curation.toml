@@ -3310,3 +3310,9 @@ kind = "set"
 subject = "taxeringsutfallet: AntBeskInkEqu where key = 'v32811'"
 fields = { "unit" = "Antal" }
 evidence = "Etiketten och definitionen anger antal fysiska personer; syskonkolumnerna AntBeskInk* har enheten Antal.\nold unit: 'Kronor (SEK)'; Registerinformation.csv:row=520174 (r7326); Registerinformation.csv:row=520180 (r9980); Registerinformation.csv:row=520195 (r11606)"
+
+[[statement]]
+kind = "set"
+subject = "set:underlag-for-allman-loneavgift"
+fields = { "description" = "Underlaget för beräkning av allmän löneavgift. Variablerna skiljer sig i avgiftsnivå (3,25 procent 2005, 3,13 procent 2005–2006, 3,07 procent 2006–2007, 4,40 procent 2007–2008 och för ungdomar 2008), i period (period 1–3, 2016–2017) och i om underlaget avser innevarande eller föregående år. Huvudvariablerna och avgiftsnivåerna avser fysiska personer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i avgiftsnivå, period och år; hänvisningen till allmän löneavgift är utelämnad.\ncatalog:variable_text:51845:14245:18628\ncatalog:variable_text:51846:16801:17532\ncatalog:variable_text:51847:16801:17532\ncatalog:variable_text:51848:16801:17167\ncatalog:variable_text:51849:17167:17897\ncatalog:variable_text:51850:13879:14245\ncatalog:variable_text:51851:13149:13879\ncatalog:variable_text:51852:12784:13514\ncatalog:variable_text:51853:12784:13149\ncatalog:variable_text:51854:13514:14245\ncatalog:variable_text:51940:16801:17167"

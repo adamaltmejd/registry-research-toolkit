@@ -821,3 +821,21 @@ kind = "set"
 subject = "var:wkout-strl"
 fields = { "label" = "Kalibreringsvikt (wkout_strl)" }
 evidence = "#2102 same-label cluster 'Kalibreringsvikt' (2 variables): judged different meaning, high confidence; Shared opdef: wkout_po8_lan is calibrated for riket, län and 8 produktionsområden, wkout_strl for storleksgrupper."
+
+[[statement]]
+kind = "set"
+subject = "set:kalibreringsvikt"
+fields = { "description" = "Kalibrerat uppräkningstal (vikt) för uppräkning till populationen i tabellerna över användning av gödselmedel: en vikt för tabeller för riket, län och åtta produktionsområden och en för tabeller efter storleksgrupp (hektar åker)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i vilka tabeller vikten gäller; alla rader i exporten är lästa.\ncatalog:variable_text:28563:17713:18078\ncatalog:variable_text:28563:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "set:djurbestandets-storlek"
+fields = { "description" = "Djurbeståndet på gården: antal djur av respektive djurslag, antal djurenheter och om lantbrukaren kryssat i att det inte finns några djur på gården. Från 2015 är antal djur förtryckt från det preliminära Lantbruksregistret och godkänt eller ändrat av lantbrukaren." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna är antal djur, djurenheter och kryssrutan för inga djur.\ncatalog:variable_text:28508:14061:14426\ncatalog:variable_text:28508:16617:16983\ncatalog:variable_text:28508:17713:18078\ncatalog:variable_text:28520:14061:14426\ncatalog:variable_text:28529:16617:16983"
+
+[[statement]]
+kind = "set"
+subject = "set:akerareal"
+fields = { "description" = "Gårdens åkerareal: den totala åkerarealen enligt SAM-blanketten, gårdsarealen grupperad efter storlek enligt Lantbruksregistret och arealen av respektive gröda." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna är total areal, storleksgrupp och areal per gröda.\ncatalog:variable_text:28510:14061:14426\ncatalog:variable_text:28526:14061:14426\ncatalog:variable_text:28557:14061:14426\ncatalog:variable_text:28557:14791:15156\ncatalog:variable_text:28557:15522:15887\ncatalog:variable_text:28557:16617:16983\ncatalog:variable_text:28557:17713:18078"
