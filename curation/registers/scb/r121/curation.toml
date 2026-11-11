@@ -94069,3 +94069,573 @@ kind = "set"
 subject = "var:typ"
 fields = { "description" = "Anger företagstyp: en framtagen variabel som anger vilken typ av företag uppgiften avser." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\n22 stavningar av ”egen definierad identifierare för företagstyp” och ”framtagen variabel som anger typ av företag” (idetifierare, definiderad, definieras, ager …), samma betydelse.\ncatalog:variable_text:26895:10957:13149\ncatalog:variable_text:26895:13514:14245\ncatalog:variable_text:26895:14245:17532\ncatalog:variable_text:26895:17897:18993\ncatalog:variable_text:26895:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: ovrfgensksats @2019 where key = 'v39788'"
+fields = { "operational_definition" = "Skattesats på energi föregående år diverse industriella processer övriga bränslen" }
+evidence = "Registerinformation.csv:row=391561 (r16482): the operational definition is word for word OVRNVMNG's 2018 text (row=387979), which this column carries in no other year: an export error. Set to the column's own row in the same release (row=392057)."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: benprivutm1 @2022 where key = 'v25873'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp" }
+evidence = "Registerinformation.csv:row=117452 (r19349): the operational definition is word for word GASPRIVUT's 2021 text (row=291997), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=96261, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: benpriv @2022 where key = 'v25873'"
+fields = { "operational_definition" = "Avser återbetalningsansökan framställning av el, privat uttag bensin" }
+evidence = "Registerinformation.csv:row=117490 (r19349): the operational definition is word for word GASATERMNG's 2021 text (row=405181), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=96265, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: ovrpriv @2022 where key = 'v25873'"
+fields = { "operational_definition" = "Avser återbetalningsansökan framställning av el" }
+evidence = "Registerinformation.csv:row=117491 (r19349): the operational definition is word for word KOLUTG's 2021 text (row=404938), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=96264, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: diemanprivm2 @2022 where key = 'v25873'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp, diesel period 2" }
+evidence = "Registerinformation.csv:row=117493 (r19349): the operational definition is word for word OVRPRIVUTHALVAR1's 2021 text (row=292006), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=96262, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: benannfb @2022 where key = 'v26016'"
+fields = { "operational_definition" = "Avser återbetalningsansökan framställning av el" }
+evidence = "Registerinformation.csv:row=117502 (r19349): the operational definition is word for word OLJANNFBHALVAR1's 2021 text (row=292017), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=96448, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: benprivutm2 @2022 where key = 'v25873'"
+fields = { "operational_definition" = "Privat uttag för båt eller skepp period 2, bensin för båt och skepp" }
+evidence = "Registerinformation.csv:row=117757 (r19349): the operational definition is word for word OLJKVFGPRIVUT's 2021 text (row=292088), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=97308, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: benprivutm3 @2022 where key = 'v25873'"
+fields = { "operational_definition" = "Privat uttag för båt eller skepp period 3, bensin för båt och skepp" }
+evidence = "Registerinformation.csv:row=117763 (r19349): the operational definition is word for word DIEPRIVUT's 2021 text (row=292097), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=97309, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: diemanprivm1 @2022 where key = 'v25873'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp, diesel period 1" }
+evidence = "Registerinformation.csv:row=117764 (r19349): the operational definition is word for word OLJPRIVUTHALVAR1's 2021 text (row=292098), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=97197, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: diemanprivm3 @2022 where key = 'v25873'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp, diesel period 3" }
+evidence = "Registerinformation.csv:row=117765 (r19349): the operational definition is word for word FARPRIV's 2021 text (row=292099), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=97198, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: arbdieoktensk @2022 where key = 'v25872'"
+fields = { "operational_definition" = "Avser återbetalningsansökan jord- och skogsbruk bränslen, oktober diesel arbetsfordon" }
+evidence = "Registerinformation.csv:row=118193 (r19349): the operational definition is word for word OLJFGMNG's 2021 text (row=405782), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=98247, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: arbdienvensk @2022 where key = 'v25872'"
+fields = { "operational_definition" = "Avser återbetalningsansökan jord- och skogsbruk bränslen, innevarande år diesel arbetsfordon" }
+evidence = "Registerinformation.csv:row=118194 (r19349): the operational definition is word for word OLJNVCO2SKSATS's 2021 text (row=406385), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=98246, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: benmanenskm3 @2022 where key = 'v25872'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp, bensin period 3" }
+evidence = "Registerinformation.csv:row=118195 (r19349): the operational definition is word for word GASFGMNG's 2021 text (row=405179), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=97962, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: sumdieensk @2022 where key = 'v25872'"
+fields = { "operational_definition" = "Avser återbetalningsansökan jord- och skogsbruk bränslen, summa energiskatt" }
+evidence = "Registerinformation.csv:row=118273 (r19349): the operational definition is word for word OLJVXFGENSKSATS's 2021 text (row=406168), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=98249, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: sumovrensk @2022 where key = 'v25872'"
+fields = { "operational_definition" = "Avser återbetalningsansökan jord- och skogsbruk bränslen, summa energiskatt övrigt bränsle" }
+evidence = "Registerinformation.csv:row=118274 (r19349): the operational definition is word for word OLJVXNVENSKSATS's 2021 text (row=406169), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=98248, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: benmanenskm1 @2022 where key = 'v25872'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp, bensin period 1" }
+evidence = "Registerinformation.csv:row=118277 (r19349): the operational definition is word for word GASVXFGMNG's 2021 text (row=405345), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=97960, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: benmanenskm2 @2022 where key = 'v25872'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skeppbensin period 2" }
+evidence = "Registerinformation.csv:row=118280 (r19349): the operational definition is word for word SUMVSENSK's 2021 text (row=292242), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=97965, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: dieman3ensk @2022 where key = 'v25872'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp, diesel period 3" }
+evidence = "Registerinformation.csv:row=118282 (r19349): the operational definition is word for word OLJVXAR2ENSKSATS's 2021 text (row=406175), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=97964, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: fotjaapensk @2022 where key = 'v25872'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart, fotogen jan till april" }
+evidence = "Registerinformation.csv:row=118294 (r19349): the operational definition is word for word OVRVXAR1ENSK's 2021 text (row=292256), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=98503, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: afokdeensk @2022 where key = 'v25872'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart, okt dec annan flygbensin" }
+evidence = "Registerinformation.csv:row=118362 (r19349): the operational definition is word for word UPPVOLJNVENSKHALVAR1's 2021 text (row=292262), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=98509, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: fotmaseensk @2022 where key = 'v25872'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart, fotogen maj till sep" }
+evidence = "Registerinformation.csv:row=118363 (r19349): the operational definition is word for word UPPVOLJFGENSKHALVAR1's 2021 text (row=292263), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=98504, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: dieman1ensk @2022 where key = 'v25872'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp, diesel period 1" }
+evidence = "Registerinformation.csv:row=118364 (r19349): the operational definition is word for word UPPVOLJENSKHALVAR1's 2021 text (row=292264), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=97963, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: mk1jaapensk @2022 where key = 'v25872'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart, MK1 jan till apr" }
+evidence = "Registerinformation.csv:row=118365 (r19349): the operational definition is word for word ELDPCAR1ENSK's 2021 text (row=292265), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=98507, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: afmasensk @2022 where key = 'v25872'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart, maj sep annan flygbensin" }
+evidence = "Registerinformation.csv:row=118366 (r19349): the operational definition is word for word OVRVXNVENSK's 2021 text (row=292266), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=98506, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: mk1maseensk @2022 where key = 'v25872'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart, MK1 maj till sep" }
+evidence = "Registerinformation.csv:row=118367 (r19349): the operational definition is word for word OVRPCNVENSK's 2021 text (row=292267), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=98508, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: afjaapensk @2022 where key = 'v25872'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart, jan apr annan flygbensin" }
+evidence = "Registerinformation.csv:row=118371 (r19349): the operational definition is word for word RATNVENSK's 2021 text (row=292271), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=98505, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: mk1okdeensk @2022 where key = 'v25872'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart, , MK1 okt till dec" }
+evidence = "Registerinformation.csv:row=118376 (r19349): the operational definition is word for word UPPVOVRENSKHALVAR1's 2021 text (row=292276), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=98501, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: fotokdeensk @2022 where key = 'v25872'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart, flygfotogen okt till dec" }
+evidence = "Registerinformation.csv:row=118377 (r19349): the operational definition is word for word ARBFARENSK's 2021 text (row=292277), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=98502, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: mk1maseco2sk @2022 where key = 'v25871'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart, MK1 co2-skatt maj till sep" }
+evidence = "Registerinformation.csv:row=118686 (r19349): the operational definition is word for word GASFGCO2SK's 2021 text (row=292307), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=98970, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: mk1okdeco2sk @2022 where key = 'v25871'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart, MK1 co2-skatt okt till dec" }
+evidence = "Registerinformation.csv:row=118688 (r19349): the operational definition is word for word NGASNVMNG's 2021 text (row=405183), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=98971, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: mk1jaapco2sk @2022 where key = 'v25871'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart, MK1 co2-skatt jan till apr" }
+evidence = "Registerinformation.csv:row=118757 (r19349): the operational definition is word for word OVRPCNVCO2SK's 2021 text (row=292340), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=98969, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: afjaapensksats @2022 where key = 'v39788'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart, jan apr annan flygbensin" }
+evidence = "Registerinformation.csv:row=842484 (r19349): the operational definition is word for word KOLPCNVENSKSATS's 2021 text (row=346955), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=842486, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: afjaapmng @2022 where key = 'v39787'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart, jan apr annan flygbensin" }
+evidence = "Registerinformation.csv:row=863656 (r19349): the operational definition is word for word GASFGMNG's 2021 text (row=404673), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=861728, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: benink @2022 where key = 'v39766'"
+fields = { "operational_definition" = "Avser återbetalningsansökan framställning av el" }
+evidence = "Registerinformation.csv:row=863682 (r19349): the operational definition is word for word OVRINKHALVAR1's 2021 text (row=404802), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=861799, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: benensksatsm1 @2022 where key = 'v39788'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp, bensin period 1" }
+evidence = "Registerinformation.csv:row=863704 (r19349): the operational definition is word for word OVRVXAR1ENSKSATS's 2021 text (row=404848), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=861875, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: diemanensksatsm3 @2022 where key = 'v39788'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp, diesel period 3" }
+evidence = "Registerinformation.csv:row=863705 (r19349): the operational definition is word for word OVRPCNVENSKSATS's 2021 text (row=404849), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=861876, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: dieman3co2sksats @2022 where key = 'v39789'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp, diesel period 3" }
+evidence = "Registerinformation.csv:row=863706 (r19349): the operational definition is word for word RATNVCO2SKSATS's 2021 text (row=404850), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=861879, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: benatermngm2 @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp, bensin period 2" }
+evidence = "Registerinformation.csv:row=863745 (r19349): the operational definition is word for word GASPCFGMNG's 2021 text (row=404990), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=861974, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: arbfargadmng @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Avser återbetalningsansökan jord- och skogsbruk bränslen" }
+evidence = "Registerinformation.csv:row=863746 (r19349): the operational definition is word for word KOLPCFGMNG's 2021 text (row=404991), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862035, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: benatermngm3 @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp, bensin period 3" }
+evidence = "Registerinformation.csv:row=863748 (r19349): the operational definition is word for word GASPCNVMNG's 2021 text (row=404996), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=861975, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: fotokdecmng @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart" }
+evidence = "Registerinformation.csv:row=863768 (r19349): the operational definition is word for word OLJFGMNG's 2021 text (row=405772), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862183, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: bentotm1 @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Totalt förbrukat för båt eller skepp period 1, bensin för båt och skepp" }
+evidence = "Registerinformation.csv:row=863773 (r19349): the operational definition is word for word GASFGMNG's 2021 text (row=405179), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862186, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: bentotm2 @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Totalt förbrukat för båt eller skepp period 2, bensin för båt och skepp" }
+evidence = "Registerinformation.csv:row=863774 (r19349): the operational definition is word for word GASNVCO2SK's 2021 text (row=292312), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862187, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: benman3mng @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Förbrukad mängd för båt eller skepp, bensin för båt och skepp period 3" }
+evidence = "Registerinformation.csv:row=863775 (r19349): the operational definition is word for word GASATERMNG's 2021 text (row=405181), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862185, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: bentotm3 @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Totalt förbrukat för båt eller skepp period 3, bensin för båt och skepp" }
+evidence = "Registerinformation.csv:row=863776 (r19349): the operational definition is word for word KOLUTG's 2021 text (row=404938), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862188, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: dieman2mng @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp Förbrukad mängd båt utan fiskelicens, dieselolja period 2" }
+evidence = "Registerinformation.csv:row=863777 (r19349): the operational definition is word for word NGASNVMNG's 2021 text (row=405183), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=861969, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: dieman1mng @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp Förbrukad mängd båt utan fiskelicens, dieselolja period 1" }
+evidence = "Registerinformation.csv:row=863778 (r19349): the operational definition is word for word NGASANNFB's 2021 text (row=291864), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=861968, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: diejanfb @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Avser återbetalningsansökan jord- och skogsbruk bränslen januari" }
+evidence = "Registerinformation.csv:row=863779 (r19349): the operational definition is word for word OVRFGMNG's 2021 text (row=405185), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862456, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: diemantotm3 @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp Totalt förbrukat båt utan fiskelicens period 3, dieselolja" }
+evidence = "Registerinformation.csv:row=863780 (r19349): the operational definition is word for word OVRANNFB's 2021 text (row=291865), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=861970, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: dienvfb @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Avser återbetalningsansökan jord- och skogsbruk bränslen, dieselolja" }
+evidence = "Registerinformation.csv:row=863790 (r19349): the operational definition is word for word GASVXNVENSKSATS's 2021 text (row=406173), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862457, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: dieoktfb @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Avser återbetalningsansökan jord- och skogsbruk bränslen" }
+evidence = "Registerinformation.csv:row=863791 (r19349): the operational definition is word for word NGASVXNVENSKSATS's 2021 text (row=406174), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862034, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: diemanmngm2 @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp Återbetalningsberättigad mängd båt utan fiskelicens period 2, dieselolja" }
+evidence = "Registerinformation.csv:row=863793 (r19349): the operational definition is word for word RATNVMNG's 2021 text (row=405351), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=861972, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: benatermngm1 @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp, bensin period 1" }
+evidence = "Registerinformation.csv:row=863794 (r19349): the operational definition is word for word GASPCAR1MNG's 2021 text (row=405352), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=861973, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: diemanmngm1 @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp Återbetalningsberättigad mängd båt utan fiskelicens period 1, dieselolja" }
+evidence = "Registerinformation.csv:row=863795 (r19349): the operational definition is word for word KOLVSAR1MNGG's 2021 text (row=405354), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=861971, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: bening @2022 where key = 'v39767'"
+fields = { "operational_definition" = "Avser återbetalningsansökan framställning av el" }
+evidence = "Registerinformation.csv:row=863823 (r19349): the operational definition is word for word OLJINGHALVAR1's 2021 text (row=405610), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862255, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: afmasemng @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart, maj sep annan flygbensin" }
+evidence = "Registerinformation.csv:row=863842 (r19349): the operational definition is word for word UPPVOLJNVMNGHALVAR1's 2021 text (row=405700), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862468, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: mk1jaapmng @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart Förbrukad mängd inköpt jan till apr, blyfri flygbensin" }
+evidence = "Registerinformation.csv:row=863849 (r19349): the operational definition is word for word UPPVOLJMNGHALVAR1's 2021 text (row=405708), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862463, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: fotmasemng @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart Förbrukad mängd inköpt maj till sep, flygfotogen" }
+evidence = "Registerinformation.csv:row=863850 (r19349): the operational definition is word for word OLJATERMNGHALVAR1's 2021 text (row=405709), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862465, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: diefb @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Avser återbetalningsansökan vattenbruk bränslen" }
+evidence = "Registerinformation.csv:row=863853 (r19349): the operational definition is word for word UPPVOLJFGMNG's 2021 text (row=405712), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862459, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: diemantotm1 @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp Totalt förbrukat båt utan fiskelicens period 1, dieselolja" }
+evidence = "Registerinformation.csv:row=863871 (r19349): the operational definition is word for word OLJFGMNG's 2021 text (row=405782), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862396, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: diemantotm2 @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp Totalt förbrukat båt utan fiskelicens period 2, dieselolja" }
+evidence = "Registerinformation.csv:row=863872 (r19349): the operational definition is word for word OLJNVCO2SKSATS's 2021 text (row=406385), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862397, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: dieman3mng @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp Förbrukad mängd båt utan fiskelicens, dieselolja period 3" }
+evidence = "Registerinformation.csv:row=863873 (r19349): the operational definition is word for word OLJPRIVUT's 2021 text (row=292095), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862275, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: diemajfb @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Avser återbetalningsansökan jord- och skogsbruk bränslen, maj" }
+evidence = "Registerinformation.csv:row=863874 (r19349): the operational definition is word for word RATATERMNG's 2021 text (row=405785), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862458, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: mk1masemng @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart Förbrukad mängd inköpt maj till sep, blyfri flygbensin" }
+evidence = "Registerinformation.csv:row=863888 (r19349): the operational definition is word for word OLJVX3ENSK's 2021 text (row=292238), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862464, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: benman2mng @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Förbrukad mängd för båt eller skepp, bensin för båt och skepp period 2" }
+evidence = "Registerinformation.csv:row=863889 (r19349): the operational definition is word for word OLJVXFGMNG's 2021 text (row=405840), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862470, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: mk1okdemng @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart Förbrukad mängd inköpt okt till dec, blyfri flygbensin" }
+evidence = "Registerinformation.csv:row=863890 (r19349): the operational definition is word for word OLJVXAR2ENSKSATS's 2021 text (row=406175), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862466, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: afokdemng @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart, okt dec annan flygbensin" }
+evidence = "Registerinformation.csv:row=863893 (r19349): the operational definition is word for word ARBFARMNG's 2021 text (row=405844), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862469, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: fotjaapmng @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart Förbrukad mängd inköpt jan till apr, flygfotogen" }
+evidence = "Registerinformation.csv:row=863894 (r19349): the operational definition is word for word FARATERMNG's 2021 text (row=405845), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862467, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: diemanmngm3 @2022 where key = 'v39768'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp Återbetalningsberättigad mängd båt utan fiskelicens period 3, dieselolja" }
+evidence = "Registerinformation.csv:row=863895 (r19349): the operational definition is word for word ELDPCAR1MNG's 2021 text (row=405846), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862398, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: benensksatsm3 @2022 where key = 'v39788'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp, bensin period 3" }
+evidence = "Registerinformation.csv:row=863958 (r19349): the operational definition is word for word ARBFARENKSKSATS's 2021 text (row=406091), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862656, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: fotjaapensksats @2022 where key = 'v39788'"
+fields = { "operational_definition" = "Skattesats för energiskatt jan till apr, flygfotogen" }
+evidence = "Registerinformation.csv:row=863970 (r19349): the operational definition is word for word KOLVSFGENSKSATS's 2021 text (row=406103), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862806, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: diemanensksatsm1 @2022 where key = 'v39788'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp, diesel period 1" }
+evidence = "Registerinformation.csv:row=863971 (r19349): the operational definition is word for word NGASVSFGENSKSATS's 2021 text (row=406104), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862657, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: diemanensksatsm2 @2022 where key = 'v39788'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp, diesel period 2" }
+evidence = "Registerinformation.csv:row=863972 (r19349): the operational definition is word for word NGASVXFGENSKSATS's 2021 text (row=406105), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862658, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: ovrnvensksats @2022 where key = 'v39788'"
+fields = { "operational_definition" = "Skattesats energiskatt innevarande år, övrigt bränsle" }
+evidence = "Registerinformation.csv:row=863973 (r19349): the operational definition is word for word KOLPCFGENSKSATS's 2021 text (row=406106), which this column carries in no other year: an export error. Set to the column's own row in the same release (row=864027)."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: fotokdeensksats @2022 where key = 'v39788'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart Skattesats för energiskatt okt till dec, flygfotogen" }
+evidence = "Registerinformation.csv:row=863974 (r19349): the operational definition is word for word NGASPCFGENSKSATS's 2021 text (row=406107), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862760, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: afmaseensksats @2022 where key = 'v39788'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart, maj sep annan flygbensin" }
+evidence = "Registerinformation.csv:row=863975 (r19349): the operational definition is word for word KOLVSNVENSKSATS's 2021 text (row=406108), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862761, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: mk1okdeensksats @2022 where key = 'v39788'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart Skattesats för energiskatt okt till dec, blyfri flygbensin" }
+evidence = "Registerinformation.csv:row=863976 (r19349): the operational definition is word for word KOLVXNVENSKSATS's 2021 text (row=406109), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862759, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: benensksatsm2 @2022 where key = 'v39788'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp, bensin period 2" }
+evidence = "Registerinformation.csv:row=863977 (r19349): the operational definition is word for word OVRVXENSKSATS's 2021 text (row=406110), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862655, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: mk1maseensksats @2022 where key = 'v39788'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart Skattesats för energiskatt maj till sep, blyfri flygbensin" }
+evidence = "Registerinformation.csv:row=864018 (r19349): the operational definition is word for word GASVSFGENSKSATS's 2021 text (row=406263), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862757, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: fotmaseensksats @2022 where key = 'v39788'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart Skattesats för energiskatt maj till sep, flygfotogen" }
+evidence = "Registerinformation.csv:row=864019 (r19349): the operational definition is word for word KOLVXFGENSKSATS's 2021 text (row=406264), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862758, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: mk1jaapensksats @2022 where key = 'v39788'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart Skattesats för energiskatt jan till apr, blyfri flygbensin" }
+evidence = "Registerinformation.csv:row=864020 (r19349): the operational definition is word for word GASPCFGENSKSATS's 2021 text (row=406265), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862756, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: afokdeensksats @2022 where key = 'v39788'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart, okt dec annan flygbensin" }
+evidence = "Registerinformation.csv:row=864023 (r19349): the operational definition is word for word GASVSNVENSKSATS's 2021 text (row=406268), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862762, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: arbdienvensksats @2022 where key = 'v39788'"
+fields = { "operational_definition" = "Avser återbetalningsansökan jord- och skogsbruk bränslen, innevarande år diesel arbetsfordon" }
+evidence = "Registerinformation.csv:row=864031 (r19349): the operational definition is word for word GASKVFGENSKSATS's 2021 text (row=406276), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862751, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: mk1maseco2sksats @2022 where key = 'v39789'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart Skattesats för co2-skatt maj till sep, blyfri flygbensin" }
+evidence = "Registerinformation.csv:row=864043 (r19349): the operational definition is word for word KOLVSFGCO2SKSATS's 2021 text (row=406317), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862890, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: benmanco2sksatsm2 @2022 where key = 'v39789'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp, bensin period 2" }
+evidence = "Registerinformation.csv:row=864090 (r19349): the operational definition is word for word GASFGCO2SKSATS's 2021 text (row=406400), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862819, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: benmanco2sksatsm1 @2022 where key = 'v39789'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp, bensin period 1" }
+evidence = "Registerinformation.csv:row=864091 (r19349): the operational definition is word for word GASFGCO2SKSATS's 2021 text (row=406401), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862818, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: mk1okdeco2sksats @2022 where key = 'v39789'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart Skattesats för co2-skatt okt till dec, blyfri flygbensin" }
+evidence = "Registerinformation.csv:row=864094 (r19349): the operational definition is word for word NGASVSFGCO2SKSATS's 2021 text (row=406405), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862930, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: fotjaapco2sksats @2022 where key = 'v39789'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart Skattesats för co2-skatt jan till apr, flygfotogen" }
+evidence = "Registerinformation.csv:row=864096 (r19349): the operational definition is word for word KOLPCFGCO2SKSATS's 2021 text (row=406407), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862889, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: benmanco2sksatsm3 @2022 where key = 'v39789'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp, bensin period 3" }
+evidence = "Registerinformation.csv:row=864101 (r19349): the operational definition is word for word GASNVCO2SKSATS's 2021 text (row=406619), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862820, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: arbfargadnvco2sksats @2022 where key = 'v39789'"
+fields = { "operational_definition" = "Avser återbetalningsansökan jord- och skogsbruk bränslen färgad diesel" }
+evidence = "Registerinformation.csv:row=864106 (r19349): the operational definition is word for word NGASNVCO2SKSATS's 2021 text (row=406624), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862882, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: mk1jaapco2sksats @2022 where key = 'v39789'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart Skattesats för co2-skatt jan till apr, blyfri flygbensin" }
+evidence = "Registerinformation.csv:row=864107 (r19349): the operational definition is word for word GASVSNVCO2SKSATS's 2021 text (row=406625), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862888, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: fotmaseco2sksats @2022 where key = 'v39789'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart Skattesats för co2-skatt maj till sep, flygfotogen" }
+evidence = "Registerinformation.csv:row=864108 (r19349): the operational definition is word for word KOLVSNVCO2SKSATS's 2021 text (row=406626), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862891, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: fotokdeco2sksats @2022 where key = 'v39789'"
+fields = { "operational_definition" = "Avser återbetalningsansökan yrkesmässig luftfart Skattesats för co2-skatt okt till dec, flygfotogen" }
+evidence = "Registerinformation.csv:row=864110 (r19349): the operational definition is word for word OVRPCNVCO2SKSATS's 2021 text (row=406629), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862931, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: dieman2co2sksats @2022 where key = 'v39789'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp, diesel period 2" }
+evidence = "Registerinformation.csv:row=864117 (r19349): the operational definition is word for word GASKVFGCO2SKSATS's 2021 text (row=406636), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862822, r20075), whose label and definition match 2022."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: dieman1co2sksats @2022 where key = 'v39789'"
+fields = { "operational_definition" = "Avser återbetalningsansökan båt och skepp, diesel period 1" }
+evidence = "Registerinformation.csv:row=864120 (r19349): the operational definition is word for word ARBFARCO2SKSATS's 2021 text (row=406639), which this column carries in no other year: an export error. Set to the column's first own row in 2023 (row=862821, r20075), whose label and definition match 2022."
