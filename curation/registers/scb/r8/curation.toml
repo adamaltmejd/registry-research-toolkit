@@ -3976,3 +3976,15 @@ kind = "set"
 subject = "var:institutionell-kod-literal-inst-3"
 fields = { "description" = "Institutionell kod (ägandeform) för fordonets nästföregående ägare när denne är en juridisk person." }
 evidence = "Operationell definition anger fordonets nästföregående ägare i de flesta tabeller och årgångar. I Lastbilar står beskrivningarna för INST och INST_3 omkastade i vissa årgångar (INST_3: r13532, r13512, r13491, r13488, r13439); ordningen INST, INST_2, INST_3 följer ägarordningen.\n0.74.0 catalog, key v3005, releases r11751, r12980, r12993, r12996...; reg_meta.db:occurrence:107354,113405,107411"
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: AgNr where key = 'v2969' and release = 'r13464'"
+fields = { "operational_definition" = "Avser fordonets ägare" }
+evidence = "Registerinformation.csv:row=518091 and row=518092 (VarId 2969, Lastbilar 2015, column AgNr, same population): the export documents AgNr twice, first 'Avser fordonets nästföregående ägare' (the text of AgNr_3, the previous owner's number) and then 'Avser fordonets ägare'. The reader keeps the first row; the column is the current owner's number, as in every other year, so the second row's text is set. Operator, #2322 curation under the maintainer's 2026-11-11 delegation."
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: AgNr where key = 'v2969' and release = 'r15115'"
+fields = { "operational_definition" = "Avser fordonets ägare" }
+evidence = "Registerinformation.csv, VarId 2969, Terrängskotrar 2008, column AgNr (one row): the operational definition is 'Anger terrängskoterns fabrikat', the make column's text; SCB's export carries the error. AgNr in Terrängskotrar has 'Avser fordonets ägare' in every other year 1980–2025, restored here. Operator, #2322 curation under the maintainer's 2026-11-11 delegation."

@@ -8666,3 +8666,9 @@ kind = "set"
 subject = "var:termin"
 fields = { "description" = "Den termin då det nya slutbetyget från grundskolan utfärdades." }
 evidence = "Only occurrence: nytt-grundskolebetyg, key v1579, opdef 'Anger den termin som det nya slutbetyget från grundskolan är utfärdat'. The short definition ('ordningsnummer i elevens utbildning') is the generic text of key v1579 shared with other registers; no code list is given, so no format is stated."
+
+[[statement]]
+kind = "set"
+subject = "slutbetyg: Stv_Prefix where key = 'v37468'"
+fields = { "variable" = "kursplan-slutbetyg" }
+evidence = "Candidate split, no succession edge (crates/DESIGN.md). SCB VarId 37468 (Kurskategori eller typ av kurs) is used for two different codings in parallel tables: Slutbetyg 1997–2005 column Stv_Prefix 'Anger vilken kursplan som eleven studerat efter', and Gymnasieintyg - kurser 2011–2013 column Markering 'Anger om betyget i variabeln Betyg hör ihop med en grundskolekurs, gymnasiekurs eller kurs inom Svenska för invandrare'. One raw row per column-year. The Markering half keeps the existing id (its ledger anchor). Operator, #2322 curation under the maintainer's 2026-11-11 delegation.\ncatalog:variable_text:29867:10043:12965\ncatalog:variable_text:29867:15156:15887"

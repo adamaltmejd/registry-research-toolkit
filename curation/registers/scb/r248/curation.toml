@@ -3762,5 +3762,5 @@ evidence = "Release '2024' is a kalenderår delivery. Maintainer ruling 2026-11-
 [[statement]]
 kind = "set"
 subject = "kursdeltagare-kalenderar: PersonNr where key = 'v57' and release = 'r11223'"
-fields = { "operational_definition" = "12-siffrigt personnummer inklusive sekelsiffra." }
-evidence = "Registerinformation.csv, VarId 57, Kursdeltagare kalenderår 2016 (release r11223), column PersonNr: the operational definition is 'Den kommun som skolenheten uppgav. Härleds från det som rapporterats i vår- och/eller höstinsamlingen.', a municipality text copied from another column; SCB's export carries the same error in a single row. The same table's PersonNr in 2015 and 2017 has '12-siffrigt personnummer inklusive sekelsiffra.', restored here. Operator, #2322 curation under the maintainer's 2026-11-11 delegation."
+fields = { "operational_definition" = "Skolenheten anger uppgiften i kolumn PersonNr i frågeformuläret." }
+evidence = "Registerinformation.csv, VarId 57, Kursdeltagare kalenderår 2016 (release r11223), column PersonNr: the operational definition is 'Den kommun som skolenheten uppgav. Härleds från det som rapporterats i vår- och/eller höstinsamlingen.', a municipality text copied from another column; SCB's export carries the same error in a single row. The same table's PersonNr has 'Skolenheten anger uppgiften i kolumn PersonNr i frågeformuläret.' in 2015 and no operational definition in 2017; the 2015 text is restored. Operator, #2322 curation under the maintainer's 2026-11-11 delegation."

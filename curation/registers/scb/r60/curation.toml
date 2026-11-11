@@ -706,3 +706,9 @@ kind = "set"
 subject = "var:sni92"
 fields = { "label" = "Näringsgren (SNI 92/2002)" }
 evidence = "#2102 same-label cluster 'Näringsgren' (2 variables): judged different meaning, high confidence; SNI92 vs SNI2007 classification versions with different code lists."
+
+[[statement]]
+kind = "set"
+subject = "konjunkturstatistik-loner-for-statlig-sektor: LNrS where key = 'v30943' and release = 'r7360'"
+fields = { "operational_definition" = "Visar om en myndighet har fler redovisningsenheter." }
+evidence = "Registerinformation.csv, VarId 30943, Konjunkturstatistik, löner för statlig sektor 2000 (release r7360), column LNrS: the operational definition is 'Hur gammal var du när du invandrade till Sverige (första gången)?', a survey question from another register; SCB's export carries the same error in its single row. The same column 2001–2011 has 'Visar om en myndighet har fler redovisningsenheter.', restored here. Operator, #2322 curation under the maintainer's 2026-11-11 delegation."

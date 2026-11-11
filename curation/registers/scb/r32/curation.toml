@@ -5880,3 +5880,15 @@ kind = "set"
 subject = "var:vigselar-upplosningsar-eller-malsmans-fodelsear"
 fields = { "description" = "För gifta personer året då äktenskapet ingicks, för änkor, änklingar och skilda året då äktenskapet upplöstes. För personer födda 1944–1960 (1960) respektive 1948–1965 (1965) anges i stället målsmannens födelseår. I 1965 års material är fältet blankt för ogifta och när uppgift saknas." }
 evidence = "Operationaliseringen av v39455 (VigselAr) beskriver de tre betydelserna; etiketten 'Vigseldatum' och definitionen 'Datum för ingånget äktenskap' beskriver bara den första. Id:t nämner redan alla tre.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=95972 (r15448)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=95983 (r15118)"
+
+[[statement]]
+kind = "set"
+subject = "individ: AntLghHiss where key = 'v42211'"
+fields = { "variable" = "antal-lagenheter-med-hiss" }
+evidence = "Material change in meaning, a separate variable (crates/DESIGN.md, one variable one description). SCB VarId 42211 (Hiss) covers two measures: FoB 1985 column AntLghHiss in Individ and Lägenhet och hushåll is the number of apartments reachable by lift, from the property form ('På fastighetsblanketten frågades efter hur många lägenheter som kan nås med hiss inkl. lägenheter i markplanet'), while FoB 1990 column Hiss asks the household whether it has a lift on the same floor (1=Ja, 2=Nej, 0=Småbostadshus). All raw rows for each column-year agree. Operator, #2322 curation under the maintainer's 2026-11-11 delegation.\ncatalog:variable_text:18302:5479:5844\ncatalog:variable_text:18302:7305:7670"
+
+[[statement]]
+kind = "set"
+subject = "lagenhet-och-hushall: AntLghHiss where key = 'v42211'"
+fields = { "variable" = "antal-lagenheter-med-hiss" }
+evidence = "Material change in meaning, a separate variable (crates/DESIGN.md, one variable one description). SCB VarId 42211 (Hiss) covers two measures: FoB 1985 column AntLghHiss in Individ and Lägenhet och hushåll is the number of apartments reachable by lift, from the property form ('På fastighetsblanketten frågades efter hur många lägenheter som kan nås med hiss inkl. lägenheter i markplanet'), while FoB 1990 column Hiss asks the household whether it has a lift on the same floor (1=Ja, 2=Nej, 0=Småbostadshus). All raw rows for each column-year agree. Operator, #2322 curation under the maintainer's 2026-11-11 delegation.\ncatalog:variable_text:18302:5479:5844\ncatalog:variable_text:18302:7305:7670"
