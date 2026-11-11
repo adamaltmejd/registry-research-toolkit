@@ -121,9 +121,9 @@ function ValueSetEntry({
                   entity="table"
                   name={tableName(table)}
                   href={catalogHref(table)}
-                />{" "}
+                />
                 <EntityPill entity="column" name={column} />
-                {/* Outside the chip, which never wraps: a long run of school
+                {/* Outside the pill, which never wraps: a long run of school
                     years wraps on a phone. */}
                 <TableYears periods={periods} />
               </li>
@@ -158,8 +158,7 @@ function TableYears({ periods }: { periods: CatalogSegment["period"][] }) {
   return (
     years && (
       <>
-        {" "}
-        <code>
+        <code className={valueStyles.years}>
           {years.split(", ").map((run, i) => (
             <Fragment key={run}>
               {i > 0 && ", "}

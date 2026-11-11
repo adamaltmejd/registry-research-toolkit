@@ -165,8 +165,10 @@ const MIN_SPAN = 6;
 // grows past the graph's width to make room (#2310).
 const MIN_TARGET = 24;
 
-function labelWidth(name: string): number {
-  return name.length * COLUMN_CHAR + LABEL_PAD;
+/** The room a span's text needs: a column name with its glyph, or a
+ * nameless span's years. */
+export function labelWidth(text: string): number {
+  return text.length * COLUMN_CHAR + LABEL_PAD;
 }
 
 /** Tick years at a step that keeps labels about 48 px apart. */

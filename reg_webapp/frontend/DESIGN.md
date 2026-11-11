@@ -836,7 +836,9 @@ Time is the axis every relation is drawn on.
   the bars at the track's end, never cut. Stacked below the breakpoint, a lane's spans
   start just under its name, a table pill over its span. Hovering or focusing a span
   shows a RAC `Tooltip` with no delay only where the span's own text is cut off, which
-  is its years, now always (maintainer, dogfood 2026-11-05, #2321; the strict reading,
+  is its years: always on a column span, on a classification version's (a span with no
+  column name, which carries its years where they fit) only where they do not
+  (maintainer, dogfood 2026-11-05, #2321; the strict reading,
   maintainer ruling, 2026-11-10): no table name and no study-window note in a tooltip,
   and no table name on a span. The
   variables a succession reaches are further lanes in time order, with their arrows. A

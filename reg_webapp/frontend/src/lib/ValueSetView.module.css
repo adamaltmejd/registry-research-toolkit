@@ -37,3 +37,16 @@
 .run {
   white-space: nowrap;
 }
+
+/* A table's use: its pill, the column pill, then the years, as the mock-up
+   sets them (#2399). */
+.coverage > li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+}
+.years {
+  color: var(--text-muted);
+  font-size: var(--text-micro);
+}

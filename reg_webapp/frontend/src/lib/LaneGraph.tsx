@@ -23,6 +23,7 @@ import {
   type LaneGeometry,
   type LaneRow,
   type LaneSpanGeometryInput,
+  labelWidth,
   laneGeometry,
   type PlacedSpan,
   SPAN_HEIGHT,
@@ -471,7 +472,7 @@ function Marks({
   const shade = (w: [number, number] | null) => {
     const r = onAxis(w);
     if (!r) return null;
-    const from = r.x - SHADE_PAD;
+    const from = Math.max(r.x - SHADE_PAD, 0);
     return {
       x: from,
       width: Math.min(r.x + r.width + SHADE_PAD, width) - from,
@@ -918,6 +919,13 @@ function Span({
     (best, segment, i) => (segment.width > at.segments[best].width ? i : best),
     0,
   );
+  // A span with no column name (a classification version) carries its years
+  // where they fit, so the bar is not an empty box; a column span shows its
+  // name only (#2399).
+  const showYears =
+    !span.name &&
+    at.segments.length === 1 &&
+    labelWidth(span.years) <= at.width;
   const faces = at.segments.map((segment, i) => {
     const name =
       at.label !== "inside"
@@ -932,6 +940,7 @@ function Span({
         key={i}
         entity="column"
         name={name}
+        years={showYears ? span.years : undefined}
         state={span.state}
         className={styles.face}
       />
@@ -974,7 +983,7 @@ function Span({
   // The tooltip opens only where the span's own text is cut off (maintainer,
   // 2026-11-10, #2321): its years, which a span no longer shows (#2399). The
   // column name is never cut.
-  const tipped = !!span.years;
+  const tipped = !!span.years && !showYears;
   const tip = tipped && (
     <Tooltip
       triggerRef={face}
