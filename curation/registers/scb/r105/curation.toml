@@ -3325,3 +3325,27 @@ kind = "set"
 subject = "set:yrkeshogskolebehorighet"
 fields = { "description" = "Om kursdeltagaren uppnått behörighet till yrkeshögskolan. 2005–2019 anges den för deltagare på lång kurs (minst 15 dagar) på gymnasial nivå, och 2013–2019 anges även antalet sådana kursdeltagare som uppnått behörigheten. Från 2017 avses behörighet som uppnåtts under terminen med utfärdat intyg, vilket kräver att både omfattnings- och innehållskrav är uppfyllda; den kan uppnås på allmän kurs på gymnasienivå och på särskild kurs, och uppnår deltagaren samtidigt grundläggande behörighet till högskolestudier anges bara den." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nLång kurs med kursnivå 2 anges 2005–2016 och i texten för 2013–2019 (YrkesUtb 2013–2014, YrkesBeh 2015–2019); terminsdefinitionen med intyg gäller 2017–2024.\ncatalog:variable_text:18540:15706:16071\ncatalog:variable_text:18540:16071:16436\ncatalog:variable_text:18541:12784:16436\ncatalog:variable_text:18541:17167:18262\ncatalog:variable_text:18541:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: Avbrott"
+fields = { "variable" = "antal-avbrott" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope.\n\nThe Grupper tables give the number of participants in the group who dropped out (a count); Deltagarregister gives a per-participant dropout flag: different unit and value. The count gets its own id.\ncatalog:occurrence:108792\ncatalog:occurrence:108071"
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: Avbrott"
+fields = { "variable" = "antal-avbrott" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope.\n\nThe Grupper tables give the number of participants in the group who dropped out (a count); Deltagarregister gives a per-participant dropout flag: different unit and value. The count gets its own id.\ncatalog:occurrence:108792\ncatalog:occurrence:108071"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-avbrott"
+fields = { "tags" = ["education"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope.\n\nThe Grupper tables give the number of participants in the group who dropped out (a count); Deltagarregister gives a per-participant dropout flag: different unit and value. The count gets its own id.\ncatalog:occurrence:108792\ncatalog:occurrence:108071"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-avbrott"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope.\n\nThe Grupper tables give the number of participants in the group who dropped out (a count); Deltagarregister gives a per-participant dropout flag: different unit and value. The count gets its own id.\ncatalog:occurrence:108792\ncatalog:occurrence:108071"

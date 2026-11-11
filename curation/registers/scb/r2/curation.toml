@@ -7728,3 +7728,15 @@ kind = "set"
 subject = "set:taxeringsdistrikt"
 fields = { "description" = "Distrikt för taxeringssyfte (1968–1977) för personens aktuella folkbokföring eller mantalsskrivning, där personen var folkbokförd vid dödsfall eller medborgarskapsändring, eller som personen flyttar till eller från." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF delas av alla; OP skiljer folkbokföring, mantalsskrivning, händelse och flytt till/från.\ncatalog:variable_text:48629:-366:-365\ncatalog:variable_text:48691:-731:2922\ncatalog:variable_text:48692:-366:-365\ncatalog:variable_text:48693:-731:2922\ncatalog:variable_text:48694:-731:2922"
+
+[[statement]]
+kind = "set"
+subject = "flyttningar-1968-1997: PersonNr"
+fields = { "operational_definition" = "Personnumret består av: Födelsetid (8 siffror), födelsenummer (3 siffror) och en kontrollsiffra." }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope.\n\nIn In- och utvandringar 1968-1997, PersonNr carries the samhörighetsperson text and PersonNrSamh the plain personnummer text: swapped. Every other RTB table gives PersonNr this text. The raw SCB export (Registerinformation.csv, current-scb-inputs 2026-03) carries this text itself; the reader places it faithfully.\ncatalog:occurrence:435932\ncatalog:occurrence:435933"
+
+[[statement]]
+kind = "set"
+subject = "flyttningar-1968-1997: PersonNrSamh"
+fields = { "operational_definition" = "Personnummer för samhörighetsperson. För gifta personer är samhörighetsperson make/maka. För barn är samhörighetsperson antingen någon av föräldrarna eller annan person hos vilken barnet är folkbokfört. Personnumret består av: Födelsetid (8 siffror), födelsenummer (3 siffror) och en kontrollsiffra." }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope.\n\nSwapped with PersonNr in this table; every other RTB table gives PersonNrSamh this text. The raw SCB export (Registerinformation.csv, current-scb-inputs 2026-03) carries this text itself; the reader places it faithfully.\ncatalog:occurrence:435933\ncatalog:occurrence:435932"

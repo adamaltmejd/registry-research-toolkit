@@ -560,3 +560,9 @@ kind = "set"
 subject = "var:storasjo"
 fields = { "label" = "De fyra största insjöarna (ja/nej-markering)" }
 evidence = "#2102 same-label cluster 'De fyra största insjöarna' (2 variables): judged different meaning, high confidence; sjonamn holds the lake name; storasjo is a 0/1 marker (value set) that the object belongs to one of the four largest lakes (opdef)."
+
+[[statement]]
+kind = "set"
+subject = "land-och-vattenarealer: SP_Geometry @2020..2023"
+fields = { "definition" = "Datatyp för geometri, SP_GEOMETRY" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope.\n\nSP_Geometry 2020–2023 is documented under VarId 16346 with areakm2's total-area definition; from 2024 under its own VarId as the geometry column. The correction is the column's own definition. The raw SCB export (Registerinformation.csv, current-scb-inputs 2026-03) carries this text itself; the reader places it faithfully.\ncatalog:occurrence:332055"

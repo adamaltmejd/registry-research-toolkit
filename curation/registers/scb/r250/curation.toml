@@ -1345,3 +1345,15 @@ kind = "set"
 subject = "set:utbildningstimmar"
 fields = { "description" = "Antal undervisningstimmar eleven hade under mätveckan, den vecka som omfattar den 15 oktober eller närliggande vardag: totalt, skolförlagd och arbetsplatsförlagd utbildning." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF är gemensam; OP anger mätveckan och uppdelningen.\ncatalog:variable_text:41292:16723:16724\ncatalog:variable_text:41293:16723:16724\ncatalog:variable_text:41294:16723:16724\ncatalog:variable_text:41354:10879:10880\ncatalog:variable_text:41354:14167:14168"
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare: OrgNr"
+fields = { "variable" = "utbildningsanordnare-orgnr" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope.\n\nElever 2020–2023 gives the huvudman's organisation number; Kursdeltagare 2024 gives the utbildningsanordnare's number when it is not municipal: different organisations. The orgnr id stays with the huvudman column, which continues person-orgnr (existing link); the anordnare column gets its own id.\ncatalog:occurrence:311851\ncatalog:occurrence:312105"
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-kalenderar: OrgNr"
+fields = { "variable" = "utbildningsanordnare-orgnr" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope.\n\nElever 2020–2023 gives the huvudman's organisation number; Kursdeltagare 2024 gives the utbildningsanordnare's number when it is not municipal: different organisations. The orgnr id stays with the huvudman column, which continues person-orgnr (existing link); the anordnare column gets its own id.\ncatalog:occurrence:311851\ncatalog:occurrence:312105"
