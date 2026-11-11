@@ -1459,3 +1459,45 @@ kind = "set"
 subject = "var:strom"
 fields = { "label" = "Ingår kostnader för hushållsel i hyran (undersökningsåret, år 0)" }
 evidence = "#2102 same-label cluster 'Ingår kostnader för hushållsel i hyran' (3 variables): judged different meaning, medium confidence; Opdefs: STROM0 refers to undersökningsåret (år 0) and STROM1 to the year after (år 1); STROM (2007-2026) is the plain column concurrent with them in 2010-2014."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsagarens-fastighetsforvaltarens-adress-aadress"
+fields = { "description" = "Gatuadress till fastighetsägaren eller fastighetsförvaltaren (kolumn AAdress). 2018 avser den förvaltarens adress, från 2019 ägarens." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger förvaltarens respektive ägarens adress med år.\ncatalog:variable_text:32672:16801:17532\ncatalog:variable_text:32672:17532:17897\ncatalog:variable_text:32672:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommentar-uppgiftslamnaren"
+fields = { "description" = "Kommentar eller övriga upplysningar från uppgiftslämnaren på den ordinarie blanketten. Blanketten med kompletteringsfråga har en egen kommentar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; 2020–2025 kortare text.\ncatalog:variable_text:32714:17532:18262\ncatalog:variable_text:32714:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "description" = "Kommun där lägenheten ligger." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDefinitionen är generisk (delas av 210 variabler); operationaliseringarna är omformuleringar.\ncatalog:variable_text:32715:13879:14245\ncatalog:variable_text:32715:14245:15340\ncatalog:variable_text:32715:15340:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "description" = "Län där lägenheten ligger." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDefinitionen är generisk (delas av 175 variabler); operationaliseringarna är omformuleringar.\ncatalog:variable_text:32721:13879:14245\ncatalog:variable_text:32721:14245:15340\ncatalog:variable_text:32721:15340:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:man"
+fields = { "description" = "Månad från vilken den alternativa månadshyran gäller, om hyran under undersökningsåret ändrats till en annan än januarihyran. 2012–2013 kan ändringen också avse året efter undersökningsåret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSCB-exporten dokumenterar Man0 2012–2013 i två rader (ändring under undersökningsåret och året efter); katalogen visar bara den andra. Båda anges.\ncatalog:variable_text:32725:13879:15340\ncatalog:variable_text:32725:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:manjust"
+fields = { "description" = "Justerad månad, härledd från variabeln Månad med imputering." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; 2024–2025 namnges ursprungsvariabeln.\ncatalog:variable_text:32728:17897:19723\ncatalog:variable_text:32728:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:specialavtal-specialbostad"
+fields = { "description" = "Om lägenheten hyrs ut med specialavtal, till exempel möblerad, som tjänstebostad eller hyresfri; från 2010 även som specialbostad. Sådana lägenheter ingår inte i undersökningens resultat och gallras bort i granskningen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; frågan utvidgades 2010 med specialbostad.\ncatalog:variable_text:32742:13514:14610\ncatalog:variable_text:32742:14610:16071"

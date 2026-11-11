@@ -19834,3 +19834,99 @@ kind = "set"
 subject = "distansundervisning-gymnasieskolan: F16h where key = 'v44894'"
 fields = { "operational_definition" = "Vid undervisning på distans, i vilken grad tycker du att ni som skola hittat former för att tillgodose elevers behov av stöd?" }
 evidence = "Same copy error in the gymnasieskolan table (key v44894, column F16h)."
+
+[[statement]]
+kind = "set"
+subject = "doktorsexaminerades-villkor: F27 where key = 'v5078'"
+fields = { "variable" = "arbete-inom-universitet-hogskola" }
+evidence = "Candidate split, no succession edge (crates/DESIGN.md, one variable one description). SCB VarId 5078 (Arbete) is a generic id used by several surveys: Folkhögskoleuppföljningen 2006 column Arbete asks 'Hade du något arbete under vecka 14 ... (även om det bara avsåg en timme)?', while Doktorsexaminerades villkor 2018 column F27 asks 'Arbetar du inom universitet/högskola i ditt huvudsakliga arbete?'. A different question in a parallel table is a different variable. Registerinformation.csv shows one row per column and year. Operator, #2322 curation under the maintainer's 2026-11-11 delegation.\ncatalog:variable_text:60229:13149:13514\ncatalog:variable_text:60229:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete"
+fields = { "description" = "Om personen hade något arbete, enligt enkätsvar. I folkhögskoleuppföljningen 2006 avses arbete, även bara en timme, under vecka 14 (3–9 april 2006)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad: 2018 års fråga om arbete inom universitet eller högskola är en egen variabel; kvar är frågan om arbete under mätveckan.\ncatalog:variable_text:60229:13149:13514\ncatalog:variable_text:60229:13514:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-inom-universitet-hogskola"
+fields = { "description" = "Om personens huvudsakliga arbete är inom universitet eller högskola, enligt enkätsvar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAndra halvan av delningen av arbete (Doktorsexaminerades villkor 2018, F27).\ncatalog:variable_text:60229:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadssektor"
+fields = { "description" = "Den arbetsmarknadssektor som personen har sitt (huvudsakliga) arbete inom, enligt enkätsvar. Referensperioden följer respektive undersökning: en angiven mätvecka eller det nuvarande arbetet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga i olika undersökningar; frågenummer och mätvecka skiljer, vilket sammanfattas.\ncatalog:variable_text:60258:11323:11688\ncatalog:variable_text:60258:12418:12784\ncatalog:variable_text:60258:12784:13149\ncatalog:variable_text:60258:13149:13514\ncatalog:variable_text:60258:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:avregkod"
+fields = { "description" = "Kod för granskning av enkätsvaret (svarstyp). 2016 anger koden svarande om personen har besvarat enkäten och bortfall om personen inte svarat eller tillhör övertäckningen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna förklarar koden olika utförligt.\ncatalog:variable_text:60292:12418:12784\ncatalog:variable_text:60292:13514:13695\ncatalog:variable_text:60292:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasiebetyg"
+fields = { "description" = "Om personen har fullföljt gymnasieskolan med slutbetyg, samlat betygsdokument eller gymnasieexamen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; 2007 beskrivs uppgiften, 2015 ställs den som enkätfråga med gymnasieexamen.\ncatalog:variable_text:60660:13514:13695\ncatalog:variable_text:60660:16617:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalpvariabel-1-distans"
+fields = { "description" = "Hjälpvariabel i undersökningarna om distansundervisning, sammansatt av bakgrundsvariabler. Vilka variabler den består av skiljer mellan tabeller och år: huvudman, programtyp och kön; huvudman och kön; stadium och kön; eller enbart huvudman." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nEn hjälpvariabel för viktning vars indelning skiljer per tabell och år; indelningarna räknas upp i stället för att delas (historiska kodningar i en kolumn delar inte variabeln).\ncatalog:variable_text:60674:18262:18809\ncatalog:variable_text:60674:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalpvariabel-2-distans"
+fields = { "description" = "Hjälpvariabel i undersökningarna om distansundervisning, sammansatt av bakgrundsvariabler. Vilka variabler den består av skiljer mellan tabeller och år: kommuntyp, årskurs och kön; programtyp, årskurs och kön; eller stadium." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nEn hjälpvariabel för viktning vars indelning skiljer per tabell och år; indelningarna räknas upp.\ncatalog:variable_text:60675:18262:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalpvariabel-3-distans"
+fields = { "description" = "Hjälpvariabel i undersökningarna om distansundervisning i grundskolan och gymnasieskolan, sammansatt av bakgrundsvariabler. Sammansättningen skiljer sig mellan tabeller och år: skolstorlek, programtyp och kön; kommuntyp, programtyp och kön; eller stadium och huvudman." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nEn hjälpvariabel för viktning vars indelning skiljer per tabell och år; indelningarna räknas upp.\ncatalog:variable_text:60676:18262:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:hjalpvariabel-4-distans"
+fields = { "description" = "Hjälpvariabel i undersökningarna om distansundervisning, som bygger på skolstorlek, programtyp och kön i gymnasieskolans tabell och på stadium och kommuntyp i grundskolans tabell." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nEn hjälpvariabel för viktning vars indelning skiljer per tabell; indelningarna räknas upp.\ncatalog:variable_text:60677:18262:18809\ncatalog:variable_text:60677:18809:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudman"
+fields = { "description" = "Huvudman för skolan eller skolenheten där läraren arbetar: för verksamma lärare huvudmannen för den nuvarande huvudsakliga sysselsättningen i skolväsendet, för lärare som inte är verksamma huvudmannen för den senaste tjänsten som lärare eller skolledare. För den som inte finns i lärarregistret 1989/90–2002/03 är värdet tomt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp i två parallella tabeller (verksamma och icke verksamma lärare 2004); texterna anger referenstjänsten per tabell. Rättar ”inomi”.\ncatalog:variable_text:60695:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Personens kön, härlett från personnumrets näst sista siffra." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger härledningen.\ncatalog:variable_text:60782:11323:11688\ncatalog:variable_text:60782:16801:17167\ncatalog:variable_text:60782:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:lilla-n-per-stratum"
+fields = { "description" = "Antal utvalda personer per stratum i urvalet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; ”strata” rättas till ”stratum”.\ncatalog:variable_text:60883:12418:12784\ncatalog:variable_text:60883:13514:13695\ncatalog:variable_text:60883:16617:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:stora-n-per-stratum"
+fields = { "description" = "Antal personer per stratum i populationen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; ”strata” rättas till ”stratum”.\ncatalog:variable_text:61273:11323:11688\ncatalog:variable_text:61273:12418:12784\ncatalog:variable_text:61273:13514:13695"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum-2"
+fields = { "description" = "Det stratum som urvalspersonen tillhör i undersökningens stratifierade urval. Stratifieringen skiljer mellan undersökningarna, till exempel efter kön och ålder i femårsklasser (2014) eller efter kön, födelseland, utbildningsnivå och om personen läst på gymnasieskolan (2015). En totalundersökning (2016) har bara ett stratum." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger respektive undersöknings stratifiering, som exemplifieras.\ncatalog:variable_text:61278:11323:11688\ncatalog:variable_text:61278:16071:16436\ncatalog:variable_text:61278:16617:16801\ncatalog:variable_text:61278:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:vikt"
+fields = { "description" = "Kalibrerad vikt som tar hänsyn till varierande urvalssannolikheter och svarsfrekvenser i olika strata och till hjälpinformation från register, till exempel elevregistret för gymnasieskolan och befolkningsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna upprepar den och 2018 anger vilka register.\ncatalog:variable_text:61406:13514:13695\ncatalog:variable_text:61406:16071:16436\ncatalog:variable_text:61406:16801:17167\ncatalog:variable_text:61406:17532:17897"

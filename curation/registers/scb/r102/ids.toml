@@ -95,6 +95,7 @@ public = "gymnasieskola-betyg"
 "antal-amnen-godkand" = ["Nytt grundskolebetyg utfärdat i gymnasieskolan: Antal_Betyg"]
 "antal-ar" = ["Gymnasieintyg: Antal_Ar"]
 "antal-gymnasiepoang" = ["Slutbetyg: TotalPoang"]
+"kursplan-slutbetyg" = ["Slutbetyg: Stv_Prefix @ 1997-07-01"]
 "lokalt-tillagg-amnesanknuten-praktik" = ["Kursbetyg: Äp"]
 "ar" = ["Gymnasieintyg - kurser: Ar"]
 "ar-avslutad-gymnasieutbildning" = ["Examens- och studiebevis, teknikprogrammet åk 4: Ar"]

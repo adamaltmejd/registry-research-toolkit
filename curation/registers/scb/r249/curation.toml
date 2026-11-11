@@ -5869,3 +5869,141 @@ kind = "set"
 subject = "release:nationella-prov-vartermin/r20006"
 fields = { "table" = "nationella-prov-kalenderar" }
 evidence = "Release '2024' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "var:ar"
+fields = { "description" = "Aktuellt verksamhetsår (kalenderår); i elevtabellen för läsåret 2003/2004 höstterminens verksamhetsår." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDefinitionen är generisk (delas av 67 variabler); läsårstabellens precisering anges för den tabellen.\ncatalog:variable_text:41455:3468:6390\ncatalog:variable_text:41455:12234:12600"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-for-komvuxutbildning"
+fields = { "description" = "Det år personen studerade i komvux. I kursdeltagartabellen för kalenderår 2023 kommer uppgiften från insamlingen av kursdeltagare under vår- och/eller hösttermin samma kalenderår." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna är omformuleringar, en anger insamlingen.\ncatalog:variable_text:41456:18993:19358\ncatalog:variable_text:41456:19358:19539"
+
+[[statement]]
+kind = "set"
+subject = "var:datumavbrott"
+fields = { "description" = "Datum då kursdeltagaren avbröt den kurs som anges i variabeln Kurs i komvux. Till och med 2016 betyder 1900-01-01 att kursen inte avbrutits; från 2017 är fältet då tomt. I kalenderårstabellerna härleds uppgiften från vår- och/eller höstinsamlingen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; kodbytet för ej avbruten kurs 2017 anges som fakta med år.\ncatalog:variable_text:41467:10043:14245\ncatalog:variable_text:41467:14245:14426\ncatalog:variable_text:41467:14426:14610\ncatalog:variable_text:41467:17167:19358\ncatalog:variable_text:41467:19358:19539"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear"
+fields = { "description" = "Födelseår, bestämt från de fyra första siffrorna i personnumret. 1997–1998 anges bara de två sista siffrorna (position 3 och 4), utan sekelsiffror." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; formatet 1997–1998 anges som fakta med år.\ncatalog:variable_text:41469:10043:10408\ncatalog:variable_text:41469:10773:12600\ncatalog:variable_text:41469:15156:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram"
+fields = { "description" = "Namn på det gymnasieprogram som utbildningen huvudsakligen motsvarar. I en del kalenderårstabeller härleds det från vår- och/eller höstinsamlingen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; den ena lägger till härledningen.\ncatalog:variable_text:41475:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunalforbund-id"
+fields = { "description" = "Kod för det kommunalförbund som skolenheten eventuellt tillhör." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i tre formuleringar.\ncatalog:variable_text:41482:17532:17897\ncatalog:variable_text:41482:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunalforbund-namn"
+fields = { "description" = "Namn på det kommunalförbund som skolenheten eventuellt tillhör." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i tre formuleringar.\ncatalog:variable_text:41484:17532:17897\ncatalog:variable_text:41484:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Personens kön, härlett från personnumret: udda elfte siffra ger man, jämn ger kvinna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma operationalisering med och utan kodregeln; stavfelen ”ojämt”/”jämt” rättas.\ncatalog:variable_text:41489:9678:9862\ncatalog:variable_text:41489:10043:10227\ncatalog:variable_text:41489:16071:16252\ncatalog:variable_text:41489:18993:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:minpoang"
+fields = { "description" = "Det minsta antal poäng som slutbetyget eller gymnasieexamen ska innehålla, vilket beror på datum för kursen. I en del kalenderårstabeller härleds det från vår- och/eller höstinsamlingen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; den ena lägger till härledningen.\ncatalog:variable_text:41508:15156:15340\ncatalog:variable_text:41508:15340:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:namn-juridiska-enheten"
+fields = { "description" = "Utbildningsanordnarens officiella namn som juridisk enhet, i klartext. Namn och namnändringar registreras av den myndighet som tilldelar organisationsnummer och förs via Skatteverkets organisationsnummerregister till FDB." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger att det är utbildningsanordnarens namn och hur namnet uppdateras.\ncatalog:variable_text:41509:18262:18444\ncatalog:variable_text:41509:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:niva-vuxenutbildning"
+fields = { "description" = "Nivå på studierna i vuxenutbildning inom Komvux, Statens skolor för vuxna (SSV) eller Nationellt centrum för flexibelt lärande (CFL). För kursdeltagare härleds den från variabeln Kurs i komvux. För elever bestäms den 1996–2016 utifrån elevens förbrukade poäng, i läsårstabellerna 1997–2009 utifrån den kurs där eleven förbrukat flest undervisningstimmar, och 2008–2024 härleds den från variabeln Kurs i komvux. Har eleven läst på flera nivåer väljs 2019–2020 nivån där eleven förbrukat flest poäng och 2021–2024 nivån där eleven läst flest poäng; vid lika många poäng väljs den högsta nivån." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; härledningen per tabelltyp och regeln från 2019 anges med år.\ncatalog:variable_text:41510:3468:6390\ncatalog:variable_text:41510:8582:14245\ncatalog:variable_text:41510:14245:19358\ncatalog:variable_text:41510:19358:19539"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr"
+fields = { "description" = "Personnummer för eleven eller kursdeltagaren." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; den generiska personnummerdefinitionen (delad av 96 variabler) tas inte med. Vårterminen 2015 års operationalisering är TPoang:s text (exportfel) och står kvar som källtext.\ncatalog:variable_text:41516:3468:6390\ncatalog:variable_text:41516:8582:18993\ncatalog:variable_text:41516:18993:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:provbet"
+fields = { "description" = "Betyg på nationellt prov, ett sammanvägt provbetyg utifrån de ingående delproven (till och med 2020 de fyra delproven)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; antalet delprov anges för åren det står.\ncatalog:variable_text:41524:15887:18628\ncatalog:variable_text:41524:18628:18809\ncatalog:variable_text:41524:18809:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:provn"
+fields = { "description" = "Om eleven eller kursdeltagaren genomgått prövning, det vill säga en bedömning av kunskaper mot kursplanens kunskapsmål och betygskriterier. I elevtabellerna bestäms den utifrån elevens lästa poäng." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger härledningen i elevtabellerna.\ncatalog:variable_text:41525:18262:19358\ncatalog:variable_text:41525:19358:19539"
+
+[[statement]]
+kind = "set"
+subject = "var:provversion"
+fields = { "description" = "Version av det nationella provet. Komvux kan använda dels de prov som tas fram för gymnasieskolan och kommer ut varje höst- och vårtermin, dels det prov som konstrueras för vuxenutbildningen och kommer ut i september varje år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; den kortare texten anger bara insamlingen.\ncatalog:variable_text:41526:15887:18628\ncatalog:variable_text:41526:18628:18809"
+
+[[statement]]
+kind = "set"
+subject = "var:skolenhetskod"
+fields = { "description" = "Kod för skolenheten, en organisatorisk enhet på en adress där lärare och/eller elever finns (inte en byggnad). I provtabellerna avses den skolenhet som rapporterat resultatet på det nationella provet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen i provtabellerna anger vilken skolenhet som avses.\ncatalog:variable_text:41529:15706:18628\ncatalog:variable_text:41529:18628:18809"
+
+[[statement]]
+kind = "set"
+subject = "var:skolenhetskodkd"
+fields = { "description" = "Kod för den skolenhet som kursdeltagaren är inskriven på under aktuell termin. Skolenhet är en organisatorisk enhet på en adress där lärare och/eller elever finns." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text med och utan ordet ”Skolenhetskod”.\ncatalog:variable_text:41530:15887:16801\ncatalog:variable_text:41530:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:skolkod"
+fields = { "description" = "Kod för skolan, en organisatorisk enhet på en adress där lärare och/eller elever finns. Till och med 1997 anger position 1–4 kommun, position 5–7 rektorsområde och position 8 löpnummer inom rektorsområdet, och skolornas namn finns inte." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; kodstrukturen anges i de äldsta tabellerna och gäller samma kod.\ncatalog:variable_text:41532:3468:6390\ncatalog:variable_text:41532:6574:8401\ncatalog:variable_text:41532:9496:9678"
+
+[[statement]]
+kind = "set"
+subject = "var:statsbidrag"
+fields = { "description" = "Om utbildningen är helt eller delvis finansierad med statsbidrag enligt förordningen (2009:43) om statsbidrag för yrkesinriktad gymnasial vuxenutbildning eller förordningen (2010:2016) om statsbidrag för lärlingsutbildning för vuxna. För kursdeltagare avser den kursplatsen; för elever att mer än hälften av elevens förbrukade poäng är på sådana kursplatser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen skiljer på kursdeltagare och elever efter tabell.\ncatalog:variable_text:41538:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "var:suppg"
+fields = { "description" = "Vilken skriftlig uppgift som valts till delprov i det nationella provet för kurserna Svenska 1 eller Svenska som andraspråk 1, Svenska 3 eller Svenska som andraspråk 3, Engelska 5 eller Engelska 6. Kursen anges i variabeln Kurs." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; 2014 års ena variant saknar Engelska 5.\ncatalog:variable_text:41543:15887:16071\ncatalog:variable_text:41543:16071:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-undervisning"
+fields = { "description" = "Om kursen bedrivits på dagtid, kvällstid (kursen startade efter 18.00), på distans eller som ej schemalagd undervisning (annan förläggning). Distans finns som alternativ från 2016. För elever avses kursen där eleven läst flest poäng." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; distans som nytt alternativ 2016 anges med år, och elev- och kursdeltagartabellerna skiljs.\ncatalog:variable_text:41556:3468:6390\ncatalog:variable_text:41556:9496:9678\ncatalog:variable_text:41556:10592:10773\ncatalog:variable_text:41556:14061:16801\ncatalog:variable_text:41556:16801:17167\ncatalog:variable_text:41556:17897:19358\ncatalog:variable_text:41556:19358:19539"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsatgard-vux"
+fields = { "description" = "Om personen fått någon särskild utbildningsåtgärd i Komvux, Statens skolor för vuxna (SSV) eller Nationellt centrum för flexibelt lärande (CFL), till exempel att personen endast varit inskriven för att validera sina kunskaper. För elever avses åtgärden på kursen med flest förbrukade undervisningstimmar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna ger ett exempel respektive elevtabellernas urval.\ncatalog:variable_text:41560:10043:10408\ncatalog:variable_text:41560:10408:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:valid"
+fields = { "description" = "Om eleven eller kursdeltagaren genomgått validering, en strukturerad bedömning, dokumentation och erkännande av kunskaper och kompetens oberoende av hur de förvärvats. I elevtabellerna bestäms den 2020 utifrån elevens förbrukade poäng och 2021–2024 utifrån elevens lästa poäng." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger härledningen i elevtabellerna.\ncatalog:variable_text:41563:18262:19358\ncatalog:variable_text:41563:19358:19539"

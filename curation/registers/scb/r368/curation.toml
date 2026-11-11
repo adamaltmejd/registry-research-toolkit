@@ -1240,3 +1240,9 @@ kind = "set"
 subject = "var:yrkesbaserad-seg-mor"
 fields = { "label" = "Yrkesbaserad socioekonomisk gruppering (biologisk mor)" }
 evidence = "#2102 same-label cluster 'Yrkesbaserad socioekonomisk gruppering' (2 variables): judged different meaning, high confidence; Opdefs: YSEG_Far refers to biologisk far, YSEG_Mor to biologisk mor."
+
+[[statement]]
+kind = "set"
+subject = "var:utlbakgr"
+fields = { "description" = "Om personen har utländsk eller svensk bakgrund. Svensk bakgrund har den som är född i Sverige och har högst en förälder född utrikes; utländsk bakgrund har den som är född utrikes eller vars båda föräldrar är födda utrikes. Saknas förälderns födelseland antas föräldern vara född i samma land som personen (inrikes eller utrikes). Saknas födelseland för både personen och föräldrarna anges Uppgift saknas. Uppgiften hämtas från Befolkningsregistret i en fast prioritetsordning mellan flera tidpunkter (årsskiftet, halvårsskiftet eller ett kvartalsskifte); ordningen har ändrats mellan åren." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition och härledning; texterna skiljer sig bara i vilka referenstidpunkter i Befolkningsregistret som prövas och i vilken ordning, vilket sammanfattas utan att räkna upp varje års ordning.\ncatalog:variable_text:41233:16436:16617\ncatalog:variable_text:41233:16617:16801\ncatalog:variable_text:41233:16983:19539\ncatalog:variable_text:41233:19539:19723\ncatalog:variable_text:41233:19723:19905"

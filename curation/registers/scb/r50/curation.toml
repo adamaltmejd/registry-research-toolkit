@@ -926,3 +926,9 @@ subject = "lonestrukturstatistik-privat-sektor-slp: OvtTim @1997-01-01..1997-12-
 fact = { "entity" = "occurrence", "fields" = { "label" = "Antal övertidstimmar", "definition" = "Antal övertidstimmar", "type" = "decimal", "sensitive" = false, "identifier" = false } }
 evidence = "private:ev-3902"
 caveat = "SCB's Registerinformation export lists OvtTim only from 1998. SCB's documentation of SLP 1997-2000 (https://www.scb.se/contentassets/97b958f7258b45d284f96669d5e4590d/am0103_do_19972000.pdf, pinned as catalog/evidence/scb/am0103_do_19972000.pdf in the inputs repository) lists overtime hours in the measurement period for 1997, from the employer's payroll system; it names that column Timmar97, the same name it gives worked hours, so the delivered spelling OvtTim rests on the 1998 edition and on a delivery of the 1997 file. Label, definition and type follow the export's 1998 edition."
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer"
+fields = { "description" = "Unikt löpnummer för observationen, satt maskinellt när inkomna uppgifter laddas till databasen. 1996 är det numret på den rad där uppgifterna lagras i registret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma löpnummer; 1996 års kolumn RadNr beskrivs som radnummer.\ncatalog:variable_text:49722:9496:9862\ncatalog:variable_text:49722:10227:12418\ncatalog:variable_text:49722:12418:12784"

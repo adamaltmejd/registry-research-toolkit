@@ -1678,3 +1678,15 @@ kind = "set"
 subject = "var:typ-av-diagnos"
 fields = { "description" = "Anger om diagnoskoden i DIA är markerad som huvuddiagnos (1) eller bidiagnos (0). Finns i flerfil." }
 evidence = "PAR_SV row 106, PAR_OV row 35, PAR_TV row 199 (identical definition and codes 1=Huvuddiagnos; 0=bidiagnos).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 35, 106, 199."
+
+[[statement]]
+kind = "set"
+subject = "var:ar"
+fields = { "description" = "Årtal för den händelse som raden avser: i slutenvården år då patienten skrevs ut, i öppenvården år då vårdkontakten ägde rum och i tvångsvården år då perioden med psykiatrisk vårdform avslutades. Är patienten fortfarande inskriven, eller saknas avslutsdatum, anges år för den sista period som ingår i leveransen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma årskolumn i patientregistrets tre delar; händelsen som året avser följer delregistret.\ncatalog:variable_text:63983:-2192:9862\ncatalog:variable_text:63983:9862:14610\ncatalog:variable_text:63983:14610:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:lopnr-oppenvardskontakt"
+fields = { "description" = "Unikt internt löpnummer för varje vårdkontakt (i tvångsvården för varje period med psykiatrisk vårdform). Externa beställare kan vid behov få variabeln pseudonymiserad med en ärendeunik nyckel." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma löpnummerkolumn IDNR; vad som numreras följer delregistret.\ncatalog:variable_text:64057:-2192:9862\ncatalog:variable_text:64057:19723:2932897"

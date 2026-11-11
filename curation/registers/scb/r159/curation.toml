@@ -229,3 +229,45 @@ kind = "set"
 subject = "var:tatortskod"
 fields = { "label" = "Tätort (tätortskod)" }
 evidence = "#2102 same-label cluster 'Tätort' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; TATORTSKOD has a code list of tätortskoder (e.g. 0115TB101=Brottby) while TATORT has none; opdefs are otherwise identical (Registret Tätorter YYYY), so 'tätortskod' holds for every TATORTSKOD occurrence."
+
+[[statement]]
+kind = "set"
+subject = "var:folkmangd"
+fields = { "description" = "Antal personer folkbokförda i tätorten. Antal folkbokförda per adresskoordinat i Registret över totalbefolkningen kombineras med Lantmäteriets adressregister, och befolkningen klassas med punkt-i-polygon-teknik som boende i eller utanför tätort." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna beskriver samma metod med olika referensår.\ncatalog:variable_text:51683:7305:7670\ncatalog:variable_text:51683:9131:9496\ncatalog:variable_text:51683:10957:11323\ncatalog:variable_text:51683:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "description" = "Kommunkod, med kod och namn från SCB:s register över regionala indelningar. Till och med 2020 kommer uppgiften från Lantmäteriets fastighetsregister, 2023 från Lantmäteriets Topografi 10." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDefinitionen är generisk; källbytet 2023 anges som fakta med år.\ncatalog:variable_text:51684:7305:7670\ncatalog:variable_text:51684:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn"
+fields = { "description" = "Kommunens namn, med kod och namn från SCB:s register över regionala indelningar. Till och med 2020 kommer uppgiften från Lantmäteriets fastighetsregister, 2023 från Lantmäteriets Topografi 10." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDefinitionen är generisk; källbytet 2023 anges som fakta med år.\ncatalog:variable_text:51685:7305:7670\ncatalog:variable_text:51685:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "description" = "Länskod, med kod och namn från SCB:s register över regionala indelningar. Till och med 2020 kommer uppgiften från Lantmäteriets fastighetsregister, 2023 från Lantmäteriets Topografi 10." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDefinitionen är generisk; källbytet 2023 anges som fakta med år.\ncatalog:variable_text:51686:7305:7670\ncatalog:variable_text:51686:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:tatort"
+fields = { "description" = "Statistisk tätort, det vill säga sammanhängande bebyggelse med minst 200 invånare, enligt det register över tätorter som undersökningen själv producerar för respektive år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna skiljer bara i registrets årtal.\ncatalog:variable_text:51691:7305:7670\ncatalog:variable_text:51691:9131:9496\ncatalog:variable_text:51691:10957:11323\ncatalog:variable_text:51691:12784:13149\ncatalog:variable_text:51691:14610:14975\ncatalog:variable_text:51691:16436:16801\ncatalog:variable_text:51691:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:tatortskod"
+fields = { "description" = "Kod för statistisk tätort, det vill säga sammanhängande bebyggelse med minst 200 invånare, enligt det register över tätorter som undersökningen själv producerar för respektive år. 2020 avgränsades tätorterna med Registret över totalbefolkningen och företagsregistret (referenstidpunkt 2018-12-31) kombinerade med Lantmäteriets adressregister (folkbokförda och anställda per adresskoordinat) samt Lantmäteriets fastighetskarta (uttag januari 2019)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna skiljer i registrets årtal, och 2020 beskriver avgränsningen, som anges utan årtal.\ncatalog:variable_text:51692:7305:7670\ncatalog:variable_text:51692:9131:9496\ncatalog:variable_text:51692:10957:11323\ncatalog:variable_text:51692:12784:13149\ncatalog:variable_text:51692:14610:14975\ncatalog:variable_text:51692:16436:16801\ncatalog:variable_text:51692:17532:17897\ncatalog:variable_text:51692:18262:18628\ncatalog:variable_text:51692:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:tatortskod-old"
+fields = { "description" = "Tätortskod enligt det äldre systemet för kodsättning. Tätort är sammanhängande bebyggelse med högst 200 meter mellan husen och minst 200 invånare, enligt det register över tätorter som undersökningen själv producerar för respektive år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna skiljer i registrets årtal och anger från 2010 att koden följer det äldre systemet.\ncatalog:variable_text:51693:7305:7670\ncatalog:variable_text:51693:9131:9496\ncatalog:variable_text:51693:12784:13149\ncatalog:variable_text:51693:14610:14975\ncatalog:variable_text:51693:16436:16801\ncatalog:variable_text:51693:17532:17897"

@@ -8666,3 +8666,171 @@ kind = "set"
 subject = "var:termin"
 fields = { "description" = "Den termin då det nya slutbetyget från grundskolan utfärdades." }
 evidence = "Only occurrence: nytt-grundskolebetyg, key v1579, opdef 'Anger den termin som det nya slutbetyget från grundskolan är utfärdat'. The short definition ('ordningsnummer i elevens utbildning') is the generic text of key v1579 shared with other registers; no code list is given, so no format is stated."
+
+[[statement]]
+kind = "set"
+subject = "slutbetyg: Stv_Prefix where key = 'v37468'"
+fields = { "variable" = "kursplan-slutbetyg" }
+evidence = "Candidate split, no succession edge (crates/DESIGN.md). SCB VarId 37468 (Kurskategori eller typ av kurs) is used for two different codings in parallel tables: Slutbetyg 1997–2005 column Stv_Prefix 'Anger vilken kursplan som eleven studerat efter', and Gymnasieintyg - kurser 2011–2013 column Markering 'Anger om betyget i variabeln Betyg hör ihop med en grundskolekurs, gymnasiekurs eller kurs inom Svenska för invandrare'. One raw row per column-year. The Markering half keeps the existing id (its ledger anchor). Operator, #2322 curation under the maintainer's 2026-11-11 delegation.\ncatalog:variable_text:29867:10043:12965\ncatalog:variable_text:29867:15156:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-kurs"
+fields = { "description" = "Om betyget i gymnasieintyget hör till en grundskolekurs, en gymnasiekurs eller en kurs i svenska för invandrare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad: slutbetygens kursplansprefix är en egen variabel; kvar är markeringen i gymnasieintygens kurstabell.\ncatalog:variable_text:29867:15156:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:kursplan-slutbetyg"
+fields = { "description" = "Vilken kursplan eleven studerat efter, angiven i slutbetyget." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAndra halvan av delningen av typ-av-kurs (Stv_Prefix i slutbetyg).\ncatalog:variable_text:29867:10043:12965"
+
+[[statement]]
+kind = "set"
+subject = "var:a-poang"
+fields = { "description" = "Summa kurspoäng för de kurser där eleven fått betyget A." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått: ”poäng för varje A-betyg” och ”totalt antal kurspoäng med betyg A” beskriver samma summa.\ncatalog:variable_text:29334:15156:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ar"
+fields = { "description" = "Antal år eleven finns i Registret över elever i gymnasieskolan, härlett genom sambearbetning med det registret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna är olika formulerade.\ncatalog:variable_text:29415:12600:15156\ncatalog:variable_text:29415:15156:15522\ncatalog:variable_text:29415:15887:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-gymnasiepoang"
+fields = { "description" = "Summa gymnasiepoäng: totala antalet poäng för de kurser eleven fått betyg i, härlett ur betygs- och kursvariablerna. Från 2013 räknas kurser med betyget ”-” inte med." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; undantaget för betyget ”-” är angivet från 2013 och anges med år.\ncatalog:variable_text:29416:12600:13695\ncatalog:variable_text:29416:13695:15887\ncatalog:variable_text:29416:15887:16617\ncatalog:variable_text:29416:16617:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:ar"
+fields = { "description" = "Det kalenderår uppgifterna avser; i tabellen över nya grundskolebetyg årtalet för vårterminen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; tabellen över nya grundskolebetyg anger vårterminens år.\ncatalog:variable_text:29418:15156:16252"
+
+[[statement]]
+kind = "set"
+subject = "var:avgangen"
+fields = { "description" = "Markerar om eleven räknas som avgången från gymnasieskolan. Enligt Skolverkets definition är eleven avgången med gymnasieexamen eller studiebevis (GY11) om minst 2 500 poäng i totalpoäng, exklusive utökade kurser och kurser med betyget ”-”; 2013–2015 räknas även slutbetyg enligt LPF94." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; slutbetyg enligt LPF94 ingår bara 2013–2015 och anges med år.\ncatalog:variable_text:29422:15887:16617\ncatalog:variable_text:29422:16617:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:b-poang"
+fields = { "description" = "Summa kurspoäng för de kurser där eleven fått betyget B." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått: ”poäng för varje B-betyg” och ”totalt antal kurspoäng med betyg B” beskriver samma summa.\ncatalog:variable_text:29425:15156:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:c-poang"
+fields = { "description" = "Summa kurspoäng för de kurser där eleven fått betyget C." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått: ”poäng för varje C-betyg” och ”totalt antal kurspoäng med betyg C” beskriver samma summa.\ncatalog:variable_text:29568:15156:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:d-poang"
+fields = { "description" = "Summa kurspoäng för de kurser där eleven fått betyget D." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått: ”poäng för varje D-betyg” och ”totalt antal kurspoäng med betyg D” beskriver samma summa.\ncatalog:variable_text:29569:15156:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:e-poang"
+fields = { "description" = "Summa kurspoäng för de kurser där eleven fått betyget E." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått: ”poäng för varje E-betyg” och ”totalt antal kurspoäng med betyg E” beskriver samma summa.\ncatalog:variable_text:29571:15156:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:elevtyp"
+fields = { "description" = "Typ av elev, till exempel efter betygstyp eller annan indelning. För teknikprogrammets fjärde år visar den om eleven fått ett samlat betygsdokument, slutbetyg eller motsvarande från Waldorf- eller IB-utbildning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; tabellen för teknikprogrammets fjärde år anger indelningen.\ncatalog:variable_text:29574:10043:10408\ncatalog:variable_text:29574:12600:15156\ncatalog:variable_text:29574:15156:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:f-poang"
+fields = { "description" = "Summa kurspoäng för de kurser där eleven fått betyget F." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått: ”poäng för varje F-betyg” och ”totalt antal kurspoäng med betyg F” beskriver samma summa.\ncatalog:variable_text:29580:15156:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:g-poang"
+fields = { "description" = "Summa kurspoäng för de kurser där eleven har betyget Godkänd (G), härledd ur betygsvariablerna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i båda tabellerna.\ncatalog:variable_text:29599:12600:15156\ncatalog:variable_text:29599:15156:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:grundlaggande-behorighet-hogskola"
+fields = { "description" = "Om eleven har uppnått grundläggande behörighet till högskola och universitet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition alla år; operationaliseringarna är olika formulerade.\ncatalog:variable_text:29603:9678:14061\ncatalog:variable_text:29603:14061:14791\ncatalog:variable_text:29603:14791:15887\ncatalog:variable_text:29603:15887:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:ig-poang"
+fields = { "description" = "Summa kurspoäng för de kurser där eleven har betyget Icke godkänd (IG), härledd ur betygsvariablerna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i båda tabellerna.\ncatalog:variable_text:29623:12600:15156\ncatalog:variable_text:29623:15156:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:jmfmetod"
+fields = { "description" = "Anger om den gamla metoden (modellen för slutbetyg före 2010) eller den nya metoden (modellen för slutbetyg 2010 och framåt) har använts för att beräkna jämförelsetalet för betygen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2010–2013 namnger de två modellerna.\ncatalog:variable_text:29633:14426:14791\ncatalog:variable_text:29633:14791:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:mvg-poang"
+fields = { "description" = "Summa kurspoäng för de kurser där eleven har betyget Mycket väl godkänd (MVG), härledd ur betygsvariablerna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i alla tabeller.\ncatalog:variable_text:29736:12600:15156\ncatalog:variable_text:29736:15156:15522\ncatalog:variable_text:29736:15887:16617"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr"
+fields = { "description" = "Elevens personnummer, identitetsbegrepp för personer som tilldelas av Skatteverket. Personnumret består av födelsetid (8 siffror), födelsenummer (3 siffror) och en kontrollsiffra." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; Skattemyndigheten heter Skatteverket.\ncatalog:variable_text:29743:912:15156\ncatalog:variable_text:29743:15156:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-far"
+fields = { "description" = "Personnummer för elevens biologiska far. Blankt innebär att ingen uppgift om far har hittats i registret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; den ena tabellen anger att fadern är den biologiska, den andra vad blankt betyder.\ncatalog:variable_text:29744:10773:15156\ncatalog:variable_text:29744:15156:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-mor"
+fields = { "description" = "Personnummer för elevens biologiska mor. Blankt innebär att ingen uppgift om mor har hittats i registret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; den ena tabellen anger att modern är den biologiska, den andra vad blankt betyder.\ncatalog:variable_text:29745:10773:15156\ncatalog:variable_text:29745:15156:15522"
+
+[[statement]]
+kind = "set"
+subject = "var:skolans-identitetsnummer"
+fields = { "description" = "Identitetsnummer för den skola eleven fick sitt betyg från: slutbetyg, gymnasieintyg eller nytt grundskolebetyg beroende på tabell. Skolan är en administrativ enhet på en adress där lärare och/eller elever finns, inte en byggnad eller fastighet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger per tabell vilket betyg skolan avser.\ncatalog:variable_text:29793:9678:14791\ncatalog:variable_text:29793:14791:15156\ncatalog:variable_text:29793:15156:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:skolenhetskod"
+fields = { "description" = "Skolenhetskod för den skolenhet eleven fick sitt betyg från: gymnasieintyg eller nytt grundskolebetyg beroende på tabell. Skolenheten är en administrativ enhet på en adress där lärare och/eller elever finns, inte en byggnad eller fastighet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger per tabell vilket betyg skolenheten avser.\ncatalog:variable_text:29795:15887:19905"
+
+[[statement]]
+kind = "set"
+subject = "var:startar"
+fields = { "description" = "Det år eleven påbörjade gymnasieutbildningen, framtaget genom sambearbetning med Registret över elever i gymnasieskolan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna är olika formulerade.\ncatalog:variable_text:29814:12600:13330\ncatalog:variable_text:29814:14791:15522\ncatalog:variable_text:29814:15887:17713"
+
+[[statement]]
+kind = "set"
+subject = "var:tid-avgtraff"
+fields = { "description" = "Om eleven redan tidigare finns i registret över avgångna från gymnasieskolan, det vill säga redan har ett slutbetyg eller avgångsdokument. Härleds genom kontroller mot tidigare årgångar av registren över avgångna elever, från 2016 högst sju årgångar. 1 = eleven har slutbetyg, gymnasieexamen, IB-diplom eller studiebevis om minst 2 500 poäng, räknat utan markerade och utökade kurser, och har inte IM som utbildningsform vid utbildningens slut; 0 = eleven saknar detta." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2016–2025 anger koderna och antalet årgångar, 2014–2016 samma poäng- och IM-villkor.\ncatalog:variable_text:29862:16252:16983\ncatalog:variable_text:29862:16983:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:totalpoangutanu"
+fields = { "description" = "Summa gymnasiepoäng för de kurser eleven fått betyg i, exklusive utökade kurser och kurser med betyget ”-”." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition, olika formulerad.\ncatalog:variable_text:29865:15887:16617\ncatalog:variable_text:29865:16617:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:vg-poang"
+fields = { "description" = "Summa kurspoäng för de kurser där eleven har betyget Väl godkänd (VG), härledd ur betygsvariablerna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i alla tabeller.\ncatalog:variable_text:29883:12600:15156\ncatalog:variable_text:29883:15156:15522\ncatalog:variable_text:29883:15887:16617"

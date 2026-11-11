@@ -1134,3 +1134,21 @@ kind = "set"
 subject = "var:verksamhetskommun"
 fields = { "label" = "Kommun (verksamhetskommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; KomGrupp is the SKL municipality group; VerkKom is the municipality of the unit."
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Personens kön, härlett från näst sista siffran i personnumret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text med verben ”härleds” och ”skapas”.\ncatalog:variable_text:19911:16358:16359\ncatalog:variable_text:19911:16723:16724"
+
+[[statement]]
+kind = "set"
+subject = "var:person-orgnr"
+fields = { "description" = "Organisationsnummer för förskolan (barntabellen) respektive verksamheten (personaltabellen)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDefinitionen är generisk (delas av 94 variabler); operationaliseringen skiljer bara på förskolans och verksamhetens nummer efter tabell.\ncatalog:variable_text:19916:16358:16359"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr"
+fields = { "description" = "Barnets personnummer i barntabellen och personalens i personaltabellen. Personnumret består av födelsetid (8 siffror), födelsenummer (3 siffror) och en kontrollsiffra." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDefinitionen är generisk; operationaliseringarna skiljer på barnets och personalens nummer efter tabell och anger personnumrets delar.\ncatalog:variable_text:19917:16358:16359\ncatalog:variable_text:19917:16723:16724"

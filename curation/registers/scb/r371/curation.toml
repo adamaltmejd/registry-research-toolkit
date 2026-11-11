@@ -31872,3 +31872,57 @@ kind = "set"
 subject = "var:btpet"
 fields = { "description" = "Antal intjänade år för tilläggspension (TP)." }
 evidence = "I samma serie anger BTPEN 'antal år man måste jobbat för att få full tilläggspension' (v27006), BJUSTTP 'uppskjutet uttag av tilläggspension' (v27030) och BTPEMP 'medelpoäng och medelintjänande år' (v37548). Bara operationaliseringen i 2013 års utgåva av BTPET säger 'Tjänstepensionsår'.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=476430 (r12997)"
+
+[[statement]]
+kind = "set"
+subject = "var:bidnrh"
+fields = { "description" = "Urvalsnummer för HEK-hushållet enligt RTB: en anonymiserad nyckel som identifierar enskilda hushåll utifrån familjehushåll." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma nyckel; den ena texten är avkortad och den andra är en generell text om anonymiserade id-nummer.\ncatalog:variable_text:15510:13149:14245\ncatalog:variable_text:15510:14245:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:blan"
+fields = { "description" = "Kod för det län där personen är folkbokförd, i vissa tabeller härledd ur läns- och kommunkoden (BLK)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma länskod; den generella texten om länsindelning delas av många variabler och tas inte med.\ncatalog:variable_text:15529:13149:16071\ncatalog:variable_text:15529:16801:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:familjehushallsidentitet"
+fields = { "description" = "Identitet för familjehushållet: en unik nyckel för enskilda hushåll baserad på familjehushåll. Familjehushållet bildas utifrån bostadshushållet (BIDNRHB), RTB-variablerna familjeställning (BFAMST) och familjetyp (BFAMTP) samt IoT-variablerna hushållsställning (BHSTALL) och hushållstyp (BHTYPHB) för bostadshushåll." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text i olika ordningsföljd; stavningen ”Identitiet” rättad.\ncatalog:variable_text:15735:13149:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsid"
+fields = { "description" = "Unik identitet för enskilda bostadshushåll: en lägenhetsnyckel baserad på folkbokföring på lägenhet. För bortfallet imputeras hushållet som RTB-familjen, det vill säga de personer som är folkbokförda på samma fastighet och har relationer med varandra." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma hushållsnyckel; den andra texten anger bara att den skapas när registret skapas.\ncatalog:variable_text:15869:16071:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:scbid"
+fields = { "description" = "Identitetsnummer som SCB tilldelar individen. Ett nytt nummer skapas varje år och nyckelfilen sparas i högst ett år; i tabeller där numret är LINDA:s identitetsnummer skapas det i stället för varje uppdrag och nyckelfilen sparas i högst tre år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma slags löpnummer; texterna skiljer FASIT:s och LINDA:s nummer, och båda reglerna anges.\ncatalog:variable_text:16498:13149:13514\ncatalog:variable_text:16498:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:sunniva"
+fields = { "description" = "Nivån för personens genomförda utbildning, klassificerad enligt Svensk utbildningsnomenklatur (SUN)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma utbildningsnivå enligt SUN; den längre texten är generell och delas av många variabler.\ncatalog:variable_text:16722:13149:13879\ncatalog:variable_text:16722:13879:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-hushallsbildning"
+fields = { "description" = "Typ av bildning av personens bostadshushåll i FASIT: RTB-familj eller övrigt bostadshushåll enligt lägenhetsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; den senare texten anger vad typerna är.\ncatalog:variable_text:16845:16071:17167\ncatalog:variable_text:16845:17167:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:zkvotk10"
+fields = { "description" = "Utnyttjandekvot för blankett K10 (Skatteverket): hur stor andel av gränsbeloppet som utnyttjas. Enligt förenklingsregeln beräknas den som V4504 (ruta 1.6) dividerat med V4503 (ruta 1.5), enligt huvudregeln som V4525 (ruta 2.7) dividerat med V4524 (ruta 2.6)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma beräkning; den senare texten anger reglerna och rutorna. Stavfelet ”alterrnativt” försvinner.\ncatalog:variable_text:17066:15340:17897\ncatalog:variable_text:17066:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:zkvotk10a"
+fields = { "description" = "Utnyttjandekvot för blankett K10A (Skatteverket): hur stor andel av gränsbeloppet som utnyttjas, beräknad som V4820 (ruta 1.6) dividerat med V4810 (ruta 1.5)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma beräkning; den senare texten anger rutorna.\ncatalog:variable_text:17067:15340:17897\ncatalog:variable_text:17067:17897:19723"

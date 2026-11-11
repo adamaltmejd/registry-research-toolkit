@@ -40,6 +40,7 @@ public = "inkvarteringsstatistik"
 "gatuadress" = ["Camping: BelAdress"]
 "gruppresenarer" = ["Hotell, stugbyar och vandrarhem: Grp"]
 "imputerad" = ["Hotell, stugbyar och vandrarhem: ImputLogiInt"]
+"imputerad-manad" = ["Hotell, stugbyar och vandrarhem: ImputMan"]
 "kommun" = ["Camping: Kommun"]
 "konf" = ["Hotell, stugbyar och vandrarhem: Konf"]
 "lan" = ["Camping: Lan"]

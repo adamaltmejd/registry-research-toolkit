@@ -2680,3 +2680,15 @@ kind = "set"
 subject = "investeringsenkaten-resultat: bkelinst where key = 'v56'"
 fields = { "label" = "BKelinst" }
 evidence = "#2141 Q3 (maintainer 2026-11-03): the BKelinst block repeats fold. The SCB metadata maps the one BKelinst column of investeringsenkaten-resultat to 16 variables at once (each under another variable's id, label and code list); they are one physical column. Its meaning is not documented, so the label is the column code."
+
+[[statement]]
+kind = "set"
+subject = "var:kvartal"
+fields = { "description" = "Det kvartal som insamlingen avser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; stavfelet ”insmalingen” rättat. Den generella kvartalsdefinitionen tas inte med.\ncatalog:variable_text:37191:17897:19358\ncatalog:variable_text:37191:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:variabelnummer"
+fields = { "description" = "Identitet för den undersökta variabel som företaget har lämnat värden för. 2016–2018 anger första positionen även perioden: 0 eller 5 helår, 1–4 kvartal 1–4 och 6 prognosår. Från 2019 är det en kod: NTOBA (ny-, till- och ombyggnad av byggnader och anläggningar), BOS (bostäder), MIL3 (maskiner och inventarier med en livslängd på minst 3 år) och KBA (köp av byggnader och anläggningar), med prefixet P för planerade investeringar kommande helår." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; kodningen beskrivs olika i perioder och anges med år.\ncatalog:variable_text:37225:10957:14245\ncatalog:variable_text:37225:16801:17897\ncatalog:variable_text:37225:17897:19723"

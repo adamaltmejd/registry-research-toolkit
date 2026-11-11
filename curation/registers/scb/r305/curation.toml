@@ -1344,3 +1344,21 @@ kind = "set"
 subject = "var:sunniva-old-far"
 fields = { "label" = "Faderns utbildningsnivå (SUN 2000, äldre indelning i sju nivåer)" }
 evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (7 variables): judged different meaning, high confidence; Several SUN codings: 3-digit SUN 2000, 7-level, 3-level, old 7-level, grouped SUN 2000, SUN 2020 and grouped SUN 2020."
+
+[[statement]]
+kind = "set"
+subject = "var:ar"
+fields = { "description" = "Kalenderår som uppgifterna avser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma årsvariabel i olika formuleringar.\ncatalog:variable_text:28867:14245:14426\ncatalog:variable_text:28867:15706:15887\ncatalog:variable_text:28867:16801:16983"
+
+[[statement]]
+kind = "set"
+subject = "var:inlasdat"
+fields = { "description" = "Datum då uppgifterna lästes in i databasen; 2012 anges även klockslaget." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma inläsningsdatum; 2012 ingår även tidpunkt.\ncatalog:variable_text:28875:15340:15522\ncatalog:variable_text:28875:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "var:skolans-namn"
+fields = { "description" = "Namn på den skola där eleven genomförde de nationella proven och som rapporterat provresultatet. Har eleven bytt skola efter provet anges elevens senaste skola." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma skolnamn med samma regel för skolbyte, olika formulerat.\ncatalog:variable_text:28916:14245:14426\ncatalog:variable_text:28916:14610:14791"

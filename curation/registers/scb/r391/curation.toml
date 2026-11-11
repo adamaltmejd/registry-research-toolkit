@@ -568,3 +568,15 @@ kind = "set"
 subject = "release:kursdeltagare-lasar/r14204"
 fields = { "table" = "kursdeltagare-vartermin" }
 evidence = "Release '2002 vårterminen' is a termin delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "var:datumavbrott"
+fields = { "description" = "Datum då kursdeltagaren avbröt den kurs som anges i variabeln Kurs i SSV/CFL. Värdet 1900-01-01 00:00:00 betyder att kursen inte har avbrutits." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text med olika interpunktion.\ncatalog:variable_text:50948:10043:10408\ncatalog:variable_text:50948:10408:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-undervisning"
+fields = { "description" = "Anger om kursen bedrevs på dagtid, på kvällstid (kursen startade efter klockan 18) eller som ej schemalagd undervisning. I elevtabellen avses den kurs där eleven har avverkat flest poäng." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; i elevtabellen gäller den elevens kurs med flest poäng.\ncatalog:variable_text:50968:10043:11869"

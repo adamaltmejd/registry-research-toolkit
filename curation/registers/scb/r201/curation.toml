@@ -198,3 +198,21 @@ kind = "set"
 subject = "var:kommun-lk"
 fields = { "label" = "Kommun (kommunkod)" }
 evidence = "#2102 same-label cluster 'Kommun' (2 variables): judged different meaning, high confidence; Kommun is the kommun name in clear text joined from the collected kommunkod (opdef); lk is the four-digit kommunkod with a code list."
+
+[[statement]]
+kind = "set"
+subject = "var:kategorikod"
+fields = { "description" = "Kod för den förbrukarkategori (bransch) som oljeleveransen gått till. Från 2012 hämtas koden från Månatlig bränslestatistik (EN0107)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2004 avser texten kategorin i klartext och 2012–2023 anges källan, som anges som fakta med år.\ncatalog:variable_text:46376:12418:12784\ncatalog:variable_text:46376:15340:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunkod"
+fields = { "description" = "Kod för den kommun som leveransen gått till, ifylld av uppgiftslämnaren i blankettens kommunkolumn." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma innebörd; texterna anger kort eller utförligt att uppgiftslämnaren anger kommunen.\ncatalog:variable_text:46379:15706:16436\ncatalog:variable_text:46379:19358:19723\ncatalog:variable_text:46379:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunnamn"
+fields = { "description" = "Kommunens namn i klartext. SCB kopplar på namnet utifrån den insamlade kommunkoden när uppgifterna kommit in." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; de två operationaliseringarna säger samma sak med olika ord.\ncatalog:variable_text:46380:15706:16436\ncatalog:variable_text:46380:19723:20089"

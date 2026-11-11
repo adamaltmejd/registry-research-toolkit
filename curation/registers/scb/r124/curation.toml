@@ -6217,3 +6217,33 @@ kind = "set"
 subject = "arbetsorsakade-besvar: ANMALVA where key = 'v17410' and release = 'r3065'"
 fields = { "spelling" = "ANMALA12" }
 evidence = "In r3065 (2010) v17410 'Har anmälan skett under de senaste 12 månaderna?' is listed as ANMALVA with opdef 'S23 ANMALA12', in the same release where v8024 'Anmälan till försäkringskassan' is ANMALVA (opdef 'S 21 ANMALVA'). v17410 is ANMALA12 in r1669 (2008, opdef 'S23 ANMALA12') and Anmala12 in r5532 (2014).\ncurrent-scb-inputs.zip/Registerinformation.csv:row=456256 (r3065, v17410)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=456248 (r3065, v8024)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=456239 (r1669, v17410 ANMALA12)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=627336 (r5532, v17410 Anmala12)"
+
+[[statement]]
+kind = "set"
+subject = "var:probanna"
+fields = { "description" = "Härledd från fråga 1 och 2: markerar den som svarat ja på någon av eller båda de två första frågorna, om kroppsliga (fysiska) eller andra besvär." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; variabelnamnet i operationaliseringen 2005–2016 tas bort.\ncatalog:variable_text:11745:11323:12784\ncatalog:variable_text:11745:12784:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:psykiska"
+fields = { "description" = "Om stress eller andra psykiska påfrestningar är en orsak till de besvär urvalspersonen nämnt, i frågan Vad var det som orsakade de besvär du nämnt?" }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga alla år; frågenummer och variabelnamn i operationaliseringen tas bort. Orsaken anges av etiketten, eftersom frågetexten delas av alla orsaksvariabler.\ncatalog:variable_text:11748:11323:12784\ncatalog:variable_text:11748:12784:13514\ncatalog:variable_text:11748:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:rehabiliteringsutredning"
+fields = { "description" = "Om urvalspersonens arbetsgivare och/eller företagshälsovård har gjort en rehabiliteringsutredning som syftar till att underlätta för personen att återgå till arbetet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga alla år; frågenummer och variabelnamn i operationaliseringen tas bort.\ncatalog:variable_text:11749:11323:12784\ncatalog:variable_text:11749:12784:13514\ncatalog:variable_text:11749:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "var:senast12"
+fields = { "description" = "Om urvalspersonen även under den senaste 12-månadersperioden har varit utsatt för det som orsakar besvären. 2014–2016 är frågan en selektionsfråga." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga alla år; frågenummer tas bort. 2014–2016 års filterbeskrivning är otydlig (”och inträffade före 2011”) och återges inte utöver att frågan är en selektionsfråga.\ncatalog:variable_text:11758:11323:12784\ncatalog:variable_text:11758:12784:13514\ncatalog:variable_text:11758:13879:14245\ncatalog:variable_text:11758:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:vaxter-djur-orsak-besvar"
+fields = { "description" = "Om växter eller djur (biologiska ämnen) är en orsak till de besvär urvalspersonen nämnt, i frågan Vad var det som orsakade de besvär du nämnt? 2014–2016 ställs frågan endast till den som på grund av arbetet under de senaste 12 månaderna haft besvär med hörseln, allergi, hudöverkänslighet, sömnbesvär, oro, ångest, depression eller nervösa besvär, eller inget av dessa besvär." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga alla år; frågenummer tas bort och 2014–2016 års filter anges med år.\ncatalog:variable_text:11790:11323:12784\ncatalog:variable_text:11790:12784:13514\ncatalog:variable_text:11790:13879:14245\ncatalog:variable_text:11790:16071:16436"

@@ -4063,3 +4063,39 @@ kind = "set"
 subject = "var:utbildningens-startar"
 fields = { "description" = "Året då forskarskolan startades. Doktorandens eget startår och starttermin i forskarskolan finns i en annan kolumn (StartArTermin)." }
 evidence = "Operationaliseringen av StartArTypFS är 'År när forskarskolan startades'. Doktorandens egen start är en separat kolumn, StartArTermin ('År och termin som forskarskolenybörjare'), i samma tabell.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=123007 (r18674)"
+
+[[statement]]
+kind = "set"
+subject = "var:adjungerad"
+fields = { "description" = "Om personen är adjungerad, det vill säga har sin huvudsakliga anställning utanför högskolan och är deltidsanställd vid ett lärosäte, vanligen omkring 20 procent av heltid. Uppgiften samlas in från och med 2009." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; skillnaden är ett radbrutet ord.\ncatalog:variable_text:33151:14245:18628\ncatalog:variable_text:33151:18628:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:anstformtb"
+fields = { "description" = "Grund för tidsbegränsad anställning: allmän visstidsanställning enligt 5 § LAS, vikariat enligt 5 § LAS eller övriga tidsbegränsade anställningar. Till övriga räknas säsongsarbete och anställning efter fyllda 67 år enligt 5 § LAS samt visstidsanställningar enligt högskoleförordningen och kollektivavtal." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; skillnaden är avstavningar. Rättar avstavningarna.\ncatalog:variable_text:33175:16801:17897\ncatalog:variable_text:33175:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:avgiftsskyldighet-studieavg"
+fields = { "description" = "Om den sökande måste betala studieavgift. Ej studieavgiftskrav gäller både anmälningsalternativ som är undantagna från avgift i en avgiftsbelagd antagningsomgång och antagningsomgångar helt utan avgiftskrav." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; den ena texten saknar förklaringen av ej studieavgiftskrav, den andra har ett dubblerat ”en”.\ncatalog:variable_text:33206:15126:15340\ncatalog:variable_text:33206:16801:16953\ncatalog:variable_text:33206:18779:18809"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-motsvarande-2"
+fields = { "description" = "Personnummer med 12 tecken enligt folkbokföringen. När personnumret är ofullständigt (de fyra sista siffrorna saknas) skapar SCB en motsvarande identitet med M för man eller K för kvinna, som följer personen genom hela registret. I tabellerna över sökande till internationella omgångar och i snabbstatistiken över sökande är numret det som erhållits från UHR, utan personnummerrättning; för skyddade personer anges ett alias-födelsedatum." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger SCB:s ersättningsnummer och, för sökandetabellerna, UHR:s nummer.\ncatalog:variable_text:33306:0:16801\ncatalog:variable_text:33306:16801:16953\ncatalog:variable_text:33306:16953:17348"
+
+[[statement]]
+kind = "set"
+subject = "var:soktid"
+fields = { "description" = "Om den sökande har sökt till högskolan tidigare. Uppgiften hämtas från tidigare årgångar av registret och avser de senaste fem åren 2005–2008, sex år 2009, sju år 2010, åtta år 2011, nio år 2012 och tio år därefter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; den bakåtblick som används växer med registrets längd och anges med år. 2011 och 2012 har två texter (åtta/tio respektive nio/tio år) i olika leveranser; den ändrade längden anges utan att lösa dubbletten.\ncatalog:variable_text:33319:12784:14245\ncatalog:variable_text:33319:14245:14610\ncatalog:variable_text:33319:14610:14975\ncatalog:variable_text:33319:14975:15126\ncatalog:variable_text:33319:15126:15156\ncatalog:variable_text:33319:15340:15492"
+
+[[statement]]
+kind = "set"
+subject = "var:vetomr"
+fields = { "description" = "Vetenskapsområde: ämnesområde som regeringen inrättat för tilldelning av resurser till forskning och utbildning på forskarnivå. För forskarutbildningen grupperar den forskarutbildningsämnena efter högskolans egen klassificering; den infördes 1999 men har förts in bakåt i tiden, och den användes som grupperingsvariabel till och med 2010, då den 2011 ersattes av forskningsämne. För personalen finns den 2001–2011 och hämtas från Konjunkturstatistik, löner för statlig sektor och undersökningen Personal vid universitet och högskolor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna beskriver användning och källa i doktorand- respektive personaltabellerna.\ncatalog:variable_text:33373:0:11323\ncatalog:variable_text:33373:11323:15340"

@@ -878,3 +878,51 @@ subject = "individer: DeSO @1990..2024 where key = 'v37894'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Demografiska statistikområden (DeSO)", "definition" = "SCB:s demografiska statistikområden som är en rikstäckande indelning som följer läns- och kommungränserna.", "type" = "text", "length" = 9, "sensitive" = false, "identifier" = false } }
 evidence = "private:ev-3898"
 caveat = "Label, definition and length follow SCB's documentation of DeSO (key v37894) on Adresser, fastigheter och koordinater, 2018-2023."
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetens-status"
+fields = { "description" = "Fastighetens status. 2003–2006 i tre grupper: aktiv, beteckningsändrad eller avregistrerad fastighet; 2007 i sex grupper." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; antalet grupper ändrades 2007 och anges som fakta med år. Rättar ”Innhåller”.\ncatalog:variable_text:28460:12053:12054\ncatalog:variable_text:28460:13514:13515"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetsbeteckning"
+fields = { "description" = "Fastighetsbeteckning, identitetsbegrepp uppbyggt av trakt, block och enhet; unikt tillsammans med kommunen. 2016–2017 hämtas den från Fastighetsregistret som en sammanslagning av trakt, block, tecken och enhet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2016–2017 års härledning anges med år. Rättar ”Hmtad”.\ncatalog:variable_text:28461:12053:12054\ncatalog:variable_text:28461:16801:16802"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "description" = "Kod för kommun enligt den regionala indelningen i kommuner." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition alla år; hänvisningarna till Rikets indelningar och scb.se beskriver dokumentationen och tas bort.\ncatalog:variable_text:28472:12053:12054\ncatalog:variable_text:28472:12418:12419\ncatalog:variable_text:28472:12784:12785\ncatalog:variable_text:28472:13149:13150\ncatalog:variable_text:28472:13514:13515"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "description" = "Kod för län enligt den regionala indelningen i län." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition alla år; hänvisningarna till Rikets indelningar och scb.se beskriver dokumentationen och tas bort.\ncatalog:variable_text:28474:12053:12054\ncatalog:variable_text:28474:12418:12419\ncatalog:variable_text:28474:12784:12785\ncatalog:variable_text:28474:13149:13150\ncatalog:variable_text:28474:13514:13515"
+
+[[statement]]
+kind = "set"
+subject = "var:landskap"
+fields = { "description" = "Kod för landskap, 01–25. Från 2016 kopplas fastigheten till landskap med hjälp av koordinater och digitala kartor eller gränser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; kopplingsmetoden från 2016 anges med år. Rättar ”digital gränser”.\ncatalog:variable_text:28475:14610:14611\ncatalog:variable_text:28475:16801:16802\ncatalog:variable_text:28475:17532:17533\ncatalog:variable_text:28475:17897:17898\ncatalog:variable_text:28475:18262:18263"
+
+[[statement]]
+kind = "set"
+subject = "var:nyko"
+fields = { "description" = "Nyckelkodsområde (NYKO): en hierarkisk indelning i små geografiska områden inom kommunen, som specificeras och ägs av respektive kommun och används i kommunal och regional planering. Koderna är 000000–999999. Saknad uppgift anges 2003 som blankt och från 2004 som Restfo." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition alla år; antalet saknade uppgifter per år tas bort och koden för saknad uppgift anges med år.\ncatalog:variable_text:28479:12053:12054\ncatalog:variable_text:28479:12418:12419\ncatalog:variable_text:28479:12784:12785\ncatalog:variable_text:28479:13149:13150\ncatalog:variable_text:28479:13514:13515"
+
+[[statement]]
+kind = "set"
+subject = "var:sams"
+fields = { "description" = "Small Areas for Market Statistics (SAMS): SCB:s rikstäckande indelning inom kommuner, för andra användare än kommunerna. Koderna är 0001–0910, och Rest anger att uppgift saknas. 2016–2017 uppdateras indelningen med hjälp av koordinater och digital karta." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2016–2017 års uppdateringsmetod anges med år.\ncatalog:variable_text:28496:12053:12054\ncatalog:variable_text:28496:16801:16802"
+
+[[statement]]
+kind = "set"
+subject = "var:valdistrikt"
+fields = { "description" = "Valdistrikt enligt den regionala indelning som fastställs av Valmyndigheten. Saknad uppgift anges 2003 som xxxx9999 och 2004–2017 som xxxxRest. Från 2016 hämtas uppgiften via digitala kartor eller gränser från Valmyndigheten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; giltiga kodintervall per år tas bort, och koden för saknad uppgift och hämtningssättet anges med år.\ncatalog:variable_text:28504:12053:12054\ncatalog:variable_text:28504:12418:12419\ncatalog:variable_text:28504:14975:14976\ncatalog:variable_text:28504:16801:16802\ncatalog:variable_text:28504:17532:17533"

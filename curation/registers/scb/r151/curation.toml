@@ -1114,3 +1114,57 @@ kind = "set"
 subject = "var:sgrm"
 fields = { "label" = "Storleksgrupp rum (SgRm)" }
 evidence = "#2102 same-label cluster 'Storleksgrupp rum' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; SgMxRm's opdef says maximum number of rooms throughout; SgRm's 2007-2013 opdef says number of rooms but Sgrm's 2014-2015 opdef says maximum, so SgRm is qualified by its code."
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: ImputMan where key = 'v1810'"
+fields = { "variable" = "imputerad-manad" }
+evidence = "Candidate split, no succession edge (crates/DESIGN.md, one variable one description). SCB VarId 1810 (Imputerad) is a generic id shared by 20 variables. In Hotell, stugbyar och vandrarhem it sits on column ImputLogiInt 2007–2018 ('Kod för om logiintäkter är imputerade', 2016–2018 'Anger huruvida variabeln Logiintäkt har rapporterats eller ej') and on column ImputMan 2019–2024 ('Anger huruvida anläggningen har rapporterat aktuell månad eller ej. Objektsbortfall.'). Two different columns flagging different things: imputed lodging revenue versus a missing monthly report. Registerinformation.csv shows one row per column and year. Operator, #2322 curation under the maintainer's 2026-11-11 delegation.\ncatalog:variable_text:34709:13514:16071\ncatalog:variable_text:34709:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerad"
+fields = { "description" = "Om anläggningens logiintäkt är imputerad, det vill säga beräknad eftersom den inte rapporterats (0 = inte imputerad)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad: ImputMan 2019–2024 är en egen variabel; kvar är ImputLogiInt 2007–2018. 2014 års text om målgruppsvärden står bara det året och tas inte med.\ncatalog:variable_text:34709:13514:16071\ncatalog:variable_text:34709:16071:16436\ncatalog:variable_text:34709:16436:16801\ncatalog:variable_text:34709:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerad-manad"
+fields = { "description" = "Om anläggningen har rapporterat aktuell månad eller inte (objektsbortfall); för en månad som inte rapporterats är uppgifterna imputerade." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAndra halvan av delningen av imputerad (kolumnen ImputMan 2019–2024).\ncatalog:variable_text:34709:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "description" = "Län där anläggningen bedriver sin verksamhet; för förmedlare av privata stugor och lägenheter från 2016 förmedlingens län." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDefinitionen är generisk (delas av 175 variabler); operationaliseringen skiljer på anläggning och förmedling efter tabell.\ncatalog:variable_text:34712:13514:15340\ncatalog:variable_text:34712:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:logiint"
+fields = { "description" = "Logiintäkt exklusive moms och frukost. För hotell och stugbyar från 2019 den totala intäkten av samtliga uthyrda rum (konto 3010 enligt HR2013). För förmedlare av privata stugor och lägenheter ingår bokningsavgift och avbeställningsskydd. För camping (från 2020) den totala intäkten, inklusive el, för uthyrda tomter, stugor och övrigt boende, exklusive intäkter från sålda säsongsabonnemang." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna preciserar intäkten per tabell, med år där de anges.\ncatalog:variable_text:34713:13514:17897\ncatalog:variable_text:34713:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:namn"
+fields = { "description" = "Anläggningens namn; för förmedlare av privata stugor och lägenheter från 2016 förmedlingens namn." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDefinitionen är generisk (delas av 9 variabler); operationaliseringen skiljer på anläggning och förmedling efter tabell.\ncatalog:variable_text:34718:13514:15706\ncatalog:variable_text:34718:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rapptyp"
+fields = { "description" = "Valt sätt att rapportera: postblankett, webbenkät eller textfil. För förmedlare av privata stugor och lägenheter 2023–2024 endast webbenkät eller textfil." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna förtydligar.\ncatalog:variable_text:34725:13514:16801\ncatalog:variable_text:34725:16801:19358\ncatalog:variable_text:34725:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:storleksgrupp-tomter-stugor"
+fields = { "description" = "Campinganläggningens storleksgrupp efter antal tomter och stugor. 2017–2018 är grupperna under 25, 25–50, 51–100, 101–250, 251–500 och över 500." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; operationaliseringarna anger grupperna och indelningsgrunden.\ncatalog:variable_text:34733:13879:17167\ncatalog:variable_text:34733:17167:17897\ncatalog:variable_text:34733:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:svarsstatus"
+fields = { "description" = "Svarsstatus för månadsenkäten: om den skickats ut, inkommit, registrerats med hårda fel, registrerats med mjuka fel eller registrerats felfritt, även för webbblanketter och textfilsinlämning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen finns i en del år och skiljer bara i ett mellanslag.\ncatalog:variable_text:34734:13514:16801\ncatalog:variable_text:34734:16801:17897"

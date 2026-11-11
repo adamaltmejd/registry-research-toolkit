@@ -712,3 +712,15 @@ kind = "set"
 subject = "var:funkstod7b"
 fields = { "description" = "Anger om personen fått det stöd som behovet i föregående fråga (7A) avsåg. Tomt värde betyder att personen inte fått frågan." }
 evidence = "xA/xB pattern: B = \"Har du fått\", 7A is the need; blank = inte tillfrågad."
+
+[[statement]]
+kind = "set"
+subject = "var:hjalp-region"
+fields = { "description" = "Regional indelning som används som hjälpinformation vid estimationen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; rättar ”hjälpinformtion”.\ncatalog:variable_text:28422:19358:19723\ncatalog:variable_text:28422:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:uvikt"
+fields = { "description" = "Andel svarande per urval av samtliga svarande en viss månad, beräknad utifrån AKU:s urval." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition båda åren; 2024 nämner bara att variabeln skapas för SAPF.\ncatalog:variable_text:28441:19358:19723\ncatalog:variable_text:28441:19723:20089"

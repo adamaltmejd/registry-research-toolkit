@@ -3057,3 +3057,27 @@ kind = "set"
 subject = "release:studerande-source-range-2005-2024/r20191"
 fields = { "table" = "studerande-kalenderar" }
 evidence = "Release '2024' is a kalenderår delivery. Maintainer ruling 2026-11-09 (option a): SCB delivers this table on overlapping cadences, and the rows of each cadence cover a different unit of time (a term, a school year, a calendar year), so each cadence is its own table. Move the release whole, with its columns."
+
+[[statement]]
+kind = "set"
+subject = "var:ar"
+fields = { "description" = "Det kalenderår som YH-studierna avser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna skiljer bara i ett ord.\ncatalog:variable_text:62166:12784:18262\ncatalog:variable_text:62166:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Personens kön, härlett från personnumrets elfte siffra: udda siffra för man, jämn siffra för kvinna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger härledningen olika utförligt. Rättar ”ojämt” och ”jämt”.\ncatalog:variable_text:62214:12784:13149\ncatalog:variable_text:62214:16071:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr"
+fields = { "description" = "Personnummer, identitetsbegrepp för personer som tilldelas av Skatteverket (tidigare Skattemyndigheten). Insamlade identiteter som inte följer svenskt format har kontrollerats mot Registret över totalbefolkningen (RTB)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger kontrollen mot RTB och svenskt format.\ncatalog:variable_text:62223:12784:16436\ncatalog:variable_text:62223:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:soktutb"
+fields = { "description" = "Om personen har rapporterats som sökande till utbildningen. Som sökande räknas den som lämnat in sin ansökan inom ansökningstiden (ordinarie eller förlängd ansökningsperiod). 2014 krävdes dessutom en fullständig ansökan; från 2015 räcker det att ansökan innehåller minst namn och personnummer (eller namn och födelsedatum)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; kravet på ansökans innehåll ändrades 2015, vilket anges som fakta med år.\ncatalog:variable_text:62231:16071:16436\ncatalog:variable_text:62231:16436:20089"

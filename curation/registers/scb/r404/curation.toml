@@ -3610,3 +3610,51 @@ kind = "set"
 subject = "var:vardbidrag-tvardp"
 fields = { "label" = "Vårdbidrag (slutlig)" }
 evidence = "#2102 same-label cluster 'Vårdbidrag' (2 variables): judged different meaning, medium confidence; The same measure in the preliminary and the final monthly tables (suffix p); the final opdef says the amount refers to an activity in the reference month."
+
+[[statement]]
+kind = "set"
+subject = "var:alder"
+fields = { "description" = "Personens ålder sista dagen i referensperioden: referensåret i årsuppgifterna, referensmånaden i månadsuppgifterna. Åldern härleds ur födelsedatum enligt personnumret, efter kontroll att personnumret har korrekt format." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått; tabellerna skiljer sig bara i referensperiod (år eller månad) och i hur härledningen beskrivs.\ncatalog:variable_text:12761:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstallenummer"
+fields = { "description" = "Arbetsställenummer, som tillsammans med organisationsnumret identifierar ett arbetsställe. Numret åsätts av Företagsdatabasen i samråd med arbetsgivaren och används för företag med flera arbetsställen. I månadsuppgifterna avser det det arbetsställe där personen anses ha bedrivit sin huvudsakliga sysselsättning. Varierar uppgiften under året väljs i årsjobbtabellen i första hand november, annars den senaste månaden personen arbetat på företaget enligt de slutliga månadsuppgifterna. I de slutliga månadsuppgifterna får den som enligt AGI placerats på ett arbetsställe långt från bostaden, trots att företaget har ett arbetsställe nära bostaden, ett imputerat arbetsställe. I de preliminära månadsuppgifterna imputeras saknat arbetsställenummer i ordningen: största arbetsstället (efter antal anställda) i bostadskommunen, största i bostadslänet, bostadskommunen och den juridiska enhetens näringsgren." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i alla tabeller; operationaliseringarna anger per tabell vilket arbetsställe som väljs och hur det imputeras.\ncatalog:variable_text:12789:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:cfar-nummer"
+fields = { "description" = "CFAR-nummer, identitetsbegrepp för arbetsställen i SCB:s Företagsdatabas (FDB). Numret är informationslöst och följer arbetsstället över tiden, även när företaget byter juridisk identitet. Med arbetsställe avses varje adress, fastighet eller grupp av närliggande fastigheter där företaget bedriver verksamhet. Varierar uppgiften under året väljs i årsjobbtabellen i första hand november, annars den senaste månaden personen arbetat på företaget enligt de slutliga månadsuppgifterna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i alla tabeller; arbetsställets avgränsning och jobbtabellens val av månad läggs till.\ncatalog:variable_text:12816:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:markering-lonegaranti"
+fields = { "description" = "Markering att personen fått lönegaranti utbetald, då arbetsgivaren gått i konkurs eller genomgår en företagsrekonstruktion. I årsuppgifterna per person finns uppgiften för den som är sysselsatt i november; i årsjobbtabellen anger den att lönegaranti betalats ut någon gång under året. Länsstyrelsens organisations- och arbetsställenummer ersätts med arbetsgivarens, 2025 även Skatteverkets." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger per tabell vilken period markeringen gäller och hur utbetalarens nummer ersätts.\ncatalog:variable_text:12893:18262:19358\ncatalog:variable_text:12893:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:person-orgnr"
+fields = { "description" = "Person- eller organisationsnummer för ett företag. För juridiska personer tilldelas organisationsnummer av Bolagsverket, Skatteverket, Kammarkollegiet, Lantmäteriet, en länsstyrelse eller SCB beroende på bolagsform; för fysiska personer med näringsverksamhet används personnumret. I årsuppgifterna per person och i månadsuppgifterna avser numret det företag där personen anses ha bedrivit sin huvudsakliga sysselsättning. I årsuppgifterna per person hämtas uppgiften för en anställning från arbetsgivardeklarationer på individnivå (AGI) eller kontrolluppgifter (KU), och för en företagarinkomst från registret Räkenskapsutdrag (SRU)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i alla tabeller; operationaliseringen anger vilket företag numret avser och var uppgiften hämtas. Rättar ”kontrolluppgiterna”.\ncatalog:variable_text:12912:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tillfalligt-franvarande"
+fields = { "description" = "Markering om personen räknas som tillfälligt frånvarande, och därmed sysselsatt, med hjälp av ersättning från Försäkringskassan. Det gäller den som under minst en av de elva månader som föregår referensmånaden fått ersättning för arbete som är underlag för arbetsgivaravgifter enligt AGI, och därefter fått ersättning från Försäkringskassan varje månad till och med referensmånaden. Ersättningen ska vara föräldrapenning, tillfällig föräldrapenning, graviditetspenning, sjukpenning, rehabiliteringspenning, arbets- eller yrkesskadepenning, närståendepenning, smittbärarpenning eller ersättning till riskgrupp (ersättning till riskgrupp ingår inte i de preliminära månadsuppgifterna 2025). I årsuppgifterna per person avser markeringen den som är sysselsatt i november, i årsjobbtabellen att personen klassats som tillfälligt frånvarande på företaget någon månad under året." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger per tabell referensperiod och ersättningstyper, och 2025 saknar ersättning till riskgrupp.\ncatalog:variable_text:12945:18262:19358\ncatalog:variable_text:12945:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-foretag"
+fields = { "description" = "Visar om företaget har ett eller flera arbetsställen, utifrån antalet arbetsställen företaget har i Företagsdatabasen (FDB). Har antalet ändrats under året väljs i första hand uppgiften för november, annars den senaste månaden arbetsstället förekommit i de slutliga månadsuppgifterna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition och regel i båda tabellerna, olika formulerade.\ncatalog:variable_text:12946:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utdelning-famansforetag"
+fields = { "description" = "Utdelning från fåmansföretag enligt blankett K10 (fälten 2.9, 1.8, 1.17 och 2.18) som tas upp och beskattas i Inkomstdeklaration 1. Uppgiften hämtas från registret Räkenskapsutdrag (SRU). I de slutliga månadsuppgifterna fördelas utdelningen på de månader personen klassificeras som delägare i fåmansaktiebolag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma uppgift; månadstabellen fördelar årsbeloppet på månader.\ncatalog:variable_text:12949:19723:20089"

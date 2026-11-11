@@ -1948,3 +1948,15 @@ kind = "set"
 subject = "var:aret-da-byggnaden-togs-i-bruk-eller-vardearet-arvardesma"
 fields = { "label" = "Året då byggnaden togs i bruk eller värdeåret (ArVardeSma)" }
 evidence = "#2102 same-label cluster 'Året då byggnaden togs i bruk eller värdeåret' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Both have the same definition and unit; 'Värdeår för småhus' appears only in the 2020- opdefs (of both columns), not in the earlier ArVarde occurrences, so 'småhus' does not hold for every occurrence and the codes are used."
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-byggnader"
+fields = { "description" = "Taxeringsvärde för byggnader på lantbruksfastigheter (byggnadsvärdet för lantbruk)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna 2018 och 2020 preciserar att värdet avser lantbruksfastigheter.\ncatalog:variable_text:17175:13879:17167\ncatalog:variable_text:17175:17532:17897\ncatalog:variable_text:17175:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-for-byggnader-vardebygg"
+fields = { "description" = "Taxeringsvärde för byggnader på den överlåtna fastigheten. 2018 och 2020–2026 omfattar uppgiften både lantbruksfastigheter och andra fastigheter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSCB-exporten (VarId 567) dokumenterar VardeBygg 2018 och 2020–2026 i två rader per år (lantbruk respektive annan fastighet/överlåtelsen); katalogen visar bara lantbruksraden. Ingen rättelse behövs.\ncatalog:variable_text:17179:10592:17532\ncatalog:variable_text:17179:17532:17897\ncatalog:variable_text:17179:18262:20819"

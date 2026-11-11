@@ -11826,3 +11826,357 @@ kind = "set"
 subject = "var:vissa-rorelsekostnader-samt-inkopt-el"
 fields = { "description" = "Energimängd i MWh som hör till rubriken Vissa rörelsekostnader samt inköpt el." }
 evidence = "Etikett och enhet MWh i alla årgångar 2009-2018.\n0.74.0 catalog, key v35429, releases r12656, r13860, r13861, r13862...; reg_meta.db:occurrence:30537,30605,30673"
+
+[[statement]]
+kind = "set"
+subject = "elnatforetag-nat: bruttoprod"
+fields = { "operational_definition" = "Elproduktion brutto vid vatten-, vind- och värmekraftstationer." }
+evidence = "Registerinformation.csv, VarId 35303, Elnätföretag (nät) 2009–2024 (all 19 versions): the operational definition of bruttoprod is word for word egenforbr's text 'Egenförbrukning av el för vatten-, vind- och värmekraftstationer.', copied from the own-use column. The label and definition say Elproduktion brutto, MWh, and the other two tables' bruttoprod rows give the station types (Vattenkraftstationer, Vindkraftstationer). Corrected to gross production for the same station types. Operator, #2322 curation under the maintainer's 2026-11-11 delegation."
+
+[[statement]]
+kind = "set"
+subject = "var:br-varmeff"
+fields = { "description" = "Värmeeffekt netto vid värmeverk och annan värme (så kallad färdig värme) för bränslebaserad produktion av enbart värme." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; den bränslebaserade produktionen av enbart värme anges i operationaliseringarna och i 2018 års förklaring av kolumnerna; stavfel rättade.\ncatalog:variable_text:11820:14245:17532\ncatalog:variable_text:11820:17532:17897\ncatalog:variable_text:11820:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:el-varmeff"
+fields = { "description" = "Värmeeffekt netto vid värmeverk och annan värme (så kallad färdig värme) vid produktion i kombination med el (kraftvärme)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; kraftvärme anges i operationaliseringarna och i 2018 års förklaring av kolumnerna; stavfel rättade.\ncatalog:variable_text:11843:14245:17532\ncatalog:variable_text:11843:17532:17897\ncatalog:variable_text:11843:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:panna-varmeff"
+fields = { "description" = "Värmeeffekt netto vid värmeverk och annan värme (så kallad färdig värme) från elpannor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; elpanna anges i operationaliseringarna och i 2018 års förklaring av kolumnerna.\ncatalog:variable_text:12105:14245:17532\ncatalog:variable_text:12105:17532:17897\ncatalog:variable_text:12105:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:pump-varmeff"
+fields = { "description" = "Värmeeffekt netto vid värmeverk och annan värme (så kallad färdig värme) från värmepumpar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; värmepump anges i operationaliseringarna och i 2018 års förklaring av kolumnerna.\ncatalog:variable_text:12114:14245:17532\ncatalog:variable_text:12114:17532:17897\ncatalog:variable_text:12114:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:rok-varmeff"
+fields = { "description" = "Värmeeffekt netto vid värmeverk och annan värme (så kallad färdig värme) från rökgaskondensering." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; rökgaskondens anges i operationaliseringarna och i 2018 års förklaring av kolumnerna.\ncatalog:variable_text:12120:14245:17532\ncatalog:variable_text:12120:17532:17897\ncatalog:variable_text:12120:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bransle-for-kraftvarmeproduktion"
+fields = { "description" = "Mängd bränsle för kraftvärmeproduktion, i respektive bränsles måttenhet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna upprepar den med stavfel.\ncatalog:variable_text:11822:14245:17897\ncatalog:variable_text:11822:17897:18262\ncatalog:variable_text:11822:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:bransle-for-produktion-av-enbart-varme"
+fields = { "description" = "Mängd bränsle för produktion av enbart värme vid värmeverk och annan värme (så kallad färdig värme), per bränsleslag och i respektive bränsles måttenhet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger värmeverk och färdig värme och att mängden redovisas per bränsleslag.\ncatalog:variable_text:11823:14245:17897\ncatalog:variable_text:11823:17897:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:bransle-for-varmeproduktion"
+fields = { "description" = "Radnummer för bränsleslag vid produktion av värme vid värmeverk och annan värme (så kallad färdig värme). Raden anger vilket bränsleslag förbrukningen avser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2018 tillägger att radnumret hör ihop med bränsleslaget i klartext.\ncatalog:variable_text:11824:14245:17532\ncatalog:variable_text:11824:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:bransle-for-varmeproduktion-klartext"
+fields = { "description" = "Bränsleslag i klartext för förbrukningen vid produktion av värme vid värmeverk och annan värme (så kallad färdig värme)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2018 och 2021 varierar operationaliseringen utan ändrad betydelse.\ncatalog:variable_text:11825:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:enbart-varme-bransleslag-klartext"
+fields = { "description" = "Bränsleslag i klartext vid produktion av enbart värme." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; ”per resp. måttenhet” hör till mängdvariabeln och tas inte med, liksom 2018 års hänvisning till radnumret.\ncatalog:variable_text:11853:14245:17532\ncatalog:variable_text:11853:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:enbart-varme-bransleslag-radnummer"
+fields = { "description" = "Radnummer för bränsleslag vid produktion av enbart värme. Raden anger vilket bränsleslag uppgiften avser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; ”per resp. måttenhet” hör till mängdvariabeln och tas inte med.\ncatalog:variable_text:11854:14245:17532\ncatalog:variable_text:11854:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:kraftvarme-bransleslag-klartext"
+fields = { "description" = "Bränsleslag i klartext vid kraftvärmeproduktion." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; ”per resp. måttenhet” hör till mängdvariabeln och tas inte med.\ncatalog:variable_text:11891:14245:17532\ncatalog:variable_text:11891:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:kraftvarme-bransleslag-radnummer"
+fields = { "description" = "Radnummer för bränsleslag vid kraftvärmeproduktion. Raden anger vilket bränsleslag uppgiften avser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; ”per resp. måttenhet” hör till mängdvariabeln och tas inte med.\ncatalog:variable_text:11892:14245:17532\ncatalog:variable_text:11892:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:egen-slutlig-forbrukning-av-el-mwh"
+fields = { "description" = "Egen slutlig förbrukning av el, i MWh." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; stavfel rättat.\ncatalog:variable_text:11834:14245:17897\ncatalog:variable_text:11834:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:forsald-el-mwh"
+fields = { "description" = "Försåld el, i MWh." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; stavfel rättat.\ncatalog:variable_text:11867:14245:17897\ncatalog:variable_text:11867:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:egenforbr"
+fields = { "description" = "Egenförbrukning av el vid vatten-, vind- och värmekraftstationer, i MWh." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger stationstyperna (elnätföretagen alla tre, övriga tabeller vattenkraftstationer).\ncatalog:variable_text:11837:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:elprodbrutto"
+fields = { "description" = "Elproduktion brutto i MWh, inklusive förbrukning vid kraftstationsdrift (förluster i kraftstationstransformatorer med mera)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; bara ett mellanslag skiljer.\ncatalog:variable_text:11851:14245:17897\ncatalog:variable_text:11851:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:maxnetto"
+fields = { "description" = "Sammanlagd generatoreffekt max netto för vatten-, vind- och värmekraftstationer. För vatten- och vindkraftstationer avses den maximala effekt som kan utvinnas vid kontinuerlig drift i mer än 15 timmar efter avdrag för hjälpkraft, det vill säga den effekt som är möjlig att utnyttja." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger stationstyp och, för industriföretagen, hur maxeffekten mäts. 2018–2021 års kolumnförklaring (Maxnethuv1) avser en annan kolumn.\ncatalog:variable_text:11906:14245:14610\ncatalog:variable_text:11906:17532:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:elforb-elpanna"
+fields = { "description" = "Elförbrukning vid värmeproduktion i värmeverk samt annan värmeproduktion (så kallad färdig värme), för elpannedrift." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; elpannedrift anges i operationaliseringarna och i 2018 års kolumnförklaring; stavfel rättade.\ncatalog:variable_text:11845:14245:17532\ncatalog:variable_text:11845:17532:17897\ncatalog:variable_text:11845:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:elforb-sum"
+fields = { "description" = "Elförbrukning totalt vid värmeproduktion i värmeverk samt annan värmeproduktion (så kallad färdig värme)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; totalen anges 2018 och från 2019; stavfel rättade.\ncatalog:variable_text:11846:14245:17532\ncatalog:variable_text:11846:17532:17897\ncatalog:variable_text:11846:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:elforb-sumvnat"
+fields = { "description" = "Summa elförbrukning vid värmeproduktion i värmeverk samt annan värmeproduktion (så kallad färdig värme)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; stavfel rättat.\ncatalog:variable_text:11848:17532:18262\ncatalog:variable_text:11848:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:elforb-varmev"
+fields = { "description" = "Elförbrukning vid värmeproduktion i värmeverk samt annan värmeproduktion (så kallad färdig värme), för värmeverksdrift." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; värmeverksdrift anges i operationaliseringarna och i 2018 års kolumnförklaring; stavfel rättade.\ncatalog:variable_text:11849:14245:17532\ncatalog:variable_text:11849:17532:17897\ncatalog:variable_text:11849:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:elforb-vpump"
+fields = { "description" = "Elförbrukning vid värmeproduktion i värmeverk samt annan värmeproduktion (så kallad färdig värme), för värmepumpsdrift." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; värmepumpsdrift anges i operationaliseringarna och i 2018 års kolumnförklaring; stavfel rättade.\ncatalog:variable_text:11850:14245:17532\ncatalog:variable_text:11850:17532:17897\ncatalog:variable_text:11850:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopsvarde"
+fields = { "description" = "Inköpsvärde för mottagen värmemängd vid värmeverk och annan värme (så kallad färdig värme)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text i båda tabellerna, med ”färdig värme” respektive ”annan värme (s.k. färdig värme)”.\ncatalog:variable_text:11878:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopsvarde-bransle"
+fields = { "description" = "Inköpsvärde för bränsle. För elproducerande industriföretag avses det totala inköpsvärdet för de olika bränsleslagen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nIndustriföretagen anger totalt inköpsvärde för olika bränsleslag; elnätföretagens kolumn anger från 2018 inköpsvärde för bränsle. Gruppens gemensamma text om mottagen värmemängd (delad av fyra kolumner) tas inte med.\ncatalog:variable_text:11879:14245:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mottagen-varmemangd-inkopsvarde"
+fields = { "description" = "Inköpsvärde för mottagen värmemängd vid värmeverk och annan värme (så kallad färdig värme)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2019–2024 upprepar operationaliseringen hela kolumnförklaringen (”Inköpsvärde för bränsle”), som hör till en annan kolumn och inte tas med.\ncatalog:variable_text:11909:14245:17532\ncatalog:variable_text:11909:17532:17897\ncatalog:variable_text:11909:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:varme-annan-fjarrvarmeproducent-inkopsvarde"
+fields = { "description" = "Inköpsvärde för värmemängd mottagen från annan fjärrvärmeproducent vid värmeverk och annan värme (så kallad färdig värme)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna upprepar gruppens text och 2019–2024 även ”Inköpsvärde för bränsle”, som hör till en annan kolumn.\ncatalog:variable_text:12213:14245:17532\ncatalog:variable_text:12213:17532:17897\ncatalog:variable_text:12213:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:varme-annan-leverantor-inkopsvarde"
+fields = { "description" = "Inköpsvärde för värmemängd mottagen från annan leverantör vid värmeverk och annan värme (så kallad färdig värme)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna upprepar gruppens text och 2019–2024 även ”Inköpsvärde för bränsle”, som hör till en annan kolumn.\ncatalog:variable_text:12214:14245:17532\ncatalog:variable_text:12214:17532:17897\ncatalog:variable_text:12214:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lev-mwh"
+fields = { "description" = "Värmemängd mottagen från annan leverantör vid värmeverk och annan värme (så kallad färdig värme), i MWh." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nGruppens gemensamma definition (mottagen värmemängd) preciseras i operationaliseringarna och i 2018 års kolumnförklaring; stavfel rättade.\ncatalog:variable_text:11895:14245:17532\ncatalog:variable_text:11895:17532:17897\ncatalog:variable_text:11895:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mot-mwh"
+fields = { "description" = "Mottagen värmemängd vid värmeverk och annan värme (så kallad färdig värme), i MWh." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; stavfel rättade.\ncatalog:variable_text:11907:14245:17532\ncatalog:variable_text:11907:17532:17897\ncatalog:variable_text:11907:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:mottagen-varmemangd"
+fields = { "description" = "Värmemängd mottagen från annan fjärrvärmeproducent vid värmeverk och annan värme (så kallad färdig värme), i MWh." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nGruppens gemensamma definition preciseras i operationaliseringarna (mottagen fjärrvärmemängd, från annan fjärrvärmeproducent).\ncatalog:variable_text:11908:14245:17532\ncatalog:variable_text:11908:17532:17897\ncatalog:variable_text:11908:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:total-mwh"
+fields = { "description" = "Totala värmeleveranser vid värmeverk och annan värme (så kallad färdig värme), i MWh." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOperationaliseringarna och 2018 års kolumnförklaring anger totala värmeleveranser; definitionen är gruppens gemensamma text om mottagen värmemängd, som etiketten följer.\ncatalog:variable_text:12207:14245:17532\ncatalog:variable_text:12207:17532:17897\ncatalog:variable_text:12207:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:leveranser-av-fardig-varme-mwh"
+fields = { "description" = "Leveranser av färdig värme (annan än fjärrvärme eller fjärrkyla), i MWh." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger enheten.\ncatalog:variable_text:11897:14245:17532\ncatalog:variable_text:11897:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:leveranser-av-fardig-varme-radnr"
+fields = { "description" = "Radnummer för leveranser av färdig värme (annan än fjärrvärme eller fjärrkyla). Raden anger mottagare av värmen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger radnummer och mottagare.\ncatalog:variable_text:11898:14245:17532\ncatalog:variable_text:11898:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:leveranser-av-fjarrkyla-mwh"
+fields = { "description" = "Leveranser av fjärrkyla, i MWh." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger enheten.\ncatalog:variable_text:11900:14245:17532\ncatalog:variable_text:11900:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:leveranser-av-fjarrkyla-radnr"
+fields = { "description" = "Radnummer för leveranser av fjärrkyla. Raden anger mottagare av fjärrkylan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger radnummer och mottagare.\ncatalog:variable_text:11901:14245:17532\ncatalog:variable_text:11901:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:leveranser-av-fjarrvarme-mwh"
+fields = { "description" = "Levererad mängd fjärrvärme, i MWh." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger enheten.\ncatalog:variable_text:11904:14245:17532\ncatalog:variable_text:11904:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:leveranser-av-fjarrvarme-radnr"
+fields = { "description" = "Radnummer för leveranser av fjärrvärme. I elproduktions-, elhandels- och fjärrvärmeföretagens uppgifter 2009–2017 anger raden mottagare av fjärrvärmen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger radnummer och mottagare.\ncatalog:variable_text:11905:14245:17532\ncatalog:variable_text:11905:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kompressorkylmaskin"
+fields = { "description" = "Installerad effekt för kompressorkylmaskiner, där el är drivkällan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text i båda tabellerna, olika interpunktion.\ncatalog:variable_text:11885:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kompressorkylmaskin-prod"
+fields = { "description" = "Producerad mängd från kompressorkylmaskiner, där el är drivkällan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; ”producerad mängd” och ”produktion” betyder detsamma.\ncatalog:variable_text:11886:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sorptiv-kyla"
+fields = { "description" = "Installerad effekt (nettoeffekt), i kW, för sorptiv kyla: fjärrvärme till kund som har ett aggregat som gör kyla av fjärrvärmen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger installerad effekt i kW respektive nettoeffekt.\ncatalog:variable_text:12194:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sorptiv-kyla-prod"
+fields = { "description" = "Producerad mängd sorptiv kyla: fjärrvärme till kund som har ett aggregat som gör kyla av fjärrvärmen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; ”producerad mängd” och ”produktion” betyder detsamma.\ncatalog:variable_text:12195:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kraftslag"
+fields = { "description" = "Typ av produktion: anläggningens stationstyp, till exempel vattenkraft." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger stationstyp respektive anläggningstyp.\ncatalog:variable_text:11888:18993:19358\ncatalog:variable_text:11888:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattning-vid-el-tkr"
+fields = { "description" = "Lönekostnader för sysselsättning vid elproduktion och elförsäljning, i tusentals kronor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger enheten (tusentals kronor) och från 2021 att uppgiften avser lönekostnader, vilket etiketten också säger.\ncatalog:variable_text:12200:14245:17532\ncatalog:variable_text:12200:17532:17897\ncatalog:variable_text:12200:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tillforsel-av-el-brutto-radnr"
+fields = { "description" = "Radnummer för tillförsel av el brutto." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; stavfel rättat.\ncatalog:variable_text:12204:14245:17532\ncatalog:variable_text:12204:17532:18262\ncatalog:variable_text:12204:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tillforsel-av-el-brutto-tkr"
+fields = { "description" = "Inköpsvärde för tillförd el brutto, inklusive värdet av köpta elcertifikat, i tusentals kronor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text, uppdelad respektive sammanslagen.\ncatalog:variable_text:12205:14245:17532\ncatalog:variable_text:12205:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:vissa-rorelseintakter-radnr"
+fields = { "description" = "Radnummer för vissa rörelseintäkter. Raden anger vilken intäktspost uppgiften avser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger radnummer för beskrivningen av intäkterna.\ncatalog:variable_text:12220:14245:17532\ncatalog:variable_text:12220:17532:18262\ncatalog:variable_text:12220:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:vissa-rorelseintakter-tkr"
+fields = { "description" = "Vissa rörelseintäkter, i tusentals kronor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger enheten, och elnätföretagens ”Totalt” anger ingen annan betydelse.\ncatalog:variable_text:12221:14245:17532\ncatalog:variable_text:12221:17532:17897\ncatalog:variable_text:12221:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:vissa-rorelsekostnader-radnr"
+fields = { "description" = "Radnummer för vissa rörelsekostnader. Raden anger vilken kostnadspost uppgiften avser; för elnätföretagen ingår även inköpt el." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; elnätföretagens text anger rörelsekostnader samt inköpt el.\ncatalog:variable_text:12223:14245:17532\ncatalog:variable_text:12223:17532:17897\ncatalog:variable_text:12223:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:vissa-rorelsekostnader-tkr"
+fields = { "description" = "Vissa rörelsekostnader, i tusentals kronor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger enheten (1000 kr, tusentals kronor, tkr).\ncatalog:variable_text:12225:14245:17532\ncatalog:variable_text:12225:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:padr"
+fields = { "description" = "Företagsenhetens postadress." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; rampopulationstexten är delad av tio variabler och beskriver registret, inte variabeln, och tas inte med.\ncatalog:variable_text:12103:14245:17532\ncatalog:variable_text:12103:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:postadress-2"
+fields = { "description" = "Företagsenhetens postadress (företagets gatuadress)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; rampopulationstexten är delad av tio variabler och tas inte med; operationaliseringarna anger företagets adress respektive gatuadress.\ncatalog:variable_text:12107:14245:14610\ncatalog:variable_text:12107:14610:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postnr"
+fields = { "description" = "Postnummer i företagsenhetens postadress." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; rampopulationstexten och texten om hur postnumret hålls uppdaterat beskriver insamlingen och tas inte med.\ncatalog:variable_text:12108:14245:15706\ncatalog:variable_text:12108:15706:16071\ncatalog:variable_text:12108:16071:19358\ncatalog:variable_text:12108:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:postnummer-padr"
+fields = { "description" = "Postnummer i företagets postadress." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; rampopulationstexten är delad av tio variabler och tas inte med.\ncatalog:variable_text:12110:14245:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:rad"
+fields = { "description" = "Rad i gasföretagens blankett. Tillsammans med Tabell anger den vilken uppgift ett värde avser, till exempel försäljningsvärde, använd mängd av en energivara, antal uttagspunkter eller investeringar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nMaintainer #2141 Q3 (2026-11-03): en registergemensam Rad-koordinat. De 144 texterna är definitionerna av de uppgifter som raden pekar ut (var och en delad med uppgiftens egen variabel) och tas inte med.\ncatalog:variable_text:12115:15706:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:tabell"
+fields = { "description" = "Tabell i gasföretagens blankett. Tillsammans med Rad anger den vilken uppgift ett värde avser, till exempel försäljningsvärde, använd mängd av en energivara, antal uttagspunkter eller investeringar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nMaintainer #2141 Q3 (2026-11-03): en registergemensam Tabell-koordinat. De 145 texterna är definitionerna av de uppgifter som tabellen pekar ut (var och en delad med uppgiftens egen variabel) och tas inte med.\ncatalog:variable_text:12201:15706:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoprod"
+fields = { "description" = "Elproduktion brutto, i MWh, vid vatten-, vind- och värmekraftstationer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått i alla tabeller; elnätföretagens operationalisering (egenforbr:s text, felet finns i SCB-exporten) är rättad på occurrence-nivå.\ncatalog:variable_text:11833:14245:14610\ncatalog:variable_text:11833:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:verkningsgrad"
+fields = { "description" = "Verkningsgrad vid värmeproduktion vid värmeverk och annan värme (så kallad färdig värme). För elnätföretagen anges den normalt till 80–90 procent." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått i båda tabellerna. Exportens värmevärdesrader för samma kolumn hör till syskonvariabeln varmevarde-vid-varmeproduktion (befintlig rolluppdelning) och tas inte med.\ncatalog:variable_text:12219:14245:17897"

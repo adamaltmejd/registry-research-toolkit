@@ -60,6 +60,7 @@ public = "fob"
 "antal-bilar" = ["Individ: AntBilar"]
 "antal-bilar-hushall" = ["Lägenhet och hushåll: AntBilarHh"]
 "antal-lagenheter" = ["Lägenhet och hushåll: AntLgh"]
+"antal-lagenheter-med-hiss" = ["Individ: AntLghHiss"]
 "antal-rum" = ["Individ: AntRumLgh"]
 "antal-rumsenheter" = ["Lägenhet och hushåll: AntRumEnhBrK @ 1975-01-01"]
 "antal-rumsenheter-rok" = ["Lägenhet och hushåll: AntRumEnhRoK @ 1975-01-01"]

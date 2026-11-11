@@ -5516,3 +5516,21 @@ kind = "set"
 subject = "var:arealklass-akermark-nya-kriterier"
 fields = { "description" = "Storleksklass för åkermarken enligt de nya kriterierna: 0 = upp till 2 hektar åkermark, 1 = mer än 2 hektar åkermark eller minst 5 hektar jordbruksmark (åker och betesmark)." }
 evidence = "Indicator: code list #8387 0 = upp till 2 ha åkermark, 1 = mer än 2 ha åkermark eller minst 5 ha jordbruksmark; label says Areal."
+
+[[statement]]
+kind = "set"
+subject = "var:epost"
+fields = { "description" = "Brukarens e-postadress." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; stavfelet ”E-postaderss” rättas.\ncatalog:variable_text:42635:13514:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kod-for-adressforsaljning"
+fields = { "description" = "Om lantbrukaren meddelat Jordbruksverket eller SCB att hen inte vill att SCB lämnar ut namn och adress: 1 = stoppad mot adressförsäljning, 0 = övriga." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text med stavfel (”atti”, ”ati”).\ncatalog:variable_text:42712:13879:14610\ncatalog:variable_text:42712:14610:14975\ncatalog:variable_text:42712:14975:15340\ncatalog:variable_text:42712:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:kundnr"
+fields = { "description" = "Företagets kundnummer hos Jordbruksverket, det som används när man söker stöd." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; den senare texten preciserar kundnumret.\ncatalog:variable_text:42720:12418:18993"

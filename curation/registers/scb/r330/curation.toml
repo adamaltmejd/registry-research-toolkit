@@ -250,3 +250,15 @@ kind = "set"
 subject = "var:vardepapperssort"
 fields = { "tags" = ["finance"] }
 evidence = "VP är en källkodsförkortning för värdepapper och id är därmed opakt.\ncatalog:variable_text:1438:17167:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:landskod"
+fields = { "description" = "Land eller landgrupp som aktieägaren tillhör. Från 2020 kan uppgiften också avse aktiebolagets land." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSCB-exporten (VarId 1892) dokumenterar Landskod 2020–2025 i två rader per år (aktieägaren och aktiebolaget); 2017–2019 bara aktieägaren. Katalogen visar från 2020 bara bolagsraden.\ncatalog:variable_text:8998:17167:18262\ncatalog:variable_text:8998:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:namn"
+fields = { "description" = "Person- eller företagsnamn." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSCB-exporten (VarId 326) dokumenterar Namn 2020–2025 i två rader per år (person- eller företagsnamn och företagsnamn); den generiska definitionen (delad av 9 variabler) tas inte med.\ncatalog:variable_text:9002:17167:18262\ncatalog:variable_text:9002:18262:20454"

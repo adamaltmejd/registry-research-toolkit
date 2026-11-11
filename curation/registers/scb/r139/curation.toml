@@ -1099,3 +1099,39 @@ kind = "set"
 subject = "var:bransleslaget-i-klartext"
 fields = { "label" = "Bränsleslaget i klartext (BrSlag)" }
 evidence = "#2102 same-label cluster 'Bränsleslaget i klartext' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; BrSlag and Text are both 'Anger benämning på bränslet' with no documented difference; Text in this member spans 2005-2020, so the spelling is the qualifier."
+
+[[statement]]
+kind = "set"
+subject = "var:brravara"
+fields = { "description" = "Förbrukning av stenkol, koks, naturgas och eldningsolja som använts som råvara vid produktframställning, i naturliga mått." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text med och utan tillägget om naturliga mått.\ncatalog:variable_text:13413:13149:13514\ncatalog:variable_text:13413:13514:16071\ncatalog:variable_text:13413:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:cfar-nummer-arbetsstalle"
+fields = { "description" = "Arbetsställets CFAR-nummer, dess registreringsnummer i Företagsdatabasen (FDB)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; operationaliseringarna anger arbetsställets nummer respektive registreringsnummer i FDB.\ncatalog:variable_text:13414:12784:13149\ncatalog:variable_text:13414:13149:13514\ncatalog:variable_text:13414:13514:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagsenhetens-status"
+fields = { "description" = "Företagsenhetens verksamhetsstatus, det vill säga om enheten är verksam eller inte, enligt statuskoderna. I en del leveranser 2006–2014 visar den om arbetsstället tillkommit eller lagts ned under referensåret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDefinitionen är generisk (delas av 7 variabler); operationaliseringarna anger verksamhetsstatus och 2006–2014 även tillkomst eller nedläggning under året.\ncatalog:variable_text:13419:12784:13149\ncatalog:variable_text:13419:13149:13514\ncatalog:variable_text:13419:15340:15706\ncatalog:variable_text:13419:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:identitet-koppling-industrins-energianvandning"
+fields = { "description" = "Informationslös identitet som kopplar uppgifterna till undersökningen Industrins energianvändning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen anger kopplingen, 2008–2013 med stavfelet ”Industrin”.\ncatalog:variable_text:13425:13514:13879\ncatalog:variable_text:13425:13879:16071\ncatalog:variable_text:13425:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:inkopt-kvantitet"
+fields = { "description" = "Övriga inköp inom landet av respektive bränsle som levererats under kvartalet. Med inköpt kvantitet avses kvantiteter som fakturerats av företag eller arbetsställen, även inom det egna företaget eller den egna koncernen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna är varianter av samma text om övriga inrikes inköp under kvartalet.\ncatalog:variable_text:13429:12784:13149\ncatalog:variable_text:13429:13149:13514\ncatalog:variable_text:13429:13514:16071\ncatalog:variable_text:13429:16071:16436\ncatalog:variable_text:13429:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:leveranser-hemmamarknad"
+fields = { "description" = "Mängd av respektive bränsle som levererats till hemmamarknaden under kvartalet, i naturliga mått." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDefinitionen är generisk och talar om värde; operationaliseringarna 2005–2014 anger levererad mängd i naturliga mått, vilket beskrivningen följer.\ncatalog:variable_text:13437:12784:13149\ncatalog:variable_text:13437:13149:13514\ncatalog:variable_text:13437:13514:16071"

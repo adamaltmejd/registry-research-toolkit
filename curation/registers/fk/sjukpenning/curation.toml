@@ -1840,3 +1840,63 @@ kind = "set"
 subject = "var:utflode-dag30"
 fields = { "tags" = ["transfers"] }
 evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc122/1734681063948/variabelforteckning-midas-sjukpenning-rehabiliteringspenning.xlsx); tagged like the register's other benefit measures."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sjukfall"
+fields = { "description" = "Antal sjukfall som har pågått någon gång under redovisningsperioden, som är året, kvartalet eller månaden beroende på tabell." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått i års-, kvartals- och månadstabellerna; bara referensperioden följer tabellen.\ncatalog:variable_text:360:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:dagbelopp"
+fields = { "description" = "Genomsnittlig utbetald dagersättning under delsjukfallet, beräknad som del_belopp_brutto dividerat med del_dagar_brutto. Dagbeloppet ändras under ett sjukfall främst vid ändrad SGI eller omfattning och i vissa fall vid ändrad delförmån. Det kan också ändras av datatekniska skäl, när ett enhetligt dagbelopp inte har gått att återskapa, och bör därför analyseras med viss försiktighet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma beräkning i alla tabeller; förbehållet om datatekniska skäl tas med som fakta om måttet.\ncatalog:variable_text:430:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:delforman1-kod-sista-dag"
+fields = { "description" = "Kod för delförmån den sista ersatta dagen i redovisningsperioden, som är året, kvartalet eller månaden beroende på tabell." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma kod; bara referensperioden följer tabellen.\ncatalog:variable_text:441:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:delforman2-kod-sista-dag"
+fields = { "description" = "Kod för en eventuell ytterligare delförmån den sista ersatta dagen i redovisningsperioden, som är året, kvartalet eller månaden beroende på tabell. Har personen flera delförmåner klassas den delförmånskod som har högst värde som den andra delförmånen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma kod; bara referensperioden följer tabellen.\ncatalog:variable_text:445:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:inflode"
+fields = { "description" = "Antal sjukfall som når Försäkringskassan och som har påbörjats under redovisningsperioden, som är året, kvartalet eller månaden beroende på tabell." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått; bara referensperioden följer tabellen.\ncatalog:variable_text:464:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:inkomsttyp-kod-sista-dag"
+fields = { "description" = "Kod för den inkomsttyp (SGI) som ligger till grund för ersättningen den sista ersatta dagen i redovisningsperioden, som är året, kvartalet eller månaden beroende på tabell." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma kod; bara referensperioden följer tabellen.\ncatalog:variable_text:469:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning-sista-dag"
+fields = { "description" = "Omfattning (sjukskrivningsgrad) som decimaltal den sista ersatta dagen i redovisningsperioden, som är året, kvartalet eller månaden beroende på tabell. Omfattningen räknas i förhållande till personens arbetstid: den som har 50 procents arbetstid och inte kan arbeta alls på grund av nedsatt arbetsförmåga har omfattningen 100 procent." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått; bara referensperioden följer tabellen. Dubbelordet ”i i” rättat.\ncatalog:variable_text:518:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukfallslangd"
+fields = { "description" = "Sjukfallets längd den sista ersatta dagen i redovisningsperioden, som är året, kvartalet eller månaden beroende på tabell. I två av årstabellerna anges att längden räknas inklusive de första 14 respektive 29 dagarna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått; referensperioden följer tabellen, och två årstabeller anger uttryckligen att de första 14 respektive 29 dagarna ingår.\ncatalog:variable_text:521:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:status"
+fields = { "description" = "Anger om sjukfallet pågår vid slutet av redovisningsperioden, som är året, kvartalet eller månaden beroende på tabell: 1 om sjukfallet pågår, 0 om det har avslutats under perioden. Värde saknas när periodens sista dag är en karensdag eller en sjuklönedag." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma 0/1-markering; bara referensperioden följer tabellen.\ncatalog:variable_text:525:8766:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:utflode"
+fields = { "description" = "Antal sjukfall som når Försäkringskassan och som har avslutats under redovisningsperioden, som är året, kvartalet eller månaden beroende på tabell. De senaste två månaderna redovisas inte på grund av eftersläpning i data." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått; referensperioden följer tabellen, och undantaget för de två senaste månaderna gäller alla tabeller.\ncatalog:variable_text:529:8766:2932897"

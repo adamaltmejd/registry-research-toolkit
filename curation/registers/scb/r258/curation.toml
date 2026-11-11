@@ -20159,3 +20159,99 @@ kind = "set"
 subject = "var:turn"
 fields = { "description" = "Omsättning exklusive moms, i tusen kronor, enligt uppgift till respektive års undersökning." }
 evidence = "Turnover excl. VAT in tkr; the \"2016\" in SCB text appears in 2013-2015 releases so it is not year-specific. Existing TURN asserts (r258 curation.toml:483, 2103-2133) keep the \"2016\" label."
+
+[[statement]]
+kind = "set"
+subject = "var:anvander-erp-affarssystem"
+fields = { "description" = "Anger om företaget använder ERP-programvara (Enterprise Resource Planning) för att dela information elektroniskt mellan olika företagsfunktioner, till exempel genom att länka data mellan olika mjukvaruapplikationer, använda en gemensam databas för flera applikationer eller skicka och ta emot information inom företaget som kan behandlas automatiskt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; den senare texten säger uttryckligen ERP (stavat ”EPR”) och stavfelet ”företagsfunktionern” rättas.\ncatalog:variable_text:39245:15706:16071\ncatalog:variable_text:39245:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "description" = "Kod för personens län; 2007–2018 hämtad från den ordinarie arbetskraftsundersökningen (AKU)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma länskod; den generella texten om länsindelning delas av många variabler.\ncatalog:variable_text:40189:13514:15706\ncatalog:variable_text:40189:16801:17167\ncatalog:variable_text:40189:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:miljopolicy-it-energianvandning"
+fields = { "description" = "Anger om företaget har en miljöpolicy eller liknande som innebär att energiförbrukningen vid användning av IT ska minskas, till exempel genom skärmsläckare, krav på att datorerna stängs av vid arbetsdagens slut, färre utskrifter eller energisnål drift." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; den senare texten ger exempel. Det avhuggna ”esor” tas bort.\ncatalog:variable_text:40211:15706:16801\ncatalog:variable_text:40211:17167:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-for-statistiken-huvudsaklig"
+fields = { "description" = "Företagets huvudsakliga näringsgren enligt Svensk näringsgrensindelning (SNI), satt för statistiska ändamål och hämtad från urvalsramen SAMU: 2021 från SAMU i mars 2021, därefter från SAMU i november året före undersökningsåret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; bara urvalsramens tidpunkt skiljer sig mellan åren.\ncatalog:variable_text:40294:18628:18993\ncatalog:variable_text:40294:18993:19358\ncatalog:variable_text:40294:19358:19723\ncatalog:variable_text:40294:19723:20089\ncatalog:variable_text:40294:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:nettoomsattning"
+fields = { "description" = "Företagets nettoomsättning, hämtad från urvalsramen SAMU: 2021 från SAMU i mars 2021, 2022 från SAMU i november 2021." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; bara urvalsramens tidpunkt skiljer sig.\ncatalog:variable_text:40298:18628:18993\ncatalog:variable_text:40298:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:nuts2"
+fields = { "description" = "Företagsenhetens region enligt EU:s geografiska indelning för regionalstatistik (NUTS), härledd genom att länskoden i urvalsramen SAMU nycklas till NUTS-nivå: 2021 från SAMU i mars 2021, därefter från SAMU i november året före undersökningsåret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma härledning; bara urvalsramens tidpunkt skiljer sig. Stavfelet ”geneom” rättat.\ncatalog:variable_text:40299:18628:18993\ncatalog:variable_text:40299:18993:19358\ncatalog:variable_text:40299:19358:19723\ncatalog:variable_text:40299:19723:20089\ncatalog:variable_text:40299:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:person-orgnr"
+fields = { "description" = "Organisationsnummer, för fysiska personer med näringsverksamhet personnummer, för företagsenhetens huvudsakliga juridiska enhet, som är uppgiftskällan. Hämtas från urvalsramen SAMU: 2021 från SAMU i mars 2021, därefter från SAMU i november året före undersökningsåret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; bara urvalsramens tidpunkt skiljer sig. Den generella texten om vem som tilldelar organisationsnummer delas av många variabler och tas inte med.\ncatalog:variable_text:40341:18628:18993\ncatalog:variable_text:40341:18993:19358\ncatalog:variable_text:40341:19358:19723\ncatalog:variable_text:40341:19723:20089\ncatalog:variable_text:40341:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "description" = "Det stratum som företagsenheten tillhör i det stratifierade urvalet. Strata bildas efter företagsenhetens branschgrupp, storleksklass och region enligt NUTS, med huvudsaklig näringsgren, medelantal anställda och läge på läns- eller regionnivå som allokeringsvariabler. 2021–2022 finns även strata som bildas enbart efter branschgrupp och storleksklass, med näringsgren och medelantal anställda som allokeringsvariabler." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSCB-exporten dokumenterar stratum 2021–2022 i två rader per år med olika population (Registerinformation.csv:row=567495, row=567499): en med och en utan regional indelning enligt NUTS; katalogen visar bara den första. Stavfelet ”antällda” rättat.\ncatalog:variable_text:40490:13514:14975\ncatalog:variable_text:40490:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tog-emot-edi-bestallningar-eu"
+fields = { "description" = "Anger om företaget har tagit emot beställningar via EDI från kunder i övriga EU, utom beställningar via webbplats eller app." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; 2013 års och de senare årens texter (nytt VarId 2015) anger samma sak, de senare med geografin bara i etiketten.\ncatalog:variable_text:40541:15706:16071\ncatalog:variable_text:40541:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:tog-emot-edi-bestallningar-sverige"
+fields = { "description" = "Anger om företaget har tagit emot beställningar via EDI från kunder i Sverige, utom beställningar via webbplats eller app." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; 2013 års och de senare årens texter anger samma sak, de senare med geografin bara i etiketten.\ncatalog:variable_text:40542:15706:16071\ncatalog:variable_text:40542:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:tog-emot-edi-bestallningar-varlden"
+fields = { "description" = "Anger om företaget har tagit emot beställningar via EDI från kunder i resten av världen, utom beställningar via webbplats eller app." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; 2013 års och de senare årens texter anger samma sak, de senare med geografin bara i etiketten.\ncatalog:variable_text:40543:15706:16071\ncatalog:variable_text:40543:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:uppgiftslamnarens-personnr"
+fields = { "description" = "Uppgiftslämnarens personnummer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; den äldre texten är den generella definitionen av personnummer.\ncatalog:variable_text:40565:13879:15340\ncatalog:variable_text:40565:16071:16801\ncatalog:variable_text:40565:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-bestallning-bokning"
+fields = { "description" = "Anger om företaget på en webbplats där det presenterar sin verksamhet, även en som ägs av tredje part, erbjuder möjlighet att beställa, reservera eller boka direkt online, till exempel via kundvagn, köpknapp eller bokningssystem. Beställningar via manuellt skriven e-post räknas inte." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga under två VarId; den äldre texten preciserar vad som räknas. Det lösa ”iii” tas bort.\ncatalog:variable_text:40600:15706:16071\ncatalog:variable_text:40600:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-produktkatalog"
+fields = { "description" = "Anger om företagets webbplats erbjuder en beskrivning av varor eller tjänster med prisinformation." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga under två VarId, olika formulerad.\ncatalog:variable_text:40603:15706:16071\ncatalog:variable_text:40603:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: Stratum where key = 'v462'"
+fields = { "variable" = "stratum-befolkning" }
+evidence = "Candidate split, no succession edge (crates/DESIGN.md). SCB VarId 462 (Stratum) is a generic sampling-stratum id used by two surveys with different units: Befolkningens IT-användning 2007–2010, column Stratum, a person's stratum taken from the ordinary AKU ('Kommer från ordinarie AKU'), and IT-användning i företag 2021–2025, column stratum, an enterprise's stratum formed by branschgrupp, storleksklass and NUTS region. The enterprise half keeps the id (its ledger anchor). Operator, #2322 curation under the maintainer's 2026-11-11 delegation.\ncatalog:variable_text:40490:13514:14975\ncatalog:variable_text:40490:18628:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum-befolkning"
+fields = { "description" = "Det stratum som personen tillhör i det stratifierade urvalet; stratum kommer från den ordinarie arbetskraftsundersökningen (AKU)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAndra halvan av delningen av stratum (befolkningsundersökningen 2007–2010).\ncatalog:variable_text:40490:13514:14975"

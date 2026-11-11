@@ -5192,3 +5192,111 @@ kind = "set"
 subject = "var:vardnadshavare2-12-senare"
 fields = { "description" = "Anger vilken typ av vårdnadshavare 2 är, tolv månader efter ursprungsmätningen, för barn under 18 år med civilstånd ogift. Vårdnadshavare 2 är den yngste av barnets vårdnadshavare." }
 evidence = "SCB:s definition säger både att vårdnadshavare 2 är den äldste och den yngste. Syskonnycklarna v19544 (Vårdnadshavare2) och v19899 (Vårdnadshavare2, 15 månader senare) definierar vårdnadshavare 2 som den yngste, och v19543, v19862 och v29139 definierar vårdnadshavare 1 som den äldste; meningen om den äldste är kopierad från vårdnadshavare 1.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=921588 (r14593)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=921600 (r14586)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=921714 (r14585)"
+
+[[statement]]
+kind = "set"
+subject = "var:adopterad"
+fields = { "description" = "Om personen är adopterad, och i så fall om hen är utrikes eller inrikes född. Härledd med hjälp av personnummer för adoptivmor och adoptivfar samt barnets födelseland." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger härledningen och kodernas uppdelning på utrikes och inrikes födda.\ncatalog:variable_text:13460:10591:10592\ncatalog:variable_text:13460:10956:10957\ncatalog:variable_text:13460:16435:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:familjetyp"
+fields = { "description" = "Barnets familjetyp, en klassificering av familjens sammansättning (till exempel familj med eller utan barn) härledd från folkbokföringen utifrån bland annat föräldrarnas civilstånd samt barnens ålder och relation till föräldrarna. 2014 är den beräknad med hänsyn till fäder som registrerats under första kvartalet året efter referenstidpunkten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i alla tabeller; operationaliseringarna anger barnets familjetyp, härledningen och 2014 års beräkning.\ncatalog:variable_text:13572:10591:10592\ncatalog:variable_text:13572:10956:10957\ncatalog:variable_text:13572:13513:13514\ncatalog:variable_text:13572:16435:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:familjetyp-12-senare"
+fields = { "description" = "Barnets familjetyp 12 månader efter referenstidpunkten (första mättidpunkten), en klassificering av familjens sammansättning härledd från folkbokföringen. Från 2014 avser familj personer som bor i samma bostad och har relationer till varandra, eller på samma fastighet när uppgift om bostad saknas." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna är omformuleringar, och familjebegreppet anges från 2014.\ncatalog:variable_text:13573:10591:10592\ncatalog:variable_text:13573:13513:13514\ncatalog:variable_text:13573:16435:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:famtyp-barnreg"
+fields = { "description" = "Barnets familjetyp i förhållande till föräldrarna i familjen, härledd från folkbokföringen och beräknad med hänsyn till fäder som registrerats under första kvartalet året efter referenstidpunkten. Familj avser personer som bor i samma bostad och har relationer till varandra, eller på samma fastighet när uppgift om bostad saknas." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; 2024 års ena tabell lägger till ”Härledd variabel”.\ncatalog:variable_text:13574:16435:16436\ncatalog:variable_text:13574:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:famtyp2"
+fields = { "description" = "Familjens sammansättning: kärnfamilj, ombildad familj med gemensamma barn, ombildad familj med den enes och den andres barn, eller ej barnfamilj. Härledd ur folkbokföringens uppgifter. Från 2014 är variabeln anpassad för Barnregistret och en gruppering av Familjetyp, och familj avser personer som bor i samma bostad och har relationer till varandra, eller på samma fastighet när uppgift om bostad saknas." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna lägger till härledning och familjebegrepp, det senare angivet från 2014.\ncatalog:variable_text:13577:10591:10592\ncatalog:variable_text:13577:10956:10957\ncatalog:variable_text:13577:16435:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:far"
+fields = { "description" = "Markering (1) för barn födda under året vars far registrerades först under första kvartalet året efter referenstidpunkten. Fadern hämtas från RTB." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna anger hämtningen från RTB och kodningen.\ncatalog:variable_text:13579:11322:11323\ncatalog:variable_text:13579:12052:12053\ncatalog:variable_text:13579:16435:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:grund-separation"
+fields = { "description" = "Om barnet och boföräldrarna fortfarande bor ihop ett år senare, jämfört med föregående årsskifte. Härledd från familjetyp och familjeställning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna förtydligar att den anger om barn och föräldrar skiljts åt.\ncatalog:variable_text:13618:10591:10592\ncatalog:variable_text:13618:16070:16071\ncatalog:variable_text:13618:16435:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "description" = "Folkbokföringskommun: barnets i barntabellerna och familjens i familjetabellen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDefinitionen är generisk (delas av 210 variabler); operationaliseringen skiljer bara på barnets och familjens kommun efter tabell.\ncatalog:variable_text:13634:10591:10592\ncatalog:variable_text:13634:10956:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "description" = "Folkbokföringslän: barnets i barntabellerna och familjens i familjetabellen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDefinitionen är generisk (delas av 175 variabler); operationaliseringen skiljer bara på barnets och familjens län efter tabell.\ncatalog:variable_text:13643:10591:10592\ncatalog:variable_text:13643:10956:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:nyfam"
+fields = { "description" = "Markerar barn som är 0-åringar i samma familj som en far som hämtats från RTB ett kvartal senare (året efter referensåret), eller som är syskon till ett sådant barn. Härledd variabel." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; operationaliseringarna är omformuleringar (”år+1” och ”ett kvartal senare”).\ncatalog:variable_text:13651:11322:11323\ncatalog:variable_text:13651:16070:16071\ncatalog:variable_text:13651:16435:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:partner"
+fields = { "description" = "Om barnet tillhör en partnerskapsfamilj, och i så fall vilken typ. Härledd variabel." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen anger att den avser barnet.\ncatalog:variable_text:13655:10591:10592\ncatalog:variable_text:13655:16070:16071\ncatalog:variable_text:13655:16435:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:samkonadfam"
+fields = { "description" = "Om barnet bor med två vuxna av samma kön som har en relation, det vill säga är gifta, registrerade partner eller har gemensamma barn; från 2015 avses vårdnadshavare för gemensamma barn. Härledd variabel." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; relationsbegreppets ändring 2015 anges som fakta med år.\ncatalog:variable_text:13672:16435:16436\ncatalog:variable_text:13672:16800:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-grov-adfar"
+fields = { "description" = "Adoptivfaderns högsta utbildningsnivå enligt Svensk utbildningsnomenklatur SUN 2020, grovt aggregerad till 3 värden av de knappt 50 nivåkoderna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; 2019 års ena definition nämner SUN 2000 (generisk text från en äldre variabel) medan etiketten och operationaliseringen anger SUN 2020.\ncatalog:variable_text:13676:18261:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-grov-admor"
+fields = { "description" = "Adoptivmoderns högsta utbildningsnivå enligt Svensk utbildningsnomenklatur SUN 2020, grovt aggregerad till 3 värden av de knappt 50 nivåkoderna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; 2019 års ena definition nämner SUN 2000 (generisk text från en äldre variabel) medan etiketten och operationaliseringen anger SUN 2020.\ncatalog:variable_text:13677:18261:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-grov-bofar"
+fields = { "description" = "Bofaderns högsta utbildningsnivå enligt Svensk utbildningsnomenklatur SUN 2020, grovt aggregerad till 3 värden av de knappt 50 nivåkoderna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; 2019 års ena definition nämner SUN 2000 (generisk text från en äldre variabel) medan etiketten och operationaliseringen anger SUN 2020.\ncatalog:variable_text:13678:18261:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-grov-bomor"
+fields = { "description" = "Bomoderns högsta utbildningsnivå enligt Svensk utbildningsnomenklatur SUN 2020, grovt aggregerad till 3 värden av de knappt 50 nivåkoderna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; 2019 års ena definition nämner SUN 2000 (generisk text från en äldre variabel) medan etiketten och operationaliseringen anger SUN 2020.\ncatalog:variable_text:13679:18261:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-grov-far"
+fields = { "description" = "Den biologiska faderns högsta utbildningsnivå enligt Svensk utbildningsnomenklatur SUN 2020, grovt aggregerad till 3 värden av de knappt 50 nivåkoderna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; 2019 års ena definition nämner SUN 2000 (generisk text från en äldre variabel) medan etiketten och operationaliseringen anger SUN 2020.\ncatalog:variable_text:13680:18261:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-grov-mor"
+fields = { "description" = "Den biologiska moderns högsta utbildningsnivå enligt Svensk utbildningsnomenklatur SUN 2020, grovt aggregerad till 3 värden av de knappt 50 nivåkoderna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; 2019 års ena definition nämner SUN 2000 (generisk text från en äldre variabel) medan etiketten och operationaliseringen anger SUN 2020.\ncatalog:variable_text:13682:18261:18262"
