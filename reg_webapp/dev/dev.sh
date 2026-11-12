@@ -30,23 +30,33 @@
 #                          agent-browser: a PNG, the accessibility snapshot
 #                          (.snapshot.txt) and an axe audit (.a11y.txt);
 #                          non-desktop captures get a `-<label>` suffix.
+#   dev.sh ab <args>...    the pinned agent-browser in this checkout's named session
+#                          (`<checkout>-ui`), to drive a page an interactive run serves;
+#                          no servers. `ab close` ends the browser.
 #   dev.sh preview         preview_start entry point (.claude/launch.json) — like
 #                          interactive serve, but the frontend binds the MCP-assigned
 #                          $PORT so preview_start attaches to OUR vite and parallel
 #                          sessions don't collide. Not meant to be run by hand.
 #
-# Leading flags (before the mode), mutually exclusive, work with every mode:
-#   --fixture-db           serve a DETERMINISTIC SYNTHETIC catalog instead of the
-#                          REG_META_DB you name: the reg_meta.db `reg-build` makes
-#                          from conformance/cases/fixtures/webapp-dev, looked up in the
-#                          shared fixture cache (<target>/debug/reg-fixture, built on
-#                          a miss) and exported as REG_META_DB. Without the flag,
-#                          REG_META_DB (a directory holding reg_meta.db) is required;
-#                          REG_META_CATALOG=<name> also serves its holdings partner
-#                          reg_meta_<name>.db there (a steward site, e.g. swecov).
+# Leading catalog flags (before the mode), one of, work with every mode:
+#   --fixture-db           serve a DETERMINISTIC SYNTHETIC catalog: the reg_meta.db
+#                          `reg-build` makes from conformance/cases/fixtures/webapp-dev,
+#                          looked up in the shared fixture cache
+#                          (<target>/debug/reg-fixture, built on a miss) and exported
+#                          as REG_META_DB.
 #   --paired-fixture       build the synthetic holdings pair into a per-session
 #                          temp directory (<target>/debug/reg-fixture --paired), export
 #                          REG_WEBAPP_FIXTURE=paired, and select catalog fixture.
+#   --db DIR [--catalog NAME]
+#                          serve DIR (a directory holding reg_meta.db; sets
+#                          REG_META_DB; relative to the checkout root, as the
+#                          variable is); --catalog also serves its holdings partner
+#                          reg_meta_<NAME>.db there (a steward site, e.g. swecov; sets
+#                          REG_META_CATALOG). Humans and CI may export the two
+#                          variables instead; agents pass the flags, because the
+#                          Claude Code sandbox exclusion for this script
+#                          (.claude/settings.json) matches the command text, and an
+#                          env-var prefix would leave Chrome sandboxed.
 #
 # smoke/shot/flows run agent-browser, pinned in reg_webapp/frontend/package.json, in a
 # browser session private to this invocation (closed on exit). It drives an
@@ -66,23 +76,63 @@ set -uo pipefail
 # it spawns), not just the direct child. Without this, vite leaks on teardown.
 set -m
 
-# Leading global flag, consumed before the mode word so every mode accepts it.
+# Short on purpose: it is what an agent reads, and it names the only paths it needs.
+usage() {
+	cat <<'EOF'
+usage (from the repo root, no env-var prefix):
+  bash reg_webapp/dev/dev.sh CATALOG [MODE]
+CATALOG, one of:
+  --fixture-db | --paired-fixture | --db DIR [--catalog NAME]
+MODE (none: interactive, Ctrl-C stops):
+  smoke
+  shot [--mobile|--tablet|--desktop|--wide|--all|--viewport WxH]... ROUTE...
+  flows OUT_DIR [JOURNEY...]
+Drive a page an interactive run serves (no CATALOG; one browser per checkout):
+  bash reg_webapp/dev/dev.sh ab AGENT_BROWSER_ARGS...   (end with: ab close)
+Ports, build dir and shots dir are automatic; the first line printed names the
+shots dir.
+EOF
+}
+
+# Leading catalog flags, consumed before the mode word so every mode accepts them.
 # `fixture_db_dir` is the session's copy of the fixture (empty when the flag is
 # absent); cleanup() removes it, so it must be defined before the trap is installed.
 fixture_db=""
 paired_fixture=""
 fixture_db_dir=""
-while [ "${1:-}" = "--fixture-db" ] || [ "${1:-}" = "--paired-fixture" ]; do
-	if [ -n "$fixture_db$paired_fixture" ]; then
-		echo "dev: choose only one of --fixture-db and --paired-fixture" >&2
-		exit 2
-	fi
+db_flag=""
+while [ "$#" -gt 0 ]; do
 	case "$1" in
 	--fixture-db) fixture_db=1 ;;
 	--paired-fixture) paired_fixture=1 ;;
+	--db | --catalog)
+		[ "$#" -ge 2 ] || {
+			echo "dev: $1 needs a value" >&2
+			exit 2
+		}
+		db_flag=1
+		if [ "$1" = --db ]; then
+			# As the variable: a relative DIR resolves against the checkout root (the
+			# script cds there below), whatever the caller's cwd.
+			export REG_META_DB="$2"
+		else
+			export REG_META_CATALOG="$2"
+		fi
+		shift
+		;;
+	-h | --help)
+		usage
+		exit 0
+		;;
+	*) break ;;
 	esac
 	shift
 done
+case "$fixture_db$paired_fixture$db_flag" in 11*)
+	echo "dev: pass one catalog: --fixture-db, --paired-fixture or --db DIR [--catalog NAME]" >&2
+	exit 2
+	;;
+esac
 
 mode=serve
 case "${1:-}" in
@@ -116,9 +166,14 @@ preview)
 	mode=preview
 	shift
 	;;
+ab)
+	mode=ab
+	shift
+	;;
 "") mode=serve ;;
 *)
-	echo "usage: dev.sh [--fixture-db | --paired-fixture] [smoke | shot [--mobile|--tablet|--desktop|--wide|--all|--viewport WxH]... <route>... | flows <out-dir> [journey...] | preview]" >&2
+	echo "dev: unknown argument '$1'" >&2
+	usage >&2
 	exit 2
 	;;
 esac
@@ -211,6 +266,15 @@ bin=${CARGO_TARGET_DIR:-$root/target}/debug
 if ! (cd reg_webapp/frontend && bun install --frozen-lockfile --silent); then
 	echo "dev: 'bun install --frozen-lockfile' failed — see output above." >&2
 	exit 1
+fi
+
+# `ab`: the pinned agent-browser against a page an interactive run serves, in one
+# named session per checkout (the default session is one browser shared machine-wide).
+# Through dev.sh so the browser launch matches the script's sandbox exclusion. No
+# servers, no build; the idle timeout reaps a daemon nobody closed.
+if [ "$mode" = ab ]; then
+	exec bun "$root/reg_webapp/frontend/node_modules/agent-browser/bin/agent-browser.js" \
+		--session "$(basename "$root")-ui" --idle-timeout 15m "$@"
 fi
 
 # The Rust server, built from this checkout. The whole workspace, as `cargo test`
@@ -329,7 +393,7 @@ fi
 
 # The Rust server reads the directory holding reg_meta.db; there is no default.
 if [ -z "${REG_META_DB:-}" ]; then
-	echo "dev: set REG_META_DB to a directory holding reg_meta.db, or pass --fixture-db or --paired-fixture" >&2
+	echo "dev: pass a catalog: --fixture-db, --paired-fixture or --db DIR (a directory holding reg_meta.db)" >&2
 	exit 1
 fi
 rust_db=$REG_META_DB

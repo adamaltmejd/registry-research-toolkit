@@ -13,8 +13,14 @@ The tooling lives in `reg_webapp/dev/`: `dev.sh` starts the Rust server
 ports. `smoke`, `shot` and `flows` drive the page with
 [agent-browser](https://github.com/vercel-labs/agent-browser) (a frontend devDep, pinned
 exactly in `reg_webapp/frontend/package.json`); `flows` runs the user journeys in
-`journeys.sh`. Every command starts at the **repo root**; `dev.sh` serves the checkout
-it lives in, whatever your cwd.
+`journeys.sh`. `dev.sh` serves the checkout it lives in.
+
+**Run it exactly as `bash reg_webapp/dev/dev.sh <flags> [mode]` from the repo or
+worktree root: no env-var prefix, no `cd X &&`.** The Claude Code sandbox exclusion
+(`.claude/settings.json`) matches the command text, and a command that does not match
+stays sandboxed, where Chrome dies. Pass only the flags below: ports, the cargo target
+and the shots directory are automatic and per-run, so concurrent runs never collide.
+`bash reg_webapp/dev/dev.sh --help` prints the usage.
 
 ## Prerequisites
 
@@ -28,11 +34,11 @@ You need:
   `crates/reg-core-wasm/Cargo.toml`.
 - For `smoke`, `shot` and `flows`: a Chrome for agent-browser. It finds an installed
   Google Chrome; with none, run
-  `bun reg_webapp/frontend/node_modules/agent-browser/bin/agent-browser.js install` once
+  `bash reg_webapp/dev/dev.sh ab install` once
   (Chrome for Testing into `~/.agent-browser`); the same command with `doctor` says
   which browser it resolves.
-- A catalog: `--fixture-db` (below), or `REG_META_DB` set to a directory holding a
-  release asset (`reg_meta.db`; root `README.md`). The server refuses a catalog whose
+- A catalog: `--fixture-db` or `--paired-fixture` (below), or `--db DIR`, a directory
+  holding a release asset (`reg_meta.db`; root `README.md`). The server refuses a catalog whose
   schema it does not admit (`CATALOG_SCHEMA_VERSION` in `crates/reg-core/src/lib.rs`)
   with `schema_incompatible`.
 
@@ -44,7 +50,11 @@ bash reg_webapp/dev/dev.sh --fixture-db shot [--mobile|--tablet|--desktop|--wide
 bash reg_webapp/dev/dev.sh --fixture-db flows <out-dir> [journey...]
 bash reg_webapp/dev/dev.sh --fixture-db          # interactive, Ctrl-C stops
 bash reg_webapp/dev/dev.sh --paired-fixture ...  # the same modes on the synthetic pair
+bash reg_webapp/dev/dev.sh --db DIR [--catalog NAME] ...  # a real or scratch catalog
 ```
+
+A relative `DIR` resolves against the checkout root. `--catalog NAME` also serves the
+holdings partner `reg_meta_<NAME>.db` in `DIR` (a steward site, e.g. `swecov`).
 
 `--paired-fixture` (instead of `--fixture-db`) builds the synthetic steward holdings
 pair into a temp directory (`target/debug/reg-fixture --paired`) and exports
@@ -75,7 +85,7 @@ job.
   cannot make is a suspected UI defect. `bash scripts/gate.sh flows` also runs the
   production-build smoke (`reg_webapp/frontend/scripts/smoke_build.ts`).
 - **Interactive** prints the URLs; the Rust server's OpenAPI document is at
-  `<rust>/openapi.json`. Pin ports with `RUST_PORT=… FRONTEND_PORT=…` if needed.
+  `<rust>/openapi.json`.
 
 **Look at the pictures.** The first line `dev.sh` prints names the checkout, the full
 HEAD and the per-invocation shots directory under `$TMPDIR`, kept after teardown:
@@ -83,8 +93,6 @@ HEAD and the per-invocation shots directory under `$TMPDIR`, kept after teardown
 ```
 dev: repo /path/to/checkout HEAD 0123456789abcdef… shots $TMPDIR/reg-webapp-shots.C8VNZN
 ```
-
-`REG_WEBAPP_SHOTS=<dir>` collects a run elsewhere (relative to the repo root).
 
 **`--fixture-db`** serves a deterministic synthetic catalog as `REG_META_DB`: current
 `reg-build` output for `conformance/cases/fixtures/webapp-dev`, from the shared fixture
@@ -95,7 +103,7 @@ density questions.
 **A scratch DB** verifies content not yet released (a `build-db` / curation change):
 
 ```sh
-REG_META_DB="$db_dir" bash reg_webapp/dev/dev.sh shot <route>
+bash reg_webapp/dev/dev.sh --db "$db_dir" shot <route>
 ```
 
 ## Parallel instances (concurrent worktrees)
@@ -109,18 +117,19 @@ REG_META_DB="$db_dir" bash reg_webapp/dev/dev.sh shot <route>
 - **`dev.sh smoke` / `shot`**: free ports, per-run shots directory, guaranteed teardown.
   The path to reach for.
 
-- **Driving a state `shot` cannot reach** (a dialog, a filled form): start `dev.sh`
-  interactively in the background and drive the printed frontend URL with the pinned
-  agent-browser in a **named session** — the default session is one browser shared by
-  every agent on the machine:
+- **Driving a state `shot` cannot reach** (a dialog, a filled form): start
+  `bash reg_webapp/dev/dev.sh --fixture-db` in the background and drive the printed
+  frontend URL with `dev.sh ab`, the pinned agent-browser in this checkout's own
+  session. One command per call, no `$ab` variable, so each one matches the sandbox
+  exclusion:
 
   ```sh
-  ab="bun reg_webapp/frontend/node_modules/agent-browser/bin/agent-browser.js --session $(basename "$PWD")-ui"
-  $ab open http://localhost:<port>/catalog/demo/bas
-  $ab snapshot -i         # interactive elements with @refs to click/fill
-  $ab set viewport 375 812 && $ab screenshot "$TMPDIR/bas-mobile.png"
-  $ab a11y                # axe audit of the current page
-  $ab close
+  bash reg_webapp/dev/dev.sh ab open http://localhost:<port>/catalog/demo/bas
+  bash reg_webapp/dev/dev.sh ab snapshot -i      # interactive elements with @refs
+  bash reg_webapp/dev/dev.sh ab set viewport 375 812
+  bash reg_webapp/dev/dev.sh ab screenshot "$TMPDIR/bas-mobile.png"
+  bash reg_webapp/dev/dev.sh ab a11y             # axe audit of the current page
+  bash reg_webapp/dev/dev.sh ab close
   ```
 
 Server-only changes rarely need the SPA: the conformance `api` corpus runs the Rust
@@ -131,7 +140,7 @@ vitest): `(cd reg_webapp/frontend && bun run test)`.
 
 - **`networkidle` is not "rendered".** React swaps in data after the network settles.
   `settled()` (in `dev.sh`, used by `journeys.sh`) waits for every `[aria-busy="true"]`
-  to clear — by hand, `$ab wait --fn '!document.querySelector("[aria-busy=\"true\"]")'`
+  to clear — by hand, `bash reg_webapp/dev/dev.sh ab wait --fn '!document.querySelector("[aria-busy=\"true\"]")'`
   after every navigation/click. Each loading placeholder carries `aria-busy="true"`; new
   ones must too (don't key on copy like "Loading…").
 - **agent-browser 0.41.2's text `errors` prints a bare `✗`** whatever it holds; read
@@ -156,19 +165,11 @@ vitest): `(cd reg_webapp/frontend && bun run test)`.
 
 ## Troubleshooting
 
-- Screenshot shows breadcrumbs + `Loading…` → the fetch hadn't landed; re-run, or raise
-  agent-browser's 25 s wait timeout (`AGENT_BROWSER_DEFAULT_TIMEOUT`, in ms).
-- The Rust server exits at boot about the DB/schema → no `REG_META_DB`, or an
-  inadmissible schema. Use `--fixture-db` or a current release asset.
-- agent-browser cannot launch Chrome (`smoke` / `shot` / `flows`) → `$ab doctor` names
-  the browser it resolved. In a sandboxed shell that denies Chrome's sandbox or its
-  child processes, pass launch flags through the environment:
-  `AGENT_BROWSER_ARGS=--no-sandbox`, then
-  `AGENT_BROWSER_ARGS=--no-sandbox,--single-process,--disable-gpu`.
-- `smoke` / `shot` / `flows` keep agent-browser's daemon sockets in a private
-  `/tmp/ab.*` directory (`AGENT_BROWSER_SOCKET_DIR`, removed on exit), not
-  `~/.agent-browser`, so a shell that cannot write `$HOME` still gets a daemon. Set the
-  variable yourself to choose the directory; the path must stay short (unix socket, 103
-  bytes). Verified from a Claude Bash shell only. The Chrome install
-  (`agent-browser install`) still writes `~/.agent-browser`, so install it outside the
-  sandbox or use an installed Google Chrome.
+- Screenshot shows breadcrumbs + `Loading…` → the fetch hadn't landed; re-run. A
+  placeholder that never clears and lacks `aria-busy="true"` is the defect.
+- The Rust server exits at boot about the DB/schema → an inadmissible schema. Use
+  `--fixture-db` or a current release asset.
+- Chrome aborts at launch (`smoke` / `shot` / `flows`) → the command ran sandboxed:
+  re-run it in the exact form above. Do not work around it with Chrome flags. Exit 3
+  is the Codex sandbox, where rendered checks cannot run. `dev.sh ab doctor` names the
+  browser agent-browser resolved.

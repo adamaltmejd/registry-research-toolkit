@@ -139,11 +139,12 @@ this part entirely if you have neither.
 
 ### Render
 
-From the repo root; `dev.sh` picks free ports and tears everything down on exit:
+From the repo root, in exactly this form (no env-var prefix, no `cd X &&`; see
+`run-reg-webapp`); `dev.sh` picks free ports and tears everything down on exit:
 
 ```sh
 bash reg_webapp/dev/dev.sh --fixture-db shot --all <route>
-REG_META_DB="$db_dir" bash reg_webapp/dev/dev.sh shot --all <route>
+bash reg_webapp/dev/dev.sh --db "$db_dir" shot --all <route>
 bash reg_webapp/dev/dev.sh --fixture-db smoke
 ```
 
@@ -209,7 +210,7 @@ axe audit.
 
 If the app will not boot or agent-browser cannot launch Chrome, the outcome is
 **blocked**, not a product finding: report the exact command, the failing line (and
-`$ab doctor`'s Chrome line, `$ab` as run-reg-webapp defines it) and what stayed
+`bash reg_webapp/dev/dev.sh ab doctor`'s Chrome line) and what stayed
 unverified. Blocked cannot support a clean visual approval; raise a product `P1` only
 where the evidence in hand establishes a candidate defect with that impact.
 
