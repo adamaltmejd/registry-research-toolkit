@@ -30,6 +30,9 @@
 #                          agent-browser: a PNG, the accessibility snapshot
 #                          (.snapshot.txt) and an axe audit (.a11y.txt);
 #                          non-desktop captures get a `-<label>` suffix.
+#   dev.sh ab <args>...    the pinned agent-browser in this checkout's named session
+#                          (`<checkout>-ui`), to drive a page an interactive run serves;
+#                          no servers. `ab close` ends the browser.
 #   dev.sh preview         preview_start entry point (.claude/launch.json) — like
 #                          interactive serve, but the frontend binds the MCP-assigned
 #                          $PORT so preview_start attaches to OUR vite and parallel
@@ -83,6 +86,8 @@ MODE (none: interactive, Ctrl-C stops):
   smoke
   shot [--mobile|--tablet|--desktop|--wide|--all|--viewport WxH]... ROUTE...
   flows OUT_DIR [JOURNEY...]
+Drive a page an interactive run serves (no CATALOG; one browser per checkout):
+  bash reg_webapp/dev/dev.sh ab AGENT_BROWSER_ARGS...   (end with: ab close)
 Ports, build dir and shots dir are automatic; the first line printed names the
 shots dir.
 EOF
@@ -160,6 +165,10 @@ preview)
 	mode=preview
 	shift
 	;;
+ab)
+	mode=ab
+	shift
+	;;
 "") mode=serve ;;
 *)
 	echo "dev: unknown argument '$1'" >&2
@@ -173,6 +182,16 @@ esac
 if [ "${CODEX_SANDBOX:-}" = seatbelt ] && [ "$mode" != serve ] && [ "$mode" != preview ]; then
 	echo "dev: '$mode' drives Chrome, which cannot launch in the Codex sandbox; rendered checks run outside it (the rendered review and CI flows)" >&2
 	exit 3
+fi
+
+# `ab`: the pinned agent-browser against a page an interactive run serves, in one
+# named session per checkout (the default session is one browser shared machine-wide).
+# Through dev.sh so the browser launch matches the script's sandbox exclusion. No
+# servers, no build; the idle timeout reaps a daemon nobody closed.
+if [ "$mode" = ab ]; then
+	ab_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd) || exit 1
+	exec bun "$ab_root/reg_webapp/frontend/node_modules/agent-browser/bin/agent-browser.js" \
+		--session "$(basename "$ab_root")-ui" --idle-timeout 15m "$@"
 fi
 
 # The capture viewports: a named preset or a raw WxH, printed as "W H". The four

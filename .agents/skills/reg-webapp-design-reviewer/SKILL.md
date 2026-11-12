@@ -210,7 +210,7 @@ axe audit.
 
 If the app will not boot or agent-browser cannot launch Chrome, the outcome is
 **blocked**, not a product finding: report the exact command, the failing line (and
-`$ab doctor`'s Chrome line, `$ab` as run-reg-webapp defines it) and what stayed
+`bash reg_webapp/dev/dev.sh ab doctor`'s Chrome line) and what stayed
 unverified. Blocked cannot support a clean visual approval; raise a product `P1` only
 where the evidence in hand establishes a candidate defect with that impact.
 

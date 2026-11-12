@@ -34,7 +34,7 @@ You need:
   `crates/reg-core-wasm/Cargo.toml`.
 - For `smoke`, `shot` and `flows`: a Chrome for agent-browser. It finds an installed
   Google Chrome; with none, run
-  `bun reg_webapp/frontend/node_modules/agent-browser/bin/agent-browser.js install` once
+  `bash reg_webapp/dev/dev.sh ab install` once
   (Chrome for Testing into `~/.agent-browser`); the same command with `doctor` says
   which browser it resolves.
 - A catalog: `--fixture-db` or `--paired-fixture` (below), or `--db DIR`, a directory
@@ -117,18 +117,19 @@ bash reg_webapp/dev/dev.sh --db "$db_dir" shot <route>
 - **`dev.sh smoke` / `shot`**: free ports, per-run shots directory, guaranteed teardown.
   The path to reach for.
 
-- **Driving a state `shot` cannot reach** (a dialog, a filled form): start `dev.sh`
-  interactively in the background and drive the printed frontend URL with the pinned
-  agent-browser in a **named session** — the default session is one browser shared by
-  every agent on the machine:
+- **Driving a state `shot` cannot reach** (a dialog, a filled form): start
+  `bash reg_webapp/dev/dev.sh --fixture-db` in the background and drive the printed
+  frontend URL with `dev.sh ab`, the pinned agent-browser in this checkout's own
+  session. One command per call, no `$ab` variable, so each one matches the sandbox
+  exclusion:
 
   ```sh
-  ab="bun reg_webapp/frontend/node_modules/agent-browser/bin/agent-browser.js --session $(basename "$PWD")-ui"
-  $ab open http://localhost:<port>/catalog/demo/bas
-  $ab snapshot -i         # interactive elements with @refs to click/fill
-  $ab set viewport 375 812 && $ab screenshot "$TMPDIR/bas-mobile.png"
-  $ab a11y                # axe audit of the current page
-  $ab close
+  bash reg_webapp/dev/dev.sh ab open http://localhost:<port>/catalog/demo/bas
+  bash reg_webapp/dev/dev.sh ab snapshot -i      # interactive elements with @refs
+  bash reg_webapp/dev/dev.sh ab set viewport 375 812
+  bash reg_webapp/dev/dev.sh ab screenshot "$TMPDIR/bas-mobile.png"
+  bash reg_webapp/dev/dev.sh ab a11y             # axe audit of the current page
+  bash reg_webapp/dev/dev.sh ab close
   ```
 
 Server-only changes rarely need the SPA: the conformance `api` corpus runs the Rust
@@ -139,7 +140,7 @@ vitest): `(cd reg_webapp/frontend && bun run test)`.
 
 - **`networkidle` is not "rendered".** React swaps in data after the network settles.
   `settled()` (in `dev.sh`, used by `journeys.sh`) waits for every `[aria-busy="true"]`
-  to clear — by hand, `$ab wait --fn '!document.querySelector("[aria-busy=\"true\"]")'`
+  to clear — by hand, `bash reg_webapp/dev/dev.sh ab wait --fn '!document.querySelector("[aria-busy=\"true\"]")'`
   after every navigation/click. Each loading placeholder carries `aria-busy="true"`; new
   ones must too (don't key on copy like "Loading…").
 - **agent-browser 0.41.2's text `errors` prints a bare `✗`** whatever it holds; read
@@ -170,7 +171,5 @@ vitest): `(cd reg_webapp/frontend && bun run test)`.
   `--fixture-db` or a current release asset.
 - Chrome aborts at launch (`smoke` / `shot` / `flows`) → the command ran sandboxed:
   re-run it in the exact form above. Do not work around it with Chrome flags. Exit 3
-  is the Codex sandbox, where rendered checks cannot run. `$ab doctor` names the
+  is the Codex sandbox, where rendered checks cannot run. `dev.sh ab doctor` names the
   browser agent-browser resolved.
-- `agent-browser install` writes `~/.agent-browser`; run it outside the sandbox, or use
-  an installed Google Chrome.
