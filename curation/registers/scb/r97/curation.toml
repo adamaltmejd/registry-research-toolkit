@@ -19244,8 +19244,8 @@ evidence = "Andelen hör till bostadstillägg.\ncatalog:variable_text:25279:1424
 [[statement]]
 kind = "set"
 subject = "var:sarskilt-bostadstillagg-pensionarer"
-fields = { "sets" = [] }
-evidence = "Den senare summan omfattar ytterligare mottagare.\ncatalog:occurrence:231648\ncatalog:occurrence:231915"
+fields = { "sets" = ["sarskilt-bostadstillagg-for-pensionarer"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nsarskilt-bostadstillagg-pensionarer and its total(s) at another level are one measure; they form set:sarskilt-bostadstillagg-for-pensionarer."
 
 [[statement]]
 kind = "set"
@@ -20966,8 +20966,8 @@ evidence = "Samma studiestödsbegrepp är uppdelat mellan efterföljande periode
 [[statement]]
 kind = "set"
 subject = "var:summa-bostadsbidrag"
-fields = { "sets" = [] }
-evidence = "Källan anger samlade bostadsbidrag och bostadstillägg i senare perioder.\ncatalog:variable_text:25428:12418:14975\ncatalog:variable_text:25428:1826:2191"
+fields = { "sets" = ["summa-bostadsbidrag"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nsumma-bostadsbidrag and its total(s) at another level are one measure; they form set:summa-bostadsbidrag."
 
 [[statement]]
 kind = "set"
@@ -31186,8 +31186,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group
 [[statement]]
 kind = "set"
 subject = "set:barnbidrag"
-fields = { "description" = "Utbetalt barnbidrag: allmänt barnbidrag, förlängt barnbidrag och flerbarnstillägg som summa (1996 utan förlängt barnbidrag), enbart allmänt barnbidrag och flerbarnstillägg, och barnbidraget fördelat på föräldrarna enligt familjeidentiteten i Registret över totalbefolkningen (RTB). Allmänt barnbidrag betalas för barn som inte fyllt 16 år; 1975 var beloppet 1 500 kronor per år. Summan 1996 och variabeln Barnbidrag, allmänt 2004–2011 hämtas från Inkomst- och taxeringsregistret och beräknas för hushåll med barn som saknar registeruppgift." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nIoT-hämtning och beräkning vid saknad registeruppgift anges bara för summan 1996 och för barnbidrag-allmant 2004–2011, inte för övriga belopp.\ncatalog:variable_text:30799:1826:2191\ncatalog:variable_text:30799:9496:9862\ncatalog:variable_text:30799:9862:11323\ncatalog:variable_text:30800:12418:15340\ncatalog:variable_text:30800:15340:16071\ncatalog:variable_text:30801:12418:15340\ncatalog:variable_text:30802:12418:12784\ncatalog:variable_text:30802:12784:16071"
+fields = { "description" = "Utbetalt barnbidrag per person och per hushåll. Per hushåll 1996–2013 är det summan av allmänt barnbidrag, förlängt barnbidrag och flerbarnstillägg (1996 utan förlängt barnbidrag); per person finns allmänt barnbidrag och flerbarnstillägg 2004–2013, allmänt barnbidrag, förlängt barnbidrag och flerbarnstillägg 2004–2011, och barnbidraget fördelat på föräldrarna enligt familjeidentiteten i Registret över totalbefolkningen (RTB) 2004–2013. Allmänt barnbidrag betalas för barn som inte fyllt 16 år; 1975 var beloppet per person 1 500 kronor per år. Hushållssumman 1996 och det allmänna barnbidraget per person 2004–2011 hämtas från Inkomst- och taxeringsregistret och beräknas för hushåll med barn som saknar registeruppgift." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nDEF/OP för respektive medlem; nivåerna följer av Individregister och Kosthushåll; fakta från nuvarande text behålls med sina år och den egna beskrivningen för förlängt barnbidrag följs.\ncatalog:variable_text:30799:1826:2191\ncatalog:variable_text:30799:9496:9862\ncatalog:variable_text:30799:9862:11323\ncatalog:variable_text:30800:12418:15340\ncatalog:variable_text:30800:15340:16071\ncatalog:variable_text:30801:12418:15340\ncatalog:variable_text:30802:12418:12784\ncatalog:variable_text:30802:12784:16071"
 
 [[statement]]
 kind = "set"
@@ -31210,8 +31210,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group
 [[statement]]
 kind = "set"
 subject = "set:boenderantor"
-fields = { "description" = "Hushållets ränteutgifter per år på lån för bostaden, för eget hem, bostadsrätt och fritidsfastighet samt totalt. Från 2004 härleds beloppen från enkätfrågorna om ränteutgift på bostadens eller fastighetens lån, med imputering; 1996–1997 samlades uppgiften in för hushållet i telefonintervjun och fördelades på individer efter ägarandel. För 1975 finns räntekostnad för eget hem och fritidsfastighet i upp till fyra förekomster." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF anger ränteutgifter per upplåtelseform och totalt; OP beskriver härledning från F33/F45B från 2004 och fördelning efter ägarandel 1996–1997; 1975-medlemmarna är förekomster.\ncatalog:variable_text:31088:9496:10227\ncatalog:variable_text:31088:10227:11323\ncatalog:variable_text:31088:12418:16071\ncatalog:variable_text:31089:9496:10227\ncatalog:variable_text:31089:10227:10957\ncatalog:variable_text:31089:10957:11323\ncatalog:variable_text:31089:12418:16071\ncatalog:variable_text:31090:9496:10227\ncatalog:variable_text:31091:9496:10227\ncatalog:variable_text:31091:12418:13514\ncatalog:variable_text:31091:13514:14245\ncatalog:variable_text:31091:14245:14975\ncatalog:variable_text:31091:14975:16071\ncatalog:variable_text:31548:1826:2191\ncatalog:variable_text:31553:1826:2191\ncatalog:variable_text:32040:1826:2191\ncatalog:variable_text:32041:1826:2191\ncatalog:variable_text:32042:1826:2191\ncatalog:variable_text:32043:1826:2191\ncatalog:variable_text:32044:1826:2191"
+fields = { "description" = "Ränteutgifter per år på lån för bostaden, för eget hem, bostadsrätt och fritidsfastighet samt totalt. Per hushåll finns eget hem och bostadsrätt 1998–2013 och totalt 2004–2013, från 2004 härledda från enkätfrågorna om ränteutgift på bostadens eller fastighetens lån; per person 1996–1997 samlades uppgiften in för hushållet i telefonintervjun och fördelades på individerna efter ägarandel. För 1975 finns räntekostnad för eget hem och fritidsfastighet per person i upp till fyra förekomster." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nDEF/OP för medlemmarna; nivåerna följer av Individregister och Kosthushåll; imputeringen utelämnas eftersom den bara anges för eget hem och bostadsrätt, inte för totalt.\ncatalog:variable_text:31088:9496:10227\ncatalog:variable_text:31088:10227:11323\ncatalog:variable_text:31088:12418:16071\ncatalog:variable_text:31089:9496:10227\ncatalog:variable_text:31089:10227:10957\ncatalog:variable_text:31089:10957:11323\ncatalog:variable_text:31089:12418:16071\ncatalog:variable_text:31090:9496:10227\ncatalog:variable_text:31091:9496:10227\ncatalog:variable_text:31091:12418:13514\ncatalog:variable_text:31091:13514:14245\ncatalog:variable_text:31091:14245:14975\ncatalog:variable_text:31091:14975:16071\ncatalog:variable_text:31548:1826:2191\ncatalog:variable_text:31553:1826:2191\ncatalog:variable_text:32040:1826:2191\ncatalog:variable_text:32041:1826:2191\ncatalog:variable_text:32042:1826:2191\ncatalog:variable_text:32043:1826:2191\ncatalog:variable_text:32044:1826:2191"
 
 [[statement]]
 kind = "set"
@@ -31714,8 +31714,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:barnbidrag-hushall"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+fields = { "sets" = ["barnbidrag"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nKosthushåll gives the amount summed per household; it is the same measure as barnbidrag at another level and joins set:barnbidrag."
 
 [[statement]]
 kind = "set"
@@ -31738,8 +31738,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:boende-ranta-bostadsratt-hushall"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+fields = { "sets" = ["boenderantor"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nKosthushåll gives the amount summed per household; it is the same measure as boende-ranta-bostadsratt at another level and joins set:boenderantor."
 
 [[statement]]
 kind = "set"
@@ -31768,8 +31768,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:boende-ranta-eget-hem-hushall"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+fields = { "sets" = ["boenderantor"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nKosthushåll gives the amount summed per household; it is the same measure as boende-ranta-eget-hem at another level and joins set:boenderantor."
 
 [[statement]]
 kind = "set"
@@ -31798,8 +31798,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:boende-ranta-totalt-hushall"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+fields = { "sets" = ["boenderantor"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nKosthushåll gives the amount summed per household; it is the same measure as boende-ranta-totalt at another level and joins set:boenderantor."
 
 [[statement]]
 kind = "set"
@@ -31828,8 +31828,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:summa-bostadsbidrag-hushall"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+fields = { "sets" = ["summa-bostadsbidrag"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nKosthushåll gives the amount summed per household; it is the same measure as summa-bostadsbidrag at another level and joins set:summa-bostadsbidrag."
 
 [[statement]]
 kind = "set"
@@ -31852,8 +31852,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:sarskilt-bostadstillagg-pensionarer-hushall"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable. IBTPSZ 2009– is already its own variable, summa-sarskilt-bostadstillagg-ibtpsz, which also covers sjuk- och aktivitetsersättning; the 1996–2008 rows (pensioners only) get their own variable."
+fields = { "sets" = ["sarskilt-bostadstillagg-for-pensionarer"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nKosthushåll gives the amount summed per household; it is the same measure as sarskilt-bostadstillagg-pensionarer at another level and joins set:sarskilt-bostadstillagg-for-pensionarer."
 
 [[statement]]
 kind = "set"
@@ -32106,3 +32106,27 @@ kind = "set"
 subject = "var:uhuselz"
 fields = { "description" = "Hushållets utgift för hushållsel under året." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; 2008 har felaktigt årtal (2010) i frågetexten.\ncatalog:variable_text:32403:12418:13879\ncatalog:variable_text:32403:13879:14245\ncatalog:variable_text:32403:14245:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:sarskilt-bostadstillagg-for-pensionarer"
+fields = { "label" = "Särskilt bostadstillägg för pensionärer" }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nGroup label from the member label of sarskilt-bostadstillagg-pensionarer."
+
+[[statement]]
+kind = "set"
+subject = "set:sarskilt-bostadstillagg-for-pensionarer"
+fields = { "description" = "Särskilt bostadstillägg för pensionärer, per person 2009–2013 och summerat för alla hushållsmedlemmar 1996–2008: 1996–2000 från pensionsregistren RFVPEN, KPAPEN och SPVPEN, 2004–2008 som utbetalt belopp enligt Försäkringskassan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nGemensam DEF; OP för hushållssumman 1996–2000 och 2004–2008; nivåer och år följer av tabellerna.\ncatalog:variable_text:32142:14245:16071\ncatalog:variable_text:32142:9496:11323\ncatalog:variable_text:32142:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "set:summa-bostadsbidrag"
+fields = { "label" = "Summa bostadsbidrag" }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nGroup label from the member label of summa-bostadsbidrag."
+
+[[statement]]
+kind = "set"
+subject = "set:summa-bostadsbidrag"
+fields = { "description" = "Summan av bostadsbidrag och bostadstillägg. Per person 1975 ingår kommunalt och statskommunalt bostadstillägg samt bostadstillägg för låginkomsttagare utan barn; per hushåll 1996–2013 ingår bostadsbidrag till barnfamiljer, makar och övriga utan barn, bostadstillägg och särskilt bostadstillägg till pensionärer samt bostadsbidrag till värnpliktiga." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nGemensam DEF; OP för 1975 (Individregister) och 1996–2013 (Kosthushåll) anger vad summan omfattar per nivå.\ncatalog:variable_text:32314:1826:2191\ncatalog:variable_text:32314:9496:11323"

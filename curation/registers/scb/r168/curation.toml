@@ -1212,8 +1212,8 @@ evidence = "Källan anger aktieinnehav i utländska koncern- och intresseföreta
 [[statement]]
 kind = "set"
 subject = "var:aktiverat-arbete-for-egen-rakning"
-fields = { "sets" = [] }
-evidence = "Måttet avser företagsredovisning.\ncatalog:variable_text:10569:18993:19723"
+fields = { "sets" = ["aktiverat-arbete-for-egen-rakning"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\naktiverat-arbete-for-egen-rakning and its total(s) at another level are one measure; they form set:aktiverat-arbete-for-egen-rakning."
 
 [[statement]]
 kind = "set"
@@ -2430,8 +2430,8 @@ evidence = "Fondemission är en kapitalförändring.\ncatalog:variable_text:1067
 [[statement]]
 kind = "set"
 subject = "var:foradlingsvarde"
-fields = { "sets" = [] }
-evidence = "Förädlingsvärde mäter företagsproduktion.\ncatalog:variable_text:10675:18993:19723"
+fields = { "sets" = ["foradlingsvarde"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nforadlingsvarde and its total(s) at another level are one measure; they form set:foradlingsvarde."
 
 [[statement]]
 kind = "set"
@@ -2442,8 +2442,8 @@ evidence = "Förädlingsvärde mäter företagsproduktion.\ncatalog:variable_tex
 [[statement]]
 kind = "set"
 subject = "var:forandring-lager-pagaende-arbete"
-fields = { "sets" = [] }
-evidence = "Lagerförändringen är en företagsredovisningspost.\ncatalog:variable_text:10676:18993:19723"
+fields = { "sets" = ["forandring-av-lager-och-pagaende-arbete"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nforandring-lager-pagaende-arbete and its total(s) at another level are one measure; they form set:forandring-av-lager-och-pagaende-arbete."
 
 [[statement]]
 kind = "set"
@@ -2466,8 +2466,8 @@ evidence = "Förändringen är en bokslutsdisposition och avser periodiseringsfo
 [[statement]]
 kind = "set"
 subject = "var:forbrukningsvarde"
-fields = { "sets" = [] }
-evidence = "Förbrukningsvärde mäter företagsproduktion.\ncatalog:variable_text:10678:18993:19723"
+fields = { "sets" = ["forbrukningsvarde"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nforbrukningsvarde and its total(s) at another level are one measure; they form set:forbrukningsvarde."
 
 [[statement]]
 kind = "set"
@@ -2796,8 +2796,8 @@ evidence = "Måttet avser företagets inköp.\ncatalog:variable_text:10705:18993
 [[statement]]
 kind = "set"
 subject = "var:intakter-av-handel"
-fields = { "sets" = [] }
-evidence = "Intäkterna avser försäljning av handelsvaror.\ncatalog:variable_text:10706:18993:19723"
+fields = { "sets" = ["intakter-av-handel"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nintakter-av-handel and its total(s) at another level are one measure; they form set:intakter-av-handel."
 
 [[statement]]
 kind = "set"
@@ -2808,8 +2808,8 @@ evidence = "Intäkterna avser försäljning av handelsvaror.\ncatalog:variable_t
 [[statement]]
 kind = "set"
 subject = "var:intakter-av-industri"
-fields = { "sets" = [] }
-evidence = "Intäkterna avser industriverksamhet.\ncatalog:variable_text:10707:18993:19723"
+fields = { "sets" = ["intakter-av-industri"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nintakter-av-industri and its total(s) at another level are one measure; they form set:intakter-av-industri."
 
 [[statement]]
 kind = "set"
@@ -2820,8 +2820,8 @@ evidence = "Intäkterna avser industriverksamhet.\ncatalog:variable_text:10707:1
 [[statement]]
 kind = "set"
 subject = "var:intakter-av-ovrigt"
-fields = { "sets" = [] }
-evidence = "Intäkterna avser övrig verksamhet.\ncatalog:variable_text:10708:18993:19723"
+fields = { "sets" = ["intakter-av-ovrigt"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nintakter-av-ovrigt and its total(s) at another level are one measure; they form set:intakter-av-ovrigt."
 
 [[statement]]
 kind = "set"
@@ -4068,8 +4068,8 @@ evidence = "Posten avser övriga bokslutsdispositioner.\ncatalog:variable_text:1
 [[statement]]
 kind = "set"
 subject = "var:ovriga-externa-kostnader"
-fields = { "sets" = [] }
-evidence = "Måttet avser företags externa kostnader.\ncatalog:variable_text:10816:18993:19723"
+fields = { "sets" = ["ovriga-externa-kostnader"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\novriga-externa-kostnader and its total(s) at another level are one measure; they form set:ovriga-externa-kostnader."
 
 [[statement]]
 kind = "set"
@@ -4200,8 +4200,8 @@ evidence = "Posten avser övriga obeskattade reserver.\ncatalog:variable_text:10
 [[statement]]
 kind = "set"
 subject = "var:ovriga-personalkostnader"
-fields = { "sets" = [] }
-evidence = "Posten avser företagets övriga personalkostnader.\ncatalog:variable_text:10827:12053:13514"
+fields = { "sets" = ["ovriga-personalkostnader"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\novriga-personalkostnader and its total(s) at another level are one measure; they form set:ovriga-personalkostnader."
 
 [[statement]]
 kind = "set"
@@ -4344,8 +4344,8 @@ evidence = "Koden beskriver företagsform och notering.\ncatalog:valueset:11619\
 [[statement]]
 kind = "set"
 subject = "var:produktionsvarde"
-fields = { "sets" = [] }
-evidence = "Produktionsvärde är ett företagsmått.\ncatalog:variable_text:10840:18993:19723"
+fields = { "sets" = ["produktionsvarde"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nproduktionsvarde and its total(s) at another level are one measure; they form set:produktionsvarde."
 
 [[statement]]
 kind = "set"
@@ -4902,8 +4902,8 @@ evidence = "TFF är en opak källförkortning som inte förekommer i etiketten.\
 [[statement]]
 kind = "set"
 subject = "var:totala-intakter-mm"
-fields = { "sets" = [] }
-evidence = "Måttet avser företagsintäkter på kommunnivå.\ncatalog:variable_text:10888:18993:19723"
+fields = { "sets" = ["totala-intakter-m-m"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\ntotala-intakter-mm and its total(s) at another level are one measure; they form set:totala-intakter-m-m."
 
 [[statement]]
 kind = "set"
@@ -4914,8 +4914,8 @@ evidence = "Måttet avser företagsintäkter på kommunnivå.\ncatalog:variable_
 [[statement]]
 kind = "set"
 subject = "var:totala-kostnader"
-fields = { "sets" = [] }
-evidence = "Måttet avser företagens totala kostnader.\ncatalog:variable_text:10889:18993:19723"
+fields = { "sets" = ["totala-kostnader"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\ntotala-kostnader and its total(s) at another level are one measure; they form set:totala-kostnader."
 
 [[statement]]
 kind = "set"
@@ -7881,14 +7881,14 @@ caveat = "The delivery carries the number pseudonymised as a serial number. Labe
 [[statement]]
 kind = "set"
 subject = "set:antal-anstallda"
-fields = { "description" = "Antal anställda i företaget: aktuellt antal vid mättillfället (anställda med A-skatt och beräknad årsinkomst över ett prisbasbelopp), samma mått inklusive ombordanställda och säsongsarbetare, medelantal anställda omräknat till heltidspersoner på årsbasis, och storleksklass efter antal anställda. 2023 finns antalet även för företagsenhet, lokal och verksamhetsenhet. Från 2023 är arbetsgivardeklarationer på individnivå huvudkälla för medelantalet, 2020–2022 kom det från årsredovisningar." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nMåtten är varianter av antalet anställda per mätpunkt, storleksklass och enhetsnivå; källbytet för medelantalet står i OP 2020–2023.\ncatalog:variable_text:17631:12053:12418\ncatalog:variable_text:17631:12418:12784\ncatalog:variable_text:17640:12053:13514\ncatalog:variable_text:17640:13514:18993\ncatalog:variable_text:17641:18993:19723\ncatalog:variable_text:17642:19358:19723\ncatalog:variable_text:17644:18993:19723\ncatalog:variable_text:17815:9862:12053\ncatalog:variable_text:17815:12053:17167\ncatalog:variable_text:17815:18262:19358\ncatalog:variable_text:17815:19358:19723"
+fields = { "description" = "Aktuellt antal anställda vid mättillfället (anställda med A-skatt och beräknad årsinkomst över ett prisbasbelopp), samma mått inklusive ombordanställda och säsongsarbetare (verksamhetsenhet 2022–2023), medelantal anställda omräknat till heltidspersoner på årsbasis, och storleksklass efter antal anställda. Medelantalet finns för företagsenhet, verksamhetsenhet och lokal enhet och summerat per kommun 2003–2020, där 2020 aggregeras från de lokala verksamhetsenheterna; 2023 finns antal anställda för alla tre enheterna. För företagsenhet och verksamhetsenhet är arbetsgivardeklarationer på individnivå (AGI) huvudkälla för medelantalet från 2023, 2020–2022 kom det från årsredovisningar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nDEF för aktuellt antal, statistiskt mått och medelantal (även kommun); OP om AGI 2023 och årsredovisningar 2020–2022 för FE/VE; OP kommun 2020 aggregering av LVE; nivåer ur tabellerna.\ncatalog:variable_text:17631:12053:12418\ncatalog:variable_text:17631:12418:12784\ncatalog:variable_text:17640:12053:13514\ncatalog:variable_text:17640:13514:18993\ncatalog:variable_text:17641:18993:19723\ncatalog:variable_text:17642:19358:19723\ncatalog:variable_text:17644:18993:19723\ncatalog:variable_text:17815:9862:12053\ncatalog:variable_text:17815:12053:17167\ncatalog:variable_text:17815:18262:19358\ncatalog:variable_text:17815:19358:19723\ncatalog:variable_text:17643:19358:19723\ncatalog:variable_text:17645:19358:19723"
 
 [[statement]]
 kind = "set"
 subject = "set:antal-sysselsatta"
-fields = { "description" = "Antal sysselsatta, 2003–2021 enligt RAMS och 2023 för företagsenhet, lokal enhet och verksamhetsenhet." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nRAMS-varianten finns 2003–2021 utan angiven enhet; 2023 finns antalet för företagsenhet, lokal och verksamhetsenhet. Imputeringstexten är generisk och utelämnad.\ncatalog:variable_text:17649:19358:19723\ncatalog:variable_text:17948:12053:18262\ncatalog:variable_text:17948:18262:18628"
+fields = { "description" = "Sysselsatta enligt RAMS per lokal enhet 2003–2021 och summerat per kommun 2003–2020, där 2020 aggregeras från de lokala verksamhetsenheterna med modellberäkning. 2023 finns antal sysselsatta för företagsenhet, lokal enhet och verksamhetsenhet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nDEF 'Antal sysselsatta enligt RAMS' för lokal och kommun, DEF 'Antal sysselsatta' 2023 för tre enheter; OP kommun 2020 modellberäkning.\ncatalog:variable_text:17649:19358:19723\ncatalog:variable_text:17948:12053:18262\ncatalog:variable_text:17948:18262:18628\ncatalog:variable_text:17650:19358:19723\ncatalog:variable_text:17651:19358:19723"
 
 [[statement]]
 kind = "set"
@@ -7899,38 +7899,38 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group
 [[statement]]
 kind = "set"
 subject = "set:kostnader-for-ravaror-och-handelsvaror"
-fields = { "description" = "Företagets kostnader för inköpta råvaror och handelsvaror, och samma summa justerad för merchanting. Justeringen är en förenklad beräkning för de blankettundersökta företagen." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOjusterad och merchantingjusterad summa är slots; OP beskriver justeringen.\ncatalog:variable_text:17935:9862:12053\ncatalog:variable_text:17935:12053:18993\ncatalog:variable_text:17943:12053:18993\ncatalog:variable_text:17944:12053:13514\ncatalog:variable_text:17944:13514:18262\ncatalog:variable_text:17944:18262:18628\ncatalog:variable_text:17944:18993:19723"
+fields = { "description" = "Kostnader för råvaror och handelsvaror, och samma summa justerad för merchanting, för företagsenhet, verksamhetsenhet och lokal enhet. Den merchanting-justerade summan finns även summerad per kommun 2003–2020, där 2020 aggregeras från de lokala verksamhetsenheterna med modellberäkning. För företagsenhet och verksamhetsenhet är justeringen en förenklad beräkning för de blankettundersökta företagen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nDEF för summa kostnader och justerad summa; OP förenklad beräkning för FE/VE; total av merchanting-varianten i Kommun-tabellen 2003–2020 med OP om LVE-aggregering 2020.\ncatalog:variable_text:17935:9862:12053\ncatalog:variable_text:17935:12053:18993\ncatalog:variable_text:17943:12053:18993\ncatalog:variable_text:17944:12053:13514\ncatalog:variable_text:17944:13514:18262\ncatalog:variable_text:17944:18262:18628\ncatalog:variable_text:17944:18993:19723"
 
 [[statement]]
 kind = "set"
 subject = "set:loner-och-andra-ersattningar"
-fields = { "description" = "Företagets löner och andra ersättningar till personalen, och kostnader för löner och andra ersättningar. För kostnaderna är arbetsgivardeklarationer på individnivå (AGI) från 2023 huvudkälla." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda posterna finns 2003–2023; att AGI är huvudkälla från FEK2023 anges bara för kostnadsposten.\ncatalog:variable_text:17800:9862:12053\ncatalog:variable_text:17800:12053:18262\ncatalog:variable_text:17800:18262:18628\ncatalog:variable_text:17800:19358:19723\ncatalog:variable_text:17812:12053:18993"
+fields = { "description" = "Kostnader för löner och andra ersättningar för företagsenhet och verksamhetsenhet, summerade per kommun 2003–2020, och löner och andra ersättningar till personalen per lokal enhet. På kommunnivå aggregeras 2020 uppgifterna från de lokala verksamhetsenheterna med modellberäkning. För företagsenhet och verksamhetsenhet är arbetsgivardeklarationer på individnivå (AGI) huvudkälla från 2023." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nDEF kostnader (FE/VE/kommun) och 'till personalen' (lokal); OP AGI 2023 för FE/VE; OP kommun 2020 modellberäkning.\ncatalog:variable_text:17800:9862:12053\ncatalog:variable_text:17800:12053:18262\ncatalog:variable_text:17800:18262:18628\ncatalog:variable_text:17800:19358:19723\ncatalog:variable_text:17812:12053:18993"
 
 [[statement]]
 kind = "set"
 subject = "set:nettoomsattning"
-fields = { "description" = "Företagets nettoomsättning, och samma belopp justerat för merchanting. Justeringen är en förenklad beräkning för de blankettundersökta företagen, från 2020 baserad på det administrativa materialet SRU." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP för den justerade varianten anger förenklad beräkning och från 2020 det administrativa materialet SRU; utskrivningen av SRU finns inte i texterna.\ncatalog:variable_text:17853:9862:12053\ncatalog:variable_text:17853:12053:18262\ncatalog:variable_text:17853:18262:18993\ncatalog:variable_text:17854:12053:13514\ncatalog:variable_text:17854:13514:18262\ncatalog:variable_text:17854:18262:18628"
+fields = { "description" = "Företagens nettoomsättning, och samma belopp justerat för merchanting, för företagsenhet, verksamhetsenhet och lokal enhet, och summerade per kommun (nettoomsättningen 2010–2021, den justerade 2003–2020). På kommunnivå aggregeras uppgifterna från 2020 från de lokala verksamhetsenheterna med modellberäkning. Justeringen är en förenklad beräkning, för företagsenhet och verksamhetsenhet för de blankettundersökta företagen; för lokal enhet baseras den från 2020 på det administrativa materialet SRU." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nDEF för båda måtten och deras kommuntotaler; OP om förenklad beräkning per tabell och SRU för lokal 2020–2023; OP kommun 2020–2021 modellberäkning.\ncatalog:variable_text:17853:9862:12053\ncatalog:variable_text:17853:12053:18262\ncatalog:variable_text:17853:18262:18993\ncatalog:variable_text:17854:12053:13514\ncatalog:variable_text:17854:13514:18262\ncatalog:variable_text:17854:18262:18628"
 
 [[statement]]
 kind = "set"
 subject = "set:ovriga-rorelseintakter"
-fields = { "description" = "Företagets övriga rörelseintäkter och övriga intäkter (2003–2023), och 2022–2023 även övriga rörelseintäkter inklusive lagerförändring och aktiverat arbete." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nTre resultatposter som slots: övriga rörelseintäkter och övriga intäkter 2003–2023, summaposten med lagerförändring och aktiverat arbete 2022–2023.\ncatalog:variable_text:17738:18993:19723\ncatalog:variable_text:17869:12053:18993\ncatalog:variable_text:17878:12053:18262\ncatalog:variable_text:17878:18262:18628"
+fields = { "description" = "Företagens övriga rörelseintäkter för företagsenhet, verksamhetsenhet och lokal enhet, summerade per kommun 2003–2020 (2020 aggregerade från de lokala verksamhetsenheterna med modellberäkning), och övriga intäkter per lokal enhet 2003–2023. För företagsenhet finns 2022–2023 även övriga rörelseintäkter inklusive lagerförändring och aktiverat arbete." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nDEF för de tre måtten; kommuntotalen i Kommun-tabellen 2003–2020 med OP om LVE-aggregering 2020; nivåer ur tabellerna.\ncatalog:variable_text:17738:18993:19723\ncatalog:variable_text:17869:12053:18993\ncatalog:variable_text:17878:12053:18262\ncatalog:variable_text:17878:18262:18628"
 
 [[statement]]
 kind = "set"
 subject = "set:ovriga-rorelsekostnader"
-fields = { "description" = "Företagets övriga kostnader (2003–2023). Från 2007 finns också övriga rörelsekostnader, det vill säga övriga kostnader som härrör från företagets produktion, som en egen post." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nÖvriga kostnader finns 2003–2023 i två versioner; övriga rörelsekostnader (2007–2023) definieras som övriga kostnader från produktionen och finns parallellt.\ncatalog:variable_text:17873:12053:13514\ncatalog:variable_text:17879:13514:17167\ncatalog:variable_text:17879:18262:18628"
+fields = { "description" = "Övriga rörelsekostnader, det vill säga övriga kostnader som härrör från företagets produktion, från 2007 för företagsenhet, verksamhetsenhet och lokal enhet och summerade per kommun 2007–2020 (2020 aggregerade från de lokala verksamhetsenheterna med modellberäkning). Per lokal enhet finns också övriga kostnader 2003–2023." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nDEF för övriga rörelsekostnader (även kommun) och övriga kostnader (lokal, två perioder som tillsammans täcker 2003–2023); OP kommun 2020 modellberäkning.\ncatalog:variable_text:17873:12053:13514\ncatalog:variable_text:17879:13514:17167\ncatalog:variable_text:17879:18262:18628\ncatalog:variable_text:17874:13514:15706"
 
 [[statement]]
 kind = "set"
 subject = "set:sociala-och-andra-personalkostnader"
-fields = { "description" = "Sociala kostnader och andra personalkostnader: kostnader för övriga sociala avgifter 2003–2006 (för företagsenhet, verksamhetsenhet och kommun) och sociala kostnader och andra personalkostnader 2007–2023. De senare hämtas 2007–2015 från Market Manager Partner och 2016–2019 från årsredovisningar och fördelas på kommunerna med modellberäkning; från 2020 kompletteras med inköpt bokslutsdata för aktiebolag. För 2003–2006 finns även ett imputerat värde för övriga personalkostnader, där föregående års värde eller branschens medelvärde används när uppgift i SRU saknas eller underkänts." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nKällbytena 2007–2015, 2016–2019 och från 2020 står i operationella texterna; imputeringsregeln för IMP_527; den generella imputeringsmeningen (239 icke-medlemmar) är utelämnad.\ncatalog:variable_text:17742:12053:13514\ncatalog:variable_text:17793:12053:13514\ncatalog:variable_text:17794:12053:13514\ncatalog:variable_text:17880:12053:12784\ncatalog:variable_text:17880:12784:13514\ncatalog:variable_text:17915:13514:16801\ncatalog:variable_text:17915:16801:18262\ncatalog:variable_text:17915:18262:18628"
+fields = { "description" = "Kostnader för övriga sociala avgifter 2003–2006 (för företagsenhet, verksamhetsenhet, lokal enhet och kommun) och sociala kostnader och andra personalkostnader 2007–2023 (för företagsenhet, verksamhetsenhet och lokal enhet, och summerade per kommun 2007–2020). Kommunsummorna hämtas 2007–2015 från Market Manager Partner och 2016–2019 från årsredovisningar och fördelas på kommunerna med modellberäkning; 2020 aggregeras de från de lokala verksamhetsenheterna. För verksamhetsenhet kompletteras uppgifterna från 2020 med inköpt bokslutsdata för alla aktiebolag, och 2003–2006 finns ett imputerat värde för övriga personalkostnader, där föregående års värde eller branschens medelvärde används när uppgift i SRU saknas eller underkänts." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nNuvarande text behålls i sak men nivåerna läggs till; MMP/årsredovisning/LVE-aggregering gäller kommuntotalen, bokslutsdata 2020–2023 och imputeringen gäller verksamhetsenhet enligt OP.\ncatalog:variable_text:17742:12053:13514\ncatalog:variable_text:17793:12053:13514\ncatalog:variable_text:17794:12053:13514\ncatalog:variable_text:17880:12053:12784\ncatalog:variable_text:17880:12784:13514\ncatalog:variable_text:17915:13514:16801\ncatalog:variable_text:17915:16801:18262\ncatalog:variable_text:17915:18262:18628\ncatalog:variable_text:17801:12053:13514"
 
 [[statement]]
 kind = "set"
@@ -7953,8 +7953,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:aktiverat-arbete-for-egen-rakning-kommun"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+fields = { "sets" = ["aktiverat-arbete-for-egen-rakning"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nFEK Slutdata (Kommun) gives the amount summed per municipality; it is the same measure as aktiverat-arbete-for-egen-rakning at another level and joins set:aktiverat-arbete-for-egen-rakning."
 
 [[statement]]
 kind = "set"
@@ -7977,8 +7977,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:foradlingsvarde-kommun"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+fields = { "sets" = ["foradlingsvarde"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nFEK Slutdata (Kommun) gives the amount summed per municipality; it is the same measure as foradlingsvarde at another level and joins set:foradlingsvarde."
 
 [[statement]]
 kind = "set"
@@ -8001,8 +8001,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:forandring-lager-pagaende-arbete-kommun"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+fields = { "sets" = ["forandring-av-lager-och-pagaende-arbete"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nFEK Slutdata (Kommun) gives the amount summed per municipality; it is the same measure as forandring-lager-pagaende-arbete at another level and joins set:forandring-av-lager-och-pagaende-arbete."
 
 [[statement]]
 kind = "set"
@@ -8025,8 +8025,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:forbrukningsvarde-kommun"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+fields = { "sets" = ["forbrukningsvarde"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nFEK Slutdata (Kommun) gives the amount summed per municipality; it is the same measure as forbrukningsvarde at another level and joins set:forbrukningsvarde."
 
 [[statement]]
 kind = "set"
@@ -8049,8 +8049,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:intakter-av-handel-kommun"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+fields = { "sets" = ["intakter-av-handel"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nFEK Slutdata (Kommun) gives the amount summed per municipality; it is the same measure as intakter-av-handel at another level and joins set:intakter-av-handel."
 
 [[statement]]
 kind = "set"
@@ -8073,8 +8073,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:intakter-av-industri-kommun"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+fields = { "sets" = ["intakter-av-industri"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nFEK Slutdata (Kommun) gives the amount summed per municipality; it is the same measure as intakter-av-industri at another level and joins set:intakter-av-industri."
 
 [[statement]]
 kind = "set"
@@ -8097,8 +8097,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:intakter-av-ovrigt-kommun"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+fields = { "sets" = ["intakter-av-ovrigt"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nFEK Slutdata (Kommun) gives the amount summed per municipality; it is the same measure as intakter-av-ovrigt at another level and joins set:intakter-av-ovrigt."
 
 [[statement]]
 kind = "set"
@@ -8121,8 +8121,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:kostnader-loner-ersattningar-kommun"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+fields = { "sets" = ["loner-och-andra-ersattningar"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nFEK Slutdata (Kommun) gives the amount summed per municipality; it is the same measure as kostnader-loner-ersattningar at another level and joins set:loner-och-andra-ersattningar."
 
 [[statement]]
 kind = "set"
@@ -8145,8 +8145,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:medelantal-anstallda-kommun"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nFEK Slutdata (Kommun) gives the amount summed per municipality; it is the same measure as medelantal-anstallda at another level and joins set:antal-anstallda."
 
 [[statement]]
 kind = "set"
@@ -8169,8 +8169,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:nettoomsattning-kommun"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nFEK Slutdata (Kommun) gives the amount summed per municipality; it is the same measure as nettoomsattning at another level and joins set:nettoomsattning."
 
 [[statement]]
 kind = "set"
@@ -8193,8 +8193,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:nettoomsattning-justerad-merchanting-kommun"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+fields = { "sets" = ["nettoomsattning"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nFEK Slutdata (Kommun) gives the amount summed per municipality; it is the same measure as nettoomsattning-justerad-merchanting at another level and joins set:nettoomsattning."
 
 [[statement]]
 kind = "set"
@@ -8217,8 +8217,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:ovriga-externa-kostnader-kommun"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+fields = { "sets" = ["ovriga-externa-kostnader"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nFEK Slutdata (Kommun) gives the amount summed per municipality; it is the same measure as ovriga-externa-kostnader at another level and joins set:ovriga-externa-kostnader."
 
 [[statement]]
 kind = "set"
@@ -8241,8 +8241,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:ovriga-personalkostnader-kommun"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+fields = { "sets" = ["ovriga-personalkostnader"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nFEK Slutdata (Kommun) gives the amount summed per municipality; it is the same measure as ovriga-personalkostnader at another level and joins set:ovriga-personalkostnader."
 
 [[statement]]
 kind = "set"
@@ -8265,8 +8265,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:ovriga-rorelseintakter-kommun"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+fields = { "sets" = ["ovriga-rorelseintakter"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nFEK Slutdata (Kommun) gives the amount summed per municipality; it is the same measure as ovriga-rorelseintakter at another level and joins set:ovriga-rorelseintakter."
 
 [[statement]]
 kind = "set"
@@ -8289,8 +8289,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:ovriga-rorelsekostnader-kommun"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+fields = { "sets" = ["ovriga-rorelsekostnader"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nFEK Slutdata (Kommun) gives the amount summed per municipality; it is the same measure as ovriga-rorelsekostnader at another level and joins set:ovriga-rorelsekostnader."
 
 [[statement]]
 kind = "set"
@@ -8313,8 +8313,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:produktionsvarde-kommun"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+fields = { "sets" = ["produktionsvarde"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nFEK Slutdata (Kommun) gives the amount summed per municipality; it is the same measure as produktionsvarde at another level and joins set:produktionsvarde."
 
 [[statement]]
 kind = "set"
@@ -8337,8 +8337,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:sociala-kostnader-personalkostnader-kommun"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+fields = { "sets" = ["sociala-och-andra-personalkostnader"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nFEK Slutdata (Kommun) gives the amount summed per municipality; it is the same measure as sociala-kostnader-personalkostnader at another level and joins set:sociala-och-andra-personalkostnader."
 
 [[statement]]
 kind = "set"
@@ -8361,8 +8361,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:summa-ravaror-handelsvaror-merchanting-kommun"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+fields = { "sets" = ["kostnader-for-ravaror-och-handelsvaror"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nFEK Slutdata (Kommun) gives the amount summed per municipality; it is the same measure as summa-ravaror-handelsvaror-merchanting at another level and joins set:kostnader-for-ravaror-och-handelsvaror."
 
 [[statement]]
 kind = "set"
@@ -8385,8 +8385,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:sysselsatta-rams-kommun"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nFEK Slutdata (Kommun) gives the amount summed per municipality; it is the same measure as sysselsatta-rams at another level and joins set:antal-sysselsatta."
 
 [[statement]]
 kind = "set"
@@ -8409,8 +8409,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:totala-intakter-mm-kommun"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+fields = { "sets" = ["totala-intakter-m-m"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nFEK Slutdata (Kommun) gives the amount summed per municipality; it is the same measure as totala-intakter-mm at another level and joins set:totala-intakter-m-m."
 
 [[statement]]
 kind = "set"
@@ -8433,8 +8433,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:totala-kostnader-kommun"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFEK Slutdata (Kommun) holds municipality-level values (its texts say 'på kommunnivå' and, 2020, that LVE values are aggregated by model calculation); the FE, VE and LVE tables give the value of the enterprise or its own unit. The Kommun column gets its own variable."
+fields = { "sets" = ["totala-kostnader"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nFEK Slutdata (Kommun) gives the amount summed per municipality; it is the same measure as totala-kostnader at another level and joins set:totala-kostnader."
 
 [[statement]]
 kind = "set"
@@ -8597,3 +8597,147 @@ kind = "set"
 subject = "var:varde"
 fields = { "description" = "Värde för uppgiften, till exempel ett belopp eller ett antal minuter. Belopp anges i tusentals kronor, utom 2009, då de anges i kronor. Uppgifterna kan vara imputerade." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nRättad efter granskning: uppgifter som bara gäller vissa år anges med sina år, och det som texterna inte stöder är struket.\ncatalog:variable_text:17961:12053:14245\ncatalog:variable_text:17961:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:aktiverat-arbete-for-egen-rakning"
+fields = { "label" = "Aktiverat arbete för egen räkning" }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nGroup label from the member label of aktiverat-arbete-for-egen-rakning."
+
+[[statement]]
+kind = "set"
+subject = "set:aktiverat-arbete-for-egen-rakning"
+fields = { "description" = "Redovisas för företagsenhet, verksamhetsenhet och lokal enhet (2017–2023) och summerat per kommun 2003–2020, där kommunvärdet 2020 aggregeras från de lokala verksamhetsenheterna med modellberäkning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nDEF ger bara namnet; nivåer och år ur tabellerna; OP kommun 2020 modellberäkning, i linje med medlemmarnas beskrivningar.\ncatalog:variable_text:17630:12053:18262\ncatalog:variable_text:17630:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:foradlingsvarde"
+fields = { "label" = "Förädlingsvärde" }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nGroup label from the member label of foradlingsvarde."
+
+[[statement]]
+kind = "set"
+subject = "set:foradlingsvarde"
+fields = { "description" = "Saldoposten i nationalräkenskapernas produktionskonto: det värde som genereras av varje enhet med produktionsaktivitet, för företagsenhet, verksamhetsenhet och lokal enhet och summerat per kommun 2003–2020. För blankettundersökta företag beräknas det förenklat som produktionsvärde minus förbrukningsvärde; för lokal enhet beräknas det från det standardiserade räkenskapsutdraget (SRU). Kommunvärdet 2020 aggregeras från de lokala verksamhetsenheterna med modellberäkning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nDEF saldopost för alla tabeller; OP formel för FE/VE och SRU för lokal; OP kommun 2020 modellberäkning.\ncatalog:variable_text:17726:12053:13149\ncatalog:variable_text:17726:13149:13514\ncatalog:variable_text:17726:13514:18262\ncatalog:variable_text:17726:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:forandring-av-lager-och-pagaende-arbete"
+fields = { "label" = "Förändring av lager och pågående arbete" }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nGroup label from the member label of forandring-lager-pagaende-arbete."
+
+[[statement]]
+kind = "set"
+subject = "set:forandring-av-lager-och-pagaende-arbete"
+fields = { "description" = "Redovisas för företagsenhet, verksamhetsenhet och lokal enhet (2017–2023) och summerat per kommun 2003–2020, där kommunvärdet 2020 aggregeras från de lokala verksamhetsenheterna med modellberäkning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nDEF ger bara namnet; nivåer och år ur tabellerna; OP kommun 2020 modellberäkning.\ncatalog:variable_text:17727:9862:12053\ncatalog:variable_text:17727:12053:18262\ncatalog:variable_text:17727:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:forbrukningsvarde"
+fields = { "label" = "Förbrukningsvärde" }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nGroup label from the member label of forbrukningsvarde."
+
+[[statement]]
+kind = "set"
+subject = "set:forbrukningsvarde"
+fields = { "description" = "Redovisas för företagsenhet, verksamhetsenhet och lokal enhet (2003–2021) och summerat per kommun 2003–2020. För blankettundersökta företag beräknas det förenklat som kostnader för råvaror plus övriga externa kostnader plus övriga personalkostnader; för lokal enhet beräknas det från det standardiserade räkenskapsutdraget. Kommunvärdet 2020 aggregeras från de lokala verksamhetsenheterna med modellberäkning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nOP formel för FE/VE och SRU för lokal; OP kommun 2020 modellberäkning; nivåer ur tabellerna; motsäger inte medlemmens beskrivning.\ncatalog:variable_text:17729:9862:12053\ncatalog:variable_text:17729:12053:13149\ncatalog:variable_text:17729:13149:13514\ncatalog:variable_text:17729:13514:18262\ncatalog:variable_text:17729:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:intakter-av-handel"
+fields = { "label" = "Intäkter av handel" }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nGroup label from the member label of intakter-av-handel."
+
+[[statement]]
+kind = "set"
+subject = "set:intakter-av-handel"
+fields = { "description" = "Intäkter från försäljning av handelsvaror, för verksamhetsenhet, lokal enhet (2017–2021) och summerade per kommun 2003–2020, där kommunvärdet 2020 aggregeras från de lokala verksamhetsenheterna med modellberäkning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nDEF gemensam för alla medlemmar; OP kommun 2020 modellberäkning; nivåer ur tabellerna.\ncatalog:variable_text:17751:12053:18262\ncatalog:variable_text:17751:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:intakter-av-industri"
+fields = { "label" = "Intäkter av industri" }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nGroup label from the member label of intakter-av-industri."
+
+[[statement]]
+kind = "set"
+subject = "set:intakter-av-industri"
+fields = { "description" = "Intäkter från industriverksamhet, för verksamhetsenhet, lokal enhet (2017–2021) och summerade per kommun 2003–2020, där kommunvärdet 2020 aggregeras från de lokala verksamhetsenheterna med modellberäkning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nDEF gemensam för alla medlemmar; OP kommun 2020 modellberäkning; nivåer ur tabellerna.\ncatalog:variable_text:17752:12053:18262\ncatalog:variable_text:17752:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:intakter-av-ovrigt"
+fields = { "label" = "Intäkter av övrigt" }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nGroup label from the member label of intakter-av-ovrigt."
+
+[[statement]]
+kind = "set"
+subject = "set:intakter-av-ovrigt"
+fields = { "description" = "Intäkter från övrig verksamhet, för verksamhetsenhet, lokal enhet (2017–2021) och summerade per kommun 2003–2020, där kommunvärdet 2020 aggregeras från de lokala verksamhetsenheterna med modellberäkning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nDEF gemensam för alla medlemmar; OP kommun 2020 modellberäkning; nivåer ur tabellerna.\ncatalog:variable_text:17753:12053:18262\ncatalog:variable_text:17753:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:ovriga-externa-kostnader"
+fields = { "label" = "Övriga externa kostnader" }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nGroup label from the member label of ovriga-externa-kostnader."
+
+[[statement]]
+kind = "set"
+subject = "set:ovriga-externa-kostnader"
+fields = { "description" = "Redovisas för företagsenhet, verksamhetsenhet och lokal enhet (2017–2023) och summerat per kommun 2003–2020, där kommunvärdet 2020 aggregeras från de lokala verksamhetsenheterna med modellberäkning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nDEF ger bara namnet; nivåer och år ur tabellerna; OP kommun 2020 modellberäkning.\ncatalog:variable_text:17866:12053:18262\ncatalog:variable_text:17866:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:ovriga-personalkostnader"
+fields = { "label" = "Övriga personalkostnader" }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nGroup label from the member label of ovriga-personalkostnader."
+
+[[statement]]
+kind = "set"
+subject = "set:ovriga-personalkostnader"
+fields = { "description" = "Redovisas 2003–2006 för företagsenhet, verksamhetsenhet och lokal enhet och summerat per kommun." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nDEF ger bara namnet; nivåer och år ur tabellerna, alla 2003–2006.\ncatalog:variable_text:17877:12053:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:produktionsvarde"
+fields = { "label" = "Produktionsvärde" }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nGroup label from the member label of produktionsvarde."
+
+[[statement]]
+kind = "set"
+subject = "set:produktionsvarde"
+fields = { "description" = "Redovisas för företagsenhet, verksamhetsenhet och lokal enhet och summerat per kommun 2003–2020. För blankettundersökta företag beräknas det förenklat som nettoomsättning + övriga rörelseintäkter + aktiverat arbete för egen räkning + förändring av lager och pågående arbeten − kostnader för handelsvaror; för lokal enhet beräknas det från variabler i de standardiserade räkenskapsutdragen. Kommunvärdet 2020 aggregeras från de lokala verksamhetsenheterna med modellberäkning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nOP formel för FE/VE och SRU för lokal; OP kommun 2020 modellberäkning; nivåer ur tabellerna.\ncatalog:variable_text:17894:9862:12053\ncatalog:variable_text:17894:12053:13149\ncatalog:variable_text:17894:13149:13514\ncatalog:variable_text:17894:13514:18262\ncatalog:variable_text:17894:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:totala-intakter-m-m"
+fields = { "label" = "Totala intäkter m.m." }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nGroup label from the member label of totala-intakter-mm."
+
+[[statement]]
+kind = "set"
+subject = "set:totala-intakter-m-m"
+fields = { "description" = "Redovisas per lokal enhet 2017–2023 och summerat per kommun 2003–2020, där kommunvärdet 2020 aggregeras från de lokala verksamhetsenheterna med modellberäkning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nDEF ger bara namnet (med 'på kommunnivå' även för lokal-medlemmen, därför utelämnat); nivåer ur tabellerna; OP kommun 2020 modellberäkning.\ncatalog:variable_text:17949:12053:18262\ncatalog:variable_text:17949:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:totala-kostnader"
+fields = { "label" = "Totala kostnader" }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nGroup label from the member label of totala-kostnader."
+
+[[statement]]
+kind = "set"
+subject = "set:totala-kostnader"
+fields = { "description" = "Redovisas för företagsenhet 2022–2023, lokal enhet 2017–2023 och summerat per kommun 2003–2020, där kommunvärdet 2020 aggregeras från de lokala verksamhetsenheterna med modellberäkning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nDEF ger bara namnet; nivåer och år ur tabellerna; OP kommun 2020 modellberäkning.\ncatalog:variable_text:17950:12053:18262\ncatalog:variable_text:17950:18262:18628"
