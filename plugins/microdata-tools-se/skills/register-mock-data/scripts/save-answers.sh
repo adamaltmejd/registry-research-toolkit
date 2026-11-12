@@ -76,15 +76,27 @@ pages() {
   done
 }
 
-# Each (table, variable) the order reads.
+# Each (table, variable) the order reads, and the variables of its references without
+# a binding (row keys, carried copies): for those compile falls back to the variable's
+# own segments when its table has none for the period (a row key can be another
+# register's variable).
 if [ "$mode" = materialize ]; then
-  pairs=$(jq -r '.data.files[].columns[].refs[] | "\(.table) \(.variable)"' "$dir/$answer")
+  refs='.data.files[].columns[].refs[]'
+  unbound="$refs | select(.binding == null) | .variable"
 else
-  pairs=$(jq -r '(.data.entries[] | "\(.table) \(.variable)"),
-                 (.data.row_keys[] | .table as $t | .columns[] | "\($t) \(.variable)")' \
-    "$dir/$answer")
+  # shellcheck disable=SC2016 # `$t` is a jq variable
+  refs='(.data.entries[] | {table, variable}),
+        (.data.row_keys[] | .table as $t | .columns[] | {table: $t, variable})'
+  unbound='.data.row_keys[].columns[].variable'
 fi
-pairs=$(sort -u <<< "$pairs" | sed '/^ *$/d')
+calls=$(jq -c "[$refs | {table, variable}] | unique | group_by(.table)[] |
+  .[0].table as \$t | map(.variable) |
+  range(0; length; 200) as \$i | {ref: \$t, variable: .[\$i:\$i + 200]}" "$dir/$answer")
+unbound=$(jq -r "[$unbound] | unique[]" "$dir/$answer")
+if [ -z "$calls" ]; then
+  echo "the order answer in $dir/$answer reads no columns" >&2
+  exit 1
+fi
 
 # One call per table for up to 200 of its variables at once (`segments` takes them as a
 # list), not one per pair: the hosted rate limit allows 60 calls, then one a second.
@@ -92,21 +104,13 @@ i=0
 while read -r arguments; do
   i=$((i + 1))
   pages segments "$dir/segments/$(printf '%04d' "$i")-table" "$arguments"
-done < <(jq -Rnc '[inputs | split(" ") | {table: .[0], variable: .[1]}] |
-  group_by(.table)[] | .[0].table as $t | map(.variable) |
-  range(0; length; 200) as $i | {ref: $t, variable: .[$i:$i + 200]}' <<< "$pairs")
-
-# A variable's own segments only where its table has none: compile falls back to them
-# for a row key that is another register's variable.
-while read -r table variable; do
-  if ! jq -e --arg t "$table" --arg v "$variable" \
-    'select(.data.items | any(.table == $t and .variable == $v))' \
-    "$dir"/segments/*-table-*.json >/dev/null 2>&1; then
-    i=$((i + 1))
-    pages segments "$dir/segments/$(printf '%04d' "$i")-variable" \
-      "$(jq -nc --arg ref "$variable" '{ref: $ref}')"
-  fi
-done <<< "$pairs"
+done <<< "$calls"
+while read -r variable; do
+  [ -z "$variable" ] && continue
+  i=$((i + 1))
+  pages segments "$dir/segments/$(printf '%04d' "$i")-variable" \
+    "$(jq -nc --arg ref "$variable" '{ref: $ref}')"
+done <<< "$unbound"
 
 for hash in $(jq -r '.data.items[].value_set.hash // empty' "$dir"/segments/*.json | sort -u); do
   pages values "$dir/values/$hash" "$(jq -nc --arg hash "$hash" '{value_set: $hash}')"
