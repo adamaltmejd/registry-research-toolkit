@@ -40,7 +40,7 @@ use crate::generate::{Cell, Kind, Table};
 use crate::spec::{Spec, SpecColumn};
 
 /// The marker every mock file carries.
-pub const MARKER: &str = "Synthetic mock data from reg-meta mock: not real records";
+pub const MARKER: &str = "Synthetic mock data from reg-mock: not real records";
 
 /// Stata dates count days from 1960-01-01; this crate's from 1970-01-01.
 const STATA_EPOCH_DAYS: i64 = 3653;
@@ -221,7 +221,7 @@ pub fn parquet(
     let batch = RecordBatch::try_new(schema.clone(), arrays).map_err(|e| err(&e))?;
     let properties = WriterProperties::builder()
         .set_compression(Compression::SNAPPY)
-        .set_created_by("reg-meta mock".to_owned())
+        .set_created_by("reg-mock".to_owned())
         .set_key_value_metadata(Some(vec![KeyValue::new(
             "reg_mock".to_owned(),
             MARKER.to_owned(),

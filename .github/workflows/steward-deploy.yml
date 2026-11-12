@@ -147,16 +147,14 @@ jobs:
           mkdir -p "$ctx/db" "$RUNNER_TEMP/dl"
           dl="$RUNNER_TEMP/dl"
           gh release download "$TAG" --repo "$TOOLKIT" --dir "$dl" \
-            --pattern "reg-meta-$TARGET" --pattern "reg-meta-$TARGET.sha256" \
-            --pattern reg_meta.db.zst
+            --pattern "reg-meta-$TARGET" --pattern reg_meta.db.zst
           gh release download "$HOLDINGS" --repo "$GITHUB_REPOSITORY" --dir "$dl" \
             --pattern "reg_meta_$STEWARD.db.zst"
-          (cd "$dl" && shasum -a 256 -c "reg-meta-$TARGET.sha256")
           digest() {
             gh release view "$1" --repo "$2" --json assets \
               --jq ".assets[] | select(.name == \"$3\") | .digest"
           }
-          for check in "$TAG $TOOLKIT reg_meta.db.zst" "$HOLDINGS $GITHUB_REPOSITORY reg_meta_$STEWARD.db.zst"; do
+          for check in "$TAG $TOOLKIT reg-meta-$TARGET" "$TAG $TOOLKIT reg_meta.db.zst" "$HOLDINGS $GITHUB_REPOSITORY reg_meta_$STEWARD.db.zst"; do
             read -r tag repo name <<< "$check"
             test "$(digest "$tag" "$repo" "$name")" = "sha256:$(shasum -a 256 "$dl/$name" | cut -d' ' -f1)" ||
               { echo "::error::$name does not match its digest on $tag"; exit 1; }
@@ -264,8 +262,11 @@ jobs:
           version=${TAG#reg_meta/v}
           spa="reg-webapp-spa-$version.tar.zst"
           gh release download "$TAG" --repo "$TOOLKIT" --dir "$RUNNER_TEMP" \
-            --pattern "$spa" --pattern "$spa.sha256"
-          (cd "$RUNNER_TEMP" && shasum -a 256 -c "$spa.sha256")
+            --pattern "$spa"
+          want=$(gh release view "$TAG" --repo "$TOOLKIT" --json assets \
+            --jq ".assets[] | select(.name == \"$spa\") | .digest")
+          test "$want" = "sha256:$(shasum -a 256 "$RUNNER_TEMP/$spa" | cut -d' ' -f1)" ||
+            { echo "::error::$spa does not match its digest on $TAG"; exit 1; }
           mkdir spa
           zstd -dc "$RUNNER_TEMP/$spa" | tar -xf - -C spa
       # The worker's route lives in the zone, which the token must list under its Zone

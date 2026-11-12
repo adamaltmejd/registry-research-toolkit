@@ -10,10 +10,10 @@ validation, and project authoring. `ARCHITECTURE.md` has the cross-package desig
 
 - `crates/` — the Rust runtime, released as `reg_meta`: `reg-core` (the
   `project_data.json` contract and structural validator, the FQID and period grammars),
-  `reg-catalog` (the catalog reader and its operations), `reg-meta` (the binary:
-  `reg-meta serve` for the HTTP API and `/mcp`, `reg-meta mcp` for local stdio MCP),
+  `reg-catalog` (the catalog reader and its operations), `reg-meta` (the server:
+  `reg-meta serve` for the HTTP API and `/mcp`),
   `reg-core-wasm` (`reg-core` for the SPA), `reg-mock` (local mock data,
-  `reg-meta mock`), and the catalog builder: `reg-frame`, `reg-readers`, `reg-resolve`
+  the `reg-mock` binary), and the catalog builder: `reg-frame`, `reg-readers`, `reg-resolve`
   and `reg-build`, with its reader config, curation and id ledgers under `curation/`.
   `xtask` is repository and release tooling (`cargo xtask gh-issue`,
   `release-base-reuse`, `gen-case-folding`, `search-eval`) and the repo-policy lints; it

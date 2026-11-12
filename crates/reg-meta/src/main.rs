@@ -1,31 +1,28 @@
-//! `reg-meta`: run modes only, no query CLI (`crates/DESIGN.md`, "Agent and web interface").
+//! `reg-meta`: the server, no query CLI (`crates/DESIGN.md`, "Agent and web interface").
 //!
 //! ```text
 //! reg-meta serve --db DIR --port N [--host ADDR] [--public-host HOST]
 //!                [--write-limit N] [--mmap-size BYTES] [--catalog NAME]
-//! reg-meta mcp --db DIR [--catalog NAME]
-//! reg-meta mock compile ...   (offline, `mock.rs`)
 //! ```
 //!
-//! Both admit `DIR/reg_meta.db`. `--catalog NAME` additionally admits its pinned
-//! `DIR/reg_meta_NAME.db` holdings partner; the default `global` opens the base only. `serve` serves every registered operation and
-//! download, `/openapi.json` and MCP at `/mcp` on `--host` (default
-//! 127.0.0.1); `/mcp` admits the `Host` header `--public-host` besides the loopback
-//! names. With `REG_META_EDGE_TOKEN` set, every route but `GET /healthz` refuses a
-//! request whose `x-edge-token` header does not carry it (`limit.rs`).
-//! `/mcp` and every POST share one rate limit per client address, keyed with
-//! the edge token (`limit.rs`): `--write-limit` tokens
-//! (default 60), refilled one a second. `--mmap-size` sets each SQLite connection's
+//! `serve` admits `DIR/reg_meta.db`. `--catalog NAME` additionally admits its pinned
+//! `DIR/reg_meta_NAME.db` holdings partner; the default `global` opens the base only.
+//! It serves every registered operation and download, `/openapi.json` and MCP at
+//! `/mcp` on `--host` (default 127.0.0.1); `/mcp` admits the `Host` header
+//! `--public-host` besides the loopback names. With `REG_META_EDGE_TOKEN` set, every
+//! route but `GET /healthz` refuses a request whose `x-edge-token` header does not
+//! carry it (`limit.rs`). `/mcp` and every POST share one rate limit per client
+//! address, keyed with the edge token (`limit.rs`): `--write-limit` tokens (default
+//! 60), refilled one a second. `--mmap-size` sets each SQLite connection's
 //! `PRAGMA mmap_size` (default 2 GiB, `reg_catalog::DEFAULT_MMAP_SIZE`; 0 disables
 //! memory-mapping). Once bound, `serve` prints `listening on ADDR:PORT` on stderr,
-//! the port the kernel chose under `--port 0`. `mcp` serves the MCP
-//! tools over stdio. A refusal prints the error document on stderr and exits with the
-//! code's status. `REG_META_CATALOG_SHA256`, when set, is the base catalog's digest
-//! that pair admission checks the partner's pin against instead of hashing the file.
+//! the port the kernel chose under `--port 0`. A refusal prints the error document on
+//! stderr and exits with the code's status. `REG_META_CATALOG_SHA256`, when set, is
+//! the base catalog's digest that pair admission checks the partner's pin against
+//! instead of hashing the file.
 
 mod limit;
 mod mcp;
-mod mock;
 mod usage;
 mod validator;
 
@@ -51,26 +48,20 @@ use crate::validator::Validators;
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
 
-enum Mode {
-    Serve {
-        port: u16,
-        host: IpAddr,
-        public_host: Option<String>,
-        write_limit: u64,
-    },
-    Mcp,
-}
-
 struct Args {
     db: PathBuf,
     catalog: String,
-    /// `serve --mmap-size`; `mcp` keeps the default.
     mmap_size: i64,
-    mode: Mode,
+    port: u16,
+    host: IpAddr,
+    public_host: Option<String>,
+    write_limit: u64,
 }
 
 fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
-    let mode = args.next();
+    if args.next().as_deref() != Some("serve") {
+        return Err(Error::invalid_parameter("mode"));
+    }
     let (mut db, mut port, mut catalog) = (None, None, None);
     let (mut host, mut public_host, mut write_limit, mut mmap_size) = (None, None, None, None);
     while let Some(flag) = args.next() {
@@ -86,44 +77,25 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
         };
         *slot = Some(args.next().ok_or_else(|| Error::invalid_parameter(&flag))?);
     }
-    let mode = match mode.as_deref() {
-        Some("serve") => Mode::Serve {
-            port: port
-                .and_then(|p| p.parse().ok())
-                .ok_or_else(|| Error::invalid_parameter("--port"))?,
-            host: match host {
-                Some(host) => host
-                    .parse()
-                    .map_err(|_| Error::invalid_parameter("--host"))?,
-                None => Ipv4Addr::LOCALHOST.into(),
-            },
-            public_host,
-            write_limit: match write_limit {
-                Some(limit) => limit
-                    .parse()
-                    .ok()
-                    .filter(|&limit| limit > 0)
-                    .ok_or_else(|| Error::invalid_parameter("--write-limit"))?,
-                None => limit::DEFAULT_PER_MINUTE,
-            },
-        },
-        // `mcp` listens on no port.
-        Some("mcp") => {
-            let serve_only = [
-                ("--port", &port),
-                ("--host", &host),
-                ("--public-host", &public_host),
-                ("--write-limit", &write_limit),
-                ("--mmap-size", &mmap_size),
-            ];
-            if let Some((flag, _)) = serve_only.iter().find(|(_, value)| value.is_some()) {
-                return Err(Error::invalid_parameter(flag));
-            }
-            Mode::Mcp
-        }
-        _ => return Err(Error::invalid_parameter("mode")),
-    };
     Ok(Args {
+        port: port
+            .and_then(|p| p.parse().ok())
+            .ok_or_else(|| Error::invalid_parameter("--port"))?,
+        host: match host {
+            Some(host) => host
+                .parse()
+                .map_err(|_| Error::invalid_parameter("--host"))?,
+            None => Ipv4Addr::LOCALHOST.into(),
+        },
+        public_host,
+        write_limit: match write_limit {
+            Some(limit) => limit
+                .parse()
+                .ok()
+                .filter(|&limit| limit > 0)
+                .ok_or_else(|| Error::invalid_parameter("--write-limit"))?,
+            None => limit::DEFAULT_PER_MINUTE,
+        },
         db: db.ok_or_else(|| Error::invalid_parameter("--db"))?.into(),
         catalog: catalog.unwrap_or_else(|| "global".to_owned()),
         mmap_size: match mmap_size {
@@ -134,7 +106,6 @@ fn parse_args(mut args: impl Iterator<Item = String>) -> Result<Args, Error> {
                 .ok_or_else(|| Error::invalid_parameter("--mmap-size"))?,
             None => DEFAULT_MMAP_SIZE,
         },
-        mode,
     })
 }
 
@@ -164,9 +135,6 @@ fn refuse(err: &Error) -> ! {
 
 #[tokio::main]
 async fn main() {
-    if std::env::args().nth(1).as_deref() == Some("mock") {
-        mock::main(std::env::args().skip(2));
-    }
     let args = parse_args(std::env::args().skip(1)).unwrap_or_else(|err| refuse(&err));
     let catalog_sha256 = catalog_sha256().unwrap_or_else(|err| refuse(&err));
     let catalog = Catalog::open_selected(
@@ -177,15 +145,8 @@ async fn main() {
     )
     .unwrap_or_else(|err| refuse(&err));
     let server = Arc::new(Server::new(catalog, VERSION).unwrap_or_else(|err| refuse(&err)));
-    match args.mode {
-        Mode::Serve {
-            port,
-            host,
-            public_host,
-            write_limit,
-        } => serve(server, (host, port).into(), public_host, write_limit).await,
-        Mode::Mcp => mcp::stdio(server).await,
-    }
+    let addr = (args.host, args.port).into();
+    serve(server, addr, args.public_host, args.write_limit).await;
 }
 
 async fn serve(

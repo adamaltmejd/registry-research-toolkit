@@ -51,48 +51,46 @@ SWECOV's catalog, which answers from SWECOV's holdings, is at
 `https://data.swecov.se/mcp`. The agent plugin above does this for you (its catalog URL
 is a setting). SWECOV's catalog is also browsable at <https://data.swecov.se>.
 
-### Local server
+### Mock data
 
-Each `reg_meta/v*` release carries a `reg-meta` binary for macOS arm64
+The `register-mock-data` skill generates local mock data shaped like a project's
+delivery with `reg-mock`. Each `reg_meta/v*` release carries it for macOS arm64
 (`aarch64-apple-darwin`), Linux x86_64 (`x86_64-unknown-linux-gnu`) and Windows x86_64
-(`x86_64-pc-windows-msvc`, asset `reg-meta-<target>.exe`), each with a SHA-256 checksum
-file, and `reg_meta.db.zst`. Download the binary for your platform and the catalog,
-verify them, and unpack the catalog into one directory:
+(`x86_64-pc-windows-msvc`, asset `reg-mock-<target>.exe`). Download the binary for your
+platform and check it against the SHA-256 digest GitHub records for the asset:
 
 ```bash
 tag=reg_meta/vX.Y.Z
 target=aarch64-apple-darwin   # or x86_64-unknown-linux-gnu
-base="https://github.com/adamaltmejd/registry-research-toolkit/releases/download/${tag/\//%2F}"
-curl -fsSLO "$base/reg-meta-$target"
-curl -fsSLO "$base/reg-meta-$target.sha256"
-shasum -a 256 -c "reg-meta-$target.sha256"
-install -m 755 "reg-meta-$target" reg-meta
+gh release download "$tag" --repo adamaltmejd/registry-research-toolkit \
+  --pattern "reg-mock-$target"
+gh release view "$tag" --repo adamaltmejd/registry-research-toolkit --json assets \
+  --jq ".assets[] | select(.name == \"reg-mock-$target\") | .digest"
+shasum -a 256 "reg-mock-$target"   # must equal the digest after `sha256:`
+install -m 755 "reg-mock-$target" reg-mock
+```
+
+The release page shows each asset's digest too; on Windows compare it with
+`Get-FileHash -Algorithm SHA256`. On other platforms, build it from a checkout
+(`cargo build --release -p reg-mock`).
+
+### Local server
+
+`reg-meta serve` runs the HTTP API and `/mcp` on a local catalog. Each release carries
+`reg-meta` for Linux x86_64 (`reg-meta-x86_64-unknown-linux-gnu`) and the catalog,
+`reg_meta.db.zst`; on other platforms build it from a checkout
+(`cargo build --release -p reg-meta`). Check both against their release digests as
+above, then:
+
+```bash
 mkdir -p catalog
-curl -fsSL -o reg_meta.db.zst "$base/reg_meta.db.zst"
-shasum -a 256 reg_meta.db.zst   # compare with the release digest
 zstd -d reg_meta.db.zst -o catalog/reg_meta.db
-```
-
-GitHub records the DB asset's SHA-256 digest
-(`gh release view reg_meta/vX.Y.Z --json assets`). On Windows, download the `.exe` from
-the release page and compare `Get-FileHash -Algorithm SHA256` with its `.sha256` file.
-On other platforms, build the binary from a checkout with a Rust toolchain and copy it
-next to `catalog` (`cargo build --release -p reg-meta && cp target/release/reg-meta .`).
-
-Then run local stdio MCP:
-
-```bash
-./reg-meta mcp --db catalog
-```
-
-Run the HTTP API and `/mcp` with the same binary and catalog directory:
-
-```bash
 ./reg-meta serve --db catalog --port 8000
 ```
 
 `serve` answers `/api/*`, `/openapi.json` and `/mcp` on `127.0.0.1` (`--host` changes
 it). The SPA is described in [`reg_webapp/DESIGN.md`](reg_webapp/DESIGN.md).
+
 
 ## Development
 

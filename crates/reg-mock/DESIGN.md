@@ -10,10 +10,11 @@ drives it lives in `plugins/microdata-tools-se`.
 - **Metadata only.** Mocks read no data rows: catalog metadata, the project and the
   researcher's reviewed rules (crates/DESIGN.md, "Local mock skill, later"). Keys are
   synthetic, never real person numbers.
-- **Not a server capability.** The hosted and stdio MCP expose metadata only. Mock
-  generation runs in `reg-meta mock` on the researcher's machine, offline.
-- **No network in the binary.** The skill saves the catalog's HTTP answers verbatim with
-  `curl`, as the runner workflow saves `materialize` (reg_mona_runner/README.md).
+- **Not a server capability.** The hosted MCP exposes metadata only. Mock generation
+  runs in the `reg-mock` binary on the researcher's machine, offline.
+- **No network in the binary.** The skill saves the catalog's answers verbatim with
+  `curl` from the hosted MCP (`save-answers.sh`): each is a tool call's
+  `structuredContent`, the document the HTTP operation returns.
   `compile` reads those files. Output then depends only on files in the project.
 
 ## Two contracts, one crate
@@ -29,7 +30,7 @@ drives it lives in `plugins/microdata-tools-se`.
 
 Both are closed and versioned (`deny_unknown_fields`). They live here, not in
 `reg-core`, because this crate is their only reader and writer, and `reg-core` is also
-the SPA's WebAssembly build, which has no use for them. The saved API answers are
+the SPA's WebAssembly build, which has no use for them. The saved answers are
 another contract's documents (conformance/api/operations.toml): `input.rs` reads only
 the fields it uses and ignores the rest.
 
@@ -83,11 +84,11 @@ What `compile` and `generate` hold to; each rule names its one place in the code
 
 ## Compile
 
-`reg-meta mock compile --project --rules --answers DIR --out`. `DIR` holds exactly one
-order answer, `order.json` (`POST /api/project/order`, any catalog) or `manifest.json`
-(`POST /api/project/materialize`, a steward's), plus every page under `segments/`
-(`GET /api/segments/{table}?variable=…`, and `GET /api/segments/{variable}` for a row
-key from another register) and `values/` (`GET /api/values?value_set=…`, each answer's
+`reg-mock compile --project --rules --answers DIR --out`. `DIR` holds exactly one order
+answer, `order.json` (the `order` tool's `order`, any catalog) or `manifest.json` (its
+`materialize_order`, a steward's), plus every page under `segments/` (`segments` with
+the table as `ref` and `variable`, and with the variable as `ref` for a row key from
+another register) and `values/` (`values` by `value_set`, each answer's
 pages named `<answer>-0001.json`, `-0002.json`, ..., as `save-answers.sh` writes them).
 A page left out (numbering with a gap, or a last page whose `next_cursor` is not null),
 answers from different catalog generations, an order answer for another version of the
@@ -128,7 +129,7 @@ refusal is returned at once, located, with a stable code.
 
 ## Generate
 
-`reg-meta mock generate --spec --out DIR [--seed N] [--persons N] [--allow-large]`
+`reg-mock generate --spec --out DIR [--seed N] [--persons N] [--allow-large]`
 writes one file per spec file, `<name>.<dta|parquet|csv>`, and `mock_manifest.json`
 (files, row counts, seed, persons, the mock marker). `--seed` defaults to 1 and
 `--persons` to 10 000. More than 1 000 000 persons needs `--allow-large`.

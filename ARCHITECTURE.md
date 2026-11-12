@@ -126,10 +126,10 @@ x86_64 and Windows x86_64. The webapp ships as a container image built from the 
   The table is in [`crates/DESIGN.md`](crates/DESIGN.md), "One implementation per
   contract".
 - **Builder and runtime are Rust.** The server and MCP tools share one validator, one
-  grammar and one set of result types, and local MCP is one binary.
+  grammar and one set of result types.
 - **One operation set for clients.** Exposed over HTTP and MCP (hosted at
-  reg-meta.vqv.uk and data.swecov.se, and local `reg-meta mcp`); there is no query CLI
-  and no human-oriented output. The interface rules are in
+  reg-meta.vqv.uk and data.swecov.se); there is no query CLI, no local MCP and no
+  human-oriented output. The interface rules are in
   [`crates/DESIGN.md`](crates/DESIGN.md), "Agent and web interface".
 
 ### Accepted source revisions and catalog generations

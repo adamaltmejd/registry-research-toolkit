@@ -53,15 +53,16 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh workflow run container-build.yml --repo "$GITHUB_REPOSITORY" --ref main
 
-  # `reg-meta` binaries for local `reg-meta mcp` (crates/DESIGN.md, "Distribution"), the
-  # `reg-build` binary a steward repository builds and verifies its holdings with, the
-  # SPA bundle a steward deploy serves and the MONA runner `extract.R` (Linux leg only;
-  # both are platform-independent), and the export gate's `reg-export-gate`, named by the gate crate's own version
-  # (crates/reg-export-gate/DESIGN.md), built natively on each runner, each with a
-  # `shasum -a 256 -c` checksum file. Not gated
-  # on `wait-ci`: the tagged commit already passed CI on main, and gating would skip the
-  # dispatch build. Linux links the runner's glibc, so it runs on Ubuntu 24.04-era
-  # distributions and newer.
+  # The release binaries, built natively on each runner (crates/DESIGN.md,
+  # "Distribution"): `reg-meta` (Linux, the server a steward deploy runs), `reg-build`
+  # (Linux for steward CI, macOS for local holdings checks), the export gate's
+  # `reg-export-gate` (Linux, named by the gate crate's own version,
+  # crates/reg-export-gate/DESIGN.md) and `reg-mock` (every researcher platform), plus
+  # the SPA bundle a steward deploy serves (Linux leg; platform-independent). No
+  # checksum files: consumers check GitHub's per-asset digest. Not gated on `wait-ci`:
+  # the tagged commit already passed CI on main, and gating would skip the dispatch
+  # build. Linux links the runner's glibc, so it runs on Ubuntu 24.04-era distributions
+  # and newer.
   binaries:
     if: >-
       github.event_name == 'workflow_dispatch'
@@ -71,11 +72,14 @@ jobs:
         include:
           - os: macos-latest
             target: aarch64-apple-darwin
+            bins: reg-build reg-mock
           - os: ubuntu-latest
             target: x86_64-unknown-linux-gnu
+            bins: reg-meta reg-build reg-export-gate reg-mock
             spa: true
           - os: windows-latest
             target: x86_64-pc-windows-msvc
+            bins: reg-mock
             exe: .exe
     runs-on: ${{ matrix.os }}
     permissions:
@@ -85,7 +89,7 @@ jobs:
       run:
         shell: bash
     env:
-      ASSET: reg-meta-${{ matrix.target }}${{ matrix.exe }}
+      BINS: ${{ matrix.bins }}
       TARGET: ${{ matrix.target }}
       EXE: ${{ matrix.exe }}
     steps:
@@ -99,49 +103,55 @@ jobs:
         run: |
           test "$(rustc -vV | sed -n 's/^host: //p')" = "$TARGET"
       # `--locked` asserts Cargo.lock is current, as in the Dockerfile.
-      - run: cargo build --release --locked -p reg-meta -p reg-build -p reg-export-gate
-      - name: Package with checksums
+      - name: Build
         run: |
-          # Git Bash on Windows has sha256sum, not shasum; both print `<hash>  <name>`.
-          sha256() { if command -v shasum >/dev/null; then shasum -a 256 "$@"; elif [ "$1" = -c ]; then sha256sum "$@"; else sha256sum --text "$@"; fi; }
+          packages=()
+          for bin in $BINS; do packages+=(-p "$bin"); done
+          cargo build --release --locked "${packages[@]}"
+      - name: Package
+        run: |
           gate_version=$(cargo pkgid -p reg-export-gate | sed 's/.*[#@]//')
-          GATE_ASSET="reg-export-gate-$gate_version-$TARGET$EXE"
-          echo "GATE_ASSET=$GATE_ASSET" >> "$GITHUB_ENV"
           mkdir dist
-          cp "target/release/reg-meta$EXE" "dist/$ASSET"
-          cp "target/release/reg-build$EXE" "dist/reg-build-$TARGET$EXE"
-          cp "target/release/reg-export-gate$EXE" "dist/$GATE_ASSET"
-          cd dist
-          for name in "$ASSET" "reg-build-$TARGET$EXE" "$GATE_ASSET"; do
-            sha256 "$name" > "$name.sha256"
-            sha256 -c "$name.sha256"
+          for bin in $BINS; do
+            case $bin in
+              reg-export-gate) name="reg-export-gate-$gate_version-$TARGET$EXE" ;;
+              *) name="$bin-$TARGET$EXE" ;;
+            esac
+            cp "target/release/$bin$EXE" "dist/$name"
           done
-      # The binary has no --help; a missing catalog is its documented refusal
-      # (`db_not_found`, exit 10), which proves it loads and parses its arguments.
-      - name: Smoke-test the binary
+      # Each binary's documented refusal on a missing input proves it loads and parses
+      # its arguments: `reg-meta` `db_not_found` (exit 10), `reg-build verify` (exit 1),
+      # the gate's setup refusal (exit 10, one stdout line), `reg-mock` `io` (exit 2).
+      - name: Smoke-test the binaries
         run: |
-          status=0
-          "dist/$ASSET" mcp --db "$RUNNER_TEMP/no-catalog" 2> smoke.err || status=$?
-          cat smoke.err
-          test "$status" -eq 10
-          grep -q '"code":"db_not_found"' smoke.err
-      # A missing staging folder is a setup refusal (exit 10, one stdout line).
-      - name: Smoke-test the gate binary
-        run: |
-          status=0
-          out=$("dist/$GATE_ASSET" check --staging "$RUNNER_TEMP/no-staging" \
-            --output "$RUNNER_TEMP/no-output") || status=$?
-          echo "$out"
-          test "$status" -eq 10
-          test "$out" = "refused: setup"
-      # A missing catalog is `verify`'s refusal (exit 1, `reg-build: <error>`).
-      - name: Smoke-test the builder binary
-        run: |
-          status=0
-          "dist/reg-build-$TARGET$EXE" verify "$RUNNER_TEMP/no-catalog.db" 2> smoke.err || status=$?
-          cat smoke.err
-          test "$status" -eq 1
-          grep -q '^reg-build: unable to open database file' smoke.err
+          for path in dist/*; do
+            status=0
+            case ${path#dist/} in
+              reg-meta-*)
+                "$path" serve --db "$RUNNER_TEMP/no-catalog" --port 0 2> smoke.err || status=$?
+                cat smoke.err
+                test "$status" -eq 10
+                grep -q '"code":"db_not_found"' smoke.err ;;
+              reg-build-*)
+                "$path" verify "$RUNNER_TEMP/no-catalog.db" 2> smoke.err || status=$?
+                cat smoke.err
+                test "$status" -eq 1
+                grep -q '^reg-build: unable to open database file' smoke.err ;;
+              reg-export-gate-*)
+                out=$("$path" check --staging "$RUNNER_TEMP/no-staging" \
+                  --output "$RUNNER_TEMP/no-output") || status=$?
+                echo "$out"
+                test "$status" -eq 10
+                test "$out" = "refused: setup" ;;
+              reg-mock-*)
+                "$path" generate --spec "$RUNNER_TEMP/no-spec.json" \
+                  --out "$RUNNER_TEMP/no-mock" 2> smoke.err || status=$?
+                cat smoke.err
+                test "$status" -eq 2
+                grep -q '"code":"io"' smoke.err ;;
+              *) echo "::error::no smoke test for $path"; exit 1 ;;
+            esac
+          done
       # The SPA bundle that steward deployments ship (steward-deploy.yml downloads it):
       # `frontend/dist` with the wasm and the API types generated at this commit, packed
       # as `reg-webapp-spa-<reg-meta version>.tar.zst`. The Node, bun and wasm-bindgen
@@ -173,18 +183,6 @@ jobs:
           listing=$(zstd -dc "dist/$spa" | tar -tf -)
           grep -qx './index.html' <<< "$listing"
           grep -q '^\./assets/.*\.wasm$' <<< "$listing"
-          cd dist
-          shasum -a 256 "$spa" > "$spa.sha256"
-          shasum -a 256 -c "$spa.sha256"
-      # The MONA extract runner, as is: one self-contained R file a steward uploads with
-      # its extract-config.json (reg_mona_runner/README.md).
-      - name: Add the extract runner
-        if: matrix.spa
-        run: |
-          cp reg_mona_runner/extract.R dist/extract.R
-          cd dist
-          shasum -a 256 extract.R > extract.R.sha256
-          shasum -a 256 -c extract.R.sha256
       # Idempotent, never `--clobber`: published assets are not replaced. A rerun,
       # or a gh retry after the first upload landed (HTTP 422), skips an asset that
       # exists with the same digest and fails on a different one.
@@ -194,7 +192,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ github.event.release.tag_name }}
         run: |
-          sha256() { if command -v shasum >/dev/null; then shasum -a 256 "$@"; elif [ "$1" = -c ]; then sha256sum "$@"; else sha256sum --text "$@"; fi; }
+          # Git Bash on Windows has sha256sum, not shasum; both print `<hash>  <name>`.
+          sha256() { if command -v shasum >/dev/null; then shasum -a 256 "$@"; else sha256sum --text "$@"; fi; }
           for path in dist/*; do
             name=${path#dist/}
             remote=$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json assets \
@@ -217,6 +216,6 @@ jobs:
         if: github.event_name == 'workflow_dispatch'
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
-          name: ${{ env.ASSET }}
+          name: binaries-${{ matrix.target }}
           path: dist/
           if-no-files-found: error

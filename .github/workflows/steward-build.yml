@@ -80,14 +80,14 @@ jobs:
           dir="$RUNNER_TEMP/toolkit"
           mkdir -p "$dir"
           gh release download "$TAG" --repo "$TOOLKIT" --dir "$dir" \
-            --pattern "reg-build-$TARGET" --pattern "reg-build-$TARGET.sha256" \
-            --pattern "reg-meta-$TARGET" --pattern "reg-meta-$TARGET.sha256" \
+            --pattern "reg-build-$TARGET" --pattern "reg-meta-$TARGET" \
             --pattern reg_meta.db.zst
-          (cd "$dir" && shasum -a 256 -c "reg-build-$TARGET.sha256" "reg-meta-$TARGET.sha256")
-          want=$(gh release view "$TAG" --repo "$TOOLKIT" --json assets \
-            --jq '.assets[] | select(.name == "reg_meta.db.zst") | .digest')
-          test "$want" = "sha256:$(shasum -a 256 "$dir/reg_meta.db.zst" | cut -d' ' -f1)" ||
-            { echo "::error::reg_meta.db.zst does not match its digest on $TAG"; exit 1; }
+          for name in "reg-build-$TARGET" "reg-meta-$TARGET" reg_meta.db.zst; do
+            want=$(gh release view "$TAG" --repo "$TOOLKIT" --json assets \
+              --jq ".assets[] | select(.name == \"$name\") | .digest")
+            test "$want" = "sha256:$(shasum -a 256 "$dir/$name" | cut -d' ' -f1)" ||
+              { echo "::error::$name does not match its digest on $TAG"; exit 1; }
+          done
           zstd -q -d --rm "$dir/reg_meta.db.zst" -o "$dir/reg_meta.db"
           install -m 755 "$dir/reg-build-$TARGET" "$dir/reg-build"
           install -m 755 "$dir/reg-meta-$TARGET" "$dir/reg-meta"

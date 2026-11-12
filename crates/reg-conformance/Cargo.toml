@@ -41,7 +41,7 @@ serde_json = "1.0.154"
 tokio = { version = "1.54.1", features = ["rt-multi-thread", "net", "time"] }
 toml = "1.1.8"
 # Its insertion-ordered JSON writes the MCP `tools/list` golden in the server's key
-# order (`mcp::stdio_session`).
+# order (`mcp::tools_list_matches_golden`).
 xtask = { path = "../xtask" }
 
 [lints]

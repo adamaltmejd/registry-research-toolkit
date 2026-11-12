@@ -78,12 +78,11 @@ The `mcp` module (MCP equivalence) sends raw JSON-RPC to `/mcp` on the case serv
 each step of the `api` cases it names, as a tool call, returns the HTTP body as
 `structuredContent` (an error with `isError`) that validates against the tool's
 `outputSchema`, and those steps cover every error the operation lists in
-`operations.toml`. `tools/list`, over HTTP and stdio, equals the golden
+`operations.toml`. `tools/list` equals the golden
 `cases/mcp/tools-list.json`, and its names are the `tool` of each served operation. The
 server builds each tool's schemas from its OpenAPI entry, so a schema change shows as a
-reviewed diff of that file; the stdio session (`reg-meta mcp`: initialize, list the
-tools and call `search`) writes it under
-`REG_META_BLESS=1 cargo test -p reg-conformance --test conformance stdio_session`
+reviewed diff of that file, which the same case writes under
+`REG_META_BLESS=1 cargo test -p reg-conformance --test conformance tools_list_matches_golden`
 (`scripts/gate.sh regen`). The body cap and the rate limit on `/mcp` answer with their
 error documents, and the drained bucket also refuses the address's project POSTs while
 its reads pass; the burst runs on a server of its own.
