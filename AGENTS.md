@@ -173,6 +173,10 @@ and to a sweep.
 
 `reg-meta serve --db <catalog-dir> --port 8000` serves the HTTP API and `/mcp`.
 `reg_webapp/dev/dev.sh` runs it with the SPA (`reg_webapp/frontend/`) on free ports.
+Agents run it as `bash reg_webapp/dev/dev.sh <flags> [mode]` from the repo or worktree
+root, with no env-var prefix and no `cd X &&`: the sandbox exclusion in
+`.claude/settings.json` matches the command text, and a sandboxed run kills Chrome. The
+`run-reg-webapp` skill has the flags and modes.
 
 # Lint and test
 

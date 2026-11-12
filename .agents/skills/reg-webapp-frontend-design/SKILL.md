@@ -244,10 +244,10 @@ existing pure-TS unit tests (AGENTS.md → "Testing policy").
    `dev.sh` prints its output directory on the first line. **Open** each PNG and read
    its `.snapshot.txt` (accessibility tree) and `.a11y.txt` (axe). Fix console errors
    and React or RAC dev warnings. `smoke` is the desktop catalog flow only. Use
-   `REG_META_DB=<db_dir>` instead of `--fixture-db` when content matters.
+   `--db <db_dir>` instead of `--fixture-db` when content matters.
 
-3. Run `dev.sh --fixture-db flows <out-dir>`; every journey must pass, with no assertion
-   weakened. A new user journey goes in `reg_webapp/dev/journeys.sh` only when the
+3. Run `bash reg_webapp/dev/dev.sh --fixture-db flows <out-dir>`; every journey must
+   pass, with no assertion weakened. A new user journey goes in `reg_webapp/dev/journeys.sh` only when the
    Testing policy admits it; a component test is not the substitute.
 
 4. Run `reg-webapp-design-reviewer` in a clean subagent; fix or explicitly dismiss each

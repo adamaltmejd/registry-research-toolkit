@@ -139,11 +139,12 @@ this part entirely if you have neither.
 
 ### Render
 
-From the repo root; `dev.sh` picks free ports and tears everything down on exit:
+From the repo root, in exactly this form (no env-var prefix, no `cd X &&`; see
+`run-reg-webapp`); `dev.sh` picks free ports and tears everything down on exit:
 
 ```sh
 bash reg_webapp/dev/dev.sh --fixture-db shot --all <route>
-REG_META_DB="$db_dir" bash reg_webapp/dev/dev.sh shot --all <route>
+bash reg_webapp/dev/dev.sh --db "$db_dir" shot --all <route>
 bash reg_webapp/dev/dev.sh --fixture-db smoke
 ```
 
