@@ -9,12 +9,13 @@ bundles four skills:
   | `catalog` MCP server         | The hosted register metadata catalog, the global catalog: `https://reg-meta.vqv.uk/mcp`.                                                                  |
   | `register-metadata-search`   | Skill: how to query variables, value codes and schemas with the catalog tools.                                                                            |
   | `register-project`           | Skill, loaded on demand: drafting a `project_data.json`, and answering questions about a project.                                                         |
-  | `register-mock-data`         | Skill: local mock data shaped like the project's delivery, with `reg-meta mock`.                                                                          |
+  | `register-mock-data`         | Skill: local mock data shaped like the project's delivery, with `reg-mock`.                                                                               |
   | `register-research-scaffold` | Skill: scaffolding a batch-based register research project with mock validation, restricted execution and the toolkit's export gate as its release stage. |
 
 Nothing to install beyond the plugin: the tools run on the hosted server. Mock data
-needs the `reg-meta` binary (see Local catalog). The scaffold's evaluation records are
-in `trials/register-research-scaffold/`.
+needs the `reg-mock` binary (the [repository README's Mock data
+section](https://github.com/adamaltmejd/registry-research-toolkit#mock-data)). The
+scaffold's evaluation records are in `trials/register-research-scaffold/`.
 
 ## Install
 
@@ -38,25 +39,6 @@ codex plugin marketplace add adamaltmejd/registry-research-toolkit
 
 Then open the Codex plugin marketplace, find `microdata-tools-se` under
 `registry-research-toolkit`, and install it.
-
-## Local catalog
-
-To query the catalog without the hosted server, run it locally over stdio with
-`reg-meta mcp --db <dir>`, where `<dir>` holds an unpacked `reg_meta.db`. The `reg-meta`
-binary for macOS arm64 and Linux x86_64 and the catalog DBs ship on each `reg_meta/v*`
-GitHub release; the download, SHA-256 check and `zstd` unpack recipe is in the
-[repository README's Local server
-section](https://github.com/adamaltmejd/registry-research-toolkit#local-server).
-
-Then register the local server with your agent host, for example:
-
-```bash
-claude mcp add catalog-local -- /path/to/reg-meta mcp --db /path/to/catalog
-codex mcp add catalog-local -- /path/to/reg-meta mcp --db /path/to/catalog
-```
-
-The local server answers the same tools from your machine; no query is sent to the
-hosted server.
 
 ## Scope
 

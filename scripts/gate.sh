@@ -145,9 +145,9 @@ regen() {
 		run env REG_META_BLESS=1 cargo test -p reg-meta --test openapi_snapshot &&
 		# Cut from the committed openapi.json, so it runs after that file is blessed.
 		run env REG_META_BLESS=1 cargo test -p xtask --test project_schema_snapshot &&
-		# The MCP `tools/list` golden, as the conformance `mcp` stdio session lists it.
+		# The MCP `tools/list` golden, as `/mcp` lists it.
 		run env REG_META_BLESS=1 cargo test -p reg-conformance --test conformance \
-			--locked stdio_session
+			--locked tools_list_matches_golden
 }
 
 usage() {

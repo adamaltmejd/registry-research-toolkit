@@ -1,8 +1,8 @@
-//! `reg-meta mock`: local mock data, offline (crates/reg-mock/DESIGN.md).
+//! `reg-mock`: local mock data, offline (`DESIGN.md`).
 //!
 //! ```text
-//! reg-meta mock compile --project FILE --rules FILE --answers DIR --out FILE
-//! reg-meta mock generate --spec FILE --out DIR [--seed N] [--persons N] [--allow-large]
+//! reg-mock compile --project FILE --rules FILE --answers DIR --out FILE
+//! reg-mock generate --spec FILE --out DIR [--seed N] [--persons N] [--allow-large]
 //! ```
 //!
 //! `generate` writes one file per spec file into `DIR` in the spec's format, and
@@ -21,14 +21,15 @@ use reg_mock::spec::{SPEC_VERSION, Spec};
 use reg_mock::{generate, write};
 use serde_json::{Value, json};
 
-const USAGE: &str = "reg-meta mock compile --project FILE --rules FILE --answers DIR --out FILE\n       \
-                     reg-meta mock generate --spec FILE --out DIR [--seed N] [--persons N] [--allow-large]";
+const USAGE: &str = "reg-mock compile --project FILE --rules FILE --answers DIR --out FILE\n       \
+                     reg-mock generate --spec FILE --out DIR [--seed N] [--persons N] [--allow-large]";
 
-pub fn main(mut args: impl Iterator<Item = String>) -> ! {
+fn main() {
+    let mut args = std::env::args().skip(1);
     match args.next().as_deref() {
         Some("compile") => run_compile(args),
         Some("generate") => run_generate(args),
-        _ => usage("mock: expected a subcommand"),
+        _ => usage("expected a subcommand"),
     }
 }
 
@@ -50,7 +51,7 @@ fn run_compile(mut args: impl Iterator<Item = String>) -> ! {
             "--rules" => &mut rules,
             "--answers" => &mut answers,
             "--out" => &mut out,
-            _ => usage(&format!("mock compile: unknown flag {flag}")),
+            _ => usage(&format!("compile: unknown flag {flag}")),
         };
         *slot = Some(PathBuf::from(
             args.next()
@@ -59,7 +60,7 @@ fn run_compile(mut args: impl Iterator<Item = String>) -> ! {
     }
     let (Some(project), Some(rules), Some(answers), Some(out)) = (project, rules, answers, out)
     else {
-        usage("mock compile: --project, --rules, --answers and --out are required");
+        usage("compile: --project, --rules, --answers and --out are required");
     };
     let project = read_json(&project);
     let rules: Rules = reg_mock::from_json(&read_json(&rules)).unwrap_or_else(|e| {
@@ -100,7 +101,7 @@ fn run_generate(mut args: impl Iterator<Item = String>) -> ! {
             "--out" => &mut out,
             "--seed" => &mut seed,
             "--persons" => &mut persons,
-            _ => usage(&format!("mock generate: unknown flag {flag}")),
+            _ => usage(&format!("generate: unknown flag {flag}")),
         };
         *slot = Some(
             args.next()
@@ -108,7 +109,7 @@ fn run_generate(mut args: impl Iterator<Item = String>) -> ! {
         );
     }
     let (Some(spec), Some(out)) = (spec, out) else {
-        usage("mock generate: --spec and --out are required");
+        usage("generate: --spec and --out are required");
     };
     let number = |value: Option<String>, flag: &str, default: u64| {
         value.map_or(default, |v| {

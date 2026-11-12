@@ -1,5 +1,4 @@
-//! MCP: `reg-meta mcp` over stdio and `/mcp` on `serve` over streamable
-//! HTTP. A tool exposes the registered operations that name it. Its schemas are the
+//! MCP: `/mcp` on `serve`, over streamable HTTP. A tool exposes the registered operations that name it. Its schemas are the
 //! operations' `OpenAPI` ones, and a call returns the HTTP response document: `{data,
 //! meta}`, or `{error, meta}` as a tool error.
 
@@ -18,13 +17,13 @@ use rmcp::model::{
     CallToolRequestParams, CallToolResponse, CallToolResult, Implementation, JsonObject,
     ListToolsResult, PaginatedRequestParams, ServerCapabilities, ServerConfig, Tool,
 };
-use rmcp::service::{RequestContext, ServerInitializeError};
+use rmcp::service::RequestContext;
 use rmcp::transport::streamable_http_server::session::never::NeverSessionManager;
 use rmcp::transport::{StreamableHttpServerConfig, StreamableHttpService};
-use rmcp::{ErrorData, RoleServer, ServerHandler, ServiceExt};
+use rmcp::{ErrorData, RoleServer, ServerHandler};
 use serde_json::{Map, Value, json};
 
-/// The tool handler: one per stdio process, and per request over stateless HTTP.
+/// The tool handler, one per request over stateless HTTP.
 #[derive(Clone)]
 struct Tools {
     server: Arc<Server>,
@@ -257,7 +256,7 @@ impl ServerHandler for Tools {
                 ..Answer::new(&self.server, Err(err))
             },
         };
-        // Over HTTP the label goes on the response (`usage::mcp`); stdio has none.
+        // The label goes on the response (`usage::mcp`).
         let slot = context
             .extensions
             .get::<axum::http::request::Parts>()
@@ -272,17 +271,6 @@ impl ServerHandler for Tools {
         }
         .into())
     }
-}
-
-/// Serve the tools over stdio until the client closes it, which may happen before
-/// the handshake completes (#1326).
-pub async fn stdio(server: Arc<Server>) {
-    let running = match Tools::new(server).serve(rmcp::transport::stdio()).await {
-        Ok(running) => running,
-        Err(ServerInitializeError::ConnectionClosed(_)) => return,
-        Err(err) => panic!("MCP initialize over stdio: {err}"),
-    };
-    running.waiting().await.expect("MCP session over stdio");
 }
 
 /// `/mcp`: streamable HTTP without sessions (each POST stands alone and is answered

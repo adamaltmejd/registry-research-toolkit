@@ -31,8 +31,8 @@ part by part and can still be refused.
   | reg_meta | `crates/reg-meta/Cargo.toml` (and `Cargo.lock`) | `publish_reg_meta.yml` on `release: published` (CI, artifact conformance, deploy, binaries) |
 
 A `reg_meta/v*` release carries one DB asset, `reg_meta.db.zst` (step 8), the
-`reg-meta`, `reg-build` and `reg-export-gate` binaries, the SPA bundle and the runner
-`extract.R` (step 10; the gate's is named by its own crate version).
+`reg-meta`, `reg-build`, `reg-export-gate` and `reg-mock` binaries and the SPA bundle
+(step 10; the gate's is named by its own crate version).
 
 ## Validation
 
@@ -324,7 +324,7 @@ gh release view reg_meta/vX.Y.Z --json assets --jq '.assets[] | [.name, .digest]
 
 Admission: the draft must hold exactly that one DB asset, with a SHA-256 digest equal to
 the local compressed file (`assets.sha256`). Only then publish (step 9). Keep the
-checksums with the evidence; the binaries and their checksums are uploaded by step 10.
+checksums with the evidence; the binaries are uploaded by step 10.
 Remove disposable downloads after the release, keeping the evidence.
 
 **Publish ordering.** Publishing a release fires `publish_reg_meta.yml`, which
@@ -373,25 +373,31 @@ over a stale check.
 review; the release does not touch them. The release notes must name any change to the
 reusable workflows' inputs (`steward-build.yml`, `steward-deploy.yml`,
 `steward-bump.yml`) or to `HOLDINGS_SCHEMA_VERSION`: a steward meets it at that PR.
+The bump runs `steward-bump.yml` at the steward's current pin against the newest
+release's assets, so a release that renames or drops an asset the old pin downloads
+breaks that bump. Name it in the notes and bump each steward by hand: push a branch
+whose `bump.yml` calls `steward-bump.yml` at the new tag, then
+`gh workflow run Bump --repo <steward repo> --ref <branch>`.
 
-**Binaries.** The `binaries` job uploads, per target (`aarch64-apple-darwin`,
-`x86_64-unknown-linux-gnu` and `x86_64-pc-windows-msvc`), `reg-meta-<target>`,
-`reg-build-<target>` and `reg-export-gate-<gate version>-<target>` (Windows assets end
-in `.exe`), and from the Linux leg the SPA bundle `reg-webapp-spa-X.Y.Z.tar.zst` and the
-MONA runner `extract.R`, each with a `.sha256`. A steward repository downloads
-`reg-build`, the SPA bundle and the runner at its pinned tag. Confirm all twenty-two:
+**Binaries.** The `binaries` job uploads `reg-meta-<target>` and
+`reg-export-gate-<gate version>-<target>` for `x86_64-unknown-linux-gnu`,
+`reg-build-<target>` for that and `aarch64-apple-darwin`, `reg-mock-<target>` for both
+and `x86_64-pc-windows-msvc` (`.exe`), and from the Linux leg the SPA bundle
+`reg-webapp-spa-X.Y.Z.tar.zst`: seven binaries and the bundle, with no checksum files
+(consumers check GitHub's per-asset digest; crates/DESIGN.md, "Distribution"). A
+steward repository downloads `reg-build`, `reg-meta` and the SPA bundle at its pinned
+tag; the MONA runner `extract.R` is read from the source at the tag. Confirm all eight:
 
 ```sh
 gh release view reg_meta/vX.Y.Z --json assets --jq '.assets[].name' |
-  grep -E '^(reg-(meta|build|export-gate|webapp-spa)-|extract\.R)'
+  grep -E '^reg-(meta|build|export-gate|mock|webapp-spa)-'
 ```
 
-If one failed, fix the cause on main and upload by hand from the release commit:
-`cargo build --release --locked -p reg-meta -p reg-build -p reg-export-gate`, copy to
-`reg-meta-<target>`, `reg-build-<target>` and `reg-export-gate-<gate version>-<target>`
-(the version from `cargo pkgid -p reg-export-gate`),
-`shasum -a 256 <asset> > <asset>.sha256` for each, then
-`gh release upload reg_meta/vX.Y.Z <asset> <asset>.sha256`.
+If one failed, fix the cause on main and upload by hand from the release commit, on
+the asset's target: `cargo build --release --locked -p <binary>`, copy to
+`<binary>-<target>` (the gate as `reg-export-gate-<gate version>-<target>`, the version
+from `cargo pkgid -p reg-export-gate`), then `gh release upload reg_meta/vX.Y.Z <asset>`.
+
 `gh workflow run publish_reg_meta.yml --ref <branch>` tests the job without a release.
 
 ### 11. Verify the deployed artifact

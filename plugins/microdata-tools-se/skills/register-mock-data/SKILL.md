@@ -1,14 +1,14 @@
 ---
 name: register-mock-data
 description: Generate local mock register data from a project_data.json with
-  `reg-meta mock`, so analysis code runs on the researcher's machine before the real
+  `reg-mock`, so analysis code runs on the researcher's machine before the real
   extract exists. Use when the user asks for mock, synthetic or fake data for a register
   project, or a mock run of their pipeline.
 ---
 
 # Mock register data
 
-`reg-meta mock` writes files shaped like the project's delivery: the same file and
+`reg-mock` writes files shaped like the project's delivery: the same file and
 column names, the runner's types and format (`.dta`, Parquet or CSV), drawn from a
 simulated population built from SCB's public demography. It reads catalog metadata only,
 never a data row; every key is synthetic. A pipeline switches between real and mock data
@@ -19,28 +19,28 @@ catalog's answers, write the rules and compile them into `mock_spec.json`, gener
 
 ## 0. The binary and the catalog
 
-- `reg-meta` ships for macOS arm64 and Linux x86_64 on each `reg_meta/v*` GitHub
-  release; the download and SHA-256 check are in the repository README's Local server
-  section. Use the release that matches `reg_meta_version` in `project_data.json`.
-- The answers come from a catalog's HTTP API. Pick it from the plugin's `catalog_url`:
-  - a steward's server (for example `https://data.swecov.se/mcp`): its origin,
-    `https://data.swecov.se`, with mode `materialize`, which gives the delivery's own
-    file and column names;
-  - the global catalog (`https://reg-meta.vqv.uk/mcp`) serves MCP only. Download the
-    same release's `reg_meta.db.zst`, unpack it into `catalog/` (README, Local server),
-    run `reg-meta serve --db catalog --port 8000`, and use `http://127.0.0.1:8000` with
-    mode `order`. Files then follow the standard names: the table's public id with `_`
-    for `/` and `-`, one file per year (`scb_lsum_individer_sociala_agi_ku_2019`).
+- `reg-mock` ships for macOS arm64, Linux x86_64 and Windows x86_64 on each
+  `reg_meta/v*` GitHub release; the download and SHA-256 check are in the repository
+  README's Mock data section. Use the release that matches `reg_meta_version` in
+  `project_data.json`.
+- The answers come from the catalog the plugin's `catalog_url` names, over MCP:
+  - a steward's catalog (for example `https://data.swecov.se/mcp`) with mode
+    `materialize`, which gives the delivery's own file and column names;
+  - the global catalog (`https://reg-meta.vqv.uk/mcp`) with mode `order`. Files then
+    follow the standard names: the table's public id with `_` for `/` and `-`, one file
+    per year (`scb_lsum_individer_sociala_agi_ku_2019`).
 - The project must validate first (`register-project` skill).
 
 ## 1. Save the answers
 
 ```bash
-scripts/save-answers.sh <api-origin> project_data.json order|materialize mock/answers
+scripts/save-answers.sh <catalog_url> project_data.json order|materialize mock/answers
 ```
 
-The script (curl and jq) posts the project and saves the order answer, every segment
-page for each column, and every page of each value set, unchanged. Commit
+The script (curl and jq) sends the project to the catalog's MCP tools and saves the
+order answer, every segment page for each column, and every page of each value set,
+unchanged. Commit
+
 `mock/answers/`: compile reads only these files, so the mock never depends on the
 network again. Save again whenever the project changes; compile refuses answers saved
 for another version of it (`answers_stale`).
@@ -91,11 +91,11 @@ choice so the researcher can judge it:
   file shape).
 
 ```bash
-reg-meta mock compile --project project_data.json --rules mock/mock_rules.json \
+reg-mock compile --project project_data.json --rules mock/mock_rules.json \
   --answers mock/answers --out mock/mock_spec.json
 ```
 
-A refusal is JSON on stdout, exit 2: every problem at once, each with a `code`, where
+A refusal is JSON on stderr, exit 2: every problem at once, each with a `code`, where
 (`at`) and what to do. Fix the rules or save the answers again; never edit
 `mock_spec.json` by hand. Show the researcher the rules and the compiled spec's files
 and columns, and commit both.
@@ -103,7 +103,7 @@ and columns, and commit both.
 ## 3. Generate
 
 ```bash
-reg-meta mock generate --spec mock/mock_spec.json --out <mock-input-dir> \
+reg-mock generate --spec mock/mock_spec.json --out <mock-input-dir> \
   [--seed 1] [--persons 10000]
 ```
 

@@ -83,7 +83,7 @@ Preserve original executable code and execution revision. Promote construction r
 analyses still needed by current research into maintained code rather than archiving
 live dependencies.
 
-The mock generator is `reg-meta mock` (the `register-mock-data` skill), not part of this
+The mock generator is `reg-mock` (the `register-mock-data` skill), not part of this
 skill or a new subsystem to build. Consume its outputs: the generated files in the
 configured mock input directory, and the committed `mock_spec.json` that declares them.
 For a trial without it, the brief may provide an independent wholly invented mock

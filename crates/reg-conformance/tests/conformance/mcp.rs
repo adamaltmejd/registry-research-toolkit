@@ -2,11 +2,10 @@
 //! operations answer.
 //!
 //! Raw JSON-RPC against `/mcp` on the case servers (stateless streamable HTTP, JSON
-//! responses), and one stdio session against `reg-meta mcp`. The oracles are the HTTP
-//! responses, which the `api` surface pins, the operation table and the `tools/list`
-//! golden (`cases/mcp/tools-list.json`). The stdio session writes that golden under
-//! `REG_META_BLESS=1`:
-//! `REG_META_BLESS=1 cargo test -p reg-conformance --test conformance stdio_session`
+//! responses). The oracles are the HTTP responses, which the `api` surface pins, the
+//! operation table and the `tools/list` golden (`cases/mcp/tools-list.json`), which
+//! `tools_list_matches_golden` writes under `REG_META_BLESS=1`:
+//! `REG_META_BLESS=1 cargo test -p reg-conformance --test conformance tools_list_matches_golden`
 //! (`scripts/gate.sh regen`).
 //!
 //! Every `/mcp` request here shares its server's one rate bucket for this address with
@@ -16,11 +15,9 @@
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::fmt::Write as _;
-use std::io::{BufRead as _, BufReader, Write as _};
-use std::path::{Path, PathBuf};
-use std::process::{Child, Command, ExitStatus, Stdio};
+use std::path::PathBuf;
 use std::sync::OnceLock;
-use std::time::{Duration, Instant};
+use std::time::Duration;
 
 use serde_json::{Map, Value, json};
 
@@ -547,8 +544,49 @@ fn array_argument_only_for_an_array_parameter() {
 #[test]
 fn tools_list_matches_golden() {
     // Fails when a tool, its description or a schema changes without updating
-    // `cases/mcp/tools-list.json`, or a tool name drifts from `operations.toml`.
+    // `cases/mcp/tools-list.json` (byte for byte as the golden spells them), or a tool
+    // name drifts from `operations.toml`. Under `REG_META_BLESS=1` it writes the golden.
+    // Also fails when `initialize`, which hosted clients send first, stops naming the
+    // server.
     let port = reader();
+    let initialize = json!({
+        "protocolVersion": PROTOCOL,
+        "capabilities": {},
+        "clientInfo": {"name": "conformance", "version": "0"},
+    });
+    let (status, reply) = rpc(port, "initialize", &initialize).unwrap();
+    assert_eq!(status, 200, "{reply}");
+    assert_eq!(reply["result"]["serverInfo"]["name"], "reg-meta", "{reply}");
+    let mut headers = mcp_headers();
+    headers.push(("content-type", "application/json".to_owned()));
+    let request = json!({"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {}});
+    let response = client::request(
+        port,
+        "POST",
+        "/mcp",
+        &headers,
+        Some(serde_json::to_vec(&request).unwrap()),
+        Duration::from_secs(60),
+    )
+    .unwrap();
+    assert_eq!(response.status, 200);
+    // The golden keeps the server's key order: `serde_json::Value` would sort it.
+    let ordered: xtask::json::Json = serde_json::from_slice(&response.content).unwrap();
+    let ordered_tools = ordered
+        .get("result")
+        .and_then(|result| result.get("tools"))
+        .unwrap();
+    let rendered = serde_json::to_string_pretty(ordered_tools).unwrap() + "\n";
+    let path = golden();
+    if std::env::var_os("REG_META_BLESS").is_some() {
+        std::fs::write(&path, &rendered).unwrap();
+    }
+    let committed = std::fs::read_to_string(&path).unwrap_or_default();
+    assert!(
+        committed == rendered,
+        "{} is stale; regenerate it with REG_META_BLESS=1 cargo test -p reg-conformance --test conformance tools_list_matches_golden",
+        path.display()
+    );
     let (_, openapi) = client::json(port, "GET", "/openapi.json", &[], None).unwrap();
     let served: BTreeSet<&str> = openapi["paths"]
         .as_object()
@@ -557,12 +595,8 @@ fn tools_list_matches_golden() {
         .flat_map(|item| item.as_object().unwrap().values())
         .filter_map(|operation| operation["operationId"].as_str())
         .collect();
-    let (_, reply) = rpc(port, "tools/list", &json!({})).unwrap();
+    let reply: Value = serde_json::from_slice(&response.content).unwrap();
     let listed = reply["result"]["tools"].as_array().unwrap();
-    assert!(
-        json_eq(&Value::from(listed.clone()), &Value::from(tools().to_vec())),
-        "tools/list differs from tools-list.json"
-    );
     let names: BTreeSet<&str> = listed.iter().filter_map(|t| t["name"].as_str()).collect();
     let catalogued: BTreeSet<&str> = operations()
         .iter()
@@ -593,132 +627,5 @@ fn body_over_the_cap_is_payload_too_large() {
     assert_eq!(
         document["error"]["fields"],
         json!({"limit_bytes": 1024 * 1024})
-    );
-}
-
-/// `reg-meta mcp` on the artifact directory `db`, from the repository root.
-fn mcp_command(db: &Path) -> Command {
-    let mut command = Command::new(server::reg_meta());
-    command
-        .arg("mcp")
-        .arg("--db")
-        .arg(db)
-        .current_dir(reg_conformance::repo());
-    command
-}
-
-/// The child's exit status; a child still running after 10 s is killed and the test
-/// fails, so a session that hangs instead of exiting does not hang the suite.
-fn exits_within_10s(child: &mut Child) -> ExitStatus {
-    let deadline = Instant::now() + Duration::from_secs(10);
-    loop {
-        if let Some(status) = child.try_wait().unwrap() {
-            return status;
-        }
-        if Instant::now() > deadline {
-            let _ = child.kill();
-            panic!("reg-meta mcp did not exit within 10 s");
-        }
-        std::thread::sleep(Duration::from_millis(20));
-    }
-}
-
-#[test]
-fn stdio_session() {
-    // Fails when `reg-meta mcp` cannot initialize, list the golden's tools (byte for
-    // byte as the golden spells them) or answer a call with the document `/api/search`
-    // returns. Under `REG_META_BLESS=1` it writes the golden instead.
-    let artifact =
-        reg_conformance::cached_reader_artifact(&reg_conformance::fixture("base")).unwrap();
-    let db = artifact.parent().unwrap();
-    let port = server::server(db).unwrap().port;
-    let (status, expected) = client::json(
-        port,
-        "GET",
-        "/api/search?q=Svar&type=variable&limit=1",
-        &[],
-        None,
-    )
-    .unwrap();
-    assert_eq!(status, 200, "{expected}");
-    // Fails when a client that disconnects before `initialize` makes `reg-meta mcp`
-    // panic (exit 101, #1326) instead of exiting cleanly.
-    let mut child = mcp_command(db)
-        .stdin(Stdio::null())
-        .stdout(Stdio::piped())
-        .stderr(Stdio::piped())
-        .spawn()
-        .unwrap();
-    exits_within_10s(&mut child);
-    let closed = child.wait_with_output().unwrap();
-    assert_eq!(
-        (
-            closed.status.code(),
-            closed.stdout.as_slice(),
-            closed.stderr.as_slice()
-        ),
-        (Some(0), &b""[..], &b""[..]),
-        "{}",
-        String::from_utf8_lossy(&closed.stderr)
-    );
-    let arguments = json!({"q": "Svar", "type": "variable", "limit": 1});
-    let messages = [
-        json!({"id": 0, "method": "initialize", "params": {
-            "protocolVersion": PROTOCOL,
-            "capabilities": {},
-            "clientInfo": {"name": "conformance", "version": "0"},
-        }}),
-        json!({"method": "notifications/initialized"}),
-        json!({"id": 2, "method": "tools/list"}),
-        json!({"id": 3, "method": "tools/call", "params": {"name": "search", "arguments": arguments}}),
-    ];
-    let mut process = mcp_command(db)
-        .stdin(Stdio::piped())
-        .stdout(Stdio::piped())
-        .spawn()
-        .unwrap();
-    let mut stdin = process.stdin.take().unwrap();
-    let mut stdout = BufReader::new(process.stdout.take().unwrap());
-    let mut replies = Vec::new();
-    for mut message in messages {
-        message["jsonrpc"] = json!("2.0");
-        writeln!(stdin, "{message}").unwrap();
-        stdin.flush().unwrap();
-        if message.get("id").is_some() {
-            let mut line = String::new();
-            stdout.read_line(&mut line).unwrap();
-            replies.push(line);
-        }
-    }
-    drop(stdin);
-    assert!(exits_within_10s(&mut process).success());
-    let [initialize, listed, searched] = &replies[..] else {
-        panic!("{} replies: {replies:?}", replies.len());
-    };
-    let initialize: Value = serde_json::from_str(initialize).unwrap();
-    assert_eq!(initialize["result"]["serverInfo"]["name"], "reg-meta");
-    let searched: Value = serde_json::from_str(searched).unwrap();
-    assert_eq!(searched["result"]["isError"], false);
-    assert!(
-        json_eq(&searched["result"]["structuredContent"], &expected),
-        "{searched}"
-    );
-
-    // The golden keeps the server's key order: `serde_json::Value` would sort it.
-    let listed: xtask::json::Json = serde_json::from_str(listed).unwrap();
-    let tools = listed
-        .get("result")
-        .and_then(|result| result.get("tools"))
-        .unwrap();
-    let rendered = serde_json::to_string_pretty(tools).unwrap() + "\n";
-    let path = golden();
-    if std::env::var_os("REG_META_BLESS").is_some() {
-        std::fs::write(&path, &rendered).unwrap();
-    }
-    let committed = std::fs::read_to_string(&path).unwrap_or_default();
-    assert!(
-        committed == rendered,
-        "{} is stale; regenerate it with REG_META_BLESS=1 cargo test -p reg-conformance --test conformance stdio_session",
-        path.display()
     );
 }

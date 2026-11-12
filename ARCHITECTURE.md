@@ -73,8 +73,8 @@ registry-research-toolkit/
   crates/
     reg-core/       # project_data.json contract + structural validator, grammars
     reg-catalog/    # catalog reader and its operations
-    reg-meta/       # binary: `serve` (HTTP API + /mcp), `mcp` (stdio), `mock` (offline)
-    reg-mock/       # local mock data: rules and spec contracts, compile
+    reg-meta/       # binary: `serve` (HTTP API + /mcp)
+    reg-mock/       # local mock data: rules and spec contracts (binary: reg-mock)
     reg-core-wasm/  # reg-core for the SPA (WebAssembly)
     reg-frame/      # the catalog builder: source frame records
     reg-readers/    #   one reader per input format
@@ -94,7 +94,7 @@ Dependency graph (acyclic):
 
 ```text
 reg-meta       → reg-catalog → reg-core
-reg-meta       → reg-mock → reg-core
+reg-mock       → reg-core
 reg-core-wasm  → reg-core
 reg-build      → reg-resolve, reg-readers → reg-frame, reg-core
 reg-frame      → reg-core
@@ -104,8 +104,8 @@ reg_export_gate → its schemas and policies (files, offline inside MONA; no cod
 ```
 
 Nothing is published to PyPI. The runtime releases on `reg_meta/v*` tags: the `reg-meta`
-crate version, the catalog asset and the `reg-meta` binaries for macOS arm64, Linux
-x86_64 and Windows x86_64. The webapp ships as a container image built from the newest
+crate version, the catalog asset and the binaries with a consumer (`crates/DESIGN.md`,
+"Distribution"). The webapp ships as a container image built from the newest
 `reg_meta/v*` release's assets.
 
 ### Why this split
@@ -126,10 +126,10 @@ x86_64 and Windows x86_64. The webapp ships as a container image built from the 
   The table is in [`crates/DESIGN.md`](crates/DESIGN.md), "One implementation per
   contract".
 - **Builder and runtime are Rust.** The server and MCP tools share one validator, one
-  grammar and one set of result types, and local MCP is one binary.
+  grammar and one set of result types.
 - **One operation set for clients.** Exposed over HTTP and MCP (hosted at
-  reg-meta.vqv.uk and data.swecov.se, and local `reg-meta mcp`); there is no query CLI
-  and no human-oriented output. The interface rules are in
+  reg-meta.vqv.uk and data.swecov.se); there is no query CLI, no local MCP and no
+  human-oriented output. The interface rules are in
   [`crates/DESIGN.md`](crates/DESIGN.md), "Agent and web interface".
 
 ### Accepted source revisions and catalog generations

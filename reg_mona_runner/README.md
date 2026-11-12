@@ -4,7 +4,8 @@
 (version 4) that the steward's catalog wrote for one sub-project; the script writes the
 ordered columns into that sub-project's export folder, in the format the researcher
 chose for the project: Stata `.dta` (the default), Parquet or CSV. Run it by hand in
-MONA. It ships as an asset of each `reg_meta` release (`extract.R`, with a `.sha256`).
+MONA. Use the copy at the `reg_meta` tag the steward pins:
+`https://raw.githubusercontent.com/adamaltmejd/registry-research-toolkit/reg_meta/vX.Y.Z/reg_mona_runner/extract.R`.
 
 ## Steward configuration
 

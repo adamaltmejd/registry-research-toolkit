@@ -2,7 +2,7 @@
 
 Design rationale and constraints for the catalog runtime: `reg-core` (grammars, folds,
 interval algebra, the project contract), `reg-catalog` (the reader and its operation
-set) and `reg-meta` (the `serve` and `mcp` run modes), plus the design of the builder,
+set) and `reg-meta` (the server, `serve`), plus the design of the builder,
 `reg-build` ("The catalog builder"), which builds the artifact these crates read. The
 project contract has its own note, [reg-core/DESIGN.md](reg-core/DESIGN.md). Holdings
 are a separate layer compiled after the artifact ("Holdings"). Cross-package topology is
@@ -33,7 +33,7 @@ bindings every result type would exist twice, as a Rust struct and as a Pydantic
 for OpenAPI, which is the drift this design removes. Most of the old backend was catalog
 logic (node assembly, search ranking, semantic validation) that belongs in the operation
 set, where agents get it too. The deploy image is one static binary plus the baked DB
-(the 1 GB Fly VM is kept for the page cache), and local MCP needs no Python environment.
+(the 1 GB Fly VM is kept for the page cache).
 
 ## One implementation per contract
 
@@ -93,10 +93,8 @@ reg-build: readers → frame → resolve → emit         uses reg-core
 reg_meta.db (documents inside), immutable
                  │
 reg-catalog: one operation set
-        ┌────────┴─────────┐
-reg-meta serve        reg-meta mcp
-HTTP API             MCP over stdio (local catalog)
-+ /mcp (hosted)
+                 │
+reg-meta serve: HTTP API + /mcp (hosted)
 ```
 
 - `reg-core`: no IO. FQID and period grammar, folds, interval algebra, project-data
@@ -105,13 +103,15 @@ HTTP API             MCP over stdio (local catalog)
 - `reg-catalog`: the reader. Opens and admits an artifact and defines the operation set:
   one function per operation, typed parameters and results with JSON Schemas. Search
   (one ranking), the logical order and project semantic validation live here.
-- `reg-meta`: the binary, with run modes only. `serve` is the HTTP API (axum + utoipa;
+- `reg-meta`: the server binary, `serve` only. It is the HTTP API (axum + utoipa;
   early `ETag` revalidation, body-size limit and rate limit as tower layers) plus the
-  remote MCP endpoint over streamable HTTP. `mcp` is MCP over stdio against a local
-  catalog, for offline use. There is no query CLI.
+  remote MCP endpoint over streamable HTTP. There is no query CLI and no stdio MCP.
 - `reg-export-gate`: the export gate, the disclosure check on aggregates leaving the
   data side. It reads no catalog. Its design is
   [reg-export-gate/DESIGN.md](reg-export-gate/DESIGN.md).
+- `reg-mock`: local mock data, the `reg-mock` binary on the researcher's machine. It
+  reads catalog answers saved from the MCP, never a catalog file or the network. Its
+  design is [reg-mock/DESIGN.md](reg-mock/DESIGN.md).
 - `xtask`: repository tooling, not shipped. `cargo xtask gh-issue` is the
   maintainer-author trust gate for issue reads; its tests hold the repo-policy lints.
   The release skill runs `release-base-reuse` (step 8a). The holdings asset's content
@@ -125,24 +125,31 @@ dependency.
 
 **Distribution.** The server image is one static binary plus the baked `reg_meta.db`,
 fetched in the Dockerfile with `curl`, SHA-256 verification against GitHub's asset
-digests, and `zstd`. Each `reg_meta/v*` release ships `reg-meta` binaries for macOS
-arm64, Linux x86_64 and Windows x86_64 (`.exe`) with SHA-256 checksums, the export
-gate's `reg-export-gate` binaries for the same targets (named by the gate crate's own
-version, `reg-export-gate-<version>-<target>`; the Linux build links the runner's glibc,
-so it needs an Ubuntu 24.04-era distribution or newer on the data VM), `reg-build`
-binaries for the same targets and the SPA bundle `reg-webapp-spa-<version>.tar.zst` (the
-built `reg_webapp/frontend/dist`), which a steward repository downloads at its pinned
-tag to build, verify and deploy its holdings, the MONA runner `extract.R` (one file,
-configured by the steward's `extract-config.json`), and one DB asset, `reg_meta.db.zst`
-(documents included). There is no separate docs asset. A steward's holdings
+digests, and `zstd`. Each `reg_meta/v*` release ships only assets with a consumer, each
+verified against GitHub's per-asset SHA-256 digest (no checksum files):
+
+- `reg_meta.db.zst`, the one DB asset (documents included; no separate docs asset);
+- `reg-meta` for Linux x86_64, the server a steward deploy runs;
+- `reg-build` for Linux x86_64 (steward CI builds, verifies and bumps its holdings
+  with it) and macOS arm64 (local holdings checks);
+- the export gate's `reg-export-gate` for Linux x86_64, named by the gate crate's own
+  version (`reg-export-gate-<version>-<target>`), for the data servers;
+- `reg-mock` for macOS arm64, Linux x86_64 and Windows x86_64 (`.exe`), local mock data
+  on the researcher's machine;
+- the SPA bundle `reg-webapp-spa-<version>.tar.zst` (the built
+  `reg_webapp/frontend/dist`), which a steward deploy serves.
+
+A steward repository downloads `reg-build`, `reg-meta` and the SPA bundle at its pinned
+tag. The MONA runner `extract.R` is one self-contained file, read from the source tree
+at the same tag (`reg_mona_runner/README.md`), not a release asset. Another target is
+added when a consumer needs it. Linux builds link the runner's glibc, so they need an
+Ubuntu 24.04-era distribution or newer. A steward's holdings
 (`reg_meta_<steward>.db.zst`, pinning the base's `catalog_sha256`) are released by its
-own repository against the `reg_meta` release it pins. The `reg-meta` binaries serve
-local HTTP or MCP; the catalog is downloaded with `curl` and `zstd`. There is no PyPI
-package and no `fetch` run mode. Windows agents use hosted MCP; a local Windows binary
-is added only if it builds and runs without special effort. The `microdata-tools-se`
+own repository against the `reg_meta` release it pins. There is no PyPI package, no
+`fetch` run mode and no local stdio MCP: agents use hosted MCP. The `microdata-tools-se`
 plugin declares one hosted MCP server whose URL is a user setting: the global catalog by
-default, a hosted steward catalog (`https://data.swecov.se/mcp`) instead. A local
-`reg-meta mcp` is added to the agent's MCP configuration by hand.
+default, a hosted steward catalog (`https://data.swecov.se/mcp`) instead.
+
 
 ## The catalog builder
 
@@ -2452,9 +2459,9 @@ alphanumeric codes keep it text. `P1105_LopNr_PersonNr` and `P1105_LopNr_Barn_Pe
 in the FK child projection have separately evidenced recipient/child identifier roles
 and stay text whatever their codes.
 
-Mock generation is not a server capability. `reg-meta mock` runs on the researcher's
+Mock generation is not a server capability. `reg-mock` runs on the researcher's
 machine, offline, on catalog answers saved from the metadata operations (the order,
-`segments`, `values`) and a reviewed rules file; both hosted and stdio MCP expose
+`segments`, `values`) over MCP and a reviewed rules file; the hosted MCP exposes
 metadata only. A mock uses adopted types, lengths, value sets and classification pins,
 reads no MONA rows, and refuses a type that would need a guess. Synthetic keys are
 conspicuous and reused only across compatible identifier kinds, never real person
