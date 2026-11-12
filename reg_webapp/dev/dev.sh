@@ -49,7 +49,8 @@
 #                          REG_WEBAPP_FIXTURE=paired, and select catalog fixture.
 #   --db DIR [--catalog NAME]
 #                          serve DIR (a directory holding reg_meta.db; sets
-#                          REG_META_DB); --catalog also serves its holdings partner
+#                          REG_META_DB; relative to the checkout root, as the
+#                          variable is); --catalog also serves its holdings partner
 #                          reg_meta_<NAME>.db there (a steward site, e.g. swecov; sets
 #                          REG_META_CATALOG). Humans and CI may export the two
 #                          variables instead; agents pass the flags, because the
@@ -111,9 +112,9 @@ while [ "$#" -gt 0 ]; do
 		}
 		db_flag=1
 		if [ "$1" = --db ]; then
-			# Against the caller's cwd: the script cds to the checkout root below.
-			case "$2" in /*) REG_META_DB=$2 ;; *) REG_META_DB=$PWD/$2 ;; esac
-			export REG_META_DB
+			# As the variable: a relative DIR resolves against the checkout root (the
+			# script cds there below), whatever the caller's cwd.
+			export REG_META_DB="$2"
 		else
 			export REG_META_CATALOG="$2"
 		fi
@@ -182,16 +183,6 @@ esac
 if [ "${CODEX_SANDBOX:-}" = seatbelt ] && [ "$mode" != serve ] && [ "$mode" != preview ]; then
 	echo "dev: '$mode' drives Chrome, which cannot launch in the Codex sandbox; rendered checks run outside it (the rendered review and CI flows)" >&2
 	exit 3
-fi
-
-# `ab`: the pinned agent-browser against a page an interactive run serves, in one
-# named session per checkout (the default session is one browser shared machine-wide).
-# Through dev.sh so the browser launch matches the script's sandbox exclusion. No
-# servers, no build; the idle timeout reaps a daemon nobody closed.
-if [ "$mode" = ab ]; then
-	ab_root=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd) || exit 1
-	exec bun "$ab_root/reg_webapp/frontend/node_modules/agent-browser/bin/agent-browser.js" \
-		--session "$(basename "$ab_root")-ui" --idle-timeout 15m "$@"
 fi
 
 # The capture viewports: a named preset or a raw WxH, printed as "W H". The four
@@ -275,6 +266,15 @@ bin=${CARGO_TARGET_DIR:-$root/target}/debug
 if ! (cd reg_webapp/frontend && bun install --frozen-lockfile --silent); then
 	echo "dev: 'bun install --frozen-lockfile' failed — see output above." >&2
 	exit 1
+fi
+
+# `ab`: the pinned agent-browser against a page an interactive run serves, in one
+# named session per checkout (the default session is one browser shared machine-wide).
+# Through dev.sh so the browser launch matches the script's sandbox exclusion. No
+# servers, no build; the idle timeout reaps a daemon nobody closed.
+if [ "$mode" = ab ]; then
+	exec bun "$root/reg_webapp/frontend/node_modules/agent-browser/bin/agent-browser.js" \
+		--session "$(basename "$root")-ui" --idle-timeout 15m "$@"
 fi
 
 # The Rust server, built from this checkout. The whole workspace, as `cargo test`

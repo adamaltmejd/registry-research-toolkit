@@ -53,8 +53,8 @@ bash reg_webapp/dev/dev.sh --paired-fixture ...  # the same modes on the synthet
 bash reg_webapp/dev/dev.sh --db DIR [--catalog NAME] ...  # a real or scratch catalog
 ```
 
-`--catalog NAME` also serves the holdings partner `reg_meta_<NAME>.db` in `DIR` (a
-steward site, e.g. `swecov`).
+A relative `DIR` resolves against the checkout root. `--catalog NAME` also serves the
+holdings partner `reg_meta_<NAME>.db` in `DIR` (a steward site, e.g. `swecov`).
 
 `--paired-fixture` (instead of `--fixture-db`) builds the synthetic steward holdings
 pair into a temp directory (`target/debug/reg-fixture --paired`) and exports
