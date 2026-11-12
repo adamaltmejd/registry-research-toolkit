@@ -1952,8 +1952,8 @@ evidence = "Kodningen hör till företagets näringsgren.\ncatalog:variable_text
 [[statement]]
 kind = "set"
 subject = "var:ovrersforskskatt"
-fields = { "sets" = ["ovriga-ersattningar"] }
-evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nKUAGG OvrErsForskSkatt 2019–2024 (inside ovriga-ersattningar-foretag) is 'Summering av värdet i variabeln per organisationsnummer' of the same-named person column ovrersforskskatt Joins set:ovriga-ersattningar."
+fields = { "sets" = [] }
+evidence = "Skattefria ersättningar och förmåner är inkomstrelaterade.\ncatalog:variable_text:39105:17897:20089"
 
 [[statement]]
 kind = "set"
@@ -3542,8 +3542,8 @@ evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the
 [[statement]]
 kind = "set"
 subject = "set:ovriga-ersattningar"
-fields = { "description" = "Övriga ersättningar som inte är skattepliktiga, per anställning 1996–2018 och summerade per företag eller organisation (organisationsnummer) 1996–2024. Per anställning 2019–2024 finns skattefria förmåner och ersättningar, som avser vissa inte skattepliktiga ersättningar till utländska experter m.fl. enligt beslut från Forskarskattenämnden." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): every level of one measure belongs in one group.\n\nNuvarande text behålls; den tillagda ovrersforskskatt beskrivs med sina år enligt DEF/OP (Forskarskattenämnden), utan att påstå att företagssumman bygger på den.\ncatalog:variable_text:45893:9496:14610\ncatalog:variable_text:45893:14610:15340\ncatalog:variable_text:45893:16071:17532\ncatalog:variable_text:45892:17897:20089"
+fields = { "description" = "Övriga ersättningar som inte är skattepliktiga, per anställning 1996–2018 och summerade per företag eller organisation (organisationsnummer) 1996–2024." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): every level of one measure belongs in one group.\n\nÖvriga ej skattepliktiga ersättningar per anställning 1996–2018 och summerade per organisationsnummer 1996–2024.\ncatalog:variable_text:45893:9496:14610\ncatalog:variable_text:45893:14610:15340\ncatalog:variable_text:45893:16071:17532"
 
 [[statement]]
 kind = "set"
