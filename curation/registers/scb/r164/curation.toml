@@ -728,12 +728,6 @@ evidence = "Indelningen kombinerar ålder och civilstånd.\ncatalog:valueset:400
 [[statement]]
 kind = "set"
 subject = "var:civilstand"
-fields = { "sets" = ["civilstand"] }
-evidence = "Civilstånd ingår även i en kombinerad indelning.\ncatalog:valueset:12759\ncatalog:variable_text:40954:20209:20240"
-
-[[statement]]
-kind = "set"
-subject = "var:civilstand"
 fields = { "tags" = ["family-household"] }
 evidence = "Civilstånd ingår även i en kombinerad indelning.\ncatalog:valueset:12759\ncatalog:variable_text:40954:20209:20240"
 
@@ -2330,12 +2324,6 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
-subject = "set:civilstand"
-fields = { "label" = "Civilstånd" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:deltagande-folkomrostning"
 fields = { "label" = "Deltagande folkomröstning" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
@@ -2666,9 +2654,9 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 
 [[statement]]
 kind = "set"
-subject = "set:civilstand"
+subject = "var:civilstand"
 fields = { "description" = "Personens formella civilstånd: om personen är, har varit eller aldrig har varit gift eller registrerad partner." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nW0 är definitionen för det formella civilståndet.\ncatalog:variable_text:47765:11078:11109"
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; fr18 left the group in #2437, so the group dissolved and its description moved to the remaining variable.\n\nW0 är definitionen för det formella civilståndet.\ncatalog:variable_text:47765:11078:11109"
 
 [[statement]]
 kind = "set"
