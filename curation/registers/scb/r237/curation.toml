@@ -114371,4 +114371,14 @@ subject = "var:barn-5-fodelsear"
 fields = { "description" = "Födelseår för barn nummer 5 i hushållet, i frågorna om familj och umgänge (FU). 2000–2007 ingår barn 0–19 år, från 2008 barn 0–18 år. 1984–1985 delades hushållen i två grupper, och variabeln avser då barn 5 i gruppen där urvalspersonen är gift eller sammanboende." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSju varianter av samma text; åldersgränsen och 1984–1985 års uppdelning anges som fakta med år.\ncatalog:variable_text:54051:5113:5844\ncatalog:variable_text:54051:8401:8766\ncatalog:variable_text:54051:13149:13514\ncatalog:variable_text:54051:13879:15706\ncatalog:variable_text:54051:15706:16801\ncatalog:variable_text:54051:16801:17532\ncatalog:variable_text:54051:17532:18628"
 
+[[statement]]
+kind = "set"
+subject = "var:antal-med-kod-05-i-tablan"
+fields = { "description" = "Antal personer i hushållet med relationskod 05 i förhållande till urvalspersonen. Kod 05 betyder föräldrar (egna eller samboendes) 1975 och eget syskon övriga år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAlla år anger samma sammanräkning och samma kodbetydelse: föräldrar 1975, eget syskon övriga år (2006 års text: 1980–2007). En ändrad kodbetydelse inom samma kolumn är ingen delning (crates/DESIGN.md: historical codings distinguished within one column do not alone imply a split); den anges med år.\ncatalog:variable_text:53319:1826:3652\ncatalog:variable_text:53319:3652:6574\ncatalog:variable_text:53319:6940:7305\ncatalog:variable_text:53319:7670:8035\ncatalog:variable_text:53319:8401:12784\ncatalog:variable_text:53319:13149:13514\nRegisterinformation.csv:row=30478\nRegisterinformation.csv:row=330641\nRegisterinformation.csv:row=342879\nRegisterinformation.csv:row=469010"
 
+[[statement]]
+kind = "set"
+subject = "var:antal-med-kod-14-i-tablan"
+fields = { "description" = "Antal personer i hushållet med relationskod 14 i förhållande till urvalspersonen. Kod 14 betyder urvalspersonens fosterbarn till och med 1993 och annat från 1994." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAlla år anger samma sammanräkning och samma kodbetydelse: fosterbarn 1992–1993, annat 1994–2007. En ändrad kodbetydelse inom samma kolumn är ingen delning (crates/DESIGN.md); den anges med år.\ncatalog:variable_text:53333:8401:12784\ncatalog:variable_text:53333:13149:13514\nRegisterinformation.csv:row=30487\nRegisterinformation.csv:row=61886\nRegisterinformation.csv:row=78285\nRegisterinformation.csv:row=468577"
