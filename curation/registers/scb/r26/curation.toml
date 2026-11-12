@@ -1119,8 +1119,8 @@ evidence = "Första och sista anställningsmånad är en sammanhållen grupp.\nc
 [[statement]]
 kind = "set"
 subject = "var:anstallda-storleksklass"
-fields = { "sets" = ["antal-anstallda-pa-foretaget"] }
-evidence = "Företagets storleksklass efter antal anställda.\ncatalog:variable_text:41100:5479:9496"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure belongs in one group; different meaning stays out.\n\nStorleksklass efter antal anställda is a size-class code, not a count; it stays out of the merged set:antal-anstallda (lane T audit)."
 
 [[statement]]
 kind = "set"
@@ -1131,8 +1131,8 @@ evidence = "Företagets storleksklass efter antal anställda.\ncatalog:variable_
 [[statement]]
 kind = "set"
 subject = "var:antal-anstallda-enligt-fdb"
-fields = { "sets" = ["antal-anstallda-pa-foretaget"] }
-evidence = "Antal anställda på företaget enligt FDB.\ncatalog:variable_text:41101:12418:18993"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nPairs by source: FDB aktuellt-antal-anstallda (workplace) / antal-anstallda-enligt-fdb (company); syssreg antalanstc (workplace, 'summera antalet anställda … enligt sysselsättningsregistret') / antal-anstallda-ftg-syssreg and its 1985 predecessor antal-anstallda-foretaget (company). Riders from the company group: antal-anstallda-ku (KU-based, no workplace twin) and anstallda-storleksklass (a size-class code; caller may prefer to drop it from the group). set:antal-anstallda-pa-foretaget merges into set:antal-anstallda."
 
 [[statement]]
 kind = "set"
@@ -1143,8 +1143,8 @@ evidence = "Antal anställda på företaget enligt FDB.\ncatalog:variable_text:4
 [[statement]]
 kind = "set"
 subject = "var:antal-anstallda-foretaget"
-fields = { "sets" = ["antal-anstallda-pa-foretaget"] }
-evidence = "Samma begrepp som scb/rams/antal-anstallda-ftg-syssreg, uppdelat på perioder.\ncatalog:occurrence:417195\ncatalog:occurrence:417236"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nPairs by source: FDB aktuellt-antal-anstallda (workplace) / antal-anstallda-enligt-fdb (company); syssreg antalanstc (workplace, 'summera antalet anställda … enligt sysselsättningsregistret') / antal-anstallda-ftg-syssreg and its 1985 predecessor antal-anstallda-foretaget (company). Riders from the company group: antal-anstallda-ku (KU-based, no workplace twin) and anstallda-storleksklass (a size-class code; caller may prefer to drop it from the group). set:antal-anstallda-pa-foretaget merges into set:antal-anstallda."
 
 [[statement]]
 kind = "set"
@@ -1155,8 +1155,8 @@ evidence = "Samma begrepp som scb/rams/antal-anstallda-ftg-syssreg, uppdelat på
 [[statement]]
 kind = "set"
 subject = "var:antal-anstallda-ftg-syssreg"
-fields = { "sets" = ["antal-anstallda-pa-foretaget"] }
-evidence = "Samma kolumn har angränsande ägare och motstridiga enheter i senare perioder.\ncatalog:occurrence:417195\ncatalog:occurrence:417236\ncatalog:occurrence:418849\ncatalog:occurrence:419083"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nPairs by source: FDB aktuellt-antal-anstallda (workplace) / antal-anstallda-enligt-fdb (company); syssreg antalanstc (workplace, 'summera antalet anställda … enligt sysselsättningsregistret') / antal-anstallda-ftg-syssreg and its 1985 predecessor antal-anstallda-foretaget (company). Riders from the company group: antal-anstallda-ku (KU-based, no workplace twin) and anstallda-storleksklass (a size-class code; caller may prefer to drop it from the group). set:antal-anstallda-pa-foretaget merges into set:antal-anstallda."
 
 [[statement]]
 kind = "set"
@@ -1167,8 +1167,8 @@ evidence = "Samma kolumn har angränsande ägare och motstridiga enheter i senar
 [[statement]]
 kind = "set"
 subject = "var:antal-anstallda-ku"
-fields = { "sets" = ["antal-anstallda-pa-foretaget"] }
-evidence = "Antal anställda på företaget enligt kontrolluppgift.\ncatalog:variable_text:41104:5479:18993"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nPairs by source: FDB aktuellt-antal-anstallda (workplace) / antal-anstallda-enligt-fdb (company); syssreg antalanstc (workplace, 'summera antalet anställda … enligt sysselsättningsregistret') / antal-anstallda-ftg-syssreg and its 1985 predecessor antal-anstallda-foretaget (company). Riders from the company group: antal-anstallda-ku (KU-based, no workplace twin) and anstallda-storleksklass (a size-class code; caller may prefer to drop it from the group). set:antal-anstallda-pa-foretaget merges into set:antal-anstallda."
 
 [[statement]]
 kind = "set"
@@ -1305,8 +1305,8 @@ evidence = "Måttet hör till antal arbetsmånader.\ncatalog:variable_text:41120
 [[statement]]
 kind = "set"
 subject = "var:antal-sysselsatta"
-fields = { "sets" = ["antal-sysselsatta-pa-foretaget"] }
-evidence = "Antalet avser företaget.\ncatalog:variable_text:41121:13149:18993"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nCompany antal-sysselsatta is defined as 'Summeras utifrån antal sysselsatta enligt RAMS, Arbetsställen'; every company member (syssreg, RAMS Individer, FAD år 1/år 2, 1985) has a workplace twin with the same definition and only the unit changed. Riders from the workplace group: the sex and sex × education sub-counts (antal-kvinnor-*, antal-man-*, antal-kv-*), which have no company counterpart but are already grouped with the workplace total. set:antal-sysselsatta-pa-foretaget merges into set:antal-sysselsatta."
 
 [[statement]]
 kind = "set"
@@ -1317,8 +1317,8 @@ evidence = "Antalet avser företaget.\ncatalog:variable_text:41121:13149:18993"
 [[statement]]
 kind = "set"
 subject = "var:antal-sysselsatta-ar-1"
-fields = { "sets" = ["antal-sysselsatta-pa-foretaget"] }
-evidence = "Antalet avser företaget år 1.\ncatalog:variable_text:41122:16801:19358"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nCompany antal-sysselsatta is defined as 'Summeras utifrån antal sysselsatta enligt RAMS, Arbetsställen'; every company member (syssreg, RAMS Individer, FAD år 1/år 2, 1985) has a workplace twin with the same definition and only the unit changed. Riders from the workplace group: the sex and sex × education sub-counts (antal-kvinnor-*, antal-man-*, antal-kv-*), which have no company counterpart but are already grouped with the workplace total. set:antal-sysselsatta-pa-foretaget merges into set:antal-sysselsatta."
 
 [[statement]]
 kind = "set"
@@ -1329,8 +1329,8 @@ evidence = "Antalet avser företaget år 1.\ncatalog:variable_text:41122:16801:1
 [[statement]]
 kind = "set"
 subject = "var:antal-sysselsatta-ar-2"
-fields = { "sets" = ["antal-sysselsatta-pa-foretaget"] }
-evidence = "Antalet avser företaget år 2.\ncatalog:variable_text:41123:16801:19358"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nCompany antal-sysselsatta is defined as 'Summeras utifrån antal sysselsatta enligt RAMS, Arbetsställen'; every company member (syssreg, RAMS Individer, FAD år 1/år 2, 1985) has a workplace twin with the same definition and only the unit changed. Riders from the workplace group: the sex and sex × education sub-counts (antal-kvinnor-*, antal-man-*, antal-kv-*), which have no company counterpart but are already grouped with the workplace total. set:antal-sysselsatta-pa-foretaget merges into set:antal-sysselsatta."
 
 [[statement]]
 kind = "set"
@@ -1371,8 +1371,8 @@ evidence = "Antalet avser arbetsstället enligt sysselsättningsregistret.\ncata
 [[statement]]
 kind = "set"
 subject = "var:antal-sysselsatta-foretag-syssreg"
-fields = { "sets" = ["antal-sysselsatta-pa-foretaget"] }
-evidence = "Samma företagsmått som scb/rams/antal-sysselsatta-foretaget är uppdelat på angränsande perioder.\ncatalog:occurrence:417197\ncatalog:occurrence:417238"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nCompany antal-sysselsatta is defined as 'Summeras utifrån antal sysselsatta enligt RAMS, Arbetsställen'; every company member (syssreg, RAMS Individer, FAD år 1/år 2, 1985) has a workplace twin with the same definition and only the unit changed. Riders from the workplace group: the sex and sex × education sub-counts (antal-kvinnor-*, antal-man-*, antal-kv-*), which have no company counterpart but are already grouped with the workplace total. set:antal-sysselsatta-pa-foretaget merges into set:antal-sysselsatta."
 
 [[statement]]
 kind = "set"
@@ -1383,8 +1383,8 @@ evidence = "Samma företagsmått som scb/rams/antal-sysselsatta-foretaget är up
 [[statement]]
 kind = "set"
 subject = "var:antal-sysselsatta-foretaget"
-fields = { "sets" = ["antal-sysselsatta-pa-foretaget"] }
-evidence = "Samma företagsmått som scb/rams/antal-sysselsatta-foretag-syssreg är uppdelat på angränsande perioder.\ncatalog:occurrence:417197\ncatalog:occurrence:417238"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nCompany antal-sysselsatta is defined as 'Summeras utifrån antal sysselsatta enligt RAMS, Arbetsställen'; every company member (syssreg, RAMS Individer, FAD år 1/år 2, 1985) has a workplace twin with the same definition and only the unit changed. Riders from the workplace group: the sex and sex × education sub-counts (antal-kvinnor-*, antal-man-*, antal-kv-*), which have no company counterpart but are already grouped with the workplace total. set:antal-sysselsatta-pa-foretaget merges into set:antal-sysselsatta."
 
 [[statement]]
 kind = "set"
@@ -1401,8 +1401,8 @@ evidence = "Antalet avser arbetsstället.\ncatalog:variable_text:41131:17897:189
 [[statement]]
 kind = "set"
 subject = "var:antal-sysselsatta-syssreg"
-fields = { "sets" = ["antal-sysselsatta-pa-foretaget"] }
-evidence = "Antalet gäller företaget enligt sysselsättningsregistret.\ncatalog:variable_text:41132:13149:18993"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nCompany antal-sysselsatta is defined as 'Summeras utifrån antal sysselsatta enligt RAMS, Arbetsställen'; every company member (syssreg, RAMS Individer, FAD år 1/år 2, 1985) has a workplace twin with the same definition and only the unit changed. Riders from the workplace group: the sex and sex × education sub-counts (antal-kvinnor-*, antal-man-*, antal-kv-*), which have no company counterpart but are already grouped with the workplace total. set:antal-sysselsatta-pa-foretaget merges into set:antal-sysselsatta."
 
 [[statement]]
 kind = "set"
@@ -3483,8 +3483,8 @@ evidence = "Variabeln anger studiedeltagande.\ncatalog:variable_text:41347:9862:
 [[statement]]
 kind = "set"
 subject = "var:summerad-inkomst-ast"
-fields = { "sets" = [] }
-evidence = "Summerad inkomst för arbetsstället.\ncatalog:variable_text:41348:17897:18993"
+fields = { "sets" = ["lone-eller-foretagarinkomst"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nDEF 'Kontant bruttolön för anställning eller nettoinkomst av näringsverksamhet för egenföretagare summerat över året för samtliga med anknytning till arbetsstället' is the job-level lone-eller-foretagarinkomst DEF summed per workplace. Joins set:lone-eller-foretagarinkomst."
 
 [[statement]]
 kind = "set"
@@ -3877,8 +3877,8 @@ evidence = "RAMS jobs table: job-level Nov status (1998-2018) -> AGI-based Nov s
 [[statement]]
 kind = "set"
 subject = "var:aktuellt-antal-anstallda"
-fields = { "sets" = ["antal-anstallda-pa-arbetsstallet"] }
-evidence = "r27 places this employee count in the workplace table; r620 defines employees at the measurement date under the FDB criteria.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40953\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:414088\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41094"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nPairs by source: FDB aktuellt-antal-anstallda (workplace) / antal-anstallda-enligt-fdb (company); syssreg antalanstc (workplace, 'summera antalet anställda … enligt sysselsättningsregistret') / antal-anstallda-ftg-syssreg and its 1985 predecessor antal-anstallda-foretaget (company). Riders from the company group: antal-anstallda-ku (KU-based, no workplace twin) and anstallda-storleksklass (a size-class code; caller may prefer to drop it from the group). set:antal-anstallda-pa-arbetsstallet merges into set:antal-anstallda."
 
 [[statement]]
 kind = "set"
@@ -3889,104 +3889,104 @@ evidence = "r621 describes administrative workplace units and operationally coun
 [[statement]]
 kind = "set"
 subject = "var:antal-kv-korteftergymn"
-fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
-evidence = "r622 explicitly counts employed women with short postsecondary education at the workplace.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40974\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41111"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nCompany antal-sysselsatta is defined as 'Summeras utifrån antal sysselsatta enligt RAMS, Arbetsställen'; every company member (syssreg, RAMS Individer, FAD år 1/år 2, 1985) has a workplace twin with the same definition and only the unit changed. Riders from the workplace group: the sex and sex × education sub-counts (antal-kvinnor-*, antal-man-*, antal-kv-*), which have no company counterpart but are already grouped with the workplace total. set:antal-sysselsatta-pa-arbetsstallet merges into set:antal-sysselsatta."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-kv-langeftergymn"
-fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
-evidence = "r623 explicitly counts employed women with long postsecondary education at the workplace.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40975\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41112"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nCompany antal-sysselsatta is defined as 'Summeras utifrån antal sysselsatta enligt RAMS, Arbetsställen'; every company member (syssreg, RAMS Individer, FAD år 1/år 2, 1985) has a workplace twin with the same definition and only the unit changed. Riders from the workplace group: the sex and sex × education sub-counts (antal-kvinnor-*, antal-man-*, antal-kv-*), which have no company counterpart but are already grouped with the workplace total. set:antal-sysselsatta-pa-arbetsstallet merges into set:antal-sysselsatta."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-kvinnor-arbetsstallet"
-fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
-evidence = "r624 explicitly defines the total number of employed women at the workplace.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40976\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41113"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nCompany antal-sysselsatta is defined as 'Summeras utifrån antal sysselsatta enligt RAMS, Arbetsställen'; every company member (syssreg, RAMS Individer, FAD år 1/år 2, 1985) has a workplace twin with the same definition and only the unit changed. Riders from the workplace group: the sex and sex × education sub-counts (antal-kvinnor-*, antal-man-*, antal-kv-*), which have no company counterpart but are already grouped with the workplace total. set:antal-sysselsatta-pa-arbetsstallet merges into set:antal-sysselsatta."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-kvinnor-forgymn"
-fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
-evidence = "r625 explicitly counts employed women with pre-secondary education at the workplace.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40977\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41114"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nCompany antal-sysselsatta is defined as 'Summeras utifrån antal sysselsatta enligt RAMS, Arbetsställen'; every company member (syssreg, RAMS Individer, FAD år 1/år 2, 1985) has a workplace twin with the same definition and only the unit changed. Riders from the workplace group: the sex and sex × education sub-counts (antal-kvinnor-*, antal-man-*, antal-kv-*), which have no company counterpart but are already grouped with the workplace total. set:antal-sysselsatta-pa-arbetsstallet merges into set:antal-sysselsatta."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-kvinnor-gymn"
-fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
-evidence = "r626 explicitly counts employed women with upper-secondary education at the workplace.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40978\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41115"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nCompany antal-sysselsatta is defined as 'Summeras utifrån antal sysselsatta enligt RAMS, Arbetsställen'; every company member (syssreg, RAMS Individer, FAD år 1/år 2, 1985) has a workplace twin with the same definition and only the unit changed. Riders from the workplace group: the sex and sex × education sub-counts (antal-kvinnor-*, antal-man-*, antal-kv-*), which have no company counterpart but are already grouped with the workplace total. set:antal-sysselsatta-pa-arbetsstallet merges into set:antal-sysselsatta."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-man-ast-eftergymn-k"
-fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
-evidence = "r627 explicitly counts employed men with short postsecondary education at the workplace.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40979\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41116"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nCompany antal-sysselsatta is defined as 'Summeras utifrån antal sysselsatta enligt RAMS, Arbetsställen'; every company member (syssreg, RAMS Individer, FAD år 1/år 2, 1985) has a workplace twin with the same definition and only the unit changed. Riders from the workplace group: the sex and sex × education sub-counts (antal-kvinnor-*, antal-man-*, antal-kv-*), which have no company counterpart but are already grouped with the workplace total. set:antal-sysselsatta-pa-arbetsstallet merges into set:antal-sysselsatta."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-man-ast-eftergymn-l"
-fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
-evidence = "r628 explicitly counts employed men with long postsecondary education at the workplace.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40980\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41117"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nCompany antal-sysselsatta is defined as 'Summeras utifrån antal sysselsatta enligt RAMS, Arbetsställen'; every company member (syssreg, RAMS Individer, FAD år 1/år 2, 1985) has a workplace twin with the same definition and only the unit changed. Riders from the workplace group: the sex and sex × education sub-counts (antal-kvinnor-*, antal-man-*, antal-kv-*), which have no company counterpart but are already grouped with the workplace total. set:antal-sysselsatta-pa-arbetsstallet merges into set:antal-sysselsatta."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-man-ast-forgymn"
-fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
-evidence = "r629 explicitly counts employed men with pre-secondary education at the workplace.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40981\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41118"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nCompany antal-sysselsatta is defined as 'Summeras utifrån antal sysselsatta enligt RAMS, Arbetsställen'; every company member (syssreg, RAMS Individer, FAD år 1/år 2, 1985) has a workplace twin with the same definition and only the unit changed. Riders from the workplace group: the sex and sex × education sub-counts (antal-kvinnor-*, antal-man-*, antal-kv-*), which have no company counterpart but are already grouped with the workplace total. set:antal-sysselsatta-pa-arbetsstallet merges into set:antal-sysselsatta."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-man-ast-gymn"
-fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
-evidence = "r630 explicitly counts employed men with upper-secondary education at the workplace.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40982\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41119"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nCompany antal-sysselsatta is defined as 'Summeras utifrån antal sysselsatta enligt RAMS, Arbetsställen'; every company member (syssreg, RAMS Individer, FAD år 1/år 2, 1985) has a workplace twin with the same definition and only the unit changed. Riders from the workplace group: the sex and sex × education sub-counts (antal-kvinnor-*, antal-man-*, antal-kv-*), which have no company counterpart but are already grouped with the workplace total. set:antal-sysselsatta-pa-arbetsstallet merges into set:antal-sysselsatta."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-man-pa-arbetsstallet"
-fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
-evidence = "r631 explicitly defines the total number of employed men at the workplace.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40983\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41120"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nCompany antal-sysselsatta is defined as 'Summeras utifrån antal sysselsatta enligt RAMS, Arbetsställen'; every company member (syssreg, RAMS Individer, FAD år 1/år 2, 1985) has a workplace twin with the same definition and only the unit changed. Riders from the workplace group: the sex and sex × education sub-counts (antal-kvinnor-*, antal-man-*, antal-kv-*), which have no company counterpart but are already grouped with the workplace total. set:antal-sysselsatta-pa-arbetsstallet merges into set:antal-sysselsatta."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-sysselsatta-ast"
-fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
-evidence = "r632 defines employed persons at the workplace and calculates the count from the employment register.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40989\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41126"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nCompany antal-sysselsatta is defined as 'Summeras utifrån antal sysselsatta enligt RAMS, Arbetsställen'; every company member (syssreg, RAMS Individer, FAD år 1/år 2, 1985) has a workplace twin with the same definition and only the unit changed. Riders from the workplace group: the sex and sex × education sub-counts (antal-kvinnor-*, antal-man-*, antal-kv-*), which have no company counterpart but are already grouped with the workplace total. set:antal-sysselsatta-pa-arbetsstallet merges into set:antal-sysselsatta."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-sysselsatta-ast-ar-1"
-fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
-evidence = "r633 measures employed persons at the workplace in year 1, explicitly the year before the register year.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40990\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41127"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nCompany antal-sysselsatta is defined as 'Summeras utifrån antal sysselsatta enligt RAMS, Arbetsställen'; every company member (syssreg, RAMS Individer, FAD år 1/år 2, 1985) has a workplace twin with the same definition and only the unit changed. Riders from the workplace group: the sex and sex × education sub-counts (antal-kvinnor-*, antal-man-*, antal-kv-*), which have no company counterpart but are already grouped with the workplace total. set:antal-sysselsatta-pa-arbetsstallet merges into set:antal-sysselsatta."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-sysselsatta-ast-ar-2"
-fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
-evidence = "r634 measures employed persons at the workplace in year 2, explicitly the register year.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40991\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41128"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nCompany antal-sysselsatta is defined as 'Summeras utifrån antal sysselsatta enligt RAMS, Arbetsställen'; every company member (syssreg, RAMS Individer, FAD år 1/år 2, 1985) has a workplace twin with the same definition and only the unit changed. Riders from the workplace group: the sex and sex × education sub-counts (antal-kvinnor-*, antal-man-*, antal-kv-*), which have no company counterpart but are already grouped with the workplace total. set:antal-sysselsatta-pa-arbetsstallet merges into set:antal-sysselsatta."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-sysselsatta-ast-astreg"
-fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
-evidence = "r635 counts employed persons at the workplace by summing workplace-register placements per cfarnr.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40992\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41129"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nCompany antal-sysselsatta is defined as 'Summeras utifrån antal sysselsatta enligt RAMS, Arbetsställen'; every company member (syssreg, RAMS Individer, FAD år 1/år 2, 1985) has a workplace twin with the same definition and only the unit changed. Riders from the workplace group: the sex and sex × education sub-counts (antal-kvinnor-*, antal-man-*, antal-kv-*), which have no company counterpart but are already grouped with the workplace total. set:antal-sysselsatta-pa-arbetsstallet merges into set:antal-sysselsatta."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-sysselsatta-ast-syssreg"
-fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
-evidence = "r636 counts employed persons at the workplace by summing employment-register placements on AstNr.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40993\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41130"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nCompany antal-sysselsatta is defined as 'Summeras utifrån antal sysselsatta enligt RAMS, Arbetsställen'; every company member (syssreg, RAMS Individer, FAD år 1/år 2, 1985) has a workplace twin with the same definition and only the unit changed. Riders from the workplace group: the sex and sex × education sub-counts (antal-kvinnor-*, antal-man-*, antal-kv-*), which have no company counterpart but are already grouped with the workplace total. set:antal-sysselsatta-pa-arbetsstallet merges into set:antal-sysselsatta."
 
 [[statement]]
 kind = "set"
 subject = "var:antal-sysselsatta-pa-arbetsstallet-antalsysc"
-fields = { "sets" = ["antal-sysselsatta-pa-arbetsstallet"] }
-evidence = "r637 sums employed persons at the fixed workplace according to the employment-register definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40996\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41133"
+fields = { "sets" = ["antal-sysselsatta"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nCompany antal-sysselsatta is defined as 'Summeras utifrån antal sysselsatta enligt RAMS, Arbetsställen'; every company member (syssreg, RAMS Individer, FAD år 1/år 2, 1985) has a workplace twin with the same definition and only the unit changed. Riders from the workplace group: the sex and sex × education sub-counts (antal-kvinnor-*, antal-man-*, antal-kv-*), which have no company counterpart but are already grouped with the workplace total. set:antal-sysselsatta-pa-arbetsstallet merges into set:antal-sysselsatta."
 
 [[statement]]
 kind = "set"
 subject = "var:antalanstc"
-fields = { "sets" = ["antal-anstallda-pa-arbetsstallet"] }
-evidence = "r638 defines employees at the fixed workplace; r608 calculates the count by summing employees allocated there.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40999\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:419475\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:41136"
+fields = { "sets" = ["antal-anstallda"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nPairs by source: FDB aktuellt-antal-anstallda (workplace) / antal-anstallda-enligt-fdb (company); syssreg antalanstc (workplace, 'summera antalet anställda … enligt sysselsättningsregistret') / antal-anstallda-ftg-syssreg and its 1985 predecessor antal-anstallda-foretaget (company). Riders from the company group: antal-anstallda-ku (KU-based, no workplace twin) and anstallda-storleksklass (a size-class code; caller may prefer to drop it from the group). set:antal-anstallda-pa-arbetsstallet merges into set:antal-anstallda."
 
 [[statement]]
 kind = "set"
@@ -4266,18 +4266,6 @@ evidence = "#2100 group name: the slug read as words, then adjusted on review (d
 
 [[statement]]
 kind = "set"
-subject = "set:antal-anstallda-pa-arbetsstallet"
-fields = { "label" = "Antal anställda på arbetsstället" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:antal-anstallda-pa-foretaget"
-fields = { "label" = "Antal anställda på företaget" }
-evidence = "#2100 group name: a member label slugifies to the group slug, then adjusted on review (double space)."
-
-[[statement]]
-kind = "set"
 subject = "set:antal-arbetsmanader"
 fields = { "label" = "Antal arbetsmånader" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
@@ -4298,18 +4286,6 @@ evidence = "#2100 group name: the slug read as words, then adjusted on review (d
 kind = "set"
 subject = "set:antal-kontrolluppgifter"
 fields = { "label" = "Antal kontrolluppgifter" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:antal-sysselsatta-pa-arbetsstallet"
-fields = { "label" = "Antal sysselsatta på arbetsstället" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:antal-sysselsatta-pa-foretaget"
-fields = { "label" = "Antal sysselsatta på företaget" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
@@ -4962,24 +4938,6 @@ evidence = "private:ev-3794"
 
 [[statement]]
 kind = "set"
-subject = "set:antal-anstallda-pa-foretaget"
-fields = { "description" = "Antal anställda på företaget, från olika källor: enligt Sysselsättningsregistret (anställda med sin huvudsakliga sysselsättning på företaget), enligt FDB och enligt kontrolluppgifter (antal personer som fått kontant ersättning från arbetsgivaren för utfört arbete). För 1985–1995 finns också en storleksklass efter antal anställda." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF för varje medlem anger källan: Sysselsättningsregistret, FDB, kontrolluppgift; anstallda-storleksklass DEF anger storleksklassindelning 1985–1995.\ncatalog:variable_text:47906:5479:9496\ncatalog:variable_text:47907:5479:12053\ncatalog:variable_text:47907:12053:12418\ncatalog:variable_text:47908:5479:5844\ncatalog:variable_text:47909:5844:6209\ncatalog:variable_text:47909:12053:12418\ncatalog:variable_text:47909:17897:18993\ncatalog:variable_text:47910:5479:18993\nRegisterinformation.csv:row=473025"
-
-[[statement]]
-kind = "set"
-subject = "set:antal-sysselsatta-pa-arbetsstallet"
-fields = { "description" = "Antal sysselsatta på arbetsstället, totalt och fördelat på kön och utbildningsnivå (förgymnasial, gymnasial, kort och lång eftergymnasial), summerat från Sysselsättningsregistret. Särskilda varianter avser året före registeråret och registeråret (år 1 och år 2), fasta arbetsställen (2019–2021) och, 2020–2021, antalet personer placerade på arbetsstället i arbetsställeregistret respektive sysselsättningsregistret." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF anger antal sysselsatta per kön och utbildning; OP anger summering från Sysselsättningsregistret, år 1 och år 2, fasta arbetsställen och summeringen per register 2020–2021.\ncatalog:variable_text:47921:5479:12053\ncatalog:variable_text:47921:12053:18993\ncatalog:variable_text:47922:5479:12053\ncatalog:variable_text:47922:12053:18993\ncatalog:variable_text:47923:5479:12053\ncatalog:variable_text:47923:12053:18993\ncatalog:variable_text:47924:5479:12053\ncatalog:variable_text:47924:12053:18993\ncatalog:variable_text:47925:5479:12053\ncatalog:variable_text:47925:12053:18993\ncatalog:variable_text:47926:5479:12053\ncatalog:variable_text:47926:12053:18993\ncatalog:variable_text:47927:5479:12053\ncatalog:variable_text:47927:12053:18993\ncatalog:variable_text:47928:5479:12053\ncatalog:variable_text:47928:12053:18993\ncatalog:variable_text:47929:5479:12053\ncatalog:variable_text:47929:12053:18993\ncatalog:variable_text:47930:5479:12053\ncatalog:variable_text:47930:12053:18993\ncatalog:variable_text:47936:5479:12053\ncatalog:variable_text:47936:12053:18993\ncatalog:variable_text:47937:6209:17897\ncatalog:variable_text:47937:17897:19358\ncatalog:variable_text:47938:6209:17897\ncatalog:variable_text:47938:17897:19358\ncatalog:variable_text:47939:17897:18993\ncatalog:variable_text:47940:17897:18993\ncatalog:variable_text:47943:17897:18993"
-
-[[statement]]
-kind = "set"
-subject = "set:antal-sysselsatta-pa-foretaget"
-fields = { "description" = "Antal sysselsatta på företaget, avseende den huvudsakliga sysselsättningen, räknat från Sysselsättningsregistret. Varianter summeras från RAMS arbetsställen respektive RAMS individer (2006–2021), och två variabler avser år 1 och år 2 (2016–2022)." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP anger antal sysselsatta enligt Sysselsättningsregistret; OP för antal-sysselsatta och antal-sysselsatta-syssreg anger summering från RAMS arbetsställen respektive individer; år 1 och år 2 har egna DEF.\ncatalog:variable_text:47933:13149:18993\ncatalog:variable_text:47934:16801:19358\ncatalog:variable_text:47935:16801:19358\ncatalog:variable_text:47941:5844:6209\ncatalog:variable_text:47941:16436:16801\ncatalog:variable_text:47941:17897:18993\ncatalog:variable_text:47942:5479:5844\ncatalog:variable_text:47944:13149:18993"
-
-[[statement]]
-kind = "set"
 subject = "set:arbetsloshetsersattning"
 fields = { "description" = "Personens inkomst under året föranledd av arbetslöshet: summan och andelen av den totala inkomsten (1992–2021), samt en kod för om personen fått ersättning från arbetslöshetskassa (1997–2021, enligt Lönesummestatistik, Individer - sociala KU). Från 2000 avser summan ersättning från arbetslöshetskassa eller arbetslöshetsförsäkring i hundratal kronor, och andelen är summan delad med den totala inkomsten." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nInnehåll och enhet för summan och andelens beräkning står bara i OP från 2000; DEF gäller 1992–2021, koden 1997–2021.\ncatalog:variable_text:47960:9862:18993\ncatalog:variable_text:48028:8035:10957\ncatalog:variable_text:48028:10957:12053\ncatalog:variable_text:48028:12784:13149\ncatalog:variable_text:48114:8035:10957\ncatalog:variable_text:48114:10957:18993"
@@ -5065,8 +5023,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group
 [[statement]]
 kind = "set"
 subject = "set:lone-eller-foretagarinkomst"
-fields = { "description" = "Personens kontanta bruttolön från anställning eller nettoinkomst av näringsverksamhet för egenföretagare, för året, per månad (2019–2021) eller i november, från alla anställningar eller bara från det arbetsställe som valts för personen, med eller utan företagarinkomst; därtill summan av skattepliktiga förmåner, bilförmåner och drivmedelsersättning. Lön kommer till 2018 från kontrolluppgifter och Lönesummestatistik, från 2019 från arbetsgivardeklarationer på individnivå (AGI) eller KU; företagarinkomst kommer från Räkenskapsutdrag (SRU), 1997–2003 från Inkomst- och taxeringsregistret. Månadsvärdena 2019–2021 är för KU-lön årslönen delad med antalet arbetade månader och för företagarinkomst årsinkomsten delad med tolv. Företagarinkomsten i november finns även uppräknad med faktorn 1,6, så att företagande prioriteras före anställning vid val av arbetsställe." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP ger lönemåtten och källorna per år; förmånerna (forman) behålls som eget slot enligt Operatorns beslut; IoT anges i OP 1997–2003.\ncatalog:variable_text:47962:17897:18993\ncatalog:variable_text:47963:17897:18993\ncatalog:variable_text:47964:17897:18993\ncatalog:variable_text:48007:9862:14610\ncatalog:variable_text:48007:14610:17897\ncatalog:variable_text:48007:18262:18993\ncatalog:variable_text:48063:5479:9862\ncatalog:variable_text:48063:9862:10957\ncatalog:variable_text:48063:10957:12418\ncatalog:variable_text:48063:12418:17897\ncatalog:variable_text:48064:17897:18993\ncatalog:variable_text:48076:5479:17897\ncatalog:variable_text:48077:17897:18993\ncatalog:variable_text:48078:12053:16801\ncatalog:variable_text:48080:17897:18993\ncatalog:variable_text:48161:17897:18993"
+fields = { "description" = "Kontant bruttolön från anställning eller nettoinkomst av näringsverksamhet för egenföretagare. Per jobb finns årsvärdet (1985–2021) och månadsvärden (2019–2021). Per person finns kontant bruttolön med semesterersättning, provision m.m. från alla anställningar (1985–2018), årslön och novemberlön från anställningar, utan företagarinkomst, (2019–2021), och inkomsten från det arbetsställe som valts för personen inklusive företagarinkomst (årsvärde från 2003, novemberinkomst 2019–2021). Per arbetsställe finns inkomsten summerad över året för alla med anknytning till arbetsstället (1985–2021). Lönen kommer per jobb 1997–1999 och per arbetsställe till 2002 från Kontrolluppgiftsregistret, per jobb, per arbetsställe och för personens valda arbetsställe därefter till 2018 från Lönesummestatistik och per jobb och per arbetsställe från 2019 från arbetsgivardeklarationer på individnivå (AGI) eller kontrolluppgifter (KU). Personens lön från alla anställningar är till 2018 summan enligt kontrolluppgifter. Företagarinkomsten kommer från Inkomst- och taxeringsregistret per jobb 1997–2003 och per arbetsställe till 2002, och därefter från Räkenskapsutdrag (SRU). Månadsvärdena 2019–2021 är för KU-lön årslönen delad med antalet arbetade månader och för företagarinkomst årsinkomsten delad med tolv. Per jobb finns även summan av förmåner, bilförmåner och drivmedelsersättning (1997–2021), och företagarinkomsten i november (2019–2021) uppräknad med faktorn 1,6, så att företagande prioriteras före anställning vid val av arbetsställe för den som både har AGI och är företagare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): every level of one measure belongs in one group.\n\nPersonens lön 1985–2018 från alla anställningar enligt KU; utan företagarinkomst anges bara 2019–2021.\ncatalog:variable_text:47962:17897:18993\ncatalog:variable_text:47963:17897:18993\ncatalog:variable_text:47964:17897:18993\ncatalog:variable_text:48007:9862:14610\ncatalog:variable_text:48007:14610:17897\ncatalog:variable_text:48007:18262:18993\ncatalog:variable_text:48063:5479:9862\ncatalog:variable_text:48063:9862:10957\ncatalog:variable_text:48063:10957:12418\ncatalog:variable_text:48063:12418:17897\ncatalog:variable_text:48064:17897:18993\ncatalog:variable_text:48076:5479:17897\ncatalog:variable_text:48077:17897:18993\ncatalog:variable_text:48078:12053:16801\ncatalog:variable_text:48080:17897:18993\ncatalog:variable_text:48161:17897:18993\ncatalog:variable_text:48147:5479:12053\ncatalog:variable_text:48147:12053:17897\ncatalog:variable_text:48147:17897:18993\ncatalog:variable_text:48065:17897:18993\ncatalog:variable_text:48066:17897:18993\ncatalog:variable_text:48067:17897:18993\ncatalog:variable_text:48068:17897:18993\ncatalog:variable_text:48069:17897:18993\ncatalog:variable_text:48070:17897:18993\ncatalog:variable_text:48071:17897:18993\ncatalog:variable_text:48072:17897:18993\ncatalog:variable_text:48073:17897:18993\ncatalog:variable_text:48074:17897:18993\ncatalog:variable_text:48075:17897:18993"
 
 [[statement]]
 kind = "set"
@@ -5283,3 +5241,27 @@ kind = "set"
 subject = "var:uppdelning-foretag"
 fields = { "description" = "Om företaget har ingått i en uppdelning mellan två år: årets FAD-kvot är över 50 och föregående års högst 50." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från uppdelning: företagen bedöms med FAD-kvoten.\ncatalog:variable_text:48160:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-sysselsatta"
+fields = { "label" = "Antal sysselsatta" }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nMerged group label: set:antal-sysselsatta-pa-arbetsstallet and set:antal-sysselsatta-pa-foretaget are the workplace and company levels of one measure."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-anstallda"
+fields = { "label" = "Antal anställda" }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nMerged group label: set:antal-anstallda-pa-arbetsstallet and set:antal-anstallda-pa-foretaget are the workplace and company levels of one measure."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-sysselsatta"
+fields = { "description" = "Antal sysselsatta enligt sysselsättningsregistret (RAMS) per arbetsställe och per företag, och på personens rad antalet sysselsatta på det företag där personen har sin huvudsakliga sysselsättning (1985–2021) och på det fasta arbetsstället (2019–2021). Per arbetsställe finns antalet 1985–2021 totalt, efter kön och efter kön och utbildningsnivå (förgymnasial, gymnasial, kort och lång eftergymnasial), och 2019–2021 även enligt arbetsställeregistret; per företag finns det 2006–2021, summerat från RAMS arbetsställen respektive RAMS individer. I FAD finns antalet för år 1 och år 2 per företag (2016–2022) och per arbetsställe (1987–2022); för arbetsställen 2019–2022 är år 1 året före registeråret och år 2 registeråret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): every level of one measure belongs in one group.\n\nDEF/OP för respektive medlem: företagsantal summeras från RAMS arbetsställen/individer, personradens antal avser huvudsaklig sysselsättning, arbetsställeantal summeras från sysselsättningsregistret, astreg-varianten från arbetsställeregistret, år 1/år 2 enligt OP 2019–2022; nivåer och år från tabellerna.\ncatalog:variable_text:47933:13149:18993\ncatalog:variable_text:47934:16801:19358\ncatalog:variable_text:47935:16801:19358\ncatalog:variable_text:47941:5844:6209\ncatalog:variable_text:47941:16436:16801\ncatalog:variable_text:47941:17897:18993\ncatalog:variable_text:47942:5479:5844\ncatalog:variable_text:47944:13149:18993\ncatalog:variable_text:47921:5479:12053\ncatalog:variable_text:47921:12053:18993\ncatalog:variable_text:47922:5479:12053\ncatalog:variable_text:47922:12053:18993\ncatalog:variable_text:47923:5479:12053\ncatalog:variable_text:47923:12053:18993\ncatalog:variable_text:47924:5479:12053\ncatalog:variable_text:47924:12053:18993\ncatalog:variable_text:47925:5479:12053\ncatalog:variable_text:47925:12053:18993\ncatalog:variable_text:47926:5479:12053\ncatalog:variable_text:47926:12053:18993\ncatalog:variable_text:47927:5479:12053\ncatalog:variable_text:47927:12053:18993\ncatalog:variable_text:47928:5479:12053\ncatalog:variable_text:47928:12053:18993\ncatalog:variable_text:47929:5479:12053\ncatalog:variable_text:47929:12053:18993\ncatalog:variable_text:47930:5479:12053\ncatalog:variable_text:47930:12053:18993\ncatalog:variable_text:47936:5479:12053\ncatalog:variable_text:47936:12053:18993\ncatalog:variable_text:47937:6209:17897\ncatalog:variable_text:47937:17897:19358\ncatalog:variable_text:47938:6209:17897\ncatalog:variable_text:47938:17897:19358\ncatalog:variable_text:47939:17897:18993\ncatalog:variable_text:47940:17897:18993\ncatalog:variable_text:47943:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-anstallda"
+fields = { "description" = "Antal anställda per företag (1985–2021) och per arbetsställe (1985–2021), och på personens rad antalet anställda enligt sysselsättningsregistret på personens företag (1985–2021; från 1986 det företag där personen har sin huvudsakliga sysselsättning) och på det fasta arbetsstället (2019–2021). Per företag finns antalet enligt FDB och enligt kontrolluppgift, det vill säga personer som får kontant ersättning från arbetsgivaren för utfört arbete. Per arbetsställe avser antalet personer som är anställda vid mättillfället, för vilka arbetsgivaren är skyldig att redovisa A-skatt och som beräknas ha en årlig arbetsinkomst över ett prisbasbelopp." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): every level of one measure belongs in one group.\n\nAntal anställda per företag och arbetsställe 1985–2021 och på personens rad; storleksklassen ingår inte i gruppen.\ncatalog:variable_text:47907:5479:12053\ncatalog:variable_text:47907:12053:12418\ncatalog:variable_text:47908:5479:5844\ncatalog:variable_text:47909:5844:6209\ncatalog:variable_text:47909:12053:12418\ncatalog:variable_text:47909:16071:16436\ncatalog:variable_text:47909:17897:18993\ncatalog:variable_text:47910:5479:18993\ncatalog:variable_text:47900:5479:18993\ncatalog:variable_text:47946:17897:18993"

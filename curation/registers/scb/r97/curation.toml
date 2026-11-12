@@ -1568,8 +1568,8 @@ evidence = "Komponenten hör till allmän pensionsavgift.\ncatalog:variable_text
 [[statement]]
 kind = "set"
 subject = "var:allmanna-avdrag-samt-forlustavdrag"
-fields = { "sets" = [] }
-evidence = "Samlingsbeloppet omfattar båda avdragsbegreppen.\ncatalog:variable_text:23697:9496:9862"
+fields = { "sets" = ["allmanna-avdrag"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nAALLMFLZ 'Allmänna avdrag samt förlustavdrag', OP 'Härledd summering från uppgifter i IoT. Summerad till hushållsnivå' = household sum of individual AALLMFL (aallmfl), already in allmanna-avdrag Joins set:allmanna-avdrag."
 
 [[statement]]
 kind = "set"
@@ -2330,8 +2330,8 @@ evidence = "Källan anger arbetsmarknadsförsäkringar.\ncatalog:variable_text:2
 [[statement]]
 kind = "set"
 subject = "var:arbetsmarknadsstod"
-fields = { "sets" = [] }
-evidence = "Källan anger ett sammansatt arbetsmarknadsstöd. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0190: Ingen vald variabel mäter arbetslöshetsersättning. membership-0191: Definitionen omfattar både a-kasseersättning vid arbetslöshet och kassans uttryckliga åtgärdsersättning. membership-0192: Inga valda variabler mäter arbetslöshetsersättning. membership-0193: Ingen vald variabel mäter arbetslöshetsersättning. membership-0194: Det verifierade medlemskapet behålls enligt den fasta inkluderingen; den sammansatta källbeskrivningen och tidigare bedömningen kräver samordnargranskning. membership-0195: Ingen vald variabel mäter arbetslöshetsersättning. membership-0196: Inga valda variabler mäter arbetslöshetsersättning. membership-0197: Barnomsorg för arbetslös förälders barn mäter omsorgsdeltagande, inte arbetslöshetsersättning. membership-0198: Ingen vald variabel mäter arbetslöshetsersättning. membership-0199: Ingen vald variabel mäter arbetslöshetsersättning. membership-0200: Ingen vald variabel avser arbetslöshetsersättning. membership-0201: Inga valda variabler mäter arbetslöshetsersättning. membership-0202: Ingen vald variabel mäter arbetslöshetsersättning. membership-0203: Ingen vald variabel mäter arbetslöshetsersättning. membership-0204: Ingen vald variabel mäter arbetslöshetsersättning. membership-0205: Inga valda variabler mäter arbetslöshetsersättning. membership-0206: Ingen vald variabel mäter arbetslöshetsersättning. membership-0207: Ingen vald variabel mäter arbetslöshetsersättning. membership-0208: Dagpenningen är uttryckligen arbetslöshetsersättning från arbetslöshetskassa. membership-0209: Programersättningarna anges inte vara arbetslöshetsersättning eller kassans åtgärdskomponent. membership-0210: Ingen vald variabel avser arbetslöshetsersättning. membership-0211: Ingen vald variabel avser arbetslöshetsersättning. membership-0212: Inga valda variabler omfattas av definitionen. membership-0213: Ingen vald variabel mäter arbetslöshetsersättning. membership-0214: Ingen vald variabel mäter arbetslöshetsersättning. membership-0215: Ingen vald variabel avser arbetslöshetsersättning. membership-0216: Ingen vald variabel mäter arbetslöshetsersättning. membership-0217: Ingen vald variabel mäter arbetslöshetsersättning. membership-0218: Ingen vald variabel mäter arbetslöshetsersättning. membership-0219: Inga valda variabler mäter arbetslöshetsersättning. membership-0220: Inga valda variabler mäter arbetslöshetsersättning. membership-0221: Ingen vald variabel mäter arbetslöshetsersättning. membership-0222: Ingen vald variabel avser arbetslöshetsersättning. membership-0223: Ingen vald variabel mäter arbetslöshetsersättning. membership-0224: Ingen vald variabel mäter arbetslöshetsersättning. membership-0225: Ingen vald variabel mäter arbetslöshetsersättning. membership-0226: Inga valda variabler mäter arbetslöshetsersättning. membership-0227: Ingen vald variabel avser arbetslöshetsersättning. membership-0228: Inga valda variabler mäter arbetslöshetsersättning. membership-0229: Ingen vald variabel mäter arbetslöshetsersättning. membership-0230: Ingen vald variabel mäter arbetslöshetsersättning. membership-0231: Den valda a-kasserelaterade variabeln mäter skattereduktion för avgift, inte arbetslöshetsersättning. membership-0232: Närståendepenning är inte arbetslöshetsersättning. membership-0233: Inga valda variabler mäter arbetslöshetsersättning. membership-0234: Ingen vald variabel mäter arbetslöshetsersättning. membership-0235: Utbildningsbidragets beskrivning nämner dagpenning men ägarbytet gör medlemskap oavgjort. membership-0236: Inga valda variabler mäter arbetslöshetsersättning. membership-0237: Inga valda variabler mäter arbetslöshetsersättning. membership-0238: Ingen vald variabel mäter arbetslöshetsersättning. membership-0239: Rehabiliteringsersättning och samlingsbeloppet rehabiliteringspenning och aktivitetsstöd särredovisar inte arbetslöshetsersättning. membership-0240: Inga valda variabler mäter arbetslöshetsersättning. membership-0241: Ingen vald variabel anger arbetslöshetsersättning. membership-0242: Ingen vald variabel mäter arbetslöshetsersättning. membership-0243: Ingen vald variabel särredovisar arbetslöshetsersättning. membership-0244: Ingen vald variabel mäter arbetslöshetsersättning. membership-0245: Det kombinerade familjebeloppet för arbetsmarknadsförsäkringar omfattar även sjukdom och är uttryckligen uteslutet. membership-0246: Båda variablerna mäter kontant arbetsmarknadsstöd enligt kontrolluppgift. membership-0247: Utbildningsbidraget avser arbetsmarknadsutbildning, inte arbetslöshetsersättning eller en angiven kassakomponent. membership-0248: Arbetslöshetskasseavgiften är inte arbetslöshetsersättning. membership-0249: Underlag för reduktion av a-kasseavgift är inte arbetslöshetsersättning. membership-0250: Ingen vald variabel mäter arbetslöshetsersättning. membership-0251: Försäkringskassans ospecificerade utbetalningar särredovisar inte arbetslöshetsersättning. membership-0252: Vuxenstudiestöd till arbetslösa är studiestöd, inte arbetslöshetsersättning. membership-0253: Ingen vald variabel mäter arbetslöshetsersättning. membership-0254: Arbetslöshetskassebeloppet stöds direkt. Arbetsmarknadsstödet behålls enligt fast inkludering och skyddat medlemskap trots den avvikande källbedömningen. membership-0255: Inga valda variabler mäter arbetslöshetsersättning. membership-0256: Inga valda variabler mäter arbetslöshetsersättning. membership-0257: Ingen vald variabel mäter arbetslöshetsersättning. membership-0258: Ingen vald variabel mäter arbetslöshetsersättning. membership-0259: Ingen vald variabel avser arbetslöshetsersättning. membership-0260: Ingen vald variabel mäter arbetslöshetsersättning. membership-0261: Inga valda variabler mäter arbetslöshetsersättning. membership-0262: Ingen vald variabel särredovisar arbetslöshetsersättning. membership-0263: Ingen vald variabel särredovisar arbetslöshetsersättning. membership-0264: Ingen vald variabel mäter arbetslöshetsersättning. membership-0265: Inga valda variabler mäter arbetslöshetsersättning; de avser imputering eller mottaget underhåll. membership-0266: Ingen vald variabel särredovisar arbetslöshetsersättning. membership-0267: Kontant arbetsmarknadsstöd enligt kontrolluppgift ingår uttryckligen. membership-0268: Ingen vald variabel mäter arbetslöshetsersättning. membership-0269: Ingen vald variabel mäter arbetslöshetsersättning.\ncatalog:occurrence:219285\ncatalog:occurrence:219565\ncatalog:variable_text:23662:12053:16071\ncatalog:variable_text:23663:13879:16071\ncatalog:variable_text:23664:15340:16071\ncatalog:variable_text:23769:12053:16071\ncatalog:variable_text:23770:15340:16071\ncatalog:variable_text:23862:14610:16071\ncatalog:variable_text:23864:14610:16071\ncatalog:variable_text:24067:12418:15340\ncatalog:variable_text:24074:13149:16071\ncatalog:variable_text:24337:1826:2191\ncatalog:variable_text:24368:13879:16071\ncatalog:variable_text:24369:12053:16071\ncatalog:variable_text:24390:14975:16071\ncatalog:variable_text:24391:14975:16071\ncatalog:variable_text:24413:15340:16071\ncatalog:variable_text:24733:12418:15340\ncatalog:variable_text:24745:14245:16071\ncatalog:variable_text:24760:12053:12418\ncatalog:variable_text:24788:12053:12418\ncatalog:variable_text:24810:10957:11323\ncatalog:variable_text:24872:12053:12418\ncatalog:variable_text:24898:10592:10957\ncatalog:variable_text:24927:13514:16071\ncatalog:variable_text:24952:10957:11323\ncatalog:variable_text:24953:10957:11323\ncatalog:variable_text:25001:13514:16071\ncatalog:variable_text:25005:12418:13514\ncatalog:variable_text:25029:15340:16071\ncatalog:variable_text:25062:12053:16071\ncatalog:variable_text:25140:1826:2191\ncatalog:variable_text:25255:12053:16071\ncatalog:variable_text:25256:12418:16071\ncatalog:variable_text:25422:12418:13149\ncatalog:variable_text:25423:12053:16071\ncatalog:variable_text:25444:13879:16071\ncatalog:variable_text:25478:9496:10592\ncatalog:variable_text:25479:9496:10227\ncatalog:variable_text:25480:9496:10592\ncatalog:variable_text:25507:9496:9862\ncatalog:variable_text:25534:12418:13514\ncatalog:variable_text:25580:12418:13514\ncatalog:variable_text:25637:1826:2191\ncatalog:variable_text:25638:1826:2191\ncatalog:variable_text:25639:1826:2191\ncatalog:variable_text:25640:1826:2191\ncatalog:variable_text:25689:12053:12418\ncatalog:variable_text:25690:12053:12418"
+fields = { "sets" = ["arbetsmarknadsstod"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nTARBSTZ and TARBST share the definition 'Dagpenning vid arbetslöshet, ALU-ersättning och övriga utbildningsbidrag, skattepliktig ersättning vid arbetsmarknadsutb.'; TARBSTZ is the household sum Forms set:arbetsmarknadsstod."
 
 [[statement]]
 kind = "set"
@@ -2342,8 +2342,8 @@ evidence = "Källan anger ett sammansatt arbetsmarknadsstöd. Coordinator group 
 [[statement]]
 kind = "set"
 subject = "var:arbetsmarknadsstod-tarbstz"
-fields = { "sets" = [] }
-evidence = "Källan anger arbetsmarknadsstöd på hushållsnivå. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0190: Ingen vald variabel mäter arbetslöshetsersättning. membership-0191: Definitionen omfattar både a-kasseersättning vid arbetslöshet och kassans uttryckliga åtgärdsersättning. membership-0192: Inga valda variabler mäter arbetslöshetsersättning. membership-0193: Ingen vald variabel mäter arbetslöshetsersättning. membership-0194: Det verifierade medlemskapet behålls enligt den fasta inkluderingen; den sammansatta källbeskrivningen och tidigare bedömningen kräver samordnargranskning. membership-0195: Ingen vald variabel mäter arbetslöshetsersättning. membership-0196: Inga valda variabler mäter arbetslöshetsersättning. membership-0197: Barnomsorg för arbetslös förälders barn mäter omsorgsdeltagande, inte arbetslöshetsersättning. membership-0198: Ingen vald variabel mäter arbetslöshetsersättning. membership-0199: Ingen vald variabel mäter arbetslöshetsersättning. membership-0200: Ingen vald variabel avser arbetslöshetsersättning. membership-0201: Inga valda variabler mäter arbetslöshetsersättning. membership-0202: Ingen vald variabel mäter arbetslöshetsersättning. membership-0203: Ingen vald variabel mäter arbetslöshetsersättning. membership-0204: Ingen vald variabel mäter arbetslöshetsersättning. membership-0205: Inga valda variabler mäter arbetslöshetsersättning. membership-0206: Ingen vald variabel mäter arbetslöshetsersättning. membership-0207: Ingen vald variabel mäter arbetslöshetsersättning. membership-0208: Dagpenningen är uttryckligen arbetslöshetsersättning från arbetslöshetskassa. membership-0209: Programersättningarna anges inte vara arbetslöshetsersättning eller kassans åtgärdskomponent. membership-0210: Ingen vald variabel avser arbetslöshetsersättning. membership-0211: Ingen vald variabel avser arbetslöshetsersättning. membership-0212: Inga valda variabler omfattas av definitionen. membership-0213: Ingen vald variabel mäter arbetslöshetsersättning. membership-0214: Ingen vald variabel mäter arbetslöshetsersättning. membership-0215: Ingen vald variabel avser arbetslöshetsersättning. membership-0216: Ingen vald variabel mäter arbetslöshetsersättning. membership-0217: Ingen vald variabel mäter arbetslöshetsersättning. membership-0218: Ingen vald variabel mäter arbetslöshetsersättning. membership-0219: Inga valda variabler mäter arbetslöshetsersättning. membership-0220: Inga valda variabler mäter arbetslöshetsersättning. membership-0221: Ingen vald variabel mäter arbetslöshetsersättning. membership-0222: Ingen vald variabel avser arbetslöshetsersättning. membership-0223: Ingen vald variabel mäter arbetslöshetsersättning. membership-0224: Ingen vald variabel mäter arbetslöshetsersättning. membership-0225: Ingen vald variabel mäter arbetslöshetsersättning. membership-0226: Inga valda variabler mäter arbetslöshetsersättning. membership-0227: Ingen vald variabel avser arbetslöshetsersättning. membership-0228: Inga valda variabler mäter arbetslöshetsersättning. membership-0229: Ingen vald variabel mäter arbetslöshetsersättning. membership-0230: Ingen vald variabel mäter arbetslöshetsersättning. membership-0231: Den valda a-kasserelaterade variabeln mäter skattereduktion för avgift, inte arbetslöshetsersättning. membership-0232: Närståendepenning är inte arbetslöshetsersättning. membership-0233: Inga valda variabler mäter arbetslöshetsersättning. membership-0234: Ingen vald variabel mäter arbetslöshetsersättning. membership-0235: Utbildningsbidragets beskrivning nämner dagpenning men ägarbytet gör medlemskap oavgjort. membership-0236: Inga valda variabler mäter arbetslöshetsersättning. membership-0237: Inga valda variabler mäter arbetslöshetsersättning. membership-0238: Ingen vald variabel mäter arbetslöshetsersättning. membership-0239: Rehabiliteringsersättning och samlingsbeloppet rehabiliteringspenning och aktivitetsstöd särredovisar inte arbetslöshetsersättning. membership-0240: Inga valda variabler mäter arbetslöshetsersättning. membership-0241: Ingen vald variabel anger arbetslöshetsersättning. membership-0242: Ingen vald variabel mäter arbetslöshetsersättning. membership-0243: Ingen vald variabel särredovisar arbetslöshetsersättning. membership-0244: Ingen vald variabel mäter arbetslöshetsersättning. membership-0245: Det kombinerade familjebeloppet för arbetsmarknadsförsäkringar omfattar även sjukdom och är uttryckligen uteslutet. membership-0246: Båda variablerna mäter kontant arbetsmarknadsstöd enligt kontrolluppgift. membership-0247: Utbildningsbidraget avser arbetsmarknadsutbildning, inte arbetslöshetsersättning eller en angiven kassakomponent. membership-0248: Arbetslöshetskasseavgiften är inte arbetslöshetsersättning. membership-0249: Underlag för reduktion av a-kasseavgift är inte arbetslöshetsersättning. membership-0250: Ingen vald variabel mäter arbetslöshetsersättning. membership-0251: Försäkringskassans ospecificerade utbetalningar särredovisar inte arbetslöshetsersättning. membership-0252: Vuxenstudiestöd till arbetslösa är studiestöd, inte arbetslöshetsersättning. membership-0253: Ingen vald variabel mäter arbetslöshetsersättning. membership-0254: Arbetslöshetskassebeloppet stöds direkt. Arbetsmarknadsstödet behålls enligt fast inkludering och skyddat medlemskap trots den avvikande källbedömningen. membership-0255: Inga valda variabler mäter arbetslöshetsersättning. membership-0256: Inga valda variabler mäter arbetslöshetsersättning. membership-0257: Ingen vald variabel mäter arbetslöshetsersättning. membership-0258: Ingen vald variabel mäter arbetslöshetsersättning. membership-0259: Ingen vald variabel avser arbetslöshetsersättning. membership-0260: Ingen vald variabel mäter arbetslöshetsersättning. membership-0261: Inga valda variabler mäter arbetslöshetsersättning. membership-0262: Ingen vald variabel särredovisar arbetslöshetsersättning. membership-0263: Ingen vald variabel särredovisar arbetslöshetsersättning. membership-0264: Ingen vald variabel mäter arbetslöshetsersättning. membership-0265: Inga valda variabler mäter arbetslöshetsersättning; de avser imputering eller mottaget underhåll. membership-0266: Ingen vald variabel särredovisar arbetslöshetsersättning. membership-0267: Kontant arbetsmarknadsstöd enligt kontrolluppgift ingår uttryckligen. membership-0268: Ingen vald variabel mäter arbetslöshetsersättning. membership-0269: Ingen vald variabel mäter arbetslöshetsersättning. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0190: Ingen vald variabel mäter ersättning vid arbetsmarknadsprogram. membership-0191: Källan anger a-kasseersättning vid arbetsmarknadsåtgärder, som definitionen uttryckligen omfattar. Ersättning enbart vid arbetslöshet exkluderas. membership-0192: Inga valda variabler mäter programersättning. membership-0193: Ingen vald variabel mäter programersättning. membership-0194: Arbetsmarknadsstöd kombinerar arbetslöshetsdagpenning och programersättningar utan särredovisat programbelopp; kandidaten omfattar inte uttryckligen denna summa. membership-0195: Ingen vald variabel mäter programersättning. membership-0196: Inga valda variabler mäter ersättning vid arbetsmarknadsprogram. membership-0197: Barnomsorg vid förälders arbetslöshet är inte programersättning. membership-0198: Ingen vald variabel mäter ersättning vid arbetsmarknadsprogram. membership-0199: Ingen vald variabel mäter ersättning vid arbetsmarknadsprogram. membership-0200: Ingen vald variabel avser programersättning. membership-0201: Inga valda variabler mäter programersättning. membership-0202: Ingen vald variabel avser arbetsmarknadsprogram. membership-0203: Ingen vald variabel mäter programersättningar. membership-0204: Ingen vald variabel mäter ersättning vid arbetsmarknadsprogram. membership-0205: Inga valda variabler mäter ersättning vid arbetsmarknadsprogram. membership-0206: Ingen vald variabel mäter ersättning vid arbetsmarknadsprogram. membership-0207: Ingen vald variabel mäter ersättning vid arbetsmarknadsprogram. membership-0208: Dagpenningen avser arbetslöshet, inte deltagande i arbetsmarknadsprogram. membership-0209: Båda variablerna mäter uttryckligen ersättning vid arbetsmarknadspolitiska program, uppdelad efter skattebehandling. membership-0210: Valda etableringsstöd anges inte vara ersättningar vid arbetsmarknadspolitiska program. membership-0211: Den valda försäkringskasseersättningen saknar uttrycklig programanknytning. membership-0212: Inga valda variabler omfattas av definitionen. membership-0213: Ingen vald variabel mäter programersättning. membership-0214: Ingen vald variabel mäter ersättning vid arbetsmarknadsprogram. membership-0215: Hemvärnsersättningen avser militär anknytning, inte arbetsmarknadsprogram. membership-0216: Ingen vald variabel mäter ersättning vid arbetsmarknadsprogram. membership-0217: Ingen vald variabel mäter programersättning. membership-0218: Ingen vald variabel mäter arbetsmarknadsprogramersättning. membership-0219: Inga valda variabler mäter programersättningar. membership-0220: Inga valda variabler anger ersättning vid arbetsmarknadsprogram. membership-0221: Utbildningsbidragets lånedel anges inte som skattefri eller skattepliktig programersättning. membership-0222: Ingen vald variabel avser ersättning vid arbetsmarknadsprogram. membership-0223: Ingen vald variabel mäter ersättning vid arbetsmarknadsprogram. membership-0224: Ingen vald variabel mäter programersättning. membership-0225: Ingen vald variabel mäter programersättning. membership-0226: Inga valda variabler mäter programersättning. membership-0227: Valda ersättningar avser avyttring, inte arbetsmarknadsprogram. membership-0228: Inga valda variabler mäter ersättning vid arbetsmarknadsprogram. membership-0229: Ingen vald variabel mäter ersättning vid arbetsmarknadsprogram. membership-0230: Ingen vald variabel mäter programersättning. membership-0231: Ingen vald variabel omfattas av definitionen. membership-0232: Närståendepenning saknar arbetsmarknadsprogramanknytning. membership-0233: Inga valda variabler mäter programersättning. membership-0234: Ingen vald variabel anger ersättning vid arbetsmarknadsprogram. membership-0235: Den tidigare granskningen anger olika kolumnägare; aktuell beskrivning avgör inte programmets ersättningsbegrepp. membership-0236: Inga valda variabler mäter programersättning. membership-0237: Inga valda variabler mäter programersättning. membership-0238: Ingen vald variabel mäter programersättning. membership-0239: Rehabiliteringsersättning beskrivs som ersättning vid arbetslivsinriktad rehabilitering. Samlingsbeloppet rehabiliteringspenning och aktivitetsstöd särredovisar inte programersättning; en ingående möjlig komponent räcker inte för hela beloppets medlemskap. membership-0240: SFI-ersättningen dokumenteras inte som ersättning vid arbetsmarknadspolitiskt program. membership-0241: Valt ospecificerat ersättningsbelopp anger inget arbetsmarknadsprogram. membership-0242: Ingen vald variabel mäter ersättning vid arbetsmarknadsprogram. membership-0243: Ingen vald variabel särredovisar ersättning vid arbetsmarknadsprogram. membership-0244: Studiepenningen är inte uttryckligen programersättning. membership-0245: Arbetsmarknadsförsäkringssumman anger arbetslöshet och sjukdom, inte programersättning. membership-0246: De valda arbetsmarknadsstöden anges som kontant arbetsmarknadsstöd utan programanknytning. membership-0247: Utbildningsbidraget är skattepliktig dagpenning vid beviljad arbetsmarknadsutbildning. membership-0248: Ingen vald variabel mäter programersättning. membership-0249: Inga valda variabler mäter programersättning. membership-0250: Ingen vald variabel mäter ersättning vid arbetsmarknadsprogram. membership-0251: Inget valt id särredovisar programersättning. membership-0252: Vuxenstudiestöd till arbetslösa anges som studiestöd, inte programersättning. membership-0253: Ingen vald variabel mäter ersättning vid arbetsmarknadsprogram. membership-0254: Beskrivningen anger uttryckligen ALU-ersättning och skattepliktig ersättning vid arbetsmarknadsutbildning. Det är programersättning, medan det separata kassabeloppet endast avser arbetslöshet. membership-0255: Inga valda variabler mäter programersättning. membership-0256: Inga valda variabler mäter ersättning vid arbetsmarknadsprogram. membership-0257: Ingen vald variabel mäter programersättning. membership-0258: Ingen vald variabel mäter programersättning. membership-0259: Ingen vald variabel avser programersättning. membership-0260: Ingen vald variabel mäter programersättning. membership-0261: Inga valda variabler mäter programersättning. membership-0262: Ingen vald variabel särredovisar ersättning vid arbetsmarknadsprogram. membership-0263: Ingen vald variabel särredovisar programersättning. membership-0264: Ingen vald variabel mäter programersättning. membership-0265: Inga valda variabler mäter programersättning; de avser imputering eller mottaget underhåll. membership-0266: Ingen vald variabel särredovisar programersättning. membership-0267: Kontant arbetsmarknadsstöd anges utan program- eller åtgärdsanknytning. membership-0268: Ingen vald variabel mäter programersättning. membership-0269: Ingen vald variabel mäter programersättning.\ncatalog:occurrence:219285\ncatalog:occurrence:219565\ncatalog:variable_text:23662:12053:16071\ncatalog:variable_text:23663:13879:16071\ncatalog:variable_text:23664:15340:16071\ncatalog:variable_text:23769:12053:16071\ncatalog:variable_text:23770:15340:16071\ncatalog:variable_text:23862:14610:16071\ncatalog:variable_text:23864:14610:16071\ncatalog:variable_text:24067:12418:15340\ncatalog:variable_text:24074:13149:16071\ncatalog:variable_text:24337:1826:2191\ncatalog:variable_text:24368:13879:16071\ncatalog:variable_text:24369:12053:16071\ncatalog:variable_text:24390:14975:16071\ncatalog:variable_text:24391:14975:16071\ncatalog:variable_text:24413:15340:16071\ncatalog:variable_text:24438:12053:16071\ncatalog:variable_text:24557:15340:16071\ncatalog:variable_text:24728:9496:9862\ncatalog:variable_text:24733:12418:15340\ncatalog:variable_text:24745:14245:16071\ncatalog:variable_text:24760:12053:12418\ncatalog:variable_text:24788:12053:12418\ncatalog:variable_text:24810:10957:11323\ncatalog:variable_text:24872:12053:12418\ncatalog:variable_text:24873:12053:12418\ncatalog:variable_text:24898:10592:10957\ncatalog:variable_text:24927:13514:16071\ncatalog:variable_text:24952:10957:11323\ncatalog:variable_text:24953:10957:11323\ncatalog:variable_text:25001:13514:16071\ncatalog:variable_text:25005:12418:13514\ncatalog:variable_text:25029:15340:16071\ncatalog:variable_text:25062:12053:16071\ncatalog:variable_text:25140:1826:2191\ncatalog:variable_text:25255:12053:16071\ncatalog:variable_text:25256:12418:16071\ncatalog:variable_text:25303:9496:10957\ncatalog:variable_text:25338:13514:16071\ncatalog:variable_text:25422:12418:13149\ncatalog:variable_text:25423:12053:16071\ncatalog:variable_text:25444:13879:16071\ncatalog:variable_text:25478:9496:10592\ncatalog:variable_text:25479:9496:10227\ncatalog:variable_text:25480:9496:10592\ncatalog:variable_text:25507:9496:9862\ncatalog:variable_text:25534:12418:13514\ncatalog:variable_text:25580:12418:13514\ncatalog:variable_text:25637:1826:2191\ncatalog:variable_text:25638:1826:2191\ncatalog:variable_text:25639:1826:2191\ncatalog:variable_text:25640:1826:2191\ncatalog:variable_text:25689:12053:12418\ncatalog:variable_text:25690:12053:12418"
+fields = { "sets" = ["arbetsmarknadsstod"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nTARBSTZ and TARBST share the definition 'Dagpenning vid arbetslöshet, ALU-ersättning och övriga utbildningsbidrag, skattepliktig ersättning vid arbetsmarknadsutb.'; TARBSTZ is the household sum Forms set:arbetsmarknadsstod."
 
 [[statement]]
 kind = "set"
@@ -6944,8 +6944,8 @@ evidence = "Andelen hör till bostadstillägg.\ncatalog:variable_text:24176:1424
 [[statement]]
 kind = "set"
 subject = "var:bostadstillagg-pensionarer"
-fields = { "sets" = [] }
-evidence = "Beloppet hör till bostadstillägg.\ncatalog:variable_text:24177:14245:16071"
+fields = { "sets" = ["bostadstillagg-till-pensionarer"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nIBTPZ OP 'Summering av uppgift om Bostadstillägg till pensionärer från tre pensionsregister ... Summerat för samtliga hushållsmedlemmar' = household sum of individual IBTP (1998–2008), continued as IBTPAP (2009–2013), same text 'Bostadstillägg till pensionärer' Forms set:bostadstillagg-till-pensionarer."
 
 [[statement]]
 kind = "set"
@@ -6992,8 +6992,8 @@ evidence = "Beloppet hör till bostadstillägg.\ncatalog:variable_text:24180:142
 [[statement]]
 kind = "set"
 subject = "var:bostadstillagg-till-pensionarer-ibtp"
-fields = { "sets" = [] }
-evidence = "Den senare ägaren omfattar även personer med sjuk- och aktivitetsersättning.\ncatalog:occurrence:224607\ncatalog:occurrence:225447"
+fields = { "sets" = ["bostadstillagg-till-pensionarer"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nIBTPZ OP 'Summering av uppgift om Bostadstillägg till pensionärer från tre pensionsregister ... Summerat för samtliga hushållsmedlemmar' = household sum of individual IBTP (1998–2008), continued as IBTPAP (2009–2013), same text 'Bostadstillägg till pensionärer' Forms set:bostadstillagg-till-pensionarer."
 
 [[statement]]
 kind = "set"
@@ -7004,8 +7004,8 @@ evidence = "Den senare ägaren omfattar även personer med sjuk- och aktivitetse
 [[statement]]
 kind = "set"
 subject = "var:bostadstillagg-till-pensionarer-ibtpz"
-fields = { "sets" = [] }
-evidence = "Den senare summan omfattar ytterligare mottagare.\ncatalog:occurrence:231649\ncatalog:occurrence:231916"
+fields = { "sets" = ["bostadstillagg-till-pensionarer"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nIBTPZ OP 'Summering av uppgift om Bostadstillägg till pensionärer från tre pensionsregister ... Summerat för samtliga hushållsmedlemmar' = household sum of individual IBTP (1998–2008), continued as IBTPAP (2009–2013), same text 'Bostadstillägg till pensionärer' Forms set:bostadstillagg-till-pensionarer."
 
 [[statement]]
 kind = "set"
@@ -9050,8 +9050,8 @@ evidence = "Identitetsfaktens motpart har en bredare angiven sammansättning.\nc
 [[statement]]
 kind = "set"
 subject = "var:ekonomiskt-bistand-socialbidrag"
-fields = { "sets" = [] }
-evidence = "Socialbidrag och ekonomiskt bistånd ingår i kandidatgruppen.\ncatalog:register:142\ncatalog:variable_text:24364:12418:14975"
+fields = { "sets" = ["ekonomiskt-bistand-och-introduktionsersattning"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nISOCBIDZ OP 'socialbidrag, individvariabel + introduktionsersättning för invandrare, individvariabel. Summerad för hushållet' = household sum of ISOCBID; kept out of ekonomiskt-bistand, which excludes introduktionsersättning Forms set:ekonomiskt-bistand-och-introduktionsersattning."
 
 [[statement]]
 kind = "set"
@@ -9062,8 +9062,8 @@ evidence = "Socialbidrag och ekonomiskt bistånd ingår i kandidatgruppen.\ncata
 [[statement]]
 kind = "set"
 subject = "var:ekonomiskt-bistand-socialbidrag-isocbid"
-fields = { "sets" = [] }
-evidence = "Identitetsfaktens motpart har en annan angiven sammansättning.\ncatalog:occurrence:219132\ncatalog:occurrence:221583"
+fields = { "sets" = ["ekonomiskt-bistand-och-introduktionsersattning"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nISOCBIDZ OP 'socialbidrag, individvariabel + introduktionsersättning för invandrare, individvariabel. Summerad för hushållet' = household sum of ISOCBID; kept out of ekonomiskt-bistand, which excludes introduktionsersättning Forms set:ekonomiskt-bistand-och-introduktionsersattning."
 
 [[statement]]
 kind = "set"
@@ -14600,8 +14600,8 @@ evidence = "Variabeln anger fastighetens kommun.\ncatalog:variable_text:24852:18
 [[statement]]
 kind = "set"
 subject = "var:kompletterande-belopp-till-bostadstillagg-ibtpkz"
-fields = { "sets" = [] }
-evidence = "Det kompletterande beloppet hör till bostadstillägg.\ncatalog:variable_text:24853:9496:11323"
+fields = { "sets" = ["kompletterande-belopp-till-bostadstillagg"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nIBTPKZ OP 'Summering av individuppgifter om Kompletterande belopp till bostadstillägg ... Summerat för samtliga hushållsmedlemmar' = household sum of IBTPK Forms set:kompletterande-belopp-till-bostadstillagg."
 
 [[statement]]
 kind = "set"
@@ -14612,8 +14612,8 @@ evidence = "Det kompletterande beloppet hör till bostadstillägg.\ncatalog:vari
 [[statement]]
 kind = "set"
 subject = "var:kompletterande-bostadstillagg"
-fields = { "sets" = [] }
-evidence = "Det kompletterande beloppet hör till bostadstillägg.\ncatalog:variable_text:24854:10227:11323"
+fields = { "sets" = ["kompletterande-belopp-till-bostadstillagg"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nIBTPKZ OP 'Summering av individuppgifter om Kompletterande belopp till bostadstillägg ... Summerat för samtliga hushållsmedlemmar' = household sum of IBTPK Forms set:kompletterande-belopp-till-bostadstillagg."
 
 [[statement]]
 kind = "set"
@@ -19244,8 +19244,8 @@ evidence = "Andelen hör till bostadstillägg.\ncatalog:variable_text:25279:1424
 [[statement]]
 kind = "set"
 subject = "var:sarskilt-bostadstillagg-pensionarer"
-fields = { "sets" = [] }
-evidence = "Den senare summan omfattar ytterligare mottagare.\ncatalog:occurrence:231648\ncatalog:occurrence:231915"
+fields = { "sets" = ["sarskilt-bostadstillagg-for-pensionarer"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nsarskilt-bostadstillagg-pensionarer and its total(s) at another level are one measure; they form set:sarskilt-bostadstillagg-for-pensionarer."
 
 [[statement]]
 kind = "set"
@@ -19268,8 +19268,8 @@ evidence = "Beloppet hör till bostadstillägg.\ncatalog:variable_text:25281:142
 [[statement]]
 kind = "set"
 subject = "var:sarskilt-bostadstillagg-till-pens"
-fields = { "sets" = [] }
-evidence = "Den senare summan omfattar ytterligare mottagare.\ncatalog:occurrence:224608\ncatalog:occurrence:225449"
+fields = { "sets" = ["sarskilt-bostadstillagg-for-pensionarer"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nIBTPS (individ, 1998–2008) 'Särskilt bostadstillägg till pensionärer' is the individual level of the C3 total IBTPSZ (sarskilt-bostadstillagg-pensionarer-hushall, 1996–2008, 'Summerat för samtliga hushållsmedlemmar'); IBTPSAP already in the group covers 2009–2013 Joins set:sarskilt-bostadstillagg-for-pensionarer."
 
 [[statement]]
 kind = "set"
@@ -20966,8 +20966,8 @@ evidence = "Samma studiestödsbegrepp är uppdelat mellan efterföljande periode
 [[statement]]
 kind = "set"
 subject = "var:summa-bostadsbidrag"
-fields = { "sets" = [] }
-evidence = "Källan anger samlade bostadsbidrag och bostadstillägg i senare perioder.\ncatalog:variable_text:25428:12418:14975\ncatalog:variable_text:25428:1826:2191"
+fields = { "sets" = ["summa-bostadsbidrag"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nsumma-bostadsbidrag and its total(s) at another level are one measure; they form set:summa-bostadsbidrag."
 
 [[statement]]
 kind = "set"
@@ -20978,8 +20978,8 @@ evidence = "Källan anger samlade bostadsbidrag och bostadstillägg i senare per
 [[statement]]
 kind = "set"
 subject = "var:summa-bostadstillagg"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har olika ägare i angränsande perioder.\ncatalog:occurrence:224607\ncatalog:occurrence:225447"
+fields = { "sets" = ["summa-bostadstillagg"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nIdentical definition 'Summa bostadstillägg för pensionärer och personer som har sjuk- och aktivitetsersättning', household vs individ, 2009–2013 Forms set:summa-bostadstillagg."
 
 [[statement]]
 kind = "set"
@@ -20990,8 +20990,8 @@ evidence = "Samma kolumn har olika ägare i angränsande perioder.\ncatalog:occu
 [[statement]]
 kind = "set"
 subject = "var:summa-bostadstillagg-ibtpz"
-fields = { "sets" = [] }
-evidence = "Den tidigare variabeln avser pensionärer, medan summan omfattar ytterligare mottagare.\ncatalog:occurrence:231649\ncatalog:occurrence:231916"
+fields = { "sets" = ["summa-bostadstillagg"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nIdentical definition 'Summa bostadstillägg för pensionärer och personer som har sjuk- och aktivitetsersättning', household vs individ, 2009–2013 Forms set:summa-bostadstillagg."
 
 [[statement]]
 kind = "set"
@@ -21056,8 +21056,8 @@ evidence = "Summa skattepliktiga och skattefria positiva transfereringar.\ncatal
 [[statement]]
 kind = "set"
 subject = "var:summa-sarskilt-bostadstillagg"
-fields = { "sets" = [] }
-evidence = "Den tidigare variabeln avser pensionärer, medan summan omfattar ytterligare mottagare.\ncatalog:occurrence:224608\ncatalog:occurrence:225449"
+fields = { "sets" = ["summa-sarskilt-bostadstillagg"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nIdentical definition 'Summa särskilt bostadstillägg för pensionärer och personer som har sjuk- och aktivitetsersättning', household vs individ, 2009–2013 Forms set:summa-sarskilt-bostadstillagg."
 
 [[statement]]
 kind = "set"
@@ -21068,8 +21068,8 @@ evidence = "Den tidigare variabeln avser pensionärer, medan summan omfattar ytt
 [[statement]]
 kind = "set"
 subject = "var:summa-sarskilt-bostadstillagg-ibtpsz"
-fields = { "sets" = [] }
-evidence = "Den tidigare variabeln avser pensionärer, medan summan omfattar ytterligare mottagare.\ncatalog:occurrence:231648\ncatalog:occurrence:231915"
+fields = { "sets" = ["summa-sarskilt-bostadstillagg"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nIdentical definition 'Summa särskilt bostadstillägg för pensionärer och personer som har sjuk- och aktivitetsersättning', household vs individ, 2009–2013 Forms set:summa-sarskilt-bostadstillagg."
 
 [[statement]]
 kind = "set"
@@ -31186,8 +31186,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group
 [[statement]]
 kind = "set"
 subject = "set:barnbidrag"
-fields = { "description" = "Utbetalt barnbidrag: allmänt barnbidrag, förlängt barnbidrag och flerbarnstillägg som summa (1996 utan förlängt barnbidrag), enbart allmänt barnbidrag och flerbarnstillägg, och barnbidraget fördelat på föräldrarna enligt familjeidentiteten i Registret över totalbefolkningen (RTB). Allmänt barnbidrag betalas för barn som inte fyllt 16 år; 1975 var beloppet 1 500 kronor per år. Summan 1996 och variabeln Barnbidrag, allmänt 2004–2011 hämtas från Inkomst- och taxeringsregistret och beräknas för hushåll med barn som saknar registeruppgift." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nIoT-hämtning och beräkning vid saknad registeruppgift anges bara för summan 1996 och för barnbidrag-allmant 2004–2011, inte för övriga belopp.\ncatalog:variable_text:30799:1826:2191\ncatalog:variable_text:30799:9496:9862\ncatalog:variable_text:30799:9862:11323\ncatalog:variable_text:30800:12418:15340\ncatalog:variable_text:30800:15340:16071\ncatalog:variable_text:30801:12418:15340\ncatalog:variable_text:30802:12418:12784\ncatalog:variable_text:30802:12784:16071"
+fields = { "description" = "Utbetalt barnbidrag per person och per hushåll. Per person finns barnbidrag 1975, allmänt barnbidrag och flerbarnstillägg 2004–2013, allmänt barnbidrag, förlängt barnbidrag och flerbarnstillägg 2004–2011, och barnbidraget fördelat på föräldrarna enligt familjeidentiteten i Registret över totalbefolkningen (RTB) 2004–2013. Per hushåll 1996–2013 är det summan av allmänt barnbidrag, förlängt barnbidrag och flerbarnstillägg (1996 utan förlängt barnbidrag). 1975 betalades barnbidrag för barn under 16 år med 1 500 kronor per barn och år. Hushållssumman 1996 och det allmänna barnbidraget per person 2004–2011 hämtas från Inkomst- och taxeringsregistret och beräknas för hushåll med barn som saknar registeruppgift." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nDEF/OP per nivå och år; 1975 års regler (under 16 år, 1 500 kr per år) gäller barnbidraget 1975; IoT-ursprung och beräkning anges för hushållssumman 1996 och allmänt barnbidrag 2004–2011.\ncatalog:variable_text:30799:1826:2191\ncatalog:variable_text:30799:9496:9862\ncatalog:variable_text:30799:9862:11323\ncatalog:variable_text:30800:12418:15340\ncatalog:variable_text:30800:15340:16071\ncatalog:variable_text:30801:12418:15340\ncatalog:variable_text:30802:12418:12784\ncatalog:variable_text:30802:12784:16071"
 
 [[statement]]
 kind = "set"
@@ -31210,8 +31210,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group
 [[statement]]
 kind = "set"
 subject = "set:boenderantor"
-fields = { "description" = "Hushållets ränteutgifter per år på lån för bostaden, för eget hem, bostadsrätt och fritidsfastighet samt totalt. Från 2004 härleds beloppen från enkätfrågorna om ränteutgift på bostadens eller fastighetens lån, med imputering; 1996–1997 samlades uppgiften in för hushållet i telefonintervjun och fördelades på individer efter ägarandel. För 1975 finns räntekostnad för eget hem och fritidsfastighet i upp till fyra förekomster." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF anger ränteutgifter per upplåtelseform och totalt; OP beskriver härledning från F33/F45B från 2004 och fördelning efter ägarandel 1996–1997; 1975-medlemmarna är förekomster.\ncatalog:variable_text:31088:9496:10227\ncatalog:variable_text:31088:10227:11323\ncatalog:variable_text:31088:12418:16071\ncatalog:variable_text:31089:9496:10227\ncatalog:variable_text:31089:10227:10957\ncatalog:variable_text:31089:10957:11323\ncatalog:variable_text:31089:12418:16071\ncatalog:variable_text:31090:9496:10227\ncatalog:variable_text:31091:9496:10227\ncatalog:variable_text:31091:12418:13514\ncatalog:variable_text:31091:13514:14245\ncatalog:variable_text:31091:14245:14975\ncatalog:variable_text:31091:14975:16071\ncatalog:variable_text:31548:1826:2191\ncatalog:variable_text:31553:1826:2191\ncatalog:variable_text:32040:1826:2191\ncatalog:variable_text:32041:1826:2191\ncatalog:variable_text:32042:1826:2191\ncatalog:variable_text:32043:1826:2191\ncatalog:variable_text:32044:1826:2191"
+fields = { "description" = "Ränteutgifter per år på lån för bostaden, för eget hem, bostadsrätt och fritidsfastighet samt totalt. Per hushåll finns eget hem och bostadsrätt 1998–2013 och totalt 2004–2013, från 2004 härledda från enkätfrågorna om ränteutgift på bostadens eller fastighetens lån; per person 1996–1997 samlades uppgiften in för hushållet i telefonintervjun och fördelades på individerna efter ägarandel. För 1975 finns räntekostnad för eget hem och fritidsfastighet per person i upp till fyra förekomster." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nDEF/OP för medlemmarna; nivåerna följer av Individregister och Kosthushåll; imputeringen utelämnas eftersom den bara anges för eget hem och bostadsrätt, inte för totalt.\ncatalog:variable_text:31088:9496:10227\ncatalog:variable_text:31088:10227:11323\ncatalog:variable_text:31088:12418:16071\ncatalog:variable_text:31089:9496:10227\ncatalog:variable_text:31089:10227:10957\ncatalog:variable_text:31089:10957:11323\ncatalog:variable_text:31089:12418:16071\ncatalog:variable_text:31090:9496:10227\ncatalog:variable_text:31091:9496:10227\ncatalog:variable_text:31091:12418:13514\ncatalog:variable_text:31091:13514:14245\ncatalog:variable_text:31091:14245:14975\ncatalog:variable_text:31091:14975:16071\ncatalog:variable_text:31548:1826:2191\ncatalog:variable_text:31553:1826:2191\ncatalog:variable_text:32040:1826:2191\ncatalog:variable_text:32041:1826:2191\ncatalog:variable_text:32042:1826:2191\ncatalog:variable_text:32043:1826:2191\ncatalog:variable_text:32044:1826:2191"
 
 [[statement]]
 kind = "set"
@@ -31714,8 +31714,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:barnbidrag-hushall"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+fields = { "sets" = ["barnbidrag"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nKosthushåll gives the amount summed per household; it is the same measure as barnbidrag at another level and joins set:barnbidrag."
 
 [[statement]]
 kind = "set"
@@ -31738,8 +31738,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:boende-ranta-bostadsratt-hushall"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+fields = { "sets" = ["boenderantor"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nKosthushåll gives the amount summed per household; it is the same measure as boende-ranta-bostadsratt at another level and joins set:boenderantor."
 
 [[statement]]
 kind = "set"
@@ -31768,8 +31768,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:boende-ranta-eget-hem-hushall"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+fields = { "sets" = ["boenderantor"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nKosthushåll gives the amount summed per household; it is the same measure as boende-ranta-eget-hem at another level and joins set:boenderantor."
 
 [[statement]]
 kind = "set"
@@ -31798,8 +31798,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:boende-ranta-totalt-hushall"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+fields = { "sets" = ["boenderantor"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nKosthushåll gives the amount summed per household; it is the same measure as boende-ranta-totalt at another level and joins set:boenderantor."
 
 [[statement]]
 kind = "set"
@@ -31828,8 +31828,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:summa-bostadsbidrag-hushall"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable."
+fields = { "sets" = ["summa-bostadsbidrag"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nKosthushåll gives the amount summed per household; it is the same measure as summa-bostadsbidrag at another level and joins set:summa-bostadsbidrag."
 
 [[statement]]
 kind = "set"
@@ -31852,8 +31852,8 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 [[statement]]
 kind = "set"
 subject = "var:sarskilt-bostadstillagg-pensionarer-hushall"
-fields = { "sets" = [] }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nKosthushåll gives the amount summed for all household members (its texts say so); Individregister gives the individual's own amount. The household sum gets its own variable. IBTPSZ 2009– is already its own variable, summa-sarskilt-bostadstillagg-ibtpsz, which also covers sjuk- och aktivitetsersättning; the 1996–2008 rows (pensioners only) get their own variable."
+fields = { "sets" = ["sarskilt-bostadstillagg-for-pensionarer"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nKosthushåll gives the amount summed per household; it is the same measure as sarskilt-bostadstillagg-pensionarer at another level and joins set:sarskilt-bostadstillagg-for-pensionarer."
 
 [[statement]]
 kind = "set"
@@ -32106,3 +32106,105 @@ kind = "set"
 subject = "var:uhuselz"
 fields = { "description" = "Hushållets utgift för hushållsel under året." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; 2008 har felaktigt årtal (2010) i frågetexten.\ncatalog:variable_text:32403:12418:13879\ncatalog:variable_text:32403:13879:14245\ncatalog:variable_text:32403:14245:16071"
+
+[[statement]]
+kind = "set"
+subject = "set:sarskilt-bostadstillagg-for-pensionarer"
+fields = { "label" = "Särskilt bostadstillägg för pensionärer" }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nGroup label from the member label of sarskilt-bostadstillagg-pensionarer."
+
+[[statement]]
+kind = "set"
+subject = "set:sarskilt-bostadstillagg-for-pensionarer"
+fields = { "description" = "Särskilt bostadstillägg för pensionärer, per person 1998–2013 och summerat för alla hushållsmedlemmar 1996–2008. Per person 1998–2000 och per hushåll 1996–2000 summeras uppgifterna från pensionsregistren RFVPEN, KPAPEN och SPVPEN; per person 2003–2008 och per hushåll 2004–2008 avser det utbetalt belopp enligt Försäkringskassan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): every level of one measure belongs in one group.\n\nNuvarande text kompletteras med personvärdet 1998–2008 (sarskilt-bostadstillagg-till-pens) och dess källor enligt OP; överensstämmer med medlemmarnas egna beskrivningar.\ncatalog:variable_text:32142:14245:16071\ncatalog:variable_text:32142:9496:11323\ncatalog:variable_text:32142:12418:14245\ncatalog:variable_text:32144:10227:11323\ncatalog:variable_text:32144:12053:14245"
+
+[[statement]]
+kind = "set"
+subject = "set:summa-bostadsbidrag"
+fields = { "label" = "Summa bostadsbidrag" }
+evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nGroup label from the member label of summa-bostadsbidrag."
+
+[[statement]]
+kind = "set"
+subject = "set:summa-bostadsbidrag"
+fields = { "description" = "Summan av bostadsbidrag och bostadstillägg. Per person 1975 ingår kommunalt och statskommunalt bostadstillägg samt bostadstillägg för låginkomsttagare utan barn; per hushåll 1996–2013 ingår bostadsbidrag till barnfamiljer, makar och övriga utan barn, bostadstillägg och särskilt bostadstillägg till pensionärer samt bostadsbidrag till värnpliktiga." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nGemensam DEF; OP för 1975 (Individregister) och 1996–2013 (Kosthushåll) anger vad summan omfattar per nivå.\ncatalog:variable_text:32314:1826:2191\ncatalog:variable_text:32314:9496:11323"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsmarknadsstod"
+fields = { "label" = "Arbetsmarknadsstöd" }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nGroup label for the levels of one measure (arbetsmarknadsstod, arbetsmarknadsstod-tarbstz)."
+
+[[statement]]
+kind = "set"
+subject = "set:bostadstillagg-till-pensionarer"
+fields = { "label" = "Bostadstillägg till pensionärer" }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nGroup label for the levels of one measure (bostadstillagg-till-pensionarer-ibtp, bostadstillagg-pensionarer, bostadstillagg-till-pensionarer-ibtpz)."
+
+[[statement]]
+kind = "set"
+subject = "set:summa-bostadstillagg"
+fields = { "label" = "Summa bostadstillägg" }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nGroup label for the levels of one measure (summa-bostadstillagg, summa-bostadstillagg-ibtpz)."
+
+[[statement]]
+kind = "set"
+subject = "set:summa-sarskilt-bostadstillagg"
+fields = { "label" = "Summa särskilt bostadstillägg" }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nGroup label for the levels of one measure (summa-sarskilt-bostadstillagg, summa-sarskilt-bostadstillagg-ibtpsz)."
+
+[[statement]]
+kind = "set"
+subject = "set:kompletterande-belopp-till-bostadstillagg"
+fields = { "label" = "Kompletterande belopp till bostadstillägg" }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nGroup label for the levels of one measure (kompletterande-bostadstillagg, kompletterande-belopp-till-bostadstillagg-ibtpkz)."
+
+[[statement]]
+kind = "set"
+subject = "set:ekonomiskt-bistand-och-introduktionsersattning"
+fields = { "label" = "Ekonomiskt bistånd och introduktionsersättning" }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nGroup label for the levels of one measure (ekonomiskt-bistand-socialbidrag-isocbid, ekonomiskt-bistand-socialbidrag)."
+
+[[statement]]
+kind = "set"
+subject = "set:allmanna-avdrag"
+fields = { "description" = "Allmänna avdrag samt förlustavdrag per person 1975–1996 och per hushåll (kosthushåll) 1996, då härlett som summering från uppgifter i Inkomst- och taxeringsregistret, samt enskilda allmänna avdrag per person: för periodiskt understöd och för premier för vissa andra försäkringar 1975, för premie för pensionsförsäkring eller pensionssparkonto och periodiskt understöd 2004–2013 och för underskott av aktiv näringsverksamhet, som får kvittas mot förvärvsinkomst, 2004–2013. Det statliga avdraget 1975 är summan av underskott i förvärvskälla och övriga allmänna avdrag och registreras bara för personer som ensamma eller tillsammans med make eller maka haft statligt taxerad inkomst på minst 4 500 kronor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): every level of one measure belongs in one group.\n\nDEF/OP för aallmfl och hushållsvarianten (härledd summering från IoT 1996, summerad till hushållsnivå), komponenternas DEF och OP för allmanna-avdrag-statligt 1975; nivåer och år från tabellerna.\ncatalog:variable_text:30545:1826:2191\ncatalog:variable_text:30545:9496:9862\ncatalog:variable_text:30615:9496:9862\ncatalog:variable_text:30616:1826:2191\ncatalog:variable_text:30618:12418:16071\ncatalog:variable_text:30620:1826:2191\ncatalog:variable_text:30621:12418:13879\ncatalog:variable_text:30621:13879:16071\ncatalog:variable_text:30614:1826:2191"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsmarknadsstod"
+fields = { "description" = "Summan av dagpenning vid arbetslöshet, ALU-ersättning och övriga utbildningsbidrag samt skattepliktig ersättning vid arbetsmarknadsutbildning, per person 1975–2013 och per hushåll (kosthushåll) 1996–2013. På personens rad ingår även ersättning till ledsagare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): every level of one measure belongs in one group.\n\nGemensam DEF och OP (härledd summa) för båda medlemmarna; ledsagare nämns bara i personvariabelns OP; nivåer och år från tabellerna.\ncatalog:variable_text:30705:1826:2191\ncatalog:variable_text:30706:9496:11323"
+
+[[statement]]
+kind = "set"
+subject = "set:bostadstillagg-till-pensionarer"
+fields = { "description" = "Bostadstillägg till pensionärer, per person 1998–2013 och summerat för hushållets medlemmar 1996–2008. Per person 1998–2000 och per hushåll 1996–2000 summeras uppgifterna från pensionsregistren RFVPEN, KPAPEN och SPVPEN; per person 2003–2008 och per hushåll 2004–2008 är det utbetalt belopp enligt Försäkringskassan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): every level of one measure belongs in one group.\n\nGemensam DEF; källor per år enligt OP för ibtp och ibtpz; personvärdet 2009–2013 (IBTPAP) utan angiven källa; nivåer och år från tabellerna.\ncatalog:variable_text:31143:14245:16071\ncatalog:variable_text:31147:10227:11323\ncatalog:variable_text:31147:12053:14245\ncatalog:variable_text:31148:9496:11323\ncatalog:variable_text:31148:12418:14245"
+
+[[statement]]
+kind = "set"
+subject = "set:summa-bostadstillagg"
+fields = { "description" = "Summan av bostadstillägg för pensionärer och bostadstillägg för personer med sjuk- och aktivitetsersättning, per person och summerat för alla hushållsmedlemmar, 2009–2013." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): every level of one measure belongs in one group.\n\nGemensam DEF; OP anger summering av de två bostadstilläggen, för hushållet över alla hushållsmedlemmar; år från tabellerna.\ncatalog:variable_text:32315:14245:16071\ncatalog:variable_text:32316:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:summa-sarskilt-bostadstillagg"
+fields = { "description" = "Summan av särskilt bostadstillägg för pensionärer och särskilt bostadstillägg för personer med sjuk- och aktivitetsersättning, per person och summerat för alla hushållsmedlemmar, 2009–2013." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): every level of one measure belongs in one group.\n\nGemensam DEF; OP anger summering av de två särskilda bostadstilläggen, för hushållet över alla hushållsmedlemmar; år från tabellerna.\ncatalog:variable_text:32323:14245:16071\ncatalog:variable_text:32324:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:kompletterande-belopp-till-bostadstillagg"
+fields = { "description" = "Kompletterande belopp till bostadstillägg, summerat från pensionsregistren RFVPEN, KPAPEN och SPVPEN, per person 1998–2000 och för samtliga hushållsmedlemmar 1996–2000." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): every level of one measure belongs in one group.\n\nGemensam DEF; OP för båda anger härledd summering från de tre pensionsregistren, för hushållet över samtliga medlemmar; år från tabellerna.\ncatalog:variable_text:31753:9496:11323\ncatalog:variable_text:31754:10227:11323"
+
+[[statement]]
+kind = "set"
+subject = "set:ekonomiskt-bistand-och-introduktionsersattning"
+fields = { "description" = "Ekonomiskt bistånd (socialbidrag) och introduktionsersättning till invandrare, härlett som summan av de två individuppgifterna, per person 2004–2011 och per hushåll (kosthushåll) 1996–2010." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): every level of one measure belongs in one group.\n\nGemensam DEF och OP (socialbidrag + introduktionsersättning, individvariabler); hushållsnivån följer av tabellen och OP 1996 (summerad för hushållet); år från tabellerna.\ncatalog:variable_text:31297:9496:9862\ncatalog:variable_text:31297:9862:11323\ncatalog:variable_text:31298:12418:15340"
