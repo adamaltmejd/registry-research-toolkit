@@ -1803,3 +1803,111 @@ kind = "set"
 subject = "set:rapporteringsvaluta"
 fields = { "description" = "Den valuta som uppgiftslämnaren rapporterar produktens pris i och som ligger till grund för värdet i kronor. Valutan justeras vid behov till standardiserade valutabeteckningar (2001–2012)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF för båda anger valutan som priset bygger på; OP för rapporteringsvaluta anger rapporteringen från uppgiftslämnaren och standardiseringen.\ncatalog:variable_text:47729:11323:15706\ncatalog:variable_text:47729:15706:17167\ncatalog:variable_text:47729:17167:17532\ncatalog:variable_text:47739:15340:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-kpi"
+fields = { "label" = "Produktgrupp (KPI)" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nProdGrpKod (VarId 23614) holds SPIN-based product-group codes in PPI and TPI, and KPI's own product codes ('Egendefinierade produktkoder') in KPI: different classifications in parallel tables. The KPI column gets its own variable; the id anchor moves to PPI."
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-kpi"
+fields = { "tags" = ["business"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nProdGrpKod (VarId 23614) holds SPIN-based product-group codes in PPI and TPI, and KPI's own product codes ('Egendefinierade produktkoder') in KPI: different classifications in parallel tables. The KPI column gets its own variable; the id anchor moves to PPI."
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-kpi"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nProdGrpKod (VarId 23614) holds SPIN-based product-group codes in PPI and TPI, and KPI's own product codes ('Egendefinierade produktkoder') in KPI: different classifications in parallel tables. The KPI column gets its own variable; the id anchor moves to PPI."
+
+[[statement]]
+kind = "set"
+subject = "konsumentprisindex-kpi: ProdGrpKod where key = 'v23614'"
+fields = { "variable" = "produktgrupp-kpi" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nProdGrpKod (VarId 23614) holds SPIN-based product-group codes in PPI and TPI, and KPI's own product codes ('Egendefinierade produktkoder') in KPI: different classifications in parallel tables. The KPI column gets its own variable; the id anchor moves to PPI."
+
+[[statement]]
+kind = "set"
+subject = "var:ar"
+fields = { "description" = "Kalenderår som statistiken avser; i KPI året för prismätningsperioden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i alla index; KPI preciserar att året avser prismätningsperioden.\ncatalog:variable_text:47588:13514:17167\ncatalog:variable_text:47588:17167:17897\ncatalog:variable_text:47588:18262:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:berakningsperiod-period"
+fields = { "description" = "Den period för vilken index beräknas, till exempel ett kvartal. 2014 är perioden ett av årets fyra kvartal." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; rättar 'vilken kvartal'.\ncatalog:variable_text:47598:15340:16071\ncatalog:variable_text:47598:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:berakningsvag"
+fields = { "description" = "Anger om index beräknas via eller förbi branschproduktgrupp. Enligt beslut i KPI-nämnden beräknas från 2014 alla produktgruppsindex i KPI förbi branschproduktgrupp, men beräkning via branschproduktgrupp är fortfarande möjlig i produktionssystemet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; från 2014 anges KPI-nämndens beslut. Rättar 'produktgruppsiindex'.\ncatalog:variable_text:47601:14610:16071\ncatalog:variable_text:47601:16071:17897\ncatalog:variable_text:47601:17897:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:indexbermetod"
+fields = { "description" = "Anger hur index beräknas. Från 2014 används i KPI genomgående geometriskt index, som ger prisnedgångar större genomslag än aritmetiskt index och speglar att konsumenter tenderar att byta till billigare produkter. Undantaget är vatten, avlopp och renhållning, från 2017 även elström, där konsumenten inte kan antas byta." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; från 2014 anges metoden och 2017 läggs elström till undantaget.\ncatalog:variable_text:47653:14610:16071\ncatalog:variable_text:47653:16071:17167\ncatalog:variable_text:47653:17167:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:klassificering-av-konsumtion-coicop"
+fields = { "description" = "Produktens kod enligt COICOP. Från 2017 är koderna egendefinierade." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; från 2017 anges att koderna (2022: produktklasserna) är egendefinierade.\ncatalog:variable_text:47660:13514:17167\ncatalog:variable_text:47660:17167:18993\ncatalog:variable_text:47660:18993:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:konsumtionsprodukt"
+fields = { "description" = "Vara eller tjänst i den privata konsumtionen; en eller flera produkter utgör en produktgrupp. Koden är en egendefinierad identifierare inom produktgruppen för en typ av produkt, som kan mätas i olika varianter och på olika försäljningsställen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; senare år förklarar koden. Rättar 'färsöljningställen'.\ncatalog:variable_text:47670:13514:17167\ncatalog:variable_text:47670:17167:17897\ncatalog:variable_text:47670:18262:20089\ncatalog:variable_text:47670:20089:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:prodgrpid"
+fields = { "description" = "Nyckel som identifierar produktgruppen. Används tillsammans med Produktid för att koppla ihop produkt och produktgrupp." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; senare år anger hur nyckeln används.\ncatalog:variable_text:47705:14610:17167\ncatalog:variable_text:47705:17167:17897\ncatalog:variable_text:47705:18262:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:prodgrpidchild"
+fields = { "description" = "Egendefinierad databasnyckel mellan produktgrupp och COICOP-klass på nivån under en överordnad nyckel (parent). Nyckeln ger de underliggande aggregaten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; rättar 'Egendefinerad' och 'underliggade'.\ncatalog:variable_text:47706:14610:17167\ncatalog:variable_text:47706:18262:20089\ncatalog:variable_text:47706:20089:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:prodgrpidparent"
+fields = { "description" = "Egendefinierad databasnyckel mellan produktgrupp och COICOP-klass på nivån ovanför en eller flera underordnade nycklar (child). Nyckeln pekar uppåt till ett större aggregat." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; rättar 'Egendefinerad'.\ncatalog:variable_text:47707:14610:17167\ncatalog:variable_text:47707:18262:20089\ncatalog:variable_text:47707:20089:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:produkterbjudande-variant"
+fields = { "description" = "En given produkt så som den säljs av ett givet företag, det vill säga det objekt som prisobservationerna görs för. I PPI kan produkten från 2017 vara en fysisk vara eller en tjänst; i tjänsteprisindex beskriver den tjänsten som prismäts." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition alla år; TPI 2014 anger att variabeln beskriver tjänsten som prismäts, vilket stämmer med att TPI mäter tjänster.\ncatalog:variable_text:47711:15706:16071\ncatalog:variable_text:47711:16071:16436\ncatalog:variable_text:47711:17167:17532\ncatalog:variable_text:47711:17532:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-namn"
+fields = { "description" = "Namn på den produktgrupp inom vilken ett index beräknas i PPI. Produktgruppen är en SPIN-kod på någon nivå (avdelning, huvudgrupp, grupp, undergrupp, detaljgrupp, total) eller en sammanvägd klass av flera produktgrupper, 2021 enligt SPIN eller KN." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2021 anger att sammanvägda klasser kan bygga på SPIN eller KN.\ncatalog:variable_text:47714:15706:18628\ncatalog:variable_text:47714:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-prodgrpkod"
+fields = { "description" = "Kod för den produktgrupp inom vilken ett index beräknas i PPI och TPI. I PPI är koden 2013–2020 en SPIN-kod på någon nivå (avdelning, huvudgrupp, grupp, undergrupp, detaljgrupp eller total) eller en sammanvägd klass av flera SPIN-koder, och från 2021 en kod enligt SPIN 2015 (för en del av 2021 års uppgifter inom avdelning G–S). I TPI 2012–2013 är koden en SPIN-kod på femsiffernivå eller en NR-produktgrupp." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: PPI och TPI använder SPIN-koder, KPI egna produktkoder (egen variabel). Rättar 'sammanvägd klass enligt SPIN eller KN' från 2021, som inget av texterna stöder.\ncatalog:variable_text:47717:14610:16071\ncatalog:variable_text:47717:17897:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:produktgrupp-kpi"
+fields = { "description" = "Kod för den produktgrupp inom vilken KPI beräknas. Från 2017 är koderna KPI:s egendefinierade produktkoder." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från produktgrupp-prodgrpkod: KPI använder egna produktkoder, inte SPIN.\ncatalog:variable_text:47717:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:produktid-prodid"
+fields = { "description" = "Löpnummer som identifierar produkten (prodkod). Används tillsammans med Produktgruppsid för att koppla ihop produkt och produktgrupp." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; senare år anger hur nyckeln används.\ncatalog:variable_text:47727:14610:17167\ncatalog:variable_text:47727:17167:17897\ncatalog:variable_text:47727:18262:20819"

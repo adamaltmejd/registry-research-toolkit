@@ -377,3 +377,15 @@ kind = "set"
 subject = "var:upprakningstal-b52"
 fields = { "label" = "Uppräkningstal (individer)" }
 evidence = "#2102 same-label cluster 'Uppräkningstal' (4 variables): judged different meaning, medium confidence; Opdefs differ: company weights (A41 for företag, A51 for företag/organisationer) versus individual weights (B42 for private-sector individuals, B52 for individuals), each in its own survey wave."
+
+[[statement]]
+kind = "set"
+subject = "var:nyckel-key-l"
+fields = { "description" = "Nyckel mellan individer och företag: varje individ får det löpnummer som satts på det företag eller den organisation där individen är anställd." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 lägger till organisationer. Rättar 'tiildelas'.\ncatalog:variable_text:48736:11688:12053\ncatalog:variable_text:48736:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "var:tabell"
+fields = { "description" = "Indikator för om tabellen innehåller uppgifter om individer eller om företag och organisationer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 skriver organisation i stället för företag.\ncatalog:variable_text:48740:11688:12053"

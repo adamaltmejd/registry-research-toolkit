@@ -1612,3 +1612,33 @@ kind = "set"
 subject = "set:varuklassificering-kpi"
 fields = { "description" = "Varans konsumentprisindexkod (KPIK), den kod som KPI använder för artiklarna, på detaljerad och aggregerad nivå (KPIK0), samt kodernas namn i klartext. Registret över koder kommer från ES/PR (för den detaljerade koden 2003 och från 2015, för den aggregerade 2003, 2005–2011 och från 2015), liksom de aggregerade namnen 2003 och 2005–2017; 2003 och 2015–2018 kodas varorna till den detaljerade koden maskinellt eller manuellt. Från 2019 kopplas den detaljerade koden till varje vara som lämnats via datakassaregister, och 2019 finns även en kod för varor inlämnade på enkät." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nES/PR anges för KPIK 2003 och 2015–2023, för KPIK0 2003, 2005–2011 och 2015–2023 och för de aggregerade namnen 2003 och 2005–2017; maskinell eller manuell kodning anges för KPIK 2003 och 2015–2018.\ncatalog:variable_text:45070:17897:18262\ncatalog:variable_text:45075:12053:12418\ncatalog:variable_text:45075:12418:15340\ncatalog:variable_text:45075:15340:15706\ncatalog:variable_text:45075:17897:19723\ncatalog:variable_text:45076:12053:12418\ncatalog:variable_text:45076:16436:17897\ncatalog:variable_text:45126:12053:12418\ncatalog:variable_text:45127:12053:12418\ncatalog:variable_text:45127:12418:12784\ncatalog:variable_text:45127:12784:15340\ncatalog:variable_text:45127:15340:16436\ncatalog:variable_text:45127:16436:16801\ncatalog:variable_text:45127:16801:17167\ncatalog:variable_text:45127:17532:19723\nRegisterinformation.csv:row=303533\nRegisterinformation.csv:row=969994"
+
+[[statement]]
+kind = "set"
+subject = "var:forsaljning-exklusive-moms-ags"
+fields = { "description" = "Försäljning exklusive moms enligt uppgift från AGS." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2004 upprepar bara 'Ags'.\ncatalog:variable_text:45024:12418:12784\ncatalog:variable_text:45024:12784:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:imputerad"
+fields = { "description" = "Anger om variabelvärdet är imputerat (beräknat): 1 om det är imputerat, 0 om inte." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2003 saknar kodförklaringen.\ncatalog:variable_text:45066:11323:11688\ncatalog:variable_text:45066:12053:12418\ncatalog:variable_text:45066:12784:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:registerstatus"
+fields = { "description" = "Företagets registerstatus: 1 om företaget är aktivt, annars en annan kod. Från 2003 har nedlagda och vilande företag kod 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; från 2003 anges koden för nedlagda och vilande företag.\ncatalog:variable_text:45098:11323:12053\ncatalog:variable_text:45098:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:stratum"
+fields = { "description" = "Det stratum företaget tillhör i det stratifierade urvalet. Stratumindelningen görs efter företagens försäljning enligt momsregistret, för att optimera urvalet och hålla nere uppgiftslämnarbördan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; texterna skiljer bara i detaljnivå.\ncatalog:variable_text:45103:11323:12053\ncatalog:variable_text:45103:12053:12418\ncatalog:variable_text:45103:15340:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:uppgiftstatus"
+fields = { "description" = "Status för företagets uppgifter, till exempel om de godkänts utan ändring eller rättats manuellt. 2001–2010 betyder status 4 att uppgifterna är korrekta, och 2012–2014 används bara uppgifter med status 4 i skattningarna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nRättad efter granskning: uppgifter som bara gäller vissa år anges med sina år, och det som texterna inte stöder är struket.\ncatalog:variable_text:45108:11323:12053\ncatalog:variable_text:45108:12053:12418\ncatalog:variable_text:45108:15340:16436"

@@ -1461,3 +1461,33 @@ kind = "set"
 subject = "set:valdistrikt"
 fields = { "description" = "Valdistriktet där personen är röstberättigad enligt röstlängden som fastställs 30 dagar före valdagen, enligt Valmyndighetens indelning. Det anges som fyrsiffrig distriktskod som blir unik tillsammans med kommunkoden, som fullständig kod med län och kommun (llkkdddd) och som namn." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nKodformerna och namnet delar definitionen; OP anger röstlängden och att fyrsiffrig kod kräver kommunkod.\ncatalog:variable_text:14875:17897:18262\ncatalog:variable_text:14876:14245:14610\ncatalog:variable_text:14877:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "valdeltagande: undnr @2004"
+fields = { "operational_definition" = "Urvalspersonerna i valdeltagandeundersökningen tillhör en av undersökningens fyra urvalsdelar. Urvalsdelarna har ett unikt id." }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope.\n\nThe 2004 operational definition is the derivation rule of natsv (naturalised Swedish citizen) and contradicts undnr's definition and value set (same set 1999–2014). The correction is undnr's own text of 1999, 2009 and 2014. The raw SCB export (Registerinformation.csv, current-scb-inputs 2026-03) carries this text itself; the reader places it faithfully.\ncatalog:occurrence:64400\ncatalog:occurrence:64330"
+
+[[statement]]
+kind = "set"
+subject = "var:natsv"
+fields = { "description" = "Om personen är naturaliserad svensk medborgare, det vill säga har bytt till svenskt medborgarskap. Härleds ur registret över totalbefolkningen: värdet 1 om medborgarskapsdatum är senare än födelsedatum och medborgarland är Sverige, eller om medborgarskapsdatum saknas, födelselandet inte är Sverige och medborgarlandet är Sverige; annars 0." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma härledning; vissa år anger källan registret över totalbefolkningen.\ncatalog:variable_text:14840:10592:10957\ncatalog:variable_text:14840:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:senaste-invandringsdatum"
+fields = { "description" = "Datum för personens senaste invandring till Sverige, enligt registret över totalbefolkningen (RTB). 1999 kompletteras uppgiften från RTB 1998 för poster som inte matchade mot RTB 1999." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 1999 anger kompletteringen från RTB 1998, 2009 en hänvisning som utelämnas.\ncatalog:variable_text:14859:10592:10957\ncatalog:variable_text:14859:12418:12784\ncatalog:variable_text:14859:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:undnr"
+fields = { "description" = "Nummer som identifierar vilken av valdeltagandeundersökningens fyra urvalsdelar personen tillhör." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDen avvikande texten kom från en annan kolumn i SCB:s export och är rättad på förekomsten. 2004 hade härledningsregeln för natsv.\ncatalog:variable_text:14867:10592:10957\ncatalog:variable_text:14867:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "var:uvikt1-aku"
+fields = { "description" = "AKU-urvalet består av urval dragna vid tre olika år. Variabeln anger andelen svarande för respektive urvalsår, beräknad på det totala antalet svarande. Personer som tillhör andra urval än AKU-urvalet får värdet 0." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2009 formulerar nollvärdet för andra urval annorlunda ('O' läses som 0).\ncatalog:variable_text:14873:10592:10957\ncatalog:variable_text:14873:14245:14610"

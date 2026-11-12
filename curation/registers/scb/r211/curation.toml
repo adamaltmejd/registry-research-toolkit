@@ -856,3 +856,15 @@ kind = "set"
 subject = "set:produktionsomrade"
 fields = { "description" = "Det produktionsområde som odlingen ligger i, enligt indelningen av Sverige i 8 produktionsområden, som används i skattningarna, eller i 18 produktionsområden." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF delas; OP skiljer 8-indelningen (används i skattningarna) och 18-indelningen.\ncatalog:variable_text:48992:16801:17532\ncatalog:variable_text:48992:17532:17897\ncatalog:variable_text:48995:16801:19358"
+
+[[statement]]
+kind = "set"
+subject = "skord-av-slattervall-fr-o-m-2016: telefon2 @2016"
+fields = { "operational_definition" = "Telefonnummer 2 till jordbruksföretaget." }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope.\n\nThe 2016 export documents telefon2 twice; the first row ('Telefonnummer 1 till jordbruksföretaget', the text of telefon1) is the one the reader keeps, the second row gives 'Telefonnummer 2', as do 2017–2024 and the label.\ncatalog:occurrence:446597\ncatalog:occurrence:446641"
+
+[[statement]]
+kind = "set"
+subject = "var:telefon2"
+fields = { "description" = "Andra telefonnumret till jordbruksföretaget." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\n2016 dokumenteras två gånger; den första raden har telefon1:s text och den andra 'Telefonnummer 2', som 2017–2024 och etiketten. Förekomsten 2016 är rättad.\ncatalog:variable_text:49004:16801:17167\ncatalog:variable_text:49004:17167:19358\nRegisterinformation.csv:row=429759\nRegisterinformation.csv:row=429761"

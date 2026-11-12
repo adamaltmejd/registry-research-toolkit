@@ -1955,3 +1955,33 @@ kind = "set"
 subject = "set:utbildningsform"
 fields = { "description" = "Utbildningsform för det program eleven är inskriven på: högskoleförberedande program, yrkesprogram eller introduktionsprogram enligt Gy11, eller nationellt, specialutformat, individuellt eller fristående program enligt Lpf94. Uppgiften skapas ur studievägskoden, i vissa år tillsammans med huvudman, och finns både för nuvarande utbildning och för den utbildningsform eleven startade på." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nGemensam DEF med kategorierna för Gy11 och Lpf94; OP anger härledning ur studieväg och huvudman och skiljer nuvarande och vid start.\ncatalog:variable_text:29982:10879:10880\ncatalog:variable_text:29982:15262:15263\ncatalog:variable_text:29982:15993:15994\ncatalog:variable_text:29982:16723:16724\ncatalog:variable_text:29982:17089:17090\ncatalog:variable_text:29982:17454:17455\ncatalog:variable_text:29983:17089:17090\ncatalog:variable_text:29983:17454:17455"
+
+[[statement]]
+kind = "set"
+subject = "var:ar"
+fields = { "description" = "Kalenderår som uppgifterna avser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; bara formuleringen skiljer.\ncatalog:variable_text:29886:9418:9419\ncatalog:variable_text:29886:15993:15994"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Personens kön, härlett från personnumrets näst sista siffra: udda siffra är man, jämn siffra kvinna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma härledning; W1 är mer utförlig. Rättar 'uifrån'.\ncatalog:variable_text:29926:9418:9419\ncatalog:variable_text:29926:15993:15994"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "description" = "Län där skolan ligger, det vill säga där studierna bedrivs. Till 2012 härleds länet från skolkodens två första positioner." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; W0 anger härledningen från skolkoden. Rättar 'uifrån'.\ncatalog:variable_text:29927:9418:9419\ncatalog:variable_text:29927:15993:15994"
+
+[[statement]]
+kind = "set"
+subject = "var:nybar"
+fields = { "description" = "Om eleven är nybörjare i gymnasieskolan. Från 2020 anges 1 om eleven går i årskurs 1, inte har funnits i gymnasieskolan tidigare och är yngre än 20 år, annars 0." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; härledningsregeln anges från 2020. Rättar 'gymansiet'.\ncatalog:variable_text:29937:18184:18185\ncatalog:variable_text:29937:18550:18551\ncatalog:variable_text:29937:19280:19281"
+
+[[statement]]
+kind = "set"
+subject = "var:termin"
+fields = { "description" = "Ordningsnummer för den aktuella höstterminen i elevens gymnasieutbildning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; rättar 'aktuell höstterminen'.\ncatalog:variable_text:29979:8323:8324\ncatalog:variable_text:29979:9418:9419"

@@ -1313,3 +1313,9 @@ kind = "set"
 subject = "var:fodelsedatum-numerisk"
 fields = { "label" = "Födelsedatum (numeriskt SAS-datum)" }
 evidence = "#2102 same-label cluster 'Födelsedatum' (2 variables): judged different meaning, high confidence; Beskrivningen anger att FODDATN är numeriskt SAS-datum; FODDAT är den andra kolumnen i samma tabeller."
+
+[[statement]]
+kind = "set"
+subject = "var:period"
+fields = { "description" = "Statistikperioden som uppgiften avser. I tabellen SOL-insatser 2007–2012 anges datumet som statistiken gäller till; i tabellerna över påbörjade, avslutade och pågående insatser från 2012 anges år och månad." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp i olika tabeller; formatet skiljer sig mellan datum och år-månad.\ncatalog:variable_text:64171:13787:15522\ncatalog:variable_text:64171:15522:2932897"

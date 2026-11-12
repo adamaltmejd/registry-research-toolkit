@@ -3942,3 +3942,45 @@ kind = "set"
 subject = "set:nybyggnadsar"
 fields = { "description" = "Byggnadens nybyggnadsår, dels enligt kommunens uppgift (tidigare hämtad från fastighetstaxeringen), dels i SCB:s version där kommunens uppgift kompletterats med SCB:s nybyggnadsstatistik." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda delar definitionen; OP skiljer kommunens uppgift från SCB:s kompletterade version.\ncatalog:variable_text:17379:16800:16801\ncatalog:variable_text:17443:16800:16801\ncatalog:variable_text:17443:19722:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fnr"
+fields = { "description" = "Unik identitet för fastigheten (registerenheten). I byggnadsinformationen är det främmande nyckel till den fastighet som byggnaden tillhör." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma identitet i alla tabeller; byggnadstabellen dokumenterar kolumnen både för byggnadens fastighet och för tredimensionellt utrymme eller ägarlägenhetsfastighet.\ncatalog:variable_text:17299:16800:16801\ncatalog:variable_text:17299:20453:20454\nRegisterinformation.csv:row=351164\nRegisterinformation.csv:row=351166\nRegisterinformation.csv:row=450844"
+
+[[statement]]
+kind = "set"
+subject = "var:inskrivningsfastighet-uuid"
+fields = { "description" = "Universellt unik identitet som refererar till inskrivningsfastigheten (främmande nyckel till IRFAST)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma referens; ordföljden i operationaliseringen är omkastad 2025.\ncatalog:variable_text:17327:17166:17167\ncatalog:variable_text:17327:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:ir-fast-uuid"
+fields = { "description" = "Universellt unik identitet som refererar till inskrivningsfastigheten (främmande nyckel till IRFAST)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma referens; ordföljden i operationaliseringen är omkastad från 2022.\ncatalog:variable_text:17329:17166:17167\ncatalog:variable_text:17329:19357:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:ridadrpl"
+fields = { "description" = "Riksnyckelid för adressplatsen. Riksnyckelid och riksnyckelprefix utgör tillsammans adressplatsens identitetsbegrepp i fastighetsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma identitet; byggnadstabellen formulerar samma sak med text gemensam för prefixet.\ncatalog:variable_text:17430:16800:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:rnpadrpl"
+fields = { "description" = "Riksnyckelprefix för adressplatsen. Riksnyckelid och riksnyckelprefix utgör tillsammans adressplatsens identitetsbegrepp i fastighetsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma identitet; byggnadstabellen formulerar samma sak med text gemensam för riksnyckelid.\ncatalog:variable_text:17438:16800:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:universalt-unik-identitet-registerenhet-fastighet"
+fields = { "description" = "Universellt unik identitet för registerenheten/fastigheten, som främmande nyckel." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma referens; adressplatstabellen säger fastighet, distriktstabellen registerenhet/fastighet.\ncatalog:variable_text:17479:17166:17167\ncatalog:variable_text:17479:17896:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:uuid"
+fields = { "description" = "Universellt unik identitet för registerposten i respektive tabell, till exempel adressen i adressplatsinformationen och entrén, lägenheten eller registerbyggnaden i byggnadsinformationen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; 2025 anger per tabell vilket objekt identiteten avser.\ncatalog:variable_text:17489:16800:16801\ncatalog:variable_text:17489:17166:17167\ncatalog:variable_text:17489:20453:20454"

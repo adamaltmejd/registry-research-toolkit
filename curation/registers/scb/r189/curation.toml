@@ -2496,3 +2496,21 @@ kind = "set"
 subject = "set:meritvarde"
 fields = { "description" = "Summan av elevens bästa betyg i slutbetyget från årskurs 9, där bokstavsbetygen ersätts med poäng (A=20, B=17,5, C=15, D=12,5, E=10, eller i den äldre skalan M=20, V=15, G=10). Meritvärdet beräknas på de 16 bästa betygen (högst 320) eller på de 17 bästa inklusive moderna språk som språkval (högst 340). Värdet 0 innebär att eleven inte fått kunskapsrelaterade betyg eller att uppgift saknas." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nGemensam DEF; OP skiljer 16 respektive 17 bästa betyg med maxvärden och poängskalor för båda betygsskalorna samt betydelsen av 0.\ncatalog:variable_text:28638:10043:15522\ncatalog:variable_text:28638:15522:15887\ncatalog:variable_text:28638:15887:16252\ncatalog:variable_text:28639:15887:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-far"
+fields = { "description" = "Faderns personnummer. Tomt värde innebär att ingen uppgift om far har hittats i registret. Från 2016 anges personnumret med tolv siffror inklusive sekelsiffra." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma uppgift; från 2016 anges formatet med sekelsiffra.\ncatalog:variable_text:28650:6390:16983\ncatalog:variable_text:28650:16983:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-mor"
+fields = { "description" = "Moderns personnummer. Tomt värde innebär att ingen uppgift om mor har hittats i registret. Från 2016 anges personnumret med tolv siffror inklusive sekelsiffra." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma uppgift; från 2016 anges formatet med sekelsiffra.\ncatalog:variable_text:28651:6390:16983\ncatalog:variable_text:28651:16983:20270"
+
+[[statement]]
+kind = "set"
+subject = "var:termin"
+fields = { "description" = "Ordningsnumret för aktuell termin i elevens utbildning. 2002–2003 kodas variabeln i stället med VT och årtalets två sista siffror, för den termin då slutbetyget gavs." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma kolumn; 2002–2003 anger en annan historisk kodning, från 2015 att variabeln är en hjälpvariabel.\ncatalog:variable_text:28686:10043:11869\ncatalog:variable_text:28686:11869:12234\ncatalog:variable_text:28686:16617:20270"

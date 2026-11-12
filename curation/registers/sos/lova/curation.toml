@@ -2938,3 +2938,15 @@ kind = "set"
 subject = "set:yrkesstallning"
 fields = { "description" = "Om personen i november var sjöman, anställd (utom sjöman), företagare eller företagare i eget aktiebolag, eller saknar kontrolluppgift, som kod eller klartext." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda delar katalogtexten med värdena; benämningarna anger november och kod respektive klartext.\ncatalog:variable_text:63655:9131:2932897\ncatalog:variable_text:63656:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:kategori"
+fields = { "description" = "Kategori för beviset: LEG för legitimation eller SPEC för specialitet. Bevisnumret är unikt inom varje kategori." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma kolumn; W0 anger syftet med kategorin och W1 dess koder.\ncatalog:variable_text:63565:9131:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:sjukvardsregion"
+fields = { "description" = "Sjukvårdsregion, bildad i LOVA utifrån arbetsställets kommun. Regionerna bygger på kommuner och överensstämmer inte helt med länen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp i data- och styrtabell; rättar 'arbetställekommun' och 'överenstämmer'.\ncatalog:variable_text:63600:9131:2932897"

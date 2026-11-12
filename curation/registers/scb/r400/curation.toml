@@ -580,3 +580,21 @@ kind = "set"
 subject = "set:typomrade"
 fields = { "description" = "TYKO för den fastighet där personen är folkbokförd, var folkbokförd vid en händelse (födelse, invandring, utvandring eller efter en flytt) eller var folkbokförd före flytten, härlett från fastighetens hustyp, juridiska form och byggår. Två indelningar finns: med storleken på tätorten och nivåfaktorn i det lokala området vid fastighetstaxeringen, eller med stadsdelsområde." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP säger efter flyttidpunkten, inte inrikes; tätort/nivåfaktor respektive stadsdelsområde skiljer tyko från tykousk.\ncatalog:variable_text:51464:19723:20088\ncatalog:variable_text:51464:20088:20089\ncatalog:variable_text:51465:19723:20088\ncatalog:variable_text:51465:20088:20089\ncatalog:variable_text:51466:19723:20089\ncatalog:variable_text:51467:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ar"
+fields = { "description" = "Kalenderår för händelsen som raden avser: dödsfall, födelse, inrikes flytt, invandring eller utvandring." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma kolumn i parallella händelsetabeller; operationaliseringen anger tabellens händelse.\ncatalog:variable_text:51429:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fastighetens-identitetsnummer"
+fields = { "description" = "Unikt identitetsnummer för den fastighet där personen är folkbokförd. I händelsetabellerna avses fastigheten vid dödsfallet, födelsen, invandringen eller utvandringen, respektive efter inrikes flytt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma kolumn i parallella tabeller; operationaliseringen anger tidpunkten per tabell.\ncatalog:variable_text:51434:19723:20088\ncatalog:variable_text:51434:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lagenhetens-identitetsnummer"
+fields = { "description" = "Unikt identitetsnummer för den lägenhet där personen är folkbokförd. I händelsetabellerna avses lägenheten vid dödsfallet, födelsen, invandringen eller utvandringen, respektive efter inrikes flytt." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma kolumn i parallella tabeller; operationaliseringen anger tidpunkten per tabell.\ncatalog:variable_text:51452:19723:20088\ncatalog:variable_text:51452:20088:20089"

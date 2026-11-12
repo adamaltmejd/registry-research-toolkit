@@ -242,3 +242,9 @@ kind = "set"
 subject = "set:smaortskod"
 fields = { "description" = "Kod för småort, SCB:s regionala indelning där koncentrerad bebyggelse med 50–199 invånare avgränsas, enligt det aktuella kodsystemet och, 1990–2015, enligt det äldre systemet för kodsättning." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF delas; OP skiljer aktuell kod och äldre kodsättning (So1990–So2015).\ncatalog:variable_text:49899:7305:7670\ncatalog:variable_text:49899:9131:9496\ncatalog:variable_text:49899:10957:11323\ncatalog:variable_text:49899:12784:13149\ncatalog:variable_text:49899:14610:14975\ncatalog:variable_text:49899:16436:16801\ncatalog:variable_text:49899:18262:18628\ncatalog:variable_text:49899:19358:19723\ncatalog:variable_text:49900:7305:7670\ncatalog:variable_text:49900:9131:9496\ncatalog:variable_text:49900:10957:11323\ncatalog:variable_text:49900:12784:13149\ncatalog:variable_text:49900:14610:14975\ncatalog:variable_text:49900:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:registreringsar"
+fields = { "description" = "Referensår för registret Småorter som uppgiften avser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen skiljer bara i vilket referensår som nämns.\ncatalog:variable_text:49897:7305:7670\ncatalog:variable_text:49897:9131:9496\ncatalog:variable_text:49897:10957:11323\ncatalog:variable_text:49897:12784:13149\ncatalog:variable_text:49897:14610:14975\ncatalog:variable_text:49897:16436:16801\ncatalog:variable_text:49897:19358:19723"

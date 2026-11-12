@@ -18286,3 +18286,261 @@ kind = "set"
 subject = "set:yrke"
 fields = { "description" = "Personens yrke i huvudsysslan, i bisysslan och i det senaste eller tidigare arbetet, som svar på frågan om yrke (från 2021 även i fritext), huvudsakliga arbetsuppgifter och kodat yrke. Yrket kodas utifrån frågorna om yrke och arbetsuppgifter, till och med 2015 enligt SSYK, på två siffror från 1987, på tre och fyra siffror från 1997 och på en siffra 1997–1998 och 2005–2015; från 2015 enligt SSYK 2012 på fyra siffror och från 2011 enligt ISCO-08 på en till fyra siffror. De kodade yrkena enligt SSYK 2005–2015 och ISCO-08 för personer utan arbete avser den som haft arbete de senaste 8 åren." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nÅttaårsgränsen anges bara för de kodade variablerna för personer utan arbete 2005–2015 (SSYK) och 2011–2026 (ISCO-08); äldre SSYK slutar 2015.\ncatalog:variable_text:9033:6209:12874\ncatalog:variable_text:9043:9496:12874\ncatalog:variable_text:9044:9862:12874\ncatalog:variable_text:9045:9862:12874\ncatalog:variable_text:9108:18628:20819\ncatalog:variable_text:9109:18628:20819\ncatalog:variable_text:9130:14975:15340\ncatalog:variable_text:9204:18628:20819\ncatalog:variable_text:9205:18628:20819\ncatalog:variable_text:9211:12874:18628\ncatalog:variable_text:9211:18628:20819\ncatalog:variable_text:9229:6209:12874\ncatalog:variable_text:9230:9862:12874\ncatalog:variable_text:9231:9862:12874\ncatalog:variable_text:9246:18628:20819\ncatalog:variable_text:9247:14975:18628\ncatalog:variable_text:9247:18628:20819\ncatalog:variable_text:9250:14975:18628\ncatalog:variable_text:9255:12874:18628\ncatalog:variable_text:9255:18628:20819\ncatalog:variable_text:9547:18628:20089\ncatalog:variable_text:9547:20089:20454\ncatalog:variable_text:9575:12874:18628\ncatalog:variable_text:9575:18628:20819\ncatalog:variable_text:9651:6209:12874\ncatalog:variable_text:9652:9862:12874\ncatalog:variable_text:9653:9862:12874\ncatalog:variable_text:9694:18628:20819\ncatalog:variable_text:9696:18628:20819\ncatalog:variable_text:9699:14975:18628\ncatalog:variable_text:9699:18628:20819\ncatalog:variable_text:9700:14975:18628\ncatalog:variable_text:9702:14975:18628\ncatalog:variable_text:10139:12874:20819\ncatalog:variable_text:10214:12874:18628\ncatalog:variable_text:10214:18628:20819\ncatalog:variable_text:10298:16436:18628\ncatalog:variable_text:10298:18628:20819\ncatalog:variable_text:10299:18628:20819\ncatalog:variable_text:10300:14975:18628\ncatalog:variable_text:10300:18628:20819\ncatalog:variable_text:10301:12874:16801\ncatalog:variable_text:10302:9862:10592\ncatalog:variable_text:10302:12874:16801\ncatalog:variable_text:10303:12874:16801\ncatalog:variable_text:10304:14975:18628\ncatalog:variable_text:10304:18628:20819\ncatalog:variable_text:10305:12874:16801\ncatalog:variable_text:10307:12874:16801\ncatalog:variable_text:10308:14975:18628\ncatalog:variable_text:10308:18628:20819\ncatalog:variable_text:10310:12874:16801\ncatalog:variable_text:10311:12874:16801\ncatalog:variable_text:10312:14975:18628\ncatalog:variable_text:10312:18628:20819\ncatalog:variable_text:10315:12874:16801\ncatalog:variable_text:10316:16436:18628\ncatalog:variable_text:10317:18628:20819\nRegisterinformation.csv:row=794414"
+
+[[statement]]
+kind = "set"
+subject = "aku-1987-mars-2005: BiSNI92 @1990..1991"
+fields = { "operational_definition" = "Utifrån svaren på frågorna G17 och G18 har kodats enligt SNI69. Därefter har koder enligt SNI92 bildats genom sannolikhetslänkning." }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope.\n\nBiSNI92 and BiSNI69 swap their operational definitions in 1990–1991: BiSNI92 carries the SNI69 text and BiSNI69 the SNI92 text, while the value sets follow the column names (BiSNI69 1991 uses the SNI69 set of 1993–1994). The correction is BiSNI92's own 1992 text, same questions G17 and G18. The raw SCB export (Registerinformation.csv, current-scb-inputs 2026-03) carries this text itself; the reader places it faithfully.\ncatalog:occurrence:10906\ncatalog:occurrence:11050\ncatalog:occurrence:11203"
+
+[[statement]]
+kind = "set"
+subject = "aku-1987-mars-2005: BiSNI69 @1990..1991"
+fields = { "operational_definition" = "Frågorna G17 och G18, svaren kodas" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope.\n\nBiSNI69 carries BiSNI92's SNI92 text in 1990–1991 (swapped with BiSNI92). The correction is BiSNI69's own 1992 text. The raw SCB export (Registerinformation.csv, current-scb-inputs 2026-03) carries this text itself; the reader places it faithfully.\ncatalog:occurrence:10905\ncatalog:occurrence:11049\ncatalog:occurrence:11202"
+
+[[statement]]
+kind = "set"
+subject = "var:alsni"
+fields = { "description" = "Näringsgren i senaste arbete, kodad enligt SNI69 (Svensk näringsgrensindelning) utifrån svaren på frågorna om det senaste arbetet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition alla år; från 1988 anges att svaren på frågorna M30–M32 kodas.\ncatalog:variable_text:9039:6209:6574\ncatalog:variable_text:9039:6574:6940\ncatalog:variable_text:9039:6940:7305\ncatalog:variable_text:9039:7305:7670"
+
+[[statement]]
+kind = "set"
+subject = "var:alsni69"
+fields = { "description" = "Näringsgren i senaste arbete, kodad enligt SNI69 (Svensk näringsgrensindelning) utifrån svaren på frågorna om det senaste arbetet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; endast frågenumren ändras (M30–M32 till M28–M29 från 1993).\ncatalog:variable_text:9041:7670:8401\ncatalog:variable_text:9041:8401:9131"
+
+[[statement]]
+kind = "set"
+subject = "var:alsni92"
+fields = { "description" = "Näringsgren i senaste arbete enligt SNI92 (Svensk näringsgrensindelning). Svaren på frågorna om det senaste arbetet kodas först enligt SNI69, varefter koder enligt SNI92 bildas genom sannolikhetslänkning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma härledning alla år; 1987 saknar SNI92 i definitionen men har samma operationalisering.\ncatalog:variable_text:9042:6209:6574\ncatalog:variable_text:9042:6574:6940\ncatalog:variable_text:9042:7305:7670\ncatalog:variable_text:9042:7670:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-hogskolepoang"
+fields = { "description" = "Sammanlagt antal avklarade högskolepoäng. Från 2021 ställs frågan till personer 15–24 år som är aktivt studerande på högskola; vissa 15–17-åringar får inte frågan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; frågetexten ersätts 2021 av frågefiltret, som anges med år.\ncatalog:variable_text:9070:15706:18628\ncatalog:variable_text:9070:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetskraftsstatus-aldre"
+fields = { "description" = "Arbetskraftsstatus enligt en tidigare svensk definition, som användes till och med september 2007. Härledd variabel." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W0 och W2 lägger till härledningslogik i kod, som sammanfattas.\ncatalog:variable_text:9095:6209:12874\ncatalog:variable_text:9095:12874:17167\ncatalog:variable_text:9095:17167:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstallenummer-i-bisysslan"
+fields = { "description" = "Arbetsställenummer för bisysslan, kodat utifrån uppgiven arbetsgivare. Från 2021 matchas den insamlade arbetsplatsen mot register, uppgiften hämtas i vissa fall från AGI-registret och vid kontrollintervju från tidigare omgång." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma variabel; 2021 lägger till registermatchning och hämtning från AGI och tidigare omgång.\ncatalog:variable_text:9117:6209:12874\ncatalog:variable_text:9117:12874:17167\ncatalog:variable_text:9117:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstallenummer-i-huvudsysslan"
+fields = { "description" = "Arbetsställenummer för huvudsysslan. 2005–2020 kodas det utifrån angiven arbetsgivare." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; kodningen utifrån arbetsgivare anges bara 2005–2020 och anges med år, W0 anger bara CFAR.\ncatalog:variable_text:9118:6209:8035\ncatalog:variable_text:9118:12874:16436\ncatalog:variable_text:9118:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:barn10arman"
+fields = { "description" = "Födelsedatum för det 10:e yngsta barnet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen anger frågenummer eller, 2017–2020, formatet år och månad, som utelämnas.\ncatalog:variable_text:9145:12874:13149\ncatalog:variable_text:9145:17167:18628\ncatalog:variable_text:9145:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:barn7arman"
+fields = { "description" = "Födelsedatum för det 7:e yngsta barnet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen anger frågenummer eller, 2017–2020, formatet år och månad, som utelämnas.\ncatalog:variable_text:9162:12874:13149\ncatalog:variable_text:9162:17167:18628\ncatalog:variable_text:9162:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:barn8arman"
+fields = { "description" = "Födelsedatum för det 8:e yngsta barnet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen anger frågenummer eller, 2017–2020, formatet år och månad, som utelämnas.\ncatalog:variable_text:9164:12874:13149\ncatalog:variable_text:9164:17167:18628\ncatalog:variable_text:9164:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:barn9arman"
+fields = { "description" = "Födelsedatum för det 9:e yngsta barnet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen anger frågenummer eller, 2017–2020, formatet år och månad, som utelämnas.\ncatalog:variable_text:9166:12874:13149\ncatalog:variable_text:9166:17167:18628\ncatalog:variable_text:9166:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-fodelsedatum-3e-yngsta"
+fields = { "description" = "Födelsedatum för det 3:e yngsta barnet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen anger frågenummer eller, 2017–2020, formatet år och månad, som utelämnas.\ncatalog:variable_text:9178:12874:13149\ncatalog:variable_text:9178:17167:18628\ncatalog:variable_text:9178:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-fodelsedatum-4e-yngsta"
+fields = { "description" = "Födelsedatum för det 4:e yngsta barnet; 2017–2020 anges år och månad." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen anger frågenummer eller, 2017–2020, formatet år och månad, som utelämnas.\ncatalog:variable_text:9180:12874:13149\ncatalog:variable_text:9180:17167:18628\ncatalog:variable_text:9180:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-fodelsedatum-5e-yngsta"
+fields = { "description" = "Födelsedatum för det 5:e yngsta barnet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen anger frågenummer eller, 2017–2020, formatet år och månad, som utelämnas.\ncatalog:variable_text:9182:12874:13149\ncatalog:variable_text:9182:17167:18628\ncatalog:variable_text:9182:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-fodelsedatum-6e-yngsta"
+fields = { "description" = "Födelsedatum för det 6:e yngsta barnet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen anger frågenummer eller, 2017–2020, formatet år och månad, som utelämnas.\ncatalog:variable_text:9184:12874:13149\ncatalog:variable_text:9184:17167:18628\ncatalog:variable_text:9184:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-fodelsedatum-nast-yngsta"
+fields = { "description" = "Födelsedatum för det näst yngsta barnet; 2017–2020 anges år och månad." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen anger frågenummer eller, 2017–2020, formatet år och månad, som utelämnas.\ncatalog:variable_text:9186:12874:13149\ncatalog:variable_text:9186:17167:18628\ncatalog:variable_text:9186:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:barnets-fodelsedatum-yngsta"
+fields = { "description" = "Födelsedatum för det yngsta barnet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen anger frågenummer eller, 2017–2020, formatet år och månad, som utelämnas.\ncatalog:variable_text:9188:12874:13149\ncatalog:variable_text:9188:17167:18628\ncatalog:variable_text:9188:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:bisni"
+fields = { "description" = "Näringsgren i bisysslan enligt SNI92 (Svensk näringsgrensindelning). Svaren på frågorna om bisysslan kodas först enligt SNI69, och koder enligt SNI92 bildas därefter genom sannolikhetslänkning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDen avvikande texten kom från en annan kolumn i SCB:s export och är rättad på förekomsten. 1990–1991 hade SNI69-variabelns text.\ncatalog:variable_text:9227:6209:7305\ncatalog:variable_text:9227:7305:8035\ncatalog:variable_text:9227:8035:8401\ncatalog:variable_text:9227:8401:10957"
+
+[[statement]]
+kind = "set"
+subject = "var:husni"
+fields = { "description" = "Näringsgren i huvudsysslan enligt SNI69 (Svensk näringsgrensindelning), kodad utifrån svaren på frågorna om huvudsysslan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; frågenumren ändras 1990 och W2 nämner inte SNI69, men etiketten gör det.\ncatalog:variable_text:9643:6209:6940\ncatalog:variable_text:9643:6940:7305\ncatalog:variable_text:9643:7305:9131"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-urval"
+fields = { "description" = "Kommun där personen var folkbokförd vid urvalsdragningen, enligt kommunindelningen 2007-01-01." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; indelningsdatumet 2007-01-01 i W0 saknas i den parallella W1 (2017–2020) och utelämnas.\ncatalog:variable_text:9765:12874:17167\ncatalog:variable_text:9765:17167:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Personens kön, härlett från personnumret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition och härledning; endast formuleringen skiljer.\ncatalog:variable_text:9766:6209:12874\ncatalog:variable_text:9766:12874:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:matmanad"
+fields = { "description" = "Den månad som undersökningen avser. Från 2005 anges den som år och månad (ÅÅÅÅMM)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; formatet anges först från 2005.\ncatalog:variable_text:9791:6209:12874\ncatalog:variable_text:9791:12874:18628\ncatalog:variable_text:9791:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-i-bisysslan-sni69"
+fields = { "description" = "Näringsgren i bisysslan, kodad enligt SNI69 (Svensk näringsgrensindelning) utifrån svaren på frågorna om bisysslan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDen avvikande texten kom från en annan kolumn i SCB:s export och är rättad på förekomsten. 1990–1991 hade SNI92-variabelns text.\ncatalog:variable_text:9816:6209:6574\ncatalog:variable_text:9816:6574:6940\ncatalog:variable_text:9816:6940:7305\ncatalog:variable_text:9816:7305:8035\ncatalog:variable_text:9816:8035:9131"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2007-enbokstavskod-i-bisysslan"
+fields = { "description" = "Näringsgren i bisysslan enligt SNI2007, enbokstavskod. Kodas utifrån svaren på frågorna om bisysslan. Från 2021 hämtas uppgiften i vissa fall från AGI-uppgifter, och vid kontrollintervju från tidigare omgång." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; rättar 'Intevjupersonen' och sammanfattar 2021 års regler för AGI och kontrollintervju.\ncatalog:variable_text:9817:13879:17167\ncatalog:variable_text:9817:17167:18628\ncatalog:variable_text:9817:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2007-fyrsifferkod-i-bisysslan"
+fields = { "description" = "Näringsgren i bisysslan enligt SNI2007, fyrsifferkod. Kodas utifrån svaren på frågorna om bisysslan. Från 2021 hämtas uppgiften i vissa fall från AGI-uppgifter, och vid kontrollintervju från tidigare omgång." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2021 års regler för AGI och kontrollintervju sammanfattas.\ncatalog:variable_text:9819:13879:17167\ncatalog:variable_text:9819:17167:18628\ncatalog:variable_text:9819:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2007-tvasifferkod-i-bisysslan"
+fields = { "description" = "Näringsgren i bisysslan enligt SNI2007, tvåsifferkod. Kodas utifrån svaren på frågorna om bisysslan. Från 2021 hämtas uppgiften i vissa fall från AGI-uppgifter, och vid kontrollintervju från tidigare omgång." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2021 års regler för AGI och kontrollintervju sammanfattas.\ncatalog:variable_text:9821:13879:17167\ncatalog:variable_text:9821:17167:18628\ncatalog:variable_text:9821:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:rekater"
+fields = { "description" = "Om en nyanställning skett hos en tidigare arbetsgivare. Härleds från intervjufrågorna om den externa rekryteringen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; från 2017 anges kodningen från frågorna Exb8 och Exb9, som sammanfattas.\ncatalog:variable_text:9890:12874:17167\ncatalog:variable_text:9890:17167:18628\ncatalog:variable_text:9890:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:rekform"
+fields = { "description" = "Typ av rekryteringsform vid extern rekrytering. Härleds från intervjufrågorna om rekryteringen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; från 2017 anges kodningen från frågorna Exb1–Exb5, som sammanfattas.\ncatalog:variable_text:9891:12874:17167\ncatalog:variable_text:9891:17167:18628\ncatalog:variable_text:9891:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:rekpassiv"
+fields = { "description" = "Om rekryteringen var passiv, det vill säga att arbetsgivaren började tänka på nyanställning först vid kontakten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2021 anger kodningen från fråga Exb7 i stället för 'passiv rekrytering eller ej'.\ncatalog:variable_text:9894:12874:18628\ncatalog:variable_text:9894:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:sni2007-1bokstav"
+fields = { "description" = "Näringsgren i huvudsysslan enligt SNI2007, enbokstavskod. Kodas utifrån svaren på frågorna om huvudsysslan. Från 2021 hämtas uppgiften i vissa fall från AGI-uppgifter eller urvalsleveransen, och vid kontrollintervju från tidigare omgång; övriga fall kodas." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2021 års hämtningsregler sammanfattas.\ncatalog:variable_text:9944:13879:18628\ncatalog:variable_text:9944:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:sni2007-2siffror"
+fields = { "description" = "Näringsgren i huvudsysslan enligt SNI2007, tvåsifferkod. Kodas utifrån svaren på frågorna om huvudsysslan. Från 2021 hämtas uppgiften i vissa fall från AGI-uppgifter eller urvalsleveransen, och vid kontrollintervju från tidigare omgång; övriga fall kodas." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2021 års hämtningsregler sammanfattas.\ncatalog:variable_text:9945:13879:18628\ncatalog:variable_text:9945:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:sni2007-3siffror"
+fields = { "description" = "Näringsgren i huvudsysslan enligt SNI2007, tresifferkod. Kodas utifrån svaren på frågorna om huvudsysslan. Från 2021 hämtas uppgiften i vissa fall från AGI-uppgifter eller urvalsleveransen, och vid kontrollintervju från tidigare omgång; övriga fall kodas." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2021 års hämtningsregler sammanfattas.\ncatalog:variable_text:9946:13879:18628\ncatalog:variable_text:9946:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:sni2007-4siffror"
+fields = { "description" = "Näringsgren i huvudsysslan enligt SNI2007, fyrsifferkod. Kodas utifrån svaren på frågorna om huvudsysslan. Från 2021 hämtas uppgiften i vissa fall från AGI-uppgifter eller urvalsleveransen, och vid kontrollintervju från tidigare omgång; övriga fall kodas." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2021 års hämtningsregler sammanfattas.\ncatalog:variable_text:9947:13879:18628\ncatalog:variable_text:9947:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:studier-eftergymnasial-niva"
+fields = { "description" = "Om en aktivt studerande person även varit inskriven som aktivt studerande vid universitet eller högskola efter den 1 juli föregående år. Från 2021 ställs frågan till personer 15–24 år som studerar på annat än högskola; vissa 15–17-åringar får inte frågan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; frågetexten ersätts 2021 av frågefiltret, som anges med år.\ncatalog:variable_text:9998:15706:18628\ncatalog:variable_text:9998:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:svar-pa-om-man-sokt-mer-arbete-anstallda"
+fields = { "description" = "Anställdas svar på frågan om på vilket sätt de sökt mer arbete. Härledd variabel; 1992–2005 har den värdet 1 om svaret på frågan har värdet 1, annars 0." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; W1 anger härledningen från fråga M10, W0 bara 'härledd'.\ncatalog:variable_text:10025:6209:7305\ncatalog:variable_text:10025:8035:12874"
+
+[[statement]]
+kind = "set"
+subject = "var:uarbsni2007-5"
+fields = { "description" = "Näringsgren enligt SNI2007, femsifferkod, i det senaste arbetet för personer utan arbete som haft arbete de senaste 8 åren. Kodas utifrån svaren på frågorna om det senaste arbetet; från 2021 hämtas svaret vid kontrollintervju från tidigare omgång om situationen är densamma." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; rättar 'utiftån' och anger 2021 års regel för kontrollintervju med år.\ncatalog:variable_text:10174:13879:17167\ncatalog:variable_text:10174:17167:18628\ncatalog:variable_text:10174:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:undersysselsattning"
+fields = { "description" = "Om personen är undersysselsatt, det vill säga sysselsatt, vill öka sin arbetstid och kan börja arbeta mer inom 14 dagar. Härleds från frågorna om att vilja och kunna arbeta mer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; från 2017 anges härledningen i kod, som sammanfattas.\ncatalog:variable_text:10218:12874:17167\ncatalog:variable_text:10218:17167:18628\ncatalog:variable_text:10218:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:utb31524b"
+fields = { "description" = "Om personen har en examen från högskola eller universitet. Från 2021 ställs frågan till personer 15–24 år; vissa 15–17-åringar får inte frågan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; frågetexten ersätts 2021 av frågefiltret, som anges med år.\ncatalog:variable_text:10245:16071:18628\ncatalog:variable_text:10245:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:utb51524"
+fields = { "description" = "Om personen bekräftar att uppgiften om högsta avslutade utbildning i SCB:s utbildningsregister stämmer. Från 2021 ställs frågan till personer 15–24 år, bland 18–24-åringar till dem som är inskrivna på grundskola eller gymnasieskola; vissa 15–17-åringar får inte frågan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; frågetexten ersätts 2021 av frågefiltret, som anges med år.\ncatalog:variable_text:10250:15706:18628\ncatalog:variable_text:10250:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:utb61524b"
+fields = { "description" = "Om personen har slutbetyg från gymnasiet. Från 2021 ställs frågan till personer 15–24 år; vissa 15–17-åringar får inte frågan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; frågetexten ersätts 2021 av frågefiltret, som anges med år.\ncatalog:variable_text:10251:16071:18628\ncatalog:variable_text:10251:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:utb61524c"
+fields = { "description" = "Om personen har behörighet till högskola eller universitet. Från 2021 ställs frågan till personer 15–24 år; vissa 15–17-åringar får inte frågan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; frågetexten ersätts 2021 av frågefiltret, som anges med år.\ncatalog:variable_text:10252:16071:18628\ncatalog:variable_text:10252:18628:20819"

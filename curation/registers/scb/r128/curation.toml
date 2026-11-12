@@ -2800,3 +2800,687 @@ kind = "set"
 subject = "set:traktamente"
 fields = { "description" = "Ersättning från arbetsgivaren för de ökade levnadskostnaderna under en tjänsteresa (logi, högre måltidskostnader och småutgifter). Till och med 2018 anges inrikes och utrikes traktamente enligt schablon var för sig, både som antal kontrolluppgifter med sådan ersättning och som om sådan ersättning har utgått; från 2019 anges antal arbetsgivardeklarationer eller kontrolluppgifter med traktamente totalt. Från 2010 är antalen summerade per företag eller organisation. Varianterna med felaktiga värden (2020–2023) innehåller fel för vissa personer och används inte längre." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF 1996–2018 ger antal och indikator per inrikes/utrikes, DEF/OP 2019–2024 antal AGI/KU; summering per företag står i OP från 2010.\ncatalog:variable_text:45807:9496:14610\ncatalog:variable_text:45807:14610:17532\ncatalog:variable_text:45807:17532:17897\ncatalog:variable_text:45812:9496:14610\ncatalog:variable_text:45812:14610:17532\ncatalog:variable_text:45812:17532:17897\ncatalog:variable_text:45830:17897:20089\ncatalog:variable_text:45831:18262:19723\ncatalog:variable_text:45920:17897:20089\ncatalog:variable_text:45921:18262:19723\ncatalog:variable_text:45922:9496:14610\ncatalog:variable_text:45922:14975:15340\ncatalog:variable_text:45923:9496:14610\ncatalog:variable_text:45923:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-km-milersattning-foretag"
+fields = { "label" = "Antal km med milersättning, summa per företag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-km-milersattning-foretag"
+fields = { "tags" = ["transport"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-km-milersattning-foretag"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AntKmErs"
+fields = { "variable" = "antal-km-milersattning-foretag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: BetKmErs"
+fields = { "variable" = "antal-km-milersattning-foretag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-vissa-lonetillagg-foretag"
+fields = { "label" = "Avdrag för vissa lönetillägg, summa per företag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-vissa-lonetillagg-foretag"
+fields = { "tags" = ["taxation"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-vissa-lonetillagg-foretag"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: Avdrag"
+fields = { "variable" = "avdrag-vissa-lonetillagg-foretag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:bilforman-foretag"
+fields = { "label" = "Bilförmån, summa per företag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:bilforman-foretag"
+fields = { "tags" = ["income"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:bilforman-foretag"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: BilForman"
+fields = { "variable" = "bilforman-foretag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:bilforman-betald-foretag"
+fields = { "label" = "Bilförmån betald, summa per företag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:bilforman-betald-foretag"
+fields = { "tags" = ["income"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:bilforman-betald-foretag"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: BetErs"
+fields = { "variable" = "bilforman-betald-foretag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforman-foretag"
+fields = { "label" = "Bränsleförmån, summa per företag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforman-foretag"
+fields = { "tags" = ["income"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:bransleforman-foretag"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: DrivmErs"
+fields = { "variable" = "bransleforman-foretag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-egenavgifter-foretag"
+fields = { "label" = "Ersättning för egenavgifter, summa per företag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-egenavgifter-foretag"
+fields = { "tags" = ["income"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-egenavgifter-foretag"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: EgenErs"
+fields = { "variable" = "ersattning-egenavgifter-foretag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-resa-utomlands-bosatta-foretag"
+fields = { "label" = "Ersättning för resa till och från Sverige för utomlands bosatta, summa per företag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-resa-utomlands-bosatta-foretag"
+fields = { "tags" = ["transport"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-resa-utomlands-bosatta-foretag"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: BostRes"
+fields = { "variable" = "ersattning-resa-utomlands-bosatta-foretag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:formaner-forman-foretag"
+fields = { "label" = "Förmåner, summa per företag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:formaner-forman-foretag"
+fields = { "tags" = ["income"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:formaner-forman-foretag"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: Forman"
+fields = { "variable" = "formaner-forman-foretag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:hyresersattning-foretag"
+fields = { "label" = "Hyresersättning, summa per företag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:hyresersattning-foretag"
+fields = { "tags" = ["income"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:hyresersattning-foretag"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: HyresErs"
+fields = { "variable" = "hyresersattning-foretag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:kostnadsavdrag-foretag"
+fields = { "label" = "Kostnadsavdrag, summa per företag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:kostnadsavdrag-foretag"
+fields = { "tags" = ["taxation"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:kostnadsavdrag-foretag"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: AvdragUtgArb"
+fields = { "variable" = "kostnadsavdrag-foretag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:kostnadsersattningar-foretag"
+fields = { "label" = "Kostnadsersättningar, summa per företag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:kostnadsersattningar-foretag"
+fields = { "tags" = ["income"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:kostnadsersattningar-foretag"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: KostnErs"
+fields = { "variable" = "kostnadsersattningar-foretag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:loneink-arbetsstalle"
+fields = { "label" = "Kontant bruttolön m.m., summa per arbetsställe" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nArbetsställen - Uppgifter aggregerade till arbetsställenivå (KUAST) gives the amount summed per workplace; the employment and person tables give it per employment or person. The KUAST column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:loneink-arbetsstalle"
+fields = { "tags" = ["income"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nArbetsställen - Uppgifter aggregerade till arbetsställenivå (KUAST) gives the amount summed per workplace; the employment and person tables give it per employment or person. The KUAST column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:loneink-arbetsstalle"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nArbetsställen - Uppgifter aggregerade till arbetsställenivå (KUAST) gives the amount summed per workplace; the employment and person tables give it per employment or person. The KUAST column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen-uppgifter: Lon"
+fields = { "variable" = "loneink-arbetsstalle" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nArbetsställen - Uppgifter aggregerade till arbetsställenivå (KUAST) gives the amount summed per workplace; the employment and person tables give it per employment or person. The KUAST column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:loneink-foretag"
+fields = { "label" = "Kontant bruttolön m.m., summa per företag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:loneink-foretag"
+fields = { "tags" = ["income"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:loneink-foretag"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: Lon"
+fields = { "variable" = "loneink-foretag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-ersattningar-foretag"
+fields = { "label" = "Övriga ersättningar, summa per företag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-ersattningar-foretag"
+fields = { "tags" = ["income"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-ersattningar-foretag"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: OvrErs"
+fields = { "variable" = "ovriga-ersattningar-foretag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: OvrErsForskSkatt"
+fields = { "variable" = "ovriga-ersattningar-foretag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-skattepliktiga-ersattningar-foretag"
+fields = { "label" = "Övriga skattepliktiga ersättningar, summa per företag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-skattepliktiga-ersattningar-foretag"
+fields = { "tags" = ["income"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-skattepliktiga-ersattningar-foretag"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: OvrSkplErs"
+fields = { "variable" = "ovriga-skattepliktiga-ersattningar-foretag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ranta-foretag"
+fields = { "label" = "Ränta, summa per företag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ranta-foretag"
+fields = { "tags" = ["finance"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:ranta-foretag"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: Ranta"
+fields = { "variable" = "ranta-foretag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:rutunderlag-foretag"
+fields = { "label" = "RutUnderlag, summa per företag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:rutunderlag-foretag"
+fields = { "tags" = ["taxation"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:rutunderlag-foretag"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: HusHall"
+fields = { "variable" = "rutunderlag-foretag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: UlagRut"
+fields = { "variable" = "rutunderlag-foretag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:skatt-arbetsstalle"
+fields = { "label" = "Skatt, summa per arbetsställe" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nArbetsställen - Uppgifter aggregerade till arbetsställenivå (KUAST) gives the amount summed per workplace; the employment and person tables give it per employment or person. The KUAST column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:skatt-arbetsstalle"
+fields = { "tags" = ["taxation"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nArbetsställen - Uppgifter aggregerade till arbetsställenivå (KUAST) gives the amount summed per workplace; the employment and person tables give it per employment or person. The KUAST column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:skatt-arbetsstalle"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nArbetsställen - Uppgifter aggregerade till arbetsställenivå (KUAST) gives the amount summed per workplace; the employment and person tables give it per employment or person. The KUAST column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen-uppgifter: Skatt"
+fields = { "variable" = "skatt-arbetsstalle" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nArbetsställen - Uppgifter aggregerade till arbetsställenivå (KUAST) gives the amount summed per workplace; the employment and person tables give it per employment or person. The KUAST column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:skatt-foretag"
+fields = { "label" = "Skatt, summa per företag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:skatt-foretag"
+fields = { "tags" = ["taxation"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:skatt-foretag"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: Skatt"
+fields = { "variable" = "skatt-foretag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:skattepliktiga-ersattningar-ej-sociala-foretag"
+fields = { "label" = "Skattepliktiga ersättningar, ej underlag för sociala avgifter eller särskild löneskatt, summa per företag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:skattepliktiga-ersattningar-ej-sociala-foretag"
+fields = { "tags" = ["income"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:skattepliktiga-ersattningar-ej-sociala-foretag"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: OvrSkplErsEjArb"
+fields = { "variable" = "skattepliktiga-ersattningar-ej-sociala-foretag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstepension-foretag"
+fields = { "label" = "Tjänstepension, summa per företag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstepension-foretag"
+fields = { "tags" = ["transfers"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstepension-foretag"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: Pension"
+fields = { "variable" = "tjanstepension-foretag" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nFöretag - Uppgifter aggregerade till företagsnivå (KUAGG) gives the amount summed per company/organisation (SCB's sum of the persons' amounts); the employment and person tables give it per employment or person. A company sum is a different quantity from its parts, so the KUAGG column gets its own variable."
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-nattbefolkning: KostnErs where key = 'v6096'"
+fields = { "variable" = "kostnadsersattningar" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nWith the KUAGG KostnErs column split off to kostnadsersattningar-foretag, the employment-table KostnErs under VarId 6096 (1996–2018) keeps the id kostnadsersattningar; VarId 1192 (2019–) stays ovriga-kostnadsersattningar."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-med-inrikes-tjansteresa-over-tre-manader"
+fields = { "description" = "Antal kontrolluppgifter där minst en inrikes tjänsteresa om mer än tre månader har gjorts, summerat per företag eller organisation." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nRättar 'om på än' till 'om mer än'; summeringen per företag följer av tabellen och anges från 2010.\ncatalog:variable_text:45808:9496:14610\ncatalog:variable_text:45808:14610:17532\ncatalog:variable_text:45808:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-med-kostforman"
+fields = { "description" = "Antal kontrolluppgifter där kostförmån har erhållits, summerat per företag eller organisation." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; från 2010 anges att summan per företag skapas på SCB.\ncatalog:variable_text:45809:9496:14610\ncatalog:variable_text:45809:14610:17532\ncatalog:variable_text:45809:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-med-logiersattning-for-utlagg"
+fields = { "description" = "Antal kontrolluppgifter där logiersättning motsvarande utlägg har erhållits, summerat per företag eller organisation." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; från 2010 anges att summan per företag skapas på SCB.\ncatalog:variable_text:45810:9496:14610\ncatalog:variable_text:45810:14610:17532\ncatalog:variable_text:45810:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-med-resekostnadsersattning-for-utlagg"
+fields = { "description" = "Antal kontrolluppgifter där resekostnadsersättning motsvarande utlägg har erhållits, summerat per företag eller organisation." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; från 2010 anges att summan per företag skapas på SCB.\ncatalog:variable_text:45811:9496:14610\ncatalog:variable_text:45811:14610:17532\ncatalog:variable_text:45811:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-med-utrikes-tjansteresa-over-tre-manader"
+fields = { "description" = "Antal kontrolluppgifter där minst en utrikes tjänsteresa om mer än tre månader har gjorts, summerat per företag eller organisation." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; från 2010 anges att summan per företag skapas på SCB.\ncatalog:variable_text:45813:9496:14610\ncatalog:variable_text:45813:14610:17532\ncatalog:variable_text:45813:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:antranteforman"
+fields = { "description" = "Antal kontrolluppgifter där ränteförmån har erhållits, summerat per företag eller organisation." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; från 2010 anges att summan per företag skapas på SCB.\ncatalog:variable_text:45827:9496:14610\ncatalog:variable_text:45827:14610:17532\ncatalog:variable_text:45827:17532:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsstallenummer"
+fields = { "description" = "Arbetsställenummer, som tillsammans med organisationsnumret identifierar arbetsstället. 1996–2009 anges det i nattbefolkningstabellen som en femsiffrig kod som arbetsgivaren väljer inom intervallet 1–99999. I dagbefolkningstabellen kompletteras från 2015 bristande uppgifter för företag med flera arbetsställen med en enkät." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i alla tabeller; rättar stavfel i kompletteringstexten (flerarbetsställeföretag, ut, RAMS-produkten) och utelämnar uppgifter som bara anges för enstaka år.\ncatalog:variable_text:45832:9496:12053\ncatalog:variable_text:45832:14610:15340\ncatalog:variable_text:45832:15706:17532\ncatalog:variable_text:45832:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-vissa-lonetillagg"
+fields = { "description" = "Vissa belopp som ingår i bruttolönen och som inkomsttagaren själv får göra avdrag för i sin deklaration." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: anställningstabellen anger beloppet per anställning; företagstabellens summa per organisationsnummer är egen variabel.\ncatalog:variable_text:45838:9496:12053\ncatalog:variable_text:45838:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-vissa-lonetillagg-foretag"
+fields = { "description" = "Vissa belopp som ingår i bruttolönen och som inkomsttagaren själv får göra avdrag för i sin deklaration. Summerat av SCB per organisationsnummer (företag)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från avdrag-vissa-lonetillagg: tabellen aggregerad till företagsnivå summerar beloppet per organisationsnummer.\ncatalog:variable_text:45838:9496:12053\ncatalog:variable_text:45838:14610:15340\ncatalog:variable_text:45838:16071:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-egenavgifter"
+fields = { "description" = "Ersättning till den som utan att vara näringsidkare ändå ska betala egenavgifter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: anställningstabellen anger beloppet per anställning; företagstabellens summa per organisationsnummer är egen variabel.\ncatalog:variable_text:45855:9496:14610\ncatalog:variable_text:45855:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-egenavgifter-foretag"
+fields = { "description" = "Ersättning till den som utan att vara näringsidkare ändå ska betala egenavgifter. Summerat av SCB per organisationsnummer (företag)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från ersattning-egenavgifter: tabellen aggregerad till företagsnivå summerar beloppet per organisationsnummer.\ncatalog:variable_text:45855:9496:14610\ncatalog:variable_text:45855:14610:15340\ncatalog:variable_text:45855:16071:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:hyresersattning"
+fields = { "description" = "Marknadsmässig ersättning för lokal som arbetsgivaren hyrt av den anställde." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: anställningstabellen anger beloppet per anställning; företagstabellens summa per organisationsnummer är egen variabel.\ncatalog:variable_text:45872:9496:14610\ncatalog:variable_text:45872:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:hyresersattning-foretag"
+fields = { "description" = "Marknadsmässig ersättning för lokal som arbetsgivaren hyrt av den anställde. Summerat av SCB per organisationsnummer (företag)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från hyresersattning: tabellen aggregerad till företagsnivå summerar beloppet per organisationsnummer.\ncatalog:variable_text:45872:9496:14610\ncatalog:variable_text:45872:14610:15340\ncatalog:variable_text:45872:15340:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:kalla"
+fields = { "description" = "Om uppgiften hämtats från arbetsgivardeklaration eller kontrolluppgift." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nRättar 'uppgiftern' och 'kontolluppgift'.\ncatalog:variable_text:45879:17897:18628\ncatalog:variable_text:45879:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "description" = "Personens bostadskommun, angiven som kommunkod. Till och med 2011 anges för nattbefolkningen den kommun där personen var folkbokförd den 31 december." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; folkbokföringsdatumet anges bara för nattbefolkningen till 2011 och anges med år.\ncatalog:variable_text:45880:9496:9862\ncatalog:variable_text:45880:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnadsavdrag"
+fields = { "description" = "Den del av bruttolönen som motsvarar ersättning för utgifter i arbetet enligt Skatteverkets beslut eller fastställd schablon, och för vilken arbetsgivaravgifter inte ska betalas." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: anställningstabellen anger beloppet per anställning; företagstabellens summa per organisationsnummer är egen variabel.\ncatalog:variable_text:45884:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kostnadsavdrag-foretag"
+fields = { "description" = "Den del av bruttolönen som motsvarar ersättning för utgifter i arbetet enligt Skatteverkets beslut eller fastställd schablon, och för vilken arbetsgivaravgifter inte ska betalas. Summerat av SCB per organisationsnummer (företag)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från kostnadsavdrag: tabellen aggregerad till företagsnivå summerar beloppet per organisationsnummer.\ncatalog:variable_text:45884:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "description" = "Personens bostadslän, angivet som länskod. Till och med 2011 anges för nattbefolkningen det län där personen var folkbokförd den 31 december inkomståret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; folkbokföringsdatumet anges bara för nattbefolkningen till 2011 och anges med år.\ncatalog:variable_text:45886:9496:14610\ncatalog:variable_text:45886:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-ersattningar"
+fields = { "description" = "Övriga ersättningar som inte är skattepliktiga." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: anställningstabellen anger beloppet per anställning; företagstabellens summa per organisationsnummer är egen variabel.\ncatalog:variable_text:45893:9496:14610\ncatalog:variable_text:45893:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-ersattningar-foretag"
+fields = { "description" = "Övriga ersättningar som inte är skattepliktiga. Summerat av SCB per organisationsnummer (företag)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från ovriga-ersattningar: tabellen aggregerad till företagsnivå summerar beloppet per organisationsnummer.\ncatalog:variable_text:45893:9496:14610\ncatalog:variable_text:45893:14610:15340\ncatalog:variable_text:45893:16071:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-skattepliktiga-ersattningar"
+fields = { "description" = "Övriga skattepliktiga ersättningar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: anställningstabellen anger beloppet per anställning; företagstabellens summa per organisationsnummer är egen variabel.\ncatalog:variable_text:45895:9496:14610\ncatalog:variable_text:45895:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-skattepliktiga-ersattningar-foretag"
+fields = { "description" = "Övriga skattepliktiga ersättningar. Summerat av SCB per organisationsnummer (företag)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från ovriga-skattepliktiga-ersattningar: tabellen aggregerad till företagsnivå summerar beloppet per organisationsnummer.\ncatalog:variable_text:45895:9496:14610\ncatalog:variable_text:45895:14610:15340\ncatalog:variable_text:45895:16071:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:skatt"
+fields = { "description" = "Det belopp som arbetsgivaren eller utbetalaren dragit av i preliminär A-skatt under inkomståret för personen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: person- och anställningstabellerna anger skatten per person; summorna per arbetsställe och per organisationsnummer är egna variabler.\ncatalog:variable_text:45914:9496:12418\ncatalog:variable_text:45914:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:skatt-arbetsstalle"
+fields = { "description" = "Det belopp som arbetsgivaren eller utbetalaren dragit av i preliminär A-skatt under inkomståret. Summerat av SCB per arbetsställe." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från skatt: tabellen aggregerad till arbetsställenivå summerar skatten per arbetsställe.\ncatalog:variable_text:45914:9496:12418\ncatalog:variable_text:45914:14610:15340\ncatalog:variable_text:45914:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:skatt-foretag"
+fields = { "description" = "Det belopp som arbetsgivaren eller utbetalaren dragit av i preliminär A-skatt under inkomståret. Summerat av SCB per organisationsnummer (företag)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från skatt: tabellen aggregerad till företagsnivå summerar skatten per organisationsnummer.\ncatalog:variable_text:45914:9496:12418\ncatalog:variable_text:45914:14610:15340\ncatalog:variable_text:45914:16071:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-post"
+fields = { "description" = "Vilken typ av post uppgifterna kommer från. Från 2019 anger koden om posten bygger på uppgifter från AGI eller vilken typ av kontrolluppgift." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; från 2019 förklaras att koden skiljer AGI från typ av kontrolluppgift.\ncatalog:variable_text:45924:9496:14610\ncatalog:variable_text:45924:14975:15340\ncatalog:variable_text:45924:17897:20089"

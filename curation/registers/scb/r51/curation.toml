@@ -1600,3 +1600,21 @@ kind = "set"
 subject = "set:tjanstledighet"
 fields = { "description" = "Tjänstledighet för anställningen: kod för grund för ledighet, tjänstledighetens omfattning i procent (0–100) och en av SCB härledd kod för om den anställde är tjänstledig. Den härledda koden bygger 1996–2012 bland annat på ledighetsmarkering och ledighetens omfattning, 2013–2016 bland annat på omfattning, ledighetstyp och löneform, och från 2017 på omfattning och löneform." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP för SCB-koden anger ledighetsmarkering och omfattning 1996–2012, omfattning, ledighetstyp och löneform 2013–2016, omfattning och löneform 2017–2024.\ncatalog:variable_text:49815:16801:17167\ncatalog:variable_text:49816:16801:17167\ncatalog:variable_text:49816:17167:19358\ncatalog:variable_text:49816:19358:20089\ncatalog:variable_text:49818:9496:15706\ncatalog:variable_text:49818:15706:16801\ncatalog:variable_text:49819:9496:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Personens kön, härlett från personnumret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; skiljer bara i versal.\ncatalog:variable_text:49775:9496:15706\ncatalog:variable_text:49775:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lonepopulation"
+fields = { "description" = "Anger om anställningen ingår i lönepopulationen. Härleds bland annat från sysselsättningsgrad och ålder. Från 2013 omfattar populationen anställningar som arbetstagare inom landstingen hade den 1 november och timavlönade anställningar med ersättning utbetald i november för arbete i oktober, utom anställda som inte fyllt 18 eller har fyllt 65 år, med tjänstgöringsomfattning under fem procent, med månadslön under 12 000 kronor eller i arbetsmarknadspolitisk åtgärd." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; från 2013 anges avgränsningen i detalj. Rättar 'exkusive' och 'marknadspolitisk'.\ncatalog:variable_text:49779:9496:15706\ncatalog:variable_text:49779:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstgoringsomfattning"
+fields = { "description" = "Faktisk tjänstgöringstid i förhållande till heltid. Härleds från överenskommen sysselsättningsgrad minskad med tjänstledighetsomfattningen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; rättar 'Tjänsteldighetsomfattning'.\ncatalog:variable_text:49814:9496:15706\ncatalog:variable_text:49814:15706:19358\ncatalog:variable_text:49814:19358:20089"

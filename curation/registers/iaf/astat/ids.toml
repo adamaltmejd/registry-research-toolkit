@@ -162,3 +162,6 @@
 "veckodelens-id" = ["aterkrav: aterkravvadelsnr"]
 "veckonummer" = ["kassakort: vecka"]
 "version" = ["underrattelse: version"]
+"beslutstyp-diverse" = ["diverse: typ"]
+"beslutstypkod-diverse" = ["diverse: typkod"]
+"objektkod-diverse" = ["diverse: objektkod"]

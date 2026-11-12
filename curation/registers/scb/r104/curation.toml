@@ -1356,3 +1356,63 @@ kind = "set"
 subject = "set:upprakningstal"
 fields = { "description" = "Uppräkningsvikt för eleven, en variabel per årskurs från 3 till 9, kalibrerad för den aktuella insamlingsomgången, samt en elevvikt som avser årskurs 3, 4, 5 eller 7. Totaler skattas genom att summera observerade värden multiplicerade med vikten." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nÅrskursvikterna beskrivs som kalibrerade vikter för insamlingsomgången; elevvikten beskrivs bara som uppräkningsvikt för årskurs 3, 4, 5 eller 7; skattningen av totaler står i DEF.\ncatalog:variable_text:14485:11688:11869\ncatalog:variable_text:14485:13879:14061\ncatalog:variable_text:14485:16071:16252\ncatalog:variable_text:14486:14245:14426\ncatalog:variable_text:14486:14610:14791\ncatalog:variable_text:14486:15340:15522\ncatalog:variable_text:14489:14975:15156"
+
+[[statement]]
+kind = "set"
+subject = "var:aldersint"
+fields = { "description" = "Om elevens årskurs undervisas tillsammans med andra årskurser (årskursblandad undervisningsgrupp), enligt skolans uppgift. Uppgiften finns för elever som ingick i insamlingen; från 2015 avser den den aktuella vårterminen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna växlar mellan skolans uppgift och svarskodsfiltret, och från 2015 anges vårterminen.\ncatalog:variable_text:14415:11688:11869\ncatalog:variable_text:14415:13149:13330\ncatalog:variable_text:14415:13879:14061\ncatalog:variable_text:14415:15706:15887\ncatalog:variable_text:14415:16436:16617"
+
+[[statement]]
+kind = "set"
+subject = "var:anpassad-studigang"
+fields = { "description" = "Om eleven har anpassad studiegång enligt grundskoleförordningen (kap. 5), enligt skolans uppgift. Uppgiften finns för elever som ingick i insamlingen; från 2015 avser den den aktuella vårterminen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna lägger till förordningshänvisningen, svarskodsfiltret och från 2015 vårterminen.\ncatalog:variable_text:14416:11688:11869\ncatalog:variable_text:14416:13149:13330\ncatalog:variable_text:14416:13879:14061\ncatalog:variable_text:14416:15706:15887\ncatalog:variable_text:14416:16436:16617"
+
+[[statement]]
+kind = "set"
+subject = "var:arskurs"
+fields = { "description" = "Den årskurs som majoriteten av eleverna i panelen normalt bör gå i, räknat från att urvalet drogs i årskurs 3. Elevpanel 6 drogs läsåret 2001/02 (och årskursen avser där den aktuella vårterminen), elevpanel 7 år 2008 och elevpanel 8 läsåret 2013/14." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp i alla paneler; texterna skiljer sig i vilket urvalsår som anges. W3 (Elevpanel 7, 2013) anger urvalsår 2002, vilket motsäger W1 och W4 (2008) och följer panel 6.\ncatalog:variable_text:14417:11688:11869\ncatalog:variable_text:14417:13879:14061\ncatalog:variable_text:14417:14245:14426\ncatalog:variable_text:14417:15706:15887\ncatalog:variable_text:14417:16071:16252\ncatalog:variable_text:14417:16436:16617"
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-undervisning-i-svenska-som-andrasprak"
+fields = { "description" = "Om eleven har deltagit i undervisning i svenska som andraspråk. Uppgiften finns för elever som ingick i insamlingen; från 2015 avser den den aktuella vårterminen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; från 2015 avgränsas uppgiften till vårterminen. Rättar 'Avser för de individer'.\ncatalog:variable_text:14440:11688:11869\ncatalog:variable_text:14440:13149:13330\ncatalog:variable_text:14440:13879:14061\ncatalog:variable_text:14440:16436:16617"
+
+[[statement]]
+kind = "set"
+subject = "var:elevnamn"
+fields = { "description" = "Elevens förnamn och efternamn. Till 2012 är namnet skolans uppgift (för elevpanel 6 ursprungligen från de klasslistor rektorsområdena skickade in våren 2002); från 2013 hämtas det från Registret över totalbefolkningen (RTB). Uppgiftslämnarna kan rätta namnet vid varje insamling." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; operationaliseringarna anger namnets källa, som byts från klasslistor och skolans uppgift till RTB 2013.\ncatalog:variable_text:14442:11688:11869\ncatalog:variable_text:14442:13879:14061\ncatalog:variable_text:14442:15706:15887\ncatalog:variable_text:14442:16071:16252\ncatalog:variable_text:14442:16436:16617"
+
+[[statement]]
+kind = "set"
+subject = "var:klassbeteckning"
+fields = { "description" = "Beteckning för den klass eleven går i den aktuella vårterminen. Uppgiften kommer från föregående insamling eller skolan och kan rättas av skolan; från 2016 hämtas den i första hand från grundskolans elevregister för höstterminen och annars från elevpanelsinsamlingen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; operationaliseringarna anger källan, som från 2016 är grundskolans elevregister.\ncatalog:variable_text:14451:11688:11869\ncatalog:variable_text:14451:13879:14061\ncatalog:variable_text:14451:15706:15887\ncatalog:variable_text:14451:16436:16617\ncatalog:variable_text:14451:16801:16983"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Personens kön, härlett från personnumret. För elevpanel 8 hämtades uppgiften i första hand från register (registret över elever i grundskolan den 15 oktober 2013) och härleddes från personnumret för elever som saknades där." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; operationaliseringarna anger olika källor. W4 (2015) anger RTB 2014 som källa medan W5 anger elevregistret 2013 för samma panel.\ncatalog:variable_text:14452:11688:11869\ncatalog:variable_text:14452:13879:14061\ncatalog:variable_text:14452:15706:15887\ncatalog:variable_text:14452:16071:16252\ncatalog:variable_text:14452:16436:16617\ncatalog:variable_text:14452:16801:16983"
+
+[[statement]]
+kind = "set"
+subject = "var:panel"
+fields = { "description" = "Beteckning för elevpanelen. En elevpanel är ett urval av elever som följs genom grundskolan, vanligtvis från årskurs 3; panelen får sitt nummer vid urvalsdragningen och behåller det i alla undersökningsomgångar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W0 och W1 lägger till vad en panel är och hur numret sätts.\ncatalog:variable_text:14464:11688:11869\ncatalog:variable_text:14464:13879:14061\ncatalog:variable_text:14464:15706:15887\ncatalog:variable_text:14464:16436:16617"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr"
+fields = { "description" = "Elevens personnummer, tilldelat av Skattemyndigheten. För elevpanel 6 kommer det från de klasslistor rektorsområdena skickade in våren 2002, för elevpanel 7 från skolorna och för elevpanel 8 från registret över elever i grundskolan den 15 oktober 2013 (kompletterat från skolorna). Personnumret kan rättas vid varje insamling." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; operationaliseringarna anger källan per panel och att uppgiften kan rättas.\ncatalog:variable_text:14465:11688:11869\ncatalog:variable_text:14465:13879:14061\ncatalog:variable_text:14465:15706:15887\ncatalog:variable_text:14465:16071:16252\ncatalog:variable_text:14465:16801:16983"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsstratum"
+fields = { "description" = "Det urvalsstratum eleven tillhör vid urvalsdragningen. För 2013–2020 är stratum tilldelat efter skolans huvudman." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; W1 anger att stratum bestäms av huvudmannen.\ncatalog:variable_text:14493:13879:14061\ncatalog:variable_text:14493:15706:15887"

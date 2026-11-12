@@ -4010,3 +4010,39 @@ kind = "set"
 subject = "set:valutfall"
 fields = { "description" = "Vilket av elevens sökalternativ som eleven slutligt antagits till, uttryckt som rangnumret för det val som motsvarar den studieväg eleven är intagen på. Uppgiften härleds ur rangordningen av elevens val av gymnasieprogram och studievägen i gymnasieskolan." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP för båda medlemmarna anger sökalternativet eleven antagits till; härledningen ur rangordning och studieväg står i OP för valutfall. Antagen-DEF delas med 6 icke-medlemmar och utelämnas.\ncatalog:variable_text:30078:5479:8766\ncatalog:variable_text:30276:8947:9131\ncatalog:variable_text:30276:17348:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ar"
+fields = { "description" = "Antal år eleven har gått i gymnasieskolan, framtaget genom samkörning med registret över elever i gymnasieskolan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; bara formuleringen skiljer.\ncatalog:variable_text:30087:12965:13149\ncatalog:variable_text:30087:17348:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-for-antagningen"
+fields = { "description" = "Kalenderår för antagningen. Härledd variabel." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 'skapad' och 'härledd' variabel.\ncatalog:variable_text:30090:12965:13149\ncatalog:variable_text:30090:15887:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:direktansokande-fran-ak9"
+fields = { "description" = "Om personen är direktansökande till gymnasieskolan, det vill säga söker samma år som hen avslutade grundskolan. Tas fram ur registren över elever och betyg i årskurs 9; från 1994 anger variabeln det år slutbetyget från årskurs 9 avser och sätts till nollor om eleven inte avslutade årskurs 9 samma år som ansökan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; från 1994 beskrivs kodningen som slutbetygsåret eller nollor.\ncatalog:variable_text:30105:5479:8766\ncatalog:variable_text:30105:8947:9131\ncatalog:variable_text:30105:17348:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:gymnasieprogram"
+fields = { "description" = "Det gymnasieprogram eleven studerar på, framtaget från studievägskoden i registret över elever i gymnasieskolan. 2005–2007 avses det program eleven var inskriven på första gången." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; W0 (2005–2007) avser första inskrivna programmet, W1 det program eleven studerar på.\ncatalog:variable_text:30133:12965:13149\ncatalog:variable_text:30133:17348:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Personens kön, härlett från personnumrets näst sista siffra: udda siffra är man, jämn siffra kvinna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma härledning i alla år; bara formuleringen skiljer.\ncatalog:variable_text:30166:5844:8766\ncatalog:variable_text:30166:12965:13149\ncatalog:variable_text:30166:17348:17532\ncatalog:variable_text:30166:19174:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:rektorsomrades-id"
+fields = { "description" = "Löpnummer för rektorsområdet, bildat av position 5–7 i skolkoden. För 1995–2001 hämtas skolkoden från registret över gymnasieskolans elever." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma härledning; W1 anger skolkodens källa.\ncatalog:variable_text:30193:8947:9131\ncatalog:variable_text:30193:9312:9496"

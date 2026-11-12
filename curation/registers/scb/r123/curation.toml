@@ -15644,3 +15644,177 @@ kind = "set"
 subject = "set:yrke-i-huvudsysslan"
 fields = { "description" = "Vilket yrke personen har i sin huvudsyssla, kodat enligt Standard för svensk yrkesklassificering (SSYK) på en- till fyrsiffernivå, samt 2024 svaret på frågan om vilket yrke personen har. 2001 och 2003 är yrket på två- och tresiffernivå en bakgrundsvariabel från AKU, och 2021 härleds de grövre nivåerna från fyrsiffernivån. 2024 avser yrket enligt SSYK 2012 personer med arbete som huvudsaklig sysselsättning; det hämtas initialt från Yrkesregistret men kodas också utifrån enkätsvaren." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAKU-bakgrundstexten gäller bara två- och tresiffervariablerna 2001 och 2003; 2021 skapas grövre nivåer från fyrsiffernivån; 2024 års SSYK 2012-variabler och frågan Vilket är ditt yrke.\ncatalog:variable_text:11154:12784:13149\ncatalog:variable_text:11154:18628:18993\ncatalog:variable_text:11155:11323:11688\ncatalog:variable_text:11156:12784:13149\ncatalog:variable_text:11156:18628:18993\ncatalog:variable_text:11157:11323:11688\ncatalog:variable_text:11382:19723:20089\ncatalog:variable_text:11386:18628:18993\ncatalog:variable_text:11494:19723:20089\ncatalog:variable_text:11498:13514:13879\ncatalog:variable_text:11498:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "arbetsmiljoundersokningen: KRAV @1997"
+fields = { "definition" = "Härledd variabel. Bygger på frågorna som mäter hur lång utbildning arbetsuppgifterna anses fordra, och vilka lärokrav som jobbet fordrar.", "operational_definition" = "Härledd variabel." }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope.\n\n1997 KRAV is documented under the VarId and texts of the demands index (ixkrav, krav-i-arbetet: four questions on workload), but its two-code value set is krav's knowledge-requirement set of 2001–2013, not the index's five-code set. The correction is krav's own 2001–2003 texts. The raw SCB export (Registerinformation.csv, current-scb-inputs 2026-03) carries this text itself; the reader places it faithfully.\ncatalog:occurrence:32270\ncatalog:occurrence:32584\ncatalog:valueset:3209\ncatalog:valueset:8079"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-jobb-senaste-3-aren-for-ungdomar"
+fields = { "description" = "Antal jobb som urvalspersonen haft sammantaget de senaste tre åren, det nuvarande inräknat. Endast jobb som varat minst två veckor räknas. Från 2017 ställs frågan till åldersgruppen 16–29 år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; operationaliseringen lägger till frågenummer och från 2017 åldersfiltret.\ncatalog:variable_text:10969:12784:13149\ncatalog:variable_text:10969:13514:13879\ncatalog:variable_text:10969:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:arbforla"
+fields = { "description" = "Om arbetstidens förläggning borde ändras för att urvalspersonen ska kunna arbeta kvar i sitt nuvarande yrke till ordinarie pensionsålder. Frågan ställs endast till 50–64-åringar; 2005 endast till den som svarat nej på fråga TP22." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma delfråga; 2005 lägger till filtret på fråga TP22. Den gemensamma frågetexten preciseras med variabelns svarsalternativ enligt etiketten.\ncatalog:variable_text:11001:11323:11688\ncatalog:variable_text:11001:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:etablering-arbetsmarknaden"
+fields = { "description" = "Om urvalspersonen anser sig ha kommit ordentligt in på arbetsmarknaden genom tillräcklig försörjning, tryggt jobb eller möjligheter att skaffa nytt jobb. Från 2017 ställs frågan till åldersgruppen 16–29 år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; operationaliseringen lägger till frågenummer och från 2017 åldersfiltret.\ncatalog:variable_text:11088:12784:13149\ncatalog:variable_text:11088:13514:13879\ncatalog:variable_text:11088:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:foranbat"
+fields = { "description" = "Om förändringen har medfört någon förbättring av de förhållanden i arbetsmiljön som påverkade urvalspersonens hälsa negativt. Frågan ställs till den som av hälsoskäl övervägt att byta eller förändra sina arbetsuppgifter, byta arbetsgivare, bli egen företagare eller minska arbetstiden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; senare år lägger till frågenummer och selektionen. Selektionen anges bara från 2011 men beskriver frågans följdfrågekaraktär.\ncatalog:variable_text:11097:12053:12418\ncatalog:variable_text:11097:13514:13879\ncatalog:variable_text:11097:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagshalsovard-godkannande-chef-forst"
+fields = { "description" = "Om urvalspersonen först behöver sin chefs godkännande för att kontakta företagshälsovården. Från 2017 ställs frågan till den som har tillgång till företagshälsovård." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; från 2017 anges selektionen på tillgång till företagshälsovård, med olika frågenummer.\ncatalog:variable_text:11107:16436:16801\ncatalog:variable_text:11107:17167:17532\ncatalog:variable_text:11107:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:foretagshalsovardens-roll-for-battre-arbetsmiljo"
+fields = { "description" = "Om urvalspersonen uppfattar att företagshälsovården har en roll i arbetet med att förbättra arbetsmiljön på arbetsplatsen. Från 2017 ställs frågan till den som har tillgång till företagshälsovård." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; från 2017 anges selektionen på tillgång till företagshälsovård, med olika frågenummer.\ncatalog:variable_text:11118:16436:16801\ncatalog:variable_text:11118:17167:17532\ncatalog:variable_text:11118:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:funkagod"
+fields = { "description" = "Om urvalspersonen tycker att arbetsgivaren har gjort vad som är möjligt för att underlätta arbetet. Från 2017 ställs frågan till den vars arbetsgivare känner till en funktionsnedsättning som innebär nedsatt arbetsförmåga." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; från 2017 anges selektionen, med olika frågenummer.\ncatalog:variable_text:11125:16436:16801\ncatalog:variable_text:11125:17167:17532\ncatalog:variable_text:11125:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:funkarbg"
+fields = { "description" = "Om urvalspersonens arbetsgivare känner till att personen har en funktionsnedsättning. Från 2017 ställs frågan till den som har en funktionsnedsättning och nedsatt arbetsförmåga." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; från 2017 anges selektionen, med olika frågenummer. Rättar 'arbbetsförmåga'.\ncatalog:variable_text:11126:16436:16801\ncatalog:variable_text:11126:17167:17532\ncatalog:variable_text:11126:18628:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:fyskrave"
+fields = { "description" = "Om de fysiska kraven i arbetet borde ändras för att urvalspersonen ska kunna arbeta kvar i sitt nuvarande yrke till ordinarie pensionsålder. Frågan ställs endast till 50–64-åringar; 2005 endast till den som svarat nej på fråga TP22." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma delfråga; 2005 lägger till filtret på fråga TP22. Den gemensamma frågetexten preciseras med variabelns svarsalternativ enligt etiketten.\ncatalog:variable_text:11130:11323:11688\ncatalog:variable_text:11130:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:huvudont"
+fields = { "description" = "Om urvalspersonen har haft huvudvärk under de senaste tre månaderna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; vissa år lägger bara till frågenummer.\ncatalog:variable_text:11158:9862:10227\ncatalog:variable_text:11158:12784:13149\ncatalog:variable_text:11158:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:kortatid"
+fields = { "description" = "Om arbetstiden borde kortas för att urvalspersonen ska kunna arbeta kvar i sitt nuvarande yrke till ordinarie pensionsålder. Frågan ställs endast till 50–64-åringar; 2005 endast till den som svarat nej på fråga TP22." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma delfråga; 2005 lägger till filtret på fråga TP22. Den gemensamma frågetexten preciseras med variabelns svarsalternativ enligt etiketten.\ncatalog:variable_text:11198:11323:11688\ncatalog:variable_text:11198:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:krav"
+fields = { "description" = "Härledd variabel om kunskapskraven i arbetet. Bygger på frågorna om hur lång utbildning arbetsuppgifterna anses kräva och vilka lärokrav jobbet ställer." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDen avvikande texten kom från en annan kolumn i SCB:s export och är rättad på förekomsten. 1997 hade texten för indexet krav i arbetet, men värdemängden är denna variabels.\ncatalog:variable_text:11199:9862:10227\ncatalog:variable_text:11199:11323:11688\ncatalog:variable_text:11199:12784:13149\ncatalog:variable_text:11199:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:krav-i-arbetet"
+fields = { "description" = "Härlett index över de krav urvalspersonen utsätts för i arbetet. Summerar fyra frågor: om man måste dra in på luncher, arbeta över eller ta med jobb hem, om man har så stressigt att man inte hinner tänka på annat än arbetet, om arbetet kräver hela uppmärksamheten och koncentrationen, och om man har för mycket att göra." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma index; senare år lägger till frågenummer och härledningsregler. Frågorna hämtas ur regeln och 1997 års frågelista i grannvariabeln krav.\ncatalog:variable_text:11200:11323:11688\ncatalog:variable_text:11200:12784:13149\ncatalog:variable_text:11200:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:krav-och-kontrollindex"
+fields = { "description" = "Härlett index som kombinerar indexen för kontroll/inflytande (ixkontr) och för krav (ixkrav) i arbetet. 2011–2015 betyder 1 att ixkontr är 3–4 och ixkrav 0–1, 2 att ixkontr är 3–4 och ixkrav 2–4 och 3 att ixkontr är 0–2 och ixkrav 2–4; indexet har också värdet 4." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nRättad efter granskning: uppgifter som bara gäller vissa år anges med sina år, och det som texterna inte stöder är struket.\ncatalog:variable_text:11201:11323:11688\ncatalog:variable_text:11201:12053:12418\ncatalog:variable_text:11201:14975:15340\ncatalog:variable_text:11201:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:luftfor"
+fields = { "description" = "Härledd variabel: om urvalspersonen utsätts för luftföroreningar minst en fjärdedel av arbetstiden, det vill säga har svarat att hon eller han varit utsatt minst en fjärdedel av tiden på någon av frågorna om luftföroreningar. 2011–2015 och 2019–2021 avses oorganiskt damm, organiskt damm eller kemikalier." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma härledning; åren skiljer sig bara i detaljnivå (frågenummer, kodregel, uppräkning av föroreningar).\ncatalog:variable_text:11225:11323:11688\ncatalog:variable_text:11225:12053:12418\ncatalog:variable_text:11225:12784:13149\ncatalog:variable_text:11225:14975:15340\ncatalog:variable_text:11225:17167:17532\ncatalog:variable_text:11225:17897:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:magoroli"
+fields = { "description" = "Om urvalspersonen under de senaste tre månaderna har haft halsbränna, sura uppstötningar, sveda i maggropen eller orolig mage." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; vissa år lägger bara till frågenummer.\ncatalog:variable_text:11229:9862:10227\ncatalog:variable_text:11229:12784:13149\ncatalog:variable_text:11229:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:nagannat"
+fields = { "description" = "Om något annat än de uppräknade förhållandena borde ändras för att urvalspersonen ska kunna arbeta kvar i sitt nuvarande yrke till ordinarie pensionsålder. Frågan ställs endast till 50–64-åringar; 2005 endast till den som svarat nej på fråga TP22." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma delfråga; 2005 lägger till filtret på fråga TP22. Den gemensamma frågetexten preciseras med variabelns svarsalternativ enligt etiketten.\ncatalog:variable_text:11256:11323:11688\ncatalog:variable_text:11256:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:ogonirri"
+fields = { "description" = "Om urvalspersonen under de senaste tre månaderna har haft kliande eller på annat sätt irriterade ögon." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; vissa år lägger bara till frågenummer.\ncatalog:variable_text:11273:9862:10227\ncatalog:variable_text:11273:12784:13149\ncatalog:variable_text:11273:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:psykarbm"
+fields = { "description" = "Om den psykosociala arbetsmiljön borde ändras för att urvalspersonen ska kunna arbeta kvar i sitt nuvarande yrke till ordinarie pensionsålder. Frågan ställs endast till 50–64-åringar; 2005 endast till den som svarat nej på fråga TP22." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma delfråga; 2005 lägger till filtret på fråga TP22. Den gemensamma frågetexten preciseras med variabelns svarsalternativ enligt etiketten.\ncatalog:variable_text:11308:11323:11688\ncatalog:variable_text:11308:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:saknatid"
+fields = { "description" = "Om det händer att urvalspersonen efter arbetet är för trött för eller saknar tid för familjen, vänner eller fritidsaktiviteter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; vissa år lägger bara till frågenummer.\ncatalog:variable_text:11329:11323:11688\ncatalog:variable_text:11329:12784:13149\ncatalog:variable_text:11329:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:samdok"
+fields = { "description" = "Om resultatet av arbetsplatsens undersökning av arbetsmiljön och riskerna för ohälsa och olycksfall har dokumenterats skriftligt. 2011–2013 besvaras frågan endast av chefer, skyddsombud och ledamöter i arbetsmiljökommittén som svarat att arbetsplatsen har undersökt arbetsmiljön." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; från 2011 anges selektionen i stället för frågenummer. Rättar 'kommité'.\ncatalog:variable_text:11331:12784:13149\ncatalog:variable_text:11331:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:samplan"
+fields = { "description" = "Om det, när en eller flera risker inte har åtgärdats direkt, finns en handlingsplan som anger när åtgärder ska vara vidtagna och vem som ansvarar. Från 2011 besvaras frågan endast av chefer, skyddsombud och ledamöter i arbetsmiljökommittén som svarat att arbetsplatsen har undersökt arbetsmiljön och riskerna för ohälsa och olycksfall." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; från 2011 anges selektionen i stället för frågenummer. Rättar 'kommité'.\ncatalog:variable_text:11333:12784:13149\ncatalog:variable_text:11333:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:sovagott"
+fields = { "description" = "Om urvalspersonen anser sig få tillräckligt med sömn. Frågan ställs från 2001." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; vissa år lägger till frågenummer och noten om ny fråga 2001.\ncatalog:variable_text:11378:11323:11688\ncatalog:variable_text:11378:12784:13149\ncatalog:variable_text:11378:13514:13879\ncatalog:variable_text:11378:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:stallnin"
+fields = { "description" = "Om urvalspersonen upplever att arbetsställningarna i arbetet är påfrestande eller bekväma." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; vissa år lägger bara till frågenummer.\ncatalog:variable_text:11387:9862:10227\ncatalog:variable_text:11387:12053:12418\ncatalog:variable_text:11387:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:systemat"
+fields = { "description" = "Om det pågår ett systematiskt arbetsmiljöarbete på urvalspersonens arbetsplats. Frågan ställs från 2001." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; vissa år lägger till frågenummer och noten om ny fråga 2001.\ncatalog:variable_text:11409:11323:11688\ncatalog:variable_text:11409:12784:13149\ncatalog:variable_text:11409:13514:13879\ncatalog:variable_text:11409:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:taktarbe"
+fields = { "description" = "Om arbetstakten borde ändras för att urvalspersonen ska kunna arbeta kvar i sitt nuvarande yrke till ordinarie pensionsålder. Frågan ställs endast till 50–64-åringar; 2005 endast till den som svarat nej på fråga TP22." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma delfråga; 2005 lägger till filtret på fråga TP22. Den gemensamma frågetexten preciseras med variabelns svarsalternativ enligt etiketten.\ncatalog:variable_text:11410:11323:11688\ncatalog:variable_text:11410:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:trotthog"
+fields = { "description" = "Om urvalspersonen under de senaste tre månaderna har varit trött och håglös." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; vissa år lägger bara till frågenummer.\ncatalog:variable_text:11429:9862:10227\ncatalog:variable_text:11429:12784:13149\ncatalog:variable_text:11429:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:undkvinn"
+fields = { "description" = "Om de flesta av urvalspersonens underställda är kvinnor eller män. Frågan ställs till den som har personer direkt eller indirekt underställda sig." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; senare år lägger till frågenummer och selektionen på att ha underställda.\ncatalog:variable_text:11441:10592:10957\ncatalog:variable_text:11441:12784:13149\ncatalog:variable_text:11441:13514:13879\ncatalog:variable_text:11441:14975:15340"

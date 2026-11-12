@@ -5722,3 +5722,165 @@ kind = "set"
 subject = "set:utlandsk-eller-svensk-bakgrund"
 fields = { "description" = "Om personen eller personens make, maka, partner eller sambo har utländsk eller svensk bakgrund, härlett från eget och föräldrarnas födelseland enligt riktlinjerna i MIS 2002:3, i en rekommenderad och en alternativ indelning. Saknas förälderns födelseland antas föräldern vara inrikes född om personen är inrikes född och utrikes född om personen är utrikes född. För sambo anges uppgiften bara vid gemensamma barn." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF skiljer personen, alternativ indelning och make/partner/sambo; OP ger MIS 2002:3 och antagandet vid saknat födelseland.\ncatalog:variable_text:51332:9862:12053\ncatalog:variable_text:51332:12053:18993\ncatalog:variable_text:51333:9862:18993\ncatalog:variable_text:51333:18993:19723\ncatalog:variable_text:51334:9862:18993\ncatalog:variable_text:51334:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:afyrke"
+fields = { "description" = "Det yrke som personen har sökt. 2007–2013 är koden fyrsiffrig och stämmer överens med SSYK 96 i Arbetsförmedlingens jobbmatchningssystem; 2022–2023 anges koder enligt SSYK 96 och SSYK 2012." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nRättad efter granskning: uppgifter som bara gäller vissa år anges med sina år, och det som texterna inte stöder är struket.\ncatalog:variable_text:50992:9862:16071\ncatalog:variable_text:50992:16071:18993\ncatalog:variable_text:50992:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:aldpens"
+fields = { "description" = "Summa inkomst under året av åldersrelaterade pensioner: ålderspension, tjänstepension och privat pensionsförsäkring enligt Inkomst- och taxeringsregistret (individer och dödsbon). Avser inkomståret oavsett när händelsen inträffade." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma summa; 2009 saknar uppräkningen av komponenterna.\ncatalog:variable_text:51013:9862:14245\ncatalog:variable_text:51013:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-senaste-beslut-uppehallstillstand"
+fields = { "description" = "År för personens senaste beslut om uppehållstillstånd hos Migrationsverket vid uttagstillfället, för beslut från 1989. Uppgiften uppdateras inte från 2007." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma uppgift; slutåret för täckningen anges som 2008 respektive 2007 men uppgiften uppdateras inte efter 2007 enligt alla texter.\ncatalog:variable_text:51032:9862:10227\ncatalog:variable_text:51032:10227:16071\ncatalog:variable_text:51032:16071:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:behorighet-fran-grundskola"
+fields = { "description" = "Om eleven är behörig till gymnasieskolans nationella program, vilket kräver lägst godkänt i svenska eller svenska som andraspråk, engelska och matematik. Anges bara för elever som slutfört grundskolan under våren aktuellt år. Skolverket räknar bara elever med mål- och kunskapsrelaterat slutbetyg som behöriga; variabeln är tänkt som komplement till variabeln för behörighet till gymnasieskolan." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; namnet på jämförelsevariabeln ändras 2011 och 2022–2023 har avstavningsfel.\ncatalog:variable_text:51058:10227:14975\ncatalog:variable_text:51058:14975:18993\ncatalog:variable_text:51058:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:besldatum"
+fields = { "description" = "Datum för personens senaste beslut om uppehållstillstånd. Eftersom en person kan få flera beslut kan datumet ändras mellan versioner av STATIV." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma uppgift; 2022–2023 förklarar att datumet kan ändras mellan versioner.\ncatalog:variable_text:51066:13879:18993\ncatalog:variable_text:51066:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:examensar"
+fields = { "description" = "Examens- eller avslutningsår för personens högsta utbildning. 2003–2015 saknas uppgift för omkring 40 procent av posterna; för uppgifter från avklarade poäng i högskolan sätts då senaste år med avklarade poäng, och för uppgifter från Komvux-databasen saknas året." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma uppgift; 2003–2015 anger källregler och bortfall, 2022–2023 preciserar högsta utbildning.\ncatalog:variable_text:51122:9862:12053\ncatalog:variable_text:51122:12053:16801\ncatalog:variable_text:51122:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:famid"
+fields = { "description" = "Familjeidentitet: personnumret för den äldsta personen i RTB-familjen, härlett i Registret över totalbefolkningen och avseende 31 december." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma härledning; senare år anger personnumrets uppbyggnad, referensdag och att fältet 2022 också finns som FamId1.\ncatalog:variable_text:51125:9862:12053\ncatalog:variable_text:51125:12053:18993\ncatalog:variable_text:51125:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelsear"
+fields = { "description" = "Födelseår, härlett från födelsedatumet i personnumret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma härledning med olika formulering.\ncatalog:variable_text:51133:9862:16071\ncatalog:variable_text:51133:16071:18993\ncatalog:variable_text:51133:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-barns-fodelse"
+fields = { "description" = "Föräldrapenning i samband med barns födelse eller adoption av barn under 10 år, utbetald till endera föräldern. Avser inkomståret oavsett när händelsen inträffade. Till 2021 anges beloppet i hundratal kronor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma ersättning; till 2021 anges enheten, 2022–2023 att beloppet avser inkomståret.\ncatalog:variable_text:51140:9862:18993\ncatalog:variable_text:51140:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:genomsnittlig-betygspoang"
+fields = { "description" = "Genomsnittlig betygspoäng i gymnasieskolan för personer som har avslutat gymnasiestudier under aktuellt år. Till 2021 har övriga värdet 0,00." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma uppgift; 2022–2023 är kortare och nämner inte nollvärdet.\ncatalog:variable_text:51150:9862:18993\ncatalog:variable_text:51150:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:grundlaggande-behorighet-hogskola"
+fields = { "description" = "Om eleven har uppnått grundläggande behörighet till högskola och universitet genom sin gymnasieutbildning. Till 2021 anges värden bara för elever som slutfört gymnasieutbildningen under vårterminen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma uppgift; operationaliseringen anger populationen till 2021 och eleven som enhet 2022–2023. Rättar 'det elever'.\ncatalog:variable_text:51163:9862:18993\ncatalog:variable_text:51163:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-foranledd-fortidspension"
+fields = { "description" = "Summa inkomst under året av förtidspension, sjukbidrag, sjukersättning och aktivitetsersättning. Summerar sjukersättning och aktivitetsersättning enligt Inkomst- och taxeringsregistret samt AGS-ersättning i samband med förtidspension eller sjukbidrag enligt Lönesummestatistiken. Avser inkomståret oavsett när händelsen inträffade." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma summa; 2009 saknar uppräkningen av komponenterna. Rättar 'Lönesummestatstik'.\ncatalog:variable_text:51177:9862:14245\ncatalog:variable_text:51177:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:inkomst-foranledd-studier"
+fields = { "description" = "Summa inkomst under året föranledd av studier. Från 2005 summeras studiemedel och studiehjälp, utbildningsbidrag för doktorander och rekryteringsbidrag enligt Inkomst- och taxeringsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma summa; komponenterna anges först från 2005.\ncatalog:variable_text:51179:9862:12784\ncatalog:variable_text:51179:12784:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:medbar"
+fields = { "description" = "År för personens aktuella prioriterade medborgarskap, härlett ur medborgarskapsdatumet i Registret över totalbefolkningen (RTB)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma härledning med olika formulering; rättar 'totalbefolknignen'.\ncatalog:variable_text:51202:9862:16801\ncatalog:variable_text:51202:16801:18993\ncatalog:variable_text:51202:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:meritvarde"
+fields = { "description" = "Meritvärde för elever som avslutat grundskolan under aktuellt år: summan av betygsvärdena för de 16 bästa betygen i slutbetyget, där A=20, B=17,5, C=15, D=12,5, E=10 och F=0. Högsta värde är 320. Till 2021 har personer som inte avslutat grundskolan det året värdet 0. Från 2022 innebär värdet 0 att eleven inte har fått kunskapsrelaterade betyg eller att uppgift saknas, och betyg i moderna språk kan ingå bland de 16 bästa." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma beräkning; 2022–2023 lägger till maxvärde, moderna språk och nollvärdets betydelse.\ncatalog:variable_text:51205:10227:18993\ncatalog:variable_text:51205:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:person-orgnr"
+fields = { "description" = "Person- eller organisationsnummer för det företag där personen anses ha haft sin huvudsakliga sysselsättning; för fysiska personer med näringsverksamhet används personnumret. Vid anställning hämtas uppgiften från Lönesummestatistiken, från 2022 från arbetsgivardeklarationer på individnivå (AGI) eller kontrolluppgifter; vid företagarinkomst från Räkenskapsutdrag (SRU)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma uppgift; från 2003 anges vilket företag som avses och källan, som byts 2022. Den generiska texten om vilka myndigheter som tilldelar organisationsnummer utelämnas. Rättar 'har bedrivit', 'kontrolluppgiterna'.\ncatalog:variable_text:51223:9862:12053\ncatalog:variable_text:51223:12053:18993\ncatalog:variable_text:51223:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-ankn"
+fields = { "description" = "Personnummer för den person som anknytningen sker till. Via numret kan alla anhöriga som följer efter kopplas ihop, både familj till flykting och familj till ensamkommande barn; vilken relation personerna har till varandra framgår inte." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma uppgift; 2016–2021 beskriver personnumrets uppbyggnad, 2022–2023 att relationen saknas.\ncatalog:variable_text:51225:16801:18993\ncatalog:variable_text:51225:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:personnradbiofar"
+fields = { "description" = "Personnummer för personens biologiska far eller adoptivfar, härlett ur Flergenerationsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma härledning; 2022–2023 är kortare.\ncatalog:variable_text:51228:13879:18993\ncatalog:variable_text:51228:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:personnradbiomor"
+fields = { "description" = "Personnummer för personens biologiska mor eller adoptivmor, härlett ur Flergenerationsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma härledning; 2022–2023 är kortare.\ncatalog:variable_text:51229:13879:18993\ncatalog:variable_text:51229:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:personnrmakpartsam"
+fields = { "description" = "Personnummer för personens make, maka, registrerade partner eller sambo, härlett ur Registret över totalbefolkningen genom att personnumret för make/maka/partner slås ihop med personnumret för sambo. Från 2021 anges att uppgiften om sambo går före vid motstridiga uppgifter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma härledning; från 2021 anges prioriteringsregeln.\ncatalog:variable_text:51230:9862:18628\ncatalog:variable_text:51230:18628:18993\ncatalog:variable_text:51230:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:registrerad-pa-gymnasieskola"
+fields = { "description" = "Om personen är registrerad som elev i gymnasieskolan under aktuellt år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma uppgift med olika formulering.\ncatalog:variable_text:51231:9862:18993\ncatalog:variable_text:51231:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sjuktyp"
+fields = { "description" = "Om personen under året har fått inkomst föranledd av sjukdom eller arbetsskada, det vill säga sjukpenning, arbetsskadeersättning eller ersättning som utgör inkomst av anställning, enligt Inkomst- och taxeringsregistret. Avser inkomståret oavsett när händelsen inträffade." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma uppgift; 2009 saknar uppräkningen. Rättar 'erhålligt', 'arbetskadeersättning'.\ncatalog:variable_text:51269:9862:14245\ncatalog:variable_text:51269:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:sokandekategori-grupp"
+fields = { "description" = "Arbetslösas senaste sökandekategori hos Arbetsförmedlingen, grupperad utifrån koderna i den detaljerade variabeln sökandekategori." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma härledning; rättar 'variablen'.\ncatalog:variable_text:51281:9862:13514\ncatalog:variable_text:51281:14975:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:stkodgrund"
+fields = { "description" = "Om personen har avslutat grundskolan under vårterminen aktuellt år. 2022–2023 härleds uppgiften ur registret Grundskolan: betyg åk 9." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma uppgift; 2022–2023 anger källregistret.\ncatalog:variable_text:51290:10227:18993\ncatalog:variable_text:51290:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:studiemedel-studiehjalp-lan-och-bidrag"
+fields = { "description" = "Summa utbetalda studiemedel och studiehjälp till personen under året: både bidrags- och lånedel av studiemedlen, även för studier i utlandet, samt studiehjälpens bidrag och extra tillägg. Till 2021 anges beloppet i hundratal kronor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma summa; 2017–2021 formulerar uppräkningen annorlunda och 2022–2023 har bara etiketten.\ncatalog:variable_text:51293:9862:17167\ncatalog:variable_text:51293:17167:18993\ncatalog:variable_text:51293:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:sumkapink"
+fields = { "description" = "Summa av inkomst av kapital och inkomst av passiv näringsverksamhet, i hundratal kronor. Komponenterna hämtas till 2015 från Inkomst- och taxeringsregistret (IoT) och från 2016 från LISA." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma summa; källan för komponenterna byts 2016.\ncatalog:variable_text:51296:9862:16801\ncatalog:variable_text:51296:16801:18262\ncatalog:variable_text:51296:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:vistelsetid"
+fields = { "description" = "Totalt antal dagar som personen varit folkbokförd i Sverige (total vistelsetid), summerat från händelserna i Historiska befolkningsregistret från 1969. Till 2021 anges uppgiften inte för personer födda i Sverige; från 2022 anges den för alla folkbokförda och kompletteras från Registret över totalbefolkningen när uppgift saknas i Historiska befolkningsregistret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått; populationen utvidgas 2022 till alla folkbokförda och RTB används då som komplement.\ncatalog:variable_text:51338:9862:16801\ncatalog:variable_text:51338:18993:19723"

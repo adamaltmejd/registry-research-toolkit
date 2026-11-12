@@ -292,3 +292,33 @@ kind = "set"
 subject = "var:anlaggningens-namn"
 fields = { "label" = "Anläggningens namn (ArbNamn)" }
 evidence = "#2102 same-label cluster 'Anläggningens namn' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; ArbNamn and Anl have the same definition and the same opdef (Kvartalsvis bränslestatistik, 'Avser industri' in 2018-2019) and coexist in one table; 'arbetsställets namn' appears in no opdef, so ArbNamn is labelled by its code."
+
+[[statement]]
+kind = "set"
+subject = "var:anlaggningens-namn-industri"
+fields = { "description" = "Anläggningens namn. 2014–2021 hämtas uppgiften från undersökningen Kvartalsvis bränslestatistik, 2014, 2015, 2017 och 2018 från året före referensåret. 2018 lämnas uppgiften både för industri och för värmeverk." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nRättad efter granskning: uppgifter som bara gäller vissa år anges med sina år, och det som texterna inte stöder är struket.\ncatalog:variable_text:52628:16071:16436\ncatalog:variable_text:52628:16436:16801\ncatalog:variable_text:52628:16801:17167\ncatalog:variable_text:52628:17532:17897\ncatalog:variable_text:52628:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:avfallsmangd"
+fields = { "description" = "Förbrukad mängd avfall per kvartal. Uppgiften lämnas både för inköpt avfall och för avfall som arbetsstället fått en intäkt för." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nVarje år 2021–2025 dokumenteras kolumnen med båda texterna; skillnaden mellan W0 och W1 är bara vilken rad som kom först.\ncatalog:variable_text:52630:18628:19723\ncatalog:variable_text:52630:19723:20454\nRegisterinformation.csv:row=140999\nRegisterinformation.csv:row=555391\nRegisterinformation.csv:row=741026\nRegisterinformation.csv:row=931958"
+
+[[statement]]
+kind = "set"
+subject = "var:bransle"
+fields = { "description" = "Förbrukat bränsle per kvartal. 2014–2020 anges kvantiteten i MWh, före pannförluster; från 2021 avses förbrukat inköpt bränsle." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; 2014–2020 har kolumnen också texten om MWh, och från 2021 avgränsas den till inköpt bränsle.\ncatalog:variable_text:52632:16071:18628\ncatalog:variable_text:52632:18628:20454\nRegisterinformation.csv:row=120111\nRegisterinformation.csv:row=120113\nRegisterinformation.csv:row=555395"
+
+[[statement]]
+kind = "set"
+subject = "var:bransleslag"
+fields = { "description" = "Typ av bränsle: ett av de sju trädbränsle- och torvsortiment som undersökningen omfattar, vart och ett med en egen kod. Från 2021 avser uppgiften kostnader för arbetsställen inom industrin med minst 10 anställda och för arbetsställen inom SNI 40." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; från 2021 dokumenteras kolumnen med en text per delpopulation (industrin med minst 10 anställda, SNI 40).\ncatalog:variable_text:52633:16071:18628\ncatalog:variable_text:52633:18628:20454\nRegisterinformation.csv:row=321015\nRegisterinformation.csv:row=564015\nRegisterinformation.csv:row=564017"
+
+[[statement]]
+kind = "set"
+subject = "var:kvartal-och-ar"
+fields = { "description" = "Referensperiod (år och kvartal) som uppgifterna avser. Från 2021 anges perioden för arbetsställen inom industrin med minst 10 anställda och inom SNI 40 som lämnat uppgifter om trädbränsle- och torvpriser, om inköpskostnad för avfall eller om intäkter för avfall." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; från 2021 dokumenteras kolumnen med en text per delpopulation och uppgiftstyp, alla avser samma referensperiod.\ncatalog:variable_text:52640:16071:18628\ncatalog:variable_text:52640:18628:20454\nRegisterinformation.csv:row=292665\nRegisterinformation.csv:row=818680\nRegisterinformation.csv:row=553647\nRegisterinformation.csv:row=553649\nRegisterinformation.csv:row=553651\nRegisterinformation.csv:row=553653\nRegisterinformation.csv:row=819469\nRegisterinformation.csv:row=819471"

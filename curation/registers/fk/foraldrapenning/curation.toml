@@ -220,3 +220,27 @@ kind = "set"
 subject = "var:overlfor"
 fields = { "tags" = ["transfers"] }
 evidence = "Föräldrapenning (äldre version), 1993 till september 2013.\nFK PM 2020:2, MiDAS föräldrapenning, s. 35-36, https://www.forsakringskassan.se/download/18.5b8b0bec183b9d817dc11e/1666183907826/midas-foraldrapenning-pm-2020-2.pdf"
+
+[[statement]]
+kind = "set"
+subject = "var:del-from-datum"
+fields = { "description" = "Delfallets första dag. I den äldre versionen (1993–2013) avser delfallet den skattade ledigheten." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma betydelse; den äldre tabellen anger att delfallet gäller den skattade ledigheten.\ncatalog:variable_text:181:8401:15979\ncatalog:variable_text:181:16071:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:del-tom-datum"
+fields = { "description" = "Delfallets sista dag. I den äldre versionen (1993–2013) avser delfallet den skattade ledigheten och datumet är den senast kända dagen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma betydelse; den äldre tabellen anger skattad ledighet och senast känd dag.\ncatalog:variable_text:182:8401:15979\ncatalog:variable_text:182:16071:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:fall-dagar-tot"
+fields = { "description" = "Totalt antal dagar i fallet, den sammanhängande skattade ledigheten, inklusive dagar som inte ersatts." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma betydelse; rättar 'ej ersätta dagar' till dagar som inte ersatts.\ncatalog:variable_text:194:8401:15979\ncatalog:variable_text:194:16071:2932897"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning"
+fields = { "description" = "Föräldrapenningens omfattning i delfallet. 1993–2013 anges den i decimaltal, från 2014 i heltal." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma betydelse; representationen byts från decimaltal till heltal 2014, en ändring i kodningen och inte i innebörden.\ncatalog:variable_text:200:8401:15979\ncatalog:variable_text:200:16071:2932897"

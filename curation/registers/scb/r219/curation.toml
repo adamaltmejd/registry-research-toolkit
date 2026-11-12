@@ -417,3 +417,45 @@ kind = "set"
 subject = "set:strandtyp"
 fields = { "description" = "Typ av strand längs strandlinjen, för havsstrand, inlandsstrand och stranden runt de fyra största sjöarna (Vänern, Vättern, Mälaren och Hjälmaren), där strandlinjen runt öar i sjöarna ingår. Strandtypen tas fram genom GIS-bearbetning av Lantmäteriets hydrografiska data." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAlla tre medlemmar delar OP om GIS-bearbetning av Lantmäteriets data; DEF skiljer havs-, inlands- och storsjöstrand.\ncatalog:variable_text:41846:17897:18262\ncatalog:variable_text:41846:19723:20089\ncatalog:variable_text:41847:17897:18262\ncatalog:variable_text:41847:19723:20089\ncatalog:variable_text:41860:17897:18262\ncatalog:variable_text:41860:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-bostader"
+fields = { "description" = "Antal bostäder, räknat som gällande byggnader (BYGGNSTAT = 1) med bebyggelsetyp bostad (TYPBEBYGG = 1) i Lantmäteriets fastighetsregister, byggnadsdelen, med en punktkoordinat per byggnad. Referenstidpunkten är 30 juni 2010 och 1 januari 2013–2020." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; bara referenstidpunkten ändras och anges med sina år.\ncatalog:variable_text:41836:14974:14975\ncatalog:variable_text:41836:16070:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-byggnader"
+fields = { "description" = "Antal byggnader, räknat som samtliga gällande byggnader (BYGGNSTAT = 1) i Lantmäteriets fastighetsregister, byggnadsdelen, med en punktkoordinat per byggnad. Referenstidpunkten är 30 juni 2010 och 1 januari 2013–2020." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; bara referenstidpunkten ändras och anges med sina år.\ncatalog:variable_text:41837:14974:14975\ncatalog:variable_text:41837:16070:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-tatorter"
+fields = { "description" = "Antal statistiska tätorter per geografiskt objekt. 2013 används tätortsavgränsningen 2010, 2018 och 2020 avgränsningen samma år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; bara tätortsavgränsningens år ändras.\ncatalog:variable_text:41838:16070:16071\ncatalog:variable_text:41838:17896:17897\ncatalog:variable_text:41838:18627:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:datatyp-for-geometri"
+fields = { "description" = "Objektets geometri i SQL Server-datatypen SP_GEOMETRY, i koordinatsystemet Sweref99TM." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; texterna skiljer bara i ordalydelse.\ncatalog:variable_text:41842:14974:14975\ncatalog:variable_text:41842:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:havso"
+fields = { "description" = "Anger att strandlinjen ligger längs en havsö; öar mellan hav och inlandsvatten (flodmynningar) räknas inte. 2024 tas strandtypen fram genom GIS-bearbetning av data från Lantmäteriets nedladdningstjänst." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2024 anger hur strandtypen tas fram.\ncatalog:variable_text:41844:17897:18262\ncatalog:variable_text:41844:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:lan"
+fields = { "description" = "Län, enligt länsgränser från Lantmäteriet: Fastighetskartan för de befolkade öarna och detaljerade länsgränser i basinformationen om kust, stränder och öar." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; tabellerna anger olika underlag och uttagsdatum, som inte stämmer med åren och utelämnas.\ncatalog:variable_text:41850:14974:14975\ncatalog:variable_text:41850:16070:16071\ncatalog:variable_text:41850:17897:18262\ncatalog:variable_text:41850:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:namn-pa-geografiskt-objekt"
+fields = { "description" = "Öns namn, enligt beslut av Lantmäteriets ortnamnsenhet 2014 och kompletterat med Lantmäteriets topografiska karta. Anges bara för öar som redovisas separat i statistiken." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; texterna skiljer i om kompletteringen nämns. Rättar 'särredivisas'.\ncatalog:variable_text:41852:14974:14975\ncatalog:variable_text:41852:16070:16071\ncatalog:variable_text:41852:18627:18628"

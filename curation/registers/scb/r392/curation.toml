@@ -1380,3 +1380,9 @@ kind = "set"
 subject = "individuppgifter-agi: ERSATTNINGS_KOD @2021..2023 where key = 'v6112'"
 fields = { "value_set" = "a82b212087e4acdd4408f7dfdb391b38ba0af7222241226c34afc28abb2f335f" }
 evidence = "SCB's Registerinformation export codes ERSATTNINGS_KOD (key v6112) with this value set in its 2019 and 2020 editions. The 2021-2023 occurrence follows the export's 2020 edition, as its assert states, so it carries the same code list."
+
+[[statement]]
+kind = "set"
+subject = "var:person-orgnr"
+fields = { "description" = "Organisationsnummer för arbetsgivaren eller annan utbetalare. För juridiska personer tilldelas numret av Bolagsverket, Skatteverket, Kammarkollegiet, Lantmäteriet, länsstyrelse eller SCB beroende på bolagsform; för fysiska personer med näringsverksamhet används personnumret." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition alla år; 2019–2020 anger att numret avser utbetalaren, från 2021 saknas den meningen.\ncatalog:variable_text:8976:17897:18628\ncatalog:variable_text:8976:18628:19723"

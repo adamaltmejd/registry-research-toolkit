@@ -2394,3 +2394,45 @@ kind = "set"
 subject = "set:totalyta"
 fields = { "description" = "Total yta, det vill säga bostadsyta plus lokalyta, i varianterna A91/Y91 (2007–2013 och 2015), TOYF (2008–2013 och 2015) och Y92 (2013 och 2015). För A91 från 2012 och för Y92 avser ytan taxeringsenheten." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAlla tre delar definitionen bostads- och lokalyta; taxeringsenheten anges bara för A91 2012–2015 och Y92.\ncatalog:variable_text:34407:13514:15340\ncatalog:variable_text:34407:15340:16071\ncatalog:variable_text:34408:13879:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:bransle-och-varmeavgift"
+fields = { "description" = "Bränsle- och värmeavgift för bostäder och lokaler, redovisad endast när den är särskilt redovisad i föreningens redovisning och inte ingår i övriga bruttointäkter. Vid databeredningen förs beloppet över till intäkter för bostäder respektive lokaler; 2012–2013 fördelas det efter yta, och 2015 fördelas det efter yta när uppgiftslämnaren har lämnat ett sammantaget belopp för bostäder och lokaler. 2007 saknar variabeln därför normalt värde i databasen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma post; åren beskriver hur beloppet fördelas på bostads- och lokalintäkter. Rättar 'sammatagen'.\ncatalog:variable_text:34299:13514:13879\ncatalog:variable_text:34299:15340:16071\ncatalog:variable_text:34299:16436:16801"
+
+[[statement]]
+kind = "set"
+subject = "var:driftskostnader-for-fastighetsel-v4030"
+fields = { "description" = "Driftskostnader för fastighetsel, exklusive hushållsel. För allmännyttiga bostadsföretag redovisas hushållsel under övriga driftskostnader och el för uppvärmning under driftskostnader för uppvärmning. För bostadsrättsföreningar och privatägda flerbostadshus dras från 2012 hushållsel som ingår i uppgiften av vid granskningen, från 2013 med hjälp av schablon." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma post i parallella tabeller; tabellerna och åren anger hur hushållsel och uppvärmningsel hålls utanför. Hänvisningen till aggregatet taxebundna kostnader utelämnas.\ncatalog:variable_text:34308:13514:13879\ncatalog:variable_text:34308:15340:15706\ncatalog:variable_text:34308:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:driftskostnader-for-uppvarmning-v4020"
+fields = { "description" = "Driftskostnader för uppvärmning. För allmännyttiga bostadsföretag ingår personal- och andra omkostnader för värmeanläggningen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma post; endast tabellen för allmännyttiga bostadsföretag anger vad som ingår. Rättar 'uppvärming'.\ncatalog:variable_text:34311:13514:13879\ncatalog:variable_text:34311:13879:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:driftskostnader-ovrigt-v4070"
+fields = { "description" = "Driftskostnader som inte ingår i någon annan post. För allmännyttiga bostadsföretag ingår kabel-tv, hushållsel och ersättningar till hyresgäster för men i nyttjanderätten eller vid skada eller olycksfall, från 2012 även kostnader för boinflytande, förhandlingsersättning och fritidsmedel. För privatägda flerbostadshus avses till exempel kabel-tv och försäkringsavgifter, inte finansiella kostnader." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma restpost i parallella tabeller; exemplen skiljer sig per tabell och utökas 2012 för allmännyttan.\ncatalog:variable_text:34312:13514:13879\ncatalog:variable_text:34312:15340:15706\ncatalog:variable_text:34312:15706:16071"
+
+[[statement]]
+kind = "set"
+subject = "var:intakter-garage-och-bilplatser-v1030"
+fields = { "description" = "Bruttointäkter för garage och bilplatser, det vill säga före avdrag för hyresbortfall och rabatter." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; skiljer sig bara i en punkt i förkortningen.\ncatalog:variable_text:34346:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:v4080"
+fields = { "description" = "Summa driftskostnader: skötsel, förvaltning och fastighetsanknuten administration, uppvärmning, vatten och avlopp, sophantering, fastighetsel och övriga driftskostnader." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma summa; 2012–2015 räknar upp fastighetsel bland komponenterna, vilket den tidigare uppräkningen saknar.\ncatalog:variable_text:34420:13514:13879\ncatalog:variable_text:34420:13879:14975\ncatalog:variable_text:34420:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:varmhyra-kallhyra"
+fields = { "description" = "Om lämnade hyresintäkter avser varmhyra (inklusive kostnader för uppvärmning) eller kallhyra (exklusive uppvärmning). Vid kallhyra fördelas bränsle- och värmeavgiften på bostads- och lokalintäkter efter yta; för privatägda flerbostadshus tas då en schablon för uppvärmningen fram." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga i parallella tabeller; tabellerna skiljer sig i hur värmeavgiften tas fram vid kallhyra.\ncatalog:variable_text:34424:15340:16071"

@@ -202,3 +202,15 @@ kind = "set"
 subject = "var:kommun"
 fields = { "tags" = ["geography"] }
 evidence = "Variabeln anger geografisk kommun.\ncatalog:variable_text:11758:14975:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:ar"
+fields = { "description" = "Kalenderår som uppgifterna avser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen varierar bara i ordval och saknas vissa år.\ncatalog:variable_text:18780:14245:14610\ncatalog:variable_text:18780:14610:14975\ncatalog:variable_text:18780:14975:16071\ncatalog:variable_text:18780:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:manad"
+fields = { "description" = "Månad som uppgifterna avser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen varierar bara i ordval och saknas vissa år.\ncatalog:variable_text:18787:14245:15340\ncatalog:variable_text:18787:15340:16071\ncatalog:variable_text:18787:16071:16436"

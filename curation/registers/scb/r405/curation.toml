@@ -6998,3 +6998,39 @@ kind = "set"
 subject = "set:tid-for-tv-och-film"
 fields = { "description" = "Ungefär hur många timmar barnet tittar på tv-program, serier eller film en vanlig vardag och en helg. Vardagsfrågan gällde 2008 tv eller video, 2009–2013 tv, dvd eller dator och från 2014 tv, dator eller mobil. 2016–2019 avser frågorna tid då barnet verkligen tittar, inte när tv:n står på medan barnet gör annat, och biobesök ingår inte; helgtimmarna för lördag och söndag summeras då, medan helgfrågan 2023 avser timmar per dag." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nFrågeformuleringarna per år står i DEF; avgränsningen mot bakgrunds-tv och bio och summeringen av helgen anges bara 2016–2019; 2023 per dag.\ncatalog:variable_text:12411:14245:14610\ncatalog:variable_text:12411:14610:16801\ncatalog:variable_text:12411:16801:18262\ncatalog:variable_text:12431:19358:19723\ncatalog:variable_text:12432:19358:19723\ncatalog:variable_text:12729:13879:14245\ncatalog:variable_text:12730:16801:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:bakgrund-artal"
+fields = { "description" = "Det år som uppgifterna gäller, det vill säga insamlingsåret. Variabeln läggs till vid bearbetningen av de insamlade uppgifterna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 anger kortare att det är årtalet för insamlingen.\ncatalog:variable_text:12292:13879:18262\ncatalog:variable_text:12292:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bakgrund-hushallsidentitet"
+fields = { "description" = "Unikt löpnummer för hushållet. Syskon från samma hushåll som ingår i undersökningen har samma hushållsidentitet; undersökningen omfattar barn 10–18 år till 2014 och 12–18 år från 2015." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; åldersgruppen ändras 2015 och hänvisningen till BarnID utelämnas.\ncatalog:variable_text:12299:13879:16436\ncatalog:variable_text:12299:16436:17167\ncatalog:variable_text:12299:17167:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:barnid"
+fields = { "description" = "Avidentifierat, unikt löpnummer för varje barn som svarat i undersökningen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2009–2011 lägger till att löpnumret är unikt per svarande barn.\ncatalog:variable_text:12316:13879:14245\ncatalog:variable_text:12316:14245:14975\ncatalog:variable_text:12316:14975:15340\ncatalog:variable_text:12316:17167:18262"
+
+[[statement]]
+kind = "set"
+subject = "var:berakning-urvalsram-stratum"
+fields = { "description" = "Antal i urvalsramen per stratum, för användning i skattningssystemet (CLAN, från 2023 ETOS). Från 2023 omfattar urvalsramen alla barn i Sverige 12–18 år vid den tidpunkt urvalet dras." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; skattningssystemet byts 2023 och urvalsramen beskrivs då.\ncatalog:variable_text:12325:13879:18262\ncatalog:variable_text:12325:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrigt-inte-protesterat-namnda-satt-2"
+fields = { "description" = "Om barnet svarat nej på alla frågor om att ha gjort något för att åstadkomma en förändring eller protestera: varit på möte med politiskt parti eller annan organisation, burit pins eller andra märken för att uttrycka en åsikt, demonstrerat, köpt varor som uppfyller vissa krav (till exempel miljömärkning), skrivit insändare, tagit kontakt med en beslutsfattare eller diskuterat samhällsfrågor på nätet. Från 2009 ingår frågan om att diskutera på nätet i härledningen. 2013–2014 ingår inte frågan om insändare, och 2014 ingår inte frågan om att demonstrera." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma konstruerade variabel; W1–W3 anger härledningsfrågorna, och 2009 års tillägg och 2014 års bortfall anges med år.\ncatalog:variable_text:12554:13879:14245\ncatalog:variable_text:12554:14245:14610\ncatalog:variable_text:12554:15706:16071\ncatalog:variable_text:12554:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "var:slut"
+fields = { "description" = "Om barnet har slutat skolan. Härleds från frågan om barnet går i grundskola, gymnasiet eller någon annan utbildning." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 anger bara frågans variabelnamn.\ncatalog:variable_text:12661:13879:15340\ncatalog:variable_text:12661:15340:16436"

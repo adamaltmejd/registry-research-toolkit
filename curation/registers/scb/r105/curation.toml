@@ -3325,3 +3325,93 @@ kind = "set"
 subject = "set:yrkeshogskolebehorighet"
 fields = { "description" = "Om kursdeltagaren uppnått behörighet till yrkeshögskolan. 2005–2019 anges den för deltagare på lång kurs (minst 15 dagar) på gymnasial nivå, och 2013–2019 anges även antalet sådana kursdeltagare som uppnått behörigheten. Från 2017 avses behörighet som uppnåtts under terminen med utfärdat intyg, vilket kräver att både omfattnings- och innehållskrav är uppfyllda; den kan uppnås på allmän kurs på gymnasienivå och på särskild kurs, och uppnår deltagaren samtidigt grundläggande behörighet till högskolestudier anges bara den." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nLång kurs med kursnivå 2 anges 2005–2016 och i texten för 2013–2019 (YrkesUtb 2013–2014, YrkesBeh 2015–2019); terminsdefinitionen med intyg gäller 2017–2024.\ncatalog:variable_text:18540:15706:16071\ncatalog:variable_text:18540:16071:16436\ncatalog:variable_text:18541:12784:16436\ncatalog:variable_text:18541:17167:18262\ncatalog:variable_text:18541:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: Avbrott"
+fields = { "variable" = "antal-avbrott" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope.\n\nThe Grupper tables give the number of participants in the group who dropped out (a count); Deltagarregister gives a per-participant dropout flag: different unit and value. The count gets its own id.\ncatalog:occurrence:108792\ncatalog:occurrence:108071"
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: Avbrott"
+fields = { "variable" = "antal-avbrott" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope.\n\nThe Grupper tables give the number of participants in the group who dropped out (a count); Deltagarregister gives a per-participant dropout flag: different unit and value. The count gets its own id.\ncatalog:occurrence:108792\ncatalog:occurrence:108071"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-avbrott"
+fields = { "tags" = ["education"] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope.\n\nThe Grupper tables give the number of participants in the group who dropped out (a count); Deltagarregister gives a per-participant dropout flag: different unit and value. The count gets its own id.\ncatalog:occurrence:108792\ncatalog:occurrence:108071"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-avbrott"
+fields = { "sets" = [] }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope.\n\nThe Grupper tables give the number of participants in the group who dropped out (a count); Deltagarregister gives a per-participant dropout flag: different unit and value. The count gets its own id.\ncatalog:occurrence:108792\ncatalog:occurrence:108071"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-avbrott"
+fields = { "description" = "Antal kursdeltagare i gruppen som har avbrutit sina studier, för lång kurs (minst 15 dagar) och arbetsmarknadsutbildning (uppdragsutbildning via Folkbildningsrådet i samarbete med Arbetsförmedlingen)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad från avbrott: grupptabellerna anger antalet deltagare med avbrott, inte avbrott per deltagare.\ncatalog:variable_text:18536:14245:14610"
+
+[[statement]]
+kind = "set"
+subject = "var:ar"
+fields = { "description" = "Kalenderår som uppgifterna avser." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i deltagar-, personal- och sfi-tabellerna; bara formuleringen skiljer.\ncatalog:variable_text:18534:12784:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:avbrott"
+fields = { "description" = "Om kursdeltagaren har avbrutit sina studier på kursen. 2015 avser uppgiften lång kurs (minst 15 dagar) och arbetsmarknadsutbildning, och avbrott räknas tidigast från den 16:e dagen efter kursstart. 2016 räknas avbrott efter den 15:e dagen under kalenderåret, för studiemotiverande folkhögskolekurs (kurstyp 15 och 16) efter den 10:e dagen. Från 2017 räknas avbrott på allmän kurs, särskild kurs och etableringskurs (2017–2019 och från 2021 även bristyrkeskurs) från den 16:e kursdagen och på studiemotiverande kurs från den 11:e. Från 2017 bedömer skolan själv när avbrott ska sättas för övriga kurser med lokalt avtalad uppdragsverksamhet, och avbrott rapporteras inte för kort kurs." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDelad variabel: Deltagarregistret anger avbrott per deltagare; gruppernas antal avbrott är egen variabel, antal-avbrott. Gränsdagarna anges med sina år enligt 2015–2024 års texter.\ncatalog:variable_text:18536:14245:14610\ncatalog:variable_text:18536:16436:16801\ncatalog:variable_text:18536:16801:17167\ncatalog:variable_text:18536:17167:18262\ncatalog:variable_text:18536:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:dagar"
+fields = { "description" = "Antal kursdagar som folkhögskolekursen omfattar. En kursdag är en dag med planerat studiearbete; i deltagarregistret från 2017 krävs minst fyra undervisningstimmar om 60 minuter. I grupptabellerna anges 0 kursdagar för kulturprogram." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna lägger till kulturprogrammen och från 2017 timkravet.\ncatalog:variable_text:18543:12784:17167\ncatalog:variable_text:18543:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:forkunskkrav"
+fields = { "description" = "Om kursen har förkunskapskrav, det vill säga behörighetskrav för att få läsa den." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; W0 beskriver kravet och W1 att variabeln anger om krav finns.\ncatalog:variable_text:18569:12784:17167\ncatalog:variable_text:18569:17167:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "description" = "Kommun där personen är folkbokförd den 31 december referensåret. För sfi-deltagare anges kommunen där personen bor." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; sfi-tabellen anger bostadskommun medan deltagarregistret anger folkbokföringskommun.\ncatalog:variable_text:18613:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "description" = "Personens kön, härlett från personnumrets elfte siffra: udda siffra ger man, jämn siffra kvinna." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma härledning i alla tabeller; rättar 'ojämt'/'jämt'.\ncatalog:variable_text:18617:14245:17532\ncatalog:variable_text:18617:17532:19174"
+
+[[statement]]
+kind = "set"
+subject = "var:langd-eftergymnasial"
+fields = { "description" = "Längd på eftergymnasial utbildning i antal terminer räknat i heltidsstudier. Från 2020 avser uppgiften särskild kurs." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 avgränsar till särskild kurs. Rättar 'särskid'.\ncatalog:variable_text:18633:12784:17167\ncatalog:variable_text:18633:18262:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:omfattningskrav"
+fields = { "description" = "Om deltagaren har uppnått omfattningskravet under kursen, vilket krävs för behörighet till eftergymnasiala studier. Omfattningskravet kan bara uppnås på allmän kurs (kurstyp 01) på gymnasienivå." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; W0 och W1 kompletterar varandra med var kravet kan uppnås och vad det ger.\ncatalog:variable_text:18642:17532:18262\ncatalog:variable_text:18642:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "var:studieomd"
+fields = { "description" = "Bedömning av deltagarens förmåga att studera vidare (studieomdöme). Omdömet sätts årligen för deltagare på allmän kurs på gymnasienivå som är minst 30 veckor lång och kan sättas för allmän kurs på grundskolenivå av samma längd." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; W1 stryker bara kurstypskoden.\ncatalog:variable_text:18663:17167:18262\ncatalog:variable_text:18663:18262:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesutb"
+fields = { "description" = "Om kursen är en yrkesutbildning. I deltagarregistret avser uppgiften endast allmän kurs (kurstyp 01) och särskild kurs (kurstyp 02)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; deltagarregistret avgränsar till allmän och särskild kurs.\ncatalog:variable_text:18697:16436:17532\ncatalog:variable_text:18697:17532:18262\ncatalog:variable_text:18697:18262:20089"

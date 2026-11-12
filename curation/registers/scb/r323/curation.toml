@@ -478,3 +478,45 @@ kind = "set"
 subject = "set:upplupen-ranta"
 fields = { "description" = "Ränta som löpt upp under perioden på ett räntebärande värdepapper: som räntekostnad från innehavarens eller emittentens perspektiv, eller som den del av marknadspriset som består av periodens upplupna ränta. Emittentens upplupna ränta beräknas 2025 från kupongräntan och antalet dagar sedan senaste kupongdag, och den upplupna räntan i marknadspriset från avkastningen till förfall och antalet dagar sedan periodens start, båda delat med antal dagar per år enligt dagräkningskonventionen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF ger de tre perspektiven; formel anges bara i OP för emittenten 2025 och för upplupen ränta, inte för innehavaren.\ncatalog:variable_text:51591:19723:20089\ncatalog:variable_text:51591:20089:20454\ncatalog:variable_text:51592:19723:20089\ncatalog:variable_text:51592:20089:20454\ncatalog:variable_text:51593:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:datelastedited"
+fields = { "description" = "Datum och tid då posten lades in i tabellen, angivet som år, månad och dag. Genereras av systemet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; rättar 'Generas'.\ncatalog:variable_text:51603:19723:20089\ncatalog:variable_text:51603:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:datelastmodified"
+fields = { "description" = "Tidpunkt för den senaste ändringen av raden. Genereras av systemet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; rättar 'Generas'.\ncatalog:variable_text:51604:19723:20089\ncatalog:variable_text:51604:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:debtid"
+fields = { "description" = "Löpnummer som identifierar det räntebärande värdepapperet i databasen. Genereras av systemet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; rättar 'Generas'.\ncatalog:variable_text:51606:19723:20089\ncatalog:variable_text:51606:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:publishperiod"
+fields = { "description" = "Den period som uppgifterna i registret avser. Genereras av systemet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; rättar 'Generas'.\ncatalog:variable_text:51630:19723:20089\ncatalog:variable_text:51630:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:rowstatus"
+fields = { "description" = "Status för raden i databastabellen. Genereras av systemet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; rättar 'Generas'.\ncatalog:variable_text:51638:19723:20089\ncatalog:variable_text:51638:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:versionsnummer"
+fields = { "description" = "Versionsnummer för till exempel prisnoteringen. Genereras av systemet." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; rättar 'Generas'.\ncatalog:variable_text:51641:19723:20089\ncatalog:variable_text:51641:20089:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:yieldtomaturity"
+fields = { "description" = "Årlig avkastning i procent för en innehavare av obligationen fram till förfallodagen. Beräknad som den diskonteringsränta som används för att räkna fram nuvärdet av framtida kassaflöden; 2025 levereras uppgiften från ECB." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 förklarar beräkningen och anger ECB som källa.\ncatalog:variable_text:51642:19723:20089\ncatalog:variable_text:51642:20089:20454"

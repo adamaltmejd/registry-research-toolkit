@@ -496,3 +496,9 @@ kind = "set"
 subject = "set:postadress"
 fields = { "description" = "Enhetens postadress, hel eller uppdelad på c/o-adress, gatudel, gatunummer, ytterligare specificering av gatudelen, postnummer och postort. För juridiska enheter med ett enda arbetsställe hämtas adressen från Skatteverket (postorten även från Svensk Adressändring AB); för företag med flera arbetsställen samlas den in genom SCB:s kontroll av uppgifter i Företagsdatabasen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF ger postadressen och dess delar; OP anger sammanställningen ur delarna och källorna Skatteverket, Svensk Adressändring och FDB-kontrollen.\ncatalog:variable_text:61446:15340:20089\ncatalog:variable_text:61449:15340:20089\ncatalog:variable_text:61450:15340:17897\ncatalog:variable_text:61451:15340:20089\ncatalog:variable_text:61464:15340:17897\ncatalog:variable_text:61464:17897:20089\ncatalog:variable_text:61465:15340:17897\ncatalog:variable_text:61466:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:komlanstkod"
+fields = { "description" = "Om köparen av verksamheten eller tjänsten är en kommun eller ett landsting (region). Från 2019 sätts koden maskinellt utifrån variabeln för kommun eller landsting." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 beskriver att koden härleds maskinellt, angivet med år.\ncatalog:variable_text:61457:15340:17897\ncatalog:variable_text:61457:17897:20089"

@@ -7728,3 +7728,75 @@ kind = "set"
 subject = "set:taxeringsdistrikt"
 fields = { "description" = "Distrikt för taxeringssyfte (1968–1977) för personens aktuella folkbokföring eller mantalsskrivning, där personen var folkbokförd vid dödsfall eller medborgarskapsändring, eller som personen flyttar till eller från." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF delas av alla; OP skiljer folkbokföring, mantalsskrivning, händelse och flytt till/från.\ncatalog:variable_text:48629:-366:-365\ncatalog:variable_text:48691:-731:2922\ncatalog:variable_text:48692:-366:-365\ncatalog:variable_text:48693:-731:2922\ncatalog:variable_text:48694:-731:2922"
+
+[[statement]]
+kind = "set"
+subject = "flyttningar-1968-1997: PersonNr"
+fields = { "operational_definition" = "Personnumret består av: Födelsetid (8 siffror), födelsenummer (3 siffror) och en kontrollsiffra." }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope.\n\nIn In- och utvandringar 1968-1997, PersonNr carries the samhörighetsperson text and PersonNrSamh the plain personnummer text: swapped. Every other RTB table gives PersonNr this text. The raw SCB export (Registerinformation.csv, current-scb-inputs 2026-03) carries this text itself; the reader places it faithfully.\ncatalog:occurrence:435932\ncatalog:occurrence:435933"
+
+[[statement]]
+kind = "set"
+subject = "flyttningar-1968-1997: PersonNrSamh"
+fields = { "operational_definition" = "Personnummer för samhörighetsperson. För gifta personer är samhörighetsperson make/maka. För barn är samhörighetsperson antingen någon av föräldrarna eller annan person hos vilken barnet är folkbokfört. Personnumret består av: Födelsetid (8 siffror), födelsenummer (3 siffror) och en kontrollsiffra." }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope.\n\nSwapped with PersonNr in this table; every other RTB table gives PersonNrSamh this text. The raw SCB export (Registerinformation.csv, current-scb-inputs 2026-03) carries this text itself; the reader places it faithfully.\ncatalog:occurrence:435933\ncatalog:occurrence:435932"
+
+[[statement]]
+kind = "set"
+subject = "var:ar"
+fields = { "description" = "Kalenderår för händelsen: civilståndsändringen, dödsfallet, barnets födelse, flyttningen, invandringen, medborgarskapsändringen eller utvandringen." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i alla tabeller och år; händelsen följer tabellen, och 1998–2016 anges bara årtalet som värde.\ncatalog:variable_text:48457:10227:10592\ncatalog:variable_text:48457:10592:10957\ncatalog:variable_text:48457:10957:11323\ncatalog:variable_text:48457:11323:11688\ncatalog:variable_text:48457:11688:12053\ncatalog:variable_text:48457:12053:12418\ncatalog:variable_text:48457:12418:12784\ncatalog:variable_text:48457:12784:13149\ncatalog:variable_text:48457:13149:13514\ncatalog:variable_text:48457:13514:13879\ncatalog:variable_text:48457:13879:14245\ncatalog:variable_text:48457:14245:14610\ncatalog:variable_text:48457:14610:14975\ncatalog:variable_text:48457:14975:15340\ncatalog:variable_text:48457:15340:15706\ncatalog:variable_text:48457:15706:16071\ncatalog:variable_text:48457:16071:16436\ncatalog:variable_text:48457:16436:16801\ncatalog:variable_text:48457:16801:17167\ncatalog:variable_text:48457:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "var:familjeidentitet-rtb"
+fields = { "description" = "Personnumret för den äldsta personen i RTB-familjen. Familjer avgränsas utifrån relationer mellan personer som är folkbokförda på samma fastighet, med uppgifter från Skatteverket." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; tabellen Folkbokförda personer beskriver i stället personnumrets uppbyggnad.\ncatalog:variable_text:48510:7669:7670\ncatalog:variable_text:48510:10591:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:familjetyp"
+fields = { "description" = "Klassificering av familjens sammansättning, till exempel familj med eller utan barn, härledd från folkbokföringen. Familjer avgränsas utifrån relationer mellan personer som är folkbokförda på samma fastighet; för 1990–1997 används även SCB:s register över födda och Andragenerationsregistret med uppgifter från Folk- och bostadsräkningarna 1960 och 1970." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 1990–1997 anger fler källor än Skatteverket.\ncatalog:variable_text:48513:7669:7670\ncatalog:variable_text:48513:10591:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-eller-lan"
+fields = { "description" = "Födelselän för personer födda i Sverige, annars födelseland enligt den då gällande indelningen. För födda före 1948 anges födelselänet, för födda från 1948 det län där modern var folkbokförd vid födelsen, eller födelselänet om modern inte var folkbokförd. I civilståndsändringar finns uppgiften inte för 1968–1977." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i alla tabeller; Civilståndsändringar anger att uppgiften saknas 1968–1977; rättar 'födelselande'.\ncatalog:variable_text:48540:-731:2922\ncatalog:variable_text:48540:2922:3286"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr"
+fields = { "description" = "Personens personnummer, tilldelat av Skatteverket. Det består av födelsetid (åtta siffror), födelsenummer (tre siffror) och en kontrollsiffra." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDen avvikande texten kom från en annan kolumn i SCB:s export och är rättad på förekomsten. In- och utvandringar 1968–1997 hade samhörighetspersonens text.\ncatalog:variable_text:48660:-3287:-731\ncatalog:variable_text:48660:-731:-366\ncatalog:variable_text:48660:17532:18352"
+
+[[statement]]
+kind = "set"
+subject = "var:personnr-samhorighet"
+fields = { "description" = "Personnummer för samhörighetspersonen: för gifta make eller maka, för barn någon av föräldrarna eller en annan person som barnet är folkbokfört hos." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDen avvikande texten kom från en annan kolumn i SCB:s export och är rättad på förekomsten. In- och utvandringar 1968–1997 hade den allmänna personnummertexten.\ncatalog:variable_text:48668:-731:-366"
+
+[[statement]]
+kind = "set"
+subject = "var:personnummer-relationsperson"
+fields = { "description" = "Personnummer för relationspersonen vid civilståndsändringen: make, maka eller partner, eller före detta make, maka eller partner." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\n1968–1997 beskrivs nuvarande och före detta make/maka/partner i var sin text, från 2009 båda tillsammans; 1998–2008 bara personnumrets uppbyggnad.\ncatalog:variable_text:48675:-731:10227\ncatalog:variable_text:48675:10227:14245\ncatalog:variable_text:48675:14245:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:popdat"
+fields = { "description" = "Datum som uppgifterna avser, angivet som år, månad och dag. För 1998–2016 är det den 31 december respektive år." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 1998–2016 anger datumvärdet för året.\ncatalog:variable_text:48676:10591:10592\ncatalog:variable_text:48676:10956:10957\ncatalog:variable_text:48676:11322:11323\ncatalog:variable_text:48676:11687:11688\ncatalog:variable_text:48676:12052:12053\ncatalog:variable_text:48676:12417:12418\ncatalog:variable_text:48676:12783:12784\ncatalog:variable_text:48676:13148:13149\ncatalog:variable_text:48676:13513:13514\ncatalog:variable_text:48676:13878:13879\ncatalog:variable_text:48676:14244:14245\ncatalog:variable_text:48676:14609:14610\ncatalog:variable_text:48676:14974:14975\ncatalog:variable_text:48676:15339:15340\ncatalog:variable_text:48676:15705:15706\ncatalog:variable_text:48676:16070:16071\ncatalog:variable_text:48676:16435:16436\ncatalog:variable_text:48676:16800:16801\ncatalog:variable_text:48676:17166:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:utflortnord"
+fields = { "description" = "Ort i Norden som personen utvandrade från vid invandringen, i tabellen Folkbokförda personer den senaste. Saknar värde om personen inte invandrat från Norden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; Folkbokförda personer anger den senaste utvandringen.\ncatalog:variable_text:48701:10227:10591\ncatalog:variable_text:48701:10591:10592"
+
+[[statement]]
+kind = "set"
+subject = "var:vardbarnbo"
+fields = { "description" = "Om personen är vårdnadshavare till minst ett barn och om barnet eller barnen är folkbokförda i samma bostad som vårdnadshavaren, i en annan bostad eller båda. Härleds från folkbokföringens uppgifter om vårdnadshavare och barn." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; källan till härledningen anges från 2016 och preciseras från 2020.\ncatalog:variable_text:48711:15339:15340\ncatalog:variable_text:48711:17166:17167\ncatalog:variable_text:48711:18352:18353"
