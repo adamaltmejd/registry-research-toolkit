@@ -3325,6 +3325,12 @@ evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections
 
 [[statement]]
 kind = "set"
+subject = "anstallningar-nattbefolkning: KostnErs where key = 'v6096'"
+fields = { "variable" = "kostnadsersattningar" }
+evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nWith the KUAGG KostnErs column split off to kostnadsersattningar-foretag, the employment-table KostnErs under VarId 6096 (1996–2018) keeps the id kostnadsersattningar; VarId 1192 (2019–) stays ovriga-kostnadsersattningar."
+
+[[statement]]
+kind = "set"
 subject = "var:antal-med-inrikes-tjansteresa-over-tre-manader"
 fields = { "description" = "Antal kontrolluppgifter där minst en inrikes tjänsteresa om mer än tre månader har gjorts, summerat per företag eller organisation." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nRättar 'om på än' till 'om mer än'; summeringen per företag följer av tabellen och anges från 2010.\ncatalog:variable_text:45808:9496:14610\ncatalog:variable_text:45808:14610:17532\ncatalog:variable_text:45808:17532:17897"
@@ -3478,9 +3484,3 @@ kind = "set"
 subject = "var:typ-av-post"
 fields = { "description" = "Vilken typ av post uppgifterna kommer från. Från 2019 anger koden om posten bygger på uppgifter från AGI eller vilken typ av kontrolluppgift." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; från 2019 förklaras att koden skiljer AGI från typ av kontrolluppgift.\ncatalog:variable_text:45924:9496:14610\ncatalog:variable_text:45924:14975:15340\ncatalog:variable_text:45924:17897:20089"
-
-[[statement]]
-kind = "set"
-subject = "anstallningar-nattbefolkning: KostnErs where key = 'v6096'"
-fields = { "variable" = "kostnadsersattningar" }
-evidence = "Maintainer ruling 2026-11-11 (#2322): identity fixes and corrections of previous curation are in scope. crates/DESIGN.md: a material change in meaning requires a separate variable; parallel tables get a candidate split, succession over time a continues link with an evidenced at.\n\nWith the KUAGG KostnErs column split off to kostnadsersattningar-foretag, the employment-table KostnErs under VarId 6096 (1996–2018) keeps the id kostnadsersattningar; VarId 1192 (2019–) stays ovriga-kostnadsersattningar."
