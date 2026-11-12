@@ -76,8 +76,7 @@ pages() {
   done
 }
 
-# Each (table, variable) the order reads: its segments in the table, and the variable's
-# own segments (a row key may be another register's variable).
+# Each (table, variable) the order reads.
 if [ "$mode" = materialize ]; then
   pairs=$(jq -r '.data.files[].columns[].refs[] | "\(.table) \(.variable)"' "$dir/$answer")
 else
@@ -85,15 +84,29 @@ else
                  (.data.row_keys[] | .table as $t | .columns[] | "\($t) \(.variable)")' \
     "$dir/$answer")
 fi
+pairs=$(sort -u <<< "$pairs" | sed '/^ *$/d')
+
+# One call per table for up to 200 of its variables at once (`segments` takes them as a
+# list), not one per pair: the hosted rate limit allows 60 calls, then one a second.
 i=0
-while read -r table variable; do
-  [ -z "$table" ] && continue
+while read -r arguments; do
   i=$((i + 1))
-  pages segments "$dir/segments/$(printf '%04d' "$i")-table" \
-    "$(jq -nc --arg ref "$table" --arg variable "$variable" '{ref: $ref, variable: $variable}')"
-  pages segments "$dir/segments/$(printf '%04d' "$i")-variable" \
-    "$(jq -nc --arg ref "$variable" '{ref: $ref}')"
-done <<< "$(sort -u <<< "$pairs")"
+  pages segments "$dir/segments/$(printf '%04d' "$i")-table" "$arguments"
+done < <(jq -Rnc '[inputs | split(" ") | {table: .[0], variable: .[1]}] |
+  group_by(.table)[] | .[0].table as $t | map(.variable) |
+  range(0; length; 200) as $i | {ref: $t, variable: .[$i:$i + 200]}' <<< "$pairs")
+
+# A variable's own segments only where its table has none: compile falls back to them
+# for a row key that is another register's variable.
+while read -r table variable; do
+  if ! jq -e --arg t "$table" --arg v "$variable" \
+    'select(.data.items | any(.table == $t and .variable == $v))' \
+    "$dir"/segments/*-table-*.json >/dev/null 2>&1; then
+    i=$((i + 1))
+    pages segments "$dir/segments/$(printf '%04d' "$i")-variable" \
+      "$(jq -nc --arg ref "$variable" '{ref: $ref}')"
+  fi
+done <<< "$pairs"
 
 for hash in $(jq -r '.data.items[].value_set.hash // empty' "$dir"/segments/*.json | sort -u); do
   pages values "$dir/values/$hash" "$(jq -nc --arg hash "$hash" '{value_set: $hash}')"

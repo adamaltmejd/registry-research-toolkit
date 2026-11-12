@@ -87,8 +87,8 @@ What `compile` and `generate` hold to; each rule names its one place in the code
 `reg-mock compile --project --rules --answers DIR --out`. `DIR` holds exactly one order
 answer, `order.json` (the `order` tool's `order`, any catalog) or `manifest.json` (its
 `materialize_order`, a steward's), plus every page under `segments/` (`segments` with
-the table as `ref` and `variable`, and with the variable as `ref` for a row key from
-another register) and `values/` (`values` by `value_set`, each answer's
+the table as `ref` and its variables as `variable`, and with the variable as `ref` where
+its table has none, for a row key from another register) and `values/` (`values` by `value_set`, each answer's
 pages named `<answer>-0001.json`, `-0002.json`, ..., as `save-answers.sh` writes them).
 A page left out (numbering with a gap, or a last page whose `next_cursor` is not null),
 answers from different catalog generations, an order answer for another version of the
