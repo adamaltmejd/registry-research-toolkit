@@ -546,7 +546,17 @@ fn tools_list_matches_golden() {
     // Fails when a tool, its description or a schema changes without updating
     // `cases/mcp/tools-list.json` (byte for byte as the golden spells them), or a tool
     // name drifts from `operations.toml`. Under `REG_META_BLESS=1` it writes the golden.
+    // Also fails when `initialize`, which hosted clients send first, stops naming the
+    // server.
     let port = reader();
+    let initialize = json!({
+        "protocolVersion": PROTOCOL,
+        "capabilities": {},
+        "clientInfo": {"name": "conformance", "version": "0"},
+    });
+    let (status, reply) = rpc(port, "initialize", &initialize).unwrap();
+    assert_eq!(status, 200, "{reply}");
+    assert_eq!(reply["result"]["serverInfo"]["name"], "reg-meta", "{reply}");
     let mut headers = mcp_headers();
     headers.push(("content-type", "application/json".to_owned()));
     let request = json!({"jsonrpc": "2.0", "id": 1, "method": "tools/list", "params": {}});

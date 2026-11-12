@@ -28,28 +28,38 @@ esac
 rm -rf "$dir/segments" "$dir/values" "$dir/order.json" "$dir/manifest.json"
 mkdir -p "$dir/segments" "$dir/values"
 
-# One `tools/call` of TOOL with the JSON object ARGUMENTS; its document goes to FILE.
-# The server's rate limit answers 429 with Retry-After, which curl's --retry honours.
-# On a tool error, its code, message and each error finding go to stderr.
-call() {
-  local out=$1 tool=$2 arguments=$3 reply
-  reply=$(jq -n --arg tool "$tool" --argjson arguments "$arguments" \
-    '{jsonrpc: "2.0", id: 1, method: "tools/call",
-      params: {name: $tool, arguments: $arguments}}' |
-    curl -sS --fail-with-body --retry 30 -X POST "$url" \
-      -H 'content-type: application/json' \
-      -H 'accept: application/json, text/event-stream' --data @-)
-  jq '.result.structuredContent' <<< "$reply" > "$out"
-  if [ "$(jq -r '.result.isError' <<< "$reply")" != false ]; then
-    jq -r '.error | "\(.code): \(.message)",
-      (.fields.findings[]? | select(.level == "error") | "  \(.path): \(.message)")' \
-      "$out" >&2 2>/dev/null || echo "$reply" >&2
-    exit 1
-  fi
+# Print an error document's code, message and each error finding on stderr, or the
+# reply as received when it holds none (a JSON-RPC error, a proxy's page).
+report() {
+  jq -er '(.result.structuredContent // .) | .error | select(type == "object") |
+    "\(.code): \(.message)",
+    (.fields.findings[]? | select(.level == "error") | "  \(.path): \(.message)")' \
+    <<< "$1" >&2 2>/dev/null || echo "$1" >&2
+  exit 1
 }
 
-call "$dir/$answer" order "$(jq -c --arg op "$operation" \
-  '{operation: $op, project: .}' "$project")"
+# POST the JSON-RPC request on stdin as a `tools/call`; its document goes to FILE. The
+# server's rate limit answers 429 with Retry-After, which curl's --retry honours.
+post() {
+  local out=$1 reply
+  reply=$(curl -sS --fail-with-body --retry 30 -X POST "$url" \
+    -H 'content-type: application/json' \
+    -H 'accept: application/json, text/event-stream' --data @-) || report "$reply"
+  [ "$(jq -r '.result.isError' <<< "$reply" 2>/dev/null)" = false ] || report "$reply"
+  jq '.result.structuredContent' <<< "$reply" > "$out"
+}
+
+# One `tools/call` of TOOL with the JSON object ARGUMENTS.
+call() {
+  jq -n --arg tool "$2" --argjson arguments "$3" \
+    '{jsonrpc: "2.0", id: 1, method: "tools/call",
+      params: {name: $tool, arguments: $arguments}}' | post "$1"
+}
+
+# Built from the file, not argv: a large project stays under the argument size limit.
+jq --arg op "$operation" '{jsonrpc: "2.0", id: 1, method: "tools/call",
+  params: {name: "order", arguments: {operation: $op, project: .}}}' "$project" |
+  post "$dir/$answer"
 
 # Every page of a listing, as PREFIX-0001.json, PREFIX-0002.json, ...
 pages() {

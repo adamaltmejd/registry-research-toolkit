@@ -373,6 +373,11 @@ over a stale check.
 review; the release does not touch them. The release notes must name any change to the
 reusable workflows' inputs (`steward-build.yml`, `steward-deploy.yml`,
 `steward-bump.yml`) or to `HOLDINGS_SCHEMA_VERSION`: a steward meets it at that PR.
+The bump runs `steward-bump.yml` at the steward's current pin against the newest
+release's assets, so a release that renames or drops an asset the old pin downloads
+breaks that bump. Name it in the notes and bump each steward by hand: push a branch
+whose `bump.yml` calls `steward-bump.yml` at the new tag, then
+`gh workflow run Bump --repo <steward repo> --ref <branch>`.
 
 **Binaries.** The `binaries` job uploads `reg-meta-<target>` and
 `reg-export-gate-<gate version>-<target>` for `x86_64-unknown-linux-gnu`,

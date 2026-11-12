@@ -33,7 +33,7 @@ bindings every result type would exist twice, as a Rust struct and as a Pydantic
 for OpenAPI, which is the drift this design removes. Most of the old backend was catalog
 logic (node assembly, search ranking, semantic validation) that belongs in the operation
 set, where agents get it too. The deploy image is one static binary plus the baked DB
-(the 1 GB Fly VM is kept for the page cache), and local MCP needs no Python environment.
+(the 1 GB Fly VM is kept for the page cache).
 
 ## One implementation per contract
 
