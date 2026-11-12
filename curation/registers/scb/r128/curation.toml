@@ -1088,8 +1088,8 @@ evidence = "Antalet och delägarkodningen mäter samma koncept.\ncatalog:variabl
 [[statement]]
 kind = "set"
 subject = "var:antal-med-inrikes-tjansteresa-over-tre-manader"
-fields = { "sets" = [] }
-evidence = "Enheten ändras från antal personer till kontrolluppgifter. Coordinator group membership: Kodningarna mäter förekomst av inrikes respektive utrikes tjänsteresa. Antalsvariablernas beskrivningar anger kontrolluppgifter och belägger inte definitionens personantal.\ncatalog:variable_text:39029:14610:17532\ncatalog:variable_text:39029:17532:17897\ncatalog:variable_text:39044:14610:17532\ncatalog:variable_text:39044:17532:17897\ncatalog:variable_text:39086:15340:17897\ncatalog:variable_text:39139:15340:17897"
+fields = { "sets" = ["tjansteresor"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nKUAGG AntInrikes/AntUtrikes count KU with the person flags Inrikes/Utrikes (same definitions), which are in tjansteresor Joins set:tjansteresor."
 
 [[statement]]
 kind = "set"
@@ -1100,8 +1100,8 @@ evidence = "Enheten ändras från antal personer till kontrolluppgifter. Coordin
 [[statement]]
 kind = "set"
 subject = "var:antal-med-kostforman"
-fields = { "sets" = [] }
-evidence = "Enheten ändras från personer till kontrolluppgifter. Coordinator group membership: Kostforman mäter uttryckligen förekomst av kostförmån. Antkostforman räknar enligt beskrivningen kontrolluppgifter; underlaget säkerställer inte att detta är antal mottagare enligt den fasta definitionen. Dess föreslagna medlemskap hålls därför utanför i väntan på granskning.\ncatalog:variable_text:39030:14610:17532\ncatalog:variable_text:39030:17532:17897\ncatalog:variable_text:39096:15340:17897"
+fields = { "sets" = ["kostforman"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nPerson flag KostForman and its per-company count AntKostForman ('Antal kontrolluppgifter där kostförmån har erhållits'); both ungrouped Forms set:kostforman."
 
 [[statement]]
 kind = "set"
@@ -1112,8 +1112,8 @@ evidence = "Enheten ändras från personer till kontrolluppgifter. Coordinator g
 [[statement]]
 kind = "set"
 subject = "var:antal-med-logiersattning-for-utlagg"
-fields = { "sets" = [] }
-evidence = "Enheten ändras från personer till kontrolluppgifter. Coordinator group membership: Logiersattning mäter uttryckligen förekomst av logiersättning motsvarande utlägg. Antlogiers räknar enligt beskrivningen kontrolluppgifter; underlaget säkerställer inte att detta är antal mottagare enligt den fasta definitionen. Dess föreslagna medlemskap hålls därför utanför i väntan på granskning.\ncatalog:variable_text:39031:14610:17532\ncatalog:variable_text:39031:17532:17897\ncatalog:variable_text:39101:15340:17897"
+fields = { "sets" = ["logiersattning"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nPerson flag LogiErs and its per-company count AntLogiErs ('logiersättning motsvarande utlägg'); both ungrouped Forms set:logiersattning."
 
 [[statement]]
 kind = "set"
@@ -1172,8 +1172,8 @@ evidence = "Personantalet hör till kontant bruttolön.\ncatalog:variable_text:3
 [[statement]]
 kind = "set"
 subject = "var:antranteforman"
-fields = { "sets" = [] }
-evidence = "Enheten ändras från personer till kontrolluppgifter. Coordinator group membership: Ranteforman mäter uttryckligen förekomst av ränteförmån. Antranteforman räknar enligt beskrivningen kontrolluppgifter; underlaget säkerställer inte att detta är antal mottagare enligt den fasta definitionen. Dess föreslagna medlemskap hålls därför utanför i väntan på granskning. Ranta är ett fristående räntebelopp och omfattas inte.\ncatalog:variable_text:39036:14610:17532\ncatalog:variable_text:39036:17532:17897\ncatalog:variable_text:39115:9496:11688\ncatalog:variable_text:39116:15340:17897"
+fields = { "sets" = ["ranteforman"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nPerson flag RanteForman and its per-company count AntRanteForman; both ungrouped (ranta is a different amount, stays out) Forms set:ranteforman."
 
 [[statement]]
 kind = "set"
@@ -1196,8 +1196,8 @@ evidence = "Antalet hör till representationsersättning.\ncatalog:variable_text
 [[statement]]
 kind = "set"
 subject = "var:antal-med-resekostnadsersattning-for-utlagg"
-fields = { "sets" = [] }
-evidence = "Enheten ändras från personer till kontrolluppgifter. Coordinator group membership: Förekomstkodningen och den uttryckligen inkluderade ersättningen för utomlands bosatta stöds. Antreseers mäter kontrolluppgifter snarare än belagt mottagarantal.\ncatalog:variable_text:39038:14610:17532\ncatalog:variable_text:39038:17532:17897\ncatalog:variable_text:39069:17532:20089\ncatalog:variable_text:39120:15340:17897"
+fields = { "sets" = ["resekostnadsersattning"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nKUAGG AntReseErs counts KU with person flag ReseErs (reseers), which is in resekostnadsersattning Joins set:resekostnadsersattning."
 
 [[statement]]
 kind = "set"
@@ -1268,8 +1268,8 @@ evidence = "Enheten ändras från personer till kontrolluppgifter.\ncatalog:vari
 [[statement]]
 kind = "set"
 subject = "var:antal-med-utrikes-tjansteresa-over-tre-manader"
-fields = { "sets" = [] }
-evidence = "Enheten ändras från antal personer till kontrolluppgifter. Coordinator group membership: Kodningarna mäter förekomst av inrikes respektive utrikes tjänsteresa. Antalsvariablernas beskrivningar anger kontrolluppgifter och belägger inte definitionens personantal.\ncatalog:variable_text:39029:14610:17532\ncatalog:variable_text:39029:17532:17897\ncatalog:variable_text:39044:14610:17532\ncatalog:variable_text:39044:17532:17897\ncatalog:variable_text:39086:15340:17897\ncatalog:variable_text:39139:15340:17897"
+fields = { "sets" = ["tjansteresor"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nKUAGG AntInrikes/AntUtrikes count KU with the person flags Inrikes/Utrikes (same definitions), which are in tjansteresor Joins set:tjansteresor."
 
 [[statement]]
 kind = "set"
@@ -1844,8 +1844,8 @@ evidence = "Kön är en demografisk uppgift.\ncatalog:variable_text:39095:12053:
 [[statement]]
 kind = "set"
 subject = "var:kostforman"
-fields = { "sets" = [] }
-evidence = "Kostförmån är en namngiven förmånskomponent. Coordinator group membership: Medlemmarna mäter samlade förmåner eller namngivna förmånskomponenter. Blandbelopp som även omfattar pension och andra ersättningar utesluts. Kostforman mäter uttryckligen förekomst av kostförmån. Antkostforman räknar enligt beskrivningen kontrolluppgifter; underlaget säkerställer inte att detta är antal mottagare enligt den fasta definitionen. Dess föreslagna medlemskap hålls därför utanför i väntan på granskning.\ncatalog:variable_text:39010:17532:17897\ncatalog:variable_text:39030:14610:17532\ncatalog:variable_text:39030:17532:17897\ncatalog:variable_text:39056:17532:20089\ncatalog:variable_text:39058:15340:20089\ncatalog:variable_text:39059:17897:19723\ncatalog:variable_text:39060:15340:20089\ncatalog:variable_text:39061:17897:19723\ncatalog:variable_text:39062:17532:20089\ncatalog:variable_text:39076:17532:20089\ncatalog:variable_text:39077:15340:20089\ncatalog:variable_text:39078:17532:20089\ncatalog:variable_text:39079:15340:17897\ncatalog:variable_text:39096:15340:17897\ncatalog:variable_text:39109:10227:10592\ncatalog:variable_text:39110:18993:19358\ncatalog:variable_text:39116:15340:17897\ncatalog:variable_text:39131:18262:20089"
+fields = { "sets" = ["kostforman"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nPerson flag KostForman and its per-company count AntKostForman ('Antal kontrolluppgifter där kostförmån har erhållits'); both ungrouped Forms set:kostforman."
 
 [[statement]]
 kind = "set"
@@ -1904,8 +1904,8 @@ evidence = "Arbetsställets län anger geografiskt läge.\ncatalog:variable_text
 [[statement]]
 kind = "set"
 subject = "var:logiersattning"
-fields = { "sets" = [] }
-evidence = "Logiersättning är en namngiven kostnadsersättningskomponent. Coordinator group membership: Samtliga avser samlade kostnadsersättningar eller namngivna komponenter. Mappningsosäkerheten mellan samlade och övriga kostnadsersättningar ändrar inte denna tillhörighet. Logiersattning mäter uttryckligen förekomst av logiersättning motsvarande utlägg. Antlogiers räknar enligt beskrivningen kontrolluppgifter; underlaget säkerställer inte att detta är antal mottagare enligt den fasta definitionen. Dess föreslagna medlemskap hålls därför utanför i väntan på granskning.\ncatalog:variable_text:39031:14610:17532\ncatalog:variable_text:39031:17532:17897\ncatalog:variable_text:39054:15340:20089\ncatalog:variable_text:39055:18262:19723\ncatalog:variable_text:39069:17532:20089\ncatalog:variable_text:39098:18262:20089\ncatalog:variable_text:39101:15340:17897\ncatalog:variable_text:39107:17897:20089\ncatalog:variable_text:39119:9496:11688\ncatalog:variable_text:39120:15340:17897\ncatalog:variable_text:39133:17897:20089\ncatalog:variable_text:39134:18262:19723\ncatalog:variable_text:39135:15340:17897\ncatalog:variable_text:39136:15340:17897"
+fields = { "sets" = ["logiersattning"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nPerson flag LogiErs and its per-company count AntLogiErs ('logiersättning motsvarande utlägg'); both ungrouped Forms set:logiersattning."
 
 [[statement]]
 kind = "set"
@@ -1952,8 +1952,8 @@ evidence = "Kodningen hör till företagets näringsgren.\ncatalog:variable_text
 [[statement]]
 kind = "set"
 subject = "var:ovrersforskskatt"
-fields = { "sets" = [] }
-evidence = "Skattefria ersättningar och förmåner är inkomstrelaterade.\ncatalog:variable_text:39105:17897:20089"
+fields = { "sets" = ["ovriga-ersattningar"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nKUAGG OvrErsForskSkatt 2019–2024 (inside ovriga-ersattningar-foretag) is 'Summering av värdet i variabeln per organisationsnummer' of the same-named person column ovrersforskskatt Joins set:ovriga-ersattningar."
 
 [[statement]]
 kind = "set"
@@ -2054,8 +2054,8 @@ evidence = "Betald ränta saknar passande kandidatgrupp.\ncatalog:variable_text:
 [[statement]]
 kind = "set"
 subject = "var:ranteforman"
-fields = { "sets" = [] }
-evidence = "Ränteförmån är en namngiven förmånskomponent. Coordinator group membership: Medlemmarna mäter samlade förmåner eller namngivna förmånskomponenter. Blandbelopp som även omfattar pension och andra ersättningar utesluts. Ranteforman mäter uttryckligen förekomst av ränteförmån. Antranteforman räknar enligt beskrivningen kontrolluppgifter; underlaget säkerställer inte att detta är antal mottagare enligt den fasta definitionen. Dess föreslagna medlemskap hålls därför utanför i väntan på granskning. Ranta är ett fristående räntebelopp och omfattas inte.\ncatalog:variable_text:39010:17532:17897\ncatalog:variable_text:39036:14610:17532\ncatalog:variable_text:39036:17532:17897\ncatalog:variable_text:39056:17532:20089\ncatalog:variable_text:39058:15340:20089\ncatalog:variable_text:39059:17897:19723\ncatalog:variable_text:39060:15340:20089\ncatalog:variable_text:39061:17897:19723\ncatalog:variable_text:39062:17532:20089\ncatalog:variable_text:39076:17532:20089\ncatalog:variable_text:39077:15340:20089\ncatalog:variable_text:39078:17532:20089\ncatalog:variable_text:39079:15340:17897\ncatalog:variable_text:39096:15340:17897\ncatalog:variable_text:39109:10227:10592\ncatalog:variable_text:39110:18993:19358\ncatalog:variable_text:39115:9496:11688\ncatalog:variable_text:39116:15340:17897\ncatalog:variable_text:39131:18262:20089"
+fields = { "sets" = ["ranteforman"] }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nPerson flag RanteForman and its per-company count AntRanteForman; both ungrouped (ranta is a different amount, stays out) Forms set:ranteforman."
 
 [[statement]]
 kind = "set"
@@ -2786,14 +2786,14 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group
 [[statement]]
 kind = "set"
 subject = "set:pensionsutbetalningar"
-fields = { "description" = "Pension som en person fått utbetald: tjänstepension från utbetalaren per anställning och summerad per företag eller organisation (organisationsnummer), och 1996–2002 utbetald pension enligt kontrolluppgift per person, med en kod som används vid beräkning av grundavdrag för pensionärer." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nDEF för tjänstepension, pensionsutbetalning och pensionskod; nivåerna följer av tabellerna Anställningar, KUAGG och Individer; nuvarande text saknade summan per företag och pensionskoden.\ncatalog:variable_text:45898:9496:12053\ncatalog:variable_text:45919:9496:14610\ncatalog:variable_text:45919:14610:15340\ncatalog:variable_text:45919:16071:17532\ncatalog:variable_text:45899:9496:12053"
+fields = { "description" = "Pension som en person fått utbetald: tjänstepension från utbetalaren per anställning och summerad per företag eller organisation (organisationsnummer), båda 1996–2024, samt utbetald pension enligt kontrolluppgift per person 1996–2002." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): every level of one measure belongs in one group.\n\nDEF för tjanstepension och pensionsutbetalning; summa per organisationsnummer enligt OP; meningen om kod för grundavdrag stryks eftersom penskod har lämnat gruppen.\ncatalog:variable_text:45898:9496:12053\ncatalog:variable_text:45919:9496:14610\ncatalog:variable_text:45919:14610:15340\ncatalog:variable_text:45919:16071:17532\ncatalog:variable_text:45899:9496:12053"
 
 [[statement]]
 kind = "set"
 subject = "set:resekostnadsersattning"
-fields = { "description" = "Om resekostnadsersättning motsvarande utlägg har gjorts, per anställning 1996–2018, och det sammanlagda beloppet av ersättning eller förmån för utomlands bosatta för resa till och från Sverige vid anställningens början och slut samt bostad i Sverige under anställningstiden. Beloppet finns per anställning 1997–2024 och summerat per företag eller organisation (organisationsnummer) 2000–2024." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nDEF för reseers och ersättning för resa för utomlands bosatta; nivåer och år följer av tabellerna Anställningar och KUAGG (nuvarande texts årsluckor gällde före uppdelningen).\ncatalog:variable_text:45856:9862:10227\ncatalog:variable_text:45856:14610:15340\ncatalog:variable_text:45856:16071:17532\ncatalog:variable_text:45907:9496:14610\ncatalog:variable_text:45907:14975:15340\ncatalog:variable_text:45856:10957:14610"
+fields = { "description" = "Om resekostnadsersättning motsvarande utlägg har gjorts, per anställning, och antalet kontrolluppgifter med sådan ersättning summerat per företag eller organisation, båda 1996–2018. Därtill det sammanlagda beloppet av ersättning eller förmån för utomlands bosatta för resa till och från Sverige vid anställningens början och slut samt bostad i Sverige under anställningstiden, per anställning 1997–2024 och summerat per företag eller organisation (organisationsnummer) 2000–2024." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): every level of one measure belongs in one group.\n\nNuvarande text behålls och kompletteras med antal KU per företag enligt DEF/OP för antal-med-resekostnadsersattning-for-utlagg (KUAGG 1996–2018).\ncatalog:variable_text:45856:9862:10227\ncatalog:variable_text:45856:14610:15340\ncatalog:variable_text:45856:16071:17532\ncatalog:variable_text:45907:9496:14610\ncatalog:variable_text:45907:14975:15340\ncatalog:variable_text:45856:10957:14610\ncatalog:variable_text:45811:9496:14610\ncatalog:variable_text:45811:14610:17532\ncatalog:variable_text:45811:17532:17897"
 
 [[statement]]
 kind = "set"
@@ -3542,8 +3542,8 @@ evidence = "Maintainer ruling 2026-11-12 (#2322): a total is another view of the
 [[statement]]
 kind = "set"
 subject = "set:ovriga-ersattningar"
-fields = { "description" = "Övriga ersättningar som inte är skattepliktiga, per anställning 1996–2018 och summerade per företag eller organisation (organisationsnummer) 1996–2024." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nGemensam DEF (övriga, ej skattepliktiga, ersättningar); nivåer och år följer av tabellerna Anställningar och KUAGG.\ncatalog:variable_text:45893:9496:14610\ncatalog:variable_text:45893:14610:15340\ncatalog:variable_text:45893:16071:17532"
+fields = { "description" = "Övriga ersättningar som inte är skattepliktiga, per anställning 1996–2018 och summerade per företag eller organisation (organisationsnummer) 1996–2024. Per anställning 2019–2024 finns skattefria förmåner och ersättningar, som avser vissa inte skattepliktiga ersättningar till utländska experter m.fl. enligt beslut från Forskarskattenämnden." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): every level of one measure belongs in one group.\n\nNuvarande text behålls; den tillagda ovrersforskskatt beskrivs med sina år enligt DEF/OP (Forskarskattenämnden), utan att påstå att företagssumman bygger på den.\ncatalog:variable_text:45893:9496:14610\ncatalog:variable_text:45893:14610:15340\ncatalog:variable_text:45893:16071:17532\ncatalog:variable_text:45892:17897:20089"
 
 [[statement]]
 kind = "set"
@@ -3604,3 +3604,45 @@ kind = "set"
 subject = "set:skattepliktiga-ersattningar-ej-sociala"
 fields = { "description" = "Skattepliktiga ersättningar som inte är underlag för socialavgifter eller särskild löneskatt och som inte ger rätt till skattereduktion för arbetsinkomst, per anställning och summerade per företag eller organisation (organisationsnummer), 2018–2024." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nGemensam DEF för båda medlemmarna; summan per företag följer av KUAGG och OP om summering per organisationsnummer; åren från tabellerna.\ncatalog:variable_text:45915:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:kostforman"
+fields = { "label" = "Kostförmån" }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nGroup label for the levels of one measure (kostforman, antal-med-kostforman)."
+
+[[statement]]
+kind = "set"
+subject = "set:logiersattning"
+fields = { "label" = "Logiersättning" }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nGroup label for the levels of one measure (logiersattning, antal-med-logiersattning-for-utlagg)."
+
+[[statement]]
+kind = "set"
+subject = "set:ranteforman"
+fields = { "label" = "Ränteförmån" }
+evidence = "Maintainer ruling 2026-11-12 (#2322): every level of one measure (person or employment, company, workplace, municipality, household) belongs in one group; different meaning stays out. Operator in/out test: an additive amount or count whose higher-level text defines it as the sum or count of the lower one, or the same definition with only the unit changed.\n\nGroup label for the levels of one measure (ranteforman, antranteforman)."
+
+[[statement]]
+kind = "set"
+subject = "set:tjansteresor"
+fields = { "description" = "Om personen gjort minst en inrikes eller utrikes tjänsteresa om mer än tre månader, per anställning, och antalet kontrolluppgifter med minst en sådan inrikes respektive utrikes resa, summerat per företag eller organisation. Allt finns 1996–2018." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): every level of one measure belongs in one group.\n\nDEF för inrikes/utrikes (anger om personen gjort resa >3 mån) och för antal-med-varianterna (antal KU); nivåerna följer av tabellerna Anställningar - nattbefolkning och KUAGG; år från tabellerna.\ncatalog:variable_text:45808:9496:14610\ncatalog:variable_text:45808:14610:17532\ncatalog:variable_text:45808:17532:17897\ncatalog:variable_text:45813:9496:14610\ncatalog:variable_text:45813:14610:17532\ncatalog:variable_text:45813:17532:17897\ncatalog:variable_text:45873:9496:14610\ncatalog:variable_text:45873:14975:15340\ncatalog:variable_text:45926:9496:14610\ncatalog:variable_text:45926:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:kostforman"
+fields = { "description" = "Om kostförmån har erhållits, per anställning, och antalet kontrolluppgifter med kostförmån summerat per företag eller organisation, båda 1996–2018." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): every level of one measure belongs in one group.\n\nDEF för kostforman (anger om kostförmån erhållits) och antal-med-kostforman (antal KU, summa per företag enligt OP); år från tabellerna.\ncatalog:variable_text:45809:9496:14610\ncatalog:variable_text:45809:14610:17532\ncatalog:variable_text:45809:17532:17897\ncatalog:variable_text:45883:9496:14610\ncatalog:variable_text:45883:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:logiersattning"
+fields = { "description" = "Om logiersättning motsvarande utlägg har utgått, per anställning, och antalet kontrolluppgifter med sådan ersättning summerat per företag eller organisation, båda 1996–2018." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): every level of one measure belongs in one group.\n\nDEF för logiersattning och antal-med-logiersattning-for-utlagg; summa per företag enligt OP och KUAGG-tabellen; år från tabellerna.\ncatalog:variable_text:45810:9496:14610\ncatalog:variable_text:45810:14610:17532\ncatalog:variable_text:45810:17532:17897\ncatalog:variable_text:45888:9496:14610\ncatalog:variable_text:45888:14975:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:ranteforman"
+fields = { "description" = "Om ränteförmån har utgått, per anställning, och antalet kontrolluppgifter med ränteförmån summerat per företag eller organisation, båda 1996–2018." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): every level of one measure belongs in one group.\n\nDEF för ranteforman och antranteforman; summa per företag enligt OP och KUAGG-tabellen; år från tabellerna.\ncatalog:variable_text:45827:9496:14610\ncatalog:variable_text:45827:14610:17532\ncatalog:variable_text:45827:17532:17897\ncatalog:variable_text:45903:9496:14610\ncatalog:variable_text:45903:14975:15340"
