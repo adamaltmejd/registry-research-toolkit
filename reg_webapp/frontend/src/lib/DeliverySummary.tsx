@@ -2,8 +2,10 @@ import type { CatalogPeriod, LogicalOrder } from "./api";
 import { catalogHref } from "./catalog";
 import { catalogPeriodRuns, inTableGrain, periodsLess } from "./catalog_period";
 import styles from "./DeliverySummary.module.css";
+import { MANUAL_LABEL } from "./manual_items";
 import { EntityPill } from "./ui/EntityPill";
 import { NameSkeleton } from "./ui/Skeleton";
+import { type ColumnType, TypePill } from "./ui/TypePill";
 import {
   useCatalogNames,
   useCatalogNamesPending,
@@ -11,6 +13,7 @@ import {
 } from "./use_catalog_names";
 
 type Entry = LogicalOrder["entries"][number];
+type ManualItem = LogicalOrder["manual"][number];
 
 /** What the order would deliver (the logical order, maintainer ruling Q1,
  * 2026-11-04): per table its columns and years, the years a column does not
@@ -26,6 +29,7 @@ export function DeliverySummary({
 }) {
   const refs = [
     ...order.entries.flatMap((entry) => [entry.table, entry.variable]),
+    ...order.manual.flatMap((item) => (item.table ? [item.table] : [])),
     ...order.clips.map((clip) => clip.variable),
     ...order.row_keys.flatMap((key) =>
       key.columns.map((column) => column.variable),
@@ -47,9 +51,10 @@ export function DeliverySummary({
   ]);
   const names = new Map([...ordered, ...useCatalogNames(refs)]);
   const pending = useCatalogNamesPending(refs);
-  const tablePeriods = useTablePeriods(
-    order.entries.map((entry) => entry.table),
-  );
+  const tablePeriods = useTablePeriods([
+    ...order.entries.map((entry) => entry.table),
+    ...order.manual.flatMap((item) => (item.table ? [item.table] : [])),
+  ]);
   // A name still loading is a placeholder, not a link; only a settled miss
   // says the name is unavailable.
   const loadingName = (ref: string) => pending.has(ref) && !names.has(ref);
@@ -67,21 +72,30 @@ export function DeliverySummary({
         {variableName(ref)}
       </a>
     );
+  // A source entered by hand has no table: it is its own group, and the
+  // columns entered by hand in a catalog table join that table's group.
   const groups = new Map<
     string,
-    { source: string; table: string; entries: Entry[] }
+    {
+      source: string;
+      table: string | null;
+      entries: Entry[];
+      manual: ManualItem[];
+    }
   >();
-  for (const entry of order.entries) {
-    const key = JSON.stringify([entry.source, entry.table]);
-    const group = groups.get(key);
-    if (group) group.entries.push(entry);
-    else
-      groups.set(key, {
-        source: entry.source,
-        table: entry.table,
-        entries: [entry],
-      });
-  }
+  const groupOf = (source: string, table: string | null) => {
+    const key = JSON.stringify([source, table]);
+    let group = groups.get(key);
+    if (!group) {
+      group = { source, table, entries: [], manual: [] };
+      groups.set(key, group);
+    }
+    return group;
+  };
+  for (const entry of order.entries)
+    groupOf(entry.source, entry.table).entries.push(entry);
+  for (const item of order.manual)
+    groupOf(item.source, item.table).manual.push(item);
   // A clip is per project table, not per catalog table: it goes under the
   // first group of its project table.
   const firstOfSource = new Map<string, string>();
@@ -124,8 +138,19 @@ export function DeliverySummary({
           // Every period here is cut to the study years; it reads in the
           // table's grain, as delivered (#2416).
           const yearsOf = (periods: readonly CatalogPeriod[]) =>
-            catalogPeriodRuns(inTableGrain(periods, tablePeriods[group.table]));
-          const years = yearsOf(group.entries.map((entry) => entry.period));
+            catalogPeriodRuns(
+              inTableGrain(
+                periods,
+                group.table ? tablePeriods[group.table] : undefined,
+              ),
+            );
+          // A group with no catalog column states the years the project asks
+          // for, as written (the order does not cut them).
+          const years = yearsOf(
+            group.entries.length > 0
+              ? group.entries.map((entry) => entry.period)
+              : group.manual.flatMap((item) => item.period),
+          );
           // A column's own years only where they differ from the table's.
           const ownYears = (periods: readonly CatalogPeriod[]) => {
             const own = yearsOf(periods);
@@ -162,11 +187,17 @@ export function DeliverySummary({
               <h3
                 id={`delivery-${encodeURIComponent(key)}`}
                 className={styles.tableHeading}
-                aria-busy={loadingName(group.table) || undefined}
+                aria-busy={
+                  (group.table && loadingName(group.table)) || undefined
+                }
               >
                 {/* As on the table's card: the file's join key stands in
-                    only where the catalog has no name. */}
-                {loadingName(group.table) ? (
+                    only where the catalog has no name. A source entered by
+                    hand has no catalog page: its provider and register, as
+                    written. */}
+                {group.table === null ? (
+                  `${group.manual[0]?.provider_name}: ${group.manual[0]?.register_name}`
+                ) : loadingName(group.table) ? (
                   <NameSkeleton label="Loading table name" />
                 ) : (
                   <a className="link" href={catalogHref(group.table)}>
@@ -188,6 +219,17 @@ export function DeliverySummary({
                       years={ownYears(column.periods)}
                     />
                     {variableLink(column.variable)}
+                  </li>
+                ))}
+                {group.manual.map((item) => (
+                  <li key={item.binding} className={styles.column}>
+                    <EntityPill
+                      entity="column"
+                      name={item.column}
+                      years={ownYears(item.period)}
+                    />
+                    <TypePill type={item.type as ColumnType} />
+                    <span className={styles.note}>{MANUAL_LABEL}</span>
                   </li>
                 ))}
               </ul>

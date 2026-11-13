@@ -8,6 +8,7 @@ import { type Space, stewardDatabases } from "./databases";
 import { FilterInput } from "./FilterInput";
 import { Highlight } from "./Highlight";
 import { dataAxis } from "./period";
+import { catalogBindings } from "./project_data";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
 import {
   lensKeyId,
@@ -92,7 +93,7 @@ export function RegisterView({
     () =>
       new Set(
         draft?.sources.flatMap((source) =>
-          source.bindings.map((binding) => binding.variable),
+          catalogBindings(source).map((binding) => binding.variable),
         ) ?? [],
       ),
     [draft],

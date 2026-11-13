@@ -23,8 +23,7 @@ drives it lives in `plugins/microdata-tools-se`.
   reviewed by the researcher. Per project source: the unit (person or firm), the
   population (age bounds, whether departed units stay), rows per unit and year with a
   stated reason, and column rules (a unit attribute such as birth year or sex, its code
-  map, a missing rate, the delivery's own codes). Also file renames and tables the
-  catalog does not know, in the spec's file shape.
+  map, a missing rate, the delivery's own codes). Also file renames.
 - `mock_spec.json` (`spec.rs`): everything `generate` reads, compiled. Committed in the
   project so a reviewer sees exactly what is generated.
 
@@ -118,9 +117,34 @@ wins; else the held storage's type (`reg_core::manifest::StorageFamily`, split i
 date/datetime and boolean); else the catalog's type. With an override, the column drops
 its storage: it is written in the override's type. An unknown type, and geometry, uuid
 or binary (maintainer, 2026-11-05), is refused, never guessed. The identifier flag comes
-from the segment, not from `type = identifier`. A variable's segments come from its own
+from the segment, not from `type = identifier`, except on a manual column, which has no
+segment (below). A variable's segments come from its own
 table; only a row key may take another table's (a person id carried into a steward
 table).
+
+**Manual items** (project contract 6.2.0, `manual_files`): columns and sources the
+catalog does not document are read from the project, not the answers, so the project is
+their one home.
+
+- A manual column in a catalog source joins every file of that source, under its stated
+  `column`, `type` and `codes`; its years are the file's. It has no segment, so it is
+  drawn by type, and its identifier flag comes from `type = identifier`: without it the
+  column would be written as an id but drawn as a plain integer. It is a random id
+  unless a rule marks it `person_key` or `firm_key`.
+- A manual source makes its own files, one per year of its period or one timeless file
+  for `_default`, named `<source name>[_<year>]` (a school year by its first year),
+  since the name is its only id; `rename` adopts the delivery's name as for catalog files.
+- Refused: a manual column named like another column of its file, case ignored
+  (`column_name_collision`; a manual `LopNr` beside the row key is the likely case), two
+  sources stating one manual column of a shared file differently
+  (`column_types_disagree`), and a rule's `codes` on a manual column
+  (`codes_in_project`), which would silently replace the project's.
+- In the delivery layout a manual column is one the runner does not write: the data
+  manager adds it by hand. That is a stated exception to switching between mock and
+  real by input directory alone.
+
+Their unit, population, rows and column rules stay in `mock_rules.json` by source name,
+as for every source.
 
 **Rules.** A file delivering several sources needs their unit, population and rows to
 agree, and the sources sharing a column must state the same rule for it. A column rule

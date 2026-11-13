@@ -29,7 +29,11 @@ use crate::validation::{IssueLevel, ValidationIssue, ValidationResult};
 
 const PROJECT_REQUIRED: [&str; 4] = ["schema_version", "reg_meta_version", "name", "sources"];
 const PROJECT_OPTIONAL: [&str; 4] = ["panels", "window", "extract_format", "linkage"];
-const SOURCE_KEYS: [&str; 4] = ["name", "table", "period", "bindings"];
+const SOURCE_KEYS: [&str; 5] = ["name", "table", "manual", "period", "bindings"];
+const MANUAL_ORIGIN_KEYS: [&str; 2] = ["provider", "register"];
+const MANUAL_BINDING_KEYS: [&str; 2] = ["manual", "display_name"];
+const MANUAL_COLUMN_KEYS: [&str; 3] = ["column", "type", "codes"];
+const MANUAL_CODE_KEYS: [&str; 3] = ["code", "label", "sentinel"];
 const BINDING_KEYS: [&str; 5] = [
     "variable",
     "follow_successor",
@@ -514,6 +518,7 @@ fn check_sources(sources: Option<&Value>, issues: &mut Issues) {
     }
 }
 
+#[allow(clippy::too_many_lines)]
 fn check_source<'a>(
     source: &'a Map<String, Value>,
     base: &str,
@@ -533,18 +538,47 @@ fn check_source<'a>(
         }
     }
 
+    // A catalog source names a `table`, a manual one carries `manual`: by key, so an
+    // explicit `null` counts as present and can never reach a type neither variant reads.
+    let kind = match (source.contains_key("table"), source.contains_key("manual")) {
+        (true, false) => Some(Kind::Catalog),
+        (false, true) => Some(Kind::Manual),
+        (both, _) => {
+            issues.error(
+                "source_kind",
+                base.to_owned(),
+                if both {
+                    "source has both 'table' and 'manual': a source is a catalog table or \
+                     entered by hand, not both"
+                } else {
+                    "source needs 'table' (a catalog table) or 'manual' (data the catalog \
+                     does not document, entered by hand)"
+                }
+                .into(),
+            );
+            None
+        }
+    };
+
     // The table's provider/register prefix scopes every binding FQID.
-    let table = required_string(source, "table", base, "source 'table'", issues);
-    let parts = table.and_then(table_parts);
-    if let (Some(table), None) = (table, &parts) {
-        issues.error(
-            "invalid_fqid",
-            format!("{base}/table"),
-            format!(
-                "table must be a 2- or 3-part public id <provider>/<register>[/<table>]; got {}",
-                q(table)
-            ),
-        );
+    let mut parts = None;
+    match kind {
+        Some(Kind::Catalog) => {
+            let table = required_string(source, "table", base, "source 'table'", issues);
+            parts = table.and_then(table_parts);
+            if let (Some(table), None) = (table, &parts) {
+                issues.error(
+                    "invalid_fqid",
+                    format!("{base}/table"),
+                    format!(
+                        "table must be a 2- or 3-part public id <provider>/<register>[/<table>]; got {}",
+                        q(table)
+                    ),
+                );
+            }
+        }
+        Some(Kind::Manual) => check_manual_origin(source, base, issues),
+        None => {}
     }
 
     if let Some(period) = required(source, "period", base, "source 'period'", issues) {
@@ -572,6 +606,8 @@ fn check_source<'a>(
     }
     let prefix = parts.as_ref().map(|p| &p[..2]);
     let mut display_names: Vec<(&str, String)> = Vec::new();
+    let mut columns: Vec<(&str, String)> = Vec::new();
+    let mut catalog_bindings = 0;
     for (j, binding) in bindings.iter().enumerate() {
         let binding_base = format!("{base}/bindings/{j}");
         let Some(binding) = binding.as_object() else {
@@ -582,7 +618,52 @@ fn check_source<'a>(
             );
             continue;
         };
-        check_binding(binding, &binding_base, prefix, issues);
+        match (
+            binding.contains_key("variable"),
+            binding.contains_key("manual"),
+        ) {
+            (true, true) => issues.error(
+                "binding_kind",
+                binding_base.clone(),
+                "binding has both 'variable' and 'manual': a column is a catalog variable \
+                 or entered by hand, not both"
+                    .into(),
+            ),
+            (false, false) => issues.error(
+                "binding_kind",
+                binding_base.clone(),
+                "binding needs 'variable' (a catalog variable) or 'manual' (a column the \
+                 catalog does not document, entered by hand)"
+                    .into(),
+            ),
+            (true, false) if kind == Some(Kind::Manual) => issues.error(
+                "binding_kind",
+                format!("{binding_base}/variable"),
+                "a source entered by hand holds only columns entered by hand: a catalog \
+                 variable needs a source with its 'table'"
+                    .into(),
+            ),
+            (true, false) => {
+                catalog_bindings += 1;
+                check_binding(binding, &binding_base, prefix, issues);
+            }
+            (false, true) => {
+                if let Some(column) = check_manual_binding(binding, &binding_base, issues) {
+                    let path = format!("{binding_base}/manual/column");
+                    match columns
+                        .iter()
+                        .find(|(c, _)| crate::fold_identity(c) == crate::fold_identity(column))
+                    {
+                        Some((_, prior)) => issues.error(
+                            "duplicate_manual_column",
+                            path,
+                            format!("column {} duplicates the one at {prior}", q(column)),
+                        ),
+                        None => columns.push((column, path)),
+                    }
+                }
+            }
+        }
         let Some(dn) = binding.get("display_name").and_then(Value::as_str) else {
             continue;
         };
@@ -594,6 +675,199 @@ fn check_source<'a>(
                 format!("display_name {} duplicates the one at {prior}", q(dn)),
             ),
             None => display_names.push((dn, path)),
+        }
+    }
+    // Every binding an object of one kind, all of them by hand: the source has no catalog
+    // column, so nothing would check its period or give it row keys and a file.
+    let all_manual = bindings.iter().all(|b| {
+        b.as_object()
+            .is_some_and(|b| b.contains_key("manual") && !b.contains_key("variable"))
+    });
+    if kind == Some(Kind::Catalog) && catalog_bindings == 0 && all_manual {
+        issues.error(
+            "catalog_source_unbound",
+            format!("{base}/bindings"),
+            "a catalog source needs at least one catalog variable; a source whose columns \
+             are all entered by hand is a manual source (replace 'table' with 'manual')"
+                .into(),
+        );
+    }
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum Kind {
+    Catalog,
+    Manual,
+}
+
+/// A required string field that must also be non-blank.
+fn non_blank<'a>(
+    map: &'a Map<String, Value>,
+    field: &str,
+    base: &str,
+    label: &str,
+    issues: &mut Issues,
+) -> Option<&'a str> {
+    let value = required_string(map, field, base, label, issues)?;
+    if value.trim().is_empty() {
+        issues.error(
+            "invalid_field_type",
+            format!("{base}/{field}"),
+            format!("{label} must be a non-blank string"),
+        );
+        return None;
+    }
+    Some(value)
+}
+
+/// A manual source's closed `{"provider", "register"}`: free-text names, not ids.
+fn check_manual_origin(source: &Map<String, Value>, base: &str, issues: &mut Issues) {
+    let Some(manual) = required(source, "manual", base, "source 'manual'", issues) else {
+        return;
+    };
+    let mbase = format!("{base}/manual");
+    let Some(manual) = manual.as_object() else {
+        issues.error(
+            "invalid_field_type",
+            mbase,
+            "source 'manual' must be an object {'provider': <name>, 'register': <name>}".into(),
+        );
+        return;
+    };
+    check_unexpected_keys(
+        manual,
+        &MANUAL_ORIGIN_KEYS,
+        &mbase,
+        "source 'manual'",
+        issues,
+    );
+    for field in MANUAL_ORIGIN_KEYS {
+        non_blank(
+            manual,
+            field,
+            &mbase,
+            &format!("source manual {}", q(field)),
+            issues,
+        );
+    }
+}
+
+/// A manual binding: a closed `{manual, display_name}` whose `manual` is a closed
+/// `{column, type, codes}`. The column name, when it is a non-blank string.
+fn check_manual_binding<'a>(
+    binding: &'a Map<String, Value>,
+    base: &str,
+    issues: &mut Issues,
+) -> Option<&'a str> {
+    // `follow_successor`, `classification` and the binding `type` name catalog facts,
+    // so they are unknown keys here, `null` included.
+    check_unexpected_keys(
+        binding,
+        &MANUAL_BINDING_KEYS,
+        base,
+        "manual binding",
+        issues,
+    );
+    optional_string(
+        binding,
+        "display_name",
+        base,
+        "binding 'display_name'",
+        issues,
+    );
+    let manual = required(binding, "manual", base, "binding 'manual'", issues)?;
+    let mbase = format!("{base}/manual");
+    let Some(manual) = manual.as_object() else {
+        issues.error(
+            "invalid_field_type",
+            mbase,
+            "binding 'manual' must be an object {'column': <name>, 'type': <type>, \
+             'codes': [...]}"
+                .into(),
+        );
+        return None;
+    };
+    check_unexpected_keys(
+        manual,
+        &MANUAL_COLUMN_KEYS,
+        &mbase,
+        "binding 'manual'",
+        issues,
+    );
+    let column = non_blank(manual, "column", &mbase, "manual 'column'", issues);
+    let typ = required_string(manual, "type", &mbase, "manual 'type'", issues);
+    if let Some(typ) = typ
+        && ColumnType::parse(typ).is_none()
+    {
+        issues.error(
+            "invalid_enum_value",
+            format!("{mbase}/type"),
+            format!(
+                "manual type must be one of {}; got {}",
+                allowed(ColumnType::ALL.iter().map(|v| v.as_str())),
+                q(typ)
+            ),
+        );
+    }
+    if let Some(codes) = manual.get("codes") {
+        let identifier = typ == Some(ColumnType::Identifier.as_str());
+        check_manual_codes(codes, &format!("{mbase}/codes"), identifier, issues);
+    }
+    column
+}
+
+/// A manual column's `codes`: a non-empty array of closed `{code, label, sentinel}`
+/// objects, each code once, and none on an identifier column.
+fn check_manual_codes(codes: &Value, cbase: &str, identifier: bool, issues: &mut Issues) {
+    let Some(codes) = codes.as_array().filter(|c| !c.is_empty()) else {
+        issues.error(
+            "invalid_field_type",
+            cbase.into(),
+            "manual 'codes' must be a non-empty array of {'code', 'label', 'sentinel'} objects"
+                .into(),
+        );
+        return;
+    };
+    // Codes listed for an identifier would be real ids, and the project leaves MONA.
+    if identifier {
+        issues.error(
+            "identifier_codes",
+            cbase.into(),
+            "an identifier column lists no codes: they would be real ids, and the project \
+             is sent outside MONA"
+                .into(),
+        );
+    }
+    let mut seen: Vec<(&str, usize)> = Vec::new();
+    for (k, code) in codes.iter().enumerate() {
+        let kbase = format!("{cbase}/{k}");
+        let Some(code) = code.as_object() else {
+            issues.error(
+                "invalid_field_type",
+                kbase,
+                "a manual code must be an object {'code', 'label', 'sentinel'}".into(),
+            );
+            continue;
+        };
+        check_unexpected_keys(code, &MANUAL_CODE_KEYS, &kbase, "manual code", issues);
+        optional_string(code, "label", &kbase, "code 'label'", issues);
+        if get(code, "sentinel").is_some_and(|v| !v.is_boolean()) {
+            issues.error(
+                "invalid_field_type",
+                format!("{kbase}/sentinel"),
+                "code 'sentinel' must be a boolean".into(),
+            );
+        }
+        let Some(value) = non_blank(code, "code", &kbase, "code 'code'", issues) else {
+            continue;
+        };
+        match seen.iter().find(|(c, _)| *c == value) {
+            Some((_, first)) => issues.error(
+                "duplicate_code",
+                format!("{kbase}/code"),
+                format!("code {} duplicates {cbase}/{first}", q(value)),
+            ),
+            None => seen.push((value, k)),
         }
     }
 }

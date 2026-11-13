@@ -1,7 +1,7 @@
 {
   "note": "Fails if a family's members collapse, follow census or declaration order instead of slot index, lose their topology, or repeat the row key.",
   "project": {
-    "schema_version": "6.1.0",
+    "schema_version": "6.2.0",
     "reg_meta_version": "0.71.0",
     "name": "Slot family",
     "sources": [

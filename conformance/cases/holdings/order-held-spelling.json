@@ -1,7 +1,7 @@
 {
   "note": "The base catalogs demo/held/id under the spelling Id, but Pool's census names the column Received_Id. A steward order's entries carry the name the held file uses, not the catalog's, so the delivery summary names the column the researcher gets (#2409). Oracle: Pool's census and the base frame's spellings for the 2018 request.",
   "project": {
-    "schema_version": "6.1.0",
+    "schema_version": "6.2.0",
     "reg_meta_version": "0.81.5",
     "name": "Held column name",
     "sources": [

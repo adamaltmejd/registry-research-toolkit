@@ -53,7 +53,7 @@ choice so the researcher can judge it:
 
 ```json
 {
-  "version": 1,
+  "version": 2,
   "sources": {
     "lisa": {
       "unit": "person",
@@ -87,8 +87,13 @@ choice so the researcher can judge it:
   catalog's. Mark every person or firm id that should join across files as `person_key`
   or `firm_key`; any other identifier is random.
 - Optional: `null_rate` for the whole spec (default 0.02), `rename` from a compiled file
-  name to the delivery's, `tables` for files the catalog does not know (in the spec's
-  file shape).
+  name to the delivery's.
+- Columns and sources entered by hand (`manual` in `project_data.json`) need no answers:
+  compile reads their name, type and codes from the project. A manual column joins its
+  source's files; a manual source gets files named `<source>_<year>` (`rename` adopts
+  the delivery's). Give a manual source its `unit`, `population` and `rows_per_unit`
+  under `sources` like any other, and key its columns by their `manual.column`. A rule's
+  `codes` on a manual column is refused (`codes_in_project`): edit the project's.
 
 ```bash
 reg-mock compile --project project_data.json --rules mock/mock_rules.json \

@@ -1,0 +1,67 @@
+{
+  "note": "A catalog source with one column entered by hand beside its catalog variable, and a source entered by hand over an interrupted period. Fails if a manual column is checked against the catalog, becomes an entry or a clip, or shifts the catalog binding's position; if `manual` stops listing each column with its stated name, type and display name, its source's table or provider and register names, and the requested periods unclipped; or if each source stops getting exactly one `manual_item` info naming its columns. Oracle: the project and crates/DESIGN.md, \"Project document 6.2.0\".",
+  "fixture": "orders",
+  "project": {
+    "schema_version": "6.2.0",
+    "reg_meta_version": "0.85.0",
+    "name": "Order case",
+    "sources": [
+      {
+        "name": "s",
+        "table": "demo/opn",
+        "period": {
+          "from": 2019,
+          "to": 2020
+        },
+        "bindings": [
+          {
+            "variable": "demo/opn/y"
+          },
+          {
+            "manual": {
+              "column": "Termin",
+              "type": "text",
+              "codes": [
+                {
+                  "code": "HT"
+                },
+                {
+                  "code": "VT"
+                }
+              ]
+            },
+            "display_name": "termin"
+          }
+        ]
+      },
+      {
+        "name": "nya",
+        "manual": {
+          "provider": "UHR",
+          "register": "NyA antagning"
+        },
+        "period": [
+          2006,
+          {
+            "from": 2008,
+            "to": 2009
+          }
+        ],
+        "bindings": [
+          {
+            "manual": {
+              "column": "LopNr",
+              "type": "identifier"
+            }
+          },
+          {
+            "manual": {
+              "column": "Urval",
+              "type": "text"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -9,7 +9,7 @@ use reg_core::project::{ColumnType, ExtractFormat};
 use serde::{Deserialize, Serialize};
 
 /// The spec `version` this crate writes and reads.
-pub const SPEC_VERSION: u32 = 1;
+pub const SPEC_VERSION: u32 = 2;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -43,15 +43,14 @@ pub struct SpecProject {
     pub hash: String,
 }
 
-/// One output file. A rules file's non-catalog `tables` are written in this shape.
+/// One output file.
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct SpecFile {
     /// The file name without its extension.
     pub name: String,
-    /// The project source it delivers; absent for a table outside the catalog.
-    #[serde(default, skip_serializing_if = "Option::is_none")]
-    pub source: Option<String>,
+    /// The project source it delivers (the first, when several share it).
+    pub source: String,
     pub unit: Unit,
     #[serde(default)]
     pub population: Population,

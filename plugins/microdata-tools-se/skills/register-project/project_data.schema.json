@@ -46,8 +46,19 @@
   "additionalProperties": false,
   "$defs": {
     "ProjectBinding": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ProjectCatalogBinding"
+        },
+        {
+          "$ref": "#/$defs/ProjectManualBinding"
+        }
+      ],
+      "description": "One column: a catalog variable, or a column entered by hand."
+    },
+    "ProjectCatalogBinding": {
       "type": "object",
-      "description": "One variable to extract.",
+      "description": "One catalog variable to extract.",
       "required": [
         "variable"
       ],
@@ -78,6 +89,36 @@
         "variable": {
           "type": "string",
           "description": "The binding FQID `<provider>/<register>/<slug>`."
+        }
+      },
+      "additionalProperties": false
+    },
+    "ProjectCatalogSource": {
+      "type": "object",
+      "description": "One catalog table, a requested period and its columns.",
+      "required": [
+        "name",
+        "table",
+        "period",
+        "bindings"
+      ],
+      "properties": {
+        "bindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ProjectBinding"
+          },
+          "description": "At least one catalog binding; the others may be entered by hand."
+        },
+        "name": {
+          "type": "string"
+        },
+        "period": {
+          "$ref": "#/$defs/ProjectSourcePeriod"
+        },
+        "table": {
+          "type": "string",
+          "description": "A table's public id: `<provider>/<register>` for a register's implicit table,\nelse `<provider>/<register>/<table>`."
         }
       },
       "additionalProperties": false
@@ -115,6 +156,119 @@
         "database": {
           "type": "string",
           "description": "A database id from the steward's `steward_config.spaces`."
+        }
+      },
+      "additionalProperties": false
+    },
+    "ProjectManualBinding": {
+      "type": "object",
+      "description": "A column the catalog does not document, entered by hand.",
+      "required": [
+        "manual"
+      ],
+      "properties": {
+        "display_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "manual": {
+          "$ref": "#/$defs/ProjectManualColumn"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ProjectManualCode": {
+      "type": "object",
+      "description": "One code of a manual column.",
+      "required": [
+        "code"
+      ],
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "label": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sentinel": {
+          "type": "boolean",
+          "description": "A missing-value code (`uppgift saknas`); absent means false.",
+          "default": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "ProjectManualColumn": {
+      "type": "object",
+      "description": "What the tools need of a manual column.",
+      "required": [
+        "column",
+        "type"
+      ],
+      "properties": {
+        "codes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ProjectManualCode"
+          },
+          "description": "The codes the column holds, from documentation; never on an identifier."
+        },
+        "column": {
+          "type": "string",
+          "description": "The column name as the delivery spells it."
+        },
+        "type": {
+          "$ref": "#/$defs/ProjectColumnType"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ProjectManualOrigin": {
+      "type": "object",
+      "description": "Who delivers a manual source, as free-text names, not catalog ids.",
+      "required": [
+        "provider",
+        "register"
+      ],
+      "properties": {
+        "provider": {
+          "type": "string"
+        },
+        "register": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ProjectManualSource": {
+      "type": "object",
+      "description": "Data the catalog does not document, entered by hand: every column is manual.",
+      "required": [
+        "name",
+        "manual",
+        "period",
+        "bindings"
+      ],
+      "properties": {
+        "bindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ProjectManualBinding"
+          }
+        },
+        "manual": {
+          "$ref": "#/$defs/ProjectManualOrigin"
+        },
+        "name": {
+          "type": "string"
+        },
+        "period": {
+          "$ref": "#/$defs/ProjectSourcePeriod"
         }
       },
       "additionalProperties": false
@@ -187,33 +341,15 @@
       "description": "A period endpoint as written: an int year or a period-token string (`\"_default\"`\nincluded, which only a scalar source period may hold)."
     },
     "ProjectSource": {
-      "type": "object",
-      "description": "One table, a requested period and its variables.",
-      "required": [
-        "name",
-        "table",
-        "period",
-        "bindings"
-      ],
-      "properties": {
-        "bindings": {
-          "type": "array",
-          "items": {
-            "$ref": "#/$defs/ProjectBinding"
-          }
+      "oneOf": [
+        {
+          "$ref": "#/$defs/ProjectCatalogSource"
         },
-        "name": {
-          "type": "string"
-        },
-        "period": {
-          "$ref": "#/$defs/ProjectSourcePeriod"
-        },
-        "table": {
-          "type": "string",
-          "description": "A table's public id: `<provider>/<register>` for a register's implicit table,\nelse `<provider>/<register>/<table>`."
+        {
+          "$ref": "#/$defs/ProjectManualSource"
         }
-      },
-      "additionalProperties": false
+      ],
+      "description": "A source: a catalog table, or data the catalog does not document, entered by hand."
     },
     "ProjectSourcePeriod": {
       "oneOf": [

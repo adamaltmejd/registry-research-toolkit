@@ -1,0 +1,41 @@
+{
+  "schema_version": "6.2.0",
+  "reg_meta_version": "reg_meta/v1.0.0",
+  "name": "demo",
+  "sources": [
+    {
+      "name": "both",
+      "table": "scb/lisa",
+      "manual": null,
+      "period": 2018,
+      "bindings": [
+        {
+          "variable": "scb/lisa/kon",
+          "manual": null
+        }
+      ]
+    },
+    {
+      "name": "neither",
+      "period": 2018,
+      "bindings": [
+        {
+          "display_name": "x"
+        }
+      ]
+    },
+    {
+      "name": "hand",
+      "manual": {
+        "provider": "UHR",
+        "register": "NyA"
+      },
+      "period": 2018,
+      "bindings": [
+        {
+          "variable": "scb/lisa/kon"
+        }
+      ]
+    }
+  ]
+}

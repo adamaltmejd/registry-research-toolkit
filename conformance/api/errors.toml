@@ -76,6 +76,17 @@ order file's provenance names the order. The project stays a valid logical draft
 `order` and `validate` accept it."""
 
 [[code]]
+code = "order_manual_only"
+class = "usage"
+surface = "operation"
+status = 422
+fields = []
+note = """`materialize_order` on a project with no catalog source: every column is entered \
+by hand, so the extract runner has nothing to extract (an order file needs a file). The \
+project stays a valid logical order; `order` and `validate` accept it and list the columns \
+in `manual`."""
+
+[[code]]
 code = "holdings_unavailable"
 class = "usage"
 surface = "operation"

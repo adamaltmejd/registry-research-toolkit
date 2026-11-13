@@ -1,7 +1,7 @@
 {
   "note": "Fails if the projection's remainder outside the request still selects its file: Child would join with an empty reference period and no row filter, extracting its whole delivery, while the parent alone places the requested half year. Also fails if the row key is resolved over the requested half year rather than the whole delivery the unfiltered file extracts, or the automatically added key drops its mapping caveat instead of reporting it at the source.",
   "project": {
-    "schema_version": "6.1.0",
+    "schema_version": "6.2.0",
     "reg_meta_version": "0.71.0",
     "name": "Parent covered",
     "sources": [

@@ -2190,6 +2190,7 @@
           "project",
           "entries",
           "row_keys",
+          "manual",
           "clips",
           "findings"
         ],
@@ -2217,6 +2218,13 @@
               "$ref": "#/components/schemas/NamedIssue"
             },
             "description": "The non-blocking findings (level `warning` or `info`)."
+          },
+          "manual": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderManual"
+            },
+            "description": "The columns entered by hand, per source and binding: not checked against the\ncatalog, and never extracted by the runner."
           },
           "project": {
             "$ref": "#/components/schemas/OrderProject"
@@ -2753,6 +2761,72 @@
           }
         }
       },
+      "OrderManual": {
+        "type": "object",
+        "description": "A column entered by hand: the catalog does not describe it.",
+        "required": [
+          "source",
+          "binding",
+          "table",
+          "provider_name",
+          "register_name",
+          "column",
+          "type",
+          "display_name",
+          "period"
+        ],
+        "properties": {
+          "binding": {
+            "type": "integer",
+            "description": "The column's position in the source.",
+            "minimum": 0
+          },
+          "column": {
+            "type": "string",
+            "description": "The column name as the delivery spells it."
+          },
+          "display_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "period": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Period"
+            },
+            "description": "The source's requested periods, unclipped; `{start: null, end: null}` for a\ntimeless source."
+          },
+          "provider_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "A source entered by hand: who delivers it, as the project names them."
+          },
+          "register_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "source": {
+            "type": "string",
+            "description": "The project source's name."
+          },
+          "table": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The catalog table of a source that has one; `null` for a source entered by hand."
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
       "OrderProject": {
         "type": "object",
         "description": "The project an order was checked for.",
@@ -2927,8 +3001,19 @@
         }
       },
       "ProjectBinding": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ProjectCatalogBinding"
+          },
+          {
+            "$ref": "#/components/schemas/ProjectManualBinding"
+          }
+        ],
+        "description": "One column: a catalog variable, or a column entered by hand."
+      },
+      "ProjectCatalogBinding": {
         "type": "object",
-        "description": "One variable to extract.",
+        "description": "One catalog variable to extract.",
         "required": [
           "variable"
         ],
@@ -2959,6 +3044,36 @@
           "variable": {
             "type": "string",
             "description": "The binding FQID `<provider>/<register>/<slug>`."
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProjectCatalogSource": {
+        "type": "object",
+        "description": "One catalog table, a requested period and its columns.",
+        "required": [
+          "name",
+          "table",
+          "period",
+          "bindings"
+        ],
+        "properties": {
+          "bindings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectBinding"
+            },
+            "description": "At least one catalog binding; the others may be entered by hand."
+          },
+          "name": {
+            "type": "string"
+          },
+          "period": {
+            "$ref": "#/components/schemas/ProjectSourcePeriod"
+          },
+          "table": {
+            "type": "string",
+            "description": "A table's public id: `<provider>/<register>` for a register's implicit table,\nelse `<provider>/<register>/<table>`."
           }
         },
         "additionalProperties": false
@@ -3067,6 +3182,119 @@
         },
         "additionalProperties": false
       },
+      "ProjectManualBinding": {
+        "type": "object",
+        "description": "A column the catalog does not document, entered by hand.",
+        "required": [
+          "manual"
+        ],
+        "properties": {
+          "display_name": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "manual": {
+            "$ref": "#/components/schemas/ProjectManualColumn"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProjectManualCode": {
+        "type": "object",
+        "description": "One code of a manual column.",
+        "required": [
+          "code"
+        ],
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "label": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "sentinel": {
+            "type": "boolean",
+            "description": "A missing-value code (`uppgift saknas`); absent means false.",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProjectManualColumn": {
+        "type": "object",
+        "description": "What the tools need of a manual column.",
+        "required": [
+          "column",
+          "type"
+        ],
+        "properties": {
+          "codes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectManualCode"
+            },
+            "description": "The codes the column holds, from documentation; never on an identifier."
+          },
+          "column": {
+            "type": "string",
+            "description": "The column name as the delivery spells it."
+          },
+          "type": {
+            "$ref": "#/components/schemas/ProjectColumnType"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProjectManualOrigin": {
+        "type": "object",
+        "description": "Who delivers a manual source, as free-text names, not catalog ids.",
+        "required": [
+          "provider",
+          "register"
+        ],
+        "properties": {
+          "provider": {
+            "type": "string"
+          },
+          "register": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ProjectManualSource": {
+        "type": "object",
+        "description": "Data the catalog does not document, entered by hand: every column is manual.",
+        "required": [
+          "name",
+          "manual",
+          "period",
+          "bindings"
+        ],
+        "properties": {
+          "bindings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectManualBinding"
+            }
+          },
+          "manual": {
+            "$ref": "#/components/schemas/ProjectManualOrigin"
+          },
+          "name": {
+            "type": "string"
+          },
+          "period": {
+            "$ref": "#/components/schemas/ProjectSourcePeriod"
+          }
+        },
+        "additionalProperties": false
+      },
       "ProjectPanel": {
         "type": "object",
         "description": "A panel over sources.",
@@ -3135,33 +3363,15 @@
         "description": "A period endpoint as written: an int year or a period-token string (`\"_default\"`\nincluded, which only a scalar source period may hold)."
       },
       "ProjectSource": {
-        "type": "object",
-        "description": "One table, a requested period and its variables.",
-        "required": [
-          "name",
-          "table",
-          "period",
-          "bindings"
-        ],
-        "properties": {
-          "bindings": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ProjectBinding"
-            }
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/ProjectCatalogSource"
           },
-          "name": {
-            "type": "string"
-          },
-          "period": {
-            "$ref": "#/components/schemas/ProjectSourcePeriod"
-          },
-          "table": {
-            "type": "string",
-            "description": "A table's public id: `<provider>/<register>` for a register's implicit table,\nelse `<provider>/<register>/<table>`."
+          {
+            "$ref": "#/components/schemas/ProjectManualSource"
           }
-        },
-        "additionalProperties": false
+        ],
+        "description": "A source: a catalog table, or data the catalog does not document, entered by hand."
       },
       "ProjectSourcePeriod": {
         "oneOf": [

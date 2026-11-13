@@ -4456,6 +4456,13 @@
               },
               "type": "array"
             },
+            "manual": {
+              "description": "The columns entered by hand, per source and binding: not checked against the\ncatalog, and never extracted by the runner.",
+              "items": {
+                "$ref": "#/$defs/OrderManual"
+              },
+              "type": "array"
+            },
             "project": {
               "$ref": "#/$defs/OrderProject"
             },
@@ -4472,6 +4479,7 @@
             "project",
             "entries",
             "row_keys",
+            "manual",
             "clips",
             "findings"
           ],
@@ -4948,6 +4956,72 @@
             "length",
             "value_set",
             "classification"
+          ],
+          "type": "object"
+        },
+        "OrderManual": {
+          "description": "A column entered by hand: the catalog does not describe it.",
+          "properties": {
+            "binding": {
+              "description": "The column's position in the source.",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "column": {
+              "description": "The column name as the delivery spells it.",
+              "type": "string"
+            },
+            "display_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "period": {
+              "description": "The source's requested periods, unclipped; `{start: null, end: null}` for a\ntimeless source.",
+              "items": {
+                "$ref": "#/$defs/Period"
+              },
+              "type": "array"
+            },
+            "provider_name": {
+              "description": "A source entered by hand: who delivers it, as the project names them.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "register_name": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "source": {
+              "description": "The project source's name.",
+              "type": "string"
+            },
+            "table": {
+              "description": "The catalog table of a source that has one; `null` for a source entered by hand.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "type": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "source",
+            "binding",
+            "table",
+            "provider_name",
+            "register_name",
+            "column",
+            "type",
+            "display_name",
+            "period"
           ],
           "type": "object"
         },

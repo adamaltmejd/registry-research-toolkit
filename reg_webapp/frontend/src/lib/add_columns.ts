@@ -1,12 +1,15 @@
 import type { CatalogSegment, RegisterShow } from "./api";
 import { catalogLastDate } from "./catalog_period";
 import { periodCoverageUnion } from "./period";
-import type {
-  ProjectBinding,
-  ProjectData,
-  ProjectSource,
-  ProjectSourcePeriod,
-  ProjectStudyWindow,
+import {
+  isCatalogBinding,
+  isCatalogSource,
+  type ProjectCatalogBinding,
+  type ProjectCatalogSource,
+  type ProjectData,
+  type ProjectSource,
+  type ProjectSourcePeriod,
+  type ProjectStudyWindow,
 } from "./project_data";
 import {
   checkProject,
@@ -57,16 +60,20 @@ export function variableColumns(
 
 /** The project's sources that bind `variable` in `table`. A binding has no
  * column, so a source binds the variable whatever its columns there (reg-core
- * `Binding`); two sources of one table can each bind it. */
+ * `Binding`); two sources of one table can each bind it. Sources entered by
+ * hand name no table and never match. */
 export function bindingSources(
   project: ProjectData | null,
   variable: string,
   table: string,
-): ProjectSource[] {
+): ProjectCatalogSource[] {
   return (project?.sources ?? []).filter(
-    (source) =>
+    (source): source is ProjectCatalogSource =>
+      isCatalogSource(source) &&
       source.table === table &&
-      source.bindings.some((binding) => binding.variable === variable),
+      source.bindings.some(
+        (binding) => isCatalogBinding(binding) && binding.variable === variable,
+      ),
   );
 }
 
@@ -172,7 +179,7 @@ export function columnWindowPeriod(
 function defaultBinding(
   variable: string,
   segments: readonly CatalogSegment[],
-): ProjectBinding {
+): ProjectCatalogBinding {
   const classification = segments[0]?.classification;
   return {
     variable,
@@ -210,15 +217,20 @@ export function removeBindings(
     for (;;) {
       const sourceIndex = candidate.sources.findIndex(
         (source) =>
+          isCatalogSource(source) &&
           source.table === table &&
-          source.bindings.some((binding) => binding.variable === variable),
+          source.bindings.some(
+            (binding) =>
+              isCatalogBinding(binding) && binding.variable === variable,
+          ),
       );
       if (sourceIndex < 0) break;
       candidate = removeBinding(
         candidate,
         sourceIndex,
         candidate.sources[sourceIndex].bindings.findIndex(
-          (binding) => binding.variable === variable,
+          (binding) =>
+            isCatalogBinding(binding) && binding.variable === variable,
         ),
       );
     }
@@ -240,10 +252,8 @@ export function addColumns(
   window: ProjectStudyWindow,
   tables: readonly TablePeriodMetadata[],
 ): ProjectData {
-  const sources = project.sources.map((source) => ({
-    ...source,
-    bindings: [...source.bindings],
-  }));
+  // A copy, so the loop below edits the candidate and never the open project.
+  const sources: ProjectSource[] = structuredClone(project.sources);
   const byTable = new Map<
     string,
     { segments: CatalogSegment[]; intervals: Interval[]; timeless: boolean }
@@ -276,7 +286,11 @@ export function addColumns(
       : sourcePeriodFromWire(
           renderIntervals(mergeIntervals(requested.intervals)),
         );
-    let source = sources.find((entry) => entry.table === table);
+    // An add goes to a catalog source only, never into one entered by hand.
+    let source = sources.find(
+      (entry): entry is ProjectCatalogSource =>
+        isCatalogSource(entry) && entry.table === table,
+    );
     if (!source) {
       source = {
         name: sourceName(sources, table),
@@ -293,7 +307,11 @@ export function addColumns(
       else if (existing.intervals !== null)
         source.period = periodCoverageUnion(source.period, period);
     }
-    if (!source.bindings.some((binding) => binding.variable === variable))
+    if (
+      !source.bindings.some(
+        (binding) => isCatalogBinding(binding) && binding.variable === variable,
+      )
+    )
       source.bindings.push(defaultBinding(variable, requested.segments));
   }
   const candidate = { ...project, sources };

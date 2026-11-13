@@ -1,7 +1,7 @@
 {
   "note": "Fails if a binding held only in part blocks, or is clipped silently: the 2021 availability no steward column holds is a clip and a coverage_gap warning, and the filter keeps an open end where it cuts no held day.",
   "project": {
-    "schema_version": "6.1.0",
+    "schema_version": "6.2.0",
     "reg_meta_version": "0.71.0",
     "name": "Past delivery",
     "sources": [

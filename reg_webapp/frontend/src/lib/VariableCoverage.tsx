@@ -47,7 +47,12 @@ import {
   yearWindowLabel,
 } from "./period";
 import { successionLanes, variableSpans } from "./picker_graph";
-import type { ProjectStudyWindow } from "./project_data";
+import {
+  catalogBindings,
+  isCatalogSource,
+  isManualBinding,
+  type ProjectStudyWindow,
+} from "./project_data";
 import { projectStore } from "./project_store";
 import { columnYearRuns, studyWindow } from "./study_window";
 import { AddBar } from "./ui/AddBar";
@@ -399,7 +404,7 @@ export function useVariableCoverage({
   const emptied = [
     ...new Set(removes.flatMap(({ sources }) => sources)),
   ].filter((source) =>
-    source.bindings.every((binding) =>
+    catalogBindings(source).every((binding) =>
       removes.some(
         (staged) =>
           staged.sources.includes(source) &&
@@ -415,7 +420,9 @@ export function useVariableCoverage({
   // no name for the table.
   const tableName = (table: string) =>
     names.get(table) ??
-    draft?.sources.find((source) => source.table === table)?.name ??
+    draft?.sources.find(
+      (source) => isCatalogSource(source) && source.table === table,
+    )?.name ??
     table;
   // A table the project splits into several sources: a removal takes the
   // variable from each, and the bar says how many (Operator, #2408).
@@ -439,7 +446,10 @@ export function useVariableCoverage({
                 // The table leaves only when none of its sources is left;
                 // otherwise name the sources that go by their years.
                 const kept = (draft?.sources ?? []).some(
-                  (source) => source.table === table && !going.includes(source),
+                  (source) =>
+                    isCatalogSource(source) &&
+                    source.table === table &&
+                    !going.includes(source),
                 );
                 if (!kept) return tableName(table);
                 const years = going
@@ -450,6 +460,11 @@ export function useVariableCoverage({
               }),
             )} from the project${grouped ? " and from its panels" : ""}.`,
           ]
+        : []),
+      // A catalog table keeps one catalog column at least, so the columns
+      // entered by hand in a table that goes are removed with it.
+      ...(emptied.some((source) => source.bindings.some(isManualBinding))
+        ? ["Columns entered by hand in those tables are removed too."]
         : []),
     ].join(" ") || null;
   const remove = () => {

@@ -28,7 +28,7 @@ pub(crate) use rows::StewardKeys;
 
 use std::collections::BTreeSet;
 
-use reg_core::project::{ProjectData, Source, StudyWindow};
+use reg_core::project::{Binding, CatalogSource, ManualSource, ProjectData, Source, StudyWindow};
 use reg_core::{Interval, IssueLevel, merge, overlap};
 use rusqlite::Connection;
 use serde::Serialize;
@@ -169,9 +169,14 @@ fn checked(
         Ok(order) => order,
         Err(findings) => return Ok(Err(findings)),
     };
-    if let (Some(held), Some(steward)) =
-        (server.catalog.connect_holdings()?, server.catalog.steward())
-    {
+    // A project with no catalog source has nothing for the holdings to place, and no
+    // database to choose.
+    let catalog = project.sources.iter().any(|s| s.catalog().is_some());
+    if let (true, Some(held), Some(steward)) = (
+        catalog,
+        server.catalog.connect_holdings()?,
+        server.catalog.steward(),
+    ) {
         match materialize::manifest(server, &held, steward, project, &order)? {
             Ok(manifest) => delivered(server, &mut order, manifest)?,
             Err(findings) => return Ok(Err(findings)),
@@ -480,6 +485,9 @@ pub struct LogicalOrder {
     entries: Vec<OrderEntry>,
     /// Per source, then by period start.
     row_keys: Vec<OrderRowKeys>,
+    /// The columns entered by hand, per source and binding: not checked against the
+    /// catalog, and never extracted by the runner.
+    manual: Vec<OrderManual>,
     /// Every period that cannot be delivered, also when the order succeeds.
     clips: Vec<OrderClip>,
     /// The non-blocking findings (level `warning` or `info`).
@@ -549,6 +557,32 @@ pub struct OrderEntry {
 pub struct OrderValueSet {
     hash: String,
     n_items: i64,
+}
+
+/// A column entered by hand: the catalog does not describe it.
+#[derive(Clone, Serialize, ToSchema)]
+pub struct OrderManual {
+    /// The project source's name.
+    source: String,
+    /// The column's position in the source.
+    binding: usize,
+    /// The catalog table of a source that has one; `null` for a source entered by hand.
+    #[schema(required = true)]
+    table: Option<String>,
+    /// A source entered by hand: who delivers it, as the project names them.
+    #[schema(required = true)]
+    provider_name: Option<String>,
+    #[schema(required = true)]
+    register_name: Option<String>,
+    /// The column name as the delivery spells it.
+    column: String,
+    #[serde(rename = "type")]
+    dtype: String,
+    #[schema(required = true)]
+    display_name: Option<String>,
+    /// The source's requested periods, unclipped; `{start: null, end: null}` for a
+    /// timeless source.
+    period: Vec<Period>,
 }
 
 /// A serving table's row-key columns over a period.
@@ -646,7 +680,16 @@ pub fn check(
     let mut entries = Vec::new();
     let mut row_keys = Vec::new();
     let mut clips = Vec::new();
+    let mut manual = Vec::new();
     for (index, source) in project.sources.iter().enumerate() {
+        manual.extend(manual_items(server, source));
+        let source = match source {
+            Source::Catalog(source) => source,
+            Source::Manual(source) => {
+                findings.extend(manual_source(index, source));
+                continue;
+            }
+        };
         let (origin, composed) = match &held {
             Some(held)
                 if refs::table(&conn, &source.table).is_err()
@@ -674,12 +717,12 @@ pub fn check(
     // outside it blocks (reg-core DESIGN.md, "Logical selection").
     if let Some(window) = project.window.as_ref().and_then(StudyWindow::interval) {
         for (index, source) in project.sources.iter().enumerate() {
-            let Ok(Some(items)) = source.period.items() else {
+            let Ok(Some(items)) = source.period().items() else {
                 continue;
             };
             if overlap(&items, std::slice::from_ref(&window)).is_empty() {
                 findings.push(Issue {
-                    source: Some(source.name.clone()),
+                    source: Some(source.name().to_owned()),
                     ..Issue::new(
                         IssueLevel::Error,
                         "source_outside_window",
@@ -687,7 +730,7 @@ pub fn check(
                         format!(
                             "{}'s period lies wholly outside the study window {}..{}; change the \
                          period or the window.",
-                            source.name,
+                            source.name(),
                             &window.0[..4],
                             &window.1[..4]
                         ),
@@ -723,9 +766,103 @@ pub fn check(
         },
         entries,
         row_keys,
+        manual,
         clips,
         findings,
     }))
+}
+
+/// A manual source's findings. It has no catalog check, but its period must still be
+/// orderable: an inverted scalar range is otherwise refused only by `requested`.
+fn manual_source(index: usize, source: &ManualSource) -> Vec<Issue> {
+    let issue = |level, code: &str, path: String, message: String| Issue {
+        source: Some(source.name.clone()),
+        ..Issue::new(level, code, path, message)
+    };
+    let mut findings = Vec::new();
+    if let Err(reason) = source.period.items() {
+        findings.push(issue(
+            IssueLevel::Error,
+            "period_not_orderable",
+            format!("/sources/{index}/period"),
+            format!("The period is not orderable: {reason}."),
+        ));
+    }
+    let columns: Vec<&str> = source
+        .bindings
+        .iter()
+        .map(|b| b.manual.column.as_str())
+        .collect();
+    findings.push(issue(
+        IssueLevel::Info,
+        "manual_item",
+        format!("/sources/{index}"),
+        format!(
+            "{} ({}, {}) is entered by hand, so nothing about it or its columns ({}) was \
+             checked against the catalog.",
+            source.name,
+            source.manual.provider,
+            source.manual.register,
+            columns.join(", ")
+        ),
+    ));
+    findings
+}
+
+/// A catalog source's one `manual_item` info naming its columns entered by hand, if it
+/// has any.
+fn manual_columns(index: usize, source: &CatalogSource) -> Option<Issue> {
+    let columns: Vec<&str> = source
+        .bindings
+        .iter()
+        .filter_map(|b| match b {
+            Binding::Manual(m) => Some(m.manual.column.as_str()),
+            Binding::Catalog(_) => None,
+        })
+        .collect();
+    if columns.is_empty() {
+        return None;
+    }
+    Some(Issue {
+        source: Some(source.name.clone()),
+        table: Some(source.table.clone()),
+        ..Issue::new(
+            IssueLevel::Info,
+            "manual_item",
+            format!("/sources/{index}"),
+            format!(
+                "Entered by hand, so not checked against the catalog: {}.",
+                columns.join(", ")
+            ),
+        )
+    })
+}
+
+/// The source's columns entered by hand, for the order's `manual` list, over the
+/// source's requested periods (one open period for `_default`).
+fn manual_items(server: &Server, source: &Source) -> Vec<OrderManual> {
+    let periods: Vec<Period> = match source.period().intervals() {
+        Ok(Some(items)) => items.iter().map(|i| period(server, i)).collect(),
+        _ => vec![Period::default()],
+    };
+    let (table, origin) = match source {
+        Source::Catalog(s) => (Some(&s.table), None),
+        Source::Manual(s) => (None, Some(&s.manual)),
+    };
+    source
+        .manual_columns()
+        .map(|(binding, column)| OrderManual {
+            source: source.name().to_owned(),
+            binding,
+            table: table.cloned(),
+            provider_name: origin.map(|o| o.provider.clone()),
+            register_name: origin.map(|o| o.register.clone()),
+            column: column.manual.column.clone(),
+            dtype: column.manual.column_type.as_str().to_owned(),
+            display_name: column.display_name.clone(),
+            period: periods.clone(),
+        })
+        .collect()
 }
 
 /// Name an order's rows and findings with one [`refs::names`] read: the rows are built
@@ -778,14 +915,14 @@ fn check_source(
     space: Option<&str>,
     composed: bool,
     index: usize,
-    source: &Source,
+    source: &CatalogSource,
 ) -> Result<Checked, Error> {
     let at = |field: &str| format!("/sources/{index}/{field}");
     let issue = |level, code: &str, path: String, message: String| Issue {
         source: Some(source.name.clone()),
         ..Issue::new(level, code, path, message)
     };
-    let mut own = Vec::new();
+    let mut own: Vec<Issue> = manual_columns(index, source).into_iter().collect();
     let table = match table_ref(conn, &source.table)? {
         Ok(table) => Some(table),
         Err((code, message)) => {
@@ -815,7 +952,7 @@ fn check_source(
         // Every finding at once: the bindings' ids still resolve.
         own.sort_by_key(Issue::key);
         checked.findings = own;
-        for (b, binding) in source.bindings.iter().enumerate() {
+        for (b, binding) in source.catalog_bindings() {
             let mut found = window::refs(
                 conn,
                 composed,
@@ -864,7 +1001,7 @@ fn check_source(
         requested: &requested,
         composed,
     };
-    for (b, binding) in source.bindings.iter().enumerate() {
+    for (b, binding) in source.catalog_bindings() {
         let outcome = window::binding(&scope, b, binding)?;
         let mut found = outcome.findings;
         found.sort_by_key(Issue::key);
@@ -911,7 +1048,7 @@ fn combine_serving(mut serving: Vec<Serving>, followed: Vec<Serving>) -> Vec<Ser
 /// period on one.
 fn requested(
     server: &Server,
-    source: &Source,
+    source: &CatalogSource,
     table: Option<&Table>,
 ) -> Result<Option<Vec<Interval>>, (&'static str, String)> {
     let intervals = source.period.items().map_err(|reason| {

@@ -1,0 +1,71 @@
+{
+  "schema_version": "6.2.0",
+  "reg_meta_version": "reg_meta/v1.0.0",
+  "name": "demo",
+  "sources": [
+    {
+      "name": "hsk",
+      "table": "scb/hreg/grundutbildning-1993",
+      "period": {
+        "from": 1993,
+        "to": 2005
+      },
+      "bindings": [
+        {
+          "variable": "scb/hreg/kursens-terminsnummer"
+        },
+        {
+          "manual": {
+            "column": "Termin",
+            "type": "text",
+            "codes": [
+              {
+                "code": "HT",
+                "label": "Hösttermin"
+              },
+              {
+                "code": "VT"
+              }
+            ]
+          },
+          "display_name": "termin"
+        }
+      ]
+    },
+    {
+      "name": "nya",
+      "manual": {
+        "provider": "UHR",
+        "register": "NyA antagning"
+      },
+      "period": [
+        2006,
+        2008
+      ],
+      "bindings": [
+        {
+          "manual": {
+            "column": "LopNr",
+            "type": "identifier"
+          }
+        },
+        {
+          "manual": {
+            "column": "Urval",
+            "type": "text",
+            "codes": [
+              {
+                "code": "URV1"
+              },
+              {
+                "code": "9",
+                "label": "Uppgift saknas",
+                "sentinel": true
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": "6.2.0",
+  "reg_meta_version": "reg_meta/v1.0.0",
+  "name": "demo",
+  "sources": [
+    {
+      "name": "hsk",
+      "table": "scb/hreg/grundutbildning-1993",
+      "period": 1995,
+      "bindings": [
+        {
+          "manual": {
+            "column": "Termin",
+            "type": "text"
+          },
+          "classification": null,
+          "follow_successor": false,
+          "type": "text"
+        }
+      ]
+    }
+  ]
+}

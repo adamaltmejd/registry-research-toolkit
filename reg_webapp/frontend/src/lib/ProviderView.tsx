@@ -6,6 +6,7 @@ import { segmentYears } from "./catalog_period";
 import { FilterInput } from "./FilterInput";
 import { Highlight } from "./Highlight";
 import { dataAxis } from "./period";
+import { catalogBindings } from "./project_data";
 import { datedYearRuns, studyWindow } from "./study_window";
 import { Definitions } from "./ui/Definitions";
 import { EmptyState } from "./ui/EmptyState";
@@ -53,7 +54,7 @@ export function ProviderView({
   ]);
   const bound =
     draft?.sources.flatMap((source) =>
-      source.bindings.map((binding) => binding.variable),
+      catalogBindings(source).map((binding) => binding.variable),
     ) ?? [];
   return (
     <article className={styles.page}>

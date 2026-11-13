@@ -157,10 +157,21 @@ j_classification() {
 # J5 build an order and save it. Fails if opening a project file stops reaching the
 # catalog check, a variable ticked on its page is not added to the project, the
 # draft does not survive a reload, or the saved project_data.json loses the project or
-# the added column (the file's contract is reg-core's validator's).
+# the added column (the file's contract is reg-core's validator's). The project also
+# holds data entered by hand (a column beside the catalog ones and a source of its
+# own): the page must show both as such, and an edit elsewhere must not drop them.
 j_order() {
 	local saved=$out_dir/order-project_data.json
-	open_project "$WEBAPP_PROJECT" && ready &&
+	local project=$out_dir/order-project.json
+	bun -e 'const p = await Bun.file(process.argv[1]).json();
+		p.sources[0].bindings.push({ manual: { column: "Termin", type: "text", codes: [{ code: "HT" }, { code: "VT" }] } });
+		p.sources.push({ name: "nya", manual: { provider: "UHR", register: "NyA antagning" }, period: [2006, { from: 2008, to: 2009 }],
+			bindings: [{ manual: { column: "LopNr", type: "identifier" } }, { manual: { column: "Urval", type: "text" } }] });
+		await Bun.write(process.argv[2], JSON.stringify(p))' \
+		"$WEBAPP_PROJECT" "$project" || return 1
+	open_project "$project" && ready &&
+		see heading "UHR: NyA antagning" && see button "Remove Termin from Basregistret" &&
+		wait_text "Not in the catalog, entered by hand" &&
 		visit /catalog/demo/hush/antal &&
 		press checkbox "Antal, Antal personer, Familjer, 2021–2022, check to add" &&
 		press button "Add 1 variable to project" &&
@@ -174,8 +185,10 @@ j_order() {
 	ab download "@$ref" "$saved" >/dev/null || fail "the download did not save" || return 1
 	bun -e 'const p = await Bun.file(process.argv[1]).json();
 		const bound = p.sources.flatMap((s) => s.bindings.map((b) => b.variable));
-		process.exit(p.name === "Baseline study" && bound.includes("demo/hush/antal") ? 0 : 1)' \
-		"$saved" || fail "the saved project lost its name or demo/hush/antal" || return 1
+		const kept = JSON.stringify(p.sources[0].bindings.at(-1)) === JSON.stringify({ manual: { column: "Termin", type: "text", codes: [{ code: "HT" }, { code: "VT" }] } })
+			&& p.sources.some((s) => s.name === "nya" && s.manual.register === "NyA antagning" && s.bindings.length === 2);
+		process.exit(p.name === "Baseline study" && bound.includes("demo/hush/antal") && kept ? 0 : 1)' \
+		"$saved" || fail "the saved project lost its name, demo/hush/antal or the data entered by hand" || return 1
 	shot
 }
 

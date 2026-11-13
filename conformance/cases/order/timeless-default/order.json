@@ -5,7 +5,7 @@
   },
   "project": {
     "name": "Order case",
-    "schema_version": "6.1.0",
+    "schema_version": "6.2.0",
     "reg_meta_version": "0.64.0"
   },
   "entries": [
@@ -31,6 +31,7 @@
     }
   ],
   "row_keys": [],
+  "manual": [],
   "clips": [],
   "findings": []
 }

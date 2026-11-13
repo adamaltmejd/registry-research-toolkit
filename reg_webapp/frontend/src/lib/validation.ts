@@ -84,6 +84,8 @@ const TITLES: Readonly<Record<string, string>> = {
   database_required: "Choose a database",
   database_unknown: "This database does not exist",
   not_in_database: "This column is not in the chosen database",
+  // Data the project states by hand, which the catalog does not describe.
+  manual_item: "Not checked",
 };
 
 export function issueTitle(issue: ValidationIssue): string {

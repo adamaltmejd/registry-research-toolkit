@@ -1,7 +1,7 @@
 {
   "note": "Fails if two sources sharing a physical table get two files, per-column filters, or a silent union: one file, one OR filter over both years, the key once with both sources' references, and an inclusion finding per source; and if source a binding the key explicitly drops b's key references (the column stays ordered with a's binding reference, b keeps its added ones).",
   "project": {
-    "schema_version": "6.1.0",
+    "schema_version": "6.2.0",
     "reg_meta_version": "0.71.0",
     "name": "Shared file",
     "sources": [
