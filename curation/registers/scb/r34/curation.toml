@@ -24425,3 +24425,21 @@ kind = "set"
 subject = "var:medbman"
 fields = { "description" = "År och månad för personens aktuella prioriterade medborgarskap. Härleds från 2000 ur Befolkningsregistret (folkbokförda personer)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma härledning; från 2000 anges källregistret.\ncatalog:variable_text:44655:10227:10957\ncatalog:variable_text:44655:10957:19723"
+
+[[statement]]
+kind = "set"
+subject = "release:individer-fodelseland/r15549"
+fields = { "period" = "1990..2023" }
+evidence = "SCB Registerinformation, RegVerID 15549: the LISA release is named \"Födelseland\", with no period, so its documented columns had no period. Its population, \"Folkbokförda personer i Sverige\", is dated 1990-12-31 - 2023-12-31: the LISA population on the last day of each year 1990–2023. The period takes those whole years, as LISA's yearly tables do."
+
+[[statement]]
+kind = "set"
+subject = "release:individer-in-utvandring/r15550"
+fields = { "period" = "1990..2023" }
+evidence = "SCB Registerinformation, RegVerID 15550: the LISA release is named \"In- och utvandrade\", with no period, so its documented columns had no period. Its population, \"Folkbokförda personer i Sverige\", is dated 1990-12-31 - 2023-12-31: the LISA population on the last day of each year 1990–2023. The period takes those whole years, as LISA's yearly tables do."
+
+[[statement]]
+kind = "set"
+subject = "release:individer-avlidna/r15551"
+fields = { "period" = "1990..2023" }
+evidence = "SCB Registerinformation, RegVerID 15551: the LISA release is named \"Avlidna\", with no period, so its documented columns had no period. Its population, \"Folkbokförda personer i Sverige\", is dated 1990-12-31 - 2023-12-31: the LISA population on the last day of each year 1990–2023. The period takes those whole years, as LISA's yearly tables do."
