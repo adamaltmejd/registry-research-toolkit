@@ -6336,3 +6336,9 @@ kind = "set"
 subject = "release:vy-fob/r18614"
 fields = { "period" = "1990" }
 evidence = "SCB Registerinformation, RegVerID 18614: the FoB view release is named \"FoB1990\", the census year, which the delivery-name grammar does not read, so its documented columns had no period. Its period is the census year, as for the FoB1990 individ and lägenhet releases named \"1990\"."
+
+[[statement]]
+kind = "set"
+subject = "vy-fob: RPSyss @1985 where key = 'v42534'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Vy FoB1985 (RegVerID 18279) documents column RPSyss twice: under VarId 42334 \"Sysselsättning - referensperson\", as in every other FoB release, and under VarId 42534 \"Förvärvsarbete - referensperson\", the VarId that column RPArb carries in the same release and in Lägenhet och hushåll 1985. One column cannot be two variables; the 42534 row is a documentation duplicate of RPArb's VarId and is withheld."
