@@ -178,8 +178,8 @@ pub fn render(intervals: &[Interval]) -> String {
             }
             // The year is what precedes the suffix: four digits for an ISO date, and
             // no byte slicing, so any string renders without a panic.
-            let start = lo.strip_suffix("-01-01").unwrap_or(lo);
-            let end = hi.strip_suffix("-12-31").unwrap_or(hi);
+            let start = lo.trim_suffix("-01-01");
+            let end = hi.trim_suffix("-12-31");
             format!("{start}..{end}")
         })
         .collect::<Vec<_>>()
