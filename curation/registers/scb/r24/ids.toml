@@ -97,4 +97,4 @@ public = "ureg"
 "kursniva" = ["Gymnasieintyg: Markering"]
 "poangomfattning" = ["Samlat betygsdokument/studiebevis: Poang"]
 "studievag-i-gymnasieskolan" = ["Samlat betygsdokument/studiebevis: STVKod"]
-"utbildningsinriktning-sun-2000-sun2000inr" = ["Samlat betygsdokument/studiebevis: SUN2000Inr"]
+"utbildningsinriktning" = ["Samlat betygsdokument/studiebevis: SUN2000Inr"]
