@@ -29,7 +29,8 @@ rex window new -s "$REX_SESSION" <name> --focus=false -c <repo> \
   schemas).
 - Never resume a worker with `claude -r`: it can't remove its worktree. To continue a
   branch, start a new `-w` worker that runs `git fetch`, `git reset --hard origin/<branch>`
-  and pushes to `HEAD:<branch>`.
+  and pushes to `HEAD:<branch>`. The reset fails if the branch changes anything under
+  `.claude/` (sandbox-protected); then ask the maintainer.
 
 Every brief says:
 - You are a tab in a shared Rex session: never `rex session rename`.
@@ -67,12 +68,14 @@ The agent token has no `workflow` scope: the maintainer pushes commits that touc
 
 After every merge, for your own workers only:
 
-1. `gh pr view <n> --json state` shows `MERGED`.
-2. Tell the worker to call ExitWorktree with action `remove` and `discard_changes: true`
+1. `gh pr view <n> --json state,headRefOid` shows `MERGED`.
+2. Have the worker confirm `git status --porcelain` is empty and `git rev-parse HEAD`
+   equals that `headRefOid`. If either fails, stop and ask the maintainer.
+3. Tell the worker to call ExitWorktree with action `remove` and `discard_changes: true`
    (after a squash merge it refuses without it). This removes the worktree and its local
    branch.
-3. Check `git worktree list` and `git branch --list '*<name>*'`.
-4. `git push origin --delete <branch>`, then `rex window close -s "$REX_SESSION" <tab>`.
-5. Anything left over goes to the maintainer as one exact `!` command, e.g.
+4. Check `git worktree list` and `git branch --list '*<name>*'`.
+5. `git push origin --delete <branch>`, then `rex window close -s "$REX_SESSION" <tab>`.
+6. Anything left over goes to the maintainer as one exact `!` command, e.g.
    `git worktree remove .claude/worktrees/<name> && git branch -D <branch>`. No `--force`,
    no loops over `.claude/worktrees/agent-*`.
