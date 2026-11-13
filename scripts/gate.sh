@@ -25,7 +25,7 @@ if [ -z "${GATE_LOG:-}" ]; then
 	GATE_LOG=$(mktemp "${TMPDIR:-/tmp}/gate.XXXXXX") || exit 1
 	export GATE_LOG
 	echo "== gate log $GATE_LOG"
-	bash "${BASH_SOURCE[0]}" "$@" 2>&1 | tee "$GATE_LOG"
+	bash "$ROOT/scripts/gate.sh" "$@" 2>&1 | tee "$GATE_LOG"
 	exit "${PIPESTATUS[0]}"
 fi
 FRONTEND=$ROOT/reg_webapp/frontend
