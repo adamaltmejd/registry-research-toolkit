@@ -4,8 +4,6 @@
     "json": {
       "/data/ok": true,
       "/data/issues/*/code": [
-        "identifier",
-        "variable_sensitive",
         "edition_disagreement",
         "period_clipped",
         "variable_replaced",
@@ -17,8 +15,6 @@
       ],
       "/data/issues/*/level": [
         "info",
-        "warning",
-        "warning",
         "info",
         "warning",
         "info",
@@ -28,8 +24,6 @@
         "warning"
       ],
       "/data/issues/*/path": [
-        "/sources/0/bindings/0",
-        "/sources/0/bindings/1",
         "/sources/1/bindings/0",
         "/sources/2/bindings/0",
         "/sources/2/bindings/0",
@@ -40,8 +34,6 @@
         "/sources/6/bindings/0"
       ],
       "/data/issues/*/source": [
-        "flags",
-        "flags",
         "editions",
         "replaced",
         "replaced",
@@ -52,8 +44,6 @@
         "replaced-undated"
       ],
       "/data/issues/*/variable": [
-        "demo/imp/lopnr",
-        "demo/imp/kansl",
         "demo/pre/mat",
         "demo/rep/gammal",
         "demo/rep/gammal",
@@ -64,8 +54,6 @@
         "demo/rep/ny"
       ],
       "/data/issues/*/variable_name": [
-        "Löpnummer",
-        "Känslig uppgift",
         "Mätvärde",
         "Gammal kod",
         "Gammal kod",
@@ -76,8 +64,6 @@
         "Ny kod"
       ],
       "/data/issues/*/table_name": [
-        "Implicitregistret",
-        "Implicitregistret",
         "Preliminära registret",
         "Ersättningsregistret",
         "Ersättningsregistret",
@@ -88,8 +74,6 @@
         "Ersättningsregistret"
       ],
       "/data/issues/*/table": [
-        "demo/imp",
-        "demo/imp",
         "demo/pre",
         "demo/rep",
         "demo/rep",
@@ -100,8 +84,6 @@
         "demo/rep"
       ],
       "/data/issues/*/period": [
-        {"start": "2020-01-01", "end": "2021-01-01"},
-        {"start": "2020-01-01", "end": "2021-01-01"},
         {"start": "2019-01-01", "end": "2020-01-01"},
         {"start": "2018-01-01", "end": "2021-01-01"},
         {"start": "2018-01-01", "end": "2021-01-01"},
@@ -114,8 +96,6 @@
       "/data/issues/*/successor_fqid": [
         null,
         null,
-        null,
-        null,
         "demo/rep/ny",
         null,
         null,
@@ -124,8 +104,6 @@
         "demo/rep/nyast"
       ],
       "/data/issues/*/successor_name": [
-        null,
-        null,
         null,
         null,
         "Ny kod",

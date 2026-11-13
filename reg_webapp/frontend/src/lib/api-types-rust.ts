@@ -299,7 +299,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description Search registers, tables, variables, codes and documents by text, best match first. `tag` keeps only that tag's variables. For exact column names use `resolve`. */
+        /** @description Search registers, tables, variables, codes and documents by text, best match first. A hit matches every word of `q`; when nothing does, hits matching the most words come first. `tag` keeps only that tag's variables. For exact column names use `resolve`. */
         get: operations["search"];
         put?: never;
         post?: never;

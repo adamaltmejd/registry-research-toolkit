@@ -75,20 +75,5 @@
     }
   ],
   "clips": [],
-  "findings": [
-    {
-      "level": "info",
-      "code": "identifier",
-      "path": "/sources/0/bindings/0",
-      "message": "demo/held/relative-id is an identifier in demo/held for 2021",
-      "source": "r",
-      "variable": "demo/held/relative-id",
-      "table": "demo/held",
-      "period": {
-        "start": "2021-01-01",
-        "end": "2022-01-01"
-      },
-      "successor_fqid": null
-    }
-  ]
+  "findings": []
 }

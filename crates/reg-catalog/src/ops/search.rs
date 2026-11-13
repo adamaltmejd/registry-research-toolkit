@@ -29,13 +29,29 @@ const MATCHES: &str = "WITH matched AS (
       AND rowid NOT IN (SELECT rowid FROM search WHERE search MATCH ?1)
 )";
 
+// The fallback when no row matches every term (rule 2): `?1` is the JSON array of the
+// terms, and a row matching any term ranks by how many it matches (most first, as a
+// negative tier), then by the sum of its best score per term over either index.
+const ANY_MATCHES: &str = "WITH hits AS (
+    SELECT s.rowid AS id, t.key AS term, bm25(search, 10.0, 5.0, 1.0) AS rank
+    FROM json_each(?1) t JOIN search s ON search MATCH t.value
+    UNION ALL
+    SELECT d.rowid, t.key, bm25(search_description, 10.0, 5.0, 1.0)
+    FROM json_each(?1) t JOIN search_description d ON search_description MATCH t.value
+), per_term AS (
+    SELECT id, term, MIN(rank) AS rank FROM hits GROUP BY id, term
+), matched AS (
+    SELECT id, -COUNT(*) AS tier, SUM(rank) AS rank FROM per_term GROUP BY id
+)";
+
 pub const OPERATIONS: &[Operation] = &[Operation {
     name: "search",
     paths: &["/api/search"],
     tool: Some("search"),
     description: "Search registers, tables, variables, codes and documents by text, best \
-            match first. `tag` keeps only that tag's variables. For exact column names use \
-            `resolve`.",
+            match first. A hit matches every word of `q`; when nothing does, hits matching \
+            the most words come first. `tag` keeps only that tag's variables. For exact \
+            column names use `resolve`.",
     params: &[
         Param::required("q", Type::String),
         Param::optional("type", Type::Enum(TYPES)),
@@ -179,7 +195,7 @@ fn search_origin(
     origin: &str,
     held: bool,
 ) -> Result<SearchPage, Error> {
-    let expression = fts::query(params["q"])?;
+    let terms = fts::terms(params["q"])?;
     let kind = params
         .get("type")
         .map(|t| {
@@ -216,33 +232,43 @@ fn search_origin(
         }
         Err(err) => return Err(err),
     };
-    let Some(expression) = expression else {
+    if terms.is_empty() {
         return Ok(SearchPage {
             items: vec![],
             next_cursor: None,
             total: paired.then_some(0),
             steward: None,
         });
-    };
+    }
     let tag = params
         .get("tag")
         .map(|tag| format!("tag/{}", tag.trim_prefix("tag/")));
     let filter = search_filter(server, conn, held)?;
     let (start, end) = period.unzip();
+    let (matches, bound, expression) = matching(terms, |every| {
+        Ok(conn.query_row(
+            &format!(
+                "{MATCHES} SELECT EXISTS (SELECT 1 FROM matched m \
+                 JOIN search_item i ON i.id = m.id WHERE {filter})"
+            ),
+            params![every, kind, register, start, end, tag],
+            |r| r.get::<_, bool>(0),
+        )?)
+    })?;
     let total = paired.then(|| conn.query_row(
-        &format!("{MATCHES} SELECT COUNT(*) FROM matched m JOIN search_item i ON i.id = m.id WHERE {filter}"),
-        params![expression, kind, register, start, end, tag], |r| r.get(0))).transpose()?;
+        &format!("{matches} SELECT COUNT(*) FROM matched m JOIN search_item i ON i.id = m.id WHERE {filter}"),
+        params![bound, kind, register, start, end, tag], |r| r.get(0))).transpose()?;
     let take = limit.min(DEPTH - offset);
     let sql_int = |n: usize| i64::try_from(n).expect("bounded by DEPTH");
     let mut rows: Vec<(i64, String, Option<i64>, String)> = rows(
         conn,
         &format!(
-            "{MATCHES} SELECT i.id, i.kind, i.entity_id, i.sort_key
+            "{matches} SELECT i.id, i.kind, i.entity_id, i.sort_key
          FROM matched m JOIN search_item i ON i.id = m.id
          WHERE {filter} ORDER BY {ORDER} LIMIT ?7 OFFSET ?8"
         ),
         params![
-            expression,
+            bound,
             kind,
             register,
             start,
@@ -268,6 +294,29 @@ fn search_origin(
         total,
         steward: None,
     })
+}
+
+/// The matching CTE, its `?1` and the FTS expression documents are matched with: every
+/// term (`MATCHES`), or the any-term fallback (`ANY_MATCHES`) when a query of several
+/// terms has no row matching them all under the filters (`whole`, given the every-term
+/// expression). Every page of one query decides alike, so its cursor's offset stays in
+/// one list.
+fn matching(
+    terms: Vec<String>,
+    whole: impl FnOnce(&str) -> Result<bool, Error>,
+) -> Result<(&'static str, String, String), Error> {
+    let every = terms.join(" ");
+    if terms.len() < 2 || whole(&every)? {
+        return Ok((MATCHES, every.clone(), every));
+    }
+    // A repeated word counts once.
+    // simplify: one FTS scan per distinct term; ten one-letter terms take ~2 s on the
+    // 0.84 catalog. Cap or prune short terms if real queries come near that.
+    let mut terms = terms;
+    let mut seen = std::collections::HashSet::new();
+    terms.retain(|t| seen.insert(t.clone()));
+    let json = serde_json::to_string(&terms).expect("terms serialize");
+    Ok((ANY_MATCHES, json, terms.join(" OR ")))
 }
 
 /// Count and page share all filters. In steward mode a register, table or variable

@@ -136,7 +136,7 @@
       "level": "info",
       "code": "form_change",
       "path": "/sources/0/bindings/0",
-      "message": "demo/held/value changes form from 2019 (Old -> New)",
+      "message": "demo/held/value changes form. From 2019, the column name changes from Old to New.",
       "source": "v",
       "variable": "demo/held/value",
       "table": "demo/held",

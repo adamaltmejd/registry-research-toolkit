@@ -28,17 +28,17 @@
     "status": 422,
     "json": {
       "/error/code": "order_blocked",
-      "/error/fields/findings/*/code": ["outside_availability", "variable_sensitive"],
+      "/error/fields/findings/*/code": ["outside_availability", "variable_replaced"],
       "/error/fields/findings/*/level": ["error", "warning"],
       "/error/fields/findings/*/path": ["/sources/0/bindings/0", "/sources/1/bindings/0"],
-      "/error/fields/findings/*/source": ["outside", "sensitive"],
-      "/error/fields/findings/*/variable": ["demo/imp/ink", "demo/imp/kansl"],
-      "/error/fields/findings/*/table": ["demo/imp", "demo/imp"],
+      "/error/fields/findings/*/source": ["outside", "replaced"],
+      "/error/fields/findings/*/variable": ["demo/imp/ink", "demo/rep/ny"],
+      "/error/fields/findings/*/table": ["demo/imp", "demo/rep"],
       "/error/fields/findings/*/period": [
         {"start": "2010-01-01", "end": "2011-01-01"},
-        {"start": "2020-01-01", "end": "2021-01-01"}
+        null
       ],
-      "/error/fields/findings/*/successor_fqid": [null, null]
+      "/error/fields/findings/*/successor_fqid": [null, "demo/rep/nyast"]
     },
     "keys": {"/error/fields": ["findings"]}
   },
