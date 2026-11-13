@@ -39,6 +39,6 @@ public = "kust-strander-oar"
 "sotvatten-utanfor-kustlinjen" = ["Basinformation om kust, stränder och öar: O_PA_HAVSO"]
 "storleksklass-pa-oar" = ["Basinformation om kust, stränder och öar: STLKLASS"]
 "kvalitetsindikator-for-geometri" = ["Basinformation om kust, stränder och öar: TOLERANCE"]
-"uuid" = ["Basinformation om kust, stränder och öar: UUID # v39462"]
+"uuid" = ["Basinformation om kust, stränder och öar: UUID # v41570"]
 "upphor-datum-for-statistiskt-objekt" = ["Basinformation om kust, stränder och öar: ValidTo"]
 "vattentyp" = ["Basinformation om kust, stränder och öar: VATTENTYP"]

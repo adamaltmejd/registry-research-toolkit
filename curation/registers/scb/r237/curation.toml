@@ -27284,6 +27284,12 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF1989.toml:20\
 
 [[statement]]
 kind = "set"
+subject = "individer-16plus-ulf: ba0040 where release = 'r737'"
+fields = { "classification" = "class/lkf/lkf1989" }
+evidence = "python-builder-pre-cutover:curation/classifications/LKF1989.toml:20\n\nLegacy exact value-set label: LKF 1989-01-01/ Län, kommuner och församlingar"
+
+[[statement]]
+kind = "set"
 subject = "individer-16-84-ar-ulf: ba0040 where release = 'r736'"
 fields = { "classification" = "class/lkf/lkf1990" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF1990.toml:19\n\nLegacy exact value-set label: LKF 1990-01-01/ Län, kommuner och församlingar"
@@ -114391,6 +114397,6 @@ evidence = "SCB Registerinformation, RegVerID 736: the ULF release is named \"19
 
 [[statement]]
 kind = "set"
-subject = "release:individer-16plus-ulf/r737"
-fields = { "period" = "1989" }
-evidence = "SCB Registerinformation, RegVerID 737: the ULF release is named \"1989_old\", which the delivery-name grammar does not read, so its documented columns had no period. SCB describes it as \"Urvalet har gjorts år 1989\": survey year 1989, the year of the release \"1989\" (RegVerID 20238) in the same table."
+subject = "individer-16-84-ar-ulf: TK0083 @1990 where key = 'v18400'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, ULF 1990_old (RegVerID 736) documents column TK0083 twice: under VarId 18399 \"Tillgång till butiksbuss vid långt avstånd\", as in 1991 (RegVerID 735), and under VarId 18400 \"Tillgång till lantbrevbärare vid avstånd\", the VarId of column TK0094 in 1982 and 1983. One column cannot be two variables; the 18400 row is a documentation duplicate and is withheld."

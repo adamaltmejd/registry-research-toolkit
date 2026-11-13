@@ -28774,27 +28774,3 @@ kind = "set"
 subject = "set:yrkesstallning"
 fields = { "description" = "Anger om personen är anställd eller företagare, dels för personer med arbetsinkomst, dels för förvärvsarbetande, det vill säga personer vars arbetsinkomst är större än ett prisbasbelopp." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna är samma yrkesställning; axeln är inkomstgränsen som avgränsar populationen.\ncatalog:variable_text:38910:2922:3287\ncatalog:variable_text:38910:3287:4383\ncatalog:variable_text:38910:4383:20089\ncatalog:variable_text:38911:2922:3287\ncatalog:variable_text:38911:17532:20089"
-
-[[statement]]
-kind = "set"
-subject = "release:bostadshushall/r18563"
-fields = { "period" = "2021" }
-evidence = "SCB Registerinformation, RegVerID 18563: the release is named \"2021VX, slutlig version\", which the delivery-name grammar does not read, so its documented columns had no period. Its population, \"Hushåll inkomststatistik\", is dated 2021-01-01 - 2021-12-31: income year 2021, as for the release \"2021, slutlig version\". VX marks household incomes that count children who live alternately with each parent (växelvis boende)."
-
-[[statement]]
-kind = "set"
-subject = "release:bostadshushall/r18997"
-fields = { "period" = "2022" }
-evidence = "SCB Registerinformation, RegVerID 18997: the release is named \"2022VX, slutlig version\", which the delivery-name grammar does not read, so its documented columns had no period. Its population, \"Hushåll inkomststatistik\", is dated 2022-01-01 - 2022-12-31: income year 2022, as for the release \"2022, slutlig version\". VX marks household incomes that count children who live alternately with each parent (växelvis boende)."
-
-[[statement]]
-kind = "set"
-subject = "release:bostadshushall/r19678"
-fields = { "period" = "2023" }
-evidence = "SCB Registerinformation, RegVerID 19678: the release is named \"2023VX, slutlig version\", which the delivery-name grammar does not read, so its documented columns had no period. Its population, \"Hushåll inkomststatistik\", is dated 2023-01-01 - 2023-12-31: income year 2023, as for the release \"2023, slutlig version\". VX marks household incomes that count children who live alternately with each parent (växelvis boende)."
-
-[[statement]]
-kind = "set"
-subject = "release:bostadshushall/r20243"
-fields = { "period" = "2024" }
-evidence = "SCB Registerinformation, RegVerID 20243: the release is named \"2024VX, slutlig version\", which the delivery-name grammar does not read, so its documented columns had no period. Its population, \"Hushåll inkomststatistik\", is dated 2024-01-01 - 2024-12-31: income year 2024, as for the release \"2024, slutlig version\". VX marks household incomes that count children who live alternately with each parent (växelvis boende)."

@@ -373,7 +373,7 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3982\n\n
 
 [[statement]]
 kind = "set"
-subject = "komvux: sun2020niva where release = 'r17564'"
+subject = "komvux: sun2020niva @1988-07-01..2024-06-30"
 fields = { "label" = "Högsta utbildningens nivå föregående år SUN2020, fullständig kod" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3706\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 
@@ -2245,18 +2245,6 @@ kind = "set"
 subject = "release:gymnasieintyg/r17536"
 fields = { "period" = "VT2012..VT2024" }
 evidence = "SCB Registerinformation, RegVerID 17536: the release is named \"Gymnasieintyg, ackumulerat register\", with no period, so its documented columns had no period. It is \"ackumulerat fr.o.m. 2012\"; its population is dated 2012-01-01 - 2024-06-30, the spring term 2012 through the spring term 2024."
-
-[[statement]]
-kind = "set"
-subject = "release:gymnasieintyg/r17537"
-fields = { "period" = "VT2012..VT2024" }
-evidence = "SCB Registerinformation, RegVerID 17537: the release is named \"Gymnasieintyg, summerade poäng\", with no period, so its documented columns had no period. It is \"ackumulerat fr.o.m. 2012\"; its population is dated 2012-01-01 - 2024-06-30, the spring term 2012 through the spring term 2024."
-
-[[statement]]
-kind = "set"
-subject = "release:komvux/r17540"
-fields = { "period" = "2001..2024" }
-evidence = "SCB Registerinformation, RegVerID 17540: the release is named \"Komvux och samlat betygsdokument/studiebevis\", with no period, so its documented columns had no period. Its population, \"Kursdeltagare i kommunal vuxenutbildning\", is dated 2001-01-01 - 2024-12-31."
 
 [[statement]]
 kind = "set"
