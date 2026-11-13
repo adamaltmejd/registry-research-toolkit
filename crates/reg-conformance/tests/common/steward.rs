@@ -1,20 +1,30 @@
 //! The run's synthetic steward: locked once, then copied and pinned per use, so a
 //! mutation case pays for its own compile only. The steward pairs are each built once
-//! and served as catalog `fixture` by one shared server. They live in the run's
-//! directory beside the server logs: a static is never dropped, so nothing would
-//! remove a scratch directory.
+//! and served as catalog `fixture` by one shared server.
 
 use std::fs;
 use std::path::{Path, PathBuf};
 use std::sync::OnceLock;
 
 use reg_conformance::{
-    Holdings, cases, copy_tree, holdings_case, lock_holdings, pinned_holdings, run,
+    Holdings, Scratch, cases, copy_tree, holdings_case, lock_holdings, pinned_holdings, run,
 };
 
 use super::server;
 
 type Built = OnceLock<Result<PathBuf, String>>;
+
+/// The run's directory for the session-built stewards, in the system temp dir: they
+/// are git repositories, and the Claude Code sandbox refuses `.git/config` writes
+/// inside the working tree. A static is never dropped, so the directory outlives the
+/// run until the OS clears its temp dir; it holds synthetic data only.
+fn run_dir() -> Result<&'static Path, String> {
+    static DIR: OnceLock<Result<Scratch, String>> = OnceLock::new();
+    DIR.get_or_init(|| Scratch::new("steward"))
+        .as_ref()
+        .map(Scratch::path)
+        .map_err(Clone::clone)
+}
 
 /// An unpinned copy of the run's locked synthetic steward in `directory/steward`; its
 /// root. `reg-build lock` writes the same lock for every copy, so it runs once per
@@ -24,7 +34,7 @@ type Built = OnceLock<Result<PathBuf, String>>;
 pub fn locked_copy(directory: &Path) -> Result<PathBuf, String> {
     static LOCKED: Built = OnceLock::new();
     let locked = LOCKED
-        .get_or_init(|| lock_holdings(&server::log_dir().join("locked")))
+        .get_or_init(|| lock_holdings(&run_dir()?.join("locked")))
         .clone()?;
     let root = directory.join("steward");
     copy_tree(&locked, &root)?;
@@ -48,7 +58,7 @@ pub struct Pair {
 pub fn pair() -> Result<&'static Pair, String> {
     static PAIR: OnceLock<Result<Pair, String>> = OnceLock::new();
     PAIR.get_or_init(|| {
-        let dir = server::log_dir().join("paired");
+        let dir = run_dir()?.join("paired");
         locked_copy(&dir)?;
         let holdings = compile(&dir)?;
         Ok(Pair { dir, holdings })
@@ -81,7 +91,7 @@ pub fn materialize() -> Result<u16, String> {
     static PAIR: Built = OnceLock::new();
     let dir = PAIR
         .get_or_init(|| {
-            let dir = server::log_dir().join("materialize");
+            let dir = run_dir()?.join("materialize");
             prepare_materialize(&dir).map(|()| dir)
         })
         .clone()?;
@@ -269,7 +279,7 @@ pub fn spaces() -> Result<u16, String> {
     static PAIR: Built = OnceLock::new();
     let dir = PAIR
         .get_or_init(|| {
-            let dir = server::log_dir().join("spaces");
+            let dir = run_dir()?.join("spaces");
             let root = locked_copy(&dir)?;
             split_schemas(&root)?;
             let holdings = pinned_holdings(&dir)?;
