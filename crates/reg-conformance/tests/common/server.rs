@@ -92,16 +92,16 @@ fn pooled(db: &Path, catalog: Option<&str>) -> Result<Arc<Server>, String> {
     .clone()
 }
 
-/// This run's directory in the cargo target's temp dir: server logs and the
-/// session-built steward pairs.
+/// This run's directory in the cargo target's temp dir, for the server logs. The
+/// session-built stewards are elsewhere (`steward::run_dir`).
 pub fn log_dir() -> PathBuf {
     static DIR: OnceLock<PathBuf> = OnceLock::new();
     DIR.get_or_init(|| {
         let dir = Path::new(env!("CARGO_TARGET_TMPDIR"))
             .join(format!("conformance-{}", std::process::id()));
         // A process id repeats across runs (CI restores the target dir from cache on a
-        // fresh runner), so an earlier run's directory is emptied, not reused: its
-        // steward pairs would make this run's setup fail with "File exists".
+        // fresh runner), so an earlier run's directory is emptied: this run's logs are
+        // not mixed with a stale run's.
         let _ = fs::remove_dir_all(&dir);
         let _ = fs::create_dir_all(&dir);
         dir
