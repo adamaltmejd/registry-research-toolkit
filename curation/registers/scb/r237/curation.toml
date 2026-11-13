@@ -114382,3 +114382,21 @@ kind = "set"
 subject = "var:antal-med-kod-14-i-tablan"
 fields = { "description" = "Antal personer i hushållet med relationskod 14 i förhållande till urvalspersonen. Kod 14 betyder urvalspersonens fosterbarn till och med 1993 och annat från 1994." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nAlla år anger samma sammanräkning och samma kodbetydelse: fosterbarn 1992–1993, annat 1994–2007. En ändrad kodbetydelse inom samma kolumn är ingen delning (crates/DESIGN.md); den anges med år.\ncatalog:variable_text:53333:8401:12784\ncatalog:variable_text:53333:13149:13514\nRegisterinformation.csv:row=30487\nRegisterinformation.csv:row=61886\nRegisterinformation.csv:row=78285\nRegisterinformation.csv:row=468577"
+
+[[statement]]
+kind = "set"
+subject = "release:individer-16-84-ar-ulf/r734"
+fields = { "period" = "1992" }
+evidence = "SCB Registerinformation, RegVerID 734: the ULF release is named \"1992_old\", which the delivery-name grammar does not read, so its documented columns had no period. SCB describes it as \"Urvalet har gjorts år 1992\": survey year 1992, as for the other ULF releases named by their year."
+
+[[statement]]
+kind = "set"
+subject = "release:individer-16-84-ar-ulf/r736"
+fields = { "period" = "1990" }
+evidence = "SCB Registerinformation, RegVerID 736: the ULF release is named \"1990_old\", which the delivery-name grammar does not read, so its documented columns had no period. SCB describes it as \"Urvalet har gjorts år 1990\": survey year 1990, as for the other ULF releases named by their year."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: TK0083 @1990 where key = 'v18400'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, ULF 1990_old (RegVerID 736) documents column TK0083 twice: under VarId 18399 \"Tillgång till butiksbuss vid långt avstånd\", as in 1991 (RegVerID 735), and under VarId 18400 \"Tillgång till lantbrevbärare vid avstånd\", the VarId of column TK0094 in 1982 and 1983. One column cannot be two variables; the 18400 row is a documentation duplicate and is withheld."

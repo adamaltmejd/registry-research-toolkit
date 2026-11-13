@@ -459,3 +459,9 @@ kind = "set"
 subject = "var:namn-pa-geografiskt-objekt"
 fields = { "description" = "Öns namn, enligt beslut av Lantmäteriets ortnamnsenhet 2014 och kompletterat med Lantmäteriets topografiska karta. Anges bara för öar som redovisas separat i statistiken." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; texterna skiljer i om kompletteringen nämns. Rättar 'särredivisas'.\ncatalog:variable_text:41852:14974:14975\ncatalog:variable_text:41852:16070:16071\ncatalog:variable_text:41852:18627:18628"
+
+[[statement]]
+kind = "set"
+subject = "release:basinformation-kust-strander-oar/r13702"
+fields = { "period" = "2013" }
+evidence = "SCB Registerinformation, RegVerID 13702: the release is named \"Öar 2013, totalregister\", which the delivery-name grammar does not read, so its documented columns had no period. SCB describes it as \"SCB:s totalregister över öar i Sverige med referensår 2013\"; its population is dated 2013-12-31."
