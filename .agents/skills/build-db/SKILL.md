@@ -45,8 +45,8 @@ inputs checkout, clone `https://github.com/<inputs-repo>.git` with
 Run these as separate commands with literal paths: the guard refuses a `$TMPDIR` or
 `${…}` word in a git command. The working tree is about 6.4 GB. The clone reads the
 source checkout's objects: while it exists, don't gc or prune the source, and fetch
-there only as `git -c gc.auto=0 fetch`. Delete the clone after the last `build` or
-`lock`, the only steps that read `$inputs`.
+there only as `git -c gc.auto=0 fetch`. Delete the clone after the last `build`, `lock`
+or `read`, the only commands that read `$inputs`.
 
 For every input with a `release` field, download its pinned asset to
 `<assets>/<release>/<path>` first
