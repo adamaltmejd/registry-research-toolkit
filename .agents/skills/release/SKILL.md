@@ -168,7 +168,7 @@ prev=/absolute/path/to/previous-release-dir  # reg_meta.db, decompressed (8b)
 
 #### 8a. Build the catalog
 
-Build from a fresh clone of the inputs repository at the exact repository and commit in
+Build from a shared clone of the inputs repository at the exact repository and commit in
 `curation/inputs.toml` (build-db skill, "Select inputs"). Check its HEAD and clean
 status before building; never edit the pinned inputs in place or mix files from
 different revisions. For every input with a `release` field, fetch its
