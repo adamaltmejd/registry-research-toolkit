@@ -41,7 +41,7 @@
 # cursor encodes (generation_id, last key), so a cursor from another generation is
 # `stale_cursor`.
 
-contract_version = "6.1.0"
+contract_version = "6.2.0"
 
 [[operation]]
 name = "search"
@@ -249,11 +249,11 @@ http = ["POST /api/project/materialize"]
 tool = "order"
 params = { project = "project" }
 result = "Manifest"
-errors = ["holdings_unavailable", "project_invalid", "project_unnamed", "order_blocked"]
+errors = ["holdings_unavailable", "project_invalid", "project_unnamed", "order_manual_only", "order_blocked"]
 note = """The MONA order file (crates/DESIGN.md, "MONA order file") on the serving \
 steward's holdings: the logical order first, then each entry intersected with the \
 accepted placements. A server without holdings is `holdings_unavailable`; a blank name \
-`project_unnamed`; every logical and physical blocking finding at once is \
+`project_unnamed`; a project of manual sources only `order_manual_only`; every logical and physical blocking finding at once is \
 `order_blocked`, never a partial manifest."""
 
 [[operation]]

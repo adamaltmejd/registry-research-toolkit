@@ -94,6 +94,11 @@ calls=$(jq -c "[$refs | {table, variable}] | unique | group_by(.table)[] |
   range(0; length; 200) as \$i | {ref: \$t, variable: .[\$i:\$i + 200]}" "$dir/$answer")
 unbound=$(jq -r "[$unbound] | unique[]" "$dir/$answer")
 if [ -z "$calls" ]; then
+  # Columns entered by hand have no segments or values: the project states them.
+  if jq -e '(.data.manual // []) | length > 0' "$dir/$answer" > /dev/null; then
+    echo "saved $answer into $dir; every column is entered by hand"
+    exit 0
+  fi
   echo "the order answer in $dir/$answer reads no columns" >&2
   exit 1
 fi

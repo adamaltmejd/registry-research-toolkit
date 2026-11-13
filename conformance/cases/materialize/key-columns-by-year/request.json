@@ -1,7 +1,7 @@
 {
   "note": "Fails if a row identifier placed in one column for some years and in another for the rest blocks as held_key_ambiguous (#2207 F9): Visits has Id over 2017 and IdAlt over 2018..2020, and the file must carry each as the row key over its own year.",
   "project": {
-    "schema_version": "6.1.0",
+    "schema_version": "6.2.0",
     "reg_meta_version": "0.71.0",
     "name": "Key columns by year",
     "sources": [

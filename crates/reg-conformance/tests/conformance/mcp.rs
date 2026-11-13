@@ -433,7 +433,8 @@ fn tool_arguments(call: &Call) -> Result<Option<Value>, String> {
 fn materialize_tool_matches_http() {
     // Fails when the `materialize_order` call of the `order` tool drifts from `POST
     // /api/project/materialize` (an order file, `order_blocked`, `project_invalid`,
-    // `project_unnamed`, or `holdings_unavailable` on a server without holdings), or a
+    // `project_unnamed`, `order_manual_only` for a project of manual sources only, or
+    // `holdings_unavailable` on a server without holdings), or a
     // document fails the tool's `outputSchema`. Not in `EQUIVALENCE`: that runs on
     // reader artifacts, where every call is `holdings_unavailable`; this needs the
     // steward.
@@ -444,6 +445,17 @@ fn materialize_tool_matches_http() {
     let old = request("api/order-errors/request.json")["requests"][0]["body"].clone();
     let mut unnamed = project.clone();
     unnamed["name"] = json!(" \t ");
+    let manual_only = json!({
+        "schema_version": project["schema_version"],
+        "reg_meta_version": project["reg_meta_version"],
+        "name": "Manual only",
+        "sources": [{
+            "name": "nya",
+            "manual": {"provider": "UHR", "register": "NyA antagning"},
+            "period": 2010,
+            "bindings": [{"manual": {"column": "LopNr", "type": "identifier"}}],
+        }],
+    });
     let base =
         reg_conformance::cached_reader_artifact(&reg_conformance::holdings_case().join("base"))
             .unwrap();
@@ -456,6 +468,7 @@ fn materialize_tool_matches_http() {
         (steward, &blocked),
         (steward, &old),
         (steward, &unnamed),
+        (steward, &manual_only),
         (reference_only, &project),
     ] {
         let (status, http) =

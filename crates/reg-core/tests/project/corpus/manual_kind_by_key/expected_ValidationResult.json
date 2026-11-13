@@ -1,0 +1,40 @@
+{
+  "ok": false,
+  "issues": [
+    {
+      "level": "error",
+      "code": "source_kind",
+      "path": "/sources/0",
+      "message": "source has both 'table' and 'manual': a source is a catalog table or entered by hand, not both",
+      "successor_fqid": null
+    },
+    {
+      "level": "error",
+      "code": "binding_kind",
+      "path": "/sources/0/bindings/0",
+      "message": "binding has both 'variable' and 'manual': a column is a catalog variable or entered by hand, not both",
+      "successor_fqid": null
+    },
+    {
+      "level": "error",
+      "code": "source_kind",
+      "path": "/sources/1",
+      "message": "source needs 'table' (a catalog table) or 'manual' (data the catalog does not document, entered by hand)",
+      "successor_fqid": null
+    },
+    {
+      "level": "error",
+      "code": "binding_kind",
+      "path": "/sources/1/bindings/0",
+      "message": "binding needs 'variable' (a catalog variable) or 'manual' (a column the catalog does not document, entered by hand)",
+      "successor_fqid": null
+    },
+    {
+      "level": "error",
+      "code": "binding_kind",
+      "path": "/sources/2/bindings/0/variable",
+      "message": "a source entered by hand holds only columns entered by hand: a catalog variable needs a source with its 'table'",
+      "successor_fqid": null
+    }
+  ]
+}

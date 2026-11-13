@@ -57,6 +57,9 @@ codes! {
         "Fix the listed issues; validate reports them.";
     ProjectUnnamed "project_unnamed" "usage" 422 0 []
         "Give the project a name; the order file records it.";
+    OrderManualOnly "order_manual_only" "usage" 422 0 []
+        "Every column is entered by hand, so the runner has nothing to extract; send the \
+         order's `manual` list to the data manager.";
     HoldingsUnavailable "holdings_unavailable" "usage" 400 0 []
         "This server has no data holder's tables; use `order`, or the holder's own server.";
     NotFound "not_found" "not_found" 404 0 ["ref"]

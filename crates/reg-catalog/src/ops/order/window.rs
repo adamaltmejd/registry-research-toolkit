@@ -2,7 +2,7 @@
 //! segments in the serving tables. The request minus the segments is the clip; the rest, split by merged form, is the binding's entries; the
 //! window findings come from the segments the entries cover.
 
-use reg_core::project::{Binding, Source};
+use reg_core::project::{CatalogBinding, CatalogSource};
 use reg_core::{Interval, IssueLevel, gaps, merge, next_iso_day, overlap};
 use rusqlite::{Connection, OptionalExtension, Row};
 
@@ -19,7 +19,7 @@ pub(super) struct Scope<'a> {
     pub conn: &'a Connection,
     /// The source's index in the project.
     pub index: usize,
-    pub source: &'a Source,
+    pub source: &'a CatalogSource,
     /// The source's table.
     pub table: &'a str,
     pub serving: &'a [Serving],
@@ -112,8 +112,8 @@ pub(super) fn refs(
     composed: bool,
     index: usize,
     b: usize,
-    source: &Source,
-    binding: &Binding,
+    source: &CatalogSource,
+    binding: &CatalogBinding,
     table: Option<&str>,
 ) -> Result<(Option<Variable>, Vec<Issue>), Error> {
     let mut findings = Vec::new();
@@ -219,7 +219,7 @@ fn held_class_version(conn: &Connection, pin: &str) -> Result<Option<String>, Er
 }
 
 /// One binding over its source's serving tables.
-pub(super) fn binding(scope: &Scope, b: usize, binding: &Binding) -> Result<Outcome, Error> {
+pub(super) fn binding(scope: &Scope, b: usize, binding: &CatalogBinding) -> Result<Outcome, Error> {
     let (variable, findings) = refs(
         scope.conn,
         scope.composed,
@@ -275,7 +275,7 @@ pub(super) fn binding(scope: &Scope, b: usize, binding: &Binding) -> Result<Outc
 fn materialize(
     scope: &Scope,
     b: usize,
-    binding: &Binding,
+    binding: &CatalogBinding,
     variable: &Variable,
     mut outcome: Outcome,
 ) -> Result<Outcome, Error> {
@@ -401,7 +401,7 @@ fn materialize(
 /// binding's type override, at the entry's period. An unknown catalog type is what the
 /// override fills, so it is not reported. A steward's order drops the finding where the
 /// held storage is of the override's family (`materialize::build`, G14).
-fn type_differs(at: &Located, binding: &Binding, entries: &[OrderEntry]) -> Vec<Issue> {
+fn type_differs(at: &Located, binding: &CatalogBinding, entries: &[OrderEntry]) -> Vec<Issue> {
     let Some(stated) = binding.column_type else {
         return Vec::new();
     };
@@ -721,7 +721,11 @@ fn replaced(at: &Located) -> Result<Vec<Issue>, Error> {
 /// piece's length stands, and an entry is sensitive when any of its pieces is. More
 /// than one spelling/type/value-set form is a `form_change`, naming what changes at
 /// each boundary.
-fn entries(at: &Located, binding: &Binding, pieces: &[Piece]) -> (Vec<OrderEntry>, Option<Issue>) {
+fn entries(
+    at: &Located,
+    binding: &CatalogBinding,
+    pieces: &[Piece],
+) -> (Vec<OrderEntry>, Option<Issue>) {
     let scope = at.scope;
     let mut merged: Vec<&Piece> = Vec::new();
     let mut spans: Vec<Interval> = Vec::new();

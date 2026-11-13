@@ -1,16 +1,17 @@
 //! The mock rules (`mock_rules.json`): what the catalog cannot say, written by the
 //! agent and reviewed by the researcher. Who each source holds, how many rows a unit
 //! has, which columns are unit attributes, and the delivery's departures from the
-//! catalog. Closed and versioned like the spec.
+//! catalog. Columns the catalog does not document are the project's (manual items), not
+//! the rules'. Closed and versioned like the spec.
 
 use std::collections::BTreeMap;
 
 use serde::{Deserialize, Serialize};
 
-use crate::spec::{Attribute, Code, Population, SpecFile, Unit};
+use crate::spec::{Attribute, Code, Population, Unit};
 
 /// The rules `version` this crate reads.
-pub const RULES_VERSION: u32 = 1;
+pub const RULES_VERSION: u32 = 2;
 
 /// The default share of missing values.
 pub const DEFAULT_NULL_RATE: f64 = 0.02;
@@ -26,9 +27,6 @@ pub struct Rules {
     /// A file name the compiled spec would use → the name the delivery uses.
     #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
     pub rename: BTreeMap<String, String>,
-    /// Tables the project holds that the catalog does not know, in the spec's shape.
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub tables: Vec<SpecFile>,
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
@@ -61,7 +59,8 @@ pub struct ColumnRules {
     pub map: BTreeMap<String, String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub null_rate: Option<f64>,
-    /// The delivery's codes, replacing the catalog's.
+    /// The delivery's codes, replacing the catalog's; a column entered by hand states
+    /// its codes in the project instead (`codes_in_project`).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub codes: Option<Vec<Code>>,
 }

@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "format": "dta",
   "layout": "delivery",
   "project": { "name": "Every type", "hash": "fixture" },

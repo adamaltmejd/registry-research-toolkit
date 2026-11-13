@@ -1,10 +1,10 @@
 import type { ReactNode } from "react";
-import type { ProjectBinding } from "../project_data";
+import type { ProjectColumnType } from "../project_data";
 import { Pill } from "./Pill";
 
 /** A column's catalog type: the names a project binding's optional `type`
  * override uses too, the one type list of the site (#2071). */
-export type ColumnType = NonNullable<ProjectBinding["type"]>;
+export type ColumnType = ProjectColumnType;
 
 const WORDS: Record<ColumnType, string> = {
   integer: "Whole number",

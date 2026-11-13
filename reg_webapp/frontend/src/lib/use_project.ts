@@ -1,6 +1,10 @@
 import { useState, useSyncExternalStore } from "react";
 import { checkProjectOrder, type OrderCheck } from "./api";
-import type { ProjectData } from "./project_data";
+import {
+  isCatalogBinding,
+  isCatalogSource,
+  type ProjectData,
+} from "./project_data";
 import { type ProjectSnapshot, projectStore } from "./project_store";
 import { type AsyncResource, useAsyncResource } from "./use_async_resource";
 
@@ -19,13 +23,16 @@ export interface ProjectCheck extends AsyncResource<OrderCheck> {
   previous: Pick<AsyncResource<OrderCheck>, "data" | "error"> | null;
 }
 
-/** Where each finding's index points: the tables and their columns, in order. */
+/** Where each finding's index points: the tables and their columns, in order.
+ * A column entered by hand has no id, so the whole of it is the key. */
 const layoutOf = (draft: ProjectData) =>
   JSON.stringify(
     draft.sources.map((source) => [
       source.name,
-      source.table,
-      source.bindings.map((binding) => binding.variable),
+      isCatalogSource(source) ? source.table : source.manual,
+      source.bindings.map((binding) =>
+        isCatalogBinding(binding) ? binding.variable : binding.manual,
+      ),
     ]),
   );
 

@@ -567,6 +567,11 @@ export interface components {
             entries: components["schemas"]["OrderEntry"][];
             /** @description The non-blocking findings (level `warning` or `info`). */
             findings: components["schemas"]["NamedIssue"][];
+            /**
+             * @description The columns entered by hand, per source and binding: not checked against the
+             *     catalog, and never extracted by the runner.
+             */
+            manual: components["schemas"]["OrderManual"][];
             project: components["schemas"]["OrderProject"];
             /** @description Per source, then by period start. */
             row_keys: components["schemas"]["OrderRowKeys"][];
@@ -715,6 +720,27 @@ export interface components {
             /** @description The variable's name, as `show` gives it. */
             variable_name: string;
         };
+        /** @description A column entered by hand: the catalog does not describe it. */
+        OrderManual: {
+            /** @description The column's position in the source. */
+            binding: number;
+            /** @description The column name as the delivery spells it. */
+            column: string;
+            display_name: string | null;
+            /**
+             * @description The source's requested periods, unclipped; `{start: null, end: null}` for a
+             *     timeless source.
+             */
+            period: components["schemas"]["Period"][];
+            /** @description A source entered by hand: who delivers it, as the project names them. */
+            provider_name: string | null;
+            register_name: string | null;
+            /** @description The project source's name. */
+            source: string;
+            /** @description The catalog table of a source that has one; `null` for a source entered by hand. */
+            table: string | null;
+            type: string;
+        };
         /** @description The project an order was checked for. */
         OrderProject: {
             name: string;
@@ -759,8 +785,10 @@ export interface components {
             /** @description The ISO day the population is stated for. */
             ref_day: string | null;
         };
-        /** @description One variable to extract. */
-        ProjectBinding: {
+        /** @description One column: a catalog variable, or a column entered by hand. */
+        ProjectBinding: components["schemas"]["ProjectCatalogBinding"] | components["schemas"]["ProjectManualBinding"];
+        /** @description One catalog variable to extract. */
+        ProjectCatalogBinding: {
             /** @description A classification version's public id `class/<family>/<version>`. */
             classification?: string | null;
             display_name?: string | null;
@@ -776,6 +804,18 @@ export interface components {
             type?: components["schemas"]["ProjectColumnType"];
             /** @description The binding FQID `<provider>/<register>/<slug>`. */
             variable: string;
+        };
+        /** @description One catalog table, a requested period and its columns. */
+        ProjectCatalogSource: {
+            /** @description At least one catalog binding; the others may be entered by hand. */
+            bindings: components["schemas"]["ProjectBinding"][];
+            name: string;
+            period: components["schemas"]["ProjectSourcePeriod"];
+            /**
+             * @description A table's public id: `<provider>/<register>` for a register's implicit table,
+             *     else `<provider>/<register>/<table>`.
+             */
+            table: string;
         };
         /** @enum {string} */
         ProjectColumnType: "integer" | "decimal" | "text" | "date" | "datetime" | "boolean" | "geometry" | "uuid" | "binary" | "identifier";
@@ -817,6 +857,41 @@ export interface components {
             /** @description A database id from the steward's `steward_config.spaces`. */
             database: string;
         };
+        /** @description A column the catalog does not document, entered by hand. */
+        ProjectManualBinding: {
+            display_name?: string | null;
+            manual: components["schemas"]["ProjectManualColumn"];
+        };
+        /** @description One code of a manual column. */
+        ProjectManualCode: {
+            code: string;
+            label?: string | null;
+            /**
+             * @description A missing-value code (`uppgift saknas`); absent means false.
+             * @default false
+             */
+            sentinel: boolean;
+        };
+        /** @description What the tools need of a manual column. */
+        ProjectManualColumn: {
+            /** @description The codes the column holds, from documentation; never on an identifier. */
+            codes?: components["schemas"]["ProjectManualCode"][];
+            /** @description The column name as the delivery spells it. */
+            column: string;
+            type: components["schemas"]["ProjectColumnType"];
+        };
+        /** @description Who delivers a manual source, as free-text names, not catalog ids. */
+        ProjectManualOrigin: {
+            provider: string;
+            register: string;
+        };
+        /** @description Data the catalog does not document, entered by hand: every column is manual. */
+        ProjectManualSource: {
+            bindings: components["schemas"]["ProjectManualBinding"][];
+            manual: components["schemas"]["ProjectManualOrigin"];
+            name: string;
+            period: components["schemas"]["ProjectSourcePeriod"];
+        };
         /** @description A panel over sources. */
         ProjectPanel: {
             comment?: string | null;
@@ -836,17 +911,8 @@ export interface components {
          *     included, which only a scalar source period may hold).
          */
         ProjectPeriodValue: number | string;
-        /** @description One table, a requested period and its variables. */
-        ProjectSource: {
-            bindings: components["schemas"]["ProjectBinding"][];
-            name: string;
-            period: components["schemas"]["ProjectSourcePeriod"];
-            /**
-             * @description A table's public id: `<provider>/<register>` for a register's implicit table,
-             *     else `<provider>/<register>/<table>`.
-             */
-            table: string;
-        };
+        /** @description A source: a catalog table, or data the catalog does not document, entered by hand. */
+        ProjectSource: components["schemas"]["ProjectCatalogSource"] | components["schemas"]["ProjectManualSource"];
         /** @description One period, or a sorted list of periods for an interrupted series. */
         ProjectSourcePeriod: components["schemas"]["ProjectPeriodSegment"][] | components["schemas"]["ProjectPeriodSegment"];
         /** @description The optional study window, in plain int years. */

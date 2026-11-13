@@ -1,0 +1,33 @@
+{
+  "ok": false,
+  "issues": [
+    {
+      "level": "error",
+      "code": "unexpected_field",
+      "path": "/sources/0/bindings/0/classification",
+      "message": "unexpected key 'classification' on manual binding",
+      "successor_fqid": null
+    },
+    {
+      "level": "error",
+      "code": "unexpected_field",
+      "path": "/sources/0/bindings/0/follow_successor",
+      "message": "unexpected key 'follow_successor' on manual binding",
+      "successor_fqid": null
+    },
+    {
+      "level": "error",
+      "code": "unexpected_field",
+      "path": "/sources/0/bindings/0/type",
+      "message": "unexpected key 'type' on manual binding",
+      "successor_fqid": null
+    },
+    {
+      "level": "error",
+      "code": "catalog_source_unbound",
+      "path": "/sources/0/bindings",
+      "message": "a catalog source needs at least one catalog variable; a source whose columns are all entered by hand is a manual source (replace 'table' with 'manual')",
+      "successor_fqid": null
+    }
+  ]
+}

@@ -840,6 +840,22 @@ Time is the axis every relation is drawn on.
   affected. A ghost "Remove table" in the card header also asks first. Focus returns to
   the card heading after a column removal, or the Tables heading after a source removal.
 
+  Data the catalog does not document (a project's "manual" items, contract 6.2.0) is shown
+  and removed, never edited, and nothing about it is read from the catalog. A source
+  entered by hand is a plain `Panel` card headed "<provider>: <register>" as the
+  researcher wrote them, with the line "Not in the catalog, entered by hand", its
+  years as text (or "not tied to years"), and one row per column: the column name, its
+  stated `TypePill`, and "N codes" when it states any. It has no lane, no coverage
+  graph, no thumbs and no catalog link, and its own `manual_item` finding is left off the
+  card, since the line says it. A column entered by hand inside a catalog source is the
+  same row (a `LaneList`, its name's sub line carrying the label) under the lanes. Both
+  take the lane's ghost "Remove", named "Remove <column> from <table>", with the same
+  dialog. A catalog source keeps one catalog column at least, so removing its last
+  catalog column removes the source, and its columns entered by hand with it; the dialog
+  and the add bar say so. The delivery summary lists the order's manual items under
+  their table, or under their own "<provider>: <register>" heading, each with its type
+  and the same label (new rule, proposed by the implementer).
+
   Each lane's below slot holds an optional classification pin and its findings. There is
   no type control: an added column states no type, so the order reads the catalog's
   (#2071, G13). The pin appears for a binding with a classification or a catalog

@@ -11,9 +11,14 @@ import { DeliverySummary } from "./DeliverySummary";
 import { stewardDatabases } from "./databases";
 import { IssueLink, LocatedIssue } from "./Finding";
 import { focusAfterRemoval } from "./focus_after_removal";
+import { ManualSourceCard } from "./ManualSource";
 import styles from "./ProjectEditor.module.css";
 import { dataAxis, sourcePeriodYearWindows } from "./period";
-import type { ProjectData } from "./project_data";
+import {
+  catalogBindings,
+  isCatalogSource,
+  type ProjectData,
+} from "./project_data";
 import { type ProjectSnapshot, projectStore } from "./project_store";
 import { SourceCard } from "./SourceCard";
 import { tableYears } from "./study_window";
@@ -397,24 +402,27 @@ function Sources({
   context: Context | null;
 }) {
   const heading = useRef<HTMLHeadingElement>(null);
+  // Everything read from the catalog below comes from these: a source entered
+  // by hand names no table, and a column entered by hand names no variable.
+  const catalogSources = draft.sources.filter(isCatalogSource);
   const registers = useCatalogRead(
     readRegisters,
     useDistinct(
-      draft.sources.map((source) =>
+      catalogSources.map((source) =>
         source.table.split("/").slice(0, 2).join("/"),
       ),
     ),
   );
   const variables = useDistinct(
-    draft.sources.flatMap((source) =>
-      source.bindings.map((binding) => binding.variable),
+    catalogSources.flatMap((source) =>
+      catalogBindings(source).map((binding) => binding.variable),
     ),
   );
   const segmentReads = useCatalogRead(
     readSegments,
     useDistinct(
-      draft.sources.flatMap((source) =>
-        source.bindings.map((binding) =>
+      catalogSources.flatMap((source) =>
+        catalogBindings(source).map((binding) =>
           columnKey(source.table, binding.variable),
         ),
       ),
@@ -430,15 +438,15 @@ function Sources({
   const columnRead = (table: string, variable: string) =>
     segmentReads[columnKey(table, variable)];
   const names = useCatalogNames([
-    ...draft.sources.map((source) => source.table),
+    ...catalogSources.map((source) => source.table),
     ...variables,
     ...[...segments.values()].flatMap((items) =>
       items.flatMap((segment) =>
         segment.classification ? [segment.classification] : [],
       ),
     ),
-    ...draft.sources.flatMap((source) =>
-      source.bindings.flatMap((binding) =>
+    ...catalogSources.flatMap((source) =>
+      catalogBindings(source).flatMap((binding) =>
         binding.classification ? [binding.classification] : [],
       ),
     ),
@@ -452,13 +460,13 @@ function Sources({
     [
       ...tables
         .filter((table) =>
-          draft.sources.some((source) => source.table === table.fqid),
+          catalogSources.some((source) => source.table === table.fqid),
         )
         .flatMap((table) => {
           const years = tableYears(table, bounds);
           return years ? [years.from, years.to] : [];
         }),
-      ...draft.sources.flatMap(
+      ...catalogSources.flatMap(
         (source) =>
           sourcePeriodYearWindows(source.period)?.flatMap(({ from, to }) => [
             from,
@@ -486,6 +494,18 @@ function Sources({
         />
       ) : (
         draft.sources.map((source, sourceIndex) => {
+          if (!isCatalogSource(source))
+            return (
+              <ManualSourceCard
+                key={source.name}
+                draft={draft}
+                source={source}
+                sourceIndex={sourceIndex}
+                issues={issues}
+                raw={raw}
+                onRemoved={() => focusAfterRemoval([() => heading.current])}
+              />
+            );
           const registerOf = (table: string) =>
             table.split("/").slice(0, 2).join("/");
           const register = registers[registerOf(source.table)];
@@ -493,13 +513,14 @@ function Sources({
             <SourceCard
               key={source.name}
               draft={draft}
+              source={source}
               sourceIndex={sourceIndex}
               issues={issues}
               raw={raw}
               names={names}
               segments={segments}
               table={tables.find((table) => table.fqid === source.table)}
-              sharedHeading={draft.sources.some(
+              sharedHeading={catalogSources.some(
                 (other) =>
                   other.table !== source.table &&
                   registerOf(other.table) === registerOf(source.table),
@@ -508,13 +529,13 @@ function Sources({
               bounds={bounds}
               loading={
                 !!register?.loading ||
-                source.bindings.some(
+                catalogBindings(source).some(
                   (binding) =>
                     columnRead(source.table, binding.variable)?.loading,
                 )
               }
               loadError={
-                (source.bindings.some((binding) => {
+                (catalogBindings(source).some((binding) => {
                   const read = columnRead(source.table, binding.variable);
                   return read && !read.loading && read.value === null;
                 })

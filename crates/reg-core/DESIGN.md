@@ -51,6 +51,34 @@ literal kind namespaces; malformed forms cannot resolve as another kind.
   override informs the order check only (`binding_type_differs`,
   [../DESIGN.md](../DESIGN.md), "The logical order"); it changes no entry and no order
   file.
+- **Manual items** (contract 6.2.0 on) are data the catalog does not document, entered
+  by hand. A binding has `variable` (catalog) or `manual` (a closed
+  `{column, type, codes?}`), and a source has `table` (catalog) or `manual` (a closed
+  `{provider, register}` of free-text names, not ids). `Source` and `Binding` are
+  untagged enums of closed structs, so each kind is a type and the schemas carry a
+  `oneOf`. Rules, each preventing a document the order or the mock would misread:
+  - the kind is decided by key presence, `null` included (`source_kind`,
+    `binding_kind`): a `null` read as absent would pass the validator and then match
+    neither variant, which panics `from_value` and aborts the WASM module;
+  - a manual source holds manual bindings only (`binding_kind` on a `variable`): it has
+    no table to resolve against;
+  - a catalog source keeps at least one catalog binding (`catalog_source_unbound`):
+    without one its period goes unchecked, it gets no file on a steward and its manual
+    columns have no mock file to join;
+  - `follow_successor`, `classification` and `type` on a manual binding are
+    `unexpected_field`: each names a catalog fact. The manual column's type lives in
+    `manual.type`, because the binding `type` means "override the catalog";
+  - `codes` on an `identifier` column is `identifier_codes`: the project is posted to
+    the hosted server and copied into the order file, and codes listed there would be
+    real ids;
+  - a repeated code (`duplicate_code`) and two manual columns of one name in a source,
+    case ignored as in a delivery (`duplicate_manual_column`), would give the mock two
+    definitions of one thing.
+  Blank names, blank codes and empty or malformed `codes` are `invalid_field_type`.
+  Whether a manual column's name meets a catalog column in the same file, or whether
+  the catalog does document it, needs the catalog and is not checked here (reg-mock refuses the first).
+  A manual binding keeps its position, so binding indices still point at the same
+  bindings.
 - **A source has no `edition` or `qualifier`.** Selecting an edition or a qualifier is
   deferred until curation; the primary segments serve every order (final over
   preliminary), and the closed source object refuses a document that carries either.
@@ -81,7 +109,8 @@ literal kind namespaces; malformed forms cannot resolve as another kind.
 
 `project_data.json` records research intent, not storage. A `Source` groups bindings by
 the catalog's table and a requested period; `Source.name` is an internal handle for
-panels, never a filename. The catalog's tables are logical (the same table over many
+panels, never a filename in the order file (a manual source's mock files take its
+name, since it has no other id; [../reg-mock/DESIGN.md](../reg-mock/DESIGN.md)). The catalog's tables are logical (the same table over many
 years and deliveries), so a `table` names the grain the researcher thinks in, and the
 order check joins it to what is delivered ([../DESIGN.md](../DESIGN.md), "The logical
 order"); this contract stays independent of holdings, and the document has no steward.
@@ -106,7 +135,9 @@ Out of scope on purpose:
 - **Semantic rules.** FQID resolution against a catalog, classification existence,
   steward membership and drift need an artifact and live in `reg-catalog`'s validate
   operation. The dependency runs one way: this crate knows no catalog.
-- **`project_data.codes.json`.** Deferred to the MONA rebuild.
+- **`project_data.codes.json`.** Deferred to the MONA rebuild. It is about recoding
+  catalog columns; a manual column's `manual.codes` states the codes it holds, the same
+  kind of fact as its type, and is distinct from it.
 - **Per-source row filtering (`where`).** Cohort filtering belongs to the MONA-side
   runner, not the order spec. An audit-filter use case needs its own contract; v1
   reserves no escape hatch.

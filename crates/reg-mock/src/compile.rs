@@ -6,7 +6,7 @@ use std::path::Path;
 
 use reg_core::issue::Period;
 use reg_core::manifest::{self, Manifest, Storage, StorageFamily};
-use reg_core::project::{ColumnType, ExtractFormat, ProjectData};
+use reg_core::project::{Binding, ColumnType, ExtractFormat, ManualBinding, ProjectData, Source};
 use serde::de::DeserializeOwned;
 use serde_json::Value;
 
@@ -361,6 +361,8 @@ pub fn compile(project: &Value, rules: &Rules, answers: &Answers) -> Result<Spec
             ctx.delivery_files(manifest, &mut refusals),
         ),
     };
+    let mut built = built;
+    ctx.manual_files(&mut built, &mut refusals);
     let mut files = apply_rules(built, rules, &mut refusals);
     // Each rename applies once, to a compiled name; check_files then refuses a final
     // name two files share.
@@ -377,18 +379,6 @@ pub fn compile(project: &Value, rules: &Rules, answers: &Answers) -> Result<Spec
         if let Some(to) = rules.rename.get(&file.name) {
             file.name.clone_from(to);
         }
-    }
-    for table in &rules.tables {
-        for column in &table.columns {
-            if let Err(code) = resolve_type(Some(column.dtype), None, None) {
-                refusals.push(Refusal::new(
-                    code,
-                    format!("/tables/{}/{}", table.name, column.name),
-                    "mocks generate integer, decimal, text, date, datetime, boolean and identifier columns",
-                ));
-            }
-        }
-        files.push(table.clone());
     }
     let null_rate = rules.null_rate.unwrap_or(DEFAULT_NULL_RATE);
     check_files(&files, null_rate, &mut refusals);
@@ -409,19 +399,36 @@ pub fn compile(project: &Value, rules: &Rules, answers: &Answers) -> Result<Spec
     })
 }
 
-/// A rules entry for each project source, and none for another.
+/// A rules entry for each project source, and none for another. A column entered by
+/// hand takes its codes from the project only, so each fact has one home.
 fn check_rule_sources(project: &ProjectData, rules: &Rules, refusals: &mut Vec<Refusal>) {
     for source in &project.sources {
-        if !rules.sources.contains_key(&source.name) {
+        let Some(source_rules) = rules.sources.get(source.name()) else {
             refusals.push(Refusal::new(
                 "rules_source_missing",
-                format!("/sources/{}", source.name),
+                format!("/sources/{}", source.name()),
                 "state the source's unit, population and rows_per_unit in the rules",
             ));
+            continue;
+        };
+        for (_, binding) in source.manual_columns() {
+            let column = &binding.manual.column;
+            if source_rules
+                .columns
+                .get(column)
+                .is_some_and(|c| c.codes.is_some())
+            {
+                refusals.push(Refusal::new(
+                    "codes_in_project",
+                    format!("/sources/{}/columns/{column}", source.name()),
+                    "this column is entered by hand: state its codes in project_data.json \
+                     (manual.codes), not in the rules",
+                ));
+            }
         }
     }
     for name in rules.sources.keys() {
-        if !project.sources.iter().any(|s| &s.name == name) {
+        if !project.sources.iter().any(|s| s.name() == name) {
             refusals.push(Refusal::new(
                 "rules_source_unknown",
                 format!("/sources/{name}"),
@@ -750,19 +757,180 @@ impl Context<'_> {
     /// reference without one (a row key, a carried copy) its source's binding of that
     /// variable, else any source's.
     fn binding_type(&self, r: &Column<'_>) -> Option<ColumnType> {
-        let source = self.project.sources.iter().find(|s| s.name == r.source);
+        let sources = &self.project.sources;
+        let s = sources.iter().position(|s| s.name() == r.source);
         if let Some(b) = r.binding {
-            return source?.bindings.get(b)?.column_type;
+            return self.project.catalog_binding(s?, b)?.column_type;
         }
-        let of = |bindings: &[reg_core::project::Binding]| {
-            bindings
-                .iter()
-                .filter(|b| b.variable == r.variable)
-                .find_map(|b| b.column_type)
+        let of = |source: &Source| {
+            source
+                .catalog()?
+                .catalog_bindings()
+                .filter(|(_, b)| b.variable == r.variable)
+                .find_map(|(_, b)| b.column_type)
         };
-        source
-            .and_then(|s| of(&s.bindings))
-            .or_else(|| self.project.sources.iter().find_map(|s| of(&s.bindings)))
+        s.and_then(|s| of(&sources[s]))
+            .or_else(|| sources.iter().find_map(of))
+    }
+
+    /// Columns entered by hand (crates/reg-mock/DESIGN.md, "Manual items"): a catalog
+    /// source's join each of its files under their stated names; a manual source gets
+    /// files of its own, one per year of its period (one for `_default`), named after
+    /// the source.
+    fn manual_files(&self, built: &mut Vec<Built>, refusals: &mut Vec<Refusal>) {
+        for source in &self.project.sources {
+            let name = source.name();
+            match source {
+                Source::Catalog(catalog) => {
+                    let manual: Vec<&ManualBinding> = catalog
+                        .bindings
+                        .iter()
+                        .filter_map(|b| match b {
+                            Binding::Manual(m) => Some(m),
+                            Binding::Catalog(_) => None,
+                        })
+                        .collect();
+                    if manual.is_empty() {
+                        continue;
+                    }
+                    for file in built
+                        .iter_mut()
+                        .filter(|f| f.column_sources.iter().flatten().any(|s| s == name))
+                    {
+                        for binding in &manual {
+                            self.push_manual(file, name, binding, refusals);
+                        }
+                    }
+                }
+                Source::Manual(manual) => {
+                    let years: Vec<Option<i32>> = match manual.period.intervals() {
+                        Ok(Some(items)) => {
+                            let year = |iso: &str| iso[..4].parse::<i32>().expect("an ISO day");
+                            let years: BTreeSet<i32> = items
+                                .iter()
+                                .flat_map(|(lo, hi)| {
+                                    // A school year (from 1 July) is one file, named by its first year.
+                                    let last = year(hi) - i32::from(lo.ends_with("-07-01"));
+                                    year(lo)..=last.max(year(lo))
+                                })
+                                .collect();
+                            years.into_iter().map(Some).collect()
+                        }
+                        Ok(None) => vec![None],
+                        Err(reason) => {
+                            refusals.push(Refusal::new(
+                                "period_not_orderable",
+                                format!("/sources/{name}/period"),
+                                reason,
+                            ));
+                            continue;
+                        }
+                    };
+                    for year in years {
+                        let file_name = match year {
+                            Some(year) => format!("{name}_{year}"),
+                            None => name.to_owned(),
+                        };
+                        let mut file = Built::new(file_name, year.into_iter().collect());
+                        for binding in &manual.bindings {
+                            self.push_manual(&mut file, name, binding, refusals);
+                        }
+                        built.push(file);
+                    }
+                }
+            }
+        }
+    }
+
+    /// One column entered by hand into `file`. A name the file already has is refused,
+    /// unless it is the same column entered by hand for another source sharing the file.
+    fn push_manual(
+        &self,
+        file: &mut Built,
+        source: &str,
+        binding: &ManualBinding,
+        refusals: &mut Vec<Refusal>,
+    ) {
+        let manual = &binding.manual;
+        let at = format!("{}/{}", file.file.name, manual.column);
+        let (dtype, _) = match resolve_type(Some(manual.column_type), None, None) {
+            Ok(resolved) => resolved,
+            Err(code) => {
+                refusals.push(Refusal::new(
+                    code,
+                    format!("/sources/{source}/{}", manual.column),
+                    "mocks generate integer, decimal, text, date, datetime, boolean and \
+                     identifier columns",
+                ));
+                return;
+            }
+        };
+        let codes: Vec<Code> = manual
+            .codes
+            .iter()
+            .flatten()
+            .map(|c| Code {
+                code: c.code.clone(),
+                label: c.label.clone(),
+                sentinel: c.sentinel == Some(true),
+            })
+            .collect();
+        let stata_name = (self.format == ExtractFormat::Dta)
+            .then(|| manifest::stata_name(&manual.column))
+            .flatten();
+        let column = SpecColumn {
+            name: manual.column.clone(),
+            label: stata_name.as_ref().map(|_| manual.column.clone()),
+            stata_name,
+            dtype,
+            storage: None,
+            length: None,
+            codes,
+            attribute: None,
+            map: BTreeMap::new(),
+            encoding: None,
+            years: Vec::new(),
+            // No segment states it: the stated type does.
+            identifier: dtype == ColumnType::Identifier,
+            null_rate: None,
+        };
+        // A delivery's column names are case-insensitive (SQL Server), so `lopnr` meets `LopNr`.
+        let key = reg_core::fold_identity(&column.name);
+        let existing = file
+            .file
+            .columns
+            .iter()
+            .position(|c| reg_core::fold_identity(&c.name) == key);
+        match existing {
+            None => {
+                if file.file.source.is_empty() {
+                    source.clone_into(&mut file.file.source);
+                }
+                file.column_sources.push(vec![source.to_owned()]);
+                file.manual.push(column.name.clone());
+                file.file.columns.push(column);
+            }
+            Some(i) if file.manual.contains(&file.file.columns[i].name) => {
+                if file.file.columns[i] == column {
+                    if !file.column_sources[i].iter().any(|s| s == source) {
+                        file.column_sources[i].push(source.to_owned());
+                    }
+                } else {
+                    refusals.push(Refusal::new(
+                        "column_types_disagree",
+                        at,
+                        "the sources sharing this file enter this column by hand with \
+                         different types or codes: give them the same",
+                    ));
+                }
+            }
+            Some(_) => refusals.push(Refusal::new(
+                "column_name_collision",
+                at,
+                "a column entered by hand has the name of a column the catalog already \
+                 delivers in this file: rename it, or bind the catalog variable instead",
+            )),
+        }
     }
 
     /// The reference's segments over its period, earliest first: the held placement's
@@ -869,6 +1037,8 @@ struct Built {
     file: SpecFile,
     /// Each column's sources: several where sources share a column.
     column_sources: Vec<Vec<String>>,
+    /// The names of the columns entered by hand.
+    manual: Vec<String>,
 }
 
 impl Built {
@@ -876,7 +1046,7 @@ impl Built {
         Self {
             file: SpecFile {
                 name,
-                source: None,
+                source: String::new(),
                 unit: Unit::Person,
                 population: Population::default(),
                 rows_per_unit: 1.0,
@@ -884,6 +1054,7 @@ impl Built {
                 columns: Vec::new(),
             },
             column_sources: Vec::new(),
+            manual: Vec::new(),
         }
     }
 
@@ -895,8 +1066,8 @@ impl Built {
                 sources.push(r.source.to_owned());
             }
         }
-        if let Some(first) = sources.first() {
-            self.file.source.get_or_insert_with(|| first.clone());
+        if let (true, Some(first)) = (self.file.source.is_empty(), sources.first()) {
+            self.file.source.clone_from(first);
         }
         self.column_sources.push(sources);
         self.file.columns.push(column);
@@ -919,6 +1090,7 @@ fn apply_rules(built: Vec<Built>, rules: &Rules, refusals: &mut Vec<Refusal>) ->
     for Built {
         mut file,
         column_sources,
+        ..
     } in built
     {
         let sources: BTreeSet<&String> = column_sources.iter().flatten().collect();

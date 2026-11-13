@@ -50,6 +50,14 @@ pub(super) fn materialize(server: &Server, params: &Params) -> Result<Value, Err
             vec![],
         ));
     }
+    if !project.sources.is_empty() && project.sources.iter().all(|s| s.catalog().is_none()) {
+        return Err(Error::new(
+            Code::OrderManualOnly,
+            "Every column of the project is entered by hand, so there is nothing for the \
+             extract runner; send the order's manual list to the data manager.",
+            vec![],
+        ));
+    }
     let result = match check(server, &project)? {
         Ok(order) => manifest(server, &held, steward, &project, &order)?,
         Err(findings) => Err(findings),
@@ -161,7 +169,7 @@ fn build(
         .sources
         .iter()
         .enumerate()
-        .map(|(i, s)| (s.name.as_str(), i))
+        .map(|(i, s)| (s.name(), i))
         .collect();
     let (space, mut findings) = database(server, project);
     let space = space.as_deref();
@@ -175,7 +183,11 @@ fn build(
         // names the successor, but its logical clip is recorded under the binding.
         let binding = bindings.entry((s, entry.binding)).or_insert_with(|| {
             (
-                project.sources[s].bindings[entry.binding].variable.clone(),
+                project
+                    .catalog_binding(s, entry.binding)
+                    .expect("an entry comes from a catalog binding")
+                    .variable
+                    .clone(),
                 vec![],
                 vec![],
             )
@@ -404,12 +416,11 @@ fn held_as_stated(
         .sources
         .iter()
         .enumerate()
+        .filter_map(|(s, source)| Some((s, source.catalog()?)))
         .flat_map(|(s, source)| {
             let at = move |b| format!("/sources/{s}/bindings/{b}");
             source
-                .bindings
-                .iter()
-                .enumerate()
+                .catalog_bindings()
                 .map(move |(b, binding)| (at(b), binding))
         })
         .find(|(path, _)| *path == issue.path)
@@ -517,7 +528,7 @@ fn not_in_database(
         .sources
         .iter()
         .enumerate()
-        .map(|(i, s)| (s.name.as_str(), i))
+        .map(|(i, s)| (s.name(), i))
         .collect();
     for (&(s, b), (variable, _, holds)) in bindings {
         if !holds.is_empty() {
@@ -554,7 +565,9 @@ fn not_in_database(
             [space],
             |r| r.get(0),
         )?;
-        let source = &project.sources[s];
+        let source = project.sources[s]
+            .catalog()
+            .expect("a binding with holdings is a catalog source's");
         // "for the requested period" only when the chosen database holds the column
         // in some other years.
         let held_other_years = order
@@ -854,10 +867,10 @@ fn clip(
     for (&(s, b), (variable, requested, holds)) in bindings.iter_mut() {
         let path = format!("/sources/{s}/bindings/{b}");
         let held = merge(std::mem::take(holds));
-        let source = &sources[s].name;
+        let source = sources[s].name();
         // The source's own request, not the logical entries: those are already cut to
         // catalog coverage, and the logical check may have left that cut unreported.
-        let stated = match sources[s].period.items() {
+        let stated = match sources[s].period().items() {
             Ok(Some(items)) => Some(merge(
                 items
                     .iter()
@@ -871,7 +884,7 @@ fn clip(
             order
                 .clips
                 .iter()
-                .find(|c| &c.source == source && &c.variable == variable)
+                .find(|c| c.source == source && &c.variable == variable)
                 .map_or_else(
                     || merge(std::mem::take(requested)),
                     |c| merge(c.requested.iter().map(|p| p.days(open)).collect()),
@@ -931,7 +944,7 @@ fn clip(
         if !reported_gaps(&minus(&asked, &held), &asked, &held).is_empty() {
             let periods = |days: &[Days]| days.iter().map(|&(a, z)| server.period(a, z)).collect();
             clips.push(Clip {
-                source: source.clone(),
+                source: source.to_owned(),
                 binding: b,
                 variable: variable.clone(),
                 requested: periods(&asked),
@@ -995,7 +1008,7 @@ fn keys(
                 continue;
             }
             let block = |code: &str, message: String| Issue {
-                source: Some(sources[*s].name.clone()),
+                source: Some(sources[*s].name().to_owned()),
                 ..Issue::new(IssueLevel::Error, code, format!("/sources/{s}"), message)
             };
             if !requirement["hold"].is_null() {
@@ -1084,7 +1097,7 @@ fn keys(
                         && entry
                             .2
                             .iter()
-                            .any(|r| r.source == sources[*s].name && r.binding.is_some())
+                            .any(|r| r.source == sources[*s].name() && r.binding.is_some())
                     {
                         continue;
                     }
@@ -1097,7 +1110,7 @@ fn keys(
                         // `ordered` above); an added key reports it at the source.
                         if let Some(caveat) = caveat {
                             findings.push(Issue {
-                                source: Some(sources[*s].name.clone()),
+                                source: Some(sources[*s].name().to_owned()),
                                 variable: Some((*variable).to_owned()),
                                 table: Some(table.clone()),
                                 period: Some(server.period(piece.0, piece.1)),
@@ -1113,7 +1126,7 @@ fn keys(
                             });
                         }
                         entry.2.push(Ref {
-                            source: sources[*s].name.clone(),
+                            source: sources[*s].name().to_owned(),
                             binding: None,
                             table: table.clone(),
                             variable: (*variable).to_owned(),
@@ -1206,7 +1219,7 @@ fn row_filter(
     let spans = |days: &[Days]| plain(server, days);
     let mut info = |s: usize, code: &str, message: String| {
         let issue = Issue {
-            source: Some(sources[s].name.clone()),
+            source: Some(sources[s].name().to_owned()),
             ..Issue::new(IssueLevel::Info, code, format!("/sources/{s}"), message)
         };
         // Two files of one source can add the same days.

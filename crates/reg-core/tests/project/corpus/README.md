@@ -25,9 +25,9 @@ Every subdirectory is a case. The directory name is the case ID, in lowercase sn
 
 ### `input.json`
 
-A `project_data.json` payload as authored by a researcher (6.1.0: `table` a 2- or 3-part
-public id + `period`, `bindings` with 3-segment binding FQIDs, 3-segment
-`class/<family>/<version>` classification pins). Both well-formed and deliberately
+A `project_data.json` payload as authored by a researcher (6.2.0: `table` a 2- or 3-part
+public id or `manual` + `period`, `bindings` with 3-segment binding FQIDs or `manual`,
+3-segment `class/<family>/<version>` classification pins). Both well-formed and deliberately
 malformed inputs live here; the case ID says which. The validator reads any JSON value,
 so a payload need not deserialize into the project types.
 

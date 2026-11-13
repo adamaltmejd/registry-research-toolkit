@@ -1179,7 +1179,7 @@ with `--catalog <steward>` ("Holdings").
 
 ## The logical order
 
-`order` runs the order check of design v4 §9 on a 6.1.0 project and returns the logical
+`order` runs the order check of design v4 §9 on a 6.2.0 project and returns the logical
 order of schema §2.3 as `data`, or the error `order_blocked`. `validate` runs the same
 check and returns the same findings as issues. Both transports call the one
 implementation in `reg-catalog`, which is what makes their results identical, except
@@ -1303,7 +1303,7 @@ and `sun2000niva`.
 {
   "data": {
     "catalog": {"generation_id": "9f2c…", "catalog_version": "0.65.0", "schema_version": "4"},
-    "project": {"name": "income-panel", "schema_version": "6.1.0",
+    "project": {"name": "income-panel", "schema_version": "6.2.0",
                 "reg_meta_version": "0.65.0", "project_hash": "51ab…"},
     "entries": [
       {"source": "lisa", "binding": 0, "provider": "scb", "register": "scb/lisa",
@@ -1334,6 +1334,7 @@ and `sun2000niva`.
        "columns": [{"variable": "scb/lisa/lopnr", "variable_name": "Löpnummer",
                     "spelling": "LopNr"}]}
     ],
+    "manual": [],
     "clips": [
       {"source": "lisa", "variable": "scb/lisa/sun2000niva",
        "variable_name": "Utbildningsnivå",
@@ -1355,7 +1356,7 @@ and `sun2000niva`.
        "variable_name": "Disponibel inkomst", "table_name": "Individer", "successor_name": null}
     ]
   },
-  "meta": {"contract_version": "6.1.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
+  "meta": {"contract_version": "6.2.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
 }
 ```
 
@@ -1384,7 +1385,7 @@ Request: source `lisa`, period `2018..2020`, bindings `kommun` and `dispink`.
       ]
     }
   },
-  "meta": {"contract_version": "6.1.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
+  "meta": {"contract_version": "6.2.0", "generation": "9f2c…", "catalog_version": "0.65.0"}
 }
 ```
 
@@ -2178,7 +2179,7 @@ promised (the runner deliberately has no `ORDER BY`).
 holdings pair come from startup configuration, with no request owner override. Add
 optional `extract_format = dta|parquet|csv` to project schema 5.2.0 ("Project document
 5.2.0"), defaulting to `dta` in order authoring. `project.rs::SCHEMA_VERSION` admits
-6.1.0 exactly; every other version is `unsupported_schema_version`. Older projects are
+6.2.0 exactly; every other version is `unsupported_schema_version`. Older projects are
 re-authored, not migrated or admitted by a compatibility path (AGENTS.md, "Maturity and
 compatibility"; ARCHITECTURE.md, "Project schema version"). When the optional field is
 absent, use the authoring default without inserting it before project hashing. The
@@ -2532,6 +2533,45 @@ delivered (#2220). Each entry also carries the column name the held files use ov
 days, split where that name changes, as row keys already do: a held file can name a
 column otherwise than the catalog (`AvgAr` for `avgar`). Days several differently named
 columns deliver at once (a slot family's members) keep the catalog spelling (#2409).
+
+### Project document 6.2.0
+
+`schema_version` `6.2.0` adds manual items: data the catalog does not document, entered
+by hand (socialprefs report, maintainer 2026-11-13). A binding with `manual` in place of
+`variable` is a column the delivery has that the catalog does not describe; a source
+with `manual` in place of `table` is a file or years the catalog has no table for. The
+shape and structural rules are in [reg-core/DESIGN.md](reg-core/DESIGN.md) ("Manual
+items"). What each tool does with them:
+
+- **Order check.** A catalog source is checked over its catalog bindings, and keeps at
+  least one; its manual bindings are skipped (no resolution, no clip, no
+  `binding_type_differs`). A manual source gets no catalog check, only the
+  document-only rules `source_outside_window` and `period_not_orderable`. Each source
+  with manual items gets one `manual_item` info at `/sources/<i>` naming its manual
+  columns, not one per column: `order.manual` already lists each (Operator, Q9). It is
+  emitted by the order check, so it reaches `validate`, `order.findings` and the order
+  file's `findings`. On a steward the holdings stage skips manual items, so none is
+  `mapping_missing`, a gap or a clip, and a project with no catalog source skips that
+  stage (it would otherwise block on `database_required`).
+- **`LogicalOrder.manual`** lists each manual binding, by source then binding:
+  `source`, `binding`, the stated `column`, `type` and `display_name`, the source's
+  `table` (a catalog source) or its `provider_name` and `register_name` (a manual
+  source), and the source's requested `period`, unclipped since nothing says where it
+  is delivered. Codes are not copied; the project is their one home. Putting them in
+  `entries` would null its required catalog fields.
+- **The order file** does not extract them: a manual column has no storage, no FQID and
+  no held placement, and the holdings are what keep identifiers out except as declared
+  row keys. The data manager learns of each from its `manual_item` finding and adds it
+  by hand; a column the steward does hold belongs in its holdings curation. The
+  manifest's shape and version do not change. A project whose sources are all manual
+  has nothing for the runner, which refuses an empty `files`, so `materialize_order`
+  refuses it with `order_manual_only` (usage, 422), checked beside `project_unnamed`;
+  `validate` and `order` accept it. That is the second exception, with
+  `project_unnamed`, to `validate`'s `ok` matching a `materialize_order` that does not
+  block.
+
+Every `project_hash` changes. A 6.1.0 document is re-authored by setting
+`schema_version`. Nothing else changes: 6.1.0 below holds otherwise.
 
 ### Project document 6.1.0
 

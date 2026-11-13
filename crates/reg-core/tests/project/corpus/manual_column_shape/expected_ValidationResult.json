@@ -1,0 +1,75 @@
+{
+  "ok": false,
+  "issues": [
+    {
+      "level": "error",
+      "code": "unexpected_field",
+      "path": "/sources/0/manual/note",
+      "message": "unexpected key 'note' on source 'manual'",
+      "successor_fqid": null
+    },
+    {
+      "level": "error",
+      "code": "invalid_field_type",
+      "path": "/sources/0/manual/provider",
+      "message": "source manual 'provider' must be a non-blank string",
+      "successor_fqid": null
+    },
+    {
+      "level": "error",
+      "code": "invalid_field_type",
+      "path": "/sources/0/bindings/0/manual/column",
+      "message": "manual 'column' must be a non-blank string",
+      "successor_fqid": null
+    },
+    {
+      "level": "error",
+      "code": "invalid_enum_value",
+      "path": "/sources/0/bindings/0/manual/type",
+      "message": "manual type must be one of ['binary', 'boolean', 'date', 'datetime', 'decimal', 'geometry', 'identifier', 'integer', 'text', 'uuid']; got 'string'",
+      "successor_fqid": null
+    },
+    {
+      "level": "error",
+      "code": "identifier_codes",
+      "path": "/sources/0/bindings/1/manual/codes",
+      "message": "an identifier column lists no codes: they would be real ids, and the project is sent outside MONA",
+      "successor_fqid": null
+    },
+    {
+      "level": "error",
+      "code": "invalid_field_type",
+      "path": "/sources/0/bindings/2/manual/codes/1/sentinel",
+      "message": "code 'sentinel' must be a boolean",
+      "successor_fqid": null
+    },
+    {
+      "level": "error",
+      "code": "duplicate_code",
+      "path": "/sources/0/bindings/2/manual/codes/1/code",
+      "message": "code 'URV1' duplicates /sources/0/bindings/2/manual/codes/0",
+      "successor_fqid": null
+    },
+    {
+      "level": "error",
+      "code": "invalid_field_type",
+      "path": "/sources/0/bindings/2/manual/codes/2",
+      "message": "a manual code must be an object {'code', 'label', 'sentinel'}",
+      "successor_fqid": null
+    },
+    {
+      "level": "error",
+      "code": "invalid_field_type",
+      "path": "/sources/0/bindings/3/manual/codes",
+      "message": "manual 'codes' must be a non-empty array of {'code', 'label', 'sentinel'} objects",
+      "successor_fqid": null
+    },
+    {
+      "level": "error",
+      "code": "duplicate_manual_column",
+      "path": "/sources/0/bindings/3/manual/column",
+      "message": "column 'Urval' duplicates the one at /sources/0/bindings/2/manual/column",
+      "successor_fqid": null
+    }
+  ]
+}

@@ -5,7 +5,7 @@ use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::sync::{Arc, Mutex, PoisonError};
 
 use reg_core::IssueLevel;
-use reg_core::project::Source;
+use reg_core::project::CatalogSource;
 use rusqlite::Connection;
 
 use super::{Issue, OrderRowKeys, RowKeyColumn, Serving, day};
@@ -197,7 +197,7 @@ pub(super) fn row_keys(
     conn: &Connection,
     space: Option<&str>,
     index: usize,
-    source: &Source,
+    source: &CatalogSource,
     serving: &[Serving],
 ) -> Result<(Vec<OrderRowKeys>, Vec<Issue>), Error> {
     let mut out = Vec::new();

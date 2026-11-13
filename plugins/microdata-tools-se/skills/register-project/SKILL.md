@@ -19,7 +19,7 @@ the `register-metadata-search` skill.
 
 ## Drafting a project
 
-1. Set the document's `schema_version` to `"6.1.0"`. Set `reg_meta_version` (required)
+1. Set the document's `schema_version` to `"6.2.0"`. Set `reg_meta_version` (required)
    to the serving catalog's release tag, `reg_meta/vX.Y.Z`. Read `meta.catalog_version`
    from a catalog tool response and format its release version `X.Y.Z` as that tag. If
    it is not a release version (for example, `dev`), ask which catalog release to use.
@@ -58,7 +58,20 @@ the `register-metadata-search` skill.
    have it. Never merge two databases into one project: make a separate project for each
    database. The researcher joins the extracts later, outside this toolkit. A steward
    with one database needs no `linkage`.
-5. Call `order` with `operation: "validate"` and the document as `project`. Fix every
+5. Data the catalog does not document can be entered by hand, but only after `resolve`,
+   `search` and `show` find no variable or table for it: a catalog binding is checked
+   and extracted, a manual one is neither. A column the delivery has that a documented
+   table lacks is a binding `{"manual": {"column": "<delivery name>", "type": "<type>"}}`
+   in that table's source; the source keeps at least one catalog binding. A file or
+   years the catalog has no table for is a source with
+   `"manual": {"provider": "<name>", "register": "<name>"}` in place of `table`, holding
+   manual bindings only. Optional `codes` lists the column's codes
+   (`[{"code": "HT", "label": "Hösttermin"}]`, `"sentinel": true` for a missing-value
+   code), taken from documentation, never from values read on MONA, and never on an
+   `identifier` column. `validate` reports each such source with a `manual_item` info;
+   tell the user that the extract runner does not deliver these columns, so the data
+   manager adds them by hand.
+6. Call `order` with `operation: "validate"` and the document as `project`. Fix every
    issue whose `level` is `error` and validate again until `ok` is true; report the
    warnings to the user. A `classification_version_ambiguous` warning means the variable
    carries several versions of a code list (municipality codes, say) over the period and
@@ -69,7 +82,7 @@ the `register-metadata-search` skill.
    from over the period is a `classification_incompatible` error. To cover several
    versions, split the source by period and pin each. Ignore the warning when the column
    is only carried along, not used to join or recode across years.
-6. Save the file as `project_data.json`.
+7. Save the file as `project_data.json`.
 
 Every ordered table also delivers its row-key columns, including the person key,
 without a binding: `order` lists them per source and period in `row_keys`, under the
@@ -85,7 +98,7 @@ one source and a year list in the other:
 
 ```json
 {
-  "schema_version": "6.1.0",
+  "schema_version": "6.2.0",
   "reg_meta_version": "reg_meta/v0.84.1",
   "name": "example",
   "sources": [
@@ -113,14 +126,14 @@ one source and a year list in the other:
 
 ## Questions about my project
 
-1. Read the user's `project_data.json`. If its `schema_version` is not `"6.1.0"`, say so
+1. Read the user's `project_data.json`. If its `schema_version` is not `"6.2.0"`, say so
    and stop: the server reads one version exactly.
 2. Call `order` with `operation: "order"` and the document as `project`. It returns the
    logical order: per source, the table, the period and the entries, each with the
-   spelling delivered. Ambiguous windows block it: the call fails with `order_blocked`
-   and lists every issue, and `validate` lists the same issues. A window only a
-   preliminary release covers does not block; it is warned (`preliminary_data`), so tell
-   the user. There are no physical files yet; give the user the logical order and the
+   spelling delivered, and the `manual` list of columns entered by hand. Ambiguous
+   windows block it: the call fails with `order_blocked` and lists every issue, and
+   `validate` lists the same issues. A window only a preliminary release covers does not
+   block; it is warned (`preliminary_data`), so tell the user. There are no physical files yet; give the user the logical order and the
    project file. Answer what will be delivered from the order, not from the document.
 3. For what a variable means or how it changed, use `show`, `segments` and `values` over
    the project's period.

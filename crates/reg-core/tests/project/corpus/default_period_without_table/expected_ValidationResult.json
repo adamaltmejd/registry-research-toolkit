@@ -2,9 +2,9 @@
   "issues": [
     {
       "level": "error",
-      "code": "missing_required_field",
-      "path": "/sources/0/table",
-      "message": "source 'table' is required"
+      "code": "source_kind",
+      "path": "/sources/0",
+      "message": "source needs 'table' (a catalog table) or 'manual' (data the catalog does not document, entered by hand)"
     }
   ]
 }

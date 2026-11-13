@@ -23,7 +23,7 @@ use crate::{
 };
 
 /// The `project_data.json` contract this runtime reads, exactly.
-pub const SCHEMA_VERSION: &str = "6.1.0";
+pub const SCHEMA_VERSION: &str = "6.2.0";
 
 /// The project in `raw`, or the issues that reject it without a catalog: the single
 /// entry point the server's validate and order operations share.
@@ -220,6 +220,15 @@ struct Fields {
 }
 
 impl ProjectData {
+    /// The catalog binding at `b` of source `s`, if both are catalog ones.
+    #[must_use]
+    pub fn catalog_binding(&self, s: usize, b: usize) -> Option<&CatalogBinding> {
+        match self.sources.get(s)?.catalog()?.bindings.get(b)? {
+            Binding::Catalog(binding) => Some(binding),
+            Binding::Manual(_) => None,
+        }
+    }
+
     /// The project in `value`, or every structural issue that rejects it.
     ///
     /// # Errors
@@ -249,24 +258,121 @@ impl ProjectData {
     }
 }
 
-/// One table, a requested period and its variables.
+/// A source: a catalog table, or data the catalog does not document, entered by hand.
+//
+// Untagged: `table` or `manual` is required and both structs refuse unknown fields, so
+// the variants are disjoint; the validator's key-presence rule (`source_kind`) holds
+// that for `null`s too.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectSource))]
+#[serde(untagged)]
+pub enum Source {
+    Catalog(CatalogSource),
+    Manual(ManualSource),
+}
+
+impl Source {
+    #[must_use]
+    pub fn name(&self) -> &str {
+        match self {
+            Self::Catalog(s) => &s.name,
+            Self::Manual(s) => &s.name,
+        }
+    }
+
+    #[must_use]
+    pub fn period(&self) -> &SourcePeriod {
+        match self {
+            Self::Catalog(s) => &s.period,
+            Self::Manual(s) => &s.period,
+        }
+    }
+
+    /// The catalog source, if this is one.
+    #[must_use]
+    pub fn catalog(&self) -> Option<&CatalogSource> {
+        match self {
+            Self::Catalog(s) => Some(s),
+            Self::Manual(_) => None,
+        }
+    }
+
+    /// Every column entered by hand, with its binding's position in the source.
+    pub fn manual_columns(&self) -> Box<dyn Iterator<Item = (usize, &ManualBinding)> + '_> {
+        match self {
+            Self::Catalog(s) => Box::new(s.bindings.iter().enumerate().filter_map(
+                |(b, binding)| match binding {
+                    Binding::Manual(m) => Some((b, m)),
+                    Binding::Catalog(_) => None,
+                },
+            )),
+            Self::Manual(s) => Box::new(s.bindings.iter().enumerate()),
+        }
+    }
+}
+
+/// One catalog table, a requested period and its columns.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectCatalogSource))]
 #[serde(deny_unknown_fields)]
-pub struct Source {
+pub struct CatalogSource {
     pub name: String,
     /// A table's public id: `<provider>/<register>` for a register's implicit table,
     /// else `<provider>/<register>/<table>`.
     pub table: String,
     pub period: SourcePeriod,
+    /// At least one catalog binding; the others may be entered by hand.
     pub bindings: Vec<Binding>,
 }
 
-/// One variable to extract.
+impl CatalogSource {
+    /// The catalog bindings with their positions in the source: a manual binding keeps
+    /// its position and is skipped.
+    pub fn catalog_bindings(&self) -> impl Iterator<Item = (usize, &CatalogBinding)> {
+        self.bindings
+            .iter()
+            .enumerate()
+            .filter_map(|(b, binding)| match binding {
+                Binding::Catalog(c) => Some((b, c)),
+                Binding::Manual(_) => None,
+            })
+    }
+}
+
+/// Data the catalog does not document, entered by hand: every column is manual.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectManualSource))]
+#[serde(deny_unknown_fields)]
+pub struct ManualSource {
+    pub name: String,
+    pub manual: ManualOrigin,
+    pub period: SourcePeriod,
+    pub bindings: Vec<ManualBinding>,
+}
+
+/// Who delivers a manual source, as free-text names, not catalog ids.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectManualOrigin))]
+#[serde(deny_unknown_fields)]
+pub struct ManualOrigin {
+    pub provider: String,
+    pub register: String,
+}
+
+/// One column: a catalog variable, or a column entered by hand.
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectBinding))]
+#[serde(untagged)]
+pub enum Binding {
+    Catalog(CatalogBinding),
+    Manual(ManualBinding),
+}
+
+/// One catalog variable to extract.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectCatalogBinding))]
 #[serde(deny_unknown_fields)]
-pub struct Binding {
+pub struct CatalogBinding {
     /// The binding FQID `<provider>/<register>/<slug>`.
     pub variable: String,
     /// Follow the variable's continues successors after it ends; absent means false.
@@ -287,6 +393,45 @@ pub struct Binding {
     )]
     #[serde(default)]
     pub classification: Option<String>,
+}
+
+/// A column the catalog does not document, entered by hand.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectManualBinding))]
+#[serde(deny_unknown_fields)]
+pub struct ManualBinding {
+    pub manual: ManualColumn,
+    #[serde(default)]
+    pub display_name: Option<String>,
+}
+
+/// What the tools need of a manual column.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectManualColumn))]
+#[serde(deny_unknown_fields)]
+pub struct ManualColumn {
+    /// The column name as the delivery spells it.
+    pub column: String,
+    #[serde(rename = "type")]
+    pub column_type: ColumnType,
+    /// The codes the column holds, from documentation; never on an identifier.
+    #[serde(default)]
+    #[cfg_attr(feature = "openapi", schema(nullable = false))]
+    pub codes: Option<Vec<ManualCode>>,
+}
+
+/// One code of a manual column.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ProjectManualCode))]
+#[serde(deny_unknown_fields)]
+pub struct ManualCode {
+    pub code: String,
+    #[serde(default)]
+    pub label: Option<String>,
+    /// A missing-value code (`uppgift saknas`); absent means false.
+    #[serde(default)]
+    #[cfg_attr(feature = "openapi", schema(nullable = false, default = false))]
+    pub sentinel: Option<bool>,
 }
 
 /// A period endpoint as written: an int year or a period-token string (`"_default"`

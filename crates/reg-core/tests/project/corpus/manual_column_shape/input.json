@@ -1,0 +1,58 @@
+{
+  "schema_version": "6.2.0",
+  "reg_meta_version": "reg_meta/v1.0.0",
+  "name": "demo",
+  "sources": [
+    {
+      "name": "nya",
+      "manual": {
+        "provider": " ",
+        "register": "NyA",
+        "note": "x"
+      },
+      "period": 2010,
+      "bindings": [
+        {
+          "manual": {
+            "column": "",
+            "type": "string"
+          }
+        },
+        {
+          "manual": {
+            "column": "LopNr",
+            "type": "identifier",
+            "codes": [
+              {
+                "code": "1"
+              }
+            ]
+          }
+        },
+        {
+          "manual": {
+            "column": "Urval",
+            "type": "text",
+            "codes": [
+              {
+                "code": "URV1"
+              },
+              {
+                "code": "URV1",
+                "sentinel": "yes"
+              },
+              "URV2"
+            ]
+          }
+        },
+        {
+          "manual": {
+            "column": "Urval",
+            "type": "text",
+            "codes": null
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -3,7 +3,7 @@
 
 use std::collections::BTreeSet;
 
-use reg_core::project::Binding;
+use reg_core::project::CatalogBinding;
 use reg_core::{Interval, IssueLevel, gaps, merge, overlap};
 use rusqlite::params;
 
@@ -14,7 +14,7 @@ use super::{
 };
 use crate::{Error, rows};
 
-pub(super) fn binding(scope: &Scope, b: usize, binding: &Binding) -> Result<Outcome, Error> {
+pub(super) fn binding(scope: &Scope, b: usize, binding: &CatalogBinding) -> Result<Outcome, Error> {
     let mut out = Outcome::default();
     let mut current = binding.clone();
     current.follow_successor = None;
@@ -102,7 +102,7 @@ pub(super) fn binding(scope: &Scope, b: usize, binding: &Binding) -> Result<Outc
 fn materialize(
     scope: &Scope,
     b: usize,
-    current: &Binding,
+    current: &CatalogBinding,
     id: i64,
     first: bool,
     requested: &[Interval],
@@ -163,7 +163,7 @@ fn materialize(
     Ok(())
 }
 
-fn finish(scope: &Scope, b: usize, binding: &Binding, out: &mut Outcome) {
+fn finish(scope: &Scope, b: usize, binding: &CatalogBinding, out: &mut Outcome) {
     out.entries
         .sort_by_key(|e| (e.period.start.clone(), e.table.clone(), e.variable.clone()));
     let ordered = merge(
