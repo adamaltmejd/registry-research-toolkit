@@ -373,7 +373,7 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3982\n\n
 
 [[statement]]
 kind = "set"
-subject = "komvux: sun2020niva @1988-07-01..2024-06-30"
+subject = "komvux: sun2020niva where release = 'r17564'"
 fields = { "label" = "Högsta utbildningens nivå föregående år SUN2020, fullständig kod" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3706\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 

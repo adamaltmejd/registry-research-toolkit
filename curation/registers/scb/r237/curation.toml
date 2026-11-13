@@ -27284,12 +27284,6 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF1989.toml:20\
 
 [[statement]]
 kind = "set"
-subject = "individer-16plus-ulf: ba0040 where release = 'r737'"
-fields = { "classification" = "class/lkf/lkf1989" }
-evidence = "python-builder-pre-cutover:curation/classifications/LKF1989.toml:20\n\nLegacy exact value-set label: LKF 1989-01-01/ Län, kommuner och församlingar"
-
-[[statement]]
-kind = "set"
 subject = "individer-16-84-ar-ulf: ba0040 where release = 'r736'"
 fields = { "classification" = "class/lkf/lkf1990" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF1990.toml:19\n\nLegacy exact value-set label: LKF 1990-01-01/ Län, kommuner och församlingar"
