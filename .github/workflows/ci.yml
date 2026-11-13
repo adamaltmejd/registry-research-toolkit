@@ -31,8 +31,7 @@ jobs:
       # toolchain: lint compiles nothing.
       - run: bash scripts/gate.sh lint
 
-  # The Rust workspace (root Cargo.toml, crates/). Latest stable toolchain, no pin:
-  # the workspace has no minimum-version policy.
+  # The Rust workspace (root Cargo.toml, crates/), on the toolchain rust-toolchain.toml pins.
   rust:
     runs-on: ubuntu-latest
     # ARCHITECTURE.md "Tiers"; sized for a cold rust-cache plus its save (#1410).
@@ -44,9 +43,8 @@ jobs:
         with:
           sparse-checkout: *no-locks
           sparse-checkout-cone-mode: false
-      - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
-        with:
-          components: rustfmt, clippy
+      # rust-toolchain.toml names the toolchain, its components and targets.
+      - run: rustup toolchain install
       - uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
       # A prebuilt binary for `crates`' unused-dependency check; never compiled here.
       - uses: taiki-e/install-action@cfdb7ed4ccc7c7dce37759eae89dc5674b469b39 # v2.90.3
@@ -133,9 +131,7 @@ jobs:
       # the wasm-bindgen CLI at the `wasm-bindgen` version Cargo.lock pins (bump
       # both together; a mismatch fails the bindgen run).
       - &rust-wasm
-        uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
-        with:
-          targets: wasm32-unknown-unknown
+        run: rustup toolchain install
       - &rust-cache
         uses: Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0 # v2.9.3
       - &wasm-bindgen

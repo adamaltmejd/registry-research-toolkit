@@ -12,11 +12,22 @@
 # release checks on the synthetic artifact, so the Rust binaries are built once per job.
 # `regen` also blesses the plugin project schema.
 #
-# No `set -e`: a failing command ends its step, and the summary still prints.
+# No `set -e`: a failing command ends its step, and the summary still prints. Output also
+# goes to a fresh log file, named on the first and the FAILED line.
 set -uo pipefail
 
 ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd) || exit 1
 cd "$ROOT" || exit 1
+# Every run also writes its output to its own log: callers need no redirect, and an agent
+# reads the file instead of the scrollback. The script re-runs itself through a pipe:
+# process substitution (`exec > >(tee …)`) is refused inside the agent sandbox.
+if [ -z "${GATE_LOG:-}" ]; then
+	GATE_LOG=$(mktemp "${TMPDIR:-/tmp}/gate.XXXXXX") || exit 1
+	export GATE_LOG
+	echo "== gate log $GATE_LOG"
+	bash "${BASH_SOURCE[0]}" "$@" 2>&1 | tee "$GATE_LOG"
+	exit "${PIPESTATUS[0]}"
+fi
 FRONTEND=$ROOT/reg_webapp/frontend
 # The binaries `cargo build --workspace` writes; a per-worktree CARGO_TARGET_DIR moves them.
 BIN=${CARGO_TARGET_DIR:-$ROOT/target}/debug
@@ -105,6 +116,11 @@ rust() {
 }
 
 flows() {
+	# Chrome cannot start inside the agent sandbox; say so instead of failing in it.
+	if [ -n "${SANDBOX_RUNTIME:-}" ]; then
+		fail "flows needs Chrome outside the sandbox: run \`bash scripts/gate.sh flows\` (or \`all\`) as its own command, with no env prefix and no \`cd … &&\`"
+		return 1
+	fi
 	# The production bootstrap smoke and the user journeys share the browser-only job.
 	run_in "$FRONTEND" bun install --frozen-lockfile &&
 		run_in "$FRONTEND" bun run gen:wasm &&
@@ -179,7 +195,7 @@ for name in "${names[@]}"; do
 done
 echo "== gate $times"
 if [ -n "$failed" ]; then
-	echo "== gate FAILED $failed"
+	echo "== gate FAILED $failed (log $GATE_LOG)"
 	exit 1
 fi
 echo "== gate passed"

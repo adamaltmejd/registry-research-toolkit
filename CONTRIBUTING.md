@@ -2,8 +2,9 @@
 
 ## Setup
 
-Prerequisites: a stable **Rust** toolchain for `crates/`, [bun](https://bun.sh) for the
-SPA, and for the gate `cargo-machete` and `shellcheck`.
+Prerequisites: rustup, which installs the **Rust** toolchain `rust-toolchain.toml` pins
+(`rustup toolchain install`), [bun](https://bun.sh) for the SPA, and for the gate
+`cargo-machete` and `shellcheck`.
 
 ```bash
 git clone https://github.com/adamaltmejd/registry-research-toolkit.git

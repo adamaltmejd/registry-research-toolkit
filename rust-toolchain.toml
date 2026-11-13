@@ -1,0 +1,8 @@
+# The one Rust toolchain for local runs, CI and releases; `reg_webapp/Dockerfile`'s
+# `rust:` image matches it, and one Renovate PR moves both. The workspace needs at least
+# this version, and a release records `rustc -vV` (release skill, base reuse).
+[toolchain]
+channel = "1.100.0"
+profile = "minimal"
+components = ["clippy", "rustfmt"]
+targets = ["wasm32-unknown-unknown"]

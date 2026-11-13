@@ -31,6 +31,18 @@
       ],
       "depNameTemplate": "wrangler",
       "datasourceTemplate": "npm"
+    },
+    {
+      "description": "The Rust toolchain pin, read as the `rust` Docker image's version so it moves with reg_webapp/Dockerfile's `rust:` image (packageRules: one PR).",
+      "customType": "regex",
+      "managerFilePatterns": [
+        "/^rust-toolchain\\.toml$/"
+      ],
+      "matchStrings": [
+        "channel = \"(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)\""
+      ],
+      "depNameTemplate": "rust",
+      "datasourceTemplate": "docker"
     }
   ],
   "packageRules": [
@@ -80,6 +92,16 @@
       "prBodyNotes": [
         "Merges on green CI; the next curation real-seed build proves it (no standalone proof build)."
       ]
+    },
+    {
+      "description": "The Rust toolchain: rust-toolchain.toml and the Dockerfile's `rust:` image in one PR. Maintainers install the new toolchain locally (`rustup toolchain install`) when it merges.",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "rust"
+      ],
+      "groupName": "Rust toolchain"
     },
     {
       "description": "Hold: the SPA's `typescript` is only openapi-typescript's peer (gen:types), which needs the JS compiler API that TypeScript 7 dropped. Type checking uses `@typescript/native` (TS 7), which this rule does not match. Drop when openapi-typescript supports TS 7.",
