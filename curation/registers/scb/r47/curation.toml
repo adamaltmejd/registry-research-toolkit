@@ -4201,3 +4201,33 @@ kind = "set"
 subject = "set:utbildningsprogram"
 fields = { "description" = "Utbildningsprogrammet, som högskolans egen programkod, som det program ansökan avser (2007–2008) och som en indelning av programmen efter vilken examen utbildningen leder till. Indelningen efter examen byggde 2006–2008 på yrkesexamina fastställda 1993 (SFS 1993:100 och SFS 1993:221) och kodas från 2009 manuellt efter en värdemängd fastställd av UKÄ och SCB." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla tre anger programmet, i lokal kod eller i nationell indelning efter examen.\ncatalog:variable_text:33248:12965:13149\ncatalog:variable_text:33368:13695:13879\ncatalog:variable_text:33369:12784:13330\ncatalog:variable_text:33369:13330:13514\ncatalog:variable_text:33369:14245:20454"
+
+[[statement]]
+kind = "set"
+subject = "release:grundutbildning-1977/r7"
+fields = { "period" = "LA1977..LA1992" }
+evidence = "SCB Registerinformation, RegVerID 7: the release is named \"Läsåren 1977/1978 - 1992/1993\", a span of academic years the delivery-name grammar does not read, which left all 30 documented columns without a period."
+
+[[statement]]
+kind = "set"
+subject = "release:grundutbildning-1993/r20173"
+fields = { "period" = "LA1993..LA2024" }
+evidence = "SCB Registerinformation, RegVerID 20173: the release is named \"Läsåren 1993/1994 - 2024/2025\", a span of academic years the delivery-name grammar does not read, which left all 46 documented columns (Ar, Termin, KursKod, HskodUppg, ...) without a period."
+
+[[statement]]
+kind = "set"
+subject = "release:grundutbildning-poang/r20174"
+fields = { "period" = "LA1993..LA2024" }
+evidence = "SCB Registerinformation, RegVerID 20174: the release is named \"Läsåren 1993/1994 - 2024/2025\", a span of academic years the delivery-name grammar does not read, which left all 32 documented columns without a period."
+
+[[statement]]
+kind = "set"
+subject = "release:grundutbildning-examina/r20158"
+fields = { "period" = "LA1977..LA2024" }
+evidence = "SCB Registerinformation, RegVerID 20158: the release is named \"Läsåren 1977/1978 - 2024/2025\", a span of academic years the delivery-name grammar does not read, which left all 23 documented columns (Kar, HsKod, Namnare, ...) without a period."
+
+[[statement]]
+kind = "set"
+subject = "release:grundutbildning-examina-aldre/r4"
+fields = { "period" = "LA1962..LA1976" }
+evidence = "SCB Registerinformation, RegVerID 4: the release is named \"Läsåren 1962/1963 - 1976/1977\", a span of academic years the delivery-name grammar does not read, which left all 11 documented columns without a period."

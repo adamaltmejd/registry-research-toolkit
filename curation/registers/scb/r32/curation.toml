@@ -6294,3 +6294,51 @@ kind = "set"
 subject = "set:yrkesstallning"
 fields = { "description" = "Om personen är företagare eller anställd, för personen och, 1960–1965, för bostadsföreståndaren och dennes maka. 1960 får ej förvärvsarbetande familjemedlemmar (gifta eller sammanboende kvinnor och barn födda 1945–1960) huvudmannens kod; huvudman är en gift eller sammanboende man eller föräldern i en ofullständig familj, och om mannen inte förvärvsarbetar men makan gör det är makan huvudman för barnen men inte för mannen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är samma indelning i företagare och anställd; de skiljer sig i person.\ncatalog:variable_text:18516:-3653:-3287\ncatalog:variable_text:18516:-1826:-1461\ncatalog:variable_text:18517:-3653:-3287\ncatalog:variable_text:18517:-1826:-1461\ncatalog:variable_text:18518:-3653:-3287\ncatalog:variable_text:18518:-1826:-1461"
+
+[[statement]]
+kind = "set"
+subject = "release:vy-fob/r19667"
+fields = { "period" = "1960" }
+evidence = "SCB Registerinformation, RegVerID 19667: the FoB view release is named \"FoB1960\", the census year, which the delivery-name grammar does not read, so its documented columns had no period. Its period is the census year, as for the FoB1960 individ and lägenhet releases named \"1960\"."
+
+[[statement]]
+kind = "set"
+subject = "release:vy-fob/r19647"
+fields = { "period" = "1965" }
+evidence = "SCB Registerinformation, RegVerID 19647: the FoB view release is named \"FoB1965\", the census year, which the delivery-name grammar does not read, so its documented columns had no period. Its period is the census year, as for the FoB1965 individ and lägenhet releases named \"1965\"."
+
+[[statement]]
+kind = "set"
+subject = "release:vy-fob/r19351"
+fields = { "period" = "1970" }
+evidence = "SCB Registerinformation, RegVerID 19351: the FoB view release is named \"FoB1970\", the census year, which the delivery-name grammar does not read, so its documented columns had no period. Its period is the census year, as for the FoB1970 individ and lägenhet releases named \"1970\"."
+
+[[statement]]
+kind = "set"
+subject = "release:vy-fob/r19272"
+fields = { "period" = "1975" }
+evidence = "SCB Registerinformation, RegVerID 19272: the FoB view release is named \"FoB1975\", the census year, which the delivery-name grammar does not read, so its documented columns had no period. Its period is the census year, as for the FoB1975 individ and lägenhet releases named \"1975\"."
+
+[[statement]]
+kind = "set"
+subject = "release:vy-fob/r19241"
+fields = { "period" = "1980" }
+evidence = "SCB Registerinformation, RegVerID 19241: the FoB view release is named \"FoB1980\", the census year, which the delivery-name grammar does not read, so its documented columns had no period. Its period is the census year, as for the FoB1980 individ and lägenhet releases named \"1980\"."
+
+[[statement]]
+kind = "set"
+subject = "release:vy-fob/r18279"
+fields = { "period" = "1985" }
+evidence = "SCB Registerinformation, RegVerID 18279: the FoB view release is named \"FoB1985\", the census year, which the delivery-name grammar does not read, so its documented columns had no period. Its period is the census year, as for the FoB1985 individ and lägenhet releases named \"1985\"."
+
+[[statement]]
+kind = "set"
+subject = "release:vy-fob/r18614"
+fields = { "period" = "1990" }
+evidence = "SCB Registerinformation, RegVerID 18614: the FoB view release is named \"FoB1990\", the census year, which the delivery-name grammar does not read, so its documented columns had no period. Its period is the census year, as for the FoB1990 individ and lägenhet releases named \"1990\"."
+
+[[statement]]
+kind = "set"
+subject = "vy-fob: RPSyss @1985 where key = 'v42534'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Vy FoB1985 (RegVerID 18279) documents column RPSyss twice: under VarId 42334 \"Sysselsättning - referensperson\", as in every other FoB release, and under VarId 42534 \"Förvärvsarbete - referensperson\", the VarId that column RPArb carries in the same release and in Lägenhet och hushåll 1985. One column cannot be two variables; the 42534 row is a documentation duplicate of RPArb's VarId and is withheld."
