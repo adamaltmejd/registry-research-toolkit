@@ -1,7 +1,8 @@
 //! `validate` and `order`: the order check of design v4 §9 over the v4 catalog
 //! (crates/DESIGN.md, "The logical order"). One function, [`check`], answers both
 //! operations (through [`checked`], which adds the holdings stage on a steward
-//! server), which is what makes their results identical.
+//! server), which is what makes their results identical, except that a successful
+//! `order` adds one note on the whole order, `sensitive_variables` ([`sensitive`]).
 //!
 //! The check, per source: resolve the table (`refs::table`) and the bindings' ids; check
 //! the period against the table (`_default` exactly on a timeless table); follow the
@@ -111,9 +112,49 @@ fn validate(server: &Server, params: &Params) -> Result<Value, Error> {
 fn order(server: &Server, params: &Params) -> Result<Value, Error> {
     let project = structural(&project(params)?)?;
     match checked(server, &project)? {
-        Ok(order) => Ok(serde_json::to_value(order).expect("LogicalOrder serializes")),
+        Ok(mut order) => {
+            order.findings.extend(sensitive(&order.entries));
+            Ok(serde_json::to_value(order).expect("LogicalOrder serializes"))
+        }
         Err(findings) => Err(blocked(server, findings)?),
     }
+}
+
+/// `sensitive_variables`: one info on the whole order, when some ordered stretch is
+/// flagged sensitive, listing each such variable once with the tables it comes from.
+/// It informs the ethics application rather than asking for a change to the file, so
+/// only `order` gives it (maintainer ruling 2026-11-13). The flag means "always or
+/// sometimes" sensitive and the catalog states no category, so the note names none.
+fn sensitive(entries: &[OrderEntry]) -> Option<NamedIssue> {
+    let mut tables: std::collections::BTreeMap<&str, BTreeSet<&str>> =
+        std::collections::BTreeMap::new();
+    for entry in entries.iter().filter(|e| e.sensitive) {
+        tables
+            .entry(&entry.variable)
+            .or_default()
+            .insert(&entry.table);
+    }
+    if tables.is_empty() {
+        return None;
+    }
+    let listed: Vec<String> = tables
+        .iter()
+        .map(|(variable, tables)| {
+            let tables: Vec<&str> = tables.iter().copied().collect();
+            format!("{variable} ({})", tables.join(", "))
+        })
+        .collect();
+    Some(NamedIssue::unnamed_issue(Issue::new(
+        IssueLevel::Info,
+        "sensitive_variables",
+        "",
+        format!(
+            "These variables may contain sensitive personal data (GDPR articles 9 and 10): {}. \
+             Research that processes such data needs approval from the Swedish Ethical Review \
+             Authority (Etikprövningsmyndigheten).",
+            listed.join(", ")
+        ),
+    )))
 }
 
 /// The logical order with every non-blocking finding, or every finding that blocks it.
@@ -388,8 +429,13 @@ impl ToSchema for NamedIssue {
 impl NamedIssue {
     /// A structural issue, which names nothing in the catalog.
     fn unnamed(issue: reg_core::ValidationIssue) -> Self {
+        Self::unnamed_issue(Issue::from(issue))
+    }
+
+    /// A finding that names nothing in the catalog.
+    fn unnamed_issue(issue: Issue) -> Self {
         Self {
-            issue: Issue::from(issue),
+            issue,
             variable_name: None,
             table_name: None,
             successor_name: None,
@@ -492,6 +538,10 @@ pub struct OrderEntry {
     /// A class version's public id.
     #[schema(required = true)]
     classification: Option<String>,
+    /// The provider flags the variable as sensitive somewhere in this stretch; read only by
+    /// `order`'s `sensitive_variables` finding.
+    #[serde(skip)]
+    sensitive: bool,
 }
 
 /// An entry's value set by its content hash.

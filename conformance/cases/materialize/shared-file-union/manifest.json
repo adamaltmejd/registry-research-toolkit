@@ -148,20 +148,6 @@
   "findings": [
     {
       "level": "info",
-      "code": "identifier",
-      "path": "/sources/0/bindings/1",
-      "message": "demo/held/id is an identifier in demo/held for 2017",
-      "source": "a",
-      "variable": "demo/held/id",
-      "table": "demo/held",
-      "period": {
-        "start": "2017-01-01",
-        "end": "2018-01-01"
-      },
-      "successor_fqid": null
-    },
-    {
-      "level": "info",
       "code": "row_filter_union",
       "path": "/sources/0",
       "message": "This table shares its file with another table of the project, so its columns are delivered for 2017 and 2020.",

@@ -153,34 +153,6 @@
   "clips": [],
   "findings": [
     {
-      "level": "info",
-      "code": "identifier",
-      "path": "/sources/0/bindings/0",
-      "message": "demo/projected/id is an identifier in demo/projected for 2018",
-      "source": "p",
-      "variable": "demo/projected/id",
-      "table": "demo/projected",
-      "period": {
-        "start": "2018-01-01",
-        "end": "2019-01-01"
-      },
-      "successor_fqid": null
-    },
-    {
-      "level": "info",
-      "code": "identifier",
-      "path": "/sources/0/bindings/1",
-      "message": "demo/projected/child-id is an identifier in demo/projected for 2018",
-      "source": "p",
-      "variable": "demo/projected/child-id",
-      "table": "demo/projected",
-      "period": {
-        "start": "2018-01-01",
-        "end": "2019-01-01"
-      },
-      "successor_fqid": null
-    },
-    {
       "level": "warning",
       "code": "mapping_caveat",
       "path": "/sources/0/bindings/0",

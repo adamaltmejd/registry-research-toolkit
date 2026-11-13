@@ -1,0 +1,22 @@
+{
+  "note": "Step 0 fails if a query of several words that no row matches whole returns nothing, or stops ranking by words matched: no code pair holds `kust`, `skärgård` and `hyresrätt`, so (K9, Kust och skärgård nord), matching two, comes before (H, Hyresrätt), matching one (DESIGN.md Search 2). Step 1 fails if that fallback runs when some row matches every word: (K9) matches `kust skärgård` whole, so (H) must not appear. Oracle: the ranking fixture's value sets.",
+  "fixture": "ranking",
+  "requests": [
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "kust skärgård hyresrätt",
+        "type": "code"
+      }
+    },
+    {
+      "operation": "search",
+      "path": "/api/search",
+      "query": {
+        "q": "kust skärgård",
+        "type": "code"
+      }
+    }
+  ]
+}

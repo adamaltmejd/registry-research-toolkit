@@ -94,7 +94,7 @@
       "level": "info",
       "code": "form_change",
       "path": "/sources/0/bindings/0",
-      "message": "demo/nam/belopptot changes form from 2020 (Belopp -> BeloppTot)",
+      "message": "demo/nam/belopptot changes form. From 2020, the column name changes from Belopp to BeloppTot.",
       "source": "s",
       "variable": "demo/nam/belopptot",
       "variable_name": "Belopp",
@@ -108,19 +108,16 @@
       "successor_name": null
     },
     {
-      "level": "warning",
-      "code": "variable_sensitive",
-      "path": "/sources/0/bindings/1",
-      "message": "demo/nam/flagga is sensitive in demo/nam/a for 2020",
-      "source": "s",
-      "variable": "demo/nam/flagga",
-      "variable_name": "Flagga",
-      "table": "demo/nam/a",
-      "table_name": "Tabell A",
-      "period": {
-        "start": "2020-01-01",
-        "end": "2021-01-01"
-      },
+      "level": "info",
+      "code": "sensitive_variables",
+      "path": "",
+      "message": "These variables may contain sensitive personal data (GDPR articles 9 and 10): demo/nam/flagga (demo/nam/a). Research that processes such data needs approval from the Swedish Ethical Review Authority (Etikprövningsmyndigheten).",
+      "source": null,
+      "variable": null,
+      "variable_name": null,
+      "table": null,
+      "table_name": null,
+      "period": null,
       "successor_fqid": null,
       "successor_name": null
     }

@@ -456,7 +456,7 @@ classification bindings. Accepting one requires reviewed curation and a premise 
   whose own occurrences state two or more type families is exactly the segment
   resolution left blank for a source conflict. The one finding fact the catalog keeps is
   F7's: `release.edition_disagreement` marks the release, because the order check's
-  `edition_disagreement` warning reads it, and re-deriving it would repeat resolve's
+  `edition_disagreement` info reads it, and re-deriving it would repeat resolve's
   edition comparison (over shadowed occurrences, with types before the integer-codes
   rule) in the reader.
 - `classification` selects an exact curated `class/<family>/<version>` for whole
@@ -1182,7 +1182,8 @@ with `--catalog <steward>` ("Holdings").
 `order` runs the order check of design v4 §9 on a 6.1.0 project and returns the logical
 order of schema §2.3 as `data`, or the error `order_blocked`. `validate` runs the same
 check and returns the same findings as issues. Both transports call the one
-implementation in `reg-catalog`, which is what makes their results identical. The check
+implementation in `reg-catalog`, which is what makes their results identical, except
+for one note only a successful `order` adds: `sensitive_variables` (below). The check
 is written over the v4 catalog (the `r-order-check` PR), not ported from the 4.0.0
 physical-order logic, which v5 deletes.
 
@@ -1221,9 +1222,9 @@ for the open sentinels; a timeless table has `{start: null, end: null}`.
 whole-project finding) and `source_outside_window` (a dated source period wholly outside
 the study window). Warnings and infos do not: `classification_version_ambiguous`,
 `preliminary_data` (a window only a preliminary release covers; final wins where both
-exist), `edition_disagreement`, `variable_sensitive`, `variable_replaced`,
-`period_clipped`, `form_change`, `table_succession_undated`, `identifier`,
-`coverage_end_unstated` and `binding_type_differs`. Each is an `Issue` whose `path`
+exist), `edition_disagreement`, `variable_replaced`, `period_clipped`, `form_change`,
+`table_succession_undated`, `coverage_end_unstated`, `binding_type_differs` and
+`sensitive_variables`. Each is an `Issue` whose `path`
 points at the source, binding or panel and whose `source`, `variable`, `table` and
 `period` say what it is about (`null` for a whole-project finding). The conditions are
 the order check's to state in its own tests; the rules that shape them:
@@ -1240,6 +1241,19 @@ the order check's to state in its own tests; the rules that shape them:
   `classification` field when the pinned version has no compatible curated windows. A
   pin preserves `ambiguous_window` refusals, including ambiguous segments that state no
   version; it cannot turn them into coverage clips.
+- The provider's sensitive and identifier flags are variable facts (`segments`, `show`),
+  not per-window findings: neither is something to fix in the file (maintainer ruling
+  2026-11-13, socialprefs feedback). A successful `order` (not `validate`, not
+  `materialize_order`) adds one info, `sensitive_variables`, at path `""` with every
+  coordinate `null`, when some ordered entry is flagged sensitive: each such variable
+  once with the tables it comes from, then the note that research processing such data
+  needs Etikprövningsmyndigheten's approval. The flag means "always or sometimes", and
+  the catalog states no category, so the note says "may" and names none.
+- `edition_disagreement` is an info: F7 marks the whole release, so it over-reports, and
+  a source cannot choose an edition. A year only a preliminary release covers is
+  `preliminary_data`, a warning.
+- `form_change` names what changes at each boundary in plain words: the column name, the
+  type, or the codes (a different value set).
 - Variables are register-scoped, so members of different registers never share a row-key
   variable. Which keys join is the researcher's call; the catalog stores no identifier
   kind, so the order check does not compare panel members' keys.
@@ -1332,7 +1346,8 @@ and `sun2000niva`.
        "period": {"start": "2003-01-01", "end": "2004-01-01"}, "successor_fqid": null,
        "variable_name": "Utbildningsnivå", "table_name": "Individer", "successor_name": null},
       {"level": "info", "code": "form_change", "path": "/sources/0/bindings/0",
-       "message": "scb/lisa/dispink changes form from 2004 (DispInk -> DispInk04)",
+       "message": "scb/lisa/dispink changes form. From 2004, the column name changes from
+                  DispInk to DispInk04.",
        "source": "lisa", "variable": "scb/lisa/dispink", "table": "scb/lisa/individ",
        "period": {"start": "2003-01-01", "end": "2007-01-01"}, "successor_fqid": null,
        "variable_name": "Disponibel inkomst", "table_name": "Individer", "successor_name": null}
@@ -2645,7 +2660,7 @@ returns one ranked list.
    `prefix = '2 3'` only makes two- and three-character prefixes cheap. `q` over 200
    characters or holding a NUL is `invalid_parameter`; a `q` with no token returns no
    items without a query. `ops/fts.rs::query` is the one
-   implementation; `docs_search` shares it.
+   implementation; `docs_search` shares it (and keeps AND only).
 2. **Rank.** Primary matches first, then description matches absent from the primary
    match set. Within each, `bm25(index, 10.0, 5.0, 1.0)` (name, label, body), ascending;
    `här` and `har` match the same rows and rank them alike. The primary corpus and its
@@ -2653,6 +2668,11 @@ returns one ranked list.
    against its whole token count, so a hit weighs most in an id or spelling and least in
    a definition or document text: a variable labelled `Vikt` ranks above a longer one
    whose definition says vikt.
+   When no row matches every term (after the filters), `search` falls back to rows
+   matching any distinct term, most terms matched first, then by the sum over terms of
+   each term's best score in either index (socialprefs feedback, 2026-11-13: a
+   five-word query returned nothing). The choice is made per query, so every page of it
+   agrees; a query some row matches whole is answered exactly as before.
 3. **Ties.** Then `search_item.kind` in SQL text order (`code`, `document`, `register`,
    `table`, `variable`), then `sort_key`, which is unique. Two rows tie on bm25 when the
    query hits the same weighted count in rows of equal token count.

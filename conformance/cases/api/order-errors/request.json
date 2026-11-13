@@ -1,5 +1,5 @@
 {
-  "note": "Fails if `order` stops refusing a project it cannot order with its located error: `project_invalid` with the structural issues (located fields null) for a foreign schema_version (alone) and for a document missing `name` whose binding names another register (`fqid_table_mismatch`); `order_blocked` with every finding at once, the blocking `outside_availability` (`imp` starts in 2018) at level `error` beside the non-blocking `variable_sensitive` (`imp` Kansl in 2020) at `warning`, nothing partial; or `invalid_parameter` for an unknown query parameter (the error the MCP equivalence test requires each operation's cases to reach). Oracle: errors.toml, logical-order.md §2-3 and the fixture's JSONL.",
+  "note": "Fails if `order` stops refusing a project it cannot order with its located error: `project_invalid` with the structural issues (located fields null) for a foreign schema_version (alone) and for a document missing `name` whose binding names another register (`fqid_table_mismatch`); `order_blocked` with every finding at once, the blocking `outside_availability` (`imp` starts in 2018) at level `error` beside the non-blocking `variable_replaced` (`rep` Ny is continued by Nyast with no stated date) at `warning`, nothing partial; or `invalid_parameter` for an unknown query parameter (the error the MCP equivalence test requires each operation's cases to reach). Oracle: errors.toml, logical-order.md §2-3 and the fixture's JSONL.",
   "fixture": "orders",
   "requests": [
     {
@@ -46,10 +46,10 @@
             "bindings": [{"variable": "demo/imp/ink"}]
           },
           {
-            "name": "sensitive",
-            "table": "demo/imp",
-            "period": 2020,
-            "bindings": [{"variable": "demo/imp/kansl"}]
+            "name": "replaced",
+            "table": "demo/rep",
+            "period": 2019,
+            "bindings": [{"variable": "demo/rep/ny"}]
           }
         ]
       }

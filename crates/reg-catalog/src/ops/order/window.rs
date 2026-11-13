@@ -63,7 +63,6 @@ struct Piece {
     /// The class version's public id.
     class_version: Option<String>,
     sensitive: bool,
-    identifier: bool,
     state: String,
     /// Its source row ends at the open sentinel: no coverage end is stated.
     open: bool,
@@ -79,8 +78,7 @@ pub(super) fn segments(scope: &Scope) -> String {
         format!(
             "SELECT {ids}, x.start AS start, x.end AS end, sp.exact AS exact, \
              x.dtype AS dtype, x.length AS length, vs.hash AS vs_hash, vs.n_items AS vs_n, \
-             cv.pid AS cv_pid, COALESCE(x.sensitive, 0) AS sensitive, \
-             COALESCE(x.identifier, 0) AS identifier, x.state AS state
+             cv.pid AS cv_pid, COALESCE(x.sensitive, 0) AS sensitive, x.state AS state
              FROM {db}.segment x {joins} JOIN {db}.spelling sp ON sp.id = x.spelling_id
              LEFT JOIN {db}.valueset vs ON vs.id = x.valueset_id
              LEFT JOIN {db}.class_version cv ON cv.id = x.class_version_id"
@@ -496,7 +494,7 @@ fn served(scope: &Scope, k: usize, variable: i64) -> Result<Vec<Piece>, Error> {
         scope.conn,
         &format!(
             "SELECT start, end, exact, dtype, length, vs_hash, vs_n, cv_pid, sensitive, \
-             identifier, state, end = ?3
+             state, end = ?3
              FROM ({}) WHERE variable_id = ?1 AND table_id = ?2
              ORDER BY start",
             segments(scope)
@@ -528,13 +526,12 @@ fn piece(serving: usize, row: &Row) -> rusqlite::Result<Piece> {
         valueset: hash.map(|h| row.get(6).map(|n| (h, n))).transpose()?,
         class_version: row.get(7)?,
         sensitive: row.get(8)?,
-        identifier: row.get(9)?,
-        state: row.get(10)?,
-        open: row.get(11)?,
+        state: row.get(9)?,
+        open: row.get(10)?,
     })
 }
 
-/// The window findings: the blocking kind (an ambiguous piece) and the warnings, flags
+/// The window findings: the blocking kind (an ambiguous piece), the preliminary warning
 /// and open ends, one per run of adjacent pieces in one table. A preliminary piece is one
 /// only a preliminary release covers (final wins where both exist); it orders, warned.
 fn windows(at: &Located, pieces: &[Piece]) -> Vec<Issue> {
@@ -564,18 +561,6 @@ fn windows(at: &Located, pieces: &[Piece]) -> Vec<Issue> {
         IssueLevel::Warning,
         "preliminary_data",
         &|t, p| format!("{pid} in {t} for {p} is preliminary data: no final release covers it"),
-    );
-    each(
-        &|p| p.sensitive,
-        IssueLevel::Warning,
-        "variable_sensitive",
-        &|t, p| format!("{pid} is sensitive in {t} for {p}"),
-    );
-    each(
-        &|p| p.identifier,
-        IssueLevel::Info,
-        "identifier",
-        &|t, p| format!("{pid} is an identifier in {t} for {p}"),
     );
     each(
         &|p| p.open && !scope.serving[p.serving].table.timeless,
@@ -608,7 +593,8 @@ fn runs(pieces: &[Piece], test: &dyn Fn(&Piece) -> bool) -> Vec<(usize, Interval
 /// (`release.edition_disagreement`), so it reaches the binding through a release of a
 /// serving table that documents the variable and overlaps its pieces there.
 // simplify: F7 marks the release, not the keys that disagree, so a variable the release
-// documents in agreement is reported too; revisit if F7 gains a variable subject.
+// documents in agreement is reported too; revisit if F7 gains a variable subject. That
+// over-report, and an edition the researcher cannot choose, make it an info.
 fn editions(at: &Located, pieces: &[Piece]) -> Result<Vec<Issue>, Error> {
     let scope = at.scope;
     let mut found = Vec::new();
@@ -662,7 +648,7 @@ fn editions(at: &Located, pieces: &[Piece]) -> Result<Vec<Issue>, Error> {
             }
             let days = hull(&hit);
             found.push(at.issue(
-                IssueLevel::Warning,
+                IssueLevel::Info,
                 "edition_disagreement",
                 &s.table.pid,
                 Some(&days),
@@ -732,11 +718,14 @@ fn replaced(at: &Located) -> Result<Vec<Issue>, Error> {
 
 /// The entries: adjacent pieces of one table merge when spelling, type and value set
 /// and classification agree, so a flag-only boundary never splits one; the latest
-/// piece's length stands. More than one spelling/type/value-set form is a `form_change`.
+/// piece's length stands, and an entry is sensitive when any of its pieces is. More
+/// than one spelling/type/value-set form is a `form_change`, naming what changes at
+/// each boundary.
 fn entries(at: &Located, binding: &Binding, pieces: &[Piece]) -> (Vec<OrderEntry>, Option<Issue>) {
     let scope = at.scope;
     let mut merged: Vec<&Piece> = Vec::new();
     let mut spans: Vec<Interval> = Vec::new();
+    let mut sensitive: Vec<bool> = Vec::new();
     for p in pieces {
         let joins = merged.last().is_some_and(|last| {
             last.serving == p.serving
@@ -749,42 +738,33 @@ fn entries(at: &Located, binding: &Binding, pieces: &[Piece]) -> (Vec<OrderEntry
             let n = merged.len() - 1;
             merged[n] = p;
             spans[n].1.clone_from(&p.days.1);
+            sensitive[n] |= p.sensitive;
         } else {
             merged.push(p);
             spans.push(p.days.clone());
+            sensitive.push(p.sensitive);
         }
     }
-    let mut boundaries = Vec::new();
-    let mut spellings = vec![merged[0].spelling.as_str()];
-    for (pair, days) in merged.windows(2).zip(&spans[1..]) {
-        if (&pair[0].spelling, &pair[0].dtype, &pair[0].valueset)
-            != (&pair[1].spelling, &pair[1].dtype, &pair[1].valueset)
-        {
-            boundaries.push(days.0.clone());
-            spellings.push(&pair[1].spelling);
-        }
-    }
-    let change = (!boundaries.is_empty()).then(|| {
+    let changes: Vec<String> = merged
+        .windows(2)
+        .zip(&spans[1..])
+        .filter_map(|(pair, days)| {
+            changed(pair[0], pair[1])
+                .map(|what| format!("From {}, {what}.", words::plain_start(&days.0)))
+        })
+        .collect();
+    let change = (!changes.is_empty()).then(|| {
         let days = (spans[0].0.clone(), spans[spans.len() - 1].1.clone());
         at.issue(
             IssueLevel::Info,
             "form_change",
             scope.table,
             Some(&days),
-            format!(
-                "{} changes form from {} ({})",
-                at.variable.pid,
-                boundaries
-                    .iter()
-                    .map(|d| words::plain_start(d))
-                    .collect::<Vec<_>>()
-                    .join(", "),
-                spellings.join(" -> ")
-            ),
+            format!("{} changes form. {}", at.variable.pid, changes.join(" ")),
         )
     });
     let mut entries = Vec::new();
-    for (p, days) in merged.into_iter().zip(&spans) {
+    for ((p, days), sensitive) in merged.into_iter().zip(&spans).zip(sensitive) {
         let table = &scope.serving[p.serving].table;
         entries.push(OrderEntry {
             source: scope.source.name.clone(),
@@ -805,9 +785,34 @@ fn entries(at: &Located, binding: &Binding, pieces: &[Piece]) -> (Vec<OrderEntry
                 .clone()
                 .map(|(hash, n_items)| OrderValueSet { hash, n_items }),
             classification: p.class_version.clone(),
+            sensitive,
         });
     }
     (entries, change)
+}
+
+/// What changes between two adjacent forms, in plain words (column name, type, codes),
+/// or `None` when spelling, type and value set agree.
+fn changed(before: &Piece, after: &Piece) -> Option<String> {
+    let mut what = Vec::new();
+    if before.spelling != after.spelling {
+        what.push(format!(
+            "the column name changes from {} to {}",
+            before.spelling, after.spelling
+        ));
+    }
+    if before.dtype != after.dtype {
+        let stated = |t: &Option<String>| t.clone().unwrap_or_else(|| "not stated".to_owned());
+        what.push(format!(
+            "the type changes from {} to {}",
+            stated(&before.dtype),
+            stated(&after.dtype)
+        ));
+    }
+    if before.valueset != after.valueset {
+        what.push("the codes change".to_owned());
+    }
+    (!what.is_empty()).then(|| what.join(", "))
 }
 
 /// The result periods of inclusive ISO intervals.

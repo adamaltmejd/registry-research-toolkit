@@ -1,0 +1,14 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/code": ["K9", "H"]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/code": ["K9"]
+    }
+  }
+]
