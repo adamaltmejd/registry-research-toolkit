@@ -512,10 +512,7 @@ impl Context<'_> {
         let prefix = self.config.sheets.codelist_prefix.to_lowercase();
         let mut found = codelists.iter().filter(|(sheet, rows)| {
             let lower = sheet.to_lowercase();
-            let suffix = lower
-                .strip_prefix(&prefix)
-                .unwrap_or(&lower)
-                .trim_start_matches(['_', ' ']);
+            let suffix = lower.trim_prefix(&prefix).trim_start_matches(['_', ' ']);
             !rows.is_empty()
                 && (suffix == key
                     || rows
@@ -585,7 +582,7 @@ impl Context<'_> {
         let mut parse = |index: Option<usize>, end: bool| {
             let text = cell(row, index)?;
             // `1999-`: a start with no end of its own.
-            let stated = text.strip_suffix('-').unwrap_or(&text);
+            let stated = text.trim_suffix('-');
             let bound = bound(stated, end);
             if bound.is_none() {
                 self.warn(&format!(

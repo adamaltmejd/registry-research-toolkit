@@ -158,7 +158,7 @@ pub fn markdown(
         }
         let key = |k: &str| meta.get(k).filter(|v| !v.is_empty());
         let source = key(&config.frontmatter.source);
-        let original = source.and_then(|s| sources.sources.get(s.strip_suffix(".md").unwrap_or(s)));
+        let original = source.and_then(|s| sources.sources.get(s.trim_suffix(".md")));
         if original.is_none() {
             out.warnings.push(format!(
                 "{path}: source {:?} is not in {}; no original URL",

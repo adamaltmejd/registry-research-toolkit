@@ -215,7 +215,7 @@ fn canonical_remote(url: &str) -> Result<String> {
     let host = host.rsplit('@').next().unwrap_or(host);
     let host = host.split(':').next().unwrap_or(host);
     let path = path.trim_end_matches('/');
-    let path = path.strip_suffix(".git").unwrap_or(path);
+    let path = path.trim_suffix(".git");
     let name = |s: &str| {
         !s.is_empty()
             && s.bytes()

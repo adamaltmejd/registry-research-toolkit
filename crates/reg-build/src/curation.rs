@@ -470,7 +470,7 @@ fn inventory_error(
     format!(
         "{}:{}: {message}",
         root.join(&at.input).display(),
-        at.at.strip_prefix("line=").unwrap_or(&at.at)
+        at.at.trim_prefix("line=")
     )
 }
 
@@ -849,11 +849,7 @@ fn sentinel_conflicts(
                 "sentinel-conflict: shared value set {} {detail}; other binding {}:{}",
                 declaration.hash,
                 other.locator.input,
-                other
-                    .locator
-                    .at
-                    .strip_prefix("line=")
-                    .unwrap_or(&other.locator.at),
+                other.locator.at.trim_prefix("line="),
             ),
         ));
     };
@@ -903,9 +899,9 @@ fn sentinel_conflicts(
                     other.family,
                     other.version,
                     at.input,
-                    at.at.strip_prefix("line=").unwrap_or(&at.at),
+                    at.at.trim_prefix("line="),
                     other_at.input,
-                    other_at.at.strip_prefix("line=").unwrap_or(&other_at.at),
+                    other_at.at.trim_prefix("line="),
                 );
                 for declaration in claims {
                     refuse(declaration, other_claims[0], detail.clone());

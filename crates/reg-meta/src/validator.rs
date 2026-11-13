@@ -116,9 +116,7 @@ pub async fn guard(
         .and_then(|value| value.to_str().ok())
         .map_or_default(|value| value.split(',').map(str::trim).collect::<Vec<_>>());
     // RFC 9110's weak comparison: Cloudflare weakens the ETag when it compresses.
-    let listed = tags
-        .iter()
-        .any(|tag| tag.strip_prefix("W/").unwrap_or(tag) == etag);
+    let listed = tags.iter().any(|tag| tag.trim_prefix("W/") == etag);
     let any = tags.contains(&"*");
     let mut response = if listed {
         StatusCode::NOT_MODIFIED.into_response()

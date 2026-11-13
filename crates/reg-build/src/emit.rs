@@ -1400,8 +1400,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
         .filter_map(|s| {
             let table = s.strip_prefix("CREATE TABLE ")?;
             table
-                .strip_prefix("IF NOT EXISTS ")
-                .unwrap_or(table)
+                .trim_prefix("IF NOT EXISTS ")
                 .split_whitespace()
                 .next()
         })

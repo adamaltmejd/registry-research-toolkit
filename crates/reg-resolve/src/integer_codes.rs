@@ -16,7 +16,7 @@ use crate::{ResolvedOccurrence, Variable, same_form};
 /// `0`, `7`, `-12`: no sign without digits, no leading zero, no `-0`. A zero-padded or
 /// alphanumeric code keeps the column text; so does a decimal point or a comma.
 fn integer_code(code: &str) -> bool {
-    let digits = code.strip_prefix('-').unwrap_or(code);
+    let digits = code.trim_prefix('-');
     !digits.is_empty()
         && digits.bytes().all(|b| b.is_ascii_digit())
         && (digits == "0" || !digits.starts_with('0'))

@@ -168,7 +168,7 @@ impl Grammar {
             if let Some(inner) = text.strip_prefix('(').and_then(|t| t.strip_suffix(')')) {
                 text = inner;
             } else if !text.contains('(') {
-                text = text.strip_suffix(')').unwrap_or(text);
+                text = text.trim_suffix(')');
             }
             let text = text.trim();
             (!text.is_empty()).then(|| text.to_owned())

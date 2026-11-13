@@ -152,7 +152,7 @@ fn search(server: &Server, params: &Params) -> Result<Value, Error> {
 /// Tags are search-only refs, so their published vocabulary lives in `var_set`,
 /// without `ident` rows. A paired catalog may define the tag in either origin.
 fn require_tag(server: &Server, conn: &Connection, value: &str) -> Result<(), Error> {
-    let pid = format!("tag/{}", value.strip_prefix("tag/").unwrap_or(value));
+    let pid = format!("tag/{}", value.trim_prefix("tag/"));
     let exists = |conn: &Connection| -> Result<bool, Error> {
         Ok(conn.query_row(
             "SELECT EXISTS(SELECT 1 FROM var_set WHERE kind = 'tag' AND pid = ?)",
@@ -226,7 +226,7 @@ fn search_origin(
     };
     let tag = params
         .get("tag")
-        .map(|tag| format!("tag/{}", tag.strip_prefix("tag/").unwrap_or(tag)));
+        .map(|tag| format!("tag/{}", tag.trim_prefix("tag/")));
     let filter = search_filter(server, conn, held)?;
     let (start, end) = period.unzip();
     let total = paired.then(|| conn.query_row(
