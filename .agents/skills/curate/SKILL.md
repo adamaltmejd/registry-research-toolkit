@@ -39,7 +39,8 @@ ask.
 - Read every raw documentation row of a column and year. The reader keeps only the
   first row per column-year (#2431), yet the provider's export can document one column
   several times a year (one row per form or scheme, differing in the operational
-  definition). Catalog wordings can therefore be incomplete. Never split or open on
+  definition). Catalog wordings can therefore be incomplete; a variable whose rows
+  differ carries an F6 source conflict in the findings. Never split or open on
   first-row differences alone.
 - Provider exports contain errors: a text recycled from another column's earlier year,
   paired columns swapped, a text copied between variables (a gain text on a loss
@@ -79,13 +80,11 @@ ask.
   are a candidate split without a succession edge.
 - Do not split on a lone contradicting row (open it), on first-row differences, or on a
   historical recoding within one column.
-- A set is closely related variables of one register, not necessarily one measure.
-  Dimensions its members vary along (unit, a component beside its sum, whose value,
-  sub-population, classification version, level of aggregation) do not split it; a
-  split by level leaves each level in the set.
-- Axes are optional. Curate them only for a set of more than two members where some
-  axis value is shared by several members; in smaller sets the labels and descriptions
-  are enough.
+- Set membership and the axis bar follow `crates/DESIGN.md`, "Sets and tags": a set is
+  closely related variables of one register, not necessarily one measure; inputs stay
+  out. When a variable is split by level of aggregation, each resulting variable stays
+  in the set. Axes are optional: curate them only for a set of more than two members
+  where some axis value is shared by several members.
 - After any membership change check set sizes. A set left with one member fails the
   build (`set-too-small`); `reg-build lock` does not catch it.
 - New ledger ids follow the conventions in the register's `ids.toml`.
@@ -124,8 +123,9 @@ Run all of it before the PR is ready.
    reads the whole corpus, so run one at a time (a mutex directory taken with `mkdir`
    and released by `trap`). Batch locks: one at the end of a batch. Commit the refreshed
    locks. Confirm no diagnostic in the new blocks and that no variable lacks a ledger id.
-5. Before merge: a `--release` build (build-db), or at least a set-size check of
-   every touched set. CI green and rebased on `origin/main`.
+5. Before merge: a lane checks every touched set's size by script; the Operator runs a
+   build (build-db), which refuses any set below two members. CI green and rebased on
+   `origin/main`.
 
 Never run a real-seed `build` as a check inside a lane, and never `pkill` or `killall`.
 
