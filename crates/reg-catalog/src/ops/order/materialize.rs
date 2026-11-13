@@ -1091,8 +1091,7 @@ fn keys(
                     let name = found
                         .iter()
                         .find(|f| f.0 == *column)
-                        .map(|f| f.4.clone())
-                        .unwrap_or_default();
+                        .map_or_default(|f| f.4.clone());
                     for piece in overlap(&days, &[*d]) {
                         // A bound key reported its caveat at the binding (it stays
                         // `ordered` above); an added key reports it at the source.
