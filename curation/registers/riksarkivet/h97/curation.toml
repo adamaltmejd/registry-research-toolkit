@@ -1,0 +1,905 @@
+[[statement]]
+kind = "set"
+subject = "amne-i-avgangsbetyg: AAK"
+fields = { "variable" = "arskurs" }
+evidence = "Same column name, different facts: the school year of the course (19BX, 19CX) or the number of school years of the subject (13XX).\nÅrskurs: Årskurs. 1 - 4.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls), tabellen Ämne i avgångsbetyg (19CX); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "enstaka-amne: AAK"
+fields = { "variable" = "arskurs" }
+evidence = "Same column name, different facts: the school year of the course (19BX, 19CX) or the number of school years of the subject (13XX).\nÅrskurs: Årskurs. 1 - 4.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls), tabellen Enstaka ämne (19BX); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "utlandska-betygsmotsvarigheter: AAK"
+fields = { "variable" = "antal-arskurser-for-amnet" }
+evidence = "Same column name, different facts: the school year of the course (19BX, 19CX) or the number of school years of the subject (13XX).\nAntal årskurser för ämnet: Antal årskurser för ämnet.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls), tabellen Utländska betygsmotsvarigheter (13XX); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "amne-i-avgangsbetyg: AEMN_KOD"
+fields = { "variable" = "amneskod-aemn-kod" }
+evidence = "Same column name, different code spaces: 14GX points at Ämnen i programgymnasiet (14FX, six characters), the other tables at Ämnen (14XX).\nÄmneskod: Ämneskod. Se tabell Ämnen (14XX).\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls), tabellen Ämne i avgångsbetyg (19CX); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "amnen: AEMN_KOD"
+fields = { "variable" = "amneskod-aemn-kod" }
+evidence = "Same column name, different code spaces: 14GX points at Ämnen i programgymnasiet (14FX, six characters), the other tables at Ämnen (14XX).\nÄmneskod: Ämneskod.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls), tabellen Ämnen (14XX); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "enstaka-amne: AEMN_KOD"
+fields = { "variable" = "amneskod-aemn-kod" }
+evidence = "Same column name, different code spaces: 14GX points at Ämnen i programgymnasiet (14FX, six characters), the other tables at Ämnen (14XX).\nÄmneskod: Ämneskod. Se tabell Ämnen (14XX).\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls), tabellen Enstaka ämne (19BX); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "komvux-kurser: AEMN_KOD"
+fields = { "variable" = "amneskod-aemn-kod" }
+evidence = "Same column name, different code spaces: 14GX points at Ämnen i programgymnasiet (14FX, six characters), the other tables at Ämnen (14XX).\nÄmneskod: Ämneskod. Se tabell Ämnen (14XX).\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls), tabellen Kurser i KOMVUX (14AX); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "motsvarande-amneskod: AEMN_KOD"
+fields = { "variable" = "amneskod-aemn-kod" }
+evidence = "Same column name, different code spaces: 14GX points at Ämnen i programgymnasiet (14FX, six characters), the other tables at Ämnen (14XX).\nÄmneskod: Ämneskod. Se tabell Ämnen (14XX).\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls), tabellen Motsvarande ämneskod för utländska betyg (19DX); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "utlandska-betygsmotsvarigheter: AEMN_KOD"
+fields = { "variable" = "amneskod-aemn-kod" }
+evidence = "Same column name, different code spaces: 14GX points at Ämnen i programgymnasiet (14FX, six characters), the other tables at Ämnen (14XX).\nÄmneskod: Ämneskod. Se tabell Ämnen (14XX).\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls), tabellen Utländska betygsmotsvarigheter (13XX); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "nya-kurser-programgymnasiet: AEMN_KOD"
+fields = { "variable" = "amneskod-nya-kurser-programgymnasiet" }
+evidence = "Same column name, different code spaces: 14GX points at Ämnen i programgymnasiet (14FX, six characters), the other tables at Ämnen (14XX).\nÄmneskod: Ämneskod. Den angivna främmande nyckeln täcker långt ifrån samtliga de koder som används. Se tabell Ämnen i programgymnasiet (14FX).\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls), tabellen Nya kurser i programgymnasiet (14GX); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuell-termin"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuell-terminsidentitet"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:aktuellt-ar"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:aldre-an-25-fyra-ars-ale"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:allman-behorighet-i-engelska-for-utlandska-betyg"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:allman-behorighet-i-svenska-for-utlandska-betyg"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:allman-behorighet-uppnadd"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:amnesbenamning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:amnesbenamning-i-kortform"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:amnesbeskrivning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:amnesbeskrivning-i-kortform"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:amneskod-aemn-kod"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:amneskod-aemn-kod-pg"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:amneskod-nya-kurser-programgymnasiet"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:amnesomfattning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:andra-ersattningskurskoden"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:anmalningskod"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:antagen-i-urval-nummer"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:antagen-i-urvalsgrupp"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arskurser"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arskurser-for-amnet"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-ingaende-betygsvarden"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-poang"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-veckotimmar-f-amnet"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-studievagen-i-amnesform"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:arskurs"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:avser-ar"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:avser-termin"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:behandlingsstatus-behandl-stat"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:benamning-pa-kursen"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:beskrivning-av-amnesomfattning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:betygsar"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:betygsmedelvarde-utlandska-betyg"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:betygsutfardandedatum"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:betygsvarde"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:dagar-med-godkand-ale"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-for-dispensansokan"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:etapp"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:examensbenamning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:examenskod"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:examensmedelvarde-utlandska-betyg"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:folkhogskoleutbildning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:forkortad-amneskod"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:forsta-ersattningskurskoden"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:forutbildnings-studievagskod"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:godk-i-provvaerd-m"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:godkand-underkand"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:hogskoleidentitet"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:hogskolenamn"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:hogskolenamn-i-kortform"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:hogsta-provresultat"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:individuell-provning-ip-x"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:individuell-provning-status"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:inriktningsbenamning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:inriktningskod"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:intern-studievagskod"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:jamforelsetal"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kan-kursen-hoja-j-tal"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kategori-individuell-provning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:klartext-for-behandlingsstatus"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:klartext-for-status-individuell-provning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:klartext-for-typ-av-avgangsbetyg"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:klartext-for-typ-av-prov"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kod-for-3-ale-4-ar"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kod-for-4-ale-5-ar"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kod-for-ale-5-ar"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kod-for-studieomdome"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kod-for-utbildningsland"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kod-for-utbildningsort"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kompl-folkhogskoleutbildning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kompl-ovrig-utbildning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kompl-trearig-gymn-utbildn"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kompl-trearig-yrkesutbildning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kompl-tvaarig-gymn-utbildn"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kompl-utlandsk-utbildning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kort-text-for-sokalternativ"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kryssruta-komvux"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kursanmarkning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kursbenamning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kursbeskrivning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kurskod"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kurskod-kurskod-pg"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kursniva"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kursomfattningsbeskrivning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kurspoang-i-timmar-kurspoaeng"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kurspoang-i-timmar-kurspoeng-ny"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kurspoang-motsvarande-antal-undervisningstimmar"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:kurstyp"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:lagsta-provresultat"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:linjebenamning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:linjebenamning-i-kortform"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:linjekod"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:manader-med-godkand-ale"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:markering-att-betygsvarde-d-for-deltagit-kan-forekomma"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:markering-att-betygsvardet-ar-godkant"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:markering-av-karnamne"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:markering-om-betyg-finns"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:minst-fem-ars-ale"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:ny-kurskod"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:omraknat-avgb-mv-utl"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:overklaganmarkering"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:ovrig-utbildning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:prioritetsordning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:provbenamning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:provets-giltighetstid-gilt-aar"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:provets-giltighetstid-gilt-maan"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:provkod"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:provresultat-prov-r"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:provtagningsdatum"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:reservplatsnummer"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskild-behorighet-uppnadd"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:sarskilda-hjalpmedel"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:siffervarde-for-betyg"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:siffv-f-bet-kp-elev"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:sokalternativsbenamning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:soker-anstand"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:soker-dispens"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:studieomdome-1"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:studieomdome-2"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:studieomdome-3"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:studieomdome-i-klartext"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:studieomdomespoang"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:studievagsbenamning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:studievagsbenamning-i-kortform"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:studievagskod-kursomfattning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:svarsmarkering"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:trearig-gymnasieutbildning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:trearig-yrkesutbildning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:tvaarig-gymnasieutbildning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-avgangsbetyg"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-prov"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:underrepresenterat-kon"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:ursprungligt-betygsvarde"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:ursprungligt-provresultat"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsgruppsbenamning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsgruppsidentitet"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsland"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsort"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsort-i-kortform"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandsk-forutbildning"
+fields = { "tags" = ["education"] }
+evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"

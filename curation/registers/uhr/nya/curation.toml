@@ -1,0 +1,665 @@
+[[statement]]
+kind = "set"
+subject = "sok-adm: STATE"
+fields = { "variable" = "status-for-atgardskoden" }
+evidence = "Same column name, different facts: the status of an action code (1-4), of a course (0/1) or of a program (0/1).\nStatus för åtgärdskoden: Status för åtgärdskoden (1=Aktiv, 2=Åtgärdad, 3=Förfrågad, 4=Avförd).\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1), tabellen SOK_ADM, åtgärdskoder på dokument; catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "sok-am: STATE"
+fields = { "variable" = "status-for-atgardskoden" }
+evidence = "Same column name, different facts: the status of an action code (1-4), of a course (0/1) or of a program (0/1).\nStatus för åtgärdskoden: Status för åtgärdskoden (1=Aktiv, 2=Åtgärdad, 3=Förfrågad, 4=Avförd).\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1), tabellen SOK_AM, åtgärdskoder på ärendenivå; catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "urv1-adm: STATE"
+fields = { "variable" = "status-for-atgardskoden" }
+evidence = "Same column name, different facts: the status of an action code (1-4), of a course (0/1) or of a program (0/1).\nStatus för åtgärdskoden: Status för åtgärdskoden (1=Aktiv, 2=Åtgärdad, 3=Förfrågad, 4=Avförd).\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1), tabellen URV1_ADM, åtgärdskoder på dokument; catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "urv1-am: STATE"
+fields = { "variable" = "status-for-atgardskoden" }
+evidence = "Same column name, different facts: the status of an action code (1-4), of a course (0/1) or of a program (0/1).\nStatus för åtgärdskoden: Status för åtgärdskoden (1=Aktiv, 2=Åtgärdad, 3=Förfrågad, 4=Avförd).\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1), tabellen URV1_AM, åtgärdskoder på ärendenivå; catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "urv2-adm: STATE"
+fields = { "variable" = "status-for-atgardskoden" }
+evidence = "Same column name, different facts: the status of an action code (1-4), of a course (0/1) or of a program (0/1).\nStatus för åtgärdskoden: Status för åtgärdskoden (1=Aktiv, 2=Åtgärdad, 3=Förfrågad, 4=Avförd).\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1), tabellen URV2_ADM, åtgärdskoder på dokument; catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "urv2-am: STATE"
+fields = { "variable" = "status-for-atgardskoden" }
+evidence = "Same column name, different facts: the status of an action code (1-4), of a course (0/1) or of a program (0/1).\nStatus för åtgärdskoden: Status för åtgärdskoden (1=Aktiv, 2=Åtgärdad, 3=Förfrågad, 4=Avförd).\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1), tabellen URV2_AM, åtgärdskoder på ärendenivå; catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "sok-course: STATE"
+fields = { "variable" = "kursens-status" }
+evidence = "Same column name, different facts: the status of an action code (1-4), of a course (0/1) or of a program (0/1).\nKursens status: Status som visar ifall kursen är aktuell eller nedlagd (0=Kursen är nedlagd , 1=Kursen är aktuell).\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1), tabellen SOK_COURSE, akademiska kurser; catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "urv1-course: STATE"
+fields = { "variable" = "kursens-status" }
+evidence = "Same column name, different facts: the status of an action code (1-4), of a course (0/1) or of a program (0/1).\nKursens status: Status som visar ifall kursen är aktuell eller nedlagd (0=Kursen är nedlagd , 1=Kursen är aktuell).\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1), tabellen URV1_COURSE, akademiska kurser; catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "urv2-course: STATE"
+fields = { "variable" = "kursens-status" }
+evidence = "Same column name, different facts: the status of an action code (1-4), of a course (0/1) or of a program (0/1).\nKursens status: Status som visar ifall kursen är aktuell eller nedlagd (0=Kursen är nedlagd , 1=Kursen är aktuell).\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1), tabellen URV2_COURSE, akademiska kurser; catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "sok-program: STATE"
+fields = { "variable" = "programmets-status" }
+evidence = "Same column name, different facts: the status of an action code (1-4), of a course (0/1) or of a program (0/1).\nProgrammets status: Om programmet är nedlagt. Även om det är nedlagt utesluter det inte att sökande finns inom programmet då vid vissa högskolor avses enbart att nyantagning till programmet inte är tillåtet. (0=Programmet är nedlagt, 1=Programmet är aktuellt)\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1), tabellen SOK_PROGRAM, akademiska program; catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "urv1-program: STATE"
+fields = { "variable" = "programmets-status" }
+evidence = "Same column name, different facts: the status of an action code (1-4), of a course (0/1) or of a program (0/1).\nProgrammets status: Om programmet är nedlagt. Även om det är nedlagt utesluter det inte att sökande finns inom programmet då vid vissa högskolor avses enbart att nyantagning till programmet inte är tillåtet. (0=Programmet är nedlagt, 1=Programmet är aktuellt)\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1), tabellen URV1_PROGRAM, akademiska program; catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "urv2-program: STATE"
+fields = { "variable" = "programmets-status" }
+evidence = "Same column name, different facts: the status of an action code (1-4), of a course (0/1) or of a program (0/1).\nProgrammets status: Om programmet är nedlagt. Även om det är nedlagt utesluter det inte att sökande finns inom programmet då vid vissa högskolor avses enbart att nyantagning till programmet inte är tillåtet. (0=Programmet är nedlagt, 1=Programmet är aktuellt)\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1), tabellen URV2_PROGRAM, akademiska program; catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "sok-course: CREDIT"
+fields = { "variable" = "kursens-poang" }
+evidence = "Same column name, different facts: the credits of a course or the credit scope of a program.\nKursens poäng: Kursens poäng.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1), tabellen SOK_COURSE, akademiska kurser; catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "urv1-course: CREDIT"
+fields = { "variable" = "kursens-poang" }
+evidence = "Same column name, different facts: the credits of a course or the credit scope of a program.\nKursens poäng: Kursens poäng.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1), tabellen URV1_COURSE, akademiska kurser; catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "urv2-course: CREDIT"
+fields = { "variable" = "kursens-poang" }
+evidence = "Same column name, different facts: the credits of a course or the credit scope of a program.\nKursens poäng: Kursens poäng.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1), tabellen URV2_COURSE, akademiska kurser; catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "sok-program: CREDIT"
+fields = { "variable" = "programmets-poangomfattning" }
+evidence = "Same column name, different facts: the credits of a course or the credit scope of a program.\nProgrammets poängomfattning: Programmets poängomfattning\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1), tabellen SOK_PROGRAM, akademiska program; catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "urv1-program: CREDIT"
+fields = { "variable" = "programmets-poangomfattning" }
+evidence = "Same column name, different facts: the credits of a course or the credit scope of a program.\nProgrammets poängomfattning: Programmets poängomfattning\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1), tabellen URV1_PROGRAM, akademiska program; catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "urv2-program: CREDIT"
+fields = { "variable" = "programmets-poangomfattning" }
+evidence = "Same column name, different facts: the credits of a course or the credit scope of a program.\nProgrammets poängomfattning: Programmets poängomfattning\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1), tabellen URV2_PROGRAM, akademiska program; catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:amne"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:amne-benamning"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:anmalningsalternativ-benamning"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:anmalningsalternativ-engelsk-benamning"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:anmalningskod"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:anmalningsnummer"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:anmalningssatt"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:anmalningssatt-benamning"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:antagning-over-antagningstalet"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:antagningsomgang"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:antagningstal"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:appl-fee-semester-alt"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:appl-fee-state-desc"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:appl-fee-state-id"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:appl-time-type"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:ar"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:avgangsdatum-fran-forutbildning"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:berattigar-till-studiemedel"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:courseoffering-from-scb"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-da-anmalningsalternativet-stalldes-in"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:datum-for-anmalan"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:djup-fordjupningsniva"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:education-level-description"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:educationlevel-id"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:endast-inom-kurspaket"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:examina-national"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:finansieringsform"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:forsta-tillatna-antagningstermin"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:forutbildningskod"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:grundlaggande-behorighet"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:hogskola"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:hogskola-benamning"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:hogskoleprovsresultat-skiljekriterium"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:institution-omrade"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:internationellt-kurstillfalle"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:jamforelsetal-som-text"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunikationssatt"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:kommunikationssatt-benamning"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-benamning"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:kurs-engelsk-benamning"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:kursens-poang"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:kursens-status"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:kurskod"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:kurspaket"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:kurstakt"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:kurstid"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:lprog"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:max-value"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:min-value"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:niva-forkunskapskrav"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:pay"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:planeringstal"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:poang"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:poanggivande"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:poangomfattning-under-startterminen"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:program-benamning"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:program-engelsk-benamning"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:programinriktningskod"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:programkod"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:programmets-poangomfattning"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:programmets-status"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:rangordning-av-sokalternativ"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:rules-for-complement"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:scale"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:sel-criterion-2"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:sel-criterion-alt"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:semesterid"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:sen-anmalan-tillaten"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:sista-tillatna-antagningstermin"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:slutvecka"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:sokt-inom-program"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:sokt-sent"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:startdatum"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:startperiod"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:starttermin"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:startvecka"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:suninr3"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:sunniva3"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:termin"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:termins-eller-kursregistrering"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:tuition-fee-state-desc"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:tuition-fee-state-id"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:underrepresenterat-kon"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:undervisningsform"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:undervisningssprak"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsgrupp"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsomgang"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsresultat-i-urvalsgruppen"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsort"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsort-benamning"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:utlandskt-gymnasiebetyg-identitet"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:varde-jamforelsetal-i-urvalsgruppen"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:yprog"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
