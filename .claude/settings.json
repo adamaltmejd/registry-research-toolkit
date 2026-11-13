@@ -1,6 +1,6 @@
 {
   "sandbox": {
-    "enabled": false,
+    "enabled": true,
     "excludedCommands": [
       "bash reg_webapp/dev/dev.sh *",
       "reg_webapp/dev/dev.sh *",
