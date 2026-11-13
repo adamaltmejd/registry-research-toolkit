@@ -182,8 +182,8 @@ The reader verifies the manifest's SHA-256. Keep the source revision, inputs com
 manifest, build report and subsequent check outputs in the release evidence directory.
 Use the full manifest: no register subset or diagnostic artifact. Build optimized
 (`target/release`): the real build is long and the verifiers and conformance run the
-same binaries. `Operation not permitted` on `deps/*.d` means a shared `sccache` wrapper:
-run with `RUSTC_WRAPPER= CARGO_BUILD_RUSTC_WRAPPER=`.
+same binaries. If you see `Operation not permitted` on `deps/*.d` or `build/*.d`,
+restart the session.
 
 ```sh
 set -euo pipefail
