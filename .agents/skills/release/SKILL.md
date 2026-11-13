@@ -168,9 +168,10 @@ prev=/absolute/path/to/previous-release-dir  # reg_meta.db, decompressed (8b)
 
 #### 8a. Build the catalog
 
-Use an inputs worktree at the exact repository and commit in `curation/inputs.toml`.
-Check its HEAD and clean status before building; never edit the pinned inputs in place
-or mix files from different revisions. For every input with a `release` field, fetch its
+Build from a shared clone of the inputs repository at the exact repository and commit in
+`curation/inputs.toml` (build-db skill, "Select inputs"). Check its HEAD and clean
+status before building; never edit the pinned inputs in place or mix files from
+different revisions. For every input with a `release` field, fetch its
 pinned asset beforehand to `<assets>/<release>/<path>`:
 
 ```sh
@@ -181,12 +182,12 @@ The reader verifies the manifest's SHA-256. Keep the source revision, inputs com
 manifest, build report and subsequent check outputs in the release evidence directory.
 Use the full manifest: no register subset or diagnostic artifact. Build optimized
 (`target/release`): the real build is long and the verifiers and conformance run the
-same binaries. `Operation not permitted` on `deps/*.d` means a shared `sccache` wrapper:
-run with `RUSTC_WRAPPER= CARGO_BUILD_RUSTC_WRAPPER=`.
+same binaries. If you see `Operation not permitted` on `deps/*.d` or `build/*.d`,
+restart the session.
 
 ```sh
 set -euo pipefail
-inputs=/absolute/path/to/pinned-inputs-worktree
+inputs=/absolute/path/to/pinned-inputs-clone
 assets=/absolute/path/to/pinned-release-assets
 evidence=/absolute/path/to/release-evidence
 version=X.Y.Z

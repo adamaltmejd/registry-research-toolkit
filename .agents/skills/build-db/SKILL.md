@@ -23,10 +23,33 @@ build is long and the verifiers and conformance run the same binaries.
 Every input lives in the private repository `adamaltmejd/registry-catalog-inputs`; the
 public repository holds code and authored curation (`curation/`) only.
 `curation/inputs.toml` pins the inputs repository, its commit, and each input with its
-reader. Run every build against a worktree of the inputs repository at exactly that
-commit (`git -C <inputs-checkout> worktree add --detach <dir> <commit>`), never its
-default branch, and never edit it in place. For every input with a `release` field,
-download its pinned asset to `<assets>/<release>/<path>` first
+reader. Run every build against a checkout of the inputs repository at exactly that
+commit, never its default branch, and never edit it in place. Make it a `--shared`
+clone of the main checkout's `.local/registry-catalog-inputs` in `$TMPDIR`: it borrows
+that repository's objects, so it downloads nothing and its `.git` is a few hundred KB.
+Don't add a worktree to the nested checkout; a worktree session's git guard refuses it.
+
+```sh
+git clone --shared --no-checkout <main-checkout>/.local/registry-catalog-inputs <tmpdir>/inputs
+git -C <tmpdir>/inputs cat-file -e <commit>^{commit}
+git -C <tmpdir>/inputs fetch https://github.com/<inputs-repo>.git <commit>
+git -C <tmpdir>/inputs checkout --detach <commit>
+git -C <tmpdir>/inputs status --porcelain --untracked-files=all
+```
+
+Run the `fetch` only if `cat-file` fails (the pin is not in the local checkout).
+`<main-checkout>` is the primary repository checkout, not the worktree; `<inputs-repo>`
+and `<commit>` are the `repo` and `commit` in `curation/inputs.toml`. Without a local
+inputs checkout, clone `https://github.com/<inputs-repo>.git` with
+`--filter=blob:none --no-checkout` instead (about 1.1 GB more).
+Run these as separate commands with literal paths: the guard refuses a `$TMPDIR` or
+`${…}` word in a git command. The working tree is about 6.4 GB. Don't run `git gc` or
+`git prune` in the source checkout while the clone exists, since the clone reads its
+objects. Delete the clone after the last step that reads `$inputs` (`build`, `lock`,
+`holdings`, the release's checks).
+
+For every input with a `release` field, download its pinned asset to
+`<assets>/<release>/<path>` first
 (`gh release download <input-release> --repo <inputs-repo> --pattern <input-path> --dir <assets>/<input-release>`);
 the reader verifies the manifest's SHA-256.
 
