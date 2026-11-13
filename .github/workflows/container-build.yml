@@ -367,7 +367,7 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@ed8efb33836e8b2096c7fd3ba1c8afe303ebbff1 # 1.6
         if: steps.head.outputs.skip != 'true'
         with:
-          version: "0.5.8"
+          version: "0.5.10"
       # Two gates guard a bad image: the container entrypoint probes
       # `context`, `search`, docs search and `/mcp` before `reg-meta serve` takes traffic (a
       # bad image exits non-zero), and fly.toml's /healthz HTTP check must

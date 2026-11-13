@@ -234,7 +234,7 @@ jobs:
           persist-credentials: false
       - uses: superfly/flyctl-actions/setup-flyctl@ed8efb33836e8b2096c7fd3ba1c8afe303ebbff1 # 1.6
         with:
-          version: "0.5.8"
+          version: "0.5.10"
       # The entrypoint gate and the Fly config's HTTP check must pass before flyctl
       # reports success. --ha=false keeps the single-machine topology.
       - run: flyctl deploy --config "$FLY_CONFIG" --app "$FLY_APP" --image "$IMAGE" --ha=false
