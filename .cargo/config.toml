@@ -4,6 +4,10 @@
 [profile.dev.package.sha2]
 opt-level = 3
 
+# Repo policy: no dependency version younger than 7 days (also renovate.json, bunfig.toml).
+[registry]
+global-min-publish-age = "7 days"
+
 # Repository tooling (crates/xtask): `cargo xtask gh-issue view <n>`.
 [alias]
 xtask = "run -q -p xtask --"

@@ -46,11 +46,17 @@ line. Record held-back packages and the specific constraint; do not force every
 transitive package to its newest version through overrides. Docker tag/digest pairs must
 identify the same exact multi-architecture image.
 
-Read the repository's release-age policy: no minimum release age. The SPA's explicit
-`minimumReleaseAge = 0` (`reg_webapp/frontend/bunfig.toml`) prevents an inherited host
-delay; deleting it is not equivalent. Prefer task-local tooling to modifying shared host
-installations, and verify the tool actually invoked by a gate step or image rather than
-relying on the shell's PATH.
+Read the repository's release-age policy: no version younger than 7 days, in every
+source. Cargo enforces it from `.cargo/config.toml` (`registry.global-min-publish-age`),
+bun from `reg_webapp/frontend/bunfig.toml` (`minimumReleaseAge`, seconds; explicit, since
+an absent key inherits a host setting), Renovate from `renovate.json`. A requirement
+whose every match is too new fails resolution: wait for it to age, do not lower it.
+Existing lock entries stay valid for `--locked` and `--frozen-lockfile`: locked versions
+are kept when the policy changes or an entry is young, so do not run `cargo update` just
+to age the lock (plain `cargo update` downgrades younger entries). Check the publish
+date of Actions, Docker and tool pins yourself. Prefer task-local tooling to modifying
+shared host installations, and verify the tool actually invoked by a gate step or image
+rather than relying on the shell's PATH.
 
 ## Update and repair in one worktree
 

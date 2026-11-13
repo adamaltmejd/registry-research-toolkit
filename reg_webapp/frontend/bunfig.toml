@@ -1,5 +1,5 @@
-# No minimum release age (repo policy: new releases are taken at once,
-# Renovate included). Explicit 0, not omitted: an absent key inherits a global bunfig.toml
-# waiting period, which resolves differently from the committed bun.lock.
+# Repo policy: no dependency version younger than 7 days (also renovate.json,
+# .cargo/config.toml). Seconds. Explicit, not omitted: an absent key inherits a host
+# bunfig.toml, which may set a different waiting period.
 [install]
-minimumReleaseAge = 0
+minimumReleaseAge = 604800

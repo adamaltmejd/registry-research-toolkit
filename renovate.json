@@ -7,6 +7,12 @@
   "timezone": "Europe/Stockholm",
   "dependencyDashboard": true,
   "automerge": false,
+  "description": [
+    "Repo policy: no dependency version younger than 7 days, for every manager. Cargo and bun enforce it themselves (.cargo/config.toml, reg_webapp/frontend/bunfig.toml), so lockfile maintenance resolves under it too."
+  ],
+  "minimumReleaseAge": "7 days",
+  "minimumReleaseAgeBehaviour": "timestamp-optional",
+  "internalChecksFilter": "strict",
   "lockFileMaintenance": {
     "enabled": true,
     "schedule": [
@@ -29,7 +35,14 @@
   ],
   "packageRules": [
     {
-      "description": "Nightly: everything the builder does not load (Actions, Docker, tool pins, the SPA's deps), none of which changes the built catalog bytes. No minimum release age anywhere (repo policy); this also lifts config:recommended's npm delay.",
+      "description": "Every package and update type. config:recommended's security:minimumReleaseAgeNpm sets npm to 3 days and lifts it for lockfile maintenance, pins and bumps; a later rule matching everything restores the repo's 7 days.",
+      "matchPackageNames": [
+        "*"
+      ],
+      "minimumReleaseAge": "7 days"
+    },
+    {
+      "description": "Nightly: everything the builder does not load (Actions, Docker, tool pins, the SPA's deps), none of which changes the built catalog bytes.",
       "matchPackageNames": [
         "*"
       ],
@@ -37,8 +50,7 @@
       "schedule": [
         "before 6am"
       ],
-      "separateMajorMinor": false,
-      "minimumReleaseAge": null
+      "separateMajorMinor": false
     },
     {
       "description": "Weekly: what the builder loads, every Cargo manifest.",
@@ -61,6 +73,7 @@
         "lockFileMaintenance"
       ],
       "groupName": "weekly",
+      "minimumReleaseAge": "7 days",
       "schedule": [
         "before 6am on monday"
       ],
