@@ -122,6 +122,16 @@ period = "school-year"
 pattern = "läsåret {year}/{year_to}"
 period = "school-year"
 
+# HREG: "Läsåren 1993/1994 - 2024/2025".
+[[names.forms]]
+pattern = "läsåren {year}/{next} - {year_to}/{next_to}"
+period = "school-years"
+
+# The FoB view: "FoB1970", the census year.
+[[names.forms]]
+pattern = "fob {year}"
+period = "year"
+
 [[names.forms]]
 pattern = "{year} {term}"
 period = "term"
