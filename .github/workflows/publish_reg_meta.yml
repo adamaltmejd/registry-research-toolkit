@@ -94,9 +94,7 @@ jobs:
       EXE: ${{ matrix.exe }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - uses: dtolnay/rust-toolchain@b725eda525362e7cf34af9a7243cac1e3f01a7ec # stable
-        with:
-          targets: ${{ matrix.spa && 'wasm32-unknown-unknown' || '' }}
+      - run: rustup toolchain install
       # A runner image that changes architecture must fail here, not ship a
       # mislabelled asset.
       - name: Check the host target
