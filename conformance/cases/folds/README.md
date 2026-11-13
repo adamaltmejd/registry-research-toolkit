@@ -37,5 +37,5 @@ Selection per fold, as generated, over assigned scalars excluding private use:
 - 300 seeded random strings and a fixed list of edge inputs, among them `straße`, `ﬁlm`
   and `ＡＢＣ`.
 
-Python's UCD (16.0 in Python 3.14) is older than `reg-core`'s (17.0). Any input holding
+Python's UCD (16.0 in Python 3.14) is older than `reg-core`'s (18.0). Any input holding
 a character Python leaves unassigned, or U+0295 (Ll in 16.0, Lo in 17.0), is excluded.

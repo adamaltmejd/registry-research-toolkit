@@ -209,8 +209,7 @@ fn served_params(operation: &Value) -> BTreeMap<String, Value> {
 /// An operation row's `params`; a row without the key (`context`) takes none.
 fn row_params(row: &toml::Table) -> toml::Table {
     row.get("params")
-        .map(|params| params.as_table().unwrap().clone())
-        .unwrap_or_default()
+        .map_or_default(|params| params.as_table().unwrap().clone())
 }
 
 /// A row with a `project` parameter takes it as the route's JSON object body, never a

@@ -3,7 +3,7 @@
 #[test]
 fn unicode_data_is_on_one_version() {
     let ours = reg_core::UNICODE_VERSION;
-    assert_eq!(ours, (17, 0, 0));
+    assert_eq!(ours, (18, 0, 0));
     assert_eq!(char::UNICODE_VERSION, ours, "Rust std");
     let (major, minor, update) = unicode_properties::UNICODE_VERSION;
     assert_eq!(

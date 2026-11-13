@@ -196,7 +196,7 @@ pub fn read(
         to: None,
         locator: Locator {
             input: rel.to_owned(),
-            at: dataset.map(|d| format!("{d}!")).unwrap_or_default(),
+            at: dataset.map_or_default(|d| format!("{d}!")),
         },
     }));
 

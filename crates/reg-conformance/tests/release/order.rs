@@ -273,7 +273,7 @@ fn census(db: &Connection, holdings: Option<&Connection>) -> (Vec<Sampled>, i64)
     let pids = candidates(db, holdings);
     // (table, variable, database) of every row-key placement.
     let key_pairs: HashSet<(String, String, String)> = holdings
-        .map(|h| {
+        .map_or_default(|h| {
             rows(
                 h,
                 "SELECT DISTINCT m.table_pid, m.variable_pid, h.space FROM holding_mapping m
@@ -283,7 +283,6 @@ fn census(db: &Connection, holdings: Option<&Connection>) -> (Vec<Sampled>, i64)
                 |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)),
             )
         })
-        .unwrap_or_default()
         .into_iter()
         .collect();
     let step = (pids.len() / SAMPLE).max(1);

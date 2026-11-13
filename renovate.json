@@ -69,16 +69,6 @@
       ]
     },
     {
-      "description": "Hold: unicode-properties 0.1.5 is Unicode 18 and Rust std is on 17; reg-core keeps one Unicode version (crates/reg-core/Cargo.toml). Drop when the toolchain moves to Unicode 18.",
-      "matchDatasources": [
-        "crate"
-      ],
-      "matchPackageNames": [
-        "unicode-properties"
-      ],
-      "allowedVersions": "<=0.1.4"
-    },
-    {
       "description": "Hold: the SPA's `typescript` is only openapi-typescript's peer (gen:types), which needs the JS compiler API that TypeScript 7 dropped. Type checking uses `@typescript/native` (TS 7), which this rule does not match. Drop when openapi-typescript supports TS 7.",
       "matchDepNames": [
         "typescript"

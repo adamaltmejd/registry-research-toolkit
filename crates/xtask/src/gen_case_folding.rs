@@ -7,7 +7,7 @@
 //! output. Fetch the file first, so this tool needs no TLS client:
 //!
 //! ```sh
-//! curl -fsSO https://www.unicode.org/Public/17.0.0/ucd/CaseFolding.txt
+//! curl -fsSO https://www.unicode.org/Public/18.0.0/ucd/CaseFolding.txt
 //! cargo xtask gen-case-folding --source CaseFolding.txt
 //! ```
 //!
@@ -26,9 +26,9 @@ const EXIT_USAGE: u8 = 2;
 
 const USAGE: &str = "usage: cargo xtask gen-case-folding --source <CaseFolding.txt>";
 
-const UCD_VERSION: (u8, u8, u8) = (17, 0, 0);
-const SOURCE_URL: &str = "https://www.unicode.org/Public/17.0.0/ucd/CaseFolding.txt";
-const SOURCE_SHA256: &str = "ff8d8fefbf123574205085d6714c36149eb946d717a0c585c27f0f4ef58c4183";
+const UCD_VERSION: (u8, u8, u8) = (18, 0, 0);
+const SOURCE_URL: &str = "https://www.unicode.org/Public/18.0.0/ucd/CaseFolding.txt";
+const SOURCE_SHA256: &str = "a004797658a457bec4dc11683e39f69249ea3b595b752dbea6721c4c9f587b0d";
 const STATUSES: [&str; 2] = ["C", "F"];
 
 /// Code point -> (folded code points, character name).

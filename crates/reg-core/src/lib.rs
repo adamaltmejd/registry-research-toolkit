@@ -7,8 +7,8 @@
 //! intervals ([`merge`], [`render`]): the shared contracts of `crates/DESIGN.md`, "One
 //! implementation per contract".
 //!
-//! All Unicode data is on one version, [`UNICODE_VERSION`] (17.0.0): Rust std's
-//! `to_lowercase` and `White_Space`, `unicode-properties` 0.1.4 (general category) and
+//! All Unicode data is on one version, [`UNICODE_VERSION`] (18.0.0): Rust std's
+//! `to_lowercase` and `White_Space`, `unicode-properties` 0.1.5 (general category) and
 //! the generated case-folding table.
 //!
 //! The oracles are `conformance/cases/folds/`, `conformance/cases/grammar/` and

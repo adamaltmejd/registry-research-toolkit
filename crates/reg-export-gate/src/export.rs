@@ -456,19 +456,17 @@ pub(crate) fn write_report(
         gate_version: VERSION,
         result: if refusal.is_some() { "refused" } else { "pass" },
         code: refusal.map(|r| r.code.as_str()),
-        findings: refusal
-            .map(|r| {
-                r.findings
-                    .iter()
-                    .map(|f| ReportFinding {
-                        file: f.file.as_deref(),
-                        column: f.column.as_deref(),
-                        position: f.position,
-                        rule: f.rule,
-                    })
-                    .collect()
-            })
-            .unwrap_or_default(),
+        findings: refusal.map_or_default(|r| {
+            r.findings
+                .iter()
+                .map(|f| ReportFinding {
+                    file: f.file.as_deref(),
+                    column: f.column.as_deref(),
+                    position: f.position,
+                    rule: f.rule,
+                })
+                .collect()
+        }),
     };
     if !std::fs::symlink_metadata(&dir).is_ok_and(|m| m.is_dir()) {
         return;

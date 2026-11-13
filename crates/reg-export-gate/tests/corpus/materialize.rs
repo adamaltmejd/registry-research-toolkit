@@ -102,13 +102,11 @@ fn repeated<T: Clone>(values: &[T], repeat: Option<&Value>) -> Vec<T> {
 }
 
 fn string_map(v: Option<&Value>) -> HashMap<String, String> {
-    v.and_then(Value::as_object)
-        .map(|m| {
-            m.iter()
-                .map(|(k, v)| (k.clone(), v.as_str().expect("string metadata").to_owned()))
-                .collect()
-        })
-        .unwrap_or_default()
+    v.and_then(Value::as_object).map_or_default(|m| {
+        m.iter()
+            .map(|(k, v)| (k.clone(), v.as_str().expect("string metadata").to_owned()))
+            .collect()
+    })
 }
 
 fn parquet(spec: &Map<String, Value>) -> Vec<u8> {
