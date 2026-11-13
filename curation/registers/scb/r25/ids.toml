@@ -1733,3 +1733,5 @@ public = "iot"
 "summa-vissa-skattepliktiga-formaner-kulonf-2" = ["Individer och dödsbon: KULONF @ 1991-01-01"]
 
 "arbetsinkomst-carb-2" = ["Individer och dödsbon: ARBINK @ 1982-01-01"]
+"antal-i-bostadshushallet" = ["Bostadshushåll: BANTVXHB"]
+"markering-for-hushall-med-vaxelvis-boende-barn" = ["Bostadshushåll: BVXHB"]
