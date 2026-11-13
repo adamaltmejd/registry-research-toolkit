@@ -394,6 +394,12 @@ classification bindings. Accepting one requires reviewed curation and a premise 
   semantics; correcting an occurrence's operational definition does not create a second
   curated variable description. Identity questions require review before splitting
   variables or assigning relation dates.
+- **What a description may state (maintainer 2026-11-13).** A fact the sources state
+  for only some years, forms or members is never extended beyond them. Text shared by
+  many columns (provider boilerplate) stays out of a description. A provider export
+  error (a text recycled from another column or year, paired columns swapped) is
+  corrected at occurrence level only when the column's own text exists elsewhere in the
+  sources and matches; otherwise the text is left out of the description and reported.
 - **Default description (proposed; #2322, maintainer 2026-11-10 and 2026-11-11).** The
   builder, not the reader or the SPA, settles one description per variable. Without a
   curated one, a variable whose used occurrences state two or more provider wordings,
@@ -407,8 +413,8 @@ classification bindings. Accepting one requires reviewed curation and a premise 
   Wordings that genuinely differ, including a partial fold (one wording inside two
   different longer ones), get no default; the reader keeps splitting them by years and
   they are curated. Scope (maintainer 2026-11-11): only variables with several wordings,
-  a single wording staying the reader's provider fallback; and no group members, since a
-  group page would show the default on some lanes and not others. Curated > rule: the
+  a single wording staying the reader's provider fallback; and no set members, since a
+  set page would show the default on some lanes and not others. Curated > rule: the
   rule runs after curation and only where no curated description applied. The artifact
   records the value as a variable override on `description`, rule
   `description-default`; `show` serves it as the `description` without its origin (open
@@ -772,7 +778,10 @@ release assets are left unchanged.
   provisional type, and unknown rows do not widen known lengths. A label, definition,
   operational definition, unit or known type family the rows disagree on keeps the first
   row's as provisional and names the field in the occurrence's `conflicts`, which
-  resolve reports as F6 (source conflict), once per variable.
+  resolve reports as F6 (source conflict), once per variable. The SCB export can
+  document one column several times a year (one row per form or scheme), so the
+  catalog's wording may be incomplete: a split or open decision reads every raw row
+  (#2431).
 - **NFC.** CP1252 decodes to precomposed characters only, so the fold needs no
   normalization step for the SCB export.
 - **SCB value sets.** A row's `CVID` names its value set in `Vardemangder.csv`. Items
@@ -2810,7 +2819,11 @@ statements stating one field of one set conflict at lock with both locations, an
 blank label or description refuses. A set without a curated label is named by its slug. Set labels and
 descriptions occupy `var_set.name_text` and `description_text`; ordered axes occupy
 `var_set_axis`. A variable's `facets = {axis = {value, label}}` supplies its coordinate
-in its one set, in `var_set_member_facet`; omitted labels default to the value. An
+in its one set, in `var_set_member_facet`; omitted labels default to the value. Axes are
+optional (maintainer 2026-11-13): curated only where they help a reader filter or group
+a set of more than two members in which some axis value is shared by several members.
+Otherwise the members' labels and descriptions are enough. A set's description says
+what ties its members together, naming axes only when the set has them. An
 undeclared axis or a variable outside the set refuses at its statement location. These
 tables are part of catalog schema 6.
 
@@ -2824,7 +2837,7 @@ located warnings, while release builds collect the refusals in their report.
 optional `description`, register public id, ordered `axes`, and `members`. Each member
 supplies `fqid`, `name`, `segments` (its whole per-period list: every row `segments`
 serves for it, unpaged, in that order and shape, without evidence) and `facets` (`axis`,
-`value`, `label`) in axis order, so the group page needs one request. The set's
+`value`, `label`) in axis order, so the set page needs one request. The set's
 `description` is its curated one; without one, a description every member states alike
 is sent once as the set's (maintainer 2026-11-04). A member carries its own
 `description` only where it differs from the set's. Members sort by facet value in axis
@@ -2852,16 +2865,22 @@ there should find in one place. A set never spans registers, and finding a conce
 across registers is a tag's job. Its public id addresses presentation only; it is never
 a variable identity, a binding or an order key.
 
-A set is warranted when one register has two or more variables that are each an amount
-(or a coding) of the same concept for some unit under some definition. A component the
-source names as part of the concept counts, and so does a quantity computed from it (a
-ratio to the median, a weight, a cost-adjusted remainder). An input to the concept stays
-out: gross income goes into disposable income but is not a quantity of it. A lone
-variable gets no set. The build refuses fewer than two distinct final member variables
-at the originating curation statement, after all memberships resolve. Repeated
-occurrences of one variable never supply a second member. Artifact verification also
-checks this minimum and that every member belongs to the set's register. Lock and build
-refuse a variable assigned to more than one set, naming every set and originating
+A set is warranted when one register has two or more closely related variables. Most
+often each is an amount (or a coding) of the same concept for some unit under some
+definition; a component the source names as part of the concept counts, and so does a
+quantity computed from it (a ratio to the median, a weight, a cost-adjusted remainder).
+Closely related variables with no common measure (a few related survey items on one
+topic) also form a set. An input to the concept stays out: gross income goes into
+disposable income but is not a quantity of it. A lone variable gets no set. Members that
+differ in whose value they measure, sub-population, classification version or level of
+aggregation stay in one set; when a variable is split by level of aggregation, each
+resulting variable stays in the set (maintainer 2026-11-13). The build refuses fewer
+than two distinct final member variables (`set-too-small`) at the originating curation
+statement, after all memberships resolve. Repeated occurrences of one variable never
+supply a second member. Artifact verification also checks this minimum and that every
+member belongs to the set's register. `reg-build lock` does not check the minimum, so a
+membership change can pass lock and fail the build (#2468). Lock and build refuse a
+variable assigned to more than one set, naming every set and originating
 statement after identity resolution and before membership setters apply; tags are
 exempt.
 
