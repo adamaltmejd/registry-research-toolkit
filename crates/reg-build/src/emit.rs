@@ -826,9 +826,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                 )
             },
         );
-        let presentation = scope
-            .map(|ri| catalog.set_presentation(ri, &name))
-            .unwrap_or_default();
+        let presentation = scope.map_or_default(|ri| catalog.set_presentation(ri, &name));
         let (label, description) = if scope.is_none() {
             let tag = catalog
                 .tags

@@ -301,13 +301,12 @@ fn domain(
         s.valueset
             .as_deref()
             .and_then(|h| valuesets.get(h))
-            .map(|set| {
+            .map_or_default(|set| {
                 set.items
                     .iter()
                     .map(|i| (i.code.as_str(), i.label.as_deref()))
                     .collect()
             })
-            .unwrap_or_default()
     };
     let (old, new) = (codes(a), codes(b));
     let added = new.keys().filter(|c| !old.contains_key(*c)).count();

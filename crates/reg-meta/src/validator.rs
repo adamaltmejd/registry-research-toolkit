@@ -114,8 +114,7 @@ pub async fn guard(
         .headers()
         .get(header::IF_NONE_MATCH)
         .and_then(|value| value.to_str().ok())
-        .map(|value| value.split(',').map(str::trim).collect::<Vec<_>>())
-        .unwrap_or_default();
+        .map_or_default(|value| value.split(',').map(str::trim).collect::<Vec<_>>());
     // RFC 9110's weak comparison: Cloudflare weakens the ETag when it compresses.
     let listed = tags
         .iter()

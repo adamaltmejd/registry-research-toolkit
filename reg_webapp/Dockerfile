@@ -52,7 +52,7 @@
 # rather than falling back to anonymous. A secret mount is in no layer and not in the
 # cache key. curl drops the Authorization header on the API's redirect to the object
 # store, which is what that host expects (no --location-trusted).
-FROM debian:trixie-20261020-slim@sha256:62bd423aeee912639ca8ee681c2b762cb3e25137e0a92b20be455898a9f034ad AS regmeta-db
+FROM debian:trixie-20261104-slim@sha256:a72b4433de1cf7d6bae0c4cee74d0547f58601a643b3375f070c51600d63b6b2 AS regmeta-db
 
 # ca-certificates is only a Recommends of curl, so it is named for the HTTPS fetch.
 RUN apt-get update \
@@ -90,7 +90,7 @@ RUN --mount=type=secret,id=gh_token,required=true,env=GH_TOKEN \
 # workspace manifest names every crate under crates/ as a member, so all of them
 # are copied; only `reg-meta` and its dependencies are built. `--locked` asserts
 # Cargo.lock is current (CI parity).
-FROM rust:1.99.1-slim-trixie@sha256:f6c4a35d21dbb3c89d7a8d056c193e94fc09037f2b58dd858b09c39a47dd02d7 AS server
+FROM rust:1.100.0-slim-trixie@sha256:e9d95b74296f7126a83ae3d041aeaba1ff4c478f13abc5cc034fcf7c131c3d4a AS server
 WORKDIR /build
 COPY Cargo.toml Cargo.lock ./
 COPY crates/ ./crates/
@@ -100,7 +100,7 @@ RUN cargo build --release --locked -p reg-meta
 # Stage 3 — runtime: `reg-meta serve` behind the entrypoint smoke gate.
 # ---------------------------------------------------------------------------
 # Debian slim plus curl, which the entrypoint's smoke gate probes with.
-FROM debian:trixie-20261020-slim@sha256:62bd423aeee912639ca8ee681c2b762cb3e25137e0a92b20be455898a9f034ad AS runtime
+FROM debian:trixie-20261104-slim@sha256:a72b4433de1cf7d6bae0c4cee74d0547f58601a643b3375f070c51600d63b6b2 AS runtime
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends curl \

@@ -36,7 +36,7 @@ hyper = { version = "1.12.0", features = ["client", "http1"] }
 hyper-util = { version = "0.1.21", features = ["tokio"] }
 percent-encoding = "2.3.2"
 regex = "1.13.1"
-rusqlite = { version = "0.41.0", features = ["bundled"] }
+rusqlite = { version = "0.42.0", features = ["bundled"] }
 serde_json = "1.0.154"
 tokio = { version = "1.54.1", features = ["rt-multi-thread", "net", "time"] }
 toml = "1.1.8"

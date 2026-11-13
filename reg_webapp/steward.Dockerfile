@@ -21,7 +21,7 @@
 #
 # The base image is pinned as an exact tag plus its manifest digest, as in
 # reg_webapp/Dockerfile; bump both files together.
-FROM debian:trixie-20261020-slim@sha256:62bd423aeee912639ca8ee681c2b762cb3e25137e0a92b20be455898a9f034ad
+FROM debian:trixie-20261104-slim@sha256:a72b4433de1cf7d6bae0c4cee74d0547f58601a643b3375f070c51600d63b6b2
 
 # curl for the entrypoint's smoke gate.
 RUN apt-get update \

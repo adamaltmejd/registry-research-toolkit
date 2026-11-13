@@ -37,10 +37,11 @@ pub fn fixture(name: &str) -> PathBuf {
     cases().join("fixtures").join(name)
 }
 
-/// A workspace binary: `$<env_var>` when set, else `name` beside the running
-/// executable in its cargo target (`<target>/debug/`, or its parent when the
-/// executable is a test in `<target>/debug/deps/`), so a per-worktree
-/// `CARGO_TARGET_DIR` works.
+/// A workspace binary: `$<env_var>` when set, else `name` in the running
+/// executable's cargo profile directory (`<target>/debug/`), so a per-worktree
+/// `CARGO_TARGET_DIR` works. A test executable sits in
+/// `<target>/debug/build/<package>/<hash>/out/` (Cargo's build-dir layout), four
+/// levels below it; a binary sits in the profile directory itself.
 ///
 /// # Panics
 /// When the running executable has no path.
@@ -50,11 +51,17 @@ pub fn binary(name: &str, env_var: &str) -> PathBuf {
         return PathBuf::from(path);
     }
     let exe = std::env::current_exe().expect("the running executable's path");
-    let mut dir = exe.parent().expect("the executable's directory");
-    if dir.file_name().is_some_and(|n| n == "deps") {
-        dir = dir.parent().expect("the target profile directory");
-    }
-    dir.join(name)
+    let dir = exe.parent().expect("the executable's directory");
+    let in_build_dir = dir.file_name().is_some_and(|n| n == "out")
+        && dir.ancestors().nth(3).and_then(Path::file_name) == Some("build".as_ref());
+    let profile = if in_build_dir {
+        dir.ancestors()
+            .nth(4)
+            .expect("the target profile directory")
+    } else {
+        dir
+    };
+    profile.join(name)
 }
 
 /// `reg-build`; `REG_BUILD_BIN` points at another build of it (a release build).

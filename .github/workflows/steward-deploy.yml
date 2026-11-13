@@ -280,7 +280,7 @@ jobs:
             "https://api.cloudflare.com/client/v4/zones?name=$ZONE" | jq '.result | length')
           [ "$count" = 1 ] || { echo "::error::CLOUDFLARE_API_TOKEN cannot see zone $ZONE: add it to the token's Zone Resources" >&2; exit 1; }
       - run: >-
-          bunx wrangler@4.160.1 deploy --config "$WRANGLER_CONFIG"
+          bunx wrangler@4.161.0 deploy --config "$WRANGLER_CONFIG"
           --var "DEPLOY_VERSION:$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT"
         env:
           WRANGLER_CONFIG: ${{ inputs.wrangler_config }}
