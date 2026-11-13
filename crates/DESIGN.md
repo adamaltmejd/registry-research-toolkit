@@ -2861,10 +2861,12 @@ there should find in one place. A set never spans registers, and finding a conce
 across registers is a tag's job. Its public id addresses presentation only; it is never
 a variable identity, a binding or an order key.
 
-A set is warranted when one register has two or more variables that are each an amount
-(or a coding) of the same concept for some unit under some definition. A component the
-source names as part of the concept counts, and so does a quantity computed from it (a
-ratio to the median, a weight, a cost-adjusted remainder). An input to the concept stays
+A set is warranted when one register has two or more closely related variables. Most
+often each is an amount (or a coding) of the same concept for some unit under some
+definition; a component the source names as part of the concept counts, and so does a
+quantity computed from it (a ratio to the median, a weight, a cost-adjusted remainder).
+Closely related variables with no common measure (a few related survey items on one
+topic) also form a set. An input to the concept stays
 out: gross income goes into disposable income but is not a quantity of it. A lone
 variable gets no set. Members that vary along a real dimension (unit, a component
 beside its sum, whose value, sub-population, classification version, level of
