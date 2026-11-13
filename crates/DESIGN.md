@@ -1247,7 +1247,9 @@ the order check's to state in its own tests; the rules that shape them:
   `materialize_order`) adds one info, `sensitive_variables`, at path `""` with every
   coordinate `null`, when some ordered entry is flagged sensitive: each such variable
   once with the tables it comes from, then the note that research processing such data
-  needs Etikprövningsmyndigheten's approval. The flag means "always or sometimes", and
+  needs Etikprövningsmyndigheten's approval. It comes last, after the sorted
+  findings. On a steward server an entry cut to its delivered days keeps its flag, so a
+  variable flagged only in undelivered days is still listed ("may"). The flag means "always or sometimes", and
   the catalog states no category, so the note says "may" and names none.
 - `edition_disagreement` is an info: F7 marks the whole release, so it over-reports, and
   a source cannot choose an edition. A year only a preliminary release covers is
@@ -2659,7 +2661,7 @@ returns one ranked list.
    inert and `ink` finds `inkomst`. A one-character token is a prefix term too:
    `prefix = '2 3'` only makes two- and three-character prefixes cheap. `q` over 200
    characters or holding a NUL is `invalid_parameter`; a `q` with no token returns no
-   items without a query. `ops/fts.rs::query` is the one
+   items without a query. `ops/fts.rs` (`terms`, joined by `query`) is the one
    implementation; `docs_search` shares it (and keeps AND only).
 2. **Rank.** Primary matches first, then description matches absent from the primary
    match set. Within each, `bm25(index, 10.0, 5.0, 1.0)` (name, label, body), ascending;
@@ -2671,8 +2673,8 @@ returns one ranked list.
    When no row matches every term (after the filters), `search` falls back to rows
    matching any distinct term, most terms matched first, then by the sum over terms of
    each term's best score in either index (socialprefs feedback, 2026-11-13: a
-   five-word query returned nothing). The choice is made per query, so every page of it
-   agrees; a query some row matches whole is answered exactly as before.
+   five-word query returned nothing). The choice is made per query (per result group on a steward
+   server, each group deciding alone), so every page of it agrees; a query some row matches whole is answered exactly as before.
 3. **Ties.** Then `search_item.kind` in SQL text order (`code`, `document`, `register`,
    `table`, `variable`), then `sort_key`, which is unique. Two rows tie on bm25 when the
    query hits the same weighted count in rows of equal token count.
