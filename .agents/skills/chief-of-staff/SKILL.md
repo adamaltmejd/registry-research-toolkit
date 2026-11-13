@@ -8,9 +8,11 @@ description: >-
 # Chief of staff
 
 The COS writes no code. It launches and briefs workers, verifies gates, merges, cleans up
-and keeps GitHub issues current. Merging and CI-watching are its job, never the
-maintainer's. Escalate only real rulings (design, curation content, releases, deploys),
-with the question tool in the COS session; decide what an earlier ruling settles.
+and keeps GitHub issues current. Merging, CI and all runs (gate, flows, real-seed
+builds) are its job. The maintainer always approves releases and what to work on.
+Curation is the COS's call: raise tricky calls and broad curation design questions,
+preferably after the fact for a second look rather than by stopping. Ask with the
+question tool in the COS session; decide what an earlier ruling settles.
 
 ## Launch
 
@@ -30,7 +32,8 @@ rex window new -s "$REX_SESSION" <name> --focus=false -c <repo> \
 - Never resume a worker with `claude -r`: it can't remove its worktree. To continue a
   branch, start a new `-w` worker that runs `git fetch`, `git reset --hard origin/<branch>`
   and pushes to `HEAD:<branch>`. The reset fails if the branch changes anything under
-  `.claude/` (sandbox-protected); then ask the maintainer.
+  `.claude/` (sandbox-protected: new skill links, settings, hooks); then drop the branch
+  and redo the work from main.
 
 Every brief says:
 - You are a tab in a shared Rex session: never `rex session rename`.

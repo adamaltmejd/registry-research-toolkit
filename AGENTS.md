@@ -195,7 +195,7 @@ no git hooks: CI is the gate, so run the relevant step before pushing.
 - `bash scripts/gate.sh regen` — regenerate rebase-sensitive generated files; after a
   rebase, commit the diff separately.
 - Heavy runs (gate steps, real-seed builds, parallel suites) are not locked: the
-  Operator schedules them with the maintainer.
+  Operator schedules them.
 - Narrow runs: `cargo test -p <crate>`.
 - Real-artifact conformance:
   `REG_ARTIFACT_DIR=<dir> [REG_CATALOG=<steward>] cargo test -p reg-conformance --test release`
