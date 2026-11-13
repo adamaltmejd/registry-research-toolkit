@@ -243,5 +243,3 @@ enforced by `crates/xtask/tests/skill_gh_reads.rs`.
   [upgrade-deps](.agents/skills/upgrade-deps/SKILL.md), releases use
   [release](.agents/skills/release/SKILL.md), and real-seed verification uses
   [build-db](.agents/skills/build-db/SKILL.md).
-- The Operator (chief-of-staff) session launches, briefs, reviews, merges and cleans up
-  workers per [chief-of-staff](.agents/skills/chief-of-staff/SKILL.md).

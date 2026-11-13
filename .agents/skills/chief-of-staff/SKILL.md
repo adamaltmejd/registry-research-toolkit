@@ -1,105 +1,78 @@
 ---
 name: chief-of-staff
 description: >-
-  Registry Research Toolkit chief-of-staff (COS, also called Operator) routine. Use when
-  the maintainer starts a session as the COS ("/chief-of-staff", "you are the Operator"):
-  launch and brief worker threads, monitor them, verify gates, merge PRs, clean up
-  worktrees and branches, keep GitHub issues current, and escalate only real rulings.
+  Registry Research Toolkit chief-of-staff (Operator) routine: run worker sessions, merge
+  their PRs and clean up after them. Use when a session is started as the COS.
 ---
 
 # Chief of staff
 
-The COS drives all worker threads and the GitHub issue list. Workers write code; the COS
-launches, briefs, monitors, reviews, merges and cleans up. Merging and CI-watching are the
-COS's job, never handed back to the maintainer.
+The COS writes no code. It launches and briefs workers, verifies gates, merges, cleans up
+and keeps GitHub issues current. Merging and CI-watching are its job, never the
+maintainer's. Escalate only real rulings (design, curation content, releases, deploys),
+with the question tool in the COS session; decide what an earlier ruling settles.
 
-## Role
+## Launch
 
-- Tell waiting workers when to go. Verify gates yourself.
-- Keep issues current: file, comment and close as work lands. Search open and closed
-  issues first (see the issue tracker in `AGENTS.md`).
-- Escalate only real maintainer rulings: design, curation content, releases and deploys.
-  Ask in the COS session with the question tool, never inside a worker thread. A ruling
-  an earlier ruling settles is decided, not asked.
-
-## Launch a worker
-
-One Rex tab per worker in your current Rex session, never a new Rex session:
+One Rex tab per worker, in the COS's own Rex session:
 
 ```bash
 rex window new -s "$REX_SESSION" <name> --focus=false -c <repo> \
   --shell /opt/homebrew/bin/bash -- \
   claude -w <name> -n <name> --model <model> --permission-mode auto \
-  "Read and follow <brief path>"
+  "Read and follow <brief path>"   # bash: zsh tabs lack cargo
 ```
 
-- Bash, not zsh: zsh tabs lack cargo.
-- `claude -w` makes the worktree. Never `git worktree add`: the sandbox allows commits
-  only in tool-made worktrees.
-- Write the brief to a file and pass its path. Long prompt or `rex send` text is
-  truncated.
-- Every brief says: this is a tab in the shared session, so no `rex session rename`
-  (`rex window rename` for its own tab is fine); no local branch rename, name the remote
-  at push (`git push -u origin HEAD:<name>`); open the PR but do not merge; report the PR
-  number and CI state in its tab.
-- Models: Opus for design-heavy or large work and first reviews of catalog logic. Sonnet
-  for docs, mechanical edits and re-reviews. Haiku for fully specified chores.
-- Several workers building at once need a per-worktree `CARGO_TARGET_DIR`.
-- Never resume a worker with `claude -r`: it exits without the remove option and leaves
-  its worktree behind. To continue work, start a fresh worker on the branch.
+- Brief by file path; long prompt and `rex send` text is truncated.
+- Opus for design-heavy or large work, Sonnet for docs and mechanical edits.
+- Don't run two workers on the same contract surface or generated files (`curation.lock`,
+  schemas).
+- Never resume a worker with `claude -r`: it can't remove its worktree. To continue a
+  branch, start a new `-w` worker that runs `git fetch`, `git reset --hard origin/<branch>`
+  and pushes to `HEAD:<branch>`.
+
+Every brief says:
+- You are a tab in a shared Rex session: never `rex session rename`.
+- Wait for the COS's go before `gate.sh all`, flows or a real-seed build (one heavy run
+  at a time).
+- Open the PR, don't merge; report the PR number in your tab.
+- Stop your own servers before you finish. Don't exit or remove the worktree until told.
 
 ## Monitor
 
-- Read: `rex capture -s "$REX_SESSION" -w <tab> --trim`. List tabs:
-  `rex window list -s "$REX_SESSION"`.
-- Send short text with `rex send -s "$REX_SESSION" -w <tab> '<text>'`, then submit with
-  `rex send-key -s "$REX_SESSION" -w <tab> enter` (key names are lowercase). Point to a
-  file for anything long.
-- Wait with an until-loop on a capture condition, not chained sleeps.
-- Never `pkill` or `killall`. Stop only PIDs you started.
+- Read: `rex capture -s "$REX_SESSION" -w <tab> --trim`.
+- Send: `rex send -s "$REX_SESSION" -w <tab> '<short text>'`, then
+  `rex send-key -s "$REX_SESSION" -w <tab> enter`. Point to a file for anything long.
+- One background `gh pr checks <n> --watch --fail-fast` per PR once it opens.
+- Never `pkill`/`killall`.
 
-## Review and merge
+## Merge
 
-A PR merges when all of these hold:
+GitHub enforces no checks, so confirm all three on the head you merge:
 
-1. **Green CI.** Arm one background `gh pr checks <n> --watch --fail-fast` per PR as soon
-   as it opens. Report ready or red at once.
-2. **Independent review** by an agent that did not write the change. Use Codex:
+1. CI green.
+2. Codex review:
    `codex exec -C <worktree> -s read-only 'Use $review-agent to review the changes on this branch against base branch origin/main'`.
-   If Codex cannot start in the sandbox, use a fresh Opus agent and say so in the PR.
-3. **UI changes** also get a rendered `reg-webapp-design-reviewer` pass by a fresh agent
-   at four widths.
+   If Codex can't start, a fresh Opus agent, noted in the PR.
+3. UI changes: a rendered `reg-webapp-design-reviewer` pass by a fresh agent.
 
-Merge it yourself, pinned to the reviewed commit:
-`gh pr merge <n> --squash --match-head-commit <sha>`. Hold merges while a release deploy
-runs (see the [release](../release/SKILL.md) skill).
+Then `gh pr merge <n> --squash --match-head-commit <sha>`. Not while a release deploy
+runs. After each merge, open PRs that touch the same files rebase (`gate.sh regen` where
+relevant) and pass CI and review again on the new head.
 
-The agent token has no `workflow` scope. The maintainer pushes workflow-file commits from
-their own terminal. Do not strip workflow edits to get around it.
+The agent token has no `workflow` scope: the maintainer pushes commits that touch
+`.github/workflows/` from their own terminal. Don't strip those edits.
 
-## Clean up after merge
+## Clean up
 
-Every time, for the worker's own worktree only:
+After every merge, for your own workers only:
 
-1. Tell the worker to call its ExitWorktree tool with action `remove` (add
-   `discard_changes: true` once its commits are merged). Under the sandbox this removes
-   the worktree and the local branch.
-2. From the main checkout, verify: `git worktree list` and `git branch --list '*<name>*'`.
-3. Delete the remote branch: `git push origin --delete <branch>`.
-4. Close the tab: `rex window close -s "$REX_SESSION" <tab>`. Stop any server the worker
-   left, by its PIDs.
-5. If something still cannot be removed (a resumed worker's, a plain-git worktree), give
-   the maintainer one exact command to run with `!`, for example
-   `git worktree remove .claude/worktrees/<name> && git branch -D <branch>`. No
-   workarounds: no `--force`, no excluded commands, no edits under `.git/worktrees`.
-6. Never loop-remove `.claude/worktrees/agent-*`. Remove only named worktrees of your own
-   finished workers.
-
-## Sandbox limits
-
-Others are in `AGENTS.md`.
-
-- `.git/config` and `.git/worktrees` are read-only.
-- Toolchain installs and updates: ask the maintainer to run them with `!`.
-- `bash scripts/gate.sh all` and `dev.sh` run only as bare commands.
-- Processes the session did not start are hidden: an empty `lsof` proves nothing.
+1. `gh pr view <n> --json state` shows `MERGED`.
+2. Tell the worker to call ExitWorktree with action `remove` and `discard_changes: true`
+   (after a squash merge it refuses without it). This removes the worktree and its local
+   branch.
+3. Check `git worktree list` and `git branch --list '*<name>*'`.
+4. `git push origin --delete <branch>`, then `rex window close -s "$REX_SESSION" <tab>`.
+5. Anything left over goes to the maintainer as one exact `!` command, e.g.
+   `git worktree remove .claude/worktrees/<name> && git branch -D <branch>`. No `--force`,
+   no loops over `.claude/worktrees/agent-*`.
