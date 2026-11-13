@@ -168,9 +168,10 @@ prev=/absolute/path/to/previous-release-dir  # reg_meta.db, decompressed (8b)
 
 #### 8a. Build the catalog
 
-Use an inputs worktree at the exact repository and commit in `curation/inputs.toml`.
-Check its HEAD and clean status before building; never edit the pinned inputs in place
-or mix files from different revisions. For every input with a `release` field, fetch its
+Build from a fresh clone of the inputs repository at the exact repository and commit in
+`curation/inputs.toml` (build-db skill, "Select inputs"). Check its HEAD and clean
+status before building; never edit the pinned inputs in place or mix files from
+different revisions. For every input with a `release` field, fetch its
 pinned asset beforehand to `<assets>/<release>/<path>`:
 
 ```sh
@@ -186,7 +187,7 @@ run with `RUSTC_WRAPPER= CARGO_BUILD_RUSTC_WRAPPER=`.
 
 ```sh
 set -euo pipefail
-inputs=/absolute/path/to/pinned-inputs-worktree
+inputs=/absolute/path/to/pinned-inputs-clone
 assets=/absolute/path/to/pinned-release-assets
 evidence=/absolute/path/to/release-evidence
 version=X.Y.Z

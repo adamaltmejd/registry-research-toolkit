@@ -23,9 +23,21 @@ build is long and the verifiers and conformance run the same binaries.
 Every input lives in the private repository `adamaltmejd/registry-catalog-inputs`; the
 public repository holds code and authored curation (`curation/`) only.
 `curation/inputs.toml` pins the inputs repository, its commit, and each input with its
-reader. Run every build against a worktree of the inputs repository at exactly that
-commit (`git -C <inputs-checkout> worktree add --detach <dir> <commit>`), never its
-default branch, and never edit it in place. For every input with a `release` field,
+reader. Run every build against a checkout of the inputs repository at exactly that
+commit, never its default branch, and never edit it in place. Clone it into `$TMPDIR`;
+don't add a worktree to a nested checkout such as `.local/registry-catalog-inputs`,
+which a worktree session's git guard refuses.
+
+```sh
+git clone --filter=blob:none --no-checkout https://github.com/adamaltmejd/registry-catalog-inputs.git <tmpdir>/inputs
+git -C <tmpdir>/inputs checkout --detach <commit>
+git -C <tmpdir>/inputs status --porcelain --untracked-files=all
+```
+
+Run these as separate commands, with `<tmpdir>` the literal path `echo $TMPDIR`
+prints: the guard refuses a `$TMPDIR` or `${…}` word in a git command. The checkout is
+about 7.5 GB; delete the clone when the run's checks are done. For every input with a
+`release` field,
 download its pinned asset to `<assets>/<release>/<path>` first
 (`gh release download <input-release> --repo <inputs-repo> --pattern <input-path> --dir <assets>/<input-release>`);
 the reader verifies the manifest's SHA-256.
