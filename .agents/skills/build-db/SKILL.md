@@ -31,13 +31,17 @@ Don't add a worktree to the nested checkout; a worktree session's git guard refu
 
 ```sh
 git clone --shared --no-checkout <main-checkout>/.local/registry-catalog-inputs <tmpdir>/inputs
-git -C <tmpdir>/inputs cat-file -e <commit>^{commit}  # fails if the pin is not local
-git -C <tmpdir>/inputs fetch https://github.com/<inputs-repo>.git <commit>  # only then
+git -C <tmpdir>/inputs cat-file -e <commit>^{commit}
+git -C <tmpdir>/inputs fetch https://github.com/<inputs-repo>.git <commit>
 git -C <tmpdir>/inputs checkout --detach <commit>
 git -C <tmpdir>/inputs status --porcelain --untracked-files=all
 ```
 
-`<inputs-repo>` and `<commit>` are the `repo` and `commit` in `curation/inputs.toml`.
+Run the `fetch` only if `cat-file` fails (the pin is not in the local checkout).
+`<main-checkout>` is the primary repository checkout, not the worktree; `<inputs-repo>`
+and `<commit>` are the `repo` and `commit` in `curation/inputs.toml`. Without a local
+inputs checkout, clone `https://github.com/<inputs-repo>.git` with
+`--filter=blob:none --no-checkout` instead (about 1.1 GB more).
 Run these as separate commands with literal paths: the guard refuses a `$TMPDIR` or
 `${…}` word in a git command. The working tree is about 6.4 GB. Don't run `git gc` or
 `git prune` in the source checkout while the clone exists, since the clone reads its

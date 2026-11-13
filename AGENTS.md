@@ -177,8 +177,7 @@ Agents run it as `bash reg_webapp/dev/dev.sh <flags> [mode]` from the repo or wo
 root, with no env-var prefix and no `cd X &&`: the sandbox exclusion in
 `.claude/settings.json` matches the command text, and a sandboxed run kills Chrome. The
 same holds for `bash scripts/gate.sh all` (trailing arguments and redirects allowed) and
-any step list with `flows`. The
-`run-reg-webapp` skill has the flags and modes.
+any step list with `flows`. The `run-reg-webapp` skill has the flags and modes.
 
 # Lint and test
 
