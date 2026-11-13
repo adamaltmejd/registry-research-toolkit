@@ -9,10 +9,10 @@
 //! failing that, a form followed by words (`2019, sociala ersättningar`) or preceded by
 //! words without a number (`Strandlinje 2024`) leaves those words as the qualifier.
 //! Qualifier words must be separated from the period by a space or a separator, so
-//! `1990_old` stays unparsed. A name no form places is unparsed.
+//! `fob1960` and `1990_old` stay unparsed. A name no form places is unparsed.
 //!
 //! A form is a pattern of literal tokens and slots: `{year}`, `{year_to}` (four digits),
-//! `{next}`, `{next_to}` (four digits, the year after `{year}` or `{year_to}`), `{yy}` (two digits), `{mm}`, `{mm_to}` (a month number), `{dd}`, `{dd_to}` (a day of
+//! `{yy}` (two digits), `{mm}`, `{mm_to}` (a month number), `{dd}`, `{dd_to}` (a day of
 //! the month), `{q}`, `{q_to}` (a quarter), `{month}` (a month word) and `{term}`,
 //! `{term_to}` (a term word), and the kind of period it states.
 
@@ -60,8 +60,6 @@ enum Kind {
     Months,
     /// `{year}` with `{yy}` or `{year_to}` the next year: 1 July to 30 June.
     SchoolYear,
-    /// From the school year `{year}`/`{next}` through `{year_to}`/`{next_to}`.
-    SchoolYears,
     /// `{term}` of `{year}`.
     Term,
     /// From `{term}` of `{year}` to `{term_to}` of `{year_to}`.
@@ -280,7 +278,7 @@ impl Grammar {
         };
         let digits = token.text.len();
         match name.trim_end_matches("_to") {
-            "year" | "next" => number().filter(|_| digits == 4),
+            "year" => number().filter(|_| digits == 4),
             "yy" => number().filter(|_| digits == 2),
             "mm" => number().filter(|m| digits == 2 && (1..=12).contains(m)),
             "dd" => number().filter(|d| digits <= 2 && (1..=31).contains(d)),
@@ -352,11 +350,6 @@ fn build(kind: Kind, s: &BTreeMap<String, u32>) -> Option<(String, String, &'sta
             };
             next.then_some(())?;
             span(day(year, 7, 1), day(year + 1, 6, 30), "span")
-        }
-        Kind::SchoolYears => {
-            let to = get("year_to")?;
-            (get("next")? == year + 1 && get("next_to")? == to + 1 && year < to).then_some(())?;
-            span(day(year, 7, 1), day(to + 1, 6, 30), "span")
         }
         Kind::Term => term(year, get("term")?),
         Kind::Terms => {
