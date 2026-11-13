@@ -70,7 +70,8 @@ After every merge, for your own workers only:
 
 1. `gh pr view <n> --json state,headRefOid` shows `MERGED`.
 2. Have the worker confirm `git status --porcelain` is empty and `git rev-parse HEAD`
-   equals that `headRefOid`. If either fails, stop and ask the maintainer.
+   equals that `headRefOid`. If not, read what is extra: worth keeping goes to a new PR
+   (or an issue); the rest is discarded.
 3. Tell the worker to call ExitWorktree with action `remove` and `discard_changes: true`
    (after a squash merge it refuses without it). This removes the worktree and its local
    branch.
