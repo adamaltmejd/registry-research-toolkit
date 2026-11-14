@@ -1,15 +1,27 @@
 
 [[statement]]
 kind = "set"
-subject = "individer: cfarnr"
+subject = "individer: cfarnr @..2009"
 fields = { "spelling" = "CfarNr_LISA" }
-evidence = "private:ev-3486\n\nprivate:ev-3492"
+evidence = "private:ev-3486"
 
 [[statement]]
 kind = "set"
-subject = "individer: peorgnr"
+subject = "individer: cfarnr @2010.."
+fields = { "spelling" = "CfarNr_LISA" }
+evidence = "private:ev-3492"
+
+[[statement]]
+kind = "set"
+subject = "individer: peorgnr @..2009"
 fields = { "spelling" = "PeOrgNr_LISA" }
-evidence = "private:ev-3487\n\nprivate:ev-3493"
+evidence = "private:ev-3487"
+
+[[statement]]
+kind = "set"
+subject = "individer: peorgnr @2010.."
+fields = { "spelling" = "PeOrgNr_LISA" }
+evidence = "private:ev-3493"
 
 [[statement]]
 kind = "set"
@@ -61,9 +73,15 @@ evidence = "private:ev-3497"
 
 [[statement]]
 kind = "set"
-subject = "individer: astnr"
+subject = "individer: astnr @..2009"
 fields = { "spelling" = "AstNr_LISA" }
-evidence = "private:ev-3498\n\npython-builder-pre-cutover:curation/registers/scb/lisa.toml:3376\n\nComplete accepted physical table header contains only AstNr_LISA for this exact own native quantity; exported AstNr is absent. Preserve original source fields; no type/coding/role borrowing."
+evidence = "private:ev-3498"
+
+[[statement]]
+kind = "set"
+subject = "individer: astnr @2010.."
+fields = { "spelling" = "AstNr_LISA" }
+evidence = "python-builder-pre-cutover:curation/registers/scb/lisa.toml:3376\n\nComplete accepted physical table header contains only AstNr_LISA for this exact own native quantity; exported AstNr is absent. Preserve original source fields; no type/coding/role borrowing."
 
 [[statement]]
 kind = "set"
