@@ -6841,12 +6841,6 @@ evidence = "Estimeringsvariabel med region.\ncatalog:variable_text:1940:18628:20
 
 [[statement]]
 kind = "set"
-subject = "var:hogsta-utb-aktivt-stud"
-fields = { "tags" = ["education"] }
-evidence = "Samma källkolumn har överlappande ägare med olika populationer.\ncatalog:occurrence:10410\ncatalog:occurrence:10411"
-
-[[statement]]
-kind = "set"
 subject = "var:hogsta-utb-ej-utbreg"
 fields = { "tags" = ["education"] }
 evidence = "Samma källkolumn har överlappande ägare med olika populationer.\ncatalog:occurrence:10410\ncatalog:occurrence:10411"
@@ -15439,12 +15433,6 @@ evidence = "The definition checks whether the previous on-call job remained the 
 
 [[statement]]
 kind = "set"
-subject = "var:hogsta-utb-aktivt-stud"
-fields = { "sets" = ["utbildningsniva"] }
-evidence = "The definition and interview question explicitly measure highest completed education; active study only defines the respondent population (r654).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:1934\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:1935"
-
-[[statement]]
-kind = "set"
 subject = "var:hogsta-utb-ej-utbreg"
 fields = { "sets" = ["utbildningsniva"] }
 evidence = "The definition and interview question explicitly measure highest completed education for people lacking register information (r655).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:1935\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:1936"
@@ -18544,3 +18532,33 @@ kind = "set"
 subject = "var:utb61524c"
 fields = { "description" = "Om personen har behörighet till högskola eller universitet. Från 2021 ställs frågan till personer 15–24 år; vissa 15–17-åringar får inte frågan." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; frågetexten ersätts 2021 av frågefiltret, som anges med år.\ncatalog:variable_text:10252:16071:18628\ncatalog:variable_text:10252:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "aku-april-2005-dec-2020: ArHuvudVerk @2008-01-01..2008-12-31 where key = 'v30539'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, AKU april 2005 - dec 2020 2008 (RegVerID 6106) documents column ArHuvudVerk under VarId 30539 \"Huvudsaklig verksamhet på tidigare arbetsplats, ett år sedan\" and VarId 31258 \"Huvudsyssla för ett år sedan\"; the 2008 release has no ArVerks1 or ArVerksamhet column. In 2007 (RegVerID 6109) ArHuvudVerk is 30539 and ArVerks1 is 31258; from 2009 to 2012 (RegVerID 6101, 6100, 6099, 5906) ArHuvudVerk is 31258 alone, as an integer, and 30539 moves to ArVerksamhet (varchar). The 30539 row is withheld; the source does not settle which, 31258 is the more plausible owner because it holds ArHuvudVerk alone, as an integer, in all four releases after the window while 30539 is documented as varchar under ArVerksamhet (maintainer 2026-11-14: place under the more plausible owner)."
+
+[[statement]]
+kind = "set"
+subject = "aku-april-2005-dec-2020: HUOTEJERS @2005-04-01..2007-12-31 where key = 'v6769'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, AKU april 2005 - dec 2020 2005 kvartal 2-4, 2006 and 2007 (RegVerID 6127, 6125, 6109) documents column HUOTEJERS under VarId 6769 \"Övertid utan ersättning i huvudsysslan, anställda\" and, beside it, VarId 31241 \"Övertid utan ersättning\" (2005, 2007) or VarId 31256 \"Övertid utan ersättning, anställda\" (2006). The three rows carry the same question text (\"Hade du någon övertid (i huvudsysslan) som du inte får ersättning för i tid eller pengar?\"); v6769 is documented for HUOTEJERS in 2014-2020, and 31241 or 31256 in 2005-2012. The source does not settle which owns the column in 2005-2007 (CVIDs do not track dates here); 31241 and 31256 are guessed to be the owners because they are the release's own listing of the column (maintainer 2026-11-14: place under the more plausible owner). The v6769 rows are withheld in 2005-2007."
+
+[[statement]]
+kind = "set"
+subject = "aku-april-2005-dec-2020: SysSokt8 @2009-01-01..2010-12-31 where key = 'v6850'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, AKU april 2005 - dec 2020 2009 and 2010 (RegVerID 6101, 6100) documents column SysSokt8 under VarId 31249 \"Sökt annat arbete, vet ej sysselsatta\" (CVID 383575, 383597) and VarId 6850 \"Vet ej om sökt annat arbete, sysselsatta\" (CVID 603044, 603040). VarId 6850 is documented under SysSokSatt88 in every release 2005-2016, including 2009 and 2010, and its SysSokt8 rows are the later 6030xx batch; 31249 holds SysSokt8 in 2009-2012 in the earlier batch (CVID 3835xx). The 2008 and 2013-2020 neighbours give SysSokt8 to 6850, so the source does not settle which; 31249 is the more plausible owner because the original listing names it for SysSokt8 in every release from 2009 to 2012 (maintainer 2026-11-14: place under the more plausible owner). The 6850 rows are withheld."
+
+[[statement]]
+kind = "set"
+subject = "aku-april-2005-dec-2020: UTB61524 @2013-01-01..2020-12-31 where key = 'v30146'"
+fields = { "variable" = "hogsta-utb-ej-utbreg" }
+evidence = "SCB Registerinformation, AKU april 2005 - dec 2020 2013-2020 (RegVerID 5824, 5748, 5810, 7304, 18775, 18774, 18772, 13795) documents column UTB61524 under VarId 30145 \"Högsta avslutade utbildning, ej i utbildningsregistret\" and VarId 30146 \"Högsta avslutade utbildning, aktivt studerande\" in every release, both char and neither under any other column. They are one question (\"Vilken är din högsta avslutade utbildning?\") asked of two groups of respondents, so the column is one variable for two row kinds (maintainer 2026-11-14: merge variants of one concept for different row kinds). v30145 continues UTB61524 in the 2021- table, so it survives."
+
+[[statement]]
+kind = "set"
+subject = "var:hogsta-utb-ej-utbreg"
+fields = { "label" = "Högsta avslutade utbildning (enkätfråga)", "description" = "Högsta avslutade utbildningsnivå enligt enkätfrågan \"Vilken är din högsta avslutade utbildning?\". Gäller personer som inte studerar aktivt och, 2013–2020, även personer som studerar aktivt." }
+evidence = "Maintainer ruling 2026-11-14: variants of one concept for different row kinds are merged and the variable carries a label and description covering both kinds.\nVarId 30145 (\"ej i utbildningsregistret\") and VarId 30146 (\"aktivt studerande\") are both documented under UTB61524 in 2013-2020 with the same question."
