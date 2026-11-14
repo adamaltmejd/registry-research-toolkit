@@ -66,6 +66,14 @@ pub struct ShowBreakRelease {
     period: Period,
 }
 
+/// One stored break: day, text, provenance, and its release (name, start, end).
+type BreakRow = (
+    Option<i64>,
+    Option<String>,
+    String,
+    Option<(String, i64, i64)>,
+);
+
 /// The breaks on one entity (`kind`, row id), and for a table its releases'.
 fn series_breaks(
     server: &Server,
@@ -73,7 +81,7 @@ fn series_breaks(
     kind: &str,
     id: i64,
 ) -> Result<Vec<ShowSeriesBreak>, Error> {
-    let rows: Vec<(Option<i64>, Option<String>, String, Option<(String, i64, i64)>)> = rows(
+    let rows: Vec<BreakRow> = rows(
         conn,
         "SELECT b.at, t.body, b.prov, NULL, NULL, NULL FROM series_break b
            LEFT JOIN text t ON t.id = b.text_id
@@ -104,7 +112,10 @@ fn series_breaks(
             period: server.period(start, end),
         });
         match breaks.iter_mut().find(|b| {
-            b.at == at && b.text == text && b.provenance == provenance && release.is_some()
+            b.at == at
+                && b.text == text
+                && b.provenance == provenance
+                && release.is_some()
                 && !b.releases.is_empty()
         }) {
             Some(b) => b.releases.extend(release),

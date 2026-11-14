@@ -984,7 +984,12 @@ fn series_breaks(p: &Pair) -> Result<Section> {
     let mut groups = Vec::new();
     for kind in ["register", "table", "release", "variable"] {
         let item = |sign: &str, (_, pid, at, text, prov): &Key| {
-            let text_shown: String = text.as_deref().unwrap_or("(no text)").chars().take(80).collect();
+            let text_shown: String = text
+                .as_deref()
+                .unwrap_or("(no text)")
+                .chars()
+                .take(80)
+                .collect();
             Item::new(
                 json!({"change": if sign == "+" { "added" } else { "removed" },
                        "subject": pid, "at": at, "text": text, "provenance": prov}),
@@ -998,7 +1003,11 @@ fn series_breaks(p: &Pair) -> Result<Section> {
             .difference(&new)
             .filter(|k| k.0 == kind)
             .map(|k| item("-", k))
-            .chain(new.difference(&old).filter(|k| k.0 == kind).map(|k| item("+", k)))
+            .chain(
+                new.difference(&old)
+                    .filter(|k| k.0 == kind)
+                    .map(|k| item("+", k)),
+            )
             .collect();
         groups.push((kind, items));
     }

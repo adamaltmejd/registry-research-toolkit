@@ -584,7 +584,14 @@ pub fn read(
     out.files.push(vs_input);
     out.files.push(format!("{name}/{VALID_DATES}"));
     flags(&mut archive, name, &registers, &mut occurrences, &mut out)?;
-    let surface = Surface::new(provider, &registers, &tables, &releases, &occurrences, &cvids);
+    let surface = Surface::new(
+        provider,
+        &registers,
+        &tables,
+        &releases,
+        &occurrences,
+        &cvids,
+    );
     let events = timeseries(&mut archive, name, &config.timeseries, &surface, &mut out)?;
     let links = derived.into_iter().map(|((register, key, text), locator)| {
         derived_from(provider, &register, key, text, locator)
@@ -818,7 +825,13 @@ impl<'a> Surface<'a> {
         let end = Endpoint {
             release: o.release.clone(),
             column: Some(o.column.clone()),
-            ..endpoint(self.provider, "variable", &o.register, Some(&o.table), Some(&o.source_key))
+            ..endpoint(
+                self.provider,
+                "variable",
+                &o.register,
+                Some(&o.table),
+                Some(&o.source_key),
+            )
         };
         vec![(end, o.label.clone().unwrap_or_else(|| o.column.clone()))]
     }

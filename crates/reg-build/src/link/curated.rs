@@ -170,12 +170,14 @@ pub(crate) fn curate(
                 &premise.subjects,
             ) {
                 Ok(subjects) => {
-                    result.breaks.extend(subjects.into_iter().map(|subject| Break {
-                        subject,
-                        at: at.clone(),
-                        text: Some(stated.text.trim().to_owned()),
-                        statement: Some(hash.clone()),
-                    }));
+                    result
+                        .breaks
+                        .extend(subjects.into_iter().map(|subject| Break {
+                            subject,
+                            at: at.clone(),
+                            text: Some(stated.text.trim().to_owned()),
+                            statement: Some(hash.clone()),
+                        }));
                     result
                         .statements
                         .push(crate::curation::statement_row(root, statement)?);

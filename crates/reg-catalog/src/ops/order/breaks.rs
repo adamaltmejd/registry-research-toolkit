@@ -73,20 +73,28 @@ pub(super) fn variable(conn: &Connection, variable: i64) -> Result<Vec<Stored>, 
 }
 
 fn load(conn: &Connection, sql: &str, id: i64) -> Result<Vec<Stored>, Error> {
-    Ok(rows(conn, &format!("{sql} ORDER BY 1, 2, 4"), [id], |row| {
-        let at: Option<i64> = row.get(0)?;
-        let name: Option<String> = row.get(2)?;
-        let release = match name {
-            Some(name) => Some((name, interval(row.get(3)?, row.get(4)?))),
-            None => None,
-        };
-        Ok(Stored {
-            at: at.map(iso_day),
-            text: row.get(1)?,
-            release,
-        })
-    })?)
+    Ok(rows(
+        conn,
+        &format!("{sql} ORDER BY 1, 2, 4"),
+        [id],
+        |row| {
+            let at: Option<i64> = row.get(0)?;
+            let name: Option<String> = row.get(2)?;
+            let release = match name {
+                Some(name) => Some((name, interval(row.get(3)?, row.get(4)?))),
+                None => None,
+            };
+            Ok(Stored {
+                at: at.map(iso_day),
+                text: row.get(1)?,
+                release,
+            })
+        },
+    )?)
 }
+
+/// Where one break text falls: dated days, releases with their span, and whether undated.
+type TextHits<'a> = (Vec<&'a str>, Vec<(&'a str, Interval)>, bool);
 
 /// The findings for `breaks` of one entity over the ordered `days` (ascending).
 pub(super) fn met(anchor: &Anchor, breaks: &[Stored], days: &[Interval]) -> Vec<Issue> {
@@ -94,8 +102,7 @@ pub(super) fn met(anchor: &Anchor, breaks: &[Stored], days: &[Interval]) -> Vec<
         return vec![];
     };
     // By text: the days it is dated at, the releases it is on, and whether it is undated.
-    let mut by_text: BTreeMap<Option<&str>, (Vec<&str>, Vec<(&str, Interval)>, bool)> =
-        BTreeMap::new();
+    let mut by_text: BTreeMap<Option<&str>, TextHits> = BTreeMap::new();
     for b in breaks {
         let entry = by_text.entry(b.text.as_deref()).or_default();
         match (&b.at, &b.release) {
@@ -125,7 +132,11 @@ pub(super) fn met(anchor: &Anchor, breaks: &[Stored], days: &[Interval]) -> Vec<
         }
         if !releases.is_empty() {
             let names: Vec<&str> = releases.iter().map(|(n, _)| *n).collect();
-            when.push(format!("in the {} release{}", names.join(", "), if names.len() > 1 { "s" } else { "" }));
+            when.push(format!(
+                "in the {} release{}",
+                names.join(", "),
+                if names.len() > 1 { "s" } else { "" }
+            ));
         }
         if undated {
             when.push("on no stated day".to_owned());
@@ -134,7 +145,10 @@ pub(super) fn met(anchor: &Anchor, breaks: &[Stored], days: &[Interval]) -> Vec<
         let (level, message) = match text {
             Some(text) => (
                 IssueLevel::Warning,
-                format!("The provider notes a series break in {pid} {}: {text}", when.join("; ")),
+                format!(
+                    "The provider notes a series break in {pid} {}: {text}",
+                    when.join("; ")
+                ),
             ),
             None => (
                 IssueLevel::Info,

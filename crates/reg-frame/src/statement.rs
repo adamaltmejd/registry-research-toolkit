@@ -303,8 +303,7 @@ impl SetFields {
                 .all(|(key, value)| value.is_null() || key == "series_break");
             if !alone {
                 return Err(
-                    "series-break-alone: a series break is stated in a statement of its own"
-                        .into(),
+                    "series-break-alone: a series break is stated in a statement of its own".into(),
                 );
             }
             if series_break.text.trim().is_empty() {
