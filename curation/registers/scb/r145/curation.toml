@@ -560,3 +560,63 @@ kind = "set"
 subject = "var:skordeomrade"
 fields = { "label" = "Skördeområde (brukningscentrum)" }
 evidence = "#2102 same-label cluster 'Skördeområde' (2 variables): judged different meaning, high confidence; Opdefs: sko is the harvest area where the area lies, OrdSko the brukningscentrum's."
+
+[[statement]]
+kind = "assert"
+subject = "table:ekologiska-arealer"
+fact = { entity = "table", fields = { name = "Höstsådda arealer, ekologiska arealer", coverage = "2016-01-01..2024-12-31" } }
+evidence = "SCB Registerinformation documents two register versions of Höstsådda arealer for each year 2016-2024: \"<year>\" and \"<year> Ekologiska arealer\". Each documents the Areal_* columns once, the ordinary one as the crop's sown area (VarId 48538 etc.) and the Ekologiska one as its organic sown area (VarId 48571 etc.). The organic area is a part of the total, a different quantity, so the two cannot share a column of one table; as with the r229 cadences (maintainer 2026-11-09), each delivery kind is its own table. The Ekologiska arealer releases form this table; the coverage is the union of their periods."
+
+[[statement]]
+kind = "set"
+subject = "release:hostsadda-arealer/r19717"
+fields = { "table" = "ekologiska-arealer" }
+evidence = "Release '2016 Ekologiska arealer' documents the organic sown areas (VarId 48568-48574, 48610). Move the release whole, with its columns, to the ekologiska-arealer table (see the table:ekologiska-arealer assertion)."
+
+[[statement]]
+kind = "set"
+subject = "release:hostsadda-arealer/r19715"
+fields = { "table" = "ekologiska-arealer" }
+evidence = "Release '2017 Ekologiska arealer' documents the organic sown areas (VarId 48568-48574, 48610). Move the release whole, with its columns, to the ekologiska-arealer table (see the table:ekologiska-arealer assertion)."
+
+[[statement]]
+kind = "set"
+subject = "release:hostsadda-arealer/r19713"
+fields = { "table" = "ekologiska-arealer" }
+evidence = "Release '2018 Ekologiska arealer' documents the organic sown areas (VarId 48568-48574, 48610). Move the release whole, with its columns, to the ekologiska-arealer table (see the table:ekologiska-arealer assertion)."
+
+[[statement]]
+kind = "set"
+subject = "release:hostsadda-arealer/r19711"
+fields = { "table" = "ekologiska-arealer" }
+evidence = "Release '2019 Ekologiska arealer' documents the organic sown areas (VarId 48568-48574, 48610). Move the release whole, with its columns, to the ekologiska-arealer table (see the table:ekologiska-arealer assertion)."
+
+[[statement]]
+kind = "set"
+subject = "release:hostsadda-arealer/r19709"
+fields = { "table" = "ekologiska-arealer" }
+evidence = "Release '2020 Ekologiska arealer' documents the organic sown areas (VarId 48568-48574, 48610). Move the release whole, with its columns, to the ekologiska-arealer table (see the table:ekologiska-arealer assertion)."
+
+[[statement]]
+kind = "set"
+subject = "release:hostsadda-arealer/r19707"
+fields = { "table" = "ekologiska-arealer" }
+evidence = "Release '2021 Ekologiska arealer' documents the organic sown areas (VarId 48568-48574, 48610). Move the release whole, with its columns, to the ekologiska-arealer table (see the table:ekologiska-arealer assertion)."
+
+[[statement]]
+kind = "set"
+subject = "release:hostsadda-arealer/r19706"
+fields = { "table" = "ekologiska-arealer" }
+evidence = "Release '2022 Ekologiska arealer' documents the organic sown areas (VarId 48568-48574, 48610). Move the release whole, with its columns, to the ekologiska-arealer table (see the table:ekologiska-arealer assertion)."
+
+[[statement]]
+kind = "set"
+subject = "release:hostsadda-arealer/r19688"
+fields = { "table" = "ekologiska-arealer" }
+evidence = "Release '2023 Ekologiska arealer' documents the organic sown areas (VarId 48568-48574, 48610). Move the release whole, with its columns, to the ekologiska-arealer table (see the table:ekologiska-arealer assertion)."
+
+[[statement]]
+kind = "set"
+subject = "release:hostsadda-arealer/r19665"
+fields = { "table" = "ekologiska-arealer" }
+evidence = "Release '2024 Ekologiska arealer' documents the organic sown areas (VarId 48568-48574, 48610). Move the release whole, with its columns, to the ekologiska-arealer table (see the table:ekologiska-arealer assertion)."
