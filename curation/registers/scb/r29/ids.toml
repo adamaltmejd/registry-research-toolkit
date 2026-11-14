@@ -1245,7 +1245,6 @@ public = "linda"
 "antal-personer-i-urvalsramen-for-panelurvalet-bstoranp" = ["Panelurval av befolkningen inklusive taxeringshushåll: BSTORANP"]
 "antal-urvalspersoner-i-panelurvalet-blillanp" = ["Panelurval av befolkningen inklusive taxeringshushåll: BLILLANP"]
 "identitetsnummer-for-hushallet-bidnrh" = ["Panelurval av befolkningen inklusive taxeringshushåll: BIDNRH"]
-"statligt-extra-avdrag-avkext" = ["Tilläggsurval av utrikesfödda inkl. taxeringshushåll: AVKEXT # v40069"]
 "statligt-extra-avdrag-sea" = ["Panelurval av befolkningen inklusive taxeringshushåll: SEA"]
 "tjanstgoringsomfattning-tjomf" = ["Panelurval av befolkningen inkl. familjemedlemmar: TJOMF"]
 "underlag-for-fastighetsskatt-med-2-8-avseende-afavat" = ["Panelurval av befolkningen inkl. familjemedlemmar: AFAVAT # v28886"]

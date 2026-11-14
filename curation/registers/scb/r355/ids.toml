@@ -20,7 +20,6 @@ public = "tradbransle-torv"
 "lansregion" = ["Trädbränsle-, torv- och avfallspriser: region"]
 "orgnr" = ["Trädbränsle-, torv- och avfallspriser: PeOrgNr"]
 "orgnr-2" = ["Trädbränsle-, torv- och avfallspriser: orgnr"]
-"postadress-anst" = ["Trädbränsle-, torv- och avfallspriser: PoAnst # v400"]
 "postnr" = ["Trädbränsle-, torv- och avfallspriser: PostNr"]
 "postort" = ["Trädbränsle-, torv- och avfallspriser: PoAnst @ 2014-01-01"]
 "stratum" = ["Trädbränsle-, torv- och avfallspriser: stratum"]

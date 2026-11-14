@@ -5,7 +5,6 @@ public = "piaac"
 [variables]
 "alder" = ["Den internationella undersökningen av vuxnas färdigheter (PIAAC): AGE_R"]
 "alder-avslutad-utbildning" = ["Den internationella undersökningen av vuxnas färdigheter (PIAAC): B_Q01c1"]
-"arbetsplats-larande" = ["Den internationella undersökningen av vuxnas färdigheter (PIAAC): D_Q12c # v32908"]
 "avbruten-utbildning-b-q03c2" = ["Den internationella undersökningen av vuxnas färdigheter (PIAAC): B_Q03c2"]
 "hogsta-fullfoljda-utbildning-utomlands-niva" = ["Den internationella undersökningen av vuxnas färdigheter (PIAAC): B_Q01a3"]
 "utbildningens-inriktning" = ["Den internationella undersökningen av vuxnas färdigheter (PIAAC): B_Q01b"]
