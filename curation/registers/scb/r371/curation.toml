@@ -25971,18 +25971,6 @@ evidence = "Källan anger underlag för småhus.\ncatalog:variable_text:9871:138
 
 [[statement]]
 kind = "set"
-subject = "var:underlag-fastighetsavgift-smahus-0375"
-fields = { "sets" = ["underlag-fastighetsavgift"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:62378\ncatalog:occurrence:62379"
-
-[[statement]]
-kind = "set"
-subject = "var:underlag-fastighetsavgift-smahus-0375"
-fields = { "tags" = ["taxation"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:62378\ncatalog:occurrence:62379"
-
-[[statement]]
-kind = "set"
 subject = "var:underlag-fastighetsskatt-hyreshus-02"
 fields = { "sets" = ["underlag-fastighetsskatt"] }
 evidence = "Källan anger fastighetsskatteunderlag.\ncatalog:variable_text:9873:13514:13879"
@@ -32154,3 +32142,21 @@ kind = "set"
 subject = "set:vardbidrag"
 fields = { "description" = "Vårdbidrag, som kan fås när en förälder vårdar ett sjukt barn eller ett barn med funktionsnedsättning i hemmet; ett krav är att barnet behöver särskild vård och tillsyn i minst sex månader och/eller att föräldern har särskilda merkostnader på grund av barnets funktionsnedsättning eller sjukdom, till exempel för slitage på kläder, extra tvätt eller särskild kost. Gruppen innehåller beloppet enligt kontrolluppgift från pensions- och försäkringsutbetalare och enligt deklarationsuppgift, merkostnadsdelen, storleken på löpande vårdbidrag (månadsbelopp), procent för skattefritt vårdbidrag, antal månader med vårdbidrag, antal barn som vårdbidraget utgår för (2006–2017) och en kod för delat vårdbidrag." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar gäller samma bidrag: belopp, delbelopp, månader, barn och koder.\ncatalog:variable_text:15121:13149:15706\ncatalog:variable_text:15189:13149:19723\ncatalog:variable_text:15994:13149:19723\ncatalog:variable_text:16426:13149:19723\ncatalog:variable_text:16636:13149:19723\ncatalog:variable_text:16807:13149:17532\ncatalog:variable_text:16807:17532:17897\ncatalog:variable_text:16840:13149:17532\ncatalog:variable_text:16840:17532:17897\ncatalog:variable_text:16841:17897:19723\ncatalog:variable_text:17025:13149:19723"
+
+[[statement]]
+kind = "set"
+subject = "individregister: AFA0375 @2008..2012 where key = 'v19878'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, FASIT Individregister 2008-2012 (RegVerID 15748, 13331, 13085, 13072, 13052) documents column AFA0375 under VarId 19807 \"Underlag för fastighetsavgift med 0,375 % avseende småhus\" and VarId 19878 \"Underlag för fastighetsavgift för småhus, 0,375 %\". Same quantity (assessment base for the 0,375 % småhus property fee), both int. 19807 documents AFA0375 in every release 2008-2021; 19878 only in 2008-2012 and under no other column. The 19878 rows are withheld; 19807 loses nothing."
+
+[[statement]]
+kind = "set"
+subject = "individregister: TAVLON @2017 where key = 'v40286'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, FASIT Individregister 2017 (RegVerID 14148) documents column TAVLON under VarId 37473 \"Beräknad avtalsenlig sjuklön under sjukpenningsperioden\" and VarId 40286 \"Beräknad avtalsersättning som lön\". 37473 is TAVLON in 2006-2016 and 40286 in 2018-2023, so 2017 is the changeover. The source does not settle which; 37473 is the more plausible owner because the 2017 40286 row is int like the 2008-2017 series while 40286 is float from 2018, and the 2017 operational definition of 37473 was rewritten, so the 2017 column was still the sjuklön amount (maintainer 2026-11-14: place under the more plausible owner). The 40286 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "individregister: TTJU @2020 where key = 'v45733'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, FASIT Individregister 2020 (RegVerID 18394) documents column TTJU under VarId 37635 \"Inkomst av tjänst, 2 år gamla\" (CVID 855700) and VarId 45733 \"Inkomst av tjänst, utländskt beskattad\" (CVID 861107). 37635 is TTJU in 2006-2020 and moves to TTJ_TAR2 in 2021-2023, where 45733 takes TTJU. The source does not settle which for 2020; 37635 is the more plausible owner because the 2020 TTJU series is unbroken from 2006 and the rename to TTJ_TAR2, which frees TTJU for 45733, first appears in 2021 (maintainer 2026-11-14: place under the more plausible owner). The 45733 row is withheld."
