@@ -2293,3 +2293,27 @@ kind = "set"
 subject = "release:komvux/r17540"
 fields = { "table" = "komvux-och-samlat-betygsdokument" }
 evidence = "SCB documents this extract (RegVerID 17540) under the Komvux variant beside the course register \"Komvux HT 1988 - VT 2024\" (RegVerID 17564), with its own population and value sets. Moved whole to its own table so that it does not make the course register's segments ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "komvux-och-samlat-betygsdokument: {sun2000inr,yfieldmax}"
+fields = { "classification" = "class/sun/sun2000-inriktning" }
+evidence = "The same columns as in the Komvux table, bound there to SUN 2000 Utbildningsinriktning; release r17540 moved to its own table and keeps the binding. Legacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "komvux-och-samlat-betygsdokument: sun2020inr"
+fields = { "classification" = "class/sun/sun2020-inriktning" }
+evidence = "The same column as in the Komvux table, bound there to SUN 2020 Utbildningsinriktning; release r17540 moved to its own table and keeps the binding. Legacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "komvux-och-samlat-betygsdokument: {ny_niva,sun2020niva}"
+fields = { "classification" = "class/sun/sun2020-niva" }
+evidence = "The same columns as in the Komvux table, bound there to SUN 2020 Utbildningsnivå; release r17540 moved to its own table and keeps the binding. Legacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "gymnasieintyg-summerade-poang: totalpoang_2012"
+fields = { "label" = "Lästa gymnasiala kurspoäng för personer med gymnasieintyg 2012" }
+evidence = "SCB Registerinformation, RegVerID 17537, TotalPoang_2012 \"Poängomfattning\", operational definition: \"Antal poäng som lästs på gymnasiala kurser för personer som erhållit ett gymnasieintyg under 2012.\" Labelled like its 2013-2024 siblings."

@@ -114423,4 +114423,70 @@ evidence = "1989_old (RegVerID 737) is SCB's second documentation of the 1989 su
 kind = "set"
 subject = "individer-16plus-ulf-1989-old: ha0333 where key = 'v11037'"
 fields = { "variable" = "none" }
-evidence = "SCB Registerinformation, RegVerID 737 (1989_old) lists the one column HA0333 twice: under VarId 11037 \"Hjälp med dagliga sysslor\" (\"Skulle Ni behöva få hjälp med Era dagliga sysslor?\") and under VarId 18415 \"Hjälp med dagliga sysslor långvarig sjukdom\". The release \"1989\" (RegVerID 20238) of the same survey and every other ULF release document HA0333 only under VarId 18415, so that listing owns the column; VarId 11037 occurs nowhere else. A duplicate listing of a column placed through another occurrence; without this the 1989_old segment of HA0333 was ambiguous."
+evidence = "SCB Registerinformation, RegVerID 737 (1989_old) lists the one column HA0333 twice: under VarId 11037 \"Hjälp med dagliga sysslor\" (\"Skulle Ni behöva få hjälp med Era dagliga sysslor?\") and under VarId 18415 \"Hjälp med dagliga sysslor långvarig sjukdom\". The release \"1989\" (RegVerID 20238) of the same survey and every other ULF release document HA0333 only under VarId 18415, so that listing owns the column. Elsewhere VarId 11037 is the column HA0330 (1980, 1981 and release 1989), which 1989_old does not list: the 11037 row is a mis-keyed listing of HA0330, a column placed through release 1989 of the same survey. Without this the 1989_old segment of HA0333 was ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf-1989-old: am0170 where key = 'v9928'"
+fields = { "variable" = "buller-pa-arbete-hela-tiden-ibland" }
+evidence = "SCB Registerinformation, RegVerID 737 (1989_old), AM0170 v9928: the same VarId 9928 as AM0170 in the main ULF table, which the survey-9 statement assigns to this variable for 1989..2004. 1989_old and 1989 (RegVerID 20238) document the same 1989 survey (6 782 interviews); one delivered column, one variable."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf-1989-old: am0180 where key = 'v14517'"
+fields = { "variable" = "buller-pa-arbetet-oronbedovande" }
+evidence = "SCB Registerinformation, RegVerID 737 (1989_old), AM0180 v14517: the same VarId 14517 as AM0180 in the main ULF table, which the survey-10 statement assigns to this variable for 1989..2004. 1989_old and 1989 (RegVerID 20238) document the same 1989 survey (6 782 interviews); one delivered column, one variable."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf-1989-old: am0290 where key = 'v13754'"
+fields = { "variable" = "tunga-lyft-i-arbetet" }
+evidence = "SCB Registerinformation, RegVerID 737 (1989_old), AM0290 v13754: the same VarId 13754 as AM0290 in the main ULF table, which the survey-28 statement assigns to this variable for 1989..2004. 1989_old and 1989 (RegVerID 20238) document the same 1989 survey (6 782 interviews); one delivered column, one variable."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf-1989-old: am0301 where key = 'v13755'"
+fields = { "variable" = "tunga-lyft-harledd" }
+evidence = "SCB Registerinformation, RegVerID 737 (1989_old), AM0301 v13755: the same VarId 13755 as AM0301 in the main ULF table, which the survey-27 statement assigns to this variable for 1989..2004. 1989_old and 1989 (RegVerID 20238) document the same 1989 survey (6 782 interviews); one delivered column, one variable."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf-1989-old: go1802 where key = 'v9699'"
+fields = { "variable" = "barn-1-sjuk-diagnos" }
+evidence = "SCB Registerinformation, RegVerID 737 (1989_old), GO1802 v9699: \"Barn sjuk diagnos\", the column release 1989 documents as GO1802 VarId 49737 \"Barn 1 sjuk diagnos\". 1989_old and 1989 (RegVerID 20238) document the same 1989 survey (6 782 interviews); one delivered column, one variable."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf-1989-old: go1831 where key = 'v9695'"
+fields = { "variable" = "barn-1-langvarig-fodelsear" }
+evidence = "SCB Registerinformation, RegVerID 737 (1989_old), GO1831 v9695: \"Barn långvarig sjukdom födelseår\", the column release 1989 documents as GO1831 VarId 49689 \"Barn 1 långvarig sjukdom födelseår\". 1989_old and 1989 (RegVerID 20238) document the same 1989 survey (6 782 interviews); one delivered column, one variable."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf-1989-old: go1832 where key = 'v9694'"
+fields = { "variable" = "barn-1-langvarig-sjukdom-diagnos" }
+evidence = "SCB Registerinformation, RegVerID 737 (1989_old), GO1832 v9694: \"Barn 1 långvarig sjukdom diagnos\", the column release 1989 documents as GO1832 VarId 49688 under the same label. 1989_old and 1989 (RegVerID 20238) document the same 1989 survey (6 782 interviews); one delivered column, one variable."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf-1989-old: go1841 where key = 'v18410'"
+fields = { "variable" = "barn-2-langvarig-fodelsear" }
+evidence = "SCB Registerinformation, RegVerID 737 (1989_old), GO1841 v18410: \"Barn 2 långvarig sjukdom födelseår\", the column release 1989 documents as GO1841 VarId 49726 under the same label. 1989_old and 1989 (RegVerID 20238) document the same 1989 survey (6 782 interviews); one delivered column, one variable."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf-1989-old: go1862 where key = 'v9696'"
+fields = { "variable" = "barn-1-medicin-diagnos" }
+evidence = "SCB Registerinformation, RegVerID 737 (1989_old), GO1862 v9696: \"Barn medicin diagnos\", the column release 1989 documents as GO1862 VarId 49715 \"Barn 1 medicin diagnos\". 1989_old and 1989 (RegVerID 20238) document the same 1989 survey (6 782 interviews); one delivered column, one variable."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf-1989-old: ha0371 where key = 'v11988'"
+fields = { "variable" = "medicinsk-vard-i-hemmet-2" }
+evidence = "SCB Registerinformation, RegVerID 737 (1989_old), HA0371 v11988: \"Medicinsk vård i hemmet\", the column release 1989 documents as HA0371 VarId 18416 \"Medicinsk vård i hemmet 2\"; VarId 11988 is HA0373 in every other release, 1989_old included, so here it split HA0373's variable by spelling. 1989_old and 1989 (RegVerID 20238) document the same 1989 survey (6 782 interviews); one delivered column, one variable."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf-1989-old: ha0956 where key = 'v13604'"
+fields = { "variable" = "tillganglighet-till-och-fran-bostaden" }
+evidence = "SCB Registerinformation, RegVerID 737 (1989_old), HA0956 v13604: \"Tillgänglighet (in och ut ur bostaden)\", the column release 1989 documents as HA0956 VarId 49745 \"Tillgänglighet (till och från bostaden)\"; VarId 13604 is BO0092 in every other release, 1989_old included, so here it split BO0092's variable by spelling. 1989_old and 1989 (RegVerID 20238) document the same 1989 survey (6 782 interviews); one delivered column, one variable."

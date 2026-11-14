@@ -28778,7 +28778,7 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "assert"
 subject = "table:bostadshushall-vx"
-fact = { "entity" = "table", "fields" = { "name" = "Bostadshushåll, växelvis boende barn (VX)", "description" = "Hushållsinkomster där hänsyn har tagits för växelvis boende barn (VX), från ett slutligt uttag av produktionsmaterial från Skatteverket. Kolumnerna har VX i namnet. Hushållsinkomster utan den hänsynen finns i tabellen Bostadshushåll." } }
+fact = { "entity" = "table", "fields" = { "name" = "Bostadshushåll, växelvis boende barn (VX)", "description" = "Hushållsinkomster där hänsyn har tagits till växelvis boende barn (VX), från ett slutligt uttag av produktionsmaterial från Skatteverket. Hushållsinkomster utan den hänsynen finns i tabellen Bostadshushåll." } }
 evidence = "SCB Registerinformation, RegVerID 18563, 18997, 19678 and 20243, the releases \"2021VX, slutlig version\" … \"2024VX, slutlig version\" of the Bostadshushåll variant: \"Uppgifterna avser hushållsinkomster där hänsyn har tagits för växelvis boende barn. Grunden är uppgifter från ett slutligt uttag av produktionsmaterial från Skatteverket.\" They document columns such as CDISPVXHB and BHTYPVXHB under the VarIds of the ordinary household columns (CDISPHB, BHTYPHB). In the Bostadshushåll table each collides (F8) with the ordinary \"20xx, slutlig version\" release of the same year, and its columns are shadowed by key. They get a table of their own."
 
 [[statement]]
