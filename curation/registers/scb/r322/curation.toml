@@ -686,66 +686,6 @@ evidence = "F12 är en opak frågekod.\ncatalog:variable_text:7121:14791:14975"
 
 [[statement]]
 kind = "set"
-subject = "var:f13-1"
-fields = { "sets" = ["obligatoriskt-samarbete"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54291\ncatalog:occurrence:54292"
-
-[[statement]]
-kind = "set"
-subject = "var:f13-1"
-fields = { "tags" = ["education"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54291\ncatalog:occurrence:54292"
-
-[[statement]]
-kind = "set"
-subject = "var:f13-2"
-fields = { "sets" = ["obligatoriskt-samarbete"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54293\ncatalog:occurrence:54294"
-
-[[statement]]
-kind = "set"
-subject = "var:f13-2"
-fields = { "tags" = ["education"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54293\ncatalog:occurrence:54294"
-
-[[statement]]
-kind = "set"
-subject = "var:f13-3"
-fields = { "sets" = ["obligatoriskt-samarbete"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54295\ncatalog:occurrence:54296"
-
-[[statement]]
-kind = "set"
-subject = "var:f13-3"
-fields = { "tags" = ["education"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54295\ncatalog:occurrence:54296"
-
-[[statement]]
-kind = "set"
-subject = "var:f13-4"
-fields = { "sets" = ["obligatoriskt-samarbete"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54297\ncatalog:occurrence:54298"
-
-[[statement]]
-kind = "set"
-subject = "var:f13-4"
-fields = { "tags" = ["education"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54297\ncatalog:occurrence:54298"
-
-[[statement]]
-kind = "set"
-subject = "var:f13-5"
-fields = { "sets" = ["obligatoriskt-samarbete"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54299\ncatalog:occurrence:54300"
-
-[[statement]]
-kind = "set"
-subject = "var:f13-5"
-fields = { "tags" = ["education"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54299\ncatalog:occurrence:54300"
-
-[[statement]]
-kind = "set"
 subject = "var:f13-txt"
 fields = { "sets" = ["obligatoriskt-samarbete"] }
 evidence = "F13_txt är en ogenomskinlig källkod. Variabeln avser obligatoriskt samarbete och ingår i kandidatgruppen.\ncatalog:occurrence:54302\ncatalog:variable_text:7127:14791:14975"
@@ -1094,18 +1034,6 @@ evidence = "Variabeln avser förälders utbildning.\ncatalog:variable_text:7155:
 
 [[statement]]
 kind = "set"
-subject = "var:forsorjning-annat-f19-4"
-fields = { "sets" = ["forsorjningskallor-under-studierna"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54346\ncatalog:occurrence:54347"
-
-[[statement]]
-kind = "set"
-subject = "var:forsorjning-annat-f19-4"
-fields = { "tags" = [] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54346\ncatalog:occurrence:54347"
-
-[[statement]]
-kind = "set"
 subject = "var:forsorjning-annat-f24"
 fields = { "sets" = ["forsorjningskallor-under-studierna"] }
 evidence = "Variabeln anger annan försörjningskälla.\ncatalog:occurrence:54368"
@@ -1238,18 +1166,6 @@ evidence = "Lön är en försörjningskälla.\ncatalog:occurrence:54371"
 
 [[statement]]
 kind = "set"
-subject = "var:forsorjning-lon-f19-3"
-fields = { "sets" = ["forsorjningskallor-under-studierna"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54344\ncatalog:occurrence:54345"
-
-[[statement]]
-kind = "set"
-subject = "var:forsorjning-lon-f19-3"
-fields = { "tags" = ["income"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54344\ncatalog:occurrence:54345"
-
-[[statement]]
-kind = "set"
 subject = "var:forsorjning-sjukpenning"
 fields = { "sets" = ["forsorjningskallor-under-studierna"] }
 evidence = "Variabeln avser sjukpenning eller sjukersättning.\ncatalog:occurrence:54351"
@@ -1310,18 +1226,6 @@ evidence = "Studiemedelsbidrag är en försörjningskälla.\ncatalog:occurrence:
 
 [[statement]]
 kind = "set"
-subject = "var:forsorjning-studiemedel-bidrag-f19-2"
-fields = { "sets" = ["forsorjningskallor-under-studierna"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54342\ncatalog:occurrence:54343"
-
-[[statement]]
-kind = "set"
-subject = "var:forsorjning-studiemedel-bidrag-f19-2"
-fields = { "tags" = ["transfers"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54342\ncatalog:occurrence:54343"
-
-[[statement]]
-kind = "set"
 subject = "var:forsorjning-studiemedel-lan-och-bidrag"
 fields = { "sets" = ["forsorjningskallor-under-studierna"] }
 evidence = "Studiemedel är en försörjningskälla.\ncatalog:occurrence:54369"
@@ -1331,18 +1235,6 @@ kind = "set"
 subject = "var:forsorjning-studiemedel-lan-och-bidrag"
 fields = { "tags" = ["transfers"] }
 evidence = "Studiemedel är en försörjningskälla.\ncatalog:occurrence:54369"
-
-[[statement]]
-kind = "set"
-subject = "var:forsorjning-studiemedel-lan-och-bidrag-f19-1"
-fields = { "sets" = ["forsorjningskallor-under-studierna"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54339\ncatalog:occurrence:54340"
-
-[[statement]]
-kind = "set"
-subject = "var:forsorjning-studiemedel-lan-och-bidrag-f19-1"
-fields = { "tags" = ["transfers"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54339\ncatalog:occurrence:54340"
 
 [[statement]]
 kind = "set"
@@ -1826,18 +1718,6 @@ evidence = "Suffixet F18_txt är en ogenomskinlig källkod; familjen behandlas k
 
 [[statement]]
 kind = "set"
-subject = "var:retrospektivt-val-f17"
-fields = { "sets" = ["retrospektivt-studieval"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54322\ncatalog:occurrence:54323"
-
-[[statement]]
-kind = "set"
-subject = "var:retrospektivt-val-f17"
-fields = { "tags" = ["education"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54322\ncatalog:occurrence:54323"
-
-[[statement]]
-kind = "set"
 subject = "var:sammanraknad-forvarvsinkomst"
 fields = { "sets" = [] }
 evidence = "Variabeln avser förvärvsinkomst.\ncatalog:variable_text:7220:14791:14975"
@@ -1886,18 +1766,6 @@ evidence = "Variabeln anger nedlagd studietid.\ncatalog:variable_text:7223:14791
 
 [[statement]]
 kind = "set"
-subject = "var:studietid-f07"
-fields = { "sets" = ["studietid"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54240\ncatalog:occurrence:54241"
-
-[[statement]]
-kind = "set"
-subject = "var:studietid-f07"
-fields = { "tags" = ["education"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54240\ncatalog:occurrence:54241"
-
-[[statement]]
-kind = "set"
 subject = "var:studietid-korrigerad-f08-korr"
 fields = { "sets" = ["studietid"] }
 evidence = "Variabeln anger korrigerad studietid.\ncatalog:variable_text:7225:14791:14975"
@@ -1919,66 +1787,6 @@ kind = "set"
 subject = "var:sysselsattningstyp"
 fields = { "tags" = ["employment"] }
 evidence = "Variabeln anger sysselsättningstyp.\ncatalog:variable_text:7226:14791:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:sysselsattningstyp-f18-1"
-fields = { "sets" = ["sysselsattningstyp"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54325\ncatalog:occurrence:54326"
-
-[[statement]]
-kind = "set"
-subject = "var:sysselsattningstyp-f18-1"
-fields = { "tags" = ["education"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54325\ncatalog:occurrence:54326"
-
-[[statement]]
-kind = "set"
-subject = "var:sysselsattningstyp-f18-2"
-fields = { "sets" = ["sysselsattningstyp"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54327\ncatalog:occurrence:54328"
-
-[[statement]]
-kind = "set"
-subject = "var:sysselsattningstyp-f18-2"
-fields = { "tags" = ["education"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54327\ncatalog:occurrence:54328"
-
-[[statement]]
-kind = "set"
-subject = "var:sysselsattningstyp-f18-3"
-fields = { "sets" = ["sysselsattningstyp"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54329\ncatalog:occurrence:54330"
-
-[[statement]]
-kind = "set"
-subject = "var:sysselsattningstyp-f18-3"
-fields = { "tags" = ["employment"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54329\ncatalog:occurrence:54330"
-
-[[statement]]
-kind = "set"
-subject = "var:sysselsattningstyp-f18-4"
-fields = { "sets" = ["sysselsattningstyp"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54331\ncatalog:occurrence:54332"
-
-[[statement]]
-kind = "set"
-subject = "var:sysselsattningstyp-f18-4"
-fields = { "tags" = ["employment"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54331\ncatalog:occurrence:54332"
-
-[[statement]]
-kind = "set"
-subject = "var:sysselsattningstyp-f18-5"
-fields = { "sets" = ["sysselsattningstyp"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54333\ncatalog:occurrence:54334"
-
-[[statement]]
-kind = "set"
-subject = "var:sysselsattningstyp-f18-5"
-fields = { "tags" = ["employment"] }
-evidence = "Samma källkolumn har olika överlappande mappningar.\ncatalog:occurrence:54333\ncatalog:occurrence:54334"
 
 [[statement]]
 kind = "set"
@@ -2438,36 +2246,6 @@ evidence = "#2102 same-label cluster 'Obligatorisk samarbete' (2 variables): jud
 
 [[statement]]
 kind = "set"
-subject = "var:f13-1"
-fields = { "label" = "Obligatoriskt samarbete genom fysisk träff (F13_1)" }
-evidence = "#2102 same-label cluster 'Obligatoriskt samarbete genom fysisk träff' (2 variables): judged different meaning, medium confidence; Same question in the F13 and F18 blocks of one table; no text says how they differ, so raw column codes."
-
-[[statement]]
-kind = "set"
-subject = "var:f13-2"
-fields = { "label" = "Obligatoriskt samarbete genom e-post (F13_2)" }
-evidence = "#2102 same-label cluster 'Obligatoriskt samarbete genom e-post' (2 variables): judged different meaning, medium confidence; Same question in the F13 and F18 blocks of one table; no text says how they differ, so raw column codes."
-
-[[statement]]
-kind = "set"
-subject = "var:f13-3"
-fields = { "label" = "Obligatoriskt samarbete genom diskussionsforum (F13_3)" }
-evidence = "#2102 same-label cluster 'Obligatoriskt samarbete genom diskussionsforum' (2 variables): judged different meaning, medium confidence; Same question in the F13 and F18 blocks of one table; no text says how they differ, so raw column codes."
-
-[[statement]]
-kind = "set"
-subject = "var:f13-4"
-fields = { "label" = "Obligatoriskt samarbete genom videolänk/-konferens (F13_4)" }
-evidence = "#2102 same-label cluster 'Obligatoriskt samarbete genom videolänk/-konferens' (2 variables): judged different meaning, medium confidence; Same question in the F13 and F18 blocks of one table; no text says how they differ, so raw column codes."
-
-[[statement]]
-kind = "set"
-subject = "var:f13-5"
-fields = { "label" = "Obligatoriskt samarbete genom samtal via telefon (F13_5)" }
-evidence = "#2102 same-label cluster 'Obligatoriskt samarbete genom samtal via telefon' (2 variables): judged different meaning, medium confidence; Same question in the F13 and F18 blocks of one table; no text says how they differ, so raw column codes."
-
-[[statement]]
-kind = "set"
 subject = "var:f13-txt"
 fields = { "label" = "Obligatoriskt samarbete på annat sätt (F13_txt)" }
 evidence = "#2102 same-label cluster 'Obligatoriskt samarbete på annat sätt' (2 variables): judged different meaning, medium confidence; Same question in the F13 and F18 blocks of one table; no text says how they differ, so raw column codes."
@@ -2576,12 +2354,6 @@ evidence = "#2102 same-label cluster 'Färdighetsträning i skriftliga presentat
 
 [[statement]]
 kind = "set"
-subject = "var:forsorjning-annat-f19-4"
-fields = { "label" = "Försörjning - annat (arbetsgivaren betalade, F19_4)" }
-evidence = "#2102 same-label cluster 'Försörjning - annat' (4 variables): judged different meaning, medium confidence; Opdefs: F19 and F24 are 'Annat', F19_4 and F24_04 'Arbetsgivaren betalade för mina studier'; F19 and F24 blocks are not distinguished by any text, so raw codes."
-
-[[statement]]
-kind = "set"
 subject = "var:forsorjning-annat-f24"
 fields = { "label" = "Försörjning - annat (annat, F24)" }
 evidence = "#2102 same-label cluster 'Försörjning - annat' (4 variables): judged different meaning, medium confidence; Opdefs: F19 and F24 are 'Annat', F19_4 and F24_04 'Arbetsgivaren betalade för mina studier'; F19 and F24 blocks are not distinguished by any text, so raw codes."
@@ -2648,12 +2420,6 @@ evidence = "#2102 same-label cluster 'Försörjning - lön' (2 variables): judge
 
 [[statement]]
 kind = "set"
-subject = "var:forsorjning-lon-f19-3"
-fields = { "label" = "Försörjning - lön (F19_3)" }
-evidence = "#2102 same-label cluster 'Försörjning - lön' (2 variables): judged different meaning, medium confidence; Same item in the F19 and F24 blocks of one table; no text says how they differ, so raw column codes."
-
-[[statement]]
-kind = "set"
 subject = "var:forsorjning-sjukpenning"
 fields = { "label" = "Försörjning - sjukpenning (F19_8)" }
 evidence = "#2102 same-label cluster 'Försörjning - sjukpenning' (2 variables): judged different meaning, medium confidence; Same item in the F19 and F24 blocks of one table; no text says how they differ, so raw column codes."
@@ -2684,20 +2450,8 @@ evidence = "#2102 same-label cluster 'Försörjning - studiemedel (bidrag)' (2 v
 
 [[statement]]
 kind = "set"
-subject = "var:forsorjning-studiemedel-bidrag-f19-2"
-fields = { "label" = "Försörjning - studiemedel (bidrag) (F19_2)" }
-evidence = "#2102 same-label cluster 'Försörjning - studiemedel (bidrag)' (2 variables): judged different meaning, medium confidence; Same item in the F19 and F24 blocks of one table; no text says how they differ, so raw column codes."
-
-[[statement]]
-kind = "set"
 subject = "var:forsorjning-studiemedel-lan-och-bidrag"
 fields = { "label" = "Försörjning - studiemedel (lån och bidrag) (F24_01)" }
-evidence = "#2102 same-label cluster 'Försörjning - studiemedel (lån och bidrag)' (2 variables): judged different meaning, medium confidence; Same item in the F19 and F24 blocks of one table; no text says how they differ, so raw column codes."
-
-[[statement]]
-kind = "set"
-subject = "var:forsorjning-studiemedel-lan-och-bidrag-f19-1"
-fields = { "label" = "Försörjning - studiemedel (lån och bidrag) (F19_1)" }
 evidence = "#2102 same-label cluster 'Försörjning - studiemedel (lån och bidrag)' (2 variables): judged different meaning, medium confidence; Same item in the F19 and F24 blocks of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
@@ -2888,20 +2642,8 @@ evidence = "#2102 same-label cluster 'Obligatoriskt samarbete på annat sätt' (
 
 [[statement]]
 kind = "set"
-subject = "var:retrospektivt-val-f17"
-fields = { "label" = "Retrospektivt val (F17)" }
-evidence = "#2102 same-label cluster 'Retrospektivt val' (2 variables): judged different meaning, medium confidence; Same question in two columns (F22, F17) of one table; no text says how they differ, so raw column codes."
-
-[[statement]]
-kind = "set"
 subject = "var:studietid"
 fields = { "label" = "Studietid (F08)" }
-evidence = "#2102 same-label cluster 'Studietid' (2 variables): judged different meaning, medium confidence; Same question in two columns (F08, F07) of one table; no text says how they differ, so raw column codes."
-
-[[statement]]
-kind = "set"
-subject = "var:studietid-f07"
-fields = { "label" = "Studietid (F07)" }
 evidence = "#2102 same-label cluster 'Studietid' (2 variables): judged different meaning, medium confidence; Same question in two columns (F08, F07) of one table; no text says how they differ, so raw column codes."
 
 [[statement]]
@@ -2914,36 +2656,6 @@ evidence = "#2102 same-label cluster 'Studietid korrigerad' (2 variables): judge
 kind = "set"
 subject = "var:sysselsattningstyp"
 fields = { "label" = "Sysselsättningstyp (annat, F18)" }
-evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, medium confidence; Opdefs: each activity item (other, studied full time/part time, worked full time/part time, parental leave, job seeker/measure, sick-listed) appears in both an F18 and an F23 block; no text says how the blocks differ, so the item and the raw code."
-
-[[statement]]
-kind = "set"
-subject = "var:sysselsattningstyp-f18-1"
-fields = { "label" = "Sysselsättningstyp (studerade heltid, F18_1)" }
-evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, medium confidence; Opdefs: each activity item (other, studied full time/part time, worked full time/part time, parental leave, job seeker/measure, sick-listed) appears in both an F18 and an F23 block; no text says how the blocks differ, so the item and the raw code."
-
-[[statement]]
-kind = "set"
-subject = "var:sysselsattningstyp-f18-2"
-fields = { "label" = "Sysselsättningstyp (studerade deltid, F18_2)" }
-evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, medium confidence; Opdefs: each activity item (other, studied full time/part time, worked full time/part time, parental leave, job seeker/measure, sick-listed) appears in both an F18 and an F23 block; no text says how the blocks differ, so the item and the raw code."
-
-[[statement]]
-kind = "set"
-subject = "var:sysselsattningstyp-f18-3"
-fields = { "label" = "Sysselsättningstyp (arbetade heltid, F18_3)" }
-evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, medium confidence; Opdefs: each activity item (other, studied full time/part time, worked full time/part time, parental leave, job seeker/measure, sick-listed) appears in both an F18 and an F23 block; no text says how the blocks differ, so the item and the raw code."
-
-[[statement]]
-kind = "set"
-subject = "var:sysselsattningstyp-f18-4"
-fields = { "label" = "Sysselsättningstyp (arbetade deltid, F18_4)" }
-evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, medium confidence; Opdefs: each activity item (other, studied full time/part time, worked full time/part time, parental leave, job seeker/measure, sick-listed) appears in both an F18 and an F23 block; no text says how the blocks differ, so the item and the raw code."
-
-[[statement]]
-kind = "set"
-subject = "var:sysselsattningstyp-f18-5"
-fields = { "label" = "Sysselsättningstyp (föräldraledig, F18_5)" }
 evidence = "#2102 same-label cluster 'Sysselsättningstyp' (16 variables): judged different meaning, medium confidence; Opdefs: each activity item (other, studied full time/part time, worked full time/part time, parental leave, job seeker/measure, sick-listed) appears in both an F18 and an F23 block; no text says how the blocks differ, so the item and the raw code."
 
 [[statement]]

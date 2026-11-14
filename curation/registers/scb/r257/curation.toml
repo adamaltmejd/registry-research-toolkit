@@ -8754,18 +8754,6 @@ evidence = "Samma källkolumn är mappad till olika populationer i överlappande
 
 [[statement]]
 kind = "set"
-subject = "var:icke-innovationsaktiva-andra-anledningar-an-reas-nminn-oth"
-fields = { "sets" = ["andra-anledningar-an-resursbrist"] }
-evidence = "Samma källkolumn är mappad till olika populationer i överlappande perioder.\ncatalog:occurrence:248428\ncatalog:occurrence:248617"
-
-[[statement]]
-kind = "set"
-subject = "var:icke-innovationsaktiva-andra-anledningar-an-reas-nminn-oth"
-fields = { "tags" = ["research"] }
-evidence = "Samma källkolumn är mappad till olika populationer i överlappande perioder.\ncatalog:occurrence:248428\ncatalog:occurrence:248617"
-
-[[statement]]
-kind = "set"
 subject = "var:icke-innovationsaktiva-bristande-resurser-reas-ninn-resc"
 fields = { "sets" = ["bristande-resurser-som-innovationsanledning"] }
 evidence = "Samma källkolumn är mappad till olika populationer i överlappande perioder.\ncatalog:occurrence:248426\ncatalog:occurrence:248615"
@@ -8778,18 +8766,6 @@ evidence = "Samma källkolumn är mappad till olika populationer i överlappande
 
 [[statement]]
 kind = "set"
-subject = "var:icke-innovationsaktiva-bristande-resurser-reas-nminn-resc"
-fields = { "sets" = ["bristande-resurser-som-innovationsanledning"] }
-evidence = "Samma källkolumn är mappad till olika populationer i överlappande perioder.\ncatalog:occurrence:248429\ncatalog:occurrence:248618"
-
-[[statement]]
-kind = "set"
-subject = "var:icke-innovationsaktiva-bristande-resurser-reas-nminn-resc"
-fields = { "tags" = ["research"] }
-evidence = "Samma källkolumn är mappad till olika populationer i överlappande perioder.\ncatalog:occurrence:248429\ncatalog:occurrence:248618"
-
-[[statement]]
-kind = "set"
 subject = "var:icke-innovationsaktiva-fanns-inget-behov-reas-ninn-nneed"
 fields = { "sets" = [] }
 evidence = "Samma källkolumn har överlappande ägare med olika populationer.\ncatalog:occurrence:248424\ncatalog:occurrence:248613"
@@ -8799,18 +8775,6 @@ kind = "set"
 subject = "var:icke-innovationsaktiva-fanns-inget-behov-reas-ninn-nneed"
 fields = { "tags" = ["research"] }
 evidence = "Samma källkolumn har överlappande ägare med olika populationer.\ncatalog:occurrence:248424\ncatalog:occurrence:248613"
-
-[[statement]]
-kind = "set"
-subject = "var:icke-innovationsaktiva-fanns-inget-behov-reas-nminn-nneed"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare med olika populationer.\ncatalog:occurrence:248427\ncatalog:occurrence:248616"
-
-[[statement]]
-kind = "set"
-subject = "var:icke-innovationsaktiva-fanns-inget-behov-reas-nminn-nneed"
-fields = { "tags" = ["research"] }
-evidence = "Samma källkolumn har överlappande ägare med olika populationer.\ncatalog:occurrence:248427\ncatalog:occurrence:248616"
 
 [[statement]]
 kind = "set"
@@ -9486,18 +9450,6 @@ evidence = "Samma källkolumn är mappad till olika populationer i överlappande
 
 [[statement]]
 kind = "set"
-subject = "var:innovationsaktiva-andra-anledningar-an-reas-nminn-oth"
-fields = { "sets" = ["andra-anledningar-an-resursbrist"] }
-evidence = "Samma källkolumn är mappad till olika populationer i överlappande perioder.\ncatalog:occurrence:248428\ncatalog:occurrence:248617"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsaktiva-andra-anledningar-an-reas-nminn-oth"
-fields = { "tags" = ["research"] }
-evidence = "Samma källkolumn är mappad till olika populationer i överlappande perioder.\ncatalog:occurrence:248428\ncatalog:occurrence:248617"
-
-[[statement]]
-kind = "set"
 subject = "var:innovationsaktiva-bristande-resurser-reas-ninn-resc"
 fields = { "sets" = ["bristande-resurser-som-innovationsanledning"] }
 evidence = "Samma källkolumn är mappad till olika populationer i överlappande perioder.\ncatalog:occurrence:248426\ncatalog:occurrence:248615"
@@ -9510,18 +9462,6 @@ evidence = "Samma källkolumn är mappad till olika populationer i överlappande
 
 [[statement]]
 kind = "set"
-subject = "var:innovationsaktiva-bristande-resurser-reas-nminn-resc"
-fields = { "sets" = ["bristande-resurser-som-innovationsanledning"] }
-evidence = "Samma källkolumn är mappad till olika populationer i överlappande perioder.\ncatalog:occurrence:248429\ncatalog:occurrence:248618"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsaktiva-bristande-resurser-reas-nminn-resc"
-fields = { "tags" = ["research"] }
-evidence = "Samma källkolumn är mappad till olika populationer i överlappande perioder.\ncatalog:occurrence:248429\ncatalog:occurrence:248618"
-
-[[statement]]
-kind = "set"
 subject = "var:innovationsaktiva-fanns-inget-behov-reas-ninn-nneed"
 fields = { "sets" = [] }
 evidence = "Samma källkolumn har överlappande ägare med olika populationer.\ncatalog:occurrence:248424\ncatalog:occurrence:248613"
@@ -9531,18 +9471,6 @@ kind = "set"
 subject = "var:innovationsaktiva-fanns-inget-behov-reas-ninn-nneed"
 fields = { "tags" = ["research"] }
 evidence = "Samma källkolumn har överlappande ägare med olika populationer.\ncatalog:occurrence:248424\ncatalog:occurrence:248613"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsaktiva-fanns-inget-behov-reas-nminn-nneed"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare med olika populationer.\ncatalog:occurrence:248427\ncatalog:occurrence:248616"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsaktiva-fanns-inget-behov-reas-nminn-nneed"
-fields = { "tags" = ["research"] }
-evidence = "Samma källkolumn har överlappande ägare med olika populationer.\ncatalog:occurrence:248427\ncatalog:occurrence:248616"
 
 [[statement]]
 kind = "set"
@@ -9603,30 +9531,6 @@ kind = "set"
 subject = "var:innovationssamarbete-konsulter-privata-coop-prv-cn-nat"
 fields = { "tags" = ["research"] }
 evidence = "Id innehåller ogenomskinliga källkoder och ingår i coop-familjen.\ncatalog:variable_text:28624:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationssamarbete-konsulter-privata-coop-prv-eu-efta"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare med olika partnerbeskrivningar.\ncatalog:occurrence:248314\ncatalog:occurrence:248315\ncatalog:occurrence:248477"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationssamarbete-konsulter-privata-coop-prv-eu-efta"
-fields = { "tags" = ["research"] }
-evidence = "Samma källkolumn har överlappande ägare med olika partnerbeskrivningar.\ncatalog:occurrence:248314\ncatalog:occurrence:248315\ncatalog:occurrence:248477"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationssamarbete-konsulter-privata-coop-prv-nat"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare med olika partnerbeskrivningar.\ncatalog:occurrence:248316\ncatalog:occurrence:248317\ncatalog:occurrence:248478"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationssamarbete-konsulter-privata-coop-prv-nat"
-fields = { "tags" = ["research"] }
-evidence = "Samma källkolumn har överlappande ägare med olika partnerbeskrivningar.\ncatalog:occurrence:248316\ncatalog:occurrence:248317\ncatalog:occurrence:248478"
 
 [[statement]]
 kind = "set"
@@ -13971,7 +13875,6 @@ kind = "set"
 subject = "var:utgifter-forvarv-existerande-kunskap"
 fields = { "description" = "Utgifter för inköp av existerande know-how, expertis, upphovsrätt, patent eller icke-patenterade uppfinningar med mera i syfte att utveckla nya eller väsentligt förbättrade produkter eller processer." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger inköpet i stället för de utgifter som mäts.\ncatalog:variable_text:29176:13149:14245"
-
 
 [[statement]]
 kind = "set"

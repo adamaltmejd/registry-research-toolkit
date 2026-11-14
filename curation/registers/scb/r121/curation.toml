@@ -3589,18 +3589,6 @@ evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:14780
 
 [[statement]]
 kind = "set"
-subject = "var:alternativ-1-forenklingsregeln-v0404-v0405"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:142747\ncatalog:occurrence:142748\ncatalog:occurrence:143108\ncatalog:occurrence:143109"
-
-[[statement]]
-kind = "set"
-subject = "var:alternativ-1-forenklingsregeln-v0404-v0405"
-fields = { "tags" = ["taxation"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:142747\ncatalog:occurrence:142748\ncatalog:occurrence:143108\ncatalog:occurrence:143109"
-
-[[statement]]
-kind = "set"
 subject = "var:ampens"
 fields = { "sets" = [] }
 evidence = "Källkolumnen är en ogenomskinlig kod.\ncatalog:variable_text:14782:10957:13149"
@@ -3670,18 +3658,6 @@ kind = "set"
 subject = "var:andel-i-handelsbolag-inklusive-kapitalvinst-forlust-pa-v7660"
 fields = { "tags" = ["business"] }
 evidence = "The identifier retains readable label stems and the source-column suffix; the item is business accounting.\ncatalog:variable_text:14787:13514:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-i-handelsbolag-inklusive-kapitalvinst-forlust-pa-v7757"
-fields = { "sets" = [] }
-evidence = "The same source column has overlapping owners.\ncatalog:occurrence:141139\ncatalog:occurrence:141140"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-i-handelsbolag-inklusive-kapitalvinst-forlust-pa-v7757"
-fields = { "tags" = ["business"] }
-evidence = "The same source column has overlapping owners.\ncatalog:occurrence:141139\ncatalog:occurrence:141140"
 
 [[statement]]
 kind = "set"
@@ -7405,18 +7381,6 @@ evidence = "Samma kolumn har en efterföljande annan ägare.\ncatalog:occurrence
 
 [[statement]]
 kind = "set"
-subject = "var:arets-resultat-l26-laa"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har överlappande ägare.\ncatalog:occurrence:163851\ncatalog:occurrence:163852"
-
-[[statement]]
-kind = "set"
-subject = "var:arets-resultat-l26-laa"
-fields = { "tags" = ["business"] }
-evidence = "Källkolumnen har överlappande ägare.\ncatalog:occurrence:163851\ncatalog:occurrence:163852"
-
-[[statement]]
-kind = "set"
 subject = "var:arets-resultat-l27"
 fields = { "sets" = [] }
 evidence = "Samma källkolumn har olika ägare i angränsande perioder och olika enheter.\ncatalog:occurrence:163555\ncatalog:occurrence:163705"
@@ -8566,18 +8530,6 @@ kind = "set"
 subject = "var:aterforsakring-andel-av-forsakringstekniska-re"
 fields = { "tags" = ["business"] }
 evidence = "Måttet gäller försäkringsbolags redovisning.\ncatalog:variable_text:15206:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:aterfort-skogsavdrag-for-beskattningsaret-fastighet-1-v8481"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:148831\ncatalog:occurrence:148832"
-
-[[statement]]
-kind = "set"
-subject = "var:aterfort-skogsavdrag-for-beskattningsaret-fastighet-1-v8481"
-fields = { "tags" = ["forestry-fishing", "taxation"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:148831\ncatalog:occurrence:148832"
 
 [[statement]]
 kind = "set"
@@ -11101,18 +11053,6 @@ evidence = "Källkolumnen har olika ägare och enheten ändras.\ncatalog:occurre
 
 [[statement]]
 kind = "set"
-subject = "var:avdr-for-skatt-pa-bransle-som-exp-till-tredje-land-v712-51"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:182938\ncatalog:occurrence:182939\ncatalog:occurrence:183680\ncatalog:occurrence:183681\ncatalog:occurrence:184460\ncatalog:occurrence:184461"
-
-[[statement]]
-kind = "set"
-subject = "var:avdr-for-skatt-pa-bransle-som-exp-till-tredje-land-v712-51"
-fields = { "tags" = ["energy", "taxation", "trade"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:182938\ncatalog:occurrence:182939\ncatalog:occurrence:183680\ncatalog:occurrence:183681\ncatalog:occurrence:184460\ncatalog:occurrence:184461"
-
-[[statement]]
-kind = "set"
 subject = "var:avdr-for-skatt-pa-bransle-som-exp-till-tredje-land-v712-52"
 fields = { "sets" = [] }
 evidence = "Källkolumnen har olika ägare i angränsande perioder.\ncatalog:occurrence:182328\ncatalog:occurrence:182940"
@@ -13102,30 +13042,6 @@ kind = "set"
 subject = "var:avdr-for-skatt-pa-ratallolja-export-v736-11"
 fields = { "tags" = ["energy", "taxation", "trade"] }
 evidence = "Källkolumnen byter ägare och enhet.\ncatalog:occurrence:182559\ncatalog:occurrence:183225\ncatalog:variable_text:15587:16071:17167\ncatalog:variable_text:15587:17167:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:avdr-for-skatt-pa-ratallolja-forbukning-v736-30"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:184808\ncatalog:occurrence:184809"
-
-[[statement]]
-kind = "set"
-subject = "var:avdr-for-skatt-pa-ratallolja-forbukning-v736-30"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:184808\ncatalog:occurrence:184809"
-
-[[statement]]
-kind = "set"
-subject = "var:avdr-for-skatt-pa-ratallolja-forbukning-v736-31"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:184810\ncatalog:occurrence:184811"
-
-[[statement]]
-kind = "set"
-subject = "var:avdr-for-skatt-pa-ratallolja-forbukning-v736-31"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:184810\ncatalog:occurrence:184811"
 
 [[statement]]
 kind = "set"
@@ -14386,18 +14302,6 @@ kind = "set"
 subject = "var:avyttring-andel-vardepappersfond"
 fields = { "tags" = ["finance", "income"] }
 evidence = "Variabeln mäter ersättning vid avyttring av fondandel.\ncatalog:variable_text:15700:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:avyttring-av-delagarratter-kapitalforlust-som-ska-dras-v7658"
-fields = { "sets" = [] }
-evidence = "Samma kolumn är samtidigt mappad till en annan variabel med kapitalvinst i namnet.\ncatalog:occurrence:141115\ncatalog:occurrence:141116"
-
-[[statement]]
-kind = "set"
-subject = "var:avyttring-av-delagarratter-kapitalforlust-som-ska-dras-v7658"
-fields = { "tags" = ["finance", "taxation"] }
-evidence = "Samma kolumn är samtidigt mappad till en annan variabel med kapitalvinst i namnet.\ncatalog:occurrence:141115\ncatalog:occurrence:141116"
 
 [[statement]]
 kind = "set"
@@ -24013,18 +23917,6 @@ evidence = "Måttet avser energiskatt.\ncatalog:variable_text:16581:13514:13879"
 
 [[statement]]
 kind = "set"
-subject = "var:energiskatt"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:187520\ncatalog:occurrence:187521"
-
-[[statement]]
-kind = "set"
-subject = "var:energiskatt"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:187520\ncatalog:occurrence:187521"
-
-[[statement]]
-kind = "set"
 subject = "var:energiskatt-affgensk"
 fields = { "sets" = [] }
 evidence = "Samma kolumn har olika ägare i angränsande perioder.\ncatalog:occurrence:182096\ncatalog:occurrence:182576"
@@ -24421,18 +24313,6 @@ evidence = "Måttet avser energiskatt; källhistoriken bevarar ändrade användn
 
 [[statement]]
 kind = "set"
-subject = "var:energiskatt-summa"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:187813\ncatalog:occurrence:187814\ncatalog:occurrence:187815"
-
-[[statement]]
-kind = "set"
-subject = "var:energiskatt-summa"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:187813\ncatalog:occurrence:187814\ncatalog:occurrence:187815"
-
-[[statement]]
-kind = "set"
 subject = "var:energiskatt-sumvxelsk"
 fields = { "sets" = [] }
 evidence = "Samma kolumn har olika ägare i skilda observerade perioder.\ncatalog:occurrence:183546\ncatalog:occurrence:185211"
@@ -24442,18 +24322,6 @@ kind = "set"
 subject = "var:energiskatt-sumvxelsk"
 fields = { "tags" = ["energy", "taxation"] }
 evidence = "Samma kolumn har olika ägare i skilda observerade perioder.\ncatalog:occurrence:183546\ncatalog:occurrence:185211"
-
-[[statement]]
-kind = "set"
-subject = "var:energiskatt-sumvxensk"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:183547\ncatalog:occurrence:183548"
-
-[[statement]]
-kind = "set"
-subject = "var:energiskatt-sumvxensk"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:183547\ncatalog:occurrence:183548"
 
 [[statement]]
 kind = "set"
@@ -26869,18 +26737,6 @@ evidence = "Katalogen visar en perioduppdelning av GASVXAR1MNG.\ncatalog:occurre
 
 [[statement]]
 kind = "set"
-subject = "var:forbrukad-mangd-diesel-okt"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare och olika enheter.\ncatalog:occurrence:190146\ncatalog:occurrence:190147"
-
-[[statement]]
-kind = "set"
-subject = "var:forbrukad-mangd-diesel-okt"
-fields = { "tags" = ["energy"] }
-evidence = "Samma källkolumn har överlappande ägare och olika enheter.\ncatalog:occurrence:190146\ncatalog:occurrence:190147"
-
-[[statement]]
-kind = "set"
 subject = "var:forbrukad-mangd-el"
 fields = { "sets" = [] }
 evidence = "Samma kolumn har överlappande ägare med olika tillämpningar.\ncatalog:occurrence:185773\ncatalog:occurrence:185774"
@@ -27010,54 +26866,6 @@ kind = "set"
 subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-kolfgmng"
 fields = { "tags" = ["energy"] }
 evidence = "Katalogen visar en perioduppdelning av kolumnen.\ncatalog:occurrence:183426\ncatalog:occurrence:185038"
-
-[[statement]]
-kind = "set"
-subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-ngasnvmng"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:182759\ncatalog:occurrence:182760"
-
-[[statement]]
-kind = "set"
-subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-ngasnvmng"
-fields = { "tags" = ["energy"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:182759\ncatalog:occurrence:182760"
-
-[[statement]]
-kind = "set"
-subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-oljfgmng"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:183476\ncatalog:occurrence:183477"
-
-[[statement]]
-kind = "set"
-subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-oljfgmng"
-fields = { "tags" = ["energy"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:183476\ncatalog:occurrence:183477"
-
-[[statement]]
-kind = "set"
-subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-oljnvmng"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:182778\ncatalog:occurrence:182779"
-
-[[statement]]
-kind = "set"
-subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-oljnvmng"
-fields = { "tags" = ["energy"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:182778\ncatalog:occurrence:182779"
-
-[[statement]]
-kind = "set"
-subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-ovrfgmng"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:182789\ncatalog:occurrence:182790"
-
-[[statement]]
-kind = "set"
-subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-ovrfgmng"
-fields = { "tags" = ["energy"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:182789\ncatalog:occurrence:182790"
 
 [[statement]]
 kind = "set"
@@ -27214,18 +27022,6 @@ kind = "set"
 subject = "var:forenklat-arsbokslut"
 fields = { "tags" = ["business"] }
 evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:154106\ncatalog:occurrence:154107"
-
-[[statement]]
-kind = "set"
-subject = "var:forenklat-arsbokslut-har-inte-tillampats"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:154106\ncatalog:occurrence:154107"
-
-[[statement]]
-kind = "set"
-subject = "var:forenklat-arsbokslut-har-inte-tillampats"
-fields = { "tags" = ["business"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:154106\ncatalog:occurrence:154107"
 
 [[statement]]
 kind = "set"
@@ -28486,18 +28282,6 @@ kind = "set"
 subject = "var:fri-parkering"
 fields = { "tags" = ["income"] }
 evidence = "Variabeln anger en anställningsförmån.\ncatalog:variable_text:16977:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:frida-differens-debet-kredit"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare med olika betydelser.\ncatalog:occurrence:137045\ncatalog:occurrence:137046"
-
-[[statement]]
-kind = "set"
-subject = "var:frida-differens-debet-kredit"
-fields = { "tags" = ["business"] }
-evidence = "Samma källkolumn har överlappande ägare med olika betydelser.\ncatalog:occurrence:137045\ncatalog:occurrence:137046"
 
 [[statement]]
 kind = "set"
@@ -34717,18 +34501,6 @@ evidence = "Variabeln avser koldioxidskattens skattesats.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:koldioxidskatt-aterbetalningar"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har överlappande ägare.\ncatalog:occurrence:186970\ncatalog:occurrence:186971"
-
-[[statement]]
-kind = "set"
-subject = "var:koldioxidskatt-aterbetalningar"
-fields = { "tags" = ["taxation"] }
-evidence = "Källkolumnen har överlappande ägare.\ncatalog:occurrence:186970\ncatalog:occurrence:186971"
-
-[[statement]]
-kind = "set"
 subject = "var:koldioxidskatt-aterbetalningar-och-arbdiefgco2sk"
 fields = { "sets" = [] }
 evidence = "Variabeln avser koldioxidskatt.\ncatalog:variable_text:17517:17167:19358"
@@ -35242,18 +35014,6 @@ kind = "set"
 subject = "var:kolink"
 fields = { "tags" = ["energy"] }
 evidence = "Källkolumnen har olika ägare i skilda perioder.\ncatalog:occurrence:179563\ncatalog:occurrence:182727"
-
-[[statement]]
-kind = "set"
-subject = "var:kolnvmng"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:187631\ncatalog:occurrence:187632"
-
-[[statement]]
-kind = "set"
-subject = "var:kolnvmng"
-fields = { "tags" = ["energy"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:187631\ncatalog:occurrence:187632"
 
 [[statement]]
 kind = "set"
@@ -36118,18 +35878,6 @@ kind = "set"
 subject = "var:kontant-ersattning-under-2014-till-arbetstagare-i-dotterforetag-punkt-6-2-for-andelar-agda-under-hela-aret"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnen har olika ägare i angränsande perioder.\ncatalog:occurrence:143314\ncatalog:occurrence:143389"
-
-[[statement]]
-kind = "set"
-subject = "var:kontant-ersattning-under-2014-till-arbetstagare-i-dotterforetag-punkt-6-2-for-andelar-anskaffade-under-aret"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har överlappande ägare.\ncatalog:occurrence:143567\ncatalog:occurrence:143568"
-
-[[statement]]
-kind = "set"
-subject = "var:kontant-ersattning-under-2014-till-arbetstagare-i-dotterforetag-punkt-6-2-for-andelar-anskaffade-under-aret"
-fields = { "tags" = ["business"] }
-evidence = "Källkolumnen har överlappande ägare.\ncatalog:occurrence:143567\ncatalog:occurrence:143568"
 
 [[statement]]
 kind = "set"
@@ -45157,18 +44905,6 @@ evidence = "Källmnemoniken är opak och etiketten kolliderar; mål måste disam
 
 [[statement]]
 kind = "set"
-subject = "var:ovrfgensksats"
-fields = { "sets" = [] }
-evidence = "Identitetsfakt visar överlappande mappningar av samma källkolumn.\ncatalog:occurrence:189637\ncatalog:occurrence:189638\ncatalog:occurrence:190510\ncatalog:occurrence:190511"
-
-[[statement]]
-kind = "set"
-subject = "var:ovrfgensksats"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "Identitetsfakt visar överlappande mappningar av samma källkolumn.\ncatalog:occurrence:189637\ncatalog:occurrence:189638\ncatalog:occurrence:190510\ncatalog:occurrence:190511"
-
-[[statement]]
-kind = "set"
 subject = "var:ovrfgenss"
 fields = { "sets" = [] }
 evidence = "Källmnemoniken är opak och etiketten kolliderar; mål måste disambigueras med källkolumnen.\ncatalog:variable_text:18491:13879:14245"
@@ -45445,18 +45181,6 @@ evidence = "Intäkterna är en skattemässig justering.\ncatalog:variable_text:1
 
 [[statement]]
 kind = "set"
-subject = "var:ovriga-intakter-som-skall-tas-upp-v7655"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:138852\ncatalog:occurrence:138853"
-
-[[statement]]
-kind = "set"
-subject = "var:ovriga-intakter-som-skall-tas-upp-v7655"
-fields = { "tags" = ["taxation"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:138852\ncatalog:occurrence:138853"
-
-[[statement]]
-kind = "set"
 subject = "var:ovriga-intakter-som-skall-tas-upp-v7665"
 fields = { "sets" = [] }
 evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:139067\ncatalog:occurrence:139068"
@@ -45562,18 +45286,6 @@ kind = "set"
 subject = "var:ovriga-kortfristiga-skulder-v7369"
 fields = { "tags" = ["business"] }
 evidence = "Skulderna är företagsbalanser.\ncatalog:variable_text:18526:13514:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:ovriga-kortfristiga-skulder-v7380"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare med olika skuldbegrepp.\ncatalog:occurrence:154507\ncatalog:occurrence:154508"
-
-[[statement]]
-kind = "set"
-subject = "var:ovriga-kortfristiga-skulder-v7380"
-fields = { "tags" = ["business"] }
-evidence = "Samma källkolumn har överlappande ägare med olika skuldbegrepp.\ncatalog:occurrence:154507\ncatalog:occurrence:154508"
 
 [[statement]]
 kind = "set"
@@ -45826,18 +45538,6 @@ kind = "set"
 subject = "var:ovriga-skattefria-transfereringar"
 fields = { "tags" = ["transfers"] }
 evidence = "Beloppet avser transfereringar.\ncatalog:variable_text:18548:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:ovriga-skattemassiga-justeringar-av-resultatet-v7662"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:141120\ncatalog:occurrence:141121"
-
-[[statement]]
-kind = "set"
-subject = "var:ovriga-skattemassiga-justeringar-av-resultatet-v7662"
-fields = { "tags" = ["taxation"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:141120\ncatalog:occurrence:141121"
 
 [[statement]]
 kind = "set"
@@ -48397,18 +48097,6 @@ evidence = "Variabeln avser pension eller livränta.\ncatalog:variable_text:1877
 
 [[statement]]
 kind = "set"
-subject = "var:privat-uttag-gasol-ton"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:179547\ncatalog:occurrence:179548"
-
-[[statement]]
-kind = "set"
-subject = "var:privat-uttag-gasol-ton"
-fields = { "tags" = ["energy"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:179547\ncatalog:occurrence:179548"
-
-[[statement]]
-kind = "set"
 subject = "var:procent-av-heltid"
 fields = { "sets" = [] }
 evidence = "Arbetstidens omfattning.\ncatalog:variable_text:18775:12053:12418"
@@ -50017,18 +49705,6 @@ evidence = "Avfallsrester.\ncatalog:variable_text:18921:16071:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:resterande-slutl-arsbelopp-foreg-ar-al"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:174992\ncatalog:occurrence:174993"
-
-[[statement]]
-kind = "set"
-subject = "var:resterande-slutl-arsbelopp-foreg-ar-al"
-fields = { "tags" = ["wealth"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:174992\ncatalog:occurrence:174993"
-
-[[statement]]
-kind = "set"
 subject = "var:resterande-vinst-punkt-2-13"
 fields = { "sets" = [] }
 evidence = "Fältet avser vinst i deklarationen.\ncatalog:variable_text:18923:13514:19723"
@@ -51193,18 +50869,6 @@ evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:1866
 
 [[statement]]
 kind = "set"
-subject = "var:skatt-betala-energi"
-fields = { "sets" = [] }
-evidence = "The source column has overlapping owners.\ncatalog:occurrence:187813\ncatalog:occurrence:187814\ncatalog:occurrence:187815"
-
-[[statement]]
-kind = "set"
-subject = "var:skatt-betala-energi"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "The source column has overlapping owners.\ncatalog:occurrence:187813\ncatalog:occurrence:187814\ncatalog:occurrence:187815"
-
-[[statement]]
-kind = "set"
 subject = "var:skatt-betala-svavel"
 fields = { "sets" = [] }
 evidence = "The source column has another owner in a later release.\ncatalog:occurrence:186075\ncatalog:occurrence:188768"
@@ -51898,18 +51562,6 @@ kind = "set"
 subject = "var:skattereduktion-underskott-kapital"
 fields = { "tags" = ["taxation"] }
 evidence = "The variable measures a tax reduction.\ncatalog:variable_text:19089:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:skattesats-elenergiskatt"
-fields = { "sets" = [] }
-evidence = "The column has overlapping owners and conflicting descriptions.\ncatalog:occurrence:187490\ncatalog:occurrence:187491"
-
-[[statement]]
-kind = "set"
-subject = "var:skattesats-elenergiskatt"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "The column has overlapping owners and conflicting descriptions.\ncatalog:occurrence:187490\ncatalog:occurrence:187491"
 
 [[statement]]
 kind = "set"
@@ -53917,18 +53569,6 @@ evidence = "Variabeln avser restmaterial från gasrening.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:storlek-pa-lopande-vb"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare med olika begrepp.\ncatalog:occurrence:173378\ncatalog:occurrence:173379\ncatalog:occurrence:174048\ncatalog:occurrence:174049\ncatalog:occurrence:174738\ncatalog:occurrence:174739"
-
-[[statement]]
-kind = "set"
-subject = "var:storlek-pa-lopande-vb"
-fields = { "tags" = ["transfers"] }
-evidence = "Samma källkolumn har överlappande ägare med olika begrepp.\ncatalog:occurrence:173378\ncatalog:occurrence:173379\ncatalog:occurrence:174048\ncatalog:occurrence:174049\ncatalog:occurrence:174738\ncatalog:occurrence:174739"
-
-[[statement]]
-kind = "set"
 subject = "var:storleken-ersattningsfonder-utgang"
 fields = { "sets" = [] }
 evidence = "Katalogen visar överlappande ägarskap.\ncatalog:occurrence:152006\ncatalog:occurrence:152007"
@@ -54034,18 +53674,6 @@ kind = "set"
 subject = "var:studiemedel-lan-m-m"
 fields = { "tags" = ["transfers"] }
 evidence = "Det finns flera dokumenterade mått på studiemedel.\ncatalog:variable_text:19273:16801:17167\ncatalog:variable_text:19274:16801:17167\ncatalog:variable_text:19276:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:studiemedel-studiebidrag"
-fields = { "sets" = [] }
-evidence = "Katalogen visar överlappande ägarskap.\ncatalog:occurrence:175722\ncatalog:occurrence:175723"
-
-[[statement]]
-kind = "set"
-subject = "var:studiemedel-studiebidrag"
-fields = { "tags" = ["transfers"] }
-evidence = "Katalogen visar överlappande ägarskap.\ncatalog:occurrence:175722\ncatalog:occurrence:175723"
 
 [[statement]]
 kind = "set"
@@ -54454,18 +54082,6 @@ kind = "set"
 subject = "var:summa-skatt-koldioxid"
 fields = { "tags" = ["taxation"] }
 evidence = "Katalogen visar överlappande ägarskap; operativ definition varierar mellan perioder.\ncatalog:occurrence:186970\ncatalog:occurrence:186971\ncatalog:variable_text:19312:17167:18262\ncatalog:variable_text:19312:18262:18628\ncatalog:variable_text:19312:18628:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:summa-skatt-punktskatt"
-fields = { "sets" = [] }
-evidence = "Katalogen visar överlappande ägarskap och operativ definition varierar.\ncatalog:occurrence:186645\ncatalog:occurrence:186646\ncatalog:variable_text:19313:17897:18628\ncatalog:variable_text:19313:18628:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:summa-skatt-punktskatt"
-fields = { "tags" = ["taxation"] }
-evidence = "Katalogen visar överlappande ägarskap och operativ definition varierar.\ncatalog:occurrence:186645\ncatalog:occurrence:186646\ncatalog:variable_text:19313:17897:18628\ncatalog:variable_text:19313:18628:19723"
 
 [[statement]]
 kind = "set"
@@ -58090,18 +57706,6 @@ kind = "set"
 subject = "var:utdelning-kapital-huvudreg-p2-15"
 fields = { "tags" = ["income", "taxation"] }
 evidence = "Utdelning enligt huvudregeln.\ncatalog:variable_text:19628:13149:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:utdelning-kapital-p1-15"
-fields = { "sets" = [] }
-evidence = "Överlappande ägare för samma källkolumn.\ncatalog:occurrence:143219\ncatalog:occurrence:143220\ncatalog:occurrence:143304\ncatalog:occurrence:143305"
-
-[[statement]]
-kind = "set"
-subject = "var:utdelning-kapital-p1-15"
-fields = { "tags" = ["income", "taxation"] }
-evidence = "Överlappande ägare för samma källkolumn.\ncatalog:occurrence:143219\ncatalog:occurrence:143220\ncatalog:occurrence:143304\ncatalog:occurrence:143305"
 
 [[statement]]
 kind = "set"
@@ -67285,18 +66889,6 @@ evidence = "Id:t är en opak källkod.\ncatalog:variable_text:20428:13514:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:v7614"
-fields = { "sets" = [] }
-evidence = "Katalogen visar överlappande kopplingar.\ncatalog:occurrence:154149\ncatalog:occurrence:154150"
-
-[[statement]]
-kind = "set"
-subject = "var:v7614"
-fields = { "tags" = ["taxation"] }
-evidence = "Katalogen visar överlappande kopplingar.\ncatalog:occurrence:154149\ncatalog:occurrence:154150"
-
-[[statement]]
-kind = "set"
 subject = "var:bokford-kostnad-7641"
 fields = { "sets" = [] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:20430:14975:19723"
@@ -67486,18 +67078,6 @@ kind = "set"
 subject = "var:v7700"
 fields = { "tags" = ["taxation"] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:20445:13514:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:v7703"
-fields = { "sets" = [] }
-evidence = "Katalogen visar överlappande kopplingar.\ncatalog:occurrence:154542\ncatalog:occurrence:154543\ncatalog:occurrence:154544"
-
-[[statement]]
-kind = "set"
-subject = "var:v7703"
-fields = { "tags" = ["taxation"] }
-evidence = "Katalogen visar överlappande kopplingar.\ncatalog:occurrence:154542\ncatalog:occurrence:154543\ncatalog:occurrence:154544"
 
 [[statement]]
 kind = "set"
@@ -69286,18 +68866,6 @@ kind = "set"
 subject = "var:valuta-aktiekapitalsgrans"
 fields = { "tags" = ["finance"] }
 evidence = "Valuta för aktiekapitalsgräns.\ncatalog:variable_text:20596:13514:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:valuta-for-kapitalforandringen-bval"
-fields = { "sets" = [] }
-evidence = "Överlappande ägare för samma källkolumn.\ncatalog:occurrence:150910\ncatalog:occurrence:150911"
-
-[[statement]]
-kind = "set"
-subject = "var:valuta-for-kapitalforandringen-bval"
-fields = { "tags" = ["finance"] }
-evidence = "Överlappande ägare för samma källkolumn.\ncatalog:occurrence:150910\ncatalog:occurrence:150911"
 
 [[statement]]
 kind = "set"
@@ -73321,18 +72889,6 @@ evidence = "Samma kolumn har överlappande ägare med olika åldersgränser.\nca
 
 [[statement]]
 kind = "set"
-subject = "var:vuxen-eller-barn-20-ar"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har överlappande ägare med olika åldersgränser.\ncatalog:occurrence:173537\ncatalog:occurrence:173538"
-
-[[statement]]
-kind = "set"
-subject = "var:vuxen-eller-barn-20-ar"
-fields = { "tags" = ["demographics", "family-household"] }
-evidence = "Samma kolumn har överlappande ägare med olika åldersgränser.\ncatalog:occurrence:173537\ncatalog:occurrence:173538"
-
-[[statement]]
-kind = "set"
 subject = "var:vuxenstudiestod"
 fields = { "sets" = [] }
 evidence = "Vuxenstudiestöd.\ncatalog:variable_text:20957:16801:17167"
@@ -76437,18 +75993,6 @@ evidence = "#2102 same-label cluster 'Kyrkoavgift exkl. begravningsavgift' (13 v
 
 [[statement]]
 kind = "set"
-subject = "var:alternativ-1-forenklingsregeln-v0404-v0405"
-fields = { "label" = "Alternativ 1 Förenklingsregeln (V0405)" }
-evidence = "#2102 same-label cluster 'Alternativ 1 Förenklingsregeln (V0404)' (2 variables): judged different meaning, medium confidence; V0404 and V0405 are concurrent columns in one table with the same value set; no source says how V0405 differs."
-
-[[statement]]
-kind = "set"
-subject = "var:andel-i-handelsbolag-inklusive-kapitalvinst-forlust-pa-v7757"
-fields = { "label" = "Andel i handelsbolag inklusive kapitalvinst/-förlust på andel: Bokförd vinst/kapitalvinst (V7757)" }
-evidence = "#2102 same-label cluster 'Andel i handelsbolag inklusive kapitalvinst/-förlust på andel: Bokförd vinst/kapitalvinst' (3 variables): judged different meaning, medium confidence; Three form codes that overlap in time in the same tables; no source says how they differ."
-
-[[statement]]
-kind = "set"
 subject = "var:andel-i-handelsbolag-inklusive-kapitalvinst-forlust-pa-v7758"
 fields = { "label" = "Andel i handelsbolag inklusive kapitalvinst/-förlust på andel: Bokförd vinst/kapitalvinst (V7758)" }
 evidence = "#2102 same-label cluster 'Andel i handelsbolag inklusive kapitalvinst/-förlust på andel: Bokförd vinst/kapitalvinst' (3 variables): judged different meaning, medium confidence; Three form codes that overlap in time in the same tables; no source says how they differ."
@@ -79515,18 +79059,6 @@ evidence = "#2102 same-label cluster 'Avdr. för skatt på råtallolja, export' 
 
 [[statement]]
 kind = "set"
-subject = "var:avdr-for-skatt-pa-ratallolja-forbukning-v736-30"
-fields = { "label" = "Avdr. för skatt på råtallolja, förbukning (V736_30)" }
-evidence = "#2102 same-label cluster 'Avdr. för skatt på råtallolja, förbukning' (3 variables): judged different meaning, low confidence; Three concurrent columns in 2016-2017 in one table; no opdef or definition says how they differ, so raw codes."
-
-[[statement]]
-kind = "set"
-subject = "var:avdr-for-skatt-pa-ratallolja-forbukning-v736-31"
-fields = { "label" = "Avdr. för skatt på råtallolja, förbukning (V736_31)" }
-evidence = "#2102 same-label cluster 'Avdr. för skatt på råtallolja, förbukning' (3 variables): judged different meaning, low confidence; Three concurrent columns in 2016-2017 in one table; no opdef or definition says how they differ, so raw codes."
-
-[[statement]]
-kind = "set"
 subject = "var:avdr-for-skatt-pa-ratallolja-som-forbr-i-tillverk-v736-25"
 fields = { "label" = "Avdr. för skatt på råtallolja som förbr. i tillverk.proc. industriell verksamhet (V736_25)" }
 evidence = "#2102 same-label cluster 'Avdr. för skatt på råtallolja som förbr. i tillverk.proc. industriell verksamhet' (4 variables): judged different meaning, low confidence; Four concurrent columns; V736_25/26 have no source text and V736_30/31 share the opdef 'råtallolja', so all are qualified with their codes."
@@ -79830,12 +79362,6 @@ kind = "set"
 subject = "var:avsattning-till-periodiseringsfond"
 fields = { "label" = "Avsättning till periodiseringsfond (2 år gamla)" }
 evidence = "#2102 same-label cluster 'Avsättning till periodiseringsfond' (3 variables): judged different meaning, medium confidence; Opdefs: NSKPERU is 2 år gamla, NSKPERX is 3 år gamla; NSKPER has no opdef and keeps the plain label."
-
-[[statement]]
-kind = "set"
-subject = "var:avyttring-av-delagarratter-kapitalforlust-som-ska-dras-v7658"
-fields = { "label" = "Avyttring av delägarrätter: Kapitalförlust som ska dras av (V7658)" }
-evidence = "#2102 same-label cluster 'Avyttring av delägarrätter: Kapitalförlust som ska dras av' (3 variables): judged different meaning, low confidence; V0624 (to 2007) and V7757 (from 2007) follow one another in the same table; V7658 runs concurrently with V7757 and nothing says how it differs."
 
 [[statement]]
 kind = "set"
@@ -82251,12 +81777,6 @@ evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetal
 
 [[statement]]
 kind = "set"
-subject = "var:forbrukad-mangd-diesel-okt"
-fields = { "label" = "Förbrukad mängd, punktskatter/återbetalningar (jord- och skogsbruk, diesel i arbetsfordon, oktober)" }
-evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetalningar' (38 variables): judged different meaning, medium confidence; 38 concurrent columns whose opdefs name use, fuel and year reference; undocumented columns get raw codes and old/new names of the same column (OVR..MNGD/MNG, AF/AFNUV) share labels."
-
-[[statement]]
-kind = "set"
 subject = "var:forbrukad-mangd-el"
 fields = { "label" = "Förbrukad mängd, punktskatter/återbetalningar (el, industri och vattenbruk)" }
 evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetalningar' (38 variables): judged different meaning, medium confidence; 38 concurrent columns whose opdefs name use, fuel and year reference; undocumented columns get raw codes and old/new names of the same column (OVR..MNGD/MNG, AF/AFNUV) share labels.\n\nMaintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; this label was widened to cover the merged variants. Source: SCB Registerinformation, the operational definitions of VarId 25874 and VarId 39787 on ELFORBMNG in 2018-2023 read \"Avser återbetalningsansökan för industri, el\" and \"... för vattenbruk, el\", both in kilowatt hours."
@@ -82343,30 +81863,6 @@ evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetal
 kind = "set"
 subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-kolfgmng"
 fields = { "label" = "Förbrukad mängd, punktskatter/återbetalningar (KOLFGMNG)" }
-evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetalningar' (38 variables): judged different meaning, medium confidence; 38 concurrent columns whose opdefs name use, fuel and year reference; undocumented columns get raw codes and old/new names of the same column (OVR..MNGD/MNG, AF/AFNUV) share labels."
-
-[[statement]]
-kind = "set"
-subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-ngasnvmng"
-fields = { "label" = "Förbrukad mängd, punktskatter/återbetalningar (NGASNVMNG)" }
-evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetalningar' (38 variables): judged different meaning, medium confidence; 38 concurrent columns whose opdefs name use, fuel and year reference; undocumented columns get raw codes and old/new names of the same column (OVR..MNGD/MNG, AF/AFNUV) share labels."
-
-[[statement]]
-kind = "set"
-subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-oljfgmng"
-fields = { "label" = "Förbrukad mängd, punktskatter/återbetalningar (OLJFGMNG)" }
-evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetalningar' (38 variables): judged different meaning, medium confidence; 38 concurrent columns whose opdefs name use, fuel and year reference; undocumented columns get raw codes and old/new names of the same column (OVR..MNGD/MNG, AF/AFNUV) share labels."
-
-[[statement]]
-kind = "set"
-subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-oljnvmng"
-fields = { "label" = "Förbrukad mängd, punktskatter/återbetalningar (OLJNVMNG)" }
-evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetalningar' (38 variables): judged different meaning, medium confidence; 38 concurrent columns whose opdefs name use, fuel and year reference; undocumented columns get raw codes and old/new names of the same column (OVR..MNGD/MNG, AF/AFNUV) share labels."
-
-[[statement]]
-kind = "set"
-subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-ovrfgmng"
-fields = { "label" = "Förbrukad mängd, punktskatter/återbetalningar (föregående år, OVRFGMNG)" }
 evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetalningar' (38 variables): judged different meaning, medium confidence; 38 concurrent columns whose opdefs name use, fuel and year reference; undocumented columns get raw codes and old/new names of the same column (OVR..MNGD/MNG, AF/AFNUV) share labels."
 
 [[statement]]
@@ -83685,12 +83181,6 @@ evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsl
 
 [[statement]]
 kind = "set"
-subject = "var:kolnvmng"
-fields = { "label" = "Förbrukad mängd, punktskatter/återbetalningar (industri, kol)" }
-evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetalningar' (38 variables): judged different meaning, medium confidence; 38 concurrent columns whose opdefs name use, fuel and year reference; undocumented columns get raw codes and old/new names of the same column (OVR..MNGD/MNG, AF/AFNUV) share labels."
-
-[[statement]]
-kind = "set"
 subject = "var:kolpcar1mng"
 fields = { "label" = "Återbetalningsberättigad mängd, bränsle (värmeleveranser, vissa industriella processer, kol, år 1)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
@@ -83837,12 +83327,6 @@ evidence = "#2102 same-label cluster 'Kommunal inkomstskatt på förvärvsinkoms
 kind = "set"
 subject = "var:kontant-ersattning-under-2014-till-arbetstagare-i-dotterforetag-punkt-6-2-for-andelar-agda-under-hela-aret"
 fields = { "label" = "Kontant ersättning under 2014 till arbetstagare i dotterföretag punkt 6.2 (andelar ägda under hela året)" }
-evidence = "#2102 same-label cluster 'Kontant ersättning under 2014 till arbetstagare i dotterföretag punkt 6.2' (2 variables): judged different meaning, high confidence; Opdefs: V4571 is for shares owned the whole year, V4577 for shares acquired during the year."
-
-[[statement]]
-kind = "set"
-subject = "var:kontant-ersattning-under-2014-till-arbetstagare-i-dotterforetag-punkt-6-2-for-andelar-anskaffade-under-aret"
-fields = { "label" = "Kontant ersättning under 2014 till arbetstagare i dotterföretag punkt 6.2 (andelar anskaffade under året)" }
 evidence = "#2102 same-label cluster 'Kontant ersättning under 2014 till arbetstagare i dotterföretag punkt 6.2' (2 variables): judged different meaning, high confidence; Opdefs: V4571 is for shares owned the whole year, V4577 for shares acquired during the year."
 
 [[statement]]
@@ -85599,12 +85083,6 @@ evidence = "#2102 same-label cluster 'Övriga intäkter som skall tas upp' (3 va
 
 [[statement]]
 kind = "set"
-subject = "var:ovriga-intakter-som-skall-tas-upp-v7655"
-fields = { "label" = "Övriga intäkter som skall tas upp (V7655)" }
-evidence = "#2102 same-label cluster 'Övriga intäkter som skall tas upp' (3 variables): judged different meaning, medium confidence; V0603 and V7655 are adjacent in the same table (one variable renamed); V7665 has the opdef 'Andra ej bokförda intäkter'."
-
-[[statement]]
-kind = "set"
 subject = "var:ovriga-intakter-som-skall-tas-upp-v7665"
 fields = { "label" = "Övriga intäkter som skall tas upp (andra ej bokförda intäkter)" }
 evidence = "#2102 same-label cluster 'Övriga intäkter som skall tas upp' (3 variables): judged different meaning, medium confidence; V0603 and V7655 are adjacent in the same table (one variable renamed); V7665 has the opdef 'Andra ej bokförda intäkter'."
@@ -85641,21 +85119,9 @@ evidence = "#2102 same-label cluster 'Övriga kortfristiga skulder' (4 variables
 
 [[statement]]
 kind = "set"
-subject = "var:ovriga-kortfristiga-skulder-v7380"
-fields = { "label" = "Övriga kortfristiga skulder (V7380)" }
-evidence = "#2102 same-label cluster 'Övriga kortfristiga skulder' (4 variables): judged different meaning, medium confidence; V0319 continues as V7369 in aktiebolag; V7383 and V7380 are separate deklarationsuppgifter fields with no text."
-
-[[statement]]
-kind = "set"
 subject = "var:ovriga-kortfristiga-skulder-v7383"
 fields = { "label" = "Övriga kortfristiga skulder (V7383)" }
 evidence = "#2102 same-label cluster 'Övriga kortfristiga skulder' (4 variables): judged different meaning, medium confidence; V0319 continues as V7369 in aktiebolag; V7383 and V7380 are separate deklarationsuppgifter fields with no text."
-
-[[statement]]
-kind = "set"
-subject = "var:ovriga-skattemassiga-justeringar-av-resultatet-v7662"
-fields = { "label" = "Övriga skattemässiga justeringar av resultatet, minskning (V7662)" }
-evidence = "#2102 same-label cluster 'Övriga skattemässiga justeringar av resultatet, minskning' (2 variables): judged different meaning, low confidence; V7762 and V7662 are concurrent aktiebolag fields with no text."
 
 [[statement]]
 kind = "set"
@@ -86607,12 +86073,6 @@ evidence = "#2102 same-label cluster 'Reparation och underhåll av markanläggni
 
 [[statement]]
 kind = "set"
-subject = "var:resterande-slutl-arsbelopp-foreg-ar-al"
-fields = { "label" = "Resterande slutl årsbelopp, föreg år AL (utgående skuld 31 december föregående år)" }
-evidence = "#2102 same-label cluster 'Resterande slutl årsbelopp, föreg år AL' (2 variables): judged different meaning, medium confidence; FSKUALT opdef is utgående skuld 31 december föregående år; FSABAL has no text."
-
-[[statement]]
-kind = "set"
 subject = "var:resultat-overskott-829-v6520"
 fields = { "label" = "Resultat: Överskott  (829) (bilaga N3A)" }
 evidence = "#2102 same-label cluster 'Resultat: Överskott  (829)' (3 variables): judged different meaning, medium confidence; V0829 spans N3A and N3B; V7830 (N3B) is concurrent with it 2007-2012 and V6520 (N3A) follows; the form distinguishes them."
@@ -86687,12 +86147,6 @@ evidence = "#2102 same-label cluster 'Skatt att betala, punktskatter/återbetaln
 kind = "set"
 subject = "var:skatt-betala-el-sum"
 fields = { "label" = "Skatt att betala, punktskatter/återbetalningar (datorhallar, el summa)" }
-evidence = "#2102 same-label cluster 'Skatt att betala, punktskatter/återbetalningar' (8 variables): judged different meaning, medium confidence; Eight concurrent punktskatter columns; opdefs name the tax, use and half-year."
-
-[[statement]]
-kind = "set"
-subject = "var:skatt-betala-energi"
-fields = { "label" = "Skatt att betala, punktskatter/återbetalningar (energiskatt, industri utsläppsrätter)" }
 evidence = "#2102 same-label cluster 'Skatt att betala, punktskatter/återbetalningar' (8 variables): judged different meaning, medium confidence; Eight concurrent punktskatter columns; opdefs name the tax, use and half-year."
 
 [[statement]]
@@ -86772,12 +86226,6 @@ kind = "set"
 subject = "var:skatter"
 fields = { "label" = "Skatt, total (energiskatt)" }
 evidence = "#2102 same-label cluster 'Skatt, total' (2 variables): judged different meaning, high confidence; Opdefs: TOTENSK is total energiskatt, TOTSKCO2 total CO2-skatt."
-
-[[statement]]
-kind = "set"
-subject = "var:skattesats-elenergiskatt"
-fields = { "label" = "Skattesats elenergiskatt (dieselbränsle, energiskattesats industri utsläppsrätter)" }
-evidence = "#2102 same-label cluster 'Skattesats elenergiskatt' (7 variables): judged different meaning, high confidence; Opdefs name the use or process each rate applies to; DIENVENSKSATS concerns a diesel energy-tax rate for industri utsläppsrätter."
 
 [[statement]]
 kind = "set"
@@ -88509,12 +87957,6 @@ evidence = "#2102 same-label cluster 'Regel' (2 variables): judged different mea
 
 [[statement]]
 kind = "set"
-subject = "var:valuta-for-kapitalforandringen-bval"
-fields = { "label" = "Valuta för kapitalförändringen (skuldebrev/konvertibler/teckningsoptioner, bval)" }
-evidence = "#2102 same-label cluster 'Valuta för kapitalförändringen' (3 variables): judged different meaning, medium confidence; BVALKAP and bval share a currency list and adjacent periods; bvalny is concurrent from 2015 and its opdef adds nyemission and fondemission."
-
-[[statement]]
-kind = "set"
 subject = "var:valuta-for-kapitalforandringen-bvalny"
 fields = { "label" = "Valuta för kapitalförändringen (BVALNY)" }
 evidence = "#2102 same-label cluster 'Valuta för kapitalförändringen' (3 variables): judged different meaning, medium confidence; BVALKAP and bval share a currency list and adjacent periods; bvalny is concurrent from 2015 and its opdef adds nyemission and fondemission."
@@ -88901,12 +88343,6 @@ evidence = "#2102 same-label cluster 'Avdr. för skatt på bränsle som exp. til
 kind = "set"
 subject = "var:avdr-for-skatt-pa-bransle-som-exp-till-tredje-land-v712-50"
 fields = { "label" = "Avdr. för skatt på bränsle som exp. till tredje land eller frizon (olja, gasol m.m., gasol motorfordon m.m.)" }
-evidence = "#2102 same-label cluster 'Avdr. för skatt på bränsle som exp. till tredje land eller frizon' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs name group and item; V712_51 has none (code), V718_61 duplicates V718_22's item (svavelskatt) so it also carries its code (unit kg)."
-
-[[statement]]
-kind = "set"
-subject = "var:avdr-for-skatt-pa-bransle-som-exp-till-tredje-land-v712-51"
-fields = { "label" = "Avdr. för skatt på bränsle som exp. till tredje land eller frizon (V712_51)" }
 evidence = "#2102 same-label cluster 'Avdr. för skatt på bränsle som exp. till tredje land eller frizon' (29 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs name group and item; V712_51 has none (code), V718_61 duplicates V718_22's item (svavelskatt) so it also carries its code (unit kg)."
 
 [[statement]]
@@ -89901,12 +89337,6 @@ evidence = "#2102 same-label cluster 'Energiskatt' (134 variables): held in #212
 
 [[statement]]
 kind = "set"
-subject = "var:energiskatt-sumvxensk"
-fields = { "label" = "Energiskatt (SUMVXENSK)" }
-evidence = "#2102 same-label cluster 'Energiskatt' (134 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Members are separate refund-application columns whose opdefs name use (båt och skepp, luftfart, industri, värmeleverans, jord- och skogsbruk), fuel and year reference; the label keeps only what every non-empty opdef of the column supports. Five columns whose opdefs disagree among themselves or have no fuel word get the column code, and the three båt och skepp GAS/OLJ/OVR old/new spelling pairs carry their codes because only the spelling separates them."
-
-[[statement]]
-kind = "set"
 subject = "var:energiskatt-uppvoljfgensk"
 fields = { "label" = "Energiskatt (jord- och skogsbruk, eldningsolja för uppvärmning, föregående år)" }
 evidence = "#2102 same-label cluster 'Energiskatt' (134 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Members are separate refund-application columns whose opdefs name use (båt och skepp, luftfart, industri, värmeleverans, jord- och skogsbruk), fuel and year reference; the label keeps only what every non-empty opdef of the column supports. Five columns whose opdefs disagree among themselves or have no fuel word get the column code, and the three båt och skepp GAS/OLJ/OVR old/new spelling pairs carry their codes because only the spelling separates them."
@@ -90165,12 +89595,6 @@ evidence = "#2102 same-label cluster 'Energiskatt' (134 variables): held in #212
 
 [[statement]]
 kind = "set"
-subject = "var:energiskatt-summa"
-fields = { "label" = "Energiskatt (tåg och andra spårbundna färdmedel, summa)" }
-evidence = "#2102 same-label cluster 'Energiskatt' (134 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Members are separate refund-application columns whose opdefs name use (båt och skepp, luftfart, industri, värmeleverans, jord- och skogsbruk), fuel and year reference; the label keeps only what every non-empty opdef of the column supports. Five columns whose opdefs disagree among themselves or have no fuel word get the column code, and the three båt och skepp GAS/OLJ/OVR old/new spelling pairs carry their codes because only the spelling separates them."
-
-[[statement]]
-kind = "set"
 subject = "var:energiskatt-vegetabiliska-oljor-fame-rme"
 fields = { "label" = "Energiskatt (vegetabiliska oljor, FAME och RME)" }
 evidence = "#2102 same-label cluster 'Energiskatt' (134 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Members are separate refund-application columns whose opdefs name use (båt och skepp, luftfart, industri, värmeleverans, jord- och skogsbruk), fuel and year reference; the label keeps only what every non-empty opdef of the column supports. Five columns whose opdefs disagree among themselves or have no fuel word get the column code, and the three båt och skepp GAS/OLJ/OVR old/new spelling pairs carry their codes because only the spelling separates them."
@@ -90233,12 +89657,6 @@ evidence = "#2102 same-label cluster 'Energiskatt' (134 variables): held in #212
 kind = "set"
 subject = "var:bgasar1ensk"
 fields = { "label" = "Energiskatt (vegetabiliska oljor för uppvärmning, bioolja, givet år)" }
-evidence = "#2102 same-label cluster 'Energiskatt' (134 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Members are separate refund-application columns whose opdefs name use (båt och skepp, luftfart, industri, värmeleverans, jord- och skogsbruk), fuel and year reference; the label keeps only what every non-empty opdef of the column supports. Five columns whose opdefs disagree among themselves or have no fuel word get the column code, and the three båt och skepp GAS/OLJ/OVR old/new spelling pairs carry their codes because only the spelling separates them."
-
-[[statement]]
-kind = "set"
-subject = "var:energiskatt"
-fields = { "label" = "Energiskatt (landström, el)" }
 evidence = "#2102 same-label cluster 'Energiskatt' (134 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Members are separate refund-application columns whose opdefs name use (båt och skepp, luftfart, industri, värmeleverans, jord- och skogsbruk), fuel and year reference; the label keeps only what every non-empty opdef of the column supports. Five columns whose opdefs disagree among themselves or have no fuel word get the column code, and the three båt och skepp GAS/OLJ/OVR old/new spelling pairs carry their codes because only the spelling separates them."
 
 [[statement]]
@@ -90419,12 +89837,6 @@ evidence = "#2102 same-label cluster 'Energiskatt' (134 variables): held in #212
 kind = "set"
 subject = "var:mk1okdeensk"
 fields = { "label" = "Energiskatt (luftfart, MK1, oktober-december)" }
-evidence = "#2102 same-label cluster 'Energiskatt' (134 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Members are separate refund-application columns whose opdefs name use (båt och skepp, luftfart, industri, värmeleverans, jord- och skogsbruk), fuel and year reference; the label keeps only what every non-empty opdef of the column supports. Five columns whose opdefs disagree among themselves or have no fuel word get the column code, and the three båt och skepp GAS/OLJ/OVR old/new spelling pairs carry their codes because only the spelling separates them."
-
-[[statement]]
-kind = "set"
-subject = "var:ovrfgensksats"
-fields = { "label" = "Energiskatt (övrigt bränsle, föregående år, OVRFGENSKSATS)" }
 evidence = "#2102 same-label cluster 'Energiskatt' (134 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Members are separate refund-application columns whose opdefs name use (båt och skepp, luftfart, industri, värmeleverans, jord- och skogsbruk), fuel and year reference; the label keeps only what every non-empty opdef of the column supports. Five columns whose opdefs disagree among themselves or have no fuel word get the column code, and the three båt och skepp GAS/OLJ/OVR old/new spelling pairs carry their codes because only the spelling separates them."
 
 [[statement]]
@@ -90983,12 +90395,6 @@ evidence = "#2102 same-label cluster 'Koldioxidskatt, återbetalningar och punkt
 kind = "set"
 subject = "var:gasar1co2sk"
 fields = { "label" = "Koldioxidskatt, återbetalningar och punktskatter (GASAR1CO2SK)" }
-evidence = "#2102 same-label cluster 'Koldioxidskatt, återbetalningar och punktskatter' (131 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Parallel to the Energiskatt columns: opdefs name use, fuel and year reference; where a column's opdefs disagree with each other or with the label, or name no fuel, it gets the column code, and the båt och skepp old/new spelling pairs carry their codes because only the spelling separates them."
-
-[[statement]]
-kind = "set"
-subject = "var:koldioxidskatt-aterbetalningar"
-fields = { "label" = "Koldioxidskatt, återbetalningar och punktskatter (tåg och andra spårbundna färdmedel, summa)" }
 evidence = "#2102 same-label cluster 'Koldioxidskatt, återbetalningar och punktskatter' (131 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Parallel to the Energiskatt columns: opdefs name use, fuel and year reference; where a column's opdefs disagree with each other or with the label, or name no fuel, it gets the column code, and the båt och skepp old/new spelling pairs carry their codes because only the spelling separates them."
 
 [[statement]]
@@ -92163,12 +91569,6 @@ evidence = "#2102 same-label cluster 'Summa skatt punktskatt' (26 variables): he
 
 [[statement]]
 kind = "set"
-subject = "var:summa-skatt-punktskatt"
-fields = { "label" = "Summa skatt punktskatt (ELSUMELSK)" }
-evidence = "#2102 same-label cluster 'Summa skatt punktskatt' (26 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each column's opdef names the tax and use (avfallsskatt, båt och skepp, jord- och skogsbruk, värmeleveranser, industri, svavel, kraftvärme). SUMDIECO2SKATT opdefs say olja/dieselbrännolja/just CO2-skatt, so diesel is dropped; ELSUMELSK opdef says CO2-skatt for industri utsläppsrätter in 2019-2021 and elenergiskatt after, so only the code is safe."
-
-[[statement]]
-kind = "set"
 subject = "var:summa-co2-skatt-kraftvarme-industri-utslappsratter"
 fields = { "label" = "Summa skatt punktskatt (kraftvärme, industri utsläppsrätter, CO2-skatt)" }
 evidence = "#2102 same-label cluster 'Summa skatt punktskatt' (26 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Each column's opdef names the tax and use (avfallsskatt, båt och skepp, jord- och skogsbruk, värmeleveranser, industri, svavel, kraftvärme). SUMDIECO2SKATT opdefs say olja/dieselbrännolja/just CO2-skatt, so diesel is dropped; ELSUMELSK opdef says CO2-skatt for industri utsläppsrätter in 2019-2021 and elenergiskatt after, so only the code is safe."
@@ -92466,12 +91866,6 @@ kind = "set"
 subject = "var:lbb1"
 fields = { "label" = "Eviga förlagslån (LBB1)" }
 evidence = "#2102 same-label cluster 'Eviga förlagslån (RCC1)' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; RCC1 and LBB1 are concurrent columns in forsakringsbolag; their opdefs swap between livförsäkringsbolag and skadeförsäkringsbolag over time (RCC1 life 2017-2022, non-life 2023; LBB1 the reverse), so neither can carry a life/non-life qualifier and the codes stay."
-
-[[statement]]
-kind = "set"
-subject = "var:frida-differens-debet-kredit"
-fields = { "label" = "FRIDA Differens i avstämning mellan debet och kredit (V0832)" }
-evidence = "#2102 same-label cluster 'FRIDA Differens i avstämning mellan debet och kredit' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V0832 has no opdef; VX4P opdef (only on its 2003 handelsbolag occurrence) says 'Egen definierad granskningsvariabel', never contradicted by the others; V0832 gets its code."
 
 [[statement]]
 kind = "set"
@@ -93099,12 +92493,6 @@ evidence = "#2102 same-label cluster 'Studiemedel, studiebidrag' (3 variables): 
 
 [[statement]]
 kind = "set"
-subject = "var:studiemedel-studiebidrag"
-fields = { "label" = "Studiemedel, studiebidrag (bidragsdelen från CSN)" }
-evidence = "#2102 same-label cluster 'Studiemedel, studiebidrag' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; IBID's opdef is the CSN grant part, while ISMBID sums studiebidrag lån and studiebidrag i utlandet lån; ISMBID00 repeats the ISMBID opdef with 'Avser 2000'."
-
-[[statement]]
-kind = "set"
 subject = "var:v04"
 fields = { "label" = "Utdelning som beskattas i tjänst Huvudregeln punkt 2.7 (V0471)" }
 evidence = "#2102 same-label cluster 'Utdelning som beskattas i tjänst Huvudregeln punkt 2.7' (3 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; V4525 and V4526 coexist in bilaga-k10 2012-2014 and V4526's 2014 opdef says the amount is after avdraget gränsbelopp; V0471 and V0469 coexist 2008-2011, so they read as separate K10 lines."
@@ -93162,12 +92550,6 @@ kind = "set"
 subject = "var:arets-resultat-l27"
 fields = { "label" = "Årets resultat (L27)" }
 evidence = "#2102 fold: the label names every folded column. D1 ruling: column L27 in forsakringsbolag 2005-15 (key v29696) continues as L27 2016-24 (key v26268, whose definition names L26); same spelling, no value set, adjacent at 2016."
-
-[[statement]]
-kind = "set"
-subject = "var:arets-resultat-l26-laa"
-fields = { "label" = "Årets resultat (LAA11)" }
-evidence = "#2102 D1: after L27 2016-24 folds into arets-resultat-l27, LAA11 (2017, forsakringsbolag) and L26 still share the source label 'Årets resultat (L26)'; LAA11 takes its column code."
 
 [[statement]]
 kind = "set"
@@ -93702,7 +93084,6 @@ kind = "set"
 subject = "var:avdr-for-skatt-pa-bransle-framstallning-elektrisk-v712-92"
 fields = { "description" = "Avdrag för skatt på bränsle som förbrukats för framställning av skattepliktig elektrisk kraft, lågbeskattad omärkt olja, enligt punktskattedeklarationen för olja, gasol m.m." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOljetypen står i definitionen 2007–2013 och i operationaliseringen 2017–2023; samma sak.\ncatalog:variable_text:22376:13514:16071\ncatalog:variable_text:22376:16071:17167\ncatalog:variable_text:22376:17167:19723"
-
 
 [[statement]]
 kind = "set"
@@ -94771,12 +94152,6 @@ kind = "set"
 subject = "var:fluor-och-svavelhaltigt-avfall-fran-rokgasreningvid-tillv"
 fields = { "description" = "Fluor- och svavelhaltigt avfall från rökgasrening vid tillverkning av järnmalmspellets, i punktskattedeklarationen för avfallsskatt." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition alla år; rättar ”rökgasreningvid tillv” och anger deklarationen från operationaliseringen 2007, 2008 och 2017–2023.\ncatalog:variable_text:23828:13514:13879\ncatalog:variable_text:23828:13879:14245\ncatalog:variable_text:23828:16071:17167\ncatalog:variable_text:23828:17167:19723\nRegisterinformation.csv:row=347189\nRegisterinformation.csv:row=347267\nRegisterinformation.csv:row=863482"
-
-[[statement]]
-kind = "set"
-subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-ovrfgmng"
-fields = { "description" = "Förbrukad mängd övrigt bränsle avseende föregående år, i ansökningar om återbetalning för framställning av el, båt och skepp och yrkesmässig luftfart (övrigt flygbränsle)." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\n2017–2023 anger övrigt bränsle respektive övrigt flygbränsle föregående år; raden om flygfotogen 2019–2020 motsäger kolumnen och tas inte med.\ncatalog:variable_text:23929:16071:16436\ncatalog:variable_text:23929:16801:17167\ncatalog:variable_text:23929:17167:17897\ncatalog:variable_text:23929:17897:18262\ncatalog:variable_text:23929:18262:18628\ncatalog:variable_text:23929:18628:19723\nRegisterinformation.csv:row=387690\nRegisterinformation.csv:row=387770\nRegisterinformation.csv:row=389521\nRegisterinformation.csv:row=390256\nRegisterinformation.csv:row=390359\nRegisterinformation.csv:row=404671\nRegisterinformation.csv:row=404680\nRegisterinformation.csv:row=861722\nRegisterinformation.csv:row=863489"
 
 [[statement]]
 kind = "set"

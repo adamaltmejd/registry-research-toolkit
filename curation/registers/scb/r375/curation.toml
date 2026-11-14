@@ -379,18 +379,6 @@ evidence = "Arbetskraftskostnader.\ncatalog:variable_text:12148:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:arets-anskaffningar-darav-kop-av-bostader-bl3332"
-fields = { "sets" = ["anskaffningar-byggnader-mark"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:126184\ncatalog:occurrence:126185\ncatalog:variable_text:12149:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:arets-anskaffningar-darav-kop-av-bostader-bl3332"
-fields = { "tags" = ["business", "housing"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:126184\ncatalog:occurrence:126185\ncatalog:variable_text:12149:9862:12053"
-
-[[statement]]
-kind = "set"
 subject = "var:arets-totala-fakturering"
 fields = { "sets" = ["total-fakturering"] }
 evidence = "Total fakturering.\ncatalog:variable_text:12150:9862:12053"
@@ -5728,12 +5716,6 @@ kind = "set"
 subject = "set:varulager"
 fields = { "label" = "Varulager" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "var:arets-anskaffningar-darav-kop-av-bostader-bl3332"
-fields = { "label" = "Årets anskaffningar därav köp av bostäder (bl3332)" }
-evidence = "#2102 same-label cluster 'Årets anskaffningar därav köp av bostäder' (2 variables): judged different meaning, medium confidence; bl3332 and bl3342 are concurrent columns in the same tables with identical text; no source says how they differ."
 
 [[statement]]
 kind = "set"

@@ -1375,18 +1375,6 @@ evidence = "Effektbeloppet hör till gruppen motoreffekt och temat transporter.\
 
 [[statement]]
 kind = "set"
-subject = "var:effektnorm-effekt3"
-fields = { "sets" = ["effektnorm"] }
-evidence = "Samma kolumn har överlappande ägare med olika begrepp.\ncatalog:occurrence:108159\ncatalog:occurrence:108160"
-
-[[statement]]
-kind = "set"
-subject = "var:effektnorm-effekt3"
-fields = { "tags" = ["transport"] }
-evidence = "Samma kolumn har överlappande ägare med olika begrepp.\ncatalog:occurrence:108159\ncatalog:occurrence:108160"
-
-[[statement]]
-kind = "set"
 subject = "var:effektnorm-effektenh2"
 fields = { "sets" = ["effektnorm"] }
 evidence = "Variabeln anger norm för motoreffekt.\ncatalog:variable_text:11825:20453:20454"
@@ -1543,18 +1531,6 @@ evidence = "Variabeln anger fordonets benämning.\ncatalog:occurrence:105083"
 
 [[statement]]
 kind = "set"
-subject = "var:fordonets-benamning-avrors"
-fields = { "sets" = ["fordonsbenamning"] }
-evidence = "Samma källkolumn har överlappande mappningar till olika begrepp.\ncatalog:occurrence:110828\ncatalog:occurrence:110829\ncatalog:occurrence:110830"
-
-[[statement]]
-kind = "set"
-subject = "var:fordonets-benamning-avrors"
-fields = { "tags" = ["transport"] }
-evidence = "Samma källkolumn har överlappande mappningar till olika begrepp.\ncatalog:occurrence:110828\ncatalog:occurrence:110829\ncatalog:occurrence:110830"
-
-[[statement]]
-kind = "set"
 subject = "var:fordonets-bullerniva-literal-buller2"
 fields = { "sets" = ["bullerniva"] }
 evidence = "Bullernivå ingår i bullergruppen.\ncatalog:variable_text:11840:20453:20454"
@@ -1576,18 +1552,6 @@ kind = "set"
 subject = "var:fordonets-bullerniva-literal-buller3"
 fields = { "tags" = ["environment", "transport"] }
 evidence = "Bullernivå ingår i bullergruppen.\ncatalog:variable_text:11841:20453:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:fordonets-handelsbeteckning-avrors"
-fields = { "sets" = ["handelsbeteckning"] }
-evidence = "Samma källkolumn har överlappande mappningar till olika begrepp.\ncatalog:occurrence:110828\ncatalog:occurrence:110829\ncatalog:occurrence:110830"
-
-[[statement]]
-kind = "set"
-subject = "var:fordonets-handelsbeteckning-avrors"
-fields = { "tags" = ["transport"] }
-evidence = "Samma källkolumn har överlappande mappningar till olika begrepp.\ncatalog:occurrence:110828\ncatalog:occurrence:110829\ncatalog:occurrence:110830"
 
 [[statement]]
 kind = "set"
@@ -3799,18 +3763,6 @@ evidence = "#2102 same-label cluster 'Drivmedel' (4 variables): held in #2127 fo
 
 [[statement]]
 kind = "set"
-subject = "var:fordonets-benamning-avrors"
-fields = { "label" = "Fordonets benämning (AvrOrs)" }
-evidence = "#2102 same-label cluster 'Fordonets benämning' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; AvrOrs (motorcyklar 2015-2016) has no opdef or code list and shares only the label; qualified by its code."
-
-[[statement]]
-kind = "set"
-subject = "var:fordonets-handelsbeteckning-avrors"
-fields = { "label" = "Fordonets handelsbeteckning (AvrOrs)" }
-evidence = "#2102 same-label cluster 'Fordonets handelsbeteckning' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; AvrOrs (motorcyklar 2015-2016) has no opdef or code list and shares only the label; qualified by its code."
-
-[[statement]]
-kind = "set"
 subject = "var:effektenh-2"
 fields = { "label" = "Effektnorm (EffektEnh1)" }
 evidence = "#2102 same-label cluster 'Effektnorm' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; EffektEnh1 has the opdef 'Avser drivmedel 3' in 2013-2017 and EffektEnh3 'Avser drivmedel 1' in 2013-2017, so drivmedel numbers do not hold for every occurrence of those two; they take their codes. EffektEnh2, Effekt3 and EffektEnh are consistent in every occurrence."
@@ -3825,12 +3777,6 @@ evidence = "#2102 same-label cluster 'Effektnorm' (5 variables): held in #2127 a
 kind = "set"
 subject = "var:effektnorm-effektenh3"
 fields = { "label" = "Effektnorm (EffektEnh3)" }
-evidence = "#2102 same-label cluster 'Effektnorm' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; EffektEnh1 has the opdef 'Avser drivmedel 3' in 2013-2017 and EffektEnh3 'Avser drivmedel 1' in 2013-2017, so drivmedel numbers do not hold for every occurrence of those two; they take their codes. EffektEnh2, Effekt3 and EffektEnh are consistent in every occurrence."
-
-[[statement]]
-kind = "set"
-subject = "var:effektnorm-effekt3"
-fields = { "label" = "Effektnorm (drivmedel 1, Effekt3)" }
 evidence = "#2102 same-label cluster 'Effektnorm' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; EffektEnh1 has the opdef 'Avser drivmedel 3' in 2013-2017 and EffektEnh3 'Avser drivmedel 1' in 2013-2017, so drivmedel numbers do not hold for every occurrence of those two; they take their codes. EffektEnh2, Effekt3 and EffektEnh are consistent in every occurrence."
 
 [[statement]]

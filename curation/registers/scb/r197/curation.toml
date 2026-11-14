@@ -379,18 +379,6 @@ evidence = "Identitetsfaktumet kopplar summan till en tidigare reparationspost.\
 
 [[statement]]
 kind = "set"
-subject = "var:driftskostnader-underhall"
-fields = { "sets" = ["reparations-och-underhallskostnader"] }
-evidence = "Identitetsfaktumet visar överlapp mellan underhåll och reparationer.\ncatalog:occurrence:243014\ncatalog:occurrence:243015"
-
-[[statement]]
-kind = "set"
-subject = "var:driftskostnader-underhall"
-fields = { "tags" = ["business"] }
-evidence = "Identitetsfaktumet visar överlapp mellan underhåll och reparationer.\ncatalog:occurrence:243014\ncatalog:occurrence:243015"
-
-[[statement]]
-kind = "set"
 subject = "var:intakter-erhallna-eu-bidrag-och-bidrag-fran-andra-an-stat"
 fields = { "sets" = [] }
 evidence = "Id är en källmnemonik och etiketten anger bidragens omfattning.\ncatalog:variable_text:27412:16436:16801"
@@ -643,18 +631,6 @@ evidence = "Posten avser hushållselintäkter.\ncatalog:variable_text:27433:1643
 
 [[statement]]
 kind = "set"
-subject = "var:hushallsel-intakter-v4080"
-fields = { "sets" = ["hushallselintakter"] }
-evidence = "Identitetsfaktet visar överlappande mappningar till olika mått.\ncatalog:occurrence:242842\ncatalog:occurrence:242843"
-
-[[statement]]
-kind = "set"
-subject = "var:hushallsel-intakter-v4080"
-fields = { "tags" = ["energy", "housing"] }
-evidence = "Identitetsfaktet visar överlappande mappningar till olika mått.\ncatalog:occurrence:242842\ncatalog:occurrence:242843"
-
-[[statement]]
-kind = "set"
 subject = "var:hushallsel-intakter-v4081"
 fields = { "sets" = ["hushallselintakter"] }
 evidence = "Identitetsfaktet kopplar intäkter och kostnader för hushållsel.\ncatalog:occurrence:242795\ncatalog:occurrence:242894\ncatalog:occurrence:243188\ncatalog:occurrence:243231"
@@ -805,18 +781,6 @@ evidence = "Hyresbortfall för bostäder hör till kandidatgruppen.\ncatalog:var
 
 [[statement]]
 kind = "set"
-subject = "var:intaktsreduktioner-bostader-v1050"
-fields = { "sets" = ["intaktsreduktioner-och-hyresbortfall"] }
-evidence = "Identitetsfaktet visar överlappande mappningar till olika mått.\ncatalog:occurrence:242870\ncatalog:occurrence:242871"
-
-[[statement]]
-kind = "set"
-subject = "var:intaktsreduktioner-bostader-v1050"
-fields = { "tags" = ["business", "housing"] }
-evidence = "Identitetsfaktet visar överlappande mappningar till olika mått.\ncatalog:occurrence:242870\ncatalog:occurrence:242871"
-
-[[statement]]
-kind = "set"
 subject = "var:intaktsreduktioner-bostader-v1070"
 fields = { "sets" = ["intaktsreduktioner-och-hyresbortfall"] }
 evidence = "Hyresbortfall för bostäder hör till kandidatgruppen.\ncatalog:variable_text:27452:16436:16801"
@@ -826,18 +790,6 @@ kind = "set"
 subject = "var:intaktsreduktioner-bostader-v1070"
 fields = { "tags" = ["business", "housing"] }
 evidence = "Hyresbortfall för bostäder hör till kandidatgruppen.\ncatalog:variable_text:27452:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:intaktsreduktioner-bostader-v1080"
-fields = { "sets" = ["intaktsreduktioner-och-hyresbortfall"] }
-evidence = "Identitetsfaktet visar överlappande mappningar till olika delposter.\ncatalog:occurrence:243045\ncatalog:occurrence:243046\ncatalog:occurrence:243088\ncatalog:occurrence:243089"
-
-[[statement]]
-kind = "set"
-subject = "var:intaktsreduktioner-bostader-v1080"
-fields = { "tags" = ["business", "housing"] }
-evidence = "Identitetsfaktet visar överlappande mappningar till olika delposter.\ncatalog:occurrence:243045\ncatalog:occurrence:243046\ncatalog:occurrence:243088\ncatalog:occurrence:243089"
 
 [[statement]]
 kind = "set"
@@ -1315,18 +1267,6 @@ evidence = "Källan anger total lokalyta.\ncatalog:variable_text:27498:16436:168
 
 [[statement]]
 kind = "set"
-subject = "var:total-lokalyta-toyf"
-fields = { "sets" = ["lokalyta"] }
-evidence = "Identitetsfaktumet visar överlapp med en annan yta.\ncatalog:occurrence:242359\ncatalog:occurrence:242360"
-
-[[statement]]
-kind = "set"
-subject = "var:total-lokalyta-toyf"
-fields = { "tags" = ["property"] }
-evidence = "Identitetsfaktumet visar överlapp med en annan yta.\ncatalog:occurrence:242359\ncatalog:occurrence:242360"
-
-[[statement]]
-kind = "set"
 subject = "var:total-lokalyta-y20"
 fields = { "sets" = ["lokalyta"] }
 evidence = "Periodsplitten mot y20 avser lokalarea i olika perioder.\ncatalog:occurrence:243027\ncatalog:occurrence:243069\ncatalog:occurrence:243112"
@@ -1423,18 +1363,6 @@ evidence = "Utgifter för ombyggnad och standardhöjande åtgärder hör till de
 
 [[statement]]
 kind = "set"
-subject = "var:v1020"
-fields = { "sets" = ["lokalintakter"] }
-evidence = "Identitetsfaktet visar överlappande mappningar för samma kolumn.\ncatalog:occurrence:242721\ncatalog:occurrence:242722\ncatalog:occurrence:242770\ncatalog:occurrence:242771\ncatalog:occurrence:242818\ncatalog:occurrence:242819"
-
-[[statement]]
-kind = "set"
-subject = "var:v1020"
-fields = { "tags" = ["business", "housing"] }
-evidence = "Identitetsfaktet visar överlappande mappningar för samma kolumn.\ncatalog:occurrence:242721\ncatalog:occurrence:242722\ncatalog:occurrence:242770\ncatalog:occurrence:242771\ncatalog:occurrence:242818\ncatalog:occurrence:242819"
-
-[[statement]]
-kind = "set"
 subject = "var:bransle-och-varmeavgift"
 fields = { "sets" = [] }
 evidence = "V1035 är en ogenomskinlig kolumnkod; etiketten anger bränsle- och värmeavgift.\ncatalog:variable_text:27509:16436:16801"
@@ -1444,18 +1372,6 @@ kind = "set"
 subject = "var:bransle-och-varmeavgift"
 fields = { "tags" = ["energy", "housing"] }
 evidence = "V1035 är en ogenomskinlig kolumnkod; etiketten anger bränsle- och värmeavgift.\ncatalog:variable_text:27509:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:v1040"
-fields = { "sets" = ["ovriga-rorelseintakter"] }
-evidence = "Identitetsfaktumet visar överlappande ägare för V1040.\ncatalog:occurrence:242675\ncatalog:occurrence:242676"
-
-[[statement]]
-kind = "set"
-subject = "var:v1040"
-fields = { "tags" = ["business"] }
-evidence = "Identitetsfaktumet visar överlappande ägare för V1040.\ncatalog:occurrence:242675\ncatalog:occurrence:242676"
 
 [[statement]]
 kind = "set"
@@ -1977,20 +1893,8 @@ evidence = "#2102 same-label cluster 'Intäktsreduktioner Bostäder' (4 variable
 
 [[statement]]
 kind = "set"
-subject = "var:intaktsreduktioner-bostader-v1050"
-fields = { "label" = "Intäktsreduktioner Bostäder (V1050)" }
-evidence = "#2102 same-label cluster 'Intäktsreduktioner Bostäder' (4 variables): judged different meaning, low confidence; HBBO (allmännyttiga), V1070/V1080 (private) and V1050 (cooperatives) share a generic rent-loss definition and coexist with V1070 in the same tables; qualified by column code."
-
-[[statement]]
-kind = "set"
 subject = "var:intaktsreduktioner-bostader-v1070"
 fields = { "label" = "Intäktsreduktioner Bostäder (V1070)" }
-evidence = "#2102 same-label cluster 'Intäktsreduktioner Bostäder' (4 variables): judged different meaning, low confidence; HBBO (allmännyttiga), V1070/V1080 (private) and V1050 (cooperatives) share a generic rent-loss definition and coexist with V1070 in the same tables; qualified by column code."
-
-[[statement]]
-kind = "set"
-subject = "var:intaktsreduktioner-bostader-v1080"
-fields = { "label" = "Intäktsreduktioner Bostäder (V1080)" }
 evidence = "#2102 same-label cluster 'Intäktsreduktioner Bostäder' (4 variables): judged different meaning, low confidence; HBBO (allmännyttiga), V1070/V1080 (private) and V1050 (cooperatives) share a generic rent-loss definition and coexist with V1070 in the same tables; qualified by column code."
 
 [[statement]]
@@ -2121,12 +2025,6 @@ evidence = "#2102 same-label cluster 'Total lokalyta' (4 variables): held in #21
 
 [[statement]]
 kind = "set"
-subject = "var:total-lokalyta-toyf"
-fields = { "label" = "Total lokalyta (TOYF)" }
-evidence = "#2102 same-label cluster 'Total lokalyta' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; LOYF is in the allmännyttiga table; the 'genomsnitt' opdef is missing from one LOYF occurrence so it is dropped. Y20 opdef: 'Föreningens totala lokalyta'; TOYF and Y21 only differ by code."
-
-[[statement]]
-kind = "set"
 subject = "var:total-lokalyta-y21"
 fields = { "label" = "Total lokalyta (Y21)" }
 evidence = "#2102 same-label cluster 'Total lokalyta' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; LOYF is in the allmännyttiga table; the 'genomsnitt' opdef is missing from one LOYF occurrence so it is dropped. Y20 opdef: 'Föreningens totala lokalyta'; TOYF and Y21 only differ by code."
@@ -2135,12 +2033,6 @@ evidence = "#2102 same-label cluster 'Total lokalyta' (4 variables): held in #21
 kind = "set"
 subject = "var:hushallsel-intakter-v4081"
 fields = { "label" = "Hushållsel, intäkter (V4081)" }
-evidence = "#2102 same-label cluster 'Hushållsel, intäkter' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V1140 is an amount in 2012 but has Ja/Nej codes (opdef: 'Ingår intäkter för hushållsel i redovisad uppgift?') in 2013, so a ja/nej qualifier is wrong for 2012; V4081, V4080, V1141 have the same definition and unit with no separating text."
-
-[[statement]]
-kind = "set"
-subject = "var:hushallsel-intakter-v4080"
-fields = { "label" = "Hushållsel, intäkter (V4080)" }
 evidence = "#2102 same-label cluster 'Hushållsel, intäkter' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; V1140 is an amount in 2012 but has Ja/Nej codes (opdef: 'Ingår intäkter för hushållsel i redovisad uppgift?') in 2013, so a ja/nej qualifier is wrong for 2012; V4081, V4080, V1141 have the same definition and unit with no separating text."
 
 [[statement]]

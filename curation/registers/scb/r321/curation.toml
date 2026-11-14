@@ -3205,18 +3205,6 @@ evidence = "Identitetsfakten kräver granskning.\ncatalog:occurrence:382768\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:fr45-5"
-fields = { "sets" = ["medborgarforslag-pa-webbplats"] }
-evidence = "Överlappande mappning kräver identitetsgranskning.\ncatalog:occurrence:383266\ncatalog:occurrence:383267\ncatalog:variable_text:38628:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:fr45-5"
-fields = { "tags" = ["democracy", "digital"] }
-evidence = "Överlappande mappning kräver identitetsgranskning.\ncatalog:occurrence:383266\ncatalog:occurrence:383267\ncatalog:variable_text:38628:19723:20089"
-
-[[statement]]
-kind = "set"
 subject = "var:fr46"
 fields = { "sets" = ["anvandning-av-sociala-medier"] }
 evidence = "Frågekoden är opak och etiketten kolliderar med andra variabler.\ncatalog:occurrence:382771\ncatalog:variable_text:38629:18262:18628"
@@ -8587,12 +8575,6 @@ evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling 
 
 [[statement]]
 kind = "set"
-subject = "var:fr45-5"
-fields = { "label" = "Webbplats med medborgarförslag (följa hanteringen, Fr45_5)" }
-evidence = "#2102 same-label cluster 'Webbplats med medborgarförslag' (10 variables): judged different meaning, medium confidence; Two items per year: information about medborgarförslag and following their handling (opdefs 2008, 2016 kommun, Fr45_5, Fr42_5); the 2012 FORS/FORSANT opdefs contradict each other and the region 2016 Fr30_9/Fr30_10 have no text, so those are qualified by column code."
-
-[[statement]]
-kind = "set"
 subject = "var:fr5-text"
 fields = { "label" = "Förekomst av folkomröstning (antal)" }
 evidence = "#2102 same-label cluster 'Förekomst av folkomröstning' (12 variables): judged different meaning, high confidence; Opdefs: Ja/Nej flags (Förekomst av folkomröstning) differ from count columns (Anger antal folkomröstningar), repeated over survey years and respondent types."
@@ -11552,17 +11534,35 @@ evidence = "SCB Registerinformation, Lokal demokrati Kommuner 2020 (RegVerID 161
 [[statement]]
 kind = "set"
 subject = "kommuner: Fr32_7 @2016 where key = 'v28625'"
-fields = { "spelling" = "Fr32_8" }
-evidence = "SCB Registerinformation, Lokal demokrati Kommuner 2016 (RegVerID 11133) documents column Fr32_7 under VarId 35984 \"Webbplats med information om det politiska styret\" and VarId 28625 \"Webbplats med möjlighet att skicka meddelanden\" and has no Fr32_8 (Fr32_1-Fr32_10 otherwise). The item order of the website block is the same in Regioner 2016 (Fr30_7 info om det politiska styret 35984, Fr30_8 meddelanden 28625) and Kommuner 2020 (Fr45_3 35984, Fr45_4 28625), so 35984 is Fr32_7 and 28625 is the missing Fr32_8. SCB attached the wrong column name to the 28625 row; it is respelled to Fr32_8."
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Lokal demokrati Kommuner 2016 (RegVerID 11133) documents column Fr32_7 under VarId 35984 \"Webbplats med information om det politiska styret\" and VarId 28625 \"Webbplats med möjlighet att skicka meddelanden\" and has no Fr32_8 (Fr32_1-Fr32_10 otherwise). The item order of the website block is the same in Regioner 2016 (Fr30_7 info om det politiska styret 35984, Fr30_8 meddelanden 28625) and Kommuner 2020 (Fr45_3 35984, Fr45_4 28625), so 35984 is Fr32_7 and 28625 is the missing Fr32_8. SCB attached the wrong column name to the 28625 row. Respelling it to Fr32_8 would join the variable that holds Fr32_7, so the 28625 row is withheld."
 
 [[statement]]
 kind = "set"
 subject = "regioner: Fr45_5 @2020 where key = 'v28626'"
-fields = { "spelling" = "Fr44_5" }
-evidence = "SCB Registerinformation, Lokal demokrati Regioner 2020 (RegVerID 16181) documents column Fr45_5 under VarId 29353 \"Användande av sociala medier\" and VarId 28626 \"Webbplats med medborgarförslag\". Fr45_1-Fr45_5 all carry 29353 (a five-part social-media question), while the website block is Fr44_1-Fr44_4 and has no fifth item; 28626 is the website item that follows 28625 in the block (Kommuner 2020 Fr45_4 28625, Fr45_5 28626; Regioner 2016 Fr30_8 28625, Fr30_9 28626). SCB attached the wrong column name to the 28626 row; it is respelled to the missing Fr44_5."
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Lokal demokrati Regioner 2020 (RegVerID 16181) documents column Fr45_5 under VarId 29353 \"Användande av sociala medier\" and VarId 28626 \"Webbplats med medborgarförslag\". Fr45_1-Fr45_5 all carry 29353 (a five-part social-media question); 28626 belongs to the website block (Kommuner 2020 Fr45_4 28625, Fr45_5 28626; Regioner 2016 Fr30_8 28625, Fr30_9 28626), whose Regioner 2020 column the source does not name, so the 28626 row is withheld."
 
 [[statement]]
 kind = "set"
 subject = "regioner: Fr7 @2016 where key = 'v28656'"
 fields = { "spelling" = "Fr14a" }
 evidence = "SCB Registerinformation, Lokal demokrati Regioner 2016 (RegVerID 11181) documents column Fr7 under VarId 28631 \"Möjlighet att lämna medborgarförslag\" and VarId 28656 \"Offentlig utfrågning (hearing)\". Fr7 sits between Fr6a (folkinitiativ) and Fr8a (inkomna medborgarförslag), which fits 28631. VarId 28656 is the hearing item and 29420 \"Offentlig utfrågning (hearing) via webbplatsen\" is Fr14b in the same release; in Kommuner 2016 the same pair is Fr16a (28656) and Fr16b (29420). The release has no Fr14a, so SCB attached the wrong column name to the 28656 row; it is respelled to Fr14a."
+
+[[statement]]
+kind = "set"
+subject = "var:fr45-5"
+fields = { "sets" = ["medborgarforslag-pa-webbplats"] }
+evidence = "Överlappande mappning kräver identitetsgranskning.\ncatalog:occurrence:383266\ncatalog:occurrence:383267\ncatalog:variable_text:38628:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fr45-5"
+fields = { "tags" = ["democracy", "digital"] }
+evidence = "Överlappande mappning kräver identitetsgranskning.\ncatalog:occurrence:383266\ncatalog:occurrence:383267\ncatalog:variable_text:38628:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:fr45-5"
+fields = { "label" = "Webbplats med medborgarförslag (följa hanteringen, Fr45_5)" }
+evidence = "#2102 same-label cluster 'Webbplats med medborgarförslag' (10 variables): judged different meaning, medium confidence; Two items per year: information about medborgarförslag and following their handling (opdefs 2008, 2016 kommun, Fr45_5, Fr42_5); the 2012 FORS/FORSANT opdefs contradict each other and the region 2016 Fr30_9/Fr30_10 have no text, so those are qualified by column code."

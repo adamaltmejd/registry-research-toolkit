@@ -1225,18 +1225,6 @@ evidence = "Kolumnnamnet och källans enhet ger olika besked.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:miljoskyddskostnader-lopande-interna-drift-kost303t"
-fields = { "sets" = ["lopande-miljoskyddskostnader"] }
-evidence = "Identitetsfaktorn visar överlappning mellan olika kostnadskomponenter.\ncatalog:occurrence:243669\ncatalog:occurrence:243670"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoskyddskostnader-lopande-interna-drift-kost303t"
-fields = { "tags" = ["business", "environment"] }
-evidence = "Identitetsfaktorn visar överlappning mellan olika kostnadskomponenter.\ncatalog:occurrence:243669\ncatalog:occurrence:243670"
-
-[[statement]]
-kind = "set"
 subject = "var:miljoskyddskostnader-lopande-interna-generell"
 fields = { "sets" = ["lopande-miljoskyddskostnader"] }
 evidence = "Identitetsfaktorn visar överlappning mellan olika kostnadskomponenter.\ncatalog:occurrence:243669\ncatalog:occurrence:243670"
@@ -1881,12 +1869,6 @@ evidence = "#2102 same-label cluster 'Miljöskyddskostnader, löpande, interna, 
 kind = "set"
 subject = "var:kost302v"
 fields = { "label" = "Miljöskyddskostnader, löpande, interna, drift/underhåll (Kost302V)" }
-evidence = "#2102 same-label cluster 'Miljöskyddskostnader, löpande, interna, drift/underhåll' (7 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; No column has an opdef or code list; the definition is shared, so the area words (avfall, luft, vatten, övrigt, totalt) are unsupported and the codes are used."
-
-[[statement]]
-kind = "set"
-subject = "var:miljoskyddskostnader-lopande-interna-drift-kost303t"
-fields = { "label" = "Miljöskyddskostnader, löpande, interna, drift/underhåll (Kost303T)" }
 evidence = "#2102 same-label cluster 'Miljöskyddskostnader, löpande, interna, drift/underhåll' (7 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; No column has an opdef or code list; the definition is shared, so the area words (avfall, luft, vatten, övrigt, totalt) are unsupported and the codes are used."
 
 [[statement]]

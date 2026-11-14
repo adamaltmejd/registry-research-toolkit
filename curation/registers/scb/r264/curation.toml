@@ -4658,18 +4658,6 @@ evidence = "Posten avser minskning av expansionsfond.\ncatalog:variable_text:435
 
 [[statement]]
 kind = "set"
-subject = "var:minskning-av-expansionsfond-sru-v0864"
-fields = { "sets" = ["minskning-av-expansionsfond"] }
-evidence = "Samma kolumn har överlappande ägare i N3A.\ncatalog:occurrence:452072\ncatalog:occurrence:452073\ncatalog:occurrence:452152\ncatalog:occurrence:452153"
-
-[[statement]]
-kind = "set"
-subject = "var:minskning-av-expansionsfond-sru-v0864"
-fields = { "tags" = ["taxation"] }
-evidence = "Samma kolumn har överlappande ägare i N3A.\ncatalog:occurrence:452072\ncatalog:occurrence:452073\ncatalog:occurrence:452152\ncatalog:occurrence:452153"
-
-[[statement]]
-kind = "set"
 subject = "var:minskning-av-expansionsfond-sru-v7609"
 fields = { "sets" = ["minskning-av-expansionsfond"] }
 evidence = "Posten avser minskning av expansionsfond.\ncatalog:variable_text:43574:13514:14610"
@@ -10496,18 +10484,6 @@ evidence = "Katalogen visar en angränsande mappning till scb/sru/avgar-annans-r
 
 [[statement]]
 kind = "set"
-subject = "var:v7703"
-fields = { "sets" = ["inkomstfordelning-mellan-makar"] }
-evidence = "Källkolumnen har överlappande ägare.\ncatalog:occurrence:452661\ncatalog:occurrence:452662\ncatalog:occurrence:452754\ncatalog:occurrence:452755"
-
-[[statement]]
-kind = "set"
-subject = "var:v7703"
-fields = { "tags" = ["business", "taxation"] }
-evidence = "Källkolumnen har överlappande ägare.\ncatalog:occurrence:452661\ncatalog:occurrence:452662\ncatalog:occurrence:452754\ncatalog:occurrence:452755"
-
-[[statement]]
-kind = "set"
 subject = "var:ovriga-kostnader-min-andel-skattemassig-justering"
 fields = { "tags" = ["business", "taxation"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:44100:13514:14610"
@@ -13138,12 +13114,6 @@ evidence = "#2102 same-label cluster 'Maskiner och inventarier' (4 variables): j
 kind = "set"
 subject = "var:minskning-av-expansionsfond-sru"
 fields = { "label" = "Minskning av expansionsfond (SRU) (V0878, N1/N2)" }
-evidence = "#2102 same-label cluster 'Minskning av expansionsfond (SRU)' (3 variables): judged different meaning, medium confidence; Same item under different field codes on different forms (N1/N2, NE, N3A)."
-
-[[statement]]
-kind = "set"
-subject = "var:minskning-av-expansionsfond-sru-v0864"
-fields = { "label" = "Minskning av expansionsfond (SRU) (v0864, N3A)" }
 evidence = "#2102 same-label cluster 'Minskning av expansionsfond (SRU)' (3 variables): judged different meaning, medium confidence; Same item under different field codes on different forms (N1/N2, NE, N3A)."
 
 [[statement]]

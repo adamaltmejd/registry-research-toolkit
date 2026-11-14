@@ -15732,18 +15732,6 @@ evidence = "Typ av funktionsnedsättning.\ncatalog:variable_text:24970:14245:146
 
 [[statement]]
 kind = "set"
-subject = "var:lilla-n-per-stratum"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:221417\ncatalog:occurrence:221418\ncatalog:occurrence:227470\ncatalog:occurrence:227471"
-
-[[statement]]
-kind = "set"
-subject = "var:lilla-n-per-stratum"
-fields = { "tags" = ["methods"] }
-evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:221417\ncatalog:occurrence:221418\ncatalog:occurrence:227470\ncatalog:occurrence:227471"
-
-[[statement]]
-kind = "set"
 subject = "var:livranta"
 fields = { "sets" = ["livranta"] }
 evidence = "Variabeln summerar livräntor.\ncatalog:register:142\ncatalog:variable_text:24973:12418:16071"
@@ -20781,18 +20769,6 @@ kind = "set"
 subject = "var:studiemedel-studiehjalp-lan-och-bidrag"
 fields = { "tags" = ["transfers"] }
 evidence = "Samlat belopp för studiemedel och studiehjälp.\ncatalog:variable_text:25419:12418:16071\ncatalog:variable_text:25419:1826:2191"
-
-[[statement]]
-kind = "set"
-subject = "var:studiemedel-studiehjalp-summering"
-fields = { "sets" = ["samlat-studiestod"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:229021\ncatalog:occurrence:229022"
-
-[[statement]]
-kind = "set"
-subject = "var:studiemedel-studiehjalp-summering"
-fields = { "tags" = ["transfers"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:229021\ncatalog:occurrence:229022"
 
 [[statement]]
 kind = "set"
@@ -31931,12 +31907,6 @@ kind = "set"
 subject = "var:lan"
 fields = { "description" = "Län där urvalspersonen var folkbokförd vid urvalstillfället. 2009 och 2010 avser urvalstillfället 30 september." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i båda tabellerna; texterna skiljer i ordalydelse och 2009–2010 anger datum.\ncatalog:variable_text:31800:12418:13514\ncatalog:variable_text:31800:13514:14245\ncatalog:variable_text:31800:14245:14610\ncatalog:variable_text:31800:14610:14975\ncatalog:variable_text:31800:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "var:lilla-n-per-stratum"
-fields = { "description" = "Antal individer som dragits i urvalet i aktuellt stratum (litet n)." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; texterna skiljer i ordval ('objekt', 'element', 'enheter'). Raderna om svarande hushåll och individer (t.ex. 132239, 455972) hör till variabeln Antal svarande objekt och utelämnas.\ncatalog:variable_text:31816:9496:11323\ncatalog:variable_text:31816:12418:13514\ncatalog:variable_text:31816:14975:15340\ncatalog:variable_text:31816:15340:16071\nRegisterinformation.csv:row=561283\nRegisterinformation.csv:row=20839\nRegisterinformation.csv:row=148046\nRegisterinformation.csv:row=161589\nRegisterinformation.csv:row=456164\nRegisterinformation.csv:row=148116"
 
 [[statement]]
 kind = "set"

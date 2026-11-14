@@ -5347,24 +5347,6 @@ evidence = "Samma kolumn har överlappande ägare för obärgad och tröskad are
 
 [[statement]]
 kind = "set"
-subject = "var:obargad-areal-oljelin-gronfoderobargadareal-dar-21"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har överlappande ägare med olika grödor.\ncatalog:occurrence:439668\ncatalog:occurrence:439669"
-
-[[statement]]
-kind = "set"
-subject = "var:obargad-areal-oljelin-gronfoderobargadareal-dar-21"
-fields = { "tags" = ["agriculture"] }
-evidence = "Samma kolumn har överlappande ägare med olika grödor.\ncatalog:occurrence:439668\ncatalog:occurrence:439669"
-
-[[statement]]
-kind = "set"
-subject = "var:obargad-areal-varrybs"
-fields = { "tags" = ["agriculture"] }
-evidence = "Samma kolumn har överlappande ägare för obärgad och tröskad areal.\ncatalog:occurrence:440445\ncatalog:occurrence:440446"
-
-[[statement]]
-kind = "set"
 subject = "var:oljelin"
 fields = { "sets" = ["total-karn-och-froskord"] }
 evidence = "Variabeln mäter total kärn- och fröskörd.\ncatalog:variable_text:42664:19723:20089"
@@ -5989,30 +5971,6 @@ evidence = "Urvalet stratifieras på skördeområden och använder samma värdem
 
 [[statement]]
 kind = "set"
-subject = "var:troskad-areal-hostrybs"
-fields = { "sets" = ["troskad-areal"] }
-evidence = "Samma kolumn har överlappande ägare för tröskad areal och hektarskörd.\ncatalog:occurrence:441336\ncatalog:occurrence:441337"
-
-[[statement]]
-kind = "set"
-subject = "var:troskad-areal-hostrybs"
-fields = { "tags" = ["agriculture"] }
-evidence = "Samma kolumn har överlappande ägare för tröskad areal och hektarskörd.\ncatalog:occurrence:441336\ncatalog:occurrence:441337"
-
-[[statement]]
-kind = "set"
-subject = "var:troskad-areal-majs"
-fields = { "sets" = ["troskad-areal"] }
-evidence = "Samma kolumn har överlappande ägare för tröskad och obärgad areal.\ncatalog:occurrence:439366\ncatalog:occurrence:439367"
-
-[[statement]]
-kind = "set"
-subject = "var:troskad-areal-majs"
-fields = { "tags" = ["agriculture"] }
-evidence = "Samma kolumn har överlappande ägare för tröskad och obärgad areal.\ncatalog:occurrence:439366\ncatalog:occurrence:439367"
-
-[[statement]]
-kind = "set"
 subject = "var:troskad-areal-varrybs"
 fields = { "sets" = ["troskad-areal"] }
 evidence = "Samma kolumn har överlappande ägare för tröskad och obärgad areal.\ncatalog:occurrence:440445\ncatalog:occurrence:440446"
@@ -6268,12 +6226,6 @@ kind = "set"
 subject = "var:obargad-areal-majs"
 fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
 evidence = "r351 defines unharvested maize area as an organic subset of unharvested area for threshing, within the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42519\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42661"
-
-[[statement]]
-kind = "set"
-subject = "var:obargad-areal-varrybs"
-fields = { "sets" = ["obargad-areal-for-karna-och-fro"] }
-evidence = "r352 explicitly defines unharvested spring turnip rape area as an organic subset of unharvested area for threshing, supporting inclusion despite the column name.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42521\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42663"
 
 [[statement]]
 kind = "set"
@@ -8443,18 +8395,6 @@ evidence = "#2102 same-label cluster 'Obärgad areal majs' (4 variables): judged
 
 [[statement]]
 kind = "set"
-subject = "var:obargad-areal-oljelin-gronfoderobargadareal-dar-21"
-fields = { "label" = "Obärgad areal oljelin (GronfoderObargadAreal_Dar_21)" }
-evidence = "#2102 same-label cluster 'Obärgad areal oljelin' (5 variables): judged different meaning, medium confidence; Opdefs differ: grönfoder versus tröskning, each with a 'därav ekologisk' subset; the fifth member GronfoderObargadAreal_Dar_21 (2018-2019) has the same opdef as the _Dar_40 column but a different code suffix, so it is qualified with its column code."
-
-[[statement]]
-kind = "set"
-subject = "var:obargad-areal-varrybs"
-fields = { "label" = "Obärgad areal vårrybs (tröskad areal, varav ekologisk)" }
-evidence = "#2102 same-label cluster 'Obärgad areal vårrybs' (5 variables): judged different meaning, medium confidence; Grönfoder vs tröskning columns, each with an ekologisk subset twin per opdef; the 2017-2025 column repeats the ekologisk tröskning opdef under a differently named column (KarnfroTroskadAreal_Dar_23) concurrent with KarnfroObargadAreal_Dar_23, so kept apart."
-
-[[statement]]
-kind = "set"
 subject = "var:partielltbortfall"
 fields = { "label" = "Partiellt bortfall av gröda (höstkorn)" }
 evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variables): judged different meaning, high confidence; One flag per crop (opdef names the crop), each with a därav ekologisk subset twin."
@@ -8737,12 +8677,6 @@ evidence = "#2102 same-label cluster 'Tröskad areal höstrybs' (3 variables): h
 
 [[statement]]
 kind = "set"
-subject = "var:troskad-areal-hostrybs"
-fields = { "label" = "Tröskad areal höstrybs (varav ekologisk, KarnfroHektarskord_Dar_22)" }
-evidence = "#2102 same-label cluster 'Tröskad areal höstrybs' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; _Dar_22 has opdef 'därav ekologisk tröskad areal' in every occurrence; KarnfroHektarskord_Dar_22 (2021-2022) has the same opdef under a yield-named column, so its code is kept."
-
-[[statement]]
-kind = "set"
 subject = "var:karnfrotroskadareal-9"
 fields = { "label" = "Tröskad areal majs (KarnfroTroskadAreal_9)" }
 evidence = "#2102 same-label cluster 'Tröskad areal majs' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; _Dar_9 and KarnfroObargadAreal_Dar_9 have opdef 'därav ekologisk tröskad areal' in every occurrence; KarnfroTroskadAreal_9 has no opdef except in its 2022 occurrence, which also says 'därav ekologisk', so 'total' cannot be claimed for all occurrences and the code is used."
@@ -8751,12 +8685,6 @@ evidence = "#2102 same-label cluster 'Tröskad areal majs' (3 variables): held i
 kind = "set"
 subject = "var:karnfrotroskadareal-dar-9"
 fields = { "label" = "Tröskad areal majs (varav ekologisk)" }
-evidence = "#2102 same-label cluster 'Tröskad areal majs' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; _Dar_9 and KarnfroObargadAreal_Dar_9 have opdef 'därav ekologisk tröskad areal' in every occurrence; KarnfroTroskadAreal_9 has no opdef except in its 2022 occurrence, which also says 'därav ekologisk', so 'total' cannot be claimed for all occurrences and the code is used."
-
-[[statement]]
-kind = "set"
-subject = "var:troskad-areal-majs"
-fields = { "label" = "Tröskad areal majs (varav ekologisk, KarnfroObargadAreal_Dar_9)" }
 evidence = "#2102 same-label cluster 'Tröskad areal majs' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; _Dar_9 and KarnfroObargadAreal_Dar_9 have opdef 'därav ekologisk tröskad areal' in every occurrence; KarnfroTroskadAreal_9 has no opdef except in its 2022 occurrence, which also says 'därav ekologisk', so 'total' cannot be claimed for all occurrences and the code is used."
 
 [[statement]]

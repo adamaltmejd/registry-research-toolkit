@@ -974,18 +974,6 @@ evidence = "Årsangivelser för om- och tillbyggnad hör till samma grupp.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:arsangivelse-for-om-eller-tillbyggnad-artillbygg"
-fields = { "sets" = ["om-och-tillbyggnadsar"] }
-evidence = "Samma källkolumn är mappad till två variabler under överlappande perioder.\ncatalog:occurrence:194318\ncatalog:occurrence:194319\ncatalog:occurrence:194437\ncatalog:occurrence:194438"
-
-[[statement]]
-kind = "set"
-subject = "var:arsangivelse-for-om-eller-tillbyggnad-artillbygg"
-fields = { "tags" = [] }
-evidence = "Samma källkolumn är mappad till två variabler under överlappande perioder.\ncatalog:occurrence:194318\ncatalog:occurrence:194319\ncatalog:occurrence:194437\ncatalog:occurrence:194438"
-
-[[statement]]
-kind = "set"
 subject = "var:arsangivelse-for-tillbyggnad"
 fields = { "sets" = ["om-och-tillbyggnadsar"] }
 evidence = "Samma källkolumn är mappad till två variabler under överlappande perioder.\ncatalog:occurrence:194318\ncatalog:occurrence:194319\ncatalog:occurrence:194437\ncatalog:occurrence:194438"
@@ -3188,18 +3176,6 @@ evidence = "Skogsmarksvärdet är samma begrepp som efter perioduppdelningen, d�
 
 [[statement]]
 kind = "set"
-subject = "var:taxeringsvarde-for-smahusbyggnader"
-fields = { "sets" = ["taxeringsvarde"] }
-evidence = "Samma tabellkolumner är överlappande mappade till flera taxeringsvärden.\ncatalog:occurrence:194757\ncatalog:occurrence:194758\ncatalog:occurrence:194759\ncatalog:occurrence:196151\ncatalog:occurrence:196152\ncatalog:register:121"
-
-[[statement]]
-kind = "set"
-subject = "var:taxeringsvarde-for-smahusbyggnader"
-fields = { "tags" = ["property"] }
-evidence = "Samma tabellkolumner är överlappande mappade till flera taxeringsvärden.\ncatalog:occurrence:194757\ncatalog:occurrence:194758\ncatalog:occurrence:194759\ncatalog:occurrence:196151\ncatalog:occurrence:196152\ncatalog:register:121"
-
-[[statement]]
-kind = "set"
 subject = "var:taxeringsvarde-mark"
 fields = { "sets" = ["taxeringsvarde"] }
 evidence = "Samma tabellkolumn är överlappande mappad till flera taxeringsvärden.\ncatalog:occurrence:194757\ncatalog:occurrence:194758\ncatalog:occurrence:194759\ncatalog:register:121"
@@ -4172,12 +4148,6 @@ evidence = "#2100 group name: slug words restored from the member and register l
 kind = "set"
 subject = "var:arsangivelse-for-om-eller-tillbyggnad-arombygg"
 fields = { "label" = "Årsangivelse för om- eller tillbyggnad (ombyggnad)" }
-evidence = "#2102 same-label cluster 'Årsangivelse för om- eller tillbyggnad' (2 variables): judged different meaning, high confidence; Column names ArOmbygg and ArTillbygg: year of rebuilding vs year of extension."
-
-[[statement]]
-kind = "set"
-subject = "var:arsangivelse-for-om-eller-tillbyggnad-artillbygg"
-fields = { "label" = "Årsangivelse för om- eller tillbyggnad (tillbyggnad)" }
 evidence = "#2102 same-label cluster 'Årsangivelse för om- eller tillbyggnad' (2 variables): judged different meaning, high confidence; Column names ArOmbygg and ArTillbygg: year of rebuilding vs year of extension."
 
 [[statement]]

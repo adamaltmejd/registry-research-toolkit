@@ -2957,18 +2957,6 @@ evidence = "Måttet avser majsareal.\ncatalog:variable_text:35942:11688:20454\nc
 
 [[statement]]
 kind = "set"
-subject = "var:majs-lamm"
-fields = { "sets" = ["majsareal"] }
-evidence = "Samma källkolumn har överlappande mappningar till majs och lamm.\ncatalog:occurrence:333507\ncatalog:occurrence:333508"
-
-[[statement]]
-kind = "set"
-subject = "var:majs-lamm"
-fields = { "tags" = ["agriculture"] }
-evidence = "Samma källkolumn har överlappande mappningar till majs och lamm.\ncatalog:occurrence:333507\ncatalog:occurrence:333508"
-
-[[statement]]
-kind = "set"
 subject = "var:matarter"
 fields = { "tags" = ["agriculture"] }
 evidence = "Matärter är en namngiven delgröda av ärtarealen.\ncatalog:variable_text:35807:11688:20454\ncatalog:variable_text:35944:7305:7670"
@@ -3308,18 +3296,6 @@ kind = "set"
 subject = "var:regionkod"
 fields = { "tags" = ["geography"] }
 evidence = "Regionkoden anger sammansatt regional tillhörighet.\ncatalog:variable_text:35978:6940:8035"
-
-[[statement]]
-kind = "set"
-subject = "var:regionkod-ragvete"
-fields = { "sets" = ["regional-tillhorighet"] }
-evidence = "Regionkod och rågvete är olika begrepp på samma kolumn.\ncatalog:occurrence:332135\ncatalog:occurrence:332136"
-
-[[statement]]
-kind = "set"
-subject = "var:regionkod-ragvete"
-fields = { "tags" = ["geography"] }
-evidence = "Regionkod och rågvete är olika begrepp på samma kolumn.\ncatalog:occurrence:332135\ncatalog:occurrence:332136"
 
 [[statement]]
 kind = "set"
@@ -5191,12 +5167,6 @@ evidence = "#2102 same-label cluster 'Rågvete (areal i ha)' (2 variables): judg
 kind = "set"
 subject = "var:regionkod"
 fields = { "label" = "Regionkod (region)" }
-evidence = "#2102 same-label cluster 'Regionkod' (4 variables): judged different meaning, low confidence; region and Regkod are consecutive spellings; regkod2000 runs concurrently from 2007 and ragvete (2002-2003, uppdragsregistret) looks like a mis-mapped rågvete column; no text separates them, so both are qualified by code."
-
-[[statement]]
-kind = "set"
-subject = "var:regionkod-ragvete"
-fields = { "label" = "Regionkod (ragvete)" }
 evidence = "#2102 same-label cluster 'Regionkod' (4 variables): judged different meaning, low confidence; region and Regkod are consecutive spellings; regkod2000 runs concurrently from 2007 and ragvete (2002-2003, uppdragsregistret) looks like a mis-mapped rågvete column; no text separates them, so both are qualified by code."
 
 [[statement]]

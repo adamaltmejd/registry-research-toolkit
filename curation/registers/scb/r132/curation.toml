@@ -193,21 +193,9 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1872\n\n
 
 [[statement]]
 kind = "set"
-subject = "industrins-energianvandning: varde where key = 'v16432'"
-fields = { "label" = "Inköpsvärde av el — Varde" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1860\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
-
-[[statement]]
-kind = "set"
 subject = "industrins-energianvandning: inköpsvärde where key = 'v16418'"
 fields = { "label" = "Inköpsvärdet av den inköpta kvantiteten — Inköpsvärde" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1692\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "industrins-energianvandning: varde where key = 'v16418'"
-fields = { "label" = "Inköpsvärdet av den inköpta kvantiteten — Varde" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1680\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
@@ -226,12 +214,6 @@ kind = "set"
 subject = "industrins-energianvandning: inköpsvärde where key = 'v2607'"
 fields = { "label" = "Inköpta värdet av förbrukningen av inköpta kvantiteten — Inköpsvärde" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1968\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "industrins-energianvandning: varde where key = 'v2607'"
-fields = { "label" = "Inköpta värdet av förbrukningen av inköpta kvantiteten — Varde" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1956\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
@@ -595,18 +577,6 @@ evidence = "Värdemängderna skiljer sig mellan undersökningsstatus och arbetss
 
 [[statement]]
 kind = "set"
-subject = "var:belagenhetsadress-postnr"
-fields = { "sets" = ["postnummer"] }
-evidence = "Samma kolumn har överlappande och angränsande ägare.\ncatalog:occurrence:288184\ncatalog:occurrence:288185\ncatalog:occurrence:288272"
-
-[[statement]]
-kind = "set"
-subject = "var:belagenhetsadress-postnr"
-fields = { "tags" = ["geography"] }
-evidence = "Samma kolumn har överlappande och angränsande ägare.\ncatalog:occurrence:288184\ncatalog:occurrence:288185\ncatalog:occurrence:288272"
-
-[[statement]]
-kind = "set"
 subject = "var:bransleslagets-identitetsnummer"
 fields = { "sets" = ["bransleslag"] }
 evidence = "BID är en ogenomskinlig bokstavskod för bränsleslagets identitetsnummer.\ncatalog:variable_text:32175:12418:20089"
@@ -842,12 +812,6 @@ evidence = "Samma kolumn har olika värdebegrepp i observerade perioder. Coordin
 [[statement]]
 kind = "set"
 subject = "var:inkopsvarde-av-el"
-fields = { "sets" = ["inkopsvarde-av-el"] }
-evidence = "Samma kolumn har olika omfattning i observerade perioder.\ncatalog:occurrence:288210\ncatalog:occurrence:288297"
-
-[[statement]]
-kind = "set"
-subject = "var:inkopsvarde-av-el"
 fields = { "tags" = ["energy"] }
 evidence = "Samma kolumn har olika omfattning i observerade perioder.\ncatalog:occurrence:288210\ncatalog:occurrence:288297"
 
@@ -866,8 +830,8 @@ evidence = "Samma kolumn har olika värdebegrepp i observerade perioder.\ncatalo
 [[statement]]
 kind = "set"
 subject = "var:inkopsvardet-av-den-inkopta-kvantiteten-varde"
-fields = { "sets" = ["inkopsvarde-av-el", "inkopsvarde-av-inkopt-kvantitet"] }
-evidence = "Kolumnen Varde har en variabel för inköpsvärdet av bränslen och el (maintainer 2026-11-14); variabeln är därför medlem i uppsättningen för inköpsvärde av el, som annars skulle krympa till en medlem, och i den för inköpt kvantitet.\ncatalog:occurrence:288280\ncatalog:occurrence:288281\ncatalog:occurrence:288404\ncatalog:occurrence:288405"
+fields = { "sets" = ["inkopsvarde-av-inkopt-kvantitet"] }
+evidence = "Samma källkolumn har överlappande ägare med olika värdebegrepp.\ncatalog:occurrence:288280\ncatalog:occurrence:288281\ncatalog:occurrence:288404\ncatalog:occurrence:288405"
 
 [[statement]]
 kind = "set"
@@ -1302,12 +1266,6 @@ kind = "set"
 subject = "set:elanvandning"
 fields = { "label" = "Elanvändning" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:inkopsvarde-av-el"
-fields = { "label" = "Inköpsvärde av el" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
 kind = "set"

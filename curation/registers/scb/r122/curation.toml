@@ -1933,18 +1933,6 @@ evidence = "Antalet barn hör till den avgränsade gruppen.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:antal-formella-studietimmar-pa-betald-arbetstid-studbet"
-fields = { "sets" = ["formella-studier-betald-arbetstid"] }
-evidence = "Samma kolumn har överlappande tilldelningar med olika mått.\ncatalog:occurrence:8495\ncatalog:occurrence:8496"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-formella-studietimmar-pa-betald-arbetstid-studbet"
-fields = { "tags" = ["education", "employment"] }
-evidence = "Samma kolumn har överlappande tilldelningar med olika mått.\ncatalog:occurrence:8495\ncatalog:occurrence:8496"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-formella-studietimmar-pa-betald-arbetstid-studbettim"
 fields = { "sets" = ["formella-studier-betald-arbetstid"] }
 evidence = "Samma kolumn har överlappande tilldelningar med olika benämningar.\ncatalog:occurrence:8497\ncatalog:occurrence:8498"
@@ -2098,18 +2086,6 @@ kind = "set"
 subject = "var:arbenamn"
 fields = { "tags" = ["employment"] }
 evidence = "Uppgiften avser arbetsplatsens namn; ingen kandidatgrupp omfattar namn.\ncatalog:variable_text:1529:13514:15706"
-
-[[statement]]
-kind = "set"
-subject = "var:arbetar-sondagar-i-huvudsysslan"
-fields = { "sets" = ["sondagsarbete"] }
-evidence = "Katalogen visar överlappande ägare för samma kolumner.\ncatalog:occurrence:5595\ncatalog:occurrence:5596\ncatalog:occurrence:6644\ncatalog:occurrence:6645"
-
-[[statement]]
-kind = "set"
-subject = "var:arbetar-sondagar-i-huvudsysslan"
-fields = { "tags" = ["employment"] }
-evidence = "Katalogen visar överlappande ägare för samma kolumner.\ncatalog:occurrence:5595\ncatalog:occurrence:5596\ncatalog:occurrence:6644\ncatalog:occurrence:6645"
 
 [[statement]]
 kind = "set"
@@ -7969,18 +7945,6 @@ evidence = "Frågan gäller uteslutande dagtid på vardagar. Coordinator group m
 
 [[statement]]
 kind = "set"
-subject = "var:huarbhem"
-fields = { "sets" = ["arbete-hemifran"] }
-evidence = "HUARBHEM har överlappande ägare med olika beskrivningar.\ncatalog:occurrence:6105\ncatalog:occurrence:6106\ncatalog:variable_text:1534:12874:18628\ncatalog:variable_text:2041:13149:13879"
-
-[[statement]]
-kind = "set"
-subject = "var:huarbhem"
-fields = { "tags" = ["employment"] }
-evidence = "HUARBHEM har överlappande ägare med olika beskrivningar.\ncatalog:occurrence:6105\ncatalog:occurrence:6106\ncatalog:variable_text:1534:12874:18628\ncatalog:variable_text:2041:13149:13879"
-
-[[statement]]
-kind = "set"
 subject = "var:huarbhem-frekvens"
 fields = { "sets" = ["arbete-hemifran"] }
 evidence = "Samma frekvensfråga är uppdelad mellan på varandra följande perioder med scb/aku/huarbhemant.\ncatalog:occurrence:6107\ncatalog:occurrence:6633\ncatalog:variable_text:2042:13514:13879\ncatalog:variable_text:2043:13149:13514"
@@ -10597,18 +10561,6 @@ evidence = "KUA2AA är en ogenomskinlig frågekod.\ncatalog:variable_text:2286:1
 
 [[statement]]
 kind = "set"
-subject = "var:kurs-aktivitet-pa-fritiden-under-referensveckan-studbettim"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har överlappande ägare med olika utbildningsomfattning.\ncatalog:occurrence:8497\ncatalog:occurrence:8498"
-
-[[statement]]
-kind = "set"
-subject = "var:kurs-aktivitet-pa-fritiden-under-referensveckan-studbettim"
-fields = { "tags" = ["culture", "education"] }
-evidence = "Källkolumnen har överlappande ägare med olika utbildningsomfattning.\ncatalog:occurrence:8497\ncatalog:occurrence:8498"
-
-[[statement]]
-kind = "set"
 subject = "var:kvallsarbete-frekvens"
 fields = { "sets" = ["kvallsarbete"] }
 evidence = "Avser kvällsarbete.\ncatalog:variable_text:2288:12874:20819"
@@ -10714,12 +10666,6 @@ kind = "set"
 subject = "var:land-for-arbetet-for-ett-ar-sedan"
 fields = { "tags" = ["geography"] }
 evidence = "Samma begrepp som arbetsland-for-ett-ar-sedan-rotgr-2-7, korrekt uppdelat mellan observerade perioder; arbetsland är en geografisk uppgift.\ncatalog:occurrence:12205\ncatalog:occurrence:9314\ncatalog:variable_text:2296:13514:15706"
-
-[[statement]]
-kind = "set"
-subject = "var:lararledd-fritidsaktivitet"
-fields = { "tags" = ["culture", "education"] }
-evidence = "Samma källkolumn har överlappande ägare med olika referensperioder.\ncatalog:occurrence:6846\ncatalog:occurrence:6847"
 
 [[statement]]
 kind = "set"
@@ -10951,18 +10897,6 @@ evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:8024
 
 [[statement]]
 kind = "set"
-subject = "var:namn-pa-up-s-senaste-arbetsplats-personer-utan-uarbforetag"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:8024\ncatalog:occurrence:8025"
-
-[[statement]]
-kind = "set"
-subject = "var:namn-pa-up-s-senaste-arbetsplats-personer-utan-uarbforetag"
-fields = { "tags" = ["employment"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:8024\ncatalog:occurrence:8025"
-
-[[statement]]
-kind = "set"
 subject = "var:namn-pa-up-s-senaste-arbetsplats-personer-utan-uarbforetagku"
 fields = { "sets" = [] }
 evidence = "Uppgiften gäller senaste arbetsplatsens namn.\ncatalog:variable_text:2319:12874:18628"
@@ -11032,18 +10966,6 @@ kind = "set"
 subject = "var:nattarbete-huvudsysslan"
 fields = { "tags" = ["employment"] }
 evidence = "Frågan gäller nattarbete.\ncatalog:variable_text:2326:12874:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:nattarbete-i-huvudsysslan-frekvens-huarbnatt"
-fields = { "sets" = ["nattarbete"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:7719\ncatalog:occurrence:7720"
-
-[[statement]]
-kind = "set"
-subject = "var:nattarbete-i-huvudsysslan-frekvens-huarbnatt"
-fields = { "tags" = ["employment"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:7719\ncatalog:occurrence:7720"
 
 [[statement]]
 kind = "set"
@@ -11194,30 +11116,6 @@ kind = "set"
 subject = "var:onskad-okad-arbetstid-sysselsatta"
 fields = { "tags" = ["employment"] }
 evidence = "Intilliggande mappning beskriver olika kvantiteter.\ncatalog:occurrence:3140\ncatalog:occurrence:3292"
-
-[[statement]]
-kind = "set"
-subject = "var:onskemal-om-mer-arbete"
-fields = { "sets" = ["onskad-arbetstidsforandring"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:5816\ncatalog:occurrence:5817"
-
-[[statement]]
-kind = "set"
-subject = "var:onskemal-om-mer-arbete"
-fields = { "tags" = ["employment"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:5816\ncatalog:occurrence:5817"
-
-[[statement]]
-kind = "set"
-subject = "var:onskemal-om-mindre-arbete"
-fields = { "sets" = ["onskad-arbetstidsforandring"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:5819\ncatalog:occurrence:5820"
-
-[[statement]]
-kind = "set"
-subject = "var:onskemal-om-mindre-arbete"
-fields = { "tags" = ["employment"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:5819\ncatalog:occurrence:5820"
 
 [[statement]]
 kind = "set"
@@ -11620,18 +11518,6 @@ kind = "set"
 subject = "var:skiftarbete-hu24"
 fields = { "tags" = ["employment"] }
 evidence = "Skiftarbete.\ncatalog:variable_text:2388:12874:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:skiftarbete-huskift"
-fields = { "sets" = ["skiftarbete"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:7255\ncatalog:occurrence:7256"
-
-[[statement]]
-kind = "set"
-subject = "var:skiftarbete-huskift"
-fields = { "tags" = ["employment"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:7255\ncatalog:occurrence:7256"
 
 [[statement]]
 kind = "set"
@@ -13276,18 +13162,6 @@ kind = "set"
 subject = "var:typ-av-studier-utvidgad-2010"
 fields = { "tags" = ["education"] }
 evidence = "Utvidgad studietyp.\ncatalog:variable_text:2556:17167:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:typ-av-tidigare-arbete"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:12607\ncatalog:occurrence:12608"
-
-[[statement]]
-kind = "set"
-subject = "var:typ-av-tidigare-arbete"
-fields = { "tags" = ["employment"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:12607\ncatalog:occurrence:12608"
 
 [[statement]]
 kind = "set"
@@ -14977,12 +14851,6 @@ evidence = "Id:t innehåller läsbara stammar och frågan gäller pension.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:vet-ej-om-sokt-annat-arbete-sysselsatta-syssoksatt88"
-fields = { "tags" = ["employment"] }
-evidence = "Samma källkolumn har överlappande ägare. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0008: Frågorna anger samlade söksätt eller sökaktiviteter. Al4soksatts motstridiga kanalangivelser gäller båda söksätt och ändrar därför inte medlemskapet. membership-0009: Frågan anger ett sätt att söka arbete; den noterade identitetsfrågan ändrar inte det dokumenterade begreppet. membership-0010: Frågorna om hur nuvarande jobb erhölls avser rekryteringskanal, inte aktiviteter för att söka arbete. membership-0011: Ingen vald variabel mäter söksätt; huanvaf gäller hur nuvarande arbete erhölls. membership-0012: Variablerna mäter söksätt, ytterligare söksätt eller komponenter och svarskoder i söksättskodningen. membership-0013: Kodningar, komponenter och fritext mäter söksätt. Identitetsosäkerhet för syssoksatt8 ändrar inte dess dokumenterade söksättsinnehåll. membership-0014: Ingen vald variabel mäter sätt att söka arbete. membership-0015: Hur nuvarande arbete erhölls är uttryckligen undantaget från söksätt. membership-0016: Frågan anger vad personen gjorde för att hitta arbete under referensperioden. membership-0017: Medlemmarna mäter konkreta sökaktiviteter för sysselsatta och personer utan arbete. SYSSOKT4 frågar enligt beskrivningen om förekomst av sökande. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0008: Frågorna anger sökande efter mer arbete hos nuvarande respektive annan arbetsgivare, vilket ryms i den fasta definitionen. membership-0009: Ingen vald variabel avgränsar sysselsattas sökande efter annat arbete. membership-0010: Inga valda variabler mäter sysselsattas sökande efter annat arbete eller extraarbete. membership-0011: Ingen vald variabel mäter sysselsattas sökande efter annat arbete eller extraarbete. membership-0012: Variablerna klassificerar sysselsattas sökande efter annat arbete eller extraarbete, inklusive vet-ej-svar. membership-0013: Variablerna kodar om sysselsatta sökt annat arbete, inklusive nekande svar, vet ej och bortfall. Den fasta placeringen av syssoksatt88 stöds av etiketten. membership-0014: Ingen vald variabel mäter sysselsattas sökande efter annat arbete. membership-0015: Den valda pandemifrågan mäter en anledning till uteblivet sökande, inte sysselsattas förekomst av annat arbetssökande. membership-0016: Extraarbetsfrågorna gäller innehav och identitet, inte sökande efter annat arbete eller extraarbete. membership-0017: Variablerna anger sysselsattas sökande efter annat arbete hos nuvarande eller annan arbetsgivare, inklusive extrajobb och företagsförberedelser i den samlade frågan.\ncatalog:occurrence:3014\ncatalog:occurrence:3165\ncatalog:occurrence:5850\ncatalog:occurrence:5851\ncatalog:variable_text:1440:8035:12874\ncatalog:variable_text:1441:8035:12874\ncatalog:variable_text:1442:8035:12874\ncatalog:variable_text:1443:8035:12874\ncatalog:variable_text:1444:8035:12874\ncatalog:variable_text:1445:8035:12874\ncatalog:variable_text:1446:8035:12874\ncatalog:variable_text:1456:6209:12874\ncatalog:variable_text:1457:6209:12874\ncatalog:variable_text:1458:6209:12874\ncatalog:variable_text:1459:6209:12874\ncatalog:variable_text:1460:8035:12874\ncatalog:variable_text:1561:6209:7670\ncatalog:variable_text:1772:18628:19358\ncatalog:variable_text:1784:12874:20819\ncatalog:variable_text:1789:12874:18628\ncatalog:variable_text:1823:18628:20819\ncatalog:variable_text:2038:12874:18628\ncatalog:variable_text:2197:18628:20819\ncatalog:variable_text:2207:18628:20819\ncatalog:variable_text:2209:18628:20819\ncatalog:variable_text:2212:18628:20819\ncatalog:variable_text:2213:18628:20819\ncatalog:variable_text:2339:18628:20819\ncatalog:variable_text:2398:12874:18628\ncatalog:variable_text:2400:14245:15706\ncatalog:variable_text:2401:18628:20819\ncatalog:variable_text:2402:6209:12874\ncatalog:variable_text:2403:18628:20819\ncatalog:variable_text:2472:12874:18628\ncatalog:variable_text:2475:12874:18628\ncatalog:variable_text:2476:12874:18628\ncatalog:variable_text:2477:12874:18628\ncatalog:variable_text:2478:12874:18628\ncatalog:variable_text:2479:12874:18628\ncatalog:variable_text:2480:12874:18628\ncatalog:variable_text:2481:12874:18628\ncatalog:variable_text:2482:12874:18628\ncatalog:variable_text:2483:12874:18628\ncatalog:variable_text:2484:12874:18628\ncatalog:variable_text:2485:12874:18628\ncatalog:variable_text:2486:12874:18628\ncatalog:variable_text:2487:12874:18628\ncatalog:variable_text:2488:12874:18628\ncatalog:variable_text:2489:12874:18628\ncatalog:variable_text:2490:12874:18628\ncatalog:variable_text:2491:12874:18628\ncatalog:variable_text:2492:12874:18628\ncatalog:variable_text:2493:12874:18628\ncatalog:variable_text:2494:12874:18628\ncatalog:variable_text:2495:18628:20819\ncatalog:variable_text:2496:18628:20819\ncatalog:variable_text:2497:18628:20819\ncatalog:variable_text:2498:18628:20819\ncatalog:variable_text:2499:18628:20819\ncatalog:variable_text:2500:18628:20819\ncatalog:variable_text:2501:18628:20819\ncatalog:variable_text:2502:18628:20819\ncatalog:variable_text:2503:18628:20819\ncatalog:variable_text:2504:18628:20819\ncatalog:variable_text:2505:18628:20819\ncatalog:variable_text:2506:18628:20819\ncatalog:variable_text:2507:18628:20819\ncatalog:variable_text:2510:18628:20819\ncatalog:variable_text:2511:17167:18628\ncatalog:variable_text:2512:12874:18628\ncatalog:variable_text:2513:18628:20819\ncatalog:variable_text:2514:12874:18628\ncatalog:variable_text:2515:18628:20819\ncatalog:variable_text:2516:17167:18628\ncatalog:variable_text:2517:12874:18628\ncatalog:variable_text:2569:12874:18628\ncatalog:variable_text:2570:17167:18628\ncatalog:variable_text:2580:12874:18628\ncatalog:variable_text:2621:17167:18628\ncatalog:variable_text:2622:12874:18628\ncatalog:variable_text:2623:12874:18628\ncatalog:variable_text:2624:12874:18628\ncatalog:variable_text:2625:12874:18628\ncatalog:variable_text:2626:12874:18628\ncatalog:variable_text:2627:12874:18628\ncatalog:variable_text:2628:12874:18628\ncatalog:variable_text:2629:12874:18628\ncatalog:variable_text:2630:12874:18628\ncatalog:variable_text:2631:12874:18628\ncatalog:variable_text:2632:12874:18628\ncatalog:variable_text:2633:12874:18628\ncatalog:variable_text:2634:12874:18628\ncatalog:variable_text:2635:12874:18628\ncatalog:variable_text:2636:12874:18628\ncatalog:variable_text:2637:12874:18628\ncatalog:variable_text:2638:12874:18628\ncatalog:variable_text:2639:12874:18628\ncatalog:variable_text:2640:12874:18628\ncatalog:variable_text:2641:12874:18628\ncatalog:variable_text:2642:18628:20819\ncatalog:variable_text:2643:18628:20819\ncatalog:variable_text:2644:18628:20819\ncatalog:variable_text:2645:18628:20819\ncatalog:variable_text:2646:18628:20819\ncatalog:variable_text:2647:18628:20819\ncatalog:variable_text:2648:18628:20819\ncatalog:variable_text:2649:18628:20819\ncatalog:variable_text:2650:18628:20819\ncatalog:variable_text:2651:18628:20819\ncatalog:variable_text:2652:18628:20819\ncatalog:variable_text:2653:18628:20819\ncatalog:variable_text:2738:12874:17167"
-
-[[statement]]
-kind = "set"
 subject = "var:vikt-1"
 fields = { "tags" = ["methods"] }
 evidence = "Månadsvikt.\ncatalog:variable_text:2739:10957:12874"
@@ -15121,18 +14989,6 @@ evidence = "Namnet motsvarar yrkesställning i huvudsysslan.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:yrkesstallning-i-senaste-arbete-personer-uarbsoktyrkstall"
-fields = { "sets" = ["yrkesstallning"] }
-evidence = "Identitetsfakta visar överlappande ägare för samma källkolumn.\ncatalog:occurrence:7535\ncatalog:occurrence:7536\ncatalog:occurrence:8075\ncatalog:occurrence:8076"
-
-[[statement]]
-kind = "set"
-subject = "var:yrkesstallning-i-senaste-arbete-personer-uarbsoktyrkstall"
-fields = { "tags" = ["employment"] }
-evidence = "Identitetsfakta visar överlappande ägare för samma källkolumn.\ncatalog:occurrence:7535\ncatalog:occurrence:7536\ncatalog:occurrence:8075\ncatalog:occurrence:8076"
-
-[[statement]]
-kind = "set"
 subject = "var:yrkesstallning-i-senaste-arbete-personer-utan-uarbyrkstall"
 fields = { "sets" = ["yrkesstallning"] }
 evidence = "Identitetsfakta visar överlappande ägare för samma källkolumn.\ncatalog:occurrence:5960\ncatalog:occurrence:5961\ncatalog:occurrence:7008\ncatalog:occurrence:7009\ncatalog:occurrence:7553\ncatalog:occurrence:7554"
@@ -15142,30 +14998,6 @@ kind = "set"
 subject = "var:yrkesstallning-i-senaste-arbete-personer-utan-uarbyrkstall"
 fields = { "tags" = ["employment"] }
 evidence = "Identitetsfakta visar överlappande ägare för samma källkolumn.\ncatalog:occurrence:5960\ncatalog:occurrence:5961\ncatalog:occurrence:7008\ncatalog:occurrence:7009\ncatalog:occurrence:7553\ncatalog:occurrence:7554"
-
-[[statement]]
-kind = "set"
-subject = "var:yrkesstallning-i-senaste-arbetet"
-fields = { "sets" = ["yrkesstallning"] }
-evidence = "Identitetsfakta visar överlappande ägare för samma källkolumn.\ncatalog:occurrence:7536\ncatalog:occurrence:8075\ncatalog:occurrence:8076"
-
-[[statement]]
-kind = "set"
-subject = "var:yrkesstallning-i-senaste-arbetet"
-fields = { "tags" = ["employment"] }
-evidence = "Identitetsfakta visar överlappande ägare för samma källkolumn.\ncatalog:occurrence:7536\ncatalog:occurrence:8075\ncatalog:occurrence:8076"
-
-[[statement]]
-kind = "set"
-subject = "var:yrkesstallning-personer-utan-arbete"
-fields = { "sets" = ["yrkesstallning"] }
-evidence = "Identitetsfakta visar överlappande ägare för två källkolumner.\ncatalog:occurrence:7008\ncatalog:occurrence:7009\ncatalog:occurrence:7553\ncatalog:occurrence:7554\ncatalog:occurrence:8644\ncatalog:occurrence:8645"
-
-[[statement]]
-kind = "set"
-subject = "var:yrkesstallning-personer-utan-arbete"
-fields = { "tags" = ["employment"] }
-evidence = "Identitetsfakta visar överlappande ägare för två källkolumner.\ncatalog:occurrence:7008\ncatalog:occurrence:7009\ncatalog:occurrence:7553\ncatalog:occurrence:7554\ncatalog:occurrence:8644\ncatalog:occurrence:8645"
 
 [[statement]]
 kind = "set"
@@ -15562,12 +15394,6 @@ kind = "set"
 subject = "var:kvartalsvikt-gemensamma-foregaende-manader"
 fields = { "sets" = ["upprakningstal"] }
 evidence = "The definition identifies a GREG quarterly weight based on the seven-eighths sample shared with preceding months (r696).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:2203\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:2722"
-
-[[statement]]
-kind = "set"
-subject = "var:lararledd-fritidsaktivitet"
-fields = { "sets" = ["deltagande-i-icke-formella-studier"] }
-evidence = "r626 explicitly measures participation in a teacher-led course or leisure activity during four weeks, covered by the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:2213\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:2229\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/aku/deltagande-i-icke-formella-studier"
 
 [[statement]]
 kind = "set"
@@ -16342,12 +16168,6 @@ kind = "set"
 subject = "var:var-du-franvarande-fran-nagot-oavlonat-arbete"
 fields = { "sets" = ["arbete-vid-franvaro"] }
 evidence = "The question measures absence from an unpaid job, establishing a job held during absence rather than unpaid work actually performed (r537, r541).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:2710\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:2714\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/aku/arbete-vid-franvaro"
-
-[[statement]]
-kind = "set"
-subject = "var:vet-ej-om-sokt-annat-arbete-sysselsatta-syssoksatt88"
-fields = { "sets" = ["sokt-annat-arbete"] }
-evidence = "The supplied definition explicitly records uncertainty about seeking other work; its codes support that response category despite the column name (r693, r636).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:2716\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:175\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:2719"
 
 [[statement]]
 kind = "set"
@@ -17725,12 +17545,6 @@ evidence = "#2102 same-label cluster 'Annan ersättning än angivna svarsalterna
 
 [[statement]]
 kind = "set"
-subject = "var:benamning-pa-up-s-senaste-arbetsplats-personer-uarbbenamn-3"
-fields = { "label" = "Benämning på up:s senaste arbetsplats, personer utan arbete, KU-uppgift (UarbBenamn)" }
-evidence = "#2102 same-label cluster 'Benämning på up:s senaste arbetsplats, personer utan arbete, KU-uppgift' (2 variables): judged different meaning, low confidence; UarbBenamn and UARBBENAMNKU are concurrent columns 2005-2011 with no source text on how they differ; raw column code qualifies."
-
-[[statement]]
-kind = "set"
 subject = "var:benamning-pa-up-s-senaste-arbetsplats-personer-uarbbenamnku"
 fields = { "label" = "Benämning på up:s senaste arbetsplats, personer utan arbete, KU-uppgift (UARBBENAMNKU)" }
 evidence = "#2102 same-label cluster 'Benämning på up:s senaste arbetsplats, personer utan arbete, KU-uppgift' (2 variables): judged different meaning, low confidence; UarbBenamn and UARBBENAMNKU are concurrent columns 2005-2011 with no source text on how they differ; raw column code qualifies."
@@ -17761,12 +17575,6 @@ evidence = "#2102 same-label cluster 'Antal övertidstimmar utan ersättning i h
 
 [[statement]]
 kind = "set"
-subject = "var:huarbhem"
-fields = { "label" = "Arbete hemifrån egna bostaden i huvudsysslan, frekvens (HUARBHEM)" }
-evidence = "#2102 same-label cluster 'Arbete hemifrån egna bostaden i huvudsysslan, frekvens' (3 variables): judged different meaning, low confidence; HUARBHEMANT and HUARBHEMMAANT are a rename (2008 overlap); HUARBHEM runs concurrently with HUARBHEMANT and nothing states how it differs, so the raw column code qualifies."
-
-[[statement]]
-kind = "set"
 subject = "var:huarbhem-frekvens"
 fields = { "label" = "Arbete hemifrån egna bostaden i huvudsysslan, frekvens (HUARBHEMANT)" }
 evidence = "#2102 same-label cluster 'Arbete hemifrån egna bostaden i huvudsysslan, frekvens' (3 variables): judged different meaning, low confidence; HUARBHEMANT and HUARBHEMMAANT are a rename (2008 overlap); HUARBHEM runs concurrently with HUARBHEMANT and nothing states how it differs, so the raw column code qualifies."
@@ -17785,18 +17593,6 @@ evidence = "#2102 same-label cluster 'Näringsgren i huvudsysslan' (2 variables)
 
 [[statement]]
 kind = "set"
-subject = "var:kurs-aktivitet-pa-fritiden-under-referensveckan-studbettim"
-fields = { "label" = "Kurs/aktivitet på fritiden under referensveckan, antal timmar (STUDBETTIM)" }
-evidence = "#2102 same-label cluster 'Kurs/aktivitet på fritiden under referensveckan, antal timmar' (3 variables): judged different meaning, medium confidence; STUDFRIT is a Ja/Nej participation flag; STUDFRITTIM and STUDBETTIM both hold hours and overlap in 2010-2011, with no source text on the difference."
-
-[[statement]]
-kind = "set"
-subject = "var:namn-pa-up-s-senaste-arbetsplats-personer-utan-uarbforetag"
-fields = { "label" = "Namn på up:s senaste arbetsplats, personer utan arbete, KU-uppgift (UarbForetag)" }
-evidence = "#2102 same-label cluster 'Namn på up:s senaste arbetsplats, personer utan arbete, KU-uppgift' (2 variables): judged different meaning, low confidence; UARBFORETAGKU and UarbForetag are concurrent 2009-2011 with no source text on how they differ; raw column code qualifies."
-
-[[statement]]
-kind = "set"
 subject = "var:namn-pa-up-s-senaste-arbetsplats-personer-utan-uarbforetagku"
 fields = { "label" = "Namn på up:s senaste arbetsplats, personer utan arbete, KU-uppgift (UARBFORETAGKU)" }
 evidence = "#2102 same-label cluster 'Namn på up:s senaste arbetsplats, personer utan arbete, KU-uppgift' (2 variables): judged different meaning, low confidence; UARBFORETAGKU and UarbForetag are concurrent 2009-2011 with no source text on how they differ; raw column code qualifies."
@@ -17812,12 +17608,6 @@ kind = "set"
 subject = "var:naringsgren-i-bisysslan-sni69"
 fields = { "label" = "Näringsgren i bisysslan (SNI 69)" }
 evidence = "#2102 same-label cluster 'Näringsgren i bisysslan' (2 variables): judged different meaning, high confidence; Opdefs: SNI 92 (linked from SNI 69 coding) versus SNI 69."
-
-[[statement]]
-kind = "set"
-subject = "var:nattarbete-i-huvudsysslan-frekvens-huarbnatt"
-fields = { "label" = "Nattarbete i huvudsysslan, frekvens (HuArbNatt)" }
-evidence = "#2102 same-label cluster 'Nattarbete i huvudsysslan, frekvens' (2 variables): judged different meaning, low confidence; HUARBNATTANT and HuArbNatt are concurrent 2009-2011 with identical value lists and no source text on the difference; raw column code qualifies."
 
 [[statement]]
 kind = "set"
@@ -17899,21 +17689,9 @@ evidence = "#2102 same-label cluster 'Utbildningsinriktning (4 positioner)' (2 v
 
 [[statement]]
 kind = "set"
-subject = "var:vet-ej-om-sokt-annat-arbete-sysselsatta-syssoksatt88"
-fields = { "label" = "Vet ej om sökt annat arbete, sysselsatta (SysSokSatt88)" }
-evidence = "#2102 same-label cluster 'Vet ej om sökt annat arbete, sysselsatta' (2 variables): judged different meaning, medium confidence; Concurrent columns with different codings (0/8 versus 0/88); only raw column codes distinguish them."
-
-[[statement]]
-kind = "set"
 subject = "var:yrke-huvudsysslan-yrkesklassificering-2012"
 fields = { "label" = "Yrke i huvudsysslan (SSYK 2012)" }
 evidence = "#2102 same-label cluster 'Yrke i huvudsysslan' (3 variables): judged different meaning, medium confidence; HsSSYK2012 has an SSYK 2012 code list; HuYrke and its successor HsYrke are a rename of each other without a code list."
-
-[[statement]]
-kind = "set"
-subject = "var:yrkesstallning-i-senaste-arbete-personer-uarbsoktyrkstall"
-fields = { "label" = "Yrkesställning i senaste arbete, personer utan arbete som haft arbete senaste 8 åren (UARBSOKTYRKSTALL)" }
-evidence = "#2102 same-label cluster 'Yrkesställning i senaste arbete, personer utan arbete som haft arbete senaste 8 åren' (2 variables): judged different meaning, low confidence; UARBYRKSTALL and UARBSOKTYRKSTALL are concurrent in 2008-2009 with the same definition and value list; no source text says how they differ, so the raw column code qualifies."
 
 [[statement]]
 kind = "set"

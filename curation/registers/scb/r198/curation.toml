@@ -421,18 +421,6 @@ evidence = "Kommun anger regional områdestillhörighet.\ncatalog:occurrence:344
 
 [[statement]]
 kind = "set"
-subject = "var:lagenheter-per-typ"
-fields = { "sets" = ["antal-lagenheter"] }
-evidence = "Antalet och klassificeringen har olika betydelser men delar källkolumn i överlappande och intilliggande perioder.\ncatalog:occurrence:34062\ncatalog:occurrence:34063\ncatalog:occurrence:34090"
-
-[[statement]]
-kind = "set"
-subject = "var:lagenheter-per-typ"
-fields = { "tags" = ["housing"] }
-evidence = "Antalet och klassificeringen har olika betydelser men delar källkolumn i överlappande och intilliggande perioder.\ncatalog:occurrence:34062\ncatalog:occurrence:34063\ncatalog:occurrence:34090"
-
-[[statement]]
-kind = "set"
 subject = "var:lagenhetstyp"
 fields = { "sets" = ["lagenhetstyp"] }
 evidence = "Klassificeringen och antalet har olika betydelser men delar källkolumn i överlappande och intilliggande perioder.\ncatalog:occurrence:34062\ncatalog:occurrence:34063\ncatalog:occurrence:34090"
@@ -635,20 +623,17 @@ subject = "var:yta"
 fields = { "tags" = ["housing"] }
 evidence = "Bostadsarean i byggnadsprojektet ingår i areagruppen.\ncatalog:occurrence:34434"
 
-
 [[statement]]
 kind = "set"
 subject = "var:bransle"
 fields = { "description" = "Anger om kostnad för bränsle ingår i hyran." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nJa- och nejvärdena visar en kodning av kostnadsinnehåll snarare än ett kostnadsbelopp.\ncatalog:occurrence:34415\ncatalog:valueset:3407"
 
-
 [[statement]]
 kind = "set"
 subject = "var:garage"
 fields = { "description" = "Anger om och vilken kostnad för garage- eller bilplats som ingår i de redovisade hyresbeloppen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVärdekoderna beskriver garage- eller bilplatsens behandling i hyresbeloppet, inte ett kostnadsbelopp.\ncatalog:valueset:11649\ncatalog:valueset:8240"
-
 
 [[statement]]
 kind = "set"

@@ -199,18 +199,6 @@ evidence = "Länsregion är en geografisk gruppering.\ncatalog:valueset:10593\nc
 
 [[statement]]
 kind = "set"
-subject = "var:postadress-anst"
-fields = { "sets" = [] }
-evidence = "Adress och postort är kopplade till samma källkolumn under en överlappande period.\ncatalog:occurrence:467433\ncatalog:occurrence:467451\ncatalog:occurrence:467452\ncatalog:occurrence:467472"
-
-[[statement]]
-kind = "set"
-subject = "var:postadress-anst"
-fields = { "tags" = ["geography"] }
-evidence = "Adress och postort är kopplade till samma källkolumn under en överlappande period.\ncatalog:occurrence:467433\ncatalog:occurrence:467451\ncatalog:occurrence:467452\ncatalog:occurrence:467472"
-
-[[statement]]
-kind = "set"
 subject = "var:postnr"
 fields = { "sets" = [] }
 evidence = "Postnummer anger geografisk tillhörighet för postadressen.\ncatalog:variable_text:45850:16071:18993\ncatalog:variable_text:45850:18993:20454"
@@ -280,12 +268,6 @@ kind = "set"
 subject = "var:inkopskostnad"
 fields = { "label" = "Total kostnad för förbrukat bränsle (avfall, inköpskostnad)" }
 evidence = "#2102 same-label cluster 'Total kostnad för förbrukat bränsle' (2 variables): judged different meaning, medium confidence; Kostnad (from 2014) is the fuel cost; Inkopskostnad (from 2021, opdef) is the cost of consumed waste."
-
-[[statement]]
-kind = "set"
-subject = "var:postadress-anst"
-fields = { "label" = "Adress (PoAnst)" }
-evidence = "#2102 same-label cluster 'Adress' (2 variables): judged different meaning, low confidence; Adress and PoAnst are concurrent columns in one table; no source text says what PoAnst holds, so raw code."
 
 [[statement]]
 kind = "set"

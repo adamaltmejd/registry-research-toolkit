@@ -1064,18 +1064,6 @@ evidence = "Kod för län.\ncatalog:variable_text:34252:13514:16436\ncatalog:var
 
 [[statement]]
 kind = "set"
-subject = "var:lan-eller-kommuner-utanfor-landsting"
-fields = { "sets" = ["lan-och-region"] }
-evidence = "Samma källkolumn har överlappande representationer.\ncatalog:occurrence:300548\ncatalog:occurrence:300549"
-
-[[statement]]
-kind = "set"
-subject = "var:lan-eller-kommuner-utanfor-landsting"
-fields = { "tags" = ["geography"] }
-evidence = "Samma källkolumn har överlappande representationer.\ncatalog:occurrence:300548\ncatalog:occurrence:300549"
-
-[[statement]]
-kind = "set"
 subject = "var:landareal"
 fields = { "sets" = ["tillagg-avdrag-for-institutionsboende-i-glesbygd"] }
 evidence = "Id:t anger landareal men variabeln är ett tillägg eller avdrag i kronor per invånare.\ncatalog:variable_text:34254:16071:18262"
@@ -1097,18 +1085,6 @@ kind = "set"
 subject = "var:landstingsnamn-i-kortform"
 fields = { "tags" = ["geography"] }
 evidence = "Källkolumnen övergår till region med en annan namnbeskrivning.\ncatalog:occurrence:300918\ncatalog:occurrence:300938"
-
-[[statement]]
-kind = "set"
-subject = "var:lanets-folkmangd-den-1-november"
-fields = { "sets" = ["folkmangd"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:300795\ncatalog:occurrence:300796"
-
-[[statement]]
-kind = "set"
-subject = "var:lanets-folkmangd-den-1-november"
-fields = { "tags" = ["demographics"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:300795\ncatalog:occurrence:300796"
 
 [[statement]]
 kind = "set"
@@ -1688,7 +1664,6 @@ subject = "var:anthivtot"
 fields = { "description" = "Schablonmässigt beräknat antal personer med HIV." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan beskriver en schablonberäkning av HIV-fall, inte kostnaden.\ncatalog:variable_text:34204:13514:16436"
 
-
 [[statement]]
 kind = "set"
 subject = "var:lss-insatser-standardkostnad-pk-ix"
@@ -2018,3 +1993,21 @@ kind = "set"
 subject = "var:lss-utjamningsavgift-kr"
 fields = { "label" = "LSS-utjämningsavgift, kr", "description" = "Kommunens avgift till LSS-utjämningen i kronor, beräknad som beloppet per invånare multiplicerat med folkmängden den 1 november året före utjämningsåret. Kolumnen Utfall innehåller 2015–2023 både avgift och bidrag (en rad gäller antingen avgift eller bidrag); övriga år (2008–2014 och från 2024) redovisas avgift och bidrag i separata kolumner, och variabeln gäller då bara avgiften." }
 evidence = "Maintainer ruling 2026-11-14: variants of one concept for different row kinds are merged and the variable carries a label and description covering both kinds.\nVarId 23832 (\"Avgift till LSS-utjämningen, i kronor\") and VarId 23833 (\"Bidrag till LSS-utjämningen, i kronor\") share the column Utfall in 2015-2023."
+
+[[statement]]
+kind = "set"
+subject = "kommunalekonomisk-utjamning-kommuner: <none> @2020..2022 where key = 'v29631'"
+fields = { "variable" = "none" }
+evidence = "Gap markers of VarId 29631 (antal-barn-7-15-ar-med-utlandskbakgrund): the curation that settles its rival-claimed column withholds its only column listings, so the variable has no column left; its documented-without-column listings are withheld with it (maintainer 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kommunalekonomisk-utjamning-kommuner: <none> @2020..2022 where key = 'v29632'"
+fields = { "variable" = "none" }
+evidence = "Gap markers of VarId 29632 (tillagg-avdrag-hemsprak-svenska2): the curation that settles its rival-claimed column UTrFF715 withholds its only column listings, so the variable has no column left; its documented-without-column listings are withheld with it (maintainer 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kommunalekonomisk-utjamning-regioner: <none> @2007..2013 where key = 'v8504'"
+fields = { "variable" = "none" }
+evidence = "Gap markers of VarId 8504 (lanets-folkmangd-den-1-november): the neighbouring-owner rule gives its only column listings to the variable that holds the column alone in the neighbouring releases, so the variable has no column left; its documented-without-column listings are withheld with it (maintainer 2026-11-14)."

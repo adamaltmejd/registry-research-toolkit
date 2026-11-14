@@ -744,30 +744,6 @@ evidence = "Postadressens geografiska kod.\ncatalog:variable_text:35691:10957:14
 
 [[statement]]
 kind = "set"
-subject = "var:slapets-karosserikod"
-fields = { "sets" = ["karosserityp"] }
-evidence = "Samma kolumn har överlappande ägare för släp och lastbil.\ncatalog:occurrence:328092\ncatalog:occurrence:328093"
-
-[[statement]]
-kind = "set"
-subject = "var:slapets-karosserikod"
-fields = { "tags" = ["transport"] }
-evidence = "Samma kolumn har överlappande ägare för släp och lastbil.\ncatalog:occurrence:328092\ncatalog:occurrence:328093"
-
-[[statement]]
-kind = "set"
-subject = "var:slapets-registreringsland"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har överlappande ägare med olika betydelser.\ncatalog:occurrence:328110\ncatalog:occurrence:328111"
-
-[[statement]]
-kind = "set"
-subject = "var:slapets-registreringsland"
-fields = { "tags" = ["geography"] }
-evidence = "Samma kolumn har överlappande ägare med olika betydelser.\ncatalog:occurrence:328110\ncatalog:occurrence:328111"
-
-[[statement]]
-kind = "set"
 subject = "var:slaptyp"
 fields = { "sets" = [] }
 evidence = "Typ av släpvagn.\ncatalog:variable_text:35701:10957:14245"

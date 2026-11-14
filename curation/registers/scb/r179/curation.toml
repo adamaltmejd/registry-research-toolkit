@@ -19,18 +19,6 @@ evidence = "Antalet avser inkomna skattedeklarationer.\ncatalog:variable_text:35
 
 [[statement]]
 kind = "set"
-subject = "var:arbetsgivaravgift-ambassad-kavgusakanada"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare; arbetsgivaravgiften är ett skattebelopp.\ncatalog:occurrence:324032\ncatalog:occurrence:324033\ncatalog:variable_text:35291:17897:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:arbetsgivaravgift-ambassad-kavgusakanada"
-fields = { "tags" = ["taxation"] }
-evidence = "Samma källkolumn har överlappande ägare; arbetsgivaravgiften är ett skattebelopp.\ncatalog:occurrence:324032\ncatalog:occurrence:324033\ncatalog:variable_text:35291:17897:18262"
-
-[[statement]]
-kind = "set"
 subject = "var:arbetsgivaravgift-summa"
 fields = { "sets" = [] }
 evidence = "Summan och delbeloppen mäter arbetsgivaravgifter.\ncatalog:variable_text:35292:14610:20089\ncatalog:variable_text:35295:14610:20089\ncatalog:variable_text:35296:14610:20089\ncatalog:variable_text:35297:14610:20089\ncatalog:variable_text:35298:14610:20089"
@@ -244,9 +232,3 @@ kind = "set"
 subject = "var:prelim-a-skatt-inkl-soc"
 fields = { "tags" = ["taxation"] }
 evidence = "Variabeln avser preliminär A-skatt.\ncatalog:variable_text:35311:14610:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:arbetsgivaravgift-ambassad-kavgusakanada"
-fields = { "label" = "Arbetsgivaravgift, ambassad (USA och Kanada)" }
-evidence = "#2102 same-label cluster 'Arbetsgivaravgift, ambassad' (2 variables): judged different meaning, medium confidence; KAVGAMBASSAD is the general ambassador contribution; KAVGUSAKANADA is a separate concurrent column, by its name for USA and Kanada."

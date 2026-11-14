@@ -607,18 +607,6 @@ evidence = "Samma hyresbegrepp är uppdelat mellan perioder med hyra-avgift-per-
 
 [[statement]]
 kind = "set"
-subject = "var:hyror-i-bostadslagenheter-hyraja1"
-fields = { "sets" = ["hyresbelopp"] }
-evidence = "Två variabler är kopplade till samma kolumn och period.\ncatalog:occurrence:233624\ncatalog:occurrence:233625"
-
-[[statement]]
-kind = "set"
-subject = "var:hyror-i-bostadslagenheter-hyraja1"
-fields = { "tags" = ["housing"] }
-evidence = "Två variabler är kopplade till samma kolumn och period.\ncatalog:occurrence:233624\ncatalog:occurrence:233625"
-
-[[statement]]
-kind = "set"
 subject = "var:hyror-i-bostadslagenheter-hyrajuli0"
 fields = { "sets" = ["hyresbelopp"] }
 evidence = "Källkolumnen avser bostadshyra.\ncatalog:occurrence:233626"
@@ -931,66 +919,6 @@ evidence = "Variabeln grupperar kommuner i regioner.\ncatalog:variable_text:2582
 
 [[statement]]
 kind = "set"
-subject = "var:schablon-bilplats"
-fields = { "sets" = ["schablonkostnad-bilplats-garage"] }
-evidence = "Schablonbelopp och inkluderingskod delar källkolumn med överlapp.\ncatalog:occurrence:233614\ncatalog:occurrence:233615\ncatalog:occurrence:233616\ncatalog:occurrence:233617\ncatalog:occurrence:233618"
-
-[[statement]]
-kind = "set"
-subject = "var:schablon-bilplats"
-fields = { "tags" = ["housing"] }
-evidence = "Schablonbelopp och inkluderingskod delar källkolumn med överlapp.\ncatalog:occurrence:233614\ncatalog:occurrence:233615\ncatalog:occurrence:233616\ncatalog:occurrence:233617\ncatalog:occurrence:233618"
-
-[[statement]]
-kind = "set"
-subject = "var:schablon-hushallsel"
-fields = { "sets" = [] }
-evidence = "Schablonbelopp och inkluderingskod delar källkolumn.\ncatalog:occurrence:233640\ncatalog:occurrence:233641"
-
-[[statement]]
-kind = "set"
-subject = "var:schablon-hushallsel"
-fields = { "tags" = ["energy", "housing"] }
-evidence = "Schablonbelopp och inkluderingskod delar källkolumn.\ncatalog:occurrence:233640\ncatalog:occurrence:233641"
-
-[[statement]]
-kind = "set"
-subject = "var:schablon-kallgarage"
-fields = { "sets" = ["schablonkostnad-bilplats-garage"] }
-evidence = "Schablonbelopp och inkluderingskod delar källkolumn med överlapp.\ncatalog:occurrence:233614\ncatalog:occurrence:233615\ncatalog:occurrence:233616\ncatalog:occurrence:233617\ncatalog:occurrence:233618"
-
-[[statement]]
-kind = "set"
-subject = "var:schablon-kallgarage"
-fields = { "tags" = ["housing"] }
-evidence = "Schablonbelopp och inkluderingskod delar källkolumn med överlapp.\ncatalog:occurrence:233614\ncatalog:occurrence:233615\ncatalog:occurrence:233616\ncatalog:occurrence:233617\ncatalog:occurrence:233618"
-
-[[statement]]
-kind = "set"
-subject = "var:schablon-motorvarmare"
-fields = { "sets" = ["schablonkostnad-bilplats-garage"] }
-evidence = "Schablonbelopp och inkluderingskod delar källkolumn med överlapp.\ncatalog:occurrence:233614\ncatalog:occurrence:233615\ncatalog:occurrence:233616\ncatalog:occurrence:233617\ncatalog:occurrence:233618"
-
-[[statement]]
-kind = "set"
-subject = "var:schablon-motorvarmare"
-fields = { "tags" = ["housing"] }
-evidence = "Schablonbelopp och inkluderingskod delar källkolumn med överlapp.\ncatalog:occurrence:233614\ncatalog:occurrence:233615\ncatalog:occurrence:233616\ncatalog:occurrence:233617\ncatalog:occurrence:233618"
-
-[[statement]]
-kind = "set"
-subject = "var:schablon-varmgarage"
-fields = { "sets" = ["schablonkostnad-bilplats-garage"] }
-evidence = "Schablonbelopp och inkluderingskod delar källkolumn med överlapp.\ncatalog:occurrence:233614\ncatalog:occurrence:233615\ncatalog:occurrence:233616\ncatalog:occurrence:233617\ncatalog:occurrence:233618"
-
-[[statement]]
-kind = "set"
-subject = "var:schablon-varmgarage"
-fields = { "tags" = ["housing"] }
-evidence = "Schablonbelopp och inkluderingskod delar källkolumn med överlapp.\ncatalog:occurrence:233614\ncatalog:occurrence:233615\ncatalog:occurrence:233616\ncatalog:occurrence:233617\ncatalog:occurrence:233618"
-
-[[statement]]
-kind = "set"
 subject = "var:stadsdelsomr"
 fields = { "sets" = [] }
 evidence = "Variabeln anger geografiska områden.\ncatalog:variable_text:25828:18993:20454"
@@ -1046,18 +974,6 @@ evidence = "Källkolumnen är kopplad till två versioner under samma period.\nc
 [[statement]]
 kind = "set"
 subject = "var:upplatelseform"
-fields = { "tags" = ["housing"] }
-evidence = "Källkolumnen är kopplad till två versioner under samma period.\ncatalog:occurrence:233642\ncatalog:occurrence:233643"
-
-[[statement]]
-kind = "set"
-subject = "var:upplatelseform-tabellering"
-fields = { "sets" = ["upplatelseform"] }
-evidence = "Källkolumnen är kopplad till två versioner under samma period.\ncatalog:occurrence:233642\ncatalog:occurrence:233643"
-
-[[statement]]
-kind = "set"
-subject = "var:upplatelseform-tabellering"
 fields = { "tags" = ["housing"] }
 evidence = "Källkolumnen är kopplad till två versioner under samma period.\ncatalog:occurrence:233642\ncatalog:occurrence:233643"
 
@@ -1182,12 +1098,6 @@ kind = "set"
 subject = "set:ombyggnad-storre-forandring"
 fields = { "label" = "Ombyggnad större förändring" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:schablonkostnad-bilplats-garage"
-fields = { "label" = "Schablonkostnad bilplats garage" }
-evidence = "#2100 group name: the slug read as words; kept on review."
 
 [[statement]]
 kind = "set"
@@ -1337,12 +1247,6 @@ evidence = "#2102 same-label cluster 'Hyror i bostadslägenheter' (13 variables)
 kind = "set"
 subject = "var:hyror-i-bostadslagenheter-hyraja0"
 fields = { "label" = "Hyror i bostadslägenheter (januari)" }
-evidence = "#2102 same-label cluster 'Hyror i bostadslägenheter' (13 variables): judged different meaning, medium confidence; One column per month decoded from the column names; HYRAJA1 is a second January column with no text, so it carries its code."
-
-[[statement]]
-kind = "set"
-subject = "var:hyror-i-bostadslagenheter-hyraja1"
-fields = { "label" = "Hyror i bostadslägenheter (januari, HYRAJA1)" }
 evidence = "#2102 same-label cluster 'Hyror i bostadslägenheter' (13 variables): judged different meaning, medium confidence; One column per month decoded from the column names; HYRAJA1 is a second January column with no text, so it carries its code."
 
 [[statement]]
@@ -1530,3 +1434,9 @@ kind = "set"
 subject = "hyror-i-bostadslagenheter: KOMMUN @2008 where key = 'v22862'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Hyror i bostadslägenheter 2008 (RegVerID 2983) documents column KOMMUN under VarId 36 \"Kommun\" and VarId 22862 \"Kommunregion\" (\"Gruppering av kommuner\"). The source does not settle which: the 2007 KOMMUN is documented as the region grouping (VarId 2302 \"Gruppering av kommuner till olika regioner\"), while 2009-2025 KOMMUN is VarId 36. VarId 36 is the more plausible owner because in 2008 its row and the LAN row are in the later CVID batch (183059, 183060), the same batch as the 2009 KOMMUN (183037), while the VarId 22862 row is in the earlier batch (174927), and 22862 has its own column Regionny in 2009-2013 (maintainer 2026-11-14: place under the more plausible owner). The VarId 22862 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: <none> @2014 where key = 'v22862'"
+fields = { "variable" = "none" }
+evidence = "Gap marker of VarId 22862 (kommunregion-kommun): the KOMMUN 2008 curation withholds its only column listing, so the variable has no column left; its documented-without-column listing in 2014 is withheld with it (maintainer 2026-11-14)."

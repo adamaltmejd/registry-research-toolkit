@@ -655,18 +655,6 @@ evidence = "KN8-benämning för varuklassificering.\ncatalog:variable_text:40859
 
 [[statement]]
 kind = "set"
-subject = "var:kn8kod"
-fields = { "sets" = ["kn8"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:400815\ncatalog:occurrence:400816"
-
-[[statement]]
-kind = "set"
-subject = "var:kn8kod"
-fields = { "tags" = ["trade"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:400815\ncatalog:occurrence:400816"
-
-[[statement]]
-kind = "set"
 subject = "var:kn8kod-2"
 fields = { "sets" = ["kn8"] }
 evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:400815\ncatalog:occurrence:400816"
@@ -1090,18 +1078,6 @@ kind = "set"
 subject = "var:produktgrupp-sammanvagda"
 fields = { "tags" = [] }
 evidence = "Källkolumnen har olika ägare i angränsande perioder.\ncatalog:occurrence:401098\ncatalog:occurrence:401135"
-
-[[statement]]
-kind = "set"
-subject = "var:produktgrupp-sammanvagda-klasser-prodgrpkod"
-fields = { "sets" = ["produktgrupp-sammanvagda-klasser"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:401145\ncatalog:occurrence:401147"
-
-[[statement]]
-kind = "set"
-subject = "var:produktgrupp-sammanvagda-klasser-prodgrpkod"
-fields = { "tags" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:401145\ncatalog:occurrence:401147"
 
 [[statement]]
 kind = "set"
@@ -1633,12 +1609,6 @@ evidence = "#2102 same-label cluster 'Produktgrupp' (6 variables): judged differ
 kind = "set"
 subject = "var:produktgrupp-sammanvagda"
 fields = { "label" = "Produktgrupp Sammanvägda klasser (namn)" }
-evidence = "#2102 same-label cluster 'Produktgrupp Sammanvägda klasser' (2 variables): judged different meaning, high confidence; Namn is the name and ProdGrpKod the code of the sammanvägd klass (value set with NR codes)."
-
-[[statement]]
-kind = "set"
-subject = "var:produktgrupp-sammanvagda-klasser-prodgrpkod"
-fields = { "label" = "Produktgrupp Sammanvägda klasser (kod)" }
 evidence = "#2102 same-label cluster 'Produktgrupp Sammanvägda klasser' (2 variables): judged different meaning, high confidence; Namn is the name and ProdGrpKod the code of the sammanvägd klass (value set with NR codes)."
 
 [[statement]]

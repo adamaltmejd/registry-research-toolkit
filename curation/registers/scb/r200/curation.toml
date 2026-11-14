@@ -12186,3 +12186,93 @@ kind = "set"
 subject = "release:vindkraft/r18456"
 fields = { "period" = "2003.." }
 evidence = "SCB Registerinformation, RegVerID 18456: the only release of Vindkraft is named \"Från år 2003 och framåt\", which the delivery-name grammar does not read, so its documented columns had no period. The name states the start, 2003, and no end. The end stays open (maintainer rule 2026-10-16: an unstated end is no reason to leave a column out)."
+
+[[statement]]
+kind = "set"
+subject = "elnatforetag-nat: tkr @2009..2017 where key = 'v35279'"
+fields = { "long_format" = true }
+evidence = "SCB Registerinformation, Elnätföretag (nät) 2009-2017 (RegVerIDs 13854, 13849, 13848, 13844, 13841, 13840, 13839, 13838, 12652) documents column tkr under VarId 35317 \"Förbrukning av bränsle, fjärrvärme och drivmedel o.d.\", VarId 35279 \"Vissa rörelseintäkter\" and VarId 35280 \"Vissa rörelsekostnader\" (all 1000-tal kronor); radnr, the form row, picks each row's measure, so the column is long format (maintainer 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elnatforetag-nat: tkr @2009..2017 where key = 'v35280'"
+fields = { "long_format" = true }
+evidence = "SCB Registerinformation, Elnätföretag (nät) 2009-2017 (RegVerIDs 13854, 13849, 13848, 13844, 13841, 13840, 13839, 13838, 12652) documents column tkr under VarId 35317 \"Förbrukning av bränsle, fjärrvärme och drivmedel o.d.\", VarId 35279 \"Vissa rörelseintäkter\" and VarId 35280 \"Vissa rörelsekostnader\" (all 1000-tal kronor); radnr, the form row, picks each row's measure, so the column is long format (maintainer 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elnatforetag-nat: tkr @2009..2017 where key = 'v35317'"
+fields = { "long_format" = true }
+evidence = "SCB Registerinformation, Elnätföretag (nät) 2009-2017 (RegVerIDs 13854, 13849, 13848, 13844, 13841, 13840, 13839, 13838, 12652) documents column tkr under VarId 35317 \"Förbrukning av bränsle, fjärrvärme och drivmedel o.d.\", VarId 35279 \"Vissa rörelseintäkter\" and VarId 35280 \"Vissa rörelsekostnader\" (all 1000-tal kronor); radnr, the form row, picks each row's measure, so the column is long format (maintainer 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elnatforetag-nat: varme_vvarde @2009..2018 where key = 'v35397'"
+fields = { "long_format" = true }
+evidence = "SCB Registerinformation, Elnätföretag (nät) 2009-2018 (RegVerIDs 13854, 13849, 13848, 13844, 13841, 13840, 13839, 13838, 13130, 12652) documents column varme_vvarde under VarId 35403 \"Värmevärde vid värmeproduktion\" (Megawattimmar) and VarId 35397 \"Verkningsgrad\" (Procent); radnr, the form row, picks each row's measure, so the column is long format (maintainer 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elnatforetag-nat: varme_vvarde @2009..2018 where key = 'v35403'"
+fields = { "long_format" = true }
+evidence = "SCB Registerinformation, Elnätföretag (nät) 2009-2018 (RegVerIDs 13854, 13849, 13848, 13844, 13841, 13840, 13839, 13838, 13130, 12652) documents column varme_vvarde under VarId 35403 \"Värmevärde vid värmeproduktion\" (Megawattimmar) and VarId 35397 \"Verkningsgrad\" (Procent); radnr, the form row, picks each row's measure, so the column is long format (maintainer 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elproduktion-elhandel: varme_kraftv @2009..2017 where key = 'v35447'"
+fields = { "long_format" = true }
+evidence = "SCB Registerinformation, Elproduktion, elhandel, fjärrvärme (ovr) 2009-2017 (RegVerIDs 13870, 13869, 13865, 13864, 13863, 13862, 13861, 13860, 12656) documents column varme_kraftv under VarId 35465 \"Bränsle för kraftvärmeproduktion\" and VarId 35447 \"Förbrukning av bränsle för produktion av el\"; radnr, the form row, picks each row's measure, so the column is long format (maintainer 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elproduktion-elhandel: varme_kraftv @2009..2017 where key = 'v35465'"
+fields = { "long_format" = true }
+evidence = "SCB Registerinformation, Elproduktion, elhandel, fjärrvärme (ovr) 2009-2017 (RegVerIDs 13870, 13869, 13865, 13864, 13863, 13862, 13861, 13860, 12656) documents column varme_kraftv under VarId 35465 \"Bränsle för kraftvärmeproduktion\" and VarId 35447 \"Förbrukning av bränsle för produktion av el\"; radnr, the form row, picks each row's measure, so the column is long format (maintainer 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elproduktion-elhandel: varme_vvarde @2009..2018 where key = 'v35397'"
+fields = { "long_format" = true }
+evidence = "SCB Registerinformation, Elproduktion, elhandel, fjärrvärme (ovr) 2009-2018 (RegVerIDs 13870, 13869, 13865, 13864, 13863, 13862, 13861, 13860, 13127, 12656) documents column varme_vvarde under VarId 35403 \"Värmevärde vid värmeproduktion\", VarId 35397 \"Verkningsgrad\" and VarId 35447 \"Förbrukning av bränsle för produktion av el\"; radnr, the form row, picks each row's measure, so the column is long format (maintainer 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elproduktion-elhandel: varme_vvarde @2009..2018 where key = 'v35403'"
+fields = { "long_format" = true }
+evidence = "SCB Registerinformation, Elproduktion, elhandel, fjärrvärme (ovr) 2009-2018 (RegVerIDs 13870, 13869, 13865, 13864, 13863, 13862, 13861, 13860, 13127, 12656) documents column varme_vvarde under VarId 35403 \"Värmevärde vid värmeproduktion\", VarId 35397 \"Verkningsgrad\" and VarId 35447 \"Förbrukning av bränsle för produktion av el\"; radnr, the form row, picks each row's measure, so the column is long format (maintainer 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elproduktion-elhandel: varme_vvarde @2009..2018 where key = 'v35447'"
+fields = { "long_format" = true }
+evidence = "SCB Registerinformation, Elproduktion, elhandel, fjärrvärme (ovr) 2009-2018 (RegVerIDs 13870, 13869, 13865, 13864, 13863, 13862, 13861, 13860, 13127, 12656) documents column varme_vvarde under VarId 35403 \"Värmevärde vid värmeproduktion\", VarId 35397 \"Verkningsgrad\" and VarId 35447 \"Förbrukning av bränsle för produktion av el\"; radnr, the form row, picks each row's measure, so the column is long format (maintainer 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elproduktion-elhandel: maxnetto @2018..2024 where key = 'v35302'"
+fields = { "long_format" = true }
+evidence = "SCB Registerinformation, Elproduktion, elhandel, fjärrvärme (ovr) 2018-2024 (RegVerIDs 13127, 14256, 15966, 18252, 18567, 19320, 20028) documents column maxnetto under VarId 35302 \"Sammanlagd generatoreffekt max netto\" (kW) and VarIds 38850 \"Kompressorkylmaskin\", 38851 \"Frikyla\", 38855 \"Absorptionskylmaskiner\", 38856 \"Sorptiv kyla\" (Kilowatttimmar); the form row (radnr, AGGRTYP) picks each row's measure, so the column is long format (maintainer 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elproduktion-elhandel: maxnetto @2018..2024 where key = 'v38850'"
+fields = { "long_format" = true }
+evidence = "SCB Registerinformation, Elproduktion, elhandel, fjärrvärme (ovr) 2018-2024 (RegVerIDs 13127, 14256, 15966, 18252, 18567, 19320, 20028) documents column maxnetto under VarId 35302 \"Sammanlagd generatoreffekt max netto\" (kW) and VarIds 38850 \"Kompressorkylmaskin\", 38851 \"Frikyla\", 38855 \"Absorptionskylmaskiner\", 38856 \"Sorptiv kyla\" (Kilowatttimmar); the form row (radnr, AGGRTYP) picks each row's measure, so the column is long format (maintainer 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elproduktion-elhandel: maxnetto @2018..2024 where key = 'v38851'"
+fields = { "long_format" = true }
+evidence = "SCB Registerinformation, Elproduktion, elhandel, fjärrvärme (ovr) 2018-2024 (RegVerIDs 13127, 14256, 15966, 18252, 18567, 19320, 20028) documents column maxnetto under VarId 35302 \"Sammanlagd generatoreffekt max netto\" (kW) and VarIds 38850 \"Kompressorkylmaskin\", 38851 \"Frikyla\", 38855 \"Absorptionskylmaskiner\", 38856 \"Sorptiv kyla\" (Kilowatttimmar); the form row (radnr, AGGRTYP) picks each row's measure, so the column is long format (maintainer 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elproduktion-elhandel: maxnetto @2018..2024 where key = 'v38855'"
+fields = { "long_format" = true }
+evidence = "SCB Registerinformation, Elproduktion, elhandel, fjärrvärme (ovr) 2018-2024 (RegVerIDs 13127, 14256, 15966, 18252, 18567, 19320, 20028) documents column maxnetto under VarId 35302 \"Sammanlagd generatoreffekt max netto\" (kW) and VarIds 38850 \"Kompressorkylmaskin\", 38851 \"Frikyla\", 38855 \"Absorptionskylmaskiner\", 38856 \"Sorptiv kyla\" (Kilowatttimmar); the form row (radnr, AGGRTYP) picks each row's measure, so the column is long format (maintainer 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elproduktion-elhandel: maxnetto @2018..2024 where key = 'v38856'"
+fields = { "long_format" = true }
+evidence = "SCB Registerinformation, Elproduktion, elhandel, fjärrvärme (ovr) 2018-2024 (RegVerIDs 13127, 14256, 15966, 18252, 18567, 19320, 20028) documents column maxnetto under VarId 35302 \"Sammanlagd generatoreffekt max netto\" (kW) and VarIds 38850 \"Kompressorkylmaskin\", 38851 \"Frikyla\", 38855 \"Absorptionskylmaskiner\", 38856 \"Sorptiv kyla\" (Kilowatttimmar); the form row (radnr, AGGRTYP) picks each row's measure, so the column is long format (maintainer 2026-11-14)."

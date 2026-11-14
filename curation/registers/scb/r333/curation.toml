@@ -1807,18 +1807,6 @@ evidence = "Antal hemmaboende barn hör till antal barn och familjesammansättni
 
 [[statement]]
 kind = "set"
-subject = "var:antal-barn-under-22-ar-antalgembarnunder22"
-fields = { "sets" = ["antal-barn"] }
-evidence = "Samma källkolumn är parallellt mappad till en annan variabel; antalet hör till familjesammansättning.\ncatalog:occurrence-locators:variable:6435\ncatalog:occurrence:46828\ncatalog:occurrence:46829"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-barn-under-22-ar-antalgembarnunder22"
-fields = { "tags" = ["family-household"] }
-evidence = "Samma källkolumn är parallellt mappad till en annan variabel; antalet hör till familjesammansättning.\ncatalog:occurrence-locators:variable:6435\ncatalog:occurrence:46828\ncatalog:occurrence:46829"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-barn-under-6-ar"
 fields = { "sets" = ["antal-barn"] }
 evidence = "Antal hemmaboende barn hör till antal barn och familjesammansättning.\ncatalog:occurrence-locators:variable:6436"
@@ -4409,13 +4397,11 @@ subject = "var:andel-av-median"
 fields = { "description" = "Familjens disponibla inkomst per konsumtionsenhet som andel av medianinkomsten i Sverige." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger inkomstbelopp men variabeln mäter en andel av medianinkomsten.\ncatalog:occurrence-locators:variable:6402"
 
-
 [[statement]]
 kind = "set"
 subject = "var:andel-barnb"
 fields = { "description" = "Andel av familjens disponibla inkomst som utgörs av barnbidrag. Andelen anges i procent och härleds från Inkomst- och taxeringsregistret." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger en andel av familjens disponibla inkomst, inte barnbidrag som belopp.\ncatalog:occurrence-locators:variable:6403\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:47131:opdef_text. One variable, one description."
-
 
 [[statement]]
 kind = "set"
@@ -4423,13 +4409,11 @@ subject = "var:andel-bostb"
 fields = { "description" = "Bostadsbidrag för barnfamiljer, makar och övriga utan barn som andel av familjens disponibla inkomst, i procent." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen beskriver bidraget, medan variabeln mäter dess andel av inkomsten.\ncatalog:variable_text:6404:20088:20089"
 
-
 [[statement]]
 kind = "set"
 subject = "var:andel-tot-famstod"
 fields = { "description" = "Andel av familjens disponibla inkomst som utgörs av familjestöd. Andelen anges i procent och härleds från Inkomst- och taxeringsregistret." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger en andel av familjens disponibla inkomst, inte stödsumman.\ncatalog:occurrence-locators:variable:6407\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:47135:opdef_text. One variable, one description."
-
 
 [[statement]]
 kind = "set"
@@ -4437,13 +4421,11 @@ subject = "var:andel-underhall"
 fields = { "description" = "Andel av familjens disponibla inkomst som utgörs av mottaget underhållsbidrag och underhållsstöd. Andelen anges i procent och härleds från Inkomst- och taxeringsregistret." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger en andel av familjens disponibla inkomst, inte underhållsbeloppet.\ncatalog:occurrence-locators:variable:6408\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:47136:opdef_text. One variable, one description."
 
-
 [[statement]]
 kind = "set"
 subject = "var:andelmediana"
 fields = { "description" = "Familjens disponibla inkomst per konsumtionsenhet som andel av medianinkomsten i Sverige, grupperad." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger inkomstbelopp men variabeln är en grupperad andel av medianinkomsten.\ncatalog:occurrence-locators:variable:6409\ncatalog:valueset:151"
-
 
 [[statement]]
 kind = "set"
@@ -4451,13 +4433,11 @@ subject = "var:ekbist"
 fields = { "description" = "Anger om familjen har erhållit ekonomiskt bistånd." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln anger mottagande av ekonomiskt bistånd, inte rätten till bistånd.\ncatalog:occurrence-locators:variable:6485"
 
-
 [[statement]]
 kind = "set"
 subject = "var:ekonomiskt-bistand-procent-disponibel-familjeinkomst"
 fields = { "description" = "Ekonomiskt bistånds andel av familjens disponibla inkomst i procent." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan beskriver biståndets andel av familjens disponibla inkomst, inte rätten till bistånd.\ncatalog:variable_text:6406:20088:20089"
-
 
 [[statement]]
 kind = "set"
@@ -4465,13 +4445,11 @@ subject = "var:foraldrapenning-procent-disponibel-familjeinkomst"
 fields = { "description" = "Andel av familjens disponibla inkomst som utgörs av föräldrapenning vid tillfällig vård av barn och vid barns födelse, i procent." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen befintliga beskrivningen anger föräldrapenning, medan variabeln mäter dess andel av familjens disponibla inkomst.\ncatalog:variable_text:6405:17531:17532\ncatalog:variable_text:6405:20088:20089"
 
-
 [[statement]]
 kind = "set"
 subject = "var:inkomststandarda-rn2017"
 fields = { "description" = "Familjens inkomststandard, grupperad efter den disponibla inkomstens relation till baskonsumtionen enligt 2017 års riksnorm." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln mäter en klass av inkomststandard, inte själva kvoten.\ncatalog:occurrence:48292\ncatalog:valueset:4264"
-
 
 [[statement]]
 kind = "set"
@@ -4802,12 +4780,6 @@ kind = "set"
 subject = "var:andelmediana"
 fields = { "label" = "Disponibel inkomst i relation till medianinkomsten i Sverige (grupperad)" }
 evidence = "#2102 same-label cluster 'Disponibel inkomst i relation till medianinkomsten i Sverige' (2 variables): judged different meaning, high confidence; Andel_av_median is the continuous share of the median, AndelMedianA the grouped version with a code list."
-
-[[statement]]
-kind = "set"
-subject = "var:antal-barn-under-22-ar-antalgembarnunder22"
-fields = { "label" = "Antal barn under 22 år (gemensamma barn)" }
-evidence = "#2102 same-label cluster 'Antal barn under 22 år' (2 variables): judged different meaning, medium confidence; Concurrent columns; AntalGemBarnUnder22 is decoded from the name as joint (gemensamma) children, the opdefs do not state the difference."
 
 [[statement]]
 kind = "set"

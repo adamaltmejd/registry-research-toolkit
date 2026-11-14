@@ -15465,12 +15465,6 @@ evidence = "Samma begrepp är perioduppdelat mot scb/fasit/disponibel-inkomst-ex
 
 [[statement]]
 kind = "set"
-subject = "var:disponibel-inkomst-individ-2004"
-fields = { "tags" = ["income"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:67894\ncatalog:occurrence:67895\ncatalog:occurrence:68714"
-
-[[statement]]
-kind = "set"
 subject = "var:disponibel-inkomst-individualiserad-fran-cdisp04hb-trif"
 fields = { "tags" = ["income"] }
 evidence = "Den perioduppdelade källkolumnens etiketter anger olika aggregationsnivå.\ncatalog:occurrence:57650\ncatalog:occurrence:57709"
@@ -16644,18 +16638,6 @@ kind = "set"
 subject = "var:fordran-pa-vardepapper"
 fields = { "tags" = ["finance", "wealth"] }
 evidence = "Fordran ingår i värdepappersfordringar.\ncatalog:variable_text:9027:13149:13879"
-
-[[statement]]
-kind = "set"
-subject = "var:foretagarinkomst"
-fields = { "sets" = ["inkomst-naringsverksamhet"] }
-evidence = "Identitetsfaktum visar överlappande ägare med olika operativa definitioner.\ncatalog:occurrence:62762\ncatalog:occurrence:62763\ncatalog:occurrence:63633\ncatalog:occurrence:63634\ncatalog:occurrence:64505\ncatalog:occurrence:64506"
-
-[[statement]]
-kind = "set"
-subject = "var:foretagarinkomst"
-fields = { "tags" = ["income"] }
-evidence = "Identitetsfaktum visar överlappande ägare med olika operativa definitioner.\ncatalog:occurrence:62762\ncatalog:occurrence:62763\ncatalog:occurrence:63633\ncatalog:occurrence:63634\ncatalog:occurrence:64505\ncatalog:occurrence:64506"
 
 [[statement]]
 kind = "set"
@@ -17838,12 +17820,6 @@ kind = "set"
 subject = "var:bostadsbidrag-varnpliktiga-rtb-familj"
 fields = { "tags" = ["transfers"] }
 evidence = "Källkoden är opak; etiketten kolliderar och mål kräver R6-prövning.\ncatalog:variable_text:9136:16071:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:ibtp"
-fields = { "tags" = ["transfers"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:62816\ncatalog:occurrence:62817"
 
 [[statement]]
 kind = "set"
@@ -20193,18 +20169,6 @@ evidence = "Geografisk indelning.\ncatalog:variable_text:9349:14610:16436"
 
 [[statement]]
 kind = "set"
-subject = "var:lan-kommun-forsamling-blk"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har överlappande mappningar till län-kommun-församling och kommun.\ncatalog:occurrence:57644\ncatalog:occurrence:57645\ncatalog:occurrence:57675"
-
-[[statement]]
-kind = "set"
-subject = "var:lan-kommun-forsamling-blk"
-fields = { "tags" = ["geography"] }
-evidence = "Källkolumnen har överlappande mappningar till län-kommun-församling och kommun.\ncatalog:occurrence:57644\ncatalog:occurrence:57645\ncatalog:occurrence:57675"
-
-[[statement]]
-kind = "set"
 subject = "var:landstingsskattesats"
 fields = { "sets" = ["landstingsskattesats"] }
 evidence = "Skattesatsen ingår i gruppen.\ncatalog:variable_text:9351:13149:19723"
@@ -20286,18 +20250,6 @@ kind = "set"
 subject = "var:livranta"
 fields = { "tags" = ["transfers"] }
 evidence = "Summerade livräntebelopp.\ncatalog:variable_text:9357:13149:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:livranta-skattepliktig-428"
-fields = { "sets" = [] }
-evidence = "Katalogen anger överlappande ägare till samma kolumn.\ncatalog:occurrence:69816\ncatalog:occurrence:69817"
-
-[[statement]]
-kind = "set"
-subject = "var:livranta-skattepliktig-428"
-fields = { "tags" = ["transfers"] }
-evidence = "Katalogen anger överlappande ägare till samma kolumn.\ncatalog:occurrence:69816\ncatalog:occurrence:69817"
 
 [[statement]]
 kind = "set"
@@ -23505,18 +23457,6 @@ evidence = "Identitetsfaktum visar växlande ägare och olika beskrivningar. Coo
 
 [[statement]]
 kind = "set"
-subject = "var:skattefri-utdelning-k10"
-fields = { "sets" = ["utdelning-aktier-och-andelar"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:62904\ncatalog:occurrence:62905"
-
-[[statement]]
-kind = "set"
-subject = "var:skattefri-utdelning-k10"
-fields = { "tags" = ["income"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:62904\ncatalog:occurrence:62905"
-
-[[statement]]
-kind = "set"
 subject = "var:skattepliktiga-ersattningar-ej-sociala"
 fields = { "sets" = [] }
 evidence = "Variabeln mäter skattepliktig ersättning.\ncatalog:variable_text:9653:13514:19723"
@@ -24540,12 +24480,6 @@ kind = "set"
 subject = "var:summa-skattefritt-skattepliktigt"
 fields = { "tags" = ["transfers"] }
 evidence = "Identitetsfaktum anger en angränsande ägare för samma kolumn.\ncatalog:occurrence:62149\ncatalog:occurrence:63002"
-
-[[statement]]
-kind = "set"
-subject = "var:summa-skattepliktiga-formaner"
-fields = { "tags" = ["income"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:63145\ncatalog:occurrence:63146"
 
 [[statement]]
 kind = "set"
@@ -26445,18 +26379,6 @@ evidence = "Samma kolumner har angränsande ägare.\ncatalog:occurrence:69249\nc
 
 [[statement]]
 kind = "set"
-subject = "var:uppskovsavdrag-nytillkomna-2010"
-fields = { "sets" = ["uppskovsavdrag"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:64180\ncatalog:occurrence:64181"
-
-[[statement]]
-kind = "set"
-subject = "var:uppskovsavdrag-nytillkomna-2010"
-fields = { "tags" = ["taxation"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:64180\ncatalog:occurrence:64181"
-
-[[statement]]
-kind = "set"
 subject = "var:uppskovsavdrag-nytillkomna-2016"
 fields = { "sets" = ["uppskovsavdrag"] }
 evidence = "Flera kolumner har angränsande ägare.\ncatalog:occurrence:69249\ncatalog:occurrence:70071\ncatalog:occurrence:70874\ncatalog:occurrence:71688"
@@ -28083,12 +28005,6 @@ evidence = "r662 defines disposable income excluding capital gains under the 200
 
 [[statement]]
 kind = "set"
-subject = "var:disponibel-inkomst-individ-2004"
-fields = { "sets" = ["disponibel-inkomst"] }
-evidence = "r663 defines individual disposable income as a component of household disposable income, covered by the fixed definition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:8572\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:8654"
-
-[[statement]]
-kind = "set"
 subject = "var:disponibel-inkomst-individualiserad-fran-cdisp04hb-trif"
 fields = { "sets" = ["disponibel-inkomst"] }
 evidence = "r664 defines disposable income individualised from the family using TRIF, an expressly included variant.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:8573\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:8655"
@@ -28176,12 +28092,6 @@ kind = "set"
 subject = "var:human-development-index-2012"
 fields = { "tags" = ["demographics"] }
 evidence = "r716 classifies the individual's birth country by UN HDI; this supports the demographic birth-information theme.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:8769\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10488\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:8833"
-
-[[statement]]
-kind = "set"
-subject = "var:ibtp"
-fields = { "sets" = ["bostadstillagg"] }
-evidence = "r672 defines housing supplements for pensioners and recipients of sickness and activity compensation.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:8800\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:8868"
 
 [[statement]]
 kind = "set"
@@ -28650,12 +28560,6 @@ kind = "set"
 subject = "var:summa-sarskilt-bostadstillagg-ibtps"
 fields = { "sets" = ["bostadstillagg"] }
 evidence = "r698 defines the sum of special housing supplements for pensioners and sickness or activity compensation recipients.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:9637\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:9682"
-
-[[statement]]
-kind = "set"
-subject = "var:summa-skattepliktiga-formaner"
-fields = { "sets" = ["skattepliktiga-formaner"] }
-evidence = "r736 explicitly sums taxable non-car benefits, car benefits and fuel benefits; r754 includes such sums.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:9639\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:9684\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/fasit/skattepliktiga-formaner"
 
 [[statement]]
 kind = "set"
@@ -31271,12 +31175,6 @@ evidence = "#2102 same-label cluster 'Konsumtionsenhet enligt 2004 års definiti
 kind = "set"
 subject = "var:lan-kommun-forsamling"
 fields = { "label" = "Län-kommun-församling (individ)" }
-evidence = "#2102 same-label cluster 'Län-kommun-församling' (2 variables): judged different meaning, medium confidence; BLKF is in the individual register (2010-2015), BLK in the dwelling household register (2014-2015); unit read from the register."
-
-[[statement]]
-kind = "set"
-subject = "var:lan-kommun-forsamling-blk"
-fields = { "label" = "Län-kommun-församling (bostadshushåll)" }
 evidence = "#2102 same-label cluster 'Län-kommun-församling' (2 variables): judged different meaning, medium confidence; BLKF is in the individual register (2010-2015), BLK in the dwelling household register (2014-2015); unit read from the register."
 
 [[statement]]

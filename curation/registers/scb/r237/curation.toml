@@ -40010,18 +40010,6 @@ evidence = "The question concerns diabetes; the legacy group dissolves.\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:diabetes-fraga-ha0503"
-fields = { "sets" = [] }
-evidence = "Katalogen visar överlappande kopplingar till en annan variabel.\ncatalog:occurrence:497819\ncatalog:occurrence:497820"
-
-[[statement]]
-kind = "set"
-subject = "var:diabetes-fraga-ha0503"
-fields = { "tags" = ["health"] }
-evidence = "Katalogen visar överlappande kopplingar till en annan variabel.\ncatalog:occurrence:497819\ncatalog:occurrence:497820"
-
-[[statement]]
-kind = "set"
 subject = "var:diabetes-fraga-ha9017"
 fields = { "sets" = [] }
 evidence = "Frågan gäller diabetes.\ncatalog:variable_text:47088:9862:10227"
@@ -111502,12 +111490,6 @@ evidence = "#2102 same-label cluster 'Diabetes fråga' (3 variables): held in #2
 
 [[statement]]
 kind = "set"
-subject = "var:diabetes-fraga-ha0503"
-fields = { "label" = "Diabetes fråga (HA0503)" }
-evidence = "#2102 same-label cluster 'Diabetes fråga' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All three have the same definition ('Jämför HA0503'), unit and seven-code list. 'Härledd' appears in only HA0757's 1980 opdef, not all its occurrences, so the code is the qualifier."
-
-[[statement]]
-kind = "set"
 subject = "var:diabetes-fraga-ha9017"
 fields = { "label" = "Diabetes fråga (HA9017)" }
 evidence = "#2102 same-label cluster 'Diabetes fråga' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; All three have the same definition ('Jämför HA0503'), unit and seven-code list. 'Härledd' appears in only HA0757's 1980 opdef, not all its occurrences, so the code is the qualifier."
@@ -111625,7 +111607,6 @@ kind = "set"
 subject = "individer-16plus-ulf: go0107r where key = 'v13621'"
 fields = { "variable" = "go0107r" }
 evidence = "GO0107R is under v42860 in 2008-2015 and 2018-2020, but under v13621 (Tillsyn 2 barn 1) in r19264 (2016) and r19219 (2017). Same column, same opdef ('Härledd från fråga om barntillsyn ...') and same code list (#9380). v13621's own GO0107 (2004, 2006) has the older list #519.\ncurrent-scb-inputs.zip/Registerinformation.csv:row=583882 (r19264, v13621)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=583893 (r19219, v13621)\ncurrent-scb-inputs.zip/Registerinformation.csv:row=477733 (r19289, v42860)"
-
 
 [[statement]]
 kind = "set"
@@ -114039,7 +114020,6 @@ subject = "var:yrkesstallning-up"
 fields = { "description" = "Om urvalspersonen är anställd, egen företagare eller liknande. Frågan ställs till den som har arbete som huvudsaklig sysselsättning och till den som har arbetat tidigare, och för den som inte arbetar nu avses det senaste arbetet. 2008–2013 ställs den även till den som har ett arbete vid sidan av, och vid flera arbeten avses det huvudsakliga." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nW0 och W1 anger samma fråga; filtret som bara gäller 2008–2013 anges med år och ”urvalspersonens har” rättas.\ncatalog:variable_text:60047:13879:16071\ncatalog:variable_text:60047:16071:18628"
 
-
 [[statement]]
 kind = "set"
 subject = "var:aktiv-i-annan-forening"
@@ -114321,7 +114301,6 @@ kind = "set"
 subject = "var:arbete-i-hemmet"
 fields = { "description" = "Om den intervjuade brukar förlägga hela eller en del av arbetet i huvudanställningen till bostaden, förberedelser, efterarbete och vård av material inräknade (Nordplan). Endast direkt intervjuade. 1986 gäller variabeln enbart anställda (företagare finns i SY1110), 1995 både anställda och företagare." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nRättar ”Variabeln gäller variabeln”; populationsändringen 1995 anges med år.\ncatalog:variable_text:53566:5844:6209\ncatalog:variable_text:53566:9131:9496"
-
 
 [[statement]]
 kind = "set"

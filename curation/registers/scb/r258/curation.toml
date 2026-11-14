@@ -15443,18 +15443,6 @@ evidence = "Kolumnen har överlappande ägare med olika incidenttyper.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:sakerhetsinc-konfdata-rojd-malware"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har två ägare under samma period.\ncatalog:occurrence:293200\ncatalog:occurrence:293201"
-
-[[statement]]
-kind = "set"
-subject = "var:sakerhetsinc-konfdata-rojd-malware"
-fields = { "tags" = ["digital"] }
-evidence = "Samma källkolumn har två ägare under samma period.\ncatalog:occurrence:293200\ncatalog:occurrence:293201"
-
-[[statement]]
-kind = "set"
 subject = "var:sakerhetsinc-konfdata-rojd-personal"
 fields = { "sets" = [] }
 evidence = "Samma källkolumn avser olika orsaker i olika perioder.\ncatalog:occurrence:293001\ncatalog:occurrence:293198"
@@ -16406,18 +16394,6 @@ kind = "set"
 subject = "var:sysselsattningstyp-skapad"
 fields = { "tags" = ["employment"] }
 evidence = "Kolumnerna har andra ägare i andra perioder.\ncatalog:occurrence:289940\ncatalog:occurrence:290462\ncatalog:occurrence:290717\ncatalog:occurrence:291337"
-
-[[statement]]
-kind = "set"
-subject = "var:sysselsattningstyp-skapad-h8x1"
-fields = { "sets" = ["sysselsattningsstatus"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:290330\ncatalog:occurrence:290331\ncatalog:occurrence:290332"
-
-[[statement]]
-kind = "set"
-subject = "var:sysselsattningstyp-skapad-h8x1"
-fields = { "tags" = ["employment"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:290330\ncatalog:occurrence:290331\ncatalog:occurrence:290332"
 
 [[statement]]
 kind = "set"
@@ -19959,12 +19935,6 @@ evidence = "#2102 same-label cluster 'Myndghetskontakter: inte skickat in blanke
 kind = "set"
 subject = "var:sysselsattningstyp-skapad"
 fields = { "label" = "Sysselsättningstyp skapad (Sy, Sy2, H8, H8X2txt)" }
-evidence = "#2102 same-label cluster 'Sysselsättningstyp skapad' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The main pid mixes a five-code AKU-derived list (Sy, Sy2, H8X2txt) with H8's eight-alternative list (88/99 added), so 'fem svarsalternativ' is not true of all its occurrences; H8X1 has the same eight-alternative list as H8, so alternative count does not separate them. Codes are used."
-
-[[statement]]
-kind = "set"
-subject = "var:sysselsattningstyp-skapad-h8x1"
-fields = { "label" = "Sysselsättningstyp skapad (H8X1)" }
 evidence = "#2102 same-label cluster 'Sysselsättningstyp skapad' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The main pid mixes a five-code AKU-derived list (Sy, Sy2, H8X2txt) with H8's eight-alternative list (88/99 added), so 'fem svarsalternativ' is not true of all its occurrences; H8X1 has the same eight-alternative list as H8, so alternative count does not separate them. Codes are used."
 
 [[statement]]

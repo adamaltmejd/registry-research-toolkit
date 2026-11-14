@@ -224,14 +224,8 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2017.toml:26\
 [[statement]]
 kind = "set"
 subject = "var:antal-fornamn"
-fields = { "sets" = ["efternamn", "fornamn", "tilltalsnamn"] }
-evidence = "Kolumnen Antal räknar förnamn, tilltalsnamn och efternamn som en variabel (maintainer 2026-11-14); den är därför medlem i uppsättningarna för alla tre namnslagen, så att inga av dem krymper till en medlem.\ncatalog:occurrence:389203\ncatalog:occurrence:389204\ncatalog:occurrence:389205\ncatalog:occurrence:389329\ncatalog:register:209"
-
-[[statement]]
-kind = "set"
-subject = "var:efternamn"
-fields = { "sets" = ["efternamn"] }
-evidence = "Efternamn och antal efternamn ingår i samma grupp.\ncatalog:occurrence:389448\ncatalog:register:209"
+fields = { "sets" = ["fornamn"] }
+evidence = "Källan beskriver antal för ett förnamn; kolumnen Antal räknar sedan sammanslagningen (maintainer 2026-11-14) alla tre namnslagen, och en variabel kan bara ingå i en uppsättning. Uppsättningen efternamn, som utan antal efternamn skulle ha en medlem, är borttagen.\ncatalog:occurrence:389203\ncatalog:occurrence:389204\ncatalog:occurrence:389205\ncatalog:occurrence:389329\ncatalog:register:209"
 
 [[statement]]
 kind = "set"
@@ -328,12 +322,6 @@ kind = "set"
 subject = "var:tilltalsnamn-namn"
 fields = { "tags" = ["demographics"] }
 evidence = "Records registered persons' usual first names, derived from the population register's name marker (r134), supporting demographic searches.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39226\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:389339"
-
-[[statement]]
-kind = "set"
-subject = "set:efternamn"
-fields = { "label" = "Efternamn" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"

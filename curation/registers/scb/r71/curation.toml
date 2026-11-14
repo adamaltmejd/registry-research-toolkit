@@ -558,18 +558,6 @@ evidence = "Bruksåret hör till byggnadsår och beskriver en byggnad.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:aret-da-byggnaden-togs-i-bruk-eller-vardearet-arvardesma"
-fields = { "sets" = ["bruksar-eller-vardear"] }
-evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:79706\ncatalog:occurrence:79707"
-
-[[statement]]
-kind = "set"
-subject = "var:aret-da-byggnaden-togs-i-bruk-eller-vardearet-arvardesma"
-fields = { "tags" = ["property"] }
-evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:79706\ncatalog:occurrence:79707"
-
-[[statement]]
-kind = "set"
 subject = "var:arsangivelse-for-om-eller-tillbyggnad-artillbhyr"
 fields = { "sets" = ["om-eller-tillbyggnadsar"] }
 evidence = "Året ingår i gruppen för om- eller tillbyggnad.\ncatalog:variable_text:10050:18262:18628"
@@ -1434,18 +1422,6 @@ evidence = "Värdeår ingår i gruppen för värdeår.\ncatalog:variable_text:10
 
 [[statement]]
 kind = "set"
-subject = "var:vardear-arvarde"
-fields = { "sets" = ["vardear"] }
-evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:77815\ncatalog:occurrence:77816"
-
-[[statement]]
-kind = "set"
-subject = "var:vardear-arvarde"
-fields = { "tags" = ["property"] }
-evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:77815\ncatalog:occurrence:77816"
-
-[[statement]]
-kind = "set"
 subject = "var:vardear-arvardesma"
 fields = { "sets" = ["vardear"] }
 evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:79706\ncatalog:occurrence:79707"
@@ -1860,12 +1836,6 @@ evidence = "#2102 same-label cluster 'Värdeår' (3 variables): judged different
 
 [[statement]]
 kind = "set"
-subject = "var:vardear-arvarde"
-fields = { "label" = "Värdeår (hyreshus, ArVarde)" }
-evidence = "#2102 same-label cluster 'Värdeår' (3 variables): judged different meaning, medium confidence; ArVardeSma has opdef 'Avser småhus'; ArVarde and ArVardeHyr both have the identical opdef 'Avser hyreshus' while concurrent 2008-2021, so they are told apart by column code."
-
-[[statement]]
-kind = "set"
 subject = "var:vardear-arvardesma"
 fields = { "label" = "Värdeår (småhus)" }
 evidence = "#2102 same-label cluster 'Värdeår' (3 variables): judged different meaning, medium confidence; ArVardeSma has opdef 'Avser småhus'; ArVarde and ArVardeHyr both have the identical opdef 'Avser hyreshus' while concurrent 2008-2021, so they are told apart by column code."
@@ -1904,12 +1874,6 @@ evidence = "#2102 same-label cluster 'Koordinat i vertikal riktning för fastigh
 kind = "set"
 subject = "var:bruksar-eller-vardear"
 fields = { "label" = "Året då byggnaden togs i bruk eller värdeåret (ArVarde)" }
-evidence = "#2102 same-label cluster 'Året då byggnaden togs i bruk eller värdeåret' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Both have the same definition and unit; 'Värdeår för småhus' appears only in the 2020- opdefs (of both columns), not in the earlier ArVarde occurrences, so 'småhus' does not hold for every occurrence and the codes are used."
-
-[[statement]]
-kind = "set"
-subject = "var:aret-da-byggnaden-togs-i-bruk-eller-vardearet-arvardesma"
-fields = { "label" = "Året då byggnaden togs i bruk eller värdeåret (ArVardeSma)" }
 evidence = "#2102 same-label cluster 'Året då byggnaden togs i bruk eller värdeåret' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Both have the same definition and unit; 'Värdeår för småhus' appears only in the 2020- opdefs (of both columns), not in the earlier ArVarde occurrences, so 'småhus' does not hold for every occurrence and the codes are used."
 
 [[statement]]

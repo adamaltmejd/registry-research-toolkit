@@ -397,18 +397,6 @@ evidence = "Fastighetspecifikation beskriver fastigheten.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:forsamling"
-fields = { "sets" = [] }
-evidence = "Lkf är samtidigt mappad till församling, kommun och län.\ncatalog:occurrence:55304\ncatalog:occurrence:55305\ncatalog:occurrence:55306\ncatalog:variable_text:7466:12784:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:forsamling"
-fields = { "tags" = ["geography"] }
-evidence = "Lkf är samtidigt mappad till församling, kommun och län.\ncatalog:occurrence:55304\ncatalog:occurrence:55305\ncatalog:occurrence:55306\ncatalog:variable_text:7466:12784:13514"
-
-[[statement]]
-kind = "set"
 subject = "var:franluftsvarmepump"
 fields = { "sets" = ["uppvarmningssatt"] }
 evidence = "Antalet frånluftsvärmepumpar hör till uppvärmningssätt.\ncatalog:variable_text:7468:12784:14245"
@@ -550,18 +538,6 @@ kind = "set"
 subject = "var:kop"
 fields = { "tags" = ["property"] }
 evidence = "Uppgiften beskriver lokalernas placering i köpcentrum.\ncatalog:variable_text:7480:12784:13149"
-
-[[statement]]
-kind = "set"
-subject = "var:lan"
-fields = { "sets" = [] }
-evidence = "Lkf är samtidigt mappad till län, församling och kommun.\ncatalog:occurrence:55304\ncatalog:occurrence:55305\ncatalog:occurrence:55306\ncatalog:variable_text:7481:12784:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:lan"
-fields = { "tags" = ["geography"] }
-evidence = "Lkf är samtidigt mappad till län, församling och kommun.\ncatalog:occurrence:55304\ncatalog:occurrence:55305\ncatalog:occurrence:55306\ncatalog:variable_text:7481:12784:13514"
 
 [[statement]]
 kind = "set"

@@ -835,18 +835,6 @@ evidence = "Kodningen ingår i stängningsorsak.\ncatalog:valueset:1144\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:stangdorsak-datumupph"
-fields = { "sets" = ["stangningsorsak"] }
-evidence = "Samma källkolumn har överlappande ägare med olika etiketter och innehåll; etiketten och värdemängden anger stängningsorsak.\ncatalog:occurrence:244857\ncatalog:occurrence:244858\ncatalog:valueset:1144\ncatalog:variable_text:27841:13879:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:stangdorsak-datumupph"
-fields = { "tags" = ["business"] }
-evidence = "Samma källkolumn har överlappande ägare med olika etiketter och innehåll; etiketten och värdemängden anger stängningsorsak.\ncatalog:occurrence:244857\ncatalog:occurrence:244858\ncatalog:valueset:1144\ncatalog:variable_text:27841:13879:16436"
-
-[[statement]]
-kind = "set"
 subject = "var:svarsstatus"
 fields = { "sets" = [] }
 evidence = "Svarsstatus beskriver insamlingens kvalitet och bortfall.\ncatalog:valueset:4956\ncatalog:variable_text:27842:18262:20089"
@@ -1084,12 +1072,6 @@ kind = "set"
 subject = "var:drm"
 fields = { "label" = "Disponibla rum (alla dagar)" }
 evidence = "#2102 same-label cluster 'Disponibla rum' (3 variables): judged different meaning, high confidence; Opdefs: all days, Friday-Sunday incl. holidays, Monday-Thursday excl. holidays."
-
-[[statement]]
-kind = "set"
-subject = "var:stangdorsak-datumupph"
-fields = { "label" = "Stängdorsak (DatumUpph)" }
-evidence = "#2102 same-label cluster 'Stängdorsak' (2 variables): judged different meaning, low confidence; StangdOrsak and DatumUpph are concurrent in the camping table with the same D/S/T codes; no text explains DatumUpph."
 
 [[statement]]
 kind = "set"

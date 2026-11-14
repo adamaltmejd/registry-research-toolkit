@@ -97,18 +97,6 @@ evidence = "B25 är en ogenomskinlig källkod; etiketten anger utbildningsnivå.
 
 [[statement]]
 kind = "set"
-subject = "var:bilforman"
-fields = { "sets" = [] }
-evidence = "B36 är samtidigt mappad till scb/ses/formaner.\ncatalog:occurrence:437090\ncatalog:occurrence:437091"
-
-[[statement]]
-kind = "set"
-subject = "var:bilforman"
-fields = { "tags" = ["income"] }
-evidence = "B36 är samtidigt mappad till scb/ses/formaner.\ncatalog:occurrence:437090\ncatalog:occurrence:437091"
-
-[[statement]]
-kind = "set"
 subject = "var:bonusar"
 fields = { "sets" = [] }
 evidence = "Bonusar är en lönekomponent.\ncatalog:variable_text:41918:13149:13514\ncatalog:variable_text:41924:13149:13514"
@@ -346,7 +334,6 @@ kind = "set"
 subject = "var:yrkesuppgift"
 fields = { "tags" = ["employment"] }
 evidence = "Yrkesklassificering hör till arbetsmarknad.\ncatalog:variable_text:41942:13149:13514"
-
 
 [[statement]]
 kind = "set"

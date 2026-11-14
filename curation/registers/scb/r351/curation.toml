@@ -487,18 +487,6 @@ evidence = "Variabeln anger ålder vid avslutad utbildning.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:arbetsplats-larande"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn är samtidigt kopplad till en annan variabel.\ncatalog:occurrence:394875\ncatalog:occurrence:394876"
-
-[[statement]]
-kind = "set"
-subject = "var:arbetsplats-larande"
-fields = { "tags" = ["employment"] }
-evidence = "Samma källkolumn är samtidigt kopplad till en annan variabel.\ncatalog:occurrence:394875\ncatalog:occurrence:394876"
-
-[[statement]]
-kind = "set"
 subject = "var:avbruten-utbildning-b-q03c2"
 fields = { "sets" = ["utbildningsavbrott"] }
 evidence = "Id är längre än 60 tecken.\ncatalog:occurrence:394747\ncatalog:variable_text:39957:15340:15706"
@@ -5693,13 +5681,11 @@ subject = "var:andel-yrkesrelaterad-utbildningstid-av-total-utbildningstid"
 fields = { "description" = "Utbildningsaktiviteter under det senaste året. Uppgiften är den uppskattade andelen utbildningstid som var yrkesrelaterad." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39996:15340:15706\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:394777:opdef_text. One variable, one description."
 
-
 [[statement]]
 kind = "set"
 subject = "var:onskad-utbildning-inte-deltagit-senaste-12-manader"
 fields = { "description" = "Utbildningsaktiviteter under det senaste året. Uppgiften avser önskat men uteblivet deltagande i organiserad utbildning, både reguljär utbildning och andra utbildningsaktiviteter." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39997:15340:15706\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:394778:opdef_text. One variable, one description."
-
 
 [[statement]]
 kind = "set"
@@ -5707,13 +5693,11 @@ subject = "var:utbildning-antal-dagar-senaste-ar"
 fields = { "description" = "Utbildningsaktiviteter under det senaste året. Tiden anges som antal dagar räknat bakåt från intervjutillfället." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39994:15340:15706\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:394775:opdef_text. One variable, one description."
 
-
 [[statement]]
 kind = "set"
 subject = "var:utbildning-antal-veckor-senaste-ar"
 fields = { "description" = "Utbildningsaktiviteter under det senaste året. Tiden anges som antal veckor räknat bakåt från intervjutillfället." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39993:15340:15706\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:394774:opdef_text. One variable, one description."
-
 
 [[statement]]
 kind = "set"
@@ -5721,13 +5705,11 @@ subject = "var:utbildning-timmar-totalt-inte-restid-senaste-ar"
 fields = { "description" = "Utbildningsaktiviteter under det senaste året. Tiden anges som totalt antal timmar utan restid till och från studieplatsen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39995:15340:15706\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:394776:opdef_text. One variable, one description."
 
-
 [[statement]]
 kind = "set"
 subject = "var:utbildning-under-eller-utanfor-arbetstid-senaste-ar"
 fields = { "description" = "Utbildningsaktiviteter under det senaste året" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39989:15340:15706"
-
 
 [[statement]]
 kind = "set"
@@ -5735,20 +5717,17 @@ subject = "var:utbildning-viktigaste-hinder-deltagande-senaste-ar"
 fields = { "description" = "Utbildningsaktiviteter under det senaste året. Den svarande anger den viktigaste anledningen till att inte delta." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39998:15340:15706\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:394779:opdef_text. One variable, one description."
 
-
 [[statement]]
 kind = "set"
 subject = "var:utbildningsaktivitet-huvudsaklig-anledning-senaste-aret"
 fields = { "description" = "Utbildningsaktiviteter under det senaste året. Den svarande anger den huvudsakliga anledningen till deltagandet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39987:15340:15706\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:394768:opdef_text. One variable, one description."
 
-
 [[statement]]
 kind = "set"
 subject = "var:utbildningsaktivitet-samtidigt-arbete-senaste-aret"
 fields = { "description" = "Utbildningsaktiviteter under det senaste året. Uppgiften anger om personen arbetade heltid eller deltid under någon del av utbildningen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar stavningen utan att ändra betydelsen.\ncatalog:variable_text:39988:15340:15706\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:394769:opdef_text. One variable, one description."
-
 
 [[statement]]
 kind = "set"
@@ -6169,12 +6148,6 @@ kind = "set"
 subject = "var:arbetsfranvaro-avsikt-aterga-forra-veckan"
 fields = { "label" = "Sysselsättning förra veckan (frånvarande från arbete med avsikt att återgå)" }
 evidence = "#2102 same-label cluster 'Sysselsättning förra veckan' (4 variables): judged different meaning, high confidence; Four different items C_Q01a-c and C_Q06 with different questions in the opdefs."
-
-[[statement]]
-kind = "set"
-subject = "var:arbetsplats-larande"
-fields = { "label" = "Nuvarande arbetsplats - i vilken grad lär du dig nya saker (lär sig något under arbetsuppgifterna)" }
-evidence = "#2102 same-label cluster 'Nuvarande arbetsplats - i vilken grad lär du dig nya saker' (3 variables): judged different meaning, high confidence; Three different items (D_Q12c, D_Q13a, D_Q13c) with the same frequency scale but different learning sources per the opdefs."
 
 [[statement]]
 kind = "set"

@@ -725,13 +725,11 @@ subject = "var:varugrupp"
 fields = { "tags" = ["business"] }
 evidence = "V är en bokstavskod för vara.\ncatalog:variable_text:32162:12784:18993"
 
-
 [[statement]]
 kind = "set"
 subject = "var:arsforandring-av-tjansteproduktionsindex-i-fasta-priser"
 fields = { "description" = "Utvecklingstal för tjänsteproduktionsindex i fasta priser, jämfört med samma period föregående år." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger löpande priser, men etiketten och den operationella definitionen anger fasta priser under hela perioden.\ncatalog:variable_text:32150:13879:15706\ncatalog:variable_text:32150:15706:16436"
-
 
 [[statement]]
 kind = "set"
@@ -909,6 +907,12 @@ evidence = "#2102 same-label cluster 'LillaN' (2 variables): held in #2127 as un
 
 [[statement]]
 kind = "set"
-subject = "kvartalsomsattning-tjanstesektorn: omsvarde @2006..2007"
+subject = "kvartalsomsattning-tjanstesektorn: omsvarde @2006..2007 where key = 'v4079'"
+fields = { "long_format" = true }
+evidence = "SCB Registerinformation, Kvartalsomsättning tjänstesektorn 2006 and 2007 (RegVerID 575, 973) documents column omsvarde under VarId 4079 \"Omsättningsvärde\" (\"Företagsenhetens inlämnade omsättning i tusentals kr för viss period\") and VarId 5084 \"Inrikes omsättning\" (\"Inrikes årsomsättning enligt momsdeklarationer\"); the table's code columns omstyp (VarId 4077 \"Omsättningstyp\") and Intyp (VarId 4073 \"Typ av värde\") pick each row's measure, so the column is long format (maintainer 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kvartalsomsattning-tjanstesektorn: omsvarde @2006..2007 where key = 'v5084'"
 fields = { "long_format" = true }
 evidence = "SCB Registerinformation, Kvartalsomsättning tjänstesektorn 2006 and 2007 (RegVerID 575, 973) documents column omsvarde under VarId 4079 \"Omsättningsvärde\" (\"Företagsenhetens inlämnade omsättning i tusentals kr för viss period\") and VarId 5084 \"Inrikes omsättning\" (\"Inrikes årsomsättning enligt momsdeklarationer\"); the table's code columns omstyp (VarId 4077 \"Omsättningstyp\") and Intyp (VarId 4073 \"Typ av värde\") pick each row's measure, so the column is long format (maintainer 2026-11-14)."

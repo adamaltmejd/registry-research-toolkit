@@ -534,12 +534,6 @@ evidence = "r16 and r42 explicitly define a protection decision date and identif
 
 [[statement]]
 kind = "set"
-subject = "var:beslutsdatum-for-skyddad-natur-beslutsstatus"
-fields = { "sets" = ["beslutsdatum-for-skyddad-natur"] }
-evidence = "r25, r29 and r33 consistently define a protection decision date; the column name alone does not establish register status. | r25, r29 and r33 consistently define a protection decision date; the column name alone does not establish register status.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42587\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442768\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442794\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442820"
-
-[[statement]]
-kind = "set"
 subject = "var:datbeslut"
 fields = { "sets" = ["beslutsdatum-for-skyddad-natur"] }
 evidence = "r37 and r44 explicitly define the date a decision to protect an area was made. | r37 and r44 explicitly define the date a decision to protect an area was made.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42592\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442849\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42735"
@@ -644,12 +638,6 @@ evidence = "#2102 same-label cluster 'Beslutsdatum för skyddad natur' (10 varia
 kind = "set"
 subject = "var:beslutsdatum-for-skyddad-natur-beslut-datum-spa"
 fields = { "label" = "Beslutsdatum för skyddad natur (SPA)" }
-evidence = "#2102 same-label cluster 'Beslutsdatum för skyddad natur' (10 variables): judged different meaning, medium confidence; Ten concurrent date columns with distinct roles in their column names (SCI, SPA, EU decisions, submission, update, latest, original); no opdef separates them."
-
-[[statement]]
-kind = "set"
-subject = "var:beslutsdatum-for-skyddad-natur-beslutsstatus"
-fields = { "label" = "Beslutsdatum för skyddad natur (beslutsstatus)" }
 evidence = "#2102 same-label cluster 'Beslutsdatum för skyddad natur' (10 variables): judged different meaning, medium confidence; Ten concurrent date columns with distinct roles in their column names (SCI, SPA, EU decisions, submission, update, latest, original); no opdef separates them."
 
 [[statement]]

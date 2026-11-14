@@ -601,42 +601,6 @@ evidence = "Samma källkolumn används därefter för kortfristig utlåning och 
 
 [[statement]]
 kind = "set"
-subject = "var:finansiella-derivat-icke-fin-omv"
-fields = { "sets" = ["finansiella-derivattillgangar"] }
-evidence = "Samma kolumn har överlappande olika motpartsdelar.\ncatalog:occurrence:38492\ncatalog:occurrence:38493"
-
-[[statement]]
-kind = "set"
-subject = "var:finansiella-derivat-icke-fin-omv"
-fields = { "tags" = ["finance"] }
-evidence = "Samma kolumn har överlappande olika motpartsdelar.\ncatalog:occurrence:38492\ncatalog:occurrence:38493"
-
-[[statement]]
-kind = "set"
-subject = "var:finansiella-derivat-icke-fin-stallning"
-fields = { "sets" = ["finansiella-derivattillgangar"] }
-evidence = "Samma kolumn har överlappande olika motpartsdelar.\ncatalog:occurrence:38544\ncatalog:occurrence:38545"
-
-[[statement]]
-kind = "set"
-subject = "var:finansiella-derivat-icke-fin-stallning"
-fields = { "tags" = ["finance"] }
-evidence = "Samma kolumn har överlappande olika motpartsdelar.\ncatalog:occurrence:38544\ncatalog:occurrence:38545"
-
-[[statement]]
-kind = "set"
-subject = "var:finansiella-derivat-icke-fin-trans"
-fields = { "sets" = ["finansiella-derivattillgangar"] }
-evidence = "Samma kolumn har överlappande olika motpartsdelar.\ncatalog:occurrence:38593\ncatalog:occurrence:38594"
-
-[[statement]]
-kind = "set"
-subject = "var:finansiella-derivat-icke-fin-trans"
-fields = { "tags" = ["finance"] }
-evidence = "Samma kolumn har överlappande olika motpartsdelar.\ncatalog:occurrence:38593\ncatalog:occurrence:38594"
-
-[[statement]]
-kind = "set"
 subject = "var:finansiella-derivat-utlandet-omv"
 fields = { "sets" = ["finansiella-derivattillgangar"] }
 evidence = "Samma kolumn har överlappande olika motpartsdelar.\ncatalog:occurrence:38492\ncatalog:occurrence:38493"

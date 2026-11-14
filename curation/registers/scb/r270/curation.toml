@@ -1098,18 +1098,6 @@ evidence = "Identitetsfaktet visar överlappande olika inkomstbegrepp.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:sammanraknad-forvarvsinkomst"
-fields = { "sets" = ["sammanraknad-forvarvsinkomst"] }
-evidence = "Identitetsfaktet visar överlappande olika inkomstbegrepp.\ncatalog:occurrence:133624\ncatalog:occurrence:133625"
-
-[[statement]]
-kind = "set"
-subject = "var:sammanraknad-forvarvsinkomst"
-fields = { "tags" = ["income"] }
-evidence = "Identitetsfaktet visar överlappande olika inkomstbegrepp.\ncatalog:occurrence:133624\ncatalog:occurrence:133625"
-
-[[statement]]
-kind = "set"
 subject = "var:sammanraknad-forvarvsinkomst-kronor"
 fields = { "sets" = ["sammanraknad-forvarvsinkomst"] }
 evidence = "Suffixet 2 är en tillagd räknare; etiketten kolliderar och mål behöver R6-prövning.\ncatalog:variable_text:13078:19358:19723"
@@ -1802,12 +1790,6 @@ evidence = "#2102 same-label cluster 'Förekomst av ersättning från arbetslös
 kind = "set"
 subject = "var:sammanraknad-forvarvsinkomst-kronor"
 fields = { "label" = "Sammanräknad förvärvsinkomst (CSFVI)" }
-evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; CSFVI and cfviki both have unit Kronor and no opdef, so '(kronor)' does not separate them; cfviki (2019-2020) is concurrent with csfvi in 2019-2020."
-
-[[statement]]
-kind = "set"
-subject = "var:sammanraknad-forvarvsinkomst"
-fields = { "label" = "Sammanräknad förvärvsinkomst (cfviki)" }
 evidence = "#2102 same-label cluster 'Sammanräknad förvärvsinkomst' (2 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; CSFVI and cfviki both have unit Kronor and no opdef, so '(kronor)' does not separate them; cfviki (2019-2020) is concurrent with csfvi in 2019-2020."
 
 [[statement]]

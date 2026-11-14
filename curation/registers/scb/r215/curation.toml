@@ -49,42 +49,6 @@ evidence = "Samma källkolumn har olika mått i angränsande perioder.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:antal-odlingar-lan1"
-fields = { "sets" = ["antal-odlingar"] }
-evidence = "Samma källkolumn har överlappande ägare med olika betydelser; antal odlingar hör till vattenbruk.\ncatalog:occurrence:515246\ncatalog:occurrence:515247"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-odlingar-lan1"
-fields = { "tags" = ["forestry-fishing"] }
-evidence = "Samma källkolumn har överlappande ägare med olika betydelser; antal odlingar hör till vattenbruk.\ncatalog:occurrence:515246\ncatalog:occurrence:515247"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-odlingar-lan2"
-fields = { "sets" = ["antal-odlingar"] }
-evidence = "Samma källkolumn har överlappande ägare med olika betydelser; antal odlingar hör till vattenbruk.\ncatalog:occurrence:515248\ncatalog:occurrence:515249"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-odlingar-lan2"
-fields = { "tags" = ["forestry-fishing"] }
-evidence = "Samma källkolumn har överlappande ägare med olika betydelser; antal odlingar hör till vattenbruk.\ncatalog:occurrence:515248\ncatalog:occurrence:515249"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-odlingar-lan3"
-fields = { "sets" = ["antal-odlingar"] }
-evidence = "Samma källkolumn har överlappande ägare med olika betydelser; antal odlingar hör till vattenbruk.\ncatalog:occurrence:515250\ncatalog:occurrence:515251"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-odlingar-lan3"
-fields = { "tags" = ["forestry-fishing"] }
-evidence = "Samma källkolumn har överlappande ägare med olika betydelser; antal odlingar hör till vattenbruk.\ncatalog:occurrence:515250\ncatalog:occurrence:515251"
-
-[[statement]]
-kind = "set"
 subject = "var:av-arb"
 fields = { "sets" = ["arbetade-timmar"] }
 evidence = "Id:t använder läsbara stammar. Måttet ingår i gruppen arbetade timmar och avser arbetstid.\ncatalog:variable_text:54922:16801:17167"
@@ -286,30 +250,6 @@ kind = "set"
 subject = "var:forsaljning-av-musslor"
 fields = { "tags" = ["business", "forestry-fishing"] }
 evidence = "Måttet avser försäljningsbelopp för musslor.\ncatalog:variable_text:54939:16801:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:forsaljning-av-oring-rom-eller-yngel"
-fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
-evidence = "Samma källkolumn är knuten till olika arter under samma perioder.\ncatalog:occurrence:514646\ncatalog:occurrence:514647"
-
-[[statement]]
-kind = "set"
-subject = "var:forsaljning-av-oring-rom-eller-yngel"
-fields = { "tags" = ["business", "forestry-fishing"] }
-evidence = "Samma källkolumn är knuten till olika arter under samma perioder.\ncatalog:occurrence:514646\ncatalog:occurrence:514647"
-
-[[statement]]
-kind = "set"
-subject = "var:forsaljning-av-oring-rom-yngel-salt"
-fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
-evidence = "Samma källkolumn är knuten till olika arter under samma perioder.\ncatalog:occurrence:514648\ncatalog:occurrence:514649"
-
-[[statement]]
-kind = "set"
-subject = "var:forsaljning-av-oring-rom-yngel-salt"
-fields = { "tags" = ["business", "forestry-fishing"] }
-evidence = "Samma källkolumn är knuten till olika arter under samma perioder.\ncatalog:occurrence:514648\ncatalog:occurrence:514649"
 
 [[statement]]
 kind = "set"
@@ -2074,30 +2014,6 @@ kind = "set"
 subject = "var:produktion-av-ostron"
 fields = { "tags" = ["forestry-fishing"] }
 evidence = "Produktion av ostron är en produktionsmängd i vattenbruk.\ncatalog:variable_text:55093:16801:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:produktion-av-regnbage-for-utsattning"
-fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
-evidence = "Samma kolumn är samtidigt kopplad till produktion och försäljning.\ncatalog:occurrence:514732\ncatalog:occurrence:514733"
-
-[[statement]]
-kind = "set"
-subject = "var:produktion-av-regnbage-for-utsattning"
-fields = { "tags" = ["forestry-fishing"] }
-evidence = "Samma kolumn är samtidigt kopplad till produktion och försäljning.\ncatalog:occurrence:514732\ncatalog:occurrence:514733"
-
-[[statement]]
-kind = "set"
-subject = "var:produktion-av-regnbage-utsattning-salt"
-fields = { "sets" = ["produktionsmangd-i-vattenbruk"] }
-evidence = "Samma kolumn är samtidigt kopplad till produktion och försäljning.\ncatalog:occurrence:514734\ncatalog:occurrence:514735"
-
-[[statement]]
-kind = "set"
-subject = "var:produktion-av-regnbage-utsattning-salt"
-fields = { "tags" = ["forestry-fishing"] }
-evidence = "Samma kolumn är samtidigt kopplad till produktion och försäljning.\ncatalog:occurrence:514734\ncatalog:occurrence:514735"
 
 [[statement]]
 kind = "set"
@@ -3989,13 +3905,11 @@ subject = "var:malr-salt"
 fields = { "description" = "Andel rymlingar bland ål för konsumtion, i procent. Uppgiften avser produktion i havet, i salt eller bräckt vatten." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54978:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:513828:opdef_text. One variable, one description."
 
-
 [[statement]]
 kind = "set"
 subject = "var:mflodr-salt"
 fields = { "description" = "Andel rymlingar bland flodkräftor för konsumtion, i procent. Uppgiften avser produktion i havet, i salt eller bräckt vatten." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:54990:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:513842:opdef_text. One variable, one description."
-
 
 [[statement]]
 kind = "set"
@@ -4003,13 +3917,11 @@ subject = "var:mlaxr-salt"
 fields = { "description" = "Andel rymlingar bland lax för konsumtion, i procent. Uppgiften avser produktion i havet, i salt eller bräckt vatten." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55011:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:513860:opdef_text. One variable, one description."
 
-
 [[statement]]
 kind = "set"
 subject = "var:moringr-salt"
 fields = { "description" = "Andel rymlingar bland öring för konsumtion, i procent. Uppgiften avser produktion i havet, i salt eller bräckt vatten." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55019:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:513868:opdef_text. One variable, one description."
-
 
 [[statement]]
 kind = "set"
@@ -4017,13 +3929,11 @@ subject = "var:movrr-salt"
 fields = { "description" = "Andel rymlingar bland övrig matfisk (1), i procent. Uppgiften avser produktion i salt eller bräckt havsvatten; arten specificeras i ”Övrig art, matfisk (1)”." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55035:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:513887:opdef_text. One variable, one description."
 
-
 [[statement]]
 kind = "set"
 subject = "var:mrblr-salt"
 fields = { "description" = "Andel rymlingar bland regnbåge för konsumtion, i procent. Uppgiften avser produktion i havet, i salt eller bräckt vatten." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55047:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:513899:opdef_text. One variable, one description."
-
 
 [[statement]]
 kind = "set"
@@ -4031,13 +3941,11 @@ subject = "var:mrodr-salt"
 fields = { "description" = "Andel rymlingar bland röding för konsumtion, i procent. Uppgiften avser produktion i havet, i salt eller bräckt vatten." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55059:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:513911:opdef_text. One variable, one description."
 
-
 [[statement]]
 kind = "set"
 subject = "var:salr-salt"
 fields = { "description" = "Andel rymlingar bland ål för utsättning, i procent. Uppgiften avser produktion i havet, i salt eller bräckt vatten." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55141:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:513958:opdef_text. One variable, one description."
-
 
 [[statement]]
 kind = "set"
@@ -4045,13 +3953,11 @@ subject = "var:sflodr-salt"
 fields = { "description" = "Andel rymlingar bland flodkräftor för utsättning, i procent. Uppgiften avser produktion i havet, i salt eller bräckt vatten." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55153:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:513970:opdef_text. One variable, one description."
 
-
 [[statement]]
 kind = "set"
 subject = "var:sjordy"
 fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten anger sättfisk under alla perioder, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55161:16436:16801\ncatalog:variable_text:55161:16801:17532\ncatalog:variable_text:55161:17532:20089"
-
 
 [[statement]]
 kind = "set"
@@ -4059,13 +3965,11 @@ subject = "var:sjordy-salt"
 fields = { "description" = "Den totala ytan för företagets dammar för odling av sättfisk. Uppgiften avser produktion i havet, i salt eller bräckt vatten." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten anger sättfisk, medan definitionen felaktigt anger matfisk.\ncatalog:variable_text:55162:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:513976:opdef_text. One variable, one description."
 
-
 [[statement]]
 kind = "set"
 subject = "var:slaxr-salt"
 fields = { "description" = "Andel rymlingar bland lax för utsättning, i procent. Uppgiften avser produktion i havet, i salt eller bräckt vatten." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55175:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:513988:opdef_text. One variable, one description."
-
 
 [[statement]]
 kind = "set"
@@ -4073,13 +3977,11 @@ subject = "var:soringr-salt"
 fields = { "description" = "Andel rymlingar bland öring för utsättning, i procent. Uppgiften avser produktion i havet, i salt eller bräckt vatten." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55183:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:513996:opdef_text. One variable, one description."
 
-
 [[statement]]
 kind = "set"
 subject = "var:sovrr-salt"
 fields = { "description" = "Andel rymlingar bland övrig sättfisk (1), i procent. Uppgiften avser produktion i salt eller bräckt havsvatten; arten specificeras i ”Övrig art, sättfisk (1)”." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55197:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:514012:opdef_text. One variable, one description."
-
 
 [[statement]]
 kind = "set"
@@ -4087,13 +3989,11 @@ subject = "var:srblr-salt"
 fields = { "description" = "Andel rymlingar bland regnbåge för utsättning, i procent. Uppgiften avser produktion i havet, i salt eller bräckt vatten." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55209:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:514024:opdef_text. One variable, one description."
 
-
 [[statement]]
 kind = "set"
 subject = "var:srodr-salt"
 fields = { "description" = "Andel rymlingar bland röding för utsättning, i procent. Uppgiften avser produktion i havet, i salt eller bräckt vatten." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger procent under hela perioden; beskrivningen ska ange andel.\ncatalog:variable_text:55220:17532:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:514036:opdef_text. One variable, one description."
-
 
 [[statement]]
 kind = "set"
@@ -4370,24 +4270,6 @@ kind = "set"
 subject = "var:antal-kassar-matfisk-hav"
 fields = { "label" = "Kassar för odling av matfisk, antal, i havet" }
 evidence = "#2102 same-label cluster 'Kassar för odling av matfisk, antal' (2 variables): judged different meaning, medium confidence; MKassa_salt is the sea-water twin from 2018 (opdef); the non-salt column has both havet and sötvatten opdefs, so it keeps the current label."
-
-[[statement]]
-kind = "set"
-subject = "var:antal-odlingar-lan1"
-fields = { "label" = "Antal odlingar, län 1 (Lan1)" }
-evidence = "#2102 same-label cluster 'Antal odlingar' (6 variables): judged different meaning, high confidence; Opdefs: number of farms in county 1, 2 or 3; odling_lan* (2019-2024) and Lan* (2024-2025) share the same opdef text and are renames of each other."
-
-[[statement]]
-kind = "set"
-subject = "var:antal-odlingar-lan2"
-fields = { "label" = "Antal odlingar, län 2 (Lan2)" }
-evidence = "#2102 same-label cluster 'Antal odlingar' (6 variables): judged different meaning, high confidence; Opdefs: number of farms in county 1, 2 or 3; odling_lan* (2019-2024) and Lan* (2024-2025) share the same opdef text and are renames of each other."
-
-[[statement]]
-kind = "set"
-subject = "var:antal-odlingar-lan3"
-fields = { "label" = "Antal odlingar, län 3 (Lan3)" }
-evidence = "#2102 same-label cluster 'Antal odlingar' (6 variables): judged different meaning, high confidence; Opdefs: number of farms in county 1, 2 or 3; odling_lan* (2019-2024) and Lan* (2024-2025) share the same opdef text and are renames of each other."
 
 [[statement]]
 kind = "set"
@@ -5621,18 +5503,6 @@ evidence = "#2102 same-label cluster 'Försäljning av öring (rom eller yngel)'
 
 [[statement]]
 kind = "set"
-subject = "var:forsaljning-av-oring-rom-eller-yngel"
-fields = { "label" = "Försäljning av öring (rom eller yngel), sötvatten (RYOvrf)" }
-evidence = "#2102 same-label cluster 'Försäljning av öring (rom eller yngel)' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; RYOringf's opdef changes over time (none in 2015, 'havet' 2016-18, 'sötvatten' from 2018) so it keeps only its code. RYOringf_salt and RYOvrf_salt have identical opdef (havet) and RYOvrf/RYOringf identical sötvatten text, so codes separate them."
-
-[[statement]]
-kind = "set"
-subject = "var:forsaljning-av-oring-rom-yngel-salt"
-fields = { "label" = "Försäljning av öring (rom eller yngel), i havet (RYOvrf_salt)" }
-evidence = "#2102 same-label cluster 'Försäljning av öring (rom eller yngel)' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; RYOringf's opdef changes over time (none in 2015, 'havet' 2016-18, 'sötvatten' from 2018) so it keeps only its code. RYOringf_salt and RYOvrf_salt have identical opdef (havet) and RYOvrf/RYOringf identical sötvatten text, so codes separate them."
-
-[[statement]]
-kind = "set"
 subject = "var:produktion-regnbage-utsattning-hav-sotvatten-kg"
 fields = { "label" = "Produktion av regnbåge för utsättning (SRblp)" }
 evidence = "#2102 same-label cluster 'Produktion av regnbåge för utsättning' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; SRblp's opdef changes over time (none 2015, 'havet' 2016-18, 'sötvatten' from 2018), so only its code is safe. SRblp_salt and SRblf_salt share the same havet opdef, so codes separate them."
@@ -5641,18 +5511,6 @@ evidence = "#2102 same-label cluster 'Produktion av regnbåge för utsättning' 
 kind = "set"
 subject = "var:produktion-regnbage-utsattning-havet-kg"
 fields = { "label" = "Produktion av regnbåge för utsättning, i havet (SRblp_salt)" }
-evidence = "#2102 same-label cluster 'Produktion av regnbåge för utsättning' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; SRblp's opdef changes over time (none 2015, 'havet' 2016-18, 'sötvatten' from 2018), so only its code is safe. SRblp_salt and SRblf_salt share the same havet opdef, so codes separate them."
-
-[[statement]]
-kind = "set"
-subject = "var:produktion-av-regnbage-for-utsattning"
-fields = { "label" = "Produktion av regnbåge för utsättning, sötvatten (SRblf)" }
-evidence = "#2102 same-label cluster 'Produktion av regnbåge för utsättning' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; SRblp's opdef changes over time (none 2015, 'havet' 2016-18, 'sötvatten' from 2018), so only its code is safe. SRblp_salt and SRblf_salt share the same havet opdef, so codes separate them."
-
-[[statement]]
-kind = "set"
-subject = "var:produktion-av-regnbage-utsattning-salt"
-fields = { "label" = "Produktion av regnbåge för utsättning, i havet (SRblf_salt)" }
 evidence = "#2102 same-label cluster 'Produktion av regnbåge för utsättning' (4 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; SRblp's opdef changes over time (none 2015, 'havet' 2016-18, 'sötvatten' from 2018), so only its code is safe. SRblp_salt and SRblf_salt share the same havet opdef, so codes separate them."
 
 [[statement]]
