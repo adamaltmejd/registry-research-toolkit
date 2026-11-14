@@ -12180,3 +12180,9 @@ kind = "set"
 subject = "var:verkningsgrad"
 fields = { "description" = "Verkningsgrad vid värmeproduktion vid värmeverk och annan värme (så kallad färdig värme). För elnätföretagen anges den normalt till 80–90 procent." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått i båda tabellerna. Exportens värmevärdesrader för samma kolumn hör till syskonvariabeln varmevarde-vid-varmeproduktion (befintlig rolluppdelning) och tas inte med.\ncatalog:variable_text:12219:14245:17897"
+
+[[statement]]
+kind = "set"
+subject = "release:vindkraft/r18456"
+fields = { "period" = "2003.." }
+evidence = "SCB Registerinformation, RegVerID 18456: the only release of Vindkraft is named \"Från år 2003 och framåt\", which the delivery-name grammar does not read, so its documented columns had no period. The name states the start, 2003, and no end. The end stays open (maintainer rule 2026-10-16: an unstated end is no reason to leave a column out)."

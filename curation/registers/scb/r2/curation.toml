@@ -7800,3 +7800,159 @@ kind = "set"
 subject = "var:vardbarnbo"
 fields = { "description" = "Om personen är vårdnadshavare till minst ett barn och om barnet eller barnen är folkbokförda i samma bostad som vårdnadshavaren, i en annan bostad eller båda. Härleds från folkbokföringens uppgifter om vårdnadshavare och barn." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; källan till härledningen anges från 2016 och preciseras från 2020.\ncatalog:variable_text:48711:15339:15340\ncatalog:variable_text:48711:17166:17167\ncatalog:variable_text:48711:18352:18353"
+
+[[statement]]
+kind = "assert"
+subject = "table:civilstandsandringar-skilda-1-3"
+fact = { "entity" = "table", "fields" = { "name" = "Civilståndsändringar, kvartal 1–3", "description" = "Uppgifter för kvartal 1–3 varje år från och med 2010. Helårsuppgifterna finns i tabellen Civilståndsändringar." } }
+evidence = "SCB Registerinformation, RegVerID 13802: the Civilståndsändringar variant has one release per year and one named \"Kvartal 1-3 fr.o.m. 2010\". Its description: \"Innehåller uppgifter som publicerats avseende demografiska händelser kvartal 1-3 från och med 2010.\" It covers quarters 1-3 of every year from 2010, so placed in the annual table it would overlap every annual release from 2010 and join them into one segment per variable, ambiguous wherever the annual value sets differ by year. It gets a table of its own."
+
+[[statement]]
+kind = "set"
+subject = "release:civilstandsandringar-skilda/r13802"
+fields = { "period" = "2010.." }
+evidence = "SCB Registerinformation, RegVerID 13802: the release is named \"Kvartal 1-3 fr.o.m. 2010\", which the delivery-name grammar does not read, so its documented columns had no period. It holds quarters 1-3 from 2010 on, with no end year stated; the variant's coverage is already open-ended. The end stays open (maintainer rule 2026-10-16: an unstated end is no reason to leave a column out)."
+
+[[statement]]
+kind = "set"
+subject = "release:civilstandsandringar-skilda/r13802"
+fields = { "table" = "civilstandsandringar-skilda-1-3" }
+evidence = "The quarters 1-3 release (RegVerID 13802) is a separate SCB file beside the annual releases of Civilståndsändringar. Moved whole to its own table so that it does not overlap the annual releases."
+
+[[statement]]
+kind = "assert"
+subject = "table:doda-kvartal-1-3"
+fact = { "entity" = "table", "fields" = { "name" = "Döda, kvartal 1–3", "description" = "Uppgifter för kvartal 1–3 varje år från och med 2010. Helårsuppgifterna finns i tabellen Döda." } }
+evidence = "SCB Registerinformation, RegVerID 13811: the Döda variant has one release per year and one named \"Kvartal 1-3 fr.o.m. 2010\". Its description: \"Innehåller uppgifter som publicerats avseende demografiska händelser kvartal 1-3 från och med 2010.\" It covers quarters 1-3 of every year from 2010, so placed in the annual table it would overlap every annual release from 2010 and join them into one segment per variable, ambiguous wherever the annual value sets differ by year. It gets a table of its own."
+
+[[statement]]
+kind = "set"
+subject = "release:doda-kvartal/r13811"
+fields = { "period" = "2010.." }
+evidence = "SCB Registerinformation, RegVerID 13811: the release is named \"Kvartal 1-3 fr.o.m. 2010\", which the delivery-name grammar does not read, so its documented columns had no period. It holds quarters 1-3 from 2010 on, with no end year stated; the variant's coverage is already open-ended. The end stays open (maintainer rule 2026-10-16: an unstated end is no reason to leave a column out)."
+
+[[statement]]
+kind = "set"
+subject = "release:doda-kvartal/r13811"
+fields = { "table" = "doda-kvartal-1-3" }
+evidence = "The quarters 1-3 release (RegVerID 13811) is a separate SCB file beside the annual releases of Döda. Moved whole to its own table so that it does not overlap the annual releases."
+
+[[statement]]
+kind = "assert"
+subject = "table:fodda-kvartal-1-3"
+fact = { "entity" = "table", "fields" = { "name" = "Födda, kvartal 1–3", "description" = "Uppgifter för kvartal 1–3 varje år från och med 2010. Helårsuppgifterna finns i tabellen Födda." } }
+evidence = "SCB Registerinformation, RegVerID 13813: the Födda variant has one release per year and one named \"Kvartal 1-3 fr.o.m. 2010\". It covers quarters 1-3 of every year from 2010, so placed in the annual table it would overlap every annual release from 2010 and join them into one segment per variable, ambiguous wherever the annual value sets differ by year. It gets a table of its own."
+
+[[statement]]
+kind = "set"
+subject = "release:fodda-kvartal/r13813"
+fields = { "period" = "2010.." }
+evidence = "SCB Registerinformation, RegVerID 13813: the release is named \"Kvartal 1-3 fr.o.m. 2010\", which the delivery-name grammar does not read, so its documented columns had no period. It holds quarters 1-3 from 2010 on, with no end year stated; the variant's coverage is already open-ended. The end stays open (maintainer rule 2026-10-16: an unstated end is no reason to leave a column out)."
+
+[[statement]]
+kind = "set"
+subject = "release:fodda-kvartal/r13813"
+fields = { "table" = "fodda-kvartal-1-3" }
+evidence = "The quarters 1-3 release (RegVerID 13813) is a separate SCB file beside the annual releases of Födda. Moved whole to its own table so that it does not overlap the annual releases."
+
+[[statement]]
+kind = "assert"
+subject = "table:folkbokforda-personer-kvartal-1-3"
+fact = { "entity" = "table", "fields" = { "name" = "Folkbokförda personer, kvartal 1–3", "description" = "Uppgifter för kvartal 1–3 varje år från och med 2009. Helårsuppgifterna finns i tabellen Folkbokförda personer." } }
+evidence = "SCB Registerinformation, RegVerID 13829: the Folkbokförda personer variant has one release per year and one named \"Kvartal 1-3 fr.o.m. 2009\". It covers quarters 1-3 of every year from 2009, so placed in the annual table it would overlap every annual release from 2009 and join them into one segment per variable, ambiguous wherever the annual value sets differ by year. It gets a table of its own."
+
+[[statement]]
+kind = "set"
+subject = "release:folkbokforda-personer-kvartal/r13829"
+fields = { "period" = "2009.." }
+evidence = "SCB Registerinformation, RegVerID 13829: the release is named \"Kvartal 1-3 fr.o.m. 2009\", which the delivery-name grammar does not read, so its documented columns had no period. It holds quarters 1-3 from 2009 on, with no end year stated; the variant's coverage is already open-ended. The end stays open (maintainer rule 2026-10-16: an unstated end is no reason to leave a column out)."
+
+[[statement]]
+kind = "set"
+subject = "release:folkbokforda-personer-kvartal/r13829"
+fields = { "table" = "folkbokforda-personer-kvartal-1-3" }
+evidence = "The quarters 1-3 release (RegVerID 13829) is a separate SCB file beside the annual releases of Folkbokförda personer. Moved whole to its own table so that it does not overlap the annual releases."
+
+[[statement]]
+kind = "assert"
+subject = "table:inrikes-flyttningar-kvartal-1-3"
+fact = { "entity" = "table", "fields" = { "name" = "Inrikes flyttningar, kvartal 1–3", "description" = "Uppgifter för kvartal 1–3 varje år från och med 2010. Helårsuppgifterna finns i tabellen Inrikes flyttningar." } }
+evidence = "SCB Registerinformation, RegVerID 13814: the Inrikes flyttningar variant has one release per year and one named \"Kvartal 1-3 fr.o.m 2010\". It covers quarters 1-3 of every year from 2010, so placed in the annual table it would overlap every annual release from 2010 and join them into one segment per variable, ambiguous wherever the annual value sets differ by year. It gets a table of its own."
+
+[[statement]]
+kind = "set"
+subject = "release:inrikes-flyttningar-kvartal/r13814"
+fields = { "period" = "2010.." }
+evidence = "SCB Registerinformation, RegVerID 13814: the release is named \"Kvartal 1-3 fr.o.m 2010\", which the delivery-name grammar does not read, so its documented columns had no period. It holds quarters 1-3 from 2010 on, with no end year stated; the variant's coverage is already open-ended. The end stays open (maintainer rule 2026-10-16: an unstated end is no reason to leave a column out)."
+
+[[statement]]
+kind = "set"
+subject = "release:inrikes-flyttningar-kvartal/r13814"
+fields = { "table" = "inrikes-flyttningar-kvartal-1-3" }
+evidence = "The quarters 1-3 release (RegVerID 13814) is a separate SCB file beside the annual releases of Inrikes flyttningar. Moved whole to its own table so that it does not overlap the annual releases."
+
+[[statement]]
+kind = "assert"
+subject = "table:invandringar-kvartal-1-3"
+fact = { "entity" = "table", "fields" = { "name" = "Invandringar, kvartal 1–3", "description" = "Uppgifter för kvartal 1–3 varje år från och med 2010. Helårsuppgifterna finns i tabellen Invandringar." } }
+evidence = "SCB Registerinformation, RegVerID 13815: the Invandringar variant has one release per year and one named \"Kvartal 1-3 fr.o.m 2010\". Its description: \"Innehåller uppgifter som publicerats avseende demografiska händelser kvartal 1-3 från och med 2010.\" It covers quarters 1-3 of every year from 2010, so placed in the annual table it would overlap every annual release from 2010 and join them into one segment per variable, ambiguous wherever the annual value sets differ by year. It gets a table of its own."
+
+[[statement]]
+kind = "set"
+subject = "release:invandringar-kvartal/r13815"
+fields = { "period" = "2010.." }
+evidence = "SCB Registerinformation, RegVerID 13815: the release is named \"Kvartal 1-3 fr.o.m 2010\", which the delivery-name grammar does not read, so its documented columns had no period. It holds quarters 1-3 from 2010 on, with no end year stated; the variant's coverage is already open-ended. The end stays open (maintainer rule 2026-10-16: an unstated end is no reason to leave a column out)."
+
+[[statement]]
+kind = "set"
+subject = "release:invandringar-kvartal/r13815"
+fields = { "table" = "invandringar-kvartal-1-3" }
+evidence = "The quarters 1-3 release (RegVerID 13815) is a separate SCB file beside the annual releases of Invandringar. Moved whole to its own table so that it does not overlap the annual releases."
+
+[[statement]]
+kind = "assert"
+subject = "table:medborgarskapsandringar-kvartal-1-3"
+fact = { "entity" = "table", "fields" = { "name" = "Medborgarskapsändringar, kvartal 1–3", "description" = "Uppgifter för kvartal 1–3 varje år från och med 2010. Helårsuppgifterna finns i tabellen Medborgarskapsändringar." } }
+evidence = "SCB Registerinformation, RegVerID 13824: the Medborgarskapsändringar variant has one release per year and one named \"Kvartal 1-3 fr.o.m. 2010\". It covers quarters 1-3 of every year from 2010, so placed in the annual table it would overlap every annual release from 2010 and join them into one segment per variable, ambiguous wherever the annual value sets differ by year. It gets a table of its own."
+
+[[statement]]
+kind = "set"
+subject = "release:medborgarskapsandringar-kvartal/r13824"
+fields = { "period" = "2010.." }
+evidence = "SCB Registerinformation, RegVerID 13824: the release is named \"Kvartal 1-3 fr.o.m. 2010\", which the delivery-name grammar does not read, so its documented columns had no period. It holds quarters 1-3 from 2010 on, with no end year stated; the variant's coverage is already open-ended. The end stays open (maintainer rule 2026-10-16: an unstated end is no reason to leave a column out)."
+
+[[statement]]
+kind = "set"
+subject = "release:medborgarskapsandringar-kvartal/r13824"
+fields = { "table" = "medborgarskapsandringar-kvartal-1-3" }
+evidence = "The quarters 1-3 release (RegVerID 13824) is a separate SCB file beside the annual releases of Medborgarskapsändringar. Moved whole to its own table so that it does not overlap the annual releases."
+
+[[statement]]
+kind = "assert"
+subject = "table:utvandringar-kvartal-1-3"
+fact = { "entity" = "table", "fields" = { "name" = "Utvandringar, kvartal 1–3", "description" = "Uppgifter för kvartal 1–3 varje år från och med 2010. Helårsuppgifterna finns i tabellen Utvandringar." } }
+evidence = "SCB Registerinformation, RegVerID 13818: the Utvandringar variant has one release per year and one named \"Kvartal 1-3 fr.o.m. 2010\". It covers quarters 1-3 of every year from 2010, so placed in the annual table it would overlap every annual release from 2010 and join them into one segment per variable, ambiguous wherever the annual value sets differ by year. It gets a table of its own."
+
+[[statement]]
+kind = "set"
+subject = "release:utvandringar-kvartal/r13818"
+fields = { "period" = "2010.." }
+evidence = "SCB Registerinformation, RegVerID 13818: the release is named \"Kvartal 1-3 fr.o.m. 2010\", which the delivery-name grammar does not read, so its documented columns had no period. It holds quarters 1-3 from 2010 on, with no end year stated; the variant's coverage is already open-ended. The end stays open (maintainer rule 2026-10-16: an unstated end is no reason to leave a column out)."
+
+[[statement]]
+kind = "set"
+subject = "release:utvandringar-kvartal/r13818"
+fields = { "table" = "utvandringar-kvartal-1-3" }
+evidence = "The quarters 1-3 release (RegVerID 13818) is a separate SCB file beside the annual releases of Utvandringar. Moved whole to its own table so that it does not overlap the annual releases."
+
+[[statement]]
+kind = "set"
+subject = "folkbokforda-personer-kvartal: nuts2_eu where release = 'r13829'"
+fields = { "period" = "2011-Q3..2020-Q3" }
+evidence = "SCB Registerinformation, RegVerID 13829 (Kvartal 1-3 fr.o.m. 2009), NUTS2_EU \"Boenderegion\", operational definition: \"Personens folkbokföringslän indelat i NUTS2-områden. Finns fr.o.m. 2011 kvartal 3 t.o.m. 2020 kvartal 3.\" Over the release's open period from 2009 it would overlap NUTS3_EU under the same VarId 27162 and split Boenderegion by spelling across the register."
+
+[[statement]]
+kind = "set"
+subject = "folkbokforda-personer-kvartal: nuts3_eu where release = 'r13829'"
+fields = { "period" = "2021-Q1.." }
+evidence = "SCB Registerinformation, RegVerID 13829 (Kvartal 1-3 fr.o.m. 2009), NUTS3_EU \"Boenderegion\", operational definition: \"Personens folkbokföringslän indelat i NUTS3-områden. Finns fr.o.m. 2021 kvartal 1.\" The end stays open, like the release's."

@@ -116,7 +116,7 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/ulf.toml:2338\n\nS
 
 [[statement]]
 kind = "set"
-subject = "individer-16plus-ulf: sy0352 where release = 'r737'"
+subject = "individer-16plus-ulf-1989-old: sy0352"
 fields = { "unit" = "Antal personer" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ulf.toml:1562\n\nThe source defines Antal anställda i företaget and the units differ only by letter case. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
 
@@ -134,13 +134,13 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/ulf.toml:1502\n\nT
 
 [[statement]]
 kind = "set"
-subject = "individer-16plus-ulf: sy0311 where release = 'r737'"
+subject = "individer-16plus-ulf-1989-old: sy0311"
 fields = { "unit" = "Antal gånger" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ulf.toml:1478\n\nThe source definition explicitly states Kod = Antal gånger. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individer-16plus-ulf: sy0321 where release = 'r737'"
+subject = "individer-16plus-ulf-1989-old: sy0321"
 fields = { "unit" = "Antal gånger" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ulf.toml:1466\n\nThe source definition explicitly states Kod = Antal gånger. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
 
@@ -152,19 +152,19 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/ulf.toml:1550\n\nT
 
 [[statement]]
 kind = "set"
-subject = "individer-16plus-ulf: ut0670 where release = 'r737'"
+subject = "individer-16plus-ulf-1989-old: ut0670"
 fields = { "unit" = "Antal månader" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ulf.toml:1514\n\nThe source field is named Utbildning3 antal mån; its companion 1989 occurrence explicitly defines the number of months beyond the reported years of schooling. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individer-16plus-ulf: ut0730 where release = 'r737'"
+subject = "individer-16plus-ulf-1989-old: ut0730"
 fields = { "unit" = "Antal timmar" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ulf.toml:1526\n\nThe source field is named Utbildning3 antal tim and its companion 1989 occurrence declares Antal timmar. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "individer-16plus-ulf: ut0640 where release = 'r737'"
+subject = "individer-16plus-ulf-1989-old: ut0640"
 fields = { "unit" = "Antal år" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ulf.toml:1538\n\nThe source field is named Utbildning3 antal år; its companion 1989 occurrence declares Antal år for the vocational training duration. Normalize only the equivalent unit wording for this exact 1989 source occurrence; no magnitude or scale conversion. Every original field, storage type, period and coding association remains unchanged. Complete conflict evidence: Batch47-ULF-unit-exact-conflict-evidence.json; compiler proof: Batch47-ULF-unit-correction-source-proof.json."
 
@@ -27284,7 +27284,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF1989.toml:20\
 
 [[statement]]
 kind = "set"
-subject = "individer-16plus-ulf: ba0040 where release = 'r737'"
+subject = "individer-16plus-ulf-1989-old: ba0040"
 fields = { "classification" = "class/lkf/lkf1989" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF1989.toml:20\n\nLegacy exact value-set label: LKF 1989-01-01/ Län, kommuner och församlingar"
 
@@ -114400,3 +114400,27 @@ kind = "set"
 subject = "individer-16-84-ar-ulf: TK0083 @1990 where key = 'v18400'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, ULF 1990_old (RegVerID 736) documents column TK0083 twice: under VarId 18399 \"Tillgång till butiksbuss vid långt avstånd\", as in 1991 (RegVerID 735), and under VarId 18400 \"Tillgång till lantbrevbärare vid avstånd\", the VarId of column TK0094 in 1982 and 1983. One column cannot be two variables; the 18400 row is a documentation duplicate and is withheld."
+
+[[statement]]
+kind = "assert"
+subject = "table:individer-16plus-ulf-1989-old"
+fact = { "entity" = "table", "fields" = { "name" = "Individer 16 år och uppåt (ULF), 1989_old", "description" = "SCB:s äldre dokumentation av ULF 1989 (registerversionen 1989_old): urvalet har gjorts år 1989, 6 782 intervjuer med personer 16 år och äldre. Undersökningen dokumenteras också i versionen 1989 av tabellen Individer 16 år och uppåt (ULF); de flesta kolumnerna finns i båda." } }
+evidence = "SCB Registerinformation, RegVerID 737 \"1989_old\" of the Individer 16 år och uppåt (ULF) variant: \"Urvalet har gjorts år 1989\", measurement \"6782 intervjuer 16+ år\", first approved 2009-06-29. The same variant has the release \"1989\" (RegVerID 20238, \"Urvalet har gjorts år 1989.\"), which documents most of the same columns under the same VarIds. In one table the two releases collide (F8): 1,019 of 1989_old's occurrences were shadowed, and its other columns turned ten 1989 segments ambiguous. It gets a table of its own, so its own columns are orderable."
+
+[[statement]]
+kind = "set"
+subject = "release:individer-16plus-ulf/r737"
+fields = { "period" = "1989" }
+evidence = "SCB Registerinformation, RegVerID 737: the ULF release is named \"1989_old\", which the delivery-name grammar does not read, so its documented columns had no period. SCB describes it as \"Urvalet har gjorts år 1989\": survey year 1989."
+
+[[statement]]
+kind = "set"
+subject = "release:individer-16plus-ulf/r737"
+fields = { "table" = "individer-16plus-ulf-1989-old" }
+evidence = "1989_old (RegVerID 737) is SCB's second documentation of the 1989 survey beside the release \"1989\" (RegVerID 20238). Moved whole to its own table so that neither shadows the other and its own columns are placed."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf-1989-old: ha0333 where key = 'v11037'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, RegVerID 737 (1989_old) lists the one column HA0333 twice: under VarId 11037 \"Hjälp med dagliga sysslor\" (\"Skulle Ni behöva få hjälp med Era dagliga sysslor?\") and under VarId 18415 \"Hjälp med dagliga sysslor långvarig sjukdom\". The release \"1989\" (RegVerID 20238) of the same survey and every other ULF release document HA0333 only under VarId 18415, so that listing owns the column; VarId 11037 occurs nowhere else. A duplicate listing of a column placed through another occurrence; without this the 1989_old segment of HA0333 was ambiguous."
