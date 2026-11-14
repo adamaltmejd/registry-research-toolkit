@@ -494,16 +494,16 @@ classification bindings. Accepting one requires reviewed curation and a premise 
   value-set identity; revisit when a dropped scoped entry needs it. Register name
   corrections that differ from source remain deferred: they need a register address in
   the grammar.
-- `curation.lock` is minified canonical JSON with `version = 3` and normalized statement
+- `curation.lock` is minified canonical JSON with `version = 4` and normalized statement
   hashes as keys. The top-level `objects` map stores each full object once, keyed by the
   SHA-256 of its canonical JSON. Each statement's `objects` is a sorted list of those
   keys; `subjects` is unchanged. References are resolved and digest keys checked when
-  reading. Object order is not semantic; comparison uses canonical full-object order,
-  retaining field-level old/new diagnostics rather than reporting only changed hashes.
-  Versions 1 and 2 refuse with an instruction to run `reg-build lock`; locks are
-  regenerated, never migrated. Variable-level setters are `var:` setters containing only
-  `sets`, `tags`, `label`, `description`, `definition` or `operational_definition`.
-  Their locked `subjects` record the variable slug, distinct matched locator count and
+  reading. Object order is not semantic. A changed premise is reported row by row,
+  matched by locator and kind: each row names its kind and address and is `added`,
+  `removed` or its changed fields with old/new values. Older versions refuse with an
+  instruction to run `reg-build lock`; locks are regenerated, never migrated.
+  Variable-level setters are `var:` setters containing only `sets`, `tags`, `label`,
+  `description`, `definition` or `operational_definition`. Their locked `subjects` record the variable slug, distinct matched locator count and
   SHA-256 of the sorted canonical locator JSON lines. Changed membership refuses with
   the variable subject and old/new counts, even when the counts are equal. Occurrence
   field values and container facts (register, table and release objects) are not
@@ -520,8 +520,18 @@ classification bindings. Accepting one requires reviewed curation and a premise 
   facts, including the destination facts used by table moves. Dependencies are evidence,
   never extra rows selected for rewriting. Missing or changed premises, empty or
   ambiguous selectors, and conflicts are located refusals. Release builds fail; dev
-  builds skip refused statements and report them. A `set` equal to the source is a
+  builds skip refused statements and report them. An error raised after statements were
+  skipped (a ledger anchor a skipped move made stale) lists those refusals first, as
+  the likely cause. A `set` equal to the source is a
   redundant-set finding.
+- A premise pins what its statement depends on and nothing that grows with unrelated
+  inputs (#2471). A value set is content-addressed: the lock keeps one object per hash
+  (`value_set` locator `at = <hash>`, fields `kind`, `hash`, `items`), not the records
+  of every input that states those items or the names each gives them, so another
+  provider reusing an SCB code list moves no lock. A changed list still refuses, since
+  the occurrence's `value_set` hash in the subject rows moves. A classification
+  version is addressed by its FQID (`classification` locator), not its authoring line.
+  The in-memory premise keeps the records: application finds them by locator.
 - Source premise field projections and their canonical sort keys are shared per source
   within each immutable view. Statement, conflict and lock bookkeeping clone shared
   snapshots. Field applications retain before/after records only for changed facts,

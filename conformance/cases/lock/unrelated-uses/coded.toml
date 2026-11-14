@@ -1,0 +1,8 @@
+
+# Appended to the classification-pins fixture's statements: a setter whose premise reads
+# the occurrence's code list.
+[[statement]]
+kind = "set"
+subject = "pins: Kod @2019"
+fields.coded = true
+evidence = "The 2019 code column holds the listed codes."

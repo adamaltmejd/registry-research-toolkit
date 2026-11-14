@@ -48,7 +48,7 @@ impl Lock {
             })
             .collect();
         Self {
-            version: 3,
+            version: 4,
             objects,
             statements,
         }
@@ -174,10 +174,40 @@ impl LockedPremise {
                         Some("register" | "table" | "release")
                     )
             })
-            .cloned()
+            .map(locked_object)
             .collect::<Vec<_>>();
         objects.sort_by_cached_key(reg_frame::canonical_line);
+        objects.dedup();
         Self { subjects, objects }
+    }
+}
+
+/// A value set is content-addressed: a statement reads its items, never which inputs
+/// state it or the names they give it. Those grow with unrelated inputs (another
+/// provider's transcription reusing a common code list), so the lock keeps one object per
+/// hash. Its items still change only with the hash, which the subject rows pin (#2471).
+fn locked_object(object: &SourcePremise) -> SourcePremise {
+    let field = |name: &str| {
+        object
+            .fields
+            .get(name)
+            .cloned()
+            .unwrap_or(serde_json::Value::Null)
+    };
+    if field("kind") != "value_set" {
+        return object.clone();
+    }
+    let hash = field("hash");
+    SourcePremise {
+        locator: reg_frame::Locator {
+            input: "value_set".into(),
+            at: hash.as_str().expect("a value set has a hash").to_owned(),
+        },
+        fields: std::sync::Arc::new(BTreeMap::from([
+            ("kind".to_owned(), field("kind")),
+            ("hash".to_owned(), hash),
+            ("items".to_owned(), field("items")),
+        ])),
     }
 }
 
@@ -391,10 +421,15 @@ fn references(
                         })
                         .unwrap_or(serde_json::Value::Null),
                 );
+                // Addressed by its FQID, not its authoring line: an entry inserted above
+                // it must not change the premise of statements that cite it (#2471).
                 references.insert(
                     object.clone(),
                     vec![reg_resolve::curation::SourcePremise {
-                        locator: class.locator.clone(),
+                        locator: reg_frame::Locator {
+                            input: "classification".into(),
+                            at: object.clone(),
+                        },
                         fields: fields.into(),
                     }],
                 );
@@ -654,8 +689,75 @@ fn inventory(root: &Path, records: &[Record]) -> Result<Applied> {
     Ok(out)
 }
 
-/// Field-level old/new values, including additions and removals. Array indexes are
-/// stable because the resolver sorts source premises by locator and canonical fields.
+/// Premise rows matched by locator and kind (a register and its implicit table share a
+/// locator), so one added or removed row is reported as that row rather than shifting
+/// every row after it: what kind of fact, where, and either "added", "removed" or its
+/// changed fields.
+fn row_changes(
+    side: &str,
+    old: &[SourcePremise],
+    new: &[SourcePremise],
+    out: &mut Vec<String>,
+) -> Result<()> {
+    fn by_locator(rows: &[SourcePremise]) -> BTreeMap<(String, String), Vec<&SourcePremise>> {
+        let mut map = BTreeMap::<_, Vec<_>>::new();
+        for row in rows {
+            let kind = row.fields.get("kind").map(ToString::to_string);
+            map.entry((
+                reg_frame::canonical_line(&row.locator),
+                kind.unwrap_or_default(),
+            ))
+            .or_default()
+            .push(row);
+        }
+        map
+    }
+    let (old, new) = (by_locator(old), by_locator(new));
+    for locator in old.keys().chain(new.keys()).collect::<BTreeSet<_>>() {
+        let (before, after) = (
+            old.get(locator).map_or(&[][..], Vec::as_slice),
+            new.get(locator).map_or(&[][..], Vec::as_slice),
+        );
+        if before == after {
+            continue;
+        }
+        let row = before.first().or(after.first()).expect("a row on one side");
+        let name = format!("{side} {}", row_name(row));
+        match (before, after) {
+            ([], _) => out.push(format!("{name}: added")),
+            (_, []) => out.push(format!("{name}: removed")),
+            ([before], [after]) => changes(
+                &serde_json::to_value(&before.fields)?,
+                &serde_json::to_value(&after.fields)?,
+                &name,
+                out,
+            ),
+            _ => changes(
+                &serde_json::to_value(before)?,
+                &serde_json::to_value(after)?,
+                &name,
+                out,
+            ),
+        }
+    }
+    Ok(())
+}
+
+/// A premise row's kind and address, as a curator would look it up.
+fn row_name(row: &SourcePremise) -> String {
+    let kind = row
+        .fields
+        .get("kind")
+        .and_then(serde_json::Value::as_str)
+        .unwrap_or(&row.locator.input);
+    match kind {
+        "value_set" => format!("value set {}", row.locator.at),
+        "classification" => format!("classification {}", row.locator.at),
+        kind => format!("{kind} {}:{}", row.locator.input, row.locator.at),
+    }
+}
+
+/// Field-level old/new values, including additions and removals.
 fn changes(old: &serde_json::Value, new: &serde_json::Value, path: &str, out: &mut Vec<String>) {
     if old == new {
         return;
@@ -930,6 +1032,28 @@ impl Refusal {
     }
 }
 
+/// An error raised after refused statements were skipped may be their consequence: a
+/// skipped move can leave a ledger anchor's source key unneeded. The refusals, the
+/// likely cause, are reported before it (#2471).
+pub(super) fn after_refusals(
+    refusals: &[Refusal],
+    error: crate::error::Error,
+) -> crate::error::Error {
+    if refusals.is_empty() {
+        return error;
+    }
+    format!(
+        "{} curation refusals, reported first; the error after them may follow from the skipped statements:\n  {}\nthen: {error}",
+        refusals.len(),
+        refusals
+            .iter()
+            .map(|r| r.message.replace('\n', "\n    "))
+            .collect::<Vec<_>>()
+            .join("\n  ")
+    )
+    .into()
+}
+
 fn refusal_findings(refusals: &[Refusal], record: bool) -> Result<Vec<String>> {
     if record && !refusals.is_empty() {
         return Err(refusals
@@ -1145,9 +1269,9 @@ fn previous(path: &Path, record: bool) -> Result<Reviewed> {
     let text = std::fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?;
     let value: serde_json::Value = serde_json::from_str(&text)
         .map_err(|e| format!("{}: invalid premise lock: {e}", path.display()))?;
-    if value["version"] != 3 {
+    if value["version"] != 4 {
         return Err(format!(
-            "{}: unsupported premise lock version {}; run reg-build lock to re-lock with version 3",
+            "{}: unsupported premise lock version {}; run reg-build lock to re-lock with version 4",
             path.display(),
             value["version"]
         )
@@ -1190,12 +1314,19 @@ fn checked_premise(
                     "var:{variable}: matched rows changed (old count {old_count}, new count {count})"
                 ));
             }
-            changes(
-                &serde_json::to_value(previous)?,
-                &serde_json::to_value(&premise)?,
-                "premise",
-                &mut diff,
-            );
+            if let (LockedSubjects::Rows(old), LockedSubjects::Rows(new)) =
+                (&previous.subjects, &premise.subjects)
+            {
+                row_changes("subject", old, new, &mut diff)?;
+            } else {
+                changes(
+                    &serde_json::to_value(&previous.subjects)?,
+                    &serde_json::to_value(&premise.subjects)?,
+                    "subjects",
+                    &mut diff,
+                );
+            }
+            row_changes("object", &previous.objects, &premise.objects, &mut diff)?;
             Err(format!("premise-changed:\n  {}", diff.join("\n  ")).into())
         }
         Some(_) => Ok(()),
@@ -1247,7 +1378,8 @@ fn run_selected(
             .copied()
             .filter(|s| !refused(s))
             .collect::<Vec<_>>();
-        let mut rerun = run_selected(root, retired, &retained, outputs, record, registers, base)?;
+        let mut rerun = run_selected(root, retired, &retained, outputs, record, registers, base)
+            .map_err(|e| after_refusals(&refusals, e))?;
         rerun.findings.extend(skipped);
         rerun.refusals.extend(refusals);
         Ok::<_, crate::error::Error>(rerun)
@@ -1792,7 +1924,8 @@ fn run_selected(
             &result.variables,
             &result.metadata,
             &result.classifications,
-        )?;
+        )
+        .map_err(|e| after_refusals(&refusals, e))?;
         crate::timing::done("curation links: resolve catalog", t);
         let linked = crate::link::curate(root, &resolved, &records, &result.links, base)?;
         if !linked.refusals.is_empty() {
@@ -1936,7 +2069,8 @@ fn run_selected(
                 &result.variables,
                 &result.metadata,
                 &result.classifications,
-            )?,
+            )
+            .map_err(|e| after_refusals(&refusals, e))?,
         };
         let invalid = reg_resolve::curation::validate_set_presentation(&resolved, &result.sets);
         result.resolved = Some(resolved);

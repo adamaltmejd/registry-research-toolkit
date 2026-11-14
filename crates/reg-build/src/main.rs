@@ -484,7 +484,8 @@ fn build_with_provenance(
         &applied,
         precomputed,
         base,
-    )?;
+    )
+    .map_err(|e| curation::after_refusals(&applied.refusals, e))?;
     timing::done("resolve", t);
     if base.is_none() {
         steward_names::ids(&args.curation, &resolved)?;
