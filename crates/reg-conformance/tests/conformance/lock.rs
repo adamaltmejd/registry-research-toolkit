@@ -688,7 +688,11 @@ fn unrelated_code_list_uses_keep_the_premise() {
     write(&statements, &(read(&statements).unwrap() + &coded)).unwrap();
     curated("lock", &inputs, &curation, &[]).ok();
 
-    fs::copy(inputs.join("codes/kind.csv"), inputs.join("codes/another.csv")).unwrap();
+    fs::copy(
+        inputs.join("codes/kind.csv"),
+        inputs.join("codes/another.csv"),
+    )
+    .unwrap();
     let classifications = curation.join("classifications.toml");
     let shifted = format!("# Inserted above.\n{}", read(&classifications).unwrap());
     write(&classifications, &shifted).unwrap();
