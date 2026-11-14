@@ -25,7 +25,6 @@ const UNIT_IDS: &[&str] = &[
     "orgnr-12",
     "person-orgnr",
     "personnr",
-    "personnummer-personnr-scb",
     "persid",
     "pnr",
 ];
