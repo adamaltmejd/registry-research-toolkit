@@ -7100,13 +7100,7 @@ evidence = "SCB Registerinformation table description of Barn-ULF 10-18 år: \"b
 
 [[statement]]
 kind = "set"
-subject = "barn-ulf-10-18-ar: var:barnid"
-fields.row_key = true
-evidence = "Row key: barnid identify a row: one row per surveyed child; the household id is an attribute (maintainer ruling 2026-11-14)."
-
-[[statement]]
-kind = "set"
-subject = "barn-ulf-12-18-ar: var:barnid"
+subject = "barn-ulf: var:barnid"
 fields.row_key = true
 evidence = "Row key: barnid identify a row: one row per surveyed child; the household id is an attribute (maintainer ruling 2026-11-14)."
 

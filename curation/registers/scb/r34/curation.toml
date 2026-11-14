@@ -24203,12 +24203,7 @@ evidence = "Row key: person-orgnr is the table's only identifier and names its u
 
 [[statement]]
 kind = "set"
-subject = "individer-15plus: var:personnr"
+subject = "individer: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: one row per person; employer, workplace, family and household ids are attributes (maintainer ruling 2026-11-14)."
 
-[[statement]]
-kind = "set"
-subject = "individer-16plus: var:personnr"
-fields.row_key = true
-evidence = "Row key: personnr identify a row: one row per person; employer, workplace, family and property ids are attributes (maintainer ruling 2026-11-14)."

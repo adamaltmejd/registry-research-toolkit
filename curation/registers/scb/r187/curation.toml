@@ -1502,12 +1502,6 @@ evidence = "Row key: verksamhetsenhetens-identitetsnummer-venr identify a row: o
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: var:verksamhetsenhetens-identitetsnummer-venr"
-fields.row_key = true
-evidence = "Row key: verksamhetsenhetens-identitetsnummer-venr identify a row: one row per surveyed kind-of-activity unit and month, keyed on venr over all years; observation, organisation and user ids are attributes (maintainer ruling 2026-11-14)."
-
-[[statement]]
-kind = "set"
 subject = "industrins-orderingang: var:verksamhetsenhetens-identitetsnummer-venr"
 fields.row_key = true
 evidence = "Row key: verksamhetsenhetens-identitetsnummer-venr identify a row: one row per surveyed kind-of-activity unit and month, keyed on venr; observation and organisation numbers are attributes (maintainer ruling 2026-11-14)."
