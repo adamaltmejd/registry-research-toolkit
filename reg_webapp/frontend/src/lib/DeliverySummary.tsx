@@ -178,6 +178,19 @@ export function DeliverySummary({
                 periods: [entry.period],
               });
           }
+          // A table the catalog merged from several of the provider's tables
+          // is delivered under the provider's name for each stretch of years.
+          const delivered = new Map<string, CatalogPeriod[]>();
+          if (
+            group.entries.some(
+              (entry) => entry.delivered_table !== entry.table_name,
+            )
+          )
+            for (const entry of group.entries) {
+              const seen = delivered.get(entry.delivered_table);
+              if (seen) seen.push(entry.period);
+              else delivered.set(entry.delivered_table, [entry.period]);
+            }
           return (
             <section
               key={key}
@@ -246,6 +259,19 @@ export function DeliverySummary({
                         <span className={styles.years}>
                           {yearsOf(periodsLess(clip.requested, clip.ordered))}
                         </span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {delivered.size > 0 && (
+                <div className={styles.fact}>
+                  <span className="micro-label">Delivered as</span>
+                  <ul className={styles.plainList}>
+                    {[...delivered].map(([name, periods]) => (
+                      <li key={name}>
+                        {name}{" "}
+                        <span className={styles.years}>{yearsOf(periods)}</span>
                       </li>
                     ))}
                   </ul>

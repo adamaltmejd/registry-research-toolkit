@@ -274,6 +274,7 @@ instructions come from `/api/context`, never from code.
   | Column, variable                                                  | binding                                |
   | Check                                                             | draft check, catalog check             |
   | Years not available                                               | period adjustments, clips              |
+  | Delivered as                                                      | delivered table, era                   |
   | Has warnings, Has problems, Can't download yet                    | warnings, errors, order blocked        |
   | (nothing: a ready project shows no verdict)                       | valid, ready                           |
   | Check did not run                                                 | check failed, error, unchecked         |
@@ -1259,7 +1260,9 @@ grow new visual language meanwhile.
   as a column pill (with its years only where they differ from the table's) beside the
   variable's name, "Years not available" per column the period asks more of than the
   table has or the steward has data for (a year without data is not listed as
-  delivered, #2220), and the "Row identifier" columns. There is no order-file download: the
+  delivered, #2220), "Delivered as" for a table the catalog merged from several of the
+  provider's tables (each provider table's name with its years, the name an order uses;
+  absent otherwise), and the "Row identifier" columns. There is no order-file download: the
   steward's instructions say how to order. With no project the page is one `EmptyState`,
   "No project yet", with "Create a project" and "Open a project file…". Below
   `breakpoint-narrow` a column's row on a card stacks: its name and Remove, its spans,
