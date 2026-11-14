@@ -1165,3 +1165,15 @@ kind = "set"
 subject = "set:land-for-import-export"
 fields = { "description" = "Det land som bränslen importeras från eller exporteras till, angivet som landkod och som landnamn." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nKod och namn för samma land, enligt samma ordalydelse.\ncatalog:variable_text:13435:12784:14975\ncatalog:variable_text:13435:14975:17167\ncatalog:variable_text:13436:14245:14975\ncatalog:variable_text:13436:17167:20454"
+
+[[statement]]
+kind = "set"
+subject = "industrins-bransleforbrukning: Bid @2016..2018 where key = 'v2601'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins bränsleförbrukning och lager versions 2016-2018 (RegVerIDs 11165, 11997, 13244) documents column Bid under VarId 83 \"Bränsleslag\" and VarId 2601 \"Bränslekoder för alla redovisningsenheters förbrukade bränslen\". From 2016 VarId 83 is the fuel-code variable of the sibling table Värmeverkens energiförbrukning (Bid in every version 2016-2025) and holds the code column of this table through 2025, while VarId 2601 is the pre-2016 listing that SCB left in place until 2018; the VarId 2601 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "varmeverkens-energi: Text @2016..2019 where key = 'v2581'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Värmeverkens energiförbrukning, energianvändning och lager versions 2016-2019 (RegVerIDs 11164, 12581, 13294, 14715) documents column Text under VarId 83 \"Bränsleslag\", VarId 2581 \"Bränsleslaget i klartext\" and VarId 19509 \"Värmeproduktion\". In the sibling table Industrins bränsleförbrukning VarId 83 takes over the clear-text column Text from 2016 and VarId 2581 is gone, and VarId 83 documents the code column Bid of this table from 2016, so VarId 83 is the fuel name from 2016 and the VarId 2581 listing on Text through 2019 is a leftover; the VarId 2581 row is withheld."
