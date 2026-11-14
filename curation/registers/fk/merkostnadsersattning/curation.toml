@@ -101,13 +101,7 @@ evidence = "Beloppet är en beräknad fördelning av utbetalningen per barn.\nca
 kind = "set"
 subject = "avslag: var:lopnr"
 fields.row_key = true
-evidence = "Row key: lopnr and lopnr-barn identify a row: each refusal pairs the applicant with the child the claim concerns (maintainer ruling 2026-11-14)."
-
-[[statement]]
-kind = "set"
-subject = "avslag: var:lopnr-barn"
-fields.row_key = true
-evidence = "Row key: lopnr and lopnr-barn identify a row: each refusal pairs the applicant with the child the claim concerns (maintainer ruling 2026-11-14)."
+evidence = "Row key: lopnr identifies a row: refusals cover adults as well as parent-child claims, so the child id is an attribute, as in the mottagare table (maintainer ruling 2026-11-14; ambiguous-table review)."
 
 [[statement]]
 kind = "set"
@@ -125,13 +119,7 @@ evidence = "Row key: lopnr and lopnr-barn identify a row: Tabell 2 is the child-
 kind = "set"
 subject = "beviljanden: var:lopnr"
 fields.row_key = true
-evidence = "Row key: lopnr and lopnr-barn identify a row: each grant pairs the applicant with the child the claim concerns (maintainer ruling 2026-11-14)."
-
-[[statement]]
-kind = "set"
-subject = "beviljanden: var:lopnr-barn"
-fields.row_key = true
-evidence = "Row key: lopnr and lopnr-barn identify a row: each grant pairs the applicant with the child the claim concerns (maintainer ruling 2026-11-14)."
+evidence = "Row key: lopnr identifies a row: grants cover adults as well as parent-child claims, so the child id is an attribute, as in the mottagare table (maintainer ruling 2026-11-14; ambiguous-table review)."
 
 [[statement]]
 kind = "set"

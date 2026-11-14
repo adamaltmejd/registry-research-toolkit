@@ -4018,12 +4018,7 @@ evidence = "Row key: uuid identify a row: one row per registration record, keyed
 
 [[statement]]
 kind = "set"
-subject = "planinformation: var:beslutsnyckel"
+subject = "planinformation: var:uuid"
 fields.row_key = true
-evidence = "Row key: pfnr and beslutsnyckel identify a row: one row per property and plan decision that applies to it; the record uuid is an attribute (maintainer ruling 2026-11-14)."
+evidence = "Row key: uuid identifies a row, as in the register's other change files (adressplats, byggnad, inskrivning); plans for areas may have no pfnr (maintainer ruling 2026-11-14; ambiguous-table review)."
 
-[[statement]]
-kind = "set"
-subject = "planinformation: var:pfnr"
-fields.row_key = true
-evidence = "Row key: pfnr and beslutsnyckel identify a row: one row per property and plan decision that applies to it; the record uuid is an attribute (maintainer ruling 2026-11-14)."

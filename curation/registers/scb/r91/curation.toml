@@ -665,10 +665,5 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 kind = "set"
 subject = "konjunkturstatistik-loner-for-privat-sektor: var:cfar-nummer"
 fields.row_key = true
-evidence = "Row key: person-orgnr and cfar-nummer identify a row: rows are reporting units of sampled firms, identified by the firm organisation number plus the workplace CFAR number (maintainer ruling 2026-11-14)."
+evidence = "Row key: cfar-nummer identifies a row: rows are workplaces of the sampled firms, and a workplace belongs to one firm, so the firm's orgnr is an attribute (maintainer ruling 2026-11-14; ambiguous-table review)."
 
-[[statement]]
-kind = "set"
-subject = "konjunkturstatistik-loner-for-privat-sektor: var:person-orgnr"
-fields.row_key = true
-evidence = "Row key: person-orgnr and cfar-nummer identify a row: rows are reporting units of sampled firms, identified by the firm organisation number plus the workplace CFAR number (maintainer ruling 2026-11-14)."

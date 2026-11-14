@@ -861,12 +861,7 @@ evidence = "Row key: foretagsidentitet identify a row: farm survey keys on the s
 
 [[statement]]
 kind = "set"
-subject = "godselmedelsanvandning-2016: var:addid"
+subject = "godselmedelsanvandning-2016: var:foretagsidentitet"
 fields.row_key = true
-evidence = "Row key: person-orgnr and addid identify a row: farm survey keys on the LBR farm id, which the definition says is the org number plus addid (maintainer ruling 2026-11-14)."
+evidence = "Row key: foretagsidentitet identifies a row, the holding, as in the 2008-2013 table; the farmer's orgnr (a personnr for sole traders) and addid are attributes (maintainer ruling 2026-11-14; ambiguous-table review)."
 
-[[statement]]
-kind = "set"
-subject = "godselmedelsanvandning-2016: var:person-orgnr"
-fields.row_key = true
-evidence = "Row key: person-orgnr and addid identify a row: farm survey keys on the LBR farm id, which the definition says is the org number plus addid (maintainer ruling 2026-11-14)."

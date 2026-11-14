@@ -315,24 +315,13 @@ evidence = "Variabeln anger om ett beviljande är förenat med villkor för komm
 
 [[statement]]
 kind = "set"
-subject = "ansokningar-beslut: var:lopnr-barn"
-fields.row_key = true
-evidence = "Row key: lopnr-sokande and lopnr-barn identify a row: each application pairs the applicant with the child the car grant is for, and there is no application id (maintainer ruling 2026-11-14)."
-
-[[statement]]
-kind = "set"
 subject = "ansokningar-beslut: var:lopnr-sokande"
 fields.row_key = true
-evidence = "Row key: lopnr-sokande and lopnr-barn identify a row: each application pairs the applicant with the child the car grant is for, and there is no application id (maintainer ruling 2026-11-14)."
-
-[[statement]]
-kind = "set"
-subject = "utbetalningar: var:lopnr-barn"
-fields.row_key = true
-evidence = "Row key: lopnr-sokande and lopnr-barn identify a row: each payment goes to the recipient for a child, there is no payment id, and the key is not unique per row (maintainer ruling 2026-11-14)."
+evidence = "Row key: lopnr-sokande identifies a row: the table mixes adults applying for themselves (lopnr-barn empty) with parents applying for a child, so rows are not one per pair and the child id is an attribute (maintainer ruling 2026-11-14; ambiguous-table review)."
 
 [[statement]]
 kind = "set"
 subject = "utbetalningar: var:lopnr-sokande"
 fields.row_key = true
-evidence = "Row key: lopnr-sokande and lopnr-barn identify a row: each payment goes to the recipient for a child, there is no payment id, and the key is not unique per row (maintainer ruling 2026-11-14)."
+evidence = "Row key: lopnr-sokande, the payment recipient, identifies a row; no payment id, so rows are not unique; the child id is an attribute, empty for adults paid for themselves (maintainer ruling 2026-11-14; ambiguous-table review)."
+

@@ -6086,21 +6086,9 @@ evidence = "Row key: person-orgnr is the table's only identifier and names its u
 
 [[statement]]
 kind = "set"
-subject = "fs-slutdata-lokal: var:den-lokala-verksamhetsenhetens-lopnummer"
+subject = "fs-slutdata-lokal: var:cfar-nummer"
 fields.row_key = true
-evidence = "Row key: person-orgnr and verksamhetsenhetens-lopnummer and den-lokala-verksamhetsenhetens-lopnummer identify a row: the row is one local activity unit, numbered within its VE and firm (maintainer ruling 2026-11-14)."
-
-[[statement]]
-kind = "set"
-subject = "fs-slutdata-lokal: var:person-orgnr"
-fields.row_key = true
-evidence = "Row key: person-orgnr and verksamhetsenhetens-lopnummer and den-lokala-verksamhetsenhetens-lopnummer identify a row: the row is one local activity unit, numbered within its VE and firm (maintainer ruling 2026-11-14)."
-
-[[statement]]
-kind = "set"
-subject = "fs-slutdata-lokal: var:verksamhetsenhetens-lopnummer"
-fields.row_key = true
-evidence = "Row key: person-orgnr and verksamhetsenhetens-lopnummer and den-lokala-verksamhetsenhetens-lopnummer identify a row: the row is one local activity unit, numbered within its VE and firm (maintainer ruling 2026-11-14)."
+evidence = "Row key: cfar-nummer identifies a row, the local unit, as in fek-slutdata-lokal which continues this table; the firm's orgnr and the unit serial numbers are attributes (maintainer ruling 2026-11-14; ambiguous-table review)."
 
 [[statement]]
 kind = "set"

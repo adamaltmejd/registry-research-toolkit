@@ -969,13 +969,19 @@ evidence = "Row key: riksnyckel and riksnyckel-rnpadrpl identify a row: address 
 kind = "set"
 subject = "adresser-fastigheter: var:riksnyckelid"
 fields.row_key = true
-evidence = "Row key: riksnyckelid and riksnyckelprefix identify a row: address table keys on the official address key, whose prefix and id together form it; property ids and record UUIDs are attributes (maintainer ruling 2026-11-14)."
+evidence = "Row key: riksnyckelid, riksnyckelprefix and fastighetsnyckel identify a row: the table joins addresses to properties, with separate address and property coordinates, so a row is an address-property pair (maintainer ruling 2026-11-14; ambiguous-table review)."
 
 [[statement]]
 kind = "set"
 subject = "adresser-fastigheter: var:riksnyckelprefix"
 fields.row_key = true
-evidence = "Row key: riksnyckelid and riksnyckelprefix identify a row: address table keys on the official address key, whose prefix and id together form it; property ids and record UUIDs are attributes (maintainer ruling 2026-11-14)."
+evidence = "Row key: riksnyckelid, riksnyckelprefix and fastighetsnyckel identify a row: the table joins addresses to properties, with separate address and property coordinates, so a row is an address-property pair (maintainer ruling 2026-11-14; ambiguous-table review)."
+
+[[statement]]
+kind = "set"
+subject = "adresser-fastigheter: var:fastighetsnyckel"
+fields.row_key = true
+evidence = "Row key: riksnyckelid, riksnyckelprefix and fastighetsnyckel identify a row: the table joins addresses to properties, with separate address and property coordinates, so a row is an address-property pair (maintainer ruling 2026-11-14; ambiguous-table review)."
 
 [[statement]]
 kind = "set"

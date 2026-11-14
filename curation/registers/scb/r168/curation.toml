@@ -8784,13 +8784,7 @@ evidence = "Row key: person-orgnr is the table's only identifier and names its u
 kind = "set"
 subject = "fek-slutdata-lokal: var:cfar-nummer"
 fields.row_key = true
-evidence = "Row key: cfar-nummer and lokal-verksamhetsenhetsnummer identify a row: one row per local unit: the workplace cfar-nummer in all years, the local unit number from 2017; person-orgnr and venr are attributes (maintainer ruling 2026-11-14)."
-
-[[statement]]
-kind = "set"
-subject = "fek-slutdata-lokal: var:lokal-verksamhetsenhetsnummer"
-fields.row_key = true
-evidence = "Row key: cfar-nummer and lokal-verksamhetsenhetsnummer identify a row: one row per local unit: the workplace cfar-nummer in all years, the local unit number from 2017; person-orgnr and venr are attributes (maintainer ruling 2026-11-14)."
+evidence = "Row key: cfar-nummer identifies a row: the local unit number is nested in the firm before 2022, and CFAR is the one unique local-unit id in every year (maintainer ruling 2026-11-14; ambiguous-table review)."
 
 [[statement]]
 kind = "set"

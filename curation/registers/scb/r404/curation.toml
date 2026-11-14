@@ -3814,7 +3814,13 @@ evidence = "Row key: cfar-nummer identify a row: a workplace table keyed on the 
 kind = "set"
 subject = "arsuppgifter-jobb: var:person-samordningsnummer"
 fields.row_key = true
-evidence = "Row key: person-samordningsnummer identify a row: one row per job; no job id, so the person id is the key and rows are not unique; employer and workplace ids are attributes (maintainer ruling 2026-11-14)."
+evidence = "Row key: person-samordningsnummer and person-orgnr identify a row: one row per job, the person-employer pair, with per-job annual amounts (maintainer ruling 2026-11-14; ambiguous-table review)."
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-jobb: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-samordningsnummer and person-orgnr identify a row: one row per job, the person-employer pair, with per-job annual amounts (maintainer ruling 2026-11-14; ambiguous-table review)."
 
 [[statement]]
 kind = "set"

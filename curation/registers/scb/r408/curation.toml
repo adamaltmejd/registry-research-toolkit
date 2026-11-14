@@ -1981,7 +1981,13 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 kind = "set"
 subject = "anstallningar-grund: var:person-samordningsnummer"
 fields.row_key = true
-evidence = "Row key: person-samordningsnummer identify a row: one row per employment spell; no employment id, so the employee id is the key and rows are not unique; the employer id is an attribute (maintainer ruling 2026-11-14)."
+evidence = "Row key: person-samordningsnummer and person-orgnr-anstalld identify a row: the unit is the employment, one person-employer pair per month (maintainer ruling 2026-11-14; ambiguous-table review)."
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-grund: var:person-orgnr-anstalld"
+fields.row_key = true
+evidence = "Row key: person-samordningsnummer and person-orgnr-anstalld identify a row: the unit is the employment, one person-employer pair per month (maintainer ruling 2026-11-14; ambiguous-table review)."
 
 [[statement]]
 kind = "set"
@@ -1993,7 +1999,13 @@ evidence = "Row key: person-orgnr is the table's only identifier and names its u
 kind = "set"
 subject = "anstallningar-period: var:person-samordningsnummer"
 fields.row_key = true
-evidence = "Row key: person-samordningsnummer identify a row: one row per employment period; no employment id, so the employee id is the key and rows are not unique; employer ids are attributes (maintainer ruling 2026-11-14)."
+evidence = "Row key: person-samordningsnummer and person-orgnr-anstalld identify a row: the unit is the employment, a person-employer pair; the AGI employer id is an attribute (maintainer ruling 2026-11-14; ambiguous-table review)."
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-period: var:person-orgnr-anstalld"
+fields.row_key = true
+evidence = "Row key: person-samordningsnummer and person-orgnr-anstalld identify a row: the unit is the employment, a person-employer pair; the AGI employer id is an attribute (maintainer ruling 2026-11-14; ambiguous-table review)."
 
 [[statement]]
 kind = "set"
