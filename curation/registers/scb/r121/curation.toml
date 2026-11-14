@@ -4129,18 +4129,6 @@ evidence = "Samma kolumn har överlappande ägare med olika omfattning.\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:anskaffningsvarde-maskinell-mark"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har överlappande ägare med olika omfattning.\ncatalog:occurrence:151902\ncatalog:occurrence:151903"
-
-[[statement]]
-kind = "set"
-subject = "var:anskaffningsvarde-maskinell-mark"
-fields = { "tags" = ["business"] }
-evidence = "Samma kolumn har överlappande ägare med olika omfattning.\ncatalog:occurrence:151902\ncatalog:occurrence:151903"
-
-[[statement]]
-kind = "set"
 subject = "var:anskaffningsvarde-pagaende-arbeten"
 fields = { "sets" = [] }
 evidence = "Posten avser företagsredovisning.\ncatalog:variable_text:14829:10957:14245"
@@ -7618,18 +7606,6 @@ kind = "set"
 subject = "var:aterbaring-rabatter-l7"
 fields = { "tags" = ["business"] }
 evidence = "Källkolumnerna har andra ägare i angränsande perioder.\ncatalog:occurrence:163710\ncatalog:occurrence:163711\ncatalog:occurrence:163846\ncatalog:occurrence:163847"
-
-[[statement]]
-kind = "set"
-subject = "var:aterbetalning-eldningsolja-uppvarmning"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:179505\ncatalog:occurrence:179506"
-
-[[statement]]
-kind = "set"
-subject = "var:aterbetalning-eldningsolja-uppvarmning"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:179505\ncatalog:occurrence:179506"
 
 [[statement]]
 kind = "set"
@@ -14281,18 +14257,6 @@ evidence = "Källkolumnen har överlappande ägare med olika definitioner.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:avskrivning-maskinell-mark"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har överlappande ägare med olika definitioner.\ncatalog:occurrence:151907\ncatalog:occurrence:151908"
-
-[[statement]]
-kind = "set"
-subject = "var:avskrivning-maskinell-mark"
-fields = { "tags" = ["business"] }
-evidence = "Källkolumnen har överlappande ägare med olika definitioner.\ncatalog:occurrence:151907\ncatalog:occurrence:151908"
-
-[[statement]]
-kind = "set"
 subject = "var:avskrivningar-ack-markanlaggningar"
 fields = { "sets" = [] }
 evidence = "Samma kolumn har överlappande ägare med olika omfattning.\ncatalog:occurrence:151909\ncatalog:occurrence:151910"
@@ -14300,18 +14264,6 @@ evidence = "Samma kolumn har överlappande ägare med olika omfattning.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:avskrivningar-ack-markanlaggningar"
-fields = { "tags" = ["business"] }
-evidence = "Samma kolumn har överlappande ägare med olika omfattning.\ncatalog:occurrence:151909\ncatalog:occurrence:151910"
-
-[[statement]]
-kind = "set"
-subject = "var:avskrivningar-ack-maskinell-mark"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har överlappande ägare med olika omfattning.\ncatalog:occurrence:151909\ncatalog:occurrence:151910"
-
-[[statement]]
-kind = "set"
-subject = "var:avskrivningar-ack-maskinell-mark"
 fields = { "tags" = ["business"] }
 evidence = "Samma kolumn har överlappande ägare med olika omfattning.\ncatalog:occurrence:151909\ncatalog:occurrence:151910"
 
@@ -24781,18 +24733,6 @@ evidence = "Variabeln mäter ersättning till värnpliktiga.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:ersattningsfonder-utgang"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:152006\ncatalog:occurrence:152007"
-
-[[statement]]
-kind = "set"
-subject = "var:ersattningsfonder-utgang"
-fields = { "tags" = ["business"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:152006\ncatalog:occurrence:152007"
-
-[[statement]]
-kind = "set"
 subject = "var:ersattningskod-420-skattefri-del"
 fields = { "sets" = [] }
 evidence = "Beloppet avser pensionens skattefria del.\ncatalog:variable_text:16643:16801:17167"
@@ -26929,18 +26869,6 @@ evidence = "Katalogen visar en perioduppdelning av GASVXAR1MNG.\ncatalog:occurre
 
 [[statement]]
 kind = "set"
-subject = "var:forbrukad-mangd-bransle-punktskatter"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har överlappande ägare med olika tillämpningar.\ncatalog:occurrence:185773\ncatalog:occurrence:185774"
-
-[[statement]]
-kind = "set"
-subject = "var:forbrukad-mangd-bransle-punktskatter"
-fields = { "tags" = ["energy"] }
-evidence = "Samma kolumn har överlappande ägare med olika tillämpningar.\ncatalog:occurrence:185773\ncatalog:occurrence:185774"
-
-[[statement]]
-kind = "set"
 subject = "var:forbrukad-mangd-diesel-okt"
 fields = { "sets" = [] }
 evidence = "Samma källkolumn har överlappande ägare och olika enheter.\ncatalog:occurrence:190146\ncatalog:occurrence:190147"
@@ -27061,18 +26989,6 @@ evidence = "Variabeln mäter bränsleförbrukning.\ncatalog:variable_text:16836:
 
 [[statement]]
 kind = "set"
-subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-gasfgmng"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:182700\ncatalog:occurrence:182701"
-
-[[statement]]
-kind = "set"
-subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-gasfgmng"
-fields = { "tags" = ["energy"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:182700\ncatalog:occurrence:182701"
-
-[[statement]]
-kind = "set"
 subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-gasmng"
 fields = { "sets" = [] }
 evidence = "Variabeln mäter bränsleförbrukning.\ncatalog:variable_text:16838:17167:19723"
@@ -27082,18 +26998,6 @@ kind = "set"
 subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-gasmng"
 fields = { "tags" = ["energy"] }
 evidence = "Variabeln mäter bränsleförbrukning.\ncatalog:variable_text:16838:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-gasnvmng"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:182707\ncatalog:occurrence:182708\ncatalog:occurrence:182709"
-
-[[statement]]
-kind = "set"
-subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-gasnvmng"
-fields = { "tags" = ["energy"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:182707\ncatalog:occurrence:182708\ncatalog:occurrence:182709"
 
 [[statement]]
 kind = "set"
@@ -29614,18 +29518,6 @@ kind = "set"
 subject = "var:gasnvenss"
 fields = { "tags" = ["energy", "taxation"] }
 evidence = "Måttet avser energiskattesats för flyggasol.\ncatalog:variable_text:17068:13879:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:gasnvmng"
-fields = { "sets" = [] }
-evidence = "Tre ägare använder samma källkolumn under överlappande perioder.\ncatalog:occurrence:182707\ncatalog:occurrence:182708\ncatalog:occurrence:182709"
-
-[[statement]]
-kind = "set"
-subject = "var:gasnvmng"
-fields = { "tags" = ["energy"] }
-evidence = "Tre ägare använder samma källkolumn under överlappande perioder.\ncatalog:occurrence:182707\ncatalog:occurrence:182708\ncatalog:occurrence:182709"
 
 [[statement]]
 kind = "set"
@@ -32461,18 +32353,6 @@ evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:1519
 
 [[statement]]
 kind = "set"
-subject = "var:ianspraktagna-fonder-maskinell-mark"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:151905\ncatalog:occurrence:151906"
-
-[[statement]]
-kind = "set"
-subject = "var:ianspraktagna-fonder-maskinell-mark"
-fields = { "tags" = ["business"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:151905\ncatalog:occurrence:151906"
-
-[[statement]]
-kind = "set"
 subject = "var:barnbidraget-uppdelat-pa-foraldrar-enligt-rtb-familjer"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källmnemonik.\ncatalog:variable_text:17312:16801:17167"
@@ -32828,18 +32708,6 @@ evidence = "Källkolumnen har överlappande ägare.\ncatalog:occurrence:179507\n
 [[statement]]
 kind = "set"
 subject = "var:ingaende-lager-eldningsolja"
-fields = { "tags" = ["energy"] }
-evidence = "Källkolumnen har överlappande ägare.\ncatalog:occurrence:179507\ncatalog:occurrence:179508"
-
-[[statement]]
-kind = "set"
-subject = "var:ingaende-lager-eldningsolja-uppvarmning"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har överlappande ägare.\ncatalog:occurrence:179507\ncatalog:occurrence:179508"
-
-[[statement]]
-kind = "set"
-subject = "var:ingaende-lager-eldningsolja-uppvarmning"
 fields = { "tags" = ["energy"] }
 evidence = "Källkolumnen har överlappande ägare.\ncatalog:occurrence:179507\ncatalog:occurrence:179508"
 
@@ -33584,18 +33452,6 @@ evidence = "Källkolumnen har överlappande ägare.\ncatalog:occurrence:179509\n
 [[statement]]
 kind = "set"
 subject = "var:inkop-eldningsolja"
-fields = { "tags" = ["energy"] }
-evidence = "Källkolumnen har överlappande ägare.\ncatalog:occurrence:179509\ncatalog:occurrence:179510"
-
-[[statement]]
-kind = "set"
-subject = "var:inkop-eldningsolja-uppvarmning"
-fields = { "sets" = [] }
-evidence = "Källkolumnen har överlappande ägare.\ncatalog:occurrence:179509\ncatalog:occurrence:179510"
-
-[[statement]]
-kind = "set"
-subject = "var:inkop-eldningsolja-uppvarmning"
 fields = { "tags" = ["energy"] }
 evidence = "Källkolumnen har överlappande ägare.\ncatalog:occurrence:179509\ncatalog:occurrence:179510"
 
@@ -40429,54 +40285,6 @@ evidence = "Miljöklassen gäller fordon.\ncatalog:variable_text:18027:13514:171
 
 [[statement]]
 kind = "set"
-subject = "var:moms-export-varor"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:152042\ncatalog:occurrence:152043"
-
-[[statement]]
-kind = "set"
-subject = "var:moms-export-varor"
-fields = { "tags" = ["taxation", "trade"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:152042\ncatalog:occurrence:152043"
-
-[[statement]]
-kind = "set"
-subject = "var:moms-overforing-eg-land"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:152046\ncatalog:occurrence:152047"
-
-[[statement]]
-kind = "set"
-subject = "var:moms-overforing-eg-land"
-fields = { "tags" = ["taxation", "trade"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:152046\ncatalog:occurrence:152047"
-
-[[statement]]
-kind = "set"
-subject = "var:moms-summa-utgaende"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:152038\ncatalog:occurrence:152039"
-
-[[statement]]
-kind = "set"
-subject = "var:moms-summa-utgaende"
-fields = { "tags" = ["taxation"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:152038\ncatalog:occurrence:152039"
-
-[[statement]]
-kind = "set"
-subject = "var:moms-uttag-fastighetsforvaltning"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:152052\ncatalog:occurrence:152053"
-
-[[statement]]
-kind = "set"
-subject = "var:moms-uttag-fastighetsforvaltning"
-fields = { "tags" = ["taxation"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:152052\ncatalog:occurrence:152053"
-
-[[statement]]
-kind = "set"
 subject = "var:momsfordran"
 fields = { "sets" = [] }
 evidence = "Momsfordran är en skatterelaterad balanspost.\ncatalog:variable_text:18032:13514:14975"
@@ -43261,18 +43069,6 @@ evidence = "Samma källkolumn har överlappande ägare och olika definitioner.\n
 
 [[statement]]
 kind = "set"
-subject = "var:oavskrivet-varde-maskinell-mark"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare och olika definitioner.\ncatalog:occurrence:151911\ncatalog:occurrence:151912"
-
-[[statement]]
-kind = "set"
-subject = "var:oavskrivet-varde-maskinell-mark"
-fields = { "tags" = ["business"] }
-evidence = "Samma källkolumn har överlappande ägare och olika definitioner.\ncatalog:occurrence:151911\ncatalog:occurrence:151912"
-
-[[statement]]
-kind = "set"
 subject = "var:obeskattade-reserver"
 fields = { "sets" = [] }
 evidence = "Obeskattade reserver är en företagsredovisningspost.\ncatalog:variable_text:18270:13514:19723"
@@ -44986,18 +44782,6 @@ kind = "set"
 subject = "var:overskott-av-naringsverksamhet"
 fields = { "tags" = ["taxation"] }
 evidence = "Överskottet följer av skattemässiga justeringar.\ncatalog:variable_text:18457:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:overskott-n1a-n2a-medhjalpande-make"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:151952\ncatalog:occurrence:151953"
-
-[[statement]]
-kind = "set"
-subject = "var:overskott-n1a-n2a-medhjalpande-make"
-fields = { "tags" = ["taxation"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:151952\ncatalog:occurrence:151953"
 
 [[statement]]
 kind = "set"
@@ -50197,18 +49981,6 @@ evidence = "Företagets representationspost.\ncatalog:variable_text:18917:10957:
 
 [[statement]]
 kind = "set"
-subject = "var:reseavdrag-bostad-arbetsplats"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:151949\ncatalog:occurrence:151950"
-
-[[statement]]
-kind = "set"
-subject = "var:reseavdrag-bostad-arbetsplats"
-fields = { "tags" = ["taxation"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:151949\ncatalog:occurrence:151950"
-
-[[statement]]
-kind = "set"
 subject = "var:resekostnader-bostad-arbetsplats"
 fields = { "sets" = [] }
 evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:151949\ncatalog:occurrence:151950"
@@ -50290,18 +50062,6 @@ kind = "set"
 subject = "var:resultat-andelar-intresseforetag-neg"
 fields = { "tags" = ["business"] }
 evidence = "Företagets resultat från andelar.\ncatalog:variable_text:18925:13514:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:resultat-av-verksamheten"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:151941\ncatalog:occurrence:151942"
-
-[[statement]]
-kind = "set"
-subject = "var:resultat-av-verksamheten"
-fields = { "tags" = ["business"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:151941\ncatalog:occurrence:151942"
 
 [[statement]]
 kind = "set"
@@ -52150,18 +51910,6 @@ kind = "set"
 subject = "var:skattesats-elenergiskatt"
 fields = { "tags" = ["energy", "taxation"] }
 evidence = "The column has overlapping owners and conflicting descriptions.\ncatalog:occurrence:187490\ncatalog:occurrence:187491"
-
-[[statement]]
-kind = "set"
-subject = "var:skattesats-elenergiskatt-nord"
-fields = { "sets" = [] }
-evidence = "The column has overlapping owners.\ncatalog:occurrence:187528\ncatalog:occurrence:187529"
-
-[[statement]]
-kind = "set"
-subject = "var:skattesats-elenergiskatt-nord"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "The column has overlapping owners.\ncatalog:occurrence:187528\ncatalog:occurrence:187529"
 
 [[statement]]
 kind = "set"
@@ -57685,18 +57433,6 @@ evidence = "Underskott i näringsbilaga.\ncatalog:variable_text:19571:15706:1972
 
 [[statement]]
 kind = "set"
-subject = "var:underskott-n1a-n2a-medhjalpande-make"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:151954\ncatalog:occurrence:151955"
-
-[[statement]]
-kind = "set"
-subject = "var:underskott-n1a-n2a-medhjalpande-make"
-fields = { "tags" = ["business", "taxation"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:151954\ncatalog:occurrence:151955"
-
-[[statement]]
-kind = "set"
 subject = "var:underskott-naringsverksamhet"
 fields = { "sets" = [] }
 evidence = "Aktivt och passivt underskott ingår i totalen.\ncatalog:variable_text:19569:10957:19723\ncatalog:variable_text:19573:10957:19723\ncatalog:variable_text:19577:10957:19723"
@@ -58508,18 +58244,6 @@ evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:1795
 [[statement]]
 kind = "set"
 subject = "var:utgaende-lager-eldningsolja"
-fields = { "tags" = ["energy"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:179512\ncatalog:occurrence:179513"
-
-[[statement]]
-kind = "set"
-subject = "var:utgaende-lager-eldningsolja-uppvarmning"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:179512\ncatalog:occurrence:179513"
-
-[[statement]]
-kind = "set"
-subject = "var:utgaende-lager-eldningsolja-uppvarmning"
 fields = { "tags" = ["energy"] }
 evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:179512\ncatalog:occurrence:179513"
 
@@ -61654,18 +61378,6 @@ kind = "set"
 subject = "var:v0889"
 fields = { "tags" = ["business"] }
 evidence = "The source column has overlapping owners.\ncatalog:occurrence:152000\ncatalog:occurrence:152001"
-
-[[statement]]
-kind = "set"
-subject = "var:v0890"
-fields = { "sets" = [] }
-evidence = "The source column has overlapping owners.\ncatalog:occurrence:152002\ncatalog:occurrence:152003"
-
-[[statement]]
-kind = "set"
-subject = "var:v0890"
-fields = { "tags" = ["business", "taxation"] }
-evidence = "The source column has overlapping owners.\ncatalog:occurrence:152002\ncatalog:occurrence:152003"
 
 [[statement]]
 kind = "set"
@@ -69658,18 +69370,6 @@ kind = "set"
 subject = "var:varde-av-fastighet-922-rantefordelning"
 fields = { "tags" = ["property", "taxation"] }
 evidence = "Fastighetsvärde för räntefördelning.\ncatalog:variable_text:20603:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:varde-fri-bil-fri-bostad"
-fields = { "sets" = [] }
-evidence = "Överlappande ägare för samma källkolumn med olika omfattning.\ncatalog:occurrence:151946\ncatalog:occurrence:151947"
-
-[[statement]]
-kind = "set"
-subject = "var:varde-fri-bil-fri-bostad"
-fields = { "tags" = ["income"] }
-evidence = "Överlappande ägare för samma källkolumn med olika omfattning.\ncatalog:occurrence:151946\ncatalog:occurrence:151947"
 
 [[statement]]
 kind = "set"
@@ -76341,12 +76041,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKäl
 
 [[statement]]
 kind = "set"
-subject = "var:forbrukad-mangd-bransle-punktskatter"
-fields = { "description" = "Totalt förbrukad mängd el för punktskatter. Uppgiften avser återbetalningsansökan för industri." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan anger el i kilowattimmar, inte bränsle.\ncatalog:variable_text:16826:17532:19723\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:185773:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
 subject = "var:forutbetalda-kostn-och-andra-upplupna-int-rh"
 fields = { "description" = "Förutbetalda kostnader och andra upplupna intäkter." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans förkortningar kan utvidgas utan att ändra betydelsen.\ncatalog:variable_text:16926:19358:19723\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:163948:opdef_text; rel070-base/reg_meta.db:occurrence:164745:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Bolag scope varies by year, not just table; older 2016 occurrence has no scope text. Evidence: rel070-base/reg_meta.db occurrences 163810, 163948, 164745.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove conflicting life/non-life population assignment from the description; material population conflict is listed for identity review, not resolved by this edit. Evidence: rel070-base/reg_meta.db occurrences 163810, 163948, 164745."
@@ -82065,12 +81759,6 @@ evidence = "#2102 same-label cluster 'Ersatta garantidagar' (4 variables): judge
 
 [[statement]]
 kind = "set"
-subject = "var:ersattningsfonder-utgang"
-fields = { "label" = "Ersättningsfonder vid beskattningsårets utgång (räntefördelning)" }
-evidence = "#2102 same-label cluster 'Ersättningsfonder vid beskattningsårets utgång' (2 variables): judged different meaning, medium confidence; Opdefs: V0895 räntefördelning, V0941 expansionsmedel."
-
-[[statement]]
-kind = "set"
 subject = "var:etableringstillagg-utbetalt-belopp-rtb-familj"
 fields = { "label" = "Etableringstillägg, utbetalt belopp (uppdelat per RTB-familj)" }
 evidence = "#2102 same-label cluster 'Etableringstillägg, utbetalt belopp' (2 variables): judged different meaning, medium confidence; Opdef: IETABTU is split by RTB family (all family members share the amount); IETABT has no opdef and keeps the plain label."
@@ -82557,12 +82245,6 @@ evidence = "#2102 same-label cluster 'Totalt förbrukad mängd bränsle punktska
 
 [[statement]]
 kind = "set"
-subject = "var:forbrukad-mangd-bransle-punktskatter"
-fields = { "label" = "Totalt förbrukad mängd bränsle punktskatter (industri, el)" }
-evidence = "#2102 same-label cluster 'Totalt förbrukad mängd bränsle punktskatter' (24 variables): judged different meaning, medium confidence; 24 concurrent consumption columns by fuel, use, total vs quantity and half-year/year basis, qualified from the opdefs; OLJTOTFB and OVRTOTFB have no text and get column codes."
-
-[[statement]]
-kind = "set"
 subject = "var:forbrukad-mangd-diesel-jord-skogsbruk-efter-oktober"
 fields = { "label" = "Förbrukad mängd, punktskatter/återbetalningar (jord- och skogsbruk, diesel, efter oktober)" }
 evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetalningar' (38 variables): judged different meaning, medium confidence; 38 concurrent columns whose opdefs name use, fuel and year reference; undocumented columns get raw codes and old/new names of the same column (OVR..MNGD/MNG, AF/AFNUV) share labels."
@@ -82576,8 +82258,8 @@ evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetal
 [[statement]]
 kind = "set"
 subject = "var:forbrukad-mangd-el"
-fields = { "label" = "Förbrukad mängd, punktskatter/återbetalningar (el i vattenbruk)" }
-evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetalningar' (38 variables): judged different meaning, medium confidence; 38 concurrent columns whose opdefs name use, fuel and year reference; undocumented columns get raw codes and old/new names of the same column (OVR..MNGD/MNG, AF/AFNUV) share labels."
+fields = { "label" = "Förbrukad mängd, punktskatter/återbetalningar (el, industri och vattenbruk)" }
+evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetalningar' (38 variables): judged different meaning, medium confidence; 38 concurrent columns whose opdefs name use, fuel and year reference; undocumented columns get raw codes and old/new names of the same column (OVR..MNGD/MNG, AF/AFNUV) share labels.\n\nMaintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; this label was widened to cover the merged variants. Source: SCB Registerinformation, the operational definitions of VarId 25874 and VarId 39787 on ELFORBMNG in 2018-2023 read \"Avser återbetalningsansökan för industri, el\" and \"... för vattenbruk, el\", both in kilowatt hours."
 
 [[statement]]
 kind = "set"
@@ -82653,20 +82335,8 @@ evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetal
 
 [[statement]]
 kind = "set"
-subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-gasfgmng"
-fields = { "label" = "Förbrukad mängd, punktskatter/återbetalningar (gasol, föregående år)" }
-evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetalningar' (38 variables): judged different meaning, medium confidence; 38 concurrent columns whose opdefs name use, fuel and year reference; undocumented columns get raw codes and old/new names of the same column (OVR..MNGD/MNG, AF/AFNUV) share labels."
-
-[[statement]]
-kind = "set"
 subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-gasmng"
 fields = { "label" = "Förbrukad mängd, punktskatter/återbetalningar (båt och skepp, gasol)" }
-evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetalningar' (38 variables): judged different meaning, medium confidence; 38 concurrent columns whose opdefs name use, fuel and year reference; undocumented columns get raw codes and old/new names of the same column (OVR..MNGD/MNG, AF/AFNUV) share labels."
-
-[[statement]]
-kind = "set"
-subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-gasnvmng"
-fields = { "label" = "Förbrukad mängd, punktskatter/återbetalningar (gasol, innevarande år)" }
 evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetalningar' (38 variables): judged different meaning, medium confidence; 38 concurrent columns whose opdefs name use, fuel and year reference; undocumented columns get raw codes and old/new names of the same column (OVR..MNGD/MNG, AF/AFNUV) share labels."
 
 [[statement]]
@@ -82703,7 +82373,7 @@ evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetal
 kind = "set"
 subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-ovrnvmng"
 fields = { "label" = "Förbrukad mängd, punktskatter/återbetalningar (övrigt bränsle, innevarande år)" }
-evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetalningar' (38 variables): judged different meaning, medium confidence; 38 concurrent columns whose opdefs name use, fuel and year reference; undocumented columns get raw codes and old/new names of the same column (OVR..MNGD/MNG, AF/AFNUV) share labels."
+evidence = "#2102 same-label cluster 'Förbrukad mängd, punktskatter/återbetalningar' (38 variables): judged different meaning, medium confidence; 38 concurrent columns whose opdefs name use, fuel and year reference; undocumented columns get raw codes and old/new names of the same column (OVR..MNGD/MNG, AF/AFNUV) share labels.\n\nMaintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; this label was widened to cover the merged variants. Source: SCB Registerinformation, the operational definitions of VarId 39787 (yrkesmässig luftfart; båt och skepp; värmeproduktion med utsläppsrätter) and VarId 39768 (diverse industriella processer; värmeproduktion med utsläppsrätter) on OVRNVMNG in 2014-2023."
 
 [[statement]]
 kind = "set"
@@ -83310,12 +82980,6 @@ kind = "set"
 subject = "var:gasnvenss"
 fields = { "label" = "Skattesats, energiskatt (yrkesmässig luftfart, flyggasol, innevarande år)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
-
-[[statement]]
-kind = "set"
-subject = "var:gasnvmng"
-fields = { "label" = "Totalt förbrukad mängd bränsle punktskatter (yrkesmässig luftfart, gasol, innevarande år)" }
-evidence = "#2102 same-label cluster 'Totalt förbrukad mängd bränsle punktskatter' (24 variables): judged different meaning, medium confidence; 24 concurrent consumption columns by fuel, use, total vs quantity and half-year/year basis, qualified from the opdefs; OLJTOTFB and OVRTOTFB have no text and get column codes."
 
 [[statement]]
 kind = "set"
@@ -87113,12 +86777,6 @@ evidence = "#2102 same-label cluster 'Skatt, total' (2 variables): judged differ
 kind = "set"
 subject = "var:skattesats-elenergiskatt"
 fields = { "label" = "Skattesats elenergiskatt (dieselbränsle, energiskattesats industri utsläppsrätter)" }
-evidence = "#2102 same-label cluster 'Skattesats elenergiskatt' (7 variables): judged different meaning, high confidence; Opdefs name the use or process each rate applies to; DIENVENSKSATS concerns a diesel energy-tax rate for industri utsläppsrätter."
-
-[[statement]]
-kind = "set"
-subject = "var:skattesats-elenergiskatt-nord"
-fields = { "label" = "Skattesats elenergiskatt (nordliga kommuner, värmeleverans till vissa industriella processer)" }
 evidence = "#2102 same-label cluster 'Skattesats elenergiskatt' (7 variables): judged different meaning, high confidence; Opdefs name the use or process each rate applies to; DIENVENSKSATS concerns a diesel energy-tax rate for industri utsläppsrätter."
 
 [[statement]]
@@ -95116,18 +94774,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 
 [[statement]]
 kind = "set"
-subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-gasfgmng"
-fields = { "description" = "Förbrukad mängd gasol avseende föregående år, i ansökningar om återbetalning för yrkesmässig luftfart och värmeproduktion med utsläppsrätter." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\n2017–2023 anger gasol föregående år för yrkesmässig luftfart; 2019–2021 också värmeproduktion med utsläppsrätter, gasol. Blankettlistan växer men måttet är detsamma.\ncatalog:variable_text:23922:16071:17167\ncatalog:variable_text:23922:17167:17897\ncatalog:variable_text:23922:17897:18993\ncatalog:variable_text:23922:18993:19723\nRegisterinformation.csv:row=390258\nRegisterinformation.csv:row=390262\nRegisterinformation.csv:row=863492\nRegisterinformation.csv:row=863660"
-
-[[statement]]
-kind = "set"
-subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-gasnvmng"
-fields = { "description" = "Förbrukad mängd gasol avseende innevarande år, i ansökningar om återbetalning för yrkesmässig luftfart, båt och skepp samt värmeproduktion med utsläppsrätter." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\n2017–2023 anger gasol innevarande år för yrkesmässig luftfart; 2019–2022 också båt och skepp, 2023 värmeproduktion med utsläppsrätter utan kraftvärme.\ncatalog:variable_text:23924:16071:17167\ncatalog:variable_text:23924:17167:17897\ncatalog:variable_text:23924:17897:19358\ncatalog:variable_text:23924:19358:19723\nRegisterinformation.csv:row=390254\nRegisterinformation.csv:row=390357\nRegisterinformation.csv:row=861726\nRegisterinformation.csv:row=861727\nRegisterinformation.csv:row=863493"
-
-[[statement]]
-kind = "set"
 subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-ovrfgmng"
 fields = { "description" = "Förbrukad mängd övrigt bränsle avseende föregående år, i ansökningar om återbetalning för framställning av el, båt och skepp och yrkesmässig luftfart (övrigt flygbränsle)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\n2017–2023 anger övrigt bränsle respektive övrigt flygbränsle föregående år; raden om flygfotogen 2019–2020 motsäger kolumnen och tas inte med.\ncatalog:variable_text:23929:16071:16436\ncatalog:variable_text:23929:16801:17167\ncatalog:variable_text:23929:17167:17897\ncatalog:variable_text:23929:17897:18262\ncatalog:variable_text:23929:18262:18628\ncatalog:variable_text:23929:18628:19723\nRegisterinformation.csv:row=387690\nRegisterinformation.csv:row=387770\nRegisterinformation.csv:row=389521\nRegisterinformation.csv:row=390256\nRegisterinformation.csv:row=390359\nRegisterinformation.csv:row=404671\nRegisterinformation.csv:row=404680\nRegisterinformation.csv:row=861722\nRegisterinformation.csv:row=863489"
@@ -95135,8 +94781,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:forbrukad-mangd-punktskatter-aterbetalningar-ovrnvmng"
-fields = { "description" = "Förbrukad mängd övrigt bränsle avseende innevarande år, i ansökningar om återbetalning för yrkesmässig luftfart samt båt och skepp." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\n2017–2022 anger övrigt bränsle innevarande år; raden 2019 om värmeproduktion med utsläppsrätter avser föregående år, motsäger kolumnen och tas inte med.\ncatalog:variable_text:23930:16071:16801\ncatalog:variable_text:23930:17167:17897\ncatalog:variable_text:23930:17897:18628\ncatalog:variable_text:23930:18628:19358\nRegisterinformation.csv:row=389522\nRegisterinformation.csv:row=390358\nRegisterinformation.csv:row=395081\nRegisterinformation.csv:row=404194\nRegisterinformation.csv:row=404679\nRegisterinformation.csv:row=863494"
+fields = { "description" = "Förbrukad mängd övrigt bränsle avseende innevarande år, i ansökningar om återbetalning för yrkesmässig luftfart, båt och skepp, diverse industriella processer samt värmeproduktion med utsläppsrätter. SCB dokumenterar kolumnen både som förbrukad mängd och som återbetalningsberättigad mängd." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\n2017–2022 anger övrigt bränsle innevarande år; raden 2019 om värmeproduktion med utsläppsrätter avser föregående år, motsäger kolumnen och tas inte med.\ncatalog:variable_text:23930:16071:16801\ncatalog:variable_text:23930:17167:17897\ncatalog:variable_text:23930:17897:18628\ncatalog:variable_text:23930:18628:19358\nRegisterinformation.csv:row=389522\nRegisterinformation.csv:row=390358\nRegisterinformation.csv:row=395081\nRegisterinformation.csv:row=404194\nRegisterinformation.csv:row=404679\nRegisterinformation.csv:row=863494\n\nMaintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; this description was widened to cover the merged variants. Source: SCB Registerinformation, the operational definitions of VarId 39787 (yrkesmässig luftfart; båt och skepp; värmeproduktion med utsläppsrätter) and VarId 39768 (diverse industriella processer; värmeproduktion med utsläppsrätter) on OVRNVMNG in 2014-2023."
 
 [[statement]]
 kind = "set"
@@ -96901,3 +96547,213 @@ kind = "set"
 subject = "var:energiskatt-ovrfgensk"
 fields = { "description" = "Energiskatt på övrigt bränsle avseende föregående år, i ansökningar om återbetalning för yrkesmässig luftfart, diverse industriella processer, framställning av el och industri." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\n2008–2023 anger övrigt bränsle föregående år, yrkesmässig luftfart alla år och fler blanketter från 2017; raderna 2019 om dieselolja och värmeleveranser innevarande år och 2022 om eldningsolja år 1 motsäger kolumnen och tas inte med.\ncatalog:variable_text:23660:13879:14245\ncatalog:variable_text:23660:14245:14610\ncatalog:variable_text:23660:14610:14975\ncatalog:variable_text:23660:14975:15340\ncatalog:variable_text:23660:15340:15706\ncatalog:variable_text:23660:15706:16071\ncatalog:variable_text:23660:16071:17167\ncatalog:variable_text:23660:17167:18628\ncatalog:variable_text:23660:18628:19358\ncatalog:variable_text:23660:19358:19723\nRegisterinformation.csv:row=97966\nRegisterinformation.csv:row=98227\nRegisterinformation.csv:row=98240\nRegisterinformation.csv:row=115473\nRegisterinformation.csv:row=115478\nRegisterinformation.csv:row=115591\nRegisterinformation.csv:row=115614\nRegisterinformation.csv:row=195887\nRegisterinformation.csv:row=195963\nRegisterinformation.csv:row=196210\nRegisterinformation.csv:row=292261"
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: V7758 @2018..2022 where key = 'v17766'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Aktiebolag versions 2018-2022 (RegVerIDs 14801, 16184, 18293, 18815, 19331) documents column V7758 under VarId 17766 \"Andel i handelsbolag inklusive kapitalvinst/-förlust på andel: Bokförd vinst/kapitalvinst\" and VarId 40858 \"Andel i handelsbolag (inkl. avyttring)\". From 2018 VarId 17766 is listed under both V7757 and V7758 with one CVID (a copied listing), V7757 is held by VarId 17764 in every version, and VarId 40858 has its own CVID and alone documents V7758 in 2023; the VarId 17766 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: V7762 @2018..2022 where key = 'v20927'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Aktiebolag versions 2018-2022 (RegVerIDs 14801, 16184, 18293, 18815, 19331) documents column V7762 under VarId 20927 \"Övriga skattemässiga justeringar av resultatet, minskning\" and VarId 40859 \"Andra skattemässiga justeringar av resultatet\". From 2018 VarId 20927 is listed under both V7662 and V7762 with one CVID (a copied listing), V7662 is held by VarId 16773 in every version, and VarId 40859 alone documents V7762 in 2023; the VarId 20927 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n3a: V6531 @2015 where key = 'v17855'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Bilaga N3A version 2015 (RegVerID 8703) documents column V6531 under VarId 17855 \"Icke varaktiga kapitaltillskott till handelsbolaget (790)\" and VarId 17857 \"Ständig övergångspost vid 1995 års taxering (792)\". VarId 17857 (Ständig övergångspost, 792) holds V6531 in 2012-2013 and 2016-2023, while VarId 17855 (Icke varaktiga kapitaltillskott, 790) holds V6631 in 2012-2014 and 2016-2023 and its V6531 listing in 2014 and 2015 is a one-digit slip for V6631; the VarId 17855 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: BANTATOT @2015..2022 where key = 'v26047'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Bolagsverket versions 2015-2022 (RegVerIDs 13735, 13734, 13698, 14824, 16188, 18300, 18808, 19337) documents column BANTATOT under VarId 26047 \"Antal aktier\" and VarId 26050 \"Totalt antal aktier\"; the VarId 26047 row is withheld. VarId 26047 \"Antal aktier\" and VarId 26050 \"Totalt antal aktier\" are both listed on bantatot in 2015-2022; the row of VarId 26047 is a copy of its banta row (same CVID) in 2015-2016 and has its own CVID from 2017, and VarId 26050 documents bantatot in every version 2007-2022 under its own CVID, and the source does not settle which; VarId 26050 is the more plausible owner because the column name is \"BANTATOT\", VarId 26050 \"Totalt antal aktier\" has held it since 2007 and VarId 26047 has its own column banta in every version (maintainer 2026-11-14: place under the more plausible owner)."
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: bfordat @2015..2023 where key = 'v39631'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Bolagsverket versions 2015-2023 (RegVerIDs 13735 (2015) to 20062 (2023), 9 versions) documents column bfordat under VarId 39622 \"Datum för fortsättning av konkurs\" and VarId 39631 \"Likvidationen fortsätter\"; the VarId 39631 row is withheld. Two events share the column name, \"Datum för fortsättning av konkurs\" (VarId 39622) and \"Likvidationen fortsätter\" (VarId 39631), and no other column in the table is named for either, and the source does not settle which; VarId 39622 is the more plausible owner because VarId 39622 sits in the same run of VarIds (39619-39629, the \"Datum för ...\" columns) as bupphdat, beskdat and benydat, whose column names follow the same short-stem pattern, whereas VarId 39631 follows the likvidation column bupphodat (VarId 39630) that has its own name (maintainer 2026-11-14: place under the more plausible owner)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V0740 @2000..2006 where key = 'v17391'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Deklarationsuppgifter för enskilda näringsidkare versions 2000-2006 (RegVerIDs 13726, 13725, 13724, 13723, 13722, 13721, 11620) documents column V0740 under VarId 17391 \"Anskaffningsvärde på tillgångar som är anskaffade före beskattningsåret, maskinell utrustning anskaffad före 1 juli 1990 samt markanläggningar\" and VarId 16907 \"Anskaffningsvärde på tillgångar anskaffade före beskattningsåret, markanläggningar anskaffade fr.o.m. 1 juli 1990\"; the VarId 17391 row is withheld. The two rows give the same line of the depreciation table for two asset groups (\"markanläggningar anskaffade fr.o.m. 1 juli 1990\" and \"maskinell utrustning anskaffad före 1 juli 1990 samt mark\"), and the source does not settle which; VarId 16907 is the more plausible owner because the neighbouring column V0741 (\"Anskaffningar under beskattningsåret, markanläggningar anskaffade fr.o.m. 1 juli 1990\") has only the markanläggningar variable, so the V0740-V0746 block is that asset group, and VarIds 17391-17397 have no other column in the table (maintainer 2026-11-14: place under the more plausible owner)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V0742 @2000..2006 where key = 'v17394'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Deklarationsuppgifter för enskilda näringsidkare versions 2000-2006 (RegVerIDs 13726, 13725, 13724, 13723, 13722, 13721, 11620) documents column V0742 under VarId 17394 \"Under beskattn.året ianspråktagna fonder eller liknande, maskinell utrustning anskaffad före 1 juli 1990 samt markanläggningar\" and VarId 16909 \"Under beskattn.året ianspråktagna fonder eller liknande, markanläggningar anskaffade fr.o.m. 1 juli 1990\"; the VarId 17394 row is withheld. The two rows give the same line of the depreciation table for two asset groups (\"markanläggningar anskaffade fr.o.m. 1 juli 1990\" and \"maskinell utrustning anskaffad före 1 juli 1990 samt mark\"), and the source does not settle which; VarId 16909 is the more plausible owner because the neighbouring column V0741 (\"Anskaffningar under beskattningsåret, markanläggningar anskaffade fr.o.m. 1 juli 1990\") has only the markanläggningar variable, so the V0740-V0746 block is that asset group, and VarIds 17391-17397 have no other column in the table (maintainer 2026-11-14: place under the more plausible owner)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V0744 @2000..2006 where key = 'v17395'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Deklarationsuppgifter för enskilda näringsidkare versions 2000-2006 (RegVerIDs 13726, 13725, 13724, 13723, 13722, 13721, 11620) documents column V0744 under VarId 17395 \"Beskattningsårets avskrivning, maskinell utrustning anskaffad före 1 juli 1990 samt markanläggningar\" and VarId 16910 \"Beskattningsårets avskrivning, markanläggningar anskaffade fr.o.m. 1 juli 1990\"; the VarId 17395 row is withheld. The two rows give the same line of the depreciation table for two asset groups (\"markanläggningar anskaffade fr.o.m. 1 juli 1990\" and \"maskinell utrustning anskaffad före 1 juli 1990 samt mark\"), and the source does not settle which; VarId 16910 is the more plausible owner because the neighbouring column V0741 (\"Anskaffningar under beskattningsåret, markanläggningar anskaffade fr.o.m. 1 juli 1990\") has only the markanläggningar variable, so the V0740-V0746 block is that asset group, and VarIds 17391-17397 have no other column in the table (maintainer 2026-11-14: place under the more plausible owner)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V0745 @2000..2006 where key = 'v17396'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Deklarationsuppgifter för enskilda näringsidkare versions 2000-2006 (RegVerIDs 13726, 13725, 13724, 13723, 13722, 13721, 11620) documents column V0745 under VarId 17396 \"Summan av tidigare beskattningsårs avskrivningar, maskinell utrustning anskaffad före 1 juli 1990 samt markanläggningar\" and VarId 16911 \"Summan av tidigare beskattningsårs avskrivningar, markanläggningar anskaffade fr.o.m. 1 juli 1990\"; the VarId 17396 row is withheld. The two rows give the same line of the depreciation table for two asset groups (\"markanläggningar anskaffade fr.o.m. 1 juli 1990\" and \"maskinell utrustning anskaffad före 1 juli 1990 samt mark\"), and the source does not settle which; VarId 16911 is the more plausible owner because the neighbouring column V0741 (\"Anskaffningar under beskattningsåret, markanläggningar anskaffade fr.o.m. 1 juli 1990\") has only the markanläggningar variable, so the V0740-V0746 block is that asset group, and VarIds 17391-17397 have no other column in the table (maintainer 2026-11-14: place under the more plausible owner)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V0746 @2000..2006 where key = 'v17397'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Deklarationsuppgifter för enskilda näringsidkare versions 2000-2006 (RegVerIDs 13726, 13725, 13724, 13723, 13722, 13721, 11620) documents column V0746 under VarId 17397 \"Oavskrivet värde vid beskattningsårets utgång, maskinell utrustning anskaffad före 1 juli 1990 samt markanläggningar\" and VarId 17174 \"Oavskrivet värde vid beskattningsårets utgång, markanläggningar anskaffade fr.o.m. 1 juli 1990\"; the VarId 17397 row is withheld. The two rows give the same line of the depreciation table for two asset groups (\"markanläggningar anskaffade fr.o.m. 1 juli 1990\" and \"maskinell utrustning anskaffad före 1 juli 1990 samt mark\"), and the source does not settle which; VarId 17174 is the more plausible owner because the neighbouring column V0741 (\"Anskaffningar under beskattningsåret, markanläggningar anskaffade fr.o.m. 1 juli 1990\") has only the markanläggningar variable, so the V0740-V0746 block is that asset group, and VarIds 17391-17397 have no other column in the table (maintainer 2026-11-14: place under the more plausible owner)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V0798 @2000..2006 where key = 'v17349'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Deklarationsuppgifter för enskilda näringsidkare versions 2000-2006 (RegVerIDs 13726, 13725, 13724, 13723, 13722, 13721, 11620) documents column V0798 under VarId 17349 \"Resultat av verksamheten\" and VarId 16776 \"Resultatet efter skattemässiga avskrivningar och övriga justeringar\"; the VarId 17349 row is withheld. The table documents the same line twice, once in the VarId 167xx-168xx run that covers the surrounding columns (V0799, V0800, V0803, V0809, V0816) and once in the VarId 173xx duplicate run, and the source does not settle which; VarId 16776 is the more plausible owner because the surrounding columns all hold the 167xx-168xx variables, and the 173xx variable has no other column in the table (maintainer 2026-11-14: place under the more plausible owner)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V0802 @2000..2006 where key = 'v17352'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Deklarationsuppgifter för enskilda näringsidkare versions 2000-2006 (RegVerIDs 13726, 13725, 13724, 13723, 13722, 13721, 11620) documents column V0802 under VarId 17352 \"Värde av fri bil, fri bostad m.m.\" and VarId 16783 \"Förmånsvärdet av fri bil\"; the VarId 17352 row is withheld. The table documents the same line twice, once in the VarId 167xx-168xx run that covers the surrounding columns (V0799, V0800, V0803, V0809, V0816) and once in the VarId 173xx duplicate run, and the source does not settle which; VarId 16783 is the more plausible owner because the surrounding columns all hold the 167xx-168xx variables, and the 173xx variable has no other column in the table (maintainer 2026-11-14: place under the more plausible owner)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V0806 @2000..2006 where key = 'v17355'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Deklarationsuppgifter för enskilda näringsidkare versions 2000-2006 (RegVerIDs 13726, 13725, 13724, 13723, 13722, 13721, 11620) documents column V0806 under VarId 17355 \"Avdragsgilla kostnader för resor mellan bostad och arbetsplats över 7 000 kr m.m.\" and VarId 16792 \"Kostnader för resor mellan bostad och arbetsplats till den del kostnaden överstiger 7 000 kr samt andra egna kostnader för verksamheten\"; the VarId 17355 row is withheld. The table documents the same line twice, once in the VarId 167xx-168xx run that covers the surrounding columns (V0799, V0800, V0803, V0809, V0816) and once in the VarId 173xx duplicate run, and the source does not settle which; VarId 16792 is the more plausible owner because the surrounding columns all hold the 167xx-168xx variables, and the 173xx variable has no other column in the table (maintainer 2026-11-14: place under the more plausible owner)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V0813 @2000..2006 where key = 'v17353'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Deklarationsuppgifter för enskilda näringsidkare versions 2000-2006 (RegVerIDs 13726, 13725, 13724, 13723, 13722, 13721, 11620) documents column V0813 under VarId 17353 \"Överskott av annan verksamhet från N1A/N2A och min andel som medhjälpande make\" and VarId 16786 \"Tillkommer: Resultat av annan verksamhet som tillhör denna näringsverksamhet men redovisats på annan blankett N1A/N2A: Överskott\"; the VarId 17353 row is withheld. The table documents the same line twice, once in the VarId 167xx-168xx run that covers the surrounding columns (V0799, V0800, V0803, V0809, V0816) and once in the VarId 173xx duplicate run, and the source does not settle which; VarId 16786 is the more plausible owner because the surrounding columns all hold the 167xx-168xx variables, and the 173xx variable has no other column in the table (maintainer 2026-11-14: place under the more plausible owner)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V0814 @2000..2006 where key = 'v17354'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Deklarationsuppgifter för enskilda näringsidkare versions 2000-2006 (RegVerIDs 13726, 13725, 13724, 13723, 13722, 13721, 11620) documents column V0814 under VarId 17354 \"Underskott av annan verksamhet från N1A/N2A och andel till medhjälpande make\" and VarId 16787 \"Avgår: Resultat av annan verksamhet som tillhör denna näringsverksamhet men redovisats på annan blankett N1a/N2a: Underskott\"; the VarId 17354 row is withheld. The table documents the same line twice, once in the VarId 167xx-168xx run that covers the surrounding columns (V0799, V0800, V0803, V0809, V0816) and once in the VarId 173xx duplicate run, and the source does not settle which; VarId 16787 is the more plausible owner because the surrounding columns all hold the 167xx-168xx variables, and the 173xx variable has no other column in the table (maintainer 2026-11-14: place under the more plausible owner)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V0890 @2000..2006 where key = 'v17205'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Deklarationsuppgifter för enskilda näringsidkare versions 2000-2006 (RegVerIDs 13726, 13725, 13724, 13723, 13722, 13721, 11620) documents column V0890 under VarId 15230 \"Momsfri omsättning\" and VarId 17205 \"Moms som redovisas i Inkomstdeklaration: 2. Momsfri omsättning inom Sverige\". VarId 15230 \"Momsfri omsättning\" (definition \"Momsfri omsättning inom Sverige\") holds V0890 in Aktiebolag in 2000-2006 and, as V7401, continues this line in this table in 2007-2023, while VarId 17205 is the form-numbered wording of the same line that appears only here in 2000-2006; the VarId 17205 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V0954 @2000..2006 where key = 'v17203'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Deklarationsuppgifter för enskilda näringsidkare versions 2000-2006 (RegVerIDs 13726, 13725, 13724, 13723, 13722, 13721, 11620) documents column V0954 under VarId 17203 \"Moms som redovisas i Inkomstdeklaration. Summa utgående moms\" and VarId 16710 \"Summa utgående moms…\"; the VarId 17203 row is withheld. The same VAT line is documented twice in 2000-2006, as the general variable (also on this column in Aktiebolag) and as the form-numbered \"Moms som redovisas i Inkomstdeklaration\" wording, which holds the neighbouring VAT columns V0955-V0964 alone, and the source does not settle which; VarId 16710 is the more plausible owner because the general variable is the one register-wide variable for this line, also used on the same column in Aktiebolag in 2000-2006 (maintainer 2026-11-14: place under the more plausible owner)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V0957 @2000..2006 where key = 'v17209'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Deklarationsuppgifter för enskilda näringsidkare versions 2000-2006 (RegVerIDs 13726, 13725, 13724, 13723, 13722, 13721, 11620) documents column V0957 under VarId 16712 \"Omsättning av varor utanför EG (export)\" and VarId 17209 \"Moms som redovisas i Inkomstdeklaration: 6. Omsättning av varor utanför EG (export)\"; the VarId 17209 row is withheld. The same VAT line is documented twice in 2000-2006, as the general variable (also on this column in Aktiebolag) and as the form-numbered \"Moms som redovisas i Inkomstdeklaration\" wording, which holds the neighbouring VAT columns V0955-V0964 alone, and the source does not settle which; VarId 16712 is the more plausible owner because the general variable is the one register-wide variable for this line, also used on the same column in Aktiebolag in 2000-2006 (maintainer 2026-11-14: place under the more plausible owner)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V0960 @2000..2006 where key = 'v17212'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Deklarationsuppgifter för enskilda näringsidkare versions 2000-2006 (RegVerIDs 13726, 13725, 13724, 13723, 13722, 13721, 11620) documents column V0960 under VarId 16719 \"Överföring av varor till EG-land\" and VarId 17212 \"Moms som redovisas i Inkomstdeklaration: 9. Överföring av varor till annat EG-land\"; the VarId 17212 row is withheld. The same VAT line is documented twice in 2000-2006, as the general variable (also on this column in Aktiebolag) and as the form-numbered \"Moms som redovisas i Inkomstdeklaration\" wording, which holds the neighbouring VAT columns V0955-V0964 alone, and the source does not settle which; VarId 16719 is the more plausible owner because the general variable is the one register-wide variable for this line, also used on the same column in Aktiebolag in 2000-2006 (maintainer 2026-11-14: place under the more plausible owner)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V0965 @2000..2006 where key = 'v17206'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Deklarationsuppgifter för enskilda näringsidkare versions 2000-2006 (RegVerIDs 13726, 13725, 13724, 13723, 13722, 13721, 11620) documents column V0965 under VarId 15231 \"Momspl uttag av fastighetsförvaltningstjänster\" and VarId 17206 \"Moms som redovisas i Inkomstdeklaration: 3. Momspliktiga uttag av fastighetsförvaltningstjänster\"; the VarId 17206 row is withheld. The same VAT line is documented twice in 2000-2006, as the general variable (also on this column in Aktiebolag) and as the form-numbered \"Moms som redovisas i Inkomstdeklaration\" wording, which holds the neighbouring VAT columns V0955-V0964 alone, and the source does not settle which; VarId 15231 is the more plausible owner because the general variable is the one register-wide variable for this line, also used on the same column in Aktiebolag in 2000-2006 (maintainer 2026-11-14: place under the more plausible owner)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V0895 @2000..2006 where key = 'v17390'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Deklarationsuppgifter för enskilda näringsidkare versions 2000-2006 (RegVerIDs 13726, 13725, 13724, 13723, 13722, 13721, 11620) documents column V0895 under VarId 17390 \"Ersättningsfonder vid beskattningsårets utgång\" and VarId 17001 \"Storleken av ersättningsfonder vid beskattningsårets utgång\". VarId 17001 \"Storleken av ersättningsfonder vid beskattningsårets utgång\" holds V0895 in Aktiebolag, Handelsbolag and this table, while VarId 17390 \"Ersättningsfonder vid beskattningsårets utgång\" has its own column V0941 in this table; the VarId 17390 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V8009 @2008..2009 where key = 'v20741'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Deklarationsuppgifter för enskilda näringsidkare versions 2008-2009 (RegVerIDs 4228, 3781) documents column V8009 under VarId 20741 \"Kapitalunderlag för expansionsfond, positivt\" and VarId 20738 \"Kapitalunderlag för räntefördelning, Positivt\". VarIds 20736-20740 map to V8007-V8011 in order (V8008 Ersättningsfonder, V8010 räntefördelning negativt, V8011 positivt räntefördelningsbelopp), so V8009 is VarId 20738 \"Kapitalunderlag för räntefördelning, positivt\"; VarId 20741 has its own column V8012 (also in 2010 beside VarId 27110); the VarId 20741 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V8009 @2011 where key = 'v20741'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Deklarationsuppgifter för enskilda näringsidkare version 2011 (RegVerID 5088) documents column V8009 under VarId 20741 \"Kapitalunderlag för expansionsfond, positivt\" and VarId 20738 \"Kapitalunderlag för räntefördelning, Positivt\". VarIds 20736-20740 map to V8007-V8011 in order (V8008 Ersättningsfonder, V8010 räntefördelning negativt, V8011 positivt räntefördelningsbelopp), so V8009 is VarId 20738 \"Kapitalunderlag för räntefördelning, positivt\"; VarId 20741 has its own column V8012 (also in 2010 beside VarId 27110); the VarId 20741 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: ELPCNORDSK @2019..2023 where key = 'v44237'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Punktskatter för energi- och koldioxidskatter versions 2019-2023 (RegVerIDs 16482, 18312, 18795, 19349, 20075) documents column ELPCNORDSK under VarId 44237 \"Skattesats elenergiskatt\" and VarId 40839 \"Elenergiskatt\". The rate columns of this family carry the suffix SATS (ELPCNORDSKSATS holds VarId 39788 \"Skattesats, energiskatt\"), so ELPCNORDSK is the amount \"Elenergiskatt\" (VarId 40839, kWh and SEK) as for ELATERFBIOELSK and the other amount columns, not the rate \"Skattesats elenergiskatt\"; the VarId 44237 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: V736_14 @2014..2016 where key = 'v26618'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Punktskatter för energi- och koldioxidskatter versions 2014-2016 (RegVerIDs 13736, 13732, 13731) documents column V736_14 under VarId 26578 \"Avdr. för skatt på bränsle som förbr. annat ändamål än motordrift eller dubbel användning\" and VarId 26618 \"Avdr. för skatt på råtallolja, förbukning\"; the VarId 26618 row is withheld. VarId 26618 \"Avdr. för skatt på råtallolja, förbrukning\" (SEK) is the specific variable on V736_14 in 2007-2016, while from 2014 VarId 26578 (a general deduction variable) is also listed on V736_14 and holds it alone from 2017; the neighbouring V736_13 and V736_15 switch from specific råtallolja variables to general ones in 2014, and the source does not settle which; VarId 26578 is the more plausible owner because VarId 26578 is the variable the column has from 2014 on the same pattern as V736_13 and V736_15, and it holds the column alone in 2017-2023 (maintainer 2026-11-14: place under the more plausible owner)."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: ELDATERMNG @2008..2013 where key = 'v25895'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Punktskatter för energi- och koldioxidskatter versions 2008-2013 (RegVerIDs 12309, 12308, 12307, 12306, 12304, 12303) documents column ELDATERMNG under VarId 25894 \"Återbetalningsberättigande förbrukad mängd, eldningsolja\" and VarId 25895 \"Återbetalningsberättigande förbrukad mängd, eldningsolja för uppvärmning och/eller stationära motorer\". The source does not settle which; VarId 25894 is the more plausible owner because the column name ELDATERMNG names eldningsolja in general and VarId 25895 is the narrower variant of the same quantity (eldningsolja för uppvärmning och/eller stationära motorer, also in m3), listed beside it on this column in every version, and neither row has an operational definition (maintainer 2026-11-14: place under the more plausible owner); the VarId 25895 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: ELDING @2008..2013 where key = 'v25897'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Punktskatter för energi- och koldioxidskatter versions 2008-2013 (RegVerIDs 12309, 12308, 12307, 12306, 12304, 12303) documents column ELDING under VarId 25896 \"Ingående lager, eldningsolja\" and VarId 25897 \"Ingående lager, eldningsolja för uppvärmning och/eller stationära motorer\". The source does not settle which; VarId 25896 is the more plausible owner because the column name ELDING names eldningsolja in general and VarId 25897 is the narrower variant of the same quantity (eldningsolja för uppvärmning och/eller stationära motorer, also in m3), listed beside it on this column in every version, and neither row has an operational definition (maintainer 2026-11-14: place under the more plausible owner); the VarId 25897 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: ELDINK @2008..2013 where key = 'v25899'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Punktskatter för energi- och koldioxidskatter versions 2008-2013 (RegVerIDs 12309, 12308, 12307, 12306, 12304, 12303) documents column ELDINK under VarId 25898 \"Inköp, eldningsolja\" and VarId 25899 \"Inköp, eldningsolja för uppvärmning och/eller stationära motorer\". The source does not settle which; VarId 25898 is the more plausible owner because the column name ELDINK names eldningsolja in general and VarId 25899 is the narrower variant of the same quantity (eldningsolja för uppvärmning och/eller stationära motorer, also in m3), listed beside it on this column in every version, and neither row has an operational definition (maintainer 2026-11-14: place under the more plausible owner); the VarId 25899 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: ELDUTG @2008..2013 where key = 'v25902'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Punktskatter för energi- och koldioxidskatter versions 2008-2013 (RegVerIDs 12309, 12308, 12307, 12306, 12304, 12303) documents column ELDUTG under VarId 25901 \"Utgående lager, eldningsolja\" and VarId 25902 \"Utgående lager, eldningsolja för uppvärmning och/eller stationära motorer\". The source does not settle which; VarId 25901 is the more plausible owner because the column name ELDUTG names eldningsolja in general and VarId 25902 is the narrower variant of the same quantity (eldningsolja för uppvärmning och/eller stationära motorer, also in m3), listed beside it on this column in every version, and neither row has an operational definition (maintainer 2026-11-14: place under the more plausible owner); the VarId 25902 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: ELFORBMNG @2018..2023 where key = 'v25874'"
+fields = { "variable" = "forbrukad-mangd-el" }
+evidence = "SCB Registerinformation, Punktskatter för energi- och koldioxidskatter versions 2018-2023 (RegVerIDs 14805, 16482, 18312, 18795, 19349, 20075) documents column ELFORBMNG under VarId 25874 \"Totalt förbrukad mängd bränsle punktskatter\" and VarId 39787 \"Förbrukad mängd, punktskatter/återbetalningar\". The operational definitions place the rows in different application kinds (\"återbetalningsansökan för industri, el\" and \"för vattenbruk, el\") of one fuel-quantity column; the VarId 25874 rows are placed under forbrukad-mangd-el (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable)."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: GASFGMNG @2014..2023 where key = 'v39787'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Punktskatter för energi- och koldioxidskatter versions 2014-2023 (RegVerIDs 13736 (2014) to 20075 (2023), 10 versions) documents column GASFGMNG under VarId 39787 \"Förbrukad mängd, punktskatter/återbetalningar\" and VarId 39768 \"Återbetalningsberättigad mängd, bränsle\". The source does not settle which; VarId 39768 is the more plausible owner because the table's sibling quantity columns (GASATERMNG, NGASFGMNG, KOLFGMNG, OLJFGMNG and others) all carry VarId 39768 and the two names are different measures (consumed and refund-eligible quantity), not row kinds of one measure (maintainer 2026-11-14: place under the more plausible owner); the VarId 39787 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: GASNVMNG @2014..2023 where key = 'v39787'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Punktskatter för energi- och koldioxidskatter versions 2014-2023 (RegVerIDs 13736 (2014) to 20075 (2023), 10 versions) documents column GASNVMNG under VarId 25874 \"Totalt förbrukad mängd bränsle punktskatter\", VarId 39787 \"Förbrukad mängd, punktskatter/återbetalningar\" and VarId 39768 \"Återbetalningsberättigad mängd, bränsle\". The source does not settle which; VarId 39768 is the more plausible owner because the table's sibling quantity columns (GASATERMNG, NGASFGMNG, KOLFGMNG, OLJFGMNG and others) all carry VarId 39768 and the two names are different measures (consumed and refund-eligible quantity), not row kinds of one measure (maintainer 2026-11-14: place under the more plausible owner); the VarId 39787 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: GASNVMNG @2014..2023 where key = 'v25874'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Punktskatter för energi- och koldioxidskatter versions 2014-2023 (RegVerIDs 13736 (2014) to 20075 (2023), 10 versions) documents column GASNVMNG under VarId 25874 \"Totalt förbrukad mängd bränsle punktskatter\", VarId 39787 \"Förbrukad mängd, punktskatter/återbetalningar\" and VarId 39768 \"Återbetalningsberättigad mängd, bränsle\". The source does not settle which; VarId 39768 is the more plausible owner because the table's sibling quantity columns (GASATERMNG, NGASFGMNG, KOLFGMNG, OLJFGMNG and others) all carry VarId 39768, and VarId 25874 gives the total consumed quantity (GASTOT) elsewhere in the table and the two names are different measures (consumed and refund-eligible quantity), not row kinds of one measure (maintainer 2026-11-14: place under the more plausible owner); the VarId 25874 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: OVRNVMNG @2017..2022 where key = 'v39787'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Punktskatter för energi- och koldioxidskatter versions 2017-2022 (RegVerIDs 13717, 14805, 16482, 18312, 18795, 19349) documents column OVRNVMNG under VarId 39787 \"Förbrukad mängd, punktskatter/återbetalningar\" and VarId 39768 \"Återbetalningsberättigad mängd, bränsle\". The source does not settle which; VarId 39768 is the more plausible owner because the table's sibling quantity columns (GASATERMNG, NGASFGMNG, KOLFGMNG, OLJFGMNG and others) all carry VarId 39768, VarId 39768 also documents OVRNVMNG in 2023 where it holds the column alone, and VarId 39787 holds OVRFGMNG there and the two names are different measures (consumed and refund-eligible quantity), not row kinds of one measure (maintainer 2026-11-14: place under the more plausible owner); the VarId 39787 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "var:forbrukad-mangd-el"
+fields = { "description" = "Förbrukad mängd el, i kilowattimmar, i ansökningar om återbetalning för industri och för vattenbruk." }
+evidence = "Maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; the description covers every variant merged into this variable. Source: SCB Registerinformation, the operational definitions of VarId 25874 and VarId 39787 on ELFORBMNG in 2018-2023 read \"Avser återbetalningsansökan för industri, el\" and \"... för vattenbruk, el\", both in kilowatt hours."
