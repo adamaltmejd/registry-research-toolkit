@@ -34,6 +34,7 @@ import {
 } from "./lane_graph";
 import { coverageMarks } from "./period";
 import type { ProjectStudyWindow } from "./project_data";
+import { repeatKeys } from "./series_breaks";
 import { EntityPill } from "./ui/EntityPill";
 import type { ColumnState } from "./ui/Pill";
 
@@ -536,6 +537,11 @@ function Marks({
   breaks: readonly number[];
 }) {
   const marker = `${markerId}-arrow`;
+  // A break's line ends at the last lane, not past it.
+  const lanesEnd = Math.max(
+    geometry.axisY,
+    ...geometry.lanes.map((lane) => lane.y + lane.height),
+  );
   const bottom = geometry.height;
   const x = (year: number) =>
     geometry.trackX +
@@ -707,7 +713,7 @@ function Marks({
           x1={x(at)}
           x2={x(at)}
           y1={geometry.axisY}
-          y2={bottom}
+          y2={lanesEnd}
         />
       ))}
       {geometry.edges.map((edge) => (
@@ -738,6 +744,7 @@ function BreakMark({
   left: number;
   top: number;
 }) {
+  const keys = repeatKeys(labels);
   return (
     <TooltipTrigger delay={0} closeDelay={0}>
       {/* A button only so the marker is a tab stop that opens its tooltip;
@@ -754,8 +761,8 @@ function BreakMark({
         offset={6}
         style={{ zIndex: "var(--z-popover)" }}
       >
-        {labels.map((label) => (
-          <span key={label}>{label}</span>
+        {labels.map((label, index) => (
+          <span key={keys[index]}>{label}</span>
         ))}
       </Tooltip>
     </TooltipTrigger>

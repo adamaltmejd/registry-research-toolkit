@@ -582,12 +582,7 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   group's under each member's lane title), each with its day or years muted over the
   provider's text, never a release name or provenance; it renders only when a break
   exists (placement: Operator, 2026-11-14; the rest is a new rule, proposed by the
-  implementer). A dated break is also drawn on that page's `Timeline` at its day
-  (maintainer, via the Operator, 2026-11-14: "markers at their day, with the text on
-  hover/focus and accessible text. Undated breaks: no marker"): a small `warn` marker
-  under the axis and a dashed `warn` line down the lanes; the marker is a tab stop
-  whose name and tooltip are the break's place, day and text, one marker per day (new
-  rule, proposed by the implementer). A variable page has no source and provenance section; MCP keeps
+  implementer). A variable page has no source and provenance section; MCP keeps
   `evidence=true` (maintainer 2026-11-04). Padding `spacing.5`. A grouped variable has
   no page of its own (maintainer 2026-11-04): its address (from search, the palette, a
   project card or a note) renders its group's page, one route and one page, not a
@@ -881,6 +876,14 @@ Time is the axis every relation is drawn on.
   warning: the uncovered part of the window is drawn `info-bg` on the coverage row. The
   picture says it, so there is no note or legend entry for it; the header names those
   years to a screen reader only (#1833).
+
+- A **dated series break** is drawn on a variable's or group's `Timeline` at its day
+  (maintainer request in the Operator's message of 2026-11-14, quoted verbatim:
+  "markers at their day, with the text on hover/focus and accessible text. Undated
+  breaks: no marker; the list covers them"): a small `warn` triangle under the axis in a
+  24 px target and a dashed `warn` line down to the last lane. The marker is a tab stop
+  whose name and tooltip are the break's place, day and text, one marker per day (new
+  rule, proposed by the implementer).
 
 - A **year without a delivery** is plain empty space on the `Timeline`, the `LaneGraph`
   and the `VariableRow`, for every register (#1832, maintainer ruling 2026-10-23): no

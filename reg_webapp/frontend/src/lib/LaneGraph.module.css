@@ -545,22 +545,32 @@ a.nameText {
   stroke-dasharray: 3 3;
 }
 
+/* A 24 px target (WCAG 2.5.8) holding a 12 px triangle under the axis line,
+   clear of the year labels above it. */
 .breakMark {
   position: absolute;
-  width: 12px;
-  height: 10px;
-  /* Under the axis line, clear of the year labels above it. */
-  margin: 1px 0 0 -6px;
+  width: 24px;
+  height: 24px;
+  margin: -5px 0 0 -12px;
   padding: 0;
   border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  cursor: help;
+}
+
+.breakMark::before {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 12px;
+  height: 10px;
   background: var(--warn);
   clip-path: polygon(50% 0, 100% 100%, 0 100%);
-  cursor: help;
+  content: "";
 }
 
 .breakMark[data-focus-visible] {
   outline: none;
-  clip-path: none;
-  border-radius: 2px;
   box-shadow: var(--focus-ring);
 }
