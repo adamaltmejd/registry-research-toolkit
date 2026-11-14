@@ -1087,6 +1087,51 @@ pub(super) struct Applied {
     /// The final records resolved, once computed: later checks and the build reuse it
     /// rather than resolving the whole catalog again (#2196).
     pub resolved: Option<Vec<reg_resolve::Resolved>>,
+    /// Each release's delivered table name by its locator ([`delivered_names`]).
+    pub delivered: BTreeMap<reg_frame::Locator, String>,
+}
+
+/// Each release's delivered table name, by its locator (kept through a move), as the
+/// parent stage leaves the frame: the name of the table its reader placed it in, or the
+/// table it was asserted into. An unnamed table's is its handle, or the register's name
+/// for the implicit table, as resolve names it. Curated names come later and never count.
+fn delivered_names(records: &[Record]) -> BTreeMap<reg_frame::Locator, String> {
+    let mut tables = BTreeMap::new();
+    let mut registers = BTreeMap::new();
+    for record in records {
+        match record {
+            Record::Table(t) => {
+                if let Some(name) = &t.name {
+                    tables
+                        .entry((&t.provider, &t.register, &t.table))
+                        .or_insert(name);
+                }
+            }
+            Record::Register(r) => {
+                registers
+                    .entry((&r.provider, &r.register))
+                    .or_insert(r.name.as_ref().unwrap_or(&r.register));
+            }
+            _ => {}
+        }
+    }
+    records
+        .iter()
+        .filter_map(|record| {
+            let Record::Release(r) = record else {
+                return None;
+            };
+            let named = tables.get(&(&r.provider, &r.register, &r.table)).copied();
+            let implicit = || {
+                r.table
+                    .is_empty()
+                    .then(|| registers.get(&(&r.provider, &r.register)).copied())
+                    .flatten()
+            };
+            let name = named.or_else(implicit).unwrap_or(&r.table);
+            Some((r.locator.clone(), name.clone()))
+        })
+        .collect()
 }
 
 /// Every curated sentinel code by value-set hash.
@@ -1444,6 +1489,9 @@ fn run_selected(
         let mut field_snapshot = Vec::new();
         if !conflicts.is_empty() {
             break;
+        }
+        if stage == Phase::Coverage {
+            result.delivered = delivered_names(&records);
         }
         let stage_start = std::time::Instant::now();
         let (mut in_references, mut in_resolve) = (Duration::ZERO, Duration::ZERO);

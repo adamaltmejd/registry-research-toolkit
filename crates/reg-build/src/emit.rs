@@ -82,8 +82,7 @@ pub struct Catalog {
     pub statements: Vec<StatementRow>,
     pub provenance: reg_resolve::provenance::Finalized,
     pub classifications: Vec<reg_resolve::curation::apply::Classification>,
-    /// A source release's locator → the name of the table its reader placed it in
-    /// (`release.delivered_text`).
+    /// A release's locator → its delivered table name (`release.delivered_text`).
     pub delivered: BTreeMap<reg_frame::Locator, String>,
 }
 
@@ -565,6 +564,12 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
             let rid = release_id[&(ri, x)];
             let rel = &release.release;
             let period = rel.from.as_ref().zip(rel.to.as_ref());
+            let delivered = catalog.delivered.get(&rel.locator).ok_or_else(|| {
+                format!(
+                    "{}:{}: release {:?} has no delivered table",
+                    rel.locator.input, rel.locator.at, rel.release
+                )
+            })?;
             write_provenance(
                 &mut rows,
                 &ProvenanceSubject::Release(ri, x),
@@ -605,11 +610,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                     flag(release.primary),
                     Cell::Int(i64::from(release.edition_disagreement)),
                     Cell::Text(rel.name.clone()),
-                    // An asserted release has no reader: its table is the one delivered.
-                    Cell::Text(catalog.delivered.get(&rel.locator).map_or_else(
-                        || r.tables[release.table].table.name.clone().unwrap_or_default(),
-                        Clone::clone,
-                    )),
+                    Cell::Text(delivered.clone()),
                     opt_text(rel.description.as_ref()),
                     Cell::Str(rel.release.clone()),
                     if asserted {
