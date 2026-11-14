@@ -30,3 +30,15 @@ kind = "set"
 subject = "bostadsbidrag: var:lopnr-personnr"
 fields.row_key = true
 evidence = "Row key: lopnr-personnr identifies a row: the applicant receives each monthly payment, the co-applicant is a household attribute, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bostadsbidrag: var:utbetalningsmanad"
+fields.row_key = true
+evidence = "Row key: utbetalningsmanad (utbetalningsmanad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bostadsbidrag: var:utbetalningsperiod-from"
+fields.row_key = true
+evidence = "Row key: utbetalningsperiod-from is the first day of the period a payment covers, distinct from the payment month (utbetalningsmanad); a retroactive or corrected payment pays an earlier period in a later month, so one person can have several rows per payment month. Key: person, payment month, period start (COS ruling on the #2479 review, 2026-11-14)."

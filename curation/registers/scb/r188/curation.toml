@@ -533,3 +533,27 @@ kind = "set"
 subject = "varu-landfordelat-intrastat: var:person-orgnr"
 fields.row_key = true
 evidence = "Row key: isid and person-orgnr identify a row: the shipment ISID identifies a row where delivered, and the trading firm organisation number identifies the reporter in the years without it (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "landfordelad-extrastat: var:manad"
+fields.row_key = true
+evidence = "Row key: manad (Manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "landfordelad-extrastat: var:manad-extrastat"
+fields.row_key = true
+evidence = "Row key: manad-extrastat (Manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "varu-landfordelat-intrastat: var:manad"
+fields.row_key = true
+evidence = "Row key: manad (Manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "varu-landfordelat-intrastat: var:manad-intrastat"
+fields.row_key = true
+evidence = "Row key: manad-intrastat (Manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

@@ -216,3 +216,21 @@ kind = "set"
 subject = "yrkesskadelivranta-manadsdata: var:lopnr"
 fields.row_key = true
 evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "arbetsskadelivranta-manadsdata: var:ar-manad"
+fields.row_key = true
+evidence = "Row key: ar-manad (Ar_manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "yrkesskadelivranta-manadsdata: var:ar-manad"
+fields.row_key = true
+evidence = "Row key: ar-manad (Ar_manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "beslut: var:startdatum"
+fields.row_key = true
+evidence = "Row key: startdatum (Startdatum) is the date FK received the application; the application is the case a row describes and one person can apply several times, so the key is the person plus the received date. One application can still yield decisions for several benefit types, so rows are not guaranteed unique (maintainer ruling 2026-11-14; #2479 re-review)."

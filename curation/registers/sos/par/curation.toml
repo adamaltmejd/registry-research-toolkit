@@ -1710,3 +1710,60 @@ kind = "set"
 subject = "par-tv: var:pseudo"
 fields.row_key = true
 evidence = "Row key: pseudo identifies a row: it is the only person id covering the whole table, since personnr ends in 2014, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: var:indatum"
+fields.row_key = true
+evidence = "Row key: indatum (INDATUM) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date; the delivered columns cannot always tell two events of one unit on that date apart, so rows are not guaranteed unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: var:indatum"
+fields.row_key = true
+evidence = "Row key: indatum (INDATUM) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "par-tv: var:startdatum-for-psykiatrisk-vardform"
+fields.row_key = true
+evidence = "Row key: startdatum-for-psykiatrisk-vardform (START) is the start of the period a row records (care form, leave or absconding) and covers 2010 onward (INDATUM only 2010-2014); one person can have several periods, so the key is the person plus the start date (maintainer ruling 2026-11-14; #2479 re-review)."
+
+# par-tv START/SLUT 2010-2014: one delivered column documented under three meanings (care
+# form, leave, absconding) is one variable describing the merged concept.
+
+[[statement]]
+kind = "set"
+subject = "par-tv: START @2010..2014 where label = 'Startdatum för permission'"
+fields = { "variable" = "none" }
+evidence = "Socialstyrelsen documents the one delivered column START in PAR tvångsvård 2010-2014 three times under source key n:start (Startdatum för psykiatrisk vårdform, för permission, för avvikning): the file mixes care-form, leave and absconding periods in one column. One column covering several documented meanings is one variable describing the merged concept (maintainer HREG ruling), so START stays in startdatum-for-psykiatrisk-vardform and this row is withheld (COS ruling on #2479, 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "par-tv: START @2010..2014 where label = 'Startdatum för avvikning'"
+fields = { "variable" = "none" }
+evidence = "Socialstyrelsen documents the one delivered column START in PAR tvångsvård 2010-2014 three times under source key n:start (Startdatum för psykiatrisk vårdform, för permission, för avvikning): the file mixes care-form, leave and absconding periods in one column. One column covering several documented meanings is one variable describing the merged concept (maintainer HREG ruling), so START stays in startdatum-for-psykiatrisk-vardform and this row is withheld (COS ruling on #2479, 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "par-tv: SLUT @2010..2014 where label = 'Slutdatum för permission'"
+fields = { "variable" = "none" }
+evidence = "Socialstyrelsen documents the one delivered column SLUT in PAR tvångsvård 2010-2014 three times under source key n:slut (Slutdatum för psykiatrisk vårdform, för permission, för avvikning): the file mixes care-form, leave and absconding periods in one column. One column covering several documented meanings is one variable describing the merged concept (maintainer HREG ruling), so SLUT stays in slutdatum-for-psykiatrisk-vardform and this row is withheld (COS ruling on #2479, 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "par-tv: SLUT @2010..2014 where label = 'Slutdatum för avvikning'"
+fields = { "variable" = "none" }
+evidence = "Socialstyrelsen documents the one delivered column SLUT in PAR tvångsvård 2010-2014 three times under source key n:slut (Slutdatum för psykiatrisk vårdform, för permission, för avvikning): the file mixes care-form, leave and absconding periods in one column. One column covering several documented meanings is one variable describing the merged concept (maintainer HREG ruling), so SLUT stays in slutdatum-for-psykiatrisk-vardform and this row is withheld (COS ruling on #2479, 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:startdatum-for-psykiatrisk-vardform"
+fields = { "description" = "Startdatum för psykiatrisk vårdform. I tvångsvården 2010–2014 anger variabeln i stället startdatum för permission eller avvikning när raden avser en sådan period." }
+evidence = "START is the care-form start date: in PAR slutenvård (2015-2023) a row is a whole stay and START is only the care-form start. PAR tvångsvård 2010-2014 documents the same column also as the start of a leave and of an absconding, which it is on rows that record such a period (maintainer HREG ruling on one column with several documented meanings; COS ruling on #2479, 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:slutdatum-for-psykiatrisk-vardform"
+fields = { "description" = "Slutdatum för psykiatrisk vårdform. I tvångsvården 2010–2014 anger variabeln i stället slutdatum för permission eller avvikning när raden avser en sådan period." }
+evidence = "SLUT is the care-form end date: in PAR slutenvård (2015-2023) a row is a whole stay and SLUT is only the care-form end. PAR tvångsvård 2010-2014 documents the same column also as the end of a leave and of an absconding, which it is on rows that record such a period (maintainer HREG ruling on one column with several documented meanings; COS ruling on #2479, 2026-11-14)."

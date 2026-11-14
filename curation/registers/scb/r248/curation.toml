@@ -3940,3 +3940,15 @@ kind = "set"
 subject = "nationella-prov-resultat-vartermin: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: rows are national test results, keyed on personnr; rows are not unique and school and provider ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-kalenderar: var:termin"
+fields.row_key = true
+evidence = "Row key: termin (Termin) is the period of a row; one delivered file holds several terms, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "nationella-prov-resultat-kalenderar: var:termin"
+fields.row_key = true
+evidence = "Row key: termin (TERMIN, Termin) is the period of a row; one delivered file holds several terms, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

@@ -929,3 +929,15 @@ kind = "set"
 subject = "lagerstatistik: var:orgnr-12"
 fields.row_key = true
 evidence = "Row key: orgnr-12 identify a row: one row per surveyed enterprise, keyed on its organisation number over all years; enterprise and kind-of-activity unit numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lagerstatistik: var:kvartal-period"
+fields.row_key = true
+evidence = "Row key: kvartal-period (kvartal) is the period of a row; one delivered file holds several quarters, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kvartalsomsattning-tjanstesektorn: var:leveransperiod"
+fields.row_key = true
+evidence = "Row key: leveransperiod (period) is the period of a row; one delivered file holds several periods, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

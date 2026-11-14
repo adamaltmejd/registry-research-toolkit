@@ -18359,3 +18359,21 @@ kind = "set"
 subject = "aku-januari-2021: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: one row per sampled person and survey wave; workplace numbers and uenr are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "aku-1987-mars-2005: var:matmanad"
+fields.row_key = true
+evidence = "Row key: matmanad (MMan, Mman) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "aku-april-2005-dec-2020: var:matmanad"
+fields.row_key = true
+evidence = "Row key: matmanad (MMAN) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: var:matmanad"
+fields.row_key = true
+evidence = "Row key: matmanad (MMan) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

@@ -8137,3 +8137,81 @@ kind = "set"
 subject = "utvandringar-kvartal-1-3: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identifies a row: the emigrant; property and dwelling ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "folkbokforda-personer-kvartal-1-3: var:kvartal"
+fields.row_key = true
+evidence = "Row key: kvartal (PublKvartal) is the period of a row; one delivered file holds several quarters, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "folkbokforda-personer-kvartal-1-3: var:ar"
+fields.row_key = true
+evidence = "Row key: ar (Ar) is the period of a row; one delivered file holds several years, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "inrikes-flyttningar-kvartal: var:folkbokforingsdatum"
+fields.row_key = true
+evidence = "Row key: folkbokforingsdatum (FolkbDat) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "inrikes-flyttningar-kvartal-1-3: var:folkbokforingsdatum"
+fields.row_key = true
+evidence = "Row key: folkbokforingsdatum (FolkbDat) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "invandringar-kvartal: var:datum-for-immigration"
+fields.row_key = true
+evidence = "Row key: datum-for-immigration (datinv) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "invandringar-kvartal-1-3: var:folkbokforingsdatum"
+fields.row_key = true
+evidence = "Row key: folkbokforingsdatum (FolkbDat) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "utvandringar-kvartal: var:utvandringsdatum"
+fields.row_key = true
+evidence = "Row key: utvandringsdatum (DatAvreg) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "utvandringar-kvartal-1-3: var:utvandringsdatum"
+fields.row_key = true
+evidence = "Row key: utvandringsdatum (DatAvreg) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "medborgarskapsandringar-kvartal: var:medborgarskapsdatum"
+fields.row_key = true
+evidence = "Row key: medborgarskapsdatum (MedbDat) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "medborgarskapsandringar-kvartal-1-3: var:medborgarskapsdatum"
+fields.row_key = true
+evidence = "Row key: medborgarskapsdatum (MedbDat) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "civilstandsandringar-skilda: var:civilstandsdatum-civilandrdatum"
+fields.row_key = true
+evidence = "Row key: civilstandsdatum-civilandrdatum (CivilAndrDatum) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "civilstandsandringar-skilda: var:civilstandsdatum-civdat-2"
+fields.row_key = true
+evidence = "Row key: civilstandsdatum-civdat-2 (CivDat) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "civilstandsandringar-skilda-1-3: var:civilstandsdatum-civdat-2"
+fields.row_key = true
+evidence = "Row key: civilstandsdatum-civdat-2 (CivDat) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."

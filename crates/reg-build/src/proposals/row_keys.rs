@@ -3,7 +3,8 @@
 //!
 //! - `K1:row-key`: identifier columns and no row key. When exactly one identifier is a
 //!   unit id by exact name, the finding proposes it.
-//! - `K1:row-key-gap`: a row key, but periods where the table has identifiers and no key.
+//! - `K1:row-key-gap`: a row key, but periods where the table has identifiers and no
+//!   identifier key (a keyed period column does not cover a period).
 //! - `K1:row-key-partial`: a segment of a key variable that is not a key. Selection
 //!   covers every occurrence of the variable in the table, so this should never fire.
 
@@ -64,9 +65,11 @@ pub(super) fn generate(registers: &mut [Resolved]) -> Result<(), String> {
                             .collect(),
                     )
                 };
+                // Only an identifier key covers a period: a keyed period column (id plus
+                // time) must not hide years whose unit id is unkeyed.
                 let unkeyed = gaps(
                     &periods(&identifiers, |s| s.identifier == Some(true)),
-                    periods(&keyed, |s| s.row_key),
+                    periods(&keyed, |s| s.row_key && s.identifier == Some(true)),
                 );
                 if !unkeyed.is_empty() {
                     findings.push(Finding {

@@ -360,3 +360,27 @@ kind = "set"
 subject = "thr-tandhalsa-landsting: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "thr-besok: var:besoksdatum"
+fields.row_key = true
+evidence = "Row key: besoksdatum (BESOKSDATUMN) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date; the delivered columns cannot always tell two events of one unit on that date apart, so rows are not guaranteed unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "thr-besok-landsting: var:besoksdatum"
+fields.row_key = true
+evidence = "Row key: besoksdatum (BESOKSDATUMN) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date; the delivered columns cannot always tell two events of one unit on that date apart, so rows are not guaranteed unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "thr-tandhalsa: var:besoksdatum"
+fields.row_key = true
+evidence = "Row key: besoksdatum (BESOKSDATUMN) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date; the delivered columns cannot always tell two events of one unit on that date apart, so rows are not guaranteed unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "thr-tandhalsa-landsting: var:besoksdatum"
+fields.row_key = true
+evidence = "Row key: besoksdatum (BESOKSDATUMN) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date; the delivered columns cannot always tell two events of one unit on that date apart, so rows are not guaranteed unique (maintainer ruling 2026-11-14)."

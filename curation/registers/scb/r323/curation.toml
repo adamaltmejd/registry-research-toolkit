@@ -528,3 +528,9 @@ kind = "set"
 subject = "rantebarande: var:isin"
 fields.row_key = true
 evidence = "Row key: isin identify a row: the ISIN identifies the security in a securities table; the issuer organisation number is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "rantebarande: var:ar-och-manad"
+fields.row_key = true
+evidence = "Row key: ar-och-manad (Period) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

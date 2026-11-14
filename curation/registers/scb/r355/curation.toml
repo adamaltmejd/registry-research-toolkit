@@ -318,3 +318,9 @@ kind = "set"
 subject = "tradbransle-torv-och-avfallspriser: var:orgnr-2"
 fields.row_key = true
 evidence = "Row key: orgnr and orgnr-2 identify a row: the organisation number of each era identifies the reporting firm; the informationless id is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "tradbransle-torv-och-avfallspriser: var:kvartal-och-ar"
+fields.row_key = true
+evidence = "Row key: kvartal-och-ar (Period, period) is the period of a row; one delivered file holds several quarters, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

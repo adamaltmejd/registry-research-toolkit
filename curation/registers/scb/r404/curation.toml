@@ -3833,3 +3833,15 @@ kind = "set"
 subject = "slutliga-manadsuppgifter: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: one row per person and month; employer and workplace ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: var:referensmanad"
+fields.row_key = true
+evidence = "Row key: referensmanad (Manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: var:referensmanad"
+fields.row_key = true
+evidence = "Row key: referensmanad (Manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

@@ -126,3 +126,9 @@ kind = "set"
 subject = "miljosektorn: var:orgnr"
 fields.row_key = true
 evidence = "Row key: orgnr identify a row: one row per environmental-sector firm, keyed on its organisation number; the main-activity workplace number is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "miljosektorn: var:ar"
+fields.row_key = true
+evidence = "Row key: ar (ar) is the period of a row; one delivered file holds several years, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

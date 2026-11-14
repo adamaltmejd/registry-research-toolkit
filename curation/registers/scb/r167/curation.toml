@@ -474,3 +474,9 @@ kind = "set"
 subject = "konkurser-offentliga-ackord: var:personnummer-for-galdenar-som-ar-enskild-firma-eller"
 fields.row_key = true
 evidence = "Row key: person-orgnr and personnummer-for-galdenar-som-ar-enskild-firma-eller identify a row: one row per bankruptcy or composition case, keyed on the debtor id, the organisation number or the sole-trader personnummer; rows are not unique per debtor (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "konkurser-offentliga-ackord: var:referensmanad"
+fields.row_key = true
+evidence = "Row key: referensmanad (beslutstid) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."

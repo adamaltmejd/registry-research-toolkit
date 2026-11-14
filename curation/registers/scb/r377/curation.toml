@@ -3155,3 +3155,15 @@ kind = "set"
 subject = "studerande-source-range-2005-2024: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: the personnummer identifies the student; programme and round ids are attributes; one row per enrolment so the key does not make rows unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "studerande-kurser: var:ar"
+fields.row_key = true
+evidence = "Row key: ar (Ar) is the period of a row; one delivered file holds several years, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: var:ar"
+fields.row_key = true
+evidence = "Row key: ar (Ar) is the period of a row; one delivered file holds several years, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

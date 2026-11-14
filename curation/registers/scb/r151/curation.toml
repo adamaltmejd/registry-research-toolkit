@@ -1211,3 +1211,21 @@ kind = "set"
 subject = "privata-stugor-lagenheter: var:cfar-nummer"
 fields.row_key = true
 evidence = "Row key: cfar-nummer identify a row: one row per letting agency workplace and month, keyed on its CFAR number; the organisation number is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "camping: var:ar-och-manad"
+fields.row_key = true
+evidence = "Row key: ar-och-manad (ArMan) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: var:ar-och-manad"
+fields.row_key = true
+evidence = "Row key: ar-och-manad (ArMan) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "privata-stugor-lagenheter: var:ar-och-manad"
+fields.row_key = true
+evidence = "Row key: ar-och-manad (ArMan) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

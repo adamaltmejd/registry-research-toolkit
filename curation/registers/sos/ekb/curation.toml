@@ -6960,3 +6960,21 @@ kind = "set"
 subject = "ekb-manad: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identifies a row: the benefit recipient is the unit, the household id is an attribute, and the key is not unique over months (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "ekb-ar: var:ar"
+fields.row_key = true
+evidence = "Row key: ar (AR) is the period of a row; one delivered file holds several years, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "ekb-manad: var:ar"
+fields.row_key = true
+evidence = "Row key: ar (AR) is the period of a row; one delivered file holds several years, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "ekb-manad: var:manad"
+fields.row_key = true
+evidence = "Row key: manad (MANAD) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

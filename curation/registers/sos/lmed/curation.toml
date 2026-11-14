@@ -1477,3 +1477,9 @@ kind = "set"
 subject = "lmed-vara: var:nplpackid"
 fields.row_key = true
 evidence = "Row key: nplpackid identifies a row: the product register is about packages, and the NPL pack id is the id of the product itself (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lmed: var:expeditionsdatum"
+fields.row_key = true
+evidence = "Row key: expeditionsdatum (EDATUM) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date; the delivered columns cannot always tell two events of one unit on that date apart, so rows are not guaranteed unique (maintainer ruling 2026-11-14)."

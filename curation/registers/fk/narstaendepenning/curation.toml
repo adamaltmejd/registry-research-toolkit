@@ -18,3 +18,9 @@ kind = "set"
 subject = "narstaendepenning: var:lopnr-personnr"
 fields.row_key = true
 evidence = "Row key: lopnr-personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "narstaendepenning: var:utbetalningsmanad"
+fields.row_key = true
+evidence = "Row key: utbetalningsmanad (utbetalningsmanad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

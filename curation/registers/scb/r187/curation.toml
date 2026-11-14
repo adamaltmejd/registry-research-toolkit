@@ -1506,9 +1506,25 @@ subject = "industrins-orderingang: var:verksamhetsenhetens-identitetsnummer-venr
 fields.row_key = true
 evidence = "Row key: verksamhetsenhetens-identitetsnummer-venr identify a row: one row per surveyed kind-of-activity unit and month, keyed on venr; observation and organisation numbers are attributes (maintainer ruling 2026-11-14)."
 
+# industriproduktionsindex has no row key: AL2UndU is an SCB data-set name, not a delivered
+# unit-id column (its orgnr placement is a curation guess), it occurs only 1998-1999 and
+# 2009-2010, and 2000-2008 and 2011-2014 are aggregates. Sibling industrins-orderingang keys
+# venr with the orgnr as an attribute (review of #2475, 2026-11-14).
 
 [[statement]]
 kind = "set"
-subject = "industriproduktionsindex: var:organisationsnummer-12-siffror-al2undu"
+subject = "industrins-lager: var:kvartal"
 fields.row_key = true
-evidence = "Row key: organisationsnummer-12-siffror-al2undu (AL2UndU, the enterprise unit's orgnr per CFAR) identifies a row with the month: the unit id over every year 1998-2011; Obsnr (1998-1999) and the user id are attributes (maintainer ruling 2026-11-14, rule 3)."
+evidence = "Row key: kvartal (Kvartal) is the period of a row; one delivered file holds several quarters, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "industrins-lager-2015: var:kvartal-och-ar"
+fields.row_key = true
+evidence = "Row key: kvartal-och-ar (Period) is the period of a row; one delivered file holds several quarters, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "industrins-orderingang: var:manad"
+fields.row_key = true
+evidence = "Row key: manad (Manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

@@ -785,3 +785,9 @@ kind = "set"
 subject = "urv2-sr: var:personnr"
 fields.row_key = true
 evidence = "Row key: PERSON_ID identifies a row: the applicant's person id; SWEDISH_PNR is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:birth-date"
+fields.identifier = true
+evidence = "BIRTH_DATE is the applicant's birth date, a personal identifier; it is not sensitive and never a row key (maintainer ruling, pending since #2473; relayed by the COS 2026-11-14)."

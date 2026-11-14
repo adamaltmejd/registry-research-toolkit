@@ -3171,3 +3171,75 @@ kind = "set"
 subject = "tjansteproduktionsindex: var:verksamhetsenhetens-identitetsnummer"
 fields.row_key = true
 evidence = "Row key: verksamhetsenhetens-identitetsnummer identify a row: the kind-of-activity unit is the reporting unit; the organisation number is the owning firm, an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "industrins-kapacitetsutnyttjande: var:kvartal"
+fields.row_key = true
+evidence = "Row key: kvartal (Kvartal) is the period of a row; one delivered file holds several quarters, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "industrins-kapacitetsutnyttjande: AgeOvanU @2009..2010 where key = 'v43'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins kapacitetsutnyttjande, versions 2009 and 2010, documents 17 VarIds (Kvartal, År, Urvalsår, Observationsnummer, the cause questions…) all under the column name AgeOvanU: a data-set name, not a delivered column, like AL2UndU in r187. Kvartal (VarId 43) is withheld for those years, so the row key does not name a column that the files do not have (COS ruling on the #2479 review, 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "industrins-kapacitetsutnyttjande: var:ar-och-kvartal"
+fields.row_key = true
+evidence = "Row key: ar-och-kvartal (Period) is the period of a row; one delivered file holds several quarters, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "industrins-orderingang: var:manad"
+fields.row_key = true
+evidence = "Row key: manad (Manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "omsattning-tjanstesektorn-2015: var:manad"
+fields.row_key = true
+evidence = "Row key: manad (Manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "omsattning-tjanstesektorn-tom2014: var:period"
+fields.row_key = true
+evidence = "Row key: period (period) is the period of a row; one delivered file holds several periods, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "industriproduktionsindex: var:referensmanad-pin"
+fields.row_key = true
+evidence = "Row key: referensmanad-pin (ReferencePeriodId) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "tjansteproduktionsindex: var:referensmanad-pin"
+fields.row_key = true
+evidence = "Row key: referensmanad-pin (ReferencePeriodId) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "produktionsvardeindex-pvi: var:referensmanad-pin"
+fields.row_key = true
+evidence = "Row key: referensmanad-pin (ReferencePeriodId) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "industrins-orderingang: var:referensmanad-pin"
+fields.row_key = true
+evidence = "Row key: referensmanad-pin (ReferencePeriodId) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "omsattning-tjanstesektorn-2015: var:referensmanad-pin"
+fields.row_key = true
+evidence = "Row key: referensmanad-pin (ReferencePeriodId) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "industrins-kapacitetsutnyttjande: var:referensmanad-pin"
+fields.row_key = true
+evidence = "Row key: referensmanad-pin (ReferencePeriodId) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

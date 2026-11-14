@@ -240,3 +240,15 @@ kind = "set"
 subject = "lagerinvesteringar: var:verksamhetsenhetens-identitetsnummer"
 fields.row_key = true
 evidence = "Row key: verksamhetsenhetens-identitetsnummer identify a row: the reporting unit is the kind-of-activity unit; the firm person-orgnr is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fasta-bruttoinvesteringar: var:kvartal"
+fields.row_key = true
+evidence = "Row key: kvartal (referenskvartal) is the period of a row; one delivered file holds several quarters, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lagerinvesteringar: var:kvartal-period"
+fields.row_key = true
+evidence = "Row key: kvartal-period (Referenskvartal) is the period of a row; one delivered file holds several quarters, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

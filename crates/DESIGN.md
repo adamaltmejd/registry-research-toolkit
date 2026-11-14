@@ -239,26 +239,34 @@ classification bindings. Accepting one requires reviewed curation and a premise 
   id by an exact-name list (`personnr`, `lopnr`, `orgnr`, `person-orgnr`, `cfar-nummer`,
   …) it proposes `set row_key = true` on `<table>: var:<id>`. `identifier` is evidence for
   the proposal only. `K1:row-key-gap`: a row key, but periods where the table has
-  identifiers and no key (a unit id the curation has not keyed for that era).
+  identifiers and no identifier key (a unit id the curation has not keyed for that era; a
+  keyed period column does not cover it).
   `K1:row-key-partial`: a segment of a key variable that is not a key, which the
   variable-wide statement rules out; it should stay empty.
 
-**Row keys.** A row key is a variable whose values, with the table's other row keys,
-identify a table's row: the unit's id (a person, firm, workplace, school, property,
-vehicle), both ids in a table about pairs, the case id of an event table. It is a property
-of a table and variable, set only by curation, once per pair: `set row_key = true` on
-`<table>: var:<id>`, an address that selects that ledger variable's occurrences in that
-table under every spelling and source key, including ones a later pin adds (the statement's
-premise then changes and the relock shows it). No other subject accepts `row_key`, so a key
-cannot be stated per spelling and lose the years another spelling covers. A key that
-changes by era is each era's variable keyed. Source readers never state it; a segment holds
-it from its covering occurrences. It is not a role: a key column keeps its code or measure
-role. `identifier` never makes one (maintainer 2026-11-14): names,
-addresses, other persons' ids and property or family ids in a person table are
-identifiers but not keys. A table with no unit id has no key. A steward's keys stay its
-declared `[[table.key]]` (below). Reference orders carry a table's row keys on every
-order (`row_keys`), `show` lists them, `schema` lines flag them, and the integer-codes
-rule leaves them text.
+**Row keys.** A table's row keys are the smallest set of delivered columns that makes a
+row unique within one delivered file (maintainer 2026-11-14): the unit's id (a person,
+firm, workplace, school, property, vehicle; both ids in a table about pairs; the case id
+of an event table), plus the period column (År, Månad, Kvartal, Termin) where one file
+holds several periods per unit (a quarterly stock in a span file, a monthly table in a
+yearly file, an FK payment file), plus the event's date (the full date, not its year)
+where one unit can have several events in the table (moves, admissions, prescriptions).
+An event that happens at most once per unit (a death) is keyed by the unit alone. Where
+even these columns repeat (two prescriptions on one day), the key stops at what the
+delivered columns identify; no column is invented to complete it. A period column that
+repeats the file's own period is not a key, and a birth date column is never one. It is a
+property of a table and variable, set only by curation, once per pair:
+`set row_key = true` on `<table>: var:<id>`, an address that selects that ledger variable's
+occurrences in that table under every spelling and source key, including ones a later pin
+adds (the statement's premise then changes and the relock shows it). No other subject
+accepts `row_key`, so a key cannot be stated per spelling and lose the years another
+spelling covers. A key that changes by era is each era's variable keyed. Source readers
+never state it; a segment holds it from its covering occurrences. It is not a role: a key
+column keeps its code or measure role. `identifier` never makes one (maintainer
+2026-11-14): names, addresses, other persons' ids and property or family ids in a person
+table are identifiers but not keys. A table with no unit id has no key. A steward's keys
+stay its declared `[[table.key]]` (below). Reference orders carry a table's row keys on
+every order (`row_keys`), `show` lists them and `schema` lines flag them.
 
 **Time.**
 
@@ -2554,7 +2562,8 @@ Reader text (`char`) whose documented code list is all plain integers publishes 
 code keeps the column text, and so does a code list that includes a non-integer
 sentinel. The rule judges a whole published segment: every delivery in it must be reader
 `char` with such a code list, not `coded = false`, not classification-bound and not an
-identifier, and the segment must not be a curated row key. Otherwise the segment stays text, so
+identifier; a curated row key that is not an identifier (a period column) qualifies like
+any other column. Otherwise the segment stays text, so
 the rule never splits a segment into text and integer years. It runs in resolution after
 the segments are built and before F1, so a type change between an integer segment and a
 text neighbour is an ordinary `F1:type-change` notice.

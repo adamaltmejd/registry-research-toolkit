@@ -3684,3 +3684,15 @@ kind = "set"
 subject = "individer-sociala-agi-ku: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: rows are taxable social benefits per person and payer, keyed on personnr; payer ids are attributes and rows are not unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-nattbefolkning: var:referensperiod"
+fields.row_key = true
+evidence = "Row key: referensperiod (Perioden) is the period of a row; one delivered file holds several periods, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "individer-sociala-agi-ku: var:referensperiod"
+fields.row_key = true
+evidence = "Row key: referensperiod (Perioden) is the period of a row; one delivered file holds several periods, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
