@@ -370,3 +370,9 @@ kind = "set"
 subject = "set:antal-bostadslagenheter"
 fields = { "description" = "Antalet lägenheter; 2019 antalet lägenheter i taxeringsenheten eller antalet outhyrda lägenheter i taxeringsenheten, beroende på klassificeringen av beståndet. 2006–2009 anges antalet för respektive lägenhetstyp och klassificering av lägenhetsbeståndet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna är samma antal med olika indelning.\ncatalog:variable_text:46353:14975:15340\ncatalog:variable_text:46353:17897:18262\ncatalog:variable_text:46354:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "outhyrda-privatagda: Lillan @2008 where key = 'v2323'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Outhyrda bostadslägenheter i privatägda bostadsföretag 2008 (RegVerID 1849) documents column Lillan under VarId 2325 \"Urval\" (CVID 123583) and VarId 2323 \"Antal svar som är bearbetade och ligger till grund för tabellsiffror\" (CVID 123582). In 2006 Lillan is 2325 and the column Asv is 2323 (\"Asv\" = antal svar); the 2008 release still has an Asv column, listed under VarId 2297, so 2323 has a column of its own. 2009 lists 2323 under Lillan alone (no Asv). The source does not settle which for 2008; 2325 is the more plausible owner because the 2006 mapping and the surviving Asv column both put 2323 on Asv (maintainer 2026-11-14: place under the more plausible owner). The 2323 row is withheld; 2323 keeps Asv in 2006 and Lillan in 2009."
