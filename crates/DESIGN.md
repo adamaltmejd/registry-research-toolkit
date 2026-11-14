@@ -349,7 +349,8 @@ classification bindings. Accepting one requires reviewed curation and a premise 
   source table no longer lists it. Another move of any of its rows is a conflict: a release is moved
   whole or not at all. An occurrence selector moves only the selected occurrences, so a
   moved release occurrence becomes dated and detached; unplaced releases and
-  population-specific value sets cannot be detached.
+  population-specific value sets cannot be detached. A table that release moves leave
+  with no release and no occurrence is not published (see "Merged variants").
 - A selector's period must cover every matched occurrence whole. A partial selection
   refuses with `selector period cuts occurrence …; select whole occurrences`. No
   operation splits source occurrences. Selectors read an immutable phase snapshot.
@@ -620,7 +621,7 @@ Kind-specific content is:
 - `link`: `subject`, typed `relation`, `object` (address or catalog FQID) and optional
   `at` period set.
 
-`set.fields` is closed: `table`, `variable`, `label`, `description`, `sets`, `unit`,
+`set.fields` is closed: `table`, `name` (a table's), `variable`, `label`, `description`, `sets`, `unit`,
 `definition`, `operational_definition`, `value_set`, `coded`, `period`, `spelling`,
 `identifier`, `sensitive`, `type`, `format`, `notice`, `coverage`, `classification`,
 `tags`, `sentinels`, `role`, `axes`, `facets`, `long_format` and `series_break` (alone
@@ -2968,6 +2969,41 @@ with no relations returns no edges. Variable succession and table succession use
 period is stored as `at_start`/`at_end` on the relation, and no day is inferred from a
 coverage end.
 
+## Merged variants
+
+A provider can publish one series as several tables that differ only by a series break:
+SCB LISA "Individer, 16 år och äldre" to 2009 and "Individer, 15 år och äldre" from
+2010. The catalog shows one table with a break (maintainer ruling 2026-11-14); orders
+still name the table the provider delivers for each era.
+
+- **Curation.** Each release of the older table moves into the newer one
+  (`set table` on `release:<table>/<handle>`); the merged table gets a description, its
+  coverage, a `set name` when neither provider name fits both eras, and a curated
+  `series_break` at the first year of the new era when the variants differ in more than
+  their name. The older table's ledger entry stays, since the moves address it by slug.
+  Statements about either table's columns address the merged table, scoped to the era
+  they described; a spelling the two tables placed on different variables keeps them
+  apart by a keyed or dated ledger anchor.
+- **Emptied tables.** A table the moves leave with no release and no occurrence is not
+  published. A table that never had releases (a routed holdings table) stays. What the
+  source says about an emptied table moves to the merged table: its notices and series
+  breaks, its documents' subjects and its links. A link that would then join the merged
+  table to itself (the provider's own succession between the variants) is the merge, and
+  is dropped. A table whose releases moved to several tables has no single destination:
+  what names it stays unresolved and counts as `link_unresolved`.
+- **Delivered name.** Each release keeps the name of the table it was delivered in,
+  `release.delivered_text` (schema 15). It is the table's name when the parent stage
+  ends, before coverage, moves and curated names: a source or asserted table's own
+  name, else its handle, else the register's name for the implicit table. A release
+  that never moved has its table's source name.
+- **Orders** (contract 6.3.0). Every order entry and row-key piece has
+  `delivered_table`. An entry or piece whose days span releases with different
+  delivered names splits at the first day of each era, so each part names one delivered
+  table. Eras come from the table's primary releases, and in composed mode its held
+  releases too. A table with no releases is delivered under its own name.
+- **Verify.** Primary releases of one table with different delivered names must not
+  overlap, so every ordered day has one delivered table.
+
 ## Series breaks
 
 A provider's note that a series changes meaning at some point (SCB `Tidsseriebrott`) is
@@ -2984,7 +3020,8 @@ relation and not as a document.
 - **Curation.** A `set` statement whose only field is `series_break = { at?, text }`
   puts a break on its subject (a table, release or variable address; not a set). `at` is one interval with a stated start; the break is at its first day. It is
   for the rows the reader cannot place (a `CVID` or release id missing from the
-  export) and for dating a source break whose text states a year. A dated curated
+  export), for dating a source break whose text states a year, and for the break where
+  merged variants meet (see "Merged variants"). A dated curated
   break with the same text as a source break on its subject, or on a release of its
   table, replaces that source break; no address names a source break.
 - **`show`** lists a register's own breaks, each table's with its releases' (a release

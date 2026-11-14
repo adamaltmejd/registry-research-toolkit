@@ -19,6 +19,7 @@
 //! succession.
 
 mod breaks;
+mod eras;
 mod materialize;
 mod rows;
 mod successor;
@@ -526,6 +527,10 @@ pub struct OrderEntry {
     table: String,
     /// The table's name, as `show` gives it.
     table_name: String,
+    /// The name of the table the provider delivered the period in, before any merge or
+    /// rename (crates/DESIGN.md, "Merged variants"); `table_name` for a table with no
+    /// releases.
+    delivered_table: String,
     variable: String,
     /// The variable's name, as `show` gives it.
     variable_name: String,
@@ -593,6 +598,8 @@ pub struct OrderRowKeys {
     table: String,
     /// The table's name.
     table_name: String,
+    /// The name of the table the provider delivered the period in, as for an entry.
+    delivered_table: String,
     period: Period,
     columns: Vec<RowKeyColumn>,
 }
@@ -753,6 +760,7 @@ pub fn check(
         return Ok(Err(findings));
     }
     let findings = name_order(server, &mut entries, &mut row_keys, &mut clips, findings)?;
+    eras::split(server, &conn, held.is_some(), &mut entries, &mut row_keys)?;
     Ok(Ok(LogicalOrder {
         catalog: OrderCatalog {
             generation_id: server.catalog.generation().to_owned(),

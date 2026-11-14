@@ -4954,6 +4954,10 @@
                 "null"
               ]
             },
+            "delivered_table": {
+              "description": "The name of the table the provider delivered the period in, before any merge or\nrename (crates/DESIGN.md, \"Merged variants\"); `table_name` for a table with no\nreleases.",
+              "type": "string"
+            },
             "display_name": {
               "description": "As the project states it.",
               "type": [
@@ -5025,6 +5029,7 @@
             "register",
             "table",
             "table_name",
+            "delivered_table",
             "variable",
             "variable_name",
             "display_name",
@@ -5137,6 +5142,10 @@
               },
               "type": "array"
             },
+            "delivered_table": {
+              "description": "The name of the table the provider delivered the period in, as for an entry.",
+              "type": "string"
+            },
             "period": {
               "$ref": "#/$defs/Period"
             },
@@ -5155,6 +5164,7 @@
             "source",
             "table",
             "table_name",
+            "delivered_table",
             "period",
             "columns"
           ],

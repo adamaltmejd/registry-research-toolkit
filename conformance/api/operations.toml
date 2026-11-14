@@ -4,7 +4,7 @@
 # Changing it is a maintainer decision; choices the interface rules do not dictate say
 # so in `note`.
 #
-# The v5 API reads catalog schema 14. The emitted DDL is crates/reg-build/src/schema.sql.
+# The v5 API reads catalog schema 15. The emitted DDL is crates/reg-build/src/schema.sql.
 #
 # Every response is `{"data": <result>, "meta": <Meta>}`; an error is
 # `{"error": <Error>, "meta": <Meta>}` (shapes below). Raw-bytes downloads
@@ -41,7 +41,7 @@
 # cursor encodes (generation_id, last key), so a cursor from another generation is
 # `stale_cursor`.
 
-contract_version = "6.2.0"
+contract_version = "6.3.0"
 
 [[operation]]
 name = "search"

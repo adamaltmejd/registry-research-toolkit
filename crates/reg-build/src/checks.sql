@@ -66,6 +66,12 @@ WHERE g.variable_id IS NULL OR g.s <> v.start OR g.e <> v.end;
 -- (9) one primary per parsed (table, period, qualifier)
 SELECT table_id, start, end, qualifier FROM release WHERE parse_state <> 'unparsed'
 GROUP BY table_id, start, end, qualifier HAVING SUM(is_primary) <> 1;
+-- primaries of one table delivered under different table names never overlap, so each
+-- day has one delivered table (an order names it per era)
+SELECT a.id FROM release a JOIN release b
+  ON b.table_id = a.table_id AND b.id <> a.id AND b.delivered_text <> a.delivered_text
+ AND a.start < b.end AND b.start < a.end
+WHERE a.is_primary = 1 AND b.is_primary = 1;
 
 -- (10) value-set structure (the hash is re-verified by `catalog verify`, not SQL)
 SELECT valueset_id FROM vs_item GROUP BY valueset_id HAVING MAX(ord) + 1 <> COUNT(*);

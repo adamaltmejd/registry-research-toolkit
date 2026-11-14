@@ -1,7 +1,7 @@
 {
   "catalog": {
     "catalog_version": "dev",
-    "schema_version": "14"
+    "schema_version": "15"
   },
   "project": {
     "name": "Order case",
@@ -16,6 +16,7 @@
       "register": "demo/nam",
       "table": "demo/nam/a",
       "table_name": "Tabell A",
+      "delivered_table": "Tabell A",
       "variable": "demo/nam/belopptot",
       "variable_name": "Belopp",
       "display_name": null,
@@ -36,6 +37,7 @@
       "register": "demo/nam",
       "table": "demo/nam/a",
       "table_name": "Tabell A",
+      "delivered_table": "Tabell A",
       "variable": "demo/nam/belopptot",
       "variable_name": "Belopp",
       "display_name": null,
@@ -56,6 +58,7 @@
       "register": "demo/nam",
       "table": "demo/nam/a",
       "table_name": "Tabell A",
+      "delivered_table": "Tabell A",
       "variable": "demo/nam/flagga",
       "variable_name": "Flagga",
       "display_name": null,
@@ -75,6 +78,7 @@
       "source": "s",
       "table": "demo/nam/a",
       "table_name": "Tabell A",
+      "delivered_table": "Tabell A",
       "period": {
         "start": "2018-01-01",
         "end": "2021-01-01"

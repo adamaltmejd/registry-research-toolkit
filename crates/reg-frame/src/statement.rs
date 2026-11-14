@@ -70,6 +70,9 @@ pub enum Relation {
 pub struct SetFields {
     pub table: Option<String>,
     pub variable: Option<String>,
+    /// A table's name. Skipped when unset, so existing statements keep their hashes.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
     pub label: Option<String>,
     pub definition: Option<String>,
     pub operational_definition: Option<String>,

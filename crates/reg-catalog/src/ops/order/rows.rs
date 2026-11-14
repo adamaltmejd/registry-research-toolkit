@@ -274,6 +274,7 @@ pub(super) fn row_keys(
                 source: source.name.clone(),
                 table: s.table.pid.clone(),
                 table_name: String::new(),
+                delivered_table: String::new(),
                 period: server.period(lo, hi),
                 columns: columns
                     .into_iter()

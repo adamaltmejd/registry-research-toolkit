@@ -1,7 +1,7 @@
 {
   "catalog": {
     "catalog_version": "dev",
-    "schema_version": "14"
+    "schema_version": "15"
   },
   "project": {
     "name": "Order case",
@@ -16,6 +16,7 @@
       "register": "demo/ark",
       "table": "demo/ark",
       "table_name": "Radnyckelregistret",
+      "delivered_table": "Radnyckelregistret",
       "variable": "demo/ark/belopp",
       "variable_name": "Belopp",
       "display_name": null,
@@ -35,6 +36,7 @@
       "source": "s",
       "table": "demo/ark",
       "table_name": "Radnyckelregistret",
+      "delivered_table": "Radnyckelregistret",
       "period": {
         "start": "2020-01-01",
         "end": "2021-01-01"

@@ -1,7 +1,7 @@
 {
   "catalog": {
     "catalog_version": "dev",
-    "schema_version": "14"
+    "schema_version": "15"
   },
   "clips": [
     {
@@ -38,6 +38,7 @@
       "spelling": "Betyg",
       "table": "demo/las",
       "table_name": "Läsårsregistret",
+      "delivered_table": "Läsårsregistret",
       "type": "integer",
       "value_set": null,
       "variable": "demo/las/betyg",

@@ -82,6 +82,8 @@ pub struct Catalog {
     pub statements: Vec<StatementRow>,
     pub provenance: reg_resolve::provenance::Finalized,
     pub classifications: Vec<reg_resolve::curation::apply::Classification>,
+    /// A release's locator → its delivered table name (`release.delivered_text`).
+    pub delivered: BTreeMap<reg_frame::Locator, String>,
 }
 
 impl Catalog {
@@ -562,6 +564,12 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
             let rid = release_id[&(ri, x)];
             let rel = &release.release;
             let period = rel.from.as_ref().zip(rel.to.as_ref());
+            let delivered = catalog.delivered.get(&rel.locator).ok_or_else(|| {
+                format!(
+                    "{}:{}: release {:?} has no delivered table",
+                    rel.locator.input, rel.locator.at, rel.release
+                )
+            })?;
             write_provenance(
                 &mut rows,
                 &ProvenanceSubject::Release(ri, x),
@@ -602,6 +610,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                     flag(release.primary),
                     Cell::Int(i64::from(release.edition_disagreement)),
                     Cell::Text(rel.name.clone()),
+                    Cell::Text(delivered.clone()),
                     opt_text(rel.description.as_ref()),
                     Cell::Str(rel.release.clone()),
                     if asserted {

@@ -1,7 +1,7 @@
 {
   "catalog": {
     "catalog_version": "dev",
-    "schema_version": "14"
+    "schema_version": "15"
   },
   "project": {
     "name": "Order case",
@@ -16,6 +16,7 @@
       "register": "demo/und",
       "table": "demo/und/ett",
       "table_name": "Tabell ett",
+      "delivered_table": "Tabell ett",
       "variable": "demo/und/ink",
       "variable_name": "Inkomst",
       "display_name": null,

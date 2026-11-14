@@ -1,0 +1,24 @@
+{
+  "note": "Merged variants (crates/DESIGN.md, \"Merged variants\"): `vari/b` holds table `a`'s releases 2008-2009 (\"Individer 16+\") moved in by curation, and its own 2010-2011 (\"Individer 15+\"), under the curated name \"Individer\". An order over 2008-2011 cuts the bound `ink` entry and the row key `id` at 2010, each piece naming its delivered table, with `table` and `table_name` the merged table's. Fails if entries or row keys stop splitting where the delivered table changes, or name the merged table's or the source handle instead of the delivered table. The provider's 2009 series break on table `a` is reported on the merged table: a source note on an emptied table moves with its releases; fails if it is dropped instead. Oracle: the fixture's JSONL and its curation.",
+  "fixture": "orders",
+  "project": {
+    "schema_version": "6.2.0",
+    "reg_meta_version": "0.64.0",
+    "name": "Order case",
+    "sources": [
+      {
+        "name": "s",
+        "table": "demo/vari/b",
+        "period": {
+          "from": 2008,
+          "to": 2011
+        },
+        "bindings": [
+          {
+            "variable": "demo/vari/ink"
+          }
+        ]
+      }
+    ]
+  }
+}

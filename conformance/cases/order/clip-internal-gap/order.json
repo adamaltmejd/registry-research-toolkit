@@ -1,7 +1,7 @@
 {
   "catalog": {
     "catalog_version": "dev",
-    "schema_version": "14"
+    "schema_version": "15"
   },
   "project": {
     "name": "Order case",
@@ -16,6 +16,7 @@
       "register": "demo/gap",
       "table": "demo/gap",
       "table_name": "Glappregistret",
+      "delivered_table": "Glappregistret",
       "variable": "demo/gap/x",
       "variable_name": "X",
       "display_name": null,
@@ -36,6 +37,7 @@
       "register": "demo/gap",
       "table": "demo/gap",
       "table_name": "Glappregistret",
+      "delivered_table": "Glappregistret",
       "variable": "demo/gap/x",
       "variable_name": "X",
       "display_name": null,

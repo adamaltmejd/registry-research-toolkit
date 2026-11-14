@@ -695,6 +695,12 @@ export interface components {
             binding: number;
             /** @description A class version's public id. */
             classification: string | null;
+            /**
+             * @description The name of the table the provider delivered the period in, before any merge or
+             *     rename (crates/DESIGN.md, "Merged variants"); `table_name` for a table with no
+             *     releases.
+             */
+            delivered_table: string;
             /** @description As the project states it. */
             display_name: string | null;
             /** Format: int64 */
@@ -752,6 +758,8 @@ export interface components {
         /** @description A serving table's row-key columns over a period. */
         OrderRowKeys: {
             columns: components["schemas"]["RowKeyColumn"][];
+            /** @description The name of the table the provider delivered the period in, as for an entry. */
+            delivered_table: string;
             period: components["schemas"]["Period"];
             source: string;
             table: string;

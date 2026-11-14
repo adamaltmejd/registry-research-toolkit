@@ -1,7 +1,7 @@
 {
   "catalog": {
     "catalog_version": "dev",
-    "schema_version": "14"
+    "schema_version": "15"
   },
   "project": {
     "name": "Order case",
@@ -16,6 +16,7 @@
       "register": "demo/typ",
       "table": "demo/typ",
       "table_name": "Typregistret",
+      "delivered_table": "Typregistret",
       "variable": "demo/typ/belopp",
       "variable_name": "Belopp",
       "display_name": null,
@@ -36,6 +37,7 @@
       "register": "demo/typ",
       "table": "demo/typ",
       "table_name": "Typregistret",
+      "delivered_table": "Typregistret",
       "variable": "demo/typ/namn",
       "variable_name": "Namn",
       "display_name": null,
@@ -56,6 +58,7 @@
       "register": "demo/typ",
       "table": "demo/typ",
       "table_name": "Typregistret",
+      "delivered_table": "Typregistret",
       "variable": "demo/typ/okand",
       "variable_name": "Okänd typ",
       "display_name": null,
@@ -75,6 +78,7 @@
       "source": "s",
       "table": "demo/typ",
       "table_name": "Typregistret",
+      "delivered_table": "Typregistret",
       "period": {
         "start": "2020-01-01",
         "end": "2021-01-01"
