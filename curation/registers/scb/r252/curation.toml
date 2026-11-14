@@ -1946,3 +1946,11 @@ kind = "set"
 subject = "set:partiellt-bortfall"
 fields = { "description" = "Partiellt bortfall i uppgifterna om potatisodling, per slag: färskpotatis, höst- och vinterpotatis och stärkelsepotatis, totalt eller för certifierad ekologisk odling, ekologisk odling under omställning och därav ekologisk potatis." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i potatisslag och odlingsform.\ncatalog:variable_text:48869:16801:17532\ncatalog:variable_text:48869:17532:19358\ncatalog:variable_text:48876:16801:19358\ncatalog:variable_text:48890:16801:19358\ncatalog:variable_text:48900:16801:19358\ncatalog:variable_text:48907:16801:19358\ncatalog:variable_text:48907:19723:20089\ncatalog:variable_text:48923:16801:19358\ncatalog:variable_text:48923:19723:20089\ncatalog:variable_text:48936:16801:19358\ncatalog:variable_text:48943:16801:19358\ncatalog:variable_text:48946:16801:19358"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "skord-av-potatis: var:foretagsidentitet"
+fields.row_key = true
+evidence = "Row key: foretagsidentitet identify a row: the survey firm id identifies the surveyed farm (maintainer ruling 2026-11-14)."

@@ -262,3 +262,17 @@ kind = "set"
 subject = "var:namn"
 fields = { "description" = "Person- eller företagsnamn." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSCB-exporten (VarId 326) dokumenterar Namn 2020–2025 i två rader per år (person- eller företagsnamn och företagsnamn); den generiska definitionen (delad av 9 variabler) tas inte med.\ncatalog:variable_text:9002:17167:18262\ncatalog:variable_text:9002:18262:20454"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "aktieagarstatistik: var:isin"
+fields.row_key = true
+evidence = "Row key: person-orgnr and isin identify a row: one row per holding: the owner person-orgnr and the security isin; issuer orgnr and namn are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "aktieagarstatistik: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr and isin identify a row: one row per holding: the owner person-orgnr and the security isin; issuer orgnr and namn are attributes (maintainer ruling 2026-11-14)."

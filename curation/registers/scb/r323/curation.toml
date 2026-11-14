@@ -520,3 +520,11 @@ kind = "set"
 subject = "var:yieldtomaturity"
 fields = { "description" = "Årlig avkastning i procent för en innehavare av obligationen fram till förfallodagen. Beräknad som den diskonteringsränta som används för att räkna fram nuvärdet av framtida kassaflöden; 2025 levereras uppgiften från ECB." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 förklarar beräkningen och anger ECB som källa.\ncatalog:variable_text:51642:19723:20089\ncatalog:variable_text:51642:20089:20454"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "rantebarande: var:isin"
+fields.row_key = true
+evidence = "Row key: isin identify a row: the ISIN identifies the security in a securities table; the issuer organisation number is an attribute (maintainer ruling 2026-11-14)."

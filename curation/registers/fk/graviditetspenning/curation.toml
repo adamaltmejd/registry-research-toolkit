@@ -22,3 +22,11 @@ kind = "set"
 subject = "var:omfattning"
 fields = { "tags" = ["transfers"] }
 evidence = "Omfattningen avser graviditetspenning.\ncatalog:register:15\ncatalog:variable_text:196:3652:2932897"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "graviditetspenning: var:lopnr-personnr"
+fields.row_key = true
+evidence = "Row key: lopnr-personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

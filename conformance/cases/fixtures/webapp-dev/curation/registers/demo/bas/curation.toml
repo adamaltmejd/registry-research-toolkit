@@ -125,3 +125,9 @@ kind = "set"
 subject = "set:inkomst"
 fields.description = "Inkomst före och efter skatt för personer och hushåll."
 evidence = "Synthetic income variants share one meaning: income before and after tax."
+
+[[statement]]
+kind = "set"
+subject = "bas: var:lopnr"
+fields.row_key = true
+evidence = "Synthetic fixture: the column identifies the table's row."

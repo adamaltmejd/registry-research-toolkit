@@ -772,3 +772,11 @@ kind = "set"
 subject = "set:naringsgren"
 fields = { "description" = "Bransch, klassificerad enligt SNI 92 (2000–2002), SNI 2002 (2003–2013) och SNI 2007 (från 2008), samt en kod för näringsgren enligt nationalräkenskaperna, som baseras på bransch, ägarkategori och juridisk form (2000–2013)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna klassificerar näringsgren i olika SNI-versioner och enligt nationalräkenskapernas indelning; den generiska meningen om produktionsenhetens näringsgren är utelämnad.\ncatalog:variable_text:40965:10957:16071\ncatalog:variable_text:40978:13879:20454\ncatalog:variable_text:40979:10957:12053\ncatalog:variable_text:40979:12053:16071"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "konjunkturstatistik-loner-for-statlig-sektor: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per state employee and month, keyed on personnr; agency ids are attributes and rows are not unique across employments (maintainer ruling 2026-11-14)."

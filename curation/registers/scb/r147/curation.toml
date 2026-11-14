@@ -851,3 +851,17 @@ kind = "set"
 subject = "release:godselmedelsanvandning-2016/r11692"
 fields = { series_break = { text = "I 2016 års urval var antalet stora djurgårdar fler än i tidigare års urval, eftersom urvalet tidigare endast gjordes utifrån areal och ingen hänsyn togs till standardtimmar. För att få med en del av de små gårdar som tidigare ingick i urvalet till Odlingsåtgärder lades ett nytt stratum till i 2016 års gemensamma undersökning om gödselmedel och odlingsåtgärder." } }
 evidence = "current-scb-inputs.zip/Timeseries.csv row=146\n\nAs row 145 (second PopContext with the same comment). Text names no day."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "godselmedelsanvandning: var:foretagsidentitet"
+fields.row_key = true
+evidence = "Row key: foretagsidentitet identify a row: farm survey keys on the survey firm id (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "godselmedelsanvandning-2016: var:foretagsidentitet"
+fields.row_key = true
+evidence = "Row key: foretagsidentitet identifies a row, the holding, as in the 2008-2013 table; the farmer's orgnr (a personnr for sole traders) and addid are attributes (maintainer ruling 2026-11-14; ambiguous-table review)."
+

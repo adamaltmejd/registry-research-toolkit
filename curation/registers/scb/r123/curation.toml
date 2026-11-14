@@ -15818,3 +15818,17 @@ kind = "set"
 subject = "var:undkvinn"
 fields = { "description" = "Om de flesta av urvalspersonens underställda är kvinnor eller män. Frågan ställs till den som har personer direkt eller indirekt underställda sig." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; senare år lägger till frågenummer och selektionen på att ha underställda.\ncatalog:variable_text:11441:10592:10957\ncatalog:variable_text:11441:12784:13149\ncatalog:variable_text:11441:13514:13879\ncatalog:variable_text:11441:14975:15340"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "arbetsmiljoundersokningen: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "arbetsmiljoundersokningen-2015: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

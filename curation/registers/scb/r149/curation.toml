@@ -221,3 +221,11 @@ kind = "set"
 subject = "var:lan"
 fields = { "description" = "Kod för län." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition alla år; 2015–2018 anger bara vilket års regionala indelning som används, vilket inte ändrar variabeln.\ncatalog:variable_text:19812:12965:16617\ncatalog:variable_text:19812:16617:16983\ncatalog:variable_text:19812:16983:17713"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "forsaljning-av-mineralgodsel-for-jord-och-tradgardsbruk: var:leverantorsnummer"
+fields.row_key = true
+evidence = "Row key: leverantorsnummer identify a row: supplier (firm) table keys on the supplier number, its only identifier (maintainer ruling 2026-11-14)."

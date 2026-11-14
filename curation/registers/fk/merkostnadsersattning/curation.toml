@@ -94,3 +94,35 @@ kind = "set"
 subject = "var:skattat-belopp"
 fields = { "tags" = ["transfers"] }
 evidence = "Beloppet är en beräknad fördelning av utbetalningen per barn.\ncatalog:variable_text:259:17897:2932897\ncatalog:variable_text:272:17897:2932897"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "avslag: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr identifies a row: refusals cover adults as well as parent-child claims, so the child id is an attribute, as in the mottagare table (maintainer ruling 2026-11-14; ambiguous-table review)."
+
+[[statement]]
+kind = "set"
+subject = "barn: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr and lopnr-barn identify a row: Tabell 2 is the child-level breakdown of recipients, one row per recipient-child pair and month, and the key is not unique over months (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "barn: var:lopnr-barn"
+fields.row_key = true
+evidence = "Row key: lopnr and lopnr-barn identify a row: Tabell 2 is the child-level breakdown of recipients, one row per recipient-child pair and month, and the key is not unique over months (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "beviljanden: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr identifies a row: grants cover adults as well as parent-child claims, so the child id is an attribute, as in the mottagare table (maintainer ruling 2026-11-14; ambiguous-table review)."
+
+[[statement]]
+kind = "set"
+subject = "mottagare: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

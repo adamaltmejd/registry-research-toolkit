@@ -271,3 +271,11 @@ kind = "set"
 subject = "var:tatortskod-old"
 fields = { "description" = "Tätortskod enligt det äldre systemet för kodsättning. Tätort är sammanhängande bebyggelse med högst 200 meter mellan husen och minst 200 invånare, enligt det register över tätorter som undersökningen själv producerar för respektive år." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringarna skiljer i registrets årtal och anger från 2010 att koden följer det äldre systemet.\ncatalog:variable_text:51693:7305:7670\ncatalog:variable_text:51693:9131:9496\ncatalog:variable_text:51693:12784:13149\ncatalog:variable_text:51693:14610:14975\ncatalog:variable_text:51693:16436:16801\ncatalog:variable_text:51693:17532:17897"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "tatorter: var:objectid"
+fields.row_key = true
+evidence = "Row key: objectid identify a row: the object number identifies each locality per reference year and covers every year; the UUID is an alternative object id (maintainer ruling 2026-11-14)."

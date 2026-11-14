@@ -1174,3 +1174,11 @@ kind = "set"
 subject = "var:uppv5"
 fields = { "label" = "Uppvärmningssätt - frånluft/luft-luftvärmepump (luft-luft och frånluft/luft-luft, uppv5)" }
 evidence = "#2102 same-label cluster 'Uppvärmningssätt - frånluft/luft-luftvärmepump' (3 variables): judged different meaning, medium confidence; UPPV11 and uppv5 share a code list and follow each other; uppv4 has a different code 2 ('uppvärmningsmöjlighet finns') in the value set."
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "energi-i-smahus: var:identitet"
+fields.row_key = true
+evidence = "Row key: identitet identify a row: a house survey keyed on the surveyed object id, which covers all years; the owner person-orgnr is an attribute (maintainer ruling 2026-11-14)."

@@ -1974,3 +1974,41 @@ kind = "set"
 subject = "var:referensperiod-manad"
 fields = { "description" = "Den månad uppgifterna avser. I tabellen Anställningar, period skapas den utifrån vilka månader arbetsgivardeklarationer har rapporterats in för." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition i alla tabeller; periodtabellen lägger till hur månaden bestäms.\ncatalog:variable_text:10900:19723:20454"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-grund: var:person-samordningsnummer"
+fields.row_key = true
+evidence = "Row key: person-samordningsnummer and person-orgnr-anstalld identify a row: the unit is the employment, one person-employer pair per month (maintainer ruling 2026-11-14; ambiguous-table review)."
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-grund: var:person-orgnr-anstalld"
+fields.row_key = true
+evidence = "Row key: person-samordningsnummer and person-orgnr-anstalld identify a row: the unit is the employment, one person-employer pair per month (maintainer ruling 2026-11-14; ambiguous-table review)."
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-laps: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-period: var:person-samordningsnummer"
+fields.row_key = true
+evidence = "Row key: person-samordningsnummer and person-orgnr-anstalld identify a row: the unit is the employment, a person-employer pair; the AGI employer id is an attribute (maintainer ruling 2026-11-14; ambiguous-table review)."
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-period: var:person-orgnr-anstalld"
+fields.row_key = true
+evidence = "Row key: person-samordningsnummer and person-orgnr-anstalld identify a row: the unit is the employment, a person-employer pair; the AGI employer id is an attribute (maintainer ruling 2026-11-14; ambiguous-table review)."
+
+[[statement]]
+kind = "set"
+subject = "sus: var:lopnummer-for-sjukfall"
+fields.row_key = true
+evidence = "Row key: lopnummer-for-sjukfall identify a row: one row per sick-leave case, and the table carries a unique case number; personnr and employer are attributes (maintainer ruling 2026-11-14)."

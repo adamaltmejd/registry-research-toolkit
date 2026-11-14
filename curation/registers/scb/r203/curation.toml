@@ -250,3 +250,11 @@ kind = "set"
 subject = "var:lillan"
 fields = { "description" = "Antal svarande företagsenheter i stratumet (lilla n)." }
 evidence = "Operationell definition \"Antal svarande FE\" (r12660); definitionen talar om utvalda företag, och den operationella definitionen anger svarande.\n0.74.0 catalog, key v4030, releases r12660; reg_meta.db:occurrence:56151"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "energianvandning-inom-byggsektorn: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: a firm table keyed on the firm id; the enterprise unit number is an attribute (maintainer ruling 2026-11-14)."

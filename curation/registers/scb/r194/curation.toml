@@ -730,3 +730,17 @@ kind = "set"
 subject = "kostnader-for-skolvasendet: KopKom @2013..2015 where key = 'v30481'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Kostnader för skolväsendet 2013, 2014, 2015 (RegVerIDs 5516, 6190, 8744) document column KopKom under VarId 14858 \"Kostnader för köp av verksamhet från annan kommun\" and VarId 30481 \"Kostnader för köp av verksamhet från kommun\". The source does not settle which; 14858 is the more plausible owner because the table's other municipality columns belong to the same 14xxx family (KopKomElev (VarId 14859, Antal elever i annan kommun)) and this register's existing SkElev statement likewise keeps the 14xxx municipality-specific family and withholds the generic 30xxx variable (maintainer 2026-11-14: place under the more plausible owner). The 30481 row is withheld."
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "kostnader-for-skolvasendet: var:gymnasieforbund-id"
+fields.row_key = true
+evidence = "Row key: skolenhetskod and gymnasieforbund-id identify a row: the school unit, or the upper-secondary federation for federation rows, identifies the organiser cost record (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kostnader-for-skolvasendet: var:skolenhetskod"
+fields.row_key = true
+evidence = "Row key: skolenhetskod and gymnasieforbund-id identify a row: the school unit, or the upper-secondary federation for federation rows, identifies the organiser cost record (maintainer ruling 2026-11-14)."

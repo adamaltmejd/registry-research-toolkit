@@ -108,6 +108,12 @@ pub enum Address {
         guards: Vec<Guard>,
     },
     Variable(String),
+    /// `<table>: var:<id>`: one ledger variable's occurrences in one table, under every
+    /// spelling and source key.
+    TableVariable {
+        table: String,
+        variable: String,
+    },
     Set(String),
     Table(String),
     Release {
@@ -123,7 +129,7 @@ impl FromStr for Address {
         let (table, rest) = text
             .trim_start()
             .split_once(':')
-            .ok_or("an address needs table: spelling, var:<id>, table:<slug> or release:<table-slug>/<handle>")?;
+            .ok_or("an address needs table: spelling, table: var:<id>, var:<id>, table:<slug> or release:<table-slug>/<handle>")?;
         let table = table.trim();
         let rest = rest.trim_start();
         // A release handle is opaque, including characters that delimit occurrence
@@ -144,6 +150,17 @@ impl FromStr for Address {
             });
         }
         let rest = rest.trim_end();
+        if let Some(variable) = rest.strip_prefix("var:")
+            && !matches!(table, "var" | "table" | "set")
+        {
+            if !reg_core::is_slug(table) || !reg_core::is_slug(variable) {
+                return Err("a table variable address needs <table-slug>: var:<id>".to_owned());
+            }
+            return Ok(Self::TableVariable {
+                table: table.to_owned(),
+                variable: variable.to_owned(),
+            });
+        }
         let end = rest
             .find(|c: char| c.is_whitespace() || c == '@')
             .unwrap_or(rest.len());
@@ -305,6 +322,7 @@ impl fmt::Display for Address {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Variable(id) => write!(f, "var:{id}"),
+            Self::TableVariable { table, variable } => write!(f, "{table}: var:{variable}"),
             Self::Set(id) => write!(f, "set:{id}"),
             Self::Table(id) => write!(f, "table:{id}"),
             Self::Release { table, handle } => write!(f, "release:{table}/{handle}"),

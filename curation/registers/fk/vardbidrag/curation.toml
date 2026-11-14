@@ -34,3 +34,17 @@ kind = "set"
 subject = "var:omfattning"
 fields = { "tags" = ["transfers"] }
 evidence = "Omfattningen mäter vårdbidrag och hör till transfereringar; belopp och omfattning är mått på samma förmån.\ncatalog:register:28\ncatalog:variable_text:572:1826:2932897\ncatalog:variable_text:576:1826:2932897"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "vardbidrag: var:lopnr-personnr"
+fields.row_key = true
+evidence = "Row key: lopnr-personnr and lopnr-personnr-barn identify a row: each payment goes to the parent for one child, as in the omvardnadsbidrag child tables, and the key is not unique over months (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "vardbidrag: var:lopnr-personnr-barn"
+fields.row_key = true
+evidence = "Row key: lopnr-personnr and lopnr-personnr-barn identify a row: each payment goes to the parent for one child, as in the omvardnadsbidrag child tables, and the key is not unique over months (maintainer ruling 2026-11-14)."

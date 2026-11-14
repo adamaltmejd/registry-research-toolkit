@@ -460,3 +460,17 @@ kind = "set"
 subject = "var:objekttyp"
 fields = { "tags" = ["business"] }
 evidence = "The complete codes distinguish composition (A) from bankruptcy (K) (r30), recorded in bankruptcy/public-composition data supplied by Bolagsverket (r1). This fits the business theme’s coverage of business demography.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:34738\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:316250\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3751"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "konkurser-offentliga-ackord: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr and personnummer-for-galdenar-som-ar-enskild-firma-eller identify a row: one row per bankruptcy or composition case, keyed on the debtor id, the organisation number or the sole-trader personnummer; rows are not unique per debtor (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "konkurser-offentliga-ackord: var:personnummer-for-galdenar-som-ar-enskild-firma-eller"
+fields.row_key = true
+evidence = "Row key: person-orgnr and personnummer-for-galdenar-som-ar-enskild-firma-eller identify a row: one row per bankruptcy or composition case, keyed on the debtor id, the organisation number or the sole-trader personnummer; rows are not unique per debtor (maintainer ruling 2026-11-14)."

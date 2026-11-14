@@ -1740,3 +1740,11 @@ kind = "set"
 subject = "var:fiskat-januari-april-enkatomgang-januari-april"
 fields = { "description" = "Om personen fiskat under januari–april och i så fall antal dagar, i storleksintervall. Avser endast enkätomgången januari–april." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; endast citattecken skiljer.\ncatalog:variable_text:27956:17532:17897\ncatalog:variable_text:27956:17897:18628"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "fritidsfiske: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: survey of persons keys on the sampled person; the survey löpnummer and round ids are attributes (maintainer ruling 2026-11-14)."

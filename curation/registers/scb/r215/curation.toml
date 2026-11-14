@@ -5608,3 +5608,23 @@ kind = "set"
 subject = "set:odlingsdammars-yta"
 fields = { "description" = "Den totala ytan av företagets dammar för odling av matfisk eller sättfisk. Till och med 2017 finns en variabel per slag, som 2016–2017 anges avse produktion i havet (salt eller bräckt vatten); från 2018 redovisas havet och sötvatten i separata variabler." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i matfisk eller sättfisk (enligt etiketterna; definitionen nämner bara matfisk för alla fyra) och i vattenmiljö.\ncatalog:variable_text:61939:16436:16801\ncatalog:variable_text:61939:16801:17532\ncatalog:variable_text:61939:17532:20089"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: var:organisationsnummer-peorgnr"
+fields.row_key = true
+evidence = "Row key: organisationsnummer-peorgnr identify a row: the organisation number identifies the aquaculture firm; the informationless id is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: var:organisationsnummer-peorgnr"
+fields.row_key = true
+evidence = "Row key: orgnr and organisationsnummer-peorgnr identify a row: the organisation number of each era identifies the aquaculture firm; the informationless farm id is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: var:orgnr"
+fields.row_key = true
+evidence = "Row key: orgnr and organisationsnummer-peorgnr identify a row: the organisation number of each era identifies the aquaculture firm; the informationless farm id is an attribute (maintainer ruling 2026-11-14)."

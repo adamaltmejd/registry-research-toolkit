@@ -1177,3 +1177,16 @@ kind = "set"
 subject = "varmeverkens-energi: Text @2016..2019 where key = 'v2581'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Värmeverkens energiförbrukning, energianvändning och lager versions 2016-2019 (RegVerIDs 11164, 12581, 13294, 14715) documents column Text under VarId 83 \"Bränsleslag\", VarId 2581 \"Bränsleslaget i klartext\" and VarId 19509 \"Värmeproduktion\". In the sibling table Industrins bränsleförbrukning VarId 83 takes over the clear-text column Text from 2016 and VarId 2581 is gone, and VarId 83 documents the code column Bid of this table from 2016, so VarId 83 is the fuel name from 2016 and the VarId 2581 listing on Text through 2019 is a leftover; the VarId 2581 row is withheld."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "industrins-bransleforbrukning: var:cfar-nummer-arbetsstalle"
+fields.row_key = true
+evidence = "Row key: cfar-nummer-arbetsstalle identify a row: the reporting unit is the workplace, whose cfar-nummer covers all years; firm, survey and supplier ids are attributes; rows per fuel are not unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "varmeverkens-energi: var:cfar-nummer-arbetsstalle"
+fields.row_key = true
+evidence = "Row key: cfar-nummer-arbetsstalle identify a row: the reporting unit is the heating plant workplace, whose cfar-nummer covers all years; firm, survey and supplier ids are attributes; rows per fuel are not unique (maintainer ruling 2026-11-14)."

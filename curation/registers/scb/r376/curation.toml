@@ -286,3 +286,11 @@ kind = "set"
 subject = "var:arbetsomfattning"
 fields = { "description" = "Om deltagarens anställning är på heltid eller deltid." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen är omformulerad mellan programperioderna.\ncatalog:variable_text:14978:16071:18628\ncatalog:variable_text:14978:18628:21184"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "deltagare-i-esf-projekt: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

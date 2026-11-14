@@ -2514,3 +2514,11 @@ kind = "set"
 subject = "var:termin"
 fields = { "description" = "Ordningsnumret för aktuell termin i elevens utbildning. 2002–2003 kodas variabeln i stället med VT och årtalets två sista siffror, för den termin då slutbetyget gavs." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma kolumn; 2002–2003 anger en annan historisk kodning, från 2015 att variabeln är en hjälpvariabel.\ncatalog:variable_text:28686:10043:11869\ncatalog:variable_text:28686:11869:12234\ncatalog:variable_text:28686:16617:20270"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-betyg-ak9: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."

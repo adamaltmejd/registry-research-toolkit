@@ -2734,3 +2734,11 @@ kind = "set"
 subject = "var:fr18"
 fields = { "description" = "Svaret på enkätfrågan om personen är gift, sammanboende eller ensamstående. Frågan ställs bara till dem som uppgett att de arbetade i eget hushåll, var hemmafru eller hemmaman eller inte var yrkesverksamma." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nfr18 lämnade gruppen civilstånd i samma PR: frågetexten (fråga 18) och urvalet av svarande skiljer den från registrerat civilstånd; den generiska civilståndsdefinitionen är utelämnad.\ncatalog:variable_text:47789:11078:11109\ncatalog:variable_text:47789:14000:14031\ncatalog:variable_text:47789:16740:16770"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "november: var:uppgiftslamnarens-personnr"
+fields.row_key = true
+evidence = "Row key: uppgiftslamnarens-personnr identify a row: the respondent personnummer identifies the surveyed person (maintainer ruling 2026-11-14)."

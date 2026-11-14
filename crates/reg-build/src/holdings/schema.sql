@@ -77,7 +77,7 @@ CREATE TABLE holding_mapping (
  variable_pid TEXT NOT NULL,
  start INTEGER NOT NULL,
  end INTEGER NOT NULL,
- role TEXT NOT NULL CHECK(role IN ('row_key','time_start','time_stop','time_point','measure','code','label')),
+ role TEXT NOT NULL CHECK(role IN ('time_start','time_stop','time_point','measure','code','label')),
  carried INTEGER NOT NULL CHECK(carried IN (0,1)),
  caveat TEXT,
  window TEXT,

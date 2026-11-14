@@ -92,6 +92,8 @@ pub struct SetFields {
     pub sensitive: Option<bool>,
     pub identifier: Option<bool>,
     pub role: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub row_key: Option<bool>,
     pub sets: Option<Vec<String>>,
     pub tags: Option<Vec<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -160,6 +162,11 @@ impl Statement {
         };
         if matches!(subject, Address::Set(_)) && !matches!(self, Self::Set { .. }) {
             return Err("set-subject: set: subjects support only set statements".into());
+        }
+        if matches!(subject, Address::TableVariable { .. }) && !matches!(self, Self::Set { .. }) {
+            return Err(
+                "table-variable-subject: <table>: var: subjects support only set statements".into(),
+            );
         }
         let (Self::Assert { evidence, .. }
         | Self::Set { evidence, .. }
@@ -319,6 +326,21 @@ impl SetFields {
             {
                 return Err("series-break-at: a series break's at is one period with a first day (\"2022\", \"2009-05\")".into());
             }
+        }
+        // A row key belongs to a variable in a table, so it holds under every spelling and
+        // source key that variable has there, including ones a later pin adds.
+        if matches!(subject, Address::TableVariable { .. }) {
+            let stated = serde_json::to_value(self).map_err(|e| e.to_string())?;
+            if stated
+                .as_object()
+                .into_iter()
+                .flatten()
+                .any(|(key, value)| !value.is_null() && key != "row_key")
+            {
+                return Err("set-fields: a <table>: var: subject accepts only row_key".into());
+            }
+        } else if self.row_key.is_some() {
+            return Err("set-row-key-subject: row_key requires a <table>: var:<id> subject".into());
         }
         if self.facets.is_some() && !matches!(subject, Address::Variable(_)) {
             return Err("set-facet-subject: facets require a var: subject".into());

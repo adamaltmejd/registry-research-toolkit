@@ -1618,3 +1618,11 @@ kind = "set"
 subject = "var:tjanstgoringsomfattning"
 fields = { "description" = "Faktisk tjänstgöringstid i förhållande till heltid. Härleds från överenskommen sysselsättningsgrad minskad med tjänstledighetsomfattningen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; rättar 'Tjänsteldighetsomfattning'.\ncatalog:variable_text:49814:9496:15706\ncatalog:variable_text:49814:15706:19358\ncatalog:variable_text:49814:19358:20089"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-regioner: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the employee; the employer organisation number is an attribute (maintainer ruling 2026-11-14)."

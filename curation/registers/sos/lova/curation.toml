@@ -2950,3 +2950,77 @@ kind = "set"
 subject = "var:sjukvardsregion"
 fields = { "description" = "Sjukvårdsregion, bildad i LOVA utifrån arbetsställets kommun. Regionerna bygger på kommuner och överensstämmer inte helt med länen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp i data- och styrtabell; rättar 'arbetställekommun' och 'överenstämmer'.\ncatalog:variable_text:63600:9131:2932897"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "lova-agarkat: var:agarkat"
+fields.row_key = true
+evidence = "Row key: agarkat identifies a row: the lookup table has one row per ownership category code (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lova-arb-mark-stat: var:arbetsmarknadsstatus-kod"
+fields.row_key = true
+evidence = "Row key: arbetsmarknadsstatus-kod identifies a row: the lookup table has one row per labour market status code (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lova-ekonomi-arbetsmarknad: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr identifies a row: the licensed person is the unit, the code columns are attributes, and the key is not unique over years (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lova-examen: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr identifies a row: the person holding the degree is the unit, the profession code is an attribute, and the key is not unique per degree row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lova-hosp: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr identifies a row: the licence holder is the unit, the category, profession and country codes are attributes, and the key is not unique per licence row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lova-landskod: var:landskod"
+fields.row_key = true
+evidence = "Row key: landskod identifies a row: the lookup table has one row per country code (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lova-leg-spec-exam: var:kategori"
+fields.row_key = true
+evidence = "Row key: kategori and leg-spec-exam-kod identify a row: the lookup table has one row per licence or specialty code within its category (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lova-leg-spec-exam: var:leg-spec-exam-kod"
+fields.row_key = true
+evidence = "Row key: kategori and leg-spec-exam-kod identify a row: the lookup table has one row per licence or specialty code within its category (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lova-person: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lova-sektorkod: var:sektorkod"
+fields.row_key = true
+evidence = "Row key: sektorkod identifies a row: the lookup table has one row per sector code (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lova-syssstat: var:syssstat"
+fields.row_key = true
+evidence = "Row key: syssstat identifies a row: the lookup table has one row per employment status code (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lova-yrkstalln: var:yrkstalln"
+fields.row_key = true
+evidence = "Row key: yrkstalln identifies a row: the lookup table has one row per employment position code (maintainer ruling 2026-11-14)."

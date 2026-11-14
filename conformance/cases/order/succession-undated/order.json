@@ -1,7 +1,7 @@
 {
   "catalog": {
     "catalog_version": "dev",
-    "schema_version": "15"
+    "schema_version": "16"
   },
   "project": {
     "name": "Order case",
@@ -86,6 +86,20 @@
       },
       "successor_fqid": null,
       "successor_name": null
+    },
+    {
+      "code": "row_key_undeclared",
+      "level": "info",
+      "message": "demo/und/ett has no stated row identifier, so its file carries only the columns you choose",
+      "path": "/sources/0",
+      "period": null,
+      "source": "s",
+      "successor_fqid": null,
+      "successor_name": null,
+      "table": "demo/und/ett",
+      "table_name": "Tabell ett",
+      "variable": null,
+      "variable_name": null
     }
   ]
 }

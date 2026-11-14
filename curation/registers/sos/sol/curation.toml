@@ -1319,3 +1319,23 @@ kind = "set"
 subject = "var:period"
 fields = { "description" = "Statistikperioden som uppgiften avser. I tabellen SOL-insatser 2007–2012 anges datumet som statistiken gäller till; i tabellerna över påbörjade, avslutade och pågående insatser från 2012 anges år och månad." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp i olika tabeller; formatet skiljer sig mellan datum och år-månad.\ncatalog:variable_text:64171:13787:15522\ncatalog:variable_text:64171:15522:2932897"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "sol: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: the service user is the unit, the statistics period is an attribute, and the key is not unique over periods (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "sol-2007-2012: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: the service user is the unit and pseudo is the same person in pseudonymised form (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: the service user is the unit, the statistics period is an attribute, and the key is not unique per row (maintainer ruling 2026-11-14)."

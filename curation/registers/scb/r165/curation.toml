@@ -3700,3 +3700,11 @@ kind = "set"
 subject = "set:stratumindelning"
 fields = { "description" = "Det stratum som företaget tillhör i det stratifierade urvalet. Företagen delas in i tio stratum, där stratum 1–6 är urvalsundersökta och 7–10 totalundersökta; från 2012 undersöks stratum 1–6 bara det första kvartalet och 7–10 samtliga kvartal. I det poststratifierade stratumet läggs outliers i ett eget, elfte stratum." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna är urvalets stratum och stratumet efter outlierhantering.\ncatalog:variable_text:13185:9862:15340\ncatalog:variable_text:13185:15340:20454\ncatalog:variable_text:13186:15340:17532\ncatalog:variable_text:13186:19723:20454"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "foretagens-kortperiodiska-tillgangar-och-skulder: var:orgnr"
+fields.row_key = true
+evidence = "Row key: orgnr identify a row: a firm table keyed on the firm orgnr; the user id is an attribute (maintainer ruling 2026-11-14)."

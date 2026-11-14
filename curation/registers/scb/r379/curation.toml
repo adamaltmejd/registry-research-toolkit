@@ -1079,3 +1079,17 @@ kind = "set"
 subject = "set:typ-av-tjanst"
 fields = { "description" = "Typ av tjänst som personen innehar: en variabel för tjänst som chef (2016 benämnd förskolechef, 2017–2018 chef inom annan pedagogisk verksamhet) och en för tjänst som resurs- eller stödpersonal." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna anger en tjänstetyp enligt samma definition; axeln är vilken tjänst.\ncatalog:variable_text:10615:16358:16359\ncatalog:variable_text:10615:17089:17090\ncatalog:variable_text:10615:17454:17455\ncatalog:variable_text:10639:16358:16359"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "barn-individ: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per enrolled child; the provider person-orgnr and cfar-nummer are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "personal-individ: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per staff member; the provider person-orgnr and cfar-nummer are attributes (maintainer ruling 2026-11-14)."

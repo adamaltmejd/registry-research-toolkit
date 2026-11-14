@@ -886,3 +886,17 @@ kind = "set"
 subject = "var:snibokst"
 fields = { "label" = "Näringsgren (SNI-avdelning, bokstav)" }
 evidence = "#2102 same-label cluster 'Näringsgren' (6 variables): judged different meaning, medium confidence; Concurrent columns hold SNI at 2, 3, 4 and 5 digits and letter section; FRSNI92F has the same 5-digit list as SNI5 but is a separate column with no stated difference."
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "labour-cost-survey: var:cfar-nummer"
+fields.row_key = true
+evidence = "Row key: renr and cfar-nummer identify a row: one row per sampled reporting unit, keyed on its reporting number renr (CFAR number in 1997 to 1998); the organisation number is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "labour-cost-survey: var:renr"
+fields.row_key = true
+evidence = "Row key: renr and cfar-nummer identify a row: one row per sampled reporting unit, keyed on its reporting number renr (CFAR number in 1997 to 1998); the organisation number is an attribute (maintainer ruling 2026-11-14)."

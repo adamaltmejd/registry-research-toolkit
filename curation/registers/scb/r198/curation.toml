@@ -772,3 +772,12 @@ kind = "set"
 subject = "set:fardigstallandetidpunkt"
 fields = { "description" = "Den månad och det år då huset färdigställdes. Ett nybyggt hus anses färdigställt den månad då minst tre fjärdedelar av lägenheterna i huset kunnat tas i bruk; för gruppbebyggelse av småhus gäller tre fjärdedelar av husen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna är år och månad.\ncatalog:variable_text:12242:13514:14610\ncatalog:variable_text:12242:18628:20089\ncatalog:variable_text:12250:13514:14610"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "avgifter-hyror-for-nybyggda-lagenheter: var:fastighetsbeteckning"
+fields.row_key = true
+evidence = "Row key: fastighetsbeteckning identifies a row from 2007: the surveyed object is a new-built property; owner and respondent ids are attributes (maintainer ruling 2026-11-14). 2006 has no key: its identifiers are the owner id (AgforId) and the respondent id (Idnr, id-nummer), both attributes; #2477 placed the 2006 Idnr in id-nummer."
+

@@ -2822,3 +2822,17 @@ kind = "set"
 subject = "set:utlandsfastigheternas-varde"
 fields = { "description" = "Värdet av fastigheter i utlandet: taxeringsvärdet, för den del av året som fastigheten ägts, och marknadsvärdet för personens andel, som beräknas schablonmässigt genom att taxeringsvärdet divideras med 0,75. I vissa versioner avser marknadsvärdet summan av hushållsmedlemmarnas andelar." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna värderar utländsk fastighet; axeln är taxerings- eller marknadsvärde, och marknadsvärdet härleds ur taxeringsvärdet.\ncatalog:variable_text:19636:10956:10957\ncatalog:variable_text:19736:10956:10957"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "hushall: var:identitetsnummer-hink-hushall"
+fields.row_key = true
+evidence = "Row key: identitetsnummer-hink-hushall identify a row: household table keys on the household id; the linked individual id is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "individ: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: person table; family id, search-person and other person or org numbers are attributes (maintainer ruling 2026-11-14)."

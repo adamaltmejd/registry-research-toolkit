@@ -1,0 +1,21 @@
+{
+  "note": "`rad` 2020 has three identifier columns: the child's `Lopnr` (curated as the row key), the mother's `LopnrMor` and the child's `Namn`. The order binds only `Vikt`, so its row keys are `Lopnr` alone. Fails if an identifier makes a column a row key without a curated `row_key`: the order would then carry the mother's id and the name unrequested. Oracle: the fixture's JSONL and its one curation statement.",
+  "fixture": "orders",
+  "project": {
+    "schema_version": "6.2.0",
+    "reg_meta_version": "0.64.0",
+    "name": "Order case",
+    "sources": [
+      {
+        "name": "s",
+        "table": "demo/rad",
+        "period": 2020,
+        "bindings": [
+          {
+            "variable": "demo/rad/vikt"
+          }
+        ]
+      }
+    ]
+  }
+}

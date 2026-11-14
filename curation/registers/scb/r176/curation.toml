@@ -1642,3 +1642,11 @@ kind = "set"
 subject = "var:uppgiftstatus"
 fields = { "description" = "Status för företagets uppgifter, till exempel om de godkänts utan ändring eller rättats manuellt. 2001–2010 betyder status 4 att uppgifterna är korrekta, och 2012–2014 används bara uppgifter med status 4 i skattningarna." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nRättad efter granskning: uppgifter som bara gäller vissa år anges med sina år, och det som texterna inte stöder är struket.\ncatalog:variable_text:45108:11323:12053\ncatalog:variable_text:45108:12053:12418\ncatalog:variable_text:45108:15340:16436"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: rows are product sales of a retail firm, keyed on its organisation number; rows are not unique (maintainer ruling 2026-11-14)."

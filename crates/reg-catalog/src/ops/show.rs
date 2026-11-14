@@ -1282,17 +1282,25 @@ fn class_users(server: &Server, versions: &BTreeSet<String>) -> Result<Vec<ShowC
     Ok(users)
 }
 
-/// A table's row keys. By table pid: in steward mode the holdings origin adds the key
-/// memberships the steward attests on a reference table.
+/// A table's row keys, the ones its orders carry: on the reference catalog the
+/// segments curated as row keys; in steward mode the steward's declared keys of the
+/// tables serving it, in every database (`ops/order/rows.rs`).
 fn row_keys(server: &Server, conn: &Connection, pid: &str) -> Result<Vec<ShowRowKey>, Error> {
-    let keys = |conn: &Connection| {
+    let mut found: Vec<(i64, String, String, i64)> = if server.catalog.steward().is_some() {
+        let attached = server.catalog.connect()?;
+        server.catalog.attach_holdings(&attached)?;
+        super::order::rows::steward_keys(server, &attached, pid, None)?
+            .iter()
+            .map(|k| (k.start, k.variable.clone(), k.spelling.clone(), k.end))
+            .collect()
+    } else {
         rows(
             conn,
             "SELECT v.pid, sp.exact, s.start, s.end
                  FROM segment s JOIN variable v ON v.id = s.variable_id
                    JOIN spelling sp ON sp.id = s.spelling_id
                    JOIN tbl t ON t.id = s.table_id
-                 WHERE t.pid = ? AND s.role = 'row_key'",
+                 WHERE t.pid = ? AND s.row_key = 1",
             [pid],
             |row| {
                 Ok((
@@ -1302,30 +1310,11 @@ fn row_keys(server: &Server, conn: &Connection, pid: &str) -> Result<Vec<ShowRow
                     row.get(3)?,
                 ))
             },
-        )
+        )?
     };
-    let mut found: Vec<(i64, String, String, i64)> = keys(conn)?;
-    let extra = server.catalog.connect_holdings()?;
-    if let Some(extra) = &extra {
-        found.extend(keys(extra)?);
-    }
-    // Steward mode: a key is shown over the years its placements in this table hold,
-    // as `schema` clips a line; a key no placement holds here is not shown. Duplicates
-    // go after the clip: two origins' segments of one key can clip to the same years.
-    let mut held = extra.as_ref().map(HeldClip::new).transpose()?;
-    let mut clipped = Vec::with_capacity(found.len());
-    for (start, fqid, spelling, end) in found {
-        let days = match held.as_mut() {
-            Some(held) => held.clip(pid, &fqid, (start, end))?,
-            None => Some((start, end)),
-        };
-        if let Some(days) = days {
-            clipped.push((days.0, fqid, spelling, days.1));
-        }
-    }
-    clipped.sort();
-    clipped.dedup();
-    let row_keys = clipped
+    found.sort();
+    found.dedup();
+    let row_keys = found
         .into_iter()
         .map(|(start, fqid, spelling, end)| ShowRowKey {
             fqid,

@@ -1785,3 +1785,29 @@ kind = "set"
 subject = "set:position-i-politiskt-organ"
 fields = { "description" = "Den förtroendevaldas position i nämnden, angiven som kod eller i klartext. 2007 är klartexten något mer detaljerad än koden." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i kod eller klartext.\ncatalog:variable_text:20073:13514:13879\ncatalog:variable_text:20074:12053:12418\ncatalog:variable_text:20074:13514:13879"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: var:eget-personnr"
+fields.row_key = true
+evidence = "Row key: eget-personnr and personnr identify a row: person table; both columns carry the personnummer of the elected person (fold personnr) in successive eras, 2006-2007 and 2010-2023 (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: var:personnr"
+fields.row_key = true
+evidence = "Row key: eget-personnr and personnr identify a row: person table; both columns carry the personnummer of the elected person (fold personnr) in successive eras, 2006-2007 and 2010-2023 (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: var:eget-personnr"
+fields.row_key = true
+evidence = "Row key: eget-personnr and personnr identify a row: person table; both columns carry the personnummer of the elected person (fold personnr) in successive eras, 2006-2007 and 2010-2023 (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: var:personnr"
+fields.row_key = true
+evidence = "Row key: eget-personnr and personnr identify a row: person table; both columns carry the personnummer of the elected person (fold personnr) in successive eras, 2006-2007 and 2010-2023 (maintainer ruling 2026-11-14)."

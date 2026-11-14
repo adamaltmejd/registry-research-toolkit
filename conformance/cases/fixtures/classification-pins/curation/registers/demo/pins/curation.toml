@@ -15,3 +15,9 @@ kind = "set"
 subject = "pins: Kod @2015 where release = 'r2015'"
 fields.classification = "class/kind/v1"
 evidence = "Only the final 2015 release documents this reviewed classification."
+
+[[statement]]
+kind = "set"
+subject = "pins: var:lopnr"
+fields.row_key = true
+evidence = "Synthetic fixture: the column identifies the table's row."

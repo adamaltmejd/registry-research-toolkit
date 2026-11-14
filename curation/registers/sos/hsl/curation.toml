@@ -469,3 +469,17 @@ kind = "set"
 subject = "var:hade-hsl-september"
 fields = { "label" = "Hade HSL i månad, september" }
 evidence = "#2102 same-label cluster 'Hade HSL i månad' (12 variables): judged different meaning, high confidence; En kolumn per kalendermånad; varje definition anger sin månad."
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "hsl: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "hsl2: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

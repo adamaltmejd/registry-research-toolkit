@@ -2328,3 +2328,11 @@ kind = "set"
 subject = "var:urvalsdel-id-2010"
 fields = { "description" = "Nummer som identifierar vilken av undersökningens urvalsdelar personen tillhör. Undersökningen har fyra urvalsdelar, utom 1998 då den hade tre." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; antalet urvalsdelar skiljer 1998, och hänvisningen till värdemängden utelämnas.\ncatalog:variable_text:10501:7670:8035\ncatalog:variable_text:10501:10227:10592\ncatalog:variable_text:10501:14975:15340"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "valdeltagande: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per person in the turnout sample; the uenr sample numbers are attributes (maintainer ruling 2026-11-14)."

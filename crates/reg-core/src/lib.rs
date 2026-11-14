@@ -16,10 +16,10 @@
 
 /// The catalog file's schema version: `PRAGMA user_version` and
 /// `meta.schema_version` (as decimal text). Readers admit exactly this version.
-pub const CATALOG_SCHEMA_VERSION: u32 = 15;
+pub const CATALOG_SCHEMA_VERSION: u32 = 16;
 
 /// A holdings file's physical schema. Its semantic tables retain the catalog schema.
-pub const HOLDINGS_SCHEMA_VERSION: u32 = 8;
+pub const HOLDINGS_SCHEMA_VERSION: u32 = 9;
 
 mod case_folding;
 mod digest;

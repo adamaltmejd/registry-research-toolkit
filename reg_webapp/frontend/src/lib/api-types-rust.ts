@@ -282,7 +282,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** @description The columns of a table, a register or a variable's tables over a period, with type, length, value set and role. */
+        /** @description The columns of a table, a register or a variable's tables over a period, with type, length, value set, role and row key. */
         get: operations["schema"];
         put?: never;
         post?: never;
@@ -1033,6 +1033,8 @@ export interface components {
             /** @description Its period, cut to the requested one. */
             period: components["schemas"]["Period"];
             role: string;
+            /** @description One of the table's row keys, curated; never inferred from `identifier`. */
+            row_key: boolean;
             spelling: string;
             state: string;
             table: string;

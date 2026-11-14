@@ -328,3 +328,29 @@ kind = "set"
 subject = "var:mottagare"
 fields = { "description" = "Löpnummer för samtliga mottagare under fallet. Om det finns flera mottagare separeras de med komma." }
 evidence = "Docs description review 2026-11-02; one variable, one description. The public MiDAS workbook explicitly defines MOTTAGARE on both matching sheets, Delfall2_1_8 and Fall_2, for episodes since 2006. Its spelling and episode scope agree with both catalog occurrences; this is metadata about identifiers, not row-level identifier data.\nhttps://www.forsakringskassan.se/download/18.4b51e19c19ac9dd9b2f1f3/1769159575895/variabelforteckning-midas-tillfallig-foraldrapenning.xlsx; sheet Delfall2_1_8, row MOTTAGARE; staged:d44d54cf92f849c7dec5a573412a2ae2e98af5949ebaffb38e65ccaf528646d3:page:2:chars:656-790\nhttps://www.forsakringskassan.se/download/18.4b51e19c19ac9dd9b2f1f3/1769159575895/variabelforteckning-midas-tillfallig-foraldrapenning.xlsx; sheet Fall_2, row MOTTAGARE; staged:d44d54cf92f849c7dec5a573412a2ae2e98af5949ebaffb38e65ccaf528646d3:page:14:chars:2096-2229"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "delfall1-1-8: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr identifies a row: the table takes the recipient perspective, the child is an attribute, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "delfall2-1-8: var:lopnr-barn"
+fields.row_key = true
+evidence = "Row key: lopnr-barn identifies a row: the table takes the child perspective, mottagare lists all recipients in the case and is an attribute, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fall-1: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fall-2: var:lopnr-barn"
+fields.row_key = true
+evidence = "Row key: lopnr-barn identifies a row: the table takes the child perspective, mottagare lists all recipients in the case and is an attribute, and the key is not unique per row (maintainer ruling 2026-11-14)."

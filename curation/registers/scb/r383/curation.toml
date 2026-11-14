@@ -502,3 +502,11 @@ kind = "set"
 subject = "var:komlanstkod"
 fields = { "description" = "Om köparen av verksamheten eller tjänsten är en kommun eller ett landsting (region). Från 2019 sätts koden maskinellt utifrån variabeln för kommun eller landsting." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 beskriver att koden härleds maskinellt, angivet med år.\ncatalog:variable_text:61457:15340:17897\ncatalog:variable_text:61457:17897:20089"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "utforarregistret: var:cfar-nummer"
+fields.row_key = true
+evidence = "Row key: cfar-nummer identify a row: the CFAR number identifies the service provider workplace; organisation numbers are attributes (maintainer ruling 2026-11-14)."

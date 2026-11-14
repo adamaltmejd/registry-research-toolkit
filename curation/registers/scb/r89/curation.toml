@@ -767,3 +767,10 @@ kind = "set"
 subject = "var:naringsgren"
 fields = { series_break = { at = "2009-09", text = "När det gäller variabeln SNI, så ingår Lärare i gruppen X Övriga till och med augusti 2009. Från och med september 2009 ligger Lärare i gruppen P Utbildning." } }
 evidence = "current-scb-inputs.zip/Timeseries.csv row=122\n\nCVID 171864 = klk 2009 column SNI. \"Från och med september 2009\"."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "konjunkturstatistik-loner-for-kommuner: var:orgnr"
+fields.row_key = true
+evidence = "Row key: orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

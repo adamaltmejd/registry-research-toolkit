@@ -3544,3 +3544,29 @@ kind = "set"
 subject = "var:diagnoskod-1-12-den-forlosta"
 fields = { "description" = "Den förlöstas diagnoskoder 1–12 samlade i en sträng, enligt den svenska versionen av ICD, under och efter förlossningen." }
 evidence = "No conflict: label 'Diagnoskod 1-12, den förlösta' and definition 'Den förlöstas diagnoskoderna 1-12 i ett sträng, under och efter förlossning' agree; Värdemängd 'Enligt den svenska versionen av ICD'. Mirrors the MDIAG1-MDIAG12 rows (124-135). The earlier proposal was only blocked by its open-ended occurrence period; a variable-level description has no period.\ncatalog/source/Socialstyrelsen/Metadata_Medicinska födelseregistret (MFR)_webb.xlsx: 'Metadata - Variabelnivå' row 136."
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "mfr: var:unikt-lopnummer"
+fields.row_key = true
+evidence = "Row key: unikt-lopnummer identifies a row: it is the unique number of each born child, the birth event id, and the mother and child ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "mfr-fok: var:unikt-lopnummer"
+fields.row_key = true
+evidence = "Row key: unikt-lopnummer identifies a row: it is the unique number of each born child, the only id covering the table from 1965, and the mother and child ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "mfr-ivf: var:personnr-mor"
+fields.row_key = true
+evidence = "Row key: personnr-mor identifies a row: the mother is the unit of the pregnancy, the child id is an attribute, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "mfr-lmed: var:personnr-mor"
+fields.row_key = true
+evidence = "Row key: personnr-mor identifies a row: the pregnant person is the unit of each medication row, and the key is not unique per row (maintainer ruling 2026-11-14)."

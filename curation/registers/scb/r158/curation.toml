@@ -855,3 +855,10 @@ kind = "set"
 subject = "skyddad-natur: BESLUT_DATUM_SPA @2020-12-31 where key = 'v43152'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Skyddad natur 2020-12-31 (RegVerID 16403) documents column BESLUT_DATUM_SPA under VarId 19072 \"Beslutsdatum för skyddad natur (SPA)\" and VarId 43152 \"Gällandedatum för skyddad natur (SPA)\". The column name BESLUT_DATUM is the decision date (VarId 19072, \"Datum för fattat beslut om skydd av område\"), while VarId 43152 is the date of legal effect (\"gällandedatum\") and has its own column URSPR_GALLANDEDATUM. The VarId 43152 row is withheld."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "skyddad-natur: var:objectid"
+fields.row_key = true
+evidence = "Row key: objectid identify a row: the unique object number identifies the protected area; names, NVR ids and Natura 2000 site codes are attributes (maintainer ruling 2026-11-14)."

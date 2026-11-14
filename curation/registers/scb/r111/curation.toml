@@ -13792,3 +13792,35 @@ kind = "set"
 subject = "set:yrke"
 fields = { "description" = "Personens yrke i arbetet under mätveckan: yrke och arbetsuppgifter enligt eget svar (veckan 6–12 mars 2000 och 11–17 mars 2002), yrkesgrupp (2004), yrke under mätveckan (2014) och yrket i klartext när det inte finns i yrkeslistan (2014)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna anger yrket under mätveckan som svar, kod, grupp eller klartext.\ncatalog:variable_text:37097:16161:16191\ncatalog:variable_text:37098:16161:16191\ncatalog:variable_text:37099:11017:11048\ncatalog:variable_text:37099:11747:11778\ncatalog:variable_text:37100:12478:12509"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr and uenr identify a row: one row per former student; personnr and the survey individual id uenr identify the person, uenr alone in 2018 to 2021 (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: var:uenr"
+fields.row_key = true
+evidence = "Row key: personnr and uenr identify a row: one row per former student; personnr and the survey individual id uenr identify the person, uenr alone in 2018 to 2021 (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr and scbid identify a row: one row per upper secondary leaver; scbid is the person id to 2014 and personnr from 2014; identitet (2017) is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: var:scbid"
+fields.row_key = true
+evidence = "Row key: personnr and scbid identify a row: one row per upper secondary leaver; scbid is the person id to 2014 and personnr from 2014; identitet (2017) is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "yh-examinerade: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per graduate, keyed on personnr; programme and round numbers and the 2019 scbid are attributes; rows are not unique for repeat graduates (maintainer ruling 2026-11-14)."

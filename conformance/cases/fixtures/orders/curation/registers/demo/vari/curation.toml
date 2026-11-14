@@ -24,3 +24,9 @@ kind = "set"
 subject = "release:a/a2009"
 fields = { table = "b" }
 evidence = "Merged variant."
+
+[[statement]]
+kind = "set"
+subject = "b: var:id"
+fields.row_key = true
+evidence = "Id is the person id; it identifies a row in both variants."

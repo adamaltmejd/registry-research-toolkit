@@ -1120,3 +1120,10 @@ kind = "set"
 subject = "table:lonestrukturstatistik-statlig-sektor"
 fields = { series_break = { at = "2000", text = "Från och med 2000 ingår timanställda i lönepopulationen, exklusive utlandsanställda och tjänstlediga" } }
 evidence = "current-scb-inputs.zip/Timeseries.csv row=46\n\nPopulation \"Anställda inom staten\" exists only in sls (r52 variant 174, releases 1996-2024). \"Från och med 2000\"."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-statlig-sektor: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the employee; the employer organisation number is an attribute (maintainer ruling 2026-11-14)."

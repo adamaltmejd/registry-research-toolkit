@@ -622,3 +622,11 @@ kind = "set"
 subject = "var:naringsgren"
 fields = { "description" = "Näringsgren för arbetsstället. Kodas enligt SNI2002 till 2007 och enligt SNI2007 från 2008; för 2008 lämnas uppgiften enligt båda." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; versionen 2008 dokumenterar kolumnen både enligt SNI2002 och SNI2007.\ncatalog:variable_text:41716:11323:13879\ncatalog:variable_text:41716:13879:19358\nRegisterinformation.csv:row=234475\nRegisterinformation.csv:row=303830\nRegisterinformation.csv:row=234481"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "kortperiodisk-sysselsattningsstatistik-ks: var:cfar-nummer"
+fields.row_key = true
+evidence = "Row key: cfar-nummer identify a row: one row per sampled workplace and month, keyed on its CFAR number; the organisation number is an attribute (maintainer ruling 2026-11-14)."

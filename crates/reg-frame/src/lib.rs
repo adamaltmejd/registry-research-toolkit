@@ -226,6 +226,10 @@ pub struct Occurrence {
     /// the neighbouring-owner rule never places it.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub long_format: Option<bool>,
+    /// Curated: the column is one of its table's row keys. Source readers leave this
+    /// unset; `identifier` never implies it.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub row_key: Option<bool>,
 }
 
 /// One code of a value set; `parent` is another item's code.

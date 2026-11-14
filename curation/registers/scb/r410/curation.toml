@@ -226,3 +226,17 @@ kind = "set"
 subject = "var:upprakningsfaktor"
 fields = { "description" = "Uppräkningsfaktor (vikt). För lagerinvesteringar (2021–2025) är den urvalsvikten plus en undertäckningskoefficient; för fasta bruttoinvesteringar (2024–2025) designvikten multiplicerad med en justering för bortfall och, inom tillverkningsindustrin, för cut-off." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma kolumn i parallella tabeller; enheten följer tabellen och beskrivningen anger den per tabell, ingen delning.\ncatalog:variable_text:15028:18628:19723\ncatalog:variable_text:15028:19723:20454"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "fasta-bruttoinvesteringar: var:verksamhetsenhetens-identitetsnummer"
+fields.row_key = true
+evidence = "Row key: verksamhetsenhetens-identitetsnummer identify a row: the reporting unit is the kind-of-activity unit; the firm orgnr is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lagerinvesteringar: var:verksamhetsenhetens-identitetsnummer"
+fields.row_key = true
+evidence = "Row key: verksamhetsenhetens-identitetsnummer identify a row: the reporting unit is the kind-of-activity unit; the firm person-orgnr is an attribute (maintainer ruling 2026-11-14)."

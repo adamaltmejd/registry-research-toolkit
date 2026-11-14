@@ -2722,3 +2722,22 @@ kind = "set"
 subject = "investeringsenkaten-fullstandigt: Komm @2016..2018 where key = 'v1653'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Fullständigt innehåll, versions 2016, 2017, 2018 (RegVerID 7518, 12024, 13323), documents column Komm under VarId 1937 \"Kommentar\" and VarId 1653 \"Kommentar från uppgiftslämnare\". The source does not settle which: Komm abbreviates the first word of both names and both rows are in every version; VarId 1937 is the more plausible owner because the column name equals its name and its definition (\"Kommentar av intervjuare, uppgiftslämnare etc.\") includes the respondent's comments (maintainer 2026-11-14: place under the more plausible owner); the VarId 1653 row is withheld."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-2019: var:venr"
+fields.row_key = true
+evidence = "Row key: venr identify a row: the survey unit is the kind-of-activity unit, so venr is the key rather than the proposed organisation number; rows are not unique in this long-format table (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-fullstandigt: var:venr"
+fields.row_key = true
+evidence = "Row key: venr identify a row: the survey unit is the kind-of-activity unit, so venr is the key rather than the proposed organisation number (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-resultat: var:venr"
+fields.row_key = true
+evidence = "Row key: venr identify a row: the survey unit is the kind-of-activity unit; enterprise, organisation and previous-unit numbers are attributes and BKbyggm and BKelinst are counts (maintainer ruling 2026-11-14)."

@@ -17707,3 +17707,82 @@ kind = "set"
 subject = "uoh-personal: U_SCBID @2023 where key = 'v6172'"
 fields = { "variable" = "lopnummer-for-individ" }
 evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column U_SCBID of uoh-personal in 2023 under several variables (lopnummer-anstallningar (v2519), lopnummer-for-individ (v6172)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "foretagssektorn: var:fenr"
+fields.row_key = true
+evidence = "Row key: orgnr-12 and person-orgnr and fenr identify a row: firm table; the firm id is orgnr-12 (2002-2007), person-orgnr (2018-2022) and fenr (2022-2023) by era; other 2002-2003 org number forms are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "foretagssektorn: var:orgnr-12"
+fields.row_key = true
+evidence = "Row key: orgnr-12 and person-orgnr and fenr identify a row: firm table; the firm id is orgnr-12 (2002-2007), person-orgnr (2018-2022) and fenr (2022-2023) by era; other 2002-2003 org number forms are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "foretagssektorn: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: orgnr-12 and person-orgnr and fenr identify a row: firm table; the firm id is orgnr-12 (2002-2007), person-orgnr (2018-2022) and fenr (2022-2023) by era; other 2002-2003 org number forms are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: var:orgnr-12"
+fields.row_key = true
+evidence = "Row key: orgnr-12 is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "landsting: var:orgnr-12"
+fields.row_key = true
+evidence = "Row key: orgnr-12 is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lokala-regionala-fou: var:orgnr-12"
+fields.row_key = true
+evidence = "Row key: orgnr-12 is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "offentlig-sektor: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "pnp: var:orgnr-12"
+fields.row_key = true
+evidence = "Row key: orgnr-12 and person-orgnr identify a row: organisation table; both columns carry its org number in successive eras, 2005-2018 and 2022-2023 (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "pnp: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: orgnr-12 and person-orgnr identify a row: organisation table; both columns carry its org number in successive eras, 2005-2018 and 2022-2023 (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "statliga-myndigheter: var:orgnr-12"
+fields.row_key = true
+evidence = "Row key: orgnr-12 is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "svenska-internationella-koncerner: var:orgnr-12"
+fields.row_key = true
+evidence = "Row key: orgnr-12 is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "uoh-ekonomi: var:orgnr"
+fields.row_key = true
+evidence = "Row key: orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

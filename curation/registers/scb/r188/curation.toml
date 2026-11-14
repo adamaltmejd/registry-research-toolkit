@@ -514,3 +514,22 @@ kind = "set"
 subject = "volymutveckling: VolymIndex @2017 where key = 'v19458'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Volymutveckling i fasta priser 2017 (RegVerID 10078) documents column VolymIndex under VarId 19458 \"Volymindex, År 2000 = 100\" (CVID 449447) and VarId 36000 \"Volymindex, År 2015 = 100\" (CVID 453888), both original rows. 19458 is VolymIndex until 2016 and 36000 from 2018, so 2017 is the changeover. The source does not settle which; 36000 is the more plausible owner because VarId 36000 was created with the 2017 documentation (its 2017 row is not part of the later 2010-2016 batch) and holds the column alone from 2018 (maintainer 2026-11-14: place under the more plausible owner). The 19458 row is withheld."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "landfordelad-extrastat: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "varu-landfordelat-intrastat: var:isid"
+fields.row_key = true
+evidence = "Row key: isid and person-orgnr identify a row: the shipment ISID identifies a row where delivered, and the trading firm organisation number identifies the reporter in the years without it (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "varu-landfordelat-intrastat: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: isid and person-orgnr identify a row: the shipment ISID identifies a row where delivered, and the trading firm organisation number identifies the reporter in the years without it (maintainer ruling 2026-11-14)."

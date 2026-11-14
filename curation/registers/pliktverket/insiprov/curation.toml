@@ -58,3 +58,11 @@ kind = "set"
 subject = "var:verbal-formaga"
 fields = { "tags" = ["defence"] }
 evidence = "The score measures aptitude at conscription; the related scores support a common group.\ncatalog:register:35\ncatalog:variable_text:737:9862:14975\ncatalog:variable_text:741:9862:14975\ncatalog:variable_text:742:9862:14975"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "insiprov: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

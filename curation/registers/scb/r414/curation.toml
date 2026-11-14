@@ -10,3 +10,11 @@ kind = "set"
 subject = "var:sjalvforsorjning-rk"
 fields = { "tags" = ["income"] }
 evidence = "BSJALVF är en källkod med ett oförklarat bokstavsprefix; källans etikett anger begreppet. Klassificeringen bygger på årsinkomst.\ncatalog:valueset:10591\ncatalog:variable_text:41994:15706:19723"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "sjalvforsorjning-20-65-ar: var:eget-personnr"
+fields.row_key = true
+evidence = "Row key: eget-personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

@@ -7096,3 +7096,16 @@ kind = "set"
 subject = "table:barn-ulf"
 fields = { "series_break" = { "at" = "2015", "text" = "Från och med 2015 omfattar undersökningen barn 12–18 år; till och med 2014 barn 10–18 år." } }
 evidence = "SCB Registerinformation table description of Barn-ULF 10-18 år: \"barn mellan 10 och 18 år (12-18 år fr.o.m. 2015)\". The variants merge into this table (maintainer ruling 2026-11-14), so the age change is a break at 2015."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "barn-ulf: var:barnid"
+fields.row_key = true
+evidence = "Row key: barnid identify a row: one row per surveyed child; the household id is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "barn-ulf-12-18-ar-2023: var:personnr-bakgrund"
+fields.row_key = true
+evidence = "Row key: personnr-bakgrund identify a row: one row per surveyed child; idbarn and idurval are survey numbers for the same child (maintainer ruling 2026-11-14)."

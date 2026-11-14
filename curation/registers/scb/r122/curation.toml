@@ -18340,3 +18340,22 @@ kind = "set"
 subject = "var:hogsta-utb-ej-utbreg"
 fields = { "label" = "Högsta avslutade utbildning (enkätfråga)", "description" = "Högsta avslutade utbildningsnivå enligt enkätfrågan \"Vilken är din högsta avslutade utbildning?\". Gäller personer som inte studerar aktivt och, 2013–2020, även personer som studerar aktivt." }
 evidence = "Maintainer ruling 2026-11-14: variants of one concept for different row kinds are merged and the variable carries a label and description covering both kinds.\nVarId 30145 (\"ej i utbildningsregistret\") and VarId 30146 (\"aktivt studerande\") are both documented under UTB61524 in 2013-2020 with the same question."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "aku-1987-mars-2005: var:personnr-urval"
+fields.row_key = true
+evidence = "Row key: personnr-urval identify a row: one row per sampled person; workplace numbers and uenr are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "aku-april-2005-dec-2020: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per sampled person and survey wave; workplace numbers, interviewer and uenr are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "aku-januari-2021: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per sampled person and survey wave; workplace numbers and uenr are attributes (maintainer ruling 2026-11-14)."

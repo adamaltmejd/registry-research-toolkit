@@ -382,3 +382,16 @@ kind = "set"
 subject = "individer-i-privat-sektor: B36 @2002 where key = 'v6087'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Individer i privat sektor 2002 (RegVerID 1542) documents column B36 under VarId 6087 \"Bilförmån\" and VarId 6091 \"Förmåner\". The source does not settle which; Förmåner (6091) is the more plausible owner because it is the total of taxable benefits other than cash pay, of which Bilförmån (6087) is one part, it is the only one of the two documented in the later Individer table (B412, a sub-item of Kontant bruttolön B41) and both have consecutive CVIDs 112334 and 112335 right after Kontant bruttolön (112333) (maintainer 2026-11-14: place under the more plausible owner). The 6087 row is withheld."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "individer: var:individnyckel"
+fields.row_key = true
+evidence = "Row key: individnyckel is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "individer-i-privat-sektor: var:individnyckel"
+fields.row_key = true
+evidence = "Row key: individnyckel is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

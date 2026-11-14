@@ -248,3 +248,11 @@ kind = "set"
 subject = "var:registreringsar"
 fields = { "description" = "Referensår för registret Småorter som uppgiften avser." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen skiljer bara i vilket referensår som nämns.\ncatalog:variable_text:49897:7305:7670\ncatalog:variable_text:49897:9131:9496\ncatalog:variable_text:49897:10957:11323\ncatalog:variable_text:49897:12784:13149\ncatalog:variable_text:49897:14610:14975\ncatalog:variable_text:49897:16436:16801\ncatalog:variable_text:49897:19358:19723"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "smaorter: var:objectid"
+fields.row_key = true
+evidence = "Row key: objectid identify a row: the object number identifies each locality per reference year and covers every year; the UUID is an alternative object id (maintainer ruling 2026-11-14)."

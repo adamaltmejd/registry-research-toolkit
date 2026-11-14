@@ -1171,3 +1171,23 @@ kind = "set"
 subject = "set:antal-bostadslagenheter"
 fields = { "description" = "Antal lägenheter i ombyggnad och rivning: lägenheter totalt, före ombyggnaden, tillkommande och borttagna lägenheter samt nettotillskottet, det vill säga antalet tillkommande minus antalet borttagna lägenheter. Totalen för ombyggnad beräknas från 2016 som tillkommande minus borttagna lägenheter." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna är antalen totalt, före, tillkommande, borttagna och netto.\ncatalog:variable_text:46392:10592:15340\ncatalog:variable_text:46423:10592:16801\ncatalog:variable_text:46423:16801:17532\ncatalog:variable_text:46423:17532:18993\ncatalog:variable_text:46442:10592:20089\ncatalog:variable_text:46443:10592:20089\ncatalog:variable_text:46444:10592:20089\ncatalog:variable_text:46445:16801:18262\ncatalog:variable_text:46445:18262:18993"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "ombyggnad-flerbostadshus: var:fastighetsbeteckning"
+fields.row_key = true
+evidence = "Row key: fastighetsbeteckning identify a row: the property designation is the only id of the rebuilt property, the unit of the table (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "rivning-av-flerbostadshus: var:fastighetsbeteckning"
+fields.row_key = true
+evidence = "Row key: fastighetsbeteckning and husbeteckning identify a row: the property designation and the house designation within it identify the demolished building (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "rivning-av-flerbostadshus: var:husbeteckning"
+fields.row_key = true
+evidence = "Row key: fastighetsbeteckning and husbeteckning identify a row: the property designation and the house designation within it identify the demolished building (maintainer ruling 2026-11-14)."

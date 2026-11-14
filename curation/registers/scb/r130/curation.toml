@@ -1386,3 +1386,10 @@ kind = "set"
 subject = "var:manadslon"
 fields = { series_break = { at = "2011", text = "Från och med 2011 ingår även förmåner i månadslönebegreppet." } }
 evidence = "current-scb-inputs.zip/Timeseries.csv row=120\n\nCVID 291969 = slk 2011 column mlon; variable split at 2011 (manadslon-exkl-natura 1996-2010, manadslon from 2011). \"Från och med 2011\"."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-kommuner: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the employee; the employer organisation number is an attribute (maintainer ruling 2026-11-14)."

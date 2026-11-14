@@ -20110,3 +20110,41 @@ kind = "set"
 subject = "set:veckoarbetstid"
 fields = { "description" = "Personens arbetstid per vecka enligt enkätsvar: antalet timmar personen arbetar en normal vecka (2006 med alla betalda arbeten), det genomsnittliga antalet timmar per vecka i det huvudsakliga och i ett andra arbete, och om personen arbetar heltid eller deltid. För timmarna per vecka 2018 betyder 777 bortfall, 888 uppgift saknas och 990 att frågan inte ska besvaras." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nInga fynd under a/b; heltid/deltid (W3) behålls som ett axelvärde enligt Operatörens regel, så nuvarande text står kvar.\ncatalog:variable_text:60192:11323:11688\ncatalog:variable_text:60192:13149:13514\ncatalog:variable_text:60671:16617:16801\ncatalog:variable_text:61399:17532:17897\ncatalog:variable_text:61400:17532:17897"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "distansundervisning-grundskola: var:personnummer-for-eleven-personnr-2"
+fields.row_key = true
+evidence = "Row key: personnummer-for-eleven-personnr-2 identify a row: the pupil personnummer identifies the pupil; the school code is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "distansundervisning-gymnasieskolan: var:personnummer-for-eleven-personnr-2"
+fields.row_key = true
+evidence = "Row key: personnummer-for-eleven-personnr-2 identify a row: the pupil personnummer identifies the pupil; the school code is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "doktorsexaminerades-villkor: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "internationell-rorlighet: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "sjukskoterskor-utanfor-yrket: var:eget-personnr"
+fields.row_key = true
+evidence = "Row key: eget-personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "ungdomar-utan-fullfoljd-gymnasieutbildning: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

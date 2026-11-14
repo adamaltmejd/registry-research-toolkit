@@ -658,3 +658,12 @@ kind = "set"
 subject = "set:styrkod"
 fields = { "description" = "Kod för granskning och rättning av företagets uppgifter, för arbetare eller tjänstemän: om uppgifterna är bortfall, godkända, felaktiga eller upprättade eller om någon variabel har imputerats. Koderna anger till exempel om blanketten inte inkommit, om den godkänts maskinellt eller manuellt, om företaget saknar anställda eller om det är övertäckning." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig bara i personalkategori.\ncatalog:variable_text:40899:10957:12053\ncatalog:variable_text:40899:13879:14245\ncatalog:variable_text:40899:17167:20454\ncatalog:variable_text:40900:10957:12053\ncatalog:variable_text:40900:13879:14245\ncatalog:variable_text:40900:17167:20454"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "konjunkturstatistik-loner-for-privat-sektor: var:cfar-nummer"
+fields.row_key = true
+evidence = "Row key: cfar-nummer identifies a row: rows are workplaces of the sampled firms, and a workplace belongs to one firm, so the firm's orgnr is an attribute (maintainer ruling 2026-11-14; ambiguous-table review)."
+

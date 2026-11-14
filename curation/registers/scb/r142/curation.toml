@@ -994,3 +994,10 @@ kind = "set"
 subject = "register-over-manatlig-elstatistik: LVEBen @2022 where key = 'v2620'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Register över månatlig elstatistik 2022 (RegVerID 18419) documents column LVEBen under VarId 2622 \"Benämning på redovisningsenheten\" (CVID 860092) and VarId 2620 \"Vilken adress har redovisningsenheten\" (CVID 860091). In 2006-2019 the mapping is LVEBen = 2622 and LVEBelAd = 2620 (the address), and 2622 is LVEBen in every release 2006-2022. From 2020 SCB lists the address under LVEBen and the postort 2634 under LVEBelAd, one column off; the 2020 and 2022 releases list both. The 2620 row under LVEBen is withheld; 2620 keeps its LVEBelAd columns in 2006-2019 and LVEBen in 2023-2025."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "register-over-manatlig-elstatistik: var:identitet-for-uppgiftslamnare"
+fields.row_key = true
+evidence = "Row key: identitet-for-uppgiftslamnare identify a row: rows are monthly electricity reports, keyed on the reporting firm control number over all years; CFAR, industry control and organisation numbers are attributes (maintainer ruling 2026-11-14)."

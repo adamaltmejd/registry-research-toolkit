@@ -4345,3 +4345,118 @@ kind = "set"
 subject = "var:larosate-ansokan-kurs"
 fields = { "label" = "Lärosäte för ansökan", "description" = "Kod för det universitet eller den högskola som ansökan avser. Gäller ansökningar till både kurser och program." }
 evidence = "Maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; the label and description cover every variant merged into this variable (course and programme application). Source: SCB Registerinformation, column HsKod of the four sökande tables, VarIds 25825, 25824; the claimants' definitions and operational definitions state the same thing, for courses, for programmes or for both.\ncatalog:variable_text:34069:12784:12965\ncatalog:variable_text:34069:14975:20454\ncatalog:variable_text:34070:12784:13695\ncatalog:variable_text:34070:14975:20454"
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "antagna-forskarniva: var:personnr-motsvarande-2"
+fields.row_key = true
+evidence = "Row key: personnr-motsvarande-2 identify a row: the table is about one person (doctoral student, applicant or staff member) (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "doktorander-aktivitet: var:personnr-motsvarande-2"
+fields.row_key = true
+evidence = "Row key: personnr-motsvarande-2 identify a row: the table is about one person (doctoral student, applicant or staff member) (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "doktorander-anknytande-hogskolor: var:personnr-motsvarande-2"
+fields.row_key = true
+evidence = "Row key: personnr-motsvarande-2 identify a row: the table is about one person (doctoral student, applicant or staff member) (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "doktorander-examina: var:personnr-motsvarande-2"
+fields.row_key = true
+evidence = "Row key: personnr-motsvarande-2 identify a row: the table is about one person (doctoral student, applicant or staff member) (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "doktorander-forskarskolor: var:personnr-motsvarande-2"
+fields.row_key = true
+evidence = "Row key: personnr-motsvarande-2 identify a row: the table is about one person (doctoral student, applicant or staff member); the second personnummer column (FSPERSONNR) from the research school file is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "doktorander-forsorjning: var:personnr-motsvarande-2"
+fields.row_key = true
+evidence = "Row key: personnr-motsvarande-2 identify a row: the table is about one person (doctoral student, applicant or staff member) (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "doktorander-mobilitet: var:personnr-motsvarande-2"
+fields.row_key = true
+evidence = "Row key: personnr-motsvarande-2 identify a row: the table is about one person (doctoral student, applicant or staff member) (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "forskarutbildning-tillgodoraknande: var:tillgodoraknassomid"
+fields.row_key = true
+evidence = "Row key: tillgodoraknassomid identify a row: one row per credited item, identified by its id (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "personal-1995-2000: var:personnr-samord"
+fields.row_key = true
+evidence = "Row key: personnr-samord identify a row: the table is about one person (doctoral student, applicant or staff member) (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "personal-vid-universitet: var:personnr-samord"
+fields.row_key = true
+evidence = "Row key: personnr-samord identify a row: the table is about one person (doctoral student, applicant or staff member) (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: var:personnr-motsvarande-2"
+fields.row_key = true
+evidence = "Row key: personnr-motsvarande-2 identify a row: the table is about one person (doctoral student, applicant or staff member); one row per application (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-internationella-omgangar: var:personnr-motsvarande-2"
+fields.row_key = true
+evidence = "Row key: personnr-motsvarande-2 identify a row: the table is about one person (doctoral student, applicant or staff member); one row per application, admission round codes are not unit ids (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-snabbstatistik: var:personnr-motsvarande-2"
+fields.row_key = true
+evidence = "Row key: personnr-motsvarande-2 identify a row: the table is about one person (doctoral student, applicant or staff member); one row per application (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: var:personnr-motsvarande-2"
+fields.row_key = true
+evidence = "Row key: personnr-motsvarande-2 identify a row: the table is about one person (doctoral student, applicant or staff member); one row per application, admission round codes are not unit ids (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "grundutbildning-1977: var:personnr-motsvarande-2"
+fields.row_key = true
+evidence = "Row key: personnr-motsvarande-2 identifies a row: the student, the table's only identifier (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "grundutbildning-1993: var:personnr-motsvarande-2"
+fields.row_key = true
+evidence = "Row key: personnr-motsvarande-2 identifies a row: the student, the table's only identifier (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "grundutbildning-examina: var:personnr-motsvarande-2"
+fields.row_key = true
+evidence = "Row key: personnr-motsvarande-2 identifies a row: the graduate, the table's only identifier (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "grundutbildning-examina-aldre: var:personnr-motsvarande-2"
+fields.row_key = true
+evidence = "Row key: personnr-motsvarande-2 identifies a row: the graduate, the table's only identifier (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "grundutbildning-poang: var:personnr-motsvarande-2"
+fields.row_key = true
+evidence = "Row key: personnr-motsvarande-2 identifies a row: the student, the table's only identifier (maintainer ruling 2026-11-14)."

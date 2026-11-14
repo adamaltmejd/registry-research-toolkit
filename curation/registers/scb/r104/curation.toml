@@ -1440,3 +1440,22 @@ kind = "set"
 subject = "elevpanel-6: Skolkod @2005-01-01..2005-06-30 where key = 'v7849'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Elevpanel 6 Vårterminen 2005 (release r7565) documents column Skolkod under VarId 104 \"Skola (aktuell skola)\" and VarId 7849 \"Rektorsområdeskod\". The version has no rektorsområde column, and the 2002-2004 versions document NySkolkod as VarId 104 beside it, so Skolkod is the school code; the 7849 row is withheld."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "elevpanel-6: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per panel pupil; school ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elevpanel-7: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per panel pupil; school ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elevpanel-8: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per panel pupil; school unit ids are attributes (maintainer ruling 2026-11-14)."

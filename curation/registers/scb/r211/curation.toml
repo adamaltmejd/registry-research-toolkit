@@ -868,3 +868,17 @@ kind = "set"
 subject = "var:telefon2"
 fields = { "description" = "Andra telefonnumret till jordbruksföretaget." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\n2016 dokumenteras två gånger; den första raden har telefon1:s text och den andra 'Telefonnummer 2', som 2017–2024 och etiketten. Förekomsten 2016 är rättad.\ncatalog:variable_text:49004:16801:17167\ncatalog:variable_text:49004:17167:19358\nRegisterinformation.csv:row=429759\nRegisterinformation.csv:row=429761"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "skord-av-slattervall-fr-o-m-2016: var:addid"
+fields.row_key = true
+evidence = "Row key: person-orgnr and addid identify a row: the farm register combines Addid with the organisation number to give a unique farm identity (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "skord-av-slattervall-fr-o-m-2016: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr and addid identify a row: the farm register combines Addid with the organisation number to give a unique farm identity (maintainer ruling 2026-11-14)."

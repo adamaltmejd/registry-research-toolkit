@@ -1,0 +1,7 @@
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "fhm-covidwgs: var:smilab-nr"
+fields.row_key = true
+evidence = "Row key: smilab-nr identifies a row: each row is a sequenced sample, the lab sample number is its event id, and the person and GISAID ids are attributes (maintainer ruling 2026-11-14)."

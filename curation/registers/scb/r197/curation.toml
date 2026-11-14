@@ -2316,3 +2316,10 @@ kind = "set"
 subject = "privatagda-flerbostadshus: V2020 @2008..2011 where key = 'v16599'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Privatägda flerbostadshus 2008-2011 (RegVerID 2900, 3237, 3984, 4465) documents column V2020 under VarId 16511 \"Tomträttsavgäld och arrendeavgifter\" and VarId 16599 \"Kostnader Tomträttsavgäld\". 16511 is the broader item (tomträttsavgäld and arrendeavgifter) and 16599 the narrower one. 16511 is V2020 in 2012-2015 in this table and in Bostadsrättsföreningar 2007-2015, while 16599 is TOMT in Allmännyttiga bostadsföretag 2007-2015 and V2020 here in 2007-2011. The source does not settle which; 16511 is the more plausible owner because it holds V2020 in the sibling table and in this table's later releases (maintainer 2026-11-14: place under the more plausible owner). The 16599 rows are withheld; 16599 keeps TOMT in Allmännyttiga bostadsföretag."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "privatagda-flerbostadshus: var:fastighetsbeteckning"
+fields.row_key = true
+evidence = "Row key: fastighetsbeteckning identify a row: one row per privately owned multi-dwelling property, keyed on the property designation (unique only together with kommun) (maintainer ruling 2026-11-14)."

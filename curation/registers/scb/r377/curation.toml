@@ -3123,3 +3123,35 @@ kind = "set"
 subject = "set:utbildningsniva"
 fields = { "description" = "Nivån för personens högsta utbildning enligt Svensk utbildningsnomenklatur (SUN), där den högsta utbildningen väljs enligt Utbildningsregistrets prioriteringsregler; från 2020 avses högsta utbildning till och med vårterminen det år utbildningsomgången startar. Nivån finns enligt SUN 2000 och, från 2019, SUN 2020, i flera aggregeringar: fullständig nivåkod, ensiffrig nivå, ett aggregat i 7 nivåer anpassat till det svenska utbildningssystemet och jämförbart bakåt med den äldre SUN-kodens nivåindelning, ett grovt aggregat i 4 nivåer av de knappt 50 nivåkoderna och en grov indelning i 3 nivåer, de senare även i klartext. För 2014–2018 finns 4- och 7-nivåaggregaten också som en kolumn per år." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är högsta utbildningsnivå; axlarna är SUN-version, aggregering, kod eller klartext och år.\ncatalog:variable_text:62263:16071:18262\ncatalog:variable_text:62264:12784:16071\ncatalog:variable_text:62265:12784:13149\ncatalog:variable_text:62265:17897:18262\ncatalog:variable_text:62266:17897:18262\ncatalog:variable_text:62267:16071:16436\ncatalog:variable_text:62268:16436:16801\ncatalog:variable_text:62269:16801:17167\ncatalog:variable_text:62270:17167:17532\ncatalog:variable_text:62271:17532:17897\ncatalog:variable_text:62272:16071:16436\ncatalog:variable_text:62273:16436:16801\ncatalog:variable_text:62274:16801:17167\ncatalog:variable_text:62275:17167:17532\ncatalog:variable_text:62276:17532:17897\ncatalog:variable_text:62280:12784:20089\ncatalog:variable_text:62282:17897:18262\ncatalog:variable_text:62282:18262:18628\ncatalog:variable_text:62283:18262:20089\ncatalog:variable_text:62284:17897:18262\ncatalog:variable_text:62284:18262:18628\ncatalog:variable_text:62288:12784:18262\ncatalog:variable_text:62288:18262:20089\ncatalog:variable_text:62306:18262:20089\ncatalog:variable_text:62307:12784:18262\ncatalog:variable_text:62307:18262:20089"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "avklarade-poang: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the student; programme and round ids are attributes; one row per enrolment so the key does not make rows unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "sokande: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the applicant; programme and round ids are attributes; one row per application so the key does not make rows unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "studerande-kalenderar: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the student; programme and round ids are attributes; one row per enrolment so the key does not make rows unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "studerande-kurser: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the student; programme and round ids are attributes; one row per course so the key does not make rows unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "studerande-source-range-2005-2024: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the student; programme and round ids are attributes; one row per enrolment so the key does not make rows unique (maintainer ruling 2026-11-14)."

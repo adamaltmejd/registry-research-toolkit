@@ -248,7 +248,8 @@ CREATE TABLE segment (
   coded            TEXT NOT NULL CHECK (coded IN ('yes','no','unknown')),
   sensitive        INTEGER CHECK (sensitive IN (0,1)),
   identifier       INTEGER CHECK (identifier IN (0,1)),
-  role             TEXT NOT NULL CHECK (role IN ('row_key','time_start','time_stop','time_point','measure','code','label')),
+  role             TEXT NOT NULL CHECK (role IN ('time_start','time_stop','time_point','measure','code','label')),
+  row_key          INTEGER NOT NULL CHECK (row_key IN (0,1)),  -- curated (`set row_key`); never from identifier
   state            TEXT NOT NULL CHECK (state IN ('clear','ambiguous','preliminary')),
   CHECK (start < end)
 ) STRICT;
@@ -261,7 +262,7 @@ CREATE INDEX segment_class    ON segment(class_version_id, variable_id) WHERE cl
 -- Occurrences: one column as documented in one period. The atom; evidence.
 -- override_mask bits: 0 spelling, 1 dtype, 2 length, 3 format, 4 valueset,
 -- 5 class_version, 6 coded, 7 sensitive, 8 identifier, 9 role, 10 label,
--- 11 definition, 12 opdef, 13 unit, 14 period, 15 table, 16 variable. Bit set: see override; no override row = the field's default rule.
+-- 11 definition, 12 opdef, 13 unit, 14 period, 15 table, 16 variable, 17 row_key. Bit set: see override; no override row = the field's default rule.
 CREATE TABLE occurrence (
   id               INTEGER PRIMARY KEY,
   table_id         INTEGER NOT NULL REFERENCES tbl(id),
@@ -282,7 +283,7 @@ CREATE TABLE occurrence (
   coded            TEXT NOT NULL CHECK (coded IN ('yes','no','unknown')),
   sensitive        INTEGER CHECK (sensitive IN (0,1)),
   identifier       INTEGER CHECK (identifier IN (0,1)),
-  role             TEXT NOT NULL CHECK (role IN ('row_key','time_start','time_stop','time_point','measure','code','label')),
+  role             TEXT NOT NULL CHECK (role IN ('time_start','time_stop','time_point','measure','code','label')),
   variable_id      INTEGER REFERENCES variable(id),   -- NULL when withheld, unplaced, or a
                                                       -- marker of a key that never has a column
   segment_id       INTEGER REFERENCES segment(id),    -- NULL unless status = 'used'

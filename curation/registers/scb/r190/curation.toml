@@ -2166,3 +2166,23 @@ kind = "set"
 subject = "set:svensk-utlandsk-bakgrund"
 fields = { "description" = "Om eleven har utländsk eller svensk bakgrund, härlett från elevens eget och föräldrarnas födelseland enligt Befolkningsregistret. Variablerna skiljer sig i antalet grupper (två, tre eller fyra). I Utländsk/svensk bakgrund (UTLBAKGR) från 2015 och i Utländsk bakgrund 2019–2025 sätts födelselandet till Sverige när uppgift saknas." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i gruppering.\ncatalog:variable_text:29270:12053:12234\ncatalog:variable_text:29271:17897:18078\ncatalog:variable_text:29272:12053:12234\ncatalog:variable_text:29272:12418:12600\ncatalog:variable_text:29272:16436:16617"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "amne-no: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "amne-sv-eng-ma: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "amne-sv-eng-ma-no-so: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."

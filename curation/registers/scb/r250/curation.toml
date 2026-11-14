@@ -1429,3 +1429,29 @@ kind = "set"
 subject = "var:valid"
 fields = { "description" = "Validering, det vill säga en strukturerad bedömning, dokumentation och erkännande av elevens kunskaper och kompetens oberoende av hur de förvärvats. För elever bestäms uppgiften utifrån elevens lästa poäng." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; elevtabellerna anger härledning från lästa poäng, kalenderårstabellen insamlingsperioden.\ncatalog:variable_text:41355:19723:19905"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "elever: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per student, keyed on personnr; school, provider and association ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elever-kalenderar: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per student, keyed on personnr; school and association ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: rows are course enrolments, keyed on personnr; rows are not unique and school and provider ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-kalenderar: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: rows are course enrolments, keyed on personnr; rows are not unique and school and provider ids are attributes (maintainer ruling 2026-11-14)."

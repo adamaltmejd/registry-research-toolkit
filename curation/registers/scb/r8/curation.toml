@@ -4036,3 +4036,77 @@ kind = "set"
 subject = "set:tankvolym"
 fields = { "description" = "Fordonets tankvolym i liter, ett mått per drivmedel: drivmedel 1 (fordonets huvudsakliga drivmedel), drivmedel 2 och drivmedel 3." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSamma definition och enhet; texterna skiljer sig bara i drivmedel.\ncatalog:variable_text:18970:13148:13149\ncatalog:variable_text:18970:16070:16071\ncatalog:variable_text:18971:16070:16071\ncatalog:variable_text:18972:16070:16071"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "bussar: var:regnr"
+fields.row_key = true
+evidence = "Row key: regnr identifies a row: the vehicle registration number names the vehicle each row describes; owner ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "eu-mopeder: var:regnr"
+fields.row_key = true
+evidence = "Row key: regnr identifies a row: the vehicle registration number names the vehicle each row describes; owner ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lastbilar: var:regnr"
+fields.row_key = true
+evidence = "Row key: regnr identifies a row: the vehicle registration number names the vehicle each row describes; owner ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "motorcyklar: var:regnr"
+fields.row_key = true
+evidence = "Row key: regnr identifies a row: the vehicle registration number names the vehicle each row describes; owner ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "ovriga-fordonsslag: var:regnr"
+fields.row_key = true
+evidence = "Row key: regnr identifies a row: the vehicle registration number names the vehicle each row describes; owner ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "personbilar: var:regnr"
+fields.row_key = true
+evidence = "Row key: regnr identifies a row: the vehicle registration number names the vehicle each row describes; owner ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "slapvagnar: var:regnr"
+fields.row_key = true
+evidence = "Row key: regnr identifies a row: the vehicle registration number names the vehicle each row describes; owner ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "snoskotrar: var:regnr"
+fields.row_key = true
+evidence = "Row key: regnr identifies a row: the vehicle registration number names the vehicle each row describes; owner ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "terranghjulingar: var:regnr"
+fields.row_key = true
+evidence = "Row key: regnr identifies a row: the vehicle registration number names the vehicle each row describes; owner ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "terrangskotrar: var:regnr"
+fields.row_key = true
+evidence = "Row key: regnr identifies a row: the vehicle registration number names the vehicle each row describes; owner ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "traktorer: var:regnr"
+fields.row_key = true
+evidence = "Row key: regnr identifies a row: the vehicle registration number names the vehicle each row describes; owner ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:regnr"
+fields.identifier = true
+evidence = "REGNR is the vehicle registration number, the id of the vehicle each fordonsreg row describes; it identifies the unit like a personnummer or orgnr (maintainer ruling 2026-11-14)."

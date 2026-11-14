@@ -286,6 +286,8 @@ pub struct Segment {
     pub sensitive: Option<bool>,
     pub identifier: Option<bool>,
     pub role: &'static str,
+    /// Curated on a covering occurrence (`set row_key = true`); never inferred.
+    pub row_key: bool,
     /// `clear`, `ambiguous` or `preliminary`.
     pub state: &'static str,
 }
@@ -334,6 +336,7 @@ pub struct Gap {
 #[derive(Debug)]
 pub enum Subject {
     Register,
+    Table(usize),
     Release(usize),
     Variable(usize),
     Segment(usize, usize),
@@ -1123,7 +1126,7 @@ fn resolve_pass(
                     "clear"
                 };
                 // Flags hold if any covering occurrence states them: under-flagging is the
-                // dangerous direction. An identifier is a row key whichever occurrence says so.
+                // dangerous direction. A curated row key holds the same way.
                 let flag = |f: fn(&Occurrence) -> Option<bool>| {
                     covering
                         .iter()
@@ -1131,7 +1134,6 @@ fn resolve_pass(
                         .max()
                         .flatten()
                 };
-                let identifier = flag(|o| o.identifier);
                 for (name, f) in [
                     (
                         "sensitive",
@@ -1192,14 +1194,15 @@ fn resolve_pass(
                     },
                     coded: coded(o),
                     sensitive: flag(|o| o.sensitive),
-                    identifier,
-                    role: covering
-                        .iter()
-                        .find(|&&i| resolved[i].occurrence.role.is_some())
-                        .map_or_else(
-                            || role(o, identifier),
-                            |&i| role(&resolved[i].occurrence, identifier),
-                        ),
+                    identifier: flag(|o| o.identifier),
+                    role: role(
+                        covering
+                            .iter()
+                            .map(|&i| &resolved[i].occurrence)
+                            .find(|o| o.role.is_some())
+                            .unwrap_or(o),
+                    ),
+                    row_key: flag(|o| o.row_key) == Some(true),
                     state,
                 };
                 let index = match runs.last_mut() {
@@ -1591,7 +1594,6 @@ pub fn role_value(kind: &str, value: &str) -> Result<&'static str, String> {
     let allowed: &[&str] = match kind {
         "table" => &["data", "codelist"],
         "occurrence" => &[
-            "row_key",
             "time_start",
             "time_stop",
             "time_point",
@@ -1608,16 +1610,15 @@ pub fn role_value(kind: &str, value: &str) -> Result<&'static str, String> {
         .ok_or_else(|| format!("set role requires one of {} on {kind}", allowed.join(", ")))
 }
 
-/// The default role: identifiers are row keys, coded columns codes, the rest measures.
+/// The default role: coded columns are codes, the rest measures. Being a row key is a
+/// column's own curated property (`row_key`), not a role, and `identifier` never makes one.
 ///
 /// # Panics
 /// A curated role bypassed validation at the application boundary.
 #[must_use]
-pub fn role(o: &Occurrence, identifier: Option<bool>) -> &'static str {
+pub fn role(o: &Occurrence) -> &'static str {
     if let Some(role) = o.role.as_deref() {
         role_value("occurrence", role).expect("curated role was validated at application")
-    } else if identifier == Some(true) {
-        "row_key"
     } else if o.valueset.is_some() || !o.population_valuesets.is_empty() {
         "code"
     } else {
@@ -1725,6 +1726,7 @@ fn same_form(a: &Segment, b: &Segment) -> bool {
             a.sensitive,
             a.identifier,
             a.role,
+            a.row_key,
         ) == (
             b.state,
             family(b.dtype.as_deref()),
@@ -1735,6 +1737,7 @@ fn same_form(a: &Segment, b: &Segment) -> bool {
             b.sensitive,
             b.identifier,
             b.role,
+            b.row_key,
         )
 }
 

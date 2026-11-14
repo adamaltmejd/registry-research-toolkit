@@ -962,3 +962,11 @@ kind = "set"
 subject = "set:manadslon"
 fields = { "description" = "Månadslön omräknad till heltid, per lönekomponent och härledd från insamlade lönekomponenter och arbetstidsvariabler: grundlön, skift- och OB-tillägg, jour- och beredskapsersättning samt förmåner, förmåner (från 2014) och totallön." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna är heltidsmånadsbelopp för olika lönekomponenter med samma härledning.\ncatalog:variable_text:49723:9496:12418\ncatalog:variable_text:49724:16071:16436\ncatalog:variable_text:49725:16436:20089\ncatalog:variable_text:49726:9496:12418\ncatalog:variable_text:49727:9496:12418\ncatalog:variable_text:49728:9496:12418"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-privat-sektor-slp: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the employee; the employer organisation number is an attribute (maintainer ruling 2026-11-14)."

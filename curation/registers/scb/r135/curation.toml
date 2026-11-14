@@ -1068,3 +1068,17 @@ kind = "set"
 subject = "set:total-producerad-kvantitet"
 fields = { "description" = "Totalt producerad kvantitet av en vara, i den kvantitetsenhet som gäller för varunumret: ett mått för kvantitetsenhet 1 och ett för kvantitetsenhet 2. Enhet 1 samlas in i blankettens avdelning 3.1 och 3.2; enhet 2 samlas inte in från 2013, eftersom den inte längre används. 2002 avser den värdemässigt största delen företag med 20 eller fler anställda (10 i vissa branscher), med uppgifter från en postenkät, medan produktionen i mindre företag modellskattas utifrån standardiserade räkenskapssammandrag (SRU)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är total producerad kvantitet; axeln är kvantitetsenhet, och upphörd insamling av enhet 2 är en angiven ändring.\ncatalog:variable_text:40663:11688:12053\ncatalog:variable_text:40663:15706:18993\ncatalog:variable_text:40663:19358:20089\ncatalog:variable_text:40664:16801:20089\ncatalog:variable_text:40668:11688:12053\ncatalog:variable_text:40668:12053:15706\ncatalog:variable_text:40668:15706:16801"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "industrins-varuproduktion: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: rows are product lines per reporting firm, keyed on its organisation number; rows are not unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "returravara: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

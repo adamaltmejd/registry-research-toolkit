@@ -22,3 +22,11 @@ kind = "set"
 subject = "var:tillaggsbidrag"
 fields = { "tags" = ["transfers"] }
 evidence = "Tilläggsbidraget är en komponent i bostadsbidraget, vars utbetalda belopp också finns i registret.\ncatalog:variable_text:133:8766:2932897\ncatalog:variable_text:136:8766:2932897"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "bostadsbidrag: var:lopnr-personnr"
+fields.row_key = true
+evidence = "Row key: lopnr-personnr identifies a row: the applicant receives each monthly payment, the co-applicant is a household attribute, and the key is not unique per row (maintainer ruling 2026-11-14)."

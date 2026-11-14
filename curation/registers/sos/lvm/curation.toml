@@ -420,3 +420,23 @@ kind = "set"
 subject = "var:pseudo"
 fields = { "description" = "Socialstyrelsens pseudonymiserade id-nummer för den person som tvångsvården, ansökan eller omhändertagandet gäller. I utskrivningstabellen är numret alfanumeriskt." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma löpnummer i parallella tabeller; tabellerna namnger personen efter händelsen.\ncatalog:variable_text:63724:8766:8768\ncatalog:variable_text:63724:8768:2932897"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "ansokningar-om-tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: the person subject to the application is the unit, pseudo is the same person in pseudonymised form, the decision date is an attribute, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "beslut-om-omedelbart-omhandertagande-for-tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: the person taken into care is the unit, pseudo is the same person in pseudonymised form, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: the discharged person is the unit, pseudo is the same person in pseudonymised form, and the key is not unique per row (maintainer ruling 2026-11-14)."

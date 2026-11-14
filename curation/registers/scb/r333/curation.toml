@@ -5422,3 +5422,28 @@ kind = "set"
 subject = "var:familjestallning-famstall-barnreg"
 fields = { series_break = { at = "2014-12-31", text = "Från och med 2014-12-31 har koderna 130 och 140 ändrat innebörd. \n\nTidigare gällde: \n130 Partner - man i sambopar (med gemensamma barn). \n140 Partner - kvinna i sambopar (med gemensamma barn). \n\nFrån 2014-12-31 gäller: \n130 Partner - man i sambopar. \n140 Partner - kvinna i sambopar." } }
 evidence = "current-scb-inputs.zip/Timeseries.csv row=87\n\nCVID 412490 = breg release r7490 column FamStall_BarnReg. \"Från och med 2014-12-31\"."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "barn: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per child; parents, guardians, other persons, family, property and dwelling ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "barn-uppfoljning: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per child; parents, guardians, other persons, family and property ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "familjer: var:familjeidentitet"
+fields.row_key = true
+evidence = "Row key: familjeidentitet and familjeidentitet-rtb identify a row: a family table keyed on the family id: familjeidentitet-rtb to 2014, familjeidentitet from 2015; parents and property are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "familjer: var:familjeidentitet-rtb"
+fields.row_key = true
+evidence = "Row key: familjeidentitet and familjeidentitet-rtb identify a row: a family table keyed on the family id: familjeidentitet-rtb to 2014, familjeidentitet from 2015; parents and property are attributes (maintainer ruling 2026-11-14)."

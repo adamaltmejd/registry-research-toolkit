@@ -186,3 +186,9 @@
 {"kind":"occurrence","provider":"demo","register":"vari","table":"b","release":"b2010","column":"Ink","source_key":"k2","label":"Inkomst","dtype":"int"}
 {"kind":"occurrence","provider":"demo","register":"vari","table":"b","release":"b2011","column":"Ink","source_key":"k2","label":"Inkomst","dtype":"int"}
 {"kind":"notice","series_break":true,"subject":{"kind":"table","provider":"demo","register":"vari","table":"a"},"at":"2009-01-01","text":"Från och med 2009 räknas inkomsten per kalenderår."}
+{"kind":"register","provider":"demo","register":"rad","name":"Barnregistret"}
+{"kind":"release","provider":"demo","register":"rad","table":"","release":"rd2020","name":"Barn 2020","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"rad","table":"","release":"rd2020","column":"Lopnr","source_key":"k1","label":"Barnets löpnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"rad","table":"","release":"rd2020","column":"LopnrMor","source_key":"k2","label":"Moderns löpnummer","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"rad","table":"","release":"rd2020","column":"Namn","source_key":"k3","label":"Barnets namn","dtype":"char","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"rad","table":"","release":"rd2020","column":"Vikt","source_key":"k4","label":"Födelsevikt","dtype":"int"}

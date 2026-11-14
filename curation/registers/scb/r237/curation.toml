@@ -114517,3 +114517,52 @@ kind = "set"
 subject = "individer-16-84-ar-ulf: TR1446 @2001 where key = 'v13067'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Individer 16-84 år (ULF) 2001 (RegVerID 722) documents column TR1446 under VarId 13067 \"Skäl ej poliskontakt 6 TR0011\" and VarId 18896 \"Skäl ej poliskontakt 6 TR0014\". In 2000 (RegVerID 723) VarId 13067 is on TR1146 and VarId 18896 on TR1446. The 2001 row of 13067 reads \"Om nej på TR1126\" (the TR0011 series, TR1146) and that of 18896 \"Om nej på TR1426\" (TR0014, TR1446), so 13067 is listed under a wrong column name in 2001 (TR1146 is not documented in that version). The 13067 row is withheld (the source shows it; maintainer 2026-11-14: every column is placed)."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "individer-16-74-ar-ulf: var:pnr"
+fields.row_key = true
+evidence = "Row key: pnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: var:eget-personnr"
+fields.row_key = true
+evidence = "Row key: personnr and eget-personnr and personnr-2 identify a row: the respondent personnummer, delivered under a different variable per era, identifies the person (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr and eget-personnr and personnr-2 identify a row: the respondent personnummer, delivered under a different variable per era, identifies the person (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: var:personnr-2"
+fields.row_key = true
+evidence = "Row key: personnr and eget-personnr and personnr-2 identify a row: the respondent personnummer, delivered under a different variable per era, identifies the person (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr and personnr-2 identify a row: the respondent personnummer, delivered under a different variable per era, identifies the person; ubnr and uenr are survey numbers, attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf: var:personnr-2"
+fields.row_key = true
+evidence = "Row key: personnr and personnr-2 identify a row: the respondent personnummer, delivered under a different variable per era, identifies the person; ubnr and uenr are survey numbers, attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "ulf-2021: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the surveyed person; survey person, household, parent and partner ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf-1989-old: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: one row per surveyed person (maintainer ruling 2026-11-14)."

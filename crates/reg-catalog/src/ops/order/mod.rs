@@ -21,7 +21,7 @@
 mod breaks;
 mod eras;
 mod materialize;
-mod rows;
+pub(crate) mod rows;
 mod successor;
 mod window;
 mod words;
@@ -115,11 +115,55 @@ fn order(server: &Server, params: &Params) -> Result<Value, Error> {
     let project = structural(&project(params)?)?;
     match checked(server, &project)? {
         Ok(mut order) => {
+            let undeclared = undeclared(server, &project, &order)?;
+            order.findings.extend(undeclared);
             order.findings.extend(sensitive(&order.entries));
             Ok(serde_json::to_value(order).expect("LogicalOrder serializes"))
         }
         Err(findings) => Err(blocked(server, findings)?),
     }
+}
+
+/// `row_key_undeclared`: an info per source and table the order draws entries from but
+/// carries no row key for, because none is curated (or declared by the steward). Like
+/// `sensitive_variables` it describes the file, not a fault in the project, so only
+/// `order` gives it (maintainer ruling 2026-11-14), after the check's findings.
+fn undeclared(
+    server: &Server,
+    project: &ProjectData,
+    order: &LogicalOrder,
+) -> Result<Vec<NamedIssue>, Error> {
+    let mut found = Vec::new();
+    for (index, source) in project.sources.iter().enumerate() {
+        let name = source.name();
+        let keyed: BTreeSet<&str> = order
+            .row_keys
+            .iter()
+            .filter(|k| k.source == name)
+            .map(|k| k.table.as_str())
+            .collect();
+        let tables: BTreeSet<&str> = order
+            .entries
+            .iter()
+            .filter(|e| e.source == name)
+            .map(|e| e.table.as_str())
+            .collect();
+        for table in tables.difference(&keyed) {
+            found.push(Issue {
+                source: Some(name.to_owned()),
+                table: Some((*table).to_owned()),
+                ..Issue::new(
+                    IssueLevel::Info,
+                    "row_key_undeclared",
+                    format!("/sources/{index}"),
+                    format!(
+                        "{table} has no stated row identifier, so its file carries only the columns you choose"
+                    ),
+                )
+            });
+        }
+    }
+    named_issues(server, found)
 }
 
 /// `sensitive_variables`: one info on the whole order, when some ordered stretch is

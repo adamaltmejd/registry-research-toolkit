@@ -88,3 +88,11 @@ kind = "set"
 subject = "release:elpriser-och-elavtal/r4497"
 fields = { "period" = "2013-Q1" }
 evidence = "SCB Registerinformation, RegVerID 4497: the release is named \"2013_1\", which the delivery-name grammar does not read, so its documented columns had no period. Its population, \"Företagsenheter som bedriver handel med el över hela landet\", is dated 2013-01-01 - 2013-03-31: the first quarter of 2013."
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "elpriser-och-elavtal: var:orgnr-foretaget"
+fields.row_key = true
+evidence = "Row key: orgnr-foretaget identify a row: a firm table keyed on the firm orgnr; the SCB id is an attribute (maintainer ruling 2026-11-14)."

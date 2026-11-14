@@ -1,0 +1,5 @@
+[[statement]]
+kind = "set"
+subject = "rad: var:lopnr"
+fields.row_key = true
+evidence = "Synthetic fixture: the child's id identifies the row; the mother's id and the name are attributes."

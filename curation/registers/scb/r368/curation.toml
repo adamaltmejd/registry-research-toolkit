@@ -1288,3 +1288,11 @@ kind = "set"
 subject = "set:invandringsdatum"
 fields = { "description" = "Datum för personens senaste och tidigaste invandring till Sverige, enligt Befolkningsregistret. Värdet 0 betyder att personen inte har något invandringsdatum registrerat." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna är invandringsdatum; de skiljer sig i senaste eller första invandringen.\ncatalog:variable_text:41216:16436:16617\ncatalog:variable_text:41216:16617:16801\ncatalog:variable_text:41216:16801:16983\ncatalog:variable_text:41216:16983:19539\ncatalog:variable_text:41216:19539:19723\ncatalog:variable_text:41216:19723:19905\ncatalog:variable_text:41229:16436:20270"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "andra-halvaret: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

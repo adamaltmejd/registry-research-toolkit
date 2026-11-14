@@ -455,3 +455,10 @@ kind = "set"
 subject = "table:foretagens-utlandska-handelskrediter"
 fields = { series_break = { at = "2005", text = "Från och med 2005 är cut-off gränsen höjd till 3 miljoner kronor. Gränsen i tidigare års undersökningar var 2 miljoner kronor." } }
 evidence = "current-scb-inputs.zip/Timeseries.csv row=95\n\nPopulation \"Icke-finansiella företag med summa utländska handelskrediter över 3 milj kr\" exists only in hku (r166 variant 239, 2005-2018). \"Från och med 2005\"."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utlandska-handelskrediter: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

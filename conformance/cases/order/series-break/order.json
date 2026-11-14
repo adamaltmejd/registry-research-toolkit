@@ -1,7 +1,7 @@
 {
   "catalog": {
     "catalog_version": "dev",
-    "schema_version": "15"
+    "schema_version": "16"
   },
   "clips": [],
   "entries": [
@@ -110,6 +110,20 @@
       "table_name": "Tabell B",
       "variable": "demo/brott/civ",
       "variable_name": "Civilstånd"
+    },
+    {
+      "code": "row_key_undeclared",
+      "level": "info",
+      "message": "demo/brott/b has no stated row identifier, so its file carries only the columns you choose",
+      "path": "/sources/0",
+      "period": null,
+      "source": "s",
+      "successor_fqid": null,
+      "successor_name": null,
+      "table": "demo/brott/b",
+      "table_name": "Tabell B",
+      "variable": null,
+      "variable_name": null
     }
   ],
   "manual": [],

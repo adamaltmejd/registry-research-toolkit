@@ -289,9 +289,8 @@ states one only to override the catalog, by editing the file (#2071, G13).
 
 **Not shown at all:** role, coded, state, temporality, storage, unplaced releases,
 source and provenance, timeless, implicit, cadence, edition, primary, populations,
-releases, and a table's row keys (the catalog marks every identifier column as one;
-Operator Q2, #2252). A fact that is not stated has no row. A yes/no fact (identifier,
-sensitive) shows only when yes.
+releases, and a table's row keys (Operator Q2, #2252). A fact that is not stated has
+no row. A yes/no fact (identifier, sensitive) shows only when yes.
 
 ## Colors
 

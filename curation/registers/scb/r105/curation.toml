@@ -3415,3 +3415,23 @@ kind = "set"
 subject = "var:yrkesutb"
 fields = { "description" = "Om kursen är en yrkesutbildning. I deltagarregistret avser uppgiften endast allmän kurs (kurstyp 01) och särskild kurs (kurstyp 02)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; deltagarregistret avgränsar till allmän och särskild kurs.\ncatalog:variable_text:18697:16436:17532\ncatalog:variable_text:18697:17532:18262\ncatalog:variable_text:18697:18262:20089"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "deltagare-i-sfi: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per participant; the provider and federation ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "deltagarregister: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per participant; SCB id and dossier number are attributes; rows per course may not be unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "pedagogisk-personal: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per teacher; the school code is an attribute (maintainer ruling 2026-11-14)."

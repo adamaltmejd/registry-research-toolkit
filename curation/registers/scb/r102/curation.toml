@@ -8942,3 +8942,59 @@ kind = "set"
 subject = "set:utbildningsform"
 fields = { "description" = "Typ av utbildning i gymnasieskolan: för elever enligt Gy11 högskoleförberedande program, yrkesprogram eller introduktionsprogram, för elever enligt Lpf94 nationellt, specialutformat, individuellt eller fristående program. Utbildningsformen anges dels vid avslut, den eleven avslutade gymnasiestudierna med, härledd ur studievägskoden, dels vid start, härledd ur studievägen där eleven påbörjade studierna och samkörning med registret över elever i gymnasieskolan." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna klassar samma utbildningsform; axeln är tidpunkt (start eller avslut).\ncatalog:variable_text:29870:12600:12965\ncatalog:variable_text:29870:15887:16252\ncatalog:variable_text:29871:12600:20270"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "avgangna-fran-waldorf: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "avgangna-sent-inkomna: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "examens-studiebevis-teknikprogrammet-ak4: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieintyg: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieintyg-kurser: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kursbetyg: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes; one row per course grade, so the key does not make rows unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "nytt-grundskolebetyg: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "samlat-betygsdokument: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "slutbetyg: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."

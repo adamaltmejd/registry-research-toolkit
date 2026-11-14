@@ -749,3 +749,11 @@ kind = "set"
 subject = "set:provresultat-matematik"
 fields = { "description" = "Elevens resultat på delproven och gruppuppgiften i provet i matematik. Delprovens innehåll skiljer sig mellan åren: 2008 var delprov B mätning, C geometriska former, D tal och mönster och E räkning; 2009–2010 var delprov A miniräknare och räknesätten, B längd, area och skala, C tid och statistik och D räknemetoder." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna är delproven A–E och gruppuppgiften; delprovens innehåll byts 2009.\ncatalog:variable_text:28983:14245:14975\ncatalog:variable_text:28985:13879:14245\ncatalog:variable_text:28985:14245:14975\ncatalog:variable_text:28987:13879:14245\ncatalog:variable_text:28987:14245:14975\ncatalog:variable_text:28989:13879:14245\ncatalog:variable_text:28989:14245:14975\ncatalog:variable_text:28992:13879:14245\ncatalog:variable_text:28994:13879:14245"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "grundskola-nationella-prov-ak-5: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."

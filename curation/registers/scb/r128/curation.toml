@@ -3646,3 +3646,41 @@ kind = "set"
 subject = "set:ranteforman"
 fields = { "description" = "Om ränteförmån har utgått, per anställning, och antalet kontrolluppgifter med ränteförmån summerat per företag eller organisation, båda 1996–2018." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): every level of one measure belongs in one group.\n\nDEF för ranteforman och antranteforman; summa per företag enligt OP och KUAGG-tabellen; år från tabellerna.\ncatalog:variable_text:45827:9496:14610\ncatalog:variable_text:45827:14610:17532\ncatalog:variable_text:45827:17532:17897\ncatalog:variable_text:45903:9496:14610\ncatalog:variable_text:45903:14975:15340"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-dagbefolkning: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: rows are employments, keyed on personnr; employer and workplace ids are attributes and rows are not unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-nattbefolkning: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: rows are employments, keyed on personnr; employer and workplace ids are attributes and rows are not unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen-uppgifter: var:arbetsstallenummer"
+fields.row_key = true
+evidence = "Row key: person-orgnr and arbetsstallenummer identify a row: one row per workplace, identified over all years by the organisation number plus the workplace number; the CFAR number from 2007 is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen-uppgifter: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr and arbetsstallenummer identify a row: one row per workplace, identified over all years by the organisation number plus the workplace number; the CFAR number from 2007 is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "foretag-kuagg: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "individer-sociala-agi-ku: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: rows are taxable social benefits per person and payer, keyed on personnr; payer ids are attributes and rows are not unique (maintainer ruling 2026-11-14)."

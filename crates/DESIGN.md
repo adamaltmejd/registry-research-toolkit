@@ -215,7 +215,7 @@ V2 (value-set carry across a segment that states none) is a v4 rule not built: o
 first full build 7 coded segments of 166k sat between two neighbours with one value set,
 spelling and type. A D `set` states those.
 
-**Review proposals (F3, V1).** Proposals are review findings whose messages carry ranked
+**Review proposals (F3, V1, K1).** Proposals are review findings whose messages carry ranked
 candidate statements as TOML in the existing curation grammar. They go to the build's
 findings output with the other findings and never change identity, relations or
 classification bindings. Accepting one requires reviewed curation and a premise lock.
@@ -234,6 +234,31 @@ classification bindings. Accepting one requires reviewed curation and a premise 
   `set classification` for whole occurrences. Source code-system text and historic label
   rules remain evidence only; neither creates a binding. Inventory book periods do not
   imply occurrence applicability.
+- K1 reviews row-key coverage per data table (`reg-build/src/proposals/row_keys.rs`).
+  `K1:row-key`: identifier columns and no row key; when exactly one identifier is a unit
+  id by an exact-name list (`personnr`, `lopnr`, `orgnr`, `person-orgnr`, `cfar-nummer`,
+  …) it proposes `set row_key = true` on `<table>: var:<id>`. `identifier` is evidence for
+  the proposal only. `K1:row-key-gap`: a row key, but periods where the table has
+  identifiers and no key (a unit id the curation has not keyed for that era).
+  `K1:row-key-partial`: a segment of a key variable that is not a key, which the
+  variable-wide statement rules out; it should stay empty.
+
+**Row keys.** A row key is a variable whose values, with the table's other row keys,
+identify a table's row: the unit's id (a person, firm, workplace, school, property,
+vehicle), both ids in a table about pairs, the case id of an event table. It is a property
+of a table and variable, set only by curation, once per pair: `set row_key = true` on
+`<table>: var:<id>`, an address that selects that ledger variable's occurrences in that
+table under every spelling and source key, including ones a later pin adds (the statement's
+premise then changes and the relock shows it). No other subject accepts `row_key`, so a key
+cannot be stated per spelling and lose the years another spelling covers. A key that
+changes by era is each era's variable keyed. Source readers never state it; a segment holds
+it from its covering occurrences. It is not a role: a key column keeps its code or measure
+role. `identifier` never makes one (maintainer 2026-11-14): names,
+addresses, other persons' ids and property or family ids in a person table are
+identifiers but not keys. A table with no unit id has no key. A steward's keys stay its
+declared `[[table.key]]` (below). Reference orders carry a table's row keys on every
+order (`row_keys`), `show` lists them, `schema` lines flag them, and the integer-codes
+rule leaves them text.
 
 **Time.**
 
@@ -476,7 +501,7 @@ classification bindings. Accepting one requires reviewed curation and a premise 
 - `label_of` is a relation consumed by the runtime's graph endpoint. The converter's
   legacy code/label pairs created presentation groups; D-3c does not synthesize those
   legacy groups, change identity or alter order bindings.
-- The findings output is the complete finding collector, including F3 and V1 proposals
+- The findings output is the complete finding collector, including F3, V1 and K1 proposals
   after curated links. F5 is currently a notice, F6 a review; neither independently
   blocks orders. F7 edition findings remain warnings.
 - **Findings are a build output, not published (maintainer 2026-11-06, #2335).** The
@@ -586,9 +611,13 @@ The address grammar is:
 ```text
 <table>: <spelling> [@<period-set>] [where <field> = '<value>' [and ...]]
 var:<id>
+<table>: var:<id>
 table:<slug>
 release:<table-slug>/<handle>
 ```
+
+`<table>: var:<id>` is that ledger variable's occurrences in that table; only
+`set row_key` takes it ("Row keys").
 
 Tables and ids are catalog slugs; spellings match folded. Brace lists expand literal
 alternatives (`{a,b}`). `<none>` addresses a documented-without-column marker. Expansion
@@ -624,8 +653,8 @@ Kind-specific content is:
 `set.fields` is closed: `table`, `name` (a table's), `variable`, `label`, `description`, `sets`, `unit`,
 `definition`, `operational_definition`, `value_set`, `coded`, `period`, `spelling`,
 `identifier`, `sensitive`, `type`, `format`, `notice`, `coverage`, `classification`,
-`tags`, `sentinels`, `role`, `axes`, `facets`, `long_format` and `series_break` (alone
-in its statement; see "Series breaks"). Source-shaped assertion fields have a
+`tags`, `sentinels`, `role`, `row_key`, `axes`, `facets`, `long_format` and `series_break`
+(alone in its statement; see "Series breaks"). Source-shaped assertion fields have a
 separate closed schema: table `name`, `description` and `coverage`; occurrence `label`,
 `definition`, `unit`, `type`, `length`, `sensitive` and `identifier`. Lists of sets,
 tags and sentinels normalize as sorted sets; asserted codes sort by code, while
@@ -859,9 +888,10 @@ release assets are left unchanged.
   `KansligVariabelIbland`); a stated `0` is a statement, an unstated flag stays unknown.
   `Identifierare` makes every occurrence of a listed `VarId` an identifier, beside the
   summary's own identifiers. In any provider, a segment is sensitive or an identifier if
-  any occurrence covering it says so, and an identifier segment is a row key;
-  under-flagging is the dangerous direction. Occurrences that state a flag differently
-  raise one F6 per key.
+  any occurrence covering it says so; under-flagging is the dangerous direction.
+  Occurrences that state a flag differently raise one F6 per key. `identifier` is
+  information (shown, used for disclosure); it never makes a column a row key ("Row
+  keys").
 - **SCB `Timeseries` is read in C.** Its rows are series breaks, ends and replacements
   of registers, variants, releases and variables: links and document references, which
   no B table holds. `Entitet` fixes what `ID1` and `ID2` are (`Register` a `RegisterId`,
@@ -1274,7 +1304,8 @@ for the open sentinels; a timeless table has `{start: null, end: null}`.
   window holds it, so one binding can give entries in two tables. Adjacent segments
   merge when their spelling, type and value set agree (design §4.6), so a flag-only
   boundary does not split an entry.
-- **`row_keys`** are the table's segments with role `row_key` over the period. A row key
+- **`row_keys`** are the table's row-key segments (curated `row_key`, "Row keys") over
+  the period; a steward's are its declared `[[table.key]]` components instead. A row key
   that no binding orders still appears there; it is not an entry. This is where a panel
   gets its keys, since the document names none. Since every order carries its row keys,
   an ambiguous row-key segment over the period blocks (`ambiguous_window`, located at
@@ -1291,7 +1322,11 @@ the study window). Warnings and infos do not: `classification_version_ambiguous`
 `preliminary_data` (a window only a preliminary release covers; final wins where both
 exist), `edition_disagreement`, `variable_replaced`, `period_clipped`, `form_change`,
 `table_succession_undated`, `coverage_end_unstated`, `binding_type_differs`,
-`series_break` and `sensitive_variables`. Each is an `Issue` whose `path`
+`series_break`, `row_key_undeclared` and `sensitive_variables`. The last two describe the file rather
+than a fault in the project, so only a successful `order` gives them, after the check's
+findings: `row_key_undeclared` is an info per source and table that the order draws
+entries from but carries no row key for (maintainer ruling 2026-11-14), and
+`sensitive_variables` one info on the whole order. Each is an `Issue` whose `path`
 points at the source, binding or panel and whose `source`, `variable`, `table` and
 `period` say what it is about (`null` for a whole-project finding). The conditions are
 the order check's to state in its own tests; the rules that shape them:
@@ -2161,7 +2196,7 @@ scoped `period`. Its columns remain held, not unmatched, and never become ordera
 placements. New census columns remain ordinary unmatched notices. Semantic `role` is
 retained from the reference or supplemental occurrence; it does not by itself make an
 identifier required. Carried copies must be declared entity/time components, including
-received keys whose old donor role was not `row_key`. They grant no additional ordered
+received keys the reference catalog does not curate as row keys. They grant no additional ordered
 cell. Stable key ordering derives from column ordinals. Holdings listings are metadata
 (§13 D9); this does not authorize publishing private source documents, secrets or
 microdata.
@@ -2519,7 +2554,7 @@ Reader text (`char`) whose documented code list is all plain integers publishes 
 code keeps the column text, and so does a code list that includes a non-integer
 sentinel. The rule judges a whole published segment: every delivery in it must be reader
 `char` with such a code list, not `coded = false`, not classification-bound and not an
-identifier, and the segment must not be a row key. Otherwise the segment stays text, so
+identifier, and the segment must not be a curated row key. Otherwise the segment stays text, so
 the rule never splits a segment into text and integer years. It runs in resolution after
 the segments are built and before F1, so a type change between an integer segment and a
 text neighbour is an ordinary `F1:type-change` notice.
@@ -2739,7 +2774,7 @@ order with the existing structured findings, never returns a partial order.
   | `representation`                          | removed                                                  | A spelling is evidence, not a selector (design §7). The order check splits by form and returns the spelling per window. Where two spellings claim a window it is `ambiguous` and blocks; curation fixes it, a pin does not.                                              |
   | `type`, `display_name`, subtypes, formats | unchanged                                                | The researcher's declared output column. Nothing in v4 replaces it.                                                                                                                                                                                                      |
   | panel `members`                           | source names only                                        | The member object form existed only to override keys.                                                                                                                                                                                                                    |
-  | panel `entity_key`, `time_key`            | removed                                                  | Steward keys come from the pinned holdings table's declared entity/time requirements, not all identifier roles. Reference-only orders use catalog `row_key` segments; their time axis is the member table's `time_point` / `time_start` segment, else the source period. |
+  | panel `entity_key`, `time_key`            | removed                                                  | Steward keys come from the pinned holdings table's declared entity/time requirements, not identifiers. Reference-only orders use the catalog's curated row-key segments; their time axis is the member table's `time_point` / `time_start` segment, else the source period. |
 
 A panel is a named grouping of sources with a comment. Which keys join across members is
 the researcher's call; the order check does not compare them.

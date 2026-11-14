@@ -942,3 +942,11 @@ kind = "set"
 subject = "var:medborgarland-varldsdel-namn"
 fields = { "label" = "Medborgarland, världsdel/landsgrupp (namn)" }
 evidence = "#2102 same-label cluster 'Medborgarland, världsdel/landsgrupp' (2 variables): judged different meaning, high confidence; medborgarlandVD holds the code (value set), medborgarlandVDnamn the name."
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "valdeltagande: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per person in the turnout sample; uenr is an attribute (maintainer ruling 2026-11-14)."

@@ -22,3 +22,11 @@ kind = "set"
 subject = "var:tatortskod"
 fields = { "tags" = ["geography"] }
 evidence = "Variabeln anger geografisk tillhörighet till tätort.\ncatalog:occurrence:198857\ncatalog:variable_text:21643:16436:16801"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "gronomraden-hoplagda: var:id-gronytor-inom-tatort"
+fields.row_key = true
+evidence = "Row key: id-gronytor-inom-tatort identify a row: green area table keys on the area id, its only identifier (maintainer ruling 2026-11-14)."

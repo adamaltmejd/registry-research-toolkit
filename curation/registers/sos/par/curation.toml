@@ -1690,3 +1690,23 @@ kind = "set"
 subject = "set:fodelsetid"
 fields = { "description" = "Patientens födelsedatum, som alfanumeriskt datum och som SAS-datum, och från 2015 även födelseåret." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar anger patientens födelsetid; axlarna är format och detaljnivå (datum eller år).\ncatalog:variable_text:64037:-2192:14610\ncatalog:variable_text:64037:14610:16436\ncatalog:variable_text:64038:16436:2932897\ncatalog:variable_text:64039:-2192:2932897\ncatalog:variable_text:64040:16436:19723\ncatalog:variable_text:64040:19723:2932897"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "par-ov: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: the patient is the unit of each visit, lopnr-oppenvardskontakt numbers only psychiatric care-form periods, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: the patient is the unit of each admission, lopnr-oppenvardskontakt numbers only psychiatric care-form periods, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "par-tv: var:pseudo"
+fields.row_key = true
+evidence = "Row key: pseudo identifies a row: it is the only person id covering the whole table, since personnr ends in 2014, and the key is not unique per row (maintainer ruling 2026-11-14)."

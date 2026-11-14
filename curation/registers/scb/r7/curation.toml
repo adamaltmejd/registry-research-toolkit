@@ -4425,3 +4425,34 @@ kind = "set"
 subject = "var:taxeringsvarde-byggnader"
 fields = { "label" = "Taxeringsvärde för byggnader", "description" = "Taxeringsenhetens taxeringsvärde för byggnader, i 1000-tal kronor. Kolumnen innehåller både värdet för småhusbyggnader (typkoderna i 100-serien) och värdet för byggnader på övriga taxeringsenheter." }
 evidence = "Maintainer ruling 2026-11-14: variants of one concept for different row kinds are merged and the variable carries a label and description covering both kinds.\nVarId 567 and VarId 3741 (småhusbyggnader) share the column VardeBygg in Fastigheter 1998-2023."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "agare: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr and taxeringsenhetens-identitetsnummer identify a row: one row per owner of a taxation unit, so the owner and the taxation unit together identify a row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "agare: var:taxeringsenhetens-identitetsnummer"
+fields.row_key = true
+evidence = "Row key: person-orgnr and taxeringsenhetens-identitetsnummer identify a row: one row per owner of a taxation unit, so the owner and the taxation unit together identify a row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: var:fastighetens-identitetsnummer"
+fields.row_key = true
+evidence = "Row key: fastighetens-identitetsnummer and taxeringsenhetens-identitetsnummer identify a row: rows are properties linked to taxation units, so the property id and the taxation unit id together identify a row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: var:taxeringsenhetens-identitetsnummer"
+fields.row_key = true
+evidence = "Row key: fastighetens-identitetsnummer and taxeringsenhetens-identitetsnummer identify a row: rows are properties linked to taxation units, so the property id and the taxation unit id together identify a row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "taxeringsenheter: var:taxeringsenhetens-identitetsnummer"
+fields.row_key = true
+evidence = "Row key: taxeringsenhetens-identitetsnummer identify a row: taxation unit table keys on the taxation unit id; the owner org number is an attribute (maintainer ruling 2026-11-14)."

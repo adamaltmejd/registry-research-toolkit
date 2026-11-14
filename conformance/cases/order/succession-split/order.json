@@ -1,7 +1,7 @@
 {
   "catalog": {
     "catalog_version": "dev",
-    "schema_version": "15"
+    "schema_version": "16"
   },
   "project": {
     "name": "Order case",
@@ -55,5 +55,34 @@
   "row_keys": [],
   "manual": [],
   "clips": [],
-  "findings": []
+  "findings": [
+    {
+      "code": "row_key_undeclared",
+      "level": "info",
+      "message": "demo/suc/gammal has no stated row identifier, so its file carries only the columns you choose",
+      "path": "/sources/0",
+      "period": null,
+      "source": "s",
+      "successor_fqid": null,
+      "successor_name": null,
+      "table": "demo/suc/gammal",
+      "table_name": "Gammal tabell",
+      "variable": null,
+      "variable_name": null
+    },
+    {
+      "code": "row_key_undeclared",
+      "level": "info",
+      "message": "demo/suc/ny has no stated row identifier, so its file carries only the columns you choose",
+      "path": "/sources/0",
+      "period": null,
+      "source": "s",
+      "successor_fqid": null,
+      "successor_name": null,
+      "table": "demo/suc/ny",
+      "table_name": "Ny tabell",
+      "variable": null,
+      "variable_name": null
+    }
+  ]
 }

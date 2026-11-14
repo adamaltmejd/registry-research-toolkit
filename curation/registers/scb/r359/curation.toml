@@ -382,3 +382,11 @@ kind = "set"
 subject = "var:effektmindre"
 fields = { "description" = "Den sammanlagda installerade effekten i elnätet från de solcellsanläggningar som var för sig har en installerad effekt mindre än 20 kW." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen anger storleksklassen. Rättar ”effekteten”.\ncatalog:variable_text:49914:16801:17167\ncatalog:variable_text:49914:17167:17532\ncatalog:variable_text:49914:18262:19723"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "natanslutna-solcellsanlaggningar: var:orgnr"
+fields.row_key = true
+evidence = "Row key: orgnr identify a row: the organisation number identifies the reporting grid company; the control number is an attribute (maintainer ruling 2026-11-14)."

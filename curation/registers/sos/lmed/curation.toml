@@ -1463,3 +1463,17 @@ kind = "set"
 subject = "var:varunr"
 fields = { "description" = "Varunummer för den expedierade varan. Varunumret är ett sexsiffrigt samnordiskt nummer som identifierar en läkemedelsvara eller en handelsvara (till exempel förbrukningsartiklar och hjälpmedel, som börjar med Y i ATC-koden) och är i de allra flesta fall unikt för en viss styrka, läkemedelsform, förpackningsstorlek och förpackningstyp. Samma varunummer kan förekomma för flera förpackningar, till exempel vid parallellimport, och numret kan ändras över tid. Licensläkemedel har gruppvarunummer." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text i båda tabellerna; den ena har en extra parentes om handelsvaror.\ncatalog:variable_text:63492:12965:2932897"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "lmed: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: the patient is the unit of each dispensing, the product id is an attribute, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lmed-vara: var:nplpackid"
+fields.row_key = true
+evidence = "Row key: nplpackid identifies a row: the product register is about packages, and the NPL pack id is the id of the product itself (maintainer ruling 2026-11-14)."

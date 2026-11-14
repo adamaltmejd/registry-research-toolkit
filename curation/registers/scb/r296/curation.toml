@@ -1898,3 +1898,34 @@ kind = "set"
 subject = "tjansteprisindex-tpi: Titel @2007..2011 where key = 'v28088'"
 fields = { "variable" = "formular-titel" }
 evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Tjänsteprisindex (TPI) 2007 (RegVerID 4674) to 2011 (RegVerID 4296) documents column Titel under VarId 28085 \"Formulär titel\" and VarId 28088 \"InmatningsGruppDefinition titel\". The four VarIds are the title text of a form (28085), a question (28086), an input field (28087) and an input group definition (28088); the variant lists these questionnaire levels as rows and all four give the title of the row. The VarId 28088 occurrences are assigned to formular-titel."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "konsumentprisindex-kpi: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "ppi: var:cfar-nummer"
+fields.row_key = true
+evidence = "Row key: foretagsidentitet and cfar-nummer and identitet-ftgid identify a row: the reporting firm id of each era (survey firm id, then CFAR, then the firm id of the new system) identifies the respondent; product, notation and lookup ids are attributes; rows are price quotes so the key does not make rows unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "ppi: var:foretagsidentitet"
+fields.row_key = true
+evidence = "Row key: foretagsidentitet and cfar-nummer and identitet-ftgid identify a row: the reporting firm id of each era (survey firm id, then CFAR, then the firm id of the new system) identifies the respondent; product, notation and lookup ids are attributes; rows are price quotes so the key does not make rows unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "ppi: var:identitet-ftgid"
+fields.row_key = true
+evidence = "Row key: foretagsidentitet and cfar-nummer and identitet-ftgid identify a row: the reporting firm id of each era (survey firm id, then CFAR, then the firm id of the new system) identifies the respondent; product, notation and lookup ids are attributes; rows are price quotes so the key does not make rows unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "tjansteprisindex-tpi: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: the reporting firm organisation number identifies the respondent; CFAR, form and question ids are attributes (maintainer ruling 2026-11-14)."

@@ -6342,3 +6342,35 @@ kind = "set"
 subject = "vy-fob: RPSyss @1985 where key = 'v42534'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Vy FoB1985 (RegVerID 18279) documents column RPSyss twice: under VarId 42334 \"Sysselsättning - referensperson\", as in every other FoB release, and under VarId 42534 \"Förvärvsarbete - referensperson\", the VarId that column RPArb carries in the same release and in Lägenhet och hushåll 1985. One column cannot be two variables; the 42534 row is a documentation duplicate of RPArb's VarId and is withheld."
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "familj: var:famfpersonnr"
+fields.row_key = true
+evidence = "Row key: famfpersonnr identify a row: a family table identified by the head of family personnr; the dwelling number is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "individ: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per person; head of household, cohabitant, property, dwelling and workplace ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lagenhet-och-hushall: var:fastighetsbeteckning"
+fields.row_key = true
+evidence = "Row key: fastighetsbeteckning and lghnr identify a row: a dwelling table: the dwelling number is unique only within the property; personnr appears only in 1975 and is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lagenhet-och-hushall: var:lghnr"
+fields.row_key = true
+evidence = "Row key: fastighetsbeteckning and lghnr identify a row: a dwelling table: the dwelling number is unique only within the property; personnr appears only in 1975 and is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "vy-fob: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: one row per person in the census view; the head's and partner's ids, workplace, property and dwelling ids are attributes (maintainer ruling 2026-11-14)."

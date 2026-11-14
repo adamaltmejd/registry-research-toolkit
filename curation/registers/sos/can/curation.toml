@@ -412,3 +412,17 @@ kind = "set"
 subject = "var:obduktionsfynd"
 fields = { "description" = "Anger om tumören identifierades vid obduktion. 1 anger att tumören inte var känd före dödsfallet och 2 att tumören var känd före dödsfallet." }
 evidence = "Docs description review 2026-11-02; one variable, one description. The Cancer Register metadata names OBD1, the matching Obduktionsfynd label, the definition and both codes, with a start year of 1958. No diagnosis or clinical inference is added.\nhttps://www.socialstyrelsen.se/globalassets/sharepoint-dokument/dokument-webb/statistik/register-variabelforteckning-cancerregistret.xlsx; sheet Metadata - Variabelnivå, extracted row 59, column OBD1; staged:01356f83728cf8916904040a34231ecc6c86c8523001832fcff9dbfce5c8c6ba:page:4:chars:10450-10713"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "can: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: the patient is the unit, pseudo is the same person in pseudonymised form, and the key is not unique per tumour row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "can-bc: var:pseudo"
+fields.row_key = true
+evidence = "Row key: pseudo identifies a row: it is the patient id, the only person id in the table, and the key is not unique per tumour row (maintainer ruling 2026-11-14)."

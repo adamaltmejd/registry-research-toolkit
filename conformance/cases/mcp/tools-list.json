@@ -3637,7 +3637,7 @@
   },
   {
     "name": "schema",
-    "description": "Set `operation` to one of these; `?` marks an optional argument.\n- `schema` (ref, period?, table?, limit?, cursor?): The columns of a table, a register or a variable's tables over a period, with type, length, value set and role.\n- `diff` (ref, from, to, table?): Compare a table's or register's columns at two periods: added, removed and changed (name, type, length, value set).",
+    "description": "Set `operation` to one of these; `?` marks an optional argument.\n- `schema` (ref, period?, table?, limit?, cursor?): The columns of a table, a register or a variable's tables over a period, with type, length, value set, role and row key.\n- `diff` (ref, from, to, table?): Compare a table's or register's columns at two periods: added, removed and changed (name, type, length, value set).",
     "inputSchema": {
       "properties": {
         "cursor": {
@@ -3904,6 +3904,10 @@
             "role": {
               "type": "string"
             },
+            "row_key": {
+              "description": "One of the table's row keys, curated; never inferred from `identifier`.",
+              "type": "boolean"
+            },
             "spelling": {
               "type": "string"
             },
@@ -3942,6 +3946,7 @@
             "length",
             "value_set",
             "role",
+            "row_key",
             "state",
             "period"
           ],

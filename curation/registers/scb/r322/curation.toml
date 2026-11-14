@@ -2813,3 +2813,10 @@ kind = "set"
 subject = "distansutbildning-i-hogskolan: F19_4 @2010-07-01..2010-12-31 where key = 'v15455'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Distansutbildning i högskolan Höstterminen 2010 (RegVerID 4404) documents column F19_4 under VarId 15455 \"Försörjning - annat\" and VarId 28589 \"Grad av nöjdhet med lärarens tillgänglighet på campus\". In the later numbering F19_1-F19_4 is the lärarens tillgänglighet block (VarIds 28586-28589) and Försörjning is F24_01-F24_10. The register documents the questionnaire under two column numberings that differ by a fixed offset (for example VarId 28556 is both F11_1 and F13_1). The later numbering F07-F24 is the one that covers every question block: Distansorsak (F07_1-F07_8) and Lärcentrum (F14, F15, F16_1-F16_7) exist only there. The version text says the study also had a campus control group; its questionnaire most likely omits those distance-specific blocks, so the earlier numbering is read as the control group's. The register's own population is the distance students. The source does not settle which numbering the table uses; the later one is the more plausible owner because it numbers every block once and fits the register's population (maintainer 2026-11-14: place under the more plausible owner). The 15455 row is withheld."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "distansutbildning-i-hogskolan: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per surveyed student; uenr is a survey number for the same person (maintainer ruling 2026-11-14)."

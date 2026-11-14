@@ -1654,3 +1654,11 @@ kind = "set"
 subject = "var:yrkemor"
 fields = { "label" = "Yrke på 3-siffernivå, huvudsakliga sysselsättningen (mammans yrke)" }
 evidence = "#2102 same-label cluster 'Yrke på 3-siffernivå, huvudsakliga sysselsättningen' (2 variables): judged different meaning, high confidence; Opdefs: Yrkefar is the father's occupation, Yrkemor the mother's."
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderandes-levnadsvillkor: var:scbid"
+fields.row_key = true
+evidence = "Row key: scbid identify a row: survey of persons keys on the respondent id, its only identifier (maintainer ruling 2026-11-14)."

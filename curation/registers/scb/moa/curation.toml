@@ -159,3 +159,17 @@ kind = "set"
 subject = "var:yrkeskod-ssyk-96"
 fields = { "type" = "text" }
 evidence = "Samma kolumn, SSYK, är text (längd 4) i scb/rtb (grund-bosattning-31-12). Bilaga 6 (SCB, Migrationsstatistik i Sverige 2014) anger ingen lagringstyp."
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "grundtabell: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: rows are residence permit decisions per person, keyed on personnr as in the existing moa row-key statement; dossier and family group numbers are attributes and rows are not unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "stocktabell: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

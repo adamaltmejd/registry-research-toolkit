@@ -6481,3 +6481,17 @@ kind = "set"
 subject = "set:vibrationer-som-besvarsorsak"
 fields = { "description" = "Om vibrationer orsakade de besvär personen uppgett. Från 2018 avser det besvär av andra förhållanden i arbetet än olyckshändelse." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nDen äldre frågan om vad som orsakade besvären och den nyare frågan om orsak till besvär av andra förhållanden än olyckshändelse gäller samma orsak.\ncatalog:variable_text:11794:11323:12784\ncatalog:variable_text:11795:17532:17897"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr and uenr identify a row: one row per surveyed person: personnr in the early rounds, the individual sample number uenr in the later rounds when personnr is absent (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "arbetsorsakade-besvar: var:uenr"
+fields.row_key = true
+evidence = "Row key: personnr and uenr identify a row: one row per surveyed person: personnr in the early rounds, the individual sample number uenr in the later rounds when personnr is absent (maintainer ruling 2026-11-14)."

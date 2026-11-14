@@ -1362,3 +1362,16 @@ kind = "set"
 subject = "var:inkopsvardet-av-den-inkopta-kvantiteten-varde"
 fields = { "label" = "Inköpsvärdet av den inköpta kvantiteten", "description" = "Inköpsvärdet i 1000-tal kronor av den energi som redovisningsenheten köpt in. Kolumnen gäller både bränslen (kostnaden för inköpta bränslen exklusive moms men inklusive energi- och miljöskatt) och el." }
 evidence = "Maintainer ruling 2026-11-14: variants of one concept for different row kinds are merged and the variable carries a label and description covering both kinds.\nVarId 16418 (\"Inköpsvärdet av den inköpta kvantiteten, alla bränsleslag\") and VarId 16432 / 22805 (\"Inköpsvärde av el(energi)\"), earlier 2607, share the column Varde in 2004-2024."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: var:cfar-nummer"
+fields.row_key = true
+evidence = "Row key: cfar-nummer and cfar-nummer-arbetsstalle identify a row: rows are workplace energy use per fuel, keyed on the workplace CFAR number of each era; organisation and control numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: var:cfar-nummer-arbetsstalle"
+fields.row_key = true
+evidence = "Row key: cfar-nummer and cfar-nummer-arbetsstalle identify a row: rows are workplace energy use per fuel, keyed on the workplace CFAR number of each era; organisation and control numbers are attributes (maintainer ruling 2026-11-14)."

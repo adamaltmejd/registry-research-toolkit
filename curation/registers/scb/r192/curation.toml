@@ -686,3 +686,65 @@ kind = "set"
 subject = "set:antal-rektorer"
 fields = { "description" = "Antal rektorer vid skolan (2013 skolenheten), separat för män och kvinnor." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSamma antal uppdelat på kön.\ncatalog:variable_text:51644:10879:10880\ncatalog:variable_text:51644:15993:15994\ncatalog:variable_text:51669:10879:10880\ncatalog:variable_text:51669:15993:15994"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "distansundervisning: var:skolkod"
+fields.row_key = true
+evidence = "Row key: skolkod identify a row: the school code identifies the school a row counts pupils for (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "grundskolan-elever: var:skolkod"
+fields.row_key = true
+evidence = "Row key: skolkod identify a row: the school code identifies the school a row counts pupils for (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieskolan-elever: var:skolkod"
+fields.row_key = true
+evidence = "Row key: skolkod identify a row: the school code identifies the school a row counts pupils for (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kompletterande-undervisning: var:skolkod"
+fields.row_key = true
+evidence = "Row key: skolkod identify a row: the school code identifies the school a row counts pupils for (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "larare: var:skolenhetskod"
+fields.row_key = true
+evidence = "Row key: skolkod and skolenhetskod identify a row: the school code, and the school unit code in the one year that delivers it, identifies the school a row describes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "larare: var:skolkod"
+fields.row_key = true
+evidence = "Row key: skolkod and skolenhetskod identify a row: the school code, and the school unit code in the one year that delivers it, identifies the school a row describes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "skolledning: var:skolenhetskod"
+fields.row_key = true
+evidence = "Row key: skolkod and skolenhetskod identify a row: the school code, and the school unit code in the one year that delivers it, identifies the school a row describes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "skolledning: var:skolkod"
+fields.row_key = true
+evidence = "Row key: skolkod and skolenhetskod identify a row: the school code, and the school unit code in the one year that delivers it, identifies the school a row describes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "skolor: var:skolenhetskod"
+fields.row_key = true
+evidence = "Row key: skolkod and skolenhetskod identify a row: the school code, and the school unit code in the one year that delivers it, identifies the school a row describes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "skolor: var:skolkod"
+fields.row_key = true
+evidence = "Row key: skolkod and skolenhetskod identify a row: the school code, and the school unit code in the one year that delivers it, identifies the school a row describes (maintainer ruling 2026-11-14)."

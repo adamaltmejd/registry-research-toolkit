@@ -2956,3 +2956,23 @@ kind = "set"
 subject = "var:stud"
 fields = { "description" = "Om personen studerat under höstterminen, det vill säga varit registrerad i någon skolform under höstterminen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1–W2 anger att det avser registrering i skolformer, W0 kodningen 1/0.\ncatalog:variable_text:62428:11323:14245\ncatalog:variable_text:62428:14245:14610\ncatalog:variable_text:62428:14610:17167"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "forvarvsarbetande: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the employed person; employer, workplace and property ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "grundregister-yrkesreg: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the person; employer, workplace and property ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "yrkesverksamma: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the person; employer, workplace and property ids are attributes (maintainer ruling 2026-11-14)."

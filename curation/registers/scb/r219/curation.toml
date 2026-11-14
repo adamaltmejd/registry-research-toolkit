@@ -465,3 +465,17 @@ kind = "set"
 subject = "release:basinformation-kust-strander-oar/r13702"
 fields = { "period" = "2013" }
 evidence = "SCB Registerinformation, RegVerID 13702: the release is named \"Öar 2013, totalregister\", which the delivery-name grammar does not read, so its documented columns had no period. SCB describes it as \"SCB:s totalregister över öar i Sverige med referensår 2013\"; its population is dated 2013-12-31."
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "basinformation-kust-strander-oar: var:objekt-id"
+fields.row_key = true
+evidence = "Row key: objekt-id identify a row: one row per geographic object, keyed on its object id; the integer serial number objectid is an alternative attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "befolkade-oar-utan-fastlandsforbindelse: var:objekt-id"
+fields.row_key = true
+evidence = "Row key: objekt-id identify a row: one row per island, keyed on its object id; the origin object id and the name are attributes (maintainer ruling 2026-11-14)."

@@ -310,3 +310,18 @@ kind = "set"
 subject = "var:villkorat-beslut"
 fields = { "tags" = ["transfers"] }
 evidence = "Variabeln anger om ett beviljande är förenat med villkor för kommande utbetalningar.\ncatalog:variable_text:132:6848:2932897"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "ansokningar-beslut: var:lopnr-sokande"
+fields.row_key = true
+evidence = "Row key: lopnr-sokande identifies a row: the table mixes adults applying for themselves (lopnr-barn empty) with parents applying for a child, so rows are not one per pair and the child id is an attribute (maintainer ruling 2026-11-14; ambiguous-table review)."
+
+[[statement]]
+kind = "set"
+subject = "utbetalningar: var:lopnr-sokande"
+fields.row_key = true
+evidence = "Row key: lopnr-sokande, the payment recipient, identifies a row; no payment id, so rows are not unique; the child id is an attribute, empty for adults paid for themselves (maintainer ruling 2026-11-14; ambiguous-table review)."
+

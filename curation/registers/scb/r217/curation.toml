@@ -589,3 +589,29 @@ kind = "set"
 subject = "var:langdm"
 fields = { "description" = "Total kust- och strandlängd, det vill säga havsstrand och inlandsstrand, mätt längs gränserna för det digitala vattnet i Lantmäteriets vattenmask i skala 1:10 000, eller 1:50 000 i fjällen. Från 2022 används den senast gällande strandlinjen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått; W1 anger att den senast gällande strandlinjen används.\ncatalog:variable_text:13266:17532:18993\ncatalog:variable_text:13266:18993:19723"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "bebyggd-mark: var:objekt-id"
+fields.row_key = true
+evidence = "Row key: objekt-id and uuid identify a row: one row per object and reference year; objekt-id and uuid are the same object id delivered in two forms (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bebyggd-mark: var:uuid"
+fields.row_key = true
+evidence = "Row key: objekt-id and uuid identify a row: one row per object and reference year; objekt-id and uuid are the same object id delivered in two forms (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bebyggelsepaverkad-kust: var:objekt-id"
+fields.row_key = true
+evidence = "Row key: objekt-id and uuid identify a row: one row per object and reference year; objekt-id and uuid are the same object id delivered in two forms (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bebyggelsepaverkad-kust: var:uuid"
+fields.row_key = true
+evidence = "Row key: objekt-id and uuid identify a row: one row per object and reference year; objekt-id and uuid are the same object id delivered in two forms (maintainer ruling 2026-11-14)."

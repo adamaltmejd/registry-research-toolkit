@@ -214,3 +214,11 @@ kind = "set"
 subject = "var:manad"
 fields = { "description" = "Månad som uppgifterna avser." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; operationaliseringen varierar bara i ordval och saknas vissa år.\ncatalog:variable_text:18787:14245:15340\ncatalog:variable_text:18787:15340:16071\ncatalog:variable_text:18787:16071:16436"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "fordonsgas: var:kontrollnummer"
+fields.row_key = true
+evidence = "Row key: kontrollnummer identify a row: a firm table whose only identifier is the firm control number; rows per delivery are not unique (maintainer ruling 2026-11-14)."

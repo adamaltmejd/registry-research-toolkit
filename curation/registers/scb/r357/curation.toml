@@ -1552,3 +1552,17 @@ kind = "set"
 subject = "set:skatteeffekt-av-boendet"
 fields = { "description" = "Minskning eller ökning av hushållets skatt som beror på hur hushållet förfogar över sin bostad. Den samlade skatteeffekten omfattar skattereduktion för underskott av kapital som avser bostaden och för underhåll och reparation, hushållets fastighetsavgift för bostaden och eventuell ränta på uppskovsbelopp efter försäljning av tidigare bostad; gruppen innehåller också skattereduktionerna för ränteutgifter för bostaden, för ombyggnation eller installation och för underhåll och reparation var för sig. Den samlade skatteeffekten och reduktionen för ränteutgifter härleds ur intervjusvar och registeruppgifter, reduktionerna för ombyggnation och för underhåll 2024 ur egen insamling i kombination med registeruppgifter om skattereduktion." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nKällan anges per mått: intervjusvar och register för totalen och ränteutgifterna (W0, W3, W4), egen insamling och register för ombyggnation och underhåll 2024 (W2, W6).\ncatalog:variable_text:13810:16436:16801\ncatalog:variable_text:13811:16436:16801\ncatalog:variable_text:13811:19723:20089\ncatalog:variable_text:13812:16436:16801\ncatalog:variable_text:13812:19723:20089\ncatalog:variable_text:13813:16436:16801\ncatalog:variable_text:13813:19723:20089"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "hushall: var:hushallsid"
+fields.row_key = true
+evidence = "Row key: hushallsid identify a row: a household table keyed on the household id (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "individer: var:eget-personnr"
+fields.row_key = true
+evidence = "Row key: eget-personnr identify a row: one row per person; household ids are attributes (maintainer ruling 2026-11-14)."

@@ -887,3 +887,17 @@ kind = "set"
 subject = "set:skatteunderlag"
 fields = { "description" = "Det kommunala skatteunderlaget i kronor, levererat av Skatteverket. Från 2018 anges det som beskattningsbar förvärvsinkomst två år före året t (fastställd förvärvsinkomst minskad med grundavdrag och sjöinkomstavdrag). Variablerna avser hela skatteunderlaget eller skatteunderlaget för medlemmar i Svenska kyrkan, och anger det i kronor, tusentals kronor eller miljoner kronor, för föregående år eller som procentuell förändring mot föregående år." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i population, enhet och år; begreppet enligt de operationella definitionerna.\ncatalog:variable_text:41145:17532:17897\ncatalog:variable_text:41145:17897:18628\ncatalog:variable_text:41146:16801:17532\ncatalog:variable_text:41146:17532:19723\ncatalog:variable_text:41146:19723:20819\ncatalog:variable_text:41147:16801:17532\ncatalog:variable_text:41151:13514:15340\ncatalog:variable_text:41152:13514:15340\ncatalog:variable_text:41153:13514:15340\ncatalog:variable_text:41154:13514:15340\ncatalog:variable_text:41158:13514:15340"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "kommunalskatter: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kommunalskatter-landsting: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

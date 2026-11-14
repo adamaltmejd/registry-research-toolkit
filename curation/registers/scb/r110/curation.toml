@@ -1780,3 +1780,17 @@ kind = "set"
 subject = "var:senaste-invandringsar"
 fields = { "description" = "Personens senaste invandringsår till Sverige, grupperat i fyraårsintervall: 2003–2006, 2007–2010 och 2011–2014 för 2015 och 2006–2009, 2010–2013 och 2014–2017 för 2018." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; grupperingen flyttas med undersökningsåret.\ncatalog:variable_text:33014:16436:16801\ncatalog:variable_text:33014:17532:17897"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "hogutbildade-utrikes-fodda: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr and personnr-2 identify a row: person table; both columns carry the personnummer (fold personnr) in successive eras, 2003-2005 and 2014-2018 (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "hogutbildade-utrikes-fodda: var:personnr-2"
+fields.row_key = true
+evidence = "Row key: personnr and personnr-2 identify a row: person table; both columns carry the personnummer (fold personnr) in successive eras, 2003-2005 and 2014-2018 (maintainer ruling 2026-11-14)."

@@ -134,6 +134,7 @@ pub fn read(
                 records.push(Record::Occurrence(Occurrence {
                     role: None,
                     long_format: None,
+                    row_key: None,
                     provider: provider.to_owned(),
                     register: register.clone(),
                     table,

@@ -1349,3 +1349,11 @@ kind = "set"
 subject = "set:utbildningsniva"
 fields = { "description" = "Föräldrarnas utbildningsnivå enligt Svensk utbildningsnomenklatur (SUN): för biologisk mor, för biologisk far och för föräldrarna, då den högsta nivån av biologisk far och mor. Uppgifterna om föräldrar hämtas från Befolkningsregistret och om utbildning från Utbildningsregistret. Nivån finns detaljerad och grupperad, enligt SUN 2000 till och med 2019 och enligt SUN 2020 från 2020 (grupperad i sex nivåer); 2012–2014 finns också moderns och faderns högsta utbildning som SUN 2000:s ensiffriga nivå och grupperad i tre grupper." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är en förälders eller föräldrarnas utbildningsnivå enligt SUN; de skiljer sig i förälder, SUN-version och gruppering.\ncatalog:variable_text:30008:15156:15522\ncatalog:variable_text:30051:15522:16436\ncatalog:variable_text:30052:16436:18262\ncatalog:variable_text:30053:18444:18628\ncatalog:variable_text:30054:16436:18262\ncatalog:variable_text:30055:18444:18628\ncatalog:variable_text:30056:15522:15706\ncatalog:variable_text:30057:15522:16436\ncatalog:variable_text:30058:16436:18262\ncatalog:variable_text:30059:16436:18262\ncatalog:variable_text:30060:16436:18262\ncatalog:variable_text:30061:16436:18262\ncatalog:variable_text:30062:15522:15706\ncatalog:variable_text:30063:18444:18628\ncatalog:variable_text:30064:18444:18628\ncatalog:variable_text:30065:18444:18628\ncatalog:variable_text:30066:18444:18628"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "gymnasieskola-nationella-prov: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."

@@ -526,3 +526,17 @@ kind = "set"
 subject = "var:antal-arbetsstallen"
 fields = { "label" = "Antal arbetsställen (som den juridiska enheten har, aeantje)" }
 evidence = "#2102 same-label cluster 'Antal arbetsställen' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs differ: antal_ae is a summed count of workplaces in branch-by-municipality tables, aeantje counts the workplaces that the legal unit has in the workplace table."
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "arbetsstalle-ar: var:cfar-nummer"
+fields.row_key = true
+evidence = "Row key: cfar-nummer identify a row: the CFAR number is the workplace own id in a workplace-year table; the organisation number is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "arbetsstalle-manad: var:cfar-nummer"
+fields.row_key = true
+evidence = "Row key: cfar-nummer identify a row: the CFAR number is the workplace own id in a workplace-month table; the organisation number is an attribute (maintainer ruling 2026-11-14)."

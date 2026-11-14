@@ -903,3 +903,77 @@ kind = "set"
 subject = "var:utlandsk-forutbildning"
 fields = { "tags" = ["education"] }
 evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "amne-i-avgangsbetyg: var:personnr"
+fields.row_key = true
+evidence = "Row key: PNR identifies a row: the applicant's personnummer; NAMN is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "amne-i-slutbetyg: var:personnr"
+fields.row_key = true
+evidence = "Row key: PNR identifies a row: the applicant's personnummer; NAMN is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "anmalan: var:personnr"
+fields.row_key = true
+evidence = "Row key: PNR identifies a row: the applicant's personnummer; NAMN is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "avgangsbetyg: var:personnr"
+fields.row_key = true
+evidence = "Row key: PNR identifies a row: the applicant's personnummer; NAMN is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "enstaka-amne: var:personnr"
+fields.row_key = true
+evidence = "Row key: PNR identifies a row: the applicant's personnummer; NAMN is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "folkhogskola: var:personnr"
+fields.row_key = true
+evidence = "Row key: PNR identifies a row: the applicant's personnummer; NAMN is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "mellanarskurser: var:personnr"
+fields.row_key = true
+evidence = "Row key: PNR identifies a row: the applicant's personnummer; NAMN is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "motsvarande-amneskod: var:personnr"
+fields.row_key = true
+evidence = "Row key: PNR identifies a row: the applicant's personnummer; NAMN is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "person: var:personnr"
+fields.row_key = true
+evidence = "Row key: PNR identifies a row: the applicant's personnummer; NAMN is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "prioritetsalternativ: var:personnr"
+fields.row_key = true
+evidence = "Row key: PNR identifies a row: the applicant's personnummer; NAMN is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "provresultat: var:personnr"
+fields.row_key = true
+evidence = "Row key: PNR identifies a row: the applicant's personnummer; NAMN is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "resultat-urvalsgrupp: var:personnr"
+fields.row_key = true
+evidence = "Row key: PNR identifies a row: the applicant's personnummer; NAMN is an attribute (maintainer ruling 2026-11-14)."

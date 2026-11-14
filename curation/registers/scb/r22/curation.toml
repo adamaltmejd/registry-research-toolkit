@@ -1050,3 +1050,10 @@ kind = "set"
 subject = "table:ekonomiskt-bistand"
 fields = { series_break = { at = "1994", text = "Fr.o.m. 1994 delas det utbetalda beloppet upp i tre delar: \n- utbetalt ekonomiskt bistånd till ej flyktingar\n- utbetalt ekonomistkt bistånd till flyktingar\n- introduktionsersättning till flyktingar och vissa andra utlänningar" } }
 evidence = "current-scb-inputs.zip/Timeseries.csv row=84\n\nRelease r1025 (variant 508) resolves to this table. \"Fr.o.m. 1994\"; the release starts in 1994 by the period statement above, so the break falls at its first year."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "bistandsmottagare: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per recipient; the collection round is an attribute (maintainer ruling 2026-11-14)."

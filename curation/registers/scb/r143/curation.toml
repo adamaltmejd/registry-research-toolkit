@@ -376,3 +376,22 @@ kind = "set"
 subject = "outhyrda-privatagda: Lillan @2008 where key = 'v2323'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Outhyrda bostadslägenheter i privatägda bostadsföretag 2008 (RegVerID 1849) documents column Lillan under VarId 2325 \"Urval\" (CVID 123583) and VarId 2323 \"Antal svar som är bearbetade och ligger till grund för tabellsiffror\" (CVID 123582). In 2006 Lillan is 2325 and the column Asv is 2323 (\"Asv\" = antal svar); the 2008 release still has an Asv column, listed under VarId 2297, so 2323 has a column of its own. 2009 lists 2323 under Lillan alone (no Asv). The source does not settle which for 2008; 2325 is the more plausible owner because the 2006 mapping and the surviving Asv column both put 2323 on Asv (maintainer 2026-11-14: place under the more plausible owner). The 2323 row is withheld; 2323 keeps Asv in 2006 and Lillan in 2009."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "outhyrda-allmannyttiga: var:foretagsidentifikation"
+fields.row_key = true
+evidence = "Row key: foretagsidentifikation identify a row: one row per public housing company, keyed on its company id (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "outhyrda-privatagda: var:taxeringsenhet-id"
+fields.row_key = true
+evidence = "Row key: taxeringsenhet-id and taxeringsid identify a row: one row per tax-assessment unit, keyed on its id of each era (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "outhyrda-privatagda: var:taxeringsid"
+fields.row_key = true
+evidence = "Row key: taxeringsenhet-id and taxeringsid identify a row: one row per tax-assessment unit, keyed on its id of each era (maintainer ruling 2026-11-14)."

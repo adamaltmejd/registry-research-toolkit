@@ -40,7 +40,7 @@
     "location": "census:row=3"
   },
   {
-    "sql": "INSERT INTO holding_mapping(column_id,table_pid,variable_pid,start,end,role,carried) SELECT c.id,'demo/held','demo/held/id',m.start,m.end,'row_key',1 FROM holding_column c JOIN holding_table h ON h.id=c.holding_id JOIN holding_column original ON original.holding_id=h.id AND original.name='Received_Id' JOIN holding_mapping m ON m.column_id=original.id WHERE h.physical_name='Pool' AND c.name='Unknown'; UPDATE meta SET value=CAST(value AS INTEGER)+1 WHERE key='mapped_columns'; UPDATE meta SET value=CAST(value AS INTEGER)-1 WHERE key='unmatched_columns';",
+    "sql": "INSERT INTO holding_mapping(column_id,table_pid,variable_pid,start,end,role,carried) SELECT c.id,'demo/held','demo/held/id',m.start,m.end,m.role,1 FROM holding_column c JOIN holding_table h ON h.id=c.holding_id JOIN holding_column original ON original.holding_id=h.id AND original.name='Received_Id' JOIN holding_mapping m ON m.column_id=original.id WHERE h.physical_name='Pool' AND c.name='Unknown'; UPDATE meta SET value=CAST(value AS INTEGER)+1 WHERE key='mapped_columns'; UPDATE meta SET value=CAST(value AS INTEGER)-1 WHERE key='unmatched_columns';",
     "code": "holdings_key_ambiguous",
     "location": "key=demo/held/id:"
   },
@@ -66,7 +66,7 @@
   },
   {
     "variant": "held-key",
-    "sql": "UPDATE holding_column SET disposition='candidate',reason=NULL,follow_up=NULL WHERE holding_id=(SELECT id FROM holding_table WHERE physical_name='Pool') AND name='Received_Id'; INSERT INTO holding_mapping(column_id,table_pid,variable_pid,start,end,role,carried) SELECT c.id,'demo/held','demo/held/id',p.start,p.end,'row_key',0 FROM holding_column c JOIN holding_table h ON h.id=c.holding_id JOIN holding_period p ON p.holding_id=h.id WHERE h.physical_name='Pool' AND c.name='Received_Id'",
+    "sql": "UPDATE holding_column SET disposition='candidate',reason=NULL,follow_up=NULL WHERE holding_id=(SELECT id FROM holding_table WHERE physical_name='Pool') AND name='Received_Id'; INSERT INTO holding_mapping(column_id,table_pid,variable_pid,start,end,role,carried) SELECT c.id,'demo/held','demo/held/id',p.start,p.end,'measure',0 FROM holding_column c JOIN holding_table h ON h.id=c.holding_id JOIN holding_period p ON p.holding_id=h.id WHERE h.physical_name='Pool' AND c.name='Received_Id'",
     "code": "holdings_held_key_mapping",
     "location": "holdings:table=8:"
   },

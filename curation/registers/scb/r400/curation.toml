@@ -598,3 +598,41 @@ kind = "set"
 subject = "var:lagenhetens-identitetsnummer"
 fields = { "description" = "Unikt identitetsnummer för den lägenhet där personen är folkbokförd. I händelsetabellerna avses lägenheten vid dödsfallet, födelsen, invandringen eller utvandringen, respektive efter inrikes flytt." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma kolumn i parallella tabeller; operationaliseringen anger tidpunkten per tabell.\ncatalog:variable_text:51452:19723:20088\ncatalog:variable_text:51452:20088:20089"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "doda: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the deceased; property and dwelling ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fodda: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the newborn; property and dwelling ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "folkbokforda-personer: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the registered person; property and dwelling ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "inrikes-flyttningar: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the moving person; one row per move so the key does not make rows unique; property and dwelling ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "invandringar: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the immigrant; one row per immigration so the key does not make rows unique; property and dwelling ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "utvandringar: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the emigrant; one row per emigration so the key does not make rows unique; property and dwelling ids are attributes (maintainer ruling 2026-11-14)."

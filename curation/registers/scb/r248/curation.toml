@@ -3908,3 +3908,35 @@ kind = "set"
 subject = "set:undervisningstimmar"
 fields = { "description" = "Antal undervisningstimmar om 60 minuter som kursdeltagaren har varit närvarande på den aktuella kursen under perioden. Från 2022 redovisas timmarna i klassrummet och timmarna via distans- eller fjärrundervisning var för sig." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSamma timmått; från 2022 uppdelat på klassrum och distans.\ncatalog:variable_text:41367:18993:20089\ncatalog:variable_text:41368:18993:20089\ncatalog:variable_text:41436:8582:9862\ncatalog:variable_text:41436:9862:10043"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-kalenderar: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: rows are course enrolments, keyed on personnr; rows are not unique and school and provider ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-lasar: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: rows are course enrolments, keyed on personnr; rows are not unique and school ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: rows are course enrolments, keyed on personnr; rows are not unique and school and provider ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "nationella-prov-resultat-kalenderar: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: rows are national test results, keyed on personnr; rows are not unique and school and provider ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "nationella-prov-resultat-vartermin: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: rows are national test results, keyed on personnr; rows are not unique and school and provider ids are attributes (maintainer ruling 2026-11-14)."

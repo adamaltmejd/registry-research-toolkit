@@ -826,3 +826,16 @@ kind = "set"
 subject = "energianvandningen-inom-fiskesektorn: TelNr @2005 where key = 'v19754'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Energianvändningen inom fiskesektorn version 2005 (RegVerID 194) documents column TelNr under VarId 1658 \"Telefonnummer, fax, epostadress\" and VarId 19754 \"Telefonnummer till kontaktperson\"; the VarId 19754 row is withheld. Both rows state the telephone number of the vessel owner or contact person (VarId 19754 in its operational definition), and the source does not settle which; VarId 1658 is the more plausible owner because VarId 1658 is the original, general listing (telephone, fax, e-mail; 255 characters) of the owner/contact block, whereas the contact person already has own columns for mobile number and reachable time (maintainer 2026-11-14: place under the more plausible owner)."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "energianvandningen-inom-fiskesektorn: var:identitetsnummer-for-scb"
+fields.row_key = true
+evidence = "Row key: personnr and identitetsnummer-for-scb identify a row: one row per fishing business: personnr in 2005, identitetsnummer-for-scb from 2017; vessel signals are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "energianvandningen-inom-fiskesektorn: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr and identitetsnummer-for-scb identify a row: one row per fishing business: personnr in 2005, identitetsnummer-for-scb from 2017; vessel signals are attributes (maintainer ruling 2026-11-14)."

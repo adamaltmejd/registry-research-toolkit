@@ -169,3 +169,11 @@ kind = "set"
 subject = "var:lannamn"
 fields = { "label" = "Län (namn)" }
 evidence = "#2102 same-label cluster 'Län' (2 variables): judged different meaning, high confidence; LAN is the code, LANNAMN the name in clear text."
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "fritidshusomraden: var:uuid"
+fields.row_key = true
+evidence = "Row key: uuid identify a row: area table keys on the area UUID, its only identifier (maintainer ruling 2026-11-14)."

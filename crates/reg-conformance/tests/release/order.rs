@@ -54,7 +54,7 @@ struct Segment {
     end: i64,
     state: Option<String>,
     exact: String,
-    role: Option<String>,
+    row_key: bool,
 }
 
 #[test]
@@ -271,14 +271,18 @@ fn candidates(db: &Connection, holdings: Option<&Connection>) -> Vec<(String, Op
 /// is blocked, so a sample of all tables would leave the order checks covering little.
 fn census(db: &Connection, holdings: Option<&Connection>) -> (Vec<Sampled>, i64) {
     let pids = candidates(db, holdings);
-    // (table, variable, database) of every row-key placement.
+    // (table, variable, database) of every placement of a declared, unheld key component.
     let key_pairs: HashSet<(String, String, String)> = holdings
         .map_or_default(|h| {
             rows(
                 h,
                 "SELECT DISTINCT m.table_pid, m.variable_pid, h.space FROM holding_mapping m
                  JOIN holding_column c ON c.id = m.column_id
-                 JOIN holding_table h ON h.id = c.holding_id WHERE m.role = 'row_key'",
+                 JOIN holding_table h ON h.id = c.holding_id
+                 JOIN json_each(h.key_requirements) k
+                 WHERE json_extract(k.value, '$.hold') IS NULL AND (
+                   EXISTS(SELECT 1 FROM json_each(k.value, '$.entity') e WHERE e.value = m.variable_pid)
+                   OR EXISTS(SELECT 1 FROM json_each(k.value, '$.time') e WHERE e.value = m.variable_pid))",
                 [],
                 |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)),
             )
@@ -332,19 +336,17 @@ fn census(db: &Connection, holdings: Option<&Connection>) -> (Vec<Sampled>, i64)
         // An ambiguous segment of a bound variable or of a row key (row keys join every
         // order) blocks, and so does a bound variable with no segment over the period;
         // a preliminary segment orders with a warning. A steward takes its row keys from
-        // the holdings (ops/order/rows.rs), so there only a row key the holdings place
-        // in the serving table joins.
-        // simplify: approximates the server's `key_requirements` (entity/time over the
-        // composed segments) by the holdings' `role = 'row_key'` placements. Ceiling: a
-        // declared key column whose mapping role is not `row_key`, or the reverse, is
-        // modelled wrong. It surfaces as a census/server disagreement, which stops the
-        // release. Upgrade trigger: the first such disagreement; then read
-        // `key_requirements` as the server does.
-        let joins = |s: &Segment| {
-            s.role.as_deref() == Some("row_key")
-                && holdings.is_none_or(|_| {
-                    key_pairs.contains(&(s.table.clone(), s.variable.clone(), in_space.clone()))
-                })
+        // its declared keys (ops/order/rows.rs), so there a declared key component the
+        // holdings place in the serving table joins; on the reference catalog a curated
+        // row key.
+        // simplify: the declared components per holding, without the server's overlap of
+        // the key mapping with the served mapping and the semantic segment. Ceiling: a key
+        // placed only in years its table does not serve is modelled as joining. It
+        // surfaces as a census/server disagreement, which stops the release. Upgrade
+        // trigger: the first such disagreement.
+        let joins = |s: &Segment| match holdings {
+            Some(_) => key_pairs.contains(&(s.table.clone(), s.variable.clone(), in_space.clone())),
+            None => s.row_key,
         };
         let covered: HashSet<&str> = segments.iter().map(|s| s.variable.as_str()).collect();
         let mut blocked = segments.iter().any(|s| {
@@ -397,7 +399,7 @@ fn clipped(
     table_id: i64,
     bounds: Option<(i64, i64)>,
 ) -> Vec<Segment> {
-    const SEGMENTS: &str = "SELECT v.pid, s.start, s.end, s.state, sp.exact, s.role
+    const SEGMENTS: &str = "SELECT v.pid, s.start, s.end, s.state, sp.exact, s.row_key
         FROM segment s JOIN tbl t ON t.id = s.table_id
         JOIN variable v ON v.id = s.variable_id
         JOIN spelling sp ON sp.id = s.spelling_id WHERE t.pid = ?1";
@@ -406,7 +408,7 @@ fn clipped(
         let start = [bounds.map(|b| b.0), w_lo].into_iter().flatten().max();
         let end = [bounds.map(|b| b.1), w_hi].into_iter().flatten().min();
         for conn in std::iter::once(db).chain(holdings) {
-            for (variable, lo, hi, state, exact, role) in
+            for (variable, lo, hi, state, exact, row_key) in
                 rows(conn, SEGMENTS, [&serving_pid], |r| {
                     Ok((
                         r.get::<_, String>(0)?,
@@ -428,7 +430,7 @@ fn clipped(
                         end: hi,
                         state,
                         exact,
-                        role,
+                        row_key,
                     });
                 }
             }

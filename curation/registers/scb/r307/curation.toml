@@ -1170,3 +1170,17 @@ kind = "set"
 subject = "set:kommuntillhorighet"
 fields = { "description" = "Kommunkod för barnets folkbokföringskommun respektive för kommunen där förskolan är placerad, samt förskolekommunens kommungrupp enligt Sveriges Kommuner och Landstings kommungruppsindelning 2011 (2014–2016, för en del uppgifter arbetsställekommunens), 2017 (2017–2022) och Sveriges Kommuner och Regioners indelning 2023 (2023–2024, verksamhetskommunens)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna anger barnets eller förskolans kommun; kommungruppen är samma kommun klassad efter SKL:s/SKR:s indelning, med indelningsversion efter år.\ncatalog:variable_text:19903:16358:16359\ncatalog:variable_text:19910:16358:16359\ncatalog:variable_text:19910:17454:17455\ncatalog:variable_text:19910:19645:19646\ncatalog:variable_text:19952:16358:16359\ncatalog:variable_text:19952:17819:17820"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "barn-individ: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the table is about one child; preschool workplace and principal org number are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "personal-individ: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the table is about one staff member; preschool workplace and principal org number are attributes (maintainer ruling 2026-11-14)."

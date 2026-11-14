@@ -922,3 +922,11 @@ kind = "set"
 subject = "var:yrkesprogram-stamde-inte-lasaret-2013-2014"
 fields = { "label" = "Variabler om gymnasial yrkesutbildning: yrkesprogram stämde inte läsåret 2013/14, fritext" }
 evidence = "#2102 same-label cluster 'Variabler om gymnasial yrkesutbildning' (27 variables): judged different meaning, high confidence; 27 distinct survey items (F-numbered questions with grouped, coded and free-text variants), identified by their opdefs."
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "gymnasial-yrkesutbildning: var:personnr-urval"
+fields.row_key = true
+evidence = "Row key: personnr-urval identify a row: survey of persons keys on the sampled person; the survey löpnummer and UENR are attributes (maintainer ruling 2026-11-14)."

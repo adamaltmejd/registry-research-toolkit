@@ -2662,3 +2662,10 @@ kind = "set"
 subject = "utlandska-doktorander: F19 @2013 where key = 'v30067'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Utländska doktorander 2013 (RegVerID 5579) documents column F19 under VarId 30067 \"Tidsåtgång för studier\" and VarId 30036 \"Utbildning 3 månader i annat land\". In the later numbering F19 is Utbildning 3 månader i annat land (VarId 30036) and Tidsåtgång för studier is F25. The register documents the survey under two column numberings that differ by an offset (for example VarId 30035 is both F13 and F18). The later numbering F4_01-F29_06 is the only one that covers every question block: Orsak till val av Sverige (F16_01-F16_08), Uppmuntrad att studera svenska språket (F20) and the stay-in-Sweden blocks F28 and F29 exist only there. The version text says a control group among other doctoral students was also surveyed; its questionnaire most likely omits the migration questions, so the earlier numbering is read as the control group's. The register's own population is the foreign doctoral students. The source does not settle which numbering the table uses; the later one is the more plausible owner (maintainer 2026-11-14: place under the more plausible owner). The 30067 row is withheld."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "utlandska-doktorander: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the doctoral student; the survey sequence number is an attribute (maintainer ruling 2026-11-14)."

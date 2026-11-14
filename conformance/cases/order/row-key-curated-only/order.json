@@ -1,0 +1,56 @@
+{
+  "catalog": {
+    "catalog_version": "dev",
+    "schema_version": "16"
+  },
+  "project": {
+    "name": "Order case",
+    "schema_version": "6.2.0",
+    "reg_meta_version": "0.64.0"
+  },
+  "entries": [
+    {
+      "source": "s",
+      "binding": 0,
+      "provider": "demo",
+      "register": "demo/rad",
+      "table": "demo/rad",
+      "table_name": "Barnregistret",
+      "delivered_table": "Barnregistret",
+      "variable": "demo/rad/vikt",
+      "variable_name": "Födelsevikt",
+      "display_name": null,
+      "period": {
+        "start": "2020-01-01",
+        "end": "2021-01-01"
+      },
+      "spelling": "Vikt",
+      "type": "integer",
+      "length": null,
+      "value_set": null,
+      "classification": null
+    }
+  ],
+  "row_keys": [
+    {
+      "source": "s",
+      "table": "demo/rad",
+      "table_name": "Barnregistret",
+      "delivered_table": "Barnregistret",
+      "period": {
+        "start": "2020-01-01",
+        "end": "2021-01-01"
+      },
+      "columns": [
+        {
+          "variable": "demo/rad/lopnr",
+          "variable_name": "Barnets löpnummer",
+          "spelling": "Lopnr"
+        }
+      ]
+    }
+  ],
+  "manual": [],
+  "clips": [],
+  "findings": []
+}
