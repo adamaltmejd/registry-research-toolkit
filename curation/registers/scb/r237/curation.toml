@@ -114560,3 +114560,9 @@ kind = "set"
 subject = "ulf-2021: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: the personnummer identifies the surveyed person; survey person, household, parent and partner ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf-1989-old: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: one row per surveyed person (maintainer ruling 2026-11-14)."

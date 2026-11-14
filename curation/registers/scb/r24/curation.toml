@@ -2473,3 +2473,33 @@ kind = "set"
 subject = "personens-samtliga-utbildningar: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieintyg: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: the certificate holder; the table's only identifier (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieintyg-summerade-poang: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: the certificate holder; the table's only identifier (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "komvux-och-samlat-betygsdokument: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: the student; the table's only identifier (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "samlat-betygsdokument: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: the student; the table's only identifier (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "ut-invandrares-utbildning: var:eget-personnummer"
+fields.row_key = true
+evidence = "Row key: eget-personnummer identifies a row: the migrant's own personnummer, the table's only identifier (maintainer ruling 2026-11-14)."

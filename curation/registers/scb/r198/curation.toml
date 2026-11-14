@@ -779,5 +779,5 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 kind = "set"
 subject = "avgifter-hyror-for-nybyggda-lagenheter: var:fastighetsbeteckning"
 fields.row_key = true
-evidence = "Row key: fastighetsbeteckning identifies a row from 2007: the surveyed object is a new-built property; owner and respondent ids are attributes (maintainer ruling 2026-11-14). The 2006 key (Idnr) is decided at the relock: #2477 retired its variable."
+evidence = "Row key: fastighetsbeteckning identifies a row from 2007: the surveyed object is a new-built property; owner and respondent ids are attributes (maintainer ruling 2026-11-14). 2006 has no key: its identifiers are the owner id (AgforId) and the respondent id (Idnr, id-nummer), both attributes; #2477 placed the 2006 Idnr in id-nummer."
 

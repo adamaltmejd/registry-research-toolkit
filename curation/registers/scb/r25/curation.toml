@@ -28779,3 +28779,9 @@ kind = "set"
 subject = "kontrolluppgifter-rantor: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: rows are interest statements per person, keyed on the person id; the reporting institution number is an attribute and rows are not unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bostadshushall-vx: var:hushallsid"
+fields.row_key = true
+evidence = "Row key: hushallsid identifies a row: a household table keys on its household id (maintainer ruling 2026-11-14, rule 3)."

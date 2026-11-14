@@ -24207,3 +24207,21 @@ subject = "individer: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: one row per person; employer, workplace, family and household ids are attributes (maintainer ruling 2026-11-14)."
 
+
+[[statement]]
+kind = "set"
+subject = "individer-avlidna: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: one row per deceased person (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "individer-fodelseland: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: one row per person (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "individer-in-utvandring: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: a migration table about one person; no event id, so rows need not be unique (maintainer ruling 2026-11-14, rule 4)."

@@ -6368,3 +6368,9 @@ kind = "set"
 subject = "lagenhet-och-hushall: var:lghnr"
 fields.row_key = true
 evidence = "Row key: fastighetsbeteckning and lghnr identify a row: a dwelling table: the dwelling number is unique only within the property; personnr appears only in 1975 and is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "vy-fob: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: one row per person in the census view; the head's and partner's ids, workplace, property and dwelling ids are attributes (maintainer ruling 2026-11-14)."
