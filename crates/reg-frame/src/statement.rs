@@ -340,11 +340,16 @@ impl SetFields {
                 return Err("series-break-at: a series break's at is one period with a first day (\"2022\", \"2009-05\")".into());
             }
             if !series_break.replaces.is_empty() && series_break.at.is_none() {
-                return Err("series-break-replaces: only a dated series break replaces source breaks".into());
+                return Err(
+                    "series-break-replaces: only a dated series break replaces source breaks"
+                        .into(),
+                );
             }
             for replaced in &series_break.replaces {
                 if replaced.text.trim().is_empty() {
-                    return Err("series-break-replaces: a replaced break's text must not be blank".into());
+                    return Err(
+                        "series-break-replaces: a replaced break's text must not be blank".into(),
+                    );
                 }
                 if let Some(on) = &replaced.on
                     && !matches!(
@@ -352,7 +357,9 @@ impl SetFields {
                         Ok(Address::Variable(_) | Address::Table(_) | Address::Release { .. })
                     )
                 {
-                    return Err(format!("series-break-replaces: on = {on:?} is not a var:, table: or release: address"));
+                    return Err(format!(
+                        "series-break-replaces: on = {on:?} is not a var:, table: or release: address"
+                    ));
                 }
             }
         }
