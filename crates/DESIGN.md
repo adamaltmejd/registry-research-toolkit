@@ -234,18 +234,26 @@ classification bindings. Accepting one requires reviewed curation and a premise 
   `set classification` for whole occurrences. Source code-system text and historic label
   rules remain evidence only; neither creates a binding. Inventory book periods do not
   imply occurrence applicability.
-- K1 lists, per data table with identifier columns and no curated row key, its
-  identifiers. When exactly one of them is a unit id by an exact-name list (`personnr`,
-  `lopnr`, `orgnr`, `person-orgnr`, `cfar-nummer`, … in `reg-build/src/proposals/row_keys.rs`)
-  it proposes `set row_key = true` on that column. `identifier` is evidence for the
-  proposal only.
+- K1 reviews row-key coverage per data table (`reg-build/src/proposals/row_keys.rs`).
+  `K1:row-key`: identifier columns and no row key; when exactly one identifier is a unit
+  id by an exact-name list (`personnr`, `lopnr`, `orgnr`, `person-orgnr`, `cfar-nummer`,
+  …) it proposes `set row_key = true` on `<table>: var:<id>`. `identifier` is evidence for
+  the proposal only. `K1:row-key-gap`: a row key, but periods where the table has
+  identifiers and no key (a unit id the curation has not keyed for that era).
+  `K1:row-key-partial`: a segment of a key variable that is not a key, which the
+  variable-wide statement rules out; it should stay empty.
 
-**Row keys.** A row key is a column whose values, with the table's other row keys,
-identify a row: the unit's id (a person, firm, workplace, school, property), both ids in
-a table about pairs. It is a column's own property, `row_key`, set only by curation
-(`set row_key = true` on its occurrences; source readers never state it) and held by a
-segment when any covering occurrence says so. It is not a role: a key column keeps its
-code or measure role. `identifier` never makes one (maintainer 2026-11-14): names,
+**Row keys.** A row key is a variable whose values, with the table's other row keys,
+identify a table's row: the unit's id (a person, firm, workplace, school, property,
+vehicle), both ids in a table about pairs, the case id of an event table. It is a property
+of a table and variable, set only by curation, once per pair: `set row_key = true` on
+`<table>: var:<id>`, an address that selects that ledger variable's occurrences in that
+table under every spelling and source key, including ones a later pin adds (the statement's
+premise then changes and the relock shows it). No other subject accepts `row_key`, so a key
+cannot be stated per spelling and lose the years another spelling covers. A key that
+changes by era is each era's variable keyed. Source readers never state it; a segment holds
+it from its covering occurrences. It is not a role: a key column keeps its code or measure
+role. `identifier` never makes one (maintainer 2026-11-14): names,
 addresses, other persons' ids and property or family ids in a person table are
 identifiers but not keys. A table with no unit id has no key. A steward's keys stay its
 declared `[[table.key]]` (below). Reference orders carry a table's row keys on every
@@ -603,9 +611,13 @@ The address grammar is:
 ```text
 <table>: <spelling> [@<period-set>] [where <field> = '<value>' [and ...]]
 var:<id>
+<table>: var:<id>
 table:<slug>
 release:<table-slug>/<handle>
 ```
+
+`<table>: var:<id>` is that ledger variable's occurrences in that table; only
+`set row_key` takes it ("Row keys").
 
 Tables and ids are catalog slugs; spellings match folded. Brace lists expand literal
 alternatives (`{a,b}`). `<none>` addresses a documented-without-column marker. Expansion
