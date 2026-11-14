@@ -5990,20 +5990,38 @@ evidence = "current-scb-inputs.zip/Timeseries.csv row=156\n\nCVID 916770 = STATI
 [[statement]]
 kind = "set"
 subject = "var:dispink-levnadsniva"
-fields = { series_break = { at = "2020", text = "Från och med 2020 ingår även nordiska inkomster." } }
-evidence = "current-scb-inputs.zip/Timeseries.csv row=77\n\nCVID 924487 = STATIV 2022 column DispInkLevN; the variable is split at 2022-01-01, and 2020 lies in dispink-levnadsniva (1997-2021), not dispink-forhallande (2022-). \"Från och med 2020\"."
+fields = { series_break = { at = "2020", text = "Från och med 2020 ingår även nordiska inkomster.", replaces = [{ on = "var:dispink-forhallande", text = "Från och med 2020 ingår även nordiska inkomster." }] } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=77\n\nCVID 924487 = STATIV 2022 column DispInkLevN; the variable is split at 2022-01-01, and 2020 lies in dispink-levnadsniva (1997-2021), not dispink-forhallande (2022-). \"Från och med 2020\". The CVID puts the source copy on dispink-forhallande; this break replaces it."
 
 [[statement]]
 kind = "set"
 subject = "var:dispink-levnadsniva-far"
-fields = { series_break = { at = "2020", text = "Från och med 2020 ingår även nordiska inkomster." } }
-evidence = "current-scb-inputs.zip/Timeseries.csv row=79\n\nAs row 77, column DispInkLevNFar. \"Från och med 2020\"."
+fields = { series_break = { at = "2020", text = "Från och med 2020 ingår även nordiska inkomster.", replaces = [{ on = "var:dispink-forhallande-far", text = "Från och med 2020 ingår även nordiska inkomster." }] } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=79\n\nAs row 77, column DispInkLevNFar. \"Från och med 2020\". Replaces the source copy on dispink-forhallande-far."
 
 [[statement]]
 kind = "set"
 subject = "var:dispink-levnadsniva-mor"
-fields = { series_break = { at = "2020", text = "Från och med 2020 ingår även nordiska inkomster." } }
-evidence = "current-scb-inputs.zip/Timeseries.csv row=81\n\nAs row 77, column DispInkLevNMor. \"Från och med 2020\"."
+fields = { series_break = { at = "2020", text = "Från och med 2020 ingår även nordiska inkomster.", replaces = [{ on = "var:dispink-forhallande-mor", text = "Från och med 2020 ingår även nordiska inkomster." }] } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=81\n\nAs row 77, column DispInkLevNMor. \"Från och med 2020\". Replaces the source copy on dispink-forhallande-mor."
+
+[[statement]]
+kind = "set"
+subject = "var:dispink-levnadsniva"
+fields = { series_break = { at = "2000", text = "För 1997–1999 grundar sig uppgifterna om disponibel inkomst/levnadsnivå på tidigare erhållna underlag från SOS. \nFrån och med STATIV 2003 har beloppen för åren 1997–1999 omräknats grundade på nya belopp från Socialstyrelsen.", replaces = [{ on = "var:dispink-forhallande", text = "För 1997–1999 grundar sig uppgifterna om disponibel inkomst/levnadsnivå på tidigare erhållna underlag från SOS. \nFrån och med STATIV 2003 har beloppen för åren 1997–1999 omräknats grundade på nya belopp från Socialstyrelsen." }] } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=78\n\nCVID 924487 = STATIV 2022 column DispInkLevN; the CVID puts the source copy on dispink-forhallande (2022-), but the text describes 1997-1999, all in dispink-levnadsniva (1997-2021). \"För 1997–1999 grundar sig uppgifterna ... på tidigare erhållna underlag\": those years rest on another basis than the years after, so the break is at 2000."
+
+[[statement]]
+kind = "set"
+subject = "var:dispink-levnadsniva-far"
+fields = { series_break = { at = "2000", text = "För 1997–1999 grundar sig uppgifterna om disponibel inkomst/levnadsnivå på tidigare erhållna underlag från SOS. \nFrån och med STATIV 2003 har beloppen för åren 1997–1999 omräknats grundade på nya belopp från Socialstyrelsen.", replaces = [{ on = "var:dispink-forhallande-far", text = "För 1997–1999 grundar sig uppgifterna om disponibel inkomst/levnadsnivå på tidigare erhållna underlag från SOS. \nFrån och med STATIV 2003 har beloppen för åren 1997–1999 omräknats grundade på nya belopp från Socialstyrelsen." }] } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=80\n\nAs row 78, column DispInkLevNFar."
+
+[[statement]]
+kind = "set"
+subject = "var:dispink-levnadsniva-mor"
+fields = { series_break = { at = "2000", text = "För 1997–1999 grundar sig uppgifterna om disponibel inkomst/levnadsnivå på tidigare erhållna underlag från SOS. \nFrån och med STATIV 2003 har beloppen för åren 1997–1999 omräknats grundade på nya belopp från Socialstyrelsen.", replaces = [{ on = "var:dispink-forhallande-mor", text = "För 1997–1999 grundar sig uppgifterna om disponibel inkomst/levnadsnivå på tidigare erhållna underlag från SOS. \nFrån och med STATIV 2003 har beloppen för åren 1997–1999 omräknats grundade på nya belopp från Socialstyrelsen." }] } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=82\n\nAs row 78, column DispInkLevNMor."
 
 [[statement]]
 kind = "set"

@@ -151,6 +151,7 @@ pub(crate) fn curate(
     let mut result = Curated::default();
     let mut curated = Vec::new();
     let mut origins = BTreeMap::new();
+    let mut dropped = BTreeSet::new();
     for (statement, premise) in statements {
         if let Statement::Set {
             subject, fields, ..
@@ -165,14 +166,20 @@ pub(crate) fn curate(
                 .as_ref()
                 .and_then(|at| at.intervals().into_iter().next())
                 .map(|(start, _)| start);
-            match endpoints(
+            let placed = endpoints(
                 registers,
                 &statement.provider,
                 &statement.register,
                 &subject.to_string(),
                 &premise.subjects,
-            ) {
-                Ok(subjects) => {
+            )
+            .and_then(|subjects| {
+                let named = replaced(registers, statement, &subjects, &source.breaks, stated)?;
+                Ok((subjects, named))
+            });
+            match placed {
+                Ok((subjects, named)) => {
+                    dropped.extend(named);
                     result
                         .breaks
                         .extend(subjects.into_iter().map(|subject| Break {
@@ -301,7 +308,12 @@ pub(crate) fn curate(
             }
         }
     }
-    result.breaks = breaks(registers, source.breaks, std::mem::take(&mut result.breaks));
+    result.breaks = breaks(
+        registers,
+        source.breaks,
+        std::mem::take(&mut result.breaks),
+        &dropped,
+    );
     check_conflicts(&curated, &origins, &mut result);
     let mut relations = source.relations;
     relations.extend(curated.iter().cloned());
@@ -311,21 +323,67 @@ pub(crate) fn curate(
     Ok(result)
 }
 
+/// Whether a break on `on` is one on `subject`: the subject itself or, for a table, one of
+/// its releases.
+fn covers(registers: &[Resolved], on: Entity, subject: Entity) -> bool {
+    on == subject
+        || matches!((on, subject),
+            (Entity::Table(r, t), Entity::Release(rr, x))
+                if r == rr && registers[r].releases[x].table == t)
+}
+
+/// The source breaks a curated break's `replaces` names. Each entry must name at least
+/// one, so a source change that drops or rewords it refuses the statement.
+fn replaced(
+    registers: &[Resolved],
+    statement: &LocatedStatement,
+    subjects: &[Entity],
+    source: &[Break],
+    stated: &reg_frame::statement::SeriesBreak,
+) -> Result<Vec<Break>, String> {
+    let mut named = Vec::new();
+    for entry in &stated.replaces {
+        let on = match &entry.on {
+            Some(on) => endpoints(registers, &statement.provider, &statement.register, on, &[])?,
+            None => subjects.to_vec(),
+        };
+        let text = entry.text.trim();
+        let found: Vec<Break> = source
+            .iter()
+            .filter(|s| {
+                s.text.as_deref() == Some(text)
+                    && on.iter().any(|&o| covers(registers, o, s.subject))
+            })
+            .cloned()
+            .collect();
+        if found.is_empty() {
+            return Err(format!(
+                "replaces names no source break: {:?} on {}",
+                text,
+                entry.on.as_deref().unwrap_or("the subject")
+            ));
+        }
+        named.extend(found);
+    }
+    Ok(named)
+}
+
 /// The published breaks: the source's and the curated ones, distinct and sorted. A dated
 /// curated break replaces each source break of the same text on its subject or, for a
-/// table, on one of its releases: it dates what the source left undated.
-fn breaks(registers: &[Resolved], source: Vec<Break>, curated: Vec<Break>) -> Vec<Break> {
+/// table, on one of its releases: it dates what the source left undated. It also
+/// replaces the source breaks its `replaces` names (`dropped`).
+fn breaks(
+    registers: &[Resolved],
+    source: Vec<Break>,
+    curated: Vec<Break>,
+    dropped: &BTreeSet<Break>,
+) -> Vec<Break> {
     let replaces = |c: &Break, s: &Break| {
-        c.at.is_some()
-            && c.text == s.text
-            && (c.subject == s.subject
-                || matches!((c.subject, s.subject),
-                    (Entity::Table(r, t), Entity::Release(rr, x))
-                        if r == rr && registers[r].releases[x].table == t))
+        c.at.is_some() && c.text == s.text && covers(registers, c.subject, s.subject)
     };
     let kept: Vec<Break> = source
         .into_iter()
-        .filter(|s| !curated.iter().any(|c| replaces(c, s)))
+        .filter(|s| !dropped.contains(s) && !curated.iter().any(|c| replaces(c, s)))
         .collect();
     kept.into_iter()
         .chain(curated)
