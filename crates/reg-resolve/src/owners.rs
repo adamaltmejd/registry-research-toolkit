@@ -1,10 +1,11 @@
 //! Neighbouring owners (F2): one column several variables claim in one table and window
 //! goes to the variable that holds the column alone in the nearest releases before and
-//! after (crates/DESIGN.md, "Identity"; maintainer 2026-11-14). The losing listings are
+//! after: the nearest sole holder on each side, across gaps (crates/DESIGN.md,
+//! "Identity"; maintainer 2026-11-14). The losing listings are
 //! duplicates and are shadowed. A run with no sole holder on either side, two different
 //! ones, or a holder that does not claim the whole run stays ambiguous. The rule never
-//! shadows a curated variable assignment, and skips a column curation marks
-//! `long_format` anywhere.
+//! shadows a curated variable assignment, and skips a column in a table when any used
+//! claimant there is marked `long_format`.
 
 use std::collections::{BTreeMap, BTreeSet};
 

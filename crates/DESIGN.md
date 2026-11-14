@@ -263,7 +263,8 @@ classification bindings. Accepting one requires reviewed curation and a premise 
 - A variable has at most one spelling per table at a time.
 - A shared name under different keys is a review proposal, never a merge.
 - One column several variables claim in one table and window goes to the variable that
-  holds it alone in the nearest releases before and after; the other listings are
+  holds it alone in the nearest releases before and after (the nearest sole holder on
+  each side, across gaps and other contested runs); the other listings are
   duplicates and are shadowed (`F2:neighbour-owner`, a notice). A variable left with no
   used occurrence is withheld. When the neighbours disagree, neither side has a sole
   holder, the holder does not claim the whole run, or a losing listing reaches past it,
@@ -273,7 +274,8 @@ classification bindings. Accepting one requires reviewed curation and a premise 
   evidence saying so. Until then the window is ambiguous and orders over it are blocked
   (`F2:ambiguous`). A long-format column, whose variable a code column picks per row
   (`OBS_VALUE` beside `VARCD`), has no owner: curation marks its occurrences
-  `long_format = true`, the rule skips the whole column, and it stays ambiguous until the
+  `long_format = true` (every claimant key), the rule skips the column in that table when
+  any used claimant carries the mark, and it stays ambiguous until the
   catalog models the code column's items (maintainer 2026-11-14). The mark is applied
   with the period corrections, before variables resolve, so `var:` statements see the
   claimants it keeps. A merge is only for a column that means the same thing on every
@@ -286,7 +288,9 @@ classification bindings. Accepting one requires reviewed curation and a premise 
   different things on one column (plattfil and flerfil under one key) need a pin each.
   A variable left with no column
   takes its gap markers with it only by statement (`<none>` with `variable = "none"`,
-  the one variable value a gap marker accepts); otherwise the build refuses. There is
+  the one variable value a gap marker accepts); otherwise the build refuses. The refusal
+  applies in a register with curated assignments; in a register without, the marker
+  attaches to the key's one remaining variable or is dropped (a known gap). There is
   no runtime signal for a placed column (maintainer 2026-11-14).
 - Variables never span registers. Cross-register relations are `continues` and
   `derived-from` links and tags.
