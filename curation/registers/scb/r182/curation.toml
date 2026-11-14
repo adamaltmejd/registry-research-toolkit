@@ -17527,3 +17527,15 @@ kind = "set"
 subject = "var:vikt"
 fields = { "description" = "Kalibrerad vikt som tar hänsyn till varierande urvalssannolikheter och svarsfrekvenser i olika strata samt till hjälpinformation från register. 2017 anges vikten som antal objekt i populationen per stratum delat med antal objekt i urvalet per stratum." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2017 års beräkningsformel anges med år.\ncatalog:variable_text:21656:16436:16801\ncatalog:variable_text:21656:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "uoh-ekonomi: KontrollVarde @2011,2013,2015,2017"
+fields = { "long_format" = true }
+evidence = "SCB Registerinformation, UoH ekonomi 2011, 2013, 2015 and 2017 (RegVerIDs 4473/4471, 5765/5764, 10094/9841, 12594/12595) documents column KontrollVarde under VarId 7596 \"Intäkter för forskning och forskarutbildning\" and VarId 29327 \"Utgift/kostnad för forskning och forskarutbildning\"; VarNr (VarId 7594 \"Finansieringskällor\" / VarId 29326 \"Typ av utgift/kostnad\") picks each row's measure, so the column is long format (maintainer 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "uoh-ekonomi: VarNr @2011,2013,2015,2017"
+fields = { "long_format" = true }
+evidence = "SCB Registerinformation, UoH ekonomi 2011, 2013, 2015 and 2017 (RegVerIDs 4473/4471, 5765/5764, 10094/9841, 12594/12595) documents column VarNr under VarId 7594 \"Finansieringskällor\" (the Intäkter file) and VarId 29326 \"Typ av utgift/kostnad\" (the Avskrivningar, investeringar och hyreskostnader file). It is the item code of the long-format column KontrollVarde, and its code list depends on the file, so neither claimant owns it; it stays with KontrollVarde until the item model exists (maintainer 2026-11-14)."
