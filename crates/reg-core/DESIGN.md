@@ -83,8 +83,8 @@ literal kind namespaces; malformed forms cannot resolve as another kind.
   deferred until curation; the primary segments serve every order (final over
   preliminary), and the closed source object refuses a document that carries either.
 - **A panel is a named grouping of sources** with a comment: its members are source
-  names. The keys a panel needs come from the catalog (a table's row-key segments), not
-  from the document.
+  names. The keys a panel needs come from the catalog (a table's curated row keys, or a
+  steward's declared keys), not from the document.
 - **`Source.period`** is an int year, a period token, a `{"from", "to"}` range, or a
   finite list of those segments. A list is an interrupted series
   (`[{"from": 2005, "to": 2010}, {"from": 2015, "to": 2020}]`): one source stays one

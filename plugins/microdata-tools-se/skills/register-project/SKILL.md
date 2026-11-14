@@ -84,10 +84,13 @@ the `register-metadata-search` skill.
    is only carried along, not used to join or recode across years.
 7. Save the file as `project_data.json`.
 
-Every ordered table also delivers its row-key columns, including the person key,
-without a binding: `order` lists them per source and period in `row_keys`, under the
-register's own spelling (`PersonNr` or `personnr` on SCB's registers, `LopNr` on a
-steward's catalog). No binding is needed. The Flergenreg reused-personnummer flags are
+Every ordered table also delivers its row-key columns, the ids that identify a row
+(the person key in a person table), without a binding: `order` lists them per source
+and period in `row_keys`, under the register's own spelling (`PersonNr` or `personnr`
+on SCB's registers, `LopNr` on a steward's catalog). No binding is needed. Other
+identifiers (a parent's personnummer, a name, an address) are never row keys: bind them
+if the study needs them. A table with no stated row key gets a `row_key_undeclared`
+info; bind the column that identifies its rows. The Flergenreg reused-personnummer flags are
 ordinary variables: `scb/flergenreg/ateranvant-personnr` and the per-parent
 `aterpnrfar`, `aterpnrmor` and adoptive variants, code `1` for a reused personnummer and
 `0` for not. Bind them when needed. `SenPNr` is only in `sos/lova`.

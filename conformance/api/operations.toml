@@ -195,7 +195,7 @@ errors = ["invalid_ref", "not_found", "retired_ref", "table_is_register", "ambig
 note = """One line per (table, variable, folded spelling) over `period` (schema §2.1, \
 "Schema of a table"): for a table (`segment_table`), a register's tables, or one \
 variable's tables (`segment_variable`). `table` narrows a register ref. Keyset-paged \
-on (table pid, variable pid, start). Row keys are the lines with role `row_key`."""
+on (table pid, variable pid, start). Row keys are the lines with `row_key` true."""
 
 [[operation]]
 name = "diff"
@@ -388,7 +388,7 @@ classification = "string?; a classification version's ref"
 coded = "\"yes\" | \"no\"?"
 sensitive = "boolean?"
 identifier = "boolean?"
-role = "\"row_key\" | \"time_start\" | \"time_stop\" | \"time_point\" | \"measure\" | \"code\" | \"label\""
+role = "\"time_start\" | \"time_stop\" | \"time_point\" | \"measure\" | \"code\" | \"label\""
 state = "\"ambiguous\" | \"preliminary\"?"
 evidence = "with `evidence` only: [{release (Release | null), period, spelling, label, source_key, status, overrides [{field, value, prov, statement {file, line} | null, rule | null, source_value}]}]"
 
@@ -420,6 +420,7 @@ type = "string | null"
 length = "integer | null"
 value_set = "ValueSetRef | null"
 role = "string"
+row_key = "boolean; one of the table's curated row keys, never inferred from `identifier`"
 state = "string"
 period = "Period; the lines' segments merged, clipped to the request"
 
