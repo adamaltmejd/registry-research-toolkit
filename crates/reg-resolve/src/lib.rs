@@ -211,6 +211,9 @@ pub struct Resolved {
     pub releases: Vec<ResolvedRelease>,
     pub variables: Vec<Variable>,
     pub occurrences: Vec<ResolvedOccurrence>,
+    /// The losing listings the neighbouring-owner rule shadowed ([`owners`]): duplicates
+    /// of the owner's column, not members of their variable.
+    pub duplicates: BTreeSet<usize>,
     pub gaps: Vec<Gap>,
     pub findings: Vec<Finding>,
     /// Source keys for register-level F5 findings, without changing their published subject.
@@ -935,9 +938,20 @@ fn resolve_pass(
     {
         return Err("set variable would leave a variable without a used occurrence".into());
     }
+    let mut duplicates = BTreeSet::new();
     if owners {
         let groups: Vec<&Vec<usize>> = variable_keys.values().collect();
-        owners::apply(&mut resolved, &groups, &tables, &mut findings);
+        // A curated variable assignment is final: the rule never shadows it.
+        let pinned = resolved
+            .iter()
+            .enumerate()
+            .filter_map(|(i, r)| match assignment(&r.occurrence) {
+                Ok(Some(v)) if v != "none" => Some(Ok(i)),
+                Ok(_) => None,
+                Err(e) => Some(Err(e)),
+            })
+            .collect::<Result<BTreeSet<usize>, String>>()?;
+        duplicates = owners::apply(&mut resolved, &groups, &pinned, &tables, &mut findings);
     }
     // A variable needs a used occurrence. One documented only outside its tables'
     // coverage, or only as a losing duplicate listing, is withheld.
@@ -1540,6 +1554,7 @@ fn resolve_pass(
         releases,
         variables,
         occurrences: resolved,
+        duplicates,
         gaps,
         findings,
         finding_keys,

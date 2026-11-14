@@ -1056,7 +1056,12 @@ pub fn variable_members(
     let resolved = crate::resolve(records, ledger, &BTreeMap::new(), assignments, &[])?;
     let mut variables: BTreeMap<String, BTreeSet<crate::OccurrenceKey>> = BTreeMap::new();
     let context = crate::OccurrenceContext::new(records);
-    for occurrence in &resolved.occurrences {
+    // A listing the neighbouring-owner rule shadowed is a duplicate, not a member:
+    // freezing it would read as a curated assignment and keep the rule from it.
+    for (i, occurrence) in resolved.occurrences.iter().enumerate() {
+        if resolved.duplicates.contains(&i) {
+            continue;
+        }
         if let Some(index) = occurrence.variable {
             let variable = &resolved.variables[index];
             if variable.pinned {
