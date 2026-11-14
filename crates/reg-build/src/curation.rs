@@ -1123,7 +1123,13 @@ fn phase(statement: &reg_frame::statement::Statement) -> Phase {
             ..
         } => Phase::Parents,
         Statement::Set { fields, .. } if fields.coverage.is_some() => Phase::Coverage,
-        Statement::Set { fields, .. } if fields.period.is_some() => Phase::Periods,
+        // `long_format` decides identity (the neighbouring-owner rule skips the column), so
+        // it lands in a field stage before variables are resolved.
+        Statement::Set { fields, .. }
+            if fields.period.is_some() || fields.long_format.is_some() =>
+        {
+            Phase::Periods
+        }
         Statement::Set { fields, .. } if fields.table.is_some() => Phase::Moves,
         Statement::Assert { .. } => Phase::Facts,
         Statement::Set { fields, .. } if fields.variable.is_some() => Phase::Variables,

@@ -1449,12 +1449,21 @@ fn resolve_pass(
         }
         let key = r.occurrence.source_key.as_str();
         if let Some(defaults) = &defaults {
-            if let Some(v) = defaults.occurrences[i].variable {
+            // A marker of a variable that curation or a neighbouring owner empties is
+            // withheld explicitly (`<none>` with `variable = "none"`), never dropped.
+            if assignment(&r.occurrence)? != Some("none")
+                && let Some(v) = defaults.occurrences[i].variable
+            {
                 let slug = &defaults.variables[v].slug;
                 let target = variables
                     .iter()
                     .position(|v| v.slug == *slug)
-                    .ok_or_else(|| format!("set variable would orphan gap marker for {slug:?}"))?;
+                    .ok_or_else(|| {
+                        format!(
+                            "variable {slug:?} has no column left but keeps a gap marker; withhold \
+                         the marker (`<none>` with variable = \"none\") or keep a column"
+                        )
+                    })?;
                 marker_variable.push((i, target));
             }
         } else if let Some(vs) = key_variables.get(key)
