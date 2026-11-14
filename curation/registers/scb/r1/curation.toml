@@ -1852,3 +1852,33 @@ kind = "set"
 subject = "set:postadress"
 fields = { "description" = "Enhetens postadress, uppdelad i c/o-adress, gatunamn, gatunummer, gatulittera (bokstavsbeteckning skild från gatunumret), övrig specificering av gatudelen (till exempel 3 tr, över gården), postnummer, postort och landskod, för arbetsstället och för den juridiska enheten. För arbetsställen i juridiska enheter med bara ett arbetsställe används adressuppgifter från Skatteverket och för företag med flera arbetsställen samlas de in via SCB:s undersökning Kontroll av uppgifter i Företagsdatabasen; den juridiska enhetens adress hämtas från Skatteverket och är den som angavs vid registreringen av firman. Postorten sammanfaller inte alltid med kommuner, församlingar eller tätorter." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna är var sin del av samma postadress för arbetsställe och juridisk enhet; kolumner utan P- (1999–2018) och med P- (2019–2025) bär samma texter.\ncatalog:variable_text:17541:10592:11323\ncatalog:variable_text:17558:10592:17897\ncatalog:variable_text:17559:17897:20454\ncatalog:variable_text:17560:10592:17897\ncatalog:variable_text:17560:17897:20454\ncatalog:variable_text:17561:10592:16071\ncatalog:variable_text:17574:17897:20454\ncatalog:variable_text:17595:17897:20454\ncatalog:variable_text:17596:17897:20454\ncatalog:variable_text:17597:17897:20454\ncatalog:variable_text:17598:17897:20454\ncatalog:variable_text:17599:10592:16071\ncatalog:variable_text:17600:10592:17897\ncatalog:variable_text:17601:17897:20454\ncatalog:variable_text:17602:17897:20454"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstalleenheter: RangOrdning @1999..2025 where key = 'v885'"
+fields = { "variable" = "ng-rangordning" }
+evidence = "SCB Registerinformation, FDB Arbetsställeenheter 1999-2025 (RegVerID 13886 for 1999) documents column RangOrdning under VarId 880 \"Rangordning av näringsgrenar\" and VarId 885 \"Rangordning av statistiska näringsgrenar\" in every release. The table has both Ng/Ng1 (näringsgren) and NgS/NgS1 (statistisk näringsgren) columns and one rank column; both definitions rank the unit's näringsgrenar by share of time or turnover (\"Rangordning 1 = Första näringsgrenskod\"). The claimants are one concept for two row kinds, the ranked list of näringsgren and of statistisk näringsgren (maintainer 2026-11-14: variants of one concept for different row kinds are merged). 880 is the generic claimant and survives; 885 keeps its other tables."
+
+[[statement]]
+kind = "set"
+subject = "arbetsstalleenheter: TidOmsPct @1999..2025 where key = 'v887'"
+fields = { "variable" = "ng-tid-oms-pct" }
+evidence = "SCB Registerinformation, FDB Arbetsställeenheter 1999-2025 documents column TidOmsPct under VarId 881 \"Procent efter tid eller omsättning\" (näringsgrenar) and VarId 887 \"Procent för tid eller omsättning\" (statistiska näringsgrenar) in every release. Same measure, the percentage share of time or turnover per näringsgren, for the ranked näringsgren rows and the ranked statistisk näringsgren rows of the one table, so the claimants are one concept for two row kinds (maintainer 2026-11-14: variants of one concept for different row kinds are merged). 881 is the generic claimant and survives; 887 keeps its other tables."
+
+[[statement]]
+kind = "set"
+subject = "var:ng-rangordning"
+fields = { "label" = "Rangordning av näringsgrenar", "description" = "Rangordnar enhetens näringsgrenar efter deras relativa storlek, mätt som näringsgrenens procentuella andel av verksamheten efter tid (anställda) eller omsättning. Rangordning 1 är första näringsgrenskoden. För arbetsställen gäller kolumnen både näringsgren och statistisk näringsgren." }
+evidence = "Maintainer ruling 2026-11-14: variants of one concept for different row kinds are merged and the variable carries a label and description covering both kinds.\nVarId 880 (\"Rangordning av variabeln näringsgren\") and VarId 885 (\"Rangordnar de statistiska näringsgrenarna efter deras relativa storlek ...\") share RangOrdning in Arbetsställeenheter 1999-2025."
+
+[[statement]]
+kind = "set"
+subject = "var:ng-tid-oms-pct"
+fields = { "label" = "Procent efter tid eller omsättning", "description" = "Näringsgrenens procentuella andel av enhetens verksamhet, mätt efter tid (anställda) eller omsättning. För arbetsställen avser procenttalen både näringsgrenar och statistiska näringsgrenar." }
+evidence = "Maintainer ruling 2026-11-14: variants of one concept for different row kinds are merged and the variable carries a label and description covering both kinds.\nVarId 881 (\"Procentuell andel av variabeln näringsgren efter tid eller omsättning\") and VarId 887 (\"Procentuell fördelning av ... statistiska näringsgrenar efter tid eller omsättning\") share TidOmsPct in Arbetsställeenheter 1999-2025."
+
+[[statement]]
+kind = "set"
+subject = "juridiska-enheter: Anst @2024 where key = 'v972'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, FDB Juridiska enheter 2024 (RegVerID 19692) documents column Anst under VarId 972 \"Aktuellt antal anställda\" (CVID 975029) and VarId 48347 \"Antal anställda, juridisk enhet\" (CVID 975109). 972 is Anst in 1999-2023 and 48347 in 2025, with a new definition (earnings over 1000 kr a month, summed from the legal unit's arbetsställen, instead of an annual earning over a prisbasbelopp). The source does not settle which for 2024; 48347 is the more plausible owner because SCB created the new VarId in the 2024 documentation, with the 2025 wording, so 2024 is the first release with the new definition (maintainer 2026-11-14: place under the more plausible owner). The 972 row is withheld."
