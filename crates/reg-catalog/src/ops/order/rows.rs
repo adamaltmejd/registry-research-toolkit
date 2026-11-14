@@ -224,8 +224,8 @@ pub(super) fn row_keys(
                     "ambiguous" => Some((
                         IssueLevel::Error,
                         "ambiguous_window",
-                        "has more than one form in",
-                        " (name, type or codes differ); pick a shorter period or ask the maintainer",
+                        "shares its column with another variable in",
+                        "; pick a shorter period or ask the maintainer",
                     )),
                     "preliminary" => Some((
                         IssueLevel::Warning,

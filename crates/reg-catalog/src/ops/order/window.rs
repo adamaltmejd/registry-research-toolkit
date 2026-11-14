@@ -565,7 +565,7 @@ fn windows(at: &Located, pieces: &[Piece]) -> Vec<Issue> {
         "ambiguous_window",
         &|t, p| {
             format!(
-                "{pid} has more than one form in {t} for {p} (name, type or codes differ); pick a shorter period or ask the maintainer"
+                "{pid} shares its column with another variable in {t} for {p}; pick a shorter period or ask the maintainer"
             )
         },
     );

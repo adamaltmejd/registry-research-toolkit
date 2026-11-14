@@ -1,0 +1,37 @@
+{
+  "catalog": {
+    "catalog_version": "dev",
+    "schema_version": "13"
+  },
+  "project": {
+    "name": "Order case",
+    "schema_version": "6.2.0",
+    "reg_meta_version": "0.64.0"
+  },
+  "entries": [
+    {
+      "source": "s",
+      "binding": 0,
+      "provider": "demo",
+      "register": "demo/amb",
+      "table": "demo/amb",
+      "table_name": "Tvetydiga registret",
+      "variable": "demo/amb/del",
+      "variable_name": "Del",
+      "display_name": null,
+      "period": {
+        "start": "2018-01-01",
+        "end": "2020-01-01"
+      },
+      "spelling": "Del",
+      "type": "integer",
+      "length": 3,
+      "value_set": null,
+      "classification": null
+    }
+  ],
+  "row_keys": [],
+  "manual": [],
+  "clips": [],
+  "findings": []
+}

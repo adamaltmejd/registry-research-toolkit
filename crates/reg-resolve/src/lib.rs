@@ -21,11 +21,12 @@
 //!   covers two folded spellings in overlapping periods anywhere in the register, among
 //!   used occurrences (after shadowing): then it splits by spelling. A key documented only without a
 //!   column is no variable (F5).
-//! - **Segments.** Per variable and table, maximal runs of one form. A run where the
-//!   variable's own occurrences disagree on label, type family or value set, or where another
-//!   variable claims the same folded spelling, is ambiguous (F2).
-//!   A family-only disagreement under one source key and folded spelling instead keeps
-//!   the type unset and raises a segment source-conflict review (F6).
+//! - **Owners (F2).** A column several variables claim in one table and window goes to
+//!   the one that holds it alone in the neighbouring releases ([`owners`]).
+//! - **Segments.** Per variable and table, maximal runs of one form. Fields the
+//!   variable's own occurrences disagree on are left blank (F2 forms-differ; a family-only
+//!   disagreement under one source key and folded spelling is F6). A run another
+//!   variable still claims under the same folded spelling is ambiguous (F2).
 //! - **Gaps (T5).** In a table with releases, the holes in the table's coverage (no
 //!   release), and the days inside a variable's hull a release covers without the
 //!   variable's column: documented without a column, or not documented.
@@ -40,6 +41,7 @@ mod f1;
 mod gaps;
 mod integer_codes;
 mod ledger;
+mod owners;
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -392,6 +394,29 @@ pub(crate) fn resolve_located(
     classifications: &[curation::apply::Classification],
     affected: &mut BTreeSet<OccurrenceKey>,
 ) -> Result<Resolved, String> {
+    resolve_pass(
+        records,
+        ledger,
+        valuesets,
+        assignments,
+        classifications,
+        affected,
+        true,
+    )
+}
+
+/// One pass; `owners` applies the neighbouring-owner rule ([`owners`]). The frozen
+/// default pass skips it, so the final pass weighs the claimants curation leaves.
+#[allow(clippy::too_many_lines, clippy::too_many_arguments)]
+fn resolve_pass(
+    records: &[Record],
+    ledger: &Ledger,
+    valuesets: &BTreeMap<&str, &ValueSet>,
+    assignments: &BTreeMap<OccurrenceKey, String>,
+    classifications: &[curation::apply::Classification],
+    affected: &mut BTreeSet<OccurrenceKey>,
+    owners: bool,
+) -> Result<Resolved, String> {
     let registers: Vec<&Register> = records
         .iter()
         .filter_map(|r| match r {
@@ -413,12 +438,14 @@ pub(crate) fn resolve_located(
     let defaults = if assignments.keys().any(|key| {
         key.identity.provider == register.provider && key.identity.register == register.register
     }) {
-        Some(resolve(
+        Some(resolve_pass(
             records,
             ledger,
             valuesets,
             &BTreeMap::new(),
             classifications,
+            &mut BTreeSet::new(),
+            false,
         )?)
     } else {
         None
@@ -908,8 +935,12 @@ pub(crate) fn resolve_located(
     {
         return Err("set variable would leave a variable without a used occurrence".into());
     }
+    if owners {
+        let groups: Vec<&Vec<usize>> = variable_keys.values().collect();
+        owners::apply(&mut resolved, &groups, &tables, &mut findings);
+    }
     // A variable needs a used occurrence. One documented only outside its tables'
-    // coverage is withheld, with its T1 notices.
+    // coverage, or only as a losing duplicate listing, is withheld.
     variable_keys.retain(|_, members| {
         let keep = members.iter().any(|&i| resolved[i].status == "used");
         if !keep {
@@ -1055,7 +1086,6 @@ pub(crate) fn resolve_located(
                 if roles.len() > 1 {
                     conflicts.insert("role".into());
                 }
-                let agree = forms.len() == 1 && classifications.len() == 1 && roles.len() <= 1;
                 // A form field is stated only where every occurrence agrees on it.
                 let agreed = |field: fn(&Form) -> &Option<String>| {
                     let values: BTreeSet<&Option<String>> = forms.iter().map(field).collect();
@@ -1064,9 +1094,9 @@ pub(crate) fn resolve_located(
                         _ => None,
                     }
                 };
-                let state = if !agree {
-                    "ambiguous"
-                } else if covering.iter().all(|&i| resolved[i].preliminary) {
+                // Occurrences that disagree on form still place: the fields they disagree on
+                // stay unset (maintainer 2026-11-14).
+                let state = if covering.iter().all(|&i| resolved[i].preliminary) {
                     "preliminary"
                 } else {
                     "clear"
@@ -1282,12 +1312,14 @@ pub(crate) fn resolve_located(
         }
     }
     let mut type_conflicts = BTreeSet::new();
+    let mut forms_differ = BTreeSet::new();
     for ((v, s), own) in segment_occurrences {
-        let segment = &mut variables[v].segments[s];
-        if segment.state != "ambiguous" {
+        let segment = &variables[v].segments[s];
+        let forms = agreement_forms(own.iter().copied());
+        let classes: BTreeSet<_> = own.iter().map(|r| &r.occurrence.classification).collect();
+        if forms.len() == 1 && classes.len() == 1 {
             continue;
         }
-        let forms = agreement_forms(own.iter().copied());
         let first = forms.first().expect("a segment has a used occurrence");
         if forms
             .iter()
@@ -1304,12 +1336,9 @@ pub(crate) fn resolve_located(
                     && fold_identity(&r.occurrence.column) == fold_identity(&segment.spelling)
             })
         {
-            segment.state = if own.iter().all(|r| r.preliminary) {
-                "preliminary"
-            } else {
-                "clear"
-            };
             type_conflicts.insert((v, s));
+        } else {
+            forms_differ.insert((v, s));
         }
     }
     // Rival claimants: segments of two variables under one folded spelling, in one
@@ -1365,7 +1394,20 @@ pub(crate) fn resolve_located(
                     subject: Subject::Segment(v, s),
                     period: Some(segment.period.clone()),
                     message: format!(
-                        "{} has more than one form here (name, type or codes differ)",
+                        "{} is claimed by another variable here, and no neighbouring \
+                         release settles which",
+                        segment.spelling
+                    ),
+                });
+            } else if forms_differ.contains(&(v, s)) {
+                findings.push(Finding {
+                    code: "F2:forms-differ",
+                    severity: "review",
+                    subject: Subject::Segment(v, s),
+                    period: Some(segment.period.clone()),
+                    message: format!(
+                        "{}: deliveries disagree on the label, type or codes; the fields \
+                         they disagree on are left blank",
                         segment.spelling
                     ),
                 });

@@ -262,8 +262,17 @@ classification bindings. Accepting one requires reviewed curation and a premise 
 - Case never distinguishes columns.
 - A variable has at most one spelling per table at a time.
 - A shared name under different keys is a review proposal, never a merge.
-- A column the source cannot place on one variable is ambiguous. Orders over that window
-  are blocked; nothing is guessed.
+- One column several variables claim in one table and window goes to the variable that
+  holds it alone in the nearest releases before and after; the other listings are
+  duplicates and are shadowed (`F2:neighbour-owner`, a notice). A variable left with no
+  used occurrence is withheld. When the neighbours disagree, neither side has a sole
+  holder, the holder does not claim the whole run, or a losing listing reaches past it,
+  the builder does not guess: curation settles the column (`set variable = "none"` on
+  the stray listing, or a merge where the claimants are one concept for different row
+  kinds), with the more plausible owner where the source does not settle it, and
+  evidence saying so. Until then the window is ambiguous and orders over it are blocked
+  (`F2:ambiguous`). The rule weighs the claimants curation leaves. There is no runtime
+  signal for a placed column (maintainer 2026-11-14).
 - Variables never span registers. Cross-register relations are `continues` and
   `derived-from` links and tags.
 
@@ -690,23 +699,24 @@ release assets are left unchanged.
   notices, since a variable needs a segment. An occurrence documented to end before it
   starts is refused, located at its source row.
 - **Segments hold whole occurrences.** The variable's overlapping occurrences in one
-  table form one segment; adjacent ones of one form join. A segment is ambiguous when
-  its occurrences disagree on label, type family or value set, except a family-only
-  disagreement under one source key and one folded spelling. That exception leaves dtype
-  unset and emits one `F6:source-conflict` review per segment for a D `set`, including
-  when case also differs. A family disagreement keeps a stated length only when all
+  table form one segment; adjacent ones of one form join. Occurrences that disagree
+  on label, type family, value set or classification still place: the fields they
+  disagree on are left blank, and the segment gets one `F2:forms-differ` review, except a
+  family-only disagreement under one source key and one folded spelling, which gets one
+  `F6:source-conflict` review per segment for a D `set`, including when case also
+  differs (maintainer 2026-11-14: place, do not block). A family disagreement keeps a stated length only when all
   stating occurrences agree, and joins adjacent segments only when their lengths agree.
-  Type agreement ignores unknown occurrences: only multiple known families can cause
-  ambiguity or a type-only F6. Unknown evidence cannot conceal a disagreement between
+  Type agreement ignores unknown occurrences: only multiple known families blank the
+  type. Unknown evidence cannot conceal a disagreement between
   known families. Within temporal the widening order is `date` < `datetime`; within
   other families equivalent aliases use lexical order. The published length is the
   greatest stated length among known forms when any exist, else among unknown forms.
   Unknown-only components remain separate from adjacent known-family runs, like gaps; F1
   skips comparisons with an unknown side. An overlapping segment with known evidence
   never publishes `unspecified`. No length is invented. Adjacent agreeing known forms
-  join with the same widest-form rule. Labels compare ignoring case and spacing; label
-  and value-set disagreements still block. Another variable claiming its folded spelling
-  in any overlap still makes the whole segment ambiguous, including an exempt segment.
+  join with the same widest-form rule. Labels compare ignoring case and spacing.
+  Another variable still claiming its folded spelling in any overlap, after the
+  neighbouring-owner rule, makes the whole segment ambiguous.
 - **The implicit table** takes its register's id, so `ident` holds that id once, as the
   register's, and the namespace check covers explicit tables only.
 - **The ledger** is `curation/registers/<provider>/<register>/ids.toml`: `[tables]` maps
@@ -1398,7 +1408,8 @@ and `sun2000niva`.
 ### A blocked order
 
 Catalog (illustrative): in `scb/lisa/individ`, two variables claim the folded spelling
-`kommun` over 2019, so both segments are `ambiguous` there. `scb/lisa/dispink` for 2020
+`kommun` over 2019 and no neighbouring release or curation settles which, so both
+segments are `ambiguous` there. `scb/lisa/dispink` for 2020
 is delivered only by a `preliminary` release.
 
 Request: source `lisa`, period `2018..2020`, bindings `kommun` and `dispink`.
@@ -1413,7 +1424,7 @@ Request: source `lisa`, period `2018..2020`, bindings `kommun` and `dispink`.
     "fields": {
       "findings": [
         {"level": "error", "code": "ambiguous_window", "path": "/sources/0/bindings/0",
-         "message": "two variables claim the column 'kommun' in scb/lisa/individ for 2019",
+         "message": "scb/lisa/kommun shares its column with another variable in scb/lisa/individ for 2019; pick a shorter period or ask the maintainer",
          "source": "lisa", "variable": "scb/lisa/kommun", "table": "scb/lisa/individ",
          "period": {"start": "2019-01-01", "end": "2020-01-01"}, "successor_fqid": null,
          "variable_name": "Kommun", "table_name": "Individer", "successor_name": null}

@@ -38,6 +38,8 @@
 {"kind":"occurrence","provider":"demo","register":"amb","table":"","release":"m2018","column":"Del","source_key":"k1","label":"Del","dtype":"int","length":2}
 {"kind":"occurrence","provider":"demo","register":"amb","table":"","release":"m2019","column":"Del","source_key":"k1","label":"Del","dtype":"int","length":3}
 {"kind":"occurrence","provider":"demo","register":"amb","table":"","release":"m2019","column":"Del","source_key":"k2","label":"Delsumma","dtype":"int","length":3}
+{"kind":"occurrence","provider":"demo","register":"amb","table":"","release":"m2019","column":"Ny","source_key":"k3","label":"Ny","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"amb","table":"","release":"m2019","column":"Ny","source_key":"k4","label":"Nytt värde","dtype":"int"}
 {"kind":"register","provider":"demo","register":"pre","name":"Preliminära registret"}
 {"kind":"release","provider":"demo","register":"pre","table":"","release":"p2019","name":"Pre 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
 {"kind":"release","provider":"demo","register":"pre","table":"","release":"p2019p","name":"Pre 2019 preliminär","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"preliminary"}
