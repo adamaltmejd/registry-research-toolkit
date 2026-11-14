@@ -1,4 +1,3 @@
-
 [[statement]]
 kind = "set"
 subject = "skyddad-natur: <none> @2017-12-31 where key = 'v36'"
@@ -559,18 +558,6 @@ evidence = "r19 and r46 define a protection decision date and expressly include 
 
 [[statement]]
 kind = "set"
-subject = "var:gallandedatum-for-skyddad-natur-beslut-datum-sci"
-fields = { "sets" = ["gallandedatum-for-skyddad-natur"] }
-evidence = "r15 and r47 explicitly define when protection takes legal effect, satisfying the effective-date group despite the column name.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42596\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442738\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42739"
-
-[[statement]]
-kind = "set"
-subject = "var:gallandedatum-for-skyddad-natur-beslut-datum-spa"
-fields = { "sets" = ["gallandedatum-for-skyddad-natur"] }
-evidence = "r17 and r48 explicitly define when protection takes legal effect, satisfying the effective-date group despite the column name.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42597\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442740\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42740"
-
-[[statement]]
-kind = "set"
 subject = "var:inlamn-datum"
 fields = { "sets" = ["beslutsdatum-for-skyddad-natur"] }
 evidence = "r20 and r49 explicitly define a protection decision date; the column name alone does not establish an excluded administrative submission date. | r20 and r49 explicitly define a protection decision date; the column name alone does not establish an excluded administrative submission date.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42598\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442747\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42741"
@@ -595,12 +582,6 @@ evidence = "r23 and r52 define a protection decision date, with operational text
 
 [[statement]]
 kind = "set"
-subject = "var:urspr-gallandedatum"
-fields = { "sets" = ["gallandedatum-for-skyddad-natur"] }
-evidence = "r24, r40 and r53 consistently define when protection takes legal effect, matching the effective-date group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:42626\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442765\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:442876\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:42769"
-
-[[statement]]
-kind = "set"
 subject = "set:beslutsdatum-for-skyddad-natur"
 fields = { "label" = "Beslutsdatum för skyddad natur" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
@@ -609,12 +590,6 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 kind = "set"
 subject = "set:forvaltare"
 fields = { "label" = "Förvaltare" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:gallandedatum-for-skyddad-natur"
-fields = { "label" = "Gällandedatum för skyddad natur" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
@@ -706,18 +681,6 @@ kind = "set"
 subject = "var:forvaltare-namn-3817"
 fields = { "label" = "Förvaltare (namn)" }
 evidence = "#2102 same-label cluster 'Förvaltare' (2 variables): judged different meaning, medium confidence; Two concurrent columns; the shared opdef says the Naturvårdsregistret holds the manager's name and Natura 2000 the party responsible for management."
-
-[[statement]]
-kind = "set"
-subject = "var:gallandedatum-for-skyddad-natur-beslut-datum-sci"
-fields = { "label" = "Gällandedatum för skyddad natur (SCI)" }
-evidence = "#2102 same-label cluster 'Gällandedatum för skyddad natur' (3 variables): judged different meaning, medium confidence; Concurrent SCI, SPA and original-validity-date columns, named in the column codes."
-
-[[statement]]
-kind = "set"
-subject = "var:gallandedatum-for-skyddad-natur-beslut-datum-spa"
-fields = { "label" = "Gällandedatum för skyddad natur (SPA)" }
-evidence = "#2102 same-label cluster 'Gällandedatum för skyddad natur' (3 variables): judged different meaning, medium confidence; Concurrent SCI, SPA and original-validity-date columns, named in the column codes."
 
 [[statement]]
 kind = "set"
@@ -892,3 +855,15 @@ kind = "set"
 subject = "var:status-for-registerobjekt"
 fields = { "description" = "Registerobjektets status. Endast objekt med status Gällande ingår i det registeruttag som används i statistikproduktionen, och ett objekt som är gällande vid referensdatumet (31 december) har ett ursprungligt gällandedatum som är senast samma datum." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; endast referensdatumets år skiljer. Raderna 745668 och 745673 (beslutsdatum i Naturvårdsregistret och Natura 2000) hör till variabeln Beslutsdatum för skyddad natur och utelämnas.\ncatalog:variable_text:49567:18627:18628\ncatalog:variable_text:49567:19357:19358\ncatalog:variable_text:49567:20088:20089\nRegisterinformation.csv:row=768010\nRegisterinformation.csv:row=768128\nRegisterinformation.csv:row=768144"
+
+[[statement]]
+kind = "set"
+subject = "skyddad-natur: BESLUT_DATUM_SCI @2020-12-31 where key = 'v43152'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Skyddad natur 2020-12-31 (RegVerID 16403) documents column BESLUT_DATUM_SCI under VarId 19072 \"Beslutsdatum för skyddad natur (SCI)\" and VarId 43152 \"Gällandedatum för skyddad natur (SCI)\". The column name BESLUT_DATUM is the decision date (VarId 19072, \"Datum för fattat beslut om skydd av område\"), while VarId 43152 is the date of legal effect (\"gällandedatum\") and has its own column URSPR_GALLANDEDATUM. The VarId 43152 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "skyddad-natur: BESLUT_DATUM_SPA @2020-12-31 where key = 'v43152'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Skyddad natur 2020-12-31 (RegVerID 16403) documents column BESLUT_DATUM_SPA under VarId 19072 \"Beslutsdatum för skyddad natur (SPA)\" and VarId 43152 \"Gällandedatum för skyddad natur (SPA)\". The column name BESLUT_DATUM is the decision date (VarId 19072, \"Datum för fattat beslut om skydd av område\"), while VarId 43152 is the date of legal effect (\"gällandedatum\") and has its own column URSPR_GALLANDEDATUM. The VarId 43152 row is withheld."
