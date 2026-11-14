@@ -449,3 +449,9 @@ kind = "set"
 subject = "var:lopnummer-urvalsenheter"
 fields = { "description" = "Löpnummer som identifierar företagen i urvalet. Ett företag behåller sitt löpnummer mellan åren, och nya företag får nya löpnummer i urvalsprocessen. Numret har 2–5 siffror till och med 2013 och 2–6 siffror 2014–2021." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; längden och regeln om behållna nummer anges som fakta med år.\ncatalog:variable_text:32790:9862:16071\ncatalog:variable_text:32790:16071:18993\ncatalog:variable_text:32790:18993:20454"
+
+[[statement]]
+kind = "set"
+subject = "table:foretagens-utlandska-handelskrediter"
+fields = { series_break = { at = "2005", text = "Från och med 2005 är cut-off gränsen höjd till 3 miljoner kronor. Gränsen i tidigare års undersökningar var 2 miljoner kronor." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=95\n\nPopulation \"Icke-finansiella företag med summa utländska handelskrediter över 3 milj kr\" exists only in hku (r166 variant 239, 2005-2018). \"Från och med 2005\"."

@@ -1102,3 +1102,21 @@ kind = "set"
 subject = "var:naturaformaner"
 fields = { "description" = "Summa naturaförmåner för anställningen, till exempel bil, drivmedel, lunch och bostadsförmån, hämtade ur myndighetens lönesystem." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 lägger till exempel. Rättar 'enventuella'.\ncatalog:variable_text:49853:9496:15706\ncatalog:variable_text:49853:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsinriktning-4-positioner"
+fields = { series_break = { at = "2001", text = "2001 byttes SUN96 tillSUN2000." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=149\n\nCVID 109879 = sls 2001 column Sun2000inr. \"2001 byttes SUN96 till SUN2000\"."
+
+[[statement]]
+kind = "set"
+subject = "var:utbildningsniva-3-positioner"
+fields = { series_break = { at = "2001", text = "2001 byttes SUN96 till SUN2000." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=150\n\nCVID 109880 = sls 2001 column Sun2000niva. \"2001 byttes SUN96 till SUN2000\"."
+
+[[statement]]
+kind = "set"
+subject = "table:lonestrukturstatistik-statlig-sektor"
+fields = { series_break = { at = "2000", text = "Från och med 2000 ingår timanställda i lönepopulationen, exklusive utlandsanställda och tjänstlediga" } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=46\n\nPopulation \"Anställda inom staten\" exists only in sls (r52 variant 174, releases 1996-2024). \"Från och med 2000\"."

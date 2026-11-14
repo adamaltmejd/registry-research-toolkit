@@ -743,3 +743,27 @@ kind = "set"
 subject = "set:utbetald-lonesumma"
 fields = { "label" = "Utbetald lönesumma" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-deltidsanstallda"
+fields = { series_break = { at = "2008-01", text = "Tidigare fanns det olika variabler för antal deltidsanställda fördelat efter kön och visstid/tillsvidare. Från och med januari 2008 finns det bara en variabel för antal deltidsanställda." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=47\n\nCVID 145650 = klk 2008 column AntDel. \"Från och med januari 2008\"."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-heltidsanstallda"
+fields = { series_break = { at = "2008-01", text = "Tidigare fanns det olika variabler för antal heltidsanställda fördelat efter kön och visstid/tillsvidare. Från och med januari 2008 finns det bara en variabel för antal heltidsanställda." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=48\n\nCVID 145649 = klk 2008 column AntHel. \"Från och med januari 2008\"."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-timanstallda"
+fields = { series_break = { at = "2008-01", text = "Tidigare fanns det olika variabler för antal timanställda fördelat efter kön. Från och med januari 2008 finns det bara en variabel för antal timanställda." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=50\n\nCVID 145652 = klk 2008 column AntTim. \"Från och med januari 2008\"."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren"
+fields = { series_break = { at = "2009-09", text = "När det gäller variabeln SNI, så ingår Lärare i gruppen X Övriga till och med augusti 2009. Från och med september 2009 ligger Lärare i gruppen P Utbildning." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=122\n\nCVID 171864 = klk 2009 column SNI. \"Från och med september 2009\"."

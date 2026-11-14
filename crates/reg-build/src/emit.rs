@@ -75,6 +75,7 @@ pub struct Catalog {
     /// The link stage's output (`link.rs`).
     pub relations: Vec<link::Relation>,
     pub notices: Vec<link::Notice>,
+    pub breaks: Vec<link::Break>,
     /// Documents in hash order; a document's id is its position, from 1.
     pub docs: Vec<Document>,
     pub doc_links: Vec<link::DocLink>,
@@ -949,6 +950,45 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                 ),
                 opt_int(rel.statement.as_deref().map(|hash| statement_id[hash])),
                 opt_text(rel.note.as_ref()),
+            ],
+        );
+    }
+    // Series-break ids follow (subject kind, subject pid, day, text, statement).
+    let mut breaks: Vec<_> = catalog
+        .breaks
+        .iter()
+        .map(|b| {
+            (
+                (
+                    b.subject.kind(),
+                    pid_of(b.subject),
+                    b.at.as_deref().map(start),
+                    b.text.clone(),
+                    b.statement.clone(),
+                ),
+                b,
+            )
+        })
+        .collect();
+    breaks.sort_by(|a, b| a.0.cmp(&b.0));
+    for (i, ((subject_kind, _, at, ..), b)) in breaks.into_iter().enumerate() {
+        rows.push(
+            "series_break",
+            vec![
+                Cell::Int(id(i)),
+                Cell::Str(subject_kind.into()),
+                Cell::Int(row_of(b.subject)),
+                opt_int(at),
+                opt_text(b.text.as_ref()),
+                Cell::Str(
+                    if b.statement.is_some() {
+                        "curated"
+                    } else {
+                        "source"
+                    }
+                    .into(),
+                ),
+                opt_int(b.statement.as_deref().map(|hash| statement_id[hash])),
             ],
         );
     }

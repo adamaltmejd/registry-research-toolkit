@@ -15,6 +15,7 @@ import {
   registerSubjectNames,
 } from "./catalog_names";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
+import { type PlacedBreak, SeriesBreaks } from "./SeriesBreaks";
 import { Button as ActionButton } from "./ui/Button";
 import { Definitions } from "./ui/Definitions";
 import { Panel } from "./ui/Panel";
@@ -141,6 +142,7 @@ function VariablePage({
   focus = null,
   context,
   validation,
+  breaks,
 }: {
   kind: "variable" | "group";
   title: string;
@@ -164,6 +166,7 @@ function VariablePage({
   focus?: string | null;
   context: Context | null;
   validation: OrderCheck | null;
+  breaks: readonly PlacedBreak[];
 }) {
   const timelineRegion = useRef<HTMLDivElement>(null);
   const registerResource = useAsyncResource(
@@ -215,6 +218,7 @@ function VariablePage({
         ]}
       />
       <Description description={description} segments={wording} />
+      <SeriesBreaks breaks={breaks} />
       <div
         ref={timelineRegion}
         tabIndex={-1}
@@ -293,6 +297,10 @@ export function VariableView({
       onRetry={() => setAttempt((current) => current + 1)}
       context={context}
       validation={validation}
+      breaks={(node.series_breaks ?? []).map((seriesBreak) => ({
+        where: null,
+        seriesBreak,
+      }))}
     />
   );
 }
@@ -394,6 +402,12 @@ export function GroupView({
       focus={focus}
       context={context}
       validation={validation}
+      breaks={titled.flatMap(({ member, title }) =>
+        (member.series_breaks ?? []).map((seriesBreak) => ({
+          where: title,
+          seriesBreak,
+        })),
+      )}
     />
   );
 }

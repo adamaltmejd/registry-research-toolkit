@@ -1128,7 +1128,9 @@ fn phase(statement: &reg_frame::statement::Statement) -> Phase {
         Statement::Assert { .. } => Phase::Facts,
         Statement::Set { fields, .. } if fields.variable.is_some() => Phase::Variables,
         Statement::Set { fields, .. } if fields.sentinels.is_some() => Phase::Sentinels,
+        // A series break, like a link, is matched against the final entities.
         Statement::Link { .. } => Phase::Relations,
+        Statement::Set { fields, .. } if fields.series_break.is_some() => Phase::Relations,
         Statement::Set { .. } => Phase::Fields,
     }
 }

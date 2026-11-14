@@ -592,7 +592,8 @@ Kind-specific content is:
 `set.fields` is closed: `table`, `variable`, `label`, `description`, `sets`, `unit`,
 `definition`, `operational_definition`, `value_set`, `coded`, `period`, `spelling`,
 `identifier`, `sensitive`, `type`, `format`, `notice`, `coverage`, `classification`,
-`tags`, `sentinels`, `role`, `axes` and `facets`. Source-shaped assertion fields have a
+`tags`, `sentinels`, `role`, `axes`, `facets` and `series_break` (alone in its
+statement; see "Series breaks"). Source-shaped assertion fields have a
 separate closed schema: table `name`, `description` and `coverage`; occurrence `label`,
 `definition`, `unit`, `type`, `length`, `sensitive` and `identifier`. Lists of sets,
 tags and sentinels normalize as sorted sets; asserted codes sort by code, while
@@ -832,13 +833,17 @@ release assets are left unchanged.
   of registers, variants, releases and variables: links and document references, which
   no B table holds. `Entitet` fixes what `ID1` and `ID2` are (`Register` a `RegisterId`,
   `RegisterVariant` a `RegVarID`, `RegisterVersion` a `RegVerID`, `Variabel` a `VarId`;
-  each row's `Namn` is `ID1`'s name). `Tidsseriebrott` and `Avslutad` are a notice on
-  `ID1`'s entity, `<Handelse>: <Beskrivning>`. `Ersätter` (`ID1` takes over from `ID2`)
+  each row's `Namn` is `ID1`'s name). `Tidsseriebrott` is a series break on `ID1`'s
+  entity, its text `Beskrivning` unless that only repeats `Namn` (see "Series breaks").
+  `Avslutad` is a notice on `ID1`'s entity, `<Handelse>: <Beskrivning>`, never
+  published. `Ersätter` (`ID1` takes over from `ID2`)
   and `Ersatt av` (`ID2` from `ID1`) are a `continues` link from the newer entity, and
   come in mirrored pairs the link stage folds into one relation; between releases the
   succession is a notice on the newer one, `continues <older name>`. A `VarId` stands
   for each register that documents it. The config's `[timeseries]` holds this map;
-  `AktuellVariabel` (its ids name no entity of the export), `Population`, `PopContext`
+  `AktuellVariabel` (its `ID1` is a `CVID`, which Registerinformation maps to a register,
+  variant, release and `VarId`; the reader does not map it yet, so its breaks are
+  curated), `Population`, `PopContext`
   and `VS_Class` are left out and counted, and `FilID` (a document reference, on every
   row) is left to the documents. A row's `VariabelRegister_Källa` is a `derived_from`
   link to the register of that name.
@@ -943,7 +948,8 @@ release assets are left unchanged.
   variable, without expanding a reused source key. A `continues` needs one entity of one
   kind at each end, a `derived_from` one object and gives a relation per subject piece,
   and a release end is never a relation (a reader states a succession between releases
-  as a notice). A notice becomes one finding per subject entity, `S0:source-notice` with
+  as a notice). A series-break notice becomes a `Break` on each subject entity instead
+  (a release end included). Any other notice becomes one finding per subject entity, `S0:source-notice` with
   severity `notice`: an addition to v4 §4.5, which has no source-notice code. A source
   can state successions the catalog cannot hold, so after folding the stage drops them
   as misses rather than let the post-write checks refuse the build: every table
@@ -1142,7 +1148,8 @@ broke when Socialstyrelsen and Försäkringskassan arrived. The v4 model removes
 assumptions: registers own tables, variables are register-scoped, a variable's history
 is its segments (one form of the variable in one table over a period), and ids have no
 variant or period slot. The relations between entities (`relation`) are rows of their
-own, the notices and review items are the build's findings output (never published), and
+own, the notices and review items are the build's findings output (never published;
+series breaks are published, see "Series breaks"), and
 build-time resolution normalizes provider oddities into the universal shape.
 
 ## FQID grammar
@@ -1242,8 +1249,8 @@ whole-project finding) and `source_outside_window` (a dated source period wholly
 the study window). Warnings and infos do not: `classification_version_ambiguous`,
 `preliminary_data` (a window only a preliminary release covers; final wins where both
 exist), `edition_disagreement`, `variable_replaced`, `period_clipped`, `form_change`,
-`table_succession_undated`, `coverage_end_unstated`, `binding_type_differs` and
-`sensitive_variables`. Each is an `Issue` whose `path`
+`table_succession_undated`, `coverage_end_unstated`, `binding_type_differs`,
+`series_break` and `sensitive_variables`. Each is an `Issue` whose `path`
 points at the source, binding or panel and whose `source`, `variable`, `table` and
 `period` say what it is about (`null` for a whole-project finding). The conditions are
 the order check's to state in its own tests; the rules that shape them:
@@ -2919,6 +2926,38 @@ with no relations returns no edges. Variable succession and table succession use
 `continues`; a representation change is not a separate succession model. The public `at`
 period is stored as `at_start`/`at_end` on the relation, and no day is inferred from a
 coverage end.
+
+## Series breaks
+
+A provider's note that a series changes meaning at some point (SCB `Tidsseriebrott`) is
+published, to the reader and to the AI (maintainer ruling 2026-11-14): a researcher who
+orders across it must know. It is stored as `series_break` rows (subject kind
+`register`, `table`, `release` or `variable`, the subject's row id, an optional `at`
+day, optional text, provenance `source` or `curated` with its statement), not as a
+relation and not as a document.
+
+- **Source.** The reader emits a frame `notice` with `series_break: true`; the link stage
+  resolves its endpoint to one entity per piece, a release included. A break without
+  text is kept: the provider still marks one there.
+- **Curation.** A `set` statement whose only field is `series_break = { at?, text }`
+  puts a break on its subject (a register, table, release or variable address; not a
+  set). `at` is one interval with a stated start; the break is at its first day. It is
+  for the rows the reader cannot place (SCB `AktuellVariabel`, releases missing from
+  the export) and for dating a source break whose text states a year. A dated curated
+  break with the same text as a source break on its subject, or on a release of its
+  table, replaces that source break; no address names a source break.
+- **`show`** lists a register's own breaks, each table's with its releases' (a release
+  break as its release's name and period, one entry per text), and a variable's own;
+  a set lists each member's. Absent when none.
+- **The order check** adds one `series_break` per entity and text that the ordered days
+  meet: a dated break when they span its day (`first < at <= last`), so a series that
+  starts at the break is not reported; an undated release break when they overlap the
+  release; any other undated break whenever the entity is ordered. A variable break is
+  at its binding, a table, release or register break at its source with `table` set. It
+  is a warning when the provider says what changed, else an info. It never blocks.
+- **The SPA** shows a register's and its tables' breaks on the register page (the
+  selected tables' with a table filter on) and a variable's on its page, without release
+  names or provenance (frontend DESIGN.md → Words).
 
 ## Documentation and what is not in the catalog
 

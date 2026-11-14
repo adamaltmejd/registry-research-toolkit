@@ -200,8 +200,10 @@ period = "year"
 # is not listed here is left out and counted. Read from the 2026-03 export: `Namn` is
 # always `ID1`'s name, and each `Ersätter` row has a mirror `Ersatt av` row.
 [timeseries.events]
-# A notice on `ID1`'s entity: "<Handelse>: <Beskrivning>".
-Tidsseriebrott = "notice"
+# A series break on `ID1`'s entity, published: its Beskrivning, none where that only
+# repeats the row's Namn. A notice on `ID1`'s entity, a build finding:
+# "<Handelse>: <Beskrivning>".
+Tidsseriebrott = "series_break"
 Avslutad = "notice"
 # A succession: `ID1` takes over from `ID2` (replaces), or `ID2` from `ID1` (replaced_by).
 "Ersätter" = "replaces"
@@ -210,7 +212,8 @@ Avslutad = "notice"
 # `Entitet` → the endpoint kind (which fixes the id space: register = RegisterId, table =
 # RegVarID, release = RegVerID, variable = VarId) and what a succession between two of
 # them becomes: a `continues` link, or a notice on the newer one, since a release is
-# never a relation end. Not mapped: `AktuellVariabel` (its ids name no export entity),
+# never a relation end. Not mapped: `AktuellVariabel` (its `ID1` is a `CVID`, which
+# Registerinformation maps to an export entity; not read yet, its breaks are curated),
 # `Population`, `PopContext` and `VS_Class` (the export gives them no id).
 [timeseries.entities]
 Register = { kind = "register", succession = "link" }

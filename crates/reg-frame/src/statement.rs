@@ -95,6 +95,18 @@ pub struct SetFields {
     pub axes: Option<Vec<SetAxis>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub facets: Option<std::collections::BTreeMap<String, MemberFacet>>,
+    /// A series break on the subject (crates/DESIGN.md, "Series breaks"), stated alone.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub series_break: Option<SeriesBreak>,
+}
+
+/// A curated series break: the provider's text and, when the text states one, the break
+/// day, the first day of `at`.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(deny_unknown_fields)]
+pub struct SeriesBreak {
+    pub at: Option<PeriodSet>,
+    pub text: String,
 }
 
 /// Ordered presentation dimensions declared by a register-local set.
@@ -278,6 +290,31 @@ impl SetFields {
             }
         } else if self.axes.is_some() {
             return Err("set-axes-subject: axes require a set: subject".into());
+        }
+        if let Some(series_break) = &self.series_break {
+            if matches!(subject, Address::Set(_)) {
+                return Err("series-break-subject: a series break needs a var:, table:, release: or occurrence subject".into());
+            }
+            let alone = serde_json::to_value(self)
+                .map_err(|e| e.to_string())?
+                .as_object()
+                .into_iter()
+                .flatten()
+                .all(|(key, value)| value.is_null() || key == "series_break");
+            if !alone {
+                return Err(
+                    "series-break-alone: a series break is stated in a statement of its own"
+                        .into(),
+                );
+            }
+            if series_break.text.trim().is_empty() {
+                return Err("series-break-text: a series break's text must not be blank".into());
+            }
+            if let Some(at) = &series_break.at
+                && !matches!(&at.intervals()[..], [(start, _)] if start != crate::OPEN_START)
+            {
+                return Err("series-break-at: a series break's at is one period with a first day (\"2022\", \"2009-05\")".into());
+            }
         }
         if self.facets.is_some() && !matches!(subject, Address::Variable(_)) {
             return Err("set-facet-subject: facets require a var: subject".into());

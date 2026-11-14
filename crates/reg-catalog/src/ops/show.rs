@@ -40,6 +40,85 @@ pub const OPERATIONS: &[Operation] = &[Operation {
     result: component::<Show>,
 }];
 
+/// A series break the provider notes (or curation states) on the entity: what changed and,
+/// when stated, from which day. One entry per text; a break the provider states on
+/// releases of a table names them.
+#[derive(Serialize, ToSchema)]
+pub struct ShowSeriesBreak {
+    /// The break day, when stated.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[schema(nullable = false)]
+    at: Option<String>,
+    /// What changed; absent when the provider marks a break without saying more.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[schema(nullable = false)]
+    text: Option<String>,
+    /// The table's releases the provider states it on, in release order.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    releases: Vec<ShowBreakRelease>,
+    /// `source` (the provider's) or `curated`.
+    provenance: String,
+}
+
+#[derive(Serialize, ToSchema)]
+pub struct ShowBreakRelease {
+    name: String,
+    period: Period,
+}
+
+/// The breaks on one entity (`kind`, row id), and for a table its releases'.
+fn series_breaks(
+    server: &Server,
+    conn: &Connection,
+    kind: &str,
+    id: i64,
+) -> Result<Vec<ShowSeriesBreak>, Error> {
+    let rows: Vec<(Option<i64>, Option<String>, String, Option<(String, i64, i64)>)> = rows(
+        conn,
+        "SELECT b.at, t.body, b.prov, NULL, NULL, NULL FROM series_break b
+           LEFT JOIN text t ON t.id = b.text_id
+         WHERE b.subject_kind = ?1 AND b.subject_id = ?2
+         UNION ALL
+         SELECT b.at, t.body, b.prov, n.body, x.start, x.end FROM series_break b
+           JOIN release x ON x.id = b.subject_id JOIN text n ON n.id = x.name_text
+           LEFT JOIN text t ON t.id = b.text_id
+         WHERE ?1 = 'table' AND b.subject_kind = 'release' AND x.table_id = ?2
+         ORDER BY 1, 2, 5, 4",
+        rusqlite::params![kind, id],
+        |row| {
+            let name: Option<String> = row.get(3)?;
+            Ok((
+                row.get(0)?,
+                row.get(1)?,
+                row.get(2)?,
+                name.map(|n| Ok::<_, rusqlite::Error>((n, row.get(4)?, row.get(5)?)))
+                    .transpose()?,
+            ))
+        },
+    )?;
+    let mut breaks: Vec<ShowSeriesBreak> = Vec::new();
+    for (at, text, provenance, release) in rows {
+        let at = at.map(super::iso_day);
+        let release = release.map(|(name, start, end)| ShowBreakRelease {
+            name,
+            period: server.period(start, end),
+        });
+        match breaks.iter_mut().find(|b| {
+            b.at == at && b.text == text && b.provenance == provenance && release.is_some()
+                && !b.releases.is_empty()
+        }) {
+            Some(b) => b.releases.extend(release),
+            None => breaks.push(ShowSeriesBreak {
+                at,
+                text,
+                releases: release.into_iter().collect(),
+                provenance,
+            }),
+        }
+    }
+    Ok(breaks)
+}
+
 /// A summary tagged by `kind`. Every kind but `root` and `class_families` carries the resolved `fqid`, so a bare-name request gets the id back.
 #[derive(Serialize, ToSchema)]
 #[serde(tag = "kind", rename_all = "snake_case")]
@@ -66,6 +145,9 @@ pub enum Show {
         tags: Vec<ShowMembership>,
         /// Names of deliveries with no known period.
         unplaced: Vec<String>,
+        /// The register's own series breaks; a table's are on the table. Absent when none.
+        #[serde(skip_serializing_if = "Vec::is_empty")]
+        series_breaks: Vec<ShowSeriesBreak>,
     },
     Table {
         fqid: String,
@@ -86,6 +168,9 @@ pub enum Show {
         row_keys: Vec<ShowRowKey>,
         /// The variables in this table, each over the years it has here.
         variables: Vec<ShowTableVariable>,
+        /// The table's series breaks and its releases'. Absent when none.
+        #[serde(skip_serializing_if = "Vec::is_empty")]
+        series_breaks: Vec<ShowSeriesBreak>,
     },
     Set {
         fqid: String,
@@ -117,6 +202,9 @@ pub enum Show {
         sets: Vec<ShowMembership>,
         #[serde(skip_serializing_if = "Vec::is_empty")]
         tags: Vec<ShowMembership>,
+        /// The variable's own series breaks. Absent when none.
+        #[serde(skip_serializing_if = "Vec::is_empty")]
+        series_breaks: Vec<ShowSeriesBreak>,
         /// Only with `evidence=true`.
         #[serde(skip_serializing_if = "Option::is_none")]
         #[schema(nullable = false)]
@@ -296,6 +384,10 @@ pub struct ShowTable {
     #[schema(required = true)]
     cadence: Option<String>,
     period: Period,
+    /// The table's series breaks and its releases', as the table's `show` has them.
+    /// Absent when none.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    series_breaks: Vec<ShowSeriesBreak>,
 }
 
 /// The row-key column's period in this table.
@@ -341,6 +433,9 @@ pub struct ShowSetMember {
     segments: Vec<Segment>,
     /// The member's coordinates in the set's axis order.
     facets: Vec<ShowSetFacet>,
+    /// The member's series breaks, as its `show` has them. Absent when none.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    series_breaks: Vec<ShowSeriesBreak>,
 }
 
 #[derive(Serialize, ToSchema)]
@@ -617,6 +712,7 @@ fn register(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show,
         sets,
         tags,
         unplaced,
+        series_breaks: series_breaks(server, conn, "register", entity.id)?,
     })
 }
 
@@ -711,26 +807,37 @@ fn register_tables(
     conn: &Connection,
     register: &str,
 ) -> Result<Vec<ShowTable>, Error> {
-    Ok(rows(
+    let tables: Vec<(i64, ShowTable)> = rows(
         conn,
-        "SELECT t.pid, n.body, t.role, t.implicit, t.timeless, t.cadence, t.start, t.end
+        "SELECT t.pid, n.body, t.role, t.implicit, t.timeless, t.cadence, t.start, t.end, t.id
              FROM tbl t JOIN register r ON r.id = t.register_id
                JOIN text n ON n.id = t.name_text
              WHERE r.pid = ? ORDER BY t.pid",
         [register],
         |row| {
             let fqid: String = row.get(0)?;
-            Ok(ShowTable {
-                period: server.hull("table", &fqid, row.get(6)?, row.get(7)?),
-                fqid,
-                name: row.get(1)?,
-                role: row.get(2)?,
-                implicit: row.get(3)?,
-                timeless: row.get(4)?,
-                cadence: row.get(5)?,
-            })
+            Ok((
+                row.get(8)?,
+                ShowTable {
+                    period: server.hull("table", &fqid, row.get(6)?, row.get(7)?),
+                    fqid,
+                    name: row.get(1)?,
+                    role: row.get(2)?,
+                    implicit: row.get(3)?,
+                    timeless: row.get(4)?,
+                    cadence: row.get(5)?,
+                    series_breaks: Vec::new(),
+                },
+            ))
         },
-    )?)
+    )?;
+    tables
+        .into_iter()
+        .map(|(id, mut table)| {
+            table.series_breaks = series_breaks(server, conn, "table", id)?;
+            Ok(table)
+        })
+        .collect()
 }
 
 /// A register's variables in one origin, each with the tables it appears in, by the
@@ -830,6 +937,7 @@ fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Er
         },
         row_keys,
         variables,
+        series_breaks: series_breaks(server, conn, "table", entity.id)?,
     })
 }
 
@@ -1252,6 +1360,7 @@ fn variable(
             .filter(|set| server.catalog.serves("set", &set.fqid))
             .collect(),
         tags: memberships(conn, entity.id, "tag")?,
+        series_breaks: series_breaks(server, conn, "variable", entity.id)?,
         evidence: include_evidence
             .then(|| show_evidence::load(server, conn, entity))
             .transpose()?,
@@ -1379,6 +1488,7 @@ fn set_members(
                     description,
                     segments: vec![],
                     facets: vec![],
+                    series_breaks: series_breaks(server, conn, "variable", id)?,
                 },
             ))
         })

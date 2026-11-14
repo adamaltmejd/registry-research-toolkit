@@ -1198,3 +1198,27 @@ kind = "set"
 subject = "set:rumskapacitet"
 fields = { "description" = "Anläggningens rumskapacitet: antal tillgängliga rum till försäljning på öppna anläggningar, totalt alla dagar, fredag–söndag inklusive röda dagar och måndag–torsdag exklusive röda dagar; anläggningens maximala antal rum (fysisk kapacitet, gäller inte vandrarhem); och storleksgrupp efter antal rum respektive maximalt antal rum (vandrarhem, 1–49 och 50–149 rum, för antal rum 2007–2013 också 150 eller fler rum)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nKlassen 150 eller fler rum finns bara i m5:s kodlista 2007–2013 (W7); W5 slutar vid 50–149 rum.\ncatalog:variable_text:34699:13514:20089\ncatalog:variable_text:34700:13514:20089\ncatalog:variable_text:34703:13514:17897\ncatalog:variable_text:34703:17897:20089\ncatalog:variable_text:34717:13514:17897\ncatalog:variable_text:34728:13514:17897\ncatalog:variable_text:34728:17897:18628\ncatalog:variable_text:34729:13514:16071\ncatalog:variable_text:34729:16071:16801"
+
+[[statement]]
+kind = "set"
+subject = "table:camping"
+fields = { series_break = { at = "2008-01", text = "Från och med januari 2008 samlar SCB in uppgifter om kapacitet och belägg-ning på campingplatser. Tidigare samlades denna statistik in av Sveriges Cam-ping- & stugföretagares Riksorganisation (SCR)." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=63\n\nRegisterVariant 973 resolves to this table. \"Från och med januari 2008\"."
+
+[[statement]]
+kind = "set"
+subject = "table:hotell-stugbyar"
+fields = { series_break = { at = "1977-05", text = "Inkvarteringsstatistiken byggdes upp 1976. I maj månad 1977 genomfördes en omläggning: i stället för att som tidigare fördela antalet nyinskrivna gäster på olika länder eller ländergrupper, registreras sedan dess antalet övernattningar per hemland." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=93\n\nRegisterVariant 933 resolves to this table. \"I maj månad 1977 genomfördes en omläggning\" (before the table starts in 2007)."
+
+[[statement]]
+kind = "set"
+subject = "table:privata-stugor-lagenheter"
+fields = { series_break = { at = "2003-01", text = "Månatlig statistik från förmedlare av privata stugor och lägenheter finns till-gänglig från och med januari år 2003. Tidigare – sedan sommaren 2000 – har statistiken samlats in två gånger per år som säsongsstatistik för perioderna juni-augusti och december-april" } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=88\n\nPopulation \"Förmedlare av privatägda stugor & lägenheter\" (r151 variant 974). \"från och med januari år 2003\" (before the table starts in 2007)."
+
+[[statement]]
+kind = "set"
+subject = "table:hotell-stugbyar"
+fields = { series_break = { at = "2002-01", text = "Från och med januari 2002 har vandrarhem en ny definition. Tidigare räknades endast de anläggningar som var anslutna till Svenska Turistföreningen (STF) till kategorin vandrarhem. Övriga anläggningar av vandrarhemskaraktär tillhörde gruppen hotell. Ungefär 250 anläggningar berördes av omdefinieringen och flyttades vid årsskiftet 2001/2002 från hotell-kategorin till vandrarhemskategorin." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=92\n\nPopulation \"Hotell, stugbyar och vandrarhem\" (r151 variant 933). \"Från och med januari 2002\" (before the table starts in 2007)."

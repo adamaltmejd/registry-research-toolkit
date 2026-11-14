@@ -20,7 +20,8 @@
 //! - `Identifierare.csv`: the `VarId`s that are identifiers wherever they occur.
 //! - `Timeseries.csv`: events (`Handelse`) on one entity (`Entitet`) named by `ID1`, and
 //!   for a succession the entity `ID2` names. The config's `[timeseries]` maps each
-//!   event to a notice or a succession and each entity to its endpoint kind; a
+//!   event to a series break, a notice or a succession and each entity to its endpoint
+//!   kind; a
 //!   succession becomes a `continues` link, or, where the config says so (between
 //!   releases), a notice on the newer entity.
 //!
@@ -86,6 +87,9 @@ pub struct Timeseries {
 pub enum Event {
     /// A notice on `ID1`'s entity: `<Handelse>: <Beskrivning>`.
     Notice,
+    /// A series break on `ID1`'s entity: its `Beskrivning`, none where that only repeats
+    /// the row's `Namn`.
+    SeriesBreak,
     /// `ID1`'s entity takes over from `ID2`'s.
     Replaces,
     /// `ID2`'s entity takes over from `ID1`'s.
@@ -830,7 +834,8 @@ fn timeseries(
         .by_name(TIMESERIES)
         .map_err(|e| error(&input, e.to_string()))?;
     let (mut reader, col) = open(member, &input)?;
-    let (event, description, entity, id1, id2) = (
+    let (named, event, description, entity, id1, id2) = (
+        col("Namn")?,
         col("Handelse")?,
         col("Beskrivning")?,
         col("Entitet")?,
@@ -869,13 +874,29 @@ fn timeseries(
             unknown += 1;
             continue;
         }
+        if ev == Event::SeriesBreak {
+            let said = note
+                .filter(|n| *n != text(named))
+                .map(|n| n.replace("\r\n", "\n"));
+            for (subject, _) in first {
+                records.push(Record::Notice(Notice {
+                    subject,
+                    series_break: true,
+                    at: None,
+                    text: said.clone(),
+                    locator: locator.clone(),
+                }));
+            }
+            continue;
+        }
         if ev == Event::Notice {
             let body = note.map_or_else(|| handelse.clone(), |n| format!("{handelse}: {n}"));
             for (subject, _) in first {
                 records.push(Record::Notice(Notice {
                     subject,
+                    series_break: false,
                     at: None,
-                    text: body.clone(),
+                    text: Some(body.clone()),
                     locator: locator.clone(),
                 }));
             }
@@ -921,11 +942,12 @@ fn timeseries(
                 }),
                 Succession::Notice => Record::Notice(Notice {
                     subject,
+                    series_break: false,
                     at: None,
-                    text: match &note {
+                    text: Some(match &note {
                         Some(n) => format!("continues {older_name}: {n}"),
                         None => format!("continues {older_name}"),
-                    },
+                    }),
                     locator: locator.clone(),
                 }),
             });

@@ -1,0 +1,27 @@
+{
+  "note": "Series breaks (crates/DESIGN.md, \"Series breaks\") over `brott/b` 2017-2019. Expected `series_break` findings: on the source, a warning for the release break on `B 2019` (the request overlaps that release) and one for the undated register break; on `ink`, a warning for its break dated 2018-01-01 (the request spans it); on `civ`, an info for its undated break without text. None for the release break on `B 2016` (outside the request) or the `ink` break dated 2020-01-01 (after the request ends). Fails if the spanning rule, the release-overlap rule, the undated rule, the warning/info split by text or the source/binding anchoring changes. Oracle: the fixture's JSONL.",
+  "fixture": "orders",
+  "project": {
+    "schema_version": "6.2.0",
+    "reg_meta_version": "0.64.0",
+    "name": "Order case",
+    "sources": [
+      {
+        "name": "s",
+        "table": "demo/brott/b",
+        "period": {
+          "from": 2017,
+          "to": 2019
+        },
+        "bindings": [
+          {
+            "variable": "demo/brott/ink"
+          },
+          {
+            "variable": "demo/brott/civ"
+          }
+        ]
+      }
+    ]
+  }
+}

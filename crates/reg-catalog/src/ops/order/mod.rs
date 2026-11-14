@@ -18,6 +18,7 @@
 //! binding for a window finding (`/sources/0/bindings/1`), the source for an undated
 //! succession.
 
+mod breaks;
 mod materialize;
 mod rows;
 mod successor;
@@ -986,6 +987,16 @@ fn check_source(
         finding.successor_fqid = Some(successor);
         own.push(finding);
     }
+    own.extend(breaks::source(
+        server,
+        conn,
+        &serving,
+        &|level, table, message| {
+            let mut finding = issue(level, "series_break", format!("/sources/{index}"), message);
+            finding.table = Some(table.to_owned());
+            finding
+        },
+    )?);
     own.sort_by_key(Issue::key);
     checked.findings = own;
     let table_pid = table_pid.unwrap_or_default();

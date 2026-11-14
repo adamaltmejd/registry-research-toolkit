@@ -583,6 +583,7 @@ fn build_with_provenance(
     let mut external_relations = Vec::new();
     if let Some(curated) = applied.linked {
         linked.relations = curated.relations;
+        linked.breaks = curated.breaks;
         external_relations = curated.external;
         applied.statements.extend(curated.statements);
     }
@@ -673,6 +674,7 @@ fn build_with_provenance(
         file_input,
         relations: linked.relations,
         notices: linked.notices,
+        breaks: linked.breaks,
         docs,
         doc_links: linked.doc_links,
         statements: applied.statements,

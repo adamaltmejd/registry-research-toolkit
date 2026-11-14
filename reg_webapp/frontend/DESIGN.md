@@ -574,7 +574,14 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   (#2317). Then facets as a labelled row, the actions row, then definitions, then the
   `Timeline`, then the list of variables or columns, then source documents. A catalog
   page lists no build findings: the catalog does not carry them (maintainer 2026-11-06,
-  #2335). A variable page has no source and provenance section; MCP keeps
+  #2335). The provider's series breaks are not build findings and are shown (maintainer
+  ruling 2026-11-14): a "Series breaks" panel after the definitions on a register's page
+  (the register's own, then each table's under "In <table>", only the selected tables'
+  with a table filter on) and after the Description on a variable's or group's page (a
+  group's under each member's lane title), each with its day or years muted over the
+  provider's text, never a release name or provenance; it renders only when a break
+  exists (placement: Operator, 2026-11-14; the rest is a new rule, proposed by the
+  implementer). A variable page has no source and provenance section; MCP keeps
   `evidence=true` (maintainer 2026-11-04). Padding `spacing.5`. A grouped variable has
   no page of its own (maintainer 2026-11-04): its address (from search, the palette, a
   project card or a note) renders its group's page, one route and one page, not a

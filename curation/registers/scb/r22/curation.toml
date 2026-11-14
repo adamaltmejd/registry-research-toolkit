@@ -1044,3 +1044,9 @@ kind = "set"
 subject = "release:ekonomiskt-bistand/r1025"
 fields = { "period" = "1994.." }
 evidence = "SCB Registerinformation, RegVerID 1025 \"Ekonomiskt bistånd, kvartal\": the release name states no period, so its documented columns had no period. The release is a series by reference year: its column Ar is \"Det kalenderår de lämnade/redovisade uppgifterna avser\". SCB Timeseries.csv, RegisterVersion 1025: \"Fr.o.m. 1994 delas det utbetalda beloppet upp i tre delar\" (ekonomiskt bistånd till ej flyktingar, till flyktingar, introduktionsersättning), and those three parts are documented columns of this release (SbeloppEjFlyktKv1–4, SbeloppFlyktKv1–4, IntroduktionsersKv1–4). So the documented column set holds from 1994. No end year is stated anywhere (the documentation was approved 2010-06-17); the end stays open (maintainer rule 2026-10-16)."
+
+[[statement]]
+kind = "set"
+subject = "table:ekonomiskt-bistand"
+fields = { series_break = { at = "1994", text = "Fr.o.m. 1994 delas det utbetalda beloppet upp i tre delar: \n- utbetalt ekonomiskt bistånd till ej flyktingar\n- utbetalt ekonomistkt bistånd till flyktingar\n- introduktionsersättning till flyktingar och vissa andra utlänningar" } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=84\n\nRelease r1025 (variant 508) resolves to this table. \"Fr.o.m. 1994\"; the release starts in 1994 by the period statement above, so the break falls at its first year."

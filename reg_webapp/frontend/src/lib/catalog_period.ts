@@ -110,6 +110,15 @@ function dayText(day: string): string {
   return `${date} ${MONTHS[month - 1]} ${year}`;
 }
 
+/** A first day in words: its year when it starts one (`2022`), else its month
+ * (`May 2009`), else the day. */
+export function startText(day: string): string {
+  const [year, month, date] = day.split("-");
+  if (month === "01" && date === "01") return year;
+  if (date === "01") return `${MONTHS[Number(month) - 1]} ${year}`;
+  return dayText(day);
+}
+
 /** Inclusive days in words, at the coarsest grain they fill exactly: a year,
  * a school year, a term (`autumn 2019`; a half year is the same days), a quarter
  * (`2019 Q3`), a month (`February 2020`) or a day; else a range of years

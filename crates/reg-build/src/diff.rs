@@ -948,6 +948,67 @@ fn registers(p: &Pair) -> Result<Section> {
     Ok(Section::flat("registers", "registers", items))
 }
 
+/// Series breaks added and removed, by subject kind; a release is named by its table and
+/// delivery name. An old catalog without the table has none.
+fn series_breaks(p: &Pair) -> Result<Section> {
+    type Key = (String, String, Option<String>, Option<String>, String);
+    let load = |conn: &Connection| -> Result<BTreeSet<Key>> {
+        if !ordinary_tables(conn)?.contains("series_break") {
+            return Ok(BTreeSet::new());
+        }
+        let found: Vec<Key> = query(
+            conn,
+            "SELECT b.subject_kind,
+               CASE b.subject_kind
+                 WHEN 'register' THEN (SELECT pid FROM register WHERE id = b.subject_id)
+                 WHEN 'table' THEN (SELECT pid FROM tbl WHERE id = b.subject_id)
+                 WHEN 'variable' THEN (SELECT pid FROM variable WHERE id = b.subject_id)
+                 ELSE (SELECT t.pid || ' @ ' || n.body FROM release x
+                       JOIN tbl t ON t.id = x.table_id JOIN text n ON n.id = x.name_text
+                       WHERE x.id = b.subject_id) END,
+               b.at, t.body, b.prov
+             FROM series_break b LEFT JOIN text t ON t.id = b.text_id",
+            |r| {
+                Ok((
+                    r.get(0)?,
+                    r.get(1)?,
+                    r.get::<_, Option<i64>>(2)?.map(iso_day),
+                    r.get(3)?,
+                    r.get(4)?,
+                ))
+            },
+        )?;
+        Ok(found.into_iter().collect())
+    };
+    let (old, new) = (load(&p.old)?, load(&p.new)?);
+    let mut groups = Vec::new();
+    for kind in ["register", "table", "release", "variable"] {
+        let item = |sign: &str, (_, pid, at, text, prov): &Key| {
+            let text_shown: String = text.as_deref().unwrap_or("(no text)").chars().take(80).collect();
+            Item::new(
+                json!({"change": if sign == "+" { "added" } else { "removed" },
+                       "subject": pid, "at": at, "text": text, "provenance": prov}),
+                format!(
+                    "{sign} {pid} {} [{prov}]: {text_shown}",
+                    at.as_deref().unwrap_or("undated")
+                ),
+            )
+        };
+        let items: Vec<Item> = old
+            .difference(&new)
+            .filter(|k| k.0 == kind)
+            .map(|k| item("-", k))
+            .chain(new.difference(&old).filter(|k| k.0 == kind).map(|k| item("+", k)))
+            .collect();
+        groups.push((kind, items));
+    }
+    Ok(Section {
+        key: "series_breaks",
+        title: "series breaks",
+        groups,
+    })
+}
+
 /// The columns of each ordinary table.
 fn columns(conn: &Connection) -> Result<BTreeMap<String, BTreeSet<String>>> {
     ordinary_tables(conn)?
@@ -1036,6 +1097,7 @@ fn catalog(pair: &Pair, args: &Args) -> Result<Report> {
                 rows(pair, &BTreeSet::new())?,
                 ids(pair)?,
                 registers(pair)?,
+                series_breaks(pair)?,
                 tables(pair)?,
                 variables,
                 valuesets(pair, &hash_changes)?,
@@ -1061,6 +1123,7 @@ fn catalog(pair: &Pair, args: &Args) -> Result<Report> {
             rows(pair, &one_sided)?,
             ids(pair)?,
             registers(pair)?,
+            series_breaks(pair)?,
             tables(pair)?,
             variables,
             valuesets(pair, &hash_changes)?,

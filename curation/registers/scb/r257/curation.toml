@@ -14842,3 +14842,9 @@ kind = "set"
 subject = "var:utgifter-forvarv-av-existerande-kunskap-roekx"
 fields = { "description" = "Utgifter för inköp av existerande know-how, expertis, upphovsrätt, patent eller icke-patenterade uppfinningar med mera i syfte att utveckla nya eller väsentligt förbättrade produkter eller processer." }
 evidence = "Förslag från tidigare granskning enligt SCB:s definition.\n0.74.0 catalog, key v15613, releases r11529, r4114, r5168; reg_meta.db:occurrence:247795,247920,248154"
+
+[[statement]]
+kind = "set"
+subject = "table:innovation-i-foretagssektorn"
+fields = { series_break = { at = "2008", text = "Fr.o.m. 2008 används en ny populationsdefinition beroende på den nya versionen av SNI" } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=103\n\nRegisterVariant 553 resolves to this table. \"Fr.o.m. 2008\"."

@@ -143,3 +143,11 @@ SELECT id FROM doc WHERE kind = 'pdf' AND bytes <> length(content);
 -- every document has its search row
 SELECT d.id FROM doc d WHERE NOT EXISTS (
   SELECT 1 FROM search_item s WHERE s.kind = 'document' AND s.entity_id = d.id);
+
+-- a series break's subject exists, and a release subject is placed (its scope is its period)
+SELECT b.id FROM series_break b WHERE NOT CASE b.subject_kind
+  WHEN 'register' THEN EXISTS (SELECT 1 FROM register r WHERE r.id = b.subject_id)
+  WHEN 'table' THEN EXISTS (SELECT 1 FROM tbl t WHERE t.id = b.subject_id)
+  WHEN 'release' THEN EXISTS (SELECT 1 FROM release x WHERE x.id = b.subject_id AND x.start IS NOT NULL)
+  WHEN 'variable' THEN EXISTS (SELECT 1 FROM variable v WHERE v.id = b.subject_id)
+END;

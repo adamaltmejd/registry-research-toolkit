@@ -331,13 +331,17 @@ pub struct Link {
     pub locator: Locator,
 }
 
-/// A notice the source states about one entity (a series break, an end): shown to users.
+/// A notice the source states about one entity. A series break is published
+/// (crates/DESIGN.md, "Series breaks"); any other notice (an end) is a build finding.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Notice {
     pub subject: Endpoint,
+    #[serde(default)]
+    pub series_break: bool,
     pub at: Option<String>,
-    pub text: String,
+    /// The source's words; `None` only for a series break the source says nothing about.
+    pub text: Option<String>,
     pub locator: Locator,
 }
 

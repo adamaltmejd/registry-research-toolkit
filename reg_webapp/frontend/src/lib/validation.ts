@@ -57,6 +57,7 @@ const TITLES: Readonly<Record<string, string>> = {
   ambiguous_window: "The variable has more than one form in these years",
   coverage_end_unstated: "The end of coverage has not been confirmed",
   form_change: "The delivered column changes during the study years",
+  series_break: "Series break during the study years",
   binding_type_differs: "The type in the project differs from the catalog",
   period_clipped: "Years not available",
   preliminary_data: "The requested data are preliminary",

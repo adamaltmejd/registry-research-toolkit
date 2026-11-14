@@ -7143,3 +7143,9 @@ kind = "set"
 subject = "set:yrkesamne"
 fields = { "description" = "Det yrkesämne eller den kategori av yrkesämne läraren huvudsakligen undervisar i, på gymnasiet och på gymnasiesärskolan (från 2014): som första, andra och tredje huvudsakliga yrkesämne, de två senare när läraren undervisar i mer än ett respektive två yrkesämnen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar anger lärarens huvudsakliga yrkesämne; axlarna är skolform och ämnets ordning.\ncatalog:variable_text:42184:15887:16252\ncatalog:variable_text:42185:16252:20270\ncatalog:variable_text:42401:16252:16617\ncatalog:variable_text:42401:16617:17348\ncatalog:variable_text:42402:15887:16617\ncatalog:variable_text:42402:16617:20270\ncatalog:variable_text:42403:15887:16617\ncatalog:variable_text:42403:16617:20270\ncatalog:variable_text:42404:16252:20270\ncatalog:variable_text:42405:16252:20270"
+
+[[statement]]
+kind = "set"
+subject = "table:lararprognos-skola-forskola"
+fields = { series_break = { at = "2017", text = "År 2017 ändrades insamlingen för förskoleklass. Tidigare ingick all pedagogisk personal. From år 2017 går det att särsklja på lärare och övriga pedagogisk personal." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=117\n\nRegisterVariant 1497 resolves to this table. \"År 2017 ändrades insamlingen\"."

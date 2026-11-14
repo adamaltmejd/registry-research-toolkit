@@ -1,4 +1,5 @@
-//! The link stage (`crates/DESIGN.md`, "The link stage"): source-stated links and notices,
+//! The link stage (`crates/DESIGN.md`, "The link stage"): source-stated links, notices
+//! and series breaks,
 //! matched against every resolved register's public surface. It decides only endpoint
 //! matching and rewrites no link into another kind. A malformed record is refused; an
 //! endpoint that matches nothing, or too much, is one warning line.
@@ -81,6 +82,16 @@ pub struct Notice {
     pub text: String,
 }
 
+/// One `series_break` row before row ids: a source's, or a curated one (`statement`).
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+pub struct Break {
+    pub subject: Entity,
+    /// The break day (ISO), when stated.
+    pub at: Option<String>,
+    pub text: Option<String>,
+    pub statement: Option<String>,
+}
+
 /// One resolved document subject: the document's index in the merged list and the
 /// entity it is about (`page` 0 is the whole document).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -101,6 +112,8 @@ pub struct Linked {
     pub relations: Vec<Relation>,
     /// Distinct, sorted.
     pub notices: Vec<Notice>,
+    /// Distinct, sorted.
+    pub breaks: Vec<Break>,
     /// One line per unresolved link or notice, in record order.
     pub warnings: Vec<String>,
     /// One line per `continues` link dropped to keep the successions valid (same-day
@@ -128,6 +141,7 @@ pub fn resolve(
     let mut relations: BTreeMap<(&'static str, Entity, Entity, Option<String>), _> =
         BTreeMap::new();
     let mut notices = BTreeSet::new();
+    let mut breaks = BTreeSet::new();
     for record in records {
         match record {
             Record::Link(link) => {
@@ -169,7 +183,20 @@ pub fn resolve(
                 match index.entities(&notice.subject) {
                     Ok(subjects) => {
                         for subject in subjects {
-                            notices.insert((subject, notice.at.clone(), notice.text.clone()));
+                            if notice.series_break {
+                                breaks.insert(Break {
+                                    subject,
+                                    at: notice.at.clone(),
+                                    text: notice.text.clone(),
+                                    statement: None,
+                                });
+                            } else {
+                                notices.insert((
+                                    subject,
+                                    notice.at.clone(),
+                                    notice.text.clone().unwrap_or_default(),
+                                ));
+                            }
                         }
                     }
                     Err(reason) => linked.warnings.push(warning(&notice.locator, &reason)),
@@ -218,6 +245,7 @@ pub fn resolve(
             statement: None,
         })
         .collect();
+    linked.breaks = breaks.into_iter().collect();
     linked.notices = notices
         .into_iter()
         .map(|(subject, at, text)| Notice { subject, at, text })

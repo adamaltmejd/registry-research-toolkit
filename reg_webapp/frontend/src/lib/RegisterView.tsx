@@ -12,9 +12,11 @@ import { catalogBindings } from "./project_data";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
 import {
   lensKeyId,
+  lensTables,
   publishRegisterLens,
   useRegisterLensOf,
 } from "./register_lens";
+import { type PlacedBreak, SeriesBreaks } from "./SeriesBreaks";
 import {
   datedYearRuns,
   studyWindow,
@@ -153,6 +155,23 @@ export function RegisterView({
     if (!next.delete(key)) next.add(key);
     setSelected(next);
   }
+  // The register's own breaks, then its tables' (and their releases'): the
+  // selected tables' with a filter on, else every table's.
+  const lensed = new Set(lensTables(node, selected).map((table) => table.fqid));
+  const breaks: PlacedBreak[] = [
+    ...(node.series_breaks ?? []).map((seriesBreak) => ({
+      where: null,
+      seriesBreak,
+    })),
+    ...node.tables
+      .filter((table) => selected.size === 0 || lensed.has(table.fqid))
+      .flatMap((table) =>
+        (table.series_breaks ?? []).map((seriesBreak) => ({
+          where: table.implicit ? null : table.name,
+          seriesBreak,
+        })),
+      ),
+  ];
   const chip = (key: string, pill: ReactNode) => (
     <FilterChip isSelected={selected.has(key)} onChange={() => toggle(key)}>
       {pill}
@@ -165,6 +184,7 @@ export function RegisterView({
         title={node.name}
         description={node.description ?? undefined}
       />
+      <SeriesBreaks breaks={breaks} />
       {/* The lists head themselves on their axis rows (#2316); only the empty
           state needs the panel's title. */}
       <Panel
