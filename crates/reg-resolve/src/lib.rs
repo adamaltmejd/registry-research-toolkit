@@ -973,8 +973,15 @@ fn resolve_pass(
             resolved[i].variable = Some(v);
         }
 
-        let last = latest(&resolved, members).expect("a variable has an occurrence");
-        let spellings: BTreeSet<String> = members
+        // A listing the neighbouring-owner rule shadowed is the owner's column: it gives
+        // the variable no name, spelling (delivered alias) or table.
+        let kept: Vec<usize> = members
+            .iter()
+            .copied()
+            .filter(|i| !duplicates.contains(i))
+            .collect();
+        let last = latest(&resolved, &kept).expect("a variable has a used occurrence");
+        let spellings: BTreeSet<String> = kept
             .iter()
             .map(|&i| resolved[i].occurrence.column.clone())
             .collect();
@@ -1005,9 +1012,9 @@ fn resolve_pass(
             .iter()
             .flat_map(|&i| resolved[i].occurrence.conflicts.iter().cloned())
             .collect();
-        let tables_used: BTreeSet<usize> = members.iter().map(|&i| resolved[i].table).collect();
+        let tables_used: BTreeSet<usize> = kept.iter().map(|&i| resolved[i].table).collect();
         if tables_used.len() > 1 {
-            let labels: BTreeSet<String> = members
+            let labels: BTreeSet<String> = kept
                 .iter()
                 .filter_map(|&i| resolved[i].occurrence.label.as_deref().map(label_key))
                 .collect();

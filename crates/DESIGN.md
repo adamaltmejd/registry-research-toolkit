@@ -265,7 +265,9 @@ classification bindings. Accepting one requires reviewed curation and a premise 
 - One column several variables claim in one table and window goes to the variable that
   holds it alone in the nearest releases before and after (the nearest sole holder on
   each side, across gaps and other contested runs); the other listings are
-  duplicates and are shadowed (`F2:neighbour-owner`, a notice). A variable left with no
+  duplicates and are shadowed (`F2:neighbour-owner`, a notice). A duplicate gives its
+  variable no name, delivered alias or table, so the column resolves to its owner alone.
+  A variable left with no
   used occurrence is withheld. When the neighbours disagree, neither side has a sole
   holder, the holder does not claim the whole run, or a losing listing reaches past it,
   the builder does not guess: curation settles the column (`set variable = "none"` on
