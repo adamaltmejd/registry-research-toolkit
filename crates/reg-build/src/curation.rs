@@ -184,7 +184,7 @@ impl LockedPremise {
 
 /// A value set is content-addressed: a statement reads its items, never which inputs
 /// state it or the names they give it. Those grow with unrelated inputs (another
-/// provider's transcription reusing an SCB code list), so the lock keeps one object per
+/// provider's transcription reusing a common code list), so the lock keeps one object per
 /// hash. Its items still change only with the hash, which the subject rows pin (#2471).
 fn locked_object(object: &SourcePremise) -> SourcePremise {
     let field = |name: &str| {
