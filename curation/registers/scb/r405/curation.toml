@@ -7041,49 +7041,49 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 kind = "set"
 subject = "table:barn-ulf"
 fields = { "coverage" = "2008.." }
-evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Barn-ULF 10-18 år (2008-2014) and Barn-ULF 12-18 år (2015-2019) are one survey whose children's age range narrows in 2015 (Registerinformation: "barn mellan 10 och 18 år (12-18 år fr.o.m. 2015)"); the row keys are the same. Barn-ULF 12-18 år, 2023– is a separate survey and stays its own table."
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Barn-ULF 10-18 år (2008-2014) and Barn-ULF 12-18 år (2015-2019) are one survey whose children's age range narrows in 2015 (Registerinformation: \"barn mellan 10 och 18 år (12-18 år fr.o.m. 2015)\"); the row keys are the same. Barn-ULF 12-18 år, 2023– is a separate survey and stays its own table."
 
 [[statement]]
 kind = "set"
 subject = "release:barn-ulf-10-18-ar/r2247"
 fields = { "table" = "barn-ulf" }
-evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Barn-ULF 10-18 år (2008-2014) and Barn-ULF 12-18 år (2015-2019) are one survey whose children's age range narrows in 2015 (Registerinformation: "barn mellan 10 och 18 år (12-18 år fr.o.m. 2015)"); the row keys are the same. Barn-ULF 12-18 år, 2023– is a separate survey and stays its own table."
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Barn-ULF 10-18 år (2008-2014) and Barn-ULF 12-18 år (2015-2019) are one survey whose children's age range narrows in 2015 (Registerinformation: \"barn mellan 10 och 18 år (12-18 år fr.o.m. 2015)\"); the row keys are the same. Barn-ULF 12-18 år, 2023– is a separate survey and stays its own table."
 
 [[statement]]
 kind = "set"
 subject = "release:barn-ulf-10-18-ar/r2933"
 fields = { "table" = "barn-ulf" }
-evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Barn-ULF 10-18 år (2008-2014) and Barn-ULF 12-18 år (2015-2019) are one survey whose children's age range narrows in 2015 (Registerinformation: "barn mellan 10 och 18 år (12-18 år fr.o.m. 2015)"); the row keys are the same. Barn-ULF 12-18 år, 2023– is a separate survey and stays its own table."
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Barn-ULF 10-18 år (2008-2014) and Barn-ULF 12-18 år (2015-2019) are one survey whose children's age range narrows in 2015 (Registerinformation: \"barn mellan 10 och 18 år (12-18 år fr.o.m. 2015)\"); the row keys are the same. Barn-ULF 12-18 år, 2023– is a separate survey and stays its own table."
 
 [[statement]]
 kind = "set"
 subject = "release:barn-ulf-10-18-ar/r3270"
 fields = { "table" = "barn-ulf" }
-evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Barn-ULF 10-18 år (2008-2014) and Barn-ULF 12-18 år (2015-2019) are one survey whose children's age range narrows in 2015 (Registerinformation: "barn mellan 10 och 18 år (12-18 år fr.o.m. 2015)"); the row keys are the same. Barn-ULF 12-18 år, 2023– is a separate survey and stays its own table."
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Barn-ULF 10-18 år (2008-2014) and Barn-ULF 12-18 år (2015-2019) are one survey whose children's age range narrows in 2015 (Registerinformation: \"barn mellan 10 och 18 år (12-18 år fr.o.m. 2015)\"); the row keys are the same. Barn-ULF 12-18 år, 2023– is a separate survey and stays its own table."
 
 [[statement]]
 kind = "set"
 subject = "release:barn-ulf-10-18-ar/r4104"
 fields = { "table" = "barn-ulf" }
-evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Barn-ULF 10-18 år (2008-2014) and Barn-ULF 12-18 år (2015-2019) are one survey whose children's age range narrows in 2015 (Registerinformation: "barn mellan 10 och 18 år (12-18 år fr.o.m. 2015)"); the row keys are the same. Barn-ULF 12-18 år, 2023– is a separate survey and stays its own table."
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Barn-ULF 10-18 år (2008-2014) and Barn-ULF 12-18 år (2015-2019) are one survey whose children's age range narrows in 2015 (Registerinformation: \"barn mellan 10 och 18 år (12-18 år fr.o.m. 2015)\"); the row keys are the same. Barn-ULF 12-18 år, 2023– is a separate survey and stays its own table."
 
 [[statement]]
 kind = "set"
 subject = "release:barn-ulf-10-18-ar/r4922"
 fields = { "table" = "barn-ulf" }
-evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Barn-ULF 10-18 år (2008-2014) and Barn-ULF 12-18 år (2015-2019) are one survey whose children's age range narrows in 2015 (Registerinformation: "barn mellan 10 och 18 år (12-18 år fr.o.m. 2015)"); the row keys are the same. Barn-ULF 12-18 år, 2023– is a separate survey and stays its own table."
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Barn-ULF 10-18 år (2008-2014) and Barn-ULF 12-18 år (2015-2019) are one survey whose children's age range narrows in 2015 (Registerinformation: \"barn mellan 10 och 18 år (12-18 år fr.o.m. 2015)\"); the row keys are the same. Barn-ULF 12-18 år, 2023– is a separate survey and stays its own table."
 
 [[statement]]
 kind = "set"
 subject = "release:barn-ulf-10-18-ar/r5368"
 fields = { "table" = "barn-ulf" }
-evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Barn-ULF 10-18 år (2008-2014) and Barn-ULF 12-18 år (2015-2019) are one survey whose children's age range narrows in 2015 (Registerinformation: "barn mellan 10 och 18 år (12-18 år fr.o.m. 2015)"); the row keys are the same. Barn-ULF 12-18 år, 2023– is a separate survey and stays its own table."
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Barn-ULF 10-18 år (2008-2014) and Barn-ULF 12-18 år (2015-2019) are one survey whose children's age range narrows in 2015 (Registerinformation: \"barn mellan 10 och 18 år (12-18 år fr.o.m. 2015)\"); the row keys are the same. Barn-ULF 12-18 år, 2023– is a separate survey and stays its own table."
 
 [[statement]]
 kind = "set"
 subject = "release:barn-ulf-10-18-ar/r6014"
 fields = { "table" = "barn-ulf" }
-evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Barn-ULF 10-18 år (2008-2014) and Barn-ULF 12-18 år (2015-2019) are one survey whose children's age range narrows in 2015 (Registerinformation: "barn mellan 10 och 18 år (12-18 år fr.o.m. 2015)"); the row keys are the same. Barn-ULF 12-18 år, 2023– is a separate survey and stays its own table."
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Barn-ULF 10-18 år (2008-2014) and Barn-ULF 12-18 år (2015-2019) are one survey whose children's age range narrows in 2015 (Registerinformation: \"barn mellan 10 och 18 år (12-18 år fr.o.m. 2015)\"); the row keys are the same. Barn-ULF 12-18 år, 2023– is a separate survey and stays its own table."
 
 [[statement]]
 kind = "set"
