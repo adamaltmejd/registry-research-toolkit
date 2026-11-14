@@ -95,6 +95,9 @@ fn endpoints(
                 .map(|x| vec![Entity::Release(ri, x)])
                 .ok_or_else(|| "unresolved release endpoint".into())
         }
+        Address::TableVariable { .. } => {
+            Err("a <table>: var: address is not a link endpoint".into())
+        }
         Address::Occurrence { .. } => {
             let mut variables = BTreeSet::new();
             for p in premise {

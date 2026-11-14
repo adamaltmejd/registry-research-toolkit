@@ -1,17 +1,17 @@
 [[statement]]
 kind = "set"
-subject = "ark: id where key = 'k1'"
+subject = "ark: var:id"
 fields.row_key = true
 evidence = "Synthetic fixture: the column identifies the table's row."
 
 [[statement]]
 kind = "set"
-subject = "ark: id where key = 'k2'"
+subject = "ark: var:id-2"
 fields.row_key = true
 evidence = "Synthetic fixture: the column identifies the table's row."
 
 [[statement]]
 kind = "set"
-subject = "ark: nyckel"
+subject = "ark: var:nyckel"
 fields.row_key = true
 evidence = "Synthetic fixture: the column identifies the table's row."

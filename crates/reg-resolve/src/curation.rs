@@ -313,7 +313,7 @@ impl SelectorIndex {
             Address::Set(slug) => add("set", slug, ""),
             Address::Table(table) => add("table", table, ""),
             Address::Release { table, handle } => add("release", table, handle),
-            Address::Variable(id) => {
+            Address::Variable(id) | Address::TableVariable { variable: id, .. } => {
                 candidates.extend(self.variables.get(id).into_iter().flatten().copied());
             }
         }
@@ -347,6 +347,15 @@ fn select_from(
     candidates
         .filter_map(|index| {
             let source = &view[index];
+            let member = |id: &str| {
+                variables.get(id).is_some_and(|members| {
+                    crate::OccurrenceIdentity::from_fields(&source.fields).is_some_and(|identity| {
+                        source.locators.iter().any(|at| {
+                            members.contains(&crate::OccurrenceKey::new(identity.clone(), at))
+                        })
+                    })
+                })
+            };
             let selected = match address {
                 Address::Occurrence {
                     table,
@@ -380,13 +389,10 @@ fn select_from(
                         && source.text("table_slug") == Some(table)
                         && source.text("release") == Some(handle)
                 }
-                Address::Variable(id) => variables.get(id).is_some_and(|members| {
-                    crate::OccurrenceIdentity::from_fields(&source.fields).is_some_and(|identity| {
-                        source.locators.iter().any(|at| {
-                            members.contains(&crate::OccurrenceKey::new(identity.clone(), at))
-                        })
-                    })
-                }),
+                Address::Variable(id) => member(id),
+                Address::TableVariable { table, variable } => {
+                    source.text("table_slug") == Some(table) && member(variable)
+                }
             };
             if !selected {
                 return None;
@@ -1335,7 +1341,7 @@ fn application_dependencies(
                     Address::Occurrence { table, .. }
                     | Address::Release { table, .. }
                     | Address::Table(table) => Some(apply::table_handle(records, ledger, table)?),
-                    Address::Variable(_) | Address::Set(_) => None,
+                    Address::Variable(_) | Address::TableVariable { .. } | Address::Set(_) => None,
                 };
                 let release = match subject {
                     Address::Release { handle, .. } => Some(handle.clone()),
@@ -1507,6 +1513,8 @@ fn conflict_candidates(
                     .or_default()
                     .insert(index);
             }
+            // Refused for assert in `apply`.
+            Address::TableVariable { .. } => {}
         }
     }
     let mut candidates = BTreeSet::new();
@@ -1578,7 +1586,7 @@ pub fn resolve(
         }
     }
     let needs_variables = statements.iter().any(|statement| {
-        variable_membership_field(statement).is_some() || matches!(subject(statement), Address::Variable(_)) || matches!(statement, Statement::Link { object, .. } if matches!(object.parse::<Address>(), Ok(Address::Variable(_))))
+        variable_membership_field(statement).is_some() || matches!(subject(statement), Address::Variable(_) | Address::TableVariable { .. }) || matches!(statement, Statement::Link { object, .. } if matches!(object.parse::<Address>(), Ok(Address::Variable(_))))
     });
     let variable_result = if needs_variables {
         variable_members(records, ledger, assignments)
@@ -1647,8 +1655,10 @@ pub fn resolve(
             objects: Vec::new(),
         });
         let result = (|| {
-            if matches!(address, Address::Variable(_))
-                && let Err(error) = &variable_result
+            if matches!(
+                address,
+                Address::Variable(_) | Address::TableVariable { .. }
+            ) && let Err(error) = &variable_result
             {
                 return Err(format!("variable selector: {error}"));
             }
@@ -1667,8 +1677,10 @@ pub fn resolve(
                     ..
                 }
             ) {
-                let addresses_variable = matches!(address, Address::Variable(_))
-                    || variable_membership_field(statement).is_some();
+                let addresses_variable = matches!(
+                    address,
+                    Address::Variable(_) | Address::TableVariable { .. }
+                ) || variable_membership_field(statement).is_some();
                 ambiguity(
                     &matches,
                     &view,

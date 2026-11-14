@@ -1,11 +1,11 @@
 [[statement]]
 kind = "set"
-subject = "gammal: lopnr"
+subject = "gammal: var:lopnr"
 fields.row_key = true
 evidence = "Synthetic fixture: the column identifies the table's row."
 
 [[statement]]
 kind = "set"
-subject = "ny: lopnr"
+subject = "ny: var:lopnr"
 fields.row_key = true
 evidence = "Synthetic fixture: the column identifies the table's row."

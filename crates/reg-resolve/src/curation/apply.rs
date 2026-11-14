@@ -694,7 +694,7 @@ pub fn apply(
                     table_handle(records, ledger, table)?,
                     p.as_ref().map(PeriodSet::intervals),
                 ),
-                Address::Variable(_) | Address::Set(_) => {
+                Address::Variable(_) | Address::TableVariable { .. } | Address::Set(_) => {
                     return Err(
                         "assert requires a source table, release or occurrence address".into(),
                     );

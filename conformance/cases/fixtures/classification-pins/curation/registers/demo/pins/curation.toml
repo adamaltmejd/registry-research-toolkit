@@ -18,6 +18,6 @@ evidence = "Only the final 2015 release documents this reviewed classification."
 
 [[statement]]
 kind = "set"
-subject = "pins: lopnr"
+subject = "pins: var:lopnr"
 fields.row_key = true
 evidence = "Synthetic fixture: the column identifies the table's row."

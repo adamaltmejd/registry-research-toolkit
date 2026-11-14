@@ -1,5 +1,5 @@
 [[statement]]
 kind = "set"
-subject = "ic: id"
+subject = "ic: var:id"
 fields.row_key = true
 evidence = "Synthetic fixture: the column identifies the table's row."
