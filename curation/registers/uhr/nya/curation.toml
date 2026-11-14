@@ -486,12 +486,6 @@ evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s 
 
 [[statement]]
 kind = "set"
-subject = "var:scale"
-fields = { "tags" = ["education"] }
-evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
-
-[[statement]]
-kind = "set"
 subject = "var:sel-criterion-2"
 fields = { "tags" = ["education"] }
 evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
@@ -517,6 +511,12 @@ evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s 
 [[statement]]
 kind = "set"
 subject = "var:sista-tillatna-antagningstermin"
+fields = { "tags" = ["education"] }
+evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
+
+[[statement]]
+kind = "set"
+subject = "var:skala-for-urvalsgruppens-meritvarde"
 fields = { "tags" = ["education"] }
 evidence = "NyA gäller anmälan och antagning till högskoleutbildning.\nUHR:s databasdokumentation (Dokumentation_statistikDB_UHR.docx, Bilaga 1); catalog/evidence/uhr/"
 
