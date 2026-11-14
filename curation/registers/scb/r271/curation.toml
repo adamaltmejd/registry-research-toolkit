@@ -223,21 +223,9 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2017.toml:26\
 
 [[statement]]
 kind = "set"
-subject = "var:antal-efternamn"
-fields = { "sets" = ["efternamn"] }
-evidence = "Källan beskriver antal för ett efternamn, men kolumnen är också kopplad till andra antalvariabler.\ncatalog:occurrence:389203\ncatalog:occurrence:389204\ncatalog:occurrence:389205\ncatalog:occurrence:389331\ncatalog:register:209"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-fornamn"
-fields = { "sets" = ["fornamn"] }
-evidence = "Källan beskriver antal för ett förnamn, men kolumnen är också kopplad till andra antalvariabler.\ncatalog:occurrence:389203\ncatalog:occurrence:389204\ncatalog:occurrence:389205\ncatalog:occurrence:389329\ncatalog:register:209"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-tilltalsnamn"
-fields = { "sets" = ["tilltalsnamn"] }
-evidence = "Källan beskriver antal för ett tilltalsnamn, men kolumnen är också kopplad till andra antalvariabler.\ncatalog:occurrence:389203\ncatalog:occurrence:389204\ncatalog:occurrence:389205\ncatalog:occurrence:389330\ncatalog:register:209"
+fields = { "sets" = ["efternamn", "fornamn", "tilltalsnamn"] }
+evidence = "Kolumnen Antal räknar förnamn, tilltalsnamn och efternamn som en variabel (maintainer 2026-11-14); den är därför medlem i uppsättningarna för alla tre namnslagen, så att inga av dem krymper till en medlem.\ncatalog:occurrence:389203\ncatalog:occurrence:389204\ncatalog:occurrence:389205\ncatalog:occurrence:389329\ncatalog:register:209"
 
 [[statement]]
 kind = "set"
@@ -313,21 +301,9 @@ evidence = "Variabeln anger tilltalsnamn och ingår i den angivna gruppen.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:antal-efternamn"
-fields = { "tags" = ["demographics"] }
-evidence = "Counts people in the population with a given surname (r129), describing population composition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39214\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:389331"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-fornamn"
 fields = { "tags" = ["demographics"] }
 evidence = "Counts people in the population with a given first name (r127), describing population composition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39215\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:389329"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-tilltalsnamn"
-fields = { "tags" = ["demographics"] }
-evidence = "Counts people in the population with a given usual first name (r128), describing population composition.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:39216\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:389330"
 
 [[statement]]
 kind = "set"
@@ -376,3 +352,21 @@ kind = "set"
 subject = "folkbokforda-personer: tilltalsnamn @2021-12-31..2022-12-31 where key = 'v16384'"
 fields = { "variable" = "tilltalsnamn-namn" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): Namn in folkbokforda-namn, folkbokforda-personer, namngivna-nyfodda; Tilltalsnamn in folkbokforda-personer: same definition and code list, never concurrent under another spelling in one table; folded into tilltalsnamn-namn."
+
+[[statement]]
+kind = "set"
+subject = "folkbokforda-namn: Antal @1999..2020 where key = 'v16399'"
+fields = { "variable" = "antal-fornamn" }
+evidence = "SCB Registerinformation, Folkbokförda - namn 1999-2020 (RegVerID 1434 for 1999, 1433 for 2000) documents column Antal under VarId 16398 \"Antal förnamn\", VarId 16399 \"Antal tilltalsnamn\" and VarId 16400 \"Antal efternamn\" in every release; no other column carries them. They are one count, the number of people in the population with the row's name (\"Antal av ett specifikt förnamn\", \"Antal specifika tilltalsnamn\", \"Antal specifika efternamn\"), for three name kinds; the table also lists FNamn, Namn (tilltalsnamn) and Efternamn as separate columns. The claimants are one concept for different row kinds (maintainer 2026-11-14: variants of one concept for different row kinds are merged). No claimant is generic; antal-fornamn survives."
+
+[[statement]]
+kind = "set"
+subject = "folkbokforda-namn: Antal @1999..2020 where key = 'v16400'"
+fields = { "variable" = "antal-fornamn" }
+evidence = "SCB Registerinformation, Folkbokförda - namn 1999-2020 (RegVerID 1434 for 1999, 1433 for 2000) documents column Antal under VarId 16398 \"Antal förnamn\", VarId 16399 \"Antal tilltalsnamn\" and VarId 16400 \"Antal efternamn\" in every release; no other column carries them. They are one count, the number of people in the population with the row's name (\"Antal av ett specifikt förnamn\", \"Antal specifika tilltalsnamn\", \"Antal specifika efternamn\"), for three name kinds; the table also lists FNamn, Namn (tilltalsnamn) and Efternamn as separate columns. The claimants are one concept for different row kinds (maintainer 2026-11-14: variants of one concept for different row kinds are merged). No claimant is generic; antal-fornamn survives."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-fornamn"
+fields = { "label" = "Antal personer med namnet", "description" = "Antal personer i befolkningen som har det aktuella namnet. Kolumnen räknar förnamn, tilltalsnamn eller efternamn, beroende på vilken namnuppgift raden gäller." }
+evidence = "Maintainer ruling 2026-11-14: variants of one concept for different row kinds are merged and the variable carries a label and description covering both kinds.\nVarId 16398, 16399 and 16400 share the column Antal in Folkbokförda - namn 1999-2020 (\"Härledd variabel. Anger antalet personer i befolkningen som har det aktuella förnamnet / förnamnet som tilltalsnamn / efternamnet\")."
