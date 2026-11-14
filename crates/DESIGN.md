@@ -913,7 +913,9 @@ release assets are left unchanged.
   succession is a notice on the newer one, `continues <older name>`. A `VarId` stands
   for each register that documents it. The config's `[timeseries]` holds this map
   (`cvid = true` marks an entity read by `CVID`); `Population`, `PopContext` and
-  `VS_Class` are left out and counted, and `FilID` (a document reference, on every
+  `VS_Class` are left out and counted (the one `VS_Class` row, SNI 2002 replacing SNI 92
+  from 2003, is the classification book's `succeeds`; a table or variable that changes
+  SNI version carries its own break), and `FilID` (a document reference, on every
   row) is left to the documents. A row's `VariabelRegister_Källa` is a `derived_from`
   link to the register of that name.
 - **LISA workbook attachments.** SCB `r34` carries the LISA workbook's descriptions,
@@ -3058,7 +3060,13 @@ relation and not as a document.
   export), for dating a source break whose text states a year, and for the break where
   merged variants meet (see "Merged variants"). A dated curated
   break with the same text as a source break on its subject, or on a release of its
-  table, replaces that source break; no address names a source break.
+  table, replaces that source break. Its `replaces = [{ on?, text }]` names further
+  source breaks it stands for, by exact text on `on` (a `var:`, `table:` or `release:`
+  address, a table with its releases; the statement's subject when absent): the
+  provider's rewordings of one break, folded to one, or a copy the source put on the
+  wrong piece of a split column (a `CVID` names the newest column, whose variable may
+  not cover the years the text describes). An entry that names no source break refuses
+  the statement, so a source change cannot leave it silently stale.
 - **`show`** lists a register's own breaks, each table's with its releases' (a release
   break as its release's name and period, one entry per text), and a variable's own;
   a set lists each member's. Absent when none.
