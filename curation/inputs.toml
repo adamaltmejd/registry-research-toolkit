@@ -50,7 +50,9 @@ pid = "sos"
 name = "Socialstyrelsen"
 
 # Source: UHR's documentation of its statistics database ("Framställande av sökande- och
-# antagningsstatistik för VHS", 2009–2013) and the ASTA_STATISTIK table list, pinned under
+# antagningsstatistik för VHS", 2009–2013), the ASTA_STATISTIK table list, the 2026 order
+# specification ("Uttagsspecifikation UHR 2026"), the selection-group history ("Urvalsgrupper
+# över tid") and a names-only header note for SEL_CRITERION, pinned under
 # catalog/evidence/uhr/ in the inputs repository. No licence stated.
 [[provider]]
 pid = "uhr"
