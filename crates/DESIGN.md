@@ -832,19 +832,25 @@ release assets are left unchanged.
 - **SCB `Timeseries` is read in C.** Its rows are series breaks, ends and replacements
   of registers, variants, releases and variables: links and document references, which
   no B table holds. `Entitet` fixes what `ID1` and `ID2` are (`Register` a `RegisterId`,
-  `RegisterVariant` a `RegVarID`, `RegisterVersion` a `RegVerID`, `Variabel` a `VarId`;
-  each row's `Namn` is `ID1`'s name). `Tidsseriebrott` is a series break on `ID1`'s
+  `RegisterVariant` a `RegVarID`, `RegisterVersion` a `RegVerID`, `Variabel` a `VarId`,
+  `AktuellVariabel` a `CVID`; each row's `Namn` is `ID1`'s name). A `CVID` is joined by
+  id to Registerinformation's `CVID` column: the rows carrying it are one occurrence
+  (several rows differ only in population), one column of one `VarId` in one release
+  (`RegVerID`) of one variant (`RegVarID`). The event is on the variable that occurrence
+  resolves to, not on every piece of the `VarId` (one `VarId` can be many columns,
+  such as STATIV's `BAS`, `BASAlt` and `BAS_BoFar`): the frame endpoint carries the
+  occurrence's table, release and column, and the link stage looks it up. A `CVID` no
+  row carries, or whose rows are several occurrences, is left out and counted; nothing
+  is matched by name. `Tidsseriebrott` is a series break on `ID1`'s
   entity, its text `Beskrivning` unless that only repeats `Namn` (see "Series breaks").
   `Avslutad` is a notice on `ID1`'s entity, `<Handelse>: <Beskrivning>`, never
   published. `Ersätter` (`ID1` takes over from `ID2`)
   and `Ersatt av` (`ID2` from `ID1`) are a `continues` link from the newer entity, and
   come in mirrored pairs the link stage folds into one relation; between releases the
   succession is a notice on the newer one, `continues <older name>`. A `VarId` stands
-  for each register that documents it. The config's `[timeseries]` holds this map;
-  `AktuellVariabel` (its `ID1` is a `CVID`, which Registerinformation maps to a register,
-  variant, release and `VarId`; the reader does not map it yet, so its breaks are
-  curated), `Population`, `PopContext`
-  and `VS_Class` are left out and counted, and `FilID` (a document reference, on every
+  for each register that documents it. The config's `[timeseries]` holds this map
+  (`cvid = true` marks an entity read by `CVID`); `Population`, `PopContext` and
+  `VS_Class` are left out and counted, and `FilID` (a document reference, on every
   row) is left to the documents. A row's `VariabelRegister_Källa` is a `derived_from`
   link to the register of that name.
 - **LISA workbook attachments.** SCB `r34` carries the LISA workbook's descriptions,
@@ -945,7 +951,9 @@ release assets are left unchanged.
   one register must match), then a table, a release or a variable by source key, where a
   split key gives every piece. A reviewed endpoint can instead use the existing
   `var:<local-ledger-slug>` address as its variable key to select exactly that final
-  variable, without expanding a reused source key. A `continues` needs one entity of one
+  variable, without expanding a reused source key, and a reader that knows the exact
+  occurrence (an SCB `CVID`) gives its table, release and column, which select the one
+  variable that occurrence resolves to. A `continues` needs one entity of one
   kind at each end, a `derived_from` one object and gives a relation per subject piece,
   and a release end is never a relation (a reader states a succession between releases
   as a notice). A series-break notice becomes a `Break` on each subject entity instead
@@ -2943,8 +2951,8 @@ relation and not as a document.
 - **Curation.** A `set` statement whose only field is `series_break = { at?, text }`
   puts a break on its subject (a register, table, release or variable address; not a
   set). `at` is one interval with a stated start; the break is at its first day. It is
-  for the rows the reader cannot place (SCB `AktuellVariabel`, releases missing from
-  the export) and for dating a source break whose text states a year. A dated curated
+  for the rows the reader cannot place (a `CVID` or release id missing from the
+  export) and for dating a source break whose text states a year. A dated curated
   break with the same text as a source break on its subject, or on a release of its
   table, replaces that source break; no address names a source break.
 - **`show`** lists a register's own breaks, each table's with its releases' (a release

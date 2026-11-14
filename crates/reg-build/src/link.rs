@@ -131,6 +131,7 @@ const ENDPOINT_KINDS: [&str; 4] = ["register", "table", "release", "variable"];
 /// A record the stage cannot read: an unknown link or endpoint kind, an endpoint without
 /// exactly one of `register` and `register_name` or without the handle its kind needs,
 /// or an `at` that is not an ISO day.
+#[allow(clippy::too_many_lines)]
 pub fn resolve(
     registers: &[Resolved],
     records: &[Record],
@@ -334,6 +335,14 @@ fn check(end: &Endpoint) -> Result<(), String> {
     if needs_key && end.key.is_none() {
         return Err(format!("a {} endpoint needs a key", end.kind));
     }
+    if (end.release.is_some() || end.column.is_some())
+        && (end.kind != "variable"
+            || end.table.is_none()
+            || end.release.is_none()
+            || end.column.is_none())
+    {
+        return Err("an occurrence end is a variable with table, release and column".to_owned());
+    }
     if end.kind == "variable"
         && let Some(key) = end.key.as_deref().filter(|key| key.starts_with("var:"))
     {
@@ -388,6 +397,9 @@ struct Index<'a> {
     tables: BTreeMap<(usize, &'a str), usize>,
     releases: BTreeMap<(usize, &'a str, &'a str), usize>,
     variables: BTreeMap<(usize, &'a str), BTreeSet<usize>>,
+    /// (register, table, release, source key, column) → the variable that occurrence
+    /// resolves to.
+    occurrences: BTreeMap<(usize, &'a str, &'a str, &'a str, &'a str), usize>,
     variable_slugs: BTreeMap<(usize, &'a str), usize>,
 }
 
@@ -417,6 +429,17 @@ impl<'a> Index<'a> {
             }
             for occurrence in &r.occurrences {
                 if let Some(variable) = occurrence.variable {
+                    let o = &occurrence.occurrence;
+                    index.occurrences.insert(
+                        (
+                            ri,
+                            o.table.as_str(),
+                            o.release.as_deref().unwrap_or_default(),
+                            o.source_key.as_str(),
+                            o.column.as_str(),
+                        ),
+                        variable,
+                    );
                     index
                         .variables
                         .entry((ri, occurrence.occurrence.source_key.as_str()))
@@ -476,6 +499,20 @@ impl<'a> Index<'a> {
                 .get(&(ri, &key[4..]))
                 .map(|&v| vec![Entity::Variable(ri, v)])
                 .ok_or_else(|| missing(&format!("variable {key:?}"))),
+            "variable" if end.column.is_some() => {
+                let (release, column) = (
+                    end.release.as_deref().unwrap_or_default(),
+                    end.column.as_deref().unwrap_or_default(),
+                );
+                self.occurrences
+                    .get(&(ri, table, release, key, column))
+                    .map(|&v| vec![Entity::Variable(ri, v)])
+                    .ok_or_else(|| {
+                        missing(&format!(
+                            "variable with key {key:?} in column {column:?} of release {release:?} of table {table:?}"
+                        ))
+                    })
+            }
             _ => self
                 .variables
                 .get(&(ri, key))
