@@ -555,7 +555,7 @@ impl Seg {
 }
 
 fn segments(conn: &Connection) -> Result<BTreeMap<String, BTreeSet<Seg>>> {
-    // Before schema 15 a row key was the role `row_key` (every identifier).
+    // Before schema 16 a row key was the role `row_key` (every identifier).
     let curated: bool = conn.query_row(
         "SELECT count(*) = 1 FROM pragma_table_info('segment') WHERE name = 'row_key'",
         [],

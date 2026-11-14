@@ -1,7 +1,7 @@
 {
   "catalog": {
     "catalog_version": "dev",
-    "schema_version": "15"
+    "schema_version": "16"
   },
   "project": {
     "name": "Order case",
@@ -16,6 +16,7 @@
       "register": "demo/rad",
       "table": "demo/rad",
       "table_name": "Barnregistret",
+      "delivered_table": "Barnregistret",
       "variable": "demo/rad/vikt",
       "variable_name": "Födelsevikt",
       "display_name": null,
@@ -35,6 +36,7 @@
       "source": "s",
       "table": "demo/rad",
       "table_name": "Barnregistret",
+      "delivered_table": "Barnregistret",
       "period": {
         "start": "2020-01-01",
         "end": "2021-01-01"
