@@ -336,3 +336,4 @@ public = "rtb"
 "lan-vid-invandring" = ["Invandringar: lan @ 1998-01-01"]
 "lan-vid-utvandring" = ["Utvandringar: lan @ 1998-01-01"]
 "lan-vid-medborgarskapsandring" = ["Medborgarskapsändringar: lan @ 1968-01-01"]
+"kvartal" = ["civilstandsandringar-skilda-1-3: PublKvartal"]

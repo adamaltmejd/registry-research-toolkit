@@ -133,9 +133,9 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/energi-flerbostad.
 
 [[statement]]
 kind = "set"
-subject = "energistatistik-for-flerbostadshus: uppvid where key = 'v8051'"
+subject = "energistatistik-for-flerbostadshus: uppvid @2005..2006 where key = 'v8051'"
 fields = { "variable" = "none" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/energi-flerbostad.toml:121\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
+evidence = "python-builder-pre-cutover:curation/registers/scb/energi-flerbostad.toml:121\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed.\n\nScoped to 2005-2006, where Uppvid is placed under VarId 7998. In 2007 and 2008 SCB documents Uppvid only under VarIds 4019 and 8051, so withholding both left the delivered column with no owner. VarId 8051 \"Uppvärmningssätt på taxeringsenheten\" owns it there: its value set (15 single heating sources, El … Annat) is the one the 2008 release also attaches to its heating columns SolGlas and SolOglas, while VarId 4019's set lists combinations (\"Olja + el\") that release does not use."
 
 [[statement]]
 kind = "set"

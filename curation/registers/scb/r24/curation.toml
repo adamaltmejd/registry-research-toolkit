@@ -385,73 +385,73 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3694\n\n
 
 [[statement]]
 kind = "set"
-subject = "gymnasieintyg: totalpoang_2013"
+subject = "gymnasieintyg-summerade-poang: totalpoang_2013"
 fields = { "label" = "Lästa gymnasiala kurspoäng för personer med gymnasieintyg 2013" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3490\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "gymnasieintyg: totalpoang_2014"
+subject = "gymnasieintyg-summerade-poang: totalpoang_2014"
 fields = { "label" = "Lästa gymnasiala kurspoäng för personer med gymnasieintyg 2014" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3502\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "gymnasieintyg: totalpoang_2015"
+subject = "gymnasieintyg-summerade-poang: totalpoang_2015"
 fields = { "label" = "Lästa gymnasiala kurspoäng för personer med gymnasieintyg 2015" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3514\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "gymnasieintyg: totalpoang_2016"
+subject = "gymnasieintyg-summerade-poang: totalpoang_2016"
 fields = { "label" = "Lästa gymnasiala kurspoäng för personer med gymnasieintyg 2016" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3526\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "gymnasieintyg: totalpoang_2017"
+subject = "gymnasieintyg-summerade-poang: totalpoang_2017"
 fields = { "label" = "Lästa gymnasiala kurspoäng för personer med gymnasieintyg 2017" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3538\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "gymnasieintyg: totalpoang_2018"
+subject = "gymnasieintyg-summerade-poang: totalpoang_2018"
 fields = { "label" = "Lästa gymnasiala kurspoäng för personer med gymnasieintyg 2018" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3550\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "gymnasieintyg: totalpoang_2019"
+subject = "gymnasieintyg-summerade-poang: totalpoang_2019"
 fields = { "label" = "Lästa gymnasiala kurspoäng för personer med gymnasieintyg 2019" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3562\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "gymnasieintyg: totalpoang_2020"
+subject = "gymnasieintyg-summerade-poang: totalpoang_2020"
 fields = { "label" = "Lästa gymnasiala kurspoäng för personer med gymnasieintyg 2020" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3574\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "gymnasieintyg: totalpoang_2021"
+subject = "gymnasieintyg-summerade-poang: totalpoang_2021"
 fields = { "label" = "Lästa gymnasiala kurspoäng för personer med gymnasieintyg 2021" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3586\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "gymnasieintyg: totalpoang_2022"
+subject = "gymnasieintyg-summerade-poang: totalpoang_2022"
 fields = { "label" = "Lästa gymnasiala kurspoäng för personer med gymnasieintyg 2022" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3610\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "gymnasieintyg: totalpoang_2023"
+subject = "gymnasieintyg-summerade-poang: totalpoang_2023"
 fields = { "label" = "Lästa gymnasiala kurspoäng för personer med gymnasieintyg 2023" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3622\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "gymnasieintyg: totalpoang_2024"
+subject = "gymnasieintyg-summerade-poang: totalpoang_2024"
 fields = { "label" = "Lästa gymnasiala kurspoäng för personer med gymnasieintyg 2024" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3634\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 
@@ -2251,3 +2251,75 @@ kind = "set"
 subject = "release:samlat-betygsdokument/r17563"
 fields = { "period" = "2001..2024" }
 evidence = "SCB Registerinformation, RegVerID 17563: the release is named \"Samlat betygsdokument/studiebevis, ackumulerat\", with no period, so its documented columns had no period. It is \"ackumulerat fr.o.m. 2001\"; its population is dated 2001-01-01 - 2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "release:ut-invandrares-utbildning/r7368"
+fields = { "period" = "1990.." }
+evidence = "SCB Registerinformation, RegVerID 7368: the only release of Ut- och invandrares utbildning is named \"Person-År\", which the delivery-name grammar does not read, so its documented columns had no period. SCB describes it as \"Utbildning vid in- eller utvandring 1990-\": migrations from 1990, with no end year stated. The end stays open (maintainer rule 2026-10-16: an unstated end is no reason to leave a column out)."
+
+[[statement]]
+kind = "assert"
+subject = "table:gymnasieintyg-summerade-poang"
+fact = { "entity" = "table", "fields" = { "name" = "Gymnasieintyg, summerade poäng", "description" = "Summerade poäng per år för personer som läst gymnasiala kurser och erhållit ett gymnasieintyg inom ett introduktionsprogram. Registret är ackumulerat från och med 2012 och är ett av underlagen till Registret över befolkningens utbildning. Kurserna och betygen finns i tabellen Gymnasieintyg." } }
+evidence = "SCB Registerinformation, RegVerID 17537 \"Gymnasieintyg, summerade poäng\": \"Registret är ackumulerat fr.o.m. 2012 och innehåller summerade poäng för personer som läst gymnasiala kurser och erhållit ett gymnasieintyg inom ett introduktionsprogram.\" Its population: \"Antal poäng personen läst summeras årsvis.\" SCB files it under the Gymnasieintyg variant beside the accumulated course register (RegVerID 17536), for the same period, so in one table the two releases collide (F8) and its columns are shadowed. It gets a table of its own."
+
+[[statement]]
+kind = "set"
+subject = "release:gymnasieintyg/r17537"
+fields = { "period" = "VT2012..VT2024" }
+evidence = "SCB Registerinformation, RegVerID 17537: the release is named \"Gymnasieintyg, summerade poäng\", with no period, so its documented columns had no period. It is \"ackumulerat fr.o.m. 2012\"; its population is dated 2012-01-01 - 2024-06-30, the spring term 2012 through the spring term 2024, as for the accumulated course register RegVerID 17536."
+
+[[statement]]
+kind = "set"
+subject = "release:gymnasieintyg/r17537"
+fields = { "table" = "gymnasieintyg-summerade-poang" }
+evidence = "SCB documents the summed-points file (RegVerID 17537, columns PersonNr and TotalPoang_2012 … TotalPoang_2024) under the same variant and period as the accumulated course register (RegVerID 17536). Moved whole to its own table so that neither release shadows the other."
+
+[[statement]]
+kind = "assert"
+subject = "table:komvux-och-samlat-betygsdokument"
+fact = { "entity" = "table", "fields" = { "name" = "Komvux och samlat betygsdokument/studiebevis", "description" = "Personer som avgått från gymnasiet med ett samlat betygsdokument eller studiebevis och har avklarade poäng på Komvux. Registret används i produktionen av Registret över befolkningens utbildning. Kursdeltagandet i Komvux finns i tabellen Komvux." } }
+evidence = "SCB Registerinformation, RegVerID 17540 \"Komvux och samlat betygsdokument/studiebevis\": \"Registret innehåller personer som avgått från gymnasiet antingen med ett samlat betygsdokument eller studiebevis, samt har avklarade poäng på Komvux.\" SCB files it under the Komvux variant beside the course register \"Komvux HT 1988 - VT 2024\" (RegVerID 17564). Placed in that table it overlaps 17564 with value sets that disagree (SUN2020Inr, YFieldMax), which made three Komvux segments ambiguous. It gets a table of its own."
+
+[[statement]]
+kind = "set"
+subject = "release:komvux/r17540"
+fields = { "period" = "2001..2024" }
+evidence = "SCB Registerinformation, RegVerID 17540: the release is named \"Komvux och samlat betygsdokument/studiebevis\", with no period, so its documented columns had no period. Its population is dated 2001-01-01 - 2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "release:komvux/r17540"
+fields = { "table" = "komvux-och-samlat-betygsdokument" }
+evidence = "SCB documents this extract (RegVerID 17540) under the Komvux variant beside the course register \"Komvux HT 1988 - VT 2024\" (RegVerID 17564), with its own population and value sets. Moved whole to its own table so that it does not make the course register's segments ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "komvux-och-samlat-betygsdokument: {sun2000inr,yfieldmax}"
+fields = { "classification" = "class/sun/sun2000-inriktning" }
+evidence = "The same columns as in the Komvux table, bound there to SUN 2000 Utbildningsinriktning; release r17540 moved to its own table and keeps the binding. Legacy exact value-set label: SUN 2000 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "komvux-och-samlat-betygsdokument: sun2020inr"
+fields = { "classification" = "class/sun/sun2020-inriktning" }
+evidence = "The same column as in the Komvux table, bound there to SUN 2020 Utbildningsinriktning; release r17540 moved to its own table and keeps the binding. Legacy exact value-set label: SUN 2020 - Utbildningsinriktning"
+
+[[statement]]
+kind = "set"
+subject = "komvux-och-samlat-betygsdokument: {ny_niva,sun2020niva}"
+fields = { "classification" = "class/sun/sun2020-niva" }
+evidence = "The same columns as in the Komvux table, bound there to SUN 2020 Utbildningsnivå; release r17540 moved to its own table and keeps the binding. Legacy exact value-set label: SUN 2020 - Utbildningsnivå"
+
+[[statement]]
+kind = "set"
+subject = "gymnasieintyg-summerade-poang: totalpoang_2012"
+fields = { "label" = "Lästa gymnasiala kurspoäng för personer med gymnasieintyg 2012" }
+evidence = "SCB Registerinformation, RegVerID 17537, TotalPoang_2012 \"Poängomfattning\", operational definition: \"Antal poäng som lästs på gymnasiala kurser för personer som erhållit ett gymnasieintyg under 2012.\" Labelled like its 2013-2024 siblings."
+
+[[statement]]
+kind = "set"
+subject = "komvux-och-samlat-betygsdokument: sun2020niva"
+fields = { "label" = "Högsta utbildningens nivå föregående år SUN2020, fullständig kod" }
+evidence = "The same column as SUN2020Niva in the Komvux table, labelled there \"Högsta utbildningens nivå föregående år SUN2020, fullständig kod\" (ureg.toml:3706 lineage); release r17540 moved to its own table and keeps the label."
