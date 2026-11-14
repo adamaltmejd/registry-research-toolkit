@@ -2503,3 +2503,9 @@ kind = "set"
 subject = "ut-invandrares-utbildning: var:eget-personnummer"
 fields.row_key = true
 evidence = "Row key: eget-personnummer identifies a row: the migrant's own personnummer, the table's only identifier (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieintyg: var:ar"
+fields.row_key = true
+evidence = "Row key: ar (Ar) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date; the delivered columns cannot always tell two events of one unit on that date apart, so rows are not guaranteed unique (maintainer ruling 2026-11-14)."

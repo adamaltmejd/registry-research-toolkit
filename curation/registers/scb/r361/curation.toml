@@ -276,9 +276,3 @@ kind = "set"
 subject = "nystartade-foretag: var:person-orgnr"
 fields.row_key = true
 evidence = "Row key: person-orgnr identify a row: one row per new firm, keyed on its organisation number over all years; the enterprise unit number and the 2013 to 2015 personnr are attributes (maintainer ruling 2026-11-14)."
-
-[[statement]]
-kind = "set"
-subject = "nystartade-foretag: var:kvartal-period"
-fields.row_key = true
-evidence = "Row key: kvartal-period (Kvartal) is the period of a row; one delivered file holds several quarters, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

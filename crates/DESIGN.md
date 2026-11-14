@@ -244,13 +244,18 @@ classification bindings. Accepting one requires reviewed curation and a premise 
   `K1:row-key-partial`: a segment of a key variable that is not a key, which the
   variable-wide statement rules out; it should stay empty.
 
-**Row keys.** A row key is a variable whose values, with the table's other row keys,
-identify a table's row within one delivered file: the unit's id (a person, firm,
-workplace, school, property, vehicle), both ids in a table about pairs, the case id of an
-event table, and the period column (År, Månad, Kvartal, Termin) where one file holds
-several periods per unit (a quarterly stock in a span file, a monthly table in a yearly
-file, an FK payment file): id plus time (maintainer 2026-11-14). A period column that
-only dates an event or repeats the file's own period is not a key. It is a property
+**Row keys.** A table's row keys are the smallest set of delivered columns that makes a
+row unique within one delivered file (maintainer 2026-11-14): the unit's id (a person,
+firm, workplace, school, property, vehicle; both ids in a table about pairs; the case id
+of an event table), plus the period column (År, Månad, Kvartal, Termin) where one file
+holds several periods per unit (a quarterly stock in a span file, a monthly table in a
+yearly file, an FK payment file), plus the event's date (the full date, not its year)
+where one unit can have several events in the table (moves, admissions, prescriptions).
+An event that happens at most once per unit (a death) is keyed by the unit alone. Where
+even these columns repeat (two prescriptions on one day), the key stops at what the
+delivered columns identify; no column is invented to complete it. A period column that
+repeats the file's own period is not a key, and a birth date column is never one. It is a
+property
 of a table and variable, set only by curation, once per pair: `set row_key = true` on
 `<table>: var:<id>`, an address that selects that ledger variable's occurrences in that
 table under every spelling and source key, including ones a later pin adds (the statement's

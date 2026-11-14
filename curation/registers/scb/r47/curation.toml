@@ -4463,18 +4463,6 @@ evidence = "Row key: personnr-motsvarande-2 identifies a row: the student, the t
 
 [[statement]]
 kind = "set"
-subject = "doktorander-aktivitet: var:termin-for-aktiviteten"
-fields.row_key = true
-evidence = "Row key: termin-for-aktiviteten (Termin) is the period of a row; one delivered file holds several terms, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
-
-[[statement]]
-kind = "set"
-subject = "doktorander-forsorjning: var:termin-for-forsorjningen"
-fields.row_key = true
-evidence = "Row key: termin-for-forsorjningen (Termin) is the period of a row; one delivered file holds several terms, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
-
-[[statement]]
-kind = "set"
 subject = "grundutbildning-1977: var:termin-for-registreringen"
 fields.row_key = true
 evidence = "Row key: termin-for-registreringen (Termin) is the period of a row; one delivered file holds several terms, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
@@ -4508,3 +4496,51 @@ kind = "set"
 subject = "grundutbildning-poang: var:ar-for-avlagda-poang"
 fields.row_key = true
 evidence = "Row key: ar-for-avlagda-poang (Ar) is the period of a row; one delivered file holds several years, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "doktorander-aktivitet: var:ar-termin-aktiviteten"
+fields.row_key = true
+evidence = "Row key: ar-termin-aktiviteten (ArTermin) is the period of a row; one delivered file holds several terms, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "doktorander-forsorjning: var:ar-termin-forsorjning"
+fields.row_key = true
+evidence = "Row key: ar-termin-forsorjning (ArTermin) is the period of a row; one delivered file holds several terms, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "doktorander-forskarskolor: var:ar-termin-aktiviteten"
+fields.row_key = true
+evidence = "Row key: ar-termin-aktiviteten (ArTermin) is the period of a row; one delivered file holds several terms, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "doktorander-anknytande-hogskolor: var:ar-termin-aktiviteten"
+fields.row_key = true
+evidence = "Row key: ar-termin-aktiviteten (ArTermin) is the period of a row; one delivered file holds several terms, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "antagna-forskarniva: var:antdatum"
+fields.row_key = true
+evidence = "Row key: antdatum (AntDatum) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "doktorander-examina: var:examensdatum"
+fields.row_key = true
+evidence = "Row key: examensdatum (ExDatum) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "grundutbildning-examina-aldre: var:ar-for-examensbevis"
+fields.row_key = true
+evidence = "Row key: ar-for-examensbevis (ar) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date; the delivered columns cannot always tell two events of one unit on that date apart, so rows are not guaranteed unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "grundutbildning-examina-aldre: var:den-termin-da-examensbeviset-utfardades"
+fields.row_key = true
+evidence = "Row key: den-termin-da-examensbeviset-utfardades (termin) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date; the delivered columns cannot always tell two events of one unit on that date apart, so rows are not guaranteed unique (maintainer ruling 2026-11-14)."

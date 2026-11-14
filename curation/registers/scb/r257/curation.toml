@@ -14920,15 +14920,3 @@ kind = "set"
 subject = "innovation-i-foretagssektorn: var:orgnr-12"
 fields.row_key = true
 evidence = "Row key: orgnr-12 and fenr and foretagsenhetsnummer-scbid identify a row: one row per surveyed enterprise unit, keyed on the enterprise id of each era; the merger and outsourcing variables are survey answers, not ids (maintainer ruling 2026-11-14)."
-
-[[statement]]
-kind = "set"
-subject = "innovation-i-foretagssektorn: var:ar"
-fields.row_key = true
-evidence = "Row key: ar (ar, Ar) is the period of a row; one delivered file holds several years, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
-
-[[statement]]
-kind = "set"
-subject = "innovation-i-foretagssektorn: var:ar-time-period"
-fields.row_key = true
-evidence = "Row key: ar-time-period (TIME_PERIOD) is the period of a row; one delivered file holds several periods, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

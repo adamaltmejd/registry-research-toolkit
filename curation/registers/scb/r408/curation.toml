@@ -2027,12 +2027,6 @@ evidence = "Row key: referensperiod-manad (Manad) is the period of a row; one de
 
 [[statement]]
 kind = "set"
-subject = "sus: var:referensperiod-manad"
-fields.row_key = true
-evidence = "Row key: referensperiod-manad (manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
-
-[[statement]]
-kind = "set"
 subject = "anstallningar-laps: var:referensperiod"
 fields.row_key = true
 evidence = "Row key: referensperiod (Period) is the period of a row; one delivered file holds several periods, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

@@ -440,3 +440,21 @@ kind = "set"
 subject = "tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identifies a row: the discharged person is the unit, pseudo is the same person in pseudonymised form, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "ansokningar-om-tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm: var:ansdatumn"
+fields.row_key = true
+evidence = "Row key: ansdatumn (ANSDATUMN) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "beslut-om-omedelbart-omhandertagande-for-tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm: var:besdatumn"
+fields.row_key = true
+evidence = "Row key: besdatumn (BESDATUMN) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm: var:vardstartdatum"
+fields.row_key = true
+evidence = "Row key: vardstartdatum (STDATUM) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."

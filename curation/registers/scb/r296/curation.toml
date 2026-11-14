@@ -1902,12 +1902,6 @@ evidence = "Maintainer 2026-11-14: where the claimants are variants of one conce
 
 [[statement]]
 kind = "set"
-subject = "konsumentprisindex-kpi: var:person-orgnr"
-fields.row_key = true
-evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
-
-[[statement]]
-kind = "set"
 subject = "ppi: var:cfar-nummer"
 fields.row_key = true
 evidence = "Row key: foretagsidentitet and cfar-nummer and identitet-ftgid identify a row: the reporting firm id of each era (survey firm id, then CFAR, then the firm id of the new system) identifies the respondent; product, notation and lookup ids are attributes; rows are price quotes so the key does not make rows unique (maintainer ruling 2026-11-14)."

@@ -24225,3 +24225,9 @@ kind = "set"
 subject = "individer-in-utvandring: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identifies a row: a migration table about one person; no event id, so rows need not be unique (maintainer ruling 2026-11-14, rule 4)."
+
+[[statement]]
+kind = "set"
+subject = "individer-in-utvandring: var:manad"
+fields.row_key = true
+evidence = "Row key: manad (InvUtvManad) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date; the delivered columns cannot always tell two events of one unit on that date apart, so rows are not guaranteed unique (maintainer ruling 2026-11-14)."

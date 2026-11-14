@@ -426,3 +426,15 @@ kind = "set"
 subject = "can-bc: var:pseudo"
 fields.row_key = true
 evidence = "Row key: pseudo identifies a row: it is the patient id, the only person id in the table, and the key is not unique per tumour row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "can: var:diagnosdatum"
+fields.row_key = true
+evidence = "Row key: diagnosdatum (DIADAT) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "can-bc: var:diagnosdatum"
+fields.row_key = true
+evidence = "Row key: diagnosdatum (DIADAT) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."

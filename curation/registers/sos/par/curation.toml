@@ -1710,3 +1710,21 @@ kind = "set"
 subject = "par-tv: var:pseudo"
 fields.row_key = true
 evidence = "Row key: pseudo identifies a row: it is the only person id covering the whole table, since personnr ends in 2014, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: var:indatum"
+fields.row_key = true
+evidence = "Row key: indatum (INDATUM) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date; the delivered columns cannot always tell two events of one unit on that date apart, so rows are not guaranteed unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: var:indatum"
+fields.row_key = true
+evidence = "Row key: indatum (INDATUM) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "par-tv: var:indatum"
+fields.row_key = true
+evidence = "Row key: indatum (INDATUM) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."

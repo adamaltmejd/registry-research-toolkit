@@ -1058,3 +1058,51 @@ kind = "set"
 subject = "bu-plac-pnrq0: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identifies a row: the child is the unit of each placement, the decision date is an attribute, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bu-insats: var:insats-beslut-datumn"
+fields.row_key = true
+evidence = "Row key: insats-beslut-datumn (INSATS_BESLUT_DATUMN) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bu-insats-19602013: var:besldat"
+fields.row_key = true
+evidence = "Row key: besldat (BESLDAT) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bu-insats-endastxnr: var:besldat"
+fields.row_key = true
+evidence = "Row key: besldat (BESLDAT) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bu-insats-pnrq0: var:besldat"
+fields.row_key = true
+evidence = "Row key: besldat (BESLDAT) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bu-plac: var:plac-start-datumn"
+fields.row_key = true
+evidence = "Row key: plac-start-datumn (PLAC_START_DATUMN) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bu-plac-19602013: var:datum-start-placering"
+fields.row_key = true
+evidence = "Row key: datum-start-placering (PLACDAT1) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bu-plac-endastxnr: var:datum-start-placering"
+fields.row_key = true
+evidence = "Row key: datum-start-placering (PLACDAT1) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bu-plac-pnrq0: var:datum-start-placering"
+fields.row_key = true
+evidence = "Row key: datum-start-placering (PLACDAT1) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."

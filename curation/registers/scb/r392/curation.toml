@@ -1397,12 +1397,6 @@ evidence = "Row key: person-samordnings-orgnr identify a row: one row per paymen
 
 [[statement]]
 kind = "set"
-subject = "individuppgifter-agi: var:referensperiod"
-fields.row_key = true
-evidence = "Row key: referensperiod (Perioden) is the period of a row; one delivered file holds several periods, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
-
-[[statement]]
-kind = "set"
 subject = "individuppgifter-agi: var:redovisningsperiod"
 fields.row_key = true
 evidence = "Row key: redovisningsperiod (period) is the period of a row; one delivered file holds several periods, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
