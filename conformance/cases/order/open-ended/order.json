@@ -1,7 +1,7 @@
 {
   "catalog": {
     "catalog_version": "dev",
-    "schema_version": "14"
+    "schema_version": "15"
   },
   "project": {
     "name": "Order case",
@@ -16,6 +16,7 @@
       "register": "demo/opn",
       "table": "demo/opn",
       "table_name": "Öppna registret",
+      "delivered_table": "Öppna registret",
       "variable": "demo/opn/y",
       "variable_name": "Värde",
       "display_name": null,

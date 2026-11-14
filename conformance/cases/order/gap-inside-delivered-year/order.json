@@ -1,7 +1,7 @@
 {
   "catalog": {
     "catalog_version": "dev",
-    "schema_version": "14"
+    "schema_version": "15"
   },
   "project": {
     "name": "Order case",
@@ -16,6 +16,7 @@
       "register": "demo/halv",
       "table": "demo/halv",
       "table_name": "Halvårsregistret",
+      "delivered_table": "Halvårsregistret",
       "variable": "demo/halv/x",
       "variable_name": "X",
       "display_name": null,

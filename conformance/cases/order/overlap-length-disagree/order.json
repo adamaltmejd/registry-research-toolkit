@@ -1,7 +1,7 @@
 {
   "catalog": {
     "catalog_version": "dev",
-    "schema_version": "14"
+    "schema_version": "15"
   },
   "project": {
     "name": "Order case",
@@ -16,6 +16,7 @@
       "register": "demo/len",
       "table": "demo/len",
       "table_name": "Längdregistret",
+      "delivered_table": "Längdregistret",
       "variable": "demo/len/kod",
       "variable_name": "Kod",
       "display_name": null,

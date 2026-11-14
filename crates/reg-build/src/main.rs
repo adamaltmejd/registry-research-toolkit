@@ -331,6 +331,48 @@ fn tree(dir: &Path, prefix: &str, out: &mut BTreeSet<String>) -> Result<()> {
     Ok(())
 }
 
+/// Each source release's delivered table name, by its locator (a release keeps it through
+/// a move): the reader's name for the table it placed the release in, else the handle, or
+/// the register's name for the implicit table, as resolve names an unnamed table.
+fn delivered_names(outputs: &[reg_readers::ReadOutput]) -> BTreeMap<reg_frame::Locator, String> {
+    let records = || outputs.iter().flat_map(|output| &output.frame.records);
+    let mut tables = BTreeMap::new();
+    let mut registers = BTreeMap::new();
+    for record in records() {
+        match record {
+            Record::Table(t) => {
+                if let Some(name) = &t.name {
+                    tables
+                        .entry((&t.provider, &t.register, &t.table))
+                        .or_insert(name);
+                }
+            }
+            Record::Register(r) => {
+                registers
+                    .entry((&r.provider, &r.register))
+                    .or_insert(r.name.as_ref().unwrap_or(&r.register));
+            }
+            _ => {}
+        }
+    }
+    records()
+        .filter_map(|record| {
+            let Record::Release(r) = record else {
+                return None;
+            };
+            let named = tables.get(&(&r.provider, &r.register, &r.table)).copied();
+            let implicit = || {
+                r.table
+                    .is_empty()
+                    .then(|| registers.get(&(&r.provider, &r.register)).copied())
+                    .flatten()
+            };
+            let name = named.or_else(implicit).unwrap_or(&r.table);
+            Some((r.locator.clone(), name.clone()))
+        })
+        .collect()
+}
+
 /// A steward commit covers its own generated transcription inputs; putting that
 /// same commit inside its manifest would make a self-referential Git pin.
 #[allow(clippy::too_many_lines)]
@@ -681,6 +723,7 @@ fn build_with_provenance(
         provenance,
         classifications: applied.classifications,
         external_relations,
+        delivered: delivered_names(&outputs),
     };
     if let Some(path) = &args.report {
         let doc = serde_json::json!({

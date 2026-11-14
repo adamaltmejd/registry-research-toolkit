@@ -22,6 +22,7 @@
         "register": "steward/slots",
         "table": "steward/slots",
         "table_name": "Delivery slots",
+        "delivered_table": "Delivery slots",
         "variable": "steward/slots/slot2",
         "variable_name": "Second position",
         "display_name": null,
@@ -38,6 +39,7 @@
         "source": "s",
         "table": "steward/slots",
         "table_name": "Delivery slots",
+        "delivered_table": "Delivery slots",
         "period": {"start": "2018-01-01", "end": "2019-01-01"},
         "columns": [
           {

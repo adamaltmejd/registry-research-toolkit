@@ -1,7 +1,7 @@
 {
   "catalog": {
     "catalog_version": "dev",
-    "schema_version": "14"
+    "schema_version": "15"
   },
   "project": {
     "name": "Order case",
@@ -16,6 +16,7 @@
       "register": "demo/eda",
       "table": "demo/eda",
       "table_name": "Hel utgåva",
+      "delivered_table": "Hel utgåva",
       "variable": "demo/eda/v",
       "variable_name": "Värde",
       "display_name": null,

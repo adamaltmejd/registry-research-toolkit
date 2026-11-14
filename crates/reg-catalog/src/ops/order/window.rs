@@ -790,6 +790,7 @@ fn entries(
             register: table.register.clone(),
             table: table.pid.clone(),
             table_name: String::new(),
+            delivered_table: String::new(),
             variable: at.variable.pid.clone(),
             variable_name: String::new(),
             display_name: binding.display_name.clone(),

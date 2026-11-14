@@ -1,7 +1,7 @@
 {
   "catalog": {
     "catalog_version": "dev",
-    "schema_version": "14"
+    "schema_version": "15"
   },
   "clips": [],
   "entries": [
@@ -20,6 +20,7 @@
       "spelling": "Ink",
       "table": "demo/brott/b",
       "table_name": "Tabell B",
+      "delivered_table": "Tabell B",
       "type": "integer",
       "value_set": null,
       "variable": "demo/brott/ink",
@@ -40,6 +41,7 @@
       "spelling": "Civ",
       "table": "demo/brott/b",
       "table_name": "Tabell B",
+      "delivered_table": "Tabell B",
       "type": "integer",
       "value_set": null,
       "variable": "demo/brott/civ",

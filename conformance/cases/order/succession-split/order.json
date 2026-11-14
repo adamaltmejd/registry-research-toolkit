@@ -1,7 +1,7 @@
 {
   "catalog": {
     "catalog_version": "dev",
-    "schema_version": "14"
+    "schema_version": "15"
   },
   "project": {
     "name": "Order case",
@@ -16,6 +16,7 @@
       "register": "demo/suc",
       "table": "demo/suc/gammal",
       "table_name": "Gammal tabell",
+      "delivered_table": "Gammal tabell",
       "variable": "demo/suc/ink",
       "variable_name": "Inkomst",
       "display_name": null,
@@ -36,6 +37,7 @@
       "register": "demo/suc",
       "table": "demo/suc/ny",
       "table_name": "Ny tabell",
+      "delivered_table": "Ny tabell",
       "variable": "demo/suc/ink",
       "variable_name": "Inkomst",
       "display_name": null,

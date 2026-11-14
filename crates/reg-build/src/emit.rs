@@ -82,6 +82,9 @@ pub struct Catalog {
     pub statements: Vec<StatementRow>,
     pub provenance: reg_resolve::provenance::Finalized,
     pub classifications: Vec<reg_resolve::curation::apply::Classification>,
+    /// A source release's locator → the name of the table its reader placed it in
+    /// (`release.delivered_text`).
+    pub delivered: BTreeMap<reg_frame::Locator, String>,
 }
 
 impl Catalog {
@@ -602,6 +605,11 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                     flag(release.primary),
                     Cell::Int(i64::from(release.edition_disagreement)),
                     Cell::Text(rel.name.clone()),
+                    // An asserted release has no reader: its table is the one delivered.
+                    Cell::Text(catalog.delivered.get(&rel.locator).map_or_else(
+                        || r.tables[release.table].table.name.clone().unwrap_or_default(),
+                        Clone::clone,
+                    )),
                     opt_text(rel.description.as_ref()),
                     Cell::Str(rel.release.clone()),
                     if asserted {

@@ -120,6 +120,9 @@ CREATE TABLE release (
   -- families (resolve's F7); the order check's `edition_disagreement` reads it.
   edition_disagreement INTEGER NOT NULL CHECK (edition_disagreement IN (0,1)),
   name_text       INTEGER NOT NULL REFERENCES text(id),  -- literal delivery name
+  -- The name of the table the reader placed the release in, before curation: an order
+  -- names it per era when a merge moved the release (crates/DESIGN.md, "Merged variants").
+  delivered_text   INTEGER NOT NULL REFERENCES text(id),
   description_text INTEGER REFERENCES text(id),
   source_key       TEXT NOT NULL,         -- opaque: 'r18774', or 'stmt:<hash>' if asserted
   input_id         INTEGER REFERENCES input(id),  -- NULL only when asserted

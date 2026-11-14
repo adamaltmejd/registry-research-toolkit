@@ -1,0 +1,94 @@
+{
+  "catalog": {
+    "catalog_version": "dev",
+    "schema_version": "15"
+  },
+  "clips": [],
+  "entries": [
+    {
+      "binding": 0,
+      "classification": null,
+      "delivered_table": "Individer 16+",
+      "display_name": null,
+      "length": null,
+      "period": {
+        "end": "2010-01-01",
+        "start": "2008-01-01"
+      },
+      "provider": "demo",
+      "register": "demo/vari",
+      "source": "s",
+      "spelling": "Ink",
+      "table": "demo/vari/b",
+      "table_name": "Individer",
+      "type": "integer",
+      "value_set": null,
+      "variable": "demo/vari/ink",
+      "variable_name": "Inkomst"
+    },
+    {
+      "binding": 0,
+      "classification": null,
+      "delivered_table": "Individer 15+",
+      "display_name": null,
+      "length": null,
+      "period": {
+        "end": "2012-01-01",
+        "start": "2010-01-01"
+      },
+      "provider": "demo",
+      "register": "demo/vari",
+      "source": "s",
+      "spelling": "Ink",
+      "table": "demo/vari/b",
+      "table_name": "Individer",
+      "type": "integer",
+      "value_set": null,
+      "variable": "demo/vari/ink",
+      "variable_name": "Inkomst"
+    }
+  ],
+  "findings": [],
+  "manual": [],
+  "project": {
+    "name": "Order case",
+    "reg_meta_version": "0.64.0",
+    "schema_version": "6.2.0"
+  },
+  "row_keys": [
+    {
+      "columns": [
+        {
+          "spelling": "Id",
+          "variable": "demo/vari/id",
+          "variable_name": "Id"
+        }
+      ],
+      "delivered_table": "Individer 16+",
+      "period": {
+        "end": "2010-01-01",
+        "start": "2008-01-01"
+      },
+      "source": "s",
+      "table": "demo/vari/b",
+      "table_name": "Individer"
+    },
+    {
+      "columns": [
+        {
+          "spelling": "Id",
+          "variable": "demo/vari/id",
+          "variable_name": "Id"
+        }
+      ],
+      "delivered_table": "Individer 15+",
+      "period": {
+        "end": "2012-01-01",
+        "start": "2010-01-01"
+      },
+      "source": "s",
+      "table": "demo/vari/b",
+      "table_name": "Individer"
+    }
+  ]
+}

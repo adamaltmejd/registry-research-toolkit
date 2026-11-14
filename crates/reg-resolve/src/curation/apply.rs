@@ -1154,6 +1154,33 @@ pub fn follow_release_moves(moves: &[ReleaseMove], records: &mut [Record]) {
     }
 }
 
+/// Drop the stated tables `moves` emptied: a table whose releases all moved out and that no
+/// occurrence names is a merged variant, so it is not published (crates/DESIGN.md, "Merged
+/// variants"). A stated table that never had a release stays.
+pub fn drop_emptied_tables(moves: &[ReleaseMove], records: &mut Vec<Record>) {
+    let named: BTreeSet<(&str, &str, &str)> = records
+        .iter()
+        .filter_map(|record| match record {
+            Record::Release(r) => Some((&*r.provider, &*r.register, &*r.table)),
+            Record::Occurrence(o) => Some((&*o.provider, &*o.register, &*o.table)),
+            _ => None,
+        })
+        .collect();
+    let emptied: BTreeSet<(String, String, String)> = moves
+        .iter()
+        .map(|m| (&*m.provider, &*m.register, &*m.table))
+        .filter(|key| !named.contains(key))
+        .map(|(p, r, t)| (p.to_owned(), r.to_owned(), t.to_owned()))
+        .collect();
+    if emptied.is_empty() {
+        return;
+    }
+    records.retain(|record| {
+        !matches!(record, Record::Table(t)
+            if emptied.contains(&(t.provider.clone(), t.register.clone(), t.table.clone())))
+    });
+}
+
 fn selected_record_value(value: &Value, source: &super::SourcePremise) -> bool {
     source.locator == locator(value)
         && ["kind", "provider", "register", "table", "release"]
@@ -1235,7 +1262,10 @@ fn apply_fields(
                         | "notice"
                         | "long_format"
                 ),
-                "table" => matches!(field.as_str(), "description" | "coverage" | "role"),
+                "table" => matches!(
+                    field.as_str(),
+                    "name" | "description" | "coverage" | "role"
+                ),
                 "release" => matches!(field.as_str(), "description" | "period"),
                 _ => false,
             };

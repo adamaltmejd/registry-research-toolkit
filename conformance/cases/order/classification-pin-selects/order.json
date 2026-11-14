@@ -1,7 +1,7 @@
 {
   "catalog": {
     "catalog_version": "dev",
-    "schema_version": "14"
+    "schema_version": "15"
   },
   "project": {
     "name": "Order case",
@@ -16,6 +16,7 @@
       "register": "demo/pins",
       "table": "demo/pins",
       "table_name": "Classification pins",
+      "delivered_table": "Classification pins",
       "variable": "demo/pins/kod",
       "variable_name": "Code",
       "display_name": null,
@@ -38,6 +39,7 @@
       "source": "s",
       "table": "demo/pins",
       "table_name": "Classification pins",
+      "delivered_table": "Classification pins",
       "period": {
         "start": "2018-01-01",
         "end": "2020-01-01"

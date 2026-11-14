@@ -170,3 +170,18 @@
 {"kind":"notice","series_break":true,"subject":{"kind":"release","provider":"demo","register":"brott","table":"b","key":"b2016"},"text":"Ny population 2016."}
 {"kind":"notice","series_break":true,"subject":{"kind":"release","provider":"demo","register":"brott","table":"b","key":"b2019"},"text":"Ny insamling 2019."}
 {"kind":"notice","series_break":true,"subject":{"kind":"register","provider":"demo","register":"brott"},"text":"Registret bytte källa."}
+{"kind":"register","provider":"demo","register":"vari","name":"Variantregistret"}
+{"kind":"table","provider":"demo","register":"vari","table":"a","name":"Individer 16+","from":"2008-01-01","to":"2009-12-31"}
+{"kind":"table","provider":"demo","register":"vari","table":"b","name":"Individer 15+","from":"2010-01-01","to":"2011-12-31"}
+{"kind":"release","provider":"demo","register":"vari","table":"a","release":"a2008","name":"2008","from":"2008-01-01","to":"2008-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"vari","table":"a","release":"a2009","name":"2009","from":"2009-01-01","to":"2009-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"vari","table":"b","release":"b2010","name":"2010","from":"2010-01-01","to":"2010-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"vari","table":"b","release":"b2011","name":"2011","from":"2011-01-01","to":"2011-12-31","grain":"year","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"vari","table":"a","release":"a2008","column":"Id","source_key":"k1","label":"Id","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"vari","table":"a","release":"a2009","column":"Id","source_key":"k1","label":"Id","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"vari","table":"b","release":"b2010","column":"Id","source_key":"k1","label":"Id","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"vari","table":"b","release":"b2011","column":"Id","source_key":"k1","label":"Id","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"vari","table":"a","release":"a2008","column":"Ink","source_key":"k2","label":"Inkomst","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"vari","table":"a","release":"a2009","column":"Ink","source_key":"k2","label":"Inkomst","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"vari","table":"b","release":"b2010","column":"Ink","source_key":"k2","label":"Inkomst","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"vari","table":"b","release":"b2011","column":"Ink","source_key":"k2","label":"Inkomst","dtype":"int"}

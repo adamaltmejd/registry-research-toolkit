@@ -1,0 +1,26 @@
+# Merged variants (crates/DESIGN.md, "Merged variants"): table `a` (16+, 2008-2009) is
+# merged into table `b` (15+, from 2010), which takes the name "Individer".
+
+[[statement]]
+kind = "set"
+subject = "table:b"
+fields = { coverage = "2008.." }
+evidence = "The merged table covers both variants' years."
+
+[[statement]]
+kind = "set"
+subject = "table:b"
+fields = { name = "Individer" }
+evidence = "The variants differ only by the population break at 2010."
+
+[[statement]]
+kind = "set"
+subject = "release:a/a2008"
+fields = { table = "b" }
+evidence = "Merged variant."
+
+[[statement]]
+kind = "set"
+subject = "release:a/a2009"
+fields = { table = "b" }
+evidence = "Merged variant."

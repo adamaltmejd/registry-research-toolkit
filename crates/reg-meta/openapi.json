@@ -2673,6 +2673,7 @@
           "register",
           "table",
           "table_name",
+          "delivered_table",
           "variable",
           "variable_name",
           "display_name",
@@ -2695,6 +2696,10 @@
               "null"
             ],
             "description": "A class version's public id."
+          },
+          "delivered_table": {
+            "type": "string",
+            "description": "The name of the table the provider delivered the period in, before any merge or\nrename (crates/DESIGN.md, \"Merged variants\"); `table_name` for a table with no\nreleases."
           },
           "display_name": {
             "type": [
@@ -2859,6 +2864,7 @@
           "source",
           "table",
           "table_name",
+          "delivered_table",
           "period",
           "columns"
         ],
@@ -2868,6 +2874,10 @@
             "items": {
               "$ref": "#/components/schemas/RowKeyColumn"
             }
+          },
+          "delivered_table": {
+            "type": "string",
+            "description": "The name of the table the provider delivered the period in, as for an entry."
           },
           "period": {
             "$ref": "#/components/schemas/Period"
