@@ -2946,12 +2946,6 @@ evidence = "LBR är en registerförkortning som inte anger variabelns innebörd.
 [[statement]]
 kind = "set"
 subject = "var:majs"
-fields = { "sets" = ["majsareal"] }
-evidence = "Måttet avser majsareal.\ncatalog:variable_text:35942:11688:20454\ncatalog:variable_text:35943:17167:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:majs"
 fields = { "tags" = ["agriculture"] }
 evidence = "Måttet avser majsareal.\ncatalog:variable_text:35942:11688:20454\ncatalog:variable_text:35943:17167:17532"
 
@@ -4694,12 +4688,6 @@ kind = "set"
 subject = "set:lan"
 fields = { "label" = "Län" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:majsareal"
-fields = { "label" = "Majsareal" }
-evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
 
 [[statement]]
 kind = "set"

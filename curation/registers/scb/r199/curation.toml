@@ -968,12 +968,6 @@ evidence = "Kodningen avser hushållsel i hyran.\ncatalog:variable_text:25831:14
 [[statement]]
 kind = "set"
 subject = "var:upplatelseform"
-fields = { "sets" = ["upplatelseform"] }
-evidence = "Källkolumnen är kopplad till två versioner under samma period.\ncatalog:occurrence:233642\ncatalog:occurrence:233643"
-
-[[statement]]
-kind = "set"
-subject = "var:upplatelseform"
 fields = { "tags" = ["housing"] }
 evidence = "Källkolumnen är kopplad till två versioner under samma period.\ncatalog:occurrence:233642\ncatalog:occurrence:233643"
 
@@ -1098,12 +1092,6 @@ kind = "set"
 subject = "set:ombyggnad-storre-forandring"
 fields = { "label" = "Ombyggnad större förändring" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:upplatelseform"
-fields = { "label" = "Upplåtelseform" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"

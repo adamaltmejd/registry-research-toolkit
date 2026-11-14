@@ -98,12 +98,6 @@ evidence = "Föräldraavgift ingår i kandidatgruppen.\ncatalog:variable_text:42
 [[statement]]
 kind = "set"
 subject = "var:fsg-annan-kommun"
-fields = { "sets" = ["forsaljning-av-utbildningsverksamhet"] }
-evidence = "Samma källkolumn överlappar med fsg-till-kommun; försäljningsbeloppet hör till kandidatgruppen.\ncatalog:occurrence:437301\ncatalog:occurrence:437302\ncatalog:variable_text:42004:15706:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:fsg-annan-kommun"
 fields = { "tags" = ["education", "public-finance"] }
 evidence = "Samma källkolumn överlappar med fsg-till-kommun; försäljningsbeloppet hör till kandidatgruppen.\ncatalog:occurrence:437301\ncatalog:occurrence:437302\ncatalog:variable_text:42004:15706:16801"
 
@@ -464,12 +458,6 @@ evidence = "Kostnaden gäller specialskolans resurscentrum.\ncatalog:variable_te
 [[statement]]
 kind = "set"
 subject = "var:sarskoleform"
-fields = { "sets" = ["sarskoleform"] }
-evidence = "Kodningen ingår i kandidatgruppen.\ncatalog:variable_text:42039:15706:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:sarskoleform"
 fields = { "tags" = ["education"] }
 evidence = "Kodningen ingår i kandidatgruppen.\ncatalog:variable_text:42039:15706:16801"
 
@@ -667,12 +655,6 @@ evidence = "#2100 group name: slug words restored from catalog wording; kept on 
 
 [[statement]]
 kind = "set"
-subject = "set:forsaljning-av-utbildningsverksamhet"
-fields = { "label" = "Försäljning av utbildningsverksamhet" }
-evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:hemkommunskostnader"
 fields = { "label" = "Hemkommunskostnader" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
@@ -688,12 +670,6 @@ kind = "set"
 subject = "set:kostnader-for-kop-av-utbildningsverksamhet"
 fields = { "label" = "Kostnader för köp av utbildningsverksamhet" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:sarskoleform"
-fields = { "label" = "Särskoleform" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"

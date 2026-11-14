@@ -4393,8 +4393,8 @@ evidence = "SCB Registerinformation, Fastigheter (RegisterId 7) 1998-2023 docume
 [[statement]]
 kind = "set"
 subject = "fastigheter: VardeMark @2011..2012,2014 where key = 'v3741'"
-fields = { "spelling" = "VardeBygg" }
-evidence = "SCB Registerinformation, Fastigheter (RegisterId 7) 2011, 2012 and 2014 (CVID 247365, 282094, 436900) lists VarId 3741 \"Taxeringsvärde för småhusbyggnader\" under VardeMark beside 571 and 3743, and has no VardeBygg column; in the other 23 releases 1998-2023 VarId 3741 is VardeBygg, and VardeBygg carries no other VarId. SCB attached the wrong column name; the 3741 rows are corrected to VardeBygg, so VardeMark keeps only the 571/3743 pair."
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Fastigheter (RegisterId 7) 2011, 2012 and 2014 (CVID 247365, 282094, 436900) lists VarId 3741 \"Taxeringsvärde för småhusbyggnader\" under VardeMark beside 571 and 3743; in the other releases 1998-2023 VarId 3741 is VardeBygg. SCB attached the wrong column name. 3741 is merged into taxeringsvarde-byggnader (VarId 567), which those releases also list under VardeBygg, so the misnamed rows are withheld rather than respelled: they add no column, and a respell would put two listings of one variable on VardeBygg in the merge."
 
 [[statement]]
 kind = "set"
@@ -4413,3 +4413,15 @@ kind = "set"
 subject = "var:basvarde-for-mark"
 fields = { "label" = "Basvärde för mark", "description" = "Taxeringsenhetens basvärde för mark, i 1000-tal kronor. Kolumnen innehåller både basvärdet för småhusmark och för övrig mark." }
 evidence = "Maintainer ruling 2026-11-14: variants of one concept for different row kinds are merged and the variable carries a label and description covering both kinds.\nVarId 572 and VarId 3744 (småhusmark) share the column VardeMarkBas in Fastigheter 1998-2004."
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: VardeBygg where key = 'v3741'"
+fields = { "variable" = "taxeringsvarde-byggnader" }
+evidence = "SCB Registerinformation, Fastigheter (RegisterId 7) 1998-2023 documents column VardeBygg under VarId 567 \"Taxeringsvärde för byggnader\" and VarId 3741 \"Taxeringsenhetens taxeringsvärde för småhusbyggnader\" in every release (3741 under VardeMark in 2011, 2012 and 2014, withheld). As with VardeMark (571 and 3743) and the basvärde columns, småhus (typkoderna i 100-serien) is a row kind of the same value column, so the claimants are one concept for different row kinds (maintainer 2026-11-14: variants of one concept for different row kinds are merged). 567 is the generic claimant and survives."
+
+[[statement]]
+kind = "set"
+subject = "var:taxeringsvarde-byggnader"
+fields = { "label" = "Taxeringsvärde för byggnader", "description" = "Taxeringsenhetens taxeringsvärde för byggnader, i 1000-tal kronor. Kolumnen innehåller både värdet för småhusbyggnader (typkoderna i 100-serien) och värdet för byggnader på övriga taxeringsenheter." }
+evidence = "Maintainer ruling 2026-11-14: variants of one concept for different row kinds are merged and the variable carries a label and description covering both kinds.\nVarId 567 and VarId 3741 (småhusbyggnader) share the column VardeBygg in Fastigheter 1998-2023."

@@ -355,12 +355,6 @@ evidence = "Uppgiftslämnarens internettillgång.\ncatalog:variable_text:35646:1
 [[statement]]
 kind = "set"
 subject = "var:karosserikod"
-fields = { "sets" = ["karosserityp"] }
-evidence = "Samma kolumn har överlappande ägare för lastbil och släp.\ncatalog:occurrence:328092\ncatalog:occurrence:328093"
-
-[[statement]]
-kind = "set"
-subject = "var:karosserikod"
 fields = { "tags" = ["transport"] }
 evidence = "Samma kolumn har överlappande ägare för lastbil och släp.\ncatalog:occurrence:328092\ncatalog:occurrence:328093"
 
@@ -1005,12 +999,6 @@ kind = "set"
 subject = "set:fordonets-icke-anvandning"
 fields = { "label" = "Fordonets icke-användning" }
 evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (diacritics)."
-
-[[statement]]
-kind = "set"
-subject = "set:karosserityp"
-fields = { "label" = "Karosserityp" }
-evidence = "#2100 group name: the slug read as words; kept on review."
 
 [[statement]]
 kind = "set"

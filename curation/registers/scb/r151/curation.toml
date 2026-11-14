@@ -824,12 +824,6 @@ evidence = "Genomsnittet ingår i vistelsedygn.\ncatalog:variable_text:27839:138
 [[statement]]
 kind = "set"
 subject = "var:stangdorsak"
-fields = { "sets" = ["stangningsorsak"] }
-evidence = "Kodningen ingår i stängningsorsak.\ncatalog:valueset:1144\ncatalog:variable_text:27840:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:stangdorsak"
 fields = { "tags" = ["business"] }
 evidence = "Kodningen ingår i stängningsorsak.\ncatalog:valueset:1144\ncatalog:variable_text:27840:13514:20089"
 
@@ -963,12 +957,6 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 kind = "set"
 subject = "set:rumskapacitet"
 fields = { "label" = "Rumskapacitet" }
-evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:stangningsorsak"
-fields = { "label" = "Stängningsorsak" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
 
 [[statement]]

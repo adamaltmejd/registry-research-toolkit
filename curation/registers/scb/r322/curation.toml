@@ -927,12 +927,6 @@ evidence = "F16 är en ogenomskinlig frågekod. Källan anger nöjdhet med den f
 [[statement]]
 kind = "set"
 subject = "var:f17"
-fields = { "sets" = ["retrospektivt-studieval"] }
-evidence = "F17 är en opak frågekod.\ncatalog:variable_text:7147:14791:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:f17"
 fields = { "tags" = ["education"] }
 evidence = "F17 är en opak frågekod.\ncatalog:variable_text:7147:14791:14975"
 
@@ -2075,12 +2069,6 @@ kind = "set"
 subject = "set:orsaker-till-kursansokan"
 fields = { "label" = "Orsaker till kursansökan" }
 evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
-
-[[statement]]
-kind = "set"
-subject = "set:retrospektivt-studieval"
-fields = { "label" = "Retrospektivt studieval" }
-evidence = "#2100 group name: the slug read as words; kept on review."
 
 [[statement]]
 kind = "set"

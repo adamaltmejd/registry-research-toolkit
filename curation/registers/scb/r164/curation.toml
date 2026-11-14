@@ -1694,12 +1694,6 @@ evidence = "Län är en geografisk indelning.\ncatalog:occurrence-locators:varia
 [[statement]]
 kind = "set"
 subject = "var:modepreferens"
-fields = { "sets" = ["prefererat-svarssatt"] }
-evidence = "Samma källkolumn har överlappande ägare med olika frågor och värdemängder.\ncatalog:occurrence:404167\ncatalog:occurrence:404168\ncatalog:occurrence:404361"
-
-[[statement]]
-kind = "set"
-subject = "var:modepreferens"
 fields = { "tags" = ["methods"] }
 evidence = "Samma källkolumn har överlappande ägare med olika frågor och värdemängder.\ncatalog:occurrence:404167\ncatalog:occurrence:404168\ncatalog:occurrence:404361"
 
@@ -2410,12 +2404,6 @@ kind = "set"
 subject = "set:partival-senaste-riksdagsval"
 fields = { "label" = "Partival senaste riksdagsval" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:prefererat-svarssatt"
-fields = { "label" = "Prefererat svarssätt" }
-evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
 
 [[statement]]
 kind = "set"

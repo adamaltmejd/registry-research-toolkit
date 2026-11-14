@@ -1520,12 +1520,6 @@ evidence = "Färgen är en fordonsuppgift.\ncatalog:occurrence:109606"
 [[statement]]
 kind = "set"
 subject = "var:fordonets-benamning"
-fields = { "sets" = ["fordonsbenamning"] }
-evidence = "Variabeln anger fordonets benämning.\ncatalog:occurrence:105083"
-
-[[statement]]
-kind = "set"
-subject = "var:fordonets-benamning"
 fields = { "tags" = ["transport"] }
 evidence = "Variabeln anger fordonets benämning.\ncatalog:occurrence:105083"
 
@@ -1696,12 +1690,6 @@ kind = "set"
 subject = "var:modellgruppkod"
 fields = { "tags" = ["transport"] }
 evidence = "Grpkod är en opak källmnemonik för modellgruppkod.\ncatalog:variable_text:11855:20453:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:handelsbeteckning"
-fields = { "sets" = ["handelsbeteckning"] }
-evidence = "Variabeln anger fordonets handelsbeteckning.\ncatalog:occurrence:105142"
 
 [[statement]]
 kind = "set"
@@ -3061,12 +3049,6 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
-subject = "set:fordonsbenamning"
-fields = { "label" = "Fordonsbenämning" }
-evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
-
-[[statement]]
-kind = "set"
 subject = "set:fordonsfabrikat"
 fields = { "label" = "Fordonsfabrikat" }
 evidence = "#2100 group name: the slug read as words; kept on review."
@@ -3094,12 +3076,6 @@ kind = "set"
 subject = "set:fysisk-juridisk-agare"
 fields = { "label" = "Fysisk/juridisk ägare" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:handelsbeteckning"
-fields = { "label" = "Handelsbeteckning" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
 kind = "set"

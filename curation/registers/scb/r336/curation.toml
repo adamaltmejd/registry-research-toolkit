@@ -698,12 +698,6 @@ evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:54724:1570
 [[statement]]
 kind = "set"
 subject = "var:andel-avklarade-forskarstudier-f18"
-fields = { "sets" = ["andel-avklarade-forskarstudier"] }
-evidence = "Andel genomförd forskarutbildning.\ncatalog:variable_text:54726:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-avklarade-forskarstudier-f18"
 fields = { "tags" = ["education"] }
 evidence = "Andel genomförd forskarutbildning.\ncatalog:variable_text:54726:15706:16071"
 
@@ -1042,12 +1036,6 @@ kind = "set"
 subject = "var:diskriminerad-f26-03"
 fields = { "sets" = ["upplevd-diskriminering"] }
 evidence = "Upplevd diskriminering har ingen tydlig temaetikett.\ncatalog:variable_text:54760:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:erbjudande-i-annat-land-f15"
-fields = { "sets" = ["erbjudande-om-forskarutbildning-i-annat-land"] }
-evidence = "Erbjudande om forskarutbildning.\ncatalog:variable_text:54762:15706:16071"
 
 [[statement]]
 kind = "set"
@@ -1730,12 +1718,6 @@ evidence = "Handledningstid i utbildningen.\ncatalog:variable_text:54820:15706:1
 [[statement]]
 kind = "set"
 subject = "var:huvudsakligt-motiv-till-forskarutbildning-f17"
-fields = { "sets" = ["huvudsakligt-motiv-till-forskarutbildning"] }
-evidence = "Motiv till forskarutbildning.\ncatalog:variable_text:54823:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:huvudsakligt-motiv-till-forskarutbildning-f17"
 fields = { "tags" = ["education"] }
 evidence = "Motiv till forskarutbildning.\ncatalog:variable_text:54823:15706:16071"
 
@@ -2114,12 +2096,6 @@ evidence = "Urvalsstratum.\ncatalog:variable_text:54855:15706:16071"
 [[statement]]
 kind = "set"
 subject = "var:tidsatgang-for-studier-f25"
-fields = { "sets" = ["upplevd-tidsatgang-for-forskarstudier"] }
-evidence = "Upplevd tidsåtgång för utbildningen.\ncatalog:variable_text:54857:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:tidsatgang-for-studier-f25"
 fields = { "tags" = ["education"] }
 evidence = "Upplevd tidsåtgång för utbildningen.\ncatalog:variable_text:54857:15706:16071"
 
@@ -2473,12 +2449,6 @@ evidence = "Other financing is a residual personal-support source (r11, r14). Em
 
 [[statement]]
 kind = "set"
-subject = "set:andel-avklarade-forskarstudier"
-fields = { "label" = "Andel avklarade forskarstudier" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:anledningar-att-inte-stanna-i-sverige"
 fields = { "label" = "Anledningar att inte stanna i Sverige" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
@@ -2505,12 +2475,6 @@ evidence = "#2100 group name: slug words restored from the member and register l
 kind = "set"
 subject = "set:behorighet-till-forskarutbildning"
 fields = { "label" = "Behörighet till forskarutbildning" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:erbjudande-om-forskarutbildning-i-annat-land"
-fields = { "label" = "Erbjudande om forskarutbildning i annat land" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
@@ -2554,12 +2518,6 @@ kind = "set"
 subject = "set:hindrande-brister-i-handledningen"
 fields = { "label" = "Hindrande brister i handledningen" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:huvudsakligt-motiv-till-forskarutbildning"
-fields = { "label" = "Huvudsakligt motiv till forskarutbildning" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
 kind = "set"
@@ -2626,12 +2584,6 @@ kind = "set"
 subject = "set:upplevd-ekonomisk-tillracklighet"
 fields = { "label" = "Upplevd ekonomisk tillräcklighet" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:upplevd-tidsatgang-for-forskarstudier"
-fields = { "label" = "Upplevd tidsåtgång för forskarstudier" }
-evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
 
 [[statement]]
 kind = "set"

@@ -24283,56 +24283,56 @@ evidence = "Both describe transfer type in individual-table column BBSTYP and us
 [[statement]]
 kind = "set"
 subject = "individregister: blillan @1996-01-01..1996-12-31 where key = 'v24445'"
-fields = { "variable" = "lilla-n-per-stratum" }
-evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+fields = { "variable" = "antal-svarande-objekt" }
+evidence = "SCB Registerinformation, Hushållens ekonomi (HEK) documents column BLILLAN in Individregister and Kosthushåll under VarId 8167 \"Antal svarande objekt\" in every release 1975-2013 and, from 1996, also under VarIds 24445, 5697 and 3573 (\"Antal objekt i urval\", \"Lilla n\"). One column with one value per stratum carries both listings, and BLILLAN carries no other VarId, so they document the same count. The listings are assigned to the variable that holds the column in every release (VarId 8167), as the neighbouring-owner rule does where no pin stops it (COS 2026-11-14: an older pin that keeps a column blocked is updated)."
 
 [[statement]]
 kind = "set"
 subject = "individregister: blillan @1997-01-01..1997-12-31 where key = 'v24445'"
-fields = { "variable" = "lilla-n-per-stratum" }
-evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+fields = { "variable" = "antal-svarande-objekt" }
+evidence = "SCB Registerinformation, Hushållens ekonomi (HEK) documents column BLILLAN in Individregister and Kosthushåll under VarId 8167 \"Antal svarande objekt\" in every release 1975-2013 and, from 1996, also under VarIds 24445, 5697 and 3573 (\"Antal objekt i urval\", \"Lilla n\"). One column with one value per stratum carries both listings, and BLILLAN carries no other VarId, so they document the same count. The listings are assigned to the variable that holds the column in every release (VarId 8167), as the neighbouring-owner rule does where no pin stops it (COS 2026-11-14: an older pin that keeps a column blocked is updated)."
 
 [[statement]]
 kind = "set"
 subject = "individregister: blillan @1998-01-01..1998-12-31 where key = 'v24445'"
-fields = { "variable" = "lilla-n-per-stratum" }
-evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+fields = { "variable" = "antal-svarande-objekt" }
+evidence = "SCB Registerinformation, Hushållens ekonomi (HEK) documents column BLILLAN in Individregister and Kosthushåll under VarId 8167 \"Antal svarande objekt\" in every release 1975-2013 and, from 1996, also under VarIds 24445, 5697 and 3573 (\"Antal objekt i urval\", \"Lilla n\"). One column with one value per stratum carries both listings, and BLILLAN carries no other VarId, so they document the same count. The listings are assigned to the variable that holds the column in every release (VarId 8167), as the neighbouring-owner rule does where no pin stops it (COS 2026-11-14: an older pin that keeps a column blocked is updated)."
 
 [[statement]]
 kind = "set"
 subject = "individregister: blillan @1999-01-01..1999-12-31 where key = 'v24445'"
-fields = { "variable" = "lilla-n-per-stratum" }
-evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+fields = { "variable" = "antal-svarande-objekt" }
+evidence = "SCB Registerinformation, Hushållens ekonomi (HEK) documents column BLILLAN in Individregister and Kosthushåll under VarId 8167 \"Antal svarande objekt\" in every release 1975-2013 and, from 1996, also under VarIds 24445, 5697 and 3573 (\"Antal objekt i urval\", \"Lilla n\"). One column with one value per stratum carries both listings, and BLILLAN carries no other VarId, so they document the same count. The listings are assigned to the variable that holds the column in every release (VarId 8167), as the neighbouring-owner rule does where no pin stops it (COS 2026-11-14: an older pin that keeps a column blocked is updated)."
 
 [[statement]]
 kind = "set"
 subject = "individregister: blillan @2000-01-01..2000-12-31 where key = 'v24445'"
-fields = { "variable" = "lilla-n-per-stratum" }
-evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+fields = { "variable" = "antal-svarande-objekt" }
+evidence = "SCB Registerinformation, Hushållens ekonomi (HEK) documents column BLILLAN in Individregister and Kosthushåll under VarId 8167 \"Antal svarande objekt\" in every release 1975-2013 and, from 1996, also under VarIds 24445, 5697 and 3573 (\"Antal objekt i urval\", \"Lilla n\"). One column with one value per stratum carries both listings, and BLILLAN carries no other VarId, so they document the same count. The listings are assigned to the variable that holds the column in every release (VarId 8167), as the neighbouring-owner rule does where no pin stops it (COS 2026-11-14: an older pin that keeps a column blocked is updated)."
 
 [[statement]]
 kind = "set"
 subject = "individregister: blillan @2003-01-01..2003-12-31 where key = 'v24445'"
-fields = { "variable" = "lilla-n-per-stratum" }
-evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+fields = { "variable" = "antal-svarande-objekt" }
+evidence = "SCB Registerinformation, Hushållens ekonomi (HEK) documents column BLILLAN in Individregister and Kosthushåll under VarId 8167 \"Antal svarande objekt\" in every release 1975-2013 and, from 1996, also under VarIds 24445, 5697 and 3573 (\"Antal objekt i urval\", \"Lilla n\"). One column with one value per stratum carries both listings, and BLILLAN carries no other VarId, so they document the same count. The listings are assigned to the variable that holds the column in every release (VarId 8167), as the neighbouring-owner rule does where no pin stops it (COS 2026-11-14: an older pin that keeps a column blocked is updated)."
 
 [[statement]]
 kind = "set"
 subject = "individregister: blillan @2011-01-01..2011-12-31 where key = 'v3573'"
-fields = { "variable" = "lilla-n-per-stratum" }
-evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+fields = { "variable" = "antal-svarande-objekt" }
+evidence = "SCB Registerinformation, Hushållens ekonomi (HEK) documents column BLILLAN in Individregister and Kosthushåll under VarId 8167 \"Antal svarande objekt\" in every release 1975-2013 and, from 1996, also under VarIds 24445, 5697 and 3573 (\"Antal objekt i urval\", \"Lilla n\"). One column with one value per stratum carries both listings, and BLILLAN carries no other VarId, so they document the same count. The listings are assigned to the variable that holds the column in every release (VarId 8167), as the neighbouring-owner rule does where no pin stops it (COS 2026-11-14: an older pin that keeps a column blocked is updated)."
 
 [[statement]]
 kind = "set"
 subject = "individregister: blillan @2012-01-01..2012-12-31 where key = 'v3573'"
-fields = { "variable" = "lilla-n-per-stratum" }
-evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+fields = { "variable" = "antal-svarande-objekt" }
+evidence = "SCB Registerinformation, Hushållens ekonomi (HEK) documents column BLILLAN in Individregister and Kosthushåll under VarId 8167 \"Antal svarande objekt\" in every release 1975-2013 and, from 1996, also under VarIds 24445, 5697 and 3573 (\"Antal objekt i urval\", \"Lilla n\"). One column with one value per stratum carries both listings, and BLILLAN carries no other VarId, so they document the same count. The listings are assigned to the variable that holds the column in every release (VarId 8167), as the neighbouring-owner rule does where no pin stops it (COS 2026-11-14: an older pin that keeps a column blocked is updated)."
 
 [[statement]]
 kind = "set"
 subject = "individregister: blillan @2013-01-01..2013-12-31 where key = 'v3573'"
-fields = { "variable" = "lilla-n-per-stratum" }
-evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+fields = { "variable" = "antal-svarande-objekt" }
+evidence = "SCB Registerinformation, Hushållens ekonomi (HEK) documents column BLILLAN in Individregister and Kosthushåll under VarId 8167 \"Antal svarande objekt\" in every release 1975-2013 and, from 1996, also under VarIds 24445, 5697 and 3573 (\"Antal objekt i urval\", \"Lilla n\"). One column with one value per stratum carries both listings, and BLILLAN carries no other VarId, so they document the same count. The listings are assigned to the variable that holds the column in every release (VarId 8167), as the neighbouring-owner rule does where no pin stops it (COS 2026-11-14: an older pin that keeps a column blocked is updated)."
 
 [[statement]]
 kind = "set"
@@ -24379,44 +24379,44 @@ evidence = "Both explicitly count individuals per stratum in the sampling frame.
 [[statement]]
 kind = "set"
 subject = "kosthushall: blillan @1996-01-01..1996-12-31 where key = 'v24445'"
-fields = { "variable" = "lilla-n-per-stratum" }
-evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+fields = { "variable" = "antal-svarande-objekt" }
+evidence = "SCB Registerinformation, Hushållens ekonomi (HEK) documents column BLILLAN in Individregister and Kosthushåll under VarId 8167 \"Antal svarande objekt\" in every release 1975-2013 and, from 1996, also under VarIds 24445, 5697 and 3573 (\"Antal objekt i urval\", \"Lilla n\"). One column with one value per stratum carries both listings, and BLILLAN carries no other VarId, so they document the same count. The listings are assigned to the variable that holds the column in every release (VarId 8167), as the neighbouring-owner rule does where no pin stops it (COS 2026-11-14: an older pin that keeps a column blocked is updated)."
 
 [[statement]]
 kind = "set"
 subject = "kosthushall: blillan @1997-01-01..1997-12-31 where key = 'v24445'"
-fields = { "variable" = "lilla-n-per-stratum" }
-evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+fields = { "variable" = "antal-svarande-objekt" }
+evidence = "SCB Registerinformation, Hushållens ekonomi (HEK) documents column BLILLAN in Individregister and Kosthushåll under VarId 8167 \"Antal svarande objekt\" in every release 1975-2013 and, from 1996, also under VarIds 24445, 5697 and 3573 (\"Antal objekt i urval\", \"Lilla n\"). One column with one value per stratum carries both listings, and BLILLAN carries no other VarId, so they document the same count. The listings are assigned to the variable that holds the column in every release (VarId 8167), as the neighbouring-owner rule does where no pin stops it (COS 2026-11-14: an older pin that keeps a column blocked is updated)."
 
 [[statement]]
 kind = "set"
 subject = "kosthushall: blillan @1998-01-01..1998-12-31 where key = 'v24445'"
-fields = { "variable" = "lilla-n-per-stratum" }
-evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+fields = { "variable" = "antal-svarande-objekt" }
+evidence = "SCB Registerinformation, Hushållens ekonomi (HEK) documents column BLILLAN in Individregister and Kosthushåll under VarId 8167 \"Antal svarande objekt\" in every release 1975-2013 and, from 1996, also under VarIds 24445, 5697 and 3573 (\"Antal objekt i urval\", \"Lilla n\"). One column with one value per stratum carries both listings, and BLILLAN carries no other VarId, so they document the same count. The listings are assigned to the variable that holds the column in every release (VarId 8167), as the neighbouring-owner rule does where no pin stops it (COS 2026-11-14: an older pin that keeps a column blocked is updated)."
 
 [[statement]]
 kind = "set"
 subject = "kosthushall: blillan @1999-01-01..1999-12-31 where key = 'v24445'"
-fields = { "variable" = "lilla-n-per-stratum" }
-evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+fields = { "variable" = "antal-svarande-objekt" }
+evidence = "SCB Registerinformation, Hushållens ekonomi (HEK) documents column BLILLAN in Individregister and Kosthushåll under VarId 8167 \"Antal svarande objekt\" in every release 1975-2013 and, from 1996, also under VarIds 24445, 5697 and 3573 (\"Antal objekt i urval\", \"Lilla n\"). One column with one value per stratum carries both listings, and BLILLAN carries no other VarId, so they document the same count. The listings are assigned to the variable that holds the column in every release (VarId 8167), as the neighbouring-owner rule does where no pin stops it (COS 2026-11-14: an older pin that keeps a column blocked is updated)."
 
 [[statement]]
 kind = "set"
 subject = "kosthushall: blillan @2000-01-01..2000-12-31 where key = 'v24445'"
-fields = { "variable" = "lilla-n-per-stratum" }
-evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+fields = { "variable" = "antal-svarande-objekt" }
+evidence = "SCB Registerinformation, Hushållens ekonomi (HEK) documents column BLILLAN in Individregister and Kosthushåll under VarId 8167 \"Antal svarande objekt\" in every release 1975-2013 and, from 1996, also under VarIds 24445, 5697 and 3573 (\"Antal objekt i urval\", \"Lilla n\"). One column with one value per stratum carries both listings, and BLILLAN carries no other VarId, so they document the same count. The listings are assigned to the variable that holds the column in every release (VarId 8167), as the neighbouring-owner rule does where no pin stops it (COS 2026-11-14: an older pin that keeps a column blocked is updated)."
 
 [[statement]]
 kind = "set"
 subject = "kosthushall: blillan @2012-01-01..2012-12-31 where key = 'v3573'"
-fields = { "variable" = "lilla-n-per-stratum" }
-evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+fields = { "variable" = "antal-svarande-objekt" }
+evidence = "SCB Registerinformation, Hushållens ekonomi (HEK) documents column BLILLAN in Individregister and Kosthushåll under VarId 8167 \"Antal svarande objekt\" in every release 1975-2013 and, from 1996, also under VarIds 24445, 5697 and 3573 (\"Antal objekt i urval\", \"Lilla n\"). One column with one value per stratum carries both listings, and BLILLAN carries no other VarId, so they document the same count. The listings are assigned to the variable that holds the column in every release (VarId 8167), as the neighbouring-owner rule does where no pin stops it (COS 2026-11-14: an older pin that keeps a column blocked is updated)."
 
 [[statement]]
 kind = "set"
 subject = "kosthushall: blillan @2013-01-01..2013-12-31 where key = 'v3573'"
-fields = { "variable" = "lilla-n-per-stratum" }
-evidence = "All three explicitly count sampled individuals per stratum. Their individual-table BLILLAN periods are nonoverlapping, changing mapping at days 12418 and 14975. The stated counts concern persons, including observations with generic count units."
+fields = { "variable" = "antal-svarande-objekt" }
+evidence = "SCB Registerinformation, Hushållens ekonomi (HEK) documents column BLILLAN in Individregister and Kosthushåll under VarId 8167 \"Antal svarande objekt\" in every release 1975-2013 and, from 1996, also under VarIds 24445, 5697 and 3573 (\"Antal objekt i urval\", \"Lilla n\"). One column with one value per stratum carries both listings, and BLILLAN carries no other VarId, so they document the same count. The listings are assigned to the variable that holds the column in every release (VarId 8167), as the neighbouring-owner rule does where no pin stops it (COS 2026-11-14: an older pin that keeps a column blocked is updated)."
 
 [[statement]]
 kind = "set"

@@ -1099,12 +1099,6 @@ evidence = "Identitetsfaktet visar överlappande olika inkomstbegrepp.\ncatalog:
 [[statement]]
 kind = "set"
 subject = "var:sammanraknad-forvarvsinkomst-kronor"
-fields = { "sets" = ["sammanraknad-forvarvsinkomst"] }
-evidence = "Suffixet 2 är en tillagd räknare; etiketten kolliderar och mål behöver R6-prövning.\ncatalog:variable_text:13078:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:sammanraknad-forvarvsinkomst-kronor"
 fields = { "tags" = ["income"] }
 evidence = "Suffixet 2 är en tillagd räknare; etiketten kolliderar och mål behöver R6-prövning.\ncatalog:variable_text:13078:19358:19723"
 
@@ -1533,12 +1527,6 @@ kind = "set"
 subject = "set:region-eller-landsting"
 fields = { "label" = "Region eller landsting" }
 evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
-
-[[statement]]
-kind = "set"
-subject = "set:sammanraknad-forvarvsinkomst"
-fields = { "label" = "Sammanräknad förvärvsinkomst" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"

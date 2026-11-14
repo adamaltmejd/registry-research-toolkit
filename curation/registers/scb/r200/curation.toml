@@ -12276,3 +12276,27 @@ kind = "set"
 subject = "elproduktion-elhandel: maxnetto @2018..2024 where key = 'v38856'"
 fields = { "long_format" = true }
 evidence = "SCB Registerinformation, Elproduktion, elhandel, fjärrvärme (ovr) 2018-2024 (RegVerIDs 13127, 14256, 15966, 18252, 18567, 19320, 20028) documents column maxnetto under VarId 35302 \"Sammanlagd generatoreffekt max netto\" (kW) and VarIds 38850 \"Kompressorkylmaskin\", 38851 \"Frikyla\", 38855 \"Absorptionskylmaskiner\", 38856 \"Sorptiv kyla\" (Kilowatttimmar); the form row (radnr, AGGRTYP) picks each row's measure, so the column is long format (maintainer 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elproducerande-industriforetag: BRKOD @2009..2017 where key = 'v1721'"
+fields = { "variable" = "bransleforbrukning" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column BRKOD of elproducerande-industriforetag in 2009..2017 under several variables (bransleforbrukning (v1721), bransleforbrukning-transporter-brkod (v35301)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "elproducerande-industriforetag: BRKOD @2009..2017 where key = 'v35301'"
+fields = { "variable" = "bransleforbrukning-transporter-brkod" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column BRKOD of elproducerande-industriforetag in 2009..2017 under several variables (bransleforbrukning (v1721), bransleforbrukning-transporter-brkod (v35301)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "elproducerande-industriforetag: BRKOD @2019..2024 where key = 'v1721'"
+fields = { "variable" = "bransleforbrukning" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column BRKOD of elproducerande-industriforetag in 2019..2024 under several variables (bransleforbrukning (v1721), bransleforbrukning-transporter-brkod (v35301)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "elproducerande-industriforetag: BRKOD @2019..2024 where key = 'v35301'"
+fields = { "variable" = "bransleforbrukning-transporter-brkod" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column BRKOD of elproducerande-industriforetag in 2019..2024 under several variables (bransleforbrukning (v1721), bransleforbrukning-transporter-brkod (v35301)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."

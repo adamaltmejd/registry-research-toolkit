@@ -1070,12 +1070,6 @@ evidence = "Samma källkolumn har överlappande ägare i två tabeller.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:produktgrupp-sammanvagda"
-fields = { "sets" = ["produktgrupp-sammanvagda-klasser"] }
-evidence = "Källkolumnen har olika ägare i angränsande perioder.\ncatalog:occurrence:401098\ncatalog:occurrence:401135"
-
-[[statement]]
-kind = "set"
-subject = "var:produktgrupp-sammanvagda"
 fields = { "tags" = [] }
 evidence = "Källkolumnen har olika ägare i angränsande perioder.\ncatalog:occurrence:401098\ncatalog:occurrence:401135"
 
@@ -1376,12 +1370,6 @@ kind = "set"
 subject = "set:produktgrupp"
 fields = { "label" = "Produktgrupp" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:produktgrupp-sammanvagda-klasser"
-fields = { "label" = "Produktgrupp sammanvägda klasser" }
-evidence = "#2100 group name: a member label slugifies to the group slug, then adjusted on review (casing)."
 
 [[statement]]
 kind = "set"

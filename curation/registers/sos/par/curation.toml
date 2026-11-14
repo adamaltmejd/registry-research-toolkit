@@ -1639,6 +1639,18 @@ evidence = "The n:hdia source key conflates two different fields. In the flat fi
 
 [[statement]]
 kind = "set"
+subject = "par-sv: hdia where key = 'n:hdia' and label = 'Typ av diagnos'"
+fields = { "variable" = "typ-av-diagnos" }
+evidence = "The n:hdia source key conflates two different fields: in the flat files (plattfil) HDIA is the main diagnosis code ('Huvuddiagnoskod', PAR_SV row 107, PAR_OV row 36); in the multi-files (flerfil) from 2015 it is the 0/1 marker 'Typ av diagnos' (PAR_SV row 106, PAR_OV row 35; PAR_SV row 107: 'I flerfilen DI är HDIA endast en binär variabel'). The flerfil listing is assigned to its own variable beside the plattfil one, as for ATC, so the neighbouring-owner rule does not fold it into the main diagnosis code (COS 2026-11-14).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 35, 36, 106, 107."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: hdia where key = 'n:hdia' and label = 'Typ av diagnos'"
+fields = { "variable" = "typ-av-diagnos" }
+evidence = "The n:hdia source key conflates two different fields: in the flat files (plattfil) HDIA is the main diagnosis code ('Huvuddiagnoskod', PAR_SV row 107, PAR_OV row 36); in the multi-files (flerfil) from 2015 it is the 0/1 marker 'Typ av diagnos' (PAR_SV row 106, PAR_OV row 35; PAR_SV row 107: 'I flerfilen DI är HDIA endast en binär variabel'). The flerfil listing is assigned to its own variable beside the plattfil one, as for ATC, so the neighbouring-owner rule does not fold it into the main diagnosis code (COS 2026-11-14).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 35, 36, 106, 107."
+
+[[statement]]
+kind = "set"
 subject = "var:huvuddiagnoskod"
 fields = { "description" = "Huvuddiagnosen som en enda diagnoskod, enligt den ICD-version som gällde vid vårdkontakten. Har huvuddiagnosen kodats med ett diagnoskodpar finns tillhörande diagnoskod tillsammans med bidiagnoserna i DIAGNOS." }
 evidence = "PAR_SV row 107 and PAR_OV row 36 (Variabelbeskrivning and Värdemängd; PAR_SV lists ICD-7 1964-1968, ICD-8 1969-1986, ICD-9 1987-1996, ICD-10-SE from 1997).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 36, 107."

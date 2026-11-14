@@ -631,12 +631,6 @@ evidence = "Biutrymmesytorna utgör en grupp; enheten ändras i källhistoriken.
 [[statement]]
 kind = "set"
 subject = "var:bruksar-eller-vardear"
-fields = { "sets" = ["bruksar-eller-vardear"] }
-evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:77815\ncatalog:occurrence:77816"
-
-[[statement]]
-kind = "set"
-subject = "var:bruksar-eller-vardear"
 fields = { "tags" = ["property"] }
 evidence = "Samma källkolumn har överlappande ägare med olika definitioner.\ncatalog:occurrence:77815\ncatalog:occurrence:77816"
 
@@ -1548,12 +1542,6 @@ evidence = "#2100 group name: slug words restored from the member and register l
 
 [[statement]]
 kind = "set"
-subject = "set:bruksar-eller-vardear"
-fields = { "label" = "Bruksår eller värdeår" }
-evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
-
-[[statement]]
-kind = "set"
 subject = "set:byggnad-under-uppforande"
 fields = { "label" = "Byggnad under uppförande" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
@@ -1887,12 +1875,6 @@ kind = "set"
 subject = "var:taxeringsvarde-for-byggnader-vardebygg"
 fields = { "description" = "Taxeringsvärde för byggnader på den överlåtna fastigheten, förvärvets totala byggnadsvärde. 2018 och 2020–2026 omfattar uppgiften både lantbruksfastigheter och andra fastigheter." }
 evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Fastighetspriser och lagfarter, column VardeBygg: VarId 567 \"Taxeringsvärde för byggnader (VardeBygg)\" and VarId 16269 \"Byggnadsvärde\". VarId 16269 is the total building value of the acquisition and VarId 567 the assessed value of buildings; in 2026 both carry the operational text \"Byggnadsvärde för överlåtelsen\", so they describe the same value of the transferred property; the survivor is VarId 567, which already has curated text."
-
-[[statement]]
-kind = "set"
-subject = "set:bruksar-eller-vardear"
-fields = { "description" = "Året då övervägande delen av byggnaden på värderingsenheten togs eller kunde ha tagits i bruk, eller byggnadens värdeår, angivet som kalenderår. Uppgiften finns för hyreshus och för småhus." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna har samma definition; RAW-raderna visar att ArVarde beskrivs både för hyreshus och småhus, och W1 anger småhus för ArVardeSma 2020.\ncatalog:variable_text:17106:17532:18262\ncatalog:variable_text:17106:18262:18628\ncatalog:variable_text:17119:10592:17532\ncatalog:variable_text:17119:17532:18262\ncatalog:variable_text:17119:18262:20819\nRegisterinformation.csv:row=123336\nRegisterinformation.csv:row=123338"
 
 [[statement]]
 kind = "set"

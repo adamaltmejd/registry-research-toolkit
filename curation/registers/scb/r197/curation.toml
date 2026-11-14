@@ -710,12 +710,6 @@ evidence = "Källan anger intäkter från garage och bilplatser.\ncatalog:variab
 [[statement]]
 kind = "set"
 subject = "var:intakter-lokaler-v1020"
-fields = { "sets" = ["lokalintakter"] }
-evidence = "Identitetsfaktet visar överlappande mappningar för samma kolumn.\ncatalog:occurrence:242721\ncatalog:occurrence:242722\ncatalog:occurrence:242770\ncatalog:occurrence:242771\ncatalog:occurrence:242818\ncatalog:occurrence:242819"
-
-[[statement]]
-kind = "set"
-subject = "var:intakter-lokaler-v1020"
 fields = { "tags" = ["business", "housing"] }
 evidence = "Identitetsfaktet visar överlappande mappningar för samma kolumn.\ncatalog:occurrence:242721\ncatalog:occurrence:242722\ncatalog:occurrence:242770\ncatalog:occurrence:242771\ncatalog:occurrence:242818\ncatalog:occurrence:242819"
 
@@ -1749,12 +1743,6 @@ evidence = "#2100 group name: slug words restored from the member and register l
 
 [[statement]]
 kind = "set"
-subject = "set:lokalintakter"
-fields = { "label" = "Lokalintäkter" }
-evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:lokalyta"
 fields = { "label" = "Lokalyta" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
@@ -2250,12 +2238,6 @@ kind = "set"
 subject = "set:kommunregion"
 fields = { "description" = "Kommunens region i en indelning i fem: Stor-Stockholm, Stor-Göteborg, Stor-Malmö, kommuner utanför storstadsområdena med mer än 75 000 invånare och övriga kommuner." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP är gemensamma; medlemmarna skiljer blanketterna.\ncatalog:variable_text:34367:13514:13879\ncatalog:variable_text:34367:14975:16071\ncatalog:variable_text:34368:13514:14245\ncatalog:variable_text:34368:14975:15706\ncatalog:variable_text:34368:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "set:lokalintakter"
-fields = { "description" = "Bruttointäkter för lokaler, före avdrag för hyresbortfall och rabatter; uppskattat hyresbortfall ingår. Från 2012 ingår inte hyresintäkter för garage- och bilplatser." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP för båda medlemmarna anger bruttointäkter inklusive uppskattat hyresbortfall.\ncatalog:variable_text:34347:13514:13879\ncatalog:variable_text:34347:13879:14610\ncatalog:variable_text:34347:14610:15340\ncatalog:variable_text:34347:15340:15706\ncatalog:variable_text:34347:15706:16071\ncatalog:variable_text:34414:14245:15340"
 
 [[statement]]
 kind = "set"

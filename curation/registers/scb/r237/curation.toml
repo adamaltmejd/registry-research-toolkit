@@ -114481,3 +114481,39 @@ kind = "set"
 subject = "individer-16plus-ulf-1989-old: go1832 where key = 'v9694'"
 fields = { "label" = "Barn 1 långvarig sjukdom diagnos", "definition" = "4-ställig diagnoskod (WHO) för den långvariga sjukdom som angetts för barn 1 enligt GO1831." }
 evidence = "SCB Registerinformation, RegVerID 737 (1989_old), GO1832: label \"Barn 1  långvarig sjukdom diagnos\" and a definition with a line break inside a sentence. Whitespace normalized only; release 1989 labels the column \"Barn 1 långvarig sjukdom diagnos\"."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-74-ar-ulf: TR0132 @1978 where key = 'v11292'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Individer 16-74 år (ULF) 1978 (RegVerID 748) documents column TR0132 under VarId 11292 \"Händelse 3 var TR0011\" and VarId 18923 \"Händelse 3 var bostad\". The 1978 documentation adds one VarId per event for the columns TR0112 to TR0162 (VarIds 18921 to 18926, \"Händelse N var bostad\", CVIDs 128947 to 128952) and lists no old \"var\" VarId for the other five of them, so VarId 18923 is TR0132's and the 11292 row is the one that is left over. The 11292 row is withheld (the source shows it; maintainer 2026-11-14: every column is placed)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: TR1174 @2000..2001 where key = 'v11298'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Individer 16-84 år (ULF) 2000 and 2001 (RegVerIDs 723 and 722) documents column TR1174 under VarId 11298 \"Händelse 4 sjukskriven TR0012\" and VarId 18839 \"Händelse 4 sjukskriven TR0011\". Both versions give the TR0011 series one VarId per event on TR1171 to TR1176 (VarIds 18836 to 18841), and the TR0012 series sits on TR1271 (VarId 18859), TR1272 (VarId 11278) and, in 2001, TR1273 (VarId 11288), so the TR0012 VarId 11298 is listed under a wrong column name (TR1274 would follow the series; neither version documents it). The 11298 row is withheld (the source shows which; maintainer 2026-11-14: every column is placed)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: TR1175 @2000..2001 where key = 'v11308'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Individer 16-84 år (ULF) 2000 and 2001 (RegVerIDs 723 and 722) documents column TR1175 under VarId 11308 \"Händelse 5 sjukskriven TR0012\" and VarId 18840 \"Händelse 5 sjukskriven TR0011\". Both versions give the TR0011 series one VarId per event on TR1171 to TR1176 (VarIds 18836 to 18841), and the TR0012 series sits on TR1271 (VarId 18859), TR1272 (VarId 11278) and, in 2001, TR1273 (VarId 11288), so the TR0012 VarId 11308 is listed under a wrong column name (TR1275 would follow the series; neither version documents it). The 11308 row is withheld (the source shows which; maintainer 2026-11-14: every column is placed)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: TR1176 @2000..2001 where key = 'v11318'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Individer 16-84 år (ULF) 2000 and 2001 (RegVerIDs 723 and 722) documents column TR1176 under VarId 11318 \"Händelse 6 sjukskriven TR0012\" and VarId 18841 \"Händelse 6 sjukskriven TR0011\". Both versions give the TR0011 series one VarId per event on TR1171 to TR1176 (VarIds 18836 to 18841), and the TR0012 series sits on TR1271 (VarId 18859), TR1272 (VarId 11278) and, in 2001, TR1273 (VarId 11288), so the TR0012 VarId 11318 is listed under a wrong column name (TR1276 would follow the series; neither version documents it). The 11318 row is withheld (the source shows which; maintainer 2026-11-14: every column is placed)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: TR1112 @2000 where key = 'v11282'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Individer 16-84 år (ULF) 2000 (RegVerID 723) documents column TR1112 under VarId 11282 \"Händelse 2 var\" and VarId 18890 \"Händelse 2 var TR0011\". The 2001 version (RegVerID 722) documents TR1112 under VarId 18890 alone, and VarIds 18889 and 18890 are the \"var TR0011\" VarIds added later (CVIDs 127640 and 127641) for TR1111 and TR1112, so the 11282 row of the original 2000 documentation (CVID 84696) is the superseded one. The 11282 row is withheld (the source shows it; maintainer 2026-11-14: every column is placed)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16-84-ar-ulf: TR1446 @2001 where key = 'v13067'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Individer 16-84 år (ULF) 2001 (RegVerID 722) documents column TR1446 under VarId 13067 \"Skäl ej poliskontakt 6 TR0011\" and VarId 18896 \"Skäl ej poliskontakt 6 TR0014\". In 2000 (RegVerID 723) VarId 13067 is on TR1146 and VarId 18896 on TR1446. The 2001 row of 13067 reads \"Om nej på TR1126\" (the TR0011 series, TR1146) and that of 18896 \"Om nej på TR1426\" (TR0014, TR1446), so 13067 is listed under a wrong column name in 2001 (TR1146 is not documented in that version). The 13067 row is withheld (the source shows it; maintainer 2026-11-14: every column is placed)."
