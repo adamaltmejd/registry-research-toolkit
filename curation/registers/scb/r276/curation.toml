@@ -1844,18 +1844,6 @@ evidence = "Samma tabell och kolumn har överlappande ägare med olika värdemä
 
 [[statement]]
 kind = "set"
-subject = "var:planforkortning-naturvard"
-fields = { "sets" = [] }
-evidence = "Samma tabell och kolumn har överlappande ägare med olika värdemängder.\ncatalog:occurrence:84245\ncatalog:occurrence:84246\ncatalog:valueset:1003\ncatalog:valueset:3237"
-
-[[statement]]
-kind = "set"
-subject = "var:planforkortning-naturvard"
-fields = { "tags" = ["environment", "property"] }
-evidence = "Samma tabell och kolumn har överlappande ägare med olika värdemängder.\ncatalog:occurrence:84245\ncatalog:occurrence:84246\ncatalog:valueset:1003\ncatalog:valueset:3237"
-
-[[statement]]
-kind = "set"
 subject = "var:plnamn"
 fields = { "sets" = [] }
 evidence = "Namnet gäller ett planbeslut.\ncatalog:occurrence-locators:variable:10345"
@@ -3984,3 +3972,15 @@ kind = "set"
 subject = "var:uuid"
 fields = { "description" = "Universellt unik identitet för registerposten i respektive tabell, till exempel adressen i adressplatsinformationen och entrén, lägenheten eller registerbyggnaden i byggnadsinformationen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; 2025 anger per tabell vilket objekt identiteten avser.\ncatalog:variable_text:17489:16800:16801\ncatalog:variable_text:17489:17166:17167\ncatalog:variable_text:17489:20453:20454"
+
+[[statement]]
+kind = "set"
+subject = "planinformation: PLANFK @2016..2025 where key = 'v35356'"
+fields = { "variable" = "planforkortning" }
+evidence = "SCB Registerinformation, Fastighetsregistret, Planinformation 2016-2025 (RegVerID 17664 for 2016, 20266 for 2025) documents column PLANFK under VarId 35349 \"Planförkortning\" (\"Anger typ av planbeslut\") and VarId 35356 \"Planförkortning Naturvård\" (\"Anger typ av planbeslut för naturvårdsbestämmelse\") in every release. The table holds both plans and naturvårdsbestämmelser (the operational definitions of BDAT and LDAT say \"planens eller naturvårdsbestämmelsens\"), so the claimants are one concept for two row kinds (maintainer 2026-11-14: variants of one concept for different row kinds are merged). 35349 is the generic claimant and survives."
+
+[[statement]]
+kind = "set"
+subject = "var:planforkortning"
+fields = { "label" = "Planförkortning", "description" = "Anger typ av planbeslut. Kolumnen gäller både planer och naturvårdsbestämmelser; för en naturvårdsbestämmelse anger den typ av planbeslut för bestämmelsen." }
+evidence = "Maintainer ruling 2026-11-14: variants of one concept for different row kinds are merged and the variable carries a label and description covering both kinds.\nVarId 35349 (\"Anger typ av planbeslut\") and VarId 35356 (\"Anger typ av planbeslut för naturvårdsbestämmelse\") share the column PLANFK in Planinformation 2016-2025."
