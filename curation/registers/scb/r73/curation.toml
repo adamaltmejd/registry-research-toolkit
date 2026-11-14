@@ -1,4 +1,3 @@
-
 [[statement]]
 kind = "set"
 subject = "priser-for-nyproducerade-bostader: {kommun,lan} @2018"
@@ -1489,18 +1488,6 @@ evidence = "Fritexten kompletterar takbeläggningen.\ncatalog:variable_text:4076
 
 [[statement]]
 kind = "set"
-subject = "var:tidsatgang-husblankett"
-fields = { "sets" = ["tidsatgang-for-blanketter"] }
-evidence = "Samma källkolumn har överlappande ägare; variabeln gäller tidsåtgång för husblankett.\ncatalog:occurrence:397457\ncatalog:occurrence:397458"
-
-[[statement]]
-kind = "set"
-subject = "var:tidsatgang-husblankett"
-fields = { "tags" = ["methods"] }
-evidence = "Samma källkolumn har överlappande ägare; variabeln gäller tidsåtgång för husblankett.\ncatalog:occurrence:397457\ncatalog:occurrence:397458"
-
-[[statement]]
-kind = "set"
 subject = "var:tidsatgang-kostnadsblankett"
 fields = { "sets" = ["tidsatgang-for-blanketter"] }
 evidence = "Samma källkolumn har överlappande ägare; variabeln gäller tidsåtgång för kostnadsblankett.\ncatalog:occurrence:397457\ncatalog:occurrence:397458"
@@ -1732,12 +1719,6 @@ kind = "set"
 subject = "var:ytterligare-uppvarmningssystem"
 fields = { "description" = "Förekomst av ytterligare uppvärmningssystem. Variabeln sätts till 1 om de flesta lägenheterna i projektet har ytterligare uppvärmningssystem, annars till 0." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln anger förekomst, inte typ av uppvärmningssystem.\ncatalog:valueset:38\ncatalog:variable_text:40678:13514:20089\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:397378:opdef_text. One variable, one description."
-
-[[statement]]
-kind = "set"
-subject = "var:ovriga-upplysningar"
-fields = { "tags" = ["housing"] }
-evidence = "The builder's remarks come from the form's house-information section (r59), supporting housing consistently with the sibling remarks field (r60) and register theme context (r68, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40595\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:40596\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
 
 [[statement]]
 kind = "set"
@@ -2155,12 +2136,6 @@ evidence = "#2102 same-label cluster 'Takbeläggning' (2 variables): judged diff
 
 [[statement]]
 kind = "set"
-subject = "var:tidsatgang-husblankett"
-fields = { "label" = "Tidsåtgång för husblanketterna (blanketten Uppgifter om hus)" }
-evidence = "#2102 same-label cluster 'Tidsåtgång för husblanketterna' (2 variables): judged different meaning, high confidence; Tidsatgang is minutes for the form Uppgifter om hus; B_TidsatgangHus is the calculated total over all hustypsblanketter in the byggprojekt."
-
-[[statement]]
-kind = "set"
 subject = "var:tidsatgang-husblanketter-totalt-minuter-byggprojekt"
 fields = { "label" = "Tidsåtgång för husblanketterna (totalt för byggprojektet)" }
 evidence = "#2102 same-label cluster 'Tidsåtgång för husblanketterna' (2 variables): judged different meaning, high confidence; Tidsatgang is minutes for the form Uppgifter om hus; B_TidsatgangHus is the calculated total over all hustypsblanketter in the byggprojekt."
@@ -2224,3 +2199,33 @@ kind = "set"
 subject = "set:antal-vaningsplan"
 fields = { "description" = "Antal våningsplan för hustypen: för flerbostadshus, för gruppbyggda småhus, det mest förekommande antalet i projektet (det som har flest lägenheter) och annat svar i klartext." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i hustyp och härledning.\ncatalog:variable_text:47448:13514:17167\ncatalog:variable_text:47448:17167:20089\ncatalog:variable_text:47449:13514:20089\ncatalog:variable_text:47450:13514:17167\ncatalog:variable_text:47450:17167:18628\ncatalog:variable_text:47450:18628:20089\ncatalog:variable_text:47581:13514:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-upplysningar-blankett"
+fields = { "description" = "Övriga upplysningar i klartext från byggherren till SCB, lämnade i blanketten. Uppgifterna kan komma från avsnittet Uppgifter om hus." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Priser för nyproducerade bostäder, column OvrigaUpplysningar: VarId 21412 \"Övriga upplysningar från blanketten\" and VarId 37437 \"Övriga upplysningar\". VarId 21412 is the builder's free-text remarks from the form and VarId 37437 the same remarks taken from the \"uppgifter om hus\" section; the same free text from the builder to SCB for two parts of the form, in one column."
+
+[[statement]]
+kind = "set"
+subject = "var:tidsatgang-kostnadsblankett"
+fields = { "label" = "Tidsåtgång för blanketterna" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Priser för nyproducerade bostäder, column Tidsatgang: VarId 21422 \"Tidsåtgång för kostnadsblanketten\" and VarId 21421 \"Tidsåtgång för husblanketterna (blanketten Uppgifter om hus)\". VarId 21421 is the time in minutes to fill in the house forms (Uppgifter om hus) and VarId 21422 the time to fill in the cost form (Uppgifter om nybyggnadsprojekt); the same measure for two forms, in one column (VarId 21421 also has its own column B_TidsatgangHus)."
+
+[[statement]]
+kind = "set"
+subject = "var:tidsatgang-kostnadsblankett"
+fields = { "description" = "Totalt antal minuter för att fylla i blanketterna: husblanketterna (Uppgifter om hus) respektive kostnadsblanketten (Uppgifter om nybyggnadsprojekt)." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Priser för nyproducerade bostäder, column Tidsatgang: VarId 21422 \"Tidsåtgång för kostnadsblanketten\" and VarId 21421 \"Tidsåtgång för husblanketterna (blanketten Uppgifter om hus)\". VarId 21421 is the time in minutes to fill in the house forms (Uppgifter om hus) and VarId 21422 the time to fill in the cost form (Uppgifter om nybyggnadsprojekt); the same measure for two forms, in one column (VarId 21421 also has its own column B_TidsatgangHus)."
+
+[[statement]]
+kind = "set"
+subject = "priser-for-nyproducerade-bostader: OvrigaUpplysningar @2007..2024 where key = 'v37437'"
+fields = { "variable" = "ovriga-upplysningar-blankett" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Priser för nyproducerade bostäder 2007 (RegVerID 12067) to 2024 (RegVerID 20199) documents column OvrigaUpplysningar under VarId 21412 \"Övriga upplysningar från blanketten\" and VarId 37437 \"Övriga upplysningar\". VarId 21412 is the builder's free-text remarks from the form and VarId 37437 the same remarks taken from the \"uppgifter om hus\" section; the same free text from the builder to SCB for two parts of the form, in one column. The VarId 37437 occurrences are assigned to ovriga-upplysningar-blankett."
+
+[[statement]]
+kind = "set"
+subject = "priser-for-nyproducerade-bostader: Tidsatgang @2007..2024 where key = 'v21421'"
+fields = { "variable" = "tidsatgang-kostnadsblankett" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Priser för nyproducerade bostäder 2007 (RegVerID 12067) to 2024 (RegVerID 20199) documents column Tidsatgang under VarId 21422 \"Tidsåtgång för kostnadsblanketten\" and VarId 21421 \"Tidsåtgång för husblanketterna (blanketten Uppgifter om hus)\". VarId 21421 is the time in minutes to fill in the house forms (Uppgifter om hus) and VarId 21422 the time to fill in the cost form (Uppgifter om nybyggnadsprojekt); the same measure for two forms, in one column (VarId 21421 also has its own column B_TidsatgangHus). The VarId 21421 occurrences are assigned to tidsatgang-kostnadsblankett."
