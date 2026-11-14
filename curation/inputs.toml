@@ -1,5 +1,5 @@
 repo = "adamaltmejd/registry-catalog-inputs"
-commit = "bee21cfa3a21bd73c84fedfee2933e584424034d"
+commit = "925979b00dd295678d3b10779a1ea3da0b4d7d7a"
 
 [[provider]]
 pid = "scb"
@@ -48,6 +48,15 @@ name = "Göteborgs universitet"
 [[provider]]
 pid = "sos"
 name = "Socialstyrelsen"
+
+# Source: UHR's documentation of its statistics database ("Framställande av sökande- och
+# antagningsstatistik för VHS", 2009–2013), the ASTA_STATISTIK table list, the 2026 order
+# specification ("Uttagsspecifikation UHR 2026"), the selection-group history ("Urvalsgrupper
+# över tid") and a names-only header note for SEL_CRITERION, pinned under
+# catalog/evidence/uhr/ in the inputs repository. No licence stated.
+[[provider]]
+pid = "uhr"
+name = "Universitets- och högskolerådet"
 
 # The fk MiDAS registers foraldrapenning and sjukpenning also follow two FK
 # publications, pinned under catalog/evidence/fk/ in the inputs repository: PM 2020:2
@@ -103,6 +112,12 @@ name = "gu-transcription"
 reader = "transcription"
 path = "catalog/source/transcriptions/gu"
 provider = "gu"
+
+[[input]]
+name = "uhr-transcription"
+reader = "transcription"
+path = "catalog/source/transcriptions/uhr"
+provider = "uhr"
 
 # The SCB metadata export, byte-exact as received: a release asset of the inputs
 # repository, fetched with `gh release download scb-raw-2026-03` into `<assets>/`.
