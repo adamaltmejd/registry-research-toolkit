@@ -1,4 +1,3 @@
-
 [[statement]]
 kind = "set"
 subject = "individregister: isu732"
@@ -5515,18 +5514,6 @@ evidence = "Antal bilar ingår i bilinnehav.\ncatalog:variable_text:24052:12418:
 
 [[statement]]
 kind = "set"
-subject = "var:bilinnehav-bensinforbrukning-bil1"
-fields = { "sets" = ["bilars-bransleforbrukning"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:230903\ncatalog:occurrence:230904"
-
-[[statement]]
-kind = "set"
-subject = "var:bilinnehav-bensinforbrukning-bil1"
-fields = { "tags" = ["energy", "transport"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:230903\ncatalog:occurrence:230904"
-
-[[statement]]
-kind = "set"
 subject = "var:bilinnehav-bilkorning-med-bensin"
 fields = { "sets" = ["andel-bilkorning-med-bensin"] }
 evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:230915\ncatalog:occurrence:230916"
@@ -5534,18 +5521,6 @@ evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:2309
 [[statement]]
 kind = "set"
 subject = "var:bilinnehav-bilkorning-med-bensin"
-fields = { "tags" = ["energy", "transport"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:230915\ncatalog:occurrence:230916"
-
-[[statement]]
-kind = "set"
-subject = "var:bilinnehav-bilkorning-med-bensin-bil-1"
-fields = { "sets" = ["andel-bilkorning-med-bensin"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:230915\ncatalog:occurrence:230916"
-
-[[statement]]
-kind = "set"
-subject = "var:bilinnehav-bilkorning-med-bensin-bil-1"
 fields = { "tags" = ["energy", "transport"] }
 evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:230915\ncatalog:occurrence:230916"
 
@@ -5575,18 +5550,6 @@ evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:2309
 
 [[statement]]
 kind = "set"
-subject = "var:bilinnehav-bransleforbrukning-bil-1"
-fields = { "sets" = ["bilars-bransleforbrukning"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:230303\ncatalog:occurrence:230304"
-
-[[statement]]
-kind = "set"
-subject = "var:bilinnehav-bransleforbrukning-bil-1"
-fields = { "tags" = ["energy", "transport"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:230303\ncatalog:occurrence:230304"
-
-[[statement]]
-kind = "set"
 subject = "var:bilinnehav-bransleforbrukning-etanol"
 fields = { "sets" = ["bilars-bransleforbrukning"] }
 evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:230907\ncatalog:occurrence:230908"
@@ -5611,30 +5574,6 @@ evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:2306
 
 [[statement]]
 kind = "set"
-subject = "var:bilinnehav-bransletyp-bil1"
-fields = { "sets" = ["bilars-bransletyp"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:230622\ncatalog:occurrence:230623"
-
-[[statement]]
-kind = "set"
-subject = "var:bilinnehav-bransletyp-bil1"
-fields = { "tags" = ["energy", "transport"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:230622\ncatalog:occurrence:230623"
-
-[[statement]]
-kind = "set"
-subject = "var:bilinnehav-etanol-forbrukning-bil1"
-fields = { "sets" = ["bilars-bransleforbrukning"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:230907\ncatalog:occurrence:230908"
-
-[[statement]]
-kind = "set"
-subject = "var:bilinnehav-etanol-forbrukning-bil1"
-fields = { "tags" = ["energy", "transport"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:230907\ncatalog:occurrence:230908"
-
-[[statement]]
-kind = "set"
 subject = "var:bilinnehav-korda-mil"
 fields = { "sets" = ["bilars-korstracka"] }
 evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:230308\ncatalog:occurrence:230309"
@@ -5642,18 +5581,6 @@ evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:2303
 [[statement]]
 kind = "set"
 subject = "var:bilinnehav-korda-mil"
-fields = { "tags" = ["transport"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:230308\ncatalog:occurrence:230309"
-
-[[statement]]
-kind = "set"
-subject = "var:bilinnehav-korda-mil-bil1"
-fields = { "sets" = ["bilars-korstracka"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:230308\ncatalog:occurrence:230309"
-
-[[statement]]
-kind = "set"
-subject = "var:bilinnehav-korda-mil-bil1"
 fields = { "tags" = ["transport"] }
 evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:230308\ncatalog:occurrence:230309"
 
@@ -11353,18 +11280,6 @@ evidence = "The source classifies household type.\ncatalog:variable_text:24566:1
 
 [[statement]]
 kind = "set"
-subject = "var:hushallsvikt-kalibrerad"
-fields = { "sets" = ["hushallsvikt"] }
-evidence = "Samma källkolumn har flera överlappande ägare.\ncatalog:occurrence:219397\ncatalog:occurrence:219398\ncatalog:occurrence:221505\ncatalog:occurrence:221506"
-
-[[statement]]
-kind = "set"
-subject = "var:hushallsvikt-kalibrerad"
-fields = { "tags" = ["methods"] }
-evidence = "Samma källkolumn har flera överlappande ägare.\ncatalog:occurrence:219397\ncatalog:occurrence:219398\ncatalog:occurrence:221505\ncatalog:occurrence:221506"
-
-[[statement]]
-kind = "set"
 subject = "var:hushallsvikt-okalibrerad"
 fields = { "sets" = ["hushallsvikt"] }
 evidence = "Samma källkolumn har flera överlappande ägare.\ncatalog:occurrence:219397\ncatalog:occurrence:219398\ncatalog:occurrence:221505\ncatalog:occurrence:221506"
@@ -13312,18 +13227,6 @@ kind = "set"
 subject = "var:totalt-inbetald-utgiftsranta"
 fields = { "tags" = ["finance"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:24735:12418:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:kalibrerad-hushallsvikt"
-fields = { "sets" = ["hushallsvikt"] }
-evidence = "Samma källkolumn har överlappande och perioduppdelade ägare.\ncatalog:occurrence:220902\ncatalog:occurrence:221473\ncatalog:occurrence:221474"
-
-[[statement]]
-kind = "set"
-subject = "var:kalibrerad-hushallsvikt"
-fields = { "tags" = ["methods"] }
-evidence = "Samma källkolumn har överlappande och perioduppdelade ägare.\ncatalog:occurrence:220902\ncatalog:occurrence:221473\ncatalog:occurrence:221474"
 
 [[statement]]
 kind = "set"
@@ -22975,18 +22878,6 @@ evidence = "Variabeln avser upplåtelse av avverkningsrätt.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:upprakningsfaktor-enkat-kalibrerad"
-fields = { "sets" = ["upprakningsvikt"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:221505\ncatalog:occurrence:221506\ncatalog:occurrence:230445\ncatalog:occurrence:230446"
-
-[[statement]]
-kind = "set"
-subject = "var:upprakningsfaktor-enkat-kalibrerad"
-fields = { "tags" = ["methods"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:221505\ncatalog:occurrence:221506\ncatalog:occurrence:230445\ncatalog:occurrence:230446"
-
-[[statement]]
-kind = "set"
 subject = "var:upprakningsfaktor-ordinarie"
 fields = { "sets" = ["upprakningsvikt"] }
 evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:221505\ncatalog:occurrence:221506\ncatalog:occurrence:230445\ncatalog:occurrence:230446"
@@ -32208,3 +32099,183 @@ kind = "set"
 subject = "set:ekonomiskt-bistand-och-introduktionsersattning"
 fields = { "description" = "Ekonomiskt bistånd (socialbidrag) och introduktionsersättning till invandrare, härlett som summan av de två individuppgifterna, per person 2004–2011 och per hushåll (kosthushåll) 1996–2010." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): every level of one measure belongs in one group.\n\nGemensam DEF och OP (socialbidrag + introduktionsersättning, individvariabler); hushållsnivån följer av tabellen och OP 1996 (summerad för hushållet); år från tabellerna.\ncatalog:variable_text:31297:9496:9862\ncatalog:variable_text:31297:9862:11323\ncatalog:variable_text:31298:12418:15340"
+
+[[statement]]
+kind = "set"
+subject = "var:hushallets-vikt"
+fields = { "label" = "Hushållets vikt" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Individregister, column BSMEDV: VarId 3224 \"Vikt (hushållets vikt)\" and VarId 24446 \"Kalibrerad hushållsvikt\". VarId 3224 is the household weight (BSMEDV in the KO register, and in KE when uncalibrated weights are used) and VarId 24446 the calibrated household weight (BSMEDV times the calibration weight GK) that replaces it when calibrated weights are used; one weight in two register kinds."
+
+[[statement]]
+kind = "set"
+subject = "var:hushallets-vikt"
+fields = { "description" = "Hushållets vikt, en uppräkningsfaktor som används vid uppräkning till rikets totalnivå. När kalibrerade vikter används gäller i stället den kalibrerade hushållsvikten, produkten av hushållsvikten och kalibreringsvikten (GK)." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Individregister, column BSMEDV: VarId 3224 \"Vikt (hushållets vikt)\" and VarId 24446 \"Kalibrerad hushållsvikt\". VarId 3224 is the household weight (BSMEDV in the KO register, and in KE when uncalibrated weights are used) and VarId 24446 the calibrated household weight (BSMEDV times the calibration weight GK) that replaces it when calibrated weights are used; one weight in two register kinds."
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsvikt-okalibrerad"
+fields = { "label" = "Hushållsvikt för uppräkning till populationen" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Individregister, column BVIKT: VarId 35743 \"Hushållsvikt, okalibrerad\" and VarId 35704 \"Hushållsvikt, kalibrerad\". VarId 35704 is the calibrated and VarId 35743 the uncalibrated household weight for scaling up to the population; the same weight in two register kinds, as SCB documents BSMEDV of these years with one VarId and separate calibrated and uncalibrated rows."
+
+[[statement]]
+kind = "set"
+subject = "var:hushallsvikt-okalibrerad"
+fields = { "description" = "Hushållsvikt för uppräkning till populationen, okalibrerad respektive kalibrerad. Den kalibrerade vikten är designvikten multiplicerad med hushållets uppräkningsfaktor och en kalibreringskorrigering." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Individregister, column BVIKT: VarId 35743 \"Hushållsvikt, okalibrerad\" and VarId 35704 \"Hushållsvikt, kalibrerad\". VarId 35704 is the calibrated and VarId 35743 the uncalibrated household weight for scaling up to the population; the same weight in two register kinds, as SCB documents BSMEDV of these years with one VarId and separate calibrated and uncalibrated rows."
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningsfaktor-ordinarie"
+fields = { "label" = "Uppräkningsfaktor (ordinarie eller enkät kalibrerad)" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Individregister, column BVIKT: VarId 24447 \"Uppräkningsfaktor (ordinarie)\" and VarId 24448 \"Uppräkningsfaktor (enkät kalibrerad)\". VarId 24447 is the uncalibrated weighting factor of the KO register (design weight times household weight) and VarId 24448 the survey-calibrated factor of the KE register (also times the calibration weight); the same factor in two register kinds."
+
+[[statement]]
+kind = "set"
+subject = "var:upprakningsfaktor-ordinarie"
+fields = { "description" = "Uppräkningsfaktor för hushållet: designvikt multiplicerad med hushållsvikt. I den enkätkalibrerade varianten (KE) multipliceras faktorn också med kalibreringsvikten (GK)." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Individregister, column BVIKT: VarId 24447 \"Uppräkningsfaktor (ordinarie)\" and VarId 24448 \"Uppräkningsfaktor (enkät kalibrerad)\". VarId 24447 is the uncalibrated weighting factor of the KO register (design weight times household weight) and VarId 24448 the survey-calibrated factor of the KE register (also times the calibration weight); the same factor in two register kinds."
+
+[[statement]]
+kind = "set"
+subject = "var:bilinnehav-bransleforbrukning"
+fields = { "label" = "Bilinnehav - Bränsleförbrukning, hushållets bil eller bil 1" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Kosthushåll, column BBILB1Z: VarId 22377 \"Bilinnehav - Bränsleförbrukning\" and VarId 22378 \"Bilinnehav - Bränsleförbrukning, bil 1\". VarId 22377 is the fuel use per mil of the household car (the question for a one-car household) and VarId 22378 that of \"bil 1\" (the question for a household with several cars); the columns for the other cars are numbered (2Z, 3Z), so the column ending 1Z holds the single car or car 1 and the two questions fill the same column for different households."
+
+[[statement]]
+kind = "set"
+subject = "var:bilinnehav-bransleforbrukning"
+fields = { "description" = "Bränsleförbrukning per mil för hushållets bil. I hushåll med flera bilar avser uppgiften bil 1." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Kosthushåll, column BBILB1Z: VarId 22377 \"Bilinnehav - Bränsleförbrukning\" and VarId 22378 \"Bilinnehav - Bränsleförbrukning, bil 1\". VarId 22377 is the fuel use per mil of the household car (the question for a one-car household) and VarId 22378 that of \"bil 1\" (the question for a household with several cars); the columns for the other cars are numbered (2Z, 3Z), so the column ending 1Z holds the single car or car 1 and the two questions fill the same column for different households."
+
+[[statement]]
+kind = "set"
+subject = "var:bilinnehav-bransleforbrukning-bensin"
+fields = { "label" = "Bilinnehav - Bränsleförbrukning bensin, hushållets bil eller bil 1" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Kosthushåll, column BBILBB1Z: VarId 22407 \"Bilinnehav - Bränsleförbrukning bensin\" and VarId 22402 \"Bilinnehav - Bränsleförbrukning bensin, bil 1\". VarId 22407 is the petrol use per mil of the household car and VarId 22402 that of \"bil 1\"; the columns for the other cars are numbered (2Z, 3Z), so the column ending 1Z holds the single car or car 1 and the two questions fill the same column for different households."
+
+[[statement]]
+kind = "set"
+subject = "var:bilinnehav-bransleforbrukning-bensin"
+fields = { "description" = "Bränsleförbrukning per mil med bensin för hushållets bil. I hushåll med flera bilar avser uppgiften bil 1." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Kosthushåll, column BBILBB1Z: VarId 22407 \"Bilinnehav - Bränsleförbrukning bensin\" and VarId 22402 \"Bilinnehav - Bränsleförbrukning bensin, bil 1\". VarId 22407 is the petrol use per mil of the household car and VarId 22402 that of \"bil 1\"; the columns for the other cars are numbered (2Z, 3Z), so the column ending 1Z holds the single car or car 1 and the two questions fill the same column for different households."
+
+[[statement]]
+kind = "set"
+subject = "var:bilinnehav-bransleforbrukning-etanol"
+fields = { "label" = "Bilinnehav - Bränsleförbrukning etanol, hushållets bil eller bil 1" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Kosthushåll, column BBILBE1Z: VarId 22398 \"Bilinnehav - Bränsleförbrukning etanol\" and VarId 22399 \"Bilinnehav - Bränsleförbrukning etanol, bil 1\". VarId 22398 is the ethanol use per mil of the household car and VarId 22399 that of \"bil 1\"; the columns for the other cars are numbered (2Z, 3Z), so the column ending 1Z holds the single car or car 1 and the two questions fill the same column for different households."
+
+[[statement]]
+kind = "set"
+subject = "var:bilinnehav-bransleforbrukning-etanol"
+fields = { "description" = "Bränsleförbrukning per mil med etanol för hushållets bil. I hushåll med flera bilar avser uppgiften bil 1." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Kosthushåll, column BBILBE1Z: VarId 22398 \"Bilinnehav - Bränsleförbrukning etanol\" and VarId 22399 \"Bilinnehav - Bränsleförbrukning etanol, bil 1\". VarId 22398 is the ethanol use per mil of the household car and VarId 22399 that of \"bil 1\"; the columns for the other cars are numbered (2Z, 3Z), so the column ending 1Z holds the single car or car 1 and the two questions fill the same column for different households."
+
+[[statement]]
+kind = "set"
+subject = "var:bilinnehav-bransletyp"
+fields = { "label" = "Bilinnehav - Typ av bränsle, hushållets bil eller bil 1" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Kosthushåll, column BBILBR1Z: VarId 22373 \"Bilinnehav - Typ av bränsle\" and VarId 22374 \"Bilinnehav - Typ av bränsle, bil 1\". VarId 22373 is the fuel type of the household car and VarId 22374 that of \"bil 1\"; the columns for the other cars are numbered (2Z, 3Z), so the column ending 1Z holds the single car or car 1 and the two questions fill the same column for different households."
+
+[[statement]]
+kind = "set"
+subject = "var:bilinnehav-bransletyp"
+fields = { "description" = "Typ av bränsle till hushållets bil. I hushåll med flera bilar avser uppgiften bil 1." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Kosthushåll, column BBILBR1Z: VarId 22373 \"Bilinnehav - Typ av bränsle\" and VarId 22374 \"Bilinnehav - Typ av bränsle, bil 1\". VarId 22373 is the fuel type of the household car and VarId 22374 that of \"bil 1\"; the columns for the other cars are numbered (2Z, 3Z), so the column ending 1Z holds the single car or car 1 and the two questions fill the same column for different households."
+
+[[statement]]
+kind = "set"
+subject = "var:bilinnehav-bilkorning-med-bensin"
+fields = { "label" = "Bilinnehav - Bilkörning med bensin, hushållets bil eller bil 1" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Kosthushåll, column BBILKB1Z: VarId 22395 \"Bilinnehav - Bilkörning med bensin\" and VarId 22404 \"Bilinnehav - Bilkörning med bensin, bil 1\". VarId 22395 is the share of driving done with petrol for the household car and VarId 22404 that for \"bil 1\"; the columns for the other cars are numbered (2Z, 3Z), so the column ending 1Z holds the single car or car 1 and the two questions fill the same column for different households."
+
+[[statement]]
+kind = "set"
+subject = "var:bilinnehav-bilkorning-med-bensin"
+fields = { "description" = "Andel av bilkörningen som görs med bensin, för hushållets bil. I hushåll med flera bilar avser uppgiften bil 1." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Kosthushåll, column BBILKB1Z: VarId 22395 \"Bilinnehav - Bilkörning med bensin\" and VarId 22404 \"Bilinnehav - Bilkörning med bensin, bil 1\". VarId 22395 is the share of driving done with petrol for the household car and VarId 22404 that for \"bil 1\"; the columns for the other cars are numbered (2Z, 3Z), so the column ending 1Z holds the single car or car 1 and the two questions fill the same column for different households."
+
+[[statement]]
+kind = "set"
+subject = "var:bilinnehav-korda-mil"
+fields = { "label" = "Bilinnehav - Antal körda mil, hushållets bil eller bil 1" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Kosthushåll, column BBILM1Z: VarId 22369 \"Bilinnehav - Antal körda mil\" and VarId 22370 \"Bilinnehav - Antal körda mil, bil 1\". VarId 22369 is the number of mil driven with the household car and VarId 22370 that of \"bil 1\"; the columns for the other cars are numbered (2Z, 3Z), so the column ending 1Z holds the single car or car 1 and the two questions fill the same column for different households."
+
+[[statement]]
+kind = "set"
+subject = "var:bilinnehav-korda-mil"
+fields = { "description" = "Antal körda mil med hushållets bil. I hushåll med flera bilar avser uppgiften bil 1." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Kosthushåll, column BBILM1Z: VarId 22369 \"Bilinnehav - Antal körda mil\" and VarId 22370 \"Bilinnehav - Antal körda mil, bil 1\". VarId 22369 is the number of mil driven with the household car and VarId 22370 that of \"bil 1\"; the columns for the other cars are numbered (2Z, 3Z), so the column ending 1Z holds the single car or car 1 and the two questions fill the same column for different households."
+
+[[statement]]
+kind = "set"
+subject = "individregister: BSMEDV @2004..2013 where key = 'v24446'"
+fields = { "variable" = "hushallets-vikt" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Individregister 2004 (RegVerID 6198) to 2013 (RegVerID 5814) documents column BSMEDV under VarId 3224 \"Vikt (hushållets vikt)\" and VarId 24446 \"Kalibrerad hushållsvikt\". VarId 3224 is the household weight (BSMEDV in the KO register, and in KE when uncalibrated weights are used) and VarId 24446 the calibrated household weight (BSMEDV times the calibration weight GK) that replaces it when calibrated weights are used; one weight in two register kinds. The VarId 24446 occurrences are assigned to hushallets-vikt."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: BSMEDV @2004..2013 where key = 'v24446'"
+fields = { "variable" = "hushallets-vikt" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Kosthushåll 2004 (RegVerID 6197) to 2013 - Boendestatistik (RegVerID 5757) documents column BSMEDV under VarId 3224 \"Vikt (hushållets vikt)\" and VarId 24446 \"Kalibrerad hushållsvikt\". VarId 3224 is the household weight (BSMEDV in the KO register, and in KE when uncalibrated weights are used) and VarId 24446 the calibrated household weight (BSMEDV times the calibration weight GK) that replaces it when calibrated weights are used; the Boendestatistik releases of 2011-2013 document only VarId 24446, so the merge covers 2011-2013 as well as the 2004-2010 window. The VarId 24446 occurrences are assigned to hushallets-vikt."
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVIKT @1996..2003 where key = 'v35704'"
+fields = { "variable" = "hushallsvikt-okalibrerad" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Individregister 1996 (RegVerID 17528) to 2003 (RegVerID 12271) documents column BVIKT under VarId 35743 \"Hushållsvikt, okalibrerad\" and VarId 35704 \"Hushållsvikt, kalibrerad\". VarId 35704 is the calibrated and VarId 35743 the uncalibrated household weight for scaling up to the population; the same weight in two register kinds, as SCB documents BSMEDV of these years with one VarId and separate calibrated and uncalibrated rows. The VarId 35704 occurrences are assigned to hushallsvikt-okalibrerad."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: BVIKT @1996..2000 where key = 'v35704'"
+fields = { "variable" = "hushallsvikt-okalibrerad" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Kosthushåll 1996 (RegVerID 16243) to 2000 (RegVerID 14912) documents column BVIKT under VarId 35743 \"Hushållsvikt, okalibrerad\" and VarId 35704 \"Hushållsvikt, kalibrerad\". VarId 35704 is the calibrated and VarId 35743 the uncalibrated household weight for scaling up to the population; the same weight in two register kinds. The VarId 35704 occurrences are assigned to hushallsvikt-okalibrerad."
+
+[[statement]]
+kind = "set"
+subject = "individregister: BVIKT @2004..2013 where key = 'v24448'"
+fields = { "variable" = "upprakningsfaktor-ordinarie" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Individregister 2004 (RegVerID 6198) to 2013 (RegVerID 5814) documents column BVIKT under VarId 24447 \"Uppräkningsfaktor (ordinarie)\" and VarId 24448 \"Uppräkningsfaktor (enkät kalibrerad)\". VarId 24447 is the uncalibrated weighting factor of the KO register (design weight times household weight) and VarId 24448 the survey-calibrated factor of the KE register (also times the calibration weight); the same factor in two register kinds. The VarId 24448 occurrences are assigned to upprakningsfaktor-ordinarie."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: BVIKT @2004..2013 where key = 'v24448'"
+fields = { "variable" = "upprakningsfaktor-ordinarie" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Kosthushåll 2004 (RegVerID 6197) to 2013 - Boendestatistik (RegVerID 5757) documents column BVIKT under VarId 24447 \"Uppräkningsfaktor (ordinarie)\" and VarId 24448 \"Uppräkningsfaktor (enkät kalibrerad)\". VarId 24447 is the uncalibrated weighting factor of the KO register and VarId 24448 the survey-calibrated factor of the KE register; the Boendestatistik releases of 2011-2013 document only VarId 24448, so the merge covers 2011-2013 as well. The VarId 24448 occurrences are assigned to upprakningsfaktor-ordinarie."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: BBILB1Z @2004..2008 where key = 'v22378'"
+fields = { "variable" = "bilinnehav-bransleforbrukning" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Kosthushåll 2004 (RegVerID 6197) to 2008 (RegVerID 2804) documents column BBILB1Z under VarId 22377 \"Bilinnehav - Bränsleförbrukning\" and VarId 22378 \"Bilinnehav - Bränsleförbrukning, bil 1\". VarId 22377 is the fuel use per mil of the household car (the question for a one-car household) and VarId 22378 that of \"bil 1\" (the question for a household with several cars); the columns for the other cars are numbered (2Z, 3Z), so the column ending 1Z holds the single car or car 1 and the two questions fill the same column for different households. The VarId 22378 occurrences are assigned to bilinnehav-bransleforbrukning."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: BBILBB1Z @2006..2008 where key = 'v22402'"
+fields = { "variable" = "bilinnehav-bransleforbrukning-bensin" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Kosthushåll 2006 (RegVerID 6131) to 2008 (RegVerID 2804) documents column BBILBB1Z under VarId 22407 \"Bilinnehav - Bränsleförbrukning bensin\" and VarId 22402 \"Bilinnehav - Bränsleförbrukning bensin, bil 1\". VarId 22407 is the petrol use per mil of the household car and VarId 22402 that of \"bil 1\"; the columns for the other cars are numbered (2Z, 3Z), so the column ending 1Z holds the single car or car 1 and the two questions fill the same column for different households. The VarId 22402 occurrences are assigned to bilinnehav-bransleforbrukning-bensin."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: BBILBE1Z @2006..2008 where key = 'v22399'"
+fields = { "variable" = "bilinnehav-bransleforbrukning-etanol" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Kosthushåll 2006 (RegVerID 6131) to 2008 (RegVerID 2804) documents column BBILBE1Z under VarId 22398 \"Bilinnehav - Bränsleförbrukning etanol\" and VarId 22399 \"Bilinnehav - Bränsleförbrukning etanol, bil 1\". VarId 22398 is the ethanol use per mil of the household car and VarId 22399 that of \"bil 1\"; the columns for the other cars are numbered (2Z, 3Z), so the column ending 1Z holds the single car or car 1 and the two questions fill the same column for different households. The VarId 22399 occurrences are assigned to bilinnehav-bransleforbrukning-etanol."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: BBILBR1Z @2005..2008 where key = 'v22374'"
+fields = { "variable" = "bilinnehav-bransletyp" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Kosthushåll 2005 (RegVerID 6180) to 2008 (RegVerID 2804) documents column BBILBR1Z under VarId 22373 \"Bilinnehav - Typ av bränsle\" and VarId 22374 \"Bilinnehav - Typ av bränsle, bil 1\". VarId 22373 is the fuel type of the household car and VarId 22374 that of \"bil 1\"; the columns for the other cars are numbered (2Z, 3Z), so the column ending 1Z holds the single car or car 1 and the two questions fill the same column for different households. The VarId 22374 occurrences are assigned to bilinnehav-bransletyp."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: BBILKB1Z @2006..2008 where key = 'v22404'"
+fields = { "variable" = "bilinnehav-bilkorning-med-bensin" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Kosthushåll 2006 (RegVerID 6131) to 2008 (RegVerID 2804) documents column BBILKB1Z under VarId 22395 \"Bilinnehav - Bilkörning med bensin\" and VarId 22404 \"Bilinnehav - Bilkörning med bensin, bil 1\". VarId 22395 is the share of driving done with petrol for the household car and VarId 22404 that for \"bil 1\"; the columns for the other cars are numbered (2Z, 3Z), so the column ending 1Z holds the single car or car 1 and the two questions fill the same column for different households. The VarId 22404 occurrences are assigned to bilinnehav-bilkorning-med-bensin."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: BBILM1Z @2004..2008 where key = 'v22370'"
+fields = { "variable" = "bilinnehav-korda-mil" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Kosthushåll 2004 (RegVerID 6197) to 2008 (RegVerID 2804) documents column BBILM1Z under VarId 22369 \"Bilinnehav - Antal körda mil\" and VarId 22370 \"Bilinnehav - Antal körda mil, bil 1\". VarId 22369 is the number of mil driven with the household car and VarId 22370 that of \"bil 1\"; the columns for the other cars are numbered (2Z, 3Z), so the column ending 1Z holds the single car or car 1 and the two questions fill the same column for different households. The VarId 22370 occurrences are assigned to bilinnehav-korda-mil."
