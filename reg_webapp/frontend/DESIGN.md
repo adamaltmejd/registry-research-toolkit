@@ -574,8 +574,9 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   (#2317). Then facets as a labelled row, the actions row, then definitions, then the
   `Timeline`, then the list of variables or columns, then source documents. A catalog
   page lists no build findings: the catalog does not carry them (maintainer 2026-11-06,
-  #2335). The provider's series breaks are not build findings and are shown (maintainer
-  ruling 2026-11-14): a "Series breaks" panel after the definitions on a register's page
+  #2335). The provider's series breaks are not build findings and are shown ("are important
+  and must be shown by reg_meta to the user and the AI", maintainer ruling 2026-11-14,
+  relayed in the Operator's brief): a "Series breaks" panel after the definitions on a register's page
   (the register's own, then each table's under "In <table>", only the selected tables'
   with a table filter on) and after the Description on a variable's or group's page (a
   group's under each member's lane title), each with its day or years muted over the

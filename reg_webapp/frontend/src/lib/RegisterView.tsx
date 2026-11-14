@@ -16,7 +16,8 @@ import {
   publishRegisterLens,
   useRegisterLensOf,
 } from "./register_lens";
-import { type PlacedBreak, SeriesBreaks } from "./SeriesBreaks";
+import { SeriesBreaks } from "./SeriesBreaks";
+import { type PlacedBreak, placeBreaks } from "./series_breaks";
 import {
   datedYearRuns,
   studyWindow,
@@ -159,17 +160,11 @@ export function RegisterView({
   // selected tables' with a filter on, else every table's.
   const lensed = new Set(lensTables(node, selected).map((table) => table.fqid));
   const breaks: PlacedBreak[] = [
-    ...(node.series_breaks ?? []).map((seriesBreak) => ({
-      where: null,
-      seriesBreak,
-    })),
+    ...placeBreaks(null, node.series_breaks),
     ...node.tables
       .filter((table) => selected.size === 0 || lensed.has(table.fqid))
       .flatMap((table) =>
-        (table.series_breaks ?? []).map((seriesBreak) => ({
-          where: table.implicit ? null : table.name,
-          seriesBreak,
-        })),
+        placeBreaks(table.implicit ? null : table.name, table.series_breaks),
       ),
   ];
   const chip = (key: string, pill: ReactNode) => (

@@ -2930,7 +2930,8 @@ coverage end.
 ## Series breaks
 
 A provider's note that a series changes meaning at some point (SCB `Tidsseriebrott`) is
-published, to the reader and to the AI (maintainer ruling 2026-11-14): a researcher who
+published, to the reader and to the AI ("are important and must be shown by reg_meta to
+the user and the AI", maintainer ruling 2026-11-14, relayed in the Operator's brief): a researcher who
 orders across it must know. It is stored as `series_break` rows (subject kind
 `register`, `table`, `release` or `variable`, the subject's row id, an optional `at`
 day, optional text, provenance `source` or `curated` with its statement), not as a

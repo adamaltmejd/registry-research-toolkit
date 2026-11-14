@@ -1,3 +1,7 @@
+.item + .item {
+  margin-top: var(--space-3);
+}
+
 /* The muted line over a break: where and when. Not `.years`: its tabular
    figures widen the comma after a table name. */
 .when {

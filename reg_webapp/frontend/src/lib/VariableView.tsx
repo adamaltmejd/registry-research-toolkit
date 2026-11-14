@@ -14,8 +14,10 @@ import {
   loadRegister,
   registerSubjectNames,
 } from "./catalog_names";
+import { Paragraphs } from "./Paragraphs";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
-import { type PlacedBreak, SeriesBreaks } from "./SeriesBreaks";
+import { SeriesBreaks } from "./SeriesBreaks";
+import { type PlacedBreak, placeBreaks } from "./series_breaks";
 import { Button as ActionButton } from "./ui/Button";
 import { Definitions } from "./ui/Definitions";
 import { Panel } from "./ui/Panel";
@@ -52,12 +54,6 @@ function Description({
   /** The rows whose wording stands in for a missing description. */
   segments: readonly CatalogSegment[];
 }) {
-  const lines = (text: string) =>
-    text.split("\n").map((line) => (
-      <p key={line} className={styles.prose}>
-        {line}
-      </p>
-    ));
   if (description)
     return (
       <Panel title="Description">
@@ -70,14 +66,16 @@ function Description({
   if (groups.length === 0) return null;
   return (
     <Panel title="Description">
-      {groups.length === 1 && !unstated
-        ? lines(groups[0][0])
-        : groups.map(([text, group]) => (
-            <div key={text} className={variableStyles.wording}>
-              <p>{factYears(group.segments)}</p>
-              {lines(text)}
-            </div>
-          ))}
+      {groups.length === 1 && !unstated ? (
+        <Paragraphs text={groups[0][0]} />
+      ) : (
+        groups.map(([text, group]) => (
+          <div key={text} className={variableStyles.wording}>
+            <p>{factYears(group.segments)}</p>
+            <Paragraphs text={text} />
+          </div>
+        ))
+      )}
     </Panel>
   );
 }
@@ -297,10 +295,7 @@ export function VariableView({
       onRetry={() => setAttempt((current) => current + 1)}
       context={context}
       validation={validation}
-      breaks={(node.series_breaks ?? []).map((seriesBreak) => ({
-        where: null,
-        seriesBreak,
-      }))}
+      breaks={placeBreaks(null, node.series_breaks)}
     />
   );
 }
@@ -403,10 +398,7 @@ export function GroupView({
       context={context}
       validation={validation}
       breaks={titled.flatMap(({ member, title }) =>
-        (member.series_breaks ?? []).map((seriesBreak) => ({
-          where: title,
-          seriesBreak,
-        })),
+        placeBreaks(title, member.series_breaks),
       )}
     />
   );
