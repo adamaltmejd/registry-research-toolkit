@@ -2977,16 +2977,20 @@ SCB LISA "Individer, 16 år och äldre" to 2009 and "Individer, 15 år och äldr
 still name the table the provider delivers for each era.
 
 - **Curation.** Each release of the older table moves into the newer one
-  (`set table` on `release:<table>/<handle>`); the merged table gets a `set name`, a
-  description, its coverage and a curated `series_break` at the first year of the new
-  era. The older table's ledger entry stays, since the moves address it by slug.
+  (`set table` on `release:<table>/<handle>`); the merged table gets a description, its
+  coverage, a `set name` when neither provider name fits both eras, and a curated
+  `series_break` at the first year of the new era when the variants differ in more than
+  their name. The older table's ledger entry stays, since the moves address it by slug.
   Statements about either table's columns address the merged table, scoped to the era
   they described; a spelling the two tables placed on different variables keeps them
   apart by a keyed or dated ledger anchor.
 - **Emptied tables.** A table the moves leave with no release and no occurrence is not
-  published. A table that never had releases (a routed holdings table) stays. Source
-  notices on an emptied table no longer resolve and count as `link_unresolved`; the
-  curated break on the merged table carries what they said.
+  published. A table that never had releases (a routed holdings table) stays. What the
+  source says about an emptied table moves to the merged table: its notices and series
+  breaks, its documents' subjects and its links. A link that would then join the merged
+  table to itself (the provider's own succession between the variants) is the merge, and
+  is dropped. A table whose releases moved to several tables has no single destination:
+  what names it stays unresolved and counts as `link_unresolved`.
 - **Delivered name.** Each release keeps the name of the table it was delivered in,
   `release.delivered_text` (schema 15). It is the table's name when the parent stage
   ends, before coverage, moves and curated names: a source or asserted table's own

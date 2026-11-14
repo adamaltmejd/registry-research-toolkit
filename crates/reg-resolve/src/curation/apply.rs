@@ -1154,10 +1154,16 @@ pub fn follow_release_moves(moves: &[ReleaseMove], records: &mut [Record]) {
     }
 }
 
-/// Drop the stated tables `moves` emptied: a table whose releases all moved out and that no
-/// occurrence names is a merged variant, so it is not published (crates/DESIGN.md, "Merged
-/// variants"). A stated table that never had a release stays.
-pub fn drop_emptied_tables(moves: &[ReleaseMove], records: &mut Vec<Record>) {
+type TableKey<'a> = (&'a str, &'a str, &'a str);
+
+/// Fold the stated tables `moves` emptied into the table their releases moved to: a table
+/// whose releases all moved out and that no occurrence names is a merged variant, so it is
+/// not published, and the source notices, documents and links that name it point at the
+/// merged table instead (crates/DESIGN.md, "Merged variants"). A link that would then join
+/// the merged table to itself is the merge, and is dropped. A table whose releases moved to
+/// several tables is dropped without a destination: what names it stays unresolved. A
+/// stated table that never had a release stays.
+pub fn merge_emptied_tables(moves: &[ReleaseMove], records: &mut Vec<Record>) {
     let named: BTreeSet<(&str, &str, &str)> = records
         .iter()
         .filter_map(|record| match record {
@@ -1166,18 +1172,68 @@ pub fn drop_emptied_tables(moves: &[ReleaseMove], records: &mut Vec<Record>) {
             _ => None,
         })
         .collect();
-    let emptied: BTreeSet<(String, String, String)> = moves
-        .iter()
-        .map(|m| (&*m.provider, &*m.register, &*m.table))
-        .filter(|key| !named.contains(key))
-        .map(|(p, r, t)| (p.to_owned(), r.to_owned(), t.to_owned()))
-        .collect();
+    // Per emptied table: its register's folded name and the tables its releases moved to.
+    let mut emptied: BTreeMap<TableKey<'_>, (Option<&str>, BTreeSet<&str>)> = BTreeMap::new();
+    for m in moves {
+        let key = (&*m.provider, &*m.register, &*m.table);
+        if !named.contains(&key) {
+            let entry = emptied
+                .entry(key)
+                .or_insert_with(|| (m.register_name.as_deref(), BTreeSet::new()));
+            entry.1.insert(&*m.to);
+        }
+    }
     if emptied.is_empty() {
         return;
     }
+    let destination = |end: &reg_frame::Endpoint| -> Option<String> {
+        let table = end.table.as_deref()?;
+        emptied
+            .iter()
+            .find_map(|((provider, register, from), (name, to))| {
+                let register = match (&end.register, &end.register_name) {
+                    (Some(handle), _) => handle == register,
+                    (None, Some(n)) => *name == Some(&*reg_core::fold_identity(n.trim())),
+                    (None, None) => false,
+                };
+                (end.provider == *provider && register && table == *from && to.len() == 1)
+                    .then(|| to.iter().next().map(|t| (*t).to_owned()))
+                    .flatten()
+            })
+    };
+    let redirect =
+        |end: &mut reg_frame::Endpoint| destination(end).map(|to| end.table = Some(to)).is_some();
+    let mut merges = BTreeSet::new();
+    for (at, record) in records.iter_mut().enumerate() {
+        match record {
+            Record::Notice(notice) => {
+                redirect(&mut notice.subject);
+            }
+            Record::Doc(doc) => doc.subjects.iter_mut().for_each(|s| {
+                redirect(&mut s.endpoint);
+            }),
+            Record::Link(link) => {
+                let redirected = redirect(&mut link.subject) | redirect(&mut link.object);
+                if redirected && link.subject == link.object {
+                    merges.insert(at);
+                }
+            }
+            _ => {}
+        }
+    }
+    let gone: BTreeSet<(String, String, String)> = emptied
+        .keys()
+        .map(|(p, r, t)| ((*p).to_owned(), (*r).to_owned(), (*t).to_owned()))
+        .collect();
+    let mut at = 0;
     records.retain(|record| {
-        !matches!(record, Record::Table(t)
-            if emptied.contains(&(t.provider.clone(), t.register.clone(), t.table.clone())))
+        at += 1;
+        match record {
+            Record::Table(t) => {
+                !gone.contains(&(t.provider.clone(), t.register.clone(), t.table.clone()))
+            }
+            _ => !merges.contains(&(at - 1)),
+        }
     });
 }
 

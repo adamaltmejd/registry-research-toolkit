@@ -11,7 +11,8 @@ use super::{OrderEntry, OrderRowKeys};
 use crate::ops::Server;
 use crate::{Error, rows};
 
-/// A table's delivered-name eras: (first day, name), ascending, adjacent names distinct.
+/// A table's delivered-name eras: (first day, name), first days strictly ascending, adjacent
+/// names distinct.
 /// Each era reaches to the next one's first day, and the first one back to the open start,
 /// so a day no primary release covers takes the era before it. Empty for a table with no
 /// placed primary release (a releaseless provider): its own name stands.
@@ -86,8 +87,13 @@ fn read(conn: &Connection, composed: bool, pid: &str) -> Result<Eras, Error> {
     };
     let starts: Vec<(i64, String)> = rows(conn, &sql, [pid], |r| Ok((r.get(0)?, r.get(1)?)))?;
     let mut eras: Eras = Vec::new();
+    // One era per first day: verify keeps one database's primaries from overlapping, but in
+    // composed mode the base and holdings databases can each start one there.
     for (start, name) in starts {
-        if eras.last().is_none_or(|(_, last)| *last != name) {
+        if eras
+            .last()
+            .is_none_or(|(first, last)| *last != name && *first != start)
+        {
             eras.push((start, name));
         }
     }

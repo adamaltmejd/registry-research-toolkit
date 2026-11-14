@@ -185,3 +185,4 @@
 {"kind":"occurrence","provider":"demo","register":"vari","table":"a","release":"a2009","column":"Ink","source_key":"k2","label":"Inkomst","dtype":"int"}
 {"kind":"occurrence","provider":"demo","register":"vari","table":"b","release":"b2010","column":"Ink","source_key":"k2","label":"Inkomst","dtype":"int"}
 {"kind":"occurrence","provider":"demo","register":"vari","table":"b","release":"b2011","column":"Ink","source_key":"k2","label":"Inkomst","dtype":"int"}
+{"kind":"notice","series_break":true,"subject":{"kind":"table","provider":"demo","register":"vari","table":"a"},"at":"2009-01-01","text":"Från och med 2009 räknas inkomsten per kalenderår."}

@@ -48,7 +48,25 @@
       "variable_name": "Inkomst"
     }
   ],
-  "findings": [],
+  "findings": [
+    {
+      "code": "series_break",
+      "level": "warning",
+      "message": "The provider notes a series break in demo/vari/b from 2009: Från och med 2009 räknas inkomsten per kalenderår.",
+      "path": "/sources/0",
+      "period": {
+        "end": "2009-01-02",
+        "start": "2009-01-01"
+      },
+      "source": "s",
+      "successor_fqid": null,
+      "successor_name": null,
+      "table": "demo/vari/b",
+      "table_name": "Individer",
+      "variable": null,
+      "variable_name": null
+    }
+  ],
   "manual": [],
   "project": {
     "name": "Order case",

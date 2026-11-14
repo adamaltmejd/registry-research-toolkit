@@ -1860,7 +1860,7 @@ fn run_selected(
             records = slots.into_records();
         }
         reg_resolve::curation::apply::follow_release_moves(&release_moves, &mut records);
-        reg_resolve::curation::apply::drop_emptied_tables(&release_moves, &mut records);
+        reg_resolve::curation::apply::merge_emptied_tables(&release_moves, &mut records);
         if fields_stage && !field_snapshot.is_empty() {
             if stage == Phase::Fields {
                 // Conflict checks retain the field phase view; links see final identities.
