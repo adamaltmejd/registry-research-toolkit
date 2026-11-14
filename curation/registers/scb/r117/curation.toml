@@ -422,30 +422,6 @@ evidence = "Antal barn efter ålder.\ncatalog:variable_text:34195:16071:18262"
 
 [[statement]]
 kind = "set"
-subject = "var:antal-barn-6-12-ar-ant6"
-fields = { "sets" = ["antal-barn-och-ungdomar"] }
-evidence = "Samma källkolumn har överlappande ägare med olika åldersavgränsning.\ncatalog:occurrence:299991\ncatalog:occurrence:299992"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-barn-6-12-ar-ant6"
-fields = { "tags" = ["demographics"] }
-evidence = "Samma källkolumn har överlappande ägare med olika åldersavgränsning.\ncatalog:occurrence:299991\ncatalog:occurrence:299992"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-barn-7-15-ar-med-utlandskbakgrund"
-fields = { "sets" = ["antal-barn-med-utlandsk-bakgrund"] }
-evidence = "Källkolumnen har överlappande ägare med olika betydelser.\ncatalog:occurrence:300025\ncatalog:occurrence:300026\ncatalog:occurrence:300027"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-barn-7-15-ar-med-utlandskbakgrund"
-fields = { "tags" = ["demographics"] }
-evidence = "Källkolumnen har överlappande ägare med olika betydelser.\ncatalog:occurrence:300025\ncatalog:occurrence:300026\ncatalog:occurrence:300027"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-barn-i-aldern-6-ar"
 fields = { "sets" = ["antal-barn-och-ungdomar"] }
 evidence = "Samma källkolumn har överlappande ägare med olika åldersavgränsning.\ncatalog:occurrence:299991\ncatalog:occurrence:299992"
@@ -539,12 +515,6 @@ kind = "set"
 subject = "var:antsvlagutb2040"
 fields = { "tags" = ["education"] }
 evidence = "Antal lågutbildade personer.\ncatalog:variable_text:34205:16071:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:tillagg-avdrag-modersmal-kr-per-invanare"
-fields = { "sets" = ["sprakrelaterade-tillagg-och-avdrag"] }
-evidence = "Id anger antal utrikes födda äldre men källan anger tillägg eller avdrag i kronor per invånare.\ncatalog:variable_text:34206:16071:18262"
 
 [[statement]]
 kind = "set"
@@ -1526,18 +1496,6 @@ evidence = "Bokstavskod med kolliderande etikett.\ncatalog:variable_text:34288:1
 
 [[statement]]
 kind = "set"
-subject = "var:tillagg-avdrag-hemsprak-svenska2"
-fields = { "sets" = ["sprakrelaterade-tillagg-och-avdrag"] }
-evidence = "Samma källkolumn har överlappande ägare med olika enheter och betydelser.\ncatalog:occurrence:300025\ncatalog:occurrence:300026\ncatalog:occurrence:300027"
-
-[[statement]]
-kind = "set"
-subject = "var:tillagg-avdrag-hemsprak-svenska2"
-fields = { "tags" = ["education", "public-finance"] }
-evidence = "Samma källkolumn har överlappande ägare med olika enheter och betydelser.\ncatalog:occurrence:300025\ncatalog:occurrence:300026\ncatalog:occurrence:300027"
-
-[[statement]]
-kind = "set"
 subject = "var:utbak019"
 fields = { "sets" = ["antal-barn-med-utlandsk-bakgrund"] }
 evidence = "Antal barn och ungdomar med utländsk bakgrund.\ncatalog:variable_text:34290:16071:18262"
@@ -1605,18 +1563,6 @@ evidence = "Överlappande mappning med olika enheter.\ncatalog:occurrence:300517
 [[statement]]
 kind = "set"
 subject = "var:utjamning-kommuner-utfall-kronor"
-fields = { "tags" = ["public-finance"] }
-evidence = "Överlappande mappning med olika enheter.\ncatalog:occurrence:300517\ncatalog:occurrence:300518"
-
-[[statement]]
-kind = "set"
-subject = "var:utjamning-kommuner-utfall-tkr"
-fields = { "sets" = ["kommunalekonomiskt-utjamningsutfall"] }
-evidence = "Överlappande mappning med olika enheter.\ncatalog:occurrence:300517\ncatalog:occurrence:300518"
-
-[[statement]]
-kind = "set"
-subject = "var:utjamning-kommuner-utfall-tkr"
 fields = { "tags" = ["public-finance"] }
 evidence = "Överlappande mappning med olika enheter.\ncatalog:occurrence:300517\ncatalog:occurrence:300518"
 
@@ -1835,12 +1781,6 @@ evidence = "#2100 group name: slug words restored from the member and register l
 
 [[statement]]
 kind = "set"
-subject = "set:sprakrelaterade-tillagg-och-avdrag"
-fields = { "label" = "Språkrelaterade tillägg och avdrag" }
-evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
-
-[[statement]]
-kind = "set"
 subject = "set:standardkostnad-for-lss-insatser"
 fields = { "label" = "Standardkostnad för LSS-insatser" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
@@ -1879,12 +1819,6 @@ evidence = "#2102 same-label cluster 'Antal barn 1-5 år, år t-2' (2 variables)
 kind = "set"
 subject = "var:antal-barn-6-12-ar"
 fields = { "label" = "Antal barn 6-12 år (7-12 år)" }
-evidence = "#2102 same-label cluster 'Antal barn 6-12 år' (2 variables): judged different meaning, medium confidence; ant7_12 and Ant6 are concurrent counts for different ages (7-12 and 6); the shared label spans both."
-
-[[statement]]
-kind = "set"
-subject = "var:antal-barn-6-12-ar-ant6"
-fields = { "label" = "Antal barn 6-12 år (6 år)" }
 evidence = "#2102 same-label cluster 'Antal barn 6-12 år' (2 variables): judged different meaning, medium confidence; ant7_12 and Ant6 are concurrent counts for different ages (7-12 and 6); the shared label spans both."
 
 [[statement]]
@@ -2048,3 +1982,39 @@ kind = "set"
 subject = "set:utjamningsar"
 fields = { "description" = "Det år som utjämningen gäller: i den kommunalekonomiska utjämningen det år som påverkar kommunens eller landstingets (regionens) utfall, och i LSS-utjämningen det år för vilket kommunen betalar en utjämningsavgift till eller får ett utjämningsbidrag från staten." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i utjämningssystem.\ncatalog:variable_text:41100:13514:16436\ncatalog:variable_text:41101:19358:19723\ncatalog:variable_text:41102:13879:16071\ncatalog:variable_text:41102:17532:19358\ncatalog:variable_text:41102:19358:19723\ncatalog:variable_text:41102:19723:20089\ncatalog:variable_text:41102:20089:20454\ncatalog:variable_text:41102:20454:20819"
+
+[[statement]]
+kind = "set"
+subject = "kommunalekonomisk-utjamning-kommuner: Ant6 @2014..2019 where key = 'v29627'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Kommunalekonomisk utjämning för kommuner, Utjämningsår 2014-2019 (RegVerID 5048 for 2014, 12461 for 2019) documents column Ant6 under VarId 22209 \"Antal barn i åldern 6 år\" and VarId 29627 \"Antal barn 6-12 år\". 22209 is the 6-year-old count and the one the column name says; 29627 is documented in the same releases on its own column ant7_12 (and unnamed in 2020-2022). The 29627 row under Ant6 is withheld; 29627 keeps ant7_12."
+
+[[statement]]
+kind = "set"
+subject = "kommunalekonomisk-utjamning-kommuner: UTrFF715 @2014..2019 where key = 'v29631'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Kommunalekonomisk utjämning för kommuner, Utjämningsår 2014-2019 documents column UTrFF715 under VarId 22220 \"Antal utrikes födda barn 7–15 år\", VarId 29631 \"Antal barn 7-15 år med utländsk bakgrund\" and VarId 29632 \"Tillägg/avdrag för hemspråk och svenska 2, kr/inv\". UTrFF715 spells out utrikes födda 7-15, which is 22220 (documented in 2007-2013 and 2020-2022 as well). 29631 is a different count (utländsk bakgrund) and its row under UTrFF715 is withheld; 29631 keeps its 2020-2022 documentation."
+
+[[statement]]
+kind = "set"
+subject = "kommunalekonomisk-utjamning-kommuner: UTrFF715 @2014..2019 where key = 'v29632'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Kommunalekonomisk utjämning för kommuner, Utjämningsår 2014-2019 documents column UTrFF715 under VarId 22220 \"Antal utrikes födda barn 7–15 år\", VarId 29631 \"Antal barn 7-15 år med utländsk bakgrund\" and VarId 29632 \"Tillägg/avdrag för hemspråk och svenska 2, kr/inv\". UTrFF715 is 22220 by its name. 29632 is a kronor-per-inhabitant adjustment, not a child count, like the other Tillägg/avdrag variables (Hemtjanst10, SSS09) that have their own columns; its row under UTrFF715 is withheld and 29632 keeps its 2020-2022 documentation."
+
+[[statement]]
+kind = "set"
+subject = "kommunalekonomisk-utjamning-kommuner: Utfall_Kr @2023 where key = 'v46093'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Kommunalekonomisk utjämning för kommuner, Utjämningsår 2023 documents column Utfall_Kr under VarId 46092 \"Kommunalekonomisk utjämning Kommuner, utfall, kronor\" (Kronor SEK) and VarId 46093 \"... utfall, tusen kronor\" (1000-tal kronor). The column name ends in Kr and 46092 is the kronor variable; the tusen kronor variable is the same amount in another unit. The source does not settle which; 46092 is the more plausible owner because of the column name suffix (maintainer 2026-11-14: place under the more plausible owner). The 46093 row is withheld; 46093 is documented under no other column."
+
+[[statement]]
+kind = "set"
+subject = "lss-utjamning: Utfall @2015..2023 where key = 'v23833'"
+fields = { "variable" = "lss-utjamningsavgift-kr" }
+evidence = "SCB Registerinformation, Utjämning av LSS-kostnader mellan kommuner 2015-2023 documents column Utfall under VarId 23832 \"LSS-utjämningsavgift enligt utjämningssystemet, kr\" and VarId 23833 \"LSS-utjämningsbidrag enligt utjämningssystemet, kr\" in every release, both float and both \"produkten av ... i kronor per invånare och folkmängden den 1 november året före utjämningsåret\". A kommun pays an avgift or receives a bidrag, so the one column holds the avgift on one kind of row and the bidrag on the other: one concept for two row kinds (maintainer 2026-11-14: variants of one concept for different row kinds are merged). Neither claimant is generic; lss-utjamningsavgift-kr survives. 2008-2014 (UtjAvgift, UtjBidrag) and 2024-2026 (UtfallAvg, UtfallBid) give them separate columns."
+
+[[statement]]
+kind = "set"
+subject = "var:lss-utjamningsavgift-kr"
+fields = { "label" = "LSS-utjämningsavgift, kr", "description" = "Kommunens avgift till LSS-utjämningen i kronor, beräknad som beloppet per invånare multiplicerat med folkmängden den 1 november året före utjämningsåret. Kolumnen Utfall innehåller 2015–2023 både avgift och bidrag (en rad gäller antingen avgift eller bidrag); övriga år (2008–2014 och från 2024) redovisas avgift och bidrag i separata kolumner, och variabeln gäller då bara avgiften." }
+evidence = "Maintainer ruling 2026-11-14: variants of one concept for different row kinds are merged and the variable carries a label and description covering both kinds.\nVarId 23832 (\"Avgift till LSS-utjämningen, i kronor\") and VarId 23833 (\"Bidrag till LSS-utjämningen, i kronor\") share the column Utfall in 2015-2023."
