@@ -26,7 +26,7 @@ evidence = "Same column name, different facts: arpost marks equivalent education
 kind = "set"
 subject = "var:filler2"
 fields = { "description" = "På position 210 i ARPOST höstterminen 1981 och vårterminen 1982 heter fältet ALEH i de äldre postbeskrivningarna per termin: \"Behörighet till förskollärar- och fritidspedagoglinjen, 80p, 2-4 = behörig\". Leveransens postbeskrivning kallar det FILLER2." }
-evidence = "A1_HT81.xls and A1_VT82.xls (Dropbox Data/data info/Riksarkivet (VHS)/A1/postbeskrivningar), sheet Postbeskrivning: ALEH, start 210, length 1. The delivery layout A1_HT81_VT82.xls has FILLER2 at 210; the column stays FILLER2 (COS ruling 2026-11-14)."
+evidence = "A1_HT81.xls and A1_VT82.xls (catalog/evidence/riksarkivet/a1/HT81-VT82/), sheet Postbeskrivning: ALEH, start 210, length 1. The delivery layout A1_HT81_VT82.xls has FILLER2 at 210; the column stays FILLER2 (COS ruling 2026-11-14)."
 
 [[statement]]
 kind = "set"
