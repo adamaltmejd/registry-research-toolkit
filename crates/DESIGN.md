@@ -315,7 +315,8 @@ classification bindings. Accepting one requires reviewed curation and a premise 
   disagreeing field with `set`. On a `release:<table>/<handle>` subject it moves the
   placed release with every occurrence and gap marker attached to it; they stay
   attached, so editions, cadence, gaps and the source's notices and documents about
-  the release follow it, and the source table no longer lists it. Another move of any of its rows is a conflict: a release is moved
+  the release follow it (an exact-occurrence end in that release included), and the
+  source table no longer lists it. Another move of any of its rows is a conflict: a release is moved
   whole or not at all. An occurrence selector moves only the selected occurrences, so a
   moved release occurrence becomes dated and detached; unplaced releases and
   population-specific value sets cannot be detached.
