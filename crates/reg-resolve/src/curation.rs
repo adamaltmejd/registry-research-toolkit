@@ -706,6 +706,10 @@ fn states_value_set(
 
 fn effects(statement: &Statement) -> BTreeSet<String> {
     match statement {
+        // Breaks add up like links: two on one subject overlap only with the same text.
+        Statement::Set { fields, .. } if let Some(stated) = &fields.series_break => {
+            BTreeSet::from([format!("series_break:{}", stated.text)])
+        }
         Statement::Set { fields, .. } => stated_fields(fields).into_keys().collect(),
         Statement::Assert { fact, .. } => match fact {
             AssertFact::Occurrence { fields } | AssertFact::Table { fields } => {
