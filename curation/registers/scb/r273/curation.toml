@@ -5989,18 +5989,6 @@ evidence = "current-scb-inputs.zip/Timeseries.csv row=156\n\nCVID 916770 = STATI
 
 [[statement]]
 kind = "set"
-subject = "var:civilstand"
-fields = { series_break = { text = "I samband med att SCB gick över från stordatormiljö till Pc-miljö, gjordes ett grunduttag från folkbokföringen, som fick utgöra grunden till det nya RTB-systemet. Vid jämförande kontroller med gamla data upptäcktes motsägelsefulla uppgifter i civilstånd för ett antal personer. Civilstånd för dessa personer togs då bort och ersattes med uppgift saknas." } }
-evidence = "current-scb-inputs.zip/Timeseries.csv row=66\n\nCVID 884528 = STATIV 2022 column Civil, ledger \"STATIV: Civil\". Text names no year."
-
-[[statement]]
-kind = "set"
-subject = "var:civilstand"
-fields = { series_break = { text = "Personer som 1997 var i partnerskap återfinns det året under gift man/kvinna." } }
-evidence = "current-scb-inputs.zip/Timeseries.csv row=67\n\nCVID 884528 = STATIV column Civil. Text covers the single year 1997, not a break day."
-
-[[statement]]
-kind = "set"
 subject = "var:dispink-levnadsniva"
 fields = { series_break = { at = "2020", text = "Från och med 2020 ingår även nordiska inkomster." } }
 evidence = "current-scb-inputs.zip/Timeseries.csv row=77\n\nCVID 924487 = STATIV 2022 column DispInkLevN; the variable is split at 2022-01-01, and 2020 lies in dispink-levnadsniva (1997-2021), not dispink-forhallande (2022-). \"Från och med 2020\"."
@@ -6016,30 +6004,6 @@ kind = "set"
 subject = "var:dispink-levnadsniva-mor"
 fields = { series_break = { at = "2020", text = "Från och med 2020 ingår även nordiska inkomster." } }
 evidence = "current-scb-inputs.zip/Timeseries.csv row=81\n\nAs row 77, column DispInkLevNMor. \"Från och med 2020\"."
-
-[[statement]]
-kind = "set"
-subject = "var:dispink-levnadsniva"
-fields = { series_break = { text = "För 1997–1999 grundar sig uppgifterna om disponibel inkomst/levnadsnivå på tidigare erhållna underlag från SOS. \nFrån och med STATIV 2003 har beloppen för åren 1997–1999 omräknats grundade på nya belopp från Socialstyrelsen." } }
-evidence = "current-scb-inputs.zip/Timeseries.csv row=78\n\nCVID 924487; the text covers the years 1997-1999 (all in dispink-levnadsniva); no single break day."
-
-[[statement]]
-kind = "set"
-subject = "var:dispink-levnadsniva-far"
-fields = { series_break = { text = "För 1997–1999 grundar sig uppgifterna om disponibel inkomst/levnadsnivå på tidigare erhållna underlag från SOS. \nFrån och med STATIV 2003 har beloppen för åren 1997–1999 omräknats grundade på nya belopp från Socialstyrelsen." } }
-evidence = "current-scb-inputs.zip/Timeseries.csv row=80\n\nAs row 78, column DispInkLevNFar."
-
-[[statement]]
-kind = "set"
-subject = "var:dispink-levnadsniva-mor"
-fields = { series_break = { text = "För 1997–1999 grundar sig uppgifterna om disponibel inkomst/levnadsnivå på tidigare erhållna underlag från SOS. \nFrån och med STATIV 2003 har beloppen för åren 1997–1999 omräknats grundade på nya belopp från Socialstyrelsen." } }
-evidence = "current-scb-inputs.zip/Timeseries.csv row=82\n\nAs row 78, column DispInkLevNMor."
-
-[[statement]]
-kind = "set"
-subject = "var:ensamkommande"
-fields = { series_break = { text = "Uppgiften är ny från och med 2009. SCB uppdaterade under 2013 med ytterligare årgångar bak till 2002 utifrån Migrationsverkets register. Eftersom Migrationsverkets data är händelsebaserat och ingen vers-ionshantering finns likt den på SCB, så kan äldre uppgifter vara uppdate-rade i efterhand. Det kan alltså finnas ensamkommande barn som inte finns med på grund av att föräldrar har kommit senare år" } }
-evidence = "current-scb-inputs.zip/Timeseries.csv row=86\n\nCVID 900411 = STATIV 2022 column Ensamkommande. \"ny från och med 2009\" but back-filled to 2002 (coverage starts 2002), so 2009 is not stated as a break; left undated."
 
 [[statement]]
 kind = "set"

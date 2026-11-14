@@ -1386,15 +1386,3 @@ kind = "set"
 subject = "var:manadslon"
 fields = { series_break = { at = "2011", text = "Från och med 2011 ingår även förmåner i månadslönebegreppet." } }
 evidence = "current-scb-inputs.zip/Timeseries.csv row=120\n\nCVID 291969 = slk 2011 column mlon; variable split at 2011 (manadslon-exkl-natura 1996-2010, manadslon from 2011). \"Från och med 2011\"."
-
-[[statement]]
-kind = "set"
-subject = "var:sjuklon-1"
-fields = { series_break = { text = "År 1996-2002 samt 2005 och framåt innehåller Sjuklön 1 dag 1-14, medan den för 2003 och 2004 innehåller dag 1-21." } }
-evidence = "current-scb-inputs.zip/Timeseries.csv row=131\n\nCVIDs 27802/28166 (rows 131, 132, same text) = slk 2005/2003 column sjuk1. Text states two break days (2003, 2005); left undated."
-
-[[statement]]
-kind = "set"
-subject = "var:sjuklon-2"
-fields = { series_break = { text = "År 1996-2002 samt 2005 och framåt innehåller Sjuklön 2 dag 15-, medan den för 2003 och 2004 innehåller dag 22-." } }
-evidence = "current-scb-inputs.zip/Timeseries.csv row=133\n\nCVIDs 27759/28123 (rows 133, 134, same text) = slk 2005/2003 column sjuk2. Two break days (2003, 2005); left undated."
