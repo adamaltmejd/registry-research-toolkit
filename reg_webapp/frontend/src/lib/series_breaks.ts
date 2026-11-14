@@ -1,4 +1,6 @@
 import type { components } from "./api-types-rust";
+import { startText } from "./catalog_period";
+import type { LaneBreak } from "./LaneGraph";
 
 type SeriesBreak = components["schemas"]["ShowSeriesBreak"];
 
@@ -19,6 +21,22 @@ export function placeBreaks(
   return [...(breaks ?? [])]
     .sort((a, b) => (start(a) < start(b) ? -1 : start(a) > start(b) ? 1 : 0))
     .map((seriesBreak) => ({ where, seriesBreak }));
+}
+
+/** The dated breaks of `breaks`, each with its accessible text: where, when
+ * and what changed. An undated break has no place on an axis; the list shows
+ * it. */
+export function laneBreaks(breaks: readonly PlacedBreak[]): LaneBreak[] {
+  return breaks.flatMap(({ where, seriesBreak }) =>
+    seriesBreak.at
+      ? [
+          {
+            day: seriesBreak.at,
+            label: `Series break${where ? ` in ${where}` : ""} from ${startText(seriesBreak.at)}: ${seriesBreak.text ?? "the provider does not say what changed."}`,
+          },
+        ]
+      : [],
+  );
 }
 
 /** React keys for `values` that may repeat: each value, numbered from its

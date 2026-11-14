@@ -10,6 +10,7 @@ import {
   useSyncExternalStore,
 } from "react";
 import {
+  Button as AriaButton,
   Checkbox,
   Focusable,
   Radio,
@@ -159,6 +160,40 @@ interface Props {
   /** One span is picked at a time (a classification's version): the spans are
    * one radio group, a single tab stop with arrow keys between them (#2310). */
   single?: boolean;
+  /** The provider's dated series breaks, a marker each on the axis. */
+  breaks?: readonly LaneBreak[];
+}
+
+/** A dated series break: its first day (ISO) and what it says, in words. */
+export interface LaneBreak {
+  day: string;
+  label: string;
+}
+
+/** A day on the axis's scale of years: 1 July 2018 is about 2018.5. */
+function dayYear(day: string): number {
+  const year = Number(day.slice(0, 4));
+  const start = Date.UTC(year, 0, 1);
+  const length = Date.UTC(year + 1, 0, 1) - start;
+  return year + (Date.parse(`${day}T00:00:00Z`) - start) / length;
+}
+
+/** The breaks on the axis, one mark per day with every label it has. */
+function breakMarks(
+  breaks: readonly LaneBreak[],
+  axis: [number, number],
+): { day: string; at: number; labels: string[] }[] {
+  const byDay = new Map<string, string[]>();
+  for (const b of breaks) {
+    const at = dayYear(b.day);
+    if (at < axis[0] || at >= axis[1] + 1) continue;
+    byDay.set(b.day, [...(byDay.get(b.day) ?? []), b.label]);
+  }
+  return [...byDay].sort().map(([day, labels]) => ({
+    day,
+    at: dayYear(day),
+    labels,
+  }));
 }
 
 /** Measured heights by lane id, and the callback a measured block reports
@@ -209,6 +244,7 @@ export function LaneGraph({
   focusSpan = null,
   hint = "Click a column to add or remove its variable.",
   single = false,
+  breaks = [],
 }: Props) {
   const [width, setWidth] = useState(0);
   const [hovered, setHovered] = useState<string | null>(null);
@@ -292,6 +328,7 @@ export function LaneGraph({
   }, [latest]);
   const scrolls = !!geometry && geometry.contentWidth > width;
   const pickable = !!onToggle && spans.some((span) => span.selectable);
+  const marked = breakMarks(breaks, axis);
   const spansByLane = new Map<string, LaneSpanModel[]>();
   for (const span of spans) {
     spansByLane.set(span.lane, [...(spansByLane.get(span.lane) ?? []), span]);
@@ -336,7 +373,20 @@ export function LaneGraph({
               width={geometry.contentWidth}
               hovered={hovered}
               markerId={markerId}
+              breaks={marked.map((mark) => mark.at)}
             />
+            {marked.map((mark) => (
+              <BreakMark
+                key={mark.day}
+                labels={mark.labels}
+                left={
+                  geometry.trackX +
+                  ((mark.at - axis[0]) / (axis[1] + 1 - axis[0])) *
+                    geometry.trackWidth
+                }
+                top={geometry.axisY}
+              />
+            ))}
             {overlay && geometry.coverageY !== null && (
               <div
                 className={styles.overlay}
@@ -471,6 +521,7 @@ function Marks({
   width,
   hovered,
   markerId,
+  breaks,
 }: {
   geometry: LaneGeometry;
   lanes: LaneModel[];
@@ -481,6 +532,8 @@ function Marks({
   width: number;
   hovered: string | null;
   markerId: string;
+  /** The series breaks' places on the axis, in years. */
+  breaks: readonly number[];
 }) {
   const marker = `${markerId}-arrow`;
   const bottom = geometry.height;
@@ -647,6 +700,16 @@ function Marks({
           {tick.label ?? tick.year}
         </text>
       ))}
+      {breaks.map((at) => (
+        <line
+          key={`b${at}`}
+          className={styles.breakLine}
+          x1={x(at)}
+          x2={x(at)}
+          y1={geometry.axisY}
+          y2={bottom}
+        />
+      ))}
       {geometry.edges.map((edge) => (
         <path
           key={edge.id}
@@ -661,6 +724,41 @@ function Marks({
         />
       ))}
     </svg>
+  );
+}
+
+/** A series break's marker on the axis: its text on hover and focus, and as
+ * its accessible name. A tab stop, so a keyboard reaches the text. */
+function BreakMark({
+  labels,
+  left,
+  top,
+}: {
+  labels: readonly string[];
+  left: number;
+  top: number;
+}) {
+  return (
+    <TooltipTrigger delay={0} closeDelay={0}>
+      {/* A button only so the marker is a tab stop that opens its tooltip;
+          pressing it does nothing. */}
+      <AriaButton
+        aria-label={labels.join(" ")}
+        className={styles.breakMark}
+        style={{ left, top }}
+      />
+      <Tooltip
+        className={({ isEntering, isExiting }) =>
+          `${findingStyles.tooltip} ${isEntering ? "motion-rise-in" : ""} ${isExiting ? "motion-rise-out" : ""}`
+        }
+        offset={6}
+        style={{ zIndex: "var(--z-popover)" }}
+      >
+        {labels.map((label) => (
+          <span key={label}>{label}</span>
+        ))}
+      </Tooltip>
+    </TooltipTrigger>
   );
 }
 

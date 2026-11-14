@@ -537,3 +537,30 @@ a.nameText {
 .run {
   white-space: nowrap;
 }
+
+/* A provider's series break: a line down the drawing at its day, and a
+   marker on the axis that holds its text. In `warn`, as its order finding. */
+.breakLine {
+  stroke: var(--warn);
+  stroke-dasharray: 3 3;
+}
+
+.breakMark {
+  position: absolute;
+  width: 12px;
+  height: 10px;
+  /* Under the axis line, clear of the year labels above it. */
+  margin: 1px 0 0 -6px;
+  padding: 0;
+  border: none;
+  background: var(--warn);
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  cursor: help;
+}
+
+.breakMark[data-focus-visible] {
+  outline: none;
+  clip-path: none;
+  border-radius: 2px;
+  box-shadow: var(--focus-ring);
+}

@@ -582,7 +582,12 @@ The shell is a top bar and two browse columns beside a detail pane, not a rail.
   group's under each member's lane title), each with its day or years muted over the
   provider's text, never a release name or provenance; it renders only when a break
   exists (placement: Operator, 2026-11-14; the rest is a new rule, proposed by the
-  implementer). A variable page has no source and provenance section; MCP keeps
+  implementer). A dated break is also drawn on that page's `Timeline` at its day
+  (maintainer, via the Operator, 2026-11-14: "markers at their day, with the text on
+  hover/focus and accessible text. Undated breaks: no marker"): a small `warn` marker
+  under the axis and a dashed `warn` line down the lanes; the marker is a tab stop
+  whose name and tooltip are the break's place, day and text, one marker per day (new
+  rule, proposed by the implementer). A variable page has no source and provenance section; MCP keeps
   `evidence=true` (maintainer 2026-11-04). Padding `spacing.5`. A grouped variable has
   no page of its own (maintainer 2026-11-04): its address (from search, the palette, a
   project card or a note) renders its group's page, one route and one page, not a

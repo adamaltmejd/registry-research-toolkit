@@ -17,7 +17,7 @@ import {
 import { Paragraphs } from "./Paragraphs";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
 import { SeriesBreaks } from "./SeriesBreaks";
-import { type PlacedBreak, placeBreaks } from "./series_breaks";
+import { laneBreaks, type PlacedBreak, placeBreaks } from "./series_breaks";
 import { Button as ActionButton } from "./ui/Button";
 import { Definitions } from "./ui/Definitions";
 import { Panel } from "./ui/Panel";
@@ -195,6 +195,7 @@ function VariablePage({
     successionError: succession.error,
     allowAdd: context !== null,
     focus,
+    breaks: laneBreaks(breaks),
   });
   return (
     <article className={styles.page}>

@@ -32,6 +32,7 @@ import {
   stewardDatabases,
 } from "./databases";
 import {
+  type LaneBreak,
   type LaneEdgeModel,
   LaneGraph,
   type LaneModel,
@@ -166,6 +167,7 @@ export function useVariableCoverage({
   successionError = null,
   allowAdd = true,
   focus = null,
+  breaks = [],
 }: {
   subjects: readonly CoverageSubject[];
   /** The drawing's accessible name. */
@@ -180,6 +182,8 @@ export function useVariableCoverage({
   allowAdd?: boolean;
   /** The subject whose lane takes focus when first drawn. */
   focus?: string | null;
+  /** The subjects' dated series breaks, marked on the axis. */
+  breaks?: readonly LaneBreak[];
 }) {
   const { draft, raw } = useProject();
   // Only a live project can take columns: without one there are no thumbs,
@@ -594,6 +598,7 @@ export function useVariableCoverage({
           }
           isDisabled={!tables}
           focus={focus}
+          breaks={breaks}
           onToggle={
             allowAdd
               ? (id) => {
