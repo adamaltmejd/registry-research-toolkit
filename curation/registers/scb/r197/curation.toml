@@ -2241,7 +2241,7 @@ evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): V1
 
 [[statement]]
 kind = "set"
-subject = "privatagda-flerbostadshus: v2020 @2007-01-01..2011-12-31 where key = 'v16599'"
+subject = "privatagda-flerbostadshus: v2020 @2007-01-01..2007-12-31 where key = 'v16599'"
 fields = { "variable" = "tomtrattsavgald" }
 evidence = "#2141 Q1 (same column in parallel tables, maintainer 2026-11-03): TOMT in allmannyttiga-bostadsforetag; V2020 in privatagda-flerbostadshus: same definition and code list, never concurrent under another spelling in one table; folded into tomtrattsavgald."
 
@@ -2436,3 +2436,9 @@ kind = "set"
 subject = "var:varmhyra-kallhyra"
 fields = { "description" = "Om lämnade hyresintäkter avser varmhyra (inklusive kostnader för uppvärmning) eller kallhyra (exklusive uppvärmning). Vid kallhyra fördelas bränsle- och värmeavgiften på bostads- och lokalintäkter efter yta; för privatägda flerbostadshus tas då en schablon för uppvärmningen fram." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga i parallella tabeller; tabellerna skiljer sig i hur värmeavgiften tas fram vid kallhyra.\ncatalog:variable_text:34424:15340:16071"
+
+[[statement]]
+kind = "set"
+subject = "privatagda-flerbostadshus: V2020 @2008..2011 where key = 'v16599'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Privatägda flerbostadshus 2008-2011 (RegVerID 2900, 3237, 3984, 4465) documents column V2020 under VarId 16511 \"Tomträttsavgäld och arrendeavgifter\" and VarId 16599 \"Kostnader Tomträttsavgäld\". 16511 is the broader item (tomträttsavgäld and arrendeavgifter) and 16599 the narrower one. 16511 is V2020 in 2012-2015 in this table and in Bostadsrättsföreningar 2007-2015, while 16599 is TOMT in Allmännyttiga bostadsföretag 2007-2015 and V2020 here in 2007-2011. The source does not settle which; 16511 is the more plausible owner because it holds V2020 in the sibling table and in this table's later releases (maintainer 2026-11-14: place under the more plausible owner). The 16599 rows are withheld; 16599 keeps TOMT in Allmännyttiga bostadsföretag."
