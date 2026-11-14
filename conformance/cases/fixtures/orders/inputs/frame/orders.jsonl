@@ -145,3 +145,26 @@
 {"kind":"release","provider":"demo","register":"las","table":"","release":"la2020","name":"Läsår 2020/2021","from":"2020-07-01","to":"2021-06-30","grain":"span","edition":"final"}
 {"kind":"occurrence","provider":"demo","register":"las","table":"","release":"la2019","column":"Betyg","source_key":"k1","label":"Betyg","dtype":"int"}
 {"kind":"occurrence","provider":"demo","register":"las","table":"","release":"la2020","column":"Betyg","source_key":"k1","label":"Betyg","dtype":"int"}
+{"kind":"register","provider":"demo","register":"brott","name":"Brottsregistret"}
+{"kind":"table","provider":"demo","register":"brott","table":"b","name":"Tabell B"}
+{"kind":"release","provider":"demo","register":"brott","table":"b","release":"b2016","name":"B 2016","from":"2016-01-01","to":"2016-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"brott","table":"b","release":"b2017","name":"B 2017","from":"2017-01-01","to":"2017-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"brott","table":"b","release":"b2018","name":"B 2018","from":"2018-01-01","to":"2018-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"brott","table":"b","release":"b2019","name":"B 2019","from":"2019-01-01","to":"2019-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"brott","table":"b","release":"b2020","name":"B 2020","from":"2020-01-01","to":"2020-12-31","grain":"year","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"brott","table":"b","release":"b2016","column":"Ink","source_key":"k1","label":"Inkomst","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"brott","table":"b","release":"b2017","column":"Ink","source_key":"k1","label":"Inkomst","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"brott","table":"b","release":"b2018","column":"Ink","source_key":"k1","label":"Inkomst","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"brott","table":"b","release":"b2019","column":"Ink","source_key":"k1","label":"Inkomst","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"brott","table":"b","release":"b2020","column":"Ink","source_key":"k1","label":"Inkomst","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"brott","table":"b","release":"b2016","column":"Civ","source_key":"k2","label":"Civilstånd","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"brott","table":"b","release":"b2017","column":"Civ","source_key":"k2","label":"Civilstånd","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"brott","table":"b","release":"b2018","column":"Civ","source_key":"k2","label":"Civilstånd","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"brott","table":"b","release":"b2019","column":"Civ","source_key":"k2","label":"Civilstånd","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"brott","table":"b","release":"b2020","column":"Civ","source_key":"k2","label":"Civilstånd","dtype":"int"}
+{"kind":"notice","series_break":true,"subject":{"kind":"variable","provider":"demo","register":"brott","key":"k1"},"at":"2018-01-01","text":"Från och med 2018 ingår nordiska inkomster."}
+{"kind":"notice","series_break":true,"subject":{"kind":"variable","provider":"demo","register":"brott","key":"k1"},"at":"2020-01-01","text":"Ny källa från och med 2020."}
+{"kind":"notice","series_break":true,"subject":{"kind":"variable","provider":"demo","register":"brott","key":"k2"}}
+{"kind":"notice","series_break":true,"subject":{"kind":"release","provider":"demo","register":"brott","table":"b","key":"b2016"},"text":"Ny population 2016."}
+{"kind":"notice","series_break":true,"subject":{"kind":"release","provider":"demo","register":"brott","table":"b","key":"b2019"},"text":"Ny insamling 2019."}
+{"kind":"notice","series_break":true,"subject":{"kind":"register","provider":"demo","register":"brott"},"text":"Registret bytte källa."}

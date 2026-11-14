@@ -1,5 +1,5 @@
 //! Curated relation rows share the link stage's endpoint and graph constraints.
-use super::{Entity, Relation, pairs, reaches, resolve};
+use super::{Break, Entity, Relation, pairs, reaches, resolve};
 use std::collections::{BTreeMap, BTreeSet};
 
 use reg_frame::{Record, address::Address, statement::Statement};
@@ -9,6 +9,8 @@ use reg_resolve::{Resolved, curation::Premise};
 #[derive(Default)]
 pub(crate) struct Curated {
     pub relations: Vec<Relation>,
+    /// Every published series break, the source's included (`breaks`).
+    pub breaks: Vec<Break>,
     pub statements: Vec<crate::emit::StatementRow>,
     pub refusals: Vec<(String, String)>,
     pub external: Vec<crate::external::Relation>,
@@ -80,7 +82,19 @@ fn endpoints(
         Address::Set(_) => {
             Err("sets are presentation only and cannot be relation endpoints".into())
         }
-        Address::Release { .. } => Err("release-kind curated link".into()),
+        Address::Release { table, handle } => {
+            let t = resolved
+                .tables
+                .iter()
+                .position(|t| t.slug.as_deref().unwrap_or(&resolved.public) == table)
+                .ok_or("unresolved table endpoint")?;
+            resolved
+                .releases
+                .iter()
+                .position(|r| r.table == t && r.release.release == handle)
+                .map(|x| vec![Entity::Release(ri, x)])
+                .ok_or_else(|| "unresolved release endpoint".into())
+        }
         Address::Occurrence { .. } => {
             let mut variables = BTreeSet::new();
             for p in premise {
@@ -135,6 +149,50 @@ pub(crate) fn curate(
     let mut curated = Vec::new();
     let mut origins = BTreeMap::new();
     for (statement, premise) in statements {
+        if let Statement::Set {
+            subject, fields, ..
+        } = &statement.statement
+            && let Some(stated) = &fields.series_break
+        {
+            let hash = statement
+                .statement
+                .scoped_identity(&statement.provider, &statement.register);
+            let at = stated
+                .at
+                .as_ref()
+                .and_then(|at| at.intervals().into_iter().next())
+                .map(|(start, _)| start);
+            match endpoints(
+                registers,
+                &statement.provider,
+                &statement.register,
+                &subject.to_string(),
+                &premise.subjects,
+            ) {
+                Ok(subjects) => {
+                    result
+                        .breaks
+                        .extend(subjects.into_iter().map(|subject| Break {
+                            subject,
+                            at: at.clone(),
+                            text: Some(stated.text.trim().to_owned()),
+                            statement: Some(hash.clone()),
+                        }));
+                    result
+                        .statements
+                        .push(crate::curation::statement_row(root, statement)?);
+                }
+                Err(reason) => result.refusals.push((
+                    hash,
+                    format!(
+                        "{}:{}: curated-series-break: {reason}",
+                        statement.path.display(),
+                        statement.line
+                    ),
+                )),
+            }
+            continue;
+        }
         let Statement::Link {
             subject,
             relation,
@@ -240,6 +298,7 @@ pub(crate) fn curate(
             }
         }
     }
+    result.breaks = breaks(registers, source.breaks, std::mem::take(&mut result.breaks));
     check_conflicts(&curated, &origins, &mut result);
     let mut relations = source.relations;
     relations.extend(curated.iter().cloned());
@@ -247,6 +306,29 @@ pub(crate) fn curate(
     result.refusals.sort();
     result.refusals.dedup();
     Ok(result)
+}
+
+/// The published breaks: the source's and the curated ones, distinct and sorted. A dated
+/// curated break replaces each source break of the same text on its subject or, for a
+/// table, on one of its releases: it dates what the source left undated.
+fn breaks(registers: &[Resolved], source: Vec<Break>, curated: Vec<Break>) -> Vec<Break> {
+    let replaces = |c: &Break, s: &Break| {
+        c.at.is_some()
+            && c.text == s.text
+            && (c.subject == s.subject
+                || matches!((c.subject, s.subject),
+                    (Entity::Table(r, t), Entity::Release(rr, x))
+                        if r == rr && registers[r].releases[x].table == t))
+    };
+    let kept: Vec<Break> = source
+        .into_iter()
+        .filter(|s| !curated.iter().any(|c| replaces(c, s)))
+        .collect();
+    kept.into_iter()
+        .chain(curated)
+        .collect::<BTreeSet<_>>()
+        .into_iter()
+        .collect()
 }
 
 fn external_link(

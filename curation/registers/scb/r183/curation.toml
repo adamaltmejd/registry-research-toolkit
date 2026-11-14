@@ -2698,3 +2698,15 @@ kind = "set"
 subject = "set:naringsgren"
 fields = { "description" = "Enhetens näringsgren (bransch) i tre versioner: enligt SNI 2007 för produktionsenheten (2019–2023), som den näringsgren SCB tilldelar för statistiska ändamål (2000–2018; 2016–2018 rapportenhetens huvudsakliga verksamhet som femsiffrig SNI-kod, och 2014–2017 för ett arbetsställe som är en hjälpenhet företagsenhetens huvudnäringsgren), och som nationalräkenskapernas näringsgrenskod, fastställd av NR och baserad på bransch, ägarkategori och juridisk form (2000–2008 och 2016–2018)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla tre är en klassificering av enhetens näringsgren; versionerna och deras år anges.\ncatalog:variable_text:37196:17897:19723\ncatalog:variable_text:37197:10957:14245\ncatalog:variable_text:37197:16801:17897\ncatalog:variable_text:37198:10957:14245\ncatalog:variable_text:37198:16071:16801\ncatalog:variable_text:37198:16801:17897"
+
+[[statement]]
+kind = "set"
+subject = "table:investeringsenkaten-fullstandigt"
+fields = { series_break = { at = "2001", text = "Från och med år 2001 har uppgifter som avser investeringsplaner för det kommande året slopats i enkäten som genomförs i maj" } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=16\n\nRelease r878 (variant 253) resolves to this table. \"Från och med år 2001\"."
+
+[[statement]]
+kind = "set"
+subject = "table:investeringsenkaten-resultat"
+fields = { series_break = { at = "2001", text = "Från och med år 2001 har uppgifter som avser investeringsplaner för det kommande året slopats i enkäten som genomförs i maj." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=17\n\nRelease r879 (variant 254) resolves to this table. \"Från och med år 2001\". Text differs from row 16 by a final full stop."

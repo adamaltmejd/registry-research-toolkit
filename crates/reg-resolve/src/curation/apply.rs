@@ -1080,11 +1080,17 @@ impl ReleaseMove {
             }
             (None, None) => false,
         };
-        end.kind == "release"
-            && end.provider == self.provider
+        // A release end names the release by key; an occurrence end (a variable end
+        // with a column) names the release it sits in.
+        let release = match end.kind.as_str() {
+            "release" => end.key.as_deref(),
+            "variable" if end.column.is_some() => end.release.as_deref(),
+            _ => None,
+        };
+        end.provider == self.provider
             && register
             && end.table.as_deref() == Some(self.table.as_str())
-            && end.key.as_deref() == Some(self.release.as_str())
+            && release == Some(self.release.as_str())
     }
 }
 

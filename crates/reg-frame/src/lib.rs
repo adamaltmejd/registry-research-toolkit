@@ -286,7 +286,9 @@ impl ValueSet {
 /// (a register handle) and `register_name` (a register *name* as the source writes it, matched
 /// by fold) is set. `table` is a table handle (table and release ends); `key` a release handle
 /// (release) or a source key (variable). A variable key `var:<local-ledger-slug>`
-/// instead addresses exactly one resolved variable, for reviewed document attachment.
+/// instead addresses exactly one resolved variable, for reviewed document attachment. A
+/// variable end with `release` and `column` (and `table`) names one occurrence of its key:
+/// the end is the one variable that occurrence resolves to, not every piece of the key.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Endpoint {
@@ -296,6 +298,10 @@ pub struct Endpoint {
     pub register_name: Option<String>,
     pub table: Option<String>,
     pub key: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub release: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub column: Option<String>,
 }
 
 impl Endpoint {
@@ -310,6 +316,8 @@ impl Endpoint {
             register_name: None,
             table: None,
             key: None,
+            release: None,
+            column: None,
         }
     }
 }
@@ -331,13 +339,17 @@ pub struct Link {
     pub locator: Locator,
 }
 
-/// A notice the source states about one entity (a series break, an end): shown to users.
+/// A notice the source states about one entity. A series break is published
+/// (crates/DESIGN.md, "Series breaks"); any other notice (an end) is a build finding.
 #[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord, Serialize, Deserialize)]
 #[serde(deny_unknown_fields)]
 pub struct Notice {
     pub subject: Endpoint,
+    #[serde(default)]
+    pub series_break: bool,
     pub at: Option<String>,
-    pub text: String,
+    /// The source's words; `None` only for a series break the source says nothing about.
+    pub text: Option<String>,
     pub locator: Locator,
 }
 

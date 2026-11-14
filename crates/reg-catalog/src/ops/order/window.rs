@@ -369,6 +369,19 @@ fn materialize(
     outcome.findings.extend(windows(&at, &pieces));
     outcome.findings.extend(editions(&at, &pieces)?);
     outcome.findings.extend(replaced(&at)?);
+    // A variable only the holdings database defines (negative id) has no provider breaks.
+    if variable.id > 0 {
+        let base = |level, message| at.issue(level, "series_break", scope.table, None, message);
+        outcome.findings.extend(super::breaks::met(
+            &super::breaks::Anchor {
+                server: scope.server,
+                pid: &variable.pid,
+                base: &base,
+            },
+            &super::breaks::variable(scope.conn, variable.id)?,
+            &ordered,
+        ));
+    }
     let versions: std::collections::BTreeSet<&String> = pieces
         .iter()
         .filter_map(|p| p.class_version.as_ref())

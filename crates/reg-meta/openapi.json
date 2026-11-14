@@ -4264,6 +4264,13 @@
               "period": {
                 "$ref": "#/components/schemas/Period"
               },
+              "series_breaks": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShowSeriesBreak"
+                },
+                "description": "The register's own series breaks; a table's are on the table. Absent when none."
+              },
               "sets": {
                 "type": "array",
                 "items": {
@@ -4362,6 +4369,13 @@
                 "items": {
                   "$ref": "#/components/schemas/ShowRowKey"
                 }
+              },
+              "series_breaks": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShowSeriesBreak"
+                },
+                "description": "The table's series breaks and its releases'. Absent when none."
               },
               "spans": {
                 "type": "array",
@@ -4471,6 +4485,13 @@
               "register": {
                 "type": "string",
                 "description": "The register's fqid."
+              },
+              "series_breaks": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShowSeriesBreak"
+                },
+                "description": "The variable's own series breaks. Absent when none."
               },
               "sets": {
                 "type": "array",
@@ -4610,6 +4631,21 @@
           }
         ],
         "description": "A summary tagged by `kind`. Every kind but `root` and `class_families` carries the resolved `fqid`, so a bare-name request gets the id back."
+      },
+      "ShowBreakRelease": {
+        "type": "object",
+        "required": [
+          "name",
+          "period"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "period": {
+            "$ref": "#/components/schemas/Period"
+          }
+        }
       },
       "ShowClassFamilyRef": {
         "type": "object",
@@ -4905,6 +4941,34 @@
           }
         }
       },
+      "ShowSeriesBreak": {
+        "type": "object",
+        "description": "A series break the provider notes (or curation states) on the entity: what changed and,\nwhen stated, from which day. One entry per text; a break the provider states on\nreleases of a table names them.",
+        "required": [
+          "provenance"
+        ],
+        "properties": {
+          "at": {
+            "type": "string",
+            "description": "The break day, when stated."
+          },
+          "provenance": {
+            "type": "string",
+            "description": "`source` (the provider's) or `curated`."
+          },
+          "releases": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShowBreakRelease"
+            },
+            "description": "The table's releases the provider states it on, in release order."
+          },
+          "text": {
+            "type": "string",
+            "description": "What changed; absent when the provider marks a break without saying more."
+          }
+        }
+      },
       "ShowSetAxis": {
         "type": "object",
         "description": "A set's distinguishing axis, in curated order.",
@@ -4972,6 +5036,13 @@
               "$ref": "#/components/schemas/Segment"
             },
             "description": "The member's whole per-period list, as `segments` serves it without evidence."
+          },
+          "series_breaks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShowSeriesBreak"
+            },
+            "description": "The member's series breaks, as its `show` has them. Absent when none."
           }
         }
       },
@@ -5008,6 +5079,13 @@
           },
           "role": {
             "type": "string"
+          },
+          "series_breaks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ShowSeriesBreak"
+            },
+            "description": "The table's series breaks and its releases', as the table's `show` has them.\nAbsent when none."
           },
           "timeless": {
             "type": "boolean"

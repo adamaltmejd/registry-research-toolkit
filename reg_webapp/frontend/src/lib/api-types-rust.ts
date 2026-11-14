@@ -1155,6 +1155,8 @@ export interface components {
             kind: "register";
             name: string;
             period: components["schemas"]["Period"];
+            /** @description The register's own series breaks; a table's are on the table. Absent when none. */
+            series_breaks?: components["schemas"]["ShowSeriesBreak"][];
             /** @description The register's curated sets (groups), in id order. */
             sets: components["schemas"]["ShowRegisterSet"][];
             tables: components["schemas"]["ShowTable"][];
@@ -1177,6 +1179,8 @@ export interface components {
             releases?: components["schemas"]["Release"][];
             role: string;
             row_keys: components["schemas"]["ShowRowKey"][];
+            /** @description The table's series breaks and its releases'. Absent when none. */
+            series_breaks?: components["schemas"]["ShowSeriesBreak"][];
             spans: components["schemas"]["Period"][];
             timeless: boolean;
             /** @description The variables in this table, each over the years it has here. */
@@ -1210,6 +1214,8 @@ export interface components {
             period: components["schemas"]["Period"];
             /** @description The register's fqid. */
             register: string;
+            /** @description The variable's own series breaks. Absent when none. */
+            series_breaks?: components["schemas"]["ShowSeriesBreak"][];
             sets?: components["schemas"]["ShowMembership"][];
             tags?: components["schemas"]["ShowMembership"][];
         } | {
@@ -1242,6 +1248,10 @@ export interface components {
             value_set: components["schemas"]["ValueSetRef"];
             /** @description The variables that use this version. */
             variables: components["schemas"]["ShowClassUser"][];
+        };
+        ShowBreakRelease: {
+            name: string;
+            period: components["schemas"]["Period"];
         };
         ShowClassFamilyRef: {
             description?: string;
@@ -1348,6 +1358,21 @@ export interface components {
             period: components["schemas"]["Period"];
             spelling: string;
         };
+        /**
+         * @description A series break the provider notes (or curation states) on the entity: what changed and,
+         *     when stated, from which day. One entry per text; a break the provider states on
+         *     releases of a table names them.
+         */
+        ShowSeriesBreak: {
+            /** @description The break day, when stated. */
+            at?: string;
+            /** @description `source` (the provider's) or `curated`. */
+            provenance: string;
+            /** @description The table's releases the provider states it on, in release order. */
+            releases?: components["schemas"]["ShowBreakRelease"][];
+            /** @description What changed; absent when the provider marks a break without saying more. */
+            text?: string;
+        };
         /** @description A set's distinguishing axis, in curated order. */
         ShowSetAxis: {
             id: string;
@@ -1367,6 +1392,8 @@ export interface components {
             name: string;
             /** @description The member's whole per-period list, as `segments` serves it without evidence. */
             segments: components["schemas"]["Segment"][];
+            /** @description The member's series breaks, as its `show` has them. Absent when none. */
+            series_breaks?: components["schemas"]["ShowSeriesBreak"][];
         };
         /** @description A register's table; the implicit one has the register's fqid. */
         ShowTable: {
@@ -1376,6 +1403,11 @@ export interface components {
             name: string;
             period: components["schemas"]["Period"];
             role: string;
+            /**
+             * @description The table's series breaks and its releases', as the table's `show` has them.
+             *     Absent when none.
+             */
+            series_breaks?: components["schemas"]["ShowSeriesBreak"][];
             timeless: boolean;
         };
         /** @description A variable's periods in a table, in one of the data holder's databases. */

@@ -1,4 +1,5 @@
-//! The link stage (`crates/DESIGN.md`, "The link stage"): source-stated links and notices,
+//! The link stage (`crates/DESIGN.md`, "The link stage"): source-stated links, notices
+//! and series breaks,
 //! matched against every resolved register's public surface. It decides only endpoint
 //! matching and rewrites no link into another kind. A malformed record is refused; an
 //! endpoint that matches nothing, or too much, is one warning line.
@@ -81,6 +82,16 @@ pub struct Notice {
     pub text: String,
 }
 
+/// One `series_break` row before row ids: a source's, or a curated one (`statement`).
+#[derive(Debug, Clone, PartialEq, Eq, PartialOrd, Ord)]
+pub struct Break {
+    pub subject: Entity,
+    /// The break day (ISO), when stated.
+    pub at: Option<String>,
+    pub text: Option<String>,
+    pub statement: Option<String>,
+}
+
 /// One resolved document subject: the document's index in the merged list and the
 /// entity it is about (`page` 0 is the whole document).
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
@@ -101,6 +112,8 @@ pub struct Linked {
     pub relations: Vec<Relation>,
     /// Distinct, sorted.
     pub notices: Vec<Notice>,
+    /// Distinct, sorted.
+    pub breaks: Vec<Break>,
     /// One line per unresolved link or notice, in record order.
     pub warnings: Vec<String>,
     /// One line per `continues` link dropped to keep the successions valid (same-day
@@ -118,6 +131,7 @@ const ENDPOINT_KINDS: [&str; 4] = ["register", "table", "release", "variable"];
 /// A record the stage cannot read: an unknown link or endpoint kind, an endpoint without
 /// exactly one of `register` and `register_name` or without the handle its kind needs,
 /// or an `at` that is not an ISO day.
+#[allow(clippy::too_many_lines)]
 pub fn resolve(
     registers: &[Resolved],
     records: &[Record],
@@ -128,6 +142,7 @@ pub fn resolve(
     let mut relations: BTreeMap<(&'static str, Entity, Entity, Option<String>), _> =
         BTreeMap::new();
     let mut notices = BTreeSet::new();
+    let mut breaks = BTreeSet::new();
     for record in records {
         match record {
             Record::Link(link) => {
@@ -169,7 +184,26 @@ pub fn resolve(
                 match index.entities(&notice.subject) {
                     Ok(subjects) => {
                         for subject in subjects {
-                            notices.insert((subject, notice.at.clone(), notice.text.clone()));
+                            if notice.series_break {
+                                breaks.insert(Break {
+                                    subject,
+                                    at: notice.at.clone(),
+                                    // Trimmed like a curated text, so a copy replaces it.
+                                    text: notice
+                                        .text
+                                        .as_deref()
+                                        .map(str::trim)
+                                        .filter(|t| !t.is_empty())
+                                        .map(str::to_owned),
+                                    statement: None,
+                                });
+                            } else {
+                                notices.insert((
+                                    subject,
+                                    notice.at.clone(),
+                                    notice.text.clone().unwrap_or_default(),
+                                ));
+                            }
                         }
                     }
                     Err(reason) => linked.warnings.push(warning(&notice.locator, &reason)),
@@ -218,6 +252,7 @@ pub fn resolve(
             statement: None,
         })
         .collect();
+    linked.breaks = breaks.into_iter().collect();
     linked.notices = notices
         .into_iter()
         .map(|(subject, at, text)| Notice { subject, at, text })
@@ -306,6 +341,14 @@ fn check(end: &Endpoint) -> Result<(), String> {
     if needs_key && end.key.is_none() {
         return Err(format!("a {} endpoint needs a key", end.kind));
     }
+    if (end.release.is_some() || end.column.is_some())
+        && (end.kind != "variable"
+            || end.table.is_none()
+            || end.release.is_none()
+            || end.column.is_none())
+    {
+        return Err("an occurrence end is a variable with table, release and column".to_owned());
+    }
     if end.kind == "variable"
         && let Some(key) = end.key.as_deref().filter(|key| key.starts_with("var:"))
     {
@@ -360,6 +403,9 @@ struct Index<'a> {
     tables: BTreeMap<(usize, &'a str), usize>,
     releases: BTreeMap<(usize, &'a str, &'a str), usize>,
     variables: BTreeMap<(usize, &'a str), BTreeSet<usize>>,
+    /// (register, table, release, source key, column) → the variable that occurrence
+    /// resolves to.
+    occurrences: BTreeMap<(usize, &'a str, &'a str, &'a str, &'a str), BTreeSet<usize>>,
     variable_slugs: BTreeMap<(usize, &'a str), usize>,
 }
 
@@ -389,6 +435,19 @@ impl<'a> Index<'a> {
             }
             for occurrence in &r.occurrences {
                 if let Some(variable) = occurrence.variable {
+                    let o = &occurrence.occurrence;
+                    // A period split gives one occurrence several variables: every piece.
+                    index
+                        .occurrences
+                        .entry((
+                            ri,
+                            o.table.as_str(),
+                            o.release.as_deref().unwrap_or_default(),
+                            o.source_key.as_str(),
+                            o.column.as_str(),
+                        ))
+                        .or_default()
+                        .insert(variable);
                     index
                         .variables
                         .entry((ri, occurrence.occurrence.source_key.as_str()))
@@ -448,6 +507,20 @@ impl<'a> Index<'a> {
                 .get(&(ri, &key[4..]))
                 .map(|&v| vec![Entity::Variable(ri, v)])
                 .ok_or_else(|| missing(&format!("variable {key:?}"))),
+            "variable" if end.column.is_some() => {
+                let (release, column) = (
+                    end.release.as_deref().unwrap_or_default(),
+                    end.column.as_deref().unwrap_or_default(),
+                );
+                self.occurrences
+                    .get(&(ri, table, release, key, column))
+                    .map(|vs| vs.iter().map(|&v| Entity::Variable(ri, v)).collect())
+                    .ok_or_else(|| {
+                        missing(&format!(
+                            "variable with key {key:?} in column {column:?} of release {release:?} of table {table:?}"
+                        ))
+                    })
+            }
             _ => self
                 .variables
                 .get(&(ri, key))

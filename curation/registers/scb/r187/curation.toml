@@ -1232,3 +1232,15 @@ kind = "set"
 subject = "set:lagervarde"
 fields = { "description" = "Företagets lager och dess värdering: lager av insatsprodukter, produkter i arbete, färdiga produkter av egen tillverkning och främmande produkter (handelsvaror), värderade till anskaffningsvärde, återanskaffningsvärde, tillverkningskostnad eller försäljningsvärde. 1998–2014 finns också påläggsbeloppet mellan tillverknings- och försäljningsvärde och ingående lager av färdiga produkter från föregående kvartal. Från 2015 räknas lagret av insatsprodukter och handelsvaror om från anskaffningsvärde till återanskaffningsvärde genom prisdeflatering, som värde vid kvartalets slut." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i lagerslag och värderingsgrund; omräkningen till återanskaffningsvärde från 2015.\ncatalog:variable_text:41572:10227:16436\ncatalog:variable_text:41572:16436:18993\ncatalog:variable_text:41573:16436:18993\ncatalog:variable_text:41581:17167:18993\ncatalog:variable_text:41582:17167:18993\ncatalog:variable_text:41588:10227:16436\ncatalog:variable_text:41589:16436:16801\ncatalog:variable_text:41589:16801:17167\ncatalog:variable_text:41591:10227:16436\ncatalog:variable_text:41591:16436:18993\ncatalog:variable_text:41592:16436:18993\ncatalog:variable_text:41596:10227:16436\ncatalog:variable_text:41598:10227:16436\ncatalog:variable_text:41628:10227:16436\ncatalog:variable_text:41629:10227:16436\ncatalog:variable_text:41640:10227:16436\ncatalog:variable_text:41641:10227:16436"
+
+[[statement]]
+kind = "set"
+subject = "table:industriproduktionsindex"
+fields = { series_break = { at = "2009-05", text = "Införande av SNI 2007 skedde i maj 2009. Branscherna för återvinning (SNI 37) och förlag (221) ingår från och med maj 2009 inte längre i undersökningen. Dessa branscher utgör endast en mindre del av hela industrin vilket innebär att tidsseriebrottet är relativt obetydligt. \nVissa metodförändringar har också genomförts vilket endast har inneburit marginell påverkan för tidsserierna." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=13\n\nRelease r391 (labelled 1999) resolves to this table. Text states \"maj 2009\"; the release year is not the break day."
+
+[[statement]]
+kind = "set"
+subject = "table:industrins-leverans-orderlage"
+fields = { series_break = { at = "2009-05", text = "Införande av SNI 2007 skedde i maj 2009. Branscherna för återvinning (SNI 37) och förlag (221) ingår från och med maj 2009 inte längre i undersökningen. Dessa branscher utgör endast en mindre del av hela industrin vilket innebär att tidsseriebrottet är relativt obetydligt. \nVissa metodförändringar har också genomförts vilket endast har inneburit marginell påverkan för tidsserierna." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=102\n\nRegisterVariant 370 resolves to this table. Same text as rows 13/31; \"maj 2009\"."

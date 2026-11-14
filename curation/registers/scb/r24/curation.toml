@@ -2323,3 +2323,39 @@ kind = "set"
 subject = "komvux-och-samlat-betygsdokument: sun2020niva"
 fields = { "label" = "Högsta utbildningens nivå föregående år SUN2020, fullständig kod" }
 evidence = "The same column as SUN2020Niva in the Komvux table, labelled there \"Högsta utbildningens nivå föregående år SUN2020, fullständig kod\" (ureg.toml:3706 lineage); release r17540 moved to its own table and keeps the label."
+
+[[statement]]
+kind = "set"
+subject = "table:personens-hogsta-utbildning-16-74"
+fields = { series_break = { at = "2000", text = "Beskrivning av statistiken, inkl. förändringar över tid: http://www.scb.se/templates/pongDescriptionOfStatisticsContainer____19035.asp#8963\n\nTidsseriebrottet år 2000:\nhttp://www.scb.se/templates/Standard____24024.asp" } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=2\n\nAlso rows 4, 5, 6, 7, 8, 9, 10, 12, 14, 15, 18, 19, 23, 25, 27, 128: same text. Releases 1990-2006 (ids 1347..1332) are missing from the export; row 128 is the same text on RegisterVariant 78 (this table). Year stated: \"Tidsseriebrottet år 2000\"."
+
+[[statement]]
+kind = "set"
+subject = "table:personens-hogsta-utbildning-16-74"
+fields = { series_break = { at = "2000", text = "Beskrivning av statistiken, inkl. förändringar över tid: http://www.scb.se/templates/pongDescriptionOfStatisticsContainer____19035.asp#8963\n\nTidsseriebrott i Utbildningsregistret år 2000;\nnya källor och ny nomenklatur (SUN2000) gjorde bl.a. att utbildningsnivåerna höjdes mer än vanligt.\nhttp://www.scb.se/templates/Standard____24024.asp" } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=3\n\nAlso rows 28: same text. Row 3 (release 1991, id 1322, missing from the export) and row 28 (release r1212, 2007, resolves to this table) carry the same text. Year stated: \"år 2000\"."
+
+[[statement]]
+kind = "set"
+subject = "table:personens-hogsta-utbildning-16-74"
+fields = { series_break = { at = "2000", text = "Beskrivning av statistiken, inkl. förändringar över tid: http://www.scb.se/templates/pongDescriptionOfStatisticsContainer____19035.asp#8963\n\nTidsseriebrott i Utbildningsregistret år 2000;\nnya källor och ny nomenklatur (SUN2000) gjorde bl.a. att utbildningsnivåerna höjdes mer än vanligt.\nAll info finns här :\nhttp://www.scb.se/templates/Standard____24024.asp" } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=11\n\nAlso rows 26: same text. Same text on r1350 (1999) and r1008 (2006), both on this table. Year stated: \"år 2000\"."
+
+[[statement]]
+kind = "set"
+subject = "table:personens-hogsta-utbildning-16-74"
+fields = { series_break = { at = "2000", text = "Beskrivning av statistiken, inkl. förändringar över tid\nhttp://www.scb.se/templates/pongDescriptionOfStatisticsContainer____19035.asp#8963\n\n\nTidsseriebrott i Utbildningsregistret år 2000;\nnya källor och ny nomenklatur (SUN2000) gjorde bl.a. att utbildningsnivåerna höjdes mer än vanligt:\nhttp://www.scb.se/templates/Standard____24024.asp" } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=22\n\nAlso rows 24: same text. Same text on r1217 (2004) and r1218 (2005), both on this table. Year stated: \"år 2000\"."
+
+[[statement]]
+kind = "set"
+subject = "table:personens-hogsta-utbildning"
+fields = { series_break = { at = "2000", text = "Beskrivning av statistiken, inkl. förändringar över tid: http://www.scb.se/templates/pongDescriptionOfStatisticsContainer____19035.asp#8963\n\nTidsseriebrottet år 2000:\nhttp://www.scb.se/templates/Standard____24024.asp" } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=29\n\nAlso rows 30: same text. Same text on r2334 (2008) and r2851 (2009); both on this table. Year stated: \"år 2000\" (before the table starts in 2008)."
+
+[[statement]]
+kind = "set"
+subject = "table:personens-hogsta-utbildning"
+fields = { series_break = { at = "2000", text = "Beskrivning av statistiken, inkl. förändringar över tid: http://www.scb.se/Pages/ProductDocumentations____19035.aspx\n\nTidsseriebrottet år 2000:\nhttp://www.scb.se/Pages/Standard____24024.aspx" } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=32\n\nText on r3314 (2010), with the later scb.se URLs, so not equal to rows 29/30. Year stated: \"år 2000\" (before the table starts in 2008)."

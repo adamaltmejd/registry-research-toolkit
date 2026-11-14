@@ -1380,3 +1380,9 @@ kind = "set"
 subject = "var:nuts2"
 fields = { "description" = "Region enligt EU:s indelning för regionalstatistik (NUTS 2), härledd från län." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma härledning; skiljer sig bara i formulering.\ncatalog:variable_text:49660:14975:15706\ncatalog:variable_text:49660:15706:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:manadslon"
+fields = { series_break = { at = "2011", text = "Från och med 2011 ingår även förmåner i månadslönebegreppet." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=120\n\nCVID 291969 = slk 2011 column mlon; variable split at 2011 (manadslon-exkl-natura 1996-2010, manadslon from 2011). \"Från och med 2011\"."

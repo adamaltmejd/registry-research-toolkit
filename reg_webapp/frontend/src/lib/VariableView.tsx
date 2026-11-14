@@ -14,7 +14,10 @@ import {
   loadRegister,
   registerSubjectNames,
 } from "./catalog_names";
+import { Paragraphs } from "./Paragraphs";
 import { RelatedDocumentsPanel } from "./RelatedDocumentsPanel";
+import { SeriesBreaks } from "./SeriesBreaks";
+import { laneBreaks, type PlacedBreak, placeBreaks } from "./series_breaks";
 import { Button as ActionButton } from "./ui/Button";
 import { Definitions } from "./ui/Definitions";
 import { Panel } from "./ui/Panel";
@@ -51,12 +54,6 @@ function Description({
   /** The rows whose wording stands in for a missing description. */
   segments: readonly CatalogSegment[];
 }) {
-  const lines = (text: string) =>
-    text.split("\n").map((line) => (
-      <p key={line} className={styles.prose}>
-        {line}
-      </p>
-    ));
   if (description)
     return (
       <Panel title="Description">
@@ -69,14 +66,16 @@ function Description({
   if (groups.length === 0) return null;
   return (
     <Panel title="Description">
-      {groups.length === 1 && !unstated
-        ? lines(groups[0][0])
-        : groups.map(([text, group]) => (
-            <div key={text} className={variableStyles.wording}>
-              <p>{factYears(group.segments)}</p>
-              {lines(text)}
-            </div>
-          ))}
+      {groups.length === 1 && !unstated ? (
+        <Paragraphs text={groups[0][0]} />
+      ) : (
+        groups.map(([text, group]) => (
+          <div key={text} className={variableStyles.wording}>
+            <p>{factYears(group.segments)}</p>
+            <Paragraphs text={text} />
+          </div>
+        ))
+      )}
     </Panel>
   );
 }
@@ -141,6 +140,7 @@ function VariablePage({
   focus = null,
   context,
   validation,
+  breaks,
 }: {
   kind: "variable" | "group";
   title: string;
@@ -164,6 +164,7 @@ function VariablePage({
   focus?: string | null;
   context: Context | null;
   validation: OrderCheck | null;
+  breaks: readonly PlacedBreak[];
 }) {
   const timelineRegion = useRef<HTMLDivElement>(null);
   const registerResource = useAsyncResource(
@@ -194,6 +195,7 @@ function VariablePage({
     successionError: succession.error,
     allowAdd: context !== null,
     focus,
+    breaks: laneBreaks(breaks),
   });
   return (
     <article className={styles.page}>
@@ -215,6 +217,7 @@ function VariablePage({
         ]}
       />
       <Description description={description} segments={wording} />
+      <SeriesBreaks breaks={breaks} />
       <div
         ref={timelineRegion}
         tabIndex={-1}
@@ -293,6 +296,7 @@ export function VariableView({
       onRetry={() => setAttempt((current) => current + 1)}
       context={context}
       validation={validation}
+      breaks={placeBreaks(null, node.series_breaks)}
     />
   );
 }
@@ -394,6 +398,9 @@ export function GroupView({
       focus={focus}
       context={context}
       validation={validation}
+      breaks={titled.flatMap(({ member, title }) =>
+        placeBreaks(title, member.series_breaks),
+      )}
     />
   );
 }

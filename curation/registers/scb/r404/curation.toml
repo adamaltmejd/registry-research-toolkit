@@ -3784,3 +3784,15 @@ kind = "set"
 subject = "set:yrkesstallning"
 fields = { "description" = "Personens yrkesställning, dels på det aktuella företaget (för alla som någon gång varit sysselsatta under året), dels den huvudsakliga, bestämd utifrån det arbetsställe där personen bedöms ha haft sin huvudsakliga verksamhet i november eller under månaden. Har personen både ersättning för arbete enligt AGI och antas driva ett verksamt företag bestäms den huvudsakliga yrkesställningen genom att jämföra ersättningen med företagarinkomsten. Varierar yrkesställningen på företaget under året väljs i första hand uppgiften för november, annars den senaste månaden personen arbetat på företaget." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna är yrkesställning per jobb och huvudsaklig yrkesställning; båda beskrivs ur sina formuleringar.\ncatalog:variable_text:12866:18262:18628\ncatalog:variable_text:12954:18262:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:justering-av-angivet-arbetsstallenummer-fran-agi-bjustastnr"
+fields = { series_break = { at = "2023", text = "Från och med år 2023 ska företagen lämna uppgifter om tjänsteställeadress för anställda i AGI.\u00a0Denna adress används i BAS för att koppla individer till ett arbetsställe om den angivna adressen återfinns bland företagens arbetsställen i FDB och arbetsställenummer saknas eller är okänt och den angivna adressen finns i samma kommun där personen är folkbokförd." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=106\n\nCVID 961867 = bas 2023 column BJustAstNr. \"Från och med år 2023\"."
+
+[[statement]]
+kind = "set"
+subject = "var:klassificerad-som-arbetslos"
+fields = { series_break = { at = "2023-01", text = "Från och med januari 2023 ändras den övre åldersgränsen från 64 år till 65 år per den sista dagen i referensmånaden." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=109\n\nCVID 884268 = bas 2023 column BAlosStat. \"Från och med januari 2023\"."

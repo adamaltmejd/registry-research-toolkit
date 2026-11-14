@@ -358,6 +358,22 @@ CREATE TABLE relation (
 CREATE INDEX relation_subject ON relation(subject_kind, subject_id, kind);
 CREATE INDEX relation_object  ON relation(object_kind, object_id, kind);
 
+-- Series breaks on one entity (crates/DESIGN.md, "Series breaks"): the source's, or
+-- curated. A release break is scoped to its release's period; `at` is the break day,
+-- when stated; `text_id` NULL when the source says nothing beyond the entity's name.
+CREATE TABLE series_break (
+  id           INTEGER PRIMARY KEY,
+  subject_kind TEXT NOT NULL CHECK (subject_kind IN ('register','table','release','variable')),
+  subject_id   INTEGER NOT NULL,
+  at           INTEGER,
+  text_id      INTEGER REFERENCES text(id),
+  prov         TEXT NOT NULL CHECK (prov IN ('source','curated')),
+  statement_id INTEGER REFERENCES statement(id),
+  CHECK ((prov = 'curated') = (statement_id IS NOT NULL)),
+  CHECK (prov = 'source' OR text_id IS NOT NULL)
+) STRICT;
+CREATE INDEX series_break_subject ON series_break(subject_kind, subject_id);
+
 -- Curated sets (within one register, the picking unit) and tags (cross-register,
 -- search only). Authored with `set` on variables (fields `sets`, `tags`).
 CREATE TABLE var_set (

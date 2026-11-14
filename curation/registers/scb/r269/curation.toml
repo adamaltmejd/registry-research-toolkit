@@ -539,3 +539,9 @@ kind = "set"
 subject = "var:styrkod-observation"
 fields = { "description" = "Kod som anger om observationen är godkänd eller icke godkänd, eller kommer från ett företag som saknar anställda eller helt saknar bonusutbetalningar." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nRättar 'obervation' till 'observation'; texterna är i övrigt lika.\ncatalog:variable_text:13317:13149:14610\ncatalog:variable_text:13317:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "var:styrkod-observation"
+fields = { series_break = { text = "Från och med 2016 har Bonusundersökningen gått över till systemetTriton. Därmed har styrkoderna ändrats jämfört mot tidigare år." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=142\n\nUNCERTAIN: CVID 465867 is not in the export. Chosen by exact Namn and the text naming Bonusundersökningen; coverage ends 2010, so the 2016 change is after it (statuskod, 2016-, is the other candidate)."

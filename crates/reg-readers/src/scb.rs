@@ -20,7 +20,8 @@
 //! - `Identifierare.csv`: the `VarId`s that are identifiers wherever they occur.
 //! - `Timeseries.csv`: events (`Handelse`) on one entity (`Entitet`) named by `ID1`, and
 //!   for a succession the entity `ID2` names. The config's `[timeseries]` maps each
-//!   event to a notice or a succession and each entity to its endpoint kind; a
+//!   event to a series break, a notice or a succession and each entity to its endpoint
+//!   kind; a
 //!   succession becomes a `continues` link, or, where the config says so (between
 //!   releases), a notice on the newer entity.
 //!
@@ -86,6 +87,9 @@ pub struct Timeseries {
 pub enum Event {
     /// A notice on `ID1`'s entity: `<Handelse>: <Beskrivning>`.
     Notice,
+    /// A series break on `ID1`'s entity: its `Beskrivning`, none where that only repeats
+    /// the row's `Namn`.
+    SeriesBreak,
     /// `ID1`'s entity takes over from `ID2`'s.
     Replaces,
     /// `ID2`'s entity takes over from `ID1`'s.
@@ -100,6 +104,10 @@ pub struct Entity {
     pub kind: Kind,
     /// What a succession between two such entities becomes.
     pub succession: Succession,
+    /// The id is a `CVID` instead (a `variable` only): the variable of the one
+    /// `Registerinformation` row set that names it, in that row's register.
+    #[serde(default)]
+    pub cvid: bool,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Deserialize)]
@@ -125,7 +133,21 @@ impl Config {
     /// # Errors
     /// An unreadable or invalid config file.
     pub fn load(path: &Path) -> Result<Self, ReadError> {
-        config(path)
+        let config: Self = config(path)?;
+        // A `CVID` names a variable in a release; read as anything else it would place
+        // the event on an entity the id does not name.
+        if let Some((name, _)) = config
+            .timeseries
+            .entities
+            .iter()
+            .find(|(_, e)| e.cvid && e.kind != Kind::Variable)
+        {
+            return Err(error(
+                &path.display().to_string(),
+                format!("[timeseries.entities] {name}: cvid needs kind = \"variable\""),
+            ));
+        }
+        Ok(config)
     }
 }
 
@@ -562,7 +584,14 @@ pub fn read(
     out.files.push(vs_input);
     out.files.push(format!("{name}/{VALID_DATES}"));
     flags(&mut archive, name, &registers, &mut occurrences, &mut out)?;
-    let surface = Surface::new(provider, &registers, &tables, &releases, &occurrences);
+    let surface = Surface::new(
+        provider,
+        &registers,
+        &tables,
+        &releases,
+        &occurrences,
+        &cvids,
+    );
     let events = timeseries(&mut archive, name, &config.timeseries, &surface, &mut out)?;
     let links = derived.into_iter().map(|((register, key, text), locator)| {
         derived_from(provider, &register, key, text, locator)
@@ -738,6 +767,9 @@ struct Surface<'a> {
     releases: &'a BTreeMap<String, Release>,
     /// Source key → register handle → the first occurrence's label.
     variables: BTreeMap<&'a str, BTreeMap<&'a str, Option<&'a str>>>,
+    /// `CVID` → the occurrences whose rows carry it: one for every `CVID` the export
+    /// gives (its rows differ only in population).
+    cvids: BTreeMap<u64, BTreeSet<&'a Occurrence>>,
 }
 
 impl<'a> Surface<'a> {
@@ -747,6 +779,7 @@ impl<'a> Surface<'a> {
         tables: &'a BTreeMap<(String, String), Table>,
         releases: &'a BTreeMap<String, Release>,
         occurrences: &'a BTreeMap<(String, String, String), Occurrence>,
+        cvids: &BTreeMap<(String, String, String), Rows>,
     ) -> Self {
         let mut variables: BTreeMap<&str, BTreeMap<&str, Option<&str>>> = BTreeMap::new();
         for o in occurrences.values() {
@@ -755,6 +788,13 @@ impl<'a> Surface<'a> {
                 .or_default()
                 .entry(o.register.as_str())
                 .or_insert(o.label.as_deref());
+        }
+        let mut by_cvid: BTreeMap<u64, BTreeSet<&Occurrence>> = BTreeMap::new();
+        for (key, rows) in cvids {
+            let o = &occurrences[key];
+            for &(_, c) in rows {
+                by_cvid.entry(c).or_default().insert(o);
+            }
         }
         Surface {
             provider,
@@ -765,7 +805,35 @@ impl<'a> Surface<'a> {
                 .collect(),
             releases,
             variables,
+            cvids: by_cvid,
         }
+    }
+
+    /// The entities `id` names as `entity`: by `CVID` for an entity read that way, the
+    /// one occurrence it names (none for a `CVID` the export does not give, or one whose
+    /// rows name several occurrences), else by `ends`.
+    fn named(&self, entity: Entity, id: &str) -> Vec<(Endpoint, String)> {
+        if !entity.cvid {
+            return self.ends(entity.kind, id);
+        }
+        let Some(found) = id.parse().ok().and_then(|c: u64| self.cvids.get(&c)) else {
+            return vec![];
+        };
+        let [o] = found.iter().collect::<Vec<_>>()[..] else {
+            return vec![];
+        };
+        let end = Endpoint {
+            release: o.release.clone(),
+            column: Some(o.column.clone()),
+            ..endpoint(
+                self.provider,
+                "variable",
+                &o.register,
+                Some(&o.table),
+                Some(&o.source_key),
+            )
+        };
+        vec![(end, o.label.clone().unwrap_or_else(|| o.column.clone()))]
     }
 
     /// The entities `id` names as `kind`, each with its name: none for an id the export
@@ -830,7 +898,8 @@ fn timeseries(
         .by_name(TIMESERIES)
         .map_err(|e| error(&input, e.to_string()))?;
     let (mut reader, col) = open(member, &input)?;
-    let (event, description, entity, id1, id2) = (
+    let (named, event, description, entity, id1, id2) = (
+        col("Namn")?,
         col("Handelse")?,
         col("Beskrivning")?,
         col("Entitet")?,
@@ -864,9 +933,24 @@ fn timeseries(
             continue;
         };
         let note = nonblank(&text(description));
-        let first = surface.ends(en.kind, &text(id1));
+        let first = surface.named(en, &text(id1));
         if first.is_empty() {
             unknown += 1;
+            continue;
+        }
+        if ev == Event::SeriesBreak {
+            let said = note
+                .filter(|n| *n != text(named))
+                .map(|n| n.replace("\r\n", "\n"));
+            for (subject, _) in first {
+                records.push(Record::Notice(Notice {
+                    subject,
+                    series_break: true,
+                    at: None,
+                    text: said.clone(),
+                    locator: locator.clone(),
+                }));
+            }
             continue;
         }
         if ev == Event::Notice {
@@ -874,14 +958,15 @@ fn timeseries(
             for (subject, _) in first {
                 records.push(Record::Notice(Notice {
                     subject,
+                    series_break: false,
                     at: None,
-                    text: body.clone(),
+                    text: Some(body.clone()),
                     locator: locator.clone(),
                 }));
             }
             continue;
         }
-        let second = surface.ends(en.kind, &text(id2));
+        let second = surface.named(en, &text(id2));
         if second.is_empty() {
             unknown += 1;
             continue;
@@ -921,11 +1006,12 @@ fn timeseries(
                 }),
                 Succession::Notice => Record::Notice(Notice {
                     subject,
+                    series_break: false,
                     at: None,
-                    text: match &note {
+                    text: Some(match &note {
                         Some(n) => format!("continues {older_name}: {n}"),
                         None => format!("continues {older_name}"),
-                    },
+                    }),
                     locator: locator.clone(),
                 }),
             });

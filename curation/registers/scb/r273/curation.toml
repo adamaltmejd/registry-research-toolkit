@@ -5884,3 +5884,129 @@ kind = "set"
 subject = "var:vistelsetid"
 fields = { "description" = "Totalt antal dagar som personen varit folkbokförd i Sverige (total vistelsetid), summerat från händelserna i Historiska befolkningsregistret från 1969. Till 2021 anges uppgiften inte för personer födda i Sverige; från 2022 anges den för alla folkbokförda och kompletteras från Registret över totalbefolkningen när uppgift saknas i Historiska befolkningsregistret." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått; populationen utvidgas 2022 till alla folkbokförda och RTB används då som komplement.\ncatalog:variable_text:51338:9862:16801\ncatalog:variable_text:51338:18993:19723"
+
+[[statement]]
+kind = "set"
+subject = "table:stativ"
+fields = { series_break = { at = "2022", text = "Fram till och med 2021 har källan för de arbetsmarknadsvariabler som ingår i STATIV varit Registerbaserad arbetsmarknadsstatistik, RAMS. Från och med 2022 är källan Befolkningens arbetsmarknadsstatus, BAS," } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=43\n\nRelease r18746 resolves to this table. \"Från och med 2022 är källan ... BAS\"."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsinkomst"
+fields = { series_break = { at = "2020", text = "Från och med 2020 ingår även nordiska inkomster. \n\nI Inkomst- och taxeringsregistret (IoT) har man även lagt till dessa inkomster bakåt i tiden till och med år 2011." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=52\n\nCVID 913655 = STATIV 2022 column ArbetsInk, ledger \"STATIV: ArbetsInk\". \"Från och med 2020\"."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus-alt"
+fields = { series_break = { at = "2022", text = "Ny variabel från och med 2022. Ersätter den tidigare variabeln Sysselsättningsstatus i november, SyssStat. Fram till och med 2021 har källan för de arbetsmarknadsvariabler som ingår i STATIV varit Registerbaserad arbetsmarknadsstatistik, RAMS. Från och med 2022 är källan Befolkningens arbetsmarknadsstatus, BAS," } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=53\n\nCVID 916765 = STATIV 2022 column BASAlt, ledger \"STATIV: BASAlt\". \"Från och med 2022\"."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus"
+fields = { series_break = { at = "2022", text = "Ny variabel från och med 2022. Ersätter den tidigare variabeln Sysselsättningsstatus i november, SyssStat. Fram till och med 2021 har källan för de arbetsmarknadsvariabler som ingår i STATIV varit Registerbaserad arbetsmarknadsstatistik, RAMS. Från och med 2022 är källan Befolkningens arbetsmarknadsstatus, BAS," } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=54\n\nCVID 916768 = STATIV 2022 column BAS, ledger \"STATIV: BAS\". \"Från och med 2022\"."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus-far"
+fields = { series_break = { at = "2022", text = "Ny variabel från och med 2022. Ersätter den tidigare variabeln Sysselsättningsstatus i november, SyssStatFar. Fram till och med 2021 har källan för de arbetsmarknadsvariabler som ingår i STATIV varit Registerbaserad arbetsmarknadsstatistik, RAMS. Från och med 2022 är källan Befolkningens arbetsmarknadsstatus, BAS," } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=55\n\nCVID 927894 = STATIV 2022 column BASFar, ledger \"STATIV: BASFar\". \"Från och med 2022\"."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus-far-grov"
+fields = { series_break = { at = "2022", text = "Ny variabel från och med 2022. Ersätter den tidigare variabeln Sysselsättningsstatus i november, SyssStatFar. Fram till och med 2021 har källan för de arbetsmarknadsvariabler som ingår i STATIV varit Registerbaserad arbetsmarknadsstatistik, RAMS. Från och med 2022 är källan Befolkningens arbetsmarknadsstatus, BAS," } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=56\n\nCVID 927896 = STATIV 2022 column BASAltFar, ledger \"STATIV: BASAltFar\". \"Från och med 2022\"."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus-mor"
+fields = { series_break = { at = "2022", text = "Ny variabel från och med 2022. Ersätter den tidigare variabeln Sysselsättningsstatus i november, SyssStatMor. Fram till och med 2021 har källan för de arbetsmarknadsvariabler som ingår i STATIV varit Registerbaserad arbetsmarknadsstatistik, RAMS. Från och med 2022 är källan Befolkningens arbetsmarknadsstatus, BAS," } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=57\n\nCVID 927893 = STATIV 2022 column BASMor, ledger \"STATIV: BASMor\". \"Från och med 2022\"."
+
+[[statement]]
+kind = "set"
+subject = "var:arbetsmarknadsstatus-mor-grov"
+fields = { series_break = { at = "2022", text = "Ny variabel från och med 2022. Ersätter den tidigare variabeln Sysselsättningsstatus i november, SyssStatMor. Fram till och med 2021 har källan för de arbetsmarknadsvariabler som ingår i STATIV varit Registerbaserad arbetsmarknadsstatistik, RAMS. Från och med 2022 är källan Befolkningens arbetsmarknadsstatus, BAS," } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=58\n\nCVID 927895 = STATIV 2022 column BASAltMor, ledger \"STATIV: BASAltMor\". \"Från och med 2022\"."
+
+[[statement]]
+kind = "set"
+subject = "var:cfar-nummer"
+fields = { series_break = { at = "2022", text = "Fram till och med 2021 har källan för de arbetsmarknadsvariabler som ingår i STATIV varit Registerbaserad arbetsmarknadsstatistik, RAMS. Från och med 2022 är källan Befolkningens arbetsmarknadsstatus, BAS," } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=64\n\nCVID 916767 = STATIV 2022 column CfarNr. \"Från och med 2022\"."
+
+[[statement]]
+kind = "set"
+subject = "var:institutionell-sektor"
+fields = { series_break = { at = "2022", text = "Ny variabel från och med 2022. Ersätter delvis den tidigare variabeln Institutionell sektorkod, InstKod10, (sektor+agkat+jurform). Fram till och med 2021 har källan för de arbetsmarknadsvariabler som ingår i STATIV varit Registerbaserad arbetsmarknadsstatistik, RAMS. Från och med 2022 är källan Befolkningens arbetsmarknadsstatus, BAS," } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=104\n\nCVID 916774 = STATIV 2022 column Sektor. \"Från och med 2022\". The catalog lists spelling \"sektor\" under this variable."
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { series_break = { at = "2022", text = "Ny variabel från och med 2022. Ersätter delvis den tidigare variabeln Institutionell sektorkod, InstKod10, (sektor+agkat+jurform). Fram till och med 2021 har källan för de arbetsmarknadsvariabler som ingår i STATIV varit Registerbaserad arbetsmarknadsstatistik, RAMS. Från och med 2022 är källan Befolkningens arbetsmarknadsstatus, BAS," } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=105\n\nCVID 916772 = STATIV 2022 column JurForm. \"Från och med 2022\"."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-for-arbetsstalle"
+fields = { series_break = { at = "2022", text = "Fram till och med 2021 har källan för de arbetsmarknadsvariabler som ingår i STATIV varit Registerbaserad arbetsmarknadsstatistik, RAMS. Från och med 2022 är källan Befolkningens arbetsmarknadsstatus, BAS," } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=110\n\nCVID 916769 = STATIV 2022 column AstKommun. \"Från och med 2022\"."
+
+[[statement]]
+kind = "set"
+subject = "var:loneinkomst"
+fields = { series_break = { at = "2022", text = "Ny variabel från och med 2022. Ersätter variabeln Årslön från anställning, ArsLoneInk. Fram till och med 2021 har källan för de arbetsmarknadsvariabler som ingår i STATIV varit Registerbaserad arbetsmarknadsstatistik, RAMS. Från och med 2022 är källan Befolkningens arbetsmarknadsstatus, BAS," } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=118\n\nCVID 926115 = STATIV 2022 column TLonJobb. \"Från och med 2022\"."
+
+[[statement]]
+kind = "set"
+subject = "var:naringsgren-sni2007"
+fields = { series_break = { at = "2022", text = "Ny variabel från och med 2022. Ersätter AstSni2007. Fram till och med 2021 har källan för de arbetsmarknadsvariabler som ingår i STATIV varit Registerbaserad arbetsmarknadsstatistik, RAMS. Från och med 2022 är källan Befolkningens arbetsmarknadsstatus, BAS," } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=123\n\nCVID 916771 = STATIV 2022 column AstNgS07. \"Från och med 2022\"."
+
+[[statement]]
+kind = "set"
+subject = "var:person-orgnr"
+fields = { series_break = { at = "2022", text = "Fram till och med 2021 har källan för de arbetsmarknadsvariabler som ingår i STATIV varit Registerbaserad arbetsmarknadsstatistik, RAMS. Från och med 2022 är källan Befolkningens arbetsmarknadsstatus, BAS," } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=126\n\nCVID 916764 = STATIV 2022 column PeOrgNr. \"Från och med 2022\"."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesstallning-grov"
+fields = { series_break = { at = "2022", text = "Ny variabel från och med 2022. Ersätter den tidigare variabeln Yrkesställning, YrkStalln. Fram till och med 2021 har källan för de arbetsmarknadsvariabler som ingår i STATIV varit Registerbaserad arbetsmarknadsstatistik, RAMS. Från och med 2022 är källan Befolkningens arbetsmarknadsstatus, BAS," } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=155\n\nCVID 925351 = STATIV 2022 column BYrkStallnG. \"Från och med 2022\"."
+
+[[statement]]
+kind = "set"
+subject = "var:agarkontroll"
+fields = { series_break = { at = "2022", text = "Ny variabel från och med 2022. Ersätter delvis den tidigare variabeln Institutionell sektorkod, InstKod10, (sektor+agkat+jurform). Fram till och med 2021 har källan för de arbetsmarknadsvariabler som ingår i STATIV varit Registerbaserad arbetsmarknadsstatistik, RAMS. Från och med 2022 är källan Befolkningens arbetsmarknadsstatus, BAS," } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=156\n\nCVID 916770 = STATIV 2022 column AgKat. \"Från och med 2022\"."
+
+[[statement]]
+kind = "set"
+subject = "var:dispink-levnadsniva"
+fields = { series_break = { at = "2020", text = "Från och med 2020 ingår även nordiska inkomster." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=77\n\nCVID 924487 = STATIV 2022 column DispInkLevN; the variable is split at 2022-01-01, and 2020 lies in dispink-levnadsniva (1997-2021), not dispink-forhallande (2022-). \"Från och med 2020\"."
+
+[[statement]]
+kind = "set"
+subject = "var:dispink-levnadsniva-far"
+fields = { series_break = { at = "2020", text = "Från och med 2020 ingår även nordiska inkomster." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=79\n\nAs row 77, column DispInkLevNFar. \"Från och med 2020\"."
+
+[[statement]]
+kind = "set"
+subject = "var:dispink-levnadsniva-mor"
+fields = { series_break = { at = "2020", text = "Från och med 2020 ingår även nordiska inkomster." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=81\n\nAs row 77, column DispInkLevNMor. \"Från och med 2020\"."
+
+[[statement]]
+kind = "set"
+subject = "var:forsorjningsstod-delat"
+fields = { series_break = { at = "2013", text = "Från referensåret 2013 fördelas beloppet på alla personer i hushållet över 16 år. Tidigare fördelades beloppet på alla över 18 år." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=91\n\nCVID 368884 = STATIV 2013 column SocBidrForStod, ledger \"STATIV: SocBidrForStod @ 1997-01-01\". \"Från referensåret 2013\"."

@@ -1057,6 +1057,13 @@
                 "period": {
                   "$ref": "#/$defs/Period"
                 },
+                "series_breaks": {
+                  "description": "The register's own series breaks; a table's are on the table. Absent when none.",
+                  "items": {
+                    "$ref": "#/$defs/ShowSeriesBreak"
+                  },
+                  "type": "array"
+                },
                 "sets": {
                   "description": "The register's curated sets (groups), in id order.",
                   "items": {
@@ -1151,6 +1158,13 @@
                 "row_keys": {
                   "items": {
                     "$ref": "#/$defs/ShowRowKey"
+                  },
+                  "type": "array"
+                },
+                "series_breaks": {
+                  "description": "The table's series breaks and its releases'. Absent when none.",
+                  "items": {
+                    "$ref": "#/$defs/ShowSeriesBreak"
                   },
                   "type": "array"
                 },
@@ -1269,6 +1283,13 @@
                 "register": {
                   "description": "The register's fqid.",
                   "type": "string"
+                },
+                "series_breaks": {
+                  "description": "The variable's own series breaks. Absent when none.",
+                  "items": {
+                    "$ref": "#/$defs/ShowSeriesBreak"
+                  },
+                  "type": "array"
                 },
                 "sets": {
                   "items": {
@@ -1415,6 +1436,21 @@
               "type": "object"
             }
           ]
+        },
+        "ShowBreakRelease": {
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "period": {
+              "$ref": "#/$defs/Period"
+            }
+          },
+          "required": [
+            "name",
+            "period"
+          ],
+          "type": "object"
         },
         "ShowClassFamilyRef": {
           "properties": {
@@ -1710,6 +1746,34 @@
           ],
           "type": "object"
         },
+        "ShowSeriesBreak": {
+          "description": "A series break the provider notes (or curation states) on the entity: what changed and,\nwhen stated, from which day. One entry per text; a break the provider states on\nreleases of a table names them.",
+          "properties": {
+            "at": {
+              "description": "The break day, when stated.",
+              "type": "string"
+            },
+            "provenance": {
+              "description": "`source` (the provider's) or `curated`.",
+              "type": "string"
+            },
+            "releases": {
+              "description": "The table's releases the provider states it on, in release order.",
+              "items": {
+                "$ref": "#/$defs/ShowBreakRelease"
+              },
+              "type": "array"
+            },
+            "text": {
+              "description": "What changed; absent when the provider marks a break without saying more.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "provenance"
+          ],
+          "type": "object"
+        },
         "ShowSetAxis": {
           "description": "A set's distinguishing axis, in curated order.",
           "properties": {
@@ -1770,6 +1834,13 @@
                 "$ref": "#/$defs/Segment"
               },
               "type": "array"
+            },
+            "series_breaks": {
+              "description": "The member's series breaks, as its `show` has them. Absent when none.",
+              "items": {
+                "$ref": "#/$defs/ShowSeriesBreak"
+              },
+              "type": "array"
             }
           },
           "required": [
@@ -1803,6 +1874,13 @@
             },
             "role": {
               "type": "string"
+            },
+            "series_breaks": {
+              "description": "The table's series breaks and its releases', as the table's `show` has them.\nAbsent when none.",
+              "items": {
+                "$ref": "#/$defs/ShowSeriesBreak"
+              },
+              "type": "array"
             },
             "timeless": {
               "type": "boolean"

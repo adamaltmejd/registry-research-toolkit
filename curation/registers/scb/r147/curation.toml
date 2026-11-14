@@ -839,3 +839,15 @@ kind = "set"
 subject = "set:akerareal"
 fields = { "description" = "Gårdens åkerareal: den totala åkerarealen enligt SAM-blanketten, gårdsarealen grupperad efter storlek enligt Lantbruksregistret och arealen av respektive gröda." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna är total areal, storleksgrupp och areal per gröda.\ncatalog:variable_text:28510:14061:14426\ncatalog:variable_text:28526:14061:14426\ncatalog:variable_text:28557:14061:14426\ncatalog:variable_text:28557:14791:15156\ncatalog:variable_text:28557:15522:15887\ncatalog:variable_text:28557:16617:16983\ncatalog:variable_text:28557:17713:18078"
+
+[[statement]]
+kind = "set"
+subject = "release:godselmedelsanvandning-2016/r11692"
+fields = { series_break = { text = "I 2016 års undersökning har även småbruk (företag med högst 400 standard-timmar) ingått i datainsamlingen. Tidigare lades dessa under cut-off-gränsen och uteslöts från datainsamlingen, men ingick liksom för 2016 i statistiken." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=145\n\nPopContext whose comment is \"Urvalsramen skapades 2016-05-03 ...\" exists only on release r11692 (2015/2016). Text names no day."
+
+[[statement]]
+kind = "set"
+subject = "release:godselmedelsanvandning-2016/r11692"
+fields = { series_break = { text = "I 2016 års urval var antalet stora djurgårdar fler än i tidigare års urval, eftersom urvalet tidigare endast gjordes utifrån areal och ingen hänsyn togs till standardtimmar. För att få med en del av de små gårdar som tidigare ingick i urvalet till Odlingsåtgärder lades ett nytt stratum till i 2016 års gemensamma undersökning om gödselmedel och odlingsåtgärder." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=146\n\nAs row 145 (second PopContext with the same comment). Text names no day."

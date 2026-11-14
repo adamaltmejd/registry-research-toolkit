@@ -5408,3 +5408,45 @@ kind = "set"
 subject = "set:vardnadshavartyp"
 fields = { "description" = "Barnets relation till sina vårdnadshavare. För barn under 18 år anges typen av vårdnadshavare för vårdnadshavare 1 (den äldste) och vårdnadshavare 2 (den yngste), vid referenstidpunkten och 12 respektive 15 månader senare; mätningarna 12 och 15 månader senare avser barn med civilståndet ogift. Gruppen innehåller också en sammanfattande typ som anger hur många vårdnadshavare barnet har och om de är biologiska föräldrar eller adoptivföräldrar eller inte." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar beskriver barnets vårdnadshavare; de skiljer sig i vilken vårdnadshavare och mättidpunkt.\ncatalog:variable_text:13718:16435:16436\ncatalog:variable_text:13719:10591:10592\ncatalog:variable_text:13719:16435:16436\ncatalog:variable_text:13720:10591:10592\ncatalog:variable_text:13720:16435:16436\ncatalog:variable_text:13721:10591:10592\ncatalog:variable_text:13722:13148:13149\ncatalog:variable_text:13723:10591:10592\ncatalog:variable_text:13724:13148:13149"
+
+[[statement]]
+kind = "set"
+subject = "table:barn"
+fields = { series_break = { at = "2014", text = "En viktig skillnad är att man nu kan utnyttja information om folkbokföringen på en finare nivå när man skapar familjer. Tidigare skapades familjer utifrån de personer som var folkbokförda på samma fastighet och hade relationer med varandra. Från 2014 skapad familjer utifrån de personer som är folkbokförda i samma bostad och har relationer med varandra." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=33\n\nRelease r7490 (variant 1077) resolves to this table. Stated \"Från 2014\" (the release is dated 2014-12-31; the text states the year). Text has the source typo \"skapad familjer\", so it differs from rows 34/35."
+
+[[statement]]
+kind = "set"
+subject = "table:familjer"
+fields = { series_break = { at = "2014", text = "En viktig skillnad är att man nu kan utnyttja information om folkbokföringen på en finare nivå när man skapar familjer. Tidigare skapades familjer utifrån de personer som var folkbokförda på samma fastighet och hade relationer med varandra. Från 2014 skapas familjer utifrån de personer som är folkbokförda i samma bostad och har relationer med varandra." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=34\n\nRelease r7492 (variant 1079) resolves to this table. \"Från 2014\"."
+
+[[statement]]
+kind = "set"
+subject = "table:barn-uppfoljning"
+fields = { series_break = { at = "2014", text = "En viktig skillnad är att man nu kan utnyttja information om folkbokföringen på en finare nivå när man skapar familjer. Tidigare skapades familjer utifrån de personer som var folkbokförda på samma fastighet och hade relationer med varandra. Från 2014 skapas familjer utifrån de personer som är folkbokförda i samma bostad och har relationer med varandra." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=35\n\nRelease r7493 (variant 1078) resolves to this table. \"Från 2014\"."
+
+[[statement]]
+kind = "set"
+subject = "table:barn"
+fields = { series_break = { at = "2014", text = "Från och med 2014 har Barnregistret gjorts om jämfört med tidigare. Vissa variabler har försvunnit och ersatts av nya och vissa variabler finns kvar men har ändrat definition eller värdemängd." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=36\n\nRelease r7490 resolves to this table. \"Från och med 2014\" (same text on all three tables)."
+
+[[statement]]
+kind = "set"
+subject = "table:familjer"
+fields = { series_break = { at = "2014", text = "Från och med 2014 har Barnregistret gjorts om jämfört med tidigare. Vissa variabler har försvunnit och ersatts av nya och vissa variabler finns kvar men har ändrat definition eller värdemängd." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=37\n\nRelease r7492 resolves to this table. \"Från och med 2014\" (same text on all three tables)."
+
+[[statement]]
+kind = "set"
+subject = "table:barn-uppfoljning"
+fields = { series_break = { at = "2014", text = "Från och med 2014 har Barnregistret gjorts om jämfört med tidigare. Vissa variabler har försvunnit och ersatts av nya och vissa variabler finns kvar men har ändrat definition eller värdemängd." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=38\n\nRelease r7493 resolves to this table. \"Från och med 2014\" (same text on all three tables)."
+
+[[statement]]
+kind = "set"
+subject = "var:familjestallning-famstall-barnreg"
+fields = { series_break = { at = "2014-12-31", text = "Från och med 2014-12-31 har koderna 130 och 140 ändrat innebörd. \n\nTidigare gällde: \n130 Partner - man i sambopar (med gemensamma barn). \n140 Partner - kvinna i sambopar (med gemensamma barn). \n\nFrån 2014-12-31 gäller: \n130 Partner - man i sambopar. \n140 Partner - kvinna i sambopar." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=87\n\nCVID 412490 = breg release r7490 column FamStall_BarnReg. \"Från och med 2014-12-31\"."

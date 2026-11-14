@@ -20604,3 +20604,9 @@ kind = "set"
 subject = "var:tjanstgoringsomfattning-tjomf"
 fields = { "description" = "Faktisk tjänstgöringstid i procent (0–100) av heltid. Uppgiften hämtas från olika undersökningar och register; i tabellen Panelurval – yrke och lön för 1997 avser den 1998." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 anger att 1997 års uppgift avser 1998. Rättar 'Tjänstgöringsonfattning'.\ncatalog:variable_text:43948:9131:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:identitetsnummer-hushall"
+fields = { series_break = { at = "1998", text = "1998 och framåt gäller familjebegrepp enligt RTB. Tidigare används familjebegreppet taxeringshushåll" } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=96\n\nCVID 13906 = linda 2004 column BIDNRF, ledger \"BIDNRF @ 2000-01-01\" (1993-2004, taxeringshushåll-based). \"1998 och framåt\"."

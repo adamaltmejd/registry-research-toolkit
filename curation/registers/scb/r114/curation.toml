@@ -898,3 +898,9 @@ kind = "set"
 subject = "var:eget-kapital-och-skulder"
 fields = { "description" = "Summa eget kapital och skulder. Från 2020 kan uppgiften vara beräknad (imputerad)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; imputeringen anges från 2020. Raderna 55420 och 958250 (Summa eget kapital = fgb370 + fgb371) hör till variabeln Summa eget kapital och utelämnas.\ncatalog:variable_text:46302:13514:17167\ncatalog:variable_text:46302:18262:19723\nRegisterinformation.csv:row=340881\nRegisterinformation.csv:row=940815\nRegisterinformation.csv:row=55869"
+
+[[statement]]
+kind = "set"
+subject = "table:offentligt-agda-foretag"
+fields = { series_break = { text = "Ny population" } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=124\n\nUNCERTAIN: population \"Offentlig sektor\" exists in r114 (2007-2023) and r407 (2021-2022); r114 chosen, see report. Text \"Ny population\" states no date."

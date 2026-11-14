@@ -4231,3 +4231,33 @@ kind = "set"
 subject = "release:grundutbildning-examina-aldre/r4"
 fields = { "period" = "LA1962..LA1976" }
 evidence = "SCB Registerinformation, RegVerID 4: the release is named \"Läsåren 1962/1963 - 1976/1977\", a span of academic years the delivery-name grammar does not read, which left all 11 documented columns without a period."
+
+[[statement]]
+kind = "set"
+subject = "table:sokande-grund-avancerad"
+fields = { series_break = { at = "2007-07-01", text = "Den första juli 2007 infördes en ny utbildnings- och examensstruktur som ett led i Sveriges arbete med att anpassa den högre utbildningen till arbetet i Bologna-processen. Den tidigare benämningen grundutbildning har från och med hösten 2007 ersatts med grundnivå och avancerad nivå." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=94\n\nRelease r927 (\"Höstterminen 2007\") resolves to this table. Text states \"Den första juli 2007\"."
+
+[[statement]]
+kind = "set"
+subject = "table:grundutbildning-poang"
+fields = { series_break = { at = "HT2007", text = "Högskoleämne ersätts med högskoleämnesgrupp från och med höstterminen 2007." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=137\n\nRegisterVariant 17 resolves to this table. \"från och med höstterminen 2007\" (HT = July-December in the period grammar)."
+
+[[statement]]
+kind = "set"
+subject = "table:grundutbildning-1993"
+fields = { series_break = { at = "HT1993", text = "Från och med höstterminen 1993 ingår inte omregistreringar i populationen, jfr variant \"Grundutb, registrerade före 93\"." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=138\n\nRegisterVariant 264 resolves to this table. \"Från och med höstterminen 1993\"."
+
+[[statement]]
+kind = "set"
+subject = "table:grundutbildning-1993"
+fields = { series_break = { at = "HT2007", text = "Högskoleämne ersätts med högskoleämnesgrupp från och med höstterminen 2007." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=140\n\nSame variant 264. \"från och med höstterminen 2007\"."
+
+[[statement]]
+kind = "set"
+subject = "table:grundutbildning-1993"
+fields = { series_break = { at = "HT2011", text = "Inför höstterminen 2011 infördes anmälnings- och studieavgifter för inresande studenter  på grundnivå och avancerad nivå som ej ingår i utbytesprogram och som inte är medborgare i EU/ESS-länderna eller Schweiz." } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=141\n\nSame variant 264. \"Inför höstterminen 2011\"."
