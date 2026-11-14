@@ -5558,3 +5558,9 @@ kind = "set"
 subject = "set:uppgiftskalla"
 fields = { "description" = "Den källa som lämnat eller bekräftat uppgifterna, angiven som den undersökning och det år uppgifterna kommer från; i en del årgångar anger den när företaget första gången förekommer i lantbruksregistret." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna anger uppgiftskälla; de två texterna går att förena som källa och år för uppgiften respektive företagets första förekomst.\ncatalog:variable_text:42707:12418:12784\ncatalog:variable_text:42707:16436:17167\ncatalog:variable_text:42707:17167:17532\ncatalog:variable_text:42747:16436:17167\ncatalog:variable_text:42747:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: betesmark @2011 where key = 'v77'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Uppdragsregistret 2011 (RegVerID 17593) documents column betesmark under VarId 77 \"Areal, betesmark\" (CVID 823151) and VarId 42304 \"Total betesmark (areal i ha)\" (CVID 823139). 77 is betesmark in 2002-2010 and 42304 in 2012-2019 (both again in 2021-2023, with 77 alone in 2020 and 2024-2025), so 2011 is the changeover to the new definition (\"Total areal av betesmark i ha inkl. ospecificerad betesmark\"). The source does not settle which for 2011; 42304 is the more plausible owner because 2011 is the first release that documents it and it then holds the column alone in 2012-2019 (maintainer 2026-11-14: place under the more plausible owner). The 77 row is withheld; 77 keeps betesmark in the other years."
