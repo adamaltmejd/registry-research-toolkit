@@ -13585,18 +13585,6 @@ evidence = "Källkolumnen har olika ägare och kommunal respektive statlig inneb
 
 [[statement]]
 kind = "set"
-subject = "var:statligt-extra-avdrag-avkext"
-fields = { "sets" = ["extra-avdrag"] }
-evidence = "Källkolumnen har överlappande ägare med kommunal respektive statlig innebörd.\ncatalog:occurrence:364153\ncatalog:occurrence:364154\ncatalog:variable_text:37137:3652:4018"
-
-[[statement]]
-kind = "set"
-subject = "var:statligt-extra-avdrag-avkext"
-fields = { "tags" = ["taxation"] }
-evidence = "Källkolumnen har överlappande ägare med kommunal respektive statlig innebörd.\ncatalog:occurrence:364153\ncatalog:occurrence:364154\ncatalog:variable_text:37137:3652:4018"
-
-[[statement]]
-kind = "set"
 subject = "var:statligt-extra-avdrag-sea"
 fields = { "sets" = ["extra-avdrag"] }
 evidence = "Variabeln mäter statligt extra avdrag.\ncatalog:variable_text:37138:-731:2922"
@@ -19663,12 +19651,6 @@ evidence = "#2102 same-label cluster 'Statlig tjänstepension' (3 variables): ju
 kind = "set"
 subject = "var:statligt-extra-avdrag"
 fields = { "label" = "Statligt extra avdrag (AVSEXT)" }
-evidence = "#2102 same-label cluster 'Statligt extra avdrag' (3 variables): judged different meaning, low confidence; SEA and AVSEXT are a rename; AVKEXT is a concurrent column in the supplement table with no stated difference (K/S looks swapped there, the shared opdef cites kommunalskattelagen), so qualified by column code."
-
-[[statement]]
-kind = "set"
-subject = "var:statligt-extra-avdrag-avkext"
-fields = { "label" = "Statligt extra avdrag (AVKEXT)" }
 evidence = "#2102 same-label cluster 'Statligt extra avdrag' (3 variables): judged different meaning, low confidence; SEA and AVSEXT are a rename; AVKEXT is a concurrent column in the supplement table with no stated difference (K/S looks swapped there, the shared opdef cites kommunalskattelagen), so qualified by column code."
 
 [[statement]]

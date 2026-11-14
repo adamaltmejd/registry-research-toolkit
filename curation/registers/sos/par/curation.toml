@@ -1151,13 +1151,11 @@ subject = "var:anestesikod-1"
 fields = { "description" = "Den första koden för eventuell anestesi vid operation, enligt Rekommendationer för registrering av anestesiarbete från 1997." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:732\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/anestesikod-1"
 
-
 [[statement]]
 kind = "set"
 subject = "var:anestesikod-2"
 fields = { "description" = "Den andra koden för eventuell anestesi vid operation, enligt Rekommendationer för registrering av anestesiarbete från 1997." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:741\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/anestesikod-2"
-
 
 [[statement]]
 kind = "set"
@@ -1165,13 +1163,11 @@ subject = "var:atgardsdatum"
 fields = { "description" = "Datum då åtgärden påbörjades, i SAS-datum, i at-fil" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:276\n\nComma spacing only. Original rows row:12 and row:85 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
-
 [[statement]]
 kind = "set"
 subject = "var:diagnos"
 fields = { "description" = "Diagnoser som haft klinisk relevans för vårdkontakten, flera i en sträng. Max antal diagnoser som fått anges har varierat över tid. Sedan 2008 finns inget max vid insamling men endast 30 diagnoskoder läggs i strängen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:426\n\nWord order only for the no-intake-maximum statement; preserve each original historical ICD representation. Original rows row:17 and row:90 provide the positive peer wording; preserve originals, periods, coding and all other fields."
-
 
 [[statement]]
 kind = "set"
@@ -1179,13 +1175,11 @@ subject = "var:diagnoskod-atc-skada-forgiftning"
 fields = { "description" = "Diagnoskod som haft klinisk relevans för vårdkontakten. Om tillståndet är orsakat av eller relaterat till läkemedel kan värdet vara en ATC-kod för läkemedlet i fråga" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:288\n\nHard line breaks only. Original rows row:15 and row:88 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
-
 [[statement]]
 kind = "set"
 subject = "var:fodelsedatum-sas-m"
 fields = { "description" = "Patientens födelsedatum uttryckt som SAS-datum." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:750\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/fodelsedatum-sas-m"
-
 
 [[statement]]
 kind = "set"
@@ -1193,13 +1187,11 @@ subject = "var:icd"
 fields = { "description" = "Version av ICD-klassifikationen som används för diagnoskoderna, inklusive huvuddiagnosen HDIA." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:777\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/icd"
 
-
 [[statement]]
 kind = "set"
 subject = "var:insatt"
 fields = { "description" = "Varifrån patienten skrivs in, det vill säga inskrivningssätt." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:786\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/insatt"
-
 
 [[statement]]
 kind = "set"
@@ -1207,13 +1199,11 @@ subject = "var:lt-klin"
 fields = { "description" = "Inrapporterad kod för klinik eller medicinskt verksamhetsområde för vårdkontakten." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:804\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/lt-klin"
 
-
 [[statement]]
 kind = "set"
 subject = "var:medicinskt-verksamhetsomrade"
 fields = { "description" = "Klinik, verksamhetsenhet, vårdenhet eller basenhet för patientens vårdkontakt." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:813\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/medicinskt-verksamhetsomrade"
-
 
 [[statement]]
 kind = "set"
@@ -1221,13 +1211,11 @@ subject = "var:op-ant"
 fields = { "description" = "Antal inrapporterade åtgärder; antalet kan överstiga 30." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:822\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/op-ant"
 
-
 [[statement]]
 kind = "set"
 subject = "var:personnr"
 fields = { "description" = "Personnummer eller samordningsnummer på patient. Om reservnummer är variabeln tom och värdet finns i RNR." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:390\n\nDuplicated space only. Original rows row:58 and row:161 provide the positive peer wording; preserve originals, periods, coding and all other fields."
-
 
 [[statement]]
 kind = "set"
@@ -1235,13 +1223,11 @@ subject = "var:planerad-vardkontakt"
 fields = { "description" = "Anger om vårdkontakten varit planerat eller ej" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:402\n\nDefinite noun form only; preserve identical planned-contact code meanings. Original rows row:165 and row:62 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
-
 [[statement]]
 kind = "set"
 subject = "var:sjukhus"
 fields = { "description" = "Sjukhus eller sjukvårdsinrättning för vårdkontakten, knuten till vårdgivare och fysisk plats." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:831\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/sjukhus"
-
 
 [[statement]]
 kind = "set"
@@ -1249,13 +1235,11 @@ subject = "var:uppgiftslamnare"
 fields = { "description" = "Inrapporterande region, angiven med landstingsnummer, eller privat rapportör, angiven med PV." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:795\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/uppgiftslamnare"
 
-
 [[statement]]
 kind = "set"
 subject = "var:utdatum"
 fields = { "description" = "Det datum då patienten skrivits ut, i SAS-datum" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:894\n\nCanonicalize only synonymous source wording. Complete peers positively describe the same supplied concept. ATCO storage details remain verbatim in description; its binary owner is excluded. SAS numerical representation remains in literal type and representation. All raw original text, periods and coding retained. SOS-semantic-wording3-source-proof.json."
-
 
 [[statement]]
 kind = "set"
@@ -1263,31 +1247,17 @@ subject = "var:utsatt"
 fields = { "description" = "Vad patienten skrivs ut till efter avslutad vårdkontakt, eller om patienten avlidit." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:849\n\nPreserve every literal supplied delivery name/description on its exact variant and period; no wording correction, licence-conditioned counterpart, occupation-domain equivalence or care-event interchangeability inferred. Steering lookup records remain support controls. Raw original facts/scopes/coding guarded; LOVA effective1995availability follows separately checked exact parent authority. SOS-delivery24-complete-native-peers.json and source-proof.json.\n\nMaintainer description review 2026-11-02: sos/par/utsatt"
 
-
 [[statement]]
 kind = "set"
 subject = "var:yttre-orsakskod-eller-atc"
 fields = { "description" = "Yttre orsak till skador och förgiftningar. Kod för yttre orsak ska finnas för vårdkontakter där diagnoskod innebär skada eller förgiftning. Om tillståndet är orsakat av eller relaterat till läkemedel kan värdet vara en ATC-kod för läkemedlet i fråga" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:414\n\nHard line breaks only. Original rows row:73 and row:181 provide the positive peer wording; preserve originals, periods, coding and all other fields."
 
-
 [[statement]]
 kind = "set"
 subject = "var:yttre-orsakskoder"
 fields = { "description" = "Samtliga rapporterade yttre orsakskoder för vårdkontakten, flera koder i en sträng" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\npython-builder-pre-cutover:curation/registers/sos/par.toml:438\n\nExplicitly state multiple external-cause codes already supplied by both originals; retain the distinct TV single-code/ATC construct. Original rows row:21 and row:94 provide the positive peer wording; preserve originals, periods, coding and all other fields."
-
-[[statement]]
-kind = "set"
-subject = "var:tillhorande-atg-kod-ar-en-atc-kod"
-fields = { "description" = "Binär variabel i flerfil som anger om koden i ATG är en ATC-kod. Alla ATC-koder är inte korrekt markerade, framför allt inte ATC-koder med färre än sju tecken." }
-evidence = "Docs description review 2026-11-02; one variable, one description. The provider metadata explicitly distinguishes the flat-file code string from the binary flerfil marker from 2015. The supplied catalog already puts the strings on separate PIDs. Exact source-label guards address only the matching binary marker in PAR_OV/PAR_SV; the older and concurrent string definitions are preserved.\nhttps://www.socialstyrelsen.se/globalassets/sharepoint-dokument/dokument-webb/statistik/statistik-register-patientregistret-metadata.xlsx; sheet Metadata - Variabelnivå, extracted row 31, column ATCO; staged:be4516db2554057f7e715278111798b7816031365678bda2896c0b977daee603:page:9:chars:9198-9494\n\nMaintainer audit follow-up 2026-11-02: Verified in supplied provider workbook quote: Code sentence duplicates valueset 1072; omits the provider quality caveat that matters for analysis.\nrel070-base/reg_meta.db:occurrence:522735"
-
-[[statement]]
-kind = "set"
-subject = "var:tillhorande-dia-eller-yo-kod-ar-en-atc-kod"
-fields = { "description" = "Binär variabel i flerfil som anger om koden i DIA eller YO är en ATC-kod. Alla ATC-koder är inte korrekt markerade, framför allt inte ATC-koder med färre än sju tecken." }
-evidence = "Docs description review 2026-11-02; one variable, one description. The provider metadata explicitly distinguishes the flat-file code string from the binary flerfil marker from 2015. The supplied catalog already puts the strings on separate PIDs. Exact source-label guards address only the matching binary marker in PAR_OV/PAR_SV; the older and concurrent string definitions are preserved.\nhttps://www.socialstyrelsen.se/globalassets/sharepoint-dokument/dokument-webb/statistik/statistik-register-patientregistret-metadata.xlsx; sheet Metadata - Variabelnivå, extracted row 24, column ATC; staged:be4516db2554057f7e715278111798b7816031365678bda2896c0b977daee603:page:9:chars:5763-6078\n\nMaintainer audit follow-up 2026-11-02: Verified in supplied provider workbook quote: Same as the ATG flag.\nrel070-base/reg_meta.db:occurrence:522734"
 
 [[statement]]
 kind = "set"
@@ -1666,6 +1636,18 @@ kind = "set"
 subject = "par-ov: hdia where key = 'n:hdia' and label = 'Huvuddiagnoskod'"
 fields = { "variable" = "huvuddiagnoskod" }
 evidence = "The n:hdia source key conflates two different fields. In the flat files (plattfil) HDIA is the main diagnosis code: PAR_SV from 1964 (row 107), PAR_OV from 1997 (row 36), label 'Huvuddiagnoskod'. In the multi-files (flerfil) from 2015 (PAR_SV row 106, PAR_OV row 35) and in PAR_TV 2011-2012 (row 199) it is the 0/1 marker 'Typ av diagnos' whether the code in DIA is the main diagnosis. PAR_SV row 107 says so itself: 'I flerfilen DI är HDIA endast en binär variabel'. Exact source-label guards separate the two as for ATC.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 35, 36, 106, 107, 199."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: hdia where key = 'n:hdia' and label = 'Typ av diagnos'"
+fields = { "variable" = "typ-av-diagnos" }
+evidence = "The n:hdia source key conflates two different fields: in the flat files (plattfil) HDIA is the main diagnosis code ('Huvuddiagnoskod', PAR_SV row 107, PAR_OV row 36); in the multi-files (flerfil) from 2015 it is the 0/1 marker 'Typ av diagnos' (PAR_SV row 106, PAR_OV row 35; PAR_SV row 107: 'I flerfilen DI är HDIA endast en binär variabel'). The flerfil listing is assigned to its own variable beside the plattfil one, as for ATC, so the neighbouring-owner rule does not fold it into the main diagnosis code (COS 2026-11-14).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 35, 36, 106, 107."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: hdia where key = 'n:hdia' and label = 'Typ av diagnos'"
+fields = { "variable" = "typ-av-diagnos" }
+evidence = "The n:hdia source key conflates two different fields: in the flat files (plattfil) HDIA is the main diagnosis code ('Huvuddiagnoskod', PAR_SV row 107, PAR_OV row 36); in the multi-files (flerfil) from 2015 it is the 0/1 marker 'Typ av diagnos' (PAR_SV row 106, PAR_OV row 35; PAR_SV row 107: 'I flerfilen DI är HDIA endast en binär variabel'). The flerfil listing is assigned to its own variable beside the plattfil one, as for ATC, so the neighbouring-owner rule does not fold it into the main diagnosis code (COS 2026-11-14).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 35, 36, 106, 107."
 
 [[statement]]
 kind = "set"

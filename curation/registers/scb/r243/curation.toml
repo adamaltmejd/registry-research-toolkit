@@ -242,18 +242,6 @@ evidence = "Samma kolumn har överlappande ägare med olika giltighetsavgränsni
 
 [[statement]]
 kind = "set"
-subject = "var:antal-giltiga-roster-antrost"
-fields = { "sets" = ["giltiga-roster"] }
-evidence = "Samma kolumn har överlappande ägare med olika giltighetsavgränsning.\ncatalog:occurrence:20222\ncatalog:occurrence:20223"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-giltiga-roster-antrost"
-fields = { "tags" = ["democracy"] }
-evidence = "Samma kolumn har överlappande ägare med olika giltighetsavgränsning.\ncatalog:occurrence:20222\ncatalog:occurrence:20223"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-giltiga-roster-apk"
 fields = { "sets" = ["giltiga-roster"] }
 evidence = "Variabeln mäter giltiga röster för ett parti.\ncatalog:variable_text:2949:4383:4748"
@@ -599,18 +587,6 @@ kind = "set"
 subject = "var:lan-2"
 fields = { "tags" = ["geography"] }
 evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:20035\ncatalog:occurrence:20036"
-
-[[statement]]
-kind = "set"
-subject = "var:landsting"
-fields = { "sets" = ["landsting-och-region"] }
-evidence = "Överlappande ägare till samma källkolumn kräver samordning.\ncatalog:occurrence:20654\ncatalog:occurrence:20655"
-
-[[statement]]
-kind = "set"
-subject = "var:landsting"
-fields = { "tags" = ["geography"] }
-evidence = "Överlappande ägare till samma källkolumn kräver samordning.\ncatalog:occurrence:20654\ncatalog:occurrence:20655"
 
 [[statement]]
 kind = "set"

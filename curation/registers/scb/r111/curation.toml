@@ -4831,18 +4831,6 @@ evidence = "FodLand har olika ägare och grupperingsnivåer mellan perioderna.\n
 
 [[statement]]
 kind = "set"
-subject = "var:fodd-i-sverige-utomlands-varlden"
-fields = { "sets" = ["fodelseland"] }
-evidence = "Varlden har överlappande ägare.\ncatalog:occurrence:249261\ncatalog:occurrence:249361\ncatalog:occurrence:249362"
-
-[[statement]]
-kind = "set"
-subject = "var:fodd-i-sverige-utomlands-varlden"
-fields = { "tags" = ["demographics"] }
-evidence = "Varlden har överlappande ägare.\ncatalog:occurrence:249261\ncatalog:occurrence:249361\ncatalog:occurrence:249362"
-
-[[statement]]
-kind = "set"
 subject = "var:fodelsear"
 fields = { "sets" = [] }
 evidence = "Födelseår är en demografisk uppgift.\ncatalog:variable_text:29703:18262:18444"
@@ -11111,13 +11099,11 @@ subject = "var:arbetsuppgifternas-krav-pa-yrkesspecifika-kunskaper-f10-07"
 fields = { "description" = "Arbetsuppgifternas krav på yrkesspecifika kunskaper. Uppgiften är den svarandes bedömning av kraven i de ordinarie arbetsuppgifterna." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans etikett och fråga anger yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249087\ncatalog:variable_text:29467:18628:18809\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:249087:opdef_text. One variable, one description."
 
-
 [[statement]]
 kind = "set"
 subject = "var:arbetsuppgifternas-krav-pa-yrkesspecifika-kunskaper-f15-09"
 fields = { "description" = "Arbetsuppgifternas krav på yrkesspecifika kunskaper. Uppgiften är den svarandes bedömning av kraven i de ordinarie arbetsuppgifterna." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällans etikett och fråga anger yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249010\ncatalog:variable_text:29468:17167:17348\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:249010:opdef_text. One variable, one description."
-
 
 [[statement]]
 kind = "set"
@@ -11125,13 +11111,11 @@ subject = "var:fardighetstraning-anvanda-kritiskt-tankande-f19-07"
 fields = { "description" = "Nöjdhet med utbildningens färdighetsträning i yrkesspecifika kunskaper. Uppgiften avser den svarandes universitets- eller högskoleutbildning." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nEtiketten och frågan avser yrkesspecifika kunskaper, inte kritiskt tänkande.\ncatalog:occurrence:249112\ncatalog:variable_text:29654:18628:18809\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:249112:opdef_text. One variable, one description."
 
-
 [[statement]]
 kind = "set"
 subject = "var:huvudsaklig-sysselsattning-juni-1998"
 fields = { "description" = "Huvudsaklig sysselsättning juni 1998" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nMellanslaget saknas i källans datum.\ncatalog:variable_text:29761:11017:11048"
-
 
 [[statement]]
 kind = "set"
@@ -11139,20 +11123,17 @@ subject = "var:latt-svart-fa-arbete-amnesomradet"
 fields = { "description" = "Hur lätt eller svårt det var att få ett arbete som överensstämmer med den avslutade utbildningens inriktning. Bedömningen gäller ett arbete som till största delen stämde överens med utbildningens inriktning." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nKällan mäter hur lätt eller svårt det var att få ett utbildningsmatchat arbete, inte själva överensstämmelsen.\ncatalog:variable_text:29920:18628:18809\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:249133:opdef_text. One variable, one description."
 
-
 [[statement]]
 kind = "set"
 subject = "var:manad-for-avslutande-av-universitets-eller-hogskolestudier"
 fields = { "description" = "Månad då individen anser sig ha avslutat sina universitets- och högskolestudier." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDefinitionen anger år men variabeln mäter avslutsmånad.\ncatalog:occurrence:248968\ncatalog:variable_text:29632:15796:15826"
 
-
 [[statement]]
 kind = "set"
 subject = "var:nojdhet-med-utbildning"
 fields = { "description" = "Bedömning av hur universitets- eller högskoleutbildningen förberett för arbetslivet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nFrågan mäter hur utbildningen förberett för arbetslivet, inte allmän nöjdhet.\ncatalog:occurrence:249031\ncatalog:occurrence:249122"
-
 
 [[statement]]
 kind = "set"
@@ -13149,12 +13130,6 @@ evidence = "#2102 same-label cluster 'Född i Sverige/utomlands' (7 variables): 
 [[statement]]
 kind = "set"
 subject = "var:fodd-i-sverige-utomlands-fodland"
-fields = { "label" = "Född i Sverige/utomlands (kod S/U)" }
-evidence = "#2102 same-label cluster 'Född i Sverige/utomlands' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Grouping is identical, but Fland2 is coded S/U in 2010 and 1/2 in 2012, so 'kod S/U' is not true of every occurrence and Fland2 is qualified by its code; other members are single-coded (1/2 or S/U)."
-
-[[statement]]
-kind = "set"
-subject = "var:fodd-i-sverige-utomlands-varlden"
 fields = { "label" = "Född i Sverige/utomlands (kod S/U)" }
 evidence = "#2102 same-label cluster 'Född i Sverige/utomlands' (7 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Grouping is identical, but Fland2 is coded S/U in 2010 and 1/2 in 2012, so 'kod S/U' is not true of every occurrence and Fland2 is qualified by its code; other members are single-coded (1/2 or S/U)."
 

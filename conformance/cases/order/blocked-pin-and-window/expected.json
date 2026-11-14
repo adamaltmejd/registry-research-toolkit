@@ -4,10 +4,10 @@
       "level": "error",
       "code": "ambiguous_window",
       "path": "/sources/0/bindings/0",
-      "message": "demo/amb/del has more than one form in demo/amb for 2019 (name, type or codes differ); pick a shorter period or ask the maintainer",
+      "message": "demo/amb/ny shares its column with another variable in demo/amb for 2019; pick a shorter period or ask the maintainer",
       "source": "s",
-      "variable": "demo/amb/del",
-      "variable_name": "Del",
+      "variable": "demo/amb/ny",
+      "variable_name": "Ny",
       "table": "demo/amb",
       "table_name": "Tvetydiga registret",
       "period": {
@@ -21,8 +21,8 @@
       "path": "/sources/0/bindings/0/classification",
       "message": "class/absent/v1 names no classification version in the catalog.",
       "source": "s",
-      "variable": "demo/amb/del",
-      "variable_name": "Del",
+      "variable": "demo/amb/ny",
+      "variable_name": "Ny",
       "table": "demo/amb",
       "table_name": "Tvetydiga registret"
     }

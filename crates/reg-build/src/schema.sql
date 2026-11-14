@@ -228,7 +228,7 @@ CREATE INDEX class_version_family ON class_version(family_id, start);
 -- Segments: maximal runs of one form of a variable in one table. One folded
 -- spelling per (variable, table) at a time. spelling_id = exact spelling of the latest
 -- primary occurrence.
--- Form fields are NULL where the state is 'ambiguous' and the claimants disagree.
+-- Form fields are NULL where the covering occurrences disagree.
 CREATE TABLE segment (
   id               INTEGER PRIMARY KEY,
   variable_id      INTEGER NOT NULL REFERENCES variable(id),

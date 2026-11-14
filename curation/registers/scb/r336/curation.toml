@@ -697,24 +697,6 @@ evidence = "Ålder är ett demografiskt mått.\ncatalog:variable_text:54724:1570
 
 [[statement]]
 kind = "set"
-subject = "var:andel-avklarade-forskarstudier-f13"
-fields = { "sets" = ["andel-avklarade-forskarstudier"] }
-evidence = "Samma källkolumn har två överlappande identiteter.\ncatalog:occurrence:512015\ncatalog:occurrence:512016"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-avklarade-forskarstudier-f13"
-fields = { "tags" = ["education"] }
-evidence = "Samma källkolumn har två överlappande identiteter.\ncatalog:occurrence:512015\ncatalog:occurrence:512016"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-avklarade-forskarstudier-f18"
-fields = { "sets" = ["andel-avklarade-forskarstudier"] }
-evidence = "Andel genomförd forskarutbildning.\ncatalog:variable_text:54726:15706:16071"
-
-[[statement]]
-kind = "set"
 subject = "var:andel-avklarade-forskarstudier-f18"
 fields = { "tags" = ["education"] }
 evidence = "Andel genomförd forskarutbildning.\ncatalog:variable_text:54726:15706:16071"
@@ -865,18 +847,6 @@ evidence = "Skäl för att stanna.\ncatalog:variable_text:54738:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:ansokan-till-forskarutbildningen-annat-satt-f10-04"
-fields = { "sets" = ["ansokningssatt-till-forskarutbildning"] }
-evidence = "Överlappande mappningar av källkolumnen.\ncatalog:occurrence:512003\ncatalog:occurrence:512004"
-
-[[statement]]
-kind = "set"
-subject = "var:ansokan-till-forskarutbildningen-annat-satt-f10-04"
-fields = { "tags" = ["education"] }
-evidence = "Överlappande mappningar av källkolumnen.\ncatalog:occurrence:512003\ncatalog:occurrence:512004"
-
-[[statement]]
-kind = "set"
 subject = "var:ansokan-till-forskarutbildningen-annat-satt-f14-05"
 fields = { "sets" = ["ansokningssatt-till-forskarutbildning"] }
 evidence = "Ansökningssätt till forskarutbildning.\ncatalog:variable_text:54740:15706:16071"
@@ -886,18 +856,6 @@ kind = "set"
 subject = "var:ansokan-till-forskarutbildningen-annat-satt-f14-05"
 fields = { "tags" = ["education"] }
 evidence = "Ansökningssätt till forskarutbildning.\ncatalog:variable_text:54740:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:ansokan-till-forskarutbildningen-efter-uppmaning-f10-02"
-fields = { "sets" = ["ansokningssatt-till-forskarutbildning"] }
-evidence = "Överlappande mappningar av källkolumnen.\ncatalog:occurrence:511999\ncatalog:occurrence:512000"
-
-[[statement]]
-kind = "set"
-subject = "var:ansokan-till-forskarutbildningen-efter-uppmaning-f10-02"
-fields = { "tags" = ["education"] }
-evidence = "Överlappande mappningar av källkolumnen.\ncatalog:occurrence:511999\ncatalog:occurrence:512000"
 
 [[statement]]
 kind = "set"
@@ -913,18 +871,6 @@ evidence = "Ansökningssätt till forskarutbildning.\ncatalog:variable_text:5474
 
 [[statement]]
 kind = "set"
-subject = "var:ansokan-till-forskarutbildningen-via-information-f10-03"
-fields = { "sets" = ["ansokningssatt-till-forskarutbildning"] }
-evidence = "Överlappande mappningar av källkolumnen.\ncatalog:occurrence:512001\ncatalog:occurrence:512002"
-
-[[statement]]
-kind = "set"
-subject = "var:ansokan-till-forskarutbildningen-via-information-f10-03"
-fields = { "tags" = ["education"] }
-evidence = "Överlappande mappningar av källkolumnen.\ncatalog:occurrence:512001\ncatalog:occurrence:512002"
-
-[[statement]]
-kind = "set"
 subject = "var:ansokan-till-forskarutbildningen-via-information-f14-03"
 fields = { "sets" = ["ansokningssatt-till-forskarutbildning"] }
 evidence = "Ansökningssätt till forskarutbildning.\ncatalog:variable_text:54744:15706:16071"
@@ -934,18 +880,6 @@ kind = "set"
 subject = "var:ansokan-till-forskarutbildningen-via-information-f14-03"
 fields = { "tags" = ["education"] }
 evidence = "Ansökningssätt till forskarutbildning.\ncatalog:variable_text:54744:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:ansokan-till-forskarutbildningen-via-utannonsering-f10-01"
-fields = { "sets" = ["ansokningssatt-till-forskarutbildning"] }
-evidence = "Överlappande mappningar av källkolumnen.\ncatalog:occurrence:511997\ncatalog:occurrence:511998"
-
-[[statement]]
-kind = "set"
-subject = "var:ansokan-till-forskarutbildningen-via-utannonsering-f10-01"
-fields = { "tags" = ["education"] }
-evidence = "Överlappande mappningar av källkolumnen.\ncatalog:occurrence:511997\ncatalog:occurrence:511998"
 
 [[statement]]
 kind = "set"
@@ -1102,24 +1036,6 @@ kind = "set"
 subject = "var:diskriminerad-f26-03"
 fields = { "sets" = ["upplevd-diskriminering"] }
 evidence = "Upplevd diskriminering har ingen tydlig temaetikett.\ncatalog:variable_text:54760:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:erbjudande-i-annat-land-f11"
-fields = { "sets" = ["erbjudande-om-forskarutbildning-i-annat-land"] }
-evidence = "Överlappande mappningar av källkolumnen.\ncatalog:occurrence:512011\ncatalog:occurrence:512012"
-
-[[statement]]
-kind = "set"
-subject = "var:erbjudande-i-annat-land-f11"
-fields = { "tags" = ["education"] }
-evidence = "Överlappande mappningar av källkolumnen.\ncatalog:occurrence:512011\ncatalog:occurrence:512012"
-
-[[statement]]
-kind = "set"
-subject = "var:erbjudande-i-annat-land-f15"
-fields = { "sets" = ["erbjudande-om-forskarutbildning-i-annat-land"] }
-evidence = "Erbjudande om forskarutbildning.\ncatalog:variable_text:54762:15706:16071"
 
 [[statement]]
 kind = "set"
@@ -1801,24 +1717,6 @@ evidence = "Handledningstid i utbildningen.\ncatalog:variable_text:54820:15706:1
 
 [[statement]]
 kind = "set"
-subject = "var:huvudsakligt-motiv-till-forskarutbildning-f12"
-fields = { "sets" = ["huvudsakligt-motiv-till-forskarutbildning"] }
-evidence = "Överlappande mappningar av källkolumnen.\ncatalog:occurrence:512013\ncatalog:occurrence:512014"
-
-[[statement]]
-kind = "set"
-subject = "var:huvudsakligt-motiv-till-forskarutbildning-f12"
-fields = { "tags" = ["education"] }
-evidence = "Överlappande mappningar av källkolumnen.\ncatalog:occurrence:512013\ncatalog:occurrence:512014"
-
-[[statement]]
-kind = "set"
-subject = "var:huvudsakligt-motiv-till-forskarutbildning-f17"
-fields = { "sets" = ["huvudsakligt-motiv-till-forskarutbildning"] }
-evidence = "Motiv till forskarutbildning.\ncatalog:variable_text:54823:15706:16071"
-
-[[statement]]
-kind = "set"
 subject = "var:huvudsakligt-motiv-till-forskarutbildning-f17"
 fields = { "tags" = ["education"] }
 evidence = "Motiv till forskarutbildning.\ncatalog:variable_text:54823:15706:16071"
@@ -2197,24 +2095,6 @@ evidence = "Urvalsstratum.\ncatalog:variable_text:54855:15706:16071"
 
 [[statement]]
 kind = "set"
-subject = "var:tidsatgang-for-studier-f19"
-fields = { "sets" = ["upplevd-tidsatgang-for-forskarstudier"] }
-evidence = "Överlappande mappningar av källkolumnen.\ncatalog:occurrence:512054\ncatalog:occurrence:512055"
-
-[[statement]]
-kind = "set"
-subject = "var:tidsatgang-for-studier-f19"
-fields = { "tags" = ["education"] }
-evidence = "Överlappande mappningar av källkolumnen.\ncatalog:occurrence:512054\ncatalog:occurrence:512055"
-
-[[statement]]
-kind = "set"
-subject = "var:tidsatgang-for-studier-f25"
-fields = { "sets" = ["upplevd-tidsatgang-for-forskarstudier"] }
-evidence = "Upplevd tidsåtgång för utbildningen.\ncatalog:variable_text:54857:15706:16071"
-
-[[statement]]
-kind = "set"
 subject = "var:tidsatgang-for-studier-f25"
 fields = { "tags" = ["education"] }
 evidence = "Upplevd tidsåtgång för utbildningen.\ncatalog:variable_text:54857:15706:16071"
@@ -2569,12 +2449,6 @@ evidence = "Other financing is a residual personal-support source (r11, r14). Em
 
 [[statement]]
 kind = "set"
-subject = "set:andel-avklarade-forskarstudier"
-fields = { "label" = "Andel avklarade forskarstudier" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:anledningar-att-inte-stanna-i-sverige"
 fields = { "label" = "Anledningar att inte stanna i Sverige" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
@@ -2601,12 +2475,6 @@ evidence = "#2100 group name: slug words restored from the member and register l
 kind = "set"
 subject = "set:behorighet-till-forskarutbildning"
 fields = { "label" = "Behörighet till forskarutbildning" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:erbjudande-om-forskarutbildning-i-annat-land"
-fields = { "label" = "Erbjudande om forskarutbildning i annat land" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
@@ -2650,12 +2518,6 @@ kind = "set"
 subject = "set:hindrande-brister-i-handledningen"
 fields = { "label" = "Hindrande brister i handledningen" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:huvudsakligt-motiv-till-forskarutbildning"
-fields = { "label" = "Huvudsakligt motiv till forskarutbildning" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
 kind = "set"
@@ -2725,12 +2587,6 @@ evidence = "#2100 group name: slug words restored from catalog wording; kept on 
 
 [[statement]]
 kind = "set"
-subject = "set:upplevd-tidsatgang-for-forskarstudier"
-fields = { "label" = "Upplevd tidsåtgång för forskarstudier" }
-evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
-
-[[statement]]
-kind = "set"
 subject = "set:utlandsstudier-inom-forskarutbildningen"
 fields = { "label" = "Utlandsstudier inom forskarutbildningen" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
@@ -2758,3 +2614,51 @@ kind = "set"
 subject = "var:f9"
 fields = { "label" = "Behörighet till utbildning på forskarnivå (Sverige eller annat land)" }
 evidence = "#2102 same-label cluster 'Behörighet till utbildning på forskarnivå' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Same survey question text, but F13 has three answer options (Sverige, hemlandet, annat land) while F9 has two (Sverige, annat land); both in the 2013 table."
+
+[[statement]]
+kind = "set"
+subject = "utlandska-doktorander: F10_01 @2013 where key = 'v30022'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Utländska doktorander 2013 (RegVerID 5579) documents column F10_01 under VarId 30022 \"Ansökan till forskarutbildningen via utannonsering\" and VarId 30008 \"Försörjningssituation doktorandanställning\". In the later numbering F10_01-F10_10 is Försörjningssituation doktorandanställning (VarId 30008, ten items) and the Ansökan till forskarutbildningen items are F14_01-F14_05. The register documents the survey under two column numberings that differ by an offset (for example VarId 30035 is both F13 and F18). The later numbering F4_01-F29_06 is the only one that covers every question block: Orsak till val av Sverige (F16_01-F16_08), Uppmuntrad att studera svenska språket (F20) and the stay-in-Sweden blocks F28 and F29 exist only there. The version text says a control group among other doctoral students was also surveyed; its questionnaire most likely omits the migration questions, so the earlier numbering is read as the control group's. The register's own population is the foreign doctoral students. The source does not settle which numbering the table uses; the later one is the more plausible owner (maintainer 2026-11-14: place under the more plausible owner). The 30022 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "utlandska-doktorander: F10_02 @2013 where key = 'v30023'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Utländska doktorander 2013 (RegVerID 5579) documents column F10_02 under VarId 30023 \"Ansökan till forskarutbildningen efter uppmaning\" and VarId 30008 \"Försörjningssituation doktorandanställning\". In the later numbering F10_01-F10_10 is Försörjningssituation doktorandanställning (VarId 30008, ten items) and the Ansökan till forskarutbildningen items are F14_01-F14_05. The register documents the survey under two column numberings that differ by an offset (for example VarId 30035 is both F13 and F18). The later numbering F4_01-F29_06 is the only one that covers every question block: Orsak till val av Sverige (F16_01-F16_08), Uppmuntrad att studera svenska språket (F20) and the stay-in-Sweden blocks F28 and F29 exist only there. The version text says a control group among other doctoral students was also surveyed; its questionnaire most likely omits the migration questions, so the earlier numbering is read as the control group's. The register's own population is the foreign doctoral students. The source does not settle which numbering the table uses; the later one is the more plausible owner (maintainer 2026-11-14: place under the more plausible owner). The 30023 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "utlandska-doktorander: F10_03 @2013 where key = 'v30024'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Utländska doktorander 2013 (RegVerID 5579) documents column F10_03 under VarId 30024 \"Ansökan till forskarutbildningen via information\" and VarId 30008 \"Försörjningssituation doktorandanställning\". In the later numbering F10_01-F10_10 is Försörjningssituation doktorandanställning (VarId 30008, ten items) and the Ansökan till forskarutbildningen items are F14_01-F14_05. The register documents the survey under two column numberings that differ by an offset (for example VarId 30035 is both F13 and F18). The later numbering F4_01-F29_06 is the only one that covers every question block: Orsak till val av Sverige (F16_01-F16_08), Uppmuntrad att studera svenska språket (F20) and the stay-in-Sweden blocks F28 and F29 exist only there. The version text says a control group among other doctoral students was also surveyed; its questionnaire most likely omits the migration questions, so the earlier numbering is read as the control group's. The register's own population is the foreign doctoral students. The source does not settle which numbering the table uses; the later one is the more plausible owner (maintainer 2026-11-14: place under the more plausible owner). The 30024 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "utlandska-doktorander: F10_04 @2013 where key = 'v30103'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Utländska doktorander 2013 (RegVerID 5579) documents column F10_04 under VarId 30103 \"Ansökan till forskarutbildningen annat sätt\" and VarId 30008 \"Försörjningssituation doktorandanställning\". In the later numbering F10_01-F10_10 is Försörjningssituation doktorandanställning (VarId 30008, ten items) and the Ansökan till forskarutbildningen items are F14_01-F14_05. The register documents the survey under two column numberings that differ by an offset (for example VarId 30035 is both F13 and F18). The later numbering F4_01-F29_06 is the only one that covers every question block: Orsak till val av Sverige (F16_01-F16_08), Uppmuntrad att studera svenska språket (F20) and the stay-in-Sweden blocks F28 and F29 exist only there. The version text says a control group among other doctoral students was also surveyed; its questionnaire most likely omits the migration questions, so the earlier numbering is read as the control group's. The register's own population is the foreign doctoral students. The source does not settle which numbering the table uses; the later one is the more plausible owner (maintainer 2026-11-14: place under the more plausible owner). The 30103 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "utlandska-doktorander: F11 @2013 where key = 'v30026'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Utländska doktorander 2013 (RegVerID 5579) documents column F11 under VarId 30026 \"Erbjudande i annat land\" and VarId 30019 \"Konkurrenskraftig ersättningsnivå\". In the later numbering F11 is Konkurrenskraftig ersättningsnivå (VarId 30019) and Erbjudande i annat land is F15. The register documents the survey under two column numberings that differ by an offset (for example VarId 30035 is both F13 and F18). The later numbering F4_01-F29_06 is the only one that covers every question block: Orsak till val av Sverige (F16_01-F16_08), Uppmuntrad att studera svenska språket (F20) and the stay-in-Sweden blocks F28 and F29 exist only there. The version text says a control group among other doctoral students was also surveyed; its questionnaire most likely omits the migration questions, so the earlier numbering is read as the control group's. The register's own population is the foreign doctoral students. The source does not settle which numbering the table uses; the later one is the more plausible owner (maintainer 2026-11-14: place under the more plausible owner). The 30026 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "utlandska-doktorander: F12 @2013 where key = 'v30034'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Utländska doktorander 2013 (RegVerID 5579) documents column F12 under VarId 30034 \"Huvudsakligt motiv till forskarutbildning\" and VarId 30020 \"Tillräcklig inkomstnivå\". In the later numbering F12 is Tillräcklig inkomstnivå (VarId 30020) and Huvudsakligt motiv till forskarutbildning is F17. The register documents the survey under two column numberings that differ by an offset (for example VarId 30035 is both F13 and F18). The later numbering F4_01-F29_06 is the only one that covers every question block: Orsak till val av Sverige (F16_01-F16_08), Uppmuntrad att studera svenska språket (F20) and the stay-in-Sweden blocks F28 and F29 exist only there. The version text says a control group among other doctoral students was also surveyed; its questionnaire most likely omits the migration questions, so the earlier numbering is read as the control group's. The register's own population is the foreign doctoral students. The source does not settle which numbering the table uses; the later one is the more plausible owner (maintainer 2026-11-14: place under the more plausible owner). The 30034 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "utlandska-doktorander: F13 @2013 where key = 'v30035'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Utländska doktorander 2013 (RegVerID 5579) documents column F13 under VarId 30035 \"Andel avklarade forskarstudier\" and VarId 30021 \"Behörighet till utbildning på forskarnivå\". In the later numbering F13 is Behörighet till utbildning på forskarnivå (VarId 30021) and Andel avklarade forskarstudier is F18. The register documents the survey under two column numberings that differ by an offset (for example VarId 30035 is both F13 and F18). The later numbering F4_01-F29_06 is the only one that covers every question block: Orsak till val av Sverige (F16_01-F16_08), Uppmuntrad att studera svenska språket (F20) and the stay-in-Sweden blocks F28 and F29 exist only there. The version text says a control group among other doctoral students was also surveyed; its questionnaire most likely omits the migration questions, so the earlier numbering is read as the control group's. The register's own population is the foreign doctoral students. The source does not settle which numbering the table uses; the later one is the more plausible owner (maintainer 2026-11-14: place under the more plausible owner). The 30035 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "utlandska-doktorander: F19 @2013 where key = 'v30067'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Utländska doktorander 2013 (RegVerID 5579) documents column F19 under VarId 30067 \"Tidsåtgång för studier\" and VarId 30036 \"Utbildning 3 månader i annat land\". In the later numbering F19 is Utbildning 3 månader i annat land (VarId 30036) and Tidsåtgång för studier is F25. The register documents the survey under two column numberings that differ by an offset (for example VarId 30035 is both F13 and F18). The later numbering F4_01-F29_06 is the only one that covers every question block: Orsak till val av Sverige (F16_01-F16_08), Uppmuntrad att studera svenska språket (F20) and the stay-in-Sweden blocks F28 and F29 exist only there. The version text says a control group among other doctoral students was also surveyed; its questionnaire most likely omits the migration questions, so the earlier numbering is read as the control group's. The register's own population is the foreign doctoral students. The source does not settle which numbering the table uses; the later one is the more plausible owner (maintainer 2026-11-14: place under the more plausible owner). The 30067 row is withheld."

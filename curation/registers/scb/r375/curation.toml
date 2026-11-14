@@ -379,18 +379,6 @@ evidence = "Arbetskraftskostnader.\ncatalog:variable_text:12148:9862:12053"
 
 [[statement]]
 kind = "set"
-subject = "var:arets-anskaffningar-darav-kop-av-bostader-bl3332"
-fields = { "sets" = ["anskaffningar-byggnader-mark"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:126184\ncatalog:occurrence:126185\ncatalog:variable_text:12149:9862:12053"
-
-[[statement]]
-kind = "set"
-subject = "var:arets-anskaffningar-darav-kop-av-bostader-bl3332"
-fields = { "tags" = ["business", "housing"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:126184\ncatalog:occurrence:126185\ncatalog:variable_text:12149:9862:12053"
-
-[[statement]]
-kind = "set"
 subject = "var:arets-totala-fakturering"
 fields = { "sets" = ["total-fakturering"] }
 evidence = "Total fakturering.\ncatalog:variable_text:12150:9862:12053"
@@ -5731,12 +5719,6 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
-subject = "var:arets-anskaffningar-darav-kop-av-bostader-bl3332"
-fields = { "label" = "Årets anskaffningar därav köp av bostäder (bl3332)" }
-evidence = "#2102 same-label cluster 'Årets anskaffningar därav köp av bostäder' (2 variables): judged different meaning, medium confidence; bl3332 and bl3342 are concurrent columns in the same tables with identical text; no source says how they differ."
-
-[[statement]]
-kind = "set"
 subject = "var:arets-totala-fakturering"
 fields = { "label" = "Årets totala fakturering (bl0100)" }
 evidence = "#2102 same-label cluster 'Årets totala fakturering' (2 variables): judged different meaning, medium confidence; bl0100 and bl0454 are different items in different tables with identical text; no source says how they differ."
@@ -6058,3 +6040,9 @@ kind = "set"
 subject = "set:arets-resultat"
 fields = { "description" = "Företagets årets resultat, i resultaträkningen eller i balansräkningen. Uppgifterna kan vara beräknade (imputerade)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i räkning.\ncatalog:variable_text:19315:9862:12053\ncatalog:variable_text:19321:9862:10227\ncatalog:variable_text:19321:10227:10592"
+
+[[statement]]
+kind = "set"
+subject = "fs-slutdata-foretagsenhet-ovr: bl3332 @1997..2002 where key = 'v40641'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, FS Slutdata (företagsenhet_Ovr) 1997-2002 (RegVerID 14800 for 1997, 14735 for 2002) documents column bl3332 under VarId 40639 \"Årets anskaffningar av bostäder\" and VarId 40641 \"Årets anskaffningar därav köp av bostäder\". 40641 is documented on its own column bl3342 in the same releases (and in the blankettvariabler table), and the release lists it under bl3332 again beside 40639 (consecutive CVIDs; in the blankettvariabler table (VE) 1997 lists bl3332 for 40639 alone and 1998-2002 list both). The source does not settle which; 40639 is the more plausible owner of bl3332 because 40641 has its own column bl3342 in every release (maintainer 2026-11-14: place under the more plausible owner). The 40641 rows under bl3332 are withheld; 40641 keeps bl3342."

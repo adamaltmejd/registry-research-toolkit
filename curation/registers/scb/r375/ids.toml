@@ -427,7 +427,6 @@ public = "foretagsstatistik"
 "vaxelskulder" = ["FS Slutdata (företagsenhet_Ovr): bl2326"]
 "verksamhetsenhetens-lopnummer" = ["FS Slutdata (lokal verksamhetsenhet): VELopnr"]
 "aktier-och-andelar-inkl-bostadsratter-bl2036" = ["FS Slutdata (företagsenhet_Ovr): bl2036"]
-"arets-anskaffningar-darav-kop-av-bostader-bl3332" = ["FS Slutdata blankettvariabler (VE): bl3332 # v40641"]
 "arets-totala-fakturering-bl0454" = ["FS Slutdata blankettvariabler (VE): bl0454"]
 "bostader-bl2013" = ["FS Slutdata (företagsenhet_Ovr): bl2013"]
 "bruttoinvestering-i-ovrig-pagaende-nybyggnation-del-bl3308" = ["FS Slutdata blankettvariabler (VE): bl3308 # v41293"]

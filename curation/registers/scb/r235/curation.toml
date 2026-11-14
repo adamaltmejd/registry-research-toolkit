@@ -1,11 +1,3 @@
-
-[[statement]]
-kind = "link"
-subject = "var:vaxtskyddsmedelsnamn"
-relation = "label_of"
-object = "scb/vaxtskyddsmedel/glyfosat-id"
-evidence = "python-builder-pre-cutover:curation/registers/scb/vaxtskyddsmedel.toml:6\n\nLegacy code_label_pair declaration"
-
 [[statement]]
 kind = "link"
 subject = "var:vaxtskyddsmedelsnamn"
@@ -595,18 +587,6 @@ evidence = "Samma användningsområde som glyfosat-omrade-fanggroda i senare per
 
 [[statement]]
 kind = "set"
-subject = "var:glyfosat-id"
-fields = { "sets" = ["vaxtskyddspreparat"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:515589\ncatalog:occurrence:515679\ncatalog:occurrence:515680\ncatalog:occurrence:515724"
-
-[[statement]]
-kind = "set"
-subject = "var:glyfosat-id"
-fields = { "tags" = ["agriculture"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:515589\ncatalog:occurrence:515679\ncatalog:occurrence:515680\ncatalog:occurrence:515724"
-
-[[statement]]
-kind = "set"
 subject = "var:glyfosat-id-2006"
 fields = { "sets" = ["vaxtskyddspreparat"] }
 evidence = "Senare ägare av samma kolumn överlappar.\ncatalog:occurrence:515589\ncatalog:occurrence:515679\ncatalog:occurrence:515680"
@@ -736,18 +716,6 @@ kind = "set"
 subject = "var:grodid-2006"
 fields = { "tags" = ["agriculture"] }
 evidence = "Överlappande mappning av Gid.\ncatalog:occurrence:515514\ncatalog:occurrence:515515"
-
-[[statement]]
-kind = "set"
-subject = "var:grodid-glyfosat-2006"
-fields = { "sets" = ["glyfosatmedlens-anvandningsomrade"] }
-evidence = "Överlappande mappning av Gid. Coordinator group membership: Variablerna kodar glyfosatbehandlingens områden eller tidpunkter. GrödID glyfosat 2006 kodar uttryckligen även stubb, annan behandling och områden utanför åker och hör därför hit. Medlemmarna anger odlade grödor med kod eller namn. GrödID glyfosat 2006 utesluts eftersom dess redovisade kodning avser behandlingsområden och även omfattar annat än grödor.\ncatalog:occurrence:515514\ncatalog:occurrence:515515\ncatalog:variable_text:55247:14610:14975\ncatalog:variable_text:55279:18628:18993\ncatalog:variable_text:55280:18628:18993\ncatalog:variable_text:55290:14610:14975\ncatalog:variable_text:55294:18628:18993\ncatalog:variable_text:55295:17167:17532\ncatalog:variable_text:55296:18628:18993\ncatalog:variable_text:55297:18628:18993\ncatalog:variable_text:55298:14610:14975\ncatalog:variable_text:55300:14610:14975\ncatalog:variable_text:55301:14610:14975\ncatalog:variable_text:55302:17167:17532\ncatalog:variable_text:55303:18628:18993\ncatalog:variable_text:55304:13149:13514\ncatalog:variable_text:55305:13149:13514\ncatalog:variable_text:55306:18628:18993\ncatalog:variable_text:55307:18628:18993\ncatalog:variable_text:55308:18628:18993\ncatalog:variable_text:55329:14610:14975\ncatalog:variable_text:55337:17167:17532\ncatalog:variable_text:55344:18628:18993\ncatalog:variable_text:55345:18628:18993\ncatalog:variable_text:55355:18628:18993\ncatalog:variable_text:55356:18628:18993\ncatalog:variable_text:55390:14610:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:grodid-glyfosat-2006"
-fields = { "tags" = ["agriculture"] }
-evidence = "Överlappande mappning av Gid. Coordinator group membership: Variablerna kodar glyfosatbehandlingens områden eller tidpunkter. GrödID glyfosat 2006 kodar uttryckligen även stubb, annan behandling och områden utanför åker och hör därför hit. Medlemmarna anger odlade grödor med kod eller namn. GrödID glyfosat 2006 utesluts eftersom dess redovisade kodning avser behandlingsområden och även omfattar annat än grödor.\ncatalog:occurrence:515514\ncatalog:occurrence:515515\ncatalog:variable_text:55247:14610:14975\ncatalog:variable_text:55279:18628:18993\ncatalog:variable_text:55280:18628:18993\ncatalog:variable_text:55290:14610:14975\ncatalog:variable_text:55294:18628:18993\ncatalog:variable_text:55295:17167:17532\ncatalog:variable_text:55296:18628:18993\ncatalog:variable_text:55297:18628:18993\ncatalog:variable_text:55298:14610:14975\ncatalog:variable_text:55300:14610:14975\ncatalog:variable_text:55301:14610:14975\ncatalog:variable_text:55302:17167:17532\ncatalog:variable_text:55303:18628:18993\ncatalog:variable_text:55304:13149:13514\ncatalog:variable_text:55305:13149:13514\ncatalog:variable_text:55306:18628:18993\ncatalog:variable_text:55307:18628:18993\ncatalog:variable_text:55308:18628:18993\ncatalog:variable_text:55329:14610:14975\ncatalog:variable_text:55337:17167:17532\ncatalog:variable_text:55344:18628:18993\ncatalog:variable_text:55345:18628:18993\ncatalog:variable_text:55355:18628:18993\ncatalog:variable_text:55356:18628:18993\ncatalog:variable_text:55390:14610:14975"
 
 [[statement]]
 kind = "set"
@@ -1699,18 +1667,6 @@ evidence = "Areal som ingår i urvalet.\ncatalog:occurrence:515576"
 
 [[statement]]
 kind = "set"
-subject = "var:urvnr-ordinarie"
-fields = { "sets" = ["undersoknings-och-urvalstillhorighet"] }
-evidence = "Överlappande mappning av urvalsnummer.\ncatalog:occurrence:515577\ncatalog:occurrence:515578"
-
-[[statement]]
-kind = "set"
-subject = "var:urvnr-ordinarie"
-fields = { "tags" = ["methods"] }
-evidence = "Överlappande mappning av urvalsnummer.\ncatalog:occurrence:515577\ncatalog:occurrence:515578"
-
-[[statement]]
-kind = "set"
 subject = "var:urvnr-undersokningar"
 fields = { "sets" = ["undersoknings-och-urvalstillhorighet"] }
 evidence = "Överlappande mappning av urvalsnummer.\ncatalog:occurrence:515577\ncatalog:occurrence:515578"
@@ -2039,13 +1995,11 @@ subject = "var:bandsprutabredd"
 fields = { "description" = "Bredd i centimeter på banden när bandspruta har använts." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger användning men variabeln mäter bandbredd.\ncatalog:occurrence:515693"
 
-
 [[statement]]
 kind = "set"
 subject = "var:mangd-glyfosatmedel"
 fields = { "description" = "Total mängd glyfosatmedel." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar duplicerat ord.\ncatalog:occurrence:515666\ncatalog:occurrence:515721\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:515721:opdef_text. One variable, one description.\n\nOccurrence-scope review 2026-11-02: Occurrences 515666 (2010), 515721 (2017), and 515759 (2021) cannot share a 2017-specific reporting sentence; preserve total quantity meaning. Evidence: rel070-base/reg_meta.db occurrences 515666, 515721."
-
 
 [[statement]]
 kind = "set"
@@ -2364,3 +2318,39 @@ kind = "set"
 subject = "var:vaxtskyddsmedel-namn"
 fields = { "label" = "Växtskyddsmedel (namn)" }
 evidence = "#2102 same-label cluster 'Växtskyddsmedel' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdef for VaxtskyddsmedelId: id number in Lantbrukssystemet for all preparations; VaxtskyddsmedelNamn carries the name."
+
+[[statement]]
+kind = "set"
+subject = "var:grodid-2006"
+fields = { "description" = "Grödidentitet för grödor i lantbrukarnas SAM-ansökningar, enligt uppgifterna i undersökningen. Gäller både den ordinarie undersökningen och glyfosatfrågan, där även grödkoderna betesvall/slåttervall, träda, fånggröda, stubb, annan behandling på åker och utanför åker förekommer." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Växtskyddsmedelsundersökningen, column gid: VarId 48770 \"GrödID 2006\" and VarId 49080 \"GrödID glyfosat 2006\". VarId 48770 is the crop id of the ordinary survey and VarId 49080 the crop id for the glyfosate question (crop codes 50, 60, 90-93 as well); the 2006 variant holds the ordinary survey and the glyfosate survey and documents both with the same operational text."
+
+[[statement]]
+kind = "set"
+subject = "var:urvnr-undersokningar"
+fields = { "description" = "Urvalsnummer som anger vilken undersökning urvalet avser: 10 ordinarie undersökning, 11 morötter, 12 matlök, 13 jordgubbar och 14 äpplen." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Växtskyddsmedelsundersökningen, column Urvnr: VarId 48967 \"Urvalsnummer till undersökningar\" and VarId 49037 \"Urvalsnummer ordinarie undersökning\". VarId 48967 lists the sample numbers of all surveys (10 ordinary survey, 11 carrots, 12 onions, 13 strawberries, 14 apples) and VarId 49037 only the ordinary-survey value 10 of the same code, so VarId 49037 is a subset of VarId 48967."
+
+[[statement]]
+kind = "set"
+subject = "var:vaxtskyddsmedel-id"
+fields = { "description" = "Id-nummer i Lantbrukssystemet för växtskyddsmedlet. Gäller alla förekommande växtskyddsmedel, även glyfosatmedel." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Växtskyddsmedelsundersökningen, column VaxtskyddsmedelId: VarId 33042 \"Växtskyddsmedel (id)\" and VarId 48829 \"VäxtskyddsmedelsID Glyfosatmedel\". VarId 33042 is the id of the plant protection product (\"Id nummer i Lantbrukssystemet för alla förekommande växtskyddsmedel\") and VarId 48829 the same id for glyfosate products; the 2010 variant holds the ordinary and the glyfosate survey, and the glyfosate products are part of the ordinary id list."
+
+[[statement]]
+kind = "set"
+subject = "vaxtskyddsmedelsundersokningen: gid @2006 where key = 'v49080'"
+fields = { "variable" = "grodid-2006" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Växtskyddsmedelsundersökningen 2006 (RegVerID 19735) documents column gid under VarId 48770 \"GrödID 2006\" and VarId 49080 \"GrödID glyfosat 2006\". VarId 48770 is the crop id of the ordinary survey and VarId 49080 the crop id for the glyfosate question (crop codes 50, 60, 90-93 as well); the 2006 variant holds the ordinary survey and the glyfosate survey and documents both with the same operational text. The VarId 49080 occurrences are assigned to grodid-2006."
+
+[[statement]]
+kind = "set"
+subject = "vaxtskyddsmedelsundersokningen: Urvnr @2006 where key = 'v49037'"
+fields = { "variable" = "urvnr-undersokningar" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Växtskyddsmedelsundersökningen 2006 (RegVerID 19735) documents column Urvnr under VarId 48967 \"Urvalsnummer till undersökningar\" and VarId 49037 \"Urvalsnummer ordinarie undersökning\". VarId 48967 lists the sample numbers of all surveys (10 ordinary survey, 11 carrots, 12 onions, 13 strawberries, 14 apples) and VarId 49037 only the ordinary-survey value 10 of the same code, so VarId 49037 is a subset of VarId 48967. The VarId 49037 occurrences are assigned to urvnr-undersokningar."
+
+[[statement]]
+kind = "set"
+subject = "vaxtskyddsmedelsundersokningen: VaxtskyddsmedelId @2010 where key = 'v48829'"
+fields = { "variable" = "vaxtskyddsmedel-id" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Växtskyddsmedelsundersökningen 2010 (RegVerID 3522) documents column VaxtskyddsmedelId under VarId 33042 \"Växtskyddsmedel (id)\" and VarId 48829 \"VäxtskyddsmedelsID Glyfosatmedel\". VarId 33042 is the id of the plant protection product (\"Id nummer i Lantbrukssystemet för alla förekommande växtskyddsmedel\") and VarId 48829 the same id for glyfosate products; the 2010 variant holds the ordinary and the glyfosate survey, and the glyfosate products are part of the ordinary id list. The VarId 48829 occurrences are assigned to vaxtskyddsmedel-id."

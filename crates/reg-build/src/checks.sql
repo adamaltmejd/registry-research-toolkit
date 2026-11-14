@@ -46,8 +46,15 @@ SELECT o.id FROM occurrence o
   JOIN spelling sp ON sp.id = o.spelling_id
 WHERE o.variable_id <> s.variable_id OR o.table_id <> s.table_id OR sp.fold_id <> s.fold_id
    OR o.start < s.start OR o.end > s.end
-   OR (s.state <> 'ambiguous' AND (o.valueset_id IS NOT s.valueset_id
-       OR o.class_version_id IS NOT s.class_version_id));
+   OR (s.state <> 'ambiguous' AND (
+         (s.valueset_id IS NOT NULL AND o.valueset_id IS NOT s.valueset_id)
+      OR (s.class_version_id IS NOT NULL AND o.class_version_id IS NOT s.class_version_id)
+      -- a blank field is one the segment's occurrences disagree on
+      OR (s.valueset_id IS NULL AND o.valueset_id IS NOT NULL AND NOT EXISTS (
+           SELECT 1 FROM occurrence p WHERE p.segment_id = s.id AND p.valueset_id IS NOT o.valueset_id))
+      OR (s.class_version_id IS NULL AND o.class_version_id IS NOT NULL AND NOT EXISTS (
+           SELECT 1 FROM occurrence p WHERE p.segment_id = s.id
+             AND p.class_version_id IS NOT o.class_version_id))));
 -- Type agreement uses reg-frame's family map in verify.rs.
 
 -- (8) variables have segments; hull matches

@@ -988,3 +988,9 @@ kind = "set"
 subject = "var:karnkraft-kondens-netto"
 fields = { "description" = "Nettoproduktion av el från kärnkraft (kondens) som gått in på elnätet i elområde 3. Från 2024 hämtas uppgiften från eSett Oy via API." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2024 anger källan. Den allmänna förklaringen av kärnkraft utelämnas.\ncatalog:variable_text:46022:19358:19723\ncatalog:variable_text:46022:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "register-over-manatlig-elstatistik: LVEBen @2022 where key = 'v2620'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Register över månatlig elstatistik 2022 (RegVerID 18419) documents column LVEBen under VarId 2622 \"Benämning på redovisningsenheten\" (CVID 860092) and VarId 2620 \"Vilken adress har redovisningsenheten\" (CVID 860091). In 2006-2019 the mapping is LVEBen = 2622 and LVEBelAd = 2620 (the address), and 2622 is LVEBen in every release 2006-2022. From 2020 SCB lists the address under LVEBen and the postort 2634 under LVEBelAd, one column off; the 2020 and 2022 releases list both. The 2620 row under LVEBen is withheld; 2620 keeps its LVEBelAd columns in 2006-2019 and LVEBen in 2023-2025."

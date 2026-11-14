@@ -1,4 +1,3 @@
-
 [[statement]]
 kind = "set"
 subject = "ppi: beskrivnsv @2013..2016"
@@ -656,18 +655,6 @@ evidence = "KN8-benämning för varuklassificering.\ncatalog:variable_text:40859
 
 [[statement]]
 kind = "set"
-subject = "var:kn8kod"
-fields = { "sets" = ["kn8"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:400815\ncatalog:occurrence:400816"
-
-[[statement]]
-kind = "set"
-subject = "var:kn8kod"
-fields = { "tags" = ["trade"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:400815\ncatalog:occurrence:400816"
-
-[[statement]]
-kind = "set"
 subject = "var:kn8kod-2"
 fields = { "sets" = ["kn8"] }
 evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:400815\ncatalog:occurrence:400816"
@@ -1083,26 +1070,8 @@ evidence = "Samma källkolumn har överlappande ägare i två tabeller.\ncatalog
 [[statement]]
 kind = "set"
 subject = "var:produktgrupp-sammanvagda"
-fields = { "sets" = ["produktgrupp-sammanvagda-klasser"] }
-evidence = "Källkolumnen har olika ägare i angränsande perioder.\ncatalog:occurrence:401098\ncatalog:occurrence:401135"
-
-[[statement]]
-kind = "set"
-subject = "var:produktgrupp-sammanvagda"
 fields = { "tags" = [] }
 evidence = "Källkolumnen har olika ägare i angränsande perioder.\ncatalog:occurrence:401098\ncatalog:occurrence:401135"
-
-[[statement]]
-kind = "set"
-subject = "var:produktgrupp-sammanvagda-klasser-prodgrpkod"
-fields = { "sets" = ["produktgrupp-sammanvagda-klasser"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:401145\ncatalog:occurrence:401147"
-
-[[statement]]
-kind = "set"
-subject = "var:produktgrupp-sammanvagda-klasser-prodgrpkod"
-fields = { "tags" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:401145\ncatalog:occurrence:401147"
 
 [[statement]]
 kind = "set"
@@ -1404,12 +1373,6 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
-subject = "set:produktgrupp-sammanvagda-klasser"
-fields = { "label" = "Produktgrupp sammanvägda klasser" }
-evidence = "#2100 group name: a member label slugifies to the group slug, then adjusted on review (casing)."
-
-[[statement]]
-kind = "set"
 subject = "set:produktgrupp-sjusifferniva-tpi"
 fields = { "label" = "Produktgrupp sjusiffernivå TPI" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
@@ -1634,12 +1597,6 @@ evidence = "#2102 same-label cluster 'Produktgrupp' (6 variables): judged differ
 kind = "set"
 subject = "var:produktgrupp-sammanvagda"
 fields = { "label" = "Produktgrupp Sammanvägda klasser (namn)" }
-evidence = "#2102 same-label cluster 'Produktgrupp Sammanvägda klasser' (2 variables): judged different meaning, high confidence; Namn is the name and ProdGrpKod the code of the sammanvägd klass (value set with NR codes)."
-
-[[statement]]
-kind = "set"
-subject = "var:produktgrupp-sammanvagda-klasser-prodgrpkod"
-fields = { "label" = "Produktgrupp Sammanvägda klasser (kod)" }
 evidence = "#2102 same-label cluster 'Produktgrupp Sammanvägda klasser' (2 variables): judged different meaning, high confidence; Namn is the name and ProdGrpKod the code of the sammanvägd klass (value set with NR codes)."
 
 [[statement]]
@@ -1911,3 +1868,33 @@ kind = "set"
 subject = "var:produktid-prodid"
 fields = { "description" = "Löpnummer som identifierar produkten (prodkod). Används tillsammans med Produktgruppsid för att koppla ihop produkt och produktgrupp." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; senare år anger hur nyckeln används.\ncatalog:variable_text:47727:14610:17167\ncatalog:variable_text:47727:17167:17897\ncatalog:variable_text:47727:18262:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:formular-titel"
+fields = { "label" = "Titel" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Tjänsteprisindex (TPI), column Titel: VarId 28085 \"Formulär titel\" and VarId 28088 \"InmatningsGruppDefinition titel\". The four VarIds are the title text of a form (28085), a question (28086), an input field (28087) and an input group definition (28088); the variant lists these questionnaire levels as rows and all four give the title of the row."
+
+[[statement]]
+kind = "set"
+subject = "var:formular-titel"
+fields = { "description" = "Titeltext för ett formulär, en fråga, ett inmatningsfält eller en inmatningsgrupp i frågeformuläret: formulärets titeltext, frågetexten, inmatningsfältets titel eller gruppens text i fetstil." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Tjänsteprisindex (TPI), column Titel: VarId 28085 \"Formulär titel\" and VarId 28088 \"InmatningsGruppDefinition titel\". The four VarIds are the title text of a form (28085), a question (28086), an input field (28087) and an input group definition (28088); the variant lists these questionnaire levels as rows and all four give the title of the row."
+
+[[statement]]
+kind = "set"
+subject = "tjansteprisindex-tpi: Titel @2007..2011 where key = 'v28086'"
+fields = { "variable" = "formular-titel" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Tjänsteprisindex (TPI) 2007 (RegVerID 4674) to 2011 (RegVerID 4296) documents column Titel under VarId 28085 \"Formulär titel\" and VarId 28086 \"Fråge titel\". The four VarIds are the title text of a form (28085), a question (28086), an input field (28087) and an input group definition (28088); the variant lists these questionnaire levels as rows and all four give the title of the row. The VarId 28086 occurrences are assigned to formular-titel."
+
+[[statement]]
+kind = "set"
+subject = "tjansteprisindex-tpi: Titel @2007..2011 where key = 'v28087'"
+fields = { "variable" = "formular-titel" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Tjänsteprisindex (TPI) 2007 (RegVerID 4674) to 2011 (RegVerID 4296) documents column Titel under VarId 28085 \"Formulär titel\" and VarId 28087 \"Inmatningsfältets titel\". The four VarIds are the title text of a form (28085), a question (28086), an input field (28087) and an input group definition (28088); the variant lists these questionnaire levels as rows and all four give the title of the row. The VarId 28087 occurrences are assigned to formular-titel."
+
+[[statement]]
+kind = "set"
+subject = "tjansteprisindex-tpi: Titel @2007..2011 where key = 'v28088'"
+fields = { "variable" = "formular-titel" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Tjänsteprisindex (TPI) 2007 (RegVerID 4674) to 2011 (RegVerID 4296) documents column Titel under VarId 28085 \"Formulär titel\" and VarId 28088 \"InmatningsGruppDefinition titel\". The four VarIds are the title text of a form (28085), a question (28086), an input field (28087) and an input group definition (28088); the variant lists these questionnaire levels as rows and all four give the title of the row. The VarId 28088 occurrences are assigned to formular-titel."

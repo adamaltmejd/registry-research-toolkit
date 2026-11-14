@@ -403,30 +403,6 @@ evidence = "Koncernnivå beskriver företagsstrukturen.\ncatalog:variable_text:3
 
 [[statement]]
 kind = "set"
-subject = "var:kortfristiga-fordringar"
-fields = { "sets" = ["kortfristiga-fordringar"] }
-evidence = "Samma kolumn är samtidigt tilldelad summa-kortfristiga-fordringar.\ncatalog:occurrence:390376\ncatalog:occurrence:390377"
-
-[[statement]]
-kind = "set"
-subject = "var:kortfristiga-fordringar"
-fields = { "tags" = ["business"] }
-evidence = "Samma kolumn är samtidigt tilldelad summa-kortfristiga-fordringar.\ncatalog:occurrence:390376\ncatalog:occurrence:390377"
-
-[[statement]]
-kind = "set"
-subject = "var:landstingskod"
-fields = { "sets" = ["region-landsting"] }
-evidence = "Kommun har överlappande och angränsande tilldelningar till andra variabler.\ncatalog:occurrence:390355\ncatalog:occurrence:390356\ncatalog:occurrence:390521\ncatalog:occurrence:390522\ncatalog:occurrence:390573"
-
-[[statement]]
-kind = "set"
-subject = "var:landstingskod"
-fields = { "tags" = ["geography"] }
-evidence = "Kommun har överlappande och angränsande tilldelningar till andra variabler.\ncatalog:occurrence:390355\ncatalog:occurrence:390356\ncatalog:occurrence:390521\ncatalog:occurrence:390522\ncatalog:occurrence:390573"
-
-[[statement]]
-kind = "set"
 subject = "var:langfristiga-fordringar"
 fields = { "sets" = ["anlaggningstillgangar"] }
 evidence = "Långfristiga fordringar och värdepappersinnehav är finansiella anläggningstillgångar.\ncatalog:variable_text:39511:17532:19723"
@@ -604,18 +580,6 @@ kind = "set"
 subject = "var:redovisat-resultat"
 fields = { "tags" = ["business"] }
 evidence = "Redovisat resultat är ett resultatmått.\ncatalog:variable_text:39526:17532:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:region-landsting"
-fields = { "sets" = ["region-landsting"] }
-evidence = "Kommun har överlappande och angränsande tilldelningar till andra variabler.\ncatalog:occurrence:390522\ncatalog:occurrence:390573\ncatalog:occurrence:390574"
-
-[[statement]]
-kind = "set"
-subject = "var:region-landsting"
-fields = { "tags" = ["geography"] }
-evidence = "Kommun har överlappande och angränsande tilldelningar till andra variabler.\ncatalog:occurrence:390522\ncatalog:occurrence:390573\ncatalog:occurrence:390574"
 
 [[statement]]
 kind = "set"
@@ -873,12 +837,6 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 kind = "set"
 subject = "set:organisationsnummer"
 fields = { "label" = "Organisationsnummer" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:region-landsting"
-fields = { "label" = "Region/landsting" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]

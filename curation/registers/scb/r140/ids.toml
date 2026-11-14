@@ -18,7 +18,6 @@ public = "energi-lokaler"
 "ejhyrarea" = ["Energistatistik för lokaler: EjhyrArea"]
 "elkyla" = ["Energistatistik för lokaler: elkyla"]
 "elvvarme-inkl-varmvatten" = ["Energistatistik för lokaler: UppvEl"]
-"fastbet-id" = ["Energistatistik för lokaler: Fastbet # v145"]
 "fastel" = ["Energistatistik för lokaler: FastEl"]
 "fastighetsbeteckning" = ["Energistatistik för lokaler: Fastbet # v26"]
 "graddagar-normalar" = ["Energistatistik för lokaler: GdNorm"]

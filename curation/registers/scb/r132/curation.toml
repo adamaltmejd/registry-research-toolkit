@@ -193,21 +193,9 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1872\n\n
 
 [[statement]]
 kind = "set"
-subject = "industrins-energianvandning: varde where key = 'v16432'"
-fields = { "label" = "Inköpsvärde av el — Varde" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1860\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
-
-[[statement]]
-kind = "set"
 subject = "industrins-energianvandning: inköpsvärde where key = 'v16418'"
 fields = { "label" = "Inköpsvärdet av den inköpta kvantiteten — Inköpsvärde" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1692\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "industrins-energianvandning: varde where key = 'v16418'"
-fields = { "label" = "Inköpsvärdet av den inköpta kvantiteten — Varde" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1680\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
@@ -226,12 +214,6 @@ kind = "set"
 subject = "industrins-energianvandning: inköpsvärde where key = 'v2607'"
 fields = { "label" = "Inköpta värdet av förbrukningen av inköpta kvantiteten — Inköpsvärde" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1968\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
-
-[[statement]]
-kind = "set"
-subject = "industrins-energianvandning: varde where key = 'v2607'"
-fields = { "label" = "Inköpta värdet av förbrukningen av inköpta kvantiteten — Varde" }
-evidence = "python-builder-pre-cutover:curation/registers/scb/isen.toml:1956\n\nComplete accepted source audit: ISEN25 native families/696 originals, exact positive native definitions/operations and physical source types, actual panel prerequisites and support joins plus all bound canonical books. Finite full-field and source-edition ownership, no inferred dates, formulas, question ordinals or statistical equivalence. Proof: Batch51-ISEN25-source-proof.json."
 
 [[statement]]
 kind = "set"
@@ -595,18 +577,6 @@ evidence = "Värdemängderna skiljer sig mellan undersökningsstatus och arbetss
 
 [[statement]]
 kind = "set"
-subject = "var:belagenhetsadress-postnr"
-fields = { "sets" = ["postnummer"] }
-evidence = "Samma kolumn har överlappande och angränsande ägare.\ncatalog:occurrence:288184\ncatalog:occurrence:288185\ncatalog:occurrence:288272"
-
-[[statement]]
-kind = "set"
-subject = "var:belagenhetsadress-postnr"
-fields = { "tags" = ["geography"] }
-evidence = "Samma kolumn har överlappande och angränsande ägare.\ncatalog:occurrence:288184\ncatalog:occurrence:288185\ncatalog:occurrence:288272"
-
-[[statement]]
-kind = "set"
 subject = "var:bransleslagets-identitetsnummer"
 fields = { "sets" = ["bransleslag"] }
 evidence = "BID är en ogenomskinlig bokstavskod för bränsleslagets identitetsnummer.\ncatalog:variable_text:32175:12418:20089"
@@ -824,12 +794,6 @@ evidence = "Mäter elanvändning i MWh.\ncatalog:variable_text:32196:12418:18262
 [[statement]]
 kind = "set"
 subject = "var:elvarde"
-fields = { "sets" = ["varde-av-el-och-transportbransleforbrukning"] }
-evidence = "Samma kolumn har olika omfattning i angränsande observerade perioder.\ncatalog:occurrence:288210\ncatalog:occurrence:288297"
-
-[[statement]]
-kind = "set"
-subject = "var:elvarde"
 fields = { "tags" = ["energy", "transport"] }
 evidence = "Samma kolumn har olika omfattning i angränsande observerade perioder.\ncatalog:occurrence:288210\ncatalog:occurrence:288297"
 
@@ -848,26 +812,8 @@ evidence = "Samma kolumn har olika värdebegrepp i observerade perioder. Coordin
 [[statement]]
 kind = "set"
 subject = "var:inkopsvarde-av-el"
-fields = { "sets" = ["inkopsvarde-av-el"] }
-evidence = "Samma kolumn har olika omfattning i observerade perioder.\ncatalog:occurrence:288210\ncatalog:occurrence:288297"
-
-[[statement]]
-kind = "set"
-subject = "var:inkopsvarde-av-el"
 fields = { "tags" = ["energy"] }
 evidence = "Samma kolumn har olika omfattning i observerade perioder.\ncatalog:occurrence:288210\ncatalog:occurrence:288297"
-
-[[statement]]
-kind = "set"
-subject = "var:inkopsvarde-av-elenergi"
-fields = { "sets" = ["inkopsvarde-av-el"] }
-evidence = "Samma källkolumn har överlappande ägare med olika värdebegrepp.\ncatalog:occurrence:288404\ncatalog:occurrence:288405"
-
-[[statement]]
-kind = "set"
-subject = "var:inkopsvarde-av-elenergi"
-fields = { "tags" = ["energy"] }
-evidence = "Samma källkolumn har överlappande ägare med olika värdebegrepp.\ncatalog:occurrence:288404\ncatalog:occurrence:288405"
 
 [[statement]]
 kind = "set"
@@ -916,18 +862,6 @@ kind = "set"
 subject = "var:inkopt-kvantitet-inkoptkvantitet"
 fields = { "tags" = ["energy"] }
 evidence = "Mäter inköpt bränslekvantitet.\ncatalog:variable_text:32210:12784:13149\ncatalog:variable_text:32210:13514:13879"
-
-[[statement]]
-kind = "set"
-subject = "var:inkopta-vardet-av-forbrukningen-av-inkopta-kvantiteten-varde"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare med olika värdebegrepp. Coordinator group membership: Båda källbenämningarna avser värdet av förbrukningen av inköpt kvantitet, till skillnad från inköpsvärdet av hela den inköpta kvantiteten.\ncatalog:occurrence:288193\ncatalog:occurrence:288194\ncatalog:occurrence:288280\ncatalog:occurrence:288281\ncatalog:variable_text:32203:12784:13149\ncatalog:variable_text:32211:12418:13149"
-
-[[statement]]
-kind = "set"
-subject = "var:inkopta-vardet-av-forbrukningen-av-inkopta-kvantiteten-varde"
-fields = { "tags" = ["energy"] }
-evidence = "Samma källkolumn har överlappande ägare med olika värdebegrepp. Coordinator group membership: Båda källbenämningarna avser värdet av förbrukningen av inköpt kvantitet, till skillnad från inköpsvärdet av hela den inköpta kvantiteten.\ncatalog:occurrence:288193\ncatalog:occurrence:288194\ncatalog:occurrence:288280\ncatalog:occurrence:288281\ncatalog:variable_text:32203:12784:13149\ncatalog:variable_text:32211:12418:13149"
 
 [[statement]]
 kind = "set"
@@ -1129,18 +1063,6 @@ evidence = "Mäter arbetsställets sammanlagda energianvändning.\ncatalog:varia
 
 [[statement]]
 kind = "set"
-subject = "var:vardet-av-elforbrukningen-och-bransleforbrukning-for-transporter-varde"
-fields = { "sets" = ["varde-av-el-och-transportbransleforbrukning"] }
-evidence = "Samma källkolumn har överlappande ägare med olika värdebegrepp.\ncatalog:occurrence:288193\ncatalog:occurrence:288194\ncatalog:occurrence:288280\ncatalog:occurrence:288281"
-
-[[statement]]
-kind = "set"
-subject = "var:vardet-av-elforbrukningen-och-bransleforbrukning-for-transporter-varde"
-fields = { "tags" = ["energy", "transport"] }
-evidence = "Samma källkolumn har överlappande ägare med olika värdebegrepp.\ncatalog:occurrence:288193\ncatalog:occurrence:288194\ncatalog:occurrence:288280\ncatalog:occurrence:288281"
-
-[[statement]]
-kind = "set"
 subject = "var:vilken-adress-har-redovisningsenheten-adress"
 fields = { "sets" = [] }
 evidence = "Arbetsställe och redovisningsenhet anges för samma kolumn i angränsande perioder.\ncatalog:occurrence:288196\ncatalog:occurrence:288248"
@@ -1204,24 +1126,6 @@ kind = "set"
 subject = "industrins-energianvandning: komm @2010-01-01..2010-12-31 where key = 'v16420'"
 fields = { "variable" = "kommentar-uppgiftslamnare" }
 evidence = "Both definitions mean 'comment from the respondent'. Character column Komm in the Industrial energy use table covers successive nonoverlapping periods [13149,14975) and [14975,20089); the wording differs only grammatically."
-
-[[statement]]
-kind = "set"
-subject = "industrins-energianvandning: varde @2006-01-01..2006-12-31 where key = 'v16432'"
-fields = { "variable" = "inkopsvarde-av-elenergi" }
-evidence = "Both measure the purchase value of electricity in thousands of SEK in the Industrial energy use table. Their periods [13149,14245) and [14245,20089) are adjacent and nonoverlapping; 'electricity' and 'electrical energy' express the same measured concept."
-
-[[statement]]
-kind = "set"
-subject = "industrins-energianvandning: varde @2007-01-01..2007-12-31 where key = 'v16432'"
-fields = { "variable" = "inkopsvarde-av-elenergi" }
-evidence = "Both measure the purchase value of electricity in thousands of SEK in the Industrial energy use table. Their periods [13149,14245) and [14245,20089) are adjacent and nonoverlapping; 'electricity' and 'electrical energy' express the same measured concept."
-
-[[statement]]
-kind = "set"
-subject = "industrins-energianvandning: varde @2008-01-01..2008-12-31 where key = 'v16432'"
-fields = { "variable" = "inkopsvarde-av-elenergi" }
-evidence = "Both measure the purchase value of electricity in thousands of SEK in the Industrial energy use table. Their periods [13149,14245) and [14245,20089) are adjacent and nonoverlapping; 'electricity' and 'electrical energy' express the same measured concept."
 
 [[statement]]
 kind = "link"
@@ -1365,12 +1269,6 @@ evidence = "#2100 group name: slug words restored from catalog wording; kept on 
 
 [[statement]]
 kind = "set"
-subject = "set:inkopsvarde-av-el"
-fields = { "label" = "Inköpsvärde av el" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:inkopsvarde-av-inkopt-kvantitet"
 fields = { "label" = "Inköpsvärde av inköpt kvantitet" }
 evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (casing)."
@@ -1401,12 +1299,6 @@ evidence = "#2100 group name: slug words restored from the member and register l
 
 [[statement]]
 kind = "set"
-subject = "set:varde-av-el-och-transportbransleforbrukning"
-fields = { "label" = "Värde av el och transportbränsleförbrukning" }
-evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
-
-[[statement]]
-kind = "set"
 subject = "var:ng"
 fields = { "label" = "Näringsgren för arbetsställe (Ng)" }
 evidence = "#2102 same-label cluster 'Näringsgren för arbetsställe' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; Ng2002's 2007 opdef says 'Äldre standard än Ng2002', indicating Ng and Ng2002 use different classification versions; Ng2002 has no code list to compare."
@@ -1434,3 +1326,39 @@ kind = "set"
 subject = "var:totalenergi"
 fields = { "description" = "Arbetsställets sammanlagda energianvändning i MWh, beräknad som summan av den rapporterade energianvändningen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 är en förkortad formulering.\ncatalog:variable_text:39074:12418:13879\ncatalog:variable_text:39074:13879:14245"
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: PostNr @2004..2005 where key = 'v803'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins energianvändning 2004 and 2005 (RegVerID 362, 619) documents column PostNr under VarId 2635 \"Vilket postnr har redovisningsenheten\" and VarId 803 \"Belägenhetsadress, postnummer\". The release's other reporting-unit address columns are Adress 2620 (\"Vilken adress har redovisningsenheten\") and PoAnst 2634 (\"Vilken postort har redovisningsenheten\"), so PostNr is the same family; 803 is documented under no other column. The 803 rows are withheld; 2635 is the owner."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: Varde @2004..2005 where key = 'v2606'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins energianvändning 2004 and 2005 (RegVerID 362, 619) documents column Varde under VarId 2606 \"Värdet av elförbrukningen och bränsleförbrukning för transporter\" and VarId 2607 \"Inköpta värdet av förbrukningen av inköpta kvantiteten\". 2606 is the consumption value of electricity and transport fuel, a different measure from the purchase value that Varde carries from 2006 (16418); in 2005 (and, as Elvärde, 2007) the same VarId is also documented under its own column Elvärde. The source does not settle which owns Varde in 2004-2005; 2607 is the more plausible owner because it is the purchase value the column carries from 2006 (maintainer 2026-11-14: place under the more plausible owner). The 2606 row is withheld.\n\nCVID 5148 (2004) and 10801 (2005)."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: Varde @2004..2005 where key = 'v2607'"
+fields = { "variable" = "inkopsvardet-av-den-inkopta-kvantiteten-varde" }
+evidence = "SCB Registerinformation, Industrins energianvändning 2004-2024 documents column Varde under two VarIds in every release: 2606 \"Värdet av elförbrukningen och bränsleförbrukning för transporter\" and 2607 \"Inköpta värdet av förbrukningen av inköpta kvantiteten\" (2004-2005), 16418 \"Inköpsvärdet av den inköpta kvantiteten\" (\"alla bränsleslag\") and 16432 \"Inköpsvärde av el\" (2006-2008), 16418 and 22805 \"Inköpsvärde av elenergi\" (2009-2024). All are a value in 1000-tal kronor of energy bought, bränsle in one VarId and el in the other, in the one column of the one table, so they are one concept for different row kinds (maintainer 2026-11-14: variants of one concept for different row kinds are merged). 16418 is the generic claimant and survives."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: Varde @2006..2008 where key = 'v16432'"
+fields = { "variable" = "inkopsvardet-av-den-inkopta-kvantiteten-varde" }
+evidence = "SCB Registerinformation, Industrins energianvändning 2004-2024 documents column Varde under two VarIds in every release: 2606 \"Värdet av elförbrukningen och bränsleförbrukning för transporter\" and 2607 \"Inköpta värdet av förbrukningen av inköpta kvantiteten\" (2004-2005), 16418 \"Inköpsvärdet av den inköpta kvantiteten\" (\"alla bränsleslag\") and 16432 \"Inköpsvärde av el\" (2006-2008), 16418 and 22805 \"Inköpsvärde av elenergi\" (2009-2024). All are a value in 1000-tal kronor of energy bought, bränsle in one VarId and el in the other, in the one column of the one table, so they are one concept for different row kinds (maintainer 2026-11-14: variants of one concept for different row kinds are merged). 16418 is the generic claimant and survives."
+
+[[statement]]
+kind = "set"
+subject = "industrins-energianvandning: Varde @2009..2024 where key = 'v22805'"
+fields = { "variable" = "inkopsvardet-av-den-inkopta-kvantiteten-varde" }
+evidence = "SCB Registerinformation, Industrins energianvändning 2004-2024 documents column Varde under two VarIds in every release: 2606 \"Värdet av elförbrukningen och bränsleförbrukning för transporter\" and 2607 \"Inköpta värdet av förbrukningen av inköpta kvantiteten\" (2004-2005), 16418 \"Inköpsvärdet av den inköpta kvantiteten\" (\"alla bränsleslag\") and 16432 \"Inköpsvärde av el\" (2006-2008), 16418 and 22805 \"Inköpsvärde av elenergi\" (2009-2024). All are a value in 1000-tal kronor of energy bought, bränsle in one VarId and el in the other, in the one column of the one table, so they are one concept for different row kinds (maintainer 2026-11-14: variants of one concept for different row kinds are merged). 16418 is the generic claimant and survives."
+
+[[statement]]
+kind = "set"
+subject = "var:inkopsvardet-av-den-inkopta-kvantiteten-varde"
+fields = { "label" = "Inköpsvärdet av den inköpta kvantiteten", "description" = "Inköpsvärdet i 1000-tal kronor av den energi som redovisningsenheten köpt in. Kolumnen gäller både bränslen (kostnaden för inköpta bränslen exklusive moms men inklusive energi- och miljöskatt) och el." }
+evidence = "Maintainer ruling 2026-11-14: variants of one concept for different row kinds are merged and the variable carries a label and description covering both kinds.\nVarId 16418 (\"Inköpsvärdet av den inköpta kvantiteten, alla bränsleslag\") and VarId 16432 / 22805 (\"Inköpsvärde av el(energi)\"), earlier 2607, share the column Varde in 2004-2024."

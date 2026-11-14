@@ -1,0 +1,24 @@
+{
+  "note": "Two variables claim the column `Del` in `amb` in 2019: k1 (`Del`), which alone holds it in 2018, and k2 (`Delsumma`), documented only there. The neighbouring-owner rule gives the column to k1 and shadows k2's listing as a duplicate, so ordering 2018..2019 is one entry over both years with the widest length (3) and no finding. Fails if the rule stops placing the column (`ambiguous_window`), places it under k2, or splits the entry at 2019. Oracle: the fixture's JSONL and crates/DESIGN.md, Identity (neighbouring owner; maintainer 2026-11-14).",
+  "fixture": "orders",
+  "project": {
+    "schema_version": "6.2.0",
+    "reg_meta_version": "0.64.0",
+    "name": "Order case",
+    "sources": [
+      {
+        "name": "s",
+        "table": "demo/amb",
+        "period": {
+          "from": 2018,
+          "to": 2019
+        },
+        "bindings": [
+          {
+            "variable": "demo/amb/del"
+          }
+        ]
+      }
+    ]
+  }
+}

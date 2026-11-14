@@ -1222,36 +1222,6 @@ evidence = "Id:t innehåller opaka källkoder och etiketten kolliderar; målet k
 [[statement]]
 kind = "set"
 subject = "var:antagningsomgang"
-fields = { "sets" = ["antagningsomgang"] }
-evidence = "Samma källkolumn är samtidigt mappad till flera variabler.\ncatalog:occurrence:238489\ncatalog:occurrence:238490\ncatalog:occurrence:238491"
-
-[[statement]]
-kind = "set"
-subject = "var:antagningsomgang"
-fields = { "tags" = ["education"] }
-evidence = "Samma källkolumn är samtidigt mappad till flera variabler.\ncatalog:occurrence:238489\ncatalog:occurrence:238490\ncatalog:occurrence:238491"
-
-[[statement]]
-kind = "set"
-subject = "var:antagningsomgang-kurs"
-fields = { "sets" = ["antagningsomgang"] }
-evidence = "Samma källkolumn är samtidigt mappad till flera variabler.\ncatalog:occurrence:238489\ncatalog:occurrence:238490\ncatalog:occurrence:238491"
-
-[[statement]]
-kind = "set"
-subject = "var:antagningsomgang-kurs"
-fields = { "tags" = ["education"] }
-evidence = "Samma källkolumn är samtidigt mappad till flera variabler.\ncatalog:occurrence:238489\ncatalog:occurrence:238490\ncatalog:occurrence:238491"
-
-[[statement]]
-kind = "set"
-subject = "var:antagningsomgang-program"
-fields = { "sets" = ["antagningsomgang"] }
-evidence = "Samma källkolumn är samtidigt mappad till flera variabler.\ncatalog:occurrence:238489\ncatalog:occurrence:238490\ncatalog:occurrence:238491"
-
-[[statement]]
-kind = "set"
-subject = "var:antagningsomgang-program"
 fields = { "tags" = ["education"] }
 evidence = "Samma källkolumn är samtidigt mappad till flera variabler.\ncatalog:occurrence:238489\ncatalog:occurrence:238490\ncatalog:occurrence:238491"
 
@@ -1293,18 +1263,6 @@ evidence = "Avsedd examenstyp är en utbildningsuppgift.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:ar-ansokan-program"
-fields = { "sets" = ["ansokningstidpunkt"] }
-evidence = "Samma tabellkolumn har överlappande ägare.\ncatalog:occurrence:236917\ncatalog:occurrence:236918\ncatalog:occurrence:236919"
-
-[[statement]]
-kind = "set"
-subject = "var:ar-ansokan-program"
-fields = { "tags" = [] }
-evidence = "Samma tabellkolumn har överlappande ägare.\ncatalog:occurrence:236917\ncatalog:occurrence:236918\ncatalog:occurrence:236919"
-
-[[statement]]
-kind = "set"
 subject = "var:ar-for-aktiviteten"
 fields = { "sets" = ["aktivitetsperiod"] }
 evidence = "Året hör till aktivitetens period.\ncatalog:variable_text:26272:365:20089"
@@ -1324,18 +1282,6 @@ evidence = "Samma tabellkolumn har överlappande ägare.\ncatalog:occurrence:236
 [[statement]]
 kind = "set"
 subject = "var:ar-for-ansokan"
-fields = { "tags" = [] }
-evidence = "Samma tabellkolumn har överlappande ägare.\ncatalog:occurrence:236917\ncatalog:occurrence:236918\ncatalog:occurrence:236919"
-
-[[statement]]
-kind = "set"
-subject = "var:ar-for-ansokan-till-kurs"
-fields = { "sets" = ["ansokningstidpunkt"] }
-evidence = "Samma tabellkolumn har överlappande ägare.\ncatalog:occurrence:236917\ncatalog:occurrence:236918\ncatalog:occurrence:236919"
-
-[[statement]]
-kind = "set"
-subject = "var:ar-for-ansokan-till-kurs"
 fields = { "tags" = [] }
 evidence = "Samma tabellkolumn har överlappande ägare.\ncatalog:occurrence:236917\ncatalog:occurrence:236918\ncatalog:occurrence:236919"
 
@@ -2254,26 +2200,8 @@ evidence = "Lärosäteskoden hör till samma begrepp som övriga lärosäteskode
 [[statement]]
 kind = "set"
 subject = "var:larosate-ansokan-kurs"
-fields = { "sets" = ["ansokningslarosate"] }
-evidence = "Samma källkolumn är samtidigt mappad till kurs och program.\ncatalog:occurrence:236921\ncatalog:occurrence:236922\ncatalog:variable_text:26358:14975:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:larosate-ansokan-kurs"
 fields = { "tags" = ["education"] }
 evidence = "Samma källkolumn är samtidigt mappad till kurs och program.\ncatalog:occurrence:236921\ncatalog:occurrence:236922\ncatalog:variable_text:26358:14975:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:larosate-ansokan-program"
-fields = { "sets" = ["ansokningslarosate"] }
-evidence = "Samma källkolumn är samtidigt mappad till program och kurs.\ncatalog:occurrence:236921\ncatalog:occurrence:236922\ncatalog:variable_text:26359:14975:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:larosate-ansokan-program"
-fields = { "tags" = ["education"] }
-evidence = "Samma källkolumn är samtidigt mappad till program och kurs.\ncatalog:occurrence:236921\ncatalog:occurrence:236922\ncatalog:variable_text:26359:14975:20454"
 
 [[statement]]
 kind = "set"
@@ -2626,26 +2554,8 @@ evidence = "Nybörjarstatus vid högskola.\ncatalog:variable_text:26392:365:2008
 [[statement]]
 kind = "set"
 subject = "var:prioritet-for-kurs"
-fields = { "sets" = ["ansokningsprioritet"] }
-evidence = "Samma källkolumn är samtidigt mappad till kurs och program.\ncatalog:occurrence:236927\ncatalog:occurrence:236928\ncatalog:variable_text:26396:18414:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:prioritet-for-kurs"
 fields = { "tags" = ["education"] }
 evidence = "Samma källkolumn är samtidigt mappad till kurs och program.\ncatalog:occurrence:236927\ncatalog:occurrence:236928\ncatalog:variable_text:26396:18414:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:prioritet-for-program"
-fields = { "sets" = ["ansokningsprioritet"] }
-evidence = "Samma källkolumn är samtidigt mappad till program och kurs.\ncatalog:occurrence:236927\ncatalog:occurrence:236928\ncatalog:variable_text:26397:12965:13149\ncatalog:variable_text:26397:20270:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:prioritet-for-program"
-fields = { "tags" = ["education"] }
-evidence = "Samma källkolumn är samtidigt mappad till program och kurs.\ncatalog:occurrence:236927\ncatalog:occurrence:236928\ncatalog:variable_text:26397:12965:13149\ncatalog:variable_text:26397:20270:20454"
 
 [[statement]]
 kind = "set"
@@ -2734,26 +2644,8 @@ evidence = "Kodningen beskriver skolform för utlandsstudier.\ncatalog:valueset:
 [[statement]]
 kind = "set"
 subject = "var:sokalternativ-kurs"
-fields = { "sets" = ["sokalternativ"] }
-evidence = "Samma källkolumn är samtidigt mappad till kurs och program.\ncatalog:occurrence:236930\ncatalog:occurrence:236931\ncatalog:variable_text:26412:15706:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:sokalternativ-kurs"
 fields = { "tags" = ["education"] }
 evidence = "Samma källkolumn är samtidigt mappad till kurs och program.\ncatalog:occurrence:236930\ncatalog:occurrence:236931\ncatalog:variable_text:26412:15706:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:sokalternativ-program"
-fields = { "sets" = ["sokalternativ"] }
-evidence = "Samma källkolumn är samtidigt mappad till program och kurs.\ncatalog:occurrence:236930\ncatalog:occurrence:236931\ncatalog:variable_text:26413:17167:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:sokalternativ-program"
-fields = { "tags" = ["education"] }
-evidence = "Samma källkolumn är samtidigt mappad till program och kurs.\ncatalog:occurrence:236930\ncatalog:occurrence:236931\ncatalog:variable_text:26413:17167:20454"
 
 [[statement]]
 kind = "set"
@@ -2922,30 +2814,6 @@ kind = "set"
 subject = "var:alder-vid-terminsstart"
 fields = { "tags" = ["demographics"] }
 evidence = "Det ensamma T är en källkod för referenstidpunkten; etiketten är källans benämning.\ncatalog:variable_text:26428:17532:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:termin-ansokan-kurs"
-fields = { "sets" = ["ansokningstidpunkt"] }
-evidence = "Samma tabellkolumn har överlappande ägare.\ncatalog:occurrence:236936\ncatalog:occurrence:236937\ncatalog:occurrence:236938"
-
-[[statement]]
-kind = "set"
-subject = "var:termin-ansokan-kurs"
-fields = { "tags" = [] }
-evidence = "Samma tabellkolumn har överlappande ägare.\ncatalog:occurrence:236936\ncatalog:occurrence:236937\ncatalog:occurrence:236938"
-
-[[statement]]
-kind = "set"
-subject = "var:termin-ansokan-program"
-fields = { "sets" = ["ansokningstidpunkt"] }
-evidence = "Samma tabellkolumn har överlappande ägare.\ncatalog:occurrence:236936\ncatalog:occurrence:236937\ncatalog:occurrence:236938"
-
-[[statement]]
-kind = "set"
-subject = "var:termin-ansokan-program"
-fields = { "tags" = [] }
-evidence = "Samma tabellkolumn har överlappande ägare.\ncatalog:occurrence:236936\ncatalog:occurrence:236937\ncatalog:occurrence:236938"
 
 [[statement]]
 kind = "set"
@@ -3154,24 +3022,6 @@ evidence = "Urvalsgruppen avser antagning till utbildning.\ncatalog:variable_tex
 [[statement]]
 kind = "set"
 subject = "var:urvalsresultat-kurs"
-fields = { "sets" = ["urvalsresultat"] }
-evidence = "Samma källkolumn är samtidigt mappad till kurs och program.\ncatalog:occurrence:236939\ncatalog:occurrence:236940"
-
-[[statement]]
-kind = "set"
-subject = "var:urvalsresultat-kurs"
-fields = { "tags" = ["education"] }
-evidence = "Samma källkolumn är samtidigt mappad till kurs och program.\ncatalog:occurrence:236939\ncatalog:occurrence:236940"
-
-[[statement]]
-kind = "set"
-subject = "var:urvalsresultat-program"
-fields = { "sets" = ["urvalsresultat"] }
-evidence = "Samma källkolumn är samtidigt mappad till kurs och program.\ncatalog:occurrence:236939\ncatalog:occurrence:236940"
-
-[[statement]]
-kind = "set"
-subject = "var:urvalsresultat-program"
 fields = { "tags" = ["education"] }
 evidence = "Samma källkolumn är samtidigt mappad till kurs och program.\ncatalog:occurrence:236939\ncatalog:occurrence:236940"
 
@@ -3454,18 +3304,6 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
-subject = "set:ansokningslarosate"
-fields = { "label" = "Ansökningslärosäte" }
-evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
-
-[[statement]]
-kind = "set"
-subject = "set:ansokningsprioritet"
-fields = { "label" = "Ansökningsprioritet" }
-evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
-
-[[statement]]
-kind = "set"
 subject = "set:ansokningstidpunkt"
 fields = { "label" = "Ansökningstidpunkt" }
 evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
@@ -3487,12 +3325,6 @@ kind = "set"
 subject = "set:anstallningsomfattning"
 fields = { "label" = "Anställningsomfattning" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:antagningsomgang"
-fields = { "label" = "Antagningsomgång" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"
@@ -3604,12 +3436,6 @@ evidence = "#2100 group name: slug words restored from the member and register l
 
 [[statement]]
 kind = "set"
-subject = "set:sokalternativ"
-fields = { "label" = "Sökalternativ" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:studieaktivitet"
 fields = { "label" = "Studieaktivitet" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
@@ -3643,12 +3469,6 @@ kind = "set"
 subject = "set:tillgodoraknandetidpunkt"
 fields = { "label" = "Tillgodoräknandetidpunkt" }
 evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
-
-[[statement]]
-kind = "set"
-subject = "set:urvalsresultat"
-fields = { "label" = "Urvalsresultat" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
 kind = "set"
@@ -4114,15 +3934,9 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 
 [[statement]]
 kind = "set"
-subject = "set:ansokningsprioritet"
-fields = { "description" = "Den prioritetsordning i vilken den sökande har valt utbildningen, där 01 är val i första hand, 02 i andra hand och så vidare; ett mått för ansökan till kurs och ett för ansökan till program." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSamma kod för kurs- och programansökan.\ncatalog:variable_text:33308:12784:14426\ncatalog:variable_text:33308:14426:14610\ncatalog:variable_text:33308:16801:16953\ncatalog:variable_text:33309:12784:12965\ncatalog:variable_text:33309:12965:13149\ncatalog:variable_text:33309:14791:14975\ncatalog:variable_text:33309:16801:16953\ncatalog:variable_text:33309:19509:20089"
-
-[[statement]]
-kind = "set"
 subject = "set:ansokningstidpunkt"
-fields = { "description" = "Tidpunkten som ansökan avser: kalenderår och termin (höst- eller vårtermin), för ansökan till kurs, för ansökan till program och för ansökan utan uppdelning." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är år eller termin för en ansökan; kurs/program är axeln.\ncatalog:variable_text:33186:12965:13149\ncatalog:variable_text:33188:12965:13149\ncatalog:variable_text:33189:12965:13149\ncatalog:variable_text:33334:12784:19539\ncatalog:variable_text:33334:19539:19723\ncatalog:variable_text:33335:12784:12965\ncatalog:variable_text:33335:12965:13149\ncatalog:variable_text:33337:12784:12965"
+fields = { "description" = "Tidpunkten som ansökan avser: kalenderår och termin (höst- eller vårtermin)." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna är år eller termin för en ansökan; varianterna för kurs och program är sammanslagna (maintainer 2026-11-14).\ncatalog:variable_text:33186:12965:13149\ncatalog:variable_text:33188:12965:13149\ncatalog:variable_text:33189:12965:13149\ncatalog:variable_text:33334:12784:19539\ncatalog:variable_text:33334:19539:19723\ncatalog:variable_text:33335:12784:12965\ncatalog:variable_text:33335:12965:13149\ncatalog:variable_text:33337:12784:12965"
 
 [[statement]]
 kind = "set"
@@ -4135,12 +3949,6 @@ kind = "set"
 subject = "set:anstallningsomfattning"
 fields = { "description" = "Anställningens omfattning i procent av heltid: anställningens omfattning och tjänstledighetens omfattning (0–100 procent), båda 2019–2023, och den faktiska tjänstgöringstiden i förhållande till heltid, som för 1995–2000 är anställningens omfattning reducerad med tjänstledighetens omfattning. För 2001–2019 hämtades uppgifterna om anställningens och tjänstledighetens omfattning via undersökningen Konjunkturstatistik, löner för statlig sektor, medan lärosäten som rapporterade via Excel själva angav tjänstgöringsomfattningen; från 2020 anger uppgiftslämnarna dessa uppgifter och SCB beräknar tjänstgöringsomfattningen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla tre är procentmått på anställningens omfattning, där tjänstgöringen är anställning minus tjänstledighet.\ncatalog:variable_text:33321:17897:19723\ncatalog:variable_text:33348:9131:11323\ncatalog:variable_text:33348:11323:18262\ncatalog:variable_text:33348:18262:19723\ncatalog:variable_text:33349:17897:19723"
-
-[[statement]]
-kind = "set"
-subject = "set:antagningsomgang"
-fields = { "description" = "Antagningsomgången vid ansökan, för ansökan till kurs, till program och utan uppdelning." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSamma uppgift, uppdelad på kurs och program; texterna är i övrigt etikettnära men entydiga.\ncatalog:variable_text:33178:15126:15340\ncatalog:variable_text:33179:15126:15340\ncatalog:variable_text:33180:15126:15340"
 
 [[statement]]
 kind = "set"
@@ -4177,12 +3985,6 @@ kind = "set"
 subject = "set:lasar"
 fields = { "description" = "Läsåret, som börjar under hösten ett kalenderår och slutar under våren följande kalenderår, härlett ur termin och kalenderår. Det finns som kod med 6 positioner (höstterminens årtal följt av de två sista siffrorna i vårterminens årtal) och med 4 positioner (höstterminens årtal)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSamma läsår i två kodlängder; positionsbeskrivningarna avgör vilken som är vilken.\ncatalog:variable_text:33279:0:365\ncatalog:variable_text:33279:365:730\ncatalog:variable_text:33281:0:365\ncatalog:variable_text:33281:365:730"
-
-[[statement]]
-kind = "set"
-subject = "set:sokalternativ"
-fields = { "description" = "Sökalternativ vid ansökan till kurs respektive program: en kod som sätts av högskolorna och som saknar klartext. Ansökan gick via VHS till och med 2012 och via UHR från 2011." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSamma kod för kurs- och programansökan.\ncatalog:variable_text:33317:12784:12965\ncatalog:variable_text:33317:12965:13149\ncatalog:variable_text:33317:15126:15156\ncatalog:variable_text:33318:12784:12965\ncatalog:variable_text:33318:12965:13149\ncatalog:variable_text:33318:15126:15156\ncatalog:variable_text:33318:16983:17167"
 
 [[statement]]
 kind = "set"
@@ -4261,3 +4063,285 @@ kind = "set"
 subject = "table:grundutbildning-1993"
 fields = { series_break = { at = "HT2011", text = "Inför höstterminen 2011 infördes anmälnings- och studieavgifter för inresande studenter  på grundnivå och avancerad nivå som ej ingår i utbytesprogram och som inte är medborgare i EU/ESS-länderna eller Schweiz." } }
 evidence = "current-scb-inputs.zip/Timeseries.csv row=141\n\nSame variant 264. \"Inför höstterminen 2011\"."
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: Ar @2005-01-01..2025-12-31 where key = 'v1308'"
+fields = { "variable" = "ar-for-ansokan" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå (42 versions, Vårterminen 2005 to Höstterminen 2025), documents column Ar under VarId 1308 \"År för ansökan till program\", VarId 25823 \"År för ansökan till kurs\", VarId 25826 \"År för ansökan\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: the generic claimant ar-for-ansokan takes the listings of the other claimants (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: Ar @2005-01-01..2025-12-31 where key = 'v25823'"
+fields = { "variable" = "ar-for-ansokan" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå (42 versions, Vårterminen 2005 to Höstterminen 2025), documents column Ar under VarId 1308 \"År för ansökan till program\", VarId 25823 \"År för ansökan till kurs\", VarId 25826 \"År för ansökan\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: the generic claimant ar-for-ansokan takes the listings of the other claimants (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: Ar @2011-06-01..2024-08-31 where key = 'v1308'"
+fields = { "variable" = "ar-for-ansokan" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sommarkurser (14 versions, 2011 to 2024), documents column Ar under VarId 1308 \"År för ansökan till program\", VarId 25823 \"År för ansökan till kurs\", VarId 25826 \"År för ansökan\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: the generic claimant ar-for-ansokan takes the listings of the other claimants (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: Ar @2011-06-01..2024-08-31 where key = 'v25823'"
+fields = { "variable" = "ar-for-ansokan" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sommarkurser (14 versions, 2011 to 2024), documents column Ar under VarId 1308 \"År för ansökan till program\", VarId 25823 \"År för ansökan till kurs\", VarId 25826 \"År för ansökan\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: the generic claimant ar-for-ansokan takes the listings of the other claimants (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-internationella-omgangar: Ar @2011-07-01..2024-12-31 where key = 'v1308'"
+fields = { "variable" = "ar-for-ansokan" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande internationella omgångar (14 versions, Höstterminen 2011 to Höstterminen 2024), documents column Ar under VarId 1308 \"År för ansökan till program\", VarId 25823 \"År för ansökan till kurs\", VarId 25826 \"År för ansökan\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: the generic claimant ar-for-ansokan takes the listings of the other claimants (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-internationella-omgangar: Ar @2011-07-01..2024-12-31 where key = 'v25823'"
+fields = { "variable" = "ar-for-ansokan" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande internationella omgångar (14 versions, Höstterminen 2011 to Höstterminen 2024), documents column Ar under VarId 1308 \"År för ansökan till program\", VarId 25823 \"År för ansökan till kurs\", VarId 25826 \"År för ansökan\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: the generic claimant ar-for-ansokan takes the listings of the other claimants (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-snabbstatistik: Ar @2017-01-01..2025-12-31 where key = 'v1308'"
+fields = { "variable" = "ar-for-ansokan" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande snabbstatistik (16 versions, 2017 to 2025), documents column Ar under VarId 1308 \"År för ansökan till program\", VarId 25823 \"År för ansökan till kurs\", VarId 25826 \"År för ansökan\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: the generic claimant ar-for-ansokan takes the listings of the other claimants (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-snabbstatistik: Ar @2017-01-01..2025-12-31 where key = 'v25823'"
+fields = { "variable" = "ar-for-ansokan" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande snabbstatistik (16 versions, 2017 to 2025), documents column Ar under VarId 1308 \"År för ansökan till program\", VarId 25823 \"År för ansökan till kurs\", VarId 25826 \"År för ansökan\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: the generic claimant ar-for-ansokan takes the listings of the other claimants (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: Termin @2005-01-01..2025-12-31 where key = 'v1306'"
+fields = { "variable" = "termin-for-ansokan" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå (42 versions, Vårterminen 2005 to Höstterminen 2025), documents column Termin under VarId 1306 \"Termin för ansökan till program\", VarId 25812 \"Termin för ansökan till kurs\", VarId 25828 \"Termin för ansökan\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: the generic claimant termin-for-ansokan takes the listings of the other claimants (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: Termin @2005-01-01..2025-12-31 where key = 'v25812'"
+fields = { "variable" = "termin-for-ansokan" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå (42 versions, Vårterminen 2005 to Höstterminen 2025), documents column Termin under VarId 1306 \"Termin för ansökan till program\", VarId 25812 \"Termin för ansökan till kurs\", VarId 25828 \"Termin för ansökan\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: the generic claimant termin-for-ansokan takes the listings of the other claimants (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: Termin @2011-06-01..2024-08-31 where key = 'v1306'"
+fields = { "variable" = "termin-for-ansokan" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sommarkurser (14 versions, 2011 to 2024), documents column Termin under VarId 1306 \"Termin för ansökan till program\", VarId 25812 \"Termin för ansökan till kurs\", VarId 25828 \"Termin för ansökan\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: the generic claimant termin-for-ansokan takes the listings of the other claimants (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: Termin @2011-06-01..2024-08-31 where key = 'v25812'"
+fields = { "variable" = "termin-for-ansokan" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sommarkurser (14 versions, 2011 to 2024), documents column Termin under VarId 1306 \"Termin för ansökan till program\", VarId 25812 \"Termin för ansökan till kurs\", VarId 25828 \"Termin för ansökan\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: the generic claimant termin-for-ansokan takes the listings of the other claimants (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-internationella-omgangar: Termin @2011-07-01..2024-12-31 where key = 'v1306'"
+fields = { "variable" = "termin-for-ansokan" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande internationella omgångar (14 versions, Höstterminen 2011 to Höstterminen 2024), documents column Termin under VarId 1306 \"Termin för ansökan till program\", VarId 25812 \"Termin för ansökan till kurs\", VarId 25828 \"Termin för ansökan\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: the generic claimant termin-for-ansokan takes the listings of the other claimants (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-internationella-omgangar: Termin @2011-07-01..2024-12-31 where key = 'v25812'"
+fields = { "variable" = "termin-for-ansokan" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande internationella omgångar (14 versions, Höstterminen 2011 to Höstterminen 2024), documents column Termin under VarId 1306 \"Termin för ansökan till program\", VarId 25812 \"Termin för ansökan till kurs\", VarId 25828 \"Termin för ansökan\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: the generic claimant termin-for-ansokan takes the listings of the other claimants (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-snabbstatistik: Termin @2017-01-01..2025-12-31 where key = 'v1306'"
+fields = { "variable" = "termin-for-ansokan" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande snabbstatistik (16 versions, 2017 to 2025), documents column Termin under VarId 1306 \"Termin för ansökan till program\", VarId 25812 \"Termin för ansökan till kurs\", VarId 25828 \"Termin för ansökan\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: the generic claimant termin-for-ansokan takes the listings of the other claimants (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-snabbstatistik: Termin @2017-01-01..2025-12-31 where key = 'v25812'"
+fields = { "variable" = "termin-for-ansokan" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande snabbstatistik (16 versions, 2017 to 2025), documents column Termin under VarId 1306 \"Termin för ansökan till program\", VarId 25812 \"Termin för ansökan till kurs\", VarId 25828 \"Termin för ansökan\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: the generic claimant termin-for-ansokan takes the listings of the other claimants (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: Omgang @2016-01-01..2025-12-31 where key = 'v39311'"
+fields = { "variable" = "antagningsomgang" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå (42 versions, Vårterminen 2005 to Höstterminen 2025), documents column Omgang under VarId 39311 \"Antagningsomgång, program\", VarId 39312 \"Antagningsomgång, kurs\", VarId 39310 \"Antagningsomgång\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: the generic claimant antagningsomgang takes the listings of the other claimants (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: Omgang @2016-01-01..2025-12-31 where key = 'v39312'"
+fields = { "variable" = "antagningsomgang" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå (42 versions, Vårterminen 2005 to Höstterminen 2025), documents column Omgang under VarId 39311 \"Antagningsomgång, program\", VarId 39312 \"Antagningsomgång, kurs\", VarId 39310 \"Antagningsomgång\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: the generic claimant antagningsomgang takes the listings of the other claimants (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: Omgang @2011-06-01..2024-08-31 where key = 'v39311'"
+fields = { "variable" = "antagningsomgang" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sommarkurser (14 versions, 2011 to 2024), documents column Omgang under VarId 39311 \"Antagningsomgång, program\", VarId 39312 \"Antagningsomgång, kurs\", VarId 39310 \"Antagningsomgång\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: the generic claimant antagningsomgang takes the listings of the other claimants (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: Omgang @2011-06-01..2024-08-31 where key = 'v39312'"
+fields = { "variable" = "antagningsomgang" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sommarkurser (14 versions, 2011 to 2024), documents column Omgang under VarId 39311 \"Antagningsomgång, program\", VarId 39312 \"Antagningsomgång, kurs\", VarId 39310 \"Antagningsomgång\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: the generic claimant antagningsomgang takes the listings of the other claimants (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-internationella-omgangar: Omgang @2011-07-01..2024-12-31 where key = 'v39311'"
+fields = { "variable" = "antagningsomgang" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande internationella omgångar (14 versions, Höstterminen 2011 to Höstterminen 2024), documents column Omgang under VarId 39311 \"Antagningsomgång, program\", VarId 39312 \"Antagningsomgång, kurs\", VarId 39310 \"Antagningsomgång\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: the generic claimant antagningsomgang takes the listings of the other claimants (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-internationella-omgangar: Omgang @2011-07-01..2024-12-31 where key = 'v39312'"
+fields = { "variable" = "antagningsomgang" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande internationella omgångar (14 versions, Höstterminen 2011 to Höstterminen 2024), documents column Omgang under VarId 39311 \"Antagningsomgång, program\", VarId 39312 \"Antagningsomgång, kurs\", VarId 39310 \"Antagningsomgång\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: the generic claimant antagningsomgang takes the listings of the other claimants (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-snabbstatistik: Omgang @2017-01-01..2025-12-31 where key = 'v39311'"
+fields = { "variable" = "antagningsomgang" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande snabbstatistik (16 versions, 2017 to 2025), documents column Omgang under VarId 39311 \"Antagningsomgång, program\", VarId 39312 \"Antagningsomgång, kurs\", VarId 39310 \"Antagningsomgång\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: the generic claimant antagningsomgang takes the listings of the other claimants (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-snabbstatistik: Omgang @2017-01-01..2025-12-31 where key = 'v39312'"
+fields = { "variable" = "antagningsomgang" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande snabbstatistik (16 versions, 2017 to 2025), documents column Omgang under VarId 39311 \"Antagningsomgång, program\", VarId 39312 \"Antagningsomgång, kurs\", VarId 39310 \"Antagningsomgång\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: the generic claimant antagningsomgang takes the listings of the other claimants (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: Prio @2005-01-01..2025-12-31 where key = 'v25809'"
+fields = { "variable" = "prioritet-for-kurs" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå (42 versions, Vårterminen 2005 to Höstterminen 2025), documents column Prio under VarId 1299 \"Prioritet för kurs\", VarId 25809 \"Prioritet för program\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: prioritet-for-kurs (the kurs variant) takes the listings of the program variant; the source gives no reason to prefer either (VarId 25825 alone documents HsKod in Höstterminen 2005 and 2006, RegVerIDs 5158 and 3716), so the kurs variant is the one target for every pair that has no generic claimant (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: Prio @2011-06-01..2024-08-31 where key = 'v25809'"
+fields = { "variable" = "prioritet-for-kurs" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sommarkurser (14 versions, 2011 to 2024), documents column Prio under VarId 1299 \"Prioritet för kurs\", VarId 25809 \"Prioritet för program\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: prioritet-for-kurs (the kurs variant) takes the listings of the program variant; the source gives no reason to prefer either (VarId 25825 alone documents HsKod in Höstterminen 2005 and 2006, RegVerIDs 5158 and 3716), so the kurs variant is the one target for every pair that has no generic claimant (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-internationella-omgangar: Prio @2011-07-01..2024-12-31 where key = 'v25809'"
+fields = { "variable" = "prioritet-for-kurs" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande internationella omgångar (14 versions, Höstterminen 2011 to Höstterminen 2024), documents column Prio under VarId 1299 \"Prioritet för kurs\", VarId 25809 \"Prioritet för program\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: prioritet-for-kurs (the kurs variant) takes the listings of the program variant; the source gives no reason to prefer either (VarId 25825 alone documents HsKod in Höstterminen 2005 and 2006, RegVerIDs 5158 and 3716), so the kurs variant is the one target for every pair that has no generic claimant (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-snabbstatistik: Prio @2017-01-01..2025-12-31 where key = 'v25809'"
+fields = { "variable" = "prioritet-for-kurs" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande snabbstatistik (16 versions, 2017 to 2025), documents column Prio under VarId 1299 \"Prioritet för kurs\", VarId 25809 \"Prioritet för program\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: prioritet-for-kurs (the kurs variant) takes the listings of the program variant; the source gives no reason to prefer either (VarId 25825 alone documents HsKod in Höstterminen 2005 and 2006, RegVerIDs 5158 and 3716), so the kurs variant is the one target for every pair that has no generic claimant (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: SokAlt @2005-01-01..2025-12-31 where key = 'v25811'"
+fields = { "variable" = "sokalternativ-kurs" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå (42 versions, Vårterminen 2005 to Höstterminen 2025), documents column SokAlt under VarId 1314 \"Sökalternativ, kurs\", VarId 25811 \"Sökalternativ, program\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: sokalternativ-kurs (the kurs variant) takes the listings of the program variant; the source gives no reason to prefer either (VarId 25825 alone documents HsKod in Höstterminen 2005 and 2006, RegVerIDs 5158 and 3716), so the kurs variant is the one target for every pair that has no generic claimant (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: SokAlt @2011-06-01..2024-08-31 where key = 'v25811'"
+fields = { "variable" = "sokalternativ-kurs" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sommarkurser (14 versions, 2011 to 2024), documents column SokAlt under VarId 1314 \"Sökalternativ, kurs\", VarId 25811 \"Sökalternativ, program\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: sokalternativ-kurs (the kurs variant) takes the listings of the program variant; the source gives no reason to prefer either (VarId 25825 alone documents HsKod in Höstterminen 2005 and 2006, RegVerIDs 5158 and 3716), so the kurs variant is the one target for every pair that has no generic claimant (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-internationella-omgangar: SokAlt @2011-07-01..2024-12-31 where key = 'v25811'"
+fields = { "variable" = "sokalternativ-kurs" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande internationella omgångar (14 versions, Höstterminen 2011 to Höstterminen 2024), documents column SokAlt under VarId 1314 \"Sökalternativ, kurs\", VarId 25811 \"Sökalternativ, program\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: sokalternativ-kurs (the kurs variant) takes the listings of the program variant; the source gives no reason to prefer either (VarId 25825 alone documents HsKod in Höstterminen 2005 and 2006, RegVerIDs 5158 and 3716), so the kurs variant is the one target for every pair that has no generic claimant (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-snabbstatistik: SokAlt @2017-01-01..2025-12-31 where key = 'v25811'"
+fields = { "variable" = "sokalternativ-kurs" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande snabbstatistik (16 versions, 2017 to 2025), documents column SokAlt under VarId 1314 \"Sökalternativ, kurs\", VarId 25811 \"Sökalternativ, program\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: sokalternativ-kurs (the kurs variant) takes the listings of the program variant; the source gives no reason to prefer either (VarId 25825 alone documents HsKod in Höstterminen 2005 and 2006, RegVerIDs 5158 and 3716), so the kurs variant is the one target for every pair that has no generic claimant (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: UrvalsRes @2005-01-01..2025-12-31 where key = 'v25822'"
+fields = { "variable" = "urvalsresultat-kurs" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå (42 versions, Vårterminen 2005 to Höstterminen 2025), documents column UrvalsRes under VarId 1307 \"Urvalsresultat, kurs\", VarId 25822 \"Urvalsresultat, program\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: urvalsresultat-kurs (the kurs variant) takes the listings of the program variant; the source gives no reason to prefer either (VarId 25825 alone documents HsKod in Höstterminen 2005 and 2006, RegVerIDs 5158 and 3716), so the kurs variant is the one target for every pair that has no generic claimant (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: UrvalsRes @2011-06-01..2024-08-31 where key = 'v25822'"
+fields = { "variable" = "urvalsresultat-kurs" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sommarkurser (14 versions, 2011 to 2024), documents column UrvalsRes under VarId 1307 \"Urvalsresultat, kurs\", VarId 25822 \"Urvalsresultat, program\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: urvalsresultat-kurs (the kurs variant) takes the listings of the program variant; the source gives no reason to prefer either (VarId 25825 alone documents HsKod in Höstterminen 2005 and 2006, RegVerIDs 5158 and 3716), so the kurs variant is the one target for every pair that has no generic claimant (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-internationella-omgangar: UrvalsRes @2011-07-01..2024-12-31 where key = 'v25822'"
+fields = { "variable" = "urvalsresultat-kurs" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande internationella omgångar (14 versions, Höstterminen 2011 to Höstterminen 2024), documents column UrvalsRes under VarId 1307 \"Urvalsresultat, kurs\", VarId 25822 \"Urvalsresultat, program\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: urvalsresultat-kurs (the kurs variant) takes the listings of the program variant; the source gives no reason to prefer either (VarId 25825 alone documents HsKod in Höstterminen 2005 and 2006, RegVerIDs 5158 and 3716), so the kurs variant is the one target for every pair that has no generic claimant (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-snabbstatistik: UrvalsRes @2017-01-01..2025-12-31 where key = 'v25822'"
+fields = { "variable" = "urvalsresultat-kurs" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande snabbstatistik (16 versions, 2017 to 2025), documents column UrvalsRes under VarId 1307 \"Urvalsresultat, kurs\", VarId 25822 \"Urvalsresultat, program\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: urvalsresultat-kurs (the kurs variant) takes the listings of the program variant; the source gives no reason to prefer either (VarId 25825 alone documents HsKod in Höstterminen 2005 and 2006, RegVerIDs 5158 and 3716), so the kurs variant is the one target for every pair that has no generic claimant (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-grund-avancerad: HsKod @2005-01-01..2025-12-31 where key = 'v25824'"
+fields = { "variable" = "larosate-ansokan-kurs" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå (42 versions, Vårterminen 2005 to Höstterminen 2025), documents column HsKod under VarId 25825 \"Universitet/högskola för ansökan till kurs\", VarId 25824 \"Universitet/högskola för ansökan till program\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: larosate-ansokan-kurs (the kurs variant) takes the listings of the program variant; the source gives no reason to prefer either (VarId 25825 alone documents HsKod in Höstterminen 2005 and 2006, RegVerIDs 5158 and 3716), so the kurs variant is the one target for every pair that has no generic claimant (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-sommarkurser: HsKod @2011-06-01..2024-08-31 where key = 'v25824'"
+fields = { "variable" = "larosate-ansokan-kurs" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sommarkurser (14 versions, 2011 to 2024), documents column HsKod under VarId 25825 \"Universitet/högskola för ansökan till kurs\", VarId 25824 \"Universitet/högskola för ansökan till program\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: larosate-ansokan-kurs (the kurs variant) takes the listings of the program variant; the source gives no reason to prefer either (VarId 25825 alone documents HsKod in Höstterminen 2005 and 2006, RegVerIDs 5158 and 3716), so the kurs variant is the one target for every pair that has no generic claimant (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-internationella-omgangar: HsKod @2011-07-01..2024-12-31 where key = 'v25824'"
+fields = { "variable" = "larosate-ansokan-kurs" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande internationella omgångar (14 versions, Höstterminen 2011 to Höstterminen 2024), documents column HsKod under VarId 25825 \"Universitet/högskola för ansökan till kurs\", VarId 25824 \"Universitet/högskola för ansökan till program\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: larosate-ansokan-kurs (the kurs variant) takes the listings of the program variant; the source gives no reason to prefer either (VarId 25825 alone documents HsKod in Höstterminen 2005 and 2006, RegVerIDs 5158 and 3716), so the kurs variant is the one target for every pair that has no generic claimant (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-snabbstatistik: HsKod @2017-01-01..2025-12-31 where key = 'v25824'"
+fields = { "variable" = "larosate-ansokan-kurs" }
+evidence = "SCB Registerinformation, Sökande och antagna till högskoleutbildning på grundnivå och avancerad nivå, sökande snabbstatistik (16 versions, 2017 to 2025), documents column HsKod under VarId 25825 \"Universitet/högskola för ansökan till kurs\", VarId 25824 \"Universitet/högskola för ansökan till program\". The table holds applications to courses and to programmes in one row set, and the column means the same on every row, so the claimants are one variable: larosate-ansokan-kurs (the kurs variant) takes the listings of the program variant; the source gives no reason to prefer either (VarId 25825 alone documents HsKod in Höstterminen 2005 and 2006, RegVerIDs 5158 and 3716), so the kurs variant is the one target for every pair that has no generic claimant (maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; one variable per concept across the four sökande tables)."
+
+[[statement]]
+kind = "set"
+subject = "var:ar-for-ansokan"
+fields = { "label" = "År för ansökan", "description" = "Kalenderåret som ansökan till högskoleutbildning avser. Gäller ansökningar till både kurser och program." }
+evidence = "Maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; the label and description cover every variant merged into this variable (course and programme application). Source: SCB Registerinformation, column Ar of the four sökande tables, VarIds 1308, 25823, 25826; the claimants' definitions and operational definitions state the same thing, for courses, for programmes or for both.\ncatalog:variable_text:33930:12784:12965\ncatalog:variable_text:33930:19509:20454\ncatalog:variable_text:33928:12784:12965\ncatalog:variable_text:33928:19509:20454\ncatalog:variable_text:33931:12784:12965\ncatalog:variable_text:33931:19509:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:termin-for-ansokan"
+fields = { "label" = "Termin för ansökan", "description" = "Den termin som ansökan avser, höst- eller vårtermin; 1 är vårtermin och 2 hösttermin. Gäller ansökningar till både kurser och program." }
+evidence = "Maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; the label and description cover every variant merged into this variable (course and programme application). Source: SCB Registerinformation, column Termin of the four sökande tables, VarIds 1306, 25812, 25828; the claimants' definitions and operational definitions state the same thing, for courses, for programmes or for both.\ncatalog:variable_text:34148:12784:12965\ncatalog:variable_text:34148:20270:20454\ncatalog:variable_text:34146:12784:12965\ncatalog:variable_text:34146:20270:20454\ncatalog:variable_text:34145:12784:19539\ncatalog:variable_text:34145:20270:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:antagningsomgang"
+fields = { "label" = "Antagningsomgång", "description" = "Antagningsomgången vid ansökan. Gäller ansökningar till både kurser och program." }
+evidence = "Maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; the label and description cover every variant merged into this variable (course and programme application). Source: SCB Registerinformation, column Omgang of the four sökande tables, VarIds 39311, 39312, 39310; the claimants' definitions and operational definitions state the same thing, for courses, for programmes or for both.\ncatalog:variable_text:33919:15126:18993\ncatalog:variable_text:33919:20270:20454\ncatalog:variable_text:33921:15126:18993\ncatalog:variable_text:33921:20270:20454\ncatalog:variable_text:33920:15126:18993\ncatalog:variable_text:33920:20270:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:prioritet-for-kurs"
+fields = { "label" = "Prioritet för ansökan", "description" = "Anger i vilken prioritetsordning den sökande har valt utbildningen: 01 är val i första hand, 02 i andra hand och så vidare. Gäller ansökningar till både kurser och program." }
+evidence = "Maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; the label and description cover every variant merged into this variable (course and programme application). Source: SCB Registerinformation, column Prio of the four sökande tables, VarIds 1299, 25809; the claimants' definitions and operational definitions state the same thing, for courses, for programmes or for both.\ncatalog:variable_text:34107:12784:14426\ncatalog:variable_text:34107:18414:20454\ncatalog:variable_text:34108:12784:12965\ncatalog:variable_text:34108:20270:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:sokalternativ-kurs"
+fields = { "label" = "Sökalternativ", "description" = "Sökalternativ vid ansökan till kurs eller program: en kod som sätts av högskolorna och som saknar klartext. Ansökan gick via VHS till och med 2012 och via UHR från 2011." }
+evidence = "Maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; the label and description cover every variant merged into this variable (course and programme application). Source: SCB Registerinformation, column SokAlt of the four sökande tables, VarIds 1314, 25811; the claimants' definitions and operational definitions state the same thing, for courses, for programmes or for both.\ncatalog:variable_text:34123:12784:12965\ncatalog:variable_text:34123:15706:20454\ncatalog:variable_text:34124:12784:12965\ncatalog:variable_text:34124:17167:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:urvalsresultat-kurs"
+fields = { "label" = "Urvalsresultat", "description" = "Urvalsresultatet vid antagning: om den sökande är antagen, ej behörig, reserv eller struken, eller om sökalternativet är inställt. Gäller ansökningar till både kurser och program." }
+evidence = "Maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; the label and description cover every variant merged into this variable (course and programme application). Source: SCB Registerinformation, column UrvalsRes of the four sökande tables, VarIds 1307, 25822; the claimants' definitions and operational definitions state the same thing, for courses, for programmes or for both.\ncatalog:variable_text:34173:12784:13695\ncatalog:variable_text:34173:19905:20454\ncatalog:variable_text:34174:12784:12965\ncatalog:variable_text:34174:19905:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:larosate-ansokan-kurs"
+fields = { "label" = "Lärosäte för ansökan", "description" = "Kod för det universitet eller den högskola som ansökan avser. Gäller ansökningar till både kurser och program." }
+evidence = "Maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; the label and description cover every variant merged into this variable (course and programme application). Source: SCB Registerinformation, column HsKod of the four sökande tables, VarIds 25825, 25824; the claimants' definitions and operational definitions state the same thing, for courses, for programmes or for both.\ncatalog:variable_text:34069:12784:12965\ncatalog:variable_text:34069:14975:20454\ncatalog:variable_text:34070:12784:13695\ncatalog:variable_text:34070:14975:20454"

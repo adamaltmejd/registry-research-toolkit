@@ -824,26 +824,8 @@ evidence = "Genomsnittet ingår i vistelsedygn.\ncatalog:variable_text:27839:138
 [[statement]]
 kind = "set"
 subject = "var:stangdorsak"
-fields = { "sets" = ["stangningsorsak"] }
-evidence = "Kodningen ingår i stängningsorsak.\ncatalog:valueset:1144\ncatalog:variable_text:27840:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:stangdorsak"
 fields = { "tags" = ["business"] }
 evidence = "Kodningen ingår i stängningsorsak.\ncatalog:valueset:1144\ncatalog:variable_text:27840:13514:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:stangdorsak-datumupph"
-fields = { "sets" = ["stangningsorsak"] }
-evidence = "Samma källkolumn har överlappande ägare med olika etiketter och innehåll; etiketten och värdemängden anger stängningsorsak.\ncatalog:occurrence:244857\ncatalog:occurrence:244858\ncatalog:valueset:1144\ncatalog:variable_text:27841:13879:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:stangdorsak-datumupph"
-fields = { "tags" = ["business"] }
-evidence = "Samma källkolumn har överlappande ägare med olika etiketter och innehåll; etiketten och värdemängden anger stängningsorsak.\ncatalog:occurrence:244857\ncatalog:occurrence:244858\ncatalog:valueset:1144\ncatalog:variable_text:27841:13879:16436"
 
 [[statement]]
 kind = "set"
@@ -979,12 +961,6 @@ evidence = "#2100 group name: slug words restored from catalog wording; kept on 
 
 [[statement]]
 kind = "set"
-subject = "set:stangningsorsak"
-fields = { "label" = "Stängningsorsak" }
-evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:stugkapacitet"
 fields = { "label" = "Stugkapacitet" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
@@ -1084,12 +1060,6 @@ kind = "set"
 subject = "var:drm"
 fields = { "label" = "Disponibla rum (alla dagar)" }
 evidence = "#2102 same-label cluster 'Disponibla rum' (3 variables): judged different meaning, high confidence; Opdefs: all days, Friday-Sunday incl. holidays, Monday-Thursday excl. holidays."
-
-[[statement]]
-kind = "set"
-subject = "var:stangdorsak-datumupph"
-fields = { "label" = "Stängdorsak (DatumUpph)" }
-evidence = "#2102 same-label cluster 'Stängdorsak' (2 variables): judged different meaning, low confidence; StangdOrsak and DatumUpph are concurrent in the camping table with the same D/S/T codes; no text explains DatumUpph."
 
 [[statement]]
 kind = "set"

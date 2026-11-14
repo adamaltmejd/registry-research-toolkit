@@ -2946,26 +2946,8 @@ evidence = "LBR är en registerförkortning som inte anger variabelns innebörd.
 [[statement]]
 kind = "set"
 subject = "var:majs"
-fields = { "sets" = ["majsareal"] }
-evidence = "Måttet avser majsareal.\ncatalog:variable_text:35942:11688:20454\ncatalog:variable_text:35943:17167:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:majs"
 fields = { "tags" = ["agriculture"] }
 evidence = "Måttet avser majsareal.\ncatalog:variable_text:35942:11688:20454\ncatalog:variable_text:35943:17167:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:majs-lamm"
-fields = { "sets" = ["majsareal"] }
-evidence = "Samma källkolumn har överlappande mappningar till majs och lamm.\ncatalog:occurrence:333507\ncatalog:occurrence:333508"
-
-[[statement]]
-kind = "set"
-subject = "var:majs-lamm"
-fields = { "tags" = ["agriculture"] }
-evidence = "Samma källkolumn har överlappande mappningar till majs och lamm.\ncatalog:occurrence:333507\ncatalog:occurrence:333508"
 
 [[statement]]
 kind = "set"
@@ -3308,18 +3290,6 @@ kind = "set"
 subject = "var:regionkod"
 fields = { "tags" = ["geography"] }
 evidence = "Regionkoden anger sammansatt regional tillhörighet.\ncatalog:variable_text:35978:6940:8035"
-
-[[statement]]
-kind = "set"
-subject = "var:regionkod-ragvete"
-fields = { "sets" = ["regional-tillhorighet"] }
-evidence = "Regionkod och rågvete är olika begrepp på samma kolumn.\ncatalog:occurrence:332135\ncatalog:occurrence:332136"
-
-[[statement]]
-kind = "set"
-subject = "var:regionkod-ragvete"
-fields = { "tags" = ["geography"] }
-evidence = "Regionkod och rågvete är olika begrepp på samma kolumn.\ncatalog:occurrence:332135\ncatalog:occurrence:332136"
 
 [[statement]]
 kind = "set"
@@ -4721,12 +4691,6 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
-subject = "set:majsareal"
-fields = { "label" = "Majsareal" }
-evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:matpotatisareal"
 fields = { "label" = "Matpotatisareal" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
@@ -5195,12 +5159,6 @@ evidence = "#2102 same-label cluster 'Regionkod' (4 variables): judged different
 
 [[statement]]
 kind = "set"
-subject = "var:regionkod-ragvete"
-fields = { "label" = "Regionkod (ragvete)" }
-evidence = "#2102 same-label cluster 'Regionkod' (4 variables): judged different meaning, low confidence; region and Regkod are consecutive spellings; regkod2000 runs concurrently from 2007 and ragvete (2002-2003, uppdragsregistret) looks like a mis-mapped rågvete column; no text separates them, so both are qualified by code."
-
-[[statement]]
-kind = "set"
 subject = "var:regionkod-regkod"
 fields = { "label" = "Regionkod (Regkod)" }
 evidence = "#2102 same-label cluster 'Regionkod' (4 variables): judged different meaning, low confidence; region and Regkod are consecutive spellings; regkod2000 runs concurrently from 2007 and ragvete (2002-2003, uppdragsregistret) looks like a mis-mapped rågvete column; no text separates them, so both are qualified by code."
@@ -5558,3 +5516,9 @@ kind = "set"
 subject = "set:uppgiftskalla"
 fields = { "description" = "Den källa som lämnat eller bekräftat uppgifterna, angiven som den undersökning och det år uppgifterna kommer från; i en del årgångar anger den när företaget första gången förekommer i lantbruksregistret." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna anger uppgiftskälla; de två texterna går att förena som källa och år för uppgiften respektive företagets första förekomst.\ncatalog:variable_text:42707:12418:12784\ncatalog:variable_text:42707:16436:17167\ncatalog:variable_text:42707:17167:17532\ncatalog:variable_text:42747:16436:17167\ncatalog:variable_text:42747:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: betesmark @2011 where key = 'v77'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Uppdragsregistret 2011 (RegVerID 17593) documents column betesmark under VarId 77 \"Areal, betesmark\" (CVID 823151) and VarId 42304 \"Total betesmark (areal i ha)\" (CVID 823139). 77 is betesmark in 2002-2010 and 42304 in 2012-2019 (both again in 2021-2023, with 77 alone in 2020 and 2024-2025), so 2011 is the changeover to the new definition (\"Total areal av betesmark i ha inkl. ospecificerad betesmark\"). The source does not settle which for 2011; 42304 is the more plausible owner because 2011 is the first release that documents it and it then holds the column alone in 2012-2019 (maintainer 2026-11-14: place under the more plausible owner). The 77 row is withheld; 77 keeps betesmark in the other years."

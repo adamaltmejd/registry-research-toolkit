@@ -98,26 +98,8 @@ evidence = "Föräldraavgift ingår i kandidatgruppen.\ncatalog:variable_text:42
 [[statement]]
 kind = "set"
 subject = "var:fsg-annan-kommun"
-fields = { "sets" = ["forsaljning-av-utbildningsverksamhet"] }
-evidence = "Samma källkolumn överlappar med fsg-till-kommun; försäljningsbeloppet hör till kandidatgruppen.\ncatalog:occurrence:437301\ncatalog:occurrence:437302\ncatalog:variable_text:42004:15706:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:fsg-annan-kommun"
 fields = { "tags" = ["education", "public-finance"] }
 evidence = "Samma källkolumn överlappar med fsg-till-kommun; försäljningsbeloppet hör till kandidatgruppen.\ncatalog:occurrence:437301\ncatalog:occurrence:437302\ncatalog:variable_text:42004:15706:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:fsg-till-kommun"
-fields = { "sets" = ["forsaljning-av-utbildningsverksamhet"] }
-evidence = "Samma källkolumn överlappar med fsg-annan-kommun; försäljningsbeloppet hör till kandidatgruppen.\ncatalog:occurrence:437301\ncatalog:occurrence:437302\ncatalog:variable_text:42005:15706:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:fsg-till-kommun"
-fields = { "tags" = ["education", "public-finance"] }
-evidence = "Samma källkolumn överlappar med fsg-annan-kommun; försäljningsbeloppet hör till kandidatgruppen.\ncatalog:occurrence:437301\ncatalog:occurrence:437302\ncatalog:variable_text:42005:15706:16801"
 
 [[statement]]
 kind = "set"
@@ -250,18 +232,6 @@ kind = "set"
 subject = "var:kop-annan-kommun"
 fields = { "tags" = ["education", "public-finance"] }
 evidence = "Samma källkolumn överlappar med kop-fran-kommun; kostnaden ingår i kandidatgruppen.\ncatalog:occurrence:437317\ncatalog:occurrence:437318\ncatalog:variable_text:42017:15706:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:kop-fran-kommun"
-fields = { "sets" = ["kostnader-for-kop-av-utbildningsverksamhet"] }
-evidence = "Samma källkolumn överlappar med kop-annan-kommun; kostnaden ingår i kandidatgruppen.\ncatalog:occurrence:437317\ncatalog:occurrence:437318\ncatalog:variable_text:42018:15706:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:kop-fran-kommun"
-fields = { "tags" = ["education", "public-finance"] }
-evidence = "Samma källkolumn överlappar med kop-annan-kommun; kostnaden ingår i kandidatgruppen.\ncatalog:occurrence:437317\ncatalog:occurrence:437318\ncatalog:variable_text:42018:15706:16801"
 
 [[statement]]
 kind = "set"
@@ -488,26 +458,8 @@ evidence = "Kostnaden gäller specialskolans resurscentrum.\ncatalog:variable_te
 [[statement]]
 kind = "set"
 subject = "var:sarskoleform"
-fields = { "sets" = ["sarskoleform"] }
-evidence = "Kodningen ingår i kandidatgruppen.\ncatalog:variable_text:42039:15706:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:sarskoleform"
 fields = { "tags" = ["education"] }
 evidence = "Kodningen ingår i kandidatgruppen.\ncatalog:variable_text:42039:15706:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:sarskoleform-sform"
-fields = { "sets" = ["sarskoleform"] }
-evidence = "SForm överlappar med skolform; särskoleform ingår i kandidatgruppen.\ncatalog:occurrence:437336\ncatalog:occurrence:437338\ncatalog:variable_text:42040:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:sarskoleform-sform"
-fields = { "tags" = ["education"] }
-evidence = "SForm överlappar med skolform; särskoleform ingår i kandidatgruppen.\ncatalog:occurrence:437336\ncatalog:occurrence:437338\ncatalog:variable_text:42040:16436:16801"
 
 [[statement]]
 kind = "set"
@@ -703,12 +655,6 @@ evidence = "#2100 group name: slug words restored from catalog wording; kept on 
 
 [[statement]]
 kind = "set"
-subject = "set:forsaljning-av-utbildningsverksamhet"
-fields = { "label" = "Försäljning av utbildningsverksamhet" }
-evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:hemkommunskostnader"
 fields = { "label" = "Hemkommunskostnader" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
@@ -724,12 +670,6 @@ kind = "set"
 subject = "set:kostnader-for-kop-av-utbildningsverksamhet"
 fields = { "label" = "Kostnader för köp av utbildningsverksamhet" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:sarskoleform"
-fields = { "label" = "Särskoleform" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
 kind = "set"
@@ -781,6 +721,12 @@ evidence = "#2102 same-label cluster 'Särskoleform' (2 variables): held in #212
 
 [[statement]]
 kind = "set"
-subject = "var:sarskoleform-sform"
-fields = { "label" = "Särskoleform (SForm)" }
-evidence = "#2102 same-label cluster 'Särskoleform' (2 variables): held in #2127 as unclear or rename-or-different; re-judged against every occurrence's opdef, code list and table, column code where no source text separates the members; SarForm (2013-2016) and SForm (2015-2016) have identical definition and codes in one table and overlap in 2015; nothing separates them, so each keeps its spelling (SarForm/Sarform are one column)."
+subject = "kostnader-for-skolvasendet: FsgKom @2013..2015 where key = 'v30483'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Kostnader för skolväsendet 2013, 2014, 2015 (RegVerIDs 5516, 6190, 8744) document column FsgKom under VarId 14841 \"Försäljning av verksamhet till annan kommun\" and VarId 30483 \"Försäljning av verksamhet till kommun\". The source does not settle which; 14841 is the more plausible owner because the table's other municipality columns belong to the same 14xxx family (FsgKomElev (VarId 14842, Antal elever från annan kommun)) and this register's existing SkElev statement likewise keeps the 14xxx municipality-specific family and withholds the generic 30xxx variable (maintainer 2026-11-14: place under the more plausible owner). The 30483 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "kostnader-for-skolvasendet: KopKom @2013..2015 where key = 'v30481'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Kostnader för skolväsendet 2013, 2014, 2015 (RegVerIDs 5516, 6190, 8744) document column KopKom under VarId 14858 \"Kostnader för köp av verksamhet från annan kommun\" and VarId 30481 \"Kostnader för köp av verksamhet från kommun\". The source does not settle which; 14858 is the more plausible owner because the table's other municipality columns belong to the same 14xxx family (KopKomElev (VarId 14859, Antal elever i annan kommun)) and this register's existing SkElev statement likewise keeps the 14xxx municipality-specific family and withholds the generic 30xxx variable (maintainer 2026-11-14: place under the more plausible owner). The 30481 row is withheld."

@@ -1056,7 +1056,12 @@ pub fn variable_members(
     let resolved = crate::resolve(records, ledger, &BTreeMap::new(), assignments, &[])?;
     let mut variables: BTreeMap<String, BTreeSet<crate::OccurrenceKey>> = BTreeMap::new();
     let context = crate::OccurrenceContext::new(records);
-    for occurrence in &resolved.occurrences {
+    // A listing the neighbouring-owner rule shadowed is a duplicate, not a member:
+    // freezing it would read as a curated assignment and keep the rule from it.
+    for (i, occurrence) in resolved.occurrences.iter().enumerate() {
+        if resolved.duplicates.contains(&i) {
+            continue;
+        }
         if let Some(index) = occurrence.variable {
             let variable = &resolved.variables[index];
             if variable.pinned {
@@ -1749,12 +1754,13 @@ pub fn resolve(
                             "table and variable fields require an occurrence selector".into()
                         );
                     }
-                    if values.variable.is_some()
+                    // A gap marker can only be withheld, with the variable it documents.
+                    if values.variable.as_deref().is_some_and(|v| v != "none")
                         && matches
                             .iter()
                             .any(|m| view[m.source].text("spelling") == Some(""))
                     {
-                        return Err("set variable cannot target a gap marker".into());
+                        return Err("set variable on a gap marker can only be \"none\"".into());
                     }
                     if values.variable.as_deref().is_some_and(|v| v != "none")
                         && matches.iter().any(|m| view[m.source].period.is_none())

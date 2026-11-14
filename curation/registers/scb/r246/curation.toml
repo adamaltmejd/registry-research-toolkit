@@ -97,18 +97,6 @@ evidence = "B25 är en ogenomskinlig källkod; etiketten anger utbildningsnivå.
 
 [[statement]]
 kind = "set"
-subject = "var:bilforman"
-fields = { "sets" = [] }
-evidence = "B36 är samtidigt mappad till scb/ses/formaner.\ncatalog:occurrence:437090\ncatalog:occurrence:437091"
-
-[[statement]]
-kind = "set"
-subject = "var:bilforman"
-fields = { "tags" = ["income"] }
-evidence = "B36 är samtidigt mappad till scb/ses/formaner.\ncatalog:occurrence:437090\ncatalog:occurrence:437091"
-
-[[statement]]
-kind = "set"
 subject = "var:bonusar"
 fields = { "sets" = [] }
 evidence = "Bonusar är en lönekomponent.\ncatalog:variable_text:41918:13149:13514\ncatalog:variable_text:41924:13149:13514"
@@ -347,7 +335,6 @@ subject = "var:yrkesuppgift"
 fields = { "tags" = ["employment"] }
 evidence = "Yrkesklassificering hör till arbetsmarknad.\ncatalog:variable_text:41942:13149:13514"
 
-
 [[statement]]
 kind = "set"
 subject = "var:timlon"
@@ -389,3 +376,9 @@ kind = "set"
 subject = "var:tabell"
 fields = { "description" = "Indikator för om tabellen innehåller uppgifter om individer eller om företag och organisationer." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 skriver organisation i stället för företag.\ncatalog:variable_text:48740:11688:12053"
+
+[[statement]]
+kind = "set"
+subject = "individer-i-privat-sektor: B36 @2002 where key = 'v6087'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Individer i privat sektor 2002 (RegVerID 1542) documents column B36 under VarId 6087 \"Bilförmån\" and VarId 6091 \"Förmåner\". The source does not settle which; Förmåner (6091) is the more plausible owner because it is the total of taxable benefits other than cash pay, of which Bilförmån (6087) is one part, it is the only one of the two documented in the later Individer table (B412, a sub-item of Kontant bruttolön B41) and both have consecutive CVIDs 112334 and 112335 right after Kontant bruttolön (112333) (maintainer 2026-11-14: place under the more plausible owner). The 6087 row is withheld."

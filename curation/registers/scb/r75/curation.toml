@@ -193,18 +193,6 @@ evidence = "Ägarkategori beskriver fastighetens ägande.\ncatalog:valueset:1101
 
 [[statement]]
 kind = "set"
-subject = "var:andel-lokal-garageyta"
-fields = { "sets" = [] }
-evidence = "Andelen hör till byggnadsarea, men samma källkolumn är samtidigt mappad till totalarea.\ncatalog:occurrence:55258\ncatalog:occurrence:55259\ncatalog:variable_text:7443:12784:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-lokal-garageyta"
-fields = { "tags" = ["property"] }
-evidence = "Andelen hör till byggnadsarea, men samma källkolumn är samtidigt mappad till totalarea.\ncatalog:occurrence:55258\ncatalog:occurrence:55259\ncatalog:variable_text:7443:12784:14245"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-svarande-enheter"
 fields = { "sets" = [] }
 evidence = "Antalet svarande enheter är ett undersökningsmått.\ncatalog:variable_text:7444:12784:14245"
@@ -373,18 +361,6 @@ evidence = "Ej uthyrningsbar area ingår i kandidatgruppen för byggnadsarea.\nc
 
 [[statement]]
 kind = "set"
-subject = "var:elvvarme-inkl-varmvatten"
-fields = { "sets" = ["elanvandning"] }
-evidence = "Elvärme inklusive varmvatten hör till elanvändning, men ElTot är samtidigt mappad till total elanvändning.\ncatalog:occurrence:55272\ncatalog:occurrence:55273\ncatalog:variable_text:7460:12784:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:elvvarme-inkl-varmvatten"
-fields = { "tags" = ["energy"] }
-evidence = "Elvärme inklusive varmvatten hör till elanvändning, men ElTot är samtidigt mappad till total elanvändning.\ncatalog:occurrence:55272\ncatalog:occurrence:55273\ncatalog:variable_text:7460:12784:14245"
-
-[[statement]]
-kind = "set"
 subject = "var:enkall"
 fields = { "sets" = [] }
 evidence = "Uppgiften gäller kallhyra eller att uppgift inte kan lämnas.\ncatalog:variable_text:7461:12784:14245"
@@ -418,18 +394,6 @@ kind = "set"
 subject = "var:fastspec"
 fields = { "tags" = ["property"] }
 evidence = "Fastighetspecifikation beskriver fastigheten.\ncatalog:variable_text:7465:13514:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:forsamling"
-fields = { "sets" = [] }
-evidence = "Lkf är samtidigt mappad till församling, kommun och län.\ncatalog:occurrence:55304\ncatalog:occurrence:55305\ncatalog:occurrence:55306\ncatalog:variable_text:7466:12784:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:forsamling"
-fields = { "tags" = ["geography"] }
-evidence = "Lkf är samtidigt mappad till församling, kommun och län.\ncatalog:occurrence:55304\ncatalog:occurrence:55305\ncatalog:occurrence:55306\ncatalog:variable_text:7466:12784:13514"
 
 [[statement]]
 kind = "set"
@@ -577,18 +541,6 @@ evidence = "Uppgiften beskriver lokalernas placering i köpcentrum.\ncatalog:var
 
 [[statement]]
 kind = "set"
-subject = "var:lan"
-fields = { "sets" = [] }
-evidence = "Lkf är samtidigt mappad till län, församling och kommun.\ncatalog:occurrence:55304\ncatalog:occurrence:55305\ncatalog:occurrence:55306\ncatalog:variable_text:7481:12784:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:lan"
-fields = { "tags" = ["geography"] }
-evidence = "Lkf är samtidigt mappad till län, församling och kommun.\ncatalog:occurrence:55304\ncatalog:occurrence:55305\ncatalog:occurrence:55306\ncatalog:variable_text:7481:12784:13514"
-
-[[statement]]
-kind = "set"
 subject = "var:samtax"
 fields = { "sets" = [] }
 evidence = "Samtaxering gäller fastighetstaxering.\ncatalog:variable_text:7482:12784:14245"
@@ -634,12 +586,6 @@ kind = "set"
 subject = "var:stratum"
 fields = { "tags" = ["methods"] }
 evidence = "Stratum beskriver undersökningens urval.\ncatalog:variable_text:7485:12784:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:total-elanvandning"
-fields = { "sets" = ["elanvandning"] }
-evidence = "Total elanvändning hör till elanvändning, men ElTot är samtidigt mappad till elvärme inklusive varmvatten.\ncatalog:occurrence:55272\ncatalog:occurrence:55273\ncatalog:variable_text:7487:12784:14245"
 
 [[statement]]
 kind = "set"
@@ -847,12 +793,6 @@ evidence = "#2100 group name: slug words restored from the member and register l
 
 [[statement]]
 kind = "set"
-subject = "set:elanvandning"
-fields = { "label" = "Elanvändning" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:energibesparande-atgarder"
 fields = { "label" = "Energibesparande åtgärder" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
@@ -952,3 +892,15 @@ kind = "set"
 subject = "energistatistik-for-flerbostadshus: VpUteEff where key = 'v19579' and release = 'r2753'"
 fields = { "unit" = "Kilowatt" }
 evidence = "Definitionen anger kW; en effekt anges inte i kilowattimmar.\nold unit: 'Kilowattimmar'; Registerinformation.csv:row=293012 (r2753)"
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-flerbostadshus: Area @2005..2008 where key = 'v7876'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Energistatistik för flerbostadshus versions 2005-2008 (RegVerIDs 282, 2120, 2121, 2753) documents column Area under VarId 8034 \"Totalarea\" and VarId 7876 \"Andel lokal- och garageyta\". The column name Area matches \"Totalarea\" (total of residential, garage and commercial area), while VarId 7876 is a derived percentage share \"Andel lokal- och garageyta\" that no other column name fits; the VarId 7876 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-flerbostadshus: ElTot @2005..2008 where key = 'v7891'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Energistatistik för flerbostadshus versions 2005-2008 (RegVerIDs 282, 2120, 2121, 2753) documents column ElTot under VarId 7748 \"Total elanvändning\" and VarId 7891 \"Elvvärme för upppvärmning/inkl.varmvatten\". The column name ElTot is \"Total elanvändning\", VarId 7748; VarId 7891 is electric heating only (El för uppvärmning inkl. varmvatten) and is a component of the total; the VarId 7891 row is withheld."

@@ -1833,18 +1833,6 @@ evidence = "Samma källkolumn är samtidigt kopplad till ensamhushall.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:ensamhushall"
-fields = { "sets" = ["hushallsstorlek"] }
-evidence = "Samma källkolumn är samtidigt kopplad till ensam-vid-aktiviteten.\ncatalog:occurrence:466012\ncatalog:occurrence:466013\ncatalog:occurrence:466237\ncatalog:occurrence:466238"
-
-[[statement]]
-kind = "set"
-subject = "var:ensamhushall"
-fields = { "tags" = ["family-household"] }
-evidence = "Samma källkolumn är samtidigt kopplad till ensam-vid-aktiviteten.\ncatalog:occurrence:466012\ncatalog:occurrence:466013\ncatalog:occurrence:466237\ncatalog:occurrence:466238"
-
-[[statement]]
-kind = "set"
 subject = "var:halsoproblem"
 fields = { "sets" = [] }
 evidence = "Id:t är en frågekod.\ncatalog:variable_text:45277:18628:18993"
@@ -3642,18 +3630,6 @@ kind = "set"
 subject = "var:idrott-och-friluftsliv-totalt"
 fields = { "tags" = ["culture"] }
 evidence = "Total tid för idrott och friluftsliv hör ihop med dess komponenter.\ncatalog:variable_text:45448:14791:15156"
-
-[[statement]]
-kind = "set"
-subject = "var:individvikt"
-fields = { "sets" = ["statistisk-vikt"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:466681\ncatalog:occurrence:466682"
-
-[[statement]]
-kind = "set"
-subject = "var:individvikt"
-fields = { "tags" = ["methods"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:466681\ncatalog:occurrence:466682"
 
 [[statement]]
 kind = "set"

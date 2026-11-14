@@ -2927,3 +2927,15 @@ kind = "set"
 subject = "var:viss-hogskola-utbildning"
 fields = { "description" = "Om eleven tycker att det är viktigast att gå på ett visst universitet eller en viss högskola eller att gå en viss utbildning." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga med olika frågenummer; vissa år har bara etiketten. Raderna 887209 och 953933 (F15 läsåret 2019/2020) hör till andra frågor (viktigaste anledningen till önskat lärosäte respektive till att läsa på högskola) och utelämnas.\ncatalog:variable_text:30483:12234:12600\ncatalog:variable_text:30483:12965:13330\ncatalog:variable_text:30483:15887:16252\ncatalog:variable_text:30483:16617:16983\ncatalog:variable_text:30483:17348:17713\nRegisterinformation.csv:row=276921\nRegisterinformation.csv:row=886764\nRegisterinformation.csv:row=887113\nRegisterinformation.csv:row=572897"
+
+[[statement]]
+kind = "set"
+subject = "gymnasieungdomars-studieintresse: F15 @2019-07-01..2020-06-30 where key = 'v14717'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Gymnasieungdomars studieintresse Läsåret 2019/2020 (RegVerID 14259) documents column F15 under VarId 14717 \"Viktigaste anledningen till att läsa på universitet/högskola\" and VarId 27256 \"Viktigaste anledningen till önskat lärosäte?\". The operational definition of 27256 is \"F15: Vilket av alternativen i fråga 14 är den viktigaste orsaken?\" and fråga 14 is the F14 and F14_01-F14_07 block (Orsak till att läsa vid ett visst universitet); the operational definition of 14717 names \"F21\" and \"fråga 20\", a numbering that is not this year's (F21 is Studiemedel från CSN here). The 14717 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieungdomars-studieintresse: F2_09 @2019-07-01..2020-06-30 where key = 'v27222'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Gymnasieungdomars studieintresse Läsåret 2019/2020 (RegVerID 14259) documents column F2_09 under VarId 40274 \"Orsak till ointresse för högskolestudier - Studielån\" and VarId 27222 \"Orsak till ointresse för högskolestudier - Annat\". The operational definition of 40274 starts \"F2_09:\", while that of 27222 \"Annat\" is \"F2_10: Vad beror det på att du inte planerar att läsa på universitet/högskola ... Annat.\"; F2_10 is the \"Annat\" item this year. The 27222 row is withheld."

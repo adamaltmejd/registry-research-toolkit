@@ -296,7 +296,7 @@ evidence = "Anskaffningsvärdet är en namngiven lagervärderingskomponent.\ncat
 [[statement]]
 kind = "set"
 subject = "var:antal-anstallda-pa-verksamhetsenheten-aktanst"
-fields = { "sets" = ["antal-anstallda"] }
+fields = { "sets" = [] }
 evidence = "Variabeln mäter antal anställda på verksamhetsenheten.\ncatalog:variable_text:34775:10227:16436"
 
 [[statement]]
@@ -304,18 +304,6 @@ kind = "set"
 subject = "var:antal-anstallda-pa-verksamhetsenheten-aktanst"
 fields = { "tags" = ["employment"] }
 evidence = "Variabeln mäter antal anställda på verksamhetsenheten.\ncatalog:variable_text:34775:10227:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-anstallda-pa-verksamhetsenheten-al2undeju"
-fields = { "sets" = ["antal-anstallda"] }
-evidence = "Katalogen anger överlappande mappningar; etiketten anger antal anställda.\ncatalog:occurrence:316036\ncatalog:occurrence:316051\ncatalog:variable_text:34776:14245:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-anstallda-pa-verksamhetsenheten-al2undeju"
-fields = { "tags" = ["employment"] }
-evidence = "Katalogen anger överlappande mappningar; etiketten anger antal anställda.\ncatalog:occurrence:316036\ncatalog:occurrence:316051\ncatalog:variable_text:34776:14245:14975"
 
 [[statement]]
 kind = "set"
@@ -388,18 +376,6 @@ kind = "set"
 subject = "var:branschgrupp-aktbr92"
 fields = { "tags" = ["business"] }
 evidence = "Variabeln grupperar branscher.\ncatalog:variable_text:34786:10227:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:branschgrupp-al2undeju"
-fields = { "sets" = ["naringsgren"] }
-evidence = "Katalogen anger överlappande mappningar; variabeln grupperar branscher.\ncatalog:occurrence:316039\ncatalog:occurrence:316051\ncatalog:variable_text:34787:14245:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:branschgrupp-al2undeju"
-fields = { "tags" = ["business"] }
-evidence = "Katalogen anger överlappande mappningar; variabeln grupperar branscher.\ncatalog:occurrence:316039\ncatalog:occurrence:316051\ncatalog:variable_text:34787:14245:14975"
 
 [[statement]]
 kind = "set"
@@ -571,30 +547,6 @@ evidence = "Katalogen anger en angränsande mappning med annan benämning.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:leveranser-exportmarknad-al3undeju"
-fields = { "sets" = ["leveransvarde"] }
-evidence = "Katalogen anger överlappande mappningar; etiketten anger exportleveranser.\ncatalog:occurrence:315891\ncatalog:occurrence:315895\ncatalog:variable_text:34806:14245:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:leveranser-exportmarknad-al3undeju"
-fields = { "tags" = ["business", "trade"] }
-evidence = "Katalogen anger överlappande mappningar; etiketten anger exportleveranser.\ncatalog:occurrence:315891\ncatalog:occurrence:315895\ncatalog:variable_text:34806:14245:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:leveranser-exportmarknad-centraldamms"
-fields = { "sets" = ["leveransvarde"] }
-evidence = "Samma källkolumn är samtidigt mappad till olika marknader.\ncatalog:occurrence:316194\ncatalog:occurrence:316195"
-
-[[statement]]
-kind = "set"
-subject = "var:leveranser-exportmarknad-centraldamms"
-fields = { "tags" = ["business", "trade"] }
-evidence = "Samma källkolumn är samtidigt mappad till olika marknader.\ncatalog:occurrence:316194\ncatalog:occurrence:316195"
-
-[[statement]]
-kind = "set"
 subject = "var:leveranser-exportmarknad-leve"
 fields = { "sets" = ["leveransvarde"] }
 evidence = "Katalogen anger en angränsande mappning med annan benämning.\ncatalog:occurrence:316230\ncatalog:occurrence:316238\ncatalog:variable_text:34805:16071:16436\ncatalog:variable_text:34808:14975:16071"
@@ -604,18 +556,6 @@ kind = "set"
 subject = "var:leveranser-exportmarknad-leve"
 fields = { "tags" = ["business", "trade"] }
 evidence = "Katalogen anger en angränsande mappning med annan benämning.\ncatalog:occurrence:316230\ncatalog:occurrence:316238\ncatalog:variable_text:34805:16071:16436\ncatalog:variable_text:34808:14975:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:leveranser-hemmamarknad-al3undeju"
-fields = { "sets" = ["leveransvarde"] }
-evidence = "Katalogen anger överlappande mappningar; etiketten anger hemmamarknadsleveranser.\ncatalog:occurrence:315895\ncatalog:occurrence:315897\ncatalog:variable_text:34809:14245:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:leveranser-hemmamarknad-al3undeju"
-fields = { "tags" = ["business"] }
-evidence = "Katalogen anger överlappande mappningar; etiketten anger hemmamarknadsleveranser.\ncatalog:occurrence:315895\ncatalog:occurrence:315897\ncatalog:variable_text:34809:14245:14975"
 
 [[statement]]
 kind = "set"
@@ -902,7 +842,7 @@ evidence = "Katalogen anger överlappande mappningar; variabeln mäter totala le
 [[statement]]
 kind = "set"
 subject = "var:uar"
-fields = { "sets" = ["urvalsar"] }
+fields = { "sets" = [] }
 evidence = "U är en enskild bokstavskod för urval.\ncatalog:variable_text:34846:10227:16436"
 
 [[statement]]
@@ -925,18 +865,6 @@ evidence = "Variabeln är en statistisk uppräkningsfaktor.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:upprakningstal-al2undu"
-fields = { "sets" = ["upprakningsfaktor"] }
-evidence = "Katalogen anger överlappande mappningar; etiketten anger uppräkningstal.\ncatalog:occurrence:316059\ncatalog:occurrence:316060\ncatalog:variable_text:34848:14245:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:upprakningstal-al2undu"
-fields = { "tags" = ["methods"] }
-evidence = "Katalogen anger överlappande mappningar; etiketten anger uppräkningstal.\ncatalog:occurrence:316059\ncatalog:occurrence:316060\ncatalog:variable_text:34848:14245:14975"
-
-[[statement]]
-kind = "set"
 subject = "var:upprakningstal-ufakt"
 fields = { "sets" = ["upprakningsfaktor"] }
 evidence = "Variabeln är ett statistiskt uppräkningstal.\ncatalog:variable_text:34849:10227:16436"
@@ -946,48 +874,6 @@ kind = "set"
 subject = "var:upprakningstal-ufakt"
 fields = { "tags" = ["methods"] }
 evidence = "Variabeln är ett statistiskt uppräkningstal.\ncatalog:variable_text:34849:10227:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:urvalsar-al2undeju"
-fields = { "sets" = ["urvalsar"] }
-evidence = "Katalogen anger överlappande mappningar; etiketten anger urvalsår.\ncatalog:occurrence:316038\ncatalog:occurrence:316051\ncatalog:variable_text:34850:14245:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:urvalsar-al2undeju"
-fields = { "tags" = [] }
-evidence = "Katalogen anger överlappande mappningar; etiketten anger urvalsår.\ncatalog:occurrence:316038\ncatalog:occurrence:316051\ncatalog:variable_text:34850:14245:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:urvalsar-al2undu"
-fields = { "sets" = ["urvalsar"] }
-evidence = "Katalogen anger överlappande mappningar; etiketten anger urvalsår.\ncatalog:occurrence:316056\ncatalog:occurrence:316060\ncatalog:variable_text:34851:14245:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:urvalsar-al2undu"
-fields = { "tags" = [] }
-evidence = "Katalogen anger överlappande mappningar; etiketten anger urvalsår.\ncatalog:occurrence:316056\ncatalog:occurrence:316060\ncatalog:variable_text:34851:14245:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:urvalsar-al3undeju"
-fields = { "sets" = ["urvalsar"] }
-evidence = "Katalogen anger överlappande mappningar; etiketten anger urvalsår.\ncatalog:occurrence:315894\ncatalog:occurrence:315908\ncatalog:variable_text:34852:14245:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:urvalsar-al3undeju"
-fields = { "tags" = [] }
-evidence = "Katalogen anger överlappande mappningar; etiketten anger urvalsår.\ncatalog:occurrence:315894\ncatalog:occurrence:315908\ncatalog:variable_text:34852:14245:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:urvalsstorlek-al2undu"
-fields = { "tags" = ["methods"] }
-evidence = "Katalogen anger överlappande mappningar och värdemängden avviker från definitionen.\ncatalog:occurrence:316060\ncatalog:occurrence:316061\ncatalog:valueset:10750\ncatalog:variable_text:34853:14245:14975"
 
 [[statement]]
 kind = "set"
@@ -1031,21 +917,9 @@ evidence = "r50 defines LillaN as the number of selected companies in the curren
 
 [[statement]]
 kind = "set"
-subject = "var:urvalsstorlek-al2undu"
-fields = { "sets" = ["urvalsstorlek"] }
-evidence = "r51 defines the number of sampled objects; r45 specifies SCB's coordinated sample size. These support the fixed inclusion, despite the conflicting employee-class codes in r49.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:34726\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:316061\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10750\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:34853"
-
-[[statement]]
-kind = "set"
 subject = "var:urvalsstorlek-samustkl"
 fields = { "sets" = ["urvalsstorlek"] }
 evidence = "r52 defines the number of sampled objects; r4 specifies SCB's coordinated sample size. These support the fixed inclusion, despite the conflicting employee-class codes in r49.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:34727\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:315146\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:10750\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:34854"
-
-[[statement]]
-kind = "set"
-subject = "set:antal-anstallda"
-fields = { "label" = "Antal anställda" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
 kind = "set"
@@ -1087,12 +961,6 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 kind = "set"
 subject = "set:upprakningsfaktor"
 fields = { "label" = "Uppräkningsfaktor" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:urvalsar"
-fields = { "label" = "Urvalsår" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]
@@ -1145,20 +1013,8 @@ evidence = "#2102 same-label cluster 'Antal anställda på verksamhetsenheten' (
 
 [[statement]]
 kind = "set"
-subject = "var:antal-anstallda-pa-verksamhetsenheten-al2undeju"
-fields = { "label" = "Antal anställda på verksamhetsenheten (AL2UndEjU)" }
-evidence = "#2102 same-label cluster 'Antal anställda på verksamhetsenheten' (2 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; AktAnst and AL2UndEjU share definition and are concurrent; nothing in the text tells them apart, so code qualifies the second."
-
-[[statement]]
-kind = "set"
 subject = "var:branschgrupp-aktbr92"
 fields = { "label" = "Branschgrupp (AktBr92)" }
-evidence = "#2102 same-label cluster 'Branschgrupp' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; No text names the classification version; the 53-code (AktBr92), 45-code (AktBr07) and five-digit (BGrupp) lists differ, and AL2UndEjU's 2009-2011 list equals AktBr07's, so SNI-version qualifiers are dropped for codes."
-
-[[statement]]
-kind = "set"
-subject = "var:branschgrupp-al2undeju"
-fields = { "label" = "Branschgrupp (AL2UndEjU)" }
 evidence = "#2102 same-label cluster 'Branschgrupp' (4 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; No text names the classification version; the 53-code (AktBr92), 45-code (AktBr07) and five-digit (BGrupp) lists differ, and AL2UndEjU's 2009-2011 list equals AktBr07's, so SNI-version qualifiers are dropped for codes."
 
 [[statement]]
@@ -1205,12 +1061,6 @@ evidence = "Värdemängd 3620 (1998-2011); definitionen \"godkända blankettuppg
 
 [[statement]]
 kind = "set"
-subject = "var:urvalsstorlek-al2undu"
-fields = { "description" = "Anställdaklass för företagsenheten i SCB:s samordnade urvalssystem; kodlistan anger storleksklasserna." }
-evidence = "Värdemängden består av anställdaklasser; definitionen anger urvalsstorlek.\n0.74.0 catalog, key v5181, releases r2847, r2848, r3255, r390...; reg_meta.db:occurrence:316301,316340,316130"
-
-[[statement]]
-kind = "set"
 subject = "var:urvalsstorlek-samustkl"
 fields = { "description" = "Anställdaklass för företagsenheten i SCB:s samordnade urvalssystem; kodlistan anger storleksklasserna." }
 evidence = "Värdemängden består av anställdaklasser; definitionen anger urvalsstorlek.\n0.74.0 catalog, key v5181, releases r14985, r14986, r3591, r3592...; reg_meta.db:occurrence:315386,315905,315409"
@@ -1244,3 +1094,291 @@ kind = "set"
 subject = "table:industrins-leverans-orderlage"
 fields = { series_break = { at = "2009-05", text = "Införande av SNI 2007 skedde i maj 2009. Branscherna för återvinning (SNI 37) och förlag (221) ingår från och med maj 2009 inte längre i undersökningen. Dessa branscher utgör endast en mindre del av hela industrin vilket innebär att tidsseriebrottet är relativt obetydligt. \nVissa metodförändringar har också genomförts vilket endast har inneburit marginell påverkan för tidsserierna." } }
 evidence = "current-scb-inputs.zip/Timeseries.csv row=102\n\nRegisterVariant 370 resolves to this table. Same text as rows 13/31; \"maj 2009\"."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL2UndEjU @2009..2010 where key = 'v2642'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL2UndEjU under 7 VarIds, among them VarId 2642 \"Antal anställda på verksamhetsenheten (AL2UndEjU)\" and VarId 4027 \"Näringsgren (AL2UndEjU)\". The source does not settle which; VarId 4027 is the more plausible owner because this register's curation already types AL2UndEjU as SNI 2007 through VarId 4027 \"Näringsgren\" (the classification statements on al2undeju where key = 'v4027'), so earlier curation treated v4027 as the column's content (maintainer 2026-11-14: place under the more plausible owner). The 2642 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL2UndEjU @2009..2010 where key = 'v73'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL2UndEjU under 7 VarIds, among them VarId 73 \"År\" and VarId 4027 \"Näringsgren (AL2UndEjU)\". The source does not settle which; VarId 4027 is the more plausible owner because this register's curation already types AL2UndEjU as SNI 2007 through VarId 4027 \"Näringsgren\" (the classification statements on al2undeju where key = 'v4027'), so earlier curation treated v4027 as the column's content (maintainer 2026-11-14: place under the more plausible owner). The 73 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL2UndEjU @2009..2010 where key = 'v3310'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL2UndEjU under 7 VarIds, among them VarId 3310 \"Branschgrupp (AL2UndEjU)\" and VarId 4027 \"Näringsgren (AL2UndEjU)\". The source does not settle which; VarId 4027 is the more plausible owner because this register's curation already types AL2UndEjU as SNI 2007 through VarId 4027 \"Näringsgren\" (the classification statements on al2undeju where key = 'v4027'), so earlier curation treated v4027 as the column's content (maintainer 2026-11-14: place under the more plausible owner). The 3310 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL2UndEjU @2009..2010 where key = 'v50'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL2UndEjU under 7 VarIds, among them VarId 50 \"Månad\" and VarId 4027 \"Näringsgren (AL2UndEjU)\". The source does not settle which; VarId 4027 is the more plausible owner because this register's curation already types AL2UndEjU as SNI 2007 through VarId 4027 \"Näringsgren\" (the classification statements on al2undeju where key = 'v4027'), so earlier curation treated v4027 as the column's content (maintainer 2026-11-14: place under the more plausible owner). The 50 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL2UndEjU @2009..2010 where key = 'v2918'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL2UndEjU under 7 VarIds, among them VarId 2918 \"Observationsnummer\" and VarId 4027 \"Näringsgren (AL2UndEjU)\". The source does not settle which; VarId 4027 is the more plausible owner because this register's curation already types AL2UndEjU as SNI 2007 through VarId 4027 \"Näringsgren\" (the classification statements on al2undeju where key = 'v4027'), so earlier curation treated v4027 as the column's content (maintainer 2026-11-14: place under the more plausible owner). The 2918 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL2UndEjU @2009..2010 where key = 'v2921'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL2UndEjU under 7 VarIds, among them VarId 2921 \"Urvalsår\" and VarId 4027 \"Näringsgren (AL2UndEjU)\". The source does not settle which; VarId 4027 is the more plausible owner because this register's curation already types AL2UndEjU as SNI 2007 through VarId 4027 \"Näringsgren\" (the classification statements on al2undeju where key = 'v4027'), so earlier curation treated v4027 as the column's content (maintainer 2026-11-14: place under the more plausible owner). The 2921 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL2UndU @2009..2010 where key = 'v5179'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL2UndU under 8 VarIds, among them VarId 5179 \"Aktivt organisationsnummer\" and VarId 3578 \"Organisationsnummer 12 siffror\". The source does not settle which; VarId 3578 is the more plausible owner because AL2UndU is the sample-frame data set (organisation number, sample size, raising factor), not one column, and no claimant carries its name; VarId 3578 \"Organisationsnummer 12 siffror\" identifies the unit that data set describes (maintainer 2026-11-14: place under the more plausible owner). The 5179 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL2UndU @2009..2010 where key = 'v2923'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL2UndU under 8 VarIds, among them VarId 2923 \"Ändrad\" and VarId 3578 \"Organisationsnummer 12 siffror\". The source does not settle which; VarId 3578 is the more plausible owner because AL2UndU is the sample-frame data set (organisation number, sample size, raising factor), not one column, and no claimant carries its name; VarId 3578 \"Organisationsnummer 12 siffror\" identifies the unit that data set describes (maintainer 2026-11-14: place under the more plausible owner). The 2923 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL2UndU @2009..2010 where key = 'v2918'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL2UndU under 8 VarIds, among them VarId 2918 \"Observationsnummer\" and VarId 3578 \"Organisationsnummer 12 siffror\". The source does not settle which; VarId 3578 is the more plausible owner because AL2UndU is the sample-frame data set (organisation number, sample size, raising factor), not one column, and no claimant carries its name; VarId 3578 \"Organisationsnummer 12 siffror\" identifies the unit that data set describes (maintainer 2026-11-14: place under the more plausible owner). The 2918 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL2UndU @2009..2010 where key = 'v466'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL2UndU under 8 VarIds, among them VarId 466 \"Uppräkningstal\" and VarId 3578 \"Organisationsnummer 12 siffror\". The source does not settle which; VarId 3578 is the more plausible owner because AL2UndU is the sample-frame data set (organisation number, sample size, raising factor), not one column, and no claimant carries its name; VarId 3578 \"Organisationsnummer 12 siffror\" identifies the unit that data set describes (maintainer 2026-11-14: place under the more plausible owner). The 466 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL2UndU @2009..2010 where key = 'v2921'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL2UndU under 8 VarIds, among them VarId 2921 \"Urvalsår\" and VarId 3578 \"Organisationsnummer 12 siffror\". The source does not settle which; VarId 3578 is the more plausible owner because AL2UndU is the sample-frame data set (organisation number, sample size, raising factor), not one column, and no claimant carries its name; VarId 3578 \"Organisationsnummer 12 siffror\" identifies the unit that data set describes (maintainer 2026-11-14: place under the more plausible owner). The 2921 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL2UndU @2009..2010 where key = 'v5181'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL2UndU under 8 VarIds, among them VarId 5181 \"Urvalsstorlek\" and VarId 3578 \"Organisationsnummer 12 siffror\". The source does not settle which; VarId 3578 is the more plausible owner because AL2UndU is the sample-frame data set (organisation number, sample size, raising factor), not one column, and no claimant carries its name; VarId 3578 \"Organisationsnummer 12 siffror\" identifies the unit that data set describes (maintainer 2026-11-14: place under the more plausible owner). The 5181 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL2UndU @2009..2010 where key = 'v1454'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL2UndU under 8 VarIds, among them VarId 1454 \"Verksamhetsenhetens identitetsnummer\" and VarId 3578 \"Organisationsnummer 12 siffror\". The source does not settle which; VarId 3578 is the more plausible owner because AL2UndU is the sample-frame data set (organisation number, sample size, raising factor), not one column, and no claimant carries its name; VarId 3578 \"Organisationsnummer 12 siffror\" identifies the unit that data set describes (maintainer 2026-11-14: place under the more plausible owner). The 1454 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v2923'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 2923 \"Ändrad\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 2923 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v865'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 865 \"Användaridentitet, uppgiftsnotering\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 865 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v73'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 73 \"År\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 73 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v2952'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 2952 \"Från- och meddatum\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 2952 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v2916'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 2916 \"Granskning\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 2916 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v14636'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 14636 \"Leveranser exportmarknad\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 14636 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v2953'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 2953 \"Leveranser hemmamarknad\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 2953 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v2954'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 2954 \"Leveranser mellan observationsenheter inom den egna juridiska enheten\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 2954 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v50'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 50 \"Månad\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 50 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v2918'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 2918 \"Observationsnummer\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 2918 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v2956'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 2956 \"Orderingång från exportmarknaden\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 2956 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v2957'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 2957 \"Orderingång från hemmamarknaden\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 2957 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v2962'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 2962 \"Tilldatum\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 2962 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v2958'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 2958 \"Total orderingång\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 2958 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v2921'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 2921 \"Urvalsår\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 2921 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industriproduktionsindex: AL2UndEjU @1998..1999 where key = 'v2642'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industriproduktionsindex, versions 1999, 1998 (RegVerID 391, 4855), documents column AL2UndEjU under 7 VarIds, among them VarId 2642 \"Antal anställda på verksamhetsenheten (AL2UndEjU)\" and VarId 4027 \"Näringsgren (AL2UndEjU)\". The source does not settle which; VarId 4027 is the more plausible owner because this register's curation already types AL2UndEjU as SNI 2007 through VarId 4027 \"Näringsgren\" (the classification statements on al2undeju where key = 'v4027'), so earlier curation treated v4027 as the column's content (maintainer 2026-11-14: place under the more plausible owner). The 2642 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industriproduktionsindex: AL2UndEjU @1998..1999 where key = 'v73'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industriproduktionsindex, versions 1999, 1998 (RegVerID 391, 4855), documents column AL2UndEjU under 7 VarIds, among them VarId 73 \"År\" and VarId 4027 \"Näringsgren (AL2UndEjU)\". The source does not settle which; VarId 4027 is the more plausible owner because this register's curation already types AL2UndEjU as SNI 2007 through VarId 4027 \"Näringsgren\" (the classification statements on al2undeju where key = 'v4027'), so earlier curation treated v4027 as the column's content (maintainer 2026-11-14: place under the more plausible owner). The 73 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industriproduktionsindex: AL2UndEjU @1998..1999 where key = 'v3310'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industriproduktionsindex, versions 1999, 1998 (RegVerID 391, 4855), documents column AL2UndEjU under 7 VarIds, among them VarId 3310 \"Branschgrupp (AL2UndEjU)\" and VarId 4027 \"Näringsgren (AL2UndEjU)\". The source does not settle which; VarId 4027 is the more plausible owner because this register's curation already types AL2UndEjU as SNI 2007 through VarId 4027 \"Näringsgren\" (the classification statements on al2undeju where key = 'v4027'), so earlier curation treated v4027 as the column's content (maintainer 2026-11-14: place under the more plausible owner). The 3310 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industriproduktionsindex: AL2UndEjU @1998..1999 where key = 'v50'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industriproduktionsindex, versions 1999, 1998 (RegVerID 391, 4855), documents column AL2UndEjU under 7 VarIds, among them VarId 50 \"Månad\" and VarId 4027 \"Näringsgren (AL2UndEjU)\". The source does not settle which; VarId 4027 is the more plausible owner because this register's curation already types AL2UndEjU as SNI 2007 through VarId 4027 \"Näringsgren\" (the classification statements on al2undeju where key = 'v4027'), so earlier curation treated v4027 as the column's content (maintainer 2026-11-14: place under the more plausible owner). The 50 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industriproduktionsindex: AL2UndEjU @1998..1999 where key = 'v2918'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industriproduktionsindex, versions 1999, 1998 (RegVerID 391, 4855), documents column AL2UndEjU under 7 VarIds, among them VarId 2918 \"Observationsnummer\" and VarId 4027 \"Näringsgren (AL2UndEjU)\". The source does not settle which; VarId 4027 is the more plausible owner because this register's curation already types AL2UndEjU as SNI 2007 through VarId 4027 \"Näringsgren\" (the classification statements on al2undeju where key = 'v4027'), so earlier curation treated v4027 as the column's content (maintainer 2026-11-14: place under the more plausible owner). The 2918 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industriproduktionsindex: AL2UndEjU @1998..1999 where key = 'v2921'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industriproduktionsindex, versions 1999, 1998 (RegVerID 391, 4855), documents column AL2UndEjU under 7 VarIds, among them VarId 2921 \"Urvalsår\" and VarId 4027 \"Näringsgren (AL2UndEjU)\". The source does not settle which; VarId 4027 is the more plausible owner because this register's curation already types AL2UndEjU as SNI 2007 through VarId 4027 \"Näringsgren\" (the classification statements on al2undeju where key = 'v4027'), so earlier curation treated v4027 as the column's content (maintainer 2026-11-14: place under the more plausible owner). The 2921 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industriproduktionsindex: AL2UndEjU @2009..2010 where key = 'v2642'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industriproduktionsindex, versions 2010, 2009 (RegVerID 2847, 2848), documents column AL2UndEjU under 5 VarIds, among them VarId 2642 \"Antal anställda på verksamhetsenheten (AL2UndEjU)\" and VarId 4027 \"Näringsgren (AL2UndEjU)\". The source does not settle which; VarId 4027 is the more plausible owner because this register's curation already types AL2UndEjU as SNI 2007 through VarId 4027 \"Näringsgren\" (the classification statements on al2undeju where key = 'v4027'), so earlier curation treated v4027 as the column's content (maintainer 2026-11-14: place under the more plausible owner). The 2642 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industriproduktionsindex: AL2UndEjU @2009..2010 where key = 'v73'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industriproduktionsindex, versions 2010, 2009 (RegVerID 2847, 2848), documents column AL2UndEjU under 5 VarIds, among them VarId 73 \"År\" and VarId 4027 \"Näringsgren (AL2UndEjU)\". The source does not settle which; VarId 4027 is the more plausible owner because this register's curation already types AL2UndEjU as SNI 2007 through VarId 4027 \"Näringsgren\" (the classification statements on al2undeju where key = 'v4027'), so earlier curation treated v4027 as the column's content (maintainer 2026-11-14: place under the more plausible owner). The 73 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industriproduktionsindex: AL2UndEjU @2009..2010 where key = 'v3310'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industriproduktionsindex, versions 2010, 2009 (RegVerID 2847, 2848), documents column AL2UndEjU under 5 VarIds, among them VarId 3310 \"Branschgrupp (AL2UndEjU)\" and VarId 4027 \"Näringsgren (AL2UndEjU)\". The source does not settle which; VarId 4027 is the more plausible owner because this register's curation already types AL2UndEjU as SNI 2007 through VarId 4027 \"Näringsgren\" (the classification statements on al2undeju where key = 'v4027'), so earlier curation treated v4027 as the column's content (maintainer 2026-11-14: place under the more plausible owner). The 3310 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industriproduktionsindex: AL2UndEjU @2009..2010 where key = 'v50'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industriproduktionsindex, versions 2010, 2009 (RegVerID 2847, 2848), documents column AL2UndEjU under 5 VarIds, among them VarId 50 \"Månad\" and VarId 4027 \"Näringsgren (AL2UndEjU)\". The source does not settle which; VarId 4027 is the more plausible owner because this register's curation already types AL2UndEjU as SNI 2007 through VarId 4027 \"Näringsgren\" (the classification statements on al2undeju where key = 'v4027'), so earlier curation treated v4027 as the column's content (maintainer 2026-11-14: place under the more plausible owner). The 50 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industriproduktionsindex: AL2UndU @1998..1999 where key = 'v5179'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industriproduktionsindex, versions 1999, 1998 (RegVerID 391, 4855), documents column AL2UndU under 8 VarIds, among them VarId 5179 \"Aktivt organisationsnummer\" and VarId 3578 \"Organisationsnummer 12 siffror\". The source does not settle which; VarId 3578 is the more plausible owner because AL2UndU is the sample-frame data set (organisation number, sample size, raising factor), not one column, and no claimant carries its name; VarId 3578 \"Organisationsnummer 12 siffror\" identifies the unit that data set describes (maintainer 2026-11-14: place under the more plausible owner). The 5179 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industriproduktionsindex: AL2UndU @1998..1999 where key = 'v2923'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industriproduktionsindex, versions 1999, 1998 (RegVerID 391, 4855), documents column AL2UndU under 8 VarIds, among them VarId 2923 \"Ändrad\" and VarId 3578 \"Organisationsnummer 12 siffror\". The source does not settle which; VarId 3578 is the more plausible owner because AL2UndU is the sample-frame data set (organisation number, sample size, raising factor), not one column, and no claimant carries its name; VarId 3578 \"Organisationsnummer 12 siffror\" identifies the unit that data set describes (maintainer 2026-11-14: place under the more plausible owner). The 2923 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industriproduktionsindex: AL2UndU @1998..1999 where key = 'v2918'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industriproduktionsindex, versions 1999, 1998 (RegVerID 391, 4855), documents column AL2UndU under 8 VarIds, among them VarId 2918 \"Observationsnummer\" and VarId 3578 \"Organisationsnummer 12 siffror\". The source does not settle which; VarId 3578 is the more plausible owner because AL2UndU is the sample-frame data set (organisation number, sample size, raising factor), not one column, and no claimant carries its name; VarId 3578 \"Organisationsnummer 12 siffror\" identifies the unit that data set describes (maintainer 2026-11-14: place under the more plausible owner). The 2918 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industriproduktionsindex: AL2UndU @1998..1999 where key = 'v466'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industriproduktionsindex, versions 1999, 1998 (RegVerID 391, 4855), documents column AL2UndU under 8 VarIds, among them VarId 466 \"Uppräkningstal\" and VarId 3578 \"Organisationsnummer 12 siffror\". The source does not settle which; VarId 3578 is the more plausible owner because AL2UndU is the sample-frame data set (organisation number, sample size, raising factor), not one column, and no claimant carries its name; VarId 3578 \"Organisationsnummer 12 siffror\" identifies the unit that data set describes (maintainer 2026-11-14: place under the more plausible owner). The 466 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industriproduktionsindex: AL2UndU @1998..1999 where key = 'v2921'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industriproduktionsindex, versions 1999, 1998 (RegVerID 391, 4855), documents column AL2UndU under 8 VarIds, among them VarId 2921 \"Urvalsår\" and VarId 3578 \"Organisationsnummer 12 siffror\". The source does not settle which; VarId 3578 is the more plausible owner because AL2UndU is the sample-frame data set (organisation number, sample size, raising factor), not one column, and no claimant carries its name; VarId 3578 \"Organisationsnummer 12 siffror\" identifies the unit that data set describes (maintainer 2026-11-14: place under the more plausible owner). The 2921 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industriproduktionsindex: AL2UndU @1998..1999 where key = 'v5181'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industriproduktionsindex, versions 1999, 1998 (RegVerID 391, 4855), documents column AL2UndU under 8 VarIds, among them VarId 5181 \"Urvalsstorlek\" and VarId 3578 \"Organisationsnummer 12 siffror\". The source does not settle which; VarId 3578 is the more plausible owner because AL2UndU is the sample-frame data set (organisation number, sample size, raising factor), not one column, and no claimant carries its name; VarId 3578 \"Organisationsnummer 12 siffror\" identifies the unit that data set describes (maintainer 2026-11-14: place under the more plausible owner). The 5181 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industriproduktionsindex: AL2UndU @1998..1999 where key = 'v1454'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industriproduktionsindex, versions 1999, 1998 (RegVerID 391, 4855), documents column AL2UndU under 8 VarIds, among them VarId 1454 \"Verksamhetsenhetens identitetsnummer\" and VarId 3578 \"Organisationsnummer 12 siffror\". The source does not settle which; VarId 3578 is the more plausible owner because AL2UndU is the sample-frame data set (organisation number, sample size, raising factor), not one column, and no claimant carries its name; VarId 3578 \"Organisationsnummer 12 siffror\" identifies the unit that data set describes (maintainer 2026-11-14: place under the more plausible owner). The 1454 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industriproduktionsindex: AL2UndU @2009..2010 where key = 'v5181'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industriproduktionsindex, versions 2010, 2009 (RegVerID 2847, 2848), documents column AL2UndU under VarId 3578 \"Organisationsnummer 12 siffror\", VarId 5181 \"Urvalsstorlek\" and VarId 1454 \"Verksamhetsenhetens identitetsnummer\". The source does not settle which; VarId 3578 is the more plausible owner because AL2UndU is the sample-frame data set (organisation number, sample size, raising factor), not one column, and no claimant carries its name; VarId 3578 \"Organisationsnummer 12 siffror\" identifies the unit that data set describes (maintainer 2026-11-14: place under the more plausible owner). The 5181 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industriproduktionsindex: AL2UndU @2009..2010 where key = 'v1454'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industriproduktionsindex, versions 2010, 2009 (RegVerID 2847, 2848), documents column AL2UndU under VarId 3578 \"Organisationsnummer 12 siffror\", VarId 5181 \"Urvalsstorlek\" and VarId 1454 \"Verksamhetsenhetens identitetsnummer\". The source does not settle which; VarId 3578 is the more plausible owner because AL2UndU is the sample-frame data set (organisation number, sample size, raising factor), not one column, and no claimant carries its name; VarId 3578 \"Organisationsnummer 12 siffror\" identifies the unit that data set describes (maintainer 2026-11-14: place under the more plausible owner). The 1454 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "industriproduktionsindex: CentralDamms @2009..2010 where key = 'v14636'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Industriproduktionsindex, versions 2010, 2009 (RegVerID 2847, 2848), documents column CentralDamms under VarId 14636 \"Leveranser exportmarknad\" and VarId 2953 \"Leveranser hemmamarknad\". The source does not settle which; VarId 2953 is the more plausible owner because CentralDamms is a data set of the two delivery variables, not one column, and no claimant carries its name; VarId 2953 \"Leveranser hemmamarknad\" is the older and the base of the pair (VarId 14636 \"Leveranser exportmarknad\" is its export part) (maintainer 2026-11-14: place under the more plausible owner). The 14636 row is withheld."

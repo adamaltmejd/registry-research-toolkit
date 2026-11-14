@@ -1416,3 +1416,27 @@ kind = "set"
 subject = "var:urvalsstratum"
 fields = { "description" = "Det urvalsstratum eleven tillhör vid urvalsdragningen. För 2013–2020 är stratum tilldelat efter skolans huvudman." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; W1 anger att stratum bestäms av huvudmannen.\ncatalog:variable_text:14493:13879:14061\ncatalog:variable_text:14493:15706:15887"
+
+[[statement]]
+kind = "set"
+subject = "elevpanel-6: Skolkod @2002-01-01..2002-06-30 where key = 'v7849'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Elevpanel 6 Vårterminen 2002 (release r15631) documents column Skolkod under VarId 104 \"Skola (aktuell skola)\" and VarId 7849 \"Rektorsområdeskod\". The version has no rektorsområde column, and the 2002-2004 versions document NySkolkod as VarId 104 beside it, so Skolkod is the school code; the 7849 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "elevpanel-6: Skolkod @2003-01-01..2003-06-30 where key = 'v7849'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Elevpanel 6 Vårterminen 2003 (release r15630) documents column Skolkod under VarId 104 \"Skola (aktuell skola)\" and VarId 7849 \"Rektorsområdeskod\". The version has no rektorsområde column, and the 2002-2004 versions document NySkolkod as VarId 104 beside it, so Skolkod is the school code; the 7849 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "elevpanel-6: Skolkod @2004-01-01..2004-06-30 where key = 'v7849'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Elevpanel 6 Vårterminen 2004 (release r7566) documents column Skolkod under VarId 104 \"Skola (aktuell skola)\" and VarId 7849 \"Rektorsområdeskod\". The version has no rektorsområde column, and the 2002-2004 versions document NySkolkod as VarId 104 beside it, so Skolkod is the school code; the 7849 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "elevpanel-6: Skolkod @2005-01-01..2005-06-30 where key = 'v7849'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Elevpanel 6 Vårterminen 2005 (release r7565) documents column Skolkod under VarId 104 \"Skola (aktuell skola)\" and VarId 7849 \"Rektorsområdeskod\". The version has no rektorsområde column, and the 2002-2004 versions document NySkolkod as VarId 104 beside it, so Skolkod is the school code; the 7849 row is withheld."

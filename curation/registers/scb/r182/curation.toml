@@ -17527,3 +17527,183 @@ kind = "set"
 subject = "var:vikt"
 fields = { "description" = "Kalibrerad vikt som tar hänsyn till varierande urvalssannolikheter och svarsfrekvenser i olika strata samt till hjälpinformation från register. 2017 anges vikten som antal objekt i populationen per stratum delat med antal objekt i urvalet per stratum." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2017 års beräkningsformel anges med år.\ncatalog:variable_text:21656:16436:16801\ncatalog:variable_text:21656:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "uoh-ekonomi: KontrollVarde @2011,2013,2015,2017 where key = 'v29327'"
+fields = { "long_format" = true }
+evidence = "SCB Registerinformation, UoH ekonomi 2011, 2013, 2015 and 2017 (RegVerIDs 4473/4471, 5765/5764, 10094/9841, 12594/12595) documents column KontrollVarde under VarId 7596 \"Intäkter för forskning och forskarutbildning\" and VarId 29327 \"Utgift/kostnad för forskning och forskarutbildning\"; VarNr (VarId 7594 \"Finansieringskällor\" / VarId 29326 \"Typ av utgift/kostnad\") picks each row's measure, so the column is long format (maintainer 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "uoh-ekonomi: KontrollVarde @2011,2013,2015,2017 where key = 'v7596'"
+fields = { "long_format" = true }
+evidence = "SCB Registerinformation, UoH ekonomi 2011, 2013, 2015 and 2017 (RegVerIDs 4473/4471, 5765/5764, 10094/9841, 12594/12595) documents column KontrollVarde under VarId 7596 \"Intäkter för forskning och forskarutbildning\" and VarId 29327 \"Utgift/kostnad för forskning och forskarutbildning\"; VarNr (VarId 7594 \"Finansieringskällor\" / VarId 29326 \"Typ av utgift/kostnad\") picks each row's measure, so the column is long format (maintainer 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "uoh-ekonomi: VarNr @2011,2013,2015,2017 where key = 'v29326'"
+fields = { "long_format" = true }
+evidence = "SCB Registerinformation, UoH ekonomi 2011, 2013, 2015 and 2017 (RegVerIDs 4473/4471, 5765/5764, 10094/9841, 12594/12595) documents column VarNr under VarId 7594 \"Finansieringskällor\" (the Intäkter file) and VarId 29326 \"Typ av utgift/kostnad\" (the Avskrivningar, investeringar och hyreskostnader file). It is the item code of the long-format column KontrollVarde, and its code list depends on the file, so neither claimant owns it; it stays with KontrollVarde until the item model exists (maintainer 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "uoh-ekonomi: VarNr @2011,2013,2015,2017 where key = 'v7594'"
+fields = { "long_format" = true }
+evidence = "SCB Registerinformation, UoH ekonomi 2011, 2013, 2015 and 2017 (RegVerIDs 4473/4471, 5765/5764, 10094/9841, 12594/12595) documents column VarNr under VarId 7594 \"Finansieringskällor\" (the Intäkter file) and VarId 29326 \"Typ av utgift/kostnad\" (the Avskrivningar, investeringar och hyreskostnader file). It is the item code of the long-format column KontrollVarde, and its code list depends on the file, so neither claimant owns it; it stays with KontrollVarde until the item model exists (maintainer 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "landsting: Ar @2015 where key = 'v98'"
+fields = { "variable" = "referensar" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column Ar of landsting in 2015 under several variables (arsverken-fou-nasta-ar (v7744), referensar (v98)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "landsting: Ar @2017 where key = 'v98'"
+fields = { "variable" = "referensar" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column Ar of landsting in 2017 under several variables (arsverken-fou-nasta-ar (v7744), referensar (v98)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "pnp: FoUArsvKomAr @2017 where key = 'v7744'"
+fields = { "variable" = "arsverken-fou-nasta-ar" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column FoUArsvKomAr of pnp in 2017 under several variables (arsverken-fou-nasta-ar (v7744), fouarsvkomar (v35646)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "pnp: FoUArsvKomAr @2017 where key = 'v35646'"
+fields = { "variable" = "fouarsvkomar" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column FoUArsvKomAr of pnp in 2017 under several variables (arsverken-fou-nasta-ar (v7744), fouarsvkomar (v35646)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: COUNTRY @2023 where key = 'v49'"
+fields = { "variable" = "lan-country" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column COUNTRY of uoh-personal in 2023 under several variables (lan-country (v49), nuts (v6290)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: COUNTRY @2023 where key = 'v6290'"
+fields = { "variable" = "nuts" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column COUNTRY of uoh-personal in 2023 under several variables (lan-country (v49), nuts (v6290)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: ForskAmneOmr @2017 where key = 'v17260'"
+fields = { "variable" = "forskningsamne-forskamneomr" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column ForskAmneOmr of uoh-personal in 2017 under several variables (forskningsamne-forskamneomr (v17260), forskningsamnesomrade (v39021)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: ForskAmneOmr @2017 where key = 'v39021'"
+fields = { "variable" = "forskningsamnesomrade" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column ForskAmneOmr of uoh-personal in 2017 under several variables (forskningsamne-forskamneomr (v17260), forskningsamnesomrade (v39021)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: MUN_CODE @2021 where key = 'v36'"
+fields = { "variable" = "kommun" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column MUN_CODE of uoh-personal in 2021 under several variables (kommun (v36), lan-mun-code (v49)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: MUN_CODE @2021 where key = 'v49'"
+fields = { "variable" = "lan-mun-code" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column MUN_CODE of uoh-personal in 2021 under several variables (kommun (v36), lan-mun-code (v49)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: OCCUP_CAT @2021 where key = 'v29507'"
+fields = { "variable" = "occup-cat" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column OCCUP_CAT of uoh-personal in 2021 under several variables (occup-cat (v29507), tjanstekategori (v3637)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: OCCUP_CAT @2021 where key = 'v3637'"
+fields = { "variable" = "tjanstekategori" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column OCCUP_CAT of uoh-personal in 2021 under several variables (occup-cat (v29507), tjanstekategori (v3637)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: OCCUP_CAT @2023 where key = 'v29507'"
+fields = { "variable" = "occup-cat" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column OCCUP_CAT of uoh-personal in 2023 under several variables (occup-cat (v29507), tjanstekategori (v3637)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: OCCUP_CAT @2023 where key = 'v3637'"
+fields = { "variable" = "tjanstekategori" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column OCCUP_CAT of uoh-personal in 2023 under several variables (occup-cat (v29507), tjanstekategori (v3637)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: QUALIFICATION @2021 where key = 'v66'"
+fields = { "variable" = "utbildningsniva" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column QUALIFICATION of uoh-personal in 2021 under several variables (utbildningsniva (v66), utbildningsniva-isced2011 (v30435)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: QUALIFICATION @2021 where key = 'v30435'"
+fields = { "variable" = "utbildningsniva-isced2011" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column QUALIFICATION of uoh-personal in 2021 under several variables (utbildningsniva (v66), utbildningsniva-isced2011 (v30435)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: QUALIFICATION @2023 where key = 'v66'"
+fields = { "variable" = "utbildningsniva" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column QUALIFICATION of uoh-personal in 2023 under several variables (utbildningsniva (v66), utbildningsniva-isced2011 (v30435)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: QUALIFICATION @2023 where key = 'v30435'"
+fields = { "variable" = "utbildningsniva-isced2011" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column QUALIFICATION of uoh-personal in 2023 under several variables (utbildningsniva (v66), utbildningsniva-isced2011 (v30435)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: TIME_PERIOD @2021 where key = 'v73'"
+fields = { "variable" = "ar" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column TIME_PERIOD of uoh-personal in 2021 under several variables (ar (v73), referensperiod (v28808)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: TIME_PERIOD @2021 where key = 'v28808'"
+fields = { "variable" = "referensperiod" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column TIME_PERIOD of uoh-personal in 2021 under several variables (ar (v73), referensperiod (v28808)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: TIME_PERIOD @2023 where key = 'v73'"
+fields = { "variable" = "ar" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column TIME_PERIOD of uoh-personal in 2023 under several variables (ar (v73), referensperiod (v28808)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: TIME_PERIOD @2023 where key = 'v28808'"
+fields = { "variable" = "referensperiod" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column TIME_PERIOD of uoh-personal in 2023 under several variables (ar (v73), referensperiod (v28808)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: U_SCBID @2021 where key = 'v2519'"
+fields = { "variable" = "lopnummer-anstallningar" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column U_SCBID of uoh-personal in 2021 under several variables (lopnummer-anstallningar (v2519), lopnummer-for-individ (v6172)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: U_SCBID @2021 where key = 'v6172'"
+fields = { "variable" = "lopnummer-for-individ" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column U_SCBID of uoh-personal in 2021 under several variables (lopnummer-anstallningar (v2519), lopnummer-for-individ (v6172)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: U_SCBID @2023 where key = 'v2519'"
+fields = { "variable" = "lopnummer-anstallningar" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column U_SCBID of uoh-personal in 2023 under several variables (lopnummer-anstallningar (v2519), lopnummer-for-individ (v6172)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: U_SCBID @2023 where key = 'v6172'"
+fields = { "variable" = "lopnummer-for-individ" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column U_SCBID of uoh-personal in 2023 under several variables (lopnummer-anstallningar (v2519), lopnummer-for-individ (v6172)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."

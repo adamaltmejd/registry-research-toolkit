@@ -217,30 +217,6 @@ evidence = "Variabeln mäter bränsleimport.\ncatalog:variable_text:39159:13879:
 
 [[statement]]
 kind = "set"
-subject = "var:importpris-cif"
-fields = { "sets" = ["branslepriser-i-utrikeshandeln"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:386947\ncatalog:occurrence:386948"
-
-[[statement]]
-kind = "set"
-subject = "var:importpris-cif"
-fields = { "tags" = ["energy", "prices", "trade"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:386947\ncatalog:occurrence:386948"
-
-[[statement]]
-kind = "set"
-subject = "var:importpris-fob"
-fields = { "sets" = ["branslepriser-i-utrikeshandeln"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:386952\ncatalog:occurrence:386953"
-
-[[statement]]
-kind = "set"
-subject = "var:importpris-fob"
-fields = { "tags" = ["energy", "prices", "trade"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:386952\ncatalog:occurrence:386953"
-
-[[statement]]
-kind = "set"
 subject = "var:inlager"
 fields = { "sets" = ["branslelager"] }
 evidence = "Variabeln mäter ingående bränslelager.\ncatalog:variable_text:39162:13879:17532"
@@ -397,18 +373,6 @@ evidence = "Variabeln mäter bränsleleveranser.\ncatalog:variable_text:39174:13
 
 [[statement]]
 kind = "set"
-subject = "var:leveranser-branslen-ovriga"
-fields = { "sets" = ["bransleleveranser"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:386978\ncatalog:occurrence:386979"
-
-[[statement]]
-kind = "set"
-subject = "var:leveranser-branslen-ovriga"
-fields = { "tags" = ["energy"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:386978\ncatalog:occurrence:386979"
-
-[[statement]]
-kind = "set"
 subject = "var:leveranser-egna-aterforsaljare"
 fields = { "sets" = ["bransleleveranser"] }
 evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:386943\ncatalog:occurrence:386944"
@@ -416,18 +380,6 @@ evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:3869
 [[statement]]
 kind = "set"
 subject = "var:leveranser-egna-aterforsaljare"
-fields = { "tags" = ["energy"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:386943\ncatalog:occurrence:386944"
-
-[[statement]]
-kind = "set"
-subject = "var:leveranser-kol-koks-aterforsaljare"
-fields = { "sets" = ["bransleleveranser"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:386943\ncatalog:occurrence:386944"
-
-[[statement]]
-kind = "set"
-subject = "var:leveranser-kol-koks-aterforsaljare"
 fields = { "tags" = ["energy"] }
 evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:386943\ncatalog:occurrence:386944"
 
@@ -839,3 +791,45 @@ kind = "set"
 subject = "set:referensmanad"
 fields = { "description" = "Den månad under året som uppgiften avser, undersökningsmånaden." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna anger månaden; Triton och SIV är interna systemnamn och utelämnade.\ncatalog:variable_text:45966:17532:19358\ncatalog:variable_text:45966:19358:19723\ncatalog:variable_text:45966:19723:20454\ncatalog:variable_text:45986:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: CIF @2008..2017 where key = 'v20488'"
+fields = { "variable" = "exportpris-cif" }
+evidence = "SCB Registerinformation, Månatlig bränsle-, gas och lagerstatistik 2008-2017 (RegVerID 2604 for 2008) documents column CIF under VarId 20487 \"Exportpris, Cif, kostnad försäkring frakt\" and VarId 20488 \"Importpris, Cif, kostnad försäkring frakt\" in every release, both in 1000-tal kronor. The table has one row per fuel code (KOD) and country (IEKOD, \"Land för import/export\") with the quantity in IMPORT or EXPORT, so the price column holds the export price on export rows and the import price on import rows: one concept for two row kinds (maintainer 2026-11-14: variants of one concept for different row kinds are merged). Neither claimant is generic; exportpris-cif survives."
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: FOB @2008..2017 where key = 'v20490'"
+fields = { "variable" = "exportpris-fob" }
+evidence = "SCB Registerinformation, Månatlig bränsle-, gas och lagerstatistik 2008-2017 (RegVerID 2604 for 2008) documents column FOB under VarId 20486 \"Exportpris, FOB, fritt ombord\" and VarId 20490 \"Importpris, FOB,fritt ombord\" in every release, both in 1000-tal kronor. As for CIF, the price column holds the export price on export rows and the import price on import rows: one concept for two row kinds (maintainer 2026-11-14: variants of one concept for different row kinds are merged). Neither claimant is generic; exportpris-fob survives."
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: ATERFORS @2008..2017 where key = 'v20672'"
+fields = { "variable" = "leveranser-egna-aterforsaljare" }
+evidence = "SCB Registerinformation, Månatlig bränsle-, gas och lagerstatistik 2008-2017 (RegVerID 2604 for 2008) documents column ATERFORS under VarId 20671 \"Leveranser av olika bränslen till egna återförsäljare\" (kubikmeter/ton) and VarId 20672 \"Leveranser av kol och koks till återförsäljare\" (ton) in every release. The table has one row per fuel code (KOD); coal and coke rows are counted in ton and the other fuels in kubikmeter or ton, so the claimants are one delivery quantity for two row kinds (maintainer 2026-11-14: variants of one concept for different row kinds are merged). 20671 is the generic claimant and survives."
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: OVRLEV @2008..2017 where key = 'v16705'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Månatlig bränsle-, gas och lagerstatistik 2008-2017 (RegVerID 2604 for 2008) documents column OVRLEV under VarId 16705 \"Leveranser av olika bränslen till övriga\" (\"till övriga kategorier\") and VarId 20673 \"Övriga levererade kvantiteter av olika bränslen\" (\"t.ex. försäljning till utländskt företag med lager beläget i Sverige\") in every release. The source does not settle which; 20673 is the more plausible owner because OVRLEV is the delivery counterpart of OVRMOT (VarId 16703 \"Övriga mottagna kvantiteter av olika bränslen\"), and 20673 is the VarId whose name says \"övriga levererade kvantiteter\" (maintainer 2026-11-14: place under the more plausible owner). The 16705 rows are withheld; 16705 is documented under no other column."
+
+[[statement]]
+kind = "set"
+subject = "var:exportpris-cif"
+fields = { "label" = "Pris, CIF (kostnad, försäkring, frakt)", "description" = "Pris inklusive kostnad, försäkring och frakt (CIF), i 1000-tal kronor. På exportrader är det exportpriset och på importrader importpriset." }
+evidence = "Maintainer ruling 2026-11-14: variants of one concept for different row kinds are merged and the variable carries a label and description covering both kinds.\nVarId 20487 (\"Exportpris, kostnad försäkring frakt\") and VarId 20488 (\"Importpris, kostnad försäkring frakt\") share the column CIF in 2008-2017."
+
+[[statement]]
+kind = "set"
+subject = "var:exportpris-fob"
+fields = { "label" = "Pris, FOB (fritt ombord)", "description" = "Pris fritt ombord (FOB), i 1000-tal kronor. På exportrader är det exportpriset och på importrader importpriset." }
+evidence = "Maintainer ruling 2026-11-14: variants of one concept for different row kinds are merged and the variable carries a label and description covering both kinds.\nVarId 20486 (\"Exportpris, FOB, fritt ombord\") and VarId 20490 (\"Importpris, FOB, fritt ombord\") share the column FOB in 2008-2017."
+
+[[statement]]
+kind = "set"
+subject = "var:leveranser-egna-aterforsaljare"
+fields = { "label" = "Leveranser till återförsäljare", "description" = "Leveranser av bränslen till egna återförsäljare, i kubikmeter eller ton. För kol och koks avser kolumnen leveranser till återförsäljare, i ton." }
+evidence = "Maintainer ruling 2026-11-14: variants of one concept for different row kinds are merged and the variable carries a label and description covering both kinds.\nVarId 20671 (\"Leveranser av olika bränslen till egna återförsäljare\") and VarId 20672 (\"Leveranser av kol och koks till återförsäljare\") share the column ATERFORS in 2008-2017."

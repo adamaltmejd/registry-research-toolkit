@@ -66,7 +66,6 @@ public = "trafo"
 "polisdistrikt" = ["Vägtrafikolyckor med personskada: PDDISTR"]
 "polisens-diarienummer" = ["Vägtrafikolyckor med personskada: PDNR"]
 "polisomrade" = ["Vägtrafikolyckor med personskada: PDOMR"]
-"person-id" = ["Vägtrafikolyckor med personskada: PRAD # v4675"]
 "person-orgnr" = ["Vägtrafikolyckor med personskada: PERSNR"]
 "personrad" = ["Vägtrafikolyckor med personskada: PRAD # v2383"]
 "primelnr" = ["Vägtrafikolyckor med personskada: PRIMELNR"]

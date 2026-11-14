@@ -1,4 +1,3 @@
-
 [[statement]]
 kind = "set"
 subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: sni @2003,2005..2007"
@@ -110,24 +109,6 @@ evidence = "Ägarbyte för lastbilen.\ncatalog:variable_text:35614:10957:14245"
 [[statement]]
 kind = "set"
 subject = "var:antal-axlar-lastbil"
-fields = { "sets" = ["antal-axlar"] }
-evidence = "Samma kolumn har överlappande ägare med olika fordonsdelar.\ncatalog:occurrence:328067\ncatalog:occurrence:328068"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-axlar-lastbil"
-fields = { "tags" = ["transport"] }
-evidence = "Samma kolumn har överlappande ägare med olika fordonsdelar.\ncatalog:occurrence:328067\ncatalog:occurrence:328068"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-axlar-pa-slapet"
-fields = { "sets" = ["antal-axlar"] }
-evidence = "Samma kolumn har överlappande ägare med olika fordonsdelar.\ncatalog:occurrence:328067\ncatalog:occurrence:328068"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-axlar-pa-slapet"
 fields = { "tags" = ["transport"] }
 evidence = "Samma kolumn har överlappande ägare med olika fordonsdelar.\ncatalog:occurrence:328067\ncatalog:occurrence:328068"
 
@@ -181,18 +162,6 @@ evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328074\nc
 
 [[statement]]
 kind = "set"
-subject = "var:avlastningsomrade-omlastning"
-fields = { "sets" = ["avlastningsplats"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328074\ncatalog:occurrence:328075"
-
-[[statement]]
-kind = "set"
-subject = "var:avlastningsomrade-omlastning"
-fields = { "tags" = ["geography"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328074\ncatalog:occurrence:328075"
-
-[[statement]]
-kind = "set"
 subject = "var:avlastningsort"
 fields = { "sets" = ["avlastningsplats"] }
 evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328076\ncatalog:occurrence:328077"
@@ -200,18 +169,6 @@ evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328076\nc
 [[statement]]
 kind = "set"
 subject = "var:avlastningsort"
-fields = { "tags" = ["geography"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328076\ncatalog:occurrence:328077"
-
-[[statement]]
-kind = "set"
-subject = "var:avlastningsort-omlastning"
-fields = { "sets" = ["avlastningsplats"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328076\ncatalog:occurrence:328077"
-
-[[statement]]
-kind = "set"
-subject = "var:avlastningsort-omlastning"
 fields = { "tags" = ["geography"] }
 evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328076\ncatalog:occurrence:328077"
 
@@ -398,12 +355,6 @@ evidence = "Uppgiftslämnarens internettillgång.\ncatalog:variable_text:35646:1
 [[statement]]
 kind = "set"
 subject = "var:karosserikod"
-fields = { "sets" = ["karosserityp"] }
-evidence = "Samma kolumn har överlappande ägare för lastbil och släp.\ncatalog:occurrence:328092\ncatalog:occurrence:328093"
-
-[[statement]]
-kind = "set"
-subject = "var:karosserikod"
 fields = { "tags" = ["transport"] }
 evidence = "Samma kolumn har överlappande ägare för lastbil och släp.\ncatalog:occurrence:328092\ncatalog:occurrence:328093"
 
@@ -493,18 +444,6 @@ evidence = "Kommun är en geografisk indelning.\ncatalog:variable_text:35656:109
 
 [[statement]]
 kind = "set"
-subject = "var:korda-kilometer-sandning"
-fields = { "sets" = ["kord-stracka"] }
-evidence = "Samma kolumn har överlappande ägare för sändning och körning.\ncatalog:occurrence:328097\ncatalog:occurrence:328098"
-
-[[statement]]
-kind = "set"
-subject = "var:korda-kilometer-sandning"
-fields = { "tags" = ["transport"] }
-evidence = "Samma kolumn har överlappande ägare för sändning och körning.\ncatalog:occurrence:328097\ncatalog:occurrence:328098"
-
-[[statement]]
-kind = "set"
 subject = "var:korningskilometer"
 fields = { "sets" = ["kord-stracka"] }
 evidence = "Samma kolumn har överlappande ägare för körning och sändning.\ncatalog:occurrence:328097\ncatalog:occurrence:328098"
@@ -550,24 +489,6 @@ kind = "set"
 subject = "var:kvantitet"
 fields = { "tags" = ["transport"] }
 evidence = "Kvantitet farligt gods i transport.\ncatalog:variable_text:35662:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:lastningsgrad-i-volymmatt"
-fields = { "sets" = ["lastningsgrad-volym"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328112\ncatalog:occurrence:328113"
-
-[[statement]]
-kind = "set"
-subject = "var:lastningsgrad-i-volymmatt"
-fields = { "tags" = ["transport"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328112\ncatalog:occurrence:328113"
-
-[[statement]]
-kind = "set"
-subject = "var:lastningsgrad-volym"
-fields = { "sets" = ["lastningsgrad-volym"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328112\ncatalog:occurrence:328113"
 
 [[statement]]
 kind = "set"
@@ -646,12 +567,6 @@ kind = "set"
 subject = "var:matstart"
 fields = { "tags" = [] }
 evidence = "Mätveckans startdatum.\ncatalog:variable_text:35673:10957:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:maximilastvikt-lastbil"
-fields = { "sets" = ["maximilastvikt"] }
-evidence = "Samma kolumn har överlappande ägare; enheten kilometer strider mot viktmåttet.\ncatalog:occurrence:328120\ncatalog:occurrence:328121\ncatalog:occurrence:328317"
 
 [[statement]]
 kind = "set"
@@ -710,12 +625,6 @@ evidence = "Första pålastningsort.\ncatalog:variable_text:35679:13879:14245"
 [[statement]]
 kind = "set"
 subject = "var:palastade-kilo"
-fields = { "sets" = ["godsvikt"] }
-evidence = "Samma kolumn har överlappande ägare för körning och sändning.\ncatalog:occurrence:328094\ncatalog:occurrence:328095"
-
-[[statement]]
-kind = "set"
-subject = "var:palastade-kilo"
 fields = { "tags" = ["transport"] }
 evidence = "Samma kolumn har överlappande ägare för körning och sändning.\ncatalog:occurrence:328094\ncatalog:occurrence:328095"
 
@@ -745,18 +654,6 @@ evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328127\nc
 
 [[statement]]
 kind = "set"
-subject = "var:palastningsomrade-omlastning"
-fields = { "sets" = ["palastningsplats"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328127\ncatalog:occurrence:328128"
-
-[[statement]]
-kind = "set"
-subject = "var:palastningsomrade-omlastning"
-fields = { "tags" = ["geography"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328127\ncatalog:occurrence:328128"
-
-[[statement]]
-kind = "set"
 subject = "var:palastningsort"
 fields = { "sets" = ["palastningsplats"] }
 evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328129\ncatalog:occurrence:328130"
@@ -764,18 +661,6 @@ evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328129\nc
 [[statement]]
 kind = "set"
 subject = "var:palastningsort"
-fields = { "tags" = ["geography"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328129\ncatalog:occurrence:328130"
-
-[[statement]]
-kind = "set"
-subject = "var:palastningsort-omlastning"
-fields = { "sets" = ["palastningsplats"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328129\ncatalog:occurrence:328130"
-
-[[statement]]
-kind = "set"
-subject = "var:palastningsort-omlastning"
 fields = { "tags" = ["geography"] }
 evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:328129\ncatalog:occurrence:328130"
 
@@ -853,78 +738,6 @@ evidence = "Postadressens geografiska kod.\ncatalog:variable_text:35691:10957:14
 
 [[statement]]
 kind = "set"
-subject = "var:sandningens-vikt-i-kilo"
-fields = { "sets" = ["godsvikt"] }
-evidence = "Samma kolumn har överlappande ägare för sändning och körning.\ncatalog:occurrence:328094\ncatalog:occurrence:328095"
-
-[[statement]]
-kind = "set"
-subject = "var:sandningens-vikt-i-kilo"
-fields = { "tags" = ["transport"] }
-evidence = "Samma kolumn har överlappande ägare för sändning och körning.\ncatalog:occurrence:328094\ncatalog:occurrence:328095"
-
-[[statement]]
-kind = "set"
-subject = "var:slapets-karosserikod"
-fields = { "sets" = ["karosserityp"] }
-evidence = "Samma kolumn har överlappande ägare för släp och lastbil.\ncatalog:occurrence:328092\ncatalog:occurrence:328093"
-
-[[statement]]
-kind = "set"
-subject = "var:slapets-karosserikod"
-fields = { "tags" = ["transport"] }
-evidence = "Samma kolumn har överlappande ägare för släp och lastbil.\ncatalog:occurrence:328092\ncatalog:occurrence:328093"
-
-[[statement]]
-kind = "set"
-subject = "var:slapets-maximilastvikt"
-fields = { "sets" = ["maximilastvikt"] }
-evidence = "Samma kolumn har överlappande ägare för släp och lastbil.\ncatalog:occurrence:328120\ncatalog:occurrence:328121"
-
-[[statement]]
-kind = "set"
-subject = "var:slapets-maximilastvikt"
-fields = { "tags" = ["transport"] }
-evidence = "Samma kolumn har överlappande ägare för släp och lastbil.\ncatalog:occurrence:328120\ncatalog:occurrence:328121"
-
-[[statement]]
-kind = "set"
-subject = "var:slapets-registreringsland"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har överlappande ägare med olika betydelser.\ncatalog:occurrence:328110\ncatalog:occurrence:328111"
-
-[[statement]]
-kind = "set"
-subject = "var:slapets-registreringsland"
-fields = { "tags" = ["geography"] }
-evidence = "Samma kolumn har överlappande ägare med olika betydelser.\ncatalog:occurrence:328110\ncatalog:occurrence:328111"
-
-[[statement]]
-kind = "set"
-subject = "var:slapets-tjanstevikt"
-fields = { "sets" = ["tjanstevikt"] }
-evidence = "Samma kolumn har överlappande ägare för släp och lastbil.\ncatalog:occurrence:328145\ncatalog:occurrence:328146"
-
-[[statement]]
-kind = "set"
-subject = "var:slapets-tjanstevikt"
-fields = { "tags" = ["transport"] }
-evidence = "Samma kolumn har överlappande ägare för släp och lastbil.\ncatalog:occurrence:328145\ncatalog:occurrence:328146"
-
-[[statement]]
-kind = "set"
-subject = "var:slapets-totalvikt"
-fields = { "sets" = ["totalvikt"] }
-evidence = "Samma kolumn har överlappande ägare för släp och lastbil.\ncatalog:occurrence:328147\ncatalog:occurrence:328148"
-
-[[statement]]
-kind = "set"
-subject = "var:slapets-totalvikt"
-fields = { "tags" = ["transport"] }
-evidence = "Samma kolumn har överlappande ägare för släp och lastbil.\ncatalog:occurrence:328147\ncatalog:occurrence:328148"
-
-[[statement]]
-kind = "set"
 subject = "var:slaptyp"
 fields = { "sets" = [] }
 evidence = "Typ av släpvagn.\ncatalog:variable_text:35701:10957:14245"
@@ -1034,20 +847,8 @@ evidence = "Uppgift om undersökningens svarsbörda.\ncatalog:variable_text:3571
 [[statement]]
 kind = "set"
 subject = "var:tjanstevikt-lastbil"
-fields = { "sets" = ["tjanstevikt"] }
-evidence = "Samma kolumn har överlappande ägare för lastbil och släp.\ncatalog:occurrence:328145\ncatalog:occurrence:328146"
-
-[[statement]]
-kind = "set"
-subject = "var:tjanstevikt-lastbil"
 fields = { "tags" = ["transport"] }
 evidence = "Samma kolumn har överlappande ägare för lastbil och släp.\ncatalog:occurrence:328145\ncatalog:occurrence:328146"
-
-[[statement]]
-kind = "set"
-subject = "var:totalvikt-lastbil"
-fields = { "sets" = ["totalvikt"] }
-evidence = "Samma kolumn har överlappande ägare för lastbil och släp.\ncatalog:occurrence:328147\ncatalog:occurrence:328148"
 
 [[statement]]
 kind = "set"
@@ -1141,18 +942,6 @@ evidence = "Samma kolumn har överlappande ägare för sändning och körning.\n
 
 [[statement]]
 kind = "set"
-subject = "var:varuslag-korning"
-fields = { "sets" = ["varuslag"] }
-evidence = "Samma kolumn har överlappande ägare för körning och sändning.\ncatalog:occurrence:328155\ncatalog:occurrence:328156"
-
-[[statement]]
-kind = "set"
-subject = "var:varuslag-korning"
-fields = { "tags" = ["transport"] }
-evidence = "Samma kolumn har överlappande ägare för körning och sändning.\ncatalog:occurrence:328155\ncatalog:occurrence:328156"
-
-[[statement]]
-kind = "set"
 subject = "var:varukod-i-klartext"
 fields = { "sets" = ["varuslag"] }
 evidence = "V är en enbokstavskod för vara.\ncatalog:variable_text:35724:10957:14245"
@@ -1186,7 +975,6 @@ kind = "set"
 subject = "var:yrkesmassig-trafik-lastbil"
 fields = { "tags" = ["transport"] }
 evidence = "M är en enbokstavskod i källmnemoniken.\ncatalog:variable_text:35726:10957:14245"
-
 
 [[statement]]
 kind = "set"
@@ -1194,18 +982,11 @@ subject = "var:korda-kilometer-i-utlandet-med-last"
 fields = { "description" = "Antal körda kilometer i utlandet med last under mätveckan" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nRättar ett skrivfel utan att ändra betydelsen.\ncatalog:variable_text:35652:10957:14245"
 
-
 [[statement]]
 kind = "set"
 subject = "var:urvslut"
 fields = { "description" = "Faktiskt slutdatum för urval" }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nMellanslag saknas i källtexten.\ncatalog:variable_text:35720:13879:14245"
-
-[[statement]]
-kind = "set"
-subject = "set:antal-axlar"
-fields = { "label" = "Antal axlar" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
 kind = "set"
@@ -1221,18 +1002,6 @@ evidence = "#2100 group name: slug words restored from catalog wording, then adj
 
 [[statement]]
 kind = "set"
-subject = "set:godsvikt"
-fields = { "label" = "Godsvikt" }
-evidence = "#2100 group name: the slug read as words; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:karosserityp"
-fields = { "label" = "Karosserityp" }
-evidence = "#2100 group name: the slug read as words; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:kord-stracka"
 fields = { "label" = "Körd sträcka" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
@@ -1245,21 +1014,9 @@ evidence = "#2100 group name: the slug read as words, then adjusted on review (d
 
 [[statement]]
 kind = "set"
-subject = "set:lastningsgrad-volym"
-fields = { "label" = "Lastningsgrad, volym" }
-evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (comma)."
-
-[[statement]]
-kind = "set"
 subject = "set:matveckans-period"
 fields = { "label" = "Mätveckans period" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:maximilastvikt"
-fields = { "label" = "Maximilastvikt" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
 kind = "set"
@@ -1299,18 +1056,6 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
-subject = "set:tjanstevikt"
-fields = { "label" = "Tjänstevikt" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:totalvikt"
-fields = { "label" = "Totalvikt" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:transitland"
 fields = { "label" = "Transitland" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
@@ -1338,3 +1083,207 @@ kind = "set"
 subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: MaxLv where key = 'v1986' and release = 'r1375'"
 fields = { "unit" = "kg" }
 evidence = "Maximal lastvikt anges inte i kilometer; övriga årgångar anger kg.\nold unit: 'kilometer'; Registerinformation.csv:row=951686 (r1375)"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-axlar-lastbil"
+fields = { "label" = "Antal axlar på lastbil/dragbil eller släp" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar, column AntAxl: VarId 1963 \"Antal axlar på lastbil/dragbil\" and VarId 2028 \"Antal axlar på släpet\". The variant documents truck/tractor, trailer, run and shipment records side by side (Lid, Slid, Kid, BlSandnNr); VarId 1963 counts the axles of the truck/tractor and VarId 2028 those of the trailer, the same measure for two vehicle kinds in one column."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-axlar-lastbil"
+fields = { "description" = "Antal axlar, på lastbilen/dragbilen respektive på släpet." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar, column AntAxl: VarId 1963 \"Antal axlar på lastbil/dragbil\" and VarId 2028 \"Antal axlar på släpet\". The variant documents truck/tractor, trailer, run and shipment records side by side (Lid, Slid, Kid, BlSandnNr); VarId 1963 counts the axles of the truck/tractor and VarId 2028 those of the trailer, the same measure for two vehicle kinds in one column."
+
+[[statement]]
+kind = "set"
+subject = "var:avlastningsomrade"
+fields = { "label" = "Avlastningsområde, län i Sverige eller landkod för utlandet" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar, column AvOmr: VarId 2037 \"Avlastningsområde, län i Sverige och landkod för utlandet\" and VarId 2022 \"Avlastningsområde från annat transportmedel\". VarId 2037 is the unloading area of the shipment and VarId 2022 the unloading area for transfer from another mode of transport (ferry or rail record, LinjeNr/Trmedel); both are an unloading area given as county or country code, with the same value set."
+
+[[statement]]
+kind = "set"
+subject = "var:avlastningsomrade"
+fields = { "description" = "Avlastningsområde som länskod i Sverige eller landkod för utlandet. Gäller både sändningens avlastningsområde och avlastningsområde från annat transportmedel." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar, column AvOmr: VarId 2037 \"Avlastningsområde, län i Sverige och landkod för utlandet\" and VarId 2022 \"Avlastningsområde från annat transportmedel\". VarId 2037 is the unloading area of the shipment and VarId 2022 the unloading area for transfer from another mode of transport (ferry or rail record, LinjeNr/Trmedel); both are an unloading area given as county or country code, with the same value set."
+
+[[statement]]
+kind = "set"
+subject = "var:avlastningsort"
+fields = { "description" = "Ort där godset avlastas. Gäller både sändningens avlastningsort och avlastningsort från annat transportmedel." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar, column AvOrt: VarId 2039 \"Avlastningsort\" and VarId 2023 \"Avlastningsort från annat transportmedel\". VarId 2039 is the unloading place of the shipment and VarId 2023 the unloading place for transfer from another mode of transport; both are an unloading place."
+
+[[statement]]
+kind = "set"
+subject = "var:palastade-kilo"
+fields = { "label" = "Godsvikt i kilo" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar, column KgKvant: VarId 1947 \"Pålastade kilo under körningen\" and VarId 2044 \"Sändningens vikt i kilo\". VarId 1947 is the kilos loaded during the run and VarId 2044 the weight of the shipment in kilos; both are weight of goods in kilos, for the run record and the shipment record."
+
+[[statement]]
+kind = "set"
+subject = "var:palastade-kilo"
+fields = { "description" = "Godsets vikt i kilo: pålastade kilo under körningen respektive sändningens vikt." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar, column KgKvant: VarId 1947 \"Pålastade kilo under körningen\" and VarId 2044 \"Sändningens vikt i kilo\". VarId 1947 is the kilos loaded during the run and VarId 2044 the weight of the shipment in kilos; both are weight of goods in kilos, for the run record and the shipment record."
+
+[[statement]]
+kind = "set"
+subject = "var:korningskilometer"
+fields = { "label" = "Körda kilometer" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar, column KmKorda: VarId 1949 \"Körningens totala kilometer\" and VarId 2046 \"Körda kilometer med den aktuella sändningen\". VarId 1949 is the total kilometres of the run and VarId 2046 the kilometres driven with the shipment; both are kilometres driven, for the run record and the shipment record."
+
+[[statement]]
+kind = "set"
+subject = "var:korningskilometer"
+fields = { "description" = "Körda kilometer: körningens totala kilometer respektive kilometer körda med den aktuella sändningen." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar, column KmKorda: VarId 1949 \"Körningens totala kilometer\" and VarId 2046 \"Körda kilometer med den aktuella sändningen\". VarId 1949 is the total kilometres of the run and VarId 2046 the kilometres driven with the shipment; both are kilometres driven, for the run record and the shipment record."
+
+[[statement]]
+kind = "set"
+subject = "var:lastningsgrad-volym"
+fields = { "label" = "Lastningsgrad i volymmått" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar, column LastGrad: VarId 1952 \"Lastningsgrad under körningen, volymutnyttjande\" and VarId 2049 \"Lastningsgrad i volymmått\". VarId 1952 is the loading degree of the run (volume utilisation) and VarId 2049 the loading degree in volume terms given in percent, a shipment-block variable (VarId 2036-2063); both measure volume loading degree."
+
+[[statement]]
+kind = "set"
+subject = "var:lastningsgrad-volym"
+fields = { "description" = "Lastningsgrad i volymmått (volymutnyttjande), angiven i procent, för körningen respektive sändningen." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar, column LastGrad: VarId 1952 \"Lastningsgrad under körningen, volymutnyttjande\" and VarId 2049 \"Lastningsgrad i volymmått\". VarId 1952 is the loading degree of the run (volume utilisation) and VarId 2049 the loading degree in volume terms given in percent, a shipment-block variable (VarId 2036-2063); both measure volume loading degree."
+
+[[statement]]
+kind = "set"
+subject = "var:maximilastvikt-lastbil"
+fields = { "label" = "Maximilastvikt för lastbil/dragbil eller släp" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar, column MaxLv: VarId 1986 \"Maximilastvikt för lastbilen/dragbilen\" and VarId 2030 \"Släpets maximilastvikt\". VarId 1986 is the maximum load weight of the truck/tractor and VarId 2030 that of the trailer; the same measure for two vehicle kinds."
+
+[[statement]]
+kind = "set"
+subject = "var:maximilastvikt-lastbil"
+fields = { "description" = "Maximilastvikt för lastbilen/dragbilen respektive för släpet." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar, column MaxLv: VarId 1986 \"Maximilastvikt för lastbilen/dragbilen\" and VarId 2030 \"Släpets maximilastvikt\". VarId 1986 is the maximum load weight of the truck/tractor and VarId 2030 that of the trailer; the same measure for two vehicle kinds."
+
+[[statement]]
+kind = "set"
+subject = "var:palastningsomrade"
+fields = { "label" = "Pålastningsområde, län i Sverige eller landkod för utlandet" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar, column PaOmr: VarId 2055 \"Pålastningsområde, län i Sverige, landkod för utlandet\" and VarId 2025 \"Pålastningsområde för omlastning till annat transportmedel\". VarId 2055 is the loading area of the shipment and VarId 2025 the loading area for transfer to another mode of transport; both are a loading area given as county or country code."
+
+[[statement]]
+kind = "set"
+subject = "var:palastningsomrade"
+fields = { "description" = "Pålastningsområde som länskod i Sverige eller landkod för utlandet. Gäller både sändningens pålastningsområde och pålastningsområde för omlastning till annat transportmedel." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar, column PaOmr: VarId 2055 \"Pålastningsområde, län i Sverige, landkod för utlandet\" and VarId 2025 \"Pålastningsområde för omlastning till annat transportmedel\". VarId 2055 is the loading area of the shipment and VarId 2025 the loading area for transfer to another mode of transport; both are a loading area given as county or country code."
+
+[[statement]]
+kind = "set"
+subject = "var:palastningsort"
+fields = { "description" = "Ort där godset pålastas. Gäller både sändningens pålastningsort och pålastningsort för omlastning till annat transportmedel." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar, column PaOrt: VarId 2057 \"Pålastningsort\" and VarId 2026 \"Pålastningsort för pålastning till annat transportmedel\". VarId 2057 is the loading place of the shipment and VarId 2026 the loading place for transfer to another mode of transport; both are a loading place."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstevikt-lastbil"
+fields = { "label" = "Tjänstevikt för lastbil/dragbil eller släp" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar, column TjVikt: VarId 2012 \"Tjänstevikt för lastbilen/dragbilen\" and VarId 2033 \"Släpets tjänstevikt\". VarId 2012 is the kerb weight of the truck/tractor and VarId 2033 that of the trailer; the same measure for two vehicle kinds."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstevikt-lastbil"
+fields = { "description" = "Tjänstevikt för lastbilen/dragbilen respektive för släpet." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar, column TjVikt: VarId 2012 \"Tjänstevikt för lastbilen/dragbilen\" and VarId 2033 \"Släpets tjänstevikt\". VarId 2012 is the kerb weight of the truck/tractor and VarId 2033 that of the trailer; the same measure for two vehicle kinds."
+
+[[statement]]
+kind = "set"
+subject = "var:totalvikt-lastbil"
+fields = { "label" = "Totalvikt för lastbil/dragbil eller släp" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar, column TotVikt: VarId 2013 \"Totalvikt för lastbilen/dragbilen\" and VarId 2034 \"Släpets totalvikt\". VarId 2013 is the gross weight of the truck/tractor and VarId 2034 that of the trailer; the same measure for two vehicle kinds."
+
+[[statement]]
+kind = "set"
+subject = "var:totalvikt-lastbil"
+fields = { "description" = "Totalvikt, tjänstevikt plus maximilastvikt, för lastbilen/dragbilen respektive för släpet." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar, column TotVikt: VarId 2013 \"Totalvikt för lastbilen/dragbilen\" and VarId 2034 \"Släpets totalvikt\". VarId 2013 is the gross weight of the truck/tractor and VarId 2034 that of the trailer; the same measure for two vehicle kinds."
+
+[[statement]]
+kind = "set"
+subject = "var:varukod-sandning"
+fields = { "label" = "Varukod, huvudsakligt varuslag" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar, column Varukod: VarId 2061 \"Varukod, huvudsaklig för sändningen\" and VarId 1956 \"Huvudsakligt varuslag på körningen\". VarId 2061 is the main goods code of the shipment (modified NST/R) and VarId 1956 the main type of goods of the run; both give the main goods type, for the shipment record and the run record."
+
+[[statement]]
+kind = "set"
+subject = "var:varukod-sandning"
+fields = { "description" = "Huvudsakligt varuslag: på körningen respektive huvudsaklig varukod för sändningen. Sändningens varukod anges enligt modifierad NST/R (nomenklatur för statistikändamål avseende transporter)." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar, column Varukod: VarId 2061 \"Varukod, huvudsaklig för sändningen\" and VarId 1956 \"Huvudsakligt varuslag på körningen\". VarId 2061 is the main goods code of the shipment (modified NST/R) and VarId 1956 the main type of goods of the run; both give the main goods type, for the shipment record and the run record."
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: AntAxl @2000..2008 where key = 'v2028'"
+fields = { "variable" = "antal-axlar-lastbil" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar 2000 (RegVerID 1377) to 2008 (RegVerID 1099) documents column AntAxl under VarId 1963 \"Antal axlar på lastbil/dragbil\" and VarId 2028 \"Antal axlar på släpet\". The variant documents truck/tractor, trailer, run and shipment records side by side (Lid, Slid, Kid, BlSandnNr); VarId 1963 counts the axles of the truck/tractor and VarId 2028 those of the trailer, the same measure for two vehicle kinds in one column. The VarId 2028 occurrences are assigned to antal-axlar-lastbil."
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: AvOmr @2000..2008 where key = 'v2022'"
+fields = { "variable" = "avlastningsomrade" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar 2000 (RegVerID 1377) to 2008 (RegVerID 1099) documents column AvOmr under VarId 2037 \"Avlastningsområde, län i Sverige och landkod för utlandet\" and VarId 2022 \"Avlastningsområde från annat transportmedel\". VarId 2037 is the unloading area of the shipment and VarId 2022 the unloading area for transfer from another mode of transport (ferry or rail record, LinjeNr/Trmedel); both are an unloading area given as county or country code, with the same value set. The VarId 2022 occurrences are assigned to avlastningsomrade."
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: AvOrt @2000..2008 where key = 'v2023'"
+fields = { "variable" = "avlastningsort" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar 2000 (RegVerID 1377) to 2008 (RegVerID 1099) documents column AvOrt under VarId 2039 \"Avlastningsort\" and VarId 2023 \"Avlastningsort från annat transportmedel\". VarId 2039 is the unloading place of the shipment and VarId 2023 the unloading place for transfer from another mode of transport; both are an unloading place. The VarId 2023 occurrences are assigned to avlastningsort."
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: KgKvant @2000..2008 where key = 'v2044'"
+fields = { "variable" = "palastade-kilo" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar 2000 (RegVerID 1377) to 2008 (RegVerID 1099) documents column KgKvant under VarId 1947 \"Pålastade kilo under körningen\" and VarId 2044 \"Sändningens vikt i kilo\". VarId 1947 is the kilos loaded during the run and VarId 2044 the weight of the shipment in kilos; both are weight of goods in kilos, for the run record and the shipment record. The VarId 2044 occurrences are assigned to palastade-kilo."
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: KmKorda @2000..2008 where key = 'v2046'"
+fields = { "variable" = "korningskilometer" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar 2000 (RegVerID 1377) to 2008 (RegVerID 1099) documents column KmKorda under VarId 1949 \"Körningens totala kilometer\" and VarId 2046 \"Körda kilometer med den aktuella sändningen\". VarId 1949 is the total kilometres of the run and VarId 2046 the kilometres driven with the shipment; both are kilometres driven, for the run record and the shipment record. The VarId 2046 occurrences are assigned to korningskilometer."
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: LastGrad @2000..2008 where key = 'v2049'"
+fields = { "variable" = "lastningsgrad-volym" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar 2000 (RegVerID 1377) to 2008 (RegVerID 1099) documents column LastGrad under VarId 1952 \"Lastningsgrad under körningen, volymutnyttjande\" and VarId 2049 \"Lastningsgrad i volymmått\". VarId 1952 is the loading degree of the run (volume utilisation) and VarId 2049 the loading degree in volume terms given in percent, a shipment-block variable (VarId 2036-2063); both measure volume loading degree. The VarId 2049 occurrences are assigned to lastningsgrad-volym."
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: MaxLv @2000..2008 where key = 'v2030'"
+fields = { "variable" = "maximilastvikt-lastbil" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar 2000 (RegVerID 1377) to 2008 (RegVerID 1099) documents column MaxLv under VarId 1986 \"Maximilastvikt för lastbilen/dragbilen\" and VarId 2030 \"Släpets maximilastvikt\". VarId 1986 is the maximum load weight of the truck/tractor and VarId 2030 that of the trailer; the same measure for two vehicle kinds. The VarId 2030 occurrences are assigned to maximilastvikt-lastbil."
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: PaOmr @2000..2008 where key = 'v2025'"
+fields = { "variable" = "palastningsomrade" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar 2000 (RegVerID 1377) to 2008 (RegVerID 1099) documents column PaOmr under VarId 2055 \"Pålastningsområde, län i Sverige, landkod för utlandet\" and VarId 2025 \"Pålastningsområde för omlastning till annat transportmedel\". VarId 2055 is the loading area of the shipment and VarId 2025 the loading area for transfer to another mode of transport; both are a loading area given as county or country code. The VarId 2025 occurrences are assigned to palastningsomrade."
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: PaOrt @2000..2008 where key = 'v2026'"
+fields = { "variable" = "palastningsort" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar 2000 (RegVerID 1377) to 2008 (RegVerID 1099) documents column PaOrt under VarId 2057 \"Pålastningsort\" and VarId 2026 \"Pålastningsort för pålastning till annat transportmedel\". VarId 2057 is the loading place of the shipment and VarId 2026 the loading place for transfer to another mode of transport; both are a loading place. The VarId 2026 occurrences are assigned to palastningsort."
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: TjVikt @2000..2008 where key = 'v2033'"
+fields = { "variable" = "tjanstevikt-lastbil" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar 2000 (RegVerID 1377) to 2008 (RegVerID 1099) documents column TjVikt under VarId 2012 \"Tjänstevikt för lastbilen/dragbilen\" and VarId 2033 \"Släpets tjänstevikt\". VarId 2012 is the kerb weight of the truck/tractor and VarId 2033 that of the trailer; the same measure for two vehicle kinds. The VarId 2033 occurrences are assigned to tjanstevikt-lastbil."
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: TotVikt @2000..2008 where key = 'v2034'"
+fields = { "variable" = "totalvikt-lastbil" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar 2000 (RegVerID 1377) to 2008 (RegVerID 1099) documents column TotVikt under VarId 2013 \"Totalvikt för lastbilen/dragbilen\" and VarId 2034 \"Släpets totalvikt\". VarId 2013 is the gross weight of the truck/tractor and VarId 2034 that of the trailer; the same measure for two vehicle kinds. The VarId 2034 occurrences are assigned to totalvikt-lastbil."
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: Varukod @2000..2008 where key = 'v1956'"
+fields = { "variable" = "varukod-sandning" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar 2000 (RegVerID 1377) to 2008 (RegVerID 1099) documents column Varukod under VarId 2061 \"Varukod, huvudsaklig för sändningen\" and VarId 1956 \"Huvudsakligt varuslag på körningen\". VarId 2061 is the main goods code of the shipment (modified NST/R) and VarId 1956 the main type of goods of the run; both give the main goods type, for the shipment record and the run record. The VarId 1956 occurrences are assigned to varukod-sandning."

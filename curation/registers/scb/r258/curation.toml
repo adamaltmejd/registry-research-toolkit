@@ -1,4 +1,3 @@
-
 [[statement]]
 kind = "assert"
 subject = "it-anvandning-i-foretag: AWSEU @2011"
@@ -10176,18 +10175,6 @@ evidence = "Källan mäter facklig centralorganisation.\ncatalog:variable_text:3
 
 [[statement]]
 kind = "set"
-subject = "var:faktura-ej-autoprocess"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:292365\ncatalog:occurrence:292452\ncatalog:occurrence:292453"
-
-[[statement]]
-kind = "set"
-subject = "var:faktura-ej-autoprocess"
-fields = { "tags" = ["digital"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:292365\ncatalog:occurrence:292452\ncatalog:occurrence:292453"
-
-[[statement]]
-kind = "set"
 subject = "var:fast-bredband-vet-ej-typ"
 fields = { "tags" = ["digital"] }
 evidence = "Källkolumnen återanvänds för en annan betydelse.\ncatalog:occurrence:290086\ncatalog:occurrence:290349"
@@ -11748,18 +11735,6 @@ evidence = "IACC har en annan periodägare med en snävare etikett.\ncatalog:occ
 
 [[statement]]
 kind = "set"
-subject = "var:inv3r-pap"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:292364\ncatalog:occurrence:292450\ncatalog:occurrence:292451"
-
-[[statement]]
-kind = "set"
-subject = "var:inv3r-pap"
-fields = { "tags" = ["digital"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:292364\ncatalog:occurrence:292450\ncatalog:occurrence:292451"
-
-[[statement]]
-kind = "set"
 subject = "var:inv3r-pmp-enligt-leverans"
 fields = { "sets" = [] }
 evidence = "Leveransens betydelse är inte fastställd.\ncatalog:occurrence:292365\ncatalog:occurrence:292452\ncatalog:occurrence:292453\ncatalog:variable_text:33199:16801:17167"
@@ -12306,18 +12281,6 @@ evidence = "Källkoden är ogenomskinlig; värdena anger utförare av it-funktio
 
 [[statement]]
 kind = "set"
-subject = "var:it-losning-energiforbrukning-stor"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare. Definitionen gäller it-lösningar för minskad energiförbrukning.\ncatalog:occurrence:293276\ncatalog:occurrence:293277\ncatalog:variable_text:33249:20089:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:it-losning-energiforbrukning-stor"
-fields = { "tags" = ["digital", "energy"] }
-evidence = "Samma källkolumn har överlappande ägare. Definitionen gäller it-lösningar för minskad energiförbrukning.\ncatalog:occurrence:293276\ncatalog:occurrence:293277\ncatalog:variable_text:33249:20089:20454"
-
-[[statement]]
-kind = "set"
 subject = "var:it-losning-minska-energiforbrukning"
 fields = { "sets" = [] }
 evidence = "Samma källkolumn har överlappande ägare. Definitionen gäller it-lösningar för minskad energiförbrukning.\ncatalog:occurrence:293276\ncatalog:occurrence:293277\ncatalog:variable_text:33250:20089:20454"
@@ -12783,18 +12746,6 @@ kind = "set"
 subject = "var:mobil-internetanvandning-anledning-du-inte-vet-hur-man-gor"
 fields = { "tags" = ["digital"] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:33298:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "var:iuph1"
-fields = { "sets" = ["anvandning-av-mobiltelefon"] }
-evidence = "Kolumnen har överlappande och angränsande ägare.\ncatalog:occurrence:289931\ncatalog:occurrence:289932\ncatalog:occurrence:290059\ncatalog:variable_text:33299:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "var:iuph1"
-fields = { "tags" = ["digital"] }
-evidence = "Kolumnen har överlappande och angränsande ägare.\ncatalog:occurrence:289931\ncatalog:occurrence:289932\ncatalog:occurrence:290059\ncatalog:variable_text:33299:15340:15706"
 
 [[statement]]
 kind = "set"
@@ -14190,12 +14141,6 @@ evidence = "Källkolumnen har olika teknikavgränsningar. Coordinator group memb
 
 [[statement]]
 kind = "set"
-subject = "var:molntjanster-delar-inte-filer"
-fields = { "tags" = ["digital"] }
-evidence = "Samma kolumn har överlappande ägare. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0328: Vald e-postfråga anger bilagor utan dokument- eller bildavgränsning; mediefildelningen avser filmer och musik. membership-0329: E-postmåtten avser allmän e-post, inte särskilt dokument- eller bilddelning. membership-0330: Ingen vald variabel mäter dokument- eller bilddelning. membership-0331: Variablerna mäter faktisk dokument- eller bilddelning efter kanal, inklusive moln, e-post och andra digitala överföringssätt. membership-0332: Studiekommunikation och medienedladdning anger inte dokument- eller bilddelning. membership-0333: De valda uppladdningsfrågorna gäller publicering av eget material, som definitionen utesluter. membership-0334: Filkopiering och mediefildelningsprogram mäter inte den definierade dokument- och bilddelningen. membership-0335: Åtkomstbegränsning till profiler eller lagring mäter skydd, inte delningskanal. membership-0336: Filflyttning mellan egna enheter och säkerhetskopiering mäter inte delning med andra. membership-0337: Filkopiering mäter inte delning med andra. membership-0338: Lämnade personuppgifter mäter uppgiftskategorier, inte dokumentdelning efter kanal. membership-0339: Filflyttning och publicering mäts, inte separat delning efter kanal. membership-0340: Digitala leveranser av köpt innehåll mäter inte delning med andra. membership-0341: Mobilfrågan mäter digital bildöverföring. Molnfrågan kodar utebliven delning eller alternativa delningskanaler; den fasta definitionen omfattar dessa komponenter. membership-0342: Filskapande och säkerhetskopiering mäter inte delning med andra. membership-0343: E-postfrågan mäter skickade bilagor utan särskild kodning av dokument- eller bilddelning efter kanal. membership-0344: Ingen vald variabel mäter dokument- eller bilddelning. membership-0345: Multimedieplattformvariabeln mäter användning av en social medietyp, inte dokument- eller bilddelning efter kanal. membership-0346: De valda delningsfrågorna avser information i distributionskedjan, inte dokument- eller bilddelning efter kanal. membership-0347: Inga valda variabler mäter digital delning av dokument eller bilder. membership-0348: Lagerinformationens elektroniska utbyte mäter inte delning av dokument eller bilder efter kanal. membership-0349: Fjärråtkomst till företagets dokument är inte belagd delning av dokument eller bilder. membership-0350: Extern informationsdelning mäter inte särskilt dokument- eller bilddelning. membership-0351: Inga valda variabler mäter digital dokument- eller bilddelning.\ncatalog:occurrence:290114\ncatalog:occurrence:290115\ncatalog:variable_text:32387:19358:19723\ncatalog:variable_text:32393:15706:16071\ncatalog:variable_text:32394:15706:16071\ncatalog:variable_text:32401:16801:17167\ncatalog:variable_text:32422:17167:20454\ncatalog:variable_text:32567:16071:16436\ncatalog:variable_text:32594:16071:16436\ncatalog:variable_text:32595:16071:16436\ncatalog:variable_text:32596:16071:16436\ncatalog:variable_text:32597:16071:16436\ncatalog:variable_text:32677:14245:14975\ncatalog:variable_text:32683:13514:13879\ncatalog:variable_text:32738:13879:14245\ncatalog:variable_text:32755:13879:14245\ncatalog:variable_text:32781:13514:13879\ncatalog:variable_text:32816:16436:17532\ncatalog:variable_text:32817:16071:16436\ncatalog:variable_text:32819:19358:19723\ncatalog:variable_text:32820:17167:17532\ncatalog:variable_text:32910:20089:20454\ncatalog:variable_text:33024:17897:18262\ncatalog:variable_text:33036:16436:16801\ncatalog:variable_text:33071:17897:18262\ncatalog:variable_text:33187:16801:17167\ncatalog:variable_text:33189:16801:17167\ncatalog:variable_text:33190:16801:17167\ncatalog:variable_text:33302:16801:17167\ncatalog:variable_text:33322:20089:20454\ncatalog:variable_text:33344:17897:18262\ncatalog:variable_text:33374:15706:16436\ncatalog:variable_text:33404:16436:16801\ncatalog:variable_text:33431:13879:14245\ncatalog:variable_text:33439:16071:16436\ncatalog:variable_text:33545:19723:20089\ncatalog:variable_text:33590:17897:18262\ncatalog:variable_text:33649:17167:17532\ncatalog:variable_text:33650:17167:17532\ncatalog:variable_text:33658:20089:20454\ncatalog:variable_text:33663:14610:15340"
-
-[[statement]]
-kind = "set"
 subject = "var:molntjanster-lagra-annat"
 fields = { "sets" = ["anvandning-av-molnlagring"] }
 evidence = "Samma källkolumn har två ägare under samma period.\ncatalog:occurrence:290114\ncatalog:occurrence:290115"
@@ -15498,18 +15443,6 @@ evidence = "Kolumnen har överlappande ägare med olika incidenttyper.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:sakerhetsinc-konfdata-rojd-malware"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har två ägare under samma period.\ncatalog:occurrence:293200\ncatalog:occurrence:293201"
-
-[[statement]]
-kind = "set"
-subject = "var:sakerhetsinc-konfdata-rojd-malware"
-fields = { "tags" = ["digital"] }
-evidence = "Samma källkolumn har två ägare under samma period.\ncatalog:occurrence:293200\ncatalog:occurrence:293201"
-
-[[statement]]
-kind = "set"
 subject = "var:sakerhetsinc-konfdata-rojd-personal"
 fields = { "sets" = [] }
 evidence = "Samma källkolumn avser olika orsaker i olika perioder.\ncatalog:occurrence:293001\ncatalog:occurrence:293198"
@@ -16284,18 +16217,6 @@ evidence = "Två variabler är mappade till samma källkolumn under samma period
 
 [[statement]]
 kind = "set"
-subject = "var:sokt-varuinfo-handlat-internet"
-fields = { "sets" = ["konsumentinformation-pa-internet"] }
-evidence = "Två variabler är mappade till samma källkolumn under samma period.\ncatalog:occurrence:289342\ncatalog:occurrence:289343"
-
-[[statement]]
-kind = "set"
-subject = "var:sokt-varuinfo-handlat-internet"
-fields = { "tags" = ["consumption", "digital"] }
-evidence = "Två variabler är mappade till samma källkolumn under samma period.\ncatalog:occurrence:289342\ncatalog:occurrence:289343"
-
-[[statement]]
-kind = "set"
 subject = "var:sokt-wikipedia-wiki-webbplatser"
 fields = { "sets" = [] }
 evidence = "Kolumnen har en annan ägare i föregående period.\ncatalog:occurrence:289549\ncatalog:occurrence:289728"
@@ -16473,18 +16394,6 @@ kind = "set"
 subject = "var:sysselsattningstyp-skapad"
 fields = { "tags" = ["employment"] }
 evidence = "Kolumnerna har andra ägare i andra perioder.\ncatalog:occurrence:289940\ncatalog:occurrence:290462\ncatalog:occurrence:290717\ncatalog:occurrence:291337"
-
-[[statement]]
-kind = "set"
-subject = "var:sysselsattningstyp-skapad-h8x1"
-fields = { "sets" = ["sysselsattningsstatus"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:290330\ncatalog:occurrence:290331\ncatalog:occurrence:290332"
-
-[[statement]]
-kind = "set"
-subject = "var:sysselsattningstyp-skapad-h8x1"
-fields = { "tags" = ["employment"] }
-evidence = "Samma kolumn har överlappande ägare.\ncatalog:occurrence:290330\ncatalog:occurrence:290331\ncatalog:occurrence:290332"
 
 [[statement]]
 kind = "set"
@@ -18500,12 +18409,6 @@ evidence = "r138 explicitly asks about connecting a mobile phone to the internet
 
 [[statement]]
 kind = "set"
-subject = "var:molntjanster-delar-inte-filer"
-fields = { "sets" = ["digital-delning-av-dokument-och-bilder"] }
-evidence = "r236 combines non-sharing with sharing through other channels; r253 includes both non-sharing and channel-based sharing.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33325\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33446\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/it-anvandning/digital-delning-av-dokument-och-bilder"
-
-[[statement]]
-kind = "set"
 subject = "var:molntjanster-har-delat-dokument-via-egen-webbsida-blogg"
 fields = { "sets" = ["digital-delning-av-dokument-och-bilder"] }
 evidence = "r167 explicitly measures sharing files with other people via websites, blogs or social networks; r142 supplies a cloud-sharing channel partner.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:33326\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:32638\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:33447"
@@ -20036,12 +19939,6 @@ evidence = "#2102 same-label cluster 'Sysselsättningstyp skapad' (3 variables):
 
 [[statement]]
 kind = "set"
-subject = "var:sysselsattningstyp-skapad-h8x1"
-fields = { "label" = "Sysselsättningstyp skapad (H8X1)" }
-evidence = "#2102 same-label cluster 'Sysselsättningstyp skapad' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The main pid mixes a five-code AKU-derived list (Sy, Sy2, H8X2txt) with H8's eight-alternative list (88/99 added), so 'fem svarsalternativ' is not true of all its occurrences; H8X1 has the same eight-alternative list as H8, so alternative count does not separate them. Codes are used."
-
-[[statement]]
-kind = "set"
 subject = "var:sysselsattningstyp-skapad-h9txt"
 fields = { "label" = "Sysselsättningstyp skapad (H9txt)" }
 evidence = "#2102 same-label cluster 'Sysselsättningstyp skapad' (3 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; The main pid mixes a five-code AKU-derived list (Sy, Sy2, H8X2txt) with H8's eight-alternative list (88/99 added), so 'fem svarsalternativ' is not true of all its occurrences; H8X1 has the same eight-alternative list as H8, so alternative count does not separate them. Codes are used."
@@ -20279,3 +20176,75 @@ kind = "set"
 subject = "set:utbildningsniva"
 fields = { "description" = "Personens utbildningsnivå enligt Svensk utbildningsnomenklatur (SUN 2000), som första positionen av tre i nivåkoden och i en grov indelning. För 2007–2023 kommer uppgiften från den ordinarie arbetskraftsundersökningen (AKU)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är SUN 2000-nivå; axeln är precision (första position mot grov).\ncatalog:variable_text:40580:17532:19723\ncatalog:variable_text:40580:19723:20454\ncatalog:variable_text:40581:15340:15706\ncatalog:variable_text:40581:16436:18628\ncatalog:variable_text:40582:13514:14245\ncatalog:variable_text:40582:14610:15340\ncatalog:variable_text:40583:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "var:it-losning-minska-energiforbrukning"
+fields = { "label" = "Företaget använder it-lösningar för att minska energiförbrukningen" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, IT-användning i företag, column ENV_ECRS: VarId 49943 \"Företaget använder it-system eller it-lösningar för att minska energiförbrukningen\" and VarId 49944 \"Företaget använder it-system eller it-lösningar för att minska energiförbrukningen, stora\". Both carry the same definition (the company uses IT systems or solutions to reduce energy use); VarId 49944 is the \"stora\" (large companies) variant, so the column holds one question asked for two company sizes."
+
+[[statement]]
+kind = "set"
+subject = "var:it-losning-minska-energiforbrukning"
+fields = { "description" = "Anger om företaget använder it-system eller it-lösningar för att minska energiförbrukningen. Uppgiften finns för företag i allmänhet och i en variant för stora företag." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, IT-användning i företag, column ENV_ECRS: VarId 49943 \"Företaget använder it-system eller it-lösningar för att minska energiförbrukningen\" and VarId 49944 \"Företaget använder it-system eller it-lösningar för att minska energiförbrukningen, stora\". Both carry the same definition (the company uses IT systems or solutions to reduce energy use); VarId 49944 is the \"stora\" (large companies) variant, so the column holds one question asked for two company sizes."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: A2B @2014 where key = 'v35514'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Befolkningens IT-användning 2014 (RegVerID 12034) documents column A2B under VarId 15894 \"Internet via bärbar dator\" and VarId 35514 \"Internetanslutning via surfplatta\". The 2014 equipment list runs A2B laptop, A2D smartphone, A2E other mobile device, so the tablet item (\"3. Surfplatta\") belongs to the undocumented A2C; VarId 15894 \"Internet via bärbar dator\" is the laptop item (DatA3B in 2007-2010) and VarId 35514 the tablet variable, which has its own column B3c from 2016. The VarId 35514 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: CC_OTH @2014 where key = 'v30747'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Befolkningens IT-användning 2014 (RegVerID 12034) documents column CC_OTH under VarId 37832 \"Molntjänster: Använt internettjänster för att lagra annat än redan nämnt\" and VarId 30747 \"Molntjänster: Delar inte filer/delar filer på annat sätt\". The source does not settle which; 37832 is the more plausible owner because it is the \"other\" item of the cloud-storage usage list (CC_EBO e-books, CC_VID video, CC_MUS music), whereas VarId 30747 is a reason for not using cloud storage, a group with no column named CC_OTH (maintainer 2026-11-14: place under the more plausible owner). The VarId 30747 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: DatC5D1 @2009 where key = 'v21114'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Befolkningens IT-användning 2009 (RegVerID 2757) documents column DatC5D1 under VarId 21113 \"Använt Internet och sökt information om varor/tjänster, har köpt?\" and VarId 21114 \"Använt Internet, sökt info, använt info vid handling via Internet\". VarId 21113 states question C5d1, whose name is the column DatC5D1, while VarId 21114 states the follow-up question C5d1_1 (\"Har du då använt informationen då du handlat via Internet?\"), which is not a column named DatC5D1. The VarId 21114 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: HH_POP @2012 where key = 'v17590'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Befolkningens IT-användning 2012 (RegVerID 12386) documents column HH_POP under VarId 23399 \"Antal personer 16 år eller mer i hushållet\" and VarId 17590 \"Antal vuxna (16-85 år)\". The source does not settle which; 23399 is the more plausible owner because HH_POP pairs with HH_CHILD (VarId 16088, persons under 16 in the household) and VarId 16088 and VarId 23399 are adjacent questions in every other year (DatG13/G12, DatG14/G15, H15/H14), whereas VarId 17590 (AP, 2007-2011) is a count SCB kept in its own column until 2011 (maintainer 2026-11-14: place under the more plausible owner). The VarId 17590 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: IUEDUIF @2013 where key = 'v35548'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Befolkningens IT-användning 2013 (RegVerID 12316) documents column IUEDUIF under VarId 35125 \"Sökt information om utbildningsmöjligheter\" and VarId 35548 \"Deltagit i kurs på nätet\". The IU..IF columns are information searches (IUIF is searching for information on goods and services), so IUEDUIF is VarId 35125 \"Sökt information om utbildningsmöjligheter\"; VarId 35548 \"Deltagit i kurs på nätet\" has its own columns in 2015-2018 (C6a, B5x). The VarId 35548 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: IUHD_OTH @2012 where key = 'v28898'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Befolkningens IT-användning 2012 (RegVerID 12386) documents column IUHD_OTH under VarId 28878 \"Mobil internetanvändning; annat?\" and VarId 28898 \"Mobil internetanvändning; kopplat upp sig med annan enhet än mobiltelefon/smartphone eller bärbar dator\". The source does not settle which; 28878 is the more plausible owner because it is the \"Annat?\" item of the IUHD_ activity list (e-mail, news, e-books, games, podcasts, social networks, GPS) and has no other column, whereas VarId 28898 (another device) is the device question that has its own column C3b1 from 2014, although its VarId sits in the device range of IUHD_PHO/IUHD_MPH, so the device reading is possible too (maintainer 2026-11-14: place under the more plausible owner). The VarId 28898 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: IUPH1 @2012 where key = 'v28848'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Befolkningens IT-användning 2012 (RegVerID 12386) documents column IUPH1 under VarId 21111 \"Använt Internet för telefon-/videosamtal via Internet\" and VarId 28848 \"Använt mobiltelefon/smartphone\". IUPH1 is VarId 37000 \"Använt Internet för telefon- eller videosamtal\" in 2013 and 2014, the same question as VarId 21111 (DatC5B in 2009-2010); VarId 28848 \"Använt mobiltelefon/smartphone\" is a device-use question, not an internet-use (IU) item. The VarId 28848 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: ENV_ECRS @2025 where key = 'v49944'"
+fields = { "variable" = "it-losning-minska-energiforbrukning" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, IT-användning i företag 2025 (RegVerID 20159) documents column ENV_ECRS under VarId 49943 \"Företaget använder it-system eller it-lösningar för att minska energiförbrukningen\" and VarId 49944 \"Företaget använder it-system eller it-lösningar för att minska energiförbrukningen, stora\". Both carry the same definition (the company uses IT systems or solutions to reduce energy use); VarId 49944 is the \"stora\" (large companies) variant, so the column holds one question asked for two company sizes. The VarId 49944 occurrences are assigned to it-losning-minska-energiforbrukning."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: inv3r_pap @2017 where key = 'v38334'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, IT-användning i företag 2017 (RegVerID 11568) documents column inv3r_pap under VarId 35491 \"Andel mottagna elektroniska fakturor som kan processas automatiskt\" and VarId 38334 \"Andel mottagna e-fakturor som kan processas automatiskt i mottgarens IT-system\". Both are the share of received invoices that are electronic and can be processed automatically, with different bases (all invoices received versus invoices from other companies and the public sector in the previous year); they are two documentations of one question, not two row kinds, so no merge. The source does not settle which; 35491 is the more plausible owner because it continues as INV4R_AP_P in 2018 (maintainer 2026-11-14: place under the more plausible owner); the 38334 row is withheld."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: inv3r_pmp @2017 where key = 'v38335'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, IT-användning i företag 2017 (RegVerID 11568) documents column inv3r_pmp under VarId 35490 \"Andel mottagna fakturor som inte kan processas automatiskt\" and VarId 38335 \"Andel mottagna e-fakturor och pappersfakturor som inte kan processas automatiskt i mottgarens IT-system\". Both are the share of received invoices (paper and e-invoices) that cannot be processed automatically, with different bases; they are two documentations of one question, not two row kinds, so no merge. The source does not settle which; 35490 is the more plausible owner because it is the counterpart of 35491 in the same 2017 column pair and the older documentation (CVID 470675 against 558837) (maintainer 2026-11-14: place under the more plausible owner); the 38335 row is withheld."

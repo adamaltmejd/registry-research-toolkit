@@ -46,19 +46,7 @@ pub(crate) fn semantic(db: &Connection) -> Result<()> {
     Ok(())
 }
 
-/// One untyped segment's own occurrences, for the F6 check in [`types`].
-#[derive(Default)]
-struct Own {
-    families: BTreeSet<&'static str>,
-    /// Label key, value set, classification, source key: one entry when they agree.
-    forms: BTreeSet<OwnForm>,
-    /// An occurrence spelled other than the segment's folded spelling.
-    off_spelling: bool,
-}
-
-type OwnForm = (Option<String>, Option<i64>, Option<i64>, String);
-
-/// Use the same closed family map as resolution, including the F6 exemption. The
+/// Use the same closed family map as resolution, including blank types over disagreeing families. The
 /// catalog holds only published names, never a reader or curation alias (#2071).
 fn types(db: &Connection) -> Result<()> {
     let mut stated = db.prepare(
@@ -75,38 +63,25 @@ fn types(db: &Connection) -> Result<()> {
     let family = |dtype: Option<&str>| {
         dtype.and_then(|t| reg_frame::dtype_info(t).expect("validated dtype").family)
     };
-    // The F6 source conflict, as resolution decides it (reg-resolve, `type_conflicts`): an
-    // untyped segment whose own occurrences state two or more known families but agree on
-    // label (`label_key`), value set, classification and source key, each spelled as the
-    // segment's folded spelling. A segment's occurrences are exactly the used ones
-    // resolution segmented; any other disagreement leaves the segment ambiguous.
-    let mut owns = BTreeMap::<i64, Own>::new();
+    // An untyped segment whose own occurrences state two or more known families.
+    let mut owns = BTreeMap::<i64, BTreeSet<&'static str>>::new();
     let mut stated = db.prepare(
-        "SELECT o.segment_id, o.dtype, t.body, o.valueset_id, o.class_version_id,
-                o.source_key, sp.fold_id IS NOT s.fold_id
+        "SELECT o.segment_id, o.dtype
          FROM occurrence o JOIN segment s ON s.id = o.segment_id
-         LEFT JOIN text t ON t.id = o.label_text
-         LEFT JOIN spelling sp ON sp.id = o.spelling_id
          WHERE s.dtype IS NULL",
     )?;
     let mut rows = stated.query([])?;
     while let Some(row) = rows.next()? {
         let own = owns.entry(row.get(0)?).or_default();
         if let Some(f) = family(row.get::<_, Option<String>>(1)?.as_deref()) {
-            own.families.insert(f);
+            own.insert(f);
         }
-        let label: Option<String> = row.get(2)?;
-        own.forms.insert((
-            label.as_deref().map(reg_core::label_key),
-            row.get(3)?,
-            row.get(4)?,
-            row.get(5)?,
-        ));
-        own.off_spelling |= row.get::<_, bool>(6)?;
     }
+    // Occurrences that disagree on form still place, with the disagreeing fields blank
+    // (maintainer 2026-11-14): a blank type needs two known families beneath it.
     let conflicts: BTreeSet<i64> = owns
         .into_iter()
-        .filter(|(_, own)| own.families.len() > 1 && own.forms.len() == 1 && !own.off_spelling)
+        .filter(|(_, families)| families.len() > 1)
         .map(|(segment, _)| segment)
         .collect();
     let mut pairs = db.prepare(
