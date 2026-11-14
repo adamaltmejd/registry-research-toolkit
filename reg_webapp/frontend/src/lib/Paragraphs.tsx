@@ -1,9 +1,9 @@
 import styles from "./CatalogNodeView.module.css";
 import { repeatKeys } from "./series_breaks";
 
-/** Provider text as prose paragraphs, one per line. */
+/** Provider text as prose paragraphs, one per non-blank line. */
 export function Paragraphs({ text }: { text: string }) {
-  const lines = text.split("\n");
+  const lines = text.split("\n").filter((line) => line.trim() !== "");
   const keys = repeatKeys(lines);
   return lines.map((line, index) => (
     <p key={keys[index]} className={styles.prose}>

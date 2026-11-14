@@ -2949,8 +2949,7 @@ relation and not as a document.
   resolves its endpoint to one entity per piece, a release included. A break without
   text is kept: the provider still marks one there.
 - **Curation.** A `set` statement whose only field is `series_break = { at?, text }`
-  puts a break on its subject (a register, table, release or variable address; not a
-  set). `at` is one interval with a stated start; the break is at its first day. It is
+  puts a break on its subject (a table, release or variable address; not a set). `at` is one interval with a stated start; the break is at its first day. It is
   for the rows the reader cannot place (a `CVID` or release id missing from the
   export) and for dating a source break whose text states a year. A dated curated
   break with the same text as a source break on its subject, or on a release of its

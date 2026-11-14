@@ -188,7 +188,13 @@ pub fn resolve(
                                 breaks.insert(Break {
                                     subject,
                                     at: notice.at.clone(),
-                                    text: notice.text.clone(),
+                                    // Trimmed like a curated text, so a copy replaces it.
+                                    text: notice
+                                        .text
+                                        .as_deref()
+                                        .map(str::trim)
+                                        .filter(|t| !t.is_empty())
+                                        .map(str::to_owned),
                                     statement: None,
                                 });
                             } else {
@@ -399,7 +405,7 @@ struct Index<'a> {
     variables: BTreeMap<(usize, &'a str), BTreeSet<usize>>,
     /// (register, table, release, source key, column) → the variable that occurrence
     /// resolves to.
-    occurrences: BTreeMap<(usize, &'a str, &'a str, &'a str, &'a str), usize>,
+    occurrences: BTreeMap<(usize, &'a str, &'a str, &'a str, &'a str), BTreeSet<usize>>,
     variable_slugs: BTreeMap<(usize, &'a str), usize>,
 }
 
@@ -430,16 +436,18 @@ impl<'a> Index<'a> {
             for occurrence in &r.occurrences {
                 if let Some(variable) = occurrence.variable {
                     let o = &occurrence.occurrence;
-                    index.occurrences.insert(
-                        (
+                    // A period split gives one occurrence several variables: every piece.
+                    index
+                        .occurrences
+                        .entry((
                             ri,
                             o.table.as_str(),
                             o.release.as_deref().unwrap_or_default(),
                             o.source_key.as_str(),
                             o.column.as_str(),
-                        ),
-                        variable,
-                    );
+                        ))
+                        .or_default()
+                        .insert(variable);
                     index
                         .variables
                         .entry((ri, occurrence.occurrence.source_key.as_str()))
@@ -506,7 +514,7 @@ impl<'a> Index<'a> {
                 );
                 self.occurrences
                     .get(&(ri, table, release, key, column))
-                    .map(|&v| vec![Entity::Variable(ri, v)])
+                    .map(|vs| vs.iter().map(|&v| Entity::Variable(ri, v)).collect())
                     .ok_or_else(|| {
                         missing(&format!(
                             "variable with key {key:?} in column {column:?} of release {release:?} of table {table:?}"
