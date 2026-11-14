@@ -216,3 +216,17 @@ kind = "set"
 subject = "var:kommunnamn"
 fields = { "description" = "Kommunens namn i klartext. SCB kopplar på namnet utifrån den insamlade kommunkoden när uppgifterna kommit in." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; de två operationaliseringarna säger samma sak med olika ord.\ncatalog:variable_text:46380:15706:16436\ncatalog:variable_text:46380:19723:20089"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "oljeleveranser-kommunvis-redovisning: var:kontrollnr"
+fields.row_key = true
+evidence = "Row key: kontrollnr and scbid identify a row: rows are deliveries per supplier, municipality and category, keyed on the supplier control number of each era; organisation number and name are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "oljeleveranser-kommunvis-redovisning: var:scbid"
+fields.row_key = true
+evidence = "Row key: kontrollnr and scbid identify a row: rows are deliveries per supplier, municipality and category, keyed on the supplier control number of each era; organisation number and name are attributes (maintainer ruling 2026-11-14)."

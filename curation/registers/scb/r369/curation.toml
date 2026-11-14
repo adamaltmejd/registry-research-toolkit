@@ -130,3 +130,11 @@ kind = "set"
 subject = "var:orgnr"
 fields = { "description" = "Företagets eller myndighetens organisationsnummer, enligt Bisnodes register till 2017 och Euro Group Register 2018." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; källan byts från Bisnode till Euro Group Register 2018.\ncatalog:variable_text:36206:13514:17532\ncatalog:variable_text:36206:17532:17897"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "svenska-koncerner: var:orgnr"
+fields.row_key = true
+evidence = "Row key: orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

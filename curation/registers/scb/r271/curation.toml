@@ -358,3 +358,16 @@ kind = "set"
 subject = "var:antal-fornamn"
 fields = { "label" = "Antal personer med namnet", "description" = "Antal personer i befolkningen som har det aktuella namnet. Kolumnen räknar förnamn, tilltalsnamn eller efternamn, beroende på vilken namnuppgift raden gäller." }
 evidence = "Maintainer ruling 2026-11-14: variants of one concept for different row kinds are merged and the variable carries a label and description covering both kinds.\nVarId 16398, 16399 and 16400 share the column Antal in Folkbokförda - namn 1999-2020 (\"Härledd variabel. Anger antalet personer i befolkningen som har det aktuella förnamnet / förnamnet som tilltalsnamn / efternamnet\")."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "folkbokforda-personer: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "namngivna-nyfodda: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

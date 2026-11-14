@@ -372,3 +372,17 @@ kind = "set"
 subject = "set:naringsgren"
 fields = { "description" = "Den näringsgren som arbetsstället tillhör, enligt Svensk näringsgrensindelning på femsiffernivå: SNI 2002 till och med 2021, från 2022 SNI 2007 i den ena variabeln." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna har samma definition; SNI-versionen byts 2022 i den ena.\ncatalog:variable_text:41877:12784:13514\ncatalog:variable_text:41878:18993:20089"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "privat-offentlig: var:cfar-nummer"
+fields.row_key = true
+evidence = "Row key: cfar-nummer and idnr identify a row: one row per sampled workplace and quarter, keyed on its CFAR number, delivered as idnr in 2005 to 2006 (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "privat-offentlig: var:idnr"
+fields.row_key = true
+evidence = "Row key: cfar-nummer and idnr identify a row: one row per sampled workplace and quarter, keyed on its CFAR number, delivered as idnr in 2005 to 2006 (maintainer ruling 2026-11-14)."

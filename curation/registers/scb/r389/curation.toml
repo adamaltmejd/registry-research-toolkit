@@ -820,3 +820,11 @@ kind = "set"
 subject = "set:alder"
 fields = { "description" = "Ålder i antal år vid årets slut, beräknad som skillnaden mellan referensåret och födelseåret enligt personnumret, i antal år eller grupperad i åldersklasser." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i gruppering.\ncatalog:variable_text:40759:16436:16801\ncatalog:variable_text:40759:16801:17167\ncatalog:variable_text:40760:16436:20089"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "konst-och-kulturutbildningar-och-vissa-andra-utbildningar: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per student enrolment, keyed on personnr; programme and round numbers are attributes and rows are not unique (maintainer ruling 2026-11-14)."

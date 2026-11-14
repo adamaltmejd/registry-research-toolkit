@@ -214,3 +214,11 @@ kind = "set"
 subject = "var:naturgas-byte-leverantor-ovrkund"
 fields = { "label" = "Naturgas, byte leverantör (övriga kunder, antal kunder)" }
 evidence = "#2102 same-label cluster 'Naturgas, byte leverantör' (4 variables): judged different meaning, high confidence; Opdefs give two measures (antal kunder, antal anläggningar) for two customer groups (hushållskunder, övriga kunder), concurrent in one table."
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "natpriser: var:orgnr"
+fields.row_key = true
+evidence = "Row key: orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

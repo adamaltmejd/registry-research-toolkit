@@ -6010,3 +6010,10 @@ kind = "set"
 subject = "var:forsorjningsstod-delat"
 fields = { series_break = { at = "2013", text = "Från referensåret 2013 fördelas beloppet på alla personer i hushållet över 16 år. Tidigare fördelades beloppet på alla över 18 år." } }
 evidence = "current-scb-inputs.zip/Timeseries.csv row=91\n\nCVID 368884 = STATIV 2013 column SocBidrForStod, ledger \"STATIV: SocBidrForStod @ 1997-01-01\". \"Från referensåret 2013\"."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "stativ: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the person; relatives, family, employer and workplace ids are attributes (maintainer ruling 2026-11-14)."

@@ -3984,3 +3984,46 @@ kind = "set"
 subject = "var:planforkortning"
 fields = { "label" = "Planförkortning", "description" = "Anger typ av planbeslut. Kolumnen gäller både planer och naturvårdsbestämmelser; för en naturvårdsbestämmelse anger den typ av planbeslut för bestämmelsen." }
 evidence = "Maintainer ruling 2026-11-14: variants of one concept for different row kinds are merged and the variable carries a label and description covering both kinds.\nVarId 35349 (\"Anger typ av planbeslut\") and VarId 35356 (\"Anger typ av planbeslut för naturvårdsbestämmelse\") share the column PLANFK in Planinformation 2016-2025."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "adressplatsinformation: var:uuid"
+fields.row_key = true
+evidence = "Row key: uuid identify a row: an address point table keyed on the record uuid; property keys, riksnyckel parts and area uuids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "byggnadsinformation: var:uuid"
+fields.row_key = true
+evidence = "Row key: uuid identify a row: a building table keyed on the record uuid; property, entrance, dwelling and address ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "distriktsinformation: var:fnr"
+fields.row_key = true
+evidence = "Row key: fnr identify a row: one row per property with its district; address and district uuids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fastighetsinformation: var:fnr"
+fields.row_key = true
+evidence = "Row key: fnr identify a row: a property table keyed on the property key fnr; origin and transfer property keys and the record uuid are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "inskrivningsinformation: var:uuid"
+fields.row_key = true
+evidence = "Row key: uuid identify a row: one row per registration record, keyed on its record uuid; the property key, the owner person-orgnr and referenced uuids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "planinformation: var:beslutsnyckel"
+fields.row_key = true
+evidence = "Row key: pfnr and beslutsnyckel identify a row: one row per property and plan decision that applies to it; the record uuid is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "planinformation: var:pfnr"
+fields.row_key = true
+evidence = "Row key: pfnr and beslutsnyckel identify a row: one row per property and plan decision that applies to it; the record uuid is an attribute (maintainer ruling 2026-11-14)."

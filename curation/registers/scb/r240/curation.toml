@@ -1088,3 +1088,11 @@ kind = "set"
 subject = "set:lan"
 fields = { "description" = "Län vid val till Europaparlamentet, angivet som kod eller som namn i klartext. Beroende på tabell avser det länet där rösten avgivits eller länet där personen är röstberättigad (boendelän)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i kod eller namn; länets roll beror på tabellen, enligt alla rader i exporten.\ncatalog:variable_text:14935:9131:9496\ncatalog:variable_text:14935:12418:12784\ncatalog:variable_text:14935:16071:16436\ncatalog:variable_text:14935:19723:20089\ncatalog:variable_text:14936:9131:9496\ncatalog:variable_text:14936:12418:12784"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "rostberattigade: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

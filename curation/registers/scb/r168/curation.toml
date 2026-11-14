@@ -8741,3 +8741,59 @@ kind = "set"
 subject = "set:totala-kostnader"
 fields = { "description" = "Redovisas för företagsenhet 2022–2023, lokal enhet 2017–2023 och summerat per kommun 2003–2020, där kommunvärdet 2020 aggregeras från de lokala verksamhetsenheterna med modellberäkning." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): a total is another view of the same measure, so it belongs in its original variable's group, as G3 ruled (a component beside its sum is a slot).\n\nDEF ger bara namnet; nivåer och år ur tabellerna; OP kommun 2020 modellberäkning.\ncatalog:variable_text:17950:12053:18262\ncatalog:variable_text:17950:18262:18628"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "fek-blankettvariabler-ve: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr and velopnr identify a row: an activity unit is identified by its sequence number within the person-orgnr (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fek-blankettvariabler-ve: var:velopnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr and velopnr identify a row: an activity unit is identified by its sequence number within the person-orgnr (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fek-juridisk-enhet: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: one row per legal unit linking it to its enterprise; fenr is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fek-preliminara-data-fe: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-investeringar-per-kommun: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: var:cfar-nummer"
+fields.row_key = true
+evidence = "Row key: cfar-nummer and lokal-verksamhetsenhetsnummer identify a row: one row per local unit: the workplace cfar-nummer in all years, the local unit number from 2017; person-orgnr and venr are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-lokal: var:lokal-verksamhetsenhetsnummer"
+fields.row_key = true
+evidence = "Row key: cfar-nummer and lokal-verksamhetsenhetsnummer identify a row: one row per local unit: the workplace cfar-nummer in all years, the local unit number from 2017; person-orgnr and venr are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: results per activity unit but no activity unit id is offered, so the firm person-orgnr is the key and rows may not be unique; fenr is an attribute (maintainer ruling 2026-11-14)."

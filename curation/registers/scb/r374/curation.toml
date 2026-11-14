@@ -2988,3 +2988,11 @@ kind = "set"
 subject = "set:utbildningsanordnare"
 fields = { "description" = "Typer av utbildningsanordnare för företagets externa kurser: grund- och gymnasieskola samt universitet och högskola, annan offentlig utbildningsanordnare (till exempel komvux, folkhögskola och studieförbund), privata utbildningsanordnare och konsulter, privata företag vars huvudsyfte inte är utbildning, bransch- och arbetsgivarorganisationer och handelskammare, fackföreningar, samt annan anordnare. För varje typ anges om företaget valt den för att organisera externa kurser (2010) respektive om den var en av de tre anordnare som bidrog till flest externa kurstimmar under referensåret (2015); för 2010 finns också den viktigaste typen av anordnare." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar avser typen av anordnare för externa kurser; frågan ändras från valda anordnare 2010 till de tre med flest kurstimmar 2015 i varje formulering.\ncatalog:variable_text:14001:14610:14975\ncatalog:variable_text:14001:16436:16801\ncatalog:variable_text:14002:14610:14975\ncatalog:variable_text:14002:16436:16801\ncatalog:variable_text:14004:14610:14975\ncatalog:variable_text:14004:16436:16801\ncatalog:variable_text:14085:14610:14975\ncatalog:variable_text:14085:16436:16801\ncatalog:variable_text:14096:14610:14975\ncatalog:variable_text:14097:14610:14975\ncatalog:variable_text:14097:16436:16801\ncatalog:variable_text:14098:14610:14975\ncatalog:variable_text:14098:16436:16801\ncatalog:variable_text:14099:14610:14975\ncatalog:variable_text:14099:16436:16801"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "continuing-vocational-training-survey: var:scbid"
+fields.row_key = true
+evidence = "Row key: scbid identify a row: a firm survey keyed on the firm id (maintainer ruling 2026-11-14)."

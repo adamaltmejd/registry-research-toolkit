@@ -96132,3 +96132,190 @@ kind = "set"
 subject = "var:forbrukad-mangd-el"
 fields = { "description" = "Förbrukad mängd el, i kilowattimmar, i ansökningar om återbetalning för industri och för vattenbruk." }
 evidence = "Maintainer 2026-11-14: variants of one concept for different row kinds are placed under one variable; the description covers every variant merged into this variable. Source: SCB Registerinformation, the operational definitions of VarId 25874 and VarId 39787 on ELFORBMNG in 2018-2023 read \"Avser återbetalningsansökan för industri, el\" and \"... för vattenbruk, el\", both in kilowatt hours."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: company table keys on BORGNR; the internal firm id, the reported orgnr and the org number and period link are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-k10: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr and person-orgnr-2 identify a row: one K10 per shareholder and close company, so BORGNR (company) and BPNR (shareholder) together identify a row; subsidiary and related-person ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-k10: var:person-orgnr-2"
+fields.row_key = true
+evidence = "Row key: person-orgnr and person-orgnr-2 identify a row: one K10 per shareholder and close company, so BORGNR (company) and BPNR (shareholder) together identify a row; subsidiary and related-person ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-k10a: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr and person-orgnr-2 identify a row: one K10A per shareholder and close company, so BORGNR (company) and BPNR (shareholder) together identify a row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-k10a: var:person-orgnr-2"
+fields.row_key = true
+evidence = "Row key: person-orgnr and person-orgnr-2 identify a row: one K10A per shareholder and close company, so BORGNR (company) and BPNR (shareholder) together identify a row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-k12: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr and person-orgnr-2 identify a row: one K12 per shareholder and close company, so BORGNR (company) and BPNR (shareholder) together identify a row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-k12: var:person-orgnr-2"
+fields.row_key = true
+evidence = "Row key: person-orgnr and person-orgnr-2 identify a row: one K12 per shareholder and close company, so BORGNR (company) and BPNR (shareholder) together identify a row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n3a: var:eget-personnr"
+fields.row_key = true
+evidence = "Row key: eget-personnr and handelsbolagets-organisationsnummer identify a row: one N3A per person and trading partnership share, so the person and the partnership org number together identify a row; the internal firm id is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n3a: var:handelsbolagets-organisationsnummer"
+fields.row_key = true
+evidence = "Row key: eget-personnr and handelsbolagets-organisationsnummer identify a row: one N3A per person and trading partnership share, so the person and the partnership org number together identify a row; the internal firm id is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n3b: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr and person-orgnr-bolag identify a row: one N3B per owning company and trading partnership, so the partnership (BORGNR) and the owning company together identify a row; internal firm ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n3b: var:person-orgnr-bolag"
+fields.row_key = true
+evidence = "Row key: person-orgnr and person-orgnr-bolag identify a row: one N3B per owning company and trading partnership, so the partnership (BORGNR) and the owning company together identify a row; internal firm ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n8: var:person-orgnr-2"
+fields.row_key = true
+evidence = "Row key: person-orgnr-2 identify a row: person table keys on BPNR; the internal person id is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n9: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: company table keys on BORGNR; co-operating firm numbers and the internal firm id are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: company table keys on BORGNR; the internal firm id is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: var:person-orgnr-2"
+fields.row_key = true
+evidence = "Row key: person-orgnr-2 identify a row: person table keys on BPNR; the internal person id is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "energi-tabell: var:orgnr"
+fields.row_key = true
+evidence = "Row key: orgnr and person-orgnr identify a row: company table; both columns carry BORGNR in successive eras, 2005-2006 and 2006-2023; the internal firm id is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "energi-tabell: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: orgnr and person-orgnr identify a row: company table; both columns carry BORGNR in successive eras, 2005-2006 and 2006-2023; the internal firm id is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: var:foretagets-id-nummer"
+fields.row_key = true
+evidence = "Row key: person-orgnr and foretagets-id-nummer identify a row: company table keys on BORGNR, with the internal firm id added because BORGNR is absent 2006-2009 (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr and foretagets-id-nummer identify a row: company table keys on BORGNR, with the internal firm id added because BORGNR is absent 2006-2009 (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "finansbolag: var:bidnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr and bidnr identify a row: company table keys on BORGNR (2017-2023), with the internal finance company id added because it is the only firm id 2006-2014 (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "finansbolag: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr and bidnr identify a row: company table keys on BORGNR (2017-2023), with the internal finance company id added because it is the only firm id 2006-2014 (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "forsakringsbolag: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: company table keys on BORGNR; the internal firm id is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "forskning-och-utveckling: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: company table keys on BORGNR; the internal firm id is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: company table keys on BORGNR; the internal firm id is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "handelssystemet: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: company table keys on BORGNR; the internal firm id is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "import-och-export: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: company table keys on BORGNR; the internal firm id is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "individtabeller: var:person-orgnr-2"
+fields.row_key = true
+evidence = "Row key: person-orgnr-2 identify a row: person table keys on BPNR; the internal person id and the family and dwelling household ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "investmentbolag: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: company table keys on BORGNR; the internal firm id is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "korstrackor: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: company table keys on BORGNR; the internal firm id is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: company table keys on BORGNR; the internal firm id and the org number on the excise declaration are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "rot-och-rut: var:orgnr"
+fields.row_key = true
+evidence = "Row key: orgnr identify a row: company table keys on BORGNR; the löpnummer replacing it in MONA is an attribute (maintainer ruling 2026-11-14)."

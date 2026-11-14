@@ -1380,3 +1380,17 @@ kind = "set"
 subject = "var:upprakningsvikt"
 fields = { "description" = "Uppräkningsfaktor för uppräkning till riksnivå som kompenserar för objektsbortfall inom strata. Varje stratum har en egen vikt, antalet objekt i rampopulationen delat med antalet svarande." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; tabellerna beskriver syftet (bortfallskompensation) respektive beräkningen.\ncatalog:variable_text:36194:18628:19358"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "innovation-arbetsstalleenheter: var:cfar-nummer"
+fields.row_key = true
+evidence = "Row key: cfar-nummer identify a row: one row per surveyed workplace unit, keyed on its CFAR number; the organisation number is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-juridiska: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: one row per surveyed legal unit, keyed on its organisation number; the CFAR number is an attribute (maintainer ruling 2026-11-14)."

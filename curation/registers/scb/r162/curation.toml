@@ -1287,3 +1287,28 @@ kind = "set"
 subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: Varukod @2000..2008 where key = 'v1956'"
 fields = { "variable" = "varukod-sandning" }
 evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Lastbilstrafik - Inrikes och utrikes trafik med svenska lastbilar 2000 (RegVerID 1377) to 2008 (RegVerID 1099) documents column Varukod under VarId 2061 \"Varukod, huvudsaklig för sändningen\" and VarId 1956 \"Huvudsakligt varuslag på körningen\". VarId 2061 is the main goods code of the shipment (modified NST/R) and VarId 1956 the main type of goods of the run; both give the main goods type, for the shipment record and the run record. The VarId 1956 occurrences are assigned to varukod-sandning."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: var:blsandnnr"
+fields.row_key = true
+evidence = "Row key: lastbilens-identifikationsnummer and korningens-identifikationsnummer and blsandnnr and sandningens-identifikationsnummer identify a row: rows are shipments, identified by the truck, the trip and the shipment number; owner, organisation and trailer ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: var:korningens-identifikationsnummer"
+fields.row_key = true
+evidence = "Row key: lastbilens-identifikationsnummer and korningens-identifikationsnummer and blsandnnr and sandningens-identifikationsnummer identify a row: rows are shipments, identified by the truck, the trip and the shipment number; owner, organisation and trailer ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: var:lastbilens-identifikationsnummer"
+fields.row_key = true
+evidence = "Row key: lastbilens-identifikationsnummer and korningens-identifikationsnummer and blsandnnr and sandningens-identifikationsnummer identify a row: rows are shipments, identified by the truck, the trip and the shipment number; owner, organisation and trailer ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lastbilstrafik-inrikes-och-utrikes-trafik-med-svenska-lastbilar: var:sandningens-identifikationsnummer"
+fields.row_key = true
+evidence = "Row key: lastbilens-identifikationsnummer and korningens-identifikationsnummer and blsandnnr and sandningens-identifikationsnummer identify a row: rows are shipments, identified by the truck, the trip and the shipment number; owner, organisation and trailer ids are attributes (maintainer ruling 2026-11-14)."

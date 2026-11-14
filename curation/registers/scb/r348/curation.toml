@@ -286,3 +286,11 @@ kind = "set"
 subject = "var:utvandringsland"
 fields = { "tags" = ["migration"] }
 evidence = "Landet avser en utvandringsrörelse.\ncatalog:variable_text:23622:-366:20454"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "historiska-befolkningsregistret: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: person table; property designations are attributes (maintainer ruling 2026-11-14)."

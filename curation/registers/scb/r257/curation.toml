@@ -14901,3 +14901,22 @@ kind = "set"
 subject = "innovation-i-foretagssektorn: TUR_PRD_NINN @2022..2024 where key = 'v49575' and release = 'r20007'"
 fields = { "period" = "2023..2024" }
 evidence = "SCB Registerinformation, Innovation i företagssektorn, versions 2020 - 2022, 2022 - 2024 (RegVerID 18898, 20007), documents column TUR_PRD_NINN under VarId 15570 \"Andel omsättning från varor/tjänster som var oförändrade/marginellt förändrade\" (2020 - 2022) and VarId 49575 \"Omsättning från oförändrade produkter\" (2022 - 2024); the two versions name overlapping reference periods, so both claim 2022. The curated operational definition of Ar in this register is \"Referensperiodens sista år\" (statement on ar @2002..2006,2014..2016), so the data of 2022 belong to the version whose reference period ends in 2022 (2020 - 2022). The listing of VarId 49575 keeps 2023..2024 and the 15570 listing keeps 2022 (maintainer 2026-11-14: every column is placed; the shared year goes to the version that ends in it)."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: var:fenr"
+fields.row_key = true
+evidence = "Row key: orgnr-12 and fenr and foretagsenhetsnummer-scbid identify a row: one row per surveyed enterprise unit, keyed on the enterprise id of each era; the merger and outsourcing variables are survey answers, not ids (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: var:foretagsenhetsnummer-scbid"
+fields.row_key = true
+evidence = "Row key: orgnr-12 and fenr and foretagsenhetsnummer-scbid identify a row: one row per surveyed enterprise unit, keyed on the enterprise id of each era; the merger and outsourcing variables are survey answers, not ids (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "innovation-i-foretagssektorn: var:orgnr-12"
+fields.row_key = true
+evidence = "Row key: orgnr-12 and fenr and foretagsenhetsnummer-scbid identify a row: one row per surveyed enterprise unit, keyed on the enterprise id of each era; the merger and outsourcing variables are survey answers, not ids (maintainer ruling 2026-11-14)."

@@ -32249,3 +32249,10 @@ kind = "set"
 subject = "kosthushall: BBILM1Z @2004..2008 where key = 'v22370'"
 fields = { "variable" = "bilinnehav-korda-mil" }
 evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Kosthushåll 2004 (RegVerID 6197) to 2008 (RegVerID 2804) documents column BBILM1Z under VarId 22369 \"Bilinnehav - Antal körda mil\" and VarId 22370 \"Bilinnehav - Antal körda mil, bil 1\". VarId 22369 is the number of mil driven with the household car and VarId 22370 that of \"bil 1\"; the columns for the other cars are numbered (2Z, 3Z), so the column ending 1Z holds the single car or car 1 and the two questions fill the same column for different households. The VarId 22370 occurrences are assigned to bilinnehav-korda-mil."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "individregister: var:eget-personnr"
+fields.row_key = true
+evidence = "Row key: eget-personnr identify a row: person table keys on the own personnummer of the person; family, household, partner, parent, workplace and firm ids are attributes (maintainer ruling 2026-11-14)."

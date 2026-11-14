@@ -1404,3 +1404,11 @@ kind = "set"
 subject = "set:provresultat-i-svenska"
 fields = { "description" = "Elevens resultat på delproven A–H i det nationella provet i svenska eller svenska som andraspråk, och poäng på läsdelproven B, C och D. Delprovens innehåll skiftar före 2014. Från 2014 avser A tala (muntlig uppgift), B läsa berättande text, C läsa faktatext, D enskild högläsning, E enskilt textsamtal, F skriva berättande text, G skriva med stavning och interpunktion och H skriva faktatext." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nAlla medlemmar är poäng eller resultat på ett delprov i samma nationella prov; de skiljer sig i delprov.\ncatalog:variable_text:28940:14610:14791\ncatalog:variable_text:28940:16071:16252\ncatalog:variable_text:28941:14245:14426\ncatalog:variable_text:28941:14610:14791\ncatalog:variable_text:28941:16071:16252\ncatalog:variable_text:28942:14245:14426\ncatalog:variable_text:28943:16071:16252\ncatalog:variable_text:28944:14245:14426\ncatalog:variable_text:28944:16071:16252\ncatalog:variable_text:28945:16071:16252\ncatalog:variable_text:28946:16071:16252\ncatalog:variable_text:28948:16071:16252\ncatalog:variable_text:28949:16071:16252\ncatalog:variable_text:28951:16071:16252\ncatalog:variable_text:28952:16071:16252"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "grundskola-nationella-prov-ak-3: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."

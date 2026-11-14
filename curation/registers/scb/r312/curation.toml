@@ -190,3 +190,11 @@ kind = "set"
 subject = "var:uppgiftstatus"
 fields = { "tags" = ["methods"] }
 evidence = "Statuskoden beskriver produktionsprocessen.\ncatalog:variable_text:45792:14610:16436"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "tjansteforetagens-forbrukning: var:verksamhetsenhetens-identitetsnummer"
+fields.row_key = true
+evidence = "Row key: verksamhetsenhetens-identitetsnummer identify a row: the kind-of-activity unit id identifies the reporting unit, as in the other business surveys; enterprise, organisation and SCB ids are attributes (maintainer ruling 2026-11-14)."

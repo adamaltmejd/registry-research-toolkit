@@ -1005,3 +1005,125 @@ kind = "set"
 subject = "var:veckodelens-id"
 fields = { "description" = "Unikt nummer för återkravets veckodel, som systemet skapar för varje återkrav, person och vecka." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nBåda tabellerna beskriver samma nummer för återkravets veckodel med olika ord.\ncatalog:variable_text:8185:16071:2932897"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "adress: var:iafid"
+fields.row_key = true
+evidence = "Row key: iafid is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "aktivitetsstodsdgr: var:iafid"
+fields.row_key = true
+evidence = "Row key: iafid is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "aterbet: var:iafid"
+fields.row_key = true
+evidence = "Row key: iafid is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "aterkrav: var:iafid"
+fields.row_key = true
+evidence = "Row key: iafid is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "aterkrav-ersattning: var:iafid"
+fields.row_key = true
+evidence = "Row key: iafid is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "beslut: var:iafid"
+fields.row_key = true
+evidence = "Row key: iafid is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "deltidsveckor: var:iafid"
+fields.row_key = true
+evidence = "Row key: iafid is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "diverse: var:iafid"
+fields.row_key = true
+evidence = "Row key: iafid is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "eesutbet: var:iafid"
+fields.row_key = true
+evidence = "Row key: iafid is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "ersperiod: var:iafid"
+fields.row_key = true
+evidence = "Row key: iafid is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kassakort: var:iafid"
+fields.row_key = true
+evidence = "Row key: iafid is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kassakort-deklaration: var:iafid"
+fields.row_key = true
+evidence = "Row key: iafid is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "medlemskap: var:iafid"
+fields.row_key = true
+evidence = "Row key: iafid is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "oldpersonnr: var:iafid"
+fields.row_key = true
+evidence = "Row key: iafid identifies a row: it is the ASTAT person id used as key across the register, the old and new personnummer are attributes, and the key is not unique if a person changed number twice (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "person: var:iafid"
+fields.row_key = true
+evidence = "Row key: iafid is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "personnummer: var:iafid"
+fields.row_key = true
+evidence = "Row key: iafid identifies a row: it is the ASTAT person id, one row per person, keyed as in the other ASTAT tables, and personnr is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "sparr: var:iafid"
+fields.row_key = true
+evidence = "Row key: iafid is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "studier: var:iafid"
+fields.row_key = true
+evidence = "Row key: iafid is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "underrattelse: var:iafid"
+fields.row_key = true
+evidence = "Row key: iafid is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "utbetalning: var:iafid"
+fields.row_key = true
+evidence = "Row key: iafid is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

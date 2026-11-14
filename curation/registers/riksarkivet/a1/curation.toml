@@ -4107,3 +4107,47 @@ kind = "set"
 subject = "var:x-antagen-utanfor-kvotgrupp-kvot-xantag-8"
 fields = { "tags" = ["education"] }
 evidence = "Antagningsregistret A1 gäller anmälan och antagning till grundläggande högskoleutbildning.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "aepost: var:personnr-aenr"
+fields.row_key = true
+evidence = "Row key: AENR identifies a row: the applicant's personnummer, the record's own person column; PNR, names, addresses and phone numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "alpost: var:personnr-alnr"
+fields.row_key = true
+evidence = "Row key: ALNR identifies a row: the applicant's personnummer, the record's own person column; PNR, names, addresses and phone numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "arpost: var:personnr-arnr"
+fields.row_key = true
+evidence = "Row key: ARNR identifies a row: the applicant's personnummer, the record's own person column; PNR, names, addresses and phone numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "btpost: var:personnr-btnr"
+fields.row_key = true
+evidence = "Row key: BTNR identifies a row: the applicant's personnummer, the record's own person column; PNR, names, addresses and phone numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fupost: var:personnr-funr"
+fields.row_key = true
+evidence = "Row key: FUNR identifies a row: the applicant's personnummer, the record's own person column; PNR, names, addresses and phone numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "smpost: var:personnr-smnr"
+fields.row_key = true
+evidence = "Row key: SMNR identifies a row: the applicant's personnummer, the record's own person column; PNR, names, addresses and phone numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "sopost: var:personnr-sonr"
+fields.row_key = true
+evidence = "Row key: SONR identifies a row: the applicant's personnummer, the record's own person column; PNR, names, addresses and phone numbers are attributes (maintainer ruling 2026-11-14)."

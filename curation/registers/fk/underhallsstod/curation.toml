@@ -262,3 +262,47 @@ kind = "set"
 subject = "var:lokalkontor-bs"
 fields = { "tags" = ["transfers"] }
 evidence = "The liable party’s local office is an administrative field in maintenance-support payments (r2, r3), consistent with the register’s transfers theme (r1, r4).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:932\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:556\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "beslut: var:lopnr-barn"
+fields.row_key = true
+evidence = "Row key: lopnr-barn identifies a row: each decision is tied to one child, the recipient, liable parent and d85 ids are attributes, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "beslut-bidragsskyldig: var:lopnr-barn"
+fields.row_key = true
+evidence = "Row key: lopnr-bs and lopnr-barn identify a row: each repayment decision is for the liable parent and one child per month, and the key is not unique over months (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "beslut-bidragsskyldig: var:lopnr-bs"
+fields.row_key = true
+evidence = "Row key: lopnr-bs and lopnr-barn identify a row: each repayment decision is for the liable parent and one child per month, and the key is not unique over months (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "inbetalningar: var:lopnr-barn"
+fields.row_key = true
+evidence = "Row key: lopnr-bs and lopnr-barn identify a row: each payment in is from the liable parent for one child and period, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "inbetalningar: var:lopnr-bs"
+fields.row_key = true
+evidence = "Row key: lopnr-bs and lopnr-barn identify a row: each payment in is from the liable parent for one child and period, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "utbetalningar-barn: var:lopnr-barn"
+fields.row_key = true
+evidence = "Row key: lopnr-barn identifies a row: each payment is at child level, the recipient is an attribute, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "utbetalningar-manad: var:lopnr-barn"
+fields.row_key = true
+evidence = "Row key: lopnr-barn identifies a row: each payment is per child and month, the parent and d85 ids are attributes, and the key is not unique over months (maintainer ruling 2026-11-14)."

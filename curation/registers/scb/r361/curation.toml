@@ -268,3 +268,11 @@ kind = "set"
 subject = "var:kvartal-period"
 fields = { "description" = "Det kvartal som beräkningarna avser, vilket också är det kvartal då företaget registrerades." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma innebörd i båda texterna, sammanslagna.\ncatalog:variable_text:46281:15706:17167\ncatalog:variable_text:46281:17167:20454"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "nystartade-foretag: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: one row per new firm, keyed on its organisation number over all years; the enterprise unit number and the 2013 to 2015 personnr are attributes (maintainer ruling 2026-11-14)."

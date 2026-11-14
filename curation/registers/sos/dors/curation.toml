@@ -3779,3 +3779,23 @@ kind = "set"
 subject = "var:substans-9"
 fields = { "label" = "Substans, nr 9" }
 evidence = "#2102 same-label cluster 'Substans' (48 variables): judged different meaning, high confidence; SUBSTANS1-SUBSTANS48 är 48 samtidiga numrerade fritextkolumner i samma tabell; löpnumret i kolumnnamnet är nummer i dödsorsaksintyget."
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "cov-dors-hermes: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: the deceased person is the unit and pseudo is the same person in pseudonymised form (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "dors: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: the deceased person is the unit and pseudo is the same person in pseudonymised form (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "dors-avi: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

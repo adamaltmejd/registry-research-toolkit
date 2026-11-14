@@ -620,3 +620,10 @@ kind = "set"
 subject = "release:hostsadda-arealer/r19665"
 fields = { "table" = "ekologiska-arealer" }
 evidence = "Release '2024 Ekologiska arealer' documents the organic sown areas (VarId 48568-48574, 48610). Move the release whole, with its columns, to the ekologiska-arealer table (see the table:ekologiska-arealer assertion)."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "hostsadda-arealer: var:addid"
+fields.row_key = true
+evidence = "Row key: addid identify a row: farm table keys on the LBR farm id addid; the firm name is an attribute (maintainer ruling 2026-11-14)."

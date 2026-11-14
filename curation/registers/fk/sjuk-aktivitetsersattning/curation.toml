@@ -490,3 +490,35 @@ kind = "set"
 subject = "var:status"
 fields = { "tags" = ["transfers"] }
 evidence = "MiDAS panel variable from FK's variable list (https://www.forsakringskassan.se/download/18.2bf3af9018425d7d4add00/1779350800884/variabelforteckning-midas-sjukersattning-aktivitetsersattning.xlsx); tagged like the register's other benefit measures."
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "ar-1: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "delfall-1-1: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "delfall-2-1: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fall-1: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fall-2: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

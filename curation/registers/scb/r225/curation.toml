@@ -614,3 +614,11 @@ kind = "set"
 subject = "var:storasjo"
 fields = { "description" = "Markering av om objektet tillhör någon av de fyra största insjöarna: Vänern, Vättern, Mälaren och Hjälmaren." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition alla år; 2020 anger att objektet tillhör någon av sjöarna; samma nyckel v2893 som sjonamn.\ncatalog:variable_text:42084:18262:18628\ncatalog:variable_text:42084:18628:19723\ncatalog:variable_text:42084:19723:20819"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "land-och-vattenarealer: var:objekt-id"
+fields.row_key = true
+evidence = "Row key: objekt-id identify a row: one row per area object, keyed on its object id over all years; the UUID from 2023 is an attribute (maintainer ruling 2026-11-14)."

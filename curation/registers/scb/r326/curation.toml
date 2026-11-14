@@ -930,3 +930,23 @@ kind = "set"
 subject = "set:utbildningsstart"
 fields = { "description" = "Datum då kursen eller den kompletterande utbildningen startade." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna är startdatum, för olika årgångar (kursstart 2001–2006, startdatum 2012–2015).\ncatalog:variable_text:41256:11323:13514\ncatalog:variable_text:41270:15340:16801"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "deltagare-2001-2011: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per participant, keyed on personnr; parents and school ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "deltagare-2012-2015: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per participant, keyed on personnr; the school id is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "utbildningsdeltagare-fullfoljt-2001-2011: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per participant who completed, keyed on personnr; parents and school ids are attributes (maintainer ruling 2026-11-14)."

@@ -1222,3 +1222,11 @@ kind = "set"
 subject = "set:varnpliktsvilja"
 fields = { "label" = "Värnpliktsvilja" }
 evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "insark: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

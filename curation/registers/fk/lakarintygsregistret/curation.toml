@@ -364,3 +364,11 @@ kind = "set"
 subject = "var:ovriga-upplysningar"
 fields = { "tags" = ["health"] }
 evidence = "The certificate's residual information field (r8) shares the medical-assessment context documented in r6. Health is an established register theme (r9, r1).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:232\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:236\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "lakarintygsregistret: var:detalj-lopnr"
+fields.row_key = true
+evidence = "Row key: detalj-lopnr identifies a row: it is the unique certificate key, and the person lopnr is an attribute of the certificate (maintainer ruling 2026-11-14)."

@@ -952,3 +952,23 @@ kind = "set"
 subject = "set:yrkesangivelse"
 fields = { "label" = "Yrkesangivelse" }
 evidence = "#2100 group name: the slug read as words; kept on review."
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "lediga-jobb-lor: var:cfar-nummer"
+fields.row_key = true
+evidence = "Row key: cfar-nummer identify a row: one row per sampled workplace, keyed on its CFAR number; scbid is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "rekryteringserfarenheter: var:cfar-nummer"
+fields.row_key = true
+evidence = "Row key: cfar-nummer identify a row: one row per sampled workplace, keyed on its CFAR number; scbid is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "rekryteringserfarenheter-yrke: var:cfar-nummer"
+fields.row_key = true
+evidence = "Row key: cfar-nummer identify a row: rows are occupations of a sampled workplace, keyed on its CFAR number; scbid is an attribute and rows are not unique (maintainer ruling 2026-11-14)."

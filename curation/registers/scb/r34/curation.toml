@@ -24187,3 +24187,28 @@ kind = "set"
 subject = "table:individer"
 fields = { "series_break" = { "at" = "2010", "text" = "Från och med 2010 omfattar tabellen personer 15 år och äldre; till och med 2009 omfattade den personer 16 år och äldre." } }
 evidence = "SCB Registerinformation table descriptions of Individer, 16 år och äldre (1990-2009: \"samtliga personer 16 år och äldre\") and Individer, 15 år och äldre (2010-: \"samtliga personer 15 år och äldre\"). The variants merge into this table (maintainer ruling 2026-11-14), so the population change is a break at 2010."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: var:fad-arbetsstalle-id"
+fields.row_key = true
+evidence = "Row key: fad-arbetsstalle-id identify a row: one row per workplace, keyed on the FAD workplace id that LISA individuals link to; CFAR, workplace and organisation numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "foretag: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "individer-15plus: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per person; employer, workplace, family and household ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per person; employer, workplace, family and property ids are attributes (maintainer ruling 2026-11-14)."

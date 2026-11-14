@@ -1428,3 +1428,10 @@ kind = "set"
 subject = "hyror-i-bostadslagenheter: <none> @2014 where key = 'v22862'"
 fields = { "variable" = "none" }
 evidence = "Gap marker of VarId 22862 (kommunregion-kommun): the KOMMUN 2008 curation withholds its only column listing, so the variable has no column left; its documented-without-column listing in 2014 is withheld with it (maintainer 2026-11-14)."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "hyror-i-bostadslagenheter: var:idnr"
+fields.row_key = true
+evidence = "Row key: idnr identify a row: dwelling table keys on the dwelling löpnummer; the apartment number and designation, property designation, owner and manager org numbers are attributes (maintainer ruling 2026-11-14)."

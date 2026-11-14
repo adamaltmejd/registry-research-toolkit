@@ -467,3 +467,17 @@ kind = "set"
 subject = "var:uuidadrpl"
 fields = { "label" = "Universalt unik identitet (adressplats)" }
 evidence = "#2102 same-label cluster 'Universalt unik identitet' (6 variables): judged different meaning, high confidence; Opdefs: six concurrent UUID columns, each identifying a different object type."
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "lagenhetsregistret: var:lagenhetsnyckel"
+fields.row_key = true
+evidence = "Row key: lagenhetsnyckel and unik-identitet-lagenhet identify a row: one row per dwelling, keyed on the dwelling key and from 2019 the dwelling UUID; property, building, entrance and address ids and the flat number are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lagenhetsregistret: var:unik-identitet-lagenhet"
+fields.row_key = true
+evidence = "Row key: lagenhetsnyckel and unik-identitet-lagenhet identify a row: one row per dwelling, keyed on the dwelling key and from 2019 the dwelling UUID; property, building, entrance and address ids and the flat number are attributes (maintainer ruling 2026-11-14)."

@@ -892,3 +892,17 @@ kind = "set"
 subject = "set:byggnadstyp"
 fields = { "description" = "Byggnadstypen i bygglovet eller projektet: hustyp (småhus, det vill säga en- och tvåbostadshus, eller flerbostadshus med tre eller fler lägenheter) med detaljerade indelningar för småhus och flerbostadshus, typ av byggnad som bygglovet avser och den huvudsakliga byggnadstypen. Den huvudsakliga byggnadstypen är 2010–2015 den med flest lägenheter, från 2016 den med störst area i bygglovet." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i indelning; den huvudsakliga byggnadstypen bestäms på nytt sätt från 2016.\ncatalog:variable_text:13860:14610:16801\ncatalog:variable_text:13860:16801:20454\ncatalog:variable_text:13877:11323:12418\ncatalog:variable_text:13877:12418:16436\ncatalog:variable_text:13877:16436:20089\ncatalog:variable_text:13879:14610:20089\ncatalog:variable_text:13880:14610:20089\ncatalog:variable_text:13881:12418:14610\ncatalog:variable_text:13881:14610:16801\ncatalog:variable_text:13881:16801:20454"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "bygglov-for-bostader: var:fastighetsbeteckning"
+fields.row_key = true
+evidence = "Row key: fastighetsbeteckning identify a row: one row per building permit project on a property, identified only by the property designation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "nybyggnad-av-bostader: var:fastighetsbeteckning"
+fields.row_key = true
+evidence = "Row key: fastighetsbeteckning identify a row: one row per new-build project on a property, identified only by the property designation (maintainer ruling 2026-11-14)."

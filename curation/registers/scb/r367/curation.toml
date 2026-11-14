@@ -9354,3 +9354,11 @@ kind = "set"
 subject = "set:alder"
 fields = { "description" = "Ålder i antal år vid årets slut, härledd från personnumret, för urvalspersonen och för övriga personer i undersökningen, och grupperingar av urvalspersonens ålder (till exempel under 20, 20–34, 35–49, 50–64 och 65 år och äldre, eller under 20, 20–24, 25–44, 45–64 och 65 år och äldre)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i person och gruppering.\ncatalog:variable_text:51947:18628:18993\ncatalog:variable_text:51948:11139:11504\ncatalog:variable_text:51948:14791:15156\ncatalog:variable_text:51955:11139:11504\ncatalog:variable_text:51955:14791:15156\ncatalog:variable_text:51956:7486:7851\ncatalog:variable_text:51958:7486:7851"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "tidsstudien: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

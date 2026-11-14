@@ -6946,3 +6946,17 @@ kind = "set"
 subject = "var:utlanskt-hushall"
 fields = { "description" = "Anger om sökande eller medsökande i hushållet är utrikesfödd: 0 = ingen av dem, 1 = en av dem, 2 = båda." }
 evidence = "Definition 'Anger om sökande eller medsökande i hushållet är utrikesfödd' and the 0/1/2 codes (value set #12410) agree; only the label 'Utlänskt hushåll' is looser. The sibling UTRFODH has the same definition and codes.\ncatalog/source/Socialstyrelsen/Metadata Registret över ekonomiskt bistånd (EKB)_webb.xlsx: 'Metadata - Variabelnivå' row 600 (UTLHH), row 601 (UTRFODH)."
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "ekb-ar: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: the benefit recipient is the unit, the household id is an attribute, and the key is not unique over years (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "ekb-manad: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: the benefit recipient is the unit, the household id is an attribute, and the key is not unique over months (maintainer ruling 2026-11-14)."

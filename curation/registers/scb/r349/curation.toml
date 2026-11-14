@@ -1113,3 +1113,65 @@ kind = "set"
 subject = "var:syskonordnr"
 fields = { "description" = "Barnets ordningsnummer efter födelsetid i syskonskaran, räknat bland de barn som i Flergenerationsregistret har uppgift om samma biologiska far respektive samma biologiska mor. Uppgiften lämnas både för faderns och för moderns sida; saknas uppgift om föräldern kan barnet inte föras till syskonskaran." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nKolumnen dokumenteras med en rad för far och en för mor; samma mått, skilt bara i vilken förälder som avses.\ncatalog:variable_text:18061:-3287:20454\nRegisterinformation.csv:row=432760\nRegisterinformation.csv:row=432761"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "antal-barn: var:personnr-far"
+fields.row_key = true
+evidence = "Row key: personnr-far and personnr-mor identify a row: one row per parent: each row is a mother or a father, identified by whichever of the two columns is filled (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "antal-barn: var:personnr-mor"
+fields.row_key = true
+evidence = "Row key: personnr-far and personnr-mor identify a row: one row per parent: each row is a mother or a father, identified by whichever of the two columns is filled (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "barns-ordningsnummer: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per child; parents personnr are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "folkbokforda-adoptivforaldrar: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per person; adoptive parents personnr are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "folkbokforda-biologiska: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per person; biological parents personnr are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "personakt-aktenskap: var:personnr-avliden"
+fields.row_key = true
+evidence = "Row key: personnr-avliden and personnrmake identify a row: one row per marriage of a deceased person: the couple of the deceased and the spouse (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "personakt-aktenskap: var:personnrmake"
+fields.row_key = true
+evidence = "Row key: personnr-avliden and personnrmake identify a row: one row per marriage of a deceased person: the couple of the deceased and the spouse (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "personakt-barn: var:personnr-barn"
+fields.row_key = true
+evidence = "Row key: personnummer-foralder-2 and personnr-barn identify a row: a pair table: the parent the record concerns and the child; the other parent is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "personakt-barn: var:personnummer-foralder-2"
+fields.row_key = true
+evidence = "Row key: personnummer-foralder-2 and personnr-barn identify a row: a pair table: the parent the record concerns and the child; the other parent is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "personakter-avlidna: var:personnr-avliden"
+fields.row_key = true
+evidence = "Row key: personnr-avliden identify a row: one row per deceased person; parents personnr are attributes (maintainer ruling 2026-11-14)."

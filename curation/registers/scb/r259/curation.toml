@@ -636,3 +636,17 @@ kind = "set"
 subject = "set:egen-personals-arbete-med-programvaruutveckling"
 fields = { "description" = "Företagets egen personal som arbetade med utveckling av programvara, till exempel systemerare eller programmerare, under föregående kalenderår: om företaget hade sådan personal, hur många årsverken den utförde och hur stor andel av dessa årsverken, i procent, som avsåg utveckling med karaktär av investering, utveckling för annans räkning eller kundspecifik anpassning av befintlig programvara (konsultverksamhet) respektive övriga relaterade uppgifter som underhåll, support och reparation." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna är en följd av enkätfrågor om samma personal: förekomst, årsverken och andelar per arbetsuppgift.\ncatalog:variable_text:18995:17532:18628\ncatalog:variable_text:18995:18628:18993\ncatalog:variable_text:18996:17532:17897\ncatalog:variable_text:18996:17897:18628\ncatalog:variable_text:18996:18628:18993\ncatalog:variable_text:18999:17532:18628\ncatalog:variable_text:18999:18628:18993\ncatalog:variable_text:19001:17532:17897\ncatalog:variable_text:19001:17897:18628\ncatalog:variable_text:19001:18628:18993\ncatalog:variable_text:19009:17532:18628\ncatalog:variable_text:19009:18628:18993"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utgifter-for-it: var:orgnr-12"
+fields.row_key = true
+evidence = "Row key: orgnr-12 and person-orgnr identify a row: firm table; both columns carry the firm org number (fold peorgnr) in successive eras, 2006-2009 and 2009-2022 (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "foretagens-utgifter-for-it: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: orgnr-12 and person-orgnr identify a row: firm table; both columns carry the firm org number (fold peorgnr) in successive eras, 2006-2009 and 2009-2022 (maintainer ruling 2026-11-14)."

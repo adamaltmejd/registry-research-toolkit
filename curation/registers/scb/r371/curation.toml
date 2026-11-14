@@ -32058,3 +32058,88 @@ kind = "set"
 subject = "individregister: TTJU @2020 where key = 'v45733'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, FASIT Individregister 2020 (RegVerID 18394) documents column TTJU under VarId 37635 \"Inkomst av tjänst, 2 år gamla\" (CVID 855700) and VarId 45733 \"Inkomst av tjänst, utländskt beskattad\" (CVID 861107). 37635 is TTJU in 2006-2020 and moves to TTJ_TAR2 in 2021-2023, where 45733 takes TTJU. The source does not settle which for 2020; 37635 is the more plausible owner because the 2020 TTJU series is unbroken from 2006 and the rename to TTJ_TAR2, which frees TTJU for 45733, first appears in 2021 (maintainer 2026-11-14: place under the more plausible owner). The 45733 row is withheld."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "arbetsloshetsregister: var:scbid"
+fields.row_key = true
+evidence = "Row key: scbid identify a row: one row per person; household ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "barnregister: var:scbid"
+fields.row_key = true
+evidence = "Row key: scbid identify a row: one row per child; household ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bostadshushallsregister: var:hushallsid"
+fields.row_key = true
+evidence = "Row key: hushallsid identify a row: a dwelling household table keyed on the household id; the TRIF flag is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "delagare-i-handelsbolag: var:scbid"
+fields.row_key = true
+evidence = "Row key: scbid identify a row: one row per partner person; no partnership id, so rows may not be unique; household ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "enskilda-naringsidkare: var:scbid"
+fields.row_key = true
+evidence = "Row key: scbid identify a row: one row per sole trader person; household ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "familjehushallsregister: var:familjehushallsidentitet"
+fields.row_key = true
+evidence = "Row key: familjehushallsidentitet identify a row: a family household table keyed on the family household id; the dwelling household id is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fastighetsregister: var:scbid"
+fields.row_key = true
+evidence = "Row key: scbid identify a row: one row per person property holding; no property id, so the person id is the key and rows may not be unique; household ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "foraldrapenningsregister: var:scbid"
+fields.row_key = true
+evidence = "Row key: scbid identify a row: one row per person; household ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "individregister: var:scbid"
+fields.row_key = true
+evidence = "Row key: scbid identify a row: one row per person; household ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "register-k10: var:scbid"
+fields.row_key = true
+evidence = "Row key: scbid identify a row: one row per person filing K10; household ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "register-k10a: var:scbid"
+fields.row_key = true
+evidence = "Row key: scbid identify a row: one row per person filing K10A; household ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "register-k5-k6: var:scbid"
+fields.row_key = true
+evidence = "Row key: scbid identify a row: one row per person filing K5/K6; household ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "sjukpenningsregister: var:scbid"
+fields.row_key = true
+evidence = "Row key: scbid identify a row: one row per person; household ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "tandvardsregister: var:scbid"
+fields.row_key = true
+evidence = "Row key: scbid identify a row: one row per person; household ids are attributes (maintainer ruling 2026-11-14)."

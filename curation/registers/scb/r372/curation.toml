@@ -1700,3 +1700,17 @@ kind = "set"
 subject = "var:haetel"
 fields = { "description" = "Telefonnummer till den juridiska enhetens huvudarbetsställe." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma uppgift; 2017–2018 saknar preciseringen till huvudarbetsstället.\ncatalog:variable_text:19096:10592:17167\ncatalog:variable_text:19096:17167:17897\ncatalog:variable_text:19096:17897:19358"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "arbetsstalleenheter: var:cfar-nummer"
+fields.row_key = true
+evidence = "Row key: cfar-nummer identify a row: workplace unit table keys on the workplace id; legal unit and group parent org numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "juridiska-enheter: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: legal unit table keys on its own org number; group parent and main workplace ids are attributes (maintainer ruling 2026-11-14)."

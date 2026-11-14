@@ -28753,3 +28753,29 @@ kind = "set"
 subject = "release:bostadshushall/r20243"
 fields = { "table" = "bostadshushall-vx" }
 evidence = "The VX release for 2024 (RegVerID 20243) is a separate SCB file beside \"2024, slutlig version\" (RegVerID 20242). Moved whole to the VX table so that neither release shadows the other."
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "bostadshushall: var:hushallsid"
+fields.row_key = true
+evidence = "Row key: hushallsid identify a row: one row per dwelling household, keyed on the household id (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: var:eget-personnr"
+fields.row_key = true
+evidence = "Row key: eget-personnr and person-organisationsnummer-personnr identify a row: one row per individual or estate, keyed on its own personnummer of each era; spouse, head, family, household, property and employer ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: var:person-organisationsnummer-personnr"
+fields.row_key = true
+evidence = "Row key: eget-personnr and person-organisationsnummer-personnr identify a row: one row per individual or estate, keyed on its own personnummer of each era; spouse, head, family, household, property and employer ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kontrolluppgifter-rantor: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: rows are interest statements per person, keyed on the person id; the reporting institution number is an attribute and rows are not unique (maintainer ruling 2026-11-14)."

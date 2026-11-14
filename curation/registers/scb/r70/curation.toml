@@ -950,3 +950,41 @@ kind = "set"
 subject = "set:tatortstillhorighet"
 fields = { "description" = "Tillhörighet till tätort enligt SCB:s regionala indelning i tätorter: sammanhängande bebyggelse med minst 200 invånare. Enligt den äldre definitionen, använd 2003–2016, får det vara högst 200 meter mellan husen och glesbygd kodas 0000; från 2017 har koderna prefixet T och T0000 betyder ej tätort, med en delvis ny definition och metod från 2015 års tätorter." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna är tätortskoden i kolumnen Tatort; axeln är definitionen före och efter omläggningen.\ncatalog:variable_text:28500:17167:17168\ncatalog:variable_text:28500:18262:18263\ncatalog:variable_text:28501:12053:12054\ncatalog:variable_text:28501:13149:13150\ncatalog:variable_text:28501:14975:14976"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "adresser: var:riksnyckel"
+fields.row_key = true
+evidence = "Row key: riksnyckel and riksnyckel-rnpadrpl identify a row: address table keys on the official address key, whose prefix (RNPADRPL) and id (RIDADRPL) together form it; property ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "adresser: var:riksnyckel-rnpadrpl"
+fields.row_key = true
+evidence = "Row key: riksnyckel and riksnyckel-rnpadrpl identify a row: address table keys on the official address key, whose prefix (RNPADRPL) and id (RIDADRPL) together form it; property ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "adresser-fastigheter: var:riksnyckelid"
+fields.row_key = true
+evidence = "Row key: riksnyckelid and riksnyckelprefix identify a row: address table keys on the official address key, whose prefix and id together form it; property ids and record UUIDs are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "adresser-fastigheter: var:riksnyckelprefix"
+fields.row_key = true
+evidence = "Row key: riksnyckelid and riksnyckelprefix identify a row: address table keys on the official address key, whose prefix and id together form it; property ids and record UUIDs are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fastigheter: var:fastighetsnyckel"
+fields.row_key = true
+evidence = "Row key: fastighetsnyckel identify a row: property table keys on the unique property key; the property designation is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "individer: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

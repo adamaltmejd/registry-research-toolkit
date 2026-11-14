@@ -100,3 +100,11 @@ kind = "set"
 subject = "var:vardgivare"
 fields = { "tags" = ["healthcare"] }
 evidence = "Ansvarig vårdgivare avser vårdresurser.\ncatalog:variable_text:597:15706:2932897"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "nvr: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: the vaccinated person is the unit, the caregiver is an attribute, and the key is not unique per vaccination row (maintainer ruling 2026-11-14)."

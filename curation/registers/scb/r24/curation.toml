@@ -2454,3 +2454,28 @@ kind = "set"
 subject = "table:personens-hogsta-utbildning"
 fields = { "series_break" = { "at" = "2008", "text" = "Från och med 2008 omfattar tabellen samtliga folkbokförda; till och med 2007 omfattade den folkbokförda 16–74 år." } }
 evidence = "SCB Registerinformation table descriptions of Personens högsta utbildning,16-74 år (to 2007: \"folkbokförda 16-74 år vid aktuellt årskifte\") and Personens högsta utbildning (2008-: \"alla folkbokförda vid aktuellt årskifte\"). The variants merge into this table (maintainer ruling 2026-11-14), so the population change is a break at 2008."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "komvux: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the person; property is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "personens-hogsta-utbildning-16-74: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the person; property is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "personens-samtliga-utbildningar: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

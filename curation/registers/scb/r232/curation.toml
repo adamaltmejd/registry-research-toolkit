@@ -7149,3 +7149,22 @@ kind = "set"
 subject = "table:lararprognos-skola-forskola"
 fields = { series_break = { at = "2017", text = "År 2017 ändrades insamlingen för förskoleklass. Tidigare ingick all pedagogisk personal. From år 2017 går det att särsklja på lärare och övriga pedagogisk personal." } }
 evidence = "current-scb-inputs.zip/Timeseries.csv row=117\n\nRegisterVariant 1497 resolves to this table. \"År 2017 ändrades insamlingen\"."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "lararprognos-skola-forskola: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "personregistret: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per teacher (one post per person), keyed on personnr; school ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "tjansteregistret: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: rows are posts held by teachers, keyed on personnr; rows are not unique and school and provider ids are attributes (maintainer ruling 2026-11-14)."

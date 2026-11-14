@@ -6046,3 +6046,64 @@ kind = "set"
 subject = "fs-slutdata-foretagsenhet-ovr: bl3332 @1997..2002 where key = 'v40641'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, FS Slutdata (företagsenhet_Ovr) 1997-2002 (RegVerID 14800 for 1997, 14735 for 2002) documents column bl3332 under VarId 40639 \"Årets anskaffningar av bostäder\" and VarId 40641 \"Årets anskaffningar därav köp av bostäder\". 40641 is documented on its own column bl3342 in the same releases (and in the blankettvariabler table), and the release lists it under bl3332 again beside 40639 (consecutive CVIDs; in the blankettvariabler table (VE) 1997 lists bl3332 for 40639 alone and 1998-2002 list both). The source does not settle which; 40639 is the more plausible owner of bl3332 because 40641 has its own column bl3342 in every release (maintainer 2026-11-14: place under the more plausible owner). The 40641 rows under bl3332 are withheld; 40641 keeps bl3342."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "fs-slutdata: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr and verksamhetsenhetens-lopnummer identify a row: the row is one activity unit (VE), numbered within its firm (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fs-slutdata: var:verksamhetsenhetens-lopnummer"
+fields.row_key = true
+evidence = "Row key: person-orgnr and verksamhetsenhetens-lopnummer identify a row: the row is one activity unit (VE), numbered within its firm (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fs-slutdata-blankettvariabler-ve: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr and verksamhetsenhetens-lopnummer identify a row: the row is one activity unit (VE), numbered within its firm (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fs-slutdata-blankettvariabler-ve: var:verksamhetsenhetens-lopnummer"
+fields.row_key = true
+evidence = "Row key: person-orgnr and verksamhetsenhetens-lopnummer identify a row: the row is one activity unit (VE), numbered within its firm (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fs-slutdata-foretagsenhet: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fs-slutdata-foretagsenhet-ovr: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fs-slutdata-lokal: var:den-lokala-verksamhetsenhetens-lopnummer"
+fields.row_key = true
+evidence = "Row key: person-orgnr and verksamhetsenhetens-lopnummer and den-lokala-verksamhetsenhetens-lopnummer identify a row: the row is one local activity unit, numbered within its VE and firm (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fs-slutdata-lokal: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr and verksamhetsenhetens-lopnummer and den-lokala-verksamhetsenhetens-lopnummer identify a row: the row is one local activity unit, numbered within its VE and firm (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fs-slutdata-lokal: var:verksamhetsenhetens-lopnummer"
+fields.row_key = true
+evidence = "Row key: person-orgnr and verksamhetsenhetens-lopnummer and den-lokala-verksamhetsenhetens-lopnummer identify a row: the row is one local activity unit, numbered within its VE and firm (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fs-slutdata-resultatrakning: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

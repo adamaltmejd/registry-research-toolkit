@@ -34,3 +34,11 @@ kind = "set"
 subject = "var:sjuklonekostnad"
 fields = { "tags" = ["business"] }
 evidence = "Sjuklönekostnaden är en arbetsgivarkostnad.\ncatalog:register:11\ncatalog:variable_text:163:18353:2932897"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "ersattning-sjuklonekostnader: var:lopnr-orgnr"
+fields.row_key = true
+evidence = "Row key: lopnr-orgnr identifies a row: the employer is the unit receiving sick-pay cost compensation, and the key is not unique per row over months (maintainer ruling 2026-11-14)."

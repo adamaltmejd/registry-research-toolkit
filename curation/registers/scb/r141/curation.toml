@@ -833,3 +833,16 @@ kind = "set"
 subject = "var:leveranser-egna-aterforsaljare"
 fields = { "label" = "Leveranser till återförsäljare", "description" = "Leveranser av bränslen till egna återförsäljare, i kubikmeter eller ton. För kol och koks avser kolumnen leveranser till återförsäljare, i ton." }
 evidence = "Maintainer ruling 2026-11-14: variants of one concept for different row kinds are merged and the variable carries a label and description covering both kinds.\nVarId 20671 (\"Leveranser av olika bränslen till egna återförsäljare\") and VarId 20672 (\"Leveranser av kol och koks till återförsäljare\") share the column ATERFORS in 2008-2017."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: var:foretagets-id-nummer"
+fields.row_key = true
+evidence = "Row key: foretagets-id-nummer and scb-nummer identify a row: rows are monthly fuel reports of a firm, keyed on the firm id of each era; CFAR, the row number and organisationsidentitet (folded from foretagstyp) are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: var:scb-nummer"
+fields.row_key = true
+evidence = "Row key: foretagets-id-nummer and scb-nummer identify a row: rows are monthly fuel reports of a firm, keyed on the firm id of each era; CFAR, the row number and organisationsidentitet (folded from foretagstyp) are attributes (maintainer ruling 2026-11-14)."

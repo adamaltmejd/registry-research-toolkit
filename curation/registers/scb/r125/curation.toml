@@ -724,3 +724,11 @@ kind = "set"
 subject = "var:uvikt"
 fields = { "description" = "Andel svarande per urval av samtliga svarande en viss månad, beräknad utifrån AKU:s urval." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition båda åren; 2024 nämner bara att variabeln skapas för SAPF.\ncatalog:variable_text:28441:19358:19723\ncatalog:variable_text:28441:19723:20089"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "situationen-pa-arbetsmarknaden-for-personer-med-funktionsnedsattning: var:uenr"
+fields.row_key = true
+evidence = "Row key: uenr identify a row: survey of persons keys on the respondent id, its only identifier (maintainer ruling 2026-11-14)."

@@ -1083,3 +1083,23 @@ kind = "set"
 subject = "var:person-orgnr"
 fields = { "description" = "Organisationsnummer för fritidshemmets huvudman. För huvudmän som är fysiska personer med näringsverksamhet används personnumret." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; 2018 säger 'huvudmannens organisationsnummer', från 2019 'fritidshemmets huvudman'. Den allmänna texten om tilldelande myndigheter utelämnas.\ncatalog:variable_text:28042:17819:17820\ncatalog:variable_text:28042:18184:18185"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "anpassad-grundskola: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "grundskola: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "specialskola: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."

@@ -990,3 +990,71 @@ kind = "set"
 subject = "set:fodelsedatum"
 fields = { "description" = "Barnets eller den ungas födelsedatum." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna har samma definition och skiljer sig i lagringsform.\ncatalog:variable_text:62477:17532:2932897\ncatalog:variable_text:62478:-3653:11323\ncatalog:variable_text:62478:11323:16436"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "bu-barn-19602013: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bu-barn-endastxnr: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bu-barn-pnrq0: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bu-insats: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: the child or young person is the unit of each intervention, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bu-insats-19602013: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: the child is the unit of each intervention, the decision date and municipality are attributes, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bu-insats-endastxnr: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: the child is the unit of each intervention, the decision date and municipality are attributes, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bu-insats-pnrq0: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: the child is the unit of each intervention, the decision date and municipality are attributes, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bu-plac: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: the child is the unit of each placement, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bu-plac-19602013: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: the child is the unit of each placement, the decision date is an attribute, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bu-plac-endastxnr: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: the child is the unit of each placement, the decision date is an attribute, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bu-plac-pnrq0: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identifies a row: the child is the unit of each placement, the decision date is an attribute, and the key is not unique per row (maintainer ruling 2026-11-14)."

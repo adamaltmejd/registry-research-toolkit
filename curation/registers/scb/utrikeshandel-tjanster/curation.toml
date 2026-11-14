@@ -70,3 +70,11 @@ kind = "set"
 subject = "var:varde"
 fields = { "tags" = ["trade"] }
 evidence = "Handelsvärdet hör till handel. Värdevariablerna är mått på samma handelskoncept och behöver en gemensam grupp.\ncatalog:register:272\ncatalog:variable_text:54867:12418:18628\ncatalog:variable_text:54868:12418:18628\ncatalog:variable_text:54875:12418:2932897"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "utrikeshandel-tjanster: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

@@ -1491,3 +1491,11 @@ kind = "set"
 subject = "var:uvikt1-aku"
 fields = { "description" = "AKU-urvalet består av urval dragna vid tre olika år. Variabeln anger andelen svarande för respektive urvalsår, beräknad på det totala antalet svarande. Personer som tillhör andra urval än AKU-urvalet får värdet 0." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; 2009 formulerar nollvärdet för andra urval annorlunda ('O' läses som 0).\ncatalog:variable_text:14873:10592:10957\ncatalog:variable_text:14873:14245:14610"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "valdeltagande: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per person in the turnout sample; uenr is an attribute (maintainer ruling 2026-11-14)."

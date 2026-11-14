@@ -1882,3 +1882,52 @@ kind = "set"
 subject = "juridiska-enheter: Anst @2024 where key = 'v972'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, FDB Juridiska enheter 2024 (RegVerID 19692) documents column Anst under VarId 972 \"Aktuellt antal anställda\" (CVID 975029) and VarId 48347 \"Antal anställda, juridisk enhet\" (CVID 975109). 972 is Anst in 1999-2023 and 48347 in 2025, with a new definition (earnings over 1000 kr a month, summed from the legal unit's arbetsställen, instead of an annual earning over a prisbasbelopp). The source does not settle which for 2024; 48347 is the more plausible owner because SCB created the new VarId in the 2024 documentation, with the 2025 wording, so 2024 is the first release with the new definition (maintainer 2026-11-14: place under the more plausible owner). The 972 row is withheld."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "administrativa: var:astnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr and cfar-nummer and astnr identify a row: an AST unit is uniquely identified by person-orgnr, cfar-nummer and astnr together, as its definition states (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "administrativa: var:cfar-nummer"
+fields.row_key = true
+evidence = "Row key: person-orgnr and cfar-nummer and astnr identify a row: an AST unit is uniquely identified by person-orgnr, cfar-nummer and astnr together, as its definition states (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "administrativa: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr and cfar-nummer and astnr identify a row: an AST unit is uniquely identified by person-orgnr, cfar-nummer and astnr together, as its definition states (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "arbetsstalleenheter: var:cfar-nummer"
+fields.row_key = true
+evidence = "Row key: cfar-nummer identify a row: a workplace table keyed on the workplace id; enterprise and legal unit ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "foretagsenheter: var:foretagsenhetsnummer"
+fields.row_key = true
+evidence = "Row key: foretagsenhetsnummer identify a row: an enterprise table keyed on the enterprise unit number; person-orgnr is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "juridiska-enheter: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: a legal unit table keyed on person-orgnr; firm sequence number and enterprise number are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lokala-verksamhetsenheter: var:lokal-verksamhetsenhetsnummer"
+fields.row_key = true
+evidence = "Row key: lokal-verksamhetsenhetsnummer identify a row: a local kind-of-activity unit table keyed on its own unit number; workplace, enterprise and activity unit ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "verksamhetsenheter: var:verksamhetsenhetens-identitetsnummer"
+fields.row_key = true
+evidence = "Row key: verksamhetsenhetens-identitetsnummer identify a row: a kind-of-activity unit table keyed on its own id; enterprise and legal unit ids are attributes (maintainer ruling 2026-11-14)."

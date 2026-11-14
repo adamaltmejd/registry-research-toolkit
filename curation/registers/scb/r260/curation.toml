@@ -4046,3 +4046,35 @@ kind = "set"
 subject = "var:rektorsomrades-id"
 fields = { "description" = "Löpnummer för rektorsområdet, bildat av position 5–7 i skolkoden. För 1995–2001 hämtas skolkoden från registret över gymnasieskolans elever." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma härledning; W1 anger skolkodens källa.\ncatalog:variable_text:30193:8947:9131\ncatalog:variable_text:30193:9312:9496"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "antagna-1994-2016: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "antagna-bakgrund-2017: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes; one row per application, so the key does not make rows unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "sokande-antagna-1985-1993: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the table is about one applicant; school choices are attributes (maintainer ruling 2026-11-14)."

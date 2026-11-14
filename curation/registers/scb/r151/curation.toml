@@ -1192,3 +1192,22 @@ kind = "set"
 subject = "table:hotell-stugbyar"
 fields = { series_break = { at = "2002-01", text = "Från och med januari 2002 har vandrarhem en ny definition. Tidigare räknades endast de anläggningar som var anslutna till Svenska Turistföreningen (STF) till kategorin vandrarhem. Övriga anläggningar av vandrarhemskaraktär tillhörde gruppen hotell. Ungefär 250 anläggningar berördes av omdefinieringen och flyttades vid årsskiftet 2001/2002 från hotell-kategorin till vandrarhemskategorin." } }
 evidence = "current-scb-inputs.zip/Timeseries.csv row=92\n\nPopulation \"Hotell, stugbyar och vandrarhem\" (r151 variant 933). \"Från och med januari 2002\" (before the table starts in 2007)."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "camping: var:anlid"
+fields.row_key = true
+evidence = "Row key: anlid identify a row: one row per campsite and month, keyed on the facility id; CFAR and organisation number are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "hotell-stugbyar: var:anlid"
+fields.row_key = true
+evidence = "Row key: anlid identify a row: one row per accommodation facility and month, keyed on the facility id rather than the proposed CFAR number (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "privata-stugor-lagenheter: var:cfar-nummer"
+fields.row_key = true
+evidence = "Row key: cfar-nummer identify a row: one row per letting agency workplace and month, keyed on its CFAR number; the organisation number is an attribute (maintainer ruling 2026-11-14)."

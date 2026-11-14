@@ -208,3 +208,11 @@ kind = "set"
 subject = "var:stod-av-mindre-betydelse"
 fields = { "tags" = ["transfers"] }
 evidence = "The variable records de minimis aid received by the company during the current and two preceding tax years (r2), fitting transfers’ scope of grants and their receipt.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:1343\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:1343"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "agi-huvud: var:person-orgnr-arbetsgivare"
+fields.row_key = true
+evidence = "Row key: person-orgnr-arbetsgivare identify a row: one row per employer declaration; the employer is the unit (maintainer ruling 2026-11-14)."

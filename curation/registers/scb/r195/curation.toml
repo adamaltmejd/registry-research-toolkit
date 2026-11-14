@@ -2022,3 +2022,23 @@ kind = "set"
 subject = "set:urvalsstratum"
 fields = { "description" = "Det urvalsstratum som objektet tillhör, en stratumbeteckning som skapas i urvalsarbetet. I beteckningen stratam (2011–2023) har den totalundersökta delen fyra siffror och urvalsdelen fem, där de fyra första siffrorna anger stratum och den femte vilken månad i kvartalet uppgifterna avser." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSiffersystemet står bara för stratam (W0) och begränsas dit.\ncatalog:variable_text:41823:15065:19723\ncatalog:variable_text:41824:13149:15065\ncatalog:variable_text:41824:15065:18993\ncatalog:variable_text:41824:18993:19723\ncatalog:variable_text:41825:13149:15065\ncatalog:variable_text:41832:13149:13514"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: var:cfar-nummer"
+fields.row_key = true
+evidence = "Row key: cfar-nummer and cfar-nummer-idnr and personnr identify a row: to 2011 rows are workplaces keyed on CFAR number, from 2011 rows are sick-pay spells keyed on personnr; the employer organisation number is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: var:cfar-nummer-idnr"
+fields.row_key = true
+evidence = "Row key: cfar-nummer and cfar-nummer-idnr and personnr identify a row: to 2011 rows are workplaces keyed on CFAR number, from 2011 rows are sick-pay spells keyed on personnr; the employer organisation number is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: var:personnr"
+fields.row_key = true
+evidence = "Row key: cfar-nummer and cfar-nummer-idnr and personnr identify a row: to 2011 rows are workplaces keyed on CFAR number, from 2011 rows are sick-pay spells keyed on personnr; the employer organisation number is an attribute (maintainer ruling 2026-11-14)."

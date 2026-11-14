@@ -2354,3 +2354,16 @@ kind = "set"
 subject = "vaxtskyddsmedelsundersokningen: VaxtskyddsmedelId @2010 where key = 'v48829'"
 fields = { "variable" = "vaxtskyddsmedel-id" }
 evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Växtskyddsmedelsundersökningen 2010 (RegVerID 3522) documents column VaxtskyddsmedelId under VarId 33042 \"Växtskyddsmedel (id)\" and VarId 48829 \"VäxtskyddsmedelsID Glyfosatmedel\". VarId 33042 is the id of the plant protection product (\"Id nummer i Lantbrukssystemet för alla förekommande växtskyddsmedel\") and VarId 48829 the same id for glyfosate products; the 2010 variant holds the ordinary and the glyfosate survey, and the glyfosate products are part of the ordinary id list. The VarId 48829 occurrences are assigned to vaxtskyddsmedel-id."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "vaxtskyddsmedelsundersokningen: var:addid"
+fields.row_key = true
+evidence = "Row key: person-orgnr and addid identify a row: the farm register combines Addid with the organisation number to give a unique farm identity (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "vaxtskyddsmedelsundersokningen: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr and addid identify a row: the farm register combines Addid with the organisation number to give a unique farm identity (maintainer ruling 2026-11-14)."

@@ -6073,3 +6073,77 @@ kind = "set"
 subject = "set:yrkespaket"
 fields = { "description" = "Yrkespaket i komvux, som kod och i klartext. Ett yrkespaket är en specifik kombination av kurser på gymnasial nivå, utformad av Skolverket i samråd med branschkunniga, som ska motsvara kompetenskraven för ett yrkesområde." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nKod och klartext för samma uppgift.\ncatalog:variable_text:41565:18628:18809\ncatalog:variable_text:41565:19358:19539\ncatalog:variable_text:41566:18262:18628\ncatalog:variable_text:41566:18628:18809"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "elever-kalenderar: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per student, keyed on personnr; school and provider ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elever-lasar: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per student, keyed on personnr; school ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elever-slutbetyg-kalenderar: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per student with a leaving certificate, keyed on personnr; school and provider ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elever-slutbetyg-vartermin: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per student with a leaving certificate, keyed on personnr; school and provider ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elever-vartermin: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per student, keyed on personnr; school and provider ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-kalenderar: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: rows are course enrolments, keyed on personnr; rows are not unique and school and provider ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-lasar: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: rows are course enrolments, keyed on personnr; rows are not unique and school ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-slutbetyg-kalenderar: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: rows are graded course enrolments, keyed on personnr; rows are not unique and school and provider ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-slutbetyg-vartermin: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: rows are graded course enrolments, keyed on personnr; rows are not unique and school and provider ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: rows are course enrolments, keyed on personnr; rows are not unique and school and provider ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "nationella-prov-kalenderar: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: rows are national test results, keyed on personnr; rows are not unique and school and provider ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "nationella-prov-vartermin: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: rows are national test results, keyed on personnr; rows are not unique and school and provider ids are attributes (maintainer ruling 2026-11-14)."

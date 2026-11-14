@@ -244,3 +244,41 @@ kind = "set"
 subject = "var:omfattning"
 fields = { "description" = "Föräldrapenningens omfattning i delfallet. 1993–2013 anges den i decimaltal, från 2014 i heltal." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma betydelse; representationen byts från decimaltal till heltal 2014, en ändring i kodningen och inte i innebörden.\ncatalog:variable_text:200:8401:15979\ncatalog:variable_text:200:16071:2932897"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "delfall-1-1: var:persid"
+fields.row_key = true
+evidence = "Row key: persid identifies a row: the recipient is the unit of the benefit spell, the child is an attribute, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fall: var:persid"
+fields.row_key = true
+evidence = "Row key: persid identifies a row: the recipient is the unit of the benefit case, the child is an attribute, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fl-delfall1: var:persid"
+fields.row_key = true
+evidence = "Row key: persid identifies a row: the parent is the unit of the leave spell, the child is an attribute, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fl-fall: var:persid"
+fields.row_key = true
+evidence = "Row key: persid is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fp-delfall1: var:persid"
+fields.row_key = true
+evidence = "Row key: persid identifies a row: the recipient is the unit of the benefit spell, the child is an attribute, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fp-fall: var:persid"
+fields.row_key = true
+evidence = "Row key: persid is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

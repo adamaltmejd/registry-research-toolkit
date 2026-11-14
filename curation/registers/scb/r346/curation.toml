@@ -520,3 +520,11 @@ kind = "set"
 subject = "var:yngstabarn"
 fields = { "description" = "Ålder på det yngsta hemmaboende barnet, blank om uppgiften är okänd. Härledd variabel; från 2024 hämtas uppgiften från Befolkningsregistret." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; W1 anger att uppgiften 2024 hämtas från Befolkningsregistret.\ncatalog:variable_text:33416:15340:19723\ncatalog:variable_text:33416:19723:20089"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "individer: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per person; family, property and dwelling ids are attributes of the person (maintainer ruling 2026-11-14)."

@@ -1985,3 +1985,11 @@ kind = "set"
 subject = "var:termin"
 fields = { "description" = "Ordningsnummer för den aktuella höstterminen i elevens gymnasieutbildning." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma text; rättar 'aktuell höstterminen'.\ncatalog:variable_text:29979:8323:8324\ncatalog:variable_text:29979:9418:9419"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "elever-per-15-oktober: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."

@@ -545,3 +545,10 @@ kind = "set"
 subject = "var:styrkod-observation"
 fields = { series_break = { text = "Från och med 2016 har Bonusundersökningen gått över till systemetTriton. Därmed har styrkoderna ändrats jämfört mot tidigare år." } }
 evidence = "current-scb-inputs.zip/Timeseries.csv row=142\n\nUNCERTAIN: CVID 465867 is not in the export. Chosen by exact Namn and the text naming Bonusundersökningen; coverage ends 2010, so the 2016 change is after it (statuskod, 2016-, is the other candidate)."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "bonus-och-andra-oregelbundna-ersattningar: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per employee in the sampled firms; firm ids are attributes (maintainer ruling 2026-11-14)."

@@ -658,3 +658,11 @@ kind = "set"
 subject = "set:utbildningsgrupp"
 fields = { "description" = "Gruppering av utbildningar, skapad av Prognosinstitutet vid SCB, där varje grupp definieras med inriktning och nivå enligt SUN2000, från 2022 enligt SUN2020. Grupperingen finns som kod (ett internt identifikationsnummer för gruppen) och som namn i klartext." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nKod och namn beskriver samma utbildningsgrupp; bytet från SUN2000 till SUN2020 2022 anges för båda.\ncatalog:variable_text:10943:14975:15340\ncatalog:variable_text:10943:15340:16801\ncatalog:variable_text:10943:18993:19723\ncatalog:variable_text:10944:10592:18993\ncatalog:variable_text:10944:18993:19723"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "arbetskraftsbarometern: var:cfar-nummer"
+fields.row_key = true
+evidence = "Row key: cfar-nummer identify a row: the surveyed unit is the workplace, identified by cfar-nummer; rows per workplace and education group are not unique; orgnr and arbetsstallenummer are attributes (maintainer ruling 2026-11-14)."

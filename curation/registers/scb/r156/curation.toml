@@ -1876,3 +1876,11 @@ kind = "set"
 subject = "var:radnr"
 fields = { "description" = "Radnummer för posten i enkäten, inte ett belopp. Investeringsbeloppet finns i kolumnen InvBelopp i samma tabell." }
 evidence = "Kolumnnamn RadNr och etiketten \"radnummer\"; beloppet finns i InvBelopp (nyckel v6331).\n0.74.0 catalog, key v6331, releases r1507, r2599, r3013, r3887...; reg_meta.db:occurrence:243636,243690,243743"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "industrins-miljoskyddskostnader: var:identitet"
+fields.row_key = true
+evidence = "Row key: identitet identify a row: one row per surveyed enterprise and identitet is its informationless id (maintainer ruling 2026-11-14)."

@@ -256,3 +256,17 @@ kind = "set"
 subject = "set:kustomrade"
 fields = { "label" = "Kustområde" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "utrikes-och-inrikes-trafik-med-fartyg: var:anlopnr"
+fields.row_key = true
+evidence = "Row key: anlopnr and granslopnr identify a row: one row per ship call, identified by the call number within the reporting port number (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "utrikes-och-inrikes-trafik-med-fartyg: var:granslopnr"
+fields.row_key = true
+evidence = "Row key: anlopnr and granslopnr identify a row: one row per ship call, identified by the call number within the reporting port number (maintainer ruling 2026-11-14)."

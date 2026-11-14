@@ -70,3 +70,47 @@ kind = "set"
 subject = "var:skattat-belopp"
 fields = { "tags" = ["transfers"] }
 evidence = "Det beräknade beloppet per barn är en transferering och hör samman med bidragets belopp och nivå.\ncatalog:occurrence:450\ncatalog:occurrence:451\ncatalog:occurrence:462"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "avslag: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr and lopnr-barn identify a row: each refusal pairs the parent with the child the claim concerns (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "avslag: var:lopnr-barn"
+fields.row_key = true
+evidence = "Row key: lopnr and lopnr-barn identify a row: each refusal pairs the parent with the child the claim concerns (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "barn: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr and lopnr-barn identify a row: Tabell 2 is the child-level breakdown of recipients, one row per parent-child pair and month, and the key is not unique over months (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "barn: var:lopnr-barn"
+fields.row_key = true
+evidence = "Row key: lopnr and lopnr-barn identify a row: Tabell 2 is the child-level breakdown of recipients, one row per parent-child pair and month, and the key is not unique over months (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "beviljanden: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr and lopnr-barn identify a row: each grant pairs the parent with the child the claim concerns (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "beviljanden: var:lopnr-barn"
+fields.row_key = true
+evidence = "Row key: lopnr and lopnr-barn identify a row: each grant pairs the parent with the child the claim concerns (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "mottagare: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

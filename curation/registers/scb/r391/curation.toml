@@ -598,3 +598,23 @@ kind = "set"
 subject = "set:utbildningsatgard"
 fields = { "description" = "Om personen har fått någon speciell utbildningsåtgärd i Statens skolor för vuxna (SSV), och i en bredare variant också i Komvux eller inom Nationellt centrum för flexibelt lärande (CFL)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nSamma uppgift om utbildningsåtgärd, för SSV eller bredare.\ncatalog:variable_text:50970:10043:11869\ncatalog:variable_text:50971:10043:10227\ncatalog:variable_text:50971:10227:10408"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "elever: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the pupil; school ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-lasar: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the course participant; one row per course so the key does not make rows unique; school ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kursdeltagare-vartermin: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the course participant; one row per course so the key does not make rows unique; school ids are attributes (maintainer ruling 2026-11-14)."

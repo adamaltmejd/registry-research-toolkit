@@ -2229,3 +2229,16 @@ kind = "set"
 subject = "priser-for-nyproducerade-bostader: Tidsatgang @2007..2024 where key = 'v21421'"
 fields = { "variable" = "tidsatgang-kostnadsblankett" }
 evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Priser för nyproducerade bostäder 2007 (RegVerID 12067) to 2024 (RegVerID 20199) documents column Tidsatgang under VarId 21422 \"Tidsåtgång för kostnadsblanketten\" and VarId 21421 \"Tidsåtgång för husblanketterna (blanketten Uppgifter om hus)\". VarId 21421 is the time in minutes to fill in the house forms (Uppgifter om hus) and VarId 21422 the time to fill in the cost form (Uppgifter om nybyggnadsprojekt); the same measure for two forms, in one column (VarId 21421 also has its own column B_TidsatgangHus). The VarId 21421 occurrences are assigned to tidsatgang-kostnadsblankett."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "priser-for-nyproducerade-bostader: var:husbeteckning"
+fields.row_key = true
+evidence = "Row key: orgnr-foretaget and husbeteckning identify a row: the builder firm and its house or stage designation identify the new-build project a row prices (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "priser-for-nyproducerade-bostader: var:orgnr-foretaget"
+fields.row_key = true
+evidence = "Row key: orgnr-foretaget and husbeteckning identify a row: the builder firm and its house or stage designation identify the new-build project a row prices (maintainer ruling 2026-11-14)."

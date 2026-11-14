@@ -5265,3 +5265,59 @@ kind = "set"
 subject = "set:antal-anstallda"
 fields = { "description" = "Antal anställda per företag (1985–2021) och per arbetsställe (1985–2021), och på personens rad antalet anställda enligt sysselsättningsregistret på personens företag (1985–2021; från 1986 det företag där personen har sin huvudsakliga sysselsättning) och på det fasta arbetsstället (2019–2021). Per företag finns antalet enligt FDB och enligt kontrolluppgift, det vill säga personer som får kontant ersättning från arbetsgivaren för utfört arbete. Per arbetsställe avser antalet personer som är anställda vid mättillfället, för vilka arbetsgivaren är skyldig att redovisa A-skatt och som beräknas ha en årlig arbetsinkomst över ett prisbasbelopp." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. Maintainer ruling 2026-11-12 (#2322): every level of one measure belongs in one group.\n\nAntal anställda per företag och arbetsställe 1985–2021 och på personens rad; storleksklassen ingår inte i gruppen.\ncatalog:variable_text:47907:5479:12053\ncatalog:variable_text:47907:12053:12418\ncatalog:variable_text:47908:5479:5844\ncatalog:variable_text:47909:5844:6209\ncatalog:variable_text:47909:12053:12418\ncatalog:variable_text:47909:16071:16436\ncatalog:variable_text:47909:17897:18993\ncatalog:variable_text:47910:5479:18993\ncatalog:variable_text:47900:5479:18993\ncatalog:variable_text:47946:17897:18993"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen: var:cfar-nummer"
+fields.row_key = true
+evidence = "Row key: cfar-nummer identify a row: the CFAR number is the workplace own id in a workplace table; the organisation number and arbetsstallenummer are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fad-arbetsstallen: var:fad-arbetsstalle-id"
+fields.row_key = true
+evidence = "Row key: fad-arbetsstalle-id identify a row: the FAD workplace id identifies the workplace a row follows across the two years; CFAR and organisation numbers per year are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fad-foretag: var:fad-f-id"
+fields.row_key = true
+evidence = "Row key: fad-f-id identify a row: the FAD firm id identifies the firm a row follows across the two years; organisation numbers per year are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fad-nedlagda-arbetsstallen: var:fad-arbetsstalle-id"
+fields.row_key = true
+evidence = "Row key: fad-arbetsstalle-id identify a row: the FAD workplace id identifies the closed workplace; CFAR and organisation numbers per year are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fad-nedlagda-foretag: var:fad-f-id"
+fields.row_key = true
+evidence = "Row key: fad-f-id identify a row: the FAD firm id identifies the closed firm; organisation numbers per year are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "foretag: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "individer: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the person; employer, workplace, family and property ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: personnr and person-orgnr identify a row: a job is one person at one employer, so the personnummer and the employer organisation number together identify a row; CFAR, arbetsstallenummer and property are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "jobbregistret: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr and person-orgnr identify a row: a job is one person at one employer, so the personnummer and the employer organisation number together identify a row; CFAR, arbetsstallenummer and property are attributes (maintainer ruling 2026-11-14)."

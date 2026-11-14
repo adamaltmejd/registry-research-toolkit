@@ -916,3 +916,16 @@ kind = "set"
 subject = "kvartalsomsattning-tjanstesektorn: omsvarde @2006..2007 where key = 'v5084'"
 fields = { "long_format" = true }
 evidence = "SCB Registerinformation, Kvartalsomsättning tjänstesektorn 2006 and 2007 (RegVerID 575, 973) documents column omsvarde under VarId 4079 \"Omsättningsvärde\" (\"Företagsenhetens inlämnade omsättning i tusentals kr för viss period\") and VarId 5084 \"Inrikes omsättning\" (\"Inrikes årsomsättning enligt momsdeklarationer\"); the table's code columns omstyp (VarId 4077 \"Omsättningstyp\") and Intyp (VarId 4073 \"Typ av värde\") pick each row's measure, so the column is long format (maintainer 2026-11-14)."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "kvartalsomsattning-tjanstesektorn: var:lopnummer"
+fields.row_key = true
+evidence = "Row key: lopnummer identify a row: lopnummer is defined as the unique id of the survey object; the organisation number is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lagerstatistik: var:orgnr-12"
+fields.row_key = true
+evidence = "Row key: orgnr-12 identify a row: one row per surveyed enterprise, keyed on its organisation number over all years; enterprise and kind-of-activity unit numbers are attributes (maintainer ruling 2026-11-14)."

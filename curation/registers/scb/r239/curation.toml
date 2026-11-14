@@ -854,3 +854,23 @@ kind = "set"
 subject = "set:kommunvalkrets"
 fields = { "description" = "Kommunvalkrets, den regionala indelning för vilken ledamöter och ersättare utses vid kommunfullmäktigeval, angiven som valkretsens nummer eller namn i klartext. Numret är unikt först tillsammans med kommunkoden." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2322 group description: the set reads as one variable; it says what the members measure together and the axes that tell them apart.\n\nMedlemmarna skiljer sig i nummer eller namn.\ncatalog:variable_text:10342:7670:8035\ncatalog:variable_text:10342:11688:12053\ncatalog:variable_text:10342:13149:13514\ncatalog:variable_text:10342:17897:18262\ncatalog:variable_text:10343:7670:8035\ncatalog:variable_text:10343:10227:10592"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "kommunfullmaktigeval: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "regionfullmaktigeval: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "riksdagsval: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

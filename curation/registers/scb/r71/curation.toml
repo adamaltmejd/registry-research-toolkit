@@ -1923,3 +1923,22 @@ kind = "set"
 subject = "fastighetspriser: YtaBost @1999..2026 where key = 'v3746'"
 fields = { "variable" = "total-bostadsyta-ytabost" }
 evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Fastighetspriser och lagfarter 1999 (RegVerID 185) to 2026 (RegVerID 20278) documents column YtaBost under VarId 3274 \"Total bostadsyta\" and VarId 3746 \"Total bostadsyta, hyreshusenhet\". VarId 3274 is the total living area of the valuation unit and VarId 3746 the total living area of all assessment units of the category rental-housing unit belonging to the property; the same measure for two property kinds, in one column. The VarId 3746 occurrences are assigned to total-bostadsyta-ytabost."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "fastighetspriser: var:idegendom"
+fields.row_key = true
+evidence = "Row key: idegendom identify a row: one row per property sale; no sale id, so the property id is the key and rows are not unique; designation, tax unit and part numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "forvarvare-av-fastighet: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "overlatare-av-fastighet: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

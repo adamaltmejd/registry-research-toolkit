@@ -148,3 +148,17 @@ kind = "set"
 subject = "var:reportertype"
 fields = { "tags" = ["medicines", "methods"] }
 evidence = "Coordinator-approved audit correction: Def 'Typ av rapportör, t.ex. hälso- och sjukvård eller privatperson' in the adverse-reaction register; medicines explicitly covers 'biverkningar'. methods alone misses the register's theme.\naudit:29f8167a91203f9f2752bf008aa1b2d3464f2a70cdde5d3829c69911f74caf1d:line:31\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:630\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:630"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "arbetsflode: var:lopnummer-biverkningsrapport"
+fields.row_key = true
+evidence = "Row key: lopnummer-biverkningsrapport identifies a row: it is the report id, several rows per report make it not unique, and the person id and names are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "handlagda: var:lopnummer-biverkningsrapport"
+fields.row_key = true
+evidence = "Row key: lopnummer-biverkningsrapport identifies a row: it is the report id, several rows per report make it not unique, and the person id and names are attributes (maintainer ruling 2026-11-14)."

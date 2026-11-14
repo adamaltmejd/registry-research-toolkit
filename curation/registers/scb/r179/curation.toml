@@ -232,3 +232,11 @@ kind = "set"
 subject = "var:prelim-a-skatt-inkl-soc"
 fields = { "tags" = ["taxation"] }
 evidence = "Variabeln avser preliminär A-skatt.\ncatalog:variable_text:35311:14610:20089"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "lonesummor-arbetsgivaravgifter-och-preliminar-a-skatt: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

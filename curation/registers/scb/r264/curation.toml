@@ -14321,3 +14321,106 @@ kind = "set"
 subject = "deklarationsbilaga-nea: v7260 @2007..2009 where key = 'v4210'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Deklarationsbilaga NEA 2007-2009 (RegVerID 2653 for 2007) documents column v7260 under VarId 4216 \"Övriga kortfristiga fordringar\" and VarId 4210 \"Summa kortfristiga fordringar\". 4216 is v7260 in Deklarationsbilaga NE in the same years and v7261 in Register för inkomstblanketter, while 4210 is v0220 in Deklarationsblankett INK4 fr 2, Deklarationsbilaga N2 and Register för inkomstblanketter, so its row under v7260 is another form's total attached to this column. The 4210 rows are withheld; 4210 keeps its v0220 columns."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n4: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: the taxpayer identity number identifies the declarant; the trading partnership number is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsbilaga-k10: var:famansforetagets-organisationsnummer"
+fields.row_key = true
+evidence = "Row key: personnr and famansforetagets-organisationsnummer identify a row: one K10 is filed per owner and close company, so the owner personnummer and the company organisation number together identify a row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsbilaga-k10: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr and famansforetagets-organisationsnummer identify a row: one K10 is filed per owner and close company, so the owner personnummer and the company organisation number together identify a row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsbilaga-n1: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: the taxpayer identity number identifies the declarant; the filer personnummer is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsbilaga-n2: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: the taxpayer identity number identifies the declarant; the filer personnummer is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsbilaga-n3a: var:handelsbolagets-organisationsnummer"
+fields.row_key = true
+evidence = "Row key: personnr and handelsbolagets-organisationsnummer identify a row: one N3A is filed per owner and trading partnership, so the owner personnummer and the partnership number together identify a row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsbilaga-n3a: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr and handelsbolagets-organisationsnummer identify a row: one N3A is filed per owner and trading partnership, so the owner personnummer and the partnership number together identify a row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsbilaga-n3b: var:handelsbolagets-organisationsnummer"
+fields.row_key = true
+evidence = "Row key: person-orgnr and handelsbolagets-organisationsnummer and handelsbolagets-organisationsnummer-v7030 identify a row: one N3B is filed per owning legal person and trading partnership, so the owner number and the partnership number of each era together identify a row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsbilaga-n3b: var:handelsbolagets-organisationsnummer-v7030"
+fields.row_key = true
+evidence = "Row key: person-orgnr and handelsbolagets-organisationsnummer and handelsbolagets-organisationsnummer-v7030 identify a row: one N3B is filed per owning legal person and trading partnership, so the owner number and the partnership number of each era together identify a row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsbilaga-n3b: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr and handelsbolagets-organisationsnummer and handelsbolagets-organisationsnummer-v7030 identify a row: one N3B is filed per owning legal person and trading partnership, so the owner number and the partnership number of each era together identify a row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsbilaga-n6: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsbilaga-ne: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: the taxpayer identity number identifies the sole trader declarant; the filer personnummer is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsbilaga-nea: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: the taxpayer identity number identifies the sole trader declarant; the filer personnummer is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsblankett: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "register: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "register-for-inkomstblanketter-ink2: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "register-for-inkomstblanketter-ink3: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

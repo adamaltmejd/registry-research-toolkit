@@ -3128,3 +3128,46 @@ kind = "set"
 subject = "table:industrins-kapacitetsutnyttjande"
 fields = { series_break = { at = "2009-05", text = "Införande av SNI 2007 skedde i maj 2009. Branscherna för återvinning (SNI 37) och förlag (221) ingår från och med maj 2009 inte längre i undersökningen. Dessa branscher utgör endast en mindre del av hela industrin vilket innebär att tidsseriebrottet är relativt obetydligt. \nVissa metodförändringar har också genomförts vilket endast har inneburit marginell påverkan för tidsserierna." } }
 evidence = "current-scb-inputs.zip/Timeseries.csv row=31\n\nRelease r392 (labelled 2009, variant 372) resolves to this table. \"maj 2009\"."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "industrins-kapacitetsutnyttjande: var:verksamhetsenhetens-identitetsnummer"
+fields.row_key = true
+evidence = "Row key: verksamhetsenhetens-identitetsnummer identify a row: the kind-of-activity unit is the reporting unit and its id spans every year; organisation numbers, observation numbers and user ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "industrins-orderingang: var:verksamhetsenhetens-identitetsnummer"
+fields.row_key = true
+evidence = "Row key: verksamhetsenhetens-identitetsnummer identify a row: the kind-of-activity unit is the reporting unit and its id spans every year; organisation numbers and observation numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "industriproduktionsindex: var:verksamhetsenhetens-identitetsnummer"
+fields.row_key = true
+evidence = "Row key: verksamhetsenhetens-identitetsnummer identify a row: the kind-of-activity unit is the reporting unit; the organisation number is the owning firm, an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "omsattning-tjanstesektorn-2015: var:verksamhetsenhetens-identitetsnummer"
+fields.row_key = true
+evidence = "Row key: verksamhetsenhetens-identitetsnummer identify a row: the kind-of-activity unit is the reporting unit and its id spans every year; organisation numbers and observation numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "omsattning-tjanstesektorn-tom2014: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "produktionsvardeindex-pvi: var:verksamhetsenhetens-identitetsnummer"
+fields.row_key = true
+evidence = "Row key: verksamhetsenhetens-identitetsnummer identify a row: the kind-of-activity unit is the reporting unit; the organisation number is the owning firm, an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "tjansteproduktionsindex: var:verksamhetsenhetens-identitetsnummer"
+fields.row_key = true
+evidence = "Row key: verksamhetsenhetens-identitetsnummer identify a row: the kind-of-activity unit is the reporting unit; the organisation number is the owning firm, an attribute (maintainer ruling 2026-11-14)."

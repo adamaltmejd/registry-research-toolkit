@@ -34,3 +34,11 @@ kind = "set"
 subject = "var:svavelhalt"
 fields = { "tags" = ["energy"] }
 evidence = "Svavelhalten är en egenskap hos bränslet.\ncatalog:variable_text:45947:17897:19723"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "transportsektorns-energianvandning-inrikes-sjofart: var:scbid"
+fields.row_key = true
+evidence = "Row key: scbid identify a row: the SCB id is the only id and identifies the reporting shipping company (maintainer ruling 2026-11-14)."

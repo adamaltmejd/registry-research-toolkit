@@ -310,3 +310,29 @@ kind = "set"
 subject = "var:villkorat-beslut"
 fields = { "tags" = ["transfers"] }
 evidence = "Variabeln anger om ett beviljande är förenat med villkor för kommande utbetalningar.\ncatalog:variable_text:132:6848:2932897"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "ansokningar-beslut: var:lopnr-barn"
+fields.row_key = true
+evidence = "Row key: lopnr-sokande and lopnr-barn identify a row: each application pairs the applicant with the child the car grant is for, and there is no application id (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "ansokningar-beslut: var:lopnr-sokande"
+fields.row_key = true
+evidence = "Row key: lopnr-sokande and lopnr-barn identify a row: each application pairs the applicant with the child the car grant is for, and there is no application id (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "utbetalningar: var:lopnr-barn"
+fields.row_key = true
+evidence = "Row key: lopnr-sokande and lopnr-barn identify a row: each payment goes to the recipient for a child, there is no payment id, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "utbetalningar: var:lopnr-sokande"
+fields.row_key = true
+evidence = "Row key: lopnr-sokande and lopnr-barn identify a row: each payment goes to the recipient for a child, there is no payment id, and the key is not unique per row (maintainer ruling 2026-11-14)."

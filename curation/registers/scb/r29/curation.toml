@@ -20592,3 +20592,64 @@ kind = "set"
 subject = "var:identitetsnummer-hushall"
 fields = { series_break = { at = "1998", text = "1998 och framåt gäller familjebegrepp enligt RTB. Tidigare används familjebegreppet taxeringshushåll" } }
 evidence = "current-scb-inputs.zip/Timeseries.csv row=96\n\nCVID 13906 = linda 2004 column BIDNRF, ledger \"BIDNRF @ 2000-01-01\" (1993-2004, taxeringshushåll-based). \"1998 och framåt\"."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "lindaurval-familjemedlemmar-lon: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per sample or family member, keyed on personnr; the LINDA id number scbid is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: var:eget-personnr"
+fields.row_key = true
+evidence = "Row key: eget-personnr and personnr identify a row: one row per person, keyed on the person id of each era; household, property and LINDA id numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: var:personnr"
+fields.row_key = true
+evidence = "Row key: eget-personnr and personnr identify a row: one row per person, keyed on the person id of each era; household, property and LINDA id numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-familjemedlemmar-yrke-lon: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per sample or family member, keyed on personnr; the LINDA id number scbid is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: var:eget-personnr"
+fields.row_key = true
+evidence = "Row key: eget-personnr and personnr identify a row: one row per person in a tax household, keyed on the person id of each era; household, property and LINDA id numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: var:personnr"
+fields.row_key = true
+evidence = "Row key: eget-personnr and personnr identify a row: one row per person in a tax household, keyed on the person id of each era; household, property and LINDA id numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-yrke-och-lon: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per sample person, keyed on personnr; the LINDA id number scbid is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per person, keyed on personnr; household and LINDA id numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: var:eget-personnr"
+fields.row_key = true
+evidence = "Row key: eget-personnr and personnr identify a row: one row per person in a tax household, keyed on the person id of each era; household, property and LINDA id numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: var:personnr"
+fields.row_key = true
+evidence = "Row key: eget-personnr and personnr identify a row: one row per person in a tax household, keyed on the person id of each era; household, property and LINDA id numbers are attributes (maintainer ruling 2026-11-14)."

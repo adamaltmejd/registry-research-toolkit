@@ -214,3 +214,11 @@ kind = "set"
 subject = "var:verbal-delsumma"
 fields = { "tags" = ["education"] }
 evidence = "Delsumman hör till utbildningsresultat.\ncatalog:variable_text:57494:15156:2932897"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "hogskoleprovet: var:lopnr-personnr"
+fields.row_key = true
+evidence = "Row key: lopnr-personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

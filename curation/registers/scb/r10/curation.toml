@@ -5522,3 +5522,64 @@ kind = "set"
 subject = "uppdragsregistret: betesmark @2011 where key = 'v77'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Uppdragsregistret 2011 (RegVerID 17593) documents column betesmark under VarId 77 \"Areal, betesmark\" (CVID 823151) and VarId 42304 \"Total betesmark (areal i ha)\" (CVID 823139). 77 is betesmark in 2002-2010 and 42304 in 2012-2019 (both again in 2021-2023, with 77 alone in 2020 and 2024-2025), so 2011 is the changeover to the new definition (\"Total areal av betesmark i ha inkl. ospecificerad betesmark\"). The source does not settle which for 2011; 42304 is the more plausible owner because 2011 is the first release that documents it and it then holds the column alone in 2012-2019 (maintainer 2026-11-14: place under the more plausible owner). The 77 row is withheld; 77 keeps betesmark in the other years."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "arealer: var:lantbruk-foretags-id"
+fields.row_key = true
+evidence = "Row key: lantbruk-foretags-id identify a row: rows are crop areas of a farm enterprise, keyed on the farm enterprise id ftgid that links the LBR tables, not the proposed person-orgnr; customer and organisation numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "brukare: var:lantbruk-foretags-id"
+fields.row_key = true
+evidence = "Row key: lantbruk-foretags-id and person-orgnr identify a row: one row per farm enterprise and operator pair, identified by the farm id plus the operator person or organisation number (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "brukare: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: lantbruk-foretags-id and person-orgnr identify a row: one row per farm enterprise and operator pair, identified by the farm id plus the operator person or organisation number (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "djur: var:lantbruk-foretags-id"
+fields.row_key = true
+evidence = "Row key: lantbruk-foretags-id identify a row: one row per farm enterprise, keyed on the farm enterprise id (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "foretag: var:lantbruk-foretags-id"
+fields.row_key = true
+evidence = "Row key: lantbruk-foretags-id identify a row: one row per farm enterprise, keyed on the farm enterprise id ftgid rather than the proposed organisation number, which ends in 1998 (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "iaks-arealer: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "iaks-brukare: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: one row per area-support applicant, keyed on its person or organisation number; the IAKS customer numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "tradgard-friland: var:lantbruk-foretags-id"
+fields.row_key = true
+evidence = "Row key: lantbruk-foretags-id identify a row: rows are open-field crops of a farm enterprise, keyed on the farm enterprise id (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "tradgard-vaxthus: var:lantbruk-foretags-id"
+fields.row_key = true
+evidence = "Row key: lantbruk-foretags-id identify a row: rows are greenhouse crops of a farm enterprise, keyed on the farm enterprise id (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: var:lantbruk-foretags-id"
+fields.row_key = true
+evidence = "Row key: lantbruk-foretags-id identify a row: the table description names ftgid as the matching id per farm enterprise, so it keys rather than the proposed person-orgnr; property designation is an attribute (maintainer ruling 2026-11-14)."

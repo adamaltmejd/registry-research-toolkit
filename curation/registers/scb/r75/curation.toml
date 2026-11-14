@@ -904,3 +904,10 @@ kind = "set"
 subject = "energistatistik-for-flerbostadshus: ElTot @2005..2008 where key = 'v7891'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Energistatistik för flerbostadshus versions 2005-2008 (RegVerIDs 282, 2120, 2121, 2753) documents column ElTot under VarId 7748 \"Total elanvändning\" and VarId 7891 \"Elvvärme för upppvärmning/inkl.varmvatten\". The column name ElTot is \"Total elanvändning\", VarId 7748; VarId 7891 is electric heating only (El för uppvärmning inkl. varmvatten) and is a component of the total; the VarId 7891 row is withheld."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-flerbostadshus: var:taxeringsid"
+fields.row_key = true
+evidence = "Row key: taxeringsid identify a row: a property table keyed on the tax assessment unit id; designation, manager and survey ids are attributes (maintainer ruling 2026-11-14)."

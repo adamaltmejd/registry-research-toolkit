@@ -1386,3 +1386,11 @@ kind = "set"
 subject = "var:person-orgnr"
 fields = { "description" = "Organisationsnummer för arbetsgivaren eller annan utbetalare. För juridiska personer tilldelas numret av Bolagsverket, Skatteverket, Kammarkollegiet, Lantmäteriet, länsstyrelse eller SCB beroende på bolagsform; för fysiska personer med näringsverksamhet används personnumret." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition alla år; 2019–2020 anger att numret avser utbetalaren, från 2021 saknas den meningen.\ncatalog:variable_text:8976:17897:18628\ncatalog:variable_text:8976:18628:19723"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: var:person-samordnings-orgnr"
+fields.row_key = true
+evidence = "Row key: person-samordnings-orgnr identify a row: one row per payment to a recipient; no payment id, so the recipient id is the key and rows are not unique; the payer person-orgnr, workplace and vessel ids are attributes (maintainer ruling 2026-11-14)."

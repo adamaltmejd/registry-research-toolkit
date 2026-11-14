@@ -2056,3 +2056,17 @@ kind = "set"
 subject = "set:svensk-utlandsk-bakgrund"
 fields = { "description" = "Om eleven har svensk eller utländsk bakgrund, härlett ur elevens och föräldrarnas födelseland enligt Befolkningsregistret, i två indelningar med tre grupper och en med fyra grupper. I en av tregruppsindelningarna sätts saknat födelseland från 2014 till Sverige. I fyragruppsindelningen antas en saknad förälders födelseland vara inrikes för inrikes födda och utrikes för utrikes födda; 2019–2024 utgår den från de biologiska föräldrarna, och utländsk bakgrund har då den som är utrikes född eller vars båda föräldrar är födda utrikes, svensk bakgrund den som är född i Sverige och har högst en förälder som är född utrikes eller saknar uppgift om födelseland." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nGruppdefinitionerna och de biologiska föräldrarna står bara för fyragruppsindelningen 2019–2024 (W3) och begränsas dit; regeln om saknat födelseland gäller bara tregruppsindelningen m0 (W1).\ncatalog:variable_text:50052:12965:16252\ncatalog:variable_text:50052:16252:18184\ncatalog:variable_text:50053:16252:17713\ncatalog:variable_text:50054:17713:18184\ncatalog:variable_text:50054:18184:18185"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "betyg-ak10: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the pupil; parents, school and organiser ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elever: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the pupil; parents, school and organiser ids are attributes (maintainer ruling 2026-11-14)."

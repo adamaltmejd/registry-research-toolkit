@@ -993,3 +993,10 @@ kind = "set"
 subject = "vagtrafikolyckor: PRAD @2000..2002 where key = 'v4675'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Vägtrafikolyckor med personskada 2000 (RegVerID 263) to 2002 (RegVerID 874) documents column PRAD under VarId 2383 \"Personrad\" and VarId 4675 \"Person ID\". PRAD abbreviates \"Personrad\" (VarId 2383); VarId 4675 \"Person ID\" carries the identical definition and has no other column, so it is a second name for the same column. The VarId 4675 row is withheld."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "vagtrafikolyckor: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

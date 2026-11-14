@@ -1260,3 +1260,11 @@ kind = "set"
 subject = "var:sateskommun"
 fields = { "description" = "Kommun där styrelsen har sitt säte för aktiebolag med flera, där huvudkontoret ligger för handelsbolag och där innehavaren är skriven för enskilda firmor. Från 2011 hämtas uppgiften från juridiska enheten i Företagsregistret." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; från 2011 anges källan.\ncatalog:variable_text:46153:10592:14975\ncatalog:variable_text:46153:14975:17897\ncatalog:variable_text:46153:17897:19358"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr identify a row: rows are monthly VAT returns of a legal unit, keyed on its organisation number; the reporting identity is an attribute (maintainer ruling 2026-11-14)."

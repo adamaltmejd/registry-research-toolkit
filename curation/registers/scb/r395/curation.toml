@@ -1046,3 +1046,10 @@ kind = "set"
 subject = "var:kapitalforlust-fonder"
 fields = { series_break = { at = "2007", text = "Underlaget för 2005 och 2006 års register är taxerade kapitalvinster/-förluster och ogranskade data från Skatteverkets K-blanketter. Fr.o.m. 2007 innehåller inkomstdeklarationen mer detaljerade uppgifter om kapitalinkomster än tidigare. Fr.o.m. 2007 framställs variabeln främst med hjälp av dessa deklarationsdata vilket innebär att kvaliteten är bättre fr.o.m. 2007." } }
 evidence = "current-scb-inputs.zip/Timeseries.csv row=107\n\nCVID 689506 = kapitalvinster 2005 column KFFF. \"Fr.o.m. 2007\"."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "individ: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

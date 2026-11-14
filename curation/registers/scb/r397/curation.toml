@@ -599,3 +599,29 @@ kind = "set"
 subject = "var:nyborjare"
 fields = { "description" = "Om personen är nybörjare inom folkbildningen, det vill säga inte deltagit i folkbildning under de tre föregående åren." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma regel alla år; texterna skiljer sig bara i vilka tre år som räknas.\ncatalog:variable_text:51580:15340:15706\ncatalog:variable_text:51580:15706:16071\ncatalog:variable_text:51580:16071:16436\ncatalog:variable_text:51580:16436:16801\ncatalog:variable_text:51580:16801:17167\ncatalog:variable_text:51580:17167:17532\ncatalog:variable_text:51580:17532:17897\ncatalog:variable_text:51580:17897:18262"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "deltagare: var:lmanr"
+fields.row_key = true
+evidence = "Row key: personnr and lmanr identify a row: the personnummer, or the LMA number for asylum seekers without one, identifies the participant; one row per activity so the key does not make rows unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "deltagare: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr and lmanr identify a row: the personnummer, or the LMA number for asylum seekers without one, identifies the participant; one row per activity so the key does not make rows unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "studieforbund-stuv-2012: var:personnummer-personnr-scb"
+fields.row_key = true
+evidence = "Row key: personnummer-personnr-scb is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "studieforbund-stuv-2020: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the participant; one row per activity so the key does not make rows unique; property is an attribute (maintainer ruling 2026-11-14)."

@@ -1486,3 +1486,34 @@ kind = "set"
 subject = "table:industrins-orderingang"
 fields = { "description" = "Statistiken belyser månadsvis utvecklingen av leverans- och orderläget inom industrin, såväl totalt som uppdelat på branscher." }
 evidence = "SCB Registerinformation table descriptions of Industrins leverans- och orderläge and Industrins orderingång och omsättning: \"Statistiken skall månadsvis belysa utvecklingen av leverans- och orderläget inom industrin, såväl totalt som uppdelat på branscher.\" The successor's added sentence (\"Årgångarna 1998-2013 ligger under Industrins leverans- och orderläge\") no longer holds once the variants merge into this table (maintainer ruling 2026-11-14)."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "industrins-lager: var:verksamhetsenhetens-identitetsnummer-venr"
+fields.row_key = true
+evidence = "Row key: verksamhetsenhetens-identitetsnummer-venr identify a row: one row per surveyed kind-of-activity unit and period, keyed on venr over all years; observation and organisation numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "industrins-lager-2015: var:verksamhetsenhetens-identitetsnummer-venr"
+fields.row_key = true
+evidence = "Row key: verksamhetsenhetens-identitetsnummer-venr identify a row: one row per surveyed kind-of-activity unit and period, keyed on venr; the organisation number is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "industrins-leverans-orderlage: var:verksamhetsenhetens-identitetsnummer-venr"
+fields.row_key = true
+evidence = "Row key: verksamhetsenhetens-identitetsnummer-venr identify a row: one row per surveyed kind-of-activity unit and month, keyed on venr over all years; observation, organisation and user ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "industrins-orderingang: var:verksamhetsenhetens-identitetsnummer-venr"
+fields.row_key = true
+evidence = "Row key: verksamhetsenhetens-identitetsnummer-venr identify a row: one row per surveyed kind-of-activity unit and month, keyed on venr; observation and organisation numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "industriproduktionsindex: var:verksamhetsenhetens-identitetsnummer-al2undu"
+fields.row_key = true
+evidence = "Row key: verksamhetsenhetens-identitetsnummer-al2undu identify a row: one row per surveyed kind-of-activity unit and month, keyed on the unit id that spans all years (maintainer ruling 2026-11-14)."

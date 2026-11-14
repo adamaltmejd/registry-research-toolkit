@@ -750,3 +750,11 @@ kind = "set"
 subject = "var:kon"
 fields = { "description" = "Personens kön, härlett från personnumret: udda elfte siffra kodas som man, jämn som kvinna." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nRättar 'ojämt'/'jämt' till 'ojämnt'/'jämnt'; samma härledning båda åren.\ncatalog:variable_text:10687:18184:18185\ncatalog:variable_text:10687:18550:18551"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "elever: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per pupil; parents personnr, school unit and provider are attributes (maintainer ruling 2026-11-14)."

@@ -118,3 +118,11 @@ kind = "set"
 subject = "var:syss-mikro-miljo"
 fields = { "tags" = ["employment", "environment"] }
 evidence = "Variabeln mäter sysselsättning i produktion av miljövänliga varor och tjänster.\ncatalog:variable_text:39275:12053:18262"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "miljosektorn: var:orgnr"
+fields.row_key = true
+evidence = "Row key: orgnr identify a row: one row per environmental-sector firm, keyed on its organisation number; the main-activity workplace number is an attribute (maintainer ruling 2026-11-14)."

@@ -9036,3 +9036,11 @@ kind = "set"
 subject = "var:vistelsetid"
 fields = { "description" = "Vistelselängd i Sverige. 2011–2012 i antal år och endast för personer födda utanför Sverige; 2022 räknad från senaste invandring." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDefinitionen ”Antal dagar folkbokförd i Sverige; total vistelsetid” är generisk text från integrationsregistrens VistTid/VTid (dagar) och tas inte med; RESTIME är nvarchar(2) och operationaliseringen anger vistelselängd, i år 2011–2012 och från senaste invandring 2022.\ncatalog:variable_text:8903:15156:15522\ncatalog:variable_text:8903:16801:17167\ncatalog:variable_text:8903:18993:19358\nRegisterinformation.csv:row=275023\nRegisterinformation.csv:row=296634\nRegisterinformation.csv:row=440070\nRegisterinformation.csv:row=440071\nRegisterinformation.csv:row=442525\nRegisterinformation.csv:row=479578"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: var:eget-personnr"
+fields.row_key = true
+evidence = "Row key: eget-personnr identify a row: one row per surveyed person; lopnummer and uenr are survey respondent numbers for the same person (maintainer ruling 2026-11-14)."

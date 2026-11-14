@@ -762,3 +762,11 @@ kind = "set"
 subject = "set:utbildningsniva"
 fields = { "description" = "Personens utbildningsnivå enligt Svensk utbildningsnomenklatur (SUN), i olika kodningar: hela nivåkoden enligt SUN 2000 med tre positioner (2005–2018), den första positionen som ensiffrig kod (2005–2024; från 2021 skapad från den fyrsiffriga koden i Utbildningsregistret), nivån enligt gamla SUN som ensiffrig kod (2016–2018), en aggregering till sju nivåer anpassade till det svenska utbildningssystemet och jämförbara med äldre nivåer före år 2000 (2005–2015) och, från 2020, nivån enligt SUN 2020 (2022 fyrsiffrig, 2023–2024 tresiffrig kod)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nMedlemmarna anger samma utbildningsnivå i olika SUN-versioner och aggregeringar.\ncatalog:variable_text:49602:12784:13149\ncatalog:variable_text:49604:16801:17897\ncatalog:variable_text:49605:16801:17897\ncatalog:variable_text:49606:12784:16801\ncatalog:variable_text:49607:18262:18993\ncatalog:variable_text:49607:18993:19358\ncatalog:variable_text:49607:19358:20089\ncatalog:variable_text:49614:16801:18628\ncatalog:variable_text:49614:18628:20089\ncatalog:variable_text:49615:12784:16801\ncatalog:variable_text:49616:12784:16801"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "lonestrukturstatistik-hela-ekonomin: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the employee; the employer organisation number is an attribute (maintainer ruling 2026-11-14)."

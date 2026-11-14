@@ -778,3 +778,29 @@ kind = "set"
 subject = "set:ovriga-externa-kostnader"
 fields = { "label" = "Övriga externa kostnader" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "externa-kostnader: var:lopnummer-for-verksamhetsenhet"
+fields.row_key = true
+evidence = "Row key: person-orgnr and lopnummer-for-verksamhetsenhet identify a row: one row per kind-of-activity unit, identified by the organisation number plus the unit serial number within it (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "externa-kostnader: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr and lopnummer-for-verksamhetsenhet identify a row: one row per kind-of-activity unit, identified by the organisation number plus the unit serial number within it (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "ravaror: var:lopnummer-for-verksamhetsenhet"
+fields.row_key = true
+evidence = "Row key: person-orgnr and lopnummer-for-verksamhetsenhet identify a row: rows are raw-material lines of a kind-of-activity unit, identified by organisation number plus unit serial number; rows are not unique on these alone (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "ravaror: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr and lopnummer-for-verksamhetsenhet identify a row: rows are raw-material lines of a kind-of-activity unit, identified by organisation number plus unit serial number; rows are not unique on these alone (maintainer ruling 2026-11-14)."

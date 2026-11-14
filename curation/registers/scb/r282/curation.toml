@@ -774,3 +774,11 @@ kind = "set"
 subject = "var:agarkategori-bostad"
 fields = { "description" = "Kategori för den deklarationsansvariga ägaren till fastigheten där bostaden ligger, härledd från ägarens juridiska form. Till och med 2018 hämtas den juridiska formen från Fastighetstaxeringsregistret; från 2019 avser den den lagfarne ägaren eller tomträttsinnehavaren och hämtas från Företagsdatabasen." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; källbytet 2019 anges som fakta med år.\ncatalog:variable_text:13325:15706:17897\ncatalog:variable_text:13325:17897:20089"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "bostadsbestand: var:lagenhetsnyckel"
+fields.row_key = true
+evidence = "Row key: lagenhetsnyckel identify a row: a dwelling table keyed on the dwelling key; property, building, entrance and address ids are attributes (maintainer ruling 2026-11-14)."

@@ -862,3 +862,16 @@ kind = "set"
 subject = "table:offentligt-agda-foretag"
 fields = { series_break = { text = "Ny population" } }
 evidence = "current-scb-inputs.zip/Timeseries.csv row=124\n\nUNCERTAIN: population \"Offentlig sektor\" exists in r114 (2007-2023) and r407 (2021-2022); r114 chosen, see report. Text \"Ny population\" states no date."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: var:organisationsnummer-10-siffror"
+fields.row_key = true
+evidence = "Row key: organisationsnummer-10-siffror and orgnr identify a row: one row per publicly owned firm, keyed on its organisation number of each era; enterprise unit number and the 12-digit person-orgnr are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "offentligt-agda-foretag: var:orgnr"
+fields.row_key = true
+evidence = "Row key: organisationsnummer-10-siffror and orgnr identify a row: one row per publicly owned firm, keyed on its organisation number of each era; enterprise unit number and the 12-digit person-orgnr are attributes (maintainer ruling 2026-11-14)."

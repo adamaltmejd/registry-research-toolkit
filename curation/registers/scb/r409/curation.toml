@@ -298,3 +298,11 @@ kind = "set"
 subject = "var:utforare"
 fields = { "tags" = ["education", "healthcare", "social-care"] }
 evidence = "Variabeln anger om organisationen utför tjänster inom vård, skola och omsorg.\ncatalog:variable_text:6897:18628:19723"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "civila-samhallet: var:person-samordnings-orgnr"
+fields.row_key = true
+evidence = "Row key: person-samordnings-orgnr identify a row: an organisation table keyed on the organisation id (maintainer ruling 2026-11-14)."

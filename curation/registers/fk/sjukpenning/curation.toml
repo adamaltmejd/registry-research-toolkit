@@ -1900,3 +1900,161 @@ kind = "set"
 subject = "var:utflode"
 fields = { "description" = "Antal sjukfall som når Försäkringskassan och som har avslutats under redovisningsperioden, som är året, kvartalet eller månaden beroende på tabell. De senaste två månaderna redovisas inte på grund av eftersläpning i data." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma mått; referensperioden följer tabellen, och undantaget för de två senaste månaderna gäller alla tabeller.\ncatalog:variable_text:529:8766:2932897"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "ar-1: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "delfall-1-1: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "delfall-1-2: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "delfall-1-3: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "delfall-2-1: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "delfall-2-2: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "delfall-2-3: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "delfall-2-4: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "delfall-2-5: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "delfall-3-1: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "delfall-3-2: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "delfall-3-3: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "delfall-3-4: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "delfall-3-5: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "delfall-4-1: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "delfall-4-2: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "delfall-4-3: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "delfall-4-4: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "delfall-4-5: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "delfall-4-6: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "delfall-4-7: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fall-1: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kvartal-1: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "manad-1: var:lopnr"
+fields.row_key = true
+evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

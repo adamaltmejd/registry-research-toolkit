@@ -3796,3 +3796,34 @@ kind = "set"
 subject = "var:klassificerad-som-arbetslos"
 fields = { series_break = { at = "2023-01", text = "Från och med januari 2023 ändras den övre åldersgränsen från 64 år till 65 år per den sista dagen i referensmånaden." } }
 evidence = "current-scb-inputs.zip/Timeseries.csv row=109\n\nCVID 884268 = bas 2023 column BAlosStat. \"Från och med januari 2023\"."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per registered person; employer and workplace ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-arbetsstallen: var:cfar-nummer"
+fields.row_key = true
+evidence = "Row key: cfar-nummer identify a row: a workplace table keyed on the workplace id; the employer person-orgnr and arbetsstallenummer are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "arsuppgifter-jobb: var:person-samordningsnummer"
+fields.row_key = true
+evidence = "Row key: person-samordningsnummer identify a row: one row per job; no job id, so the person id is the key and rows are not unique; employer and workplace ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "preliminara-manadsuppgifter: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per person and month; employer and workplace ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "slutliga-manadsuppgifter: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per person and month; employer and workplace ids are attributes (maintainer ruling 2026-11-14)."

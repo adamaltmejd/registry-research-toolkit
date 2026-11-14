@@ -20248,3 +20248,22 @@ kind = "set"
 subject = "it-anvandning-i-foretag: inv3r_pmp @2017 where key = 'v38335'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, IT-användning i företag 2017 (RegVerID 11568) documents column inv3r_pmp under VarId 35490 \"Andel mottagna fakturor som inte kan processas automatiskt\" and VarId 38335 \"Andel mottagna e-fakturor och pappersfakturor som inte kan processas automatiskt i mottgarens IT-system\". Both are the share of received invoices (paper and e-invoices) that cannot be processed automatically, with different bases; they are two documentations of one question, not two row kinds, so no merge. The source does not settle which; 35490 is the more plausible owner because it is the counterpart of 35491 in the same 2017 column pair and the older documentation (CVID 470675 against 558837) (maintainer 2026-11-14: place under the more plausible owner); the 38335 row is withheld."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: var:uenr"
+fields.row_key = true
+evidence = "Row key: uppgiftslamnarens-personnr and uenr identify a row: one row per respondent; personnr from 2007 and the internal respondent id uenr in 2006 to 2010 identify the person (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "befolkningens-it-anvandning: var:uppgiftslamnarens-personnr"
+fields.row_key = true
+evidence = "Row key: uppgiftslamnarens-personnr and uenr identify a row: one row per respondent; personnr from 2007 and the internal respondent id uenr in 2006 to 2010 identify the person (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "it-anvandning-i-foretag: var:person-orgnr"
+fields.row_key = true
+evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

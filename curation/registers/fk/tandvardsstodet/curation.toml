@@ -1192,3 +1192,53 @@ kind = "set"
 subject = "set:vardgivarpris"
 fields = { "label" = "Vårdgivarpris" }
 evidence = "#2100 group name: a member label slugifies to the group slug, then adjusted on review (diacritics/casing)."
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "abonnemang: var:lopnr-arende-id"
+fields.row_key = true
+evidence = "Row key: lopnr-arende-id identifies a row: it is the case id of the subscription, and the patient lopnummer is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "abonnemang-detaljerat: var:lopnr-arende-id"
+fields.row_key = true
+evidence = "Row key: lopnr-arende-id identifies a row: it is the case id of the subscription, the patient lopnummer is an attribute, and detail rows make the key not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "arende-atgard: var:aro-sekvnr"
+fields.row_key = true
+evidence = "Row key: aro-sekvnr identifies a row: its definition is the case id, and rows are actions within the case, so the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "arenden-detaljerat: var:lopnr-arende-id"
+fields.row_key = true
+evidence = "Row key: lopnr-arende-id identifies a row: it is the case id, and related-case ids, patient, clinic, provider and practitioner ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "atgarder: var:lopnr-arende-id"
+fields.row_key = true
+evidence = "Row key: lopnr-arende-id identifies a row: it is the case id the actions belong to, the key is not unique per action row, and patient, clinic, provider and practitioner ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "betalningar: var:lopnr-arende-id"
+fields.row_key = true
+evidence = "Row key: lopnr-arende-id identifies a row: it is the case id the payment belongs to, and patient, clinic and provider ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "efterhandskontroll: var:lopnr-arende-id-ehk"
+fields.row_key = true
+evidence = "Row key: lopnr-arende-id-ehk identifies a row: it is the id of the post-check case, and the checked case id, clinic and provider are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "ersattningsperioder: var:lopnummer"
+fields.row_key = true
+evidence = "Row key: lopnummer is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."

@@ -12300,3 +12300,28 @@ kind = "set"
 subject = "elproducerande-industriforetag: BRKOD @2019..2024 where key = 'v35301'"
 fields = { "variable" = "bransleforbrukning-transporter-brkod" }
 evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column BRKOD of elproducerande-industriforetag in 2019..2024 under several variables (bransleforbrukning (v1721), bransleforbrukning-transporter-brkod (v35301)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "elnatforetag-nat: var:orgnr"
+fields.row_key = true
+evidence = "Row key: orgnr identify a row: a firm table: the grid company orgnr covers all years; survey ids and control numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elproducerande-industriforetag: var:orgnr"
+fields.row_key = true
+evidence = "Row key: orgnr identify a row: a firm table keyed on the firm orgnr; survey ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elproduktion-elhandel: var:orgnr"
+fields.row_key = true
+evidence = "Row key: orgnr identify a row: a firm table keyed on the firm orgnr; survey ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "gasforetag: var:foretagets-id-nummer"
+fields.row_key = true
+evidence = "Row key: foretagets-id-nummer identify a row: a firm table whose only identifier is the firm id (maintainer ruling 2026-11-14)."

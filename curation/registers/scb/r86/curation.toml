@@ -13569,3 +13569,23 @@ kind = "set"
 subject = "set:upplatelseform"
 fields = { "description" = "Hur hushållet förfogar över sin bostad: om det hyr eller äger den, är inneboende, har tjänstebostad eller andelslägenhet (1999–2012), och för 2021 upplåtelseformen, härledd ur boendeform och typ av kontrakt." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda anger hushållets förfogande över bostaden.\ncatalog:variable_text:33487:10592:11688\ncatalog:variable_text:33487:12053:14610\ncatalog:variable_text:33810:18628:18993"
+
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "hushall-1999-2001: var:kundnr"
+fields.row_key = true
+evidence = "Row key: kundnr identify a row: one row per surveyed household and kundnr is the household survey id, its only identifier (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "hushall-2021: var:hushallsid"
+fields.row_key = true
+evidence = "Row key: hushallsid identify a row: one row per household, keyed on the household id (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "individ-2021: var:eget-personnr"
+fields.row_key = true
+evidence = "Row key: eget-personnr identify a row: one row per household member, keyed on the member personnummer; the household id is an attribute (maintainer ruling 2026-11-14)."

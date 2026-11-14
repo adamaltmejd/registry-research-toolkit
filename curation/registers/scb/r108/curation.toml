@@ -2939,3 +2939,16 @@ kind = "set"
 subject = "gymnasieungdomars-studieintresse: F2_09 @2019-07-01..2020-06-30 where key = 'v27222'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Gymnasieungdomars studieintresse Läsåret 2019/2020 (RegVerID 14259) documents column F2_09 under VarId 40274 \"Orsak till ointresse för högskolestudier - Studielån\" and VarId 27222 \"Orsak till ointresse för högskolestudier - Annat\". The operational definition of 40274 starts \"F2_09:\", while that of 27222 \"Annat\" is \"F2_10: Vad beror det på att du inte planerar att läsa på universitet/högskola ... Annat.\"; F2_10 is the \"Annat\" item this year. The 27222 row is withheld."
+# Row keys: the columns that identify a row (set row_key).
+
+[[statement]]
+kind = "set"
+subject = "gymnasieungdomars-studieintresse: var:personnr-urval"
+fields.row_key = true
+evidence = "Row key: personnr-urval and uenr identify a row: survey of persons keys on the sampled person; UENR is added because it is the only person id 2005-2010 (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieungdomars-studieintresse: var:uenr"
+fields.row_key = true
+evidence = "Row key: personnr-urval and uenr identify a row: survey of persons keys on the sampled person; UENR is added because it is the only person id 2005-2010 (maintainer ruling 2026-11-14)."
