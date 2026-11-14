@@ -455,6 +455,6 @@ evidence = "Row key: besdatumn (BESDATUMN) is the date of the event a row record
 
 [[statement]]
 kind = "set"
-subject = "tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm: var:vardstartdatum"
+subject = "tvangsvard-enligt-lagen-om-vard-av-missbrukare-i-vissa-fall-lvm: var:utdatum"
 fields.row_key = true
-evidence = "Row key: vardstartdatum (STDATUM) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."
+evidence = "Row key: utdatum (UTDATUM) is the discharge date; a row records one discharge from LVM care and one person can be discharged several times, so the key is the person plus the discharge date (maintainer ruling 2026-11-14; #2479 re-review)."

@@ -233,4 +233,4 @@ evidence = "Row key: ar-manad (Ar_manad) is the period of a row; one delivered f
 kind = "set"
 subject = "beslut: var:startdatum"
 fields.row_key = true
-evidence = "Row key: startdatum (Startdatum) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date; the delivered columns cannot always tell two events of one unit on that date apart, so rows are not guaranteed unique (maintainer ruling 2026-11-14)."
+evidence = "Row key: startdatum (Startdatum) is the date FK received the application; the application is the case a row describes and one person can apply several times, so the key is the person plus the received date. One application can still yield decisions for several benefit types, so rows are not guaranteed unique (maintainer ruling 2026-11-14; #2479 re-review)."

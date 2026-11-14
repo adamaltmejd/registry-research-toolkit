@@ -1725,6 +1725,6 @@ evidence = "Row key: indatum (INDATUM) is the date of the event a row records; o
 
 [[statement]]
 kind = "set"
-subject = "par-tv: var:indatum"
+subject = "par-tv: var:startdatum-for-psykiatrisk-vardform"
 fields.row_key = true
-evidence = "Row key: indatum (INDATUM) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."
+evidence = "Row key: startdatum-for-psykiatrisk-vardform (START) is the start of the compulsory psychiatric care period a row records and covers 2010 onward (INDATUM only 2010-2014); one person can have several periods, so the key is the person plus the start date (maintainer ruling 2026-11-14; #2479 re-review)."

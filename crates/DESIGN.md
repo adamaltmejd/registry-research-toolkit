@@ -255,12 +255,12 @@ An event that happens at most once per unit (a death) is keyed by the unit alone
 even these columns repeat (two prescriptions on one day), the key stops at what the
 delivered columns identify; no column is invented to complete it. A period column that
 repeats the file's own period is not a key, and a birth date column is never one. It is a
-property
-of a table and variable, set only by curation, once per pair: `set row_key = true` on
-`<table>: var:<id>`, an address that selects that ledger variable's occurrences in that
-table under every spelling and source key, including ones a later pin adds (the statement's
-premise then changes and the relock shows it). No other subject accepts `row_key`, so a key
-cannot be stated per spelling and lose the years another spelling covers. A key that
+property of a table and variable, set only by curation, once per pair:
+`set row_key = true` on `<table>: var:<id>`, an address that selects that ledger variable's
+occurrences in that table under every spelling and source key, including ones a later pin
+adds (the statement's premise then changes and the relock shows it). No other subject
+accepts `row_key`, so a key cannot be stated per spelling and lose the years another
+spelling covers. A key that
 changes by era is each era's variable keyed. Source readers never state it; a segment holds
 it from its covering occurrences. It is not a role: a key column keeps its code or measure
 role. `identifier` never makes one (maintainer 2026-11-14): names,

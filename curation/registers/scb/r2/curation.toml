@@ -8215,9 +8215,3 @@ kind = "set"
 subject = "civilstandsandringar-skilda-1-3: var:civilstandsdatum-civdat-2"
 fields.row_key = true
 evidence = "Row key: civilstandsdatum-civdat-2 (CivDat) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date (maintainer ruling 2026-11-14)."
-
-[[statement]]
-kind = "set"
-subject = "flyttningar-1968-1997: var:bearbetningsar-vecka"
-fields.row_key = true
-evidence = "Row key: bearbetningsar-vecka (BearbArVecka) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date; the delivered columns cannot always tell two events of one unit on that date apart, so rows are not guaranteed unique (maintainer ruling 2026-11-14)."
