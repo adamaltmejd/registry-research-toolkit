@@ -1,121 +1,121 @@
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: al2undeju where key = 'v5144'"
+subject = "industrins-orderingang: al2undeju @..2013 where key = 'v5144'"
 fields = { "variable" = "none" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/konjunkturstatistik-industri.toml:758\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: al2undeju where key = 'v5147'"
+subject = "industrins-orderingang: al2undeju @..2013 where key = 'v5147'"
 fields = { "variable" = "none" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/konjunkturstatistik-industri.toml:763\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: al2undeju where key = 'v5160'"
+subject = "industrins-orderingang: al2undeju @..2013 where key = 'v5160'"
 fields = { "variable" = "none" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/konjunkturstatistik-industri.toml:768\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: al2undeju where key = 'v5165'"
+subject = "industrins-orderingang: al2undeju @..2013 where key = 'v5165'"
 fields = { "variable" = "none" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/konjunkturstatistik-industri.toml:793\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: al2undeju where key = 'v5166'"
+subject = "industrins-orderingang: al2undeju @..2013 where key = 'v5166'"
 fields = { "variable" = "none" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/konjunkturstatistik-industri.toml:798\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: al2undeju where key = 'v5167'"
+subject = "industrins-orderingang: al2undeju @..2013 where key = 'v5167'"
 fields = { "variable" = "none" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/konjunkturstatistik-industri.toml:803\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: al2undeju where key = 'v5168'"
+subject = "industrins-orderingang: al2undeju @..2013 where key = 'v5168'"
 fields = { "variable" = "none" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/konjunkturstatistik-industri.toml:808\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: al2undeju where key = 'v5169'"
+subject = "industrins-orderingang: al2undeju @..2013 where key = 'v5169'"
 fields = { "variable" = "none" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/konjunkturstatistik-industri.toml:813\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: al2undeju where key = 'v5170'"
+subject = "industrins-orderingang: al2undeju @..2013 where key = 'v5170'"
 fields = { "variable" = "none" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/konjunkturstatistik-industri.toml:818\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: al2undeju where key = 'v5171'"
+subject = "industrins-orderingang: al2undeju @..2013 where key = 'v5171'"
 fields = { "variable" = "none" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/konjunkturstatistik-industri.toml:823\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: al2undeju where key = 'v5172'"
+subject = "industrins-orderingang: al2undeju @..2013 where key = 'v5172'"
 fields = { "variable" = "none" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/konjunkturstatistik-industri.toml:828\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: al2undeju where key = 'v5173'"
+subject = "industrins-orderingang: al2undeju @..2013 where key = 'v5173'"
 fields = { "variable" = "none" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/konjunkturstatistik-industri.toml:833\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: al2undeju where key = 'v5174'"
+subject = "industrins-orderingang: al2undeju @..2013 where key = 'v5174'"
 fields = { "variable" = "none" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/konjunkturstatistik-industri.toml:838\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: al2undeju where key = 'v5176'"
+subject = "industrins-orderingang: al2undeju @..2013 where key = 'v5176'"
 fields = { "variable" = "none" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/konjunkturstatistik-industri.toml:843\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: al2undeju where key = 'v5177'"
+subject = "industrins-orderingang: al2undeju @..2013 where key = 'v5177'"
 fields = { "variable" = "none" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/konjunkturstatistik-industri.toml:848\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: al2undu where key = 'v2005'"
+subject = "industrins-orderingang: al2undu @..2013 where key = 'v2005'"
 fields = { "variable" = "none" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/konjunkturstatistik-industri.toml:733\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: al2undu where key = 'v2643'"
+subject = "industrins-orderingang: al2undu @..2013 where key = 'v2643'"
 fields = { "variable" = "none" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/konjunkturstatistik-industri.toml:738\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: al3undeju where key = 'v2959'"
+subject = "industrins-orderingang: al3undeju @..2013 where key = 'v2959'"
 fields = { "variable" = "none" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/konjunkturstatistik-industri.toml:743\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: al3undeju where key = 'v2960'"
+subject = "industrins-orderingang: al3undeju @..2013 where key = 'v2960'"
 fields = { "variable" = "none" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/konjunkturstatistik-industri.toml:748\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: al3undeju where key = 'v2961'"
+subject = "industrins-orderingang: al3undeju @..2013 where key = 'v2961'"
 fields = { "variable" = "none" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/konjunkturstatistik-industri.toml:753\n\nComplete native family and full physical-peer closure, Batch54-root-complete-collision-closure.json. Every declared field coordinate has simultaneous conflicting native ownership without a supplied delivery discriminator. Preserve all original columns, periods, meanings and coding associations as unmapped source evidence; no owner is guessed."
 
@@ -199,19 +199,13 @@ evidence = "python-builder-pre-cutover:curation/classifications/SNI2007.toml:29\
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: aktsni07"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "python-builder-pre-cutover:curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
-subject = "industrins-leverans-orderlage: al2undeju where key = 'v4027'"
-fields = { "classification" = "class/sni/sni2007" }
-evidence = "python-builder-pre-cutover:curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
-
-[[statement]]
-kind = "set"
 subject = "industrins-orderingang: aktsni07"
+fields = { "classification" = "class/sni/sni2007" }
+evidence = "python-builder-pre-cutover:curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
+
+[[statement]]
+kind = "set"
+subject = "industrins-orderingang: al2undeju @..2013 where key = 'v4027'"
 fields = { "classification" = "class/sni/sni2007" }
 evidence = "python-builder-pre-cutover:curation/classifications/SNI2007.toml:29\n\nLegacy exact value-set label: SNI 2007, Aktiviteter, alternativ"
 
@@ -247,13 +241,13 @@ evidence = "python-builder-pre-cutover:curation/classifications/SNI2002.toml:27\
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: aktsni92 @2003..2008"
+subject = "industrins-orderingang: aktsni92 @2003..2008"
 fields = { "classification" = "class/sni/sni2002" }
 evidence = "python-builder-pre-cutover:curation/classifications/SNI2002.toml:28\n\nLegacy exact value-set label: Standard för svensk näringsgrensindelning, 2002, Aktiviteter"
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: aktsni92 @1998..2002"
+subject = "industrins-orderingang: aktsni92 @1998..2002"
 fields = { "classification" = "class/sni/sni1992" }
 evidence = "python-builder-pre-cutover:curation/classifications/SNI92.toml:21\n\nLegacy exact value-set label: Svensk standard för näringsgrensindelning, SNI 92, Aktiviteter"
 
@@ -1091,175 +1085,175 @@ evidence = "current-scb-inputs.zip/Timeseries.csv row=13\n\nRelease r391 (labell
 
 [[statement]]
 kind = "set"
-subject = "table:industrins-leverans-orderlage"
+subject = "table:industrins-orderingang"
 fields = { series_break = { at = "2009-05", text = "Införande av SNI 2007 skedde i maj 2009. Branscherna för återvinning (SNI 37) och förlag (221) ingår från och med maj 2009 inte längre i undersökningen. Dessa branscher utgör endast en mindre del av hela industrin vilket innebär att tidsseriebrottet är relativt obetydligt. \nVissa metodförändringar har också genomförts vilket endast har inneburit marginell påverkan för tidsserierna." } }
 evidence = "current-scb-inputs.zip/Timeseries.csv row=102\n\nRegisterVariant 370 resolves to this table. Same text as rows 13/31; \"maj 2009\"."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL2UndEjU @2009..2010 where key = 'v2642'"
+subject = "industrins-orderingang: AL2UndEjU @2009..2010 where key = 'v2642'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL2UndEjU under 7 VarIds, among them VarId 2642 \"Antal anställda på verksamhetsenheten (AL2UndEjU)\" and VarId 4027 \"Näringsgren (AL2UndEjU)\". The source does not settle which; VarId 4027 is the more plausible owner because this register's curation already types AL2UndEjU as SNI 2007 through VarId 4027 \"Näringsgren\" (the classification statements on al2undeju where key = 'v4027'), so earlier curation treated v4027 as the column's content (maintainer 2026-11-14: place under the more plausible owner). The 2642 row is withheld."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL2UndEjU @2009..2010 where key = 'v73'"
+subject = "industrins-orderingang: AL2UndEjU @2009..2010 where key = 'v73'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL2UndEjU under 7 VarIds, among them VarId 73 \"År\" and VarId 4027 \"Näringsgren (AL2UndEjU)\". The source does not settle which; VarId 4027 is the more plausible owner because this register's curation already types AL2UndEjU as SNI 2007 through VarId 4027 \"Näringsgren\" (the classification statements on al2undeju where key = 'v4027'), so earlier curation treated v4027 as the column's content (maintainer 2026-11-14: place under the more plausible owner). The 73 row is withheld."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL2UndEjU @2009..2010 where key = 'v3310'"
+subject = "industrins-orderingang: AL2UndEjU @2009..2010 where key = 'v3310'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL2UndEjU under 7 VarIds, among them VarId 3310 \"Branschgrupp (AL2UndEjU)\" and VarId 4027 \"Näringsgren (AL2UndEjU)\". The source does not settle which; VarId 4027 is the more plausible owner because this register's curation already types AL2UndEjU as SNI 2007 through VarId 4027 \"Näringsgren\" (the classification statements on al2undeju where key = 'v4027'), so earlier curation treated v4027 as the column's content (maintainer 2026-11-14: place under the more plausible owner). The 3310 row is withheld."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL2UndEjU @2009..2010 where key = 'v50'"
+subject = "industrins-orderingang: AL2UndEjU @2009..2010 where key = 'v50'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL2UndEjU under 7 VarIds, among them VarId 50 \"Månad\" and VarId 4027 \"Näringsgren (AL2UndEjU)\". The source does not settle which; VarId 4027 is the more plausible owner because this register's curation already types AL2UndEjU as SNI 2007 through VarId 4027 \"Näringsgren\" (the classification statements on al2undeju where key = 'v4027'), so earlier curation treated v4027 as the column's content (maintainer 2026-11-14: place under the more plausible owner). The 50 row is withheld."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL2UndEjU @2009..2010 where key = 'v2918'"
+subject = "industrins-orderingang: AL2UndEjU @2009..2010 where key = 'v2918'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL2UndEjU under 7 VarIds, among them VarId 2918 \"Observationsnummer\" and VarId 4027 \"Näringsgren (AL2UndEjU)\". The source does not settle which; VarId 4027 is the more plausible owner because this register's curation already types AL2UndEjU as SNI 2007 through VarId 4027 \"Näringsgren\" (the classification statements on al2undeju where key = 'v4027'), so earlier curation treated v4027 as the column's content (maintainer 2026-11-14: place under the more plausible owner). The 2918 row is withheld."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL2UndEjU @2009..2010 where key = 'v2921'"
+subject = "industrins-orderingang: AL2UndEjU @2009..2010 where key = 'v2921'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL2UndEjU under 7 VarIds, among them VarId 2921 \"Urvalsår\" and VarId 4027 \"Näringsgren (AL2UndEjU)\". The source does not settle which; VarId 4027 is the more plausible owner because this register's curation already types AL2UndEjU as SNI 2007 through VarId 4027 \"Näringsgren\" (the classification statements on al2undeju where key = 'v4027'), so earlier curation treated v4027 as the column's content (maintainer 2026-11-14: place under the more plausible owner). The 2921 row is withheld."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL2UndU @2009..2010 where key = 'v5179'"
+subject = "industrins-orderingang: AL2UndU @2009..2010 where key = 'v5179'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL2UndU under 8 VarIds, among them VarId 5179 \"Aktivt organisationsnummer\" and VarId 3578 \"Organisationsnummer 12 siffror\". The source does not settle which; VarId 3578 is the more plausible owner because AL2UndU is the sample-frame data set (organisation number, sample size, raising factor), not one column, and no claimant carries its name; VarId 3578 \"Organisationsnummer 12 siffror\" identifies the unit that data set describes (maintainer 2026-11-14: place under the more plausible owner). The 5179 row is withheld."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL2UndU @2009..2010 where key = 'v2923'"
+subject = "industrins-orderingang: AL2UndU @2009..2010 where key = 'v2923'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL2UndU under 8 VarIds, among them VarId 2923 \"Ändrad\" and VarId 3578 \"Organisationsnummer 12 siffror\". The source does not settle which; VarId 3578 is the more plausible owner because AL2UndU is the sample-frame data set (organisation number, sample size, raising factor), not one column, and no claimant carries its name; VarId 3578 \"Organisationsnummer 12 siffror\" identifies the unit that data set describes (maintainer 2026-11-14: place under the more plausible owner). The 2923 row is withheld."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL2UndU @2009..2010 where key = 'v2918'"
+subject = "industrins-orderingang: AL2UndU @2009..2010 where key = 'v2918'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL2UndU under 8 VarIds, among them VarId 2918 \"Observationsnummer\" and VarId 3578 \"Organisationsnummer 12 siffror\". The source does not settle which; VarId 3578 is the more plausible owner because AL2UndU is the sample-frame data set (organisation number, sample size, raising factor), not one column, and no claimant carries its name; VarId 3578 \"Organisationsnummer 12 siffror\" identifies the unit that data set describes (maintainer 2026-11-14: place under the more plausible owner). The 2918 row is withheld."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL2UndU @2009..2010 where key = 'v466'"
+subject = "industrins-orderingang: AL2UndU @2009..2010 where key = 'v466'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL2UndU under 8 VarIds, among them VarId 466 \"Uppräkningstal\" and VarId 3578 \"Organisationsnummer 12 siffror\". The source does not settle which; VarId 3578 is the more plausible owner because AL2UndU is the sample-frame data set (organisation number, sample size, raising factor), not one column, and no claimant carries its name; VarId 3578 \"Organisationsnummer 12 siffror\" identifies the unit that data set describes (maintainer 2026-11-14: place under the more plausible owner). The 466 row is withheld."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL2UndU @2009..2010 where key = 'v2921'"
+subject = "industrins-orderingang: AL2UndU @2009..2010 where key = 'v2921'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL2UndU under 8 VarIds, among them VarId 2921 \"Urvalsår\" and VarId 3578 \"Organisationsnummer 12 siffror\". The source does not settle which; VarId 3578 is the more plausible owner because AL2UndU is the sample-frame data set (organisation number, sample size, raising factor), not one column, and no claimant carries its name; VarId 3578 \"Organisationsnummer 12 siffror\" identifies the unit that data set describes (maintainer 2026-11-14: place under the more plausible owner). The 2921 row is withheld."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL2UndU @2009..2010 where key = 'v5181'"
+subject = "industrins-orderingang: AL2UndU @2009..2010 where key = 'v5181'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL2UndU under 8 VarIds, among them VarId 5181 \"Urvalsstorlek\" and VarId 3578 \"Organisationsnummer 12 siffror\". The source does not settle which; VarId 3578 is the more plausible owner because AL2UndU is the sample-frame data set (organisation number, sample size, raising factor), not one column, and no claimant carries its name; VarId 3578 \"Organisationsnummer 12 siffror\" identifies the unit that data set describes (maintainer 2026-11-14: place under the more plausible owner). The 5181 row is withheld."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL2UndU @2009..2010 where key = 'v1454'"
+subject = "industrins-orderingang: AL2UndU @2009..2010 where key = 'v1454'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL2UndU under 8 VarIds, among them VarId 1454 \"Verksamhetsenhetens identitetsnummer\" and VarId 3578 \"Organisationsnummer 12 siffror\". The source does not settle which; VarId 3578 is the more plausible owner because AL2UndU is the sample-frame data set (organisation number, sample size, raising factor), not one column, and no claimant carries its name; VarId 3578 \"Organisationsnummer 12 siffror\" identifies the unit that data set describes (maintainer 2026-11-14: place under the more plausible owner). The 1454 row is withheld."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v2923'"
+subject = "industrins-orderingang: AL3UndEjU @2009..2010 where key = 'v2923'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 2923 \"Ändrad\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 2923 row is withheld."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v865'"
+subject = "industrins-orderingang: AL3UndEjU @2009..2010 where key = 'v865'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 865 \"Användaridentitet, uppgiftsnotering\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 865 row is withheld."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v73'"
+subject = "industrins-orderingang: AL3UndEjU @2009..2010 where key = 'v73'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 73 \"År\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 73 row is withheld."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v2952'"
+subject = "industrins-orderingang: AL3UndEjU @2009..2010 where key = 'v2952'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 2952 \"Från- och meddatum\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 2952 row is withheld."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v2916'"
+subject = "industrins-orderingang: AL3UndEjU @2009..2010 where key = 'v2916'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 2916 \"Granskning\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 2916 row is withheld."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v14636'"
+subject = "industrins-orderingang: AL3UndEjU @2009..2010 where key = 'v14636'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 14636 \"Leveranser exportmarknad\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 14636 row is withheld."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v2953'"
+subject = "industrins-orderingang: AL3UndEjU @2009..2010 where key = 'v2953'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 2953 \"Leveranser hemmamarknad\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 2953 row is withheld."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v2954'"
+subject = "industrins-orderingang: AL3UndEjU @2009..2010 where key = 'v2954'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 2954 \"Leveranser mellan observationsenheter inom den egna juridiska enheten\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 2954 row is withheld."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v50'"
+subject = "industrins-orderingang: AL3UndEjU @2009..2010 where key = 'v50'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 50 \"Månad\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 50 row is withheld."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v2918'"
+subject = "industrins-orderingang: AL3UndEjU @2009..2010 where key = 'v2918'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 2918 \"Observationsnummer\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 2918 row is withheld."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v2956'"
+subject = "industrins-orderingang: AL3UndEjU @2009..2010 where key = 'v2956'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 2956 \"Orderingång från exportmarknaden\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 2956 row is withheld."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v2957'"
+subject = "industrins-orderingang: AL3UndEjU @2009..2010 where key = 'v2957'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 2957 \"Orderingång från hemmamarknaden\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 2957 row is withheld."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v2962'"
+subject = "industrins-orderingang: AL3UndEjU @2009..2010 where key = 'v2962'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 2962 \"Tilldatum\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 2962 row is withheld."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v2958'"
+subject = "industrins-orderingang: AL3UndEjU @2009..2010 where key = 'v2958'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 2958 \"Total orderingång\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 2958 row is withheld."
 
 [[statement]]
 kind = "set"
-subject = "industrins-leverans-orderlage: AL3UndEjU @2009..2010 where key = 'v2921'"
+subject = "industrins-orderingang: AL3UndEjU @2009..2010 where key = 'v2921'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industrins leverans- och orderläge, versions 2009, 2010 (RegVerID 390, 3255), documents column AL3UndEjU under 16 VarIds, among them VarId 2921 \"Urvalsår\" and VarId 2955 \"Totala leveranser\". The source does not settle which; VarId 2955 is the more plausible owner because AL3UndEjU is the data set of the deliveries and orders measures, not one column, and no claimant carries its name; VarId 2955 \"Totala leveranser\" is the register's headline delivery measure (maintainer 2026-11-14: place under the more plausible owner). The 2921 row is withheld."
 
@@ -1382,3 +1376,113 @@ kind = "set"
 subject = "industriproduktionsindex: CentralDamms @2009..2010 where key = 'v14636'"
 fields = { "variable" = "none" }
 evidence = "SCB Registerinformation, Industriproduktionsindex, versions 2010, 2009 (RegVerID 2847, 2848), documents column CentralDamms under VarId 14636 \"Leveranser exportmarknad\" and VarId 2953 \"Leveranser hemmamarknad\". The source does not settle which; VarId 2953 is the more plausible owner because CentralDamms is a data set of the two delivery variables, not one column, and no claimant carries its name; VarId 2953 \"Leveranser hemmamarknad\" is the older and the base of the pair (VarId 14636 \"Leveranser exportmarknad\" is its export part) (maintainer 2026-11-14: place under the more plausible owner). The 14636 row is withheld."
+
+# Merged variants (crates/DESIGN.md, "Merged variants"; maintainer ruling 2026-11-14).
+
+[[statement]]
+kind = "set"
+subject = "table:industrins-orderingang"
+fields = { "coverage" = "1998.." }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB delivers this monthly statistic as Industrins leverans- och orderläge for 1998-2013 and as Industrins orderingång och omsättning from 2014 (Registerinformation: \"Årgångarna 1998-2013 ligger under Industrins leverans- och orderläge\"); 18 of 19 column names continue at 2014 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:industrins-leverans-orderlage/r4781"
+fields = { "table" = "industrins-orderingang" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB delivers this monthly statistic as Industrins leverans- och orderläge for 1998-2013 and as Industrins orderingång och omsättning from 2014 (Registerinformation: \"Årgångarna 1998-2013 ligger under Industrins leverans- och orderläge\"); 18 of 19 column names continue at 2014 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:industrins-leverans-orderlage/r4780"
+fields = { "table" = "industrins-orderingang" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB delivers this monthly statistic as Industrins leverans- och orderläge for 1998-2013 and as Industrins orderingång och omsättning from 2014 (Registerinformation: \"Årgångarna 1998-2013 ligger under Industrins leverans- och orderläge\"); 18 of 19 column names continue at 2014 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:industrins-leverans-orderlage/r4779"
+fields = { "table" = "industrins-orderingang" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB delivers this monthly statistic as Industrins leverans- och orderläge for 1998-2013 and as Industrins orderingång och omsättning from 2014 (Registerinformation: \"Årgångarna 1998-2013 ligger under Industrins leverans- och orderläge\"); 18 of 19 column names continue at 2014 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:industrins-leverans-orderlage/r4778"
+fields = { "table" = "industrins-orderingang" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB delivers this monthly statistic as Industrins leverans- och orderläge for 1998-2013 and as Industrins orderingång och omsättning from 2014 (Registerinformation: \"Årgångarna 1998-2013 ligger under Industrins leverans- och orderläge\"); 18 of 19 column names continue at 2014 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:industrins-leverans-orderlage/r4777"
+fields = { "table" = "industrins-orderingang" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB delivers this monthly statistic as Industrins leverans- och orderläge for 1998-2013 and as Industrins orderingång och omsättning from 2014 (Registerinformation: \"Årgångarna 1998-2013 ligger under Industrins leverans- och orderläge\"); 18 of 19 column names continue at 2014 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:industrins-leverans-orderlage/r4776"
+fields = { "table" = "industrins-orderingang" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB delivers this monthly statistic as Industrins leverans- och orderläge for 1998-2013 and as Industrins orderingång och omsättning from 2014 (Registerinformation: \"Årgångarna 1998-2013 ligger under Industrins leverans- och orderläge\"); 18 of 19 column names continue at 2014 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:industrins-leverans-orderlage/r4771"
+fields = { "table" = "industrins-orderingang" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB delivers this monthly statistic as Industrins leverans- och orderläge for 1998-2013 and as Industrins orderingång och omsättning from 2014 (Registerinformation: \"Årgångarna 1998-2013 ligger under Industrins leverans- och orderläge\"); 18 of 19 column names continue at 2014 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:industrins-leverans-orderlage/r4775"
+fields = { "table" = "industrins-orderingang" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB delivers this monthly statistic as Industrins leverans- och orderläge for 1998-2013 and as Industrins orderingång och omsättning from 2014 (Registerinformation: \"Årgångarna 1998-2013 ligger under Industrins leverans- och orderläge\"); 18 of 19 column names continue at 2014 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:industrins-leverans-orderlage/r4774"
+fields = { "table" = "industrins-orderingang" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB delivers this monthly statistic as Industrins leverans- och orderläge for 1998-2013 and as Industrins orderingång och omsättning from 2014 (Registerinformation: \"Årgångarna 1998-2013 ligger under Industrins leverans- och orderläge\"); 18 of 19 column names continue at 2014 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:industrins-leverans-orderlage/r4773"
+fields = { "table" = "industrins-orderingang" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB delivers this monthly statistic as Industrins leverans- och orderläge for 1998-2013 and as Industrins orderingång och omsättning from 2014 (Registerinformation: \"Årgångarna 1998-2013 ligger under Industrins leverans- och orderläge\"); 18 of 19 column names continue at 2014 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:industrins-leverans-orderlage/r4772"
+fields = { "table" = "industrins-orderingang" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB delivers this monthly statistic as Industrins leverans- och orderläge for 1998-2013 and as Industrins orderingång och omsättning from 2014 (Registerinformation: \"Årgångarna 1998-2013 ligger under Industrins leverans- och orderläge\"); 18 of 19 column names continue at 2014 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:industrins-leverans-orderlage/r390"
+fields = { "table" = "industrins-orderingang" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB delivers this monthly statistic as Industrins leverans- och orderläge for 1998-2013 and as Industrins orderingång och omsättning from 2014 (Registerinformation: \"Årgångarna 1998-2013 ligger under Industrins leverans- och orderläge\"); 18 of 19 column names continue at 2014 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:industrins-leverans-orderlage/r3255"
+fields = { "table" = "industrins-orderingang" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB delivers this monthly statistic as Industrins leverans- och orderläge for 1998-2013 and as Industrins orderingång och omsättning from 2014 (Registerinformation: \"Årgångarna 1998-2013 ligger under Industrins leverans- och orderläge\"); 18 of 19 column names continue at 2014 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:industrins-leverans-orderlage/r3592"
+fields = { "table" = "industrins-orderingang" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB delivers this monthly statistic as Industrins leverans- och orderläge for 1998-2013 and as Industrins orderingång och omsättning from 2014 (Registerinformation: \"Årgångarna 1998-2013 ligger under Industrins leverans- och orderläge\"); 18 of 19 column names continue at 2014 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:industrins-leverans-orderlage/r4076"
+fields = { "table" = "industrins-orderingang" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB delivers this monthly statistic as Industrins leverans- och orderläge for 1998-2013 and as Industrins orderingång och omsättning from 2014 (Registerinformation: \"Årgångarna 1998-2013 ligger under Industrins leverans- och orderläge\"); 18 of 19 column names continue at 2014 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:industrins-leverans-orderlage/r4593"
+fields = { "table" = "industrins-orderingang" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB delivers this monthly statistic as Industrins leverans- och orderläge for 1998-2013 and as Industrins orderingång och omsättning from 2014 (Registerinformation: \"Årgångarna 1998-2013 ligger under Industrins leverans- och orderläge\"); 18 of 19 column names continue at 2014 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "table:industrins-orderingang"
+fields = { "description" = "Statistiken belyser månadsvis utvecklingen av leverans- och orderläget inom industrin, såväl totalt som uppdelat på branscher." }
+evidence = "SCB Registerinformation table descriptions of Industrins leverans- och orderläge and Industrins orderingång och omsättning: \"Statistiken skall månadsvis belysa utvecklingen av leverans- och orderläget inom industrin, såväl totalt som uppdelat på branscher.\" The successor's added sentence (\"Årgångarna 1998-2013 ligger under Industrins leverans- och orderläge\") no longer holds once the variants merge into this table (maintainer ruling 2026-11-14)."

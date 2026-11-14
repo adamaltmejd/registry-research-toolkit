@@ -13,13 +13,13 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:4426\n\n
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: sun2000inr_1 @2000,2002..2007"
+subject = "personens-hogsta-utbildning: sun2000inr_1 @2000,2002..2007"
 fields = { "label" = "Högsta utbildningens inriktning SUN2000, första positionen" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:4246\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: sun2000inr_1 @2001"
+subject = "personens-hogsta-utbildning: sun2000inr_1 @2001"
 fields = { "label" = "Högsta utbildningens inriktning SUN2000, första positionen" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:4258\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 
@@ -55,7 +55,7 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:4210\n\n
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: sun2000inr_3"
+subject = "personens-hogsta-utbildning: sun2000inr_3 @..2007"
 fields = { "label" = "Högsta utbildningens inriktning SUN2000, tre första positionerna" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:4222\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 
@@ -97,7 +97,7 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:4186\n\n
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: sun2000inr_2"
+subject = "personens-hogsta-utbildning: sun2000inr_2 @..2007"
 fields = { "label" = "Högsta utbildningens inriktning SUN2000, två första positionerna" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:4234\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 
@@ -187,7 +187,7 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3778\n\n
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: sun2000niva_1"
+subject = "personens-hogsta-utbildning: sun2000niva_1 @..2007"
 fields = { "label" = "Högsta utbildningens nivå SUN2000, första positionen" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3742\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 
@@ -217,7 +217,7 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3826\n\n
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: sun2000niva_grov"
+subject = "personens-hogsta-utbildning: sun2000niva_grov @..2007"
 fields = { "label" = "Högsta utbildningens nivå SUN2000, grovt aggregat till fyra värden" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3790\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 
@@ -259,13 +259,13 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3658\n\n
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: sun2000niva_2 @2000..2004,2006..2007"
+subject = "personens-hogsta-utbildning: sun2000niva_2 @2000..2004,2006..2007"
 fields = { "label" = "Högsta utbildningens nivå SUN2000, två första positionerna" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3838\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: sun2000niva_2 @2005"
+subject = "personens-hogsta-utbildning: sun2000niva_2 @2005"
 fields = { "label" = "Högsta utbildningens nivå SUN2000, två första positionerna" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3862\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 
@@ -283,13 +283,13 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3814\n\n
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: sun2000niva_old @2000..2005,2007"
+subject = "personens-hogsta-utbildning: sun2000niva_old @2000..2005,2007"
 fields = { "label" = "Högsta utbildningens nivå SUN2000, äldre aggregat till sju värden" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3850\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: sun2000niva_old @2006"
+subject = "personens-hogsta-utbildning: sun2000niva_old @2006"
 fields = { "label" = "Högsta utbildningens nivå SUN2000, äldre aggregat till sju värden" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3874\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 
@@ -463,7 +463,7 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3598\n\n
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning: kallkod_6"
+subject = "personens-hogsta-utbildning: kallkod_6 @2008.."
 fields = { "label" = "Utbildningens källkod för äldre personer födda 1911–1926, RAMS och LISA" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3466\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 
@@ -493,19 +493,19 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:4414\n\n
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: sun2000inr @2000"
+subject = "personens-hogsta-utbildning: sun2000inr @2000"
 fields = { "variable" = "sun2000inr" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3178\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: sun2000inr @2001"
+subject = "personens-hogsta-utbildning: sun2000inr @2001"
 fields = { "variable" = "sun2000inr" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3214\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: sun2000inr @2002..2007"
+subject = "personens-hogsta-utbildning: sun2000inr @2002..2007"
 fields = { "variable" = "sun2000inr" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/ureg.toml:3052\n\nComplete accepted UREG six native families530originals and68literal columns, actual support joins, all original fields, exact edition selectors and independently bound source domains/books. Finite source-positive educational standard, digit, aggregate, course-point, cohort and migration-time roles stay separate. Unknown availability remains unknown; no semester-day or population-date inference. Proof: Batch50-UREG6-source-proof.json."
 
@@ -637,67 +637,67 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2024.toml:27\
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning: isced2011niva_1"
+subject = "personens-hogsta-utbildning: isced2011niva_1 @2008.."
 fields = { "classification" = "class/isced/isced2011" }
 evidence = "python-builder-pre-cutover:curation/classifications/ISCED2011.toml:17\n\nLegacy exact value-set label: ISCED 2011 - Nivå"
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning: isced_f_2013_2"
+subject = "personens-hogsta-utbildning: isced_f_2013_2 @2008.."
 fields = { "classification" = "class/isced/isced-f2013" }
 evidence = "python-builder-pre-cutover:curation/classifications/ISCED-F2013.toml:13\n\nLegacy exact value-set label: ISCED-F 2013 - Inriktning"
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: {forsamling,kommun,lan} @1997"
+subject = "personens-hogsta-utbildning: {forsamling,kommun,lan} @1997"
 fields = { "classification" = "class/lkf/lkf1998" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF1998.toml:23\n\nLegacy exact value-set label: LKF 1998-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: {forsamling,kommun,lan} @1998"
+subject = "personens-hogsta-utbildning: {forsamling,kommun,lan} @1998"
 fields = { "classification" = "class/lkf/lkf1999" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF1999.toml:25\n\nLegacy exact value-set label: LKF 1999-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: {forsamling,kommun,lan} @1999"
+subject = "personens-hogsta-utbildning: {forsamling,kommun,lan} @1999"
 fields = { "classification" = "class/lkf/lkf2000" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2000.toml:26\n\nLegacy exact value-set label: LKF 2000-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: {forsamling,kommun,lan} @2000"
+subject = "personens-hogsta-utbildning: {forsamling,kommun,lan} @2000"
 fields = { "classification" = "class/lkf/lkf2001" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2001.toml:27\n\nLegacy exact value-set label: LKF 2001-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: {forsamling,kommun,lan} @2001"
+subject = "personens-hogsta-utbildning: {forsamling,kommun,lan} @2001"
 fields = { "classification" = "class/lkf/lkf2002" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2002.toml:25\n\nLegacy exact value-set label: LKF 2002-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: {forsamling,kommun,lan} @2002"
+subject = "personens-hogsta-utbildning: {forsamling,kommun,lan} @2002"
 fields = { "classification" = "class/lkf/lkf2003" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2003.toml:24\n\nLegacy exact value-set label: LKF 2003-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: {forsamling,kommun,lan} @2003"
+subject = "personens-hogsta-utbildning: {forsamling,kommun,lan} @2003"
 fields = { "classification" = "class/lkf/lkf2004" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2004.toml:26\n\nLegacy exact value-set label: LKF 2004-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: {forsamling,kommun,lan} @2004"
+subject = "personens-hogsta-utbildning: {forsamling,kommun,lan} @2004"
 fields = { "classification" = "class/lkf/lkf2005" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2005.toml:27\n\nLegacy exact value-set label: LKF 2005-01-01/ Län, kommuner och församlingar"
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: {forsamling,kommun,lan} @2005"
+subject = "personens-hogsta-utbildning: {forsamling,kommun,lan} @2005"
 fields = { "classification" = "class/lkf/lkf2006" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2006.toml:32\n\nLegacy exact value-set label: LKF 2006-01-01/ Län, kommuner och församlingar"
 
@@ -709,7 +709,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2006.toml:32\
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: {forsamling,kommun,lan} @2006..2007"
+subject = "personens-hogsta-utbildning: {forsamling,kommun,lan} @2006..2007"
 fields = { "classification" = "class/lkf/lkf2007" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2007.toml:26\n\nLegacy exact value-set label: LKF 2007-01-01/ Län, kommuner och församlingar"
 
@@ -775,7 +775,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2025.toml:21\
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: sun"
+subject = "personens-hogsta-utbildning: sun @..2007"
 fields = { "classification" = "class/sun/sun1996" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN1996.toml:19\n\nLegacy exact value-set label: SUN 1996"
 
@@ -793,12 +793,6 @@ evidence = "python-builder-pre-cutover:curation/classifications/SUN1996.toml:19\
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: sun2000grp"
-fields = { "classification" = "class/sun/sun2000-grupp" }
-evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-GRUPP.toml:18\n\nLegacy exact value-set label: SUN 2000 - Gruppering"
-
-[[statement]]
-kind = "set"
 subject = "personens-hogsta-utbildning: sun2000grp"
 fields = { "classification" = "class/sun/sun2000-grupp" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-GRUPP.toml:18\n\nLegacy exact value-set label: SUN 2000 - Gruppering"
@@ -812,12 +806,6 @@ evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-GRUPP.to
 [[statement]]
 kind = "set"
 subject = "komvux: {sun2000inr,yfieldmax}"
-fields = { "classification" = "class/sun/sun2000-inriktning" }
-evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
-
-[[statement]]
-kind = "set"
-subject = "personens-hogsta-utbildning-16-74: {sun2000inr,sun2000inr_1,sun2000inr_2,sun2000inr_3}"
 fields = { "classification" = "class/sun/sun2000-inriktning" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-INRIKTNING.toml:25\n\nLegacy exact value-set label: SUN 2000 - Utbildningsinriktning"
 
@@ -847,12 +835,6 @@ evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-INRIKTNI
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: {sun2000niva,sun2000niva_1,sun2000niva_2}"
-fields = { "classification" = "class/sun/sun2000-niva" }
-evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
-
-[[statement]]
-kind = "set"
 subject = "personens-hogsta-utbildning: {sun2000niva,sun2000niva_1,sun2000niva_2}"
 fields = { "classification" = "class/sun/sun2000-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.toml:45\n\nLegacy exact value-set label: SUN 2000 - Utbildningsnivå"
@@ -871,13 +853,13 @@ evidence = "python-builder-pre-cutover:curation/classifications/SUN2000-NIVA.tom
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: {sun2000niva_old,sunniva}"
+subject = "personens-hogsta-utbildning: {sun2000niva_old,sunniva} @..2007"
 fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning: sun2000niva_old"
+subject = "personens-hogsta-utbildning: sun2000niva_old @2008.."
 fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:34\n\nLegacy exact value-set label: SUN 2000 NivaOld"
 
@@ -889,25 +871,19 @@ evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:34
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning-16-74: sun2000niva_grov"
-fields = { "classification" = "class/sun/niva-grovv1" }
-evidence = "python-builder-pre-cutover:curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
-
-[[statement]]
-kind = "set"
 subject = "personens-hogsta-utbildning: sun2000niva_grov"
 fields = { "classification" = "class/sun/niva-grovv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-GROV.toml:27\n\nLegacy exact value-set label: SUN 2000 NivåGrov"
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning: sun2020grp_detalj"
+subject = "personens-hogsta-utbildning: sun2020grp_detalj @2008.."
 fields = { "classification" = "class/sun/sun2020-grupp" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-GRUPP.toml:18\n\nLegacy exact value-set label: SUN 2020 - Gruppering - Detaljerad"
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning: sun2020grp"
+subject = "personens-hogsta-utbildning: sun2020grp @2008.."
 fields = { "classification" = "class/sun/sun2020-grupp" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-GRUPP.toml:17\n\nLegacy exact value-set label: SUN 2020 - Gruppering"
 
@@ -919,7 +895,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-INRIKTNI
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning: {sun2020inr,sun2020inr_1,sun2020inr_2,sun2020inr_3}"
+subject = "personens-hogsta-utbildning: {sun2020inr,sun2020inr_1,sun2020inr_2,sun2020inr_3} @2008.."
 fields = { "classification" = "class/sun/sun2020-inriktning" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-INRIKTNING.toml:18\n\nLegacy exact value-set label: SUN 2020 - Utbildningsinriktning"
 
@@ -943,7 +919,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-NIVA.tom
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning: {sun2020niva,sun2020niva_1,sun2020niva_2}"
+subject = "personens-hogsta-utbildning: {sun2020niva,sun2020niva_1,sun2020niva_2} @2008.."
 fields = { "classification" = "class/sun/sun2020-niva" }
 evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-NIVA.toml:21\n\nLegacy exact value-set label: SUN 2020 - Utbildningsnivå"
 
@@ -961,13 +937,13 @@ evidence = "python-builder-pre-cutover:curation/classifications/SUN2020-NIVA.tom
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning: sun2020niva_old"
+subject = "personens-hogsta-utbildning: sun2020niva_old @2008.."
 fields = { "classification" = "class/sun/niva-oldv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-OLD.toml:35\n\nLegacy exact value-set label: SUN 2020 NivaOld"
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning: sun2020niva_grov"
+subject = "personens-hogsta-utbildning: sun2020niva_grov @2008.."
 fields = { "classification" = "class/sun/niva-grovv1" }
 evidence = "python-builder-pre-cutover:curation/classifications/NIVA-GROV.toml:28\n\nLegacy exact value-set label: SUN 2020 NivåGrov"
 
@@ -983,7 +959,6 @@ subject = "var:isced-f-2013"
 fields = { "classification" = "class/isced/isced-f2013" }
 evidence = "python-builder-pre-cutover:curation/classifications/ISCED-F2013.toml:13\npython-builder-pre-cutover:curation/classifications/ISCED-F2013.toml:24\n\ncurated:#494 ISCED-F 2013 field-of-education labels\n\nLegacy exact value-set label: ISCED-F 2013 - Inriktning"
 
-
 [[statement]]
 kind = "set"
 subject = "komvux: sun2020niva_2"
@@ -992,7 +967,7 @@ evidence = "Komvux explicitly measures education from the previous year's regist
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning: sun2020niva_2"
+subject = "personens-hogsta-utbildning: sun2020niva_2 @2008.."
 fields = { "variable" = "hogsta-utbildningens-niva-sun2020-tva-forsta-sun2020niva-2" }
 evidence = "Komvux explicitly measures education from the previous year's register; the residual history measures highest education through the current spring term."
 
@@ -1004,7 +979,7 @@ evidence = "Komvux explicitly measures the full education level code from the pr
 
 [[statement]]
 kind = "set"
-subject = "personens-hogsta-utbildning: sun2020niva"
+subject = "personens-hogsta-utbildning: sun2020niva @2008.."
 fields = { "variable" = "utbildningsniva-sun2020niva" }
 evidence = "Komvux explicitly measures the full education level code from the previous year's register."
 
@@ -1902,13 +1877,11 @@ subject = "var:undervisningstimmar-yrkesinriktade-kurser-komvux"
 fields = { "tags" = ["education"] }
 evidence = "YTutim är en opak källmnemonik; etiketten kolliderar och målet behöver R6-prövning.\ncatalog:variable_text:53390:6756:19905"
 
-
 [[statement]]
 kind = "set"
 subject = "var:huvudsaklig-kursinriktning-komvux-nuvarande-berakning"
 fields = { "description" = "Klassificering av avklarade Komvuxpoäng efter andelen på yrkesinriktade kurser. Uppgiften bygger på den nuvarande beräkningen av Komvuxpoäng." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nVariabeln klassificerar fördelningen mellan kursinriktningar utifrån andelen yrkesinriktade poäng, inte poängomfattningen.\ncatalog:valueset:1721\ncatalog:variable_text:53385:6756:19905\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:508171:opdef_text. One variable, one description."
-
 
 [[statement]]
 kind = "set"
@@ -2326,36 +2299,158 @@ evidence = "The same column as SUN2020Niva in the Komvux table, labelled there \
 
 [[statement]]
 kind = "set"
-subject = "table:personens-hogsta-utbildning-16-74"
+subject = "table:personens-hogsta-utbildning"
 fields = { series_break = { at = "2000", text = "Beskrivning av statistiken, inkl. förändringar över tid: http://www.scb.se/templates/pongDescriptionOfStatisticsContainer____19035.asp#8963\n\nTidsseriebrottet år 2000:\nhttp://www.scb.se/templates/Standard____24024.asp" } }
-evidence = "current-scb-inputs.zip/Timeseries.csv row=2\n\nAlso rows 4, 5, 6, 7, 8, 9, 10, 12, 14, 15, 18, 19, 23, 25, 27, 128: same text. Releases 1990-2006 (ids 1347..1332) are missing from the export; row 128 is the same text on RegisterVariant 78 (this table). Year stated: \"Tidsseriebrottet år 2000\"."
+evidence = "current-scb-inputs.zip/Timeseries.csv row=2\n\nAlso rows 4, 5, 6, 7, 8, 9, 10, 12, 14, 15, 18, 19, 23, 25, 27, 128: same text. Releases 1990-2006 (ids 1347..1332) are missing from the export; row 128 is the same text on RegisterVariant 78 (this table). Year stated: \"Tidsseriebrottet år 2000\".\n\ncurrent-scb-inputs.zip/Timeseries.csv row=29\n\nAlso rows 30: same text. Same text on r2334 (2008) and r2851 (2009); both on this table. Year stated: \"år 2000\" (before the table starts in 2008)."
 
 [[statement]]
 kind = "set"
-subject = "table:personens-hogsta-utbildning-16-74"
+subject = "table:personens-hogsta-utbildning"
 fields = { series_break = { at = "2000", text = "Beskrivning av statistiken, inkl. förändringar över tid: http://www.scb.se/templates/pongDescriptionOfStatisticsContainer____19035.asp#8963\n\nTidsseriebrott i Utbildningsregistret år 2000;\nnya källor och ny nomenklatur (SUN2000) gjorde bl.a. att utbildningsnivåerna höjdes mer än vanligt.\nhttp://www.scb.se/templates/Standard____24024.asp" } }
 evidence = "current-scb-inputs.zip/Timeseries.csv row=3\n\nAlso rows 28: same text. Row 3 (release 1991, id 1322, missing from the export) and row 28 (release r1212, 2007, resolves to this table) carry the same text. Year stated: \"år 2000\"."
 
 [[statement]]
 kind = "set"
-subject = "table:personens-hogsta-utbildning-16-74"
+subject = "table:personens-hogsta-utbildning"
 fields = { series_break = { at = "2000", text = "Beskrivning av statistiken, inkl. förändringar över tid: http://www.scb.se/templates/pongDescriptionOfStatisticsContainer____19035.asp#8963\n\nTidsseriebrott i Utbildningsregistret år 2000;\nnya källor och ny nomenklatur (SUN2000) gjorde bl.a. att utbildningsnivåerna höjdes mer än vanligt.\nAll info finns här :\nhttp://www.scb.se/templates/Standard____24024.asp" } }
 evidence = "current-scb-inputs.zip/Timeseries.csv row=11\n\nAlso rows 26: same text. Same text on r1350 (1999) and r1008 (2006), both on this table. Year stated: \"år 2000\"."
 
 [[statement]]
 kind = "set"
-subject = "table:personens-hogsta-utbildning-16-74"
+subject = "table:personens-hogsta-utbildning"
 fields = { series_break = { at = "2000", text = "Beskrivning av statistiken, inkl. förändringar över tid\nhttp://www.scb.se/templates/pongDescriptionOfStatisticsContainer____19035.asp#8963\n\n\nTidsseriebrott i Utbildningsregistret år 2000;\nnya källor och ny nomenklatur (SUN2000) gjorde bl.a. att utbildningsnivåerna höjdes mer än vanligt:\nhttp://www.scb.se/templates/Standard____24024.asp" } }
 evidence = "current-scb-inputs.zip/Timeseries.csv row=22\n\nAlso rows 24: same text. Same text on r1217 (2004) and r1218 (2005), both on this table. Year stated: \"år 2000\"."
 
 [[statement]]
 kind = "set"
 subject = "table:personens-hogsta-utbildning"
-fields = { series_break = { at = "2000", text = "Beskrivning av statistiken, inkl. förändringar över tid: http://www.scb.se/templates/pongDescriptionOfStatisticsContainer____19035.asp#8963\n\nTidsseriebrottet år 2000:\nhttp://www.scb.se/templates/Standard____24024.asp" } }
-evidence = "current-scb-inputs.zip/Timeseries.csv row=29\n\nAlso rows 30: same text. Same text on r2334 (2008) and r2851 (2009); both on this table. Year stated: \"år 2000\" (before the table starts in 2008)."
+fields = { series_break = { at = "2000", text = "Beskrivning av statistiken, inkl. förändringar över tid: http://www.scb.se/Pages/ProductDocumentations____19035.aspx\n\nTidsseriebrottet år 2000:\nhttp://www.scb.se/Pages/Standard____24024.aspx" } }
+evidence = "current-scb-inputs.zip/Timeseries.csv row=32\n\nText on r3314 (2010), with the later scb.se URLs, so not equal to rows 29/30. Year stated: \"år 2000\" (before the table starts in 2008)."
+
+# Merged variants (crates/DESIGN.md, "Merged variants"; maintainer ruling 2026-11-14).
 
 [[statement]]
 kind = "set"
 subject = "table:personens-hogsta-utbildning"
-fields = { series_break = { at = "2000", text = "Beskrivning av statistiken, inkl. förändringar över tid: http://www.scb.se/Pages/ProductDocumentations____19035.aspx\n\nTidsseriebrottet år 2000:\nhttp://www.scb.se/Pages/Standard____24024.aspx" } }
-evidence = "current-scb-inputs.zip/Timeseries.csv row=32\n\nText on r3314 (2010), with the later scb.se URLs, so not equal to rows 29/30. Year stated: \"år 2000\" (before the table starts in 2008)."
+fields = { "coverage" = "1990.." }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Personens högsta utbildning,16-74 år (to 2007) and Personens högsta utbildning (2008-) differ only in the population (Registerinformation table descriptions: folkbokförda 16-74 år, alla folkbokförda); 33 of 34 column names continue at 2008 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:personens-hogsta-utbildning-16-74/1990"
+fields = { "table" = "personens-hogsta-utbildning" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Personens högsta utbildning,16-74 år (to 2007) and Personens högsta utbildning (2008-) differ only in the population (Registerinformation table descriptions: folkbokförda 16-74 år, alla folkbokförda); 33 of 34 column names continue at 2008 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:personens-hogsta-utbildning-16-74/1991"
+fields = { "table" = "personens-hogsta-utbildning" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Personens högsta utbildning,16-74 år (to 2007) and Personens högsta utbildning (2008-) differ only in the population (Registerinformation table descriptions: folkbokförda 16-74 år, alla folkbokförda); 33 of 34 column names continue at 2008 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:personens-hogsta-utbildning-16-74/1992"
+fields = { "table" = "personens-hogsta-utbildning" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Personens högsta utbildning,16-74 år (to 2007) and Personens högsta utbildning (2008-) differ only in the population (Registerinformation table descriptions: folkbokförda 16-74 år, alla folkbokförda); 33 of 34 column names continue at 2008 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:personens-hogsta-utbildning-16-74/1993"
+fields = { "table" = "personens-hogsta-utbildning" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Personens högsta utbildning,16-74 år (to 2007) and Personens högsta utbildning (2008-) differ only in the population (Registerinformation table descriptions: folkbokförda 16-74 år, alla folkbokförda); 33 of 34 column names continue at 2008 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:personens-hogsta-utbildning-16-74/1994"
+fields = { "table" = "personens-hogsta-utbildning" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Personens högsta utbildning,16-74 år (to 2007) and Personens högsta utbildning (2008-) differ only in the population (Registerinformation table descriptions: folkbokförda 16-74 år, alla folkbokförda); 33 of 34 column names continue at 2008 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:personens-hogsta-utbildning-16-74/1995"
+fields = { "table" = "personens-hogsta-utbildning" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Personens högsta utbildning,16-74 år (to 2007) and Personens högsta utbildning (2008-) differ only in the population (Registerinformation table descriptions: folkbokförda 16-74 år, alla folkbokförda); 33 of 34 column names continue at 2008 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:personens-hogsta-utbildning-16-74/1996"
+fields = { "table" = "personens-hogsta-utbildning" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Personens högsta utbildning,16-74 år (to 2007) and Personens högsta utbildning (2008-) differ only in the population (Registerinformation table descriptions: folkbokförda 16-74 år, alla folkbokförda); 33 of 34 column names continue at 2008 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:personens-hogsta-utbildning-16-74/r2591"
+fields = { "table" = "personens-hogsta-utbildning" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Personens högsta utbildning,16-74 år (to 2007) and Personens högsta utbildning (2008-) differ only in the population (Registerinformation table descriptions: folkbokförda 16-74 år, alla folkbokförda); 33 of 34 column names continue at 2008 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:personens-hogsta-utbildning-16-74/r1351"
+fields = { "table" = "personens-hogsta-utbildning" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Personens högsta utbildning,16-74 år (to 2007) and Personens högsta utbildning (2008-) differ only in the population (Registerinformation table descriptions: folkbokförda 16-74 år, alla folkbokförda); 33 of 34 column names continue at 2008 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:personens-hogsta-utbildning-16-74/r1350"
+fields = { "table" = "personens-hogsta-utbildning" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Personens högsta utbildning,16-74 år (to 2007) and Personens högsta utbildning (2008-) differ only in the population (Registerinformation table descriptions: folkbokförda 16-74 år, alla folkbokförda); 33 of 34 column names continue at 2008 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:personens-hogsta-utbildning-16-74/r1213"
+fields = { "table" = "personens-hogsta-utbildning" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Personens högsta utbildning,16-74 år (to 2007) and Personens högsta utbildning (2008-) differ only in the population (Registerinformation table descriptions: folkbokförda 16-74 år, alla folkbokförda); 33 of 34 column names continue at 2008 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:personens-hogsta-utbildning-16-74/r1214"
+fields = { "table" = "personens-hogsta-utbildning" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Personens högsta utbildning,16-74 år (to 2007) and Personens högsta utbildning (2008-) differ only in the population (Registerinformation table descriptions: folkbokförda 16-74 år, alla folkbokförda); 33 of 34 column names continue at 2008 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:personens-hogsta-utbildning-16-74/r1215"
+fields = { "table" = "personens-hogsta-utbildning" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Personens högsta utbildning,16-74 år (to 2007) and Personens högsta utbildning (2008-) differ only in the population (Registerinformation table descriptions: folkbokförda 16-74 år, alla folkbokförda); 33 of 34 column names continue at 2008 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:personens-hogsta-utbildning-16-74/r1216"
+fields = { "table" = "personens-hogsta-utbildning" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Personens högsta utbildning,16-74 år (to 2007) and Personens högsta utbildning (2008-) differ only in the population (Registerinformation table descriptions: folkbokförda 16-74 år, alla folkbokförda); 33 of 34 column names continue at 2008 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:personens-hogsta-utbildning-16-74/r1217"
+fields = { "table" = "personens-hogsta-utbildning" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Personens högsta utbildning,16-74 år (to 2007) and Personens högsta utbildning (2008-) differ only in the population (Registerinformation table descriptions: folkbokförda 16-74 år, alla folkbokförda); 33 of 34 column names continue at 2008 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:personens-hogsta-utbildning-16-74/r1218"
+fields = { "table" = "personens-hogsta-utbildning" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Personens högsta utbildning,16-74 år (to 2007) and Personens högsta utbildning (2008-) differ only in the population (Registerinformation table descriptions: folkbokförda 16-74 år, alla folkbokförda); 33 of 34 column names continue at 2008 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:personens-hogsta-utbildning-16-74/r1008"
+fields = { "table" = "personens-hogsta-utbildning" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Personens högsta utbildning,16-74 år (to 2007) and Personens högsta utbildning (2008-) differ only in the population (Registerinformation table descriptions: folkbokförda 16-74 år, alla folkbokförda); 33 of 34 column names continue at 2008 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "release:personens-hogsta-utbildning-16-74/r1212"
+fields = { "table" = "personens-hogsta-utbildning" }
+evidence = "Maintainer ruling 2026-11-14 (relayed by the Operator, merge-variants brief): register variants that differ only by a series break are one table, and orders name the delivered table per era. SCB's Personens högsta utbildning,16-74 år (to 2007) and Personens högsta utbildning (2008-) differ only in the population (Registerinformation table descriptions: folkbokförda 16-74 år, alla folkbokförda); 33 of 34 column names continue at 2008 and the row key is the same."
+
+[[statement]]
+kind = "set"
+subject = "table:personens-hogsta-utbildning"
+fields = { "description" = "Uppgift om högsta utbildning för de folkbokförda vid aktuellt årsskifte: 16–74 år till och med 2007, samtliga folkbokförda från och med 2008. Utbildningen är kodad enligt Svensk utbildningsnomenklatur (SUN). Uppdateras årligen." }
+evidence = "SCB Registerinformation table descriptions: \"Denna variant innehåller folkbokförda 16-74 år vid aktuellt årskifte\" (Personens högsta utbildning,16-74 år, to 2007) and \"Denna variant innehåller alla folkbokförda vid aktuellt årskifte\" (Personens högsta utbildning, 2008-); both: \"Uppgifterna om utbildning är kodade enligt Svensk utbildningsnomenklatur. Årliga uppdateringar görs.\" The variants merge into this table (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "table:personens-hogsta-utbildning"
+fields = { "series_break" = { "at" = "2008", "text" = "Från och med 2008 omfattar tabellen samtliga folkbokförda; till och med 2007 omfattade den folkbokförda 16–74 år." } }
+evidence = "SCB Registerinformation table descriptions of Personens högsta utbildning,16-74 år (to 2007: \"folkbokförda 16-74 år vid aktuellt årskifte\") and Personens högsta utbildning (2008-: \"alla folkbokförda vid aktuellt årskifte\"). The variants merge into this table (maintainer ruling 2026-11-14), so the population change is a break at 2008."
