@@ -38,6 +38,7 @@ fn lines(catalog: &Catalog) -> Vec<Line> {
         for f in &r.findings {
             let (subject_kind, subject) = match f.subject {
                 Subject::Register => ("register", pid_of_register(r)),
+                Subject::Table(t) => ("table", pid_of_table(r, t)),
                 Subject::Release(x) => ("release", Entity::Release(ri, x).pid(registers)),
                 Subject::Variable(v) => ("variable", pid_of_variable(r, v)),
                 Subject::Segment(v, s) => {

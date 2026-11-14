@@ -523,6 +523,7 @@ struct Seg {
     sensitive: Option<i64>,
     identifier: Option<i64>,
     role: String,
+    row_key: bool,
 }
 
 impl Seg {
@@ -530,13 +531,14 @@ impl Seg {
         json!({"table": self.table, "start": iso_day(self.start), "end": iso_day(self.end),
                "spelling": self.spelling, "dtype": self.dtype, "valueset": self.valueset,
                "state": self.state, "coded": self.coded, "sensitive": self.sensitive,
-               "identifier": self.identifier, "role": self.role})
+               "identifier": self.identifier, "role": self.role,
+               "row_key": self.row_key})
     }
 
     fn text(&self) -> String {
         let flag = |v: Option<i64>| v.map_or_else(|| "-".to_owned(), |v| v.to_string());
         format!(
-            "{} {} {} dtype={} vs={} {} coded={} sensitive={} identifier={} {}",
+            "{} {} {} dtype={} vs={} {} coded={} sensitive={} identifier={} {} row_key={}",
             self.table,
             span(self.start, self.end),
             self.spelling,
@@ -546,21 +548,35 @@ impl Seg {
             self.coded,
             flag(self.sensitive),
             flag(self.identifier),
-            self.role
+            self.role,
+            u8::from(self.row_key)
         )
     }
 }
 
 fn segments(conn: &Connection) -> Result<BTreeMap<String, BTreeSet<Seg>>> {
+    // Before schema 14 a row key was the role `row_key` (every identifier).
+    let curated: bool = conn.query_row(
+        "SELECT count(*) = 1 FROM pragma_table_info('segment') WHERE name = 'row_key'",
+        [],
+        |r| r.get(0),
+    )?;
+    let row_key = if curated {
+        "s.row_key"
+    } else {
+        "s.role = 'row_key'"
+    };
     let rows = query(
         conn,
-        "SELECT v.pid, t.pid, s.start, s.end, sp.exact, s.dtype, coalesce(vs.hash, ''),
-                s.state, s.coded, s.sensitive, s.identifier, s.role
-         FROM segment s
-         JOIN variable v ON v.id = s.variable_id
-         JOIN tbl t ON t.id = s.table_id
-         JOIN spelling sp ON sp.id = s.spelling_id
-         LEFT JOIN valueset vs ON vs.id = s.valueset_id",
+        &format!(
+            "SELECT v.pid, t.pid, s.start, s.end, sp.exact, s.dtype, coalesce(vs.hash, ''),
+                    s.state, s.coded, s.sensitive, s.identifier, s.role, {row_key}
+             FROM segment s
+             JOIN variable v ON v.id = s.variable_id
+             JOIN tbl t ON t.id = s.table_id
+             JOIN spelling sp ON sp.id = s.spelling_id
+             LEFT JOIN valueset vs ON vs.id = s.valueset_id"
+        ),
         |r| {
             Ok((
                 r.get::<_, String>(0)?,
@@ -576,6 +592,7 @@ fn segments(conn: &Connection) -> Result<BTreeMap<String, BTreeSet<Seg>>> {
                     sensitive: r.get(9)?,
                     identifier: r.get(10)?,
                     role: r.get(11)?,
+                    row_key: r.get(12)?,
                 },
             ))
         },

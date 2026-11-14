@@ -11,6 +11,7 @@ use reg_resolve::{Finding, Resolved, ResolvedOccurrence, Subject};
 use crate::link::{Entity, Linked};
 
 mod classification;
+mod row_keys;
 
 pub fn generate(
     registers: &mut [Resolved],
@@ -19,6 +20,7 @@ pub fn generate(
     linked: &Linked,
 ) -> Result<(), String> {
     continuations(registers, linked)?;
+    row_keys::generate(registers)?;
     classification::generate(registers, classes, sets)
 }
 

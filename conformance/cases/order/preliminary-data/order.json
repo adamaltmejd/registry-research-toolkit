@@ -51,6 +51,20 @@
       },
       "successor_fqid": null,
       "successor_name": null
+    },
+    {
+      "code": "row_key_undeclared",
+      "level": "info",
+      "message": "demo/pre has no stated row identifier, so its file carries only the columns you choose",
+      "path": "/sources/0",
+      "period": null,
+      "source": "s",
+      "successor_fqid": null,
+      "successor_name": null,
+      "table": "demo/pre",
+      "table_name": "Preliminära registret",
+      "variable": null,
+      "variable_name": null
     }
   ]
 }

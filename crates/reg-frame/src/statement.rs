@@ -92,6 +92,8 @@ pub struct SetFields {
     pub sensitive: Option<bool>,
     pub identifier: Option<bool>,
     pub role: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub row_key: Option<bool>,
     pub sets: Option<Vec<String>>,
     pub tags: Option<Vec<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]

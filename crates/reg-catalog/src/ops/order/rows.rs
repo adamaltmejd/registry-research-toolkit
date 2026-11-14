@@ -1,5 +1,5 @@
 //! Row keys use the steward's declared physical entity/time components.
-//! Reference-only orders use catalog segments with role `row_key`.
+//! Reference-only orders use the catalog segments curated as row keys (`row_key`).
 
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::sync::{Arc, Mutex, PoisonError};
@@ -16,11 +16,11 @@ use crate::{Error, rows};
 type Columns = BTreeSet<(String, String)>;
 
 #[derive(Clone)]
-struct KeySegment {
-    variable: String,
-    spelling: String,
-    start: i64,
-    end: i64,
+pub(crate) struct KeySegment {
+    pub(crate) variable: String,
+    pub(crate) spelling: String,
+    pub(crate) start: i64,
+    pub(crate) end: i64,
     state: String,
     entity: bool,
 }
@@ -51,7 +51,7 @@ fn key_segments(
             conn,
             "SELECT v.pid,sp.exact,s.start,s.end,s.state FROM segment s
              JOIN variable v ON v.id=s.variable_id JOIN spelling sp ON sp.id=s.spelling_id
-             WHERE s.table_id=? AND s.role='row_key' ORDER BY v.pid,sp.exact,s.start",
+             WHERE s.table_id=? AND s.row_key=1 ORDER BY v.pid,sp.exact,s.start",
             [serving.table.id],
             |r| {
                 Ok(KeySegment {
@@ -65,9 +65,19 @@ fn key_segments(
             },
         )?));
     }
+    steward_keys(server, conn, &serving.table.pid, space)
+}
+
+/// The steward's declared key columns of `pid`, cached per (table, database). `conn`
+/// has the holdings attached as `held`.
+pub(crate) fn steward_keys(
+    server: &Server,
+    conn: &Connection,
+    pid: &str,
+    space: Option<&str>,
+) -> Result<Arc<Vec<KeySegment>>, Error> {
     let cache = &server.steward_keys.0;
-    let pid = &serving.table.pid;
-    let at = (pid.clone(), space.map(str::to_owned));
+    let at = (pid.to_owned(), space.map(str::to_owned));
     if let Some(hit) = cache
         .lock()
         .unwrap_or_else(PoisonError::into_inner)

@@ -63,6 +63,7 @@ const TITLES: Readonly<Record<string, string>> = {
   preliminary_data: "The requested data are preliminary",
   variable_replaced: "Variable has a successor",
   sensitive_variables: "Some variables may contain sensitive personal data",
+  row_key_undeclared: "This table has no stated row identifier",
   source_outside_window: "Table is outside the study years",
   table_succession_undated: "The table succession has no stated date",
   period_default_on_dated_table: "Choose years for this dated table",

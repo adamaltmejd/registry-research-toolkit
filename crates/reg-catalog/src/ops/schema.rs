@@ -21,7 +21,7 @@ pub const OPERATIONS: &[Operation] = &[
         paths: &["/api/schema/{ref}"],
         tool: Some("schema"),
         description: "The columns of a table, a register or a variable's tables over a period, \
-            with type, length, value set and role.",
+            with type, length, value set, role and row key.",
         params: &[
             Param::required("ref", Type::Ref),
             Param::optional("period", Type::Period),
@@ -73,6 +73,8 @@ pub struct SchemaLine {
     #[schema(required = true)]
     value_set: Option<ValueSetRef>,
     role: String,
+    /// One of the table's row keys, curated; never inferred from `identifier`.
+    row_key: bool,
     state: String,
     /// Its period, cut to the requested one.
     period: Period,
@@ -245,6 +247,7 @@ struct Line {
     length: Option<i64>,
     valueset_id: Option<i64>,
     role: String,
+    row_key: bool,
     state: String,
     /// First segment start to last segment end, clipped to the request.
     start: i64,
@@ -269,7 +272,7 @@ fn lines(
         for &(origin, id, variable) in &table.locals {
             let mut stmt = origins[origin].prepare_cached(
                 "SELECT v.pid, l.body, f.folded, sp.exact, s.dtype, s.length, s.valueset_id,
-                        s.role, s.state, s.start, s.end
+                        s.role, s.state, s.start, s.end, s.row_key
                  FROM segment s
                    JOIN variable v ON v.id = s.variable_id
                    JOIN text l ON l.id = v.label_text
@@ -290,6 +293,7 @@ fn lines(
                     length: row.get(5)?,
                     valueset_id: row.get(6)?,
                     role: row.get(7)?,
+                    row_key: row.get(11)?,
                     state: row.get(8)?,
                     start: row.get::<_, i64>(9)?.max(from),
                     end: row.get::<_, i64>(10)?.min(to),
@@ -365,6 +369,7 @@ impl Line {
                 .valueset_id
                 .map_or(Ok(None), |id| value_set_ref(conn, id).map(Some))?,
             role: self.role,
+            row_key: self.row_key,
             state: self.state,
             period: server.period(self.start, self.end),
         })

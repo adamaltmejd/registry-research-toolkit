@@ -1,0 +1,5 @@
+[[statement]]
+kind = "set"
+subject = "a: lopnr"
+fields.row_key = true
+evidence = "Synthetic fixture: the column identifies the table's row."

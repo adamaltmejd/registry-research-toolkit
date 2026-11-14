@@ -1,0 +1,17 @@
+[[statement]]
+kind = "set"
+subject = "ark: id where key = 'k1'"
+fields.row_key = true
+evidence = "Synthetic fixture: the column identifies the table's row."
+
+[[statement]]
+kind = "set"
+subject = "ark: id where key = 'k2'"
+fields.row_key = true
+evidence = "Synthetic fixture: the column identifies the table's row."
+
+[[statement]]
+kind = "set"
+subject = "ark: nyckel"
+fields.row_key = true
+evidence = "Synthetic fixture: the column identifies the table's row."

@@ -62,6 +62,20 @@
       "table_name": "Läsårsregistret",
       "variable": "demo/las/betyg",
       "variable_name": "Betyg"
+    },
+    {
+      "code": "row_key_undeclared",
+      "level": "info",
+      "message": "demo/las has no stated row identifier, so its file carries only the columns you choose",
+      "path": "/sources/0",
+      "period": null,
+      "source": "s",
+      "successor_fqid": null,
+      "successor_name": null,
+      "table": "demo/las",
+      "table_name": "Läsårsregistret",
+      "variable": null,
+      "variable_name": null
     }
   ],
   "project": {

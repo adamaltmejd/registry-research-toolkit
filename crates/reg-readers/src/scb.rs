@@ -328,6 +328,7 @@ pub fn read(
         let occurrence = Occurrence {
             role: None,
             long_format: None,
+            row_key: None,
             provider: provider.to_owned(),
             register: handle,
             table,

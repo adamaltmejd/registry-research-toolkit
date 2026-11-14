@@ -43,7 +43,7 @@ pub(crate) fn apply(
     for ((v, s), members) in covering {
         let segment = &variables[v].segments[s];
         if segment.dtype.as_deref() != Some("char")
-            || segment.role == "row_key"
+            || segment.row_key
             || segment.identifier == Some(true)
             || segment.classification.is_some()
         {

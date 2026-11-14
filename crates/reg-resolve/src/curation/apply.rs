@@ -1314,6 +1314,7 @@ fn apply_fields(
                         | "facets"
                         | "sentinels"
                         | "role"
+                        | "row_key"
                         | "classification"
                         | "notice"
                         | "long_format"

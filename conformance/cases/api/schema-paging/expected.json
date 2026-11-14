@@ -12,6 +12,7 @@
           "length": 3,
           "value_set": null,
           "role": "measure",
+          "row_key": false,
           "state": "clear",
           "period": {"start": "2017-01-01", "end": "2021-01-01"}
         },
@@ -23,7 +24,8 @@
           "type": "text",
           "length": 10,
           "value_set": null,
-          "role": "row_key",
+          "role": "measure",
+          "row_key": true,
           "state": "clear",
           "period": {"start": "2017-01-01", "end": "2021-01-01"}
         }
@@ -73,7 +75,7 @@
     "json": {
       "/data/items/*/table": ["demo/sp/b"],
       "/data/items/*/variable": ["demo/sp/id"],
-      "/data/items/*/role": ["row_key"],
+      "/data/items/*/row_key": [true],
       "/data/next_cursor": null
     }
   },

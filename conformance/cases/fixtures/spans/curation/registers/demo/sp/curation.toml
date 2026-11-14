@@ -1,0 +1,11 @@
+[[statement]]
+kind = "set"
+subject = "a: id"
+fields.row_key = true
+evidence = "Synthetic fixture: the column identifies the table's row."
+
+[[statement]]
+kind = "set"
+subject = "b: id"
+fields.row_key = true
+evidence = "Synthetic fixture: the column identifies the table's row."

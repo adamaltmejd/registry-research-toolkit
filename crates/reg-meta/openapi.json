@@ -939,7 +939,7 @@
     },
     "/api/schema/{ref}": {
       "get": {
-        "description": "The columns of a table, a register or a variable's tables over a period, with type, length, value set and role.",
+        "description": "The columns of a table, a register or a variable's tables over a period, with type, length, value set, role and row key.",
         "operationId": "schema",
         "parameters": [
           {
@@ -3770,6 +3770,7 @@
           "length",
           "value_set",
           "role",
+          "row_key",
           "state",
           "period"
         ],
@@ -3791,6 +3792,10 @@
           },
           "role": {
             "type": "string"
+          },
+          "row_key": {
+            "type": "boolean",
+            "description": "One of the table's row keys, curated; never inferred from `identifier`."
           },
           "spelling": {
             "type": "string"

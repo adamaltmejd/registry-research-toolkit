@@ -70,6 +70,7 @@ fn override_bit(field: &str) -> i64 {
         "period",
         "table",
         "variable",
+        "row_key",
     ]
     .iter()
     .position(|name| *name == field)

@@ -713,6 +713,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                         flag(segment.sensitive),
                         flag(segment.identifier),
                         Cell::Str(segment.role.into()),
+                        Cell::Int(i64::from(segment.row_key)),
                         Cell::Str(segment.state.into()),
                     ],
                 );
@@ -761,7 +762,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                     Cell::Str(reg_resolve::coded(x).into()),
                     flag(x.sensitive),
                     flag(x.identifier),
-                    Cell::Str(reg_resolve::role(x, x.identifier).into()),
+                    Cell::Str(reg_resolve::role(x).into()),
                     opt_int(occ.variable.map(|v| variable_id[&(ri, v)])),
                     opt_int(
                         occ.variable

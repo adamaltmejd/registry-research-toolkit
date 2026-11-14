@@ -69,6 +69,20 @@
       },
       "successor_fqid": null,
       "successor_name": null
+    },
+    {
+      "code": "row_key_undeclared",
+      "level": "info",
+      "message": "demo/halv has no stated row identifier, so its file carries only the columns you choose",
+      "path": "/sources/0",
+      "period": null,
+      "source": "s",
+      "successor_fqid": null,
+      "successor_name": null,
+      "table": "demo/halv",
+      "table_name": "Halvårsregistret",
+      "variable": null,
+      "variable_name": null
     }
   ]
 }

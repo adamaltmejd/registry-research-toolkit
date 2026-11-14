@@ -16,6 +16,7 @@
           "length": 4,
           "value_set": null,
           "role": "measure",
+          "row_key": false,
           "state": "clear",
           "period": {"start": "2020-01-01", "end": "2021-01-01"}
         }
@@ -30,6 +31,7 @@
           "length": 20,
           "value_set": null,
           "role": "measure",
+          "row_key": false,
           "state": "clear",
           "period": {"start": "2017-01-01", "end": "2018-01-01"}
         }
