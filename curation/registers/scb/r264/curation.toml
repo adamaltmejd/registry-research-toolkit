@@ -3290,24 +3290,6 @@ evidence = "Källan beskriver fordringar på koncern- och intresseföretag. Coor
 
 [[statement]]
 kind = "set"
-subject = "var:forenklat-arsbokslut"
-fields = { "sets" = ["tillampning-av-forenklat-arsbokslut"] }
-evidence = "Samma källkolumn har överlappande ägare; definitionen avser tillämpning av förenklat årsbokslut.\ncatalog:occurrence:452511\ncatalog:occurrence:452512\ncatalog:variable_text:43443:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:forenklat-arsbokslut"
-fields = { "tags" = ["business"] }
-evidence = "Samma källkolumn har överlappande ägare; definitionen avser tillämpning av förenklat årsbokslut.\ncatalog:occurrence:452511\ncatalog:occurrence:452512\ncatalog:variable_text:43443:13514:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:forenklat-arsbokslut-har-inte-tillampats"
-fields = { "sets" = ["tillampning-av-forenklat-arsbokslut"] }
-evidence = "Samma källkolumn har överlappande ägare; definitionen avser tillämpning av förenklat årsbokslut.\ncatalog:occurrence:452511\ncatalog:occurrence:452512\ncatalog:variable_text:43444:13514:14610"
-
-[[statement]]
-kind = "set"
 subject = "var:forenklat-arsbokslut-har-inte-tillampats"
 fields = { "tags" = ["business"] }
 evidence = "Samma källkolumn har överlappande ägare; definitionen avser tillämpning av förenklat årsbokslut.\ncatalog:occurrence:452511\ncatalog:occurrence:452512\ncatalog:variable_text:43444:13514:14610"
@@ -7649,18 +7631,6 @@ kind = "set"
 subject = "var:summa-kortfristiga-fordringar"
 fields = { "tags" = ["business"] }
 evidence = "Källan beskriver summan av kortfristiga fordringar.\ncatalog:variable_text:43842:12418:14610"
-
-[[statement]]
-kind = "set"
-subject = "var:summa-kortfristiga-fordringar-v7260"
-fields = { "sets" = ["kortfristiga-fordringar"] }
-evidence = "Samma källkolumn är samtidigt kopplad till en summa och en övrigpost.\ncatalog:occurrence:452805\ncatalog:occurrence:452806\ncatalog:occurrence:452862\ncatalog:occurrence:452863\ncatalog:occurrence:452918\ncatalog:occurrence:452919"
-
-[[statement]]
-kind = "set"
-subject = "var:summa-kortfristiga-fordringar-v7260"
-fields = { "tags" = ["business"] }
-evidence = "Samma källkolumn är samtidigt kopplad till en summa och en övrigpost.\ncatalog:occurrence:452805\ncatalog:occurrence:452806\ncatalog:occurrence:452862\ncatalog:occurrence:452863\ncatalog:occurrence:452918\ncatalog:occurrence:452919"
 
 [[statement]]
 kind = "set"
@@ -12494,12 +12464,6 @@ evidence = "#2100 group name: slug words restored from catalog wording; kept on 
 
 [[statement]]
 kind = "set"
-subject = "set:tillampning-av-forenklat-arsbokslut"
-fields = { "label" = "Tillämpning av förenklat årsbokslut" }
-evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
-
-[[statement]]
-kind = "set"
 subject = "set:upplupna-kostnader-och-forutbetalda-intakter"
 fields = { "label" = "Upplupna kostnader och förutbetalda intäkter" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
@@ -13604,12 +13568,6 @@ evidence = "#2102 same-label cluster 'Summa kortfristiga fordringar' (2 variable
 
 [[statement]]
 kind = "set"
-subject = "var:summa-kortfristiga-fordringar-v7260"
-fields = { "label" = "Summa kortfristiga fordringar (v7260, NEA)" }
-evidence = "#2102 same-label cluster 'Summa kortfristiga fordringar' (2 variables): judged different meaning, medium confidence; Same item under different field codes on N2 and NEA."
-
-[[statement]]
-kind = "set"
 subject = "var:upplupna-kostnader-forutbetalda-intakter"
 fields = { "label" = "Upplupna kostnader och förutbetalda intäkter (V0305, N2)" }
 evidence = "#2102 same-label cluster 'Upplupna kostnader och förutbetalda intäkter' (3 variables): judged different meaning, medium confidence; Same item under different field codes on N2, INK2 and INK3."
@@ -14381,3 +14339,15 @@ kind = "set"
 subject = "var:personnr"
 fields = { "description" = "Personnummer för den skatteskyldige i bilaga K10 respektive för handelsbolagets delägare i bilaga N3A." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDefinitionen är generisk (delas av 96 variabler); operationaliseringen skiljer bara på vems nummer efter bilaga.\ncatalog:variable_text:50673:12418:13149"
+
+[[statement]]
+kind = "set"
+subject = "deklarationsbilaga-ne: v7023 @2007..2009 where key = 'v20799'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Deklarationsbilaga NE 2007-2009 (RegVerID 2643, 2723, 3131) documents column v7023 under VarId 20700 \"Förenklat årsbokslut har inte tillämpats\" and VarId 20799 \"Förenklat årsbokslut\" (definition \"Förenklat årsbokslut har ej använts\"). Both are one char(1) item with the same wording (not applied / not used), and both appear under no other column. 20700 is the one whose name states what the item says and the original listing (CVID 156554 against 158391 in 2007); the 20799 rows are withheld."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsbilaga-nea: v7260 @2007..2009 where key = 'v4210'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Deklarationsbilaga NEA 2007-2009 (RegVerID 2653 for 2007) documents column v7260 under VarId 4216 \"Övriga kortfristiga fordringar\" and VarId 4210 \"Summa kortfristiga fordringar\". 4216 is v7260 in Deklarationsbilaga NE in the same years and v7261 in Register för inkomstblanketter, while 4210 is v0220 in Deklarationsblankett INK4 fr 2, Deklarationsbilaga N2 and Register för inkomstblanketter, so its row under v7260 is another form's total attached to this column. The 4210 rows are withheld; 4210 keeps its v0220 columns."
