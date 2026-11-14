@@ -114490,3 +114490,15 @@ kind = "set"
 subject = "individer-16plus-ulf-1989-old: ha0956 where key = 'v13604'"
 fields = { "variable" = "tillganglighet-till-och-fran-bostaden" }
 evidence = "SCB Registerinformation, RegVerID 737 (1989_old), HA0956 v13604: \"Tillgänglighet (in och ut ur bostaden)\", the column release 1989 documents as HA0956 VarId 49745 \"Tillgänglighet (till och från bostaden)\"; VarId 13604 is BO0092 in every other release, 1989_old included, so here it split BO0092's variable by spelling. 1989_old and 1989 (RegVerID 20238) document the same 1989 survey (6 782 interviews); one delivered column, one variable."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf-1989-old: am0184 where key = 'v11158'"
+fields = { "variable" = "hur-ofta-dagligen-starkt-buller" }
+evidence = "SCB Registerinformation, RegVerID 737 (1989_old) documents the delivered column AM0184 under VarId 11158 \"Hur ofta starkt buller\", which in every other release is AM0183 (1984, 1985). Release 1989 (RegVerID 20238) of the same survey, like 1986 and 1987, documents AM0184 as VarId 44820 \"Hur ofta dagligen starkt buller\". Delivered data wins: the column is AM0184, so it joins that variable."
+
+[[statement]]
+kind = "set"
+subject = "individer-16plus-ulf-1989-old: go1832 where key = 'v9694'"
+fields = { "label" = "Barn 1 långvarig sjukdom diagnos", "definition" = "4-ställig diagnoskod (WHO) för den långvariga sjukdom som angetts för barn 1 enligt GO1831." }
+evidence = "SCB Registerinformation, RegVerID 737 (1989_old), GO1832: label \"Barn 1  långvarig sjukdom diagnos\" and a definition with a line break inside a sentence. Whitespace normalized only; release 1989 labels the column \"Barn 1 långvarig sjukdom diagnos\"."

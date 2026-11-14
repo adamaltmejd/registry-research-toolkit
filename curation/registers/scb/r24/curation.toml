@@ -2317,3 +2317,9 @@ kind = "set"
 subject = "gymnasieintyg-summerade-poang: totalpoang_2012"
 fields = { "label" = "Lästa gymnasiala kurspoäng för personer med gymnasieintyg 2012" }
 evidence = "SCB Registerinformation, RegVerID 17537, TotalPoang_2012 \"Poängomfattning\", operational definition: \"Antal poäng som lästs på gymnasiala kurser för personer som erhållit ett gymnasieintyg under 2012.\" Labelled like its 2013-2024 siblings."
+
+[[statement]]
+kind = "set"
+subject = "komvux-och-samlat-betygsdokument: sun2020niva"
+fields = { "label" = "Högsta utbildningens nivå föregående år SUN2020, fullständig kod" }
+evidence = "The same column as SUN2020Niva in the Komvux table, labelled there \"Högsta utbildningens nivå föregående år SUN2020, fullständig kod\" (ureg.toml:3706 lineage); release r17540 moved to its own table and keeps the label."
