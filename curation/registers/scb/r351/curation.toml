@@ -7159,3 +7159,9 @@ kind = "set"
 subject = "var:vill-ta-reda-pa-hur-olika-ideer-hanger-ihop"
 fields = { "label" = "Om dig själv (vill ta reda på hur olika idéer hänger ihop)" }
 evidence = "#2102 same-label cluster 'Om dig själv' (11 variables): judged different meaning, high confidence; Eleven distinct attitude, trust, volunteering and health items (I_Q04, I_Q05, I_Q06, I_Q07, I_Q08), each with its own statement in the opdef."
+
+[[statement]]
+kind = "set"
+subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: D_Q12c @2012 where key = 'v32908'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Den internationella undersökningen av vuxnas färdigheter (PIAAC) 2012 (RegVerID 6196) documents column D_Q12c under VarId 32908 \"Nuvarande arbetsplats - i vilken grad lär du dig nya saker\" and VarId 32906 \"Nuvarande arbetsplats - vilken utbildningsnivå skulle krävas\". VarId 32906 is documented under D_Q12a, D_Q12b and D_Q12c with consecutive CVIDs 407003, 407005 and 407004, and its operational definition asks how much experience of similar work is needed. VarId 32908 is documented under D_Q13a (CVID 407022) and D_Q13c (407023) and a third row under D_Q12c (407024) directly after them, while no D_Q13b is documented; its operational definition (learning while carrying out the work tasks) fits D_Q13b, so that row is most likely D_Q13b recorded under the wrong column name. The 32908 row is withheld."
