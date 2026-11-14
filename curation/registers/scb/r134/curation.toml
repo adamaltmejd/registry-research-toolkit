@@ -630,3 +630,9 @@ kind = "set"
 subject = "kortperiodisk-sysselsattningsstatistik-ks: var:cfar-nummer"
 fields.row_key = true
 evidence = "Row key: cfar-nummer identify a row: one row per sampled workplace and month, keyed on its CFAR number; the organisation number is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kortperiodisk-sysselsattningsstatistik-ks: var:manad"
+fields.row_key = true
+evidence = "Row key: manad (Manad, MatManad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

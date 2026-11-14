@@ -96,3 +96,9 @@ kind = "set"
 subject = "elpriser-och-elavtal: var:orgnr-foretaget"
 fields.row_key = true
 evidence = "Row key: orgnr-foretaget identify a row: a firm table keyed on the firm orgnr; the SCB id is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elpriser-och-elavtal: var:referensmanad"
+fields.row_key = true
+evidence = "Row key: referensmanad (Manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

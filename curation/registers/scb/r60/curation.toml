@@ -780,3 +780,15 @@ kind = "set"
 subject = "konjunkturstatistik-loner-for-statlig-sektor: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: one row per state employee and month, keyed on personnr; agency ids are attributes and rows are not unique across employments (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "konjunkturstatistik-loner-for-statlig-sektor: var:manad"
+fields.row_key = true
+evidence = "Row key: manad (Manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "konjunkturstatistik-loner-for-statlig-sektor: var:matmanad"
+fields.row_key = true
+evidence = "Row key: matmanad (Manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

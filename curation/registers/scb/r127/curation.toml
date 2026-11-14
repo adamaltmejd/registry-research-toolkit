@@ -386,3 +386,9 @@ kind = "set"
 subject = "privat-offentlig: var:idnr"
 fields.row_key = true
 evidence = "Row key: cfar-nummer and idnr identify a row: one row per sampled workplace and quarter, keyed on its CFAR number, delivered as idnr in 2005 to 2006 (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "privat-offentlig: var:manad"
+fields.row_key = true
+evidence = "Row key: manad (Manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

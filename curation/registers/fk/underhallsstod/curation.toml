@@ -306,3 +306,9 @@ kind = "set"
 subject = "utbetalningar-manad: var:lopnr-barn"
 fields.row_key = true
 evidence = "Row key: lopnr-barn identifies a row: each payment is per child and month, the parent and d85 ids are attributes, and the key is not unique over months (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "utbetalningar-barn: var:utbetalningsmanad"
+fields.row_key = true
+evidence = "Row key: utbetalningsmanad (Utbetalningsmanad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

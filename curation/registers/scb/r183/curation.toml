@@ -2741,3 +2741,9 @@ kind = "set"
 subject = "investeringsenkaten-resultat: var:venr"
 fields.row_key = true
 evidence = "Row key: venr identify a row: the survey unit is the kind-of-activity unit; enterprise, organisation and previous-unit numbers are attributes and BKbyggm and BKelinst are counts (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "investeringsenkaten-2019: var:kvartal"
+fields.row_key = true
+evidence = "Row key: kvartal (referenskvartal) is the period of a row; one delivered file holds several quarters, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

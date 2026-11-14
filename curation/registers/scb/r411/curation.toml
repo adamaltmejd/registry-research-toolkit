@@ -972,3 +972,9 @@ kind = "set"
 subject = "rekryteringserfarenheter-yrke: var:cfar-nummer"
 fields.row_key = true
 evidence = "Row key: cfar-nummer identify a row: rows are occupations of a sampled workplace, keyed on its CFAR number; scbid is an attribute and rows are not unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lediga-jobb-lor: var:matmanad"
+fields.row_key = true
+evidence = "Row key: matmanad (Matmanad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

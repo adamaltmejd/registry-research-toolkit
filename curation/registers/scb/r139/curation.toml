@@ -1190,3 +1190,15 @@ kind = "set"
 subject = "varmeverkens-energi: var:cfar-nummer-arbetsstalle"
 fields.row_key = true
 evidence = "Row key: cfar-nummer-arbetsstalle identify a row: the reporting unit is the heating plant workplace, whose cfar-nummer covers all years; firm, survey and supplier ids are attributes; rows per fuel are not unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "industrins-bransleforbrukning: var:kvartal"
+fields.row_key = true
+evidence = "Row key: kvartal (Kvartal) is the period of a row; one delivered file holds several quarters, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "varmeverkens-energi: var:kvartal"
+fields.row_key = true
+evidence = "Row key: kvartal (Kvartal) is the period of a row; one delivered file holds several quarters, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

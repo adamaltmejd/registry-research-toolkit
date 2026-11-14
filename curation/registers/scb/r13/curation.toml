@@ -1268,3 +1268,9 @@ kind = "set"
 subject = "momsdeklarationsregistret: var:person-orgnr"
 fields.row_key = true
 evidence = "Row key: person-orgnr identify a row: rows are monthly VAT returns of a legal unit, keyed on its organisation number; the reporting identity is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "momsdeklarationsregistret: var:redovisningsmanad"
+fields.row_key = true
+evidence = "Row key: redovisningsmanad (RedMan) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

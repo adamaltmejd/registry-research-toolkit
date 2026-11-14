@@ -2058,3 +2058,33 @@ kind = "set"
 subject = "manad-1: var:lopnr"
 fields.row_key = true
 evidence = "Row key: lopnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "ar-1: var:ar"
+fields.row_key = true
+evidence = "Row key: ar (Ar) is the period of a row; one delivered file holds several years, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "ar-15: var:ar"
+fields.row_key = true
+evidence = "Row key: ar (Ar) is the period of a row; one delivered file holds several years, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "ar-30: var:ar"
+fields.row_key = true
+evidence = "Row key: ar (Ar) is the period of a row; one delivered file holds several years, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kvartal-1: var:ar-kvartal"
+fields.row_key = true
+evidence = "Row key: ar-kvartal (Ar_kvartal) is the period of a row; one delivered file holds several quarters, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "manad-1: var:ar-manad"
+fields.row_key = true
+evidence = "Row key: ar-manad (Ar_manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

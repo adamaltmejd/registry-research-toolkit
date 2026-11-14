@@ -1929,3 +1929,21 @@ kind = "set"
 subject = "tjansteprisindex-tpi: var:person-orgnr"
 fields.row_key = true
 evidence = "Row key: person-orgnr identify a row: the reporting firm organisation number identifies the respondent; CFAR, form and question ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "ppi: var:period"
+fields.row_key = true
+evidence = "Row key: period (Period) is the period of a row; one delivered file holds several periods, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "ppi: var:period-ppi-period"
+fields.row_key = true
+evidence = "Row key: period-ppi-period (Period) is the period of a row; one delivered file holds several periods, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "tjansteprisindex-tpi: var:berakningsperiod-period"
+fields.row_key = true
+evidence = "Row key: berakningsperiod-period (Period) is the period of a row; one delivered file holds several periods, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

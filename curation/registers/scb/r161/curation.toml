@@ -270,3 +270,9 @@ kind = "set"
 subject = "utrikes-och-inrikes-trafik-med-fartyg: var:granslopnr"
 fields.row_key = true
 evidence = "Row key: anlopnr and granslopnr identify a row: one row per ship call, identified by the call number within the reporting port number (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "utrikes-och-inrikes-trafik-med-fartyg: var:redovisningsmanad"
+fields.row_key = true
+evidence = "Row key: redovisningsmanad (Manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

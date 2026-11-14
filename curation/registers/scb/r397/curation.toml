@@ -625,3 +625,9 @@ kind = "set"
 subject = "studieforbund-stuv-2020: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: the personnummer identifies the participant; one row per activity so the key does not make rows unique; property is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "deltagare: var:kalenderar"
+fields.row_key = true
+evidence = "Row key: kalenderar (VerkAr) is the period of a row; one delivered file holds several years, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

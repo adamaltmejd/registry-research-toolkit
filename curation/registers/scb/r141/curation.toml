@@ -846,3 +846,15 @@ kind = "set"
 subject = "manatlig-bransle-gas-och-lagerstatistik: var:scb-nummer"
 fields.row_key = true
 evidence = "Row key: foretagets-id-nummer and scb-nummer identify a row: rows are monthly fuel reports of a firm, keyed on the firm id of each era; CFAR, the row number and organisationsidentitet (folded from foretagstyp) are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: var:manad"
+fields.row_key = true
+evidence = "Row key: manad (Manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "manatlig-bransle-gas-och-lagerstatistik: var:undersokningsmanad"
+fields.row_key = true
+evidence = "Row key: undersokningsmanad (MAN) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

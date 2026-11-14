@@ -1339,3 +1339,21 @@ kind = "set"
 subject = "sol-incr: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identifies a row: the service user is the unit, the statistics period is an attribute, and the key is not unique per row (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "sol: var:period"
+fields.row_key = true
+evidence = "Row key: period (PERIOD) is the period of a row; one delivered file holds several periods, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "sol-2007-2012: var:period"
+fields.row_key = true
+evidence = "Row key: period (PERIOD) is the period of a row; one delivered file holds several periods, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "sol-incr: var:period"
+fields.row_key = true
+evidence = "Row key: period (PERIOD) is the period of a row; one delivered file holds several periods, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

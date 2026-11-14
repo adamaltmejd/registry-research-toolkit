@@ -2042,3 +2042,9 @@ kind = "set"
 subject = "sjukfranvaro-sjukloneperioden: var:personnr"
 fields.row_key = true
 evidence = "Row key: cfar-nummer and cfar-nummer-idnr and personnr identify a row: to 2011 rows are workplaces keyed on CFAR number, from 2011 rows are sick-pay spells keyed on personnr; the employer organisation number is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "sjukfranvaro-sjukloneperioden: var:referensmanad"
+fields.row_key = true
+evidence = "Row key: referensmanad (manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

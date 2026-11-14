@@ -216,3 +216,9 @@ kind = "set"
 subject = "agi-huvud: var:person-orgnr-arbetsgivare"
 fields.row_key = true
 evidence = "Row key: person-orgnr-arbetsgivare identify a row: one row per employer declaration; the employer is the unit (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "agi-huvud: var:period"
+fields.row_key = true
+evidence = "Row key: period (PERIOD) is the period of a row; one delivered file holds several periods, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

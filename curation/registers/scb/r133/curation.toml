@@ -540,3 +540,21 @@ kind = "set"
 subject = "arbetsstalle-manad: var:cfar-nummer"
 fields.row_key = true
 evidence = "Row key: cfar-nummer identify a row: the CFAR number is the workplace own id in a workplace-month table; the organisation number is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "arbetsstalle-ar: var:ar"
+fields.row_key = true
+evidence = "Row key: ar (RedAr) is the period of a row; one delivered file holds several years, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "arbetsstalle-manad: var:ar"
+fields.row_key = true
+evidence = "Row key: ar (RedAr) is the period of a row; one delivered file holds several years, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "arbetsstalle-manad: var:redman"
+fields.row_key = true
+evidence = "Row key: redman (RedMan) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

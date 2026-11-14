@@ -3171,3 +3171,33 @@ kind = "set"
 subject = "tjansteproduktionsindex: var:verksamhetsenhetens-identitetsnummer"
 fields.row_key = true
 evidence = "Row key: verksamhetsenhetens-identitetsnummer identify a row: the kind-of-activity unit is the reporting unit; the organisation number is the owning firm, an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "industrins-kapacitetsutnyttjande: var:kvartal"
+fields.row_key = true
+evidence = "Row key: kvartal (Kvartal, AgeOvanU) is the period of a row; one delivered file holds several quarters, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "industrins-kapacitetsutnyttjande: var:ar-och-kvartal"
+fields.row_key = true
+evidence = "Row key: ar-och-kvartal (Period) is the period of a row; one delivered file holds several quarters, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "industrins-orderingang: var:manad"
+fields.row_key = true
+evidence = "Row key: manad (Manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "omsattning-tjanstesektorn-2015: var:manad"
+fields.row_key = true
+evidence = "Row key: manad (Manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "omsattning-tjanstesektorn-tom2014: var:period"
+fields.row_key = true
+evidence = "Row key: period (period) is the period of a row; one delivered file holds several periods, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

@@ -667,3 +667,9 @@ subject = "konjunkturstatistik-loner-for-privat-sektor: var:cfar-nummer"
 fields.row_key = true
 evidence = "Row key: cfar-nummer identifies a row: rows are workplaces of the sampled firms, and a workplace belongs to one firm, so the firm's orgnr is an attribute (maintainer ruling 2026-11-14; ambiguous-table review)."
 
+
+[[statement]]
+kind = "set"
+subject = "konjunkturstatistik-loner-for-privat-sektor: var:undersokningsmanad"
+fields.row_key = true
+evidence = "Row key: undersokningsmanad (Man, Manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

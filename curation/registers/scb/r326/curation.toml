@@ -950,3 +950,9 @@ kind = "set"
 subject = "utbildningsdeltagare-fullfoljt-2001-2011: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: one row per participant who completed, keyed on personnr; parents and school ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "deltagare-2001-2011: var:termin"
+fields.row_key = true
+evidence = "Row key: termin (Termin, VTHT) is the period of a row; one delivered file holds several terms, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

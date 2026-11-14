@@ -1001,3 +1001,9 @@ kind = "set"
 subject = "register-over-manatlig-elstatistik: var:identitet-for-uppgiftslamnare"
 fields.row_key = true
 evidence = "Row key: identitet-for-uppgiftslamnare identify a row: rows are monthly electricity reports, keyed on the reporting firm control number over all years; CFAR, industry control and organisation numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "register-over-manatlig-elstatistik: var:redovisningsmanad"
+fields.row_key = true
+evidence = "Row key: redovisningsmanad (Period) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

@@ -2012,3 +2012,27 @@ kind = "set"
 subject = "sus: var:lopnummer-for-sjukfall"
 fields.row_key = true
 evidence = "Row key: lopnummer-for-sjukfall identify a row: one row per sick-leave case, and the table carries a unique case number; personnr and employer are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-grund: var:referensperiod-manad"
+fields.row_key = true
+evidence = "Row key: referensperiod-manad (Manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-period: var:referensperiod-manad"
+fields.row_key = true
+evidence = "Row key: referensperiod-manad (Manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "sus: var:referensperiod-manad"
+fields.row_key = true
+evidence = "Row key: referensperiod-manad (manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "anstallningar-laps: var:referensperiod"
+fields.row_key = true
+evidence = "Row key: referensperiod (Period) is the period of a row; one delivered file holds several periods, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."

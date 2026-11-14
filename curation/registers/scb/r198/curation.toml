@@ -779,5 +779,11 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 kind = "set"
 subject = "avgifter-hyror-for-nybyggda-lagenheter: var:fastighetsbeteckning"
 fields.row_key = true
-evidence = "Row key: fastighetsbeteckning identifies a row from 2007: the surveyed object is a new-built property; owner and respondent ids are attributes (maintainer ruling 2026-11-14). 2006 has no key: its identifiers are the owner id (AgforId) and the respondent id (Idnr, id-nummer), both attributes; #2477 placed the 2006 Idnr in id-nummer."
+evidence = "Row key: fastighetsbeteckning identifies a row from 2007: the surveyed object is a new-built property; the owner id (AgforId) is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "avgifter-hyror-for-nybyggda-lagenheter: var:id-nummer"
+fields.row_key = true
+evidence = "Row key: Idnr (id-nummer) keys 2006, which has no Fastbet column; #2477 placed the 2006 Idnr in id-nummer. A key is variable-wide, so 2007-2013 key Fastbet plus Idnr (maintainer ruling 2026-11-14)."
 
