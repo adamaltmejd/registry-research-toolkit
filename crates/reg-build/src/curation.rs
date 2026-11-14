@@ -689,21 +689,26 @@ fn inventory(root: &Path, records: &[Record]) -> Result<Applied> {
     Ok(out)
 }
 
-/// Premise rows matched by locator, so one added or removed row is reported as that
-/// row rather than shifting every row after it: what kind of fact, where, and either
-/// "added", "removed" or its changed fields.
+/// Premise rows matched by locator and kind (a register and its implicit table share a
+/// locator), so one added or removed row is reported as that row rather than shifting
+/// every row after it: what kind of fact, where, and either "added", "removed" or its
+/// changed fields.
 fn row_changes(
     side: &str,
     old: &[SourcePremise],
     new: &[SourcePremise],
     out: &mut Vec<String>,
 ) -> Result<()> {
-    fn by_locator(rows: &[SourcePremise]) -> BTreeMap<String, Vec<&SourcePremise>> {
+    fn by_locator(rows: &[SourcePremise]) -> BTreeMap<(String, String), Vec<&SourcePremise>> {
         let mut map = BTreeMap::<_, Vec<_>>::new();
         for row in rows {
-            map.entry(reg_frame::canonical_line(&row.locator))
-                .or_default()
-                .push(row);
+            let kind = row.fields.get("kind").map(ToString::to_string);
+            map.entry((
+                reg_frame::canonical_line(&row.locator),
+                kind.unwrap_or_default(),
+            ))
+            .or_default()
+            .push(row);
         }
         map
     }

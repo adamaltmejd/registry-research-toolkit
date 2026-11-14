@@ -499,19 +499,11 @@ classification bindings. Accepting one requires reviewed curation and a premise 
   SHA-256 of its canonical JSON. Each statement's `objects` is a sorted list of those
   keys; `subjects` is unchanged. References are resolved and digest keys checked when
   reading. Object order is not semantic. A changed premise is reported row by row,
-  matched by locator: each row names its kind and address and is `added`, `removed` or
-  its changed fields with old/new values. Older versions refuse with an instruction to
-  run `reg-build lock`; locks are regenerated, never migrated.
-- A premise pins what its statement depends on and nothing that grows with unrelated
-  inputs (#2471). A value set is content-addressed: the lock keeps one object per hash
-  (`value_set` locator `at = <hash>`, fields `kind`, `hash`, `items`), not the records
-  of every input that states those items or the names each gives them, so another
-  provider reusing an SCB code list moves no lock. A changed list still refuses, since
-  the occurrence's `value_set` hash in the subject rows moves. A classification
-  version is addressed by its FQID (`classification` locator), not its authoring line.
-  The in-memory premise keeps the records: application finds them by locator. Variable-level setters are `var:` setters containing only
-  `sets`, `tags`, `label`, `description`, `definition` or `operational_definition`.
-  Their locked `subjects` record the variable slug, distinct matched locator count and
+  matched by locator and kind: each row names its kind and address and is `added`,
+  `removed` or its changed fields with old/new values. Older versions refuse with an
+  instruction to run `reg-build lock`; locks are regenerated, never migrated.
+  Variable-level setters are `var:` setters containing only `sets`, `tags`, `label`,
+  `description`, `definition` or `operational_definition`. Their locked `subjects` record the variable slug, distinct matched locator count and
   SHA-256 of the sorted canonical locator JSON lines. Changed membership refuses with
   the variable subject and old/new counts, even when the counts are equal. Occurrence
   field values and container facts (register, table and release objects) are not
@@ -532,6 +524,14 @@ classification bindings. Accepting one requires reviewed curation and a premise 
   skipped (a ledger anchor a skipped move made stale) lists those refusals first, as
   the likely cause. A `set` equal to the source is a
   redundant-set finding.
+- A premise pins what its statement depends on and nothing that grows with unrelated
+  inputs (#2471). A value set is content-addressed: the lock keeps one object per hash
+  (`value_set` locator `at = <hash>`, fields `kind`, `hash`, `items`), not the records
+  of every input that states those items or the names each gives them, so another
+  provider reusing an SCB code list moves no lock. A changed list still refuses, since
+  the occurrence's `value_set` hash in the subject rows moves. A classification
+  version is addressed by its FQID (`classification` locator), not its authoring line.
+  The in-memory premise keeps the records: application finds them by locator.
 - Source premise field projections and their canonical sort keys are shared per source
   within each immutable view. Statement, conflict and lock bookkeeping clone shared
   snapshots. Field applications retain before/after records only for changed facts,
