@@ -504,10 +504,10 @@ fn variable_premise_tracks_matches_not_occurrence_fields() {
         let located = format!("{}: {code}:", text(location));
         assert!(details.contains(&located), "no {located:?} in: {details}");
     }
-    // Regression: a v1 or v2 lock is silently accepted rather than requiring a
+    // Regression: an older lock version is silently accepted rather than requiring a
     // re-lock. These deliberately obsolete inputs exercise the version gate.
     let mut obsolete = read_json(&overlay.join("v1.lock")).unwrap();
-    for version in [1, 2] {
+    for version in [1, 2, 3] {
         obsolete["version"] = version.into();
         write(&lock_path, &obsolete.to_string()).unwrap();
         build().refused(&[
@@ -669,4 +669,35 @@ fn steward_names_stay_out_of_the_global_catalog() {
             .all(|body| !body.contains(text)),
         "the private evidence text reached the catalog"
     );
+}
+
+#[test]
+fn unrelated_code_list_uses_keep_the_premise() {
+    // Regression (#2471): the stored premise of a statement that reads a code list keeps
+    // which inputs state that list and the names they give it, or a classification's
+    // authoring line, so another input stating the same items (`another.csv`, sorting
+    // before the reviewed sources) or an entry inserted above in classifications.toml
+    // refuses the release build with premise-changed.
+    let fixture = cases().join("fixtures/classification-pins");
+    let dir = scratch("unrelated-uses");
+    let curation = curation_copy(&fixture, dir.path());
+    let inputs = dir.path().join("inputs");
+    copy_tree(&fixture.join("inputs"), &inputs).unwrap();
+    let statements = curation.join("registers/demo/pins/curation.toml");
+    let coded = read(&cases().join("lock/unrelated-uses/coded.toml")).unwrap();
+    write(&statements, &(read(&statements).unwrap() + &coded)).unwrap();
+    curated("lock", &inputs, &curation, &[]).ok();
+
+    fs::copy(inputs.join("codes/kind.csv"), inputs.join("codes/another.csv")).unwrap();
+    let classifications = curation.join("classifications.toml");
+    let shifted = format!("# Inserted above.\n{}", read(&classifications).unwrap());
+    write(&classifications, &shifted).unwrap();
+    let catalog = dir.path().join("catalog.db");
+    curated(
+        "build",
+        &inputs,
+        &curation,
+        &["--release".as_ref(), "--out".as_ref(), catalog.as_os_str()],
+    )
+    .ok();
 }
