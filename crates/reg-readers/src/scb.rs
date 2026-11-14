@@ -327,6 +327,7 @@ pub fn read(
         let literal = get(dtype);
         let occurrence = Occurrence {
             role: None,
+            long_format: None,
             provider: provider.to_owned(),
             register: handle,
             table,

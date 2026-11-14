@@ -271,7 +271,12 @@ classification bindings. Accepting one requires reviewed curation and a premise 
   the stray listing, or a merge where the claimants are one concept for different row
   kinds), with the more plausible owner where the source does not settle it, and
   evidence saying so. Until then the window is ambiguous and orders over it are blocked
-  (`F2:ambiguous`). The rule weighs the claimants curation leaves. There is no runtime
+  (`F2:ambiguous`). A long-format column, whose variable a code column picks per row
+  (`OBS_VALUE` beside `VARCD`), has no owner: curation marks its occurrences
+  `long_format = true`, the rule never places it, and it stays ambiguous until the
+  catalog models the code column's items (maintainer 2026-11-14). A merge is only for
+  a column that means the same thing on every row. The rule weighs the claimants
+  curation leaves. There is no runtime
   signal for a placed column (maintainer 2026-11-14).
 - Variables never span registers. Cross-register relations are `continues` and
   `derived-from` links and tags.
@@ -602,8 +607,8 @@ Kind-specific content is:
 `set.fields` is closed: `table`, `variable`, `label`, `description`, `sets`, `unit`,
 `definition`, `operational_definition`, `value_set`, `coded`, `period`, `spelling`,
 `identifier`, `sensitive`, `type`, `format`, `notice`, `coverage`, `classification`,
-`tags`, `sentinels`, `role`, `axes`, `facets` and `series_break` (alone in its
-statement; see "Series breaks"). Source-shaped assertion fields have a
+`tags`, `sentinels`, `role`, `axes`, `facets`, `long_format` and `series_break` (alone
+in its statement; see "Series breaks"). Source-shaped assertion fields have a
 separate closed schema: table `name`, `description` and `coverage`; occurrence `label`,
 `definition`, `unit`, `type`, `length`, `sensitive` and `identifier`. Lists of sets,
 tags and sentinels normalize as sorted sets; asserted codes sort by code, while

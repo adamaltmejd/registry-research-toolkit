@@ -441,6 +441,7 @@ impl Context<'_> {
             };
             self.records.push(Record::Occurrence(Occurrence {
                 role: None,
+                long_format: None,
                 provider: self.provider.to_owned(),
                 register: self.register.to_owned(),
                 table,

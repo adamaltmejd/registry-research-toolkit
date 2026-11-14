@@ -222,6 +222,10 @@ pub struct Occurrence {
     /// Curated role; source readers leave this unset.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub role: Option<String>,
+    /// Curated: the column is long format (a code column picks each row's variable), so
+    /// the neighbouring-owner rule never places it.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub long_format: Option<bool>,
 }
 
 /// One code of a value set; `parent` is another item's code.

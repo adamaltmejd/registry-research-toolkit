@@ -98,6 +98,8 @@ pub struct SetFields {
     /// A series break on the subject (crates/DESIGN.md, "Series breaks"), stated alone.
     #[serde(skip_serializing_if = "Option::is_none")]
     pub series_break: Option<SeriesBreak>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub long_format: Option<bool>,
 }
 
 /// A curated series break: the provider's text and, when the text states one, the break

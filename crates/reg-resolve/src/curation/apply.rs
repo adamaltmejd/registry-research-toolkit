@@ -1233,6 +1233,7 @@ fn apply_fields(
                         | "role"
                         | "classification"
                         | "notice"
+                        | "long_format"
                 ),
                 "table" => matches!(field.as_str(), "description" | "coverage" | "role"),
                 "release" => matches!(field.as_str(), "description" | "period"),

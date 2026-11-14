@@ -2,7 +2,8 @@
 //! goes to the variable that holds the column alone in the nearest releases before and
 //! after (crates/DESIGN.md, "Identity"; maintainer 2026-11-14). The losing listings are
 //! duplicates and are shadowed. A run with no sole holder on either side, two different
-//! ones, or a holder that does not claim the whole run stays for curation.
+//! ones, a holder that does not claim the whole run, or a column curation marks
+//! `long_format` stays ambiguous.
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -42,25 +43,7 @@ pub(crate) fn apply(
         {
             continue;
         }
-        let spans: Vec<Interval> = claims
-            .iter()
-            .map(|&(_, i)| span(&resolved[i]).clone())
-            .collect();
-        // Adjacent pieces with one claimant set merge; a gap breaks a run.
-        let mut runs: Vec<(Interval, BTreeSet<usize>)> = Vec::new();
-        for piece in pieces(&spans) {
-            let holders: BTreeSet<usize> = claims
-                .iter()
-                .filter(|&&(_, i)| covers(span(&resolved[i]), &piece))
-                .map(|&(g, _)| g)
-                .collect();
-            match runs.last_mut() {
-                Some((p, h)) if *h == holders && next_iso_day(&p.1) == piece.0 => {
-                    p.1 = piece.1;
-                }
-                _ => runs.push((piece, holders)),
-            }
-        }
+        let runs = holder_runs(resolved, claims);
         let sole = |k: usize| (runs[k].1.len() == 1).then(|| *runs[k].1.first().expect("one"));
         let mut k = 0;
         while k < runs.len() {
@@ -82,7 +65,14 @@ pub(crate) fn apply(
                 (Some(a), Some(b)) if a != b => None,
                 (a, b) => a.or(b),
             };
+            // Curation marks a long-format column (a code column picks each row's
+            // variable): no claimant owns it, so it stays ambiguous.
+            let long_format = claims.iter().any(|&(_, i)| {
+                resolved[i].occurrence.long_format == Some(true)
+                    && reg_core::intersect(span(&resolved[i]), &run).is_some()
+            });
             if let Some(owner) = owner
+                && !long_format
                 && runs[k..end].iter().all(|(_, h)| h.contains(&owner))
             {
                 let losing: Vec<usize> = claims
@@ -118,4 +108,29 @@ pub(crate) fn apply(
     for i in lost {
         resolved[i].status = "shadowed";
     }
+}
+
+/// The column's elementary pieces with the groups holding each; adjacent pieces with one
+/// holder set merge, a gap breaks a run.
+fn holder_runs(
+    resolved: &[ResolvedOccurrence],
+    claims: &[(usize, usize)],
+) -> Vec<(Interval, BTreeSet<usize>)> {
+    let spans: Vec<Interval> = claims
+        .iter()
+        .map(|&(_, i)| span(&resolved[i]).clone())
+        .collect();
+    let mut runs: Vec<(Interval, BTreeSet<usize>)> = Vec::new();
+    for piece in pieces(&spans) {
+        let holders: BTreeSet<usize> = claims
+            .iter()
+            .filter(|&&(_, i)| covers(span(&resolved[i]), &piece))
+            .map(|&(g, _)| g)
+            .collect();
+        match runs.last_mut() {
+            Some((p, h)) if *h == holders && next_iso_day(&p.1) == piece.0 => p.1 = piece.1,
+            _ => runs.push((piece, holders)),
+        }
+    }
+    runs
 }
