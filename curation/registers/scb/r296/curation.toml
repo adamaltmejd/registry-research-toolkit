@@ -1,4 +1,3 @@
-
 [[statement]]
 kind = "set"
 subject = "ppi: beskrivnsv @2013..2016"
@@ -1911,3 +1910,33 @@ kind = "set"
 subject = "var:produktid-prodid"
 fields = { "description" = "Löpnummer som identifierar produkten (prodkod). Används tillsammans med Produktgruppsid för att koppla ihop produkt och produktgrupp." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma begrepp; senare år anger hur nyckeln används.\ncatalog:variable_text:47727:14610:17167\ncatalog:variable_text:47727:17167:17897\ncatalog:variable_text:47727:18262:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:formular-titel"
+fields = { "label" = "Titel" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Tjänsteprisindex (TPI), column Titel: VarId 28085 \"Formulär titel\" and VarId 28088 \"InmatningsGruppDefinition titel\". The four VarIds are the title text of a form (28085), a question (28086), an input field (28087) and an input group definition (28088); the variant lists these questionnaire levels as rows and all four give the title of the row."
+
+[[statement]]
+kind = "set"
+subject = "var:formular-titel"
+fields = { "description" = "Titeltext för ett formulär, en fråga, ett inmatningsfält eller en inmatningsgrupp i frågeformuläret: formulärets titeltext, frågetexten, inmatningsfältets titel eller gruppens text i fetstil." }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable; the label and description cover every claimant.\n\nSCB Registerinformation, Tjänsteprisindex (TPI), column Titel: VarId 28085 \"Formulär titel\" and VarId 28088 \"InmatningsGruppDefinition titel\". The four VarIds are the title text of a form (28085), a question (28086), an input field (28087) and an input group definition (28088); the variant lists these questionnaire levels as rows and all four give the title of the row."
+
+[[statement]]
+kind = "set"
+subject = "tjansteprisindex-tpi: Titel @2007..2011 where key = 'v28086'"
+fields = { "variable" = "formular-titel" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Tjänsteprisindex (TPI) 2007 (RegVerID 4674) to 2011 (RegVerID 4296) documents column Titel under VarId 28085 \"Formulär titel\" and VarId 28086 \"Fråge titel\". The four VarIds are the title text of a form (28085), a question (28086), an input field (28087) and an input group definition (28088); the variant lists these questionnaire levels as rows and all four give the title of the row. The VarId 28086 occurrences are assigned to formular-titel."
+
+[[statement]]
+kind = "set"
+subject = "tjansteprisindex-tpi: Titel @2007..2011 where key = 'v28087'"
+fields = { "variable" = "formular-titel" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Tjänsteprisindex (TPI) 2007 (RegVerID 4674) to 2011 (RegVerID 4296) documents column Titel under VarId 28085 \"Formulär titel\" and VarId 28087 \"Inmatningsfältets titel\". The four VarIds are the title text of a form (28085), a question (28086), an input field (28087) and an input group definition (28088); the variant lists these questionnaire levels as rows and all four give the title of the row. The VarId 28087 occurrences are assigned to formular-titel."
+
+[[statement]]
+kind = "set"
+subject = "tjansteprisindex-tpi: Titel @2007..2011 where key = 'v28088'"
+fields = { "variable" = "formular-titel" }
+evidence = "Maintainer 2026-11-14: where the claimants are variants of one concept for different row kinds, they are merged into one variable. SCB Registerinformation, Tjänsteprisindex (TPI) 2007 (RegVerID 4674) to 2011 (RegVerID 4296) documents column Titel under VarId 28085 \"Formulär titel\" and VarId 28088 \"InmatningsGruppDefinition titel\". The four VarIds are the title text of a form (28085), a question (28086), an input field (28087) and an input group definition (28088); the variant lists these questionnaire levels as rows and all four give the title of the row. The VarId 28088 occurrences are assigned to formular-titel."
