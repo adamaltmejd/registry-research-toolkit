@@ -835,18 +835,6 @@ evidence = "Variabeln avser ekonomiska mål för samtliga bolag.\ncatalog:occurr
 
 [[statement]]
 kind = "set"
-subject = "var:faststallande-i-fullmaktige-av-ek-och-verksamh-mal-for-fr10a"
-fields = { "sets" = ["fullmaktiges-mal-for-bolag"] }
-evidence = "Samma källkolumn är mappad till två olika variabler i samma period.\ncatalog:occurrence:382688\ncatalog:occurrence:382689"
-
-[[statement]]
-kind = "set"
-subject = "var:faststallande-i-fullmaktige-av-ek-och-verksamh-mal-for-fr10a"
-fields = { "tags" = ["business"] }
-evidence = "Samma källkolumn är mappad till två olika variabler i samma period.\ncatalog:occurrence:382688\ncatalog:occurrence:382689"
-
-[[statement]]
-kind = "set"
 subject = "var:finsyn"
 fields = { "sets" = [] }
 evidence = "Variabeln avser fullmäktiges bestämmelser om insyn i offentliga företag.\ncatalog:occurrence:382418"
@@ -4669,18 +4657,6 @@ evidence = "Förekomst av offentlig utfrågning.\ncatalog:occurrence:382615\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:offentlig-utfragning-hearing-fr7"
-fields = { "sets" = ["offentliga-utfragningar"] }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. The member had no group; it joins its cluster."
-
-[[statement]]
-kind = "set"
-subject = "var:offentlig-utfragning-hearing-fr7"
-fields = { "tags" = ["democracy"] }
-evidence = "Samma källkolumn har överlappande och senare andra ägare.\ncatalog:occurrence:383190\ncatalog:occurrence:383191\ncatalog:occurrence:383275"
-
-[[statement]]
-kind = "set"
 subject = "var:offentlig-utfragning-hearing-medbdia"
 fields = { "sets" = ["offentliga-utfragningar"] }
 evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. The member had no group; it joins its cluster."
@@ -6535,24 +6511,6 @@ evidence = "Variabeln beskriver publicering av föreskrifter på webbplats.\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:webbplats-med-mojlighet-att-skicka-meddelanden-fr32-7"
-fields = { "sets" = ["meddelandefunktion-pa-webbplats"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:382670\ncatalog:occurrence:382671"
-
-[[statement]]
-kind = "set"
-subject = "var:webbplats-med-mojlighet-att-skicka-meddelanden-fr32-7"
-fields = { "tags" = ["democracy", "digital"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:382670\ncatalog:occurrence:382671"
-
-[[statement]]
-kind = "set"
-subject = "var:webbplats-med-mojlighet-att-skicka-meddelanden-fr45-4-2"
-fields = { "sets" = ["meddelandefunktion-pa-webbplats"] }
-evidence = "Samma källkolumn har en annan ägare med överlappande och senare perioder.\ncatalog:occurrence:382768\ncatalog:occurrence:382769\ncatalog:occurrence:382888"
-
-[[statement]]
-kind = "set"
 subject = "var:webbplats-med-mojlighet-att-skicka-meddelanden-fr45-4-2"
 fields = { "tags" = ["democracy", "digital"] }
 evidence = "Samma källkolumn har en annan ägare med överlappande och senare perioder.\ncatalog:occurrence:382768\ncatalog:occurrence:382769\ncatalog:occurrence:382888"
@@ -7429,12 +7387,6 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
-subject = "set:meddelandefunktion-pa-webbplats"
-fields = { "label" = "Meddelandefunktion på webbplats" }
-evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
-
-[[statement]]
-kind = "set"
 subject = "set:medel-for-demokratifragor"
 fields = { "label" = "Medel för demokratifrågor", "axes" = [{ "id" = "population", "label" = "Population" }] }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
@@ -7983,12 +7935,6 @@ evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och 
 kind = "set"
 subject = "var:faststall-bolagsmal-fr39"
 fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (ekonomiska mål, samtliga bolag)" }
-evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
-
-[[statement]]
-kind = "set"
-subject = "var:faststallande-i-fullmaktige-av-ek-och-verksamh-mal-for-fr10a"
-fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (verksamhetsmål, vissa bolag)" }
 evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
 
 [[statement]]
@@ -10687,12 +10633,6 @@ evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys 
 
 [[statement]]
 kind = "set"
-subject = "var:offentlig-utfragning-hearing-fr7"
-fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
 subject = "var:offentlig-utfragning-hearing-medbdia"
 fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
 evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
@@ -11473,12 +11413,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group
 
 [[statement]]
 kind = "set"
-subject = "set:meddelandefunktion-pa-webbplats"
-fields = { "description" = "Om allmänheten via kommunens eller landstingets webbplats kan skicka meddelanden till förtroendevalda i fullmäktige, till exempel genom utlagda e-postadresser. Från 2020 avser det regionfullmäktige." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nOP nämner kommunen och landstinget med kommun- och landstingsfullmäktige, från 2020 regionfullmäktige; kodningen 0/1 för 2024 är självklar för en ja/nej-variabel och utelämnas.\ncatalog:variable_text:45713:16801:17167\ncatalog:variable_text:45714:12053:12418\ncatalog:variable_text:45714:13879:14245\ncatalog:variable_text:45714:15340:15706\ncatalog:variable_text:45714:18262:18628\ncatalog:variable_text:45714:19723:20089"
-
-[[statement]]
-kind = "set"
 subject = "set:medel-for-demokratifragor"
 fields = { "description" = "Om kommunen eller regionen (tidigare landstinget) har avsatt särskilda medel för arbete med demokratifrågor." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF och OP är samma för alla; medlemmarna är olika enkätomgångar och organisationstyper.\ncatalog:variable_text:45466:12053:12418\ncatalog:variable_text:45469:18262:18628"
@@ -11608,3 +11542,27 @@ kind = "set"
 subject = "var:oppsam"
 fields = { "description" = "Om allmänheten hade närvarorätt till kommunens eller landstingets nämndsammanträden (öppna nämndsammanträden). 2012 avser frågan landstingens sammanträden under 2011." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma fråga; 2012 ställs den som en fråga om föregående år.\ncatalog:variable_text:45511:12053:12418\ncatalog:variable_text:45511:15340:15706"
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr10a @2020 where key = 'v29350'"
+fields = { "spelling" = "Fr39_4" }
+evidence = "SCB Registerinformation, Lokal demokrati Kommuner 2020 (RegVerID 16180) documents column Fr10a under VarId 28630 \"Folkinitiativ till folkomröstning\" and VarId 29350 \"Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag\". The same release has Fr10a_text and Fr10b_text on 28630, and documents 29350 on Fr39_1, Fr39_2, Fr39_3, Fr39_5, Fr39_6 and Fr39_7, so the series has no Fr39_4; Regioner 2024 documents Fr10a on 28630. SCB attached the wrong column name to the 29350 row; it is the missing Fr39_4 and is respelled to it."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr32_7 @2016 where key = 'v28625'"
+fields = { "spelling" = "Fr32_8" }
+evidence = "SCB Registerinformation, Lokal demokrati Kommuner 2016 (RegVerID 11133) documents column Fr32_7 under VarId 35984 \"Webbplats med information om det politiska styret\" and VarId 28625 \"Webbplats med möjlighet att skicka meddelanden\" and has no Fr32_8 (Fr32_1-Fr32_10 otherwise). The item order of the website block is the same in Regioner 2016 (Fr30_7 info om det politiska styret 35984, Fr30_8 meddelanden 28625) and Kommuner 2020 (Fr45_3 35984, Fr45_4 28625), so 35984 is Fr32_7 and 28625 is the missing Fr32_8. SCB attached the wrong column name to the 28625 row; it is respelled to Fr32_8."
+
+[[statement]]
+kind = "set"
+subject = "regioner: Fr45_5 @2020 where key = 'v28626'"
+fields = { "spelling" = "Fr44_5" }
+evidence = "SCB Registerinformation, Lokal demokrati Regioner 2020 (RegVerID 16181) documents column Fr45_5 under VarId 29353 \"Användande av sociala medier\" and VarId 28626 \"Webbplats med medborgarförslag\". Fr45_1-Fr45_5 all carry 29353 (a five-part social-media question), while the website block is Fr44_1-Fr44_4 and has no fifth item; 28626 is the website item that follows 28625 in the block (Kommuner 2020 Fr45_4 28625, Fr45_5 28626; Regioner 2016 Fr30_8 28625, Fr30_9 28626). SCB attached the wrong column name to the 28626 row; it is respelled to the missing Fr44_5."
+
+[[statement]]
+kind = "set"
+subject = "regioner: Fr7 @2016 where key = 'v28656'"
+fields = { "spelling" = "Fr14a" }
+evidence = "SCB Registerinformation, Lokal demokrati Regioner 2016 (RegVerID 11181) documents column Fr7 under VarId 28631 \"Möjlighet att lämna medborgarförslag\" and VarId 28656 \"Offentlig utfrågning (hearing)\". Fr7 sits between Fr6a (folkinitiativ) and Fr8a (inkomna medborgarförslag), which fits 28631. VarId 28656 is the hearing item and 29420 \"Offentlig utfrågning (hearing) via webbplatsen\" is Fr14b in the same release; in Kommuner 2016 the same pair is Fr16a (28656) and Fr16b (29420). The release has no Fr14a, so SCB attached the wrong column name to the 28656 row; it is respelled to Fr14a."
