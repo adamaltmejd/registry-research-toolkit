@@ -814,3 +814,15 @@ kind = "set"
 subject = "var:langd5"
 fields = { "label" = "Fartygets längd (fartyg 5)" }
 evidence = "#2102 same-label cluster 'Fartygets längd' (5 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Opdefs: Längd för fartyg1 ... fartyg 5, identical definition and unit; the fartyg number holds for every occurrence."
+
+[[statement]]
+kind = "set"
+subject = "energianvandningen-inom-fiskesektorn: Namn @2005 where key = 'v1655'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Energianvändningen inom fiskesektorn version 2005 (RegVerID 194) documents column Namn under VarId 1655 \"Kontaktpersonens namn\" and VarId 1649 \"Fiskefartygsägarens namn\"; the VarId 1655 row is withheld. Both rows carry the identical definition \"Namn på fiskefartygets ägare resp kontaktperson\", and the source does not settle which; VarId 1649 is the more plausible owner because VarId 1649 is the owner-name variable that continues in later versions (Fiskelicensinnehavare, 2017 and 2022), and the owner block of the form (Adress, PostNr, PostOrt) leads with the name (maintainer 2026-11-14: place under the more plausible owner)."
+
+[[statement]]
+kind = "set"
+subject = "energianvandningen-inom-fiskesektorn: TelNr @2005 where key = 'v19754'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Energianvändningen inom fiskesektorn version 2005 (RegVerID 194) documents column TelNr under VarId 1658 \"Telefonnummer, fax, epostadress\" and VarId 19754 \"Telefonnummer till kontaktperson\"; the VarId 19754 row is withheld. Both rows state the telephone number of the vessel owner or contact person (VarId 19754 in its operational definition), and the source does not settle which; VarId 1658 is the more plausible owner because VarId 1658 is the original, general listing (telephone, fax, e-mail; 255 characters) of the owner/contact block, whereas the contact person already has own columns for mobile number and reachable time (maintainer 2026-11-14: place under the more plausible owner)."
