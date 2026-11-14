@@ -24,6 +24,372 @@ evidence = "Same column name, different facts: arpost marks equivalent education
 
 [[statement]]
 kind = "set"
+subject = "arpost: ANTBT @1989-07-01..1991-06-30"
+fields = { "label" = "Antal betygssegment" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Copy error in the HT89-VT91 layouts: the label of ANTAL (sökalternativ) on the BT-record count. The same rows define the field as \"Antal BT-poster som följer AR i filen\"; HT77-VT89 label it \"Antal betygssegment\". Layout label: Antal sökalternativsegment\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Ansökan (ARPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA1_VAGA1 @1977-07-01..1977-12-31"
+fields = { "label" = "Studievägskod (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA1_VAGA1 @1978-01-01..1983-12-31"
+fields = { "label" = "Studievägskod (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA1_VAGA1 @1984-01-01..1984-06-30"
+fields = { "label" = "Studievägskod (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA1_VAGA1 @1984-07-01..1987-06-30"
+fields = { "label" = "Studievägskod (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA1_VAGA2 @1977-07-01..1977-12-31"
+fields = { "label" = "Studievägskod (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA1_VAGA2 @1978-01-01..1979-12-31"
+fields = { "label" = "Studievägskod (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA1_VAGA2 @1980-01-01..1980-06-30"
+fields = { "label" = "Studievägskod (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA1_VAGA2 @1980-07-01..1982-06-30"
+fields = { "label" = "Studievägskod (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA1_VAGA2 @1982-07-01..1985-12-31"
+fields = { "label" = "Studievägskod (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA1_VAGA2 @1986-01-01..1986-06-30"
+fields = { "label" = "Studievägskod (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA1_VAGA2 @1986-07-01..1987-06-30"
+fields = { "label" = "Studievägskod (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA2_VAGA1 @1977-07-01..1982-06-30"
+fields = { "label" = "Studievägskod (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA2_VAGA2 @1977-07-01..1977-12-31"
+fields = { "label" = "Studievägskod (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA2_VAGA2 @1978-01-01..1979-12-31"
+fields = { "label" = "Studievägskod (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA2_VAGA2 @1980-01-01..1980-06-30"
+fields = { "label" = "Studievägskod (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA2_VAGA2 @1980-07-01..1982-06-30"
+fields = { "label" = "Studievägskod (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA3_VAGA1 @1977-07-01..1982-06-30"
+fields = { "label" = "Studievägskod (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA3_VAGA2 @1977-07-01..1977-12-31"
+fields = { "label" = "Studievägskod (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA3_VAGA2 @1978-01-01..1979-12-31"
+fields = { "label" = "Studievägskod (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA3_VAGA2 @1980-01-01..1980-06-30"
+fields = { "label" = "Studievägskod (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA3_VAGA2 @1980-07-01..1982-06-30"
+fields = { "label" = "Studievägskod (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA_VAGA1 @1987-07-01..1988-06-30"
+fields = { "label" = "Studievägskod (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA_VAGA1 @1988-07-01..1989-06-30"
+fields = { "label" = "Studievägskod (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA_VAGA1 @1989-07-01..1989-12-31"
+fields = { "label" = "Studievägskod del 1 (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod del 1 (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA_VAGA1 @1990-01-01..1990-06-30"
+fields = { "label" = "Studievägskod del 1" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod del 1\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA_VAGA1 @1990-07-01..1991-06-30"
+fields = { "label" = "Studievägskod del 1 (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod del 1 (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA_VAGA2 @1987-07-01..1989-06-30"
+fields = { "label" = "Studievägskod (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA_VAGA2 @1989-07-01..1989-12-31"
+fields = { "label" = "Studievägskod del 2 (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod del 2 (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA_VAGA2 @1990-01-01..1990-06-30"
+fields = { "label" = "Studievägskod del 2" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod del 2\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "btpost: VAGA_VAGA2 @1990-07-01..1991-06-30"
+fields = { "label" = "Studievägskod del 2 (SÖ standard)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (Studivägskod); the field is the studievägskod (SÖ standard). Layout label: Studivägskod del 2 (SÖ standard)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Betyg (BTPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "alpost: ALT_SEKT @1979-07-01..1979-12-31"
+fields = { "label" = "Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativ ort)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (sökalternativt ort); the sibling parts read sökalternativ sektor, linje, program. Layout label: Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativt ort)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Sökalternativ (ALPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "alpost: ALT_SEKT @1980-01-01..1980-06-30"
+fields = { "label" = "Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativ ort)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (sökalternativt ort); the sibling parts read sökalternativ sektor, linje, program. Layout label: Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativt ort)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Sökalternativ (ALPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "alpost: ALT_SEKT @1980-07-01..1980-12-31"
+fields = { "label" = "Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativ ort)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (sökalternativt ort); the sibling parts read sökalternativ sektor, linje, program. Layout label: Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativt ort)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Sökalternativ (ALPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "alpost: ALT_SEKT @1981-01-01..1981-06-30"
+fields = { "label" = "Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativ ort)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (sökalternativt ort); the sibling parts read sökalternativ sektor, linje, program. Layout label: Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativt ort)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Sökalternativ (ALPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "alpost: ALT_SEKT @1981-07-01..1981-12-31"
+fields = { "label" = "Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativ ort)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (sökalternativt ort); the sibling parts read sökalternativ sektor, linje, program. Layout label: Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativt ort)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Sökalternativ (ALPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "alpost: ALT_SEKT @1982-01-01..1982-06-30"
+fields = { "label" = "Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativ ort)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (sökalternativt ort); the sibling parts read sökalternativ sektor, linje, program. Layout label: Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativt ort)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Sökalternativ (ALPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "alpost: ALT_ORT @1977-07-01..1977-12-31"
+fields = { "label" = "Sökalternativ ort" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (sökalternativt ort); the sibling parts read sökalternativ sektor, linje, program. Layout label: Sökalternativt ort\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Sökalternativ (ALPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "alpost: ALT_ORT @1978-07-01..1978-12-31"
+fields = { "label" = "Sökalternativ ort" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (sökalternativt ort); the sibling parts read sökalternativ sektor, linje, program. Layout label: Sökalternativt ort\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Sökalternativ (ALPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "alpost: ALT_ORT @1987-07-01..1988-06-30"
+fields = { "label" = "Sökalternativ ort" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (sökalternativt ort); the sibling parts read sökalternativ sektor, linje, program. Layout label: Sökalternativt ort\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Sökalternativ (ALPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "alpost: ALT_ORT @1989-07-01..1992-06-30"
+fields = { "label" = "Sökalternativ ort" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (sökalternativt ort); the sibling parts read sökalternativ sektor, linje, program. Layout label: Sökalternativt ort\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Sökalternativ (ALPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "alpost: ALT @1979-01-01..1979-06-30"
+fields = { "label" = "Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativ ort)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (sökalternativt ort); the sibling parts read sökalternativ sektor, linje, program. Layout label: Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativt ort)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Sökalternativ (ALPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "alpost: ALT @1982-07-01..1982-12-31"
+fields = { "label" = "Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativ ort)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (sökalternativt ort); the sibling parts read sökalternativ sektor, linje, program. Layout label: Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativt ort)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Sökalternativ (ALPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "alpost: ALT @1983-01-01..1983-06-30"
+fields = { "label" = "Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativ ort)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (sökalternativt ort); the sibling parts read sökalternativ sektor, linje, program. Layout label: Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativt ort)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Sökalternativ (ALPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "alpost: ALT @1983-07-01..1983-12-31"
+fields = { "label" = "Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativ ort)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (sökalternativt ort); the sibling parts read sökalternativ sektor, linje, program. Layout label: Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativt ort)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Sökalternativ (ALPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "alpost: ALT @1984-01-01..1984-06-30"
+fields = { "label" = "Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativ ort)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (sökalternativt ort); the sibling parts read sökalternativ sektor, linje, program. Layout label: Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativt ort)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Sökalternativ (ALPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "alpost: ALT @1984-07-01..1984-12-31"
+fields = { "label" = "Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativ ort)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (sökalternativt ort); the sibling parts read sökalternativ sektor, linje, program. Layout label: Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativt ort)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Sökalternativ (ALPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "alpost: ALT @1985-01-01..1985-06-30"
+fields = { "label" = "Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativ ort)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (sökalternativt ort); the sibling parts read sökalternativ sektor, linje, program. Layout label: Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativt ort)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Sökalternativ (ALPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "alpost: ALT @1985-07-01..1985-12-31"
+fields = { "label" = "Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativ ort)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (sökalternativt ort); the sibling parts read sökalternativ sektor, linje, program. Layout label: Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativt ort)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Sökalternativ (ALPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "alpost: ALT @1986-01-01..1986-06-30"
+fields = { "label" = "Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativ ort)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (sökalternativt ort); the sibling parts read sökalternativ sektor, linje, program. Layout label: Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativt ort)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Sökalternativ (ALPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "alpost: ALT @1986-07-01..1986-12-31"
+fields = { "label" = "Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativ ort)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (sökalternativt ort); the sibling parts read sökalternativ sektor, linje, program. Layout label: Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativt ort)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Sökalternativ (ALPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "alpost: ALT @1987-01-01..1987-06-30"
+fields = { "label" = "Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativ ort)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the layouts (sökalternativt ort); the sibling parts read sökalternativ sektor, linje, program. Layout label: Sökalternativ. (sökalternativ sektor, sökalternativ linje, sökalternativ program, sökalternativt ort)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Sökalternativ (ALPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "arpost: STAT_STATH @1977-07-01..1988-06-30"
+fields = { "label" = "Folkhögskola som saknar studieomdöme" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Doubled word in the layout (som som). Layout label: Folkhögskola som som saknar studieomdöme\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Ansökan (ARPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "arpost: ANTAE @1991-07-01..1992-06-30"
+fields = { "label" = "Antal arbetslivserfarenhetssegment" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Spelling in the HT91-VT92 layouts (arbetslivserfarenhetsegment); HT77-VT91 read arbetslivserfarenhetssegment. Layout label: Antal arbetslivserfarenhetsegment\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Ansökan (ARPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "arpost: ANTBT @1991-07-01..1991-12-31"
+fields = { "label" = "Antal betygssegment" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Spelling in the HT91-VT92 layouts (betygsegment); HT77-VT89 read betygssegment. Layout label: Antal betygsegment\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Ansökan (ARPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "arpost: ANTBT_1 @1992-01-01..1992-06-30"
+fields = { "label" = "Antal betygssegment" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Spelling in the HT91-VT92 layouts (betygsegment); HT77-VT89 read betygssegment. Layout label: Antal betygsegment\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Ansökan (ARPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "arpost: SLP_SPLAR @1988-07-01..1989-06-30"
+fields = { "label" = "Högskoleprov, termin och år" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the HT88-VT89 layout (doubled 'prov'); HT89-VT92 read \"Högskoleprov, termin och år\". Layout label: Högskoleprovprov termin och år\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Ansökan (ARPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "fupost: FUKOD @1977-07-01..1979-06-30"
+fields = { "label" = "Postens kod (=FU)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in some layouts (kode); the other terms read \"Postens kod\". Layout label: Postens kode (=FU)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Föreningsmeriter (FUPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "fupost: FUKOD @1980-07-01..1982-06-30"
+fields = { "label" = "Postens kod (=FU)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in some layouts (kode); the other terms read \"Postens kod\". Layout label: Postens kode (=FU)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Föreningsmeriter (FUPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "sopost: SOKOD @1983-01-01..1987-06-30"
+fields = { "label" = "Postens kod (=SO)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in some layouts (kode); the other terms read \"Postens kod\". Layout label: Postens kode (=SO)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Ämnen för särskild behörighet (SOPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
+subject = "arpost: 750 @1991-07-01..1991-12-31"
+fields = { "label" = "Minst 5 år ALE (arbetslivserfarenhet)" }
+evidence = "Maintainer ruling 2026-11-14: curate mislabels. Typo in the HT91 layout (arbetsliverfarenhet); VT92 reads arbetslivserfarenhet. Layout label: Minst 5 år ALE (arbetsliverfarenhet)\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Ansökan (ARPOST); catalog/evidence/riksarkivet/a1/"
+
+[[statement]]
+kind = "set"
 subject = "var:filler2"
 fields = { "description" = "På position 210 i ARPOST höstterminen 1981 och vårterminen 1982 heter fältet ALEH i de äldre postbeskrivningarna per termin: \"Behörighet till förskollärar- och fritidspedagoglinjen, 80p, 2-4 = behörig\". Leveransens postbeskrivning kallar det FILLER2." }
 evidence = "A1_HT81.xls and A1_VT82.xls (catalog/evidence/riksarkivet/a1/HT81-VT82/), sheet Postbeskrivning: ALEH, start 210, length 1. The delivery layout A1_HT81_VT82.xls has FILLER2 at 210; the column stays FILLER2 (COS ruling 2026-11-14)."
