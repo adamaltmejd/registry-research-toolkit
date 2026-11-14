@@ -24,8 +24,9 @@ fn integer_code(code: &str) -> bool {
 }
 
 /// Every covering occurrence must qualify, so the rule never splits a segment into text
-/// and integer years (G3). Row keys and identifiers stay text: a code list never covers
-/// every unit id (G2). A classification governs its own codes. Sentinels are not
+/// and integer years (G3). Identifiers stay text: a code list never covers every unit id
+/// (G2). Being a row key does not matter: a keyed period column (År, Månad) is integer like
+/// any other. A classification governs its own codes. Sentinels are not
 /// removed: a non-integer sentinel keeps the column text (stricter than N1 was, and no
 /// 0.75.0 N1 review had one).
 pub(crate) fn apply(
@@ -43,7 +44,6 @@ pub(crate) fn apply(
     for ((v, s), members) in covering {
         let segment = &variables[v].segments[s];
         if segment.dtype.as_deref() != Some("char")
-            || segment.row_key
             || segment.identifier == Some(true)
             || segment.classification.is_some()
         {
