@@ -676,3 +676,9 @@ kind = "set"
 subject = "var:vpute"
 fields = { "label" = "Använt uppvärmningssätt av utevärmepump (VpUte)" }
 evidence = "#2102 same-label cluster 'Använt uppvärmningssätt av utevärmepump' (2 variables): judged different meaning, low confidence; vpumpute and VpUte coexist in one table with the same definition and no opdef; raw column codes."
+
+[[statement]]
+kind = "set"
+subject = "energistatistik-for-lokaler: Fastbet @2007..2008 where key = 'v145'"
+fields = { "variable" = "none" }
+evidence = "SCB Registerinformation, Energistatistik för lokaler versions 2007-2008 (RegVerIDs 2805, 2844) documents column Fastbet under VarId 145 \"Identitet\" and VarId 26 \"Fastighetsbeteckning\". The column name Fastbet abbreviates Fastighetsbeteckning, VarId 26; VarId 145 is the information-free serial number \"Identitet\" (unit Löpnummer), a different thing; the VarId 145 row is withheld."
