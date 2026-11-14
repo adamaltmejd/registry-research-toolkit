@@ -260,14 +260,13 @@ property of a table and variable, set only by curation, once per pair:
 occurrences in that table under every spelling and source key, including ones a later pin
 adds (the statement's premise then changes and the relock shows it). No other subject
 accepts `row_key`, so a key cannot be stated per spelling and lose the years another
-spelling covers. A key that
-changes by era is each era's variable keyed. Source readers never state it; a segment holds
-it from its covering occurrences. It is not a role: a key column keeps its code or measure
-role. `identifier` never makes one (maintainer 2026-11-14): names,
-addresses, other persons' ids and property or family ids in a person table are
-identifiers but not keys. A table with no unit id has no key. A steward's keys stay its
-declared `[[table.key]]` (below). Reference orders carry a table's row keys on every
-order (`row_keys`), `show` lists them and `schema` lines flag them.
+spelling covers. A key that changes by era is each era's variable keyed. Source readers
+never state it; a segment holds it from its covering occurrences. It is not a role: a key
+column keeps its code or measure role. `identifier` never makes one (maintainer
+2026-11-14): names, addresses, other persons' ids and property or family ids in a person
+table are identifiers but not keys. A table with no unit id has no key. A steward's keys
+stay its declared `[[table.key]]` (below). Reference orders carry a table's row keys on
+every order (`row_keys`), `show` lists them and `schema` lines flag them.
 
 **Time.**
 
