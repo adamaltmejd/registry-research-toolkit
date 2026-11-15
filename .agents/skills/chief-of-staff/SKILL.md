@@ -52,6 +52,10 @@ GitHub enforces no checks, so confirm all three on the head you merge:
 1. CI green.
 2. Codex review:
    `codex exec -C <worktree> -s read-only 'Use $review-agent to review the changes on this branch against base branch origin/main'`.
+   Run it bare: no `cd`, `timeout`, environment-variable prefix, `&&` chain or output
+   redirect. The sandbox exclusion `codex *` (in `.claude/settings.local.json`) matches
+   the start of the command text, and a redirect also breaks it; inside the sandbox Codex
+   fails with "Operation not permitted".
    If Codex can't start, a fresh Opus agent, noted in the PR.
 3. UI changes: a rendered `reg-webapp-design-reviewer` pass by a fresh agent.
 
