@@ -994,3 +994,28 @@ kind = "set"
 subject = "individer: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+
+[[statement]]
+kind = "assert"
+subject = "table:arbetsstallen-deso"
+fact = { entity = "table", fields = { name = "DeSO för arbetsställen", coverage = "2023" } }
+evidence = "https://www.scb.se/vara-tjanster/bestall-data-och-statistik/mikrodata/aktuellt/ — 2025-11-14, Arbetsställen: DeSO_2018 för årgång 2023. Maintainer ruling 2026-11-15: admit workplace DeSO 2023 in scb/gdb."
+
+[[statement]]
+kind = "assert"
+subject = "arbetsstallen-deso: DeSO @2023 where key = 'v37894'"
+fact = { entity = "occurrence", fields = { label = "Demografiskt statistikområde", type = "text", length = 9 } }
+evidence = "https://www.scb.se/vara-tjanster/bestall-data-och-statistik/mikrodata/aktuellt/ — 2025-11-14, Arbetsställen: DeSO_2018 för arbetsställens belägenhet, årgång 2023."
+
+[[statement]]
+kind = "assert"
+subject = "arbetsstallen-deso: CfarLopNr @2023"
+fact = { entity = "occurrence", fields = { label = "Löpnummer för arbetsställe", type = "text", length = 8, identifier = true } }
+evidence = "private:ev-3908"
+
+[[statement]]
+kind = "set"
+subject = "arbetsstallen-deso: var:lopnummer-for-arbetsstalle"
+fields.row_key = true
+evidence = "private:ev-3908"

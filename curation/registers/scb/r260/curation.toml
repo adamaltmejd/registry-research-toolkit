@@ -4078,3 +4078,9 @@ kind = "set"
 subject = "sokande-antagna-1985-1993: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: the table is about one applicant; school choices are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "assert"
+subject = "sokande-antagna-1985-1993: PersonNr @1985..1990 where key = 'v57'"
+fact = { entity = "occurrence", fields = { label = "Personnummer", identifier = true } }
+evidence = "private:ev-3906"

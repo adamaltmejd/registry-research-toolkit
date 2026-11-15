@@ -887,3 +887,18 @@ public = "lisa"
 "posttyp" = ["Indvider in- och utvandring: PostTyp"]
 "utlandsk-svensk-bakgrund" = ["Individer födelseland: UtlSvBakg"]
 "utlandsk-svensk-bakgrund-alternativ-indelning" = ["Individer födelseland: UtlSvBakgAlt"]
+
+# Nya kolumner i SCB:s LISA-förteckning för 2024.
+"harledd-medborgarskapsmanad" = ["Individer, 15 år och äldre: MedbMan_harledd"]
+"hushallsstallning-enligt-iot-med-vaxelvis-boende-barn" = ["Individer, 15 år och äldre: HushallsSt_IoTVX"]
+"hushallstyp-enligt-iot-med-vaxelvis-boende-barn" = ["Individer, 15 år och äldre: HushallsTyp_IoTVX"]
+"utdelning-famansforetag" = ["Individer, 15 år och äldre: CUTDK10"]
+"utlandskt-beskattad-nordisk-lon-bas" = ["Individer, 15 år och äldre: TTJLONU_BAS"]
+"utlandskt-beskattad-nordisk-lon-iot" = ["Individer, 15 år och äldre: TTJLONU_IoT"]
+"tillfallig-foraldrapenning-bruttodagar-enligt-midas" = ["Individer, 15 år och äldre: TfForPeng_Bdag_MiDAS"]
+"tillfallig-foraldrapenning-nettodagar-enligt-midas" = ["Individer, 15 år och äldre: TfForPeng_Ndag_MiDAS"]
+"tillfallig-foraldrapenning-ersattningsbelopp-enligt-midas" = ["Individer, 15 år och äldre: TfForPeng_Belopp_MiDAS"]
+"statlig-ersattning-vid-etableringsjobb" = ["Individer, 15 år och äldre: TETABJ"]
+"disponibel-inkomst-med-vaxelvis-boende-barn" = ["Individer, 15 år och äldre: DispInkKE04VX"]
+"bortfall-i-resultatrakningen" = ["Företag: Ftg_BortfallRR"]
+"bortfall-i-balansrakningen" = ["Företag: Ftg_BortfallBR"]
