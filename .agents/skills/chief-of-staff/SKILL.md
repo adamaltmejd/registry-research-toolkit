@@ -17,27 +17,30 @@ question tool in the COS session; decide what an earlier ruling settles.
 ## Launch
 
 One worker session per task, started from the COS session, each in its own git worktree
-(in the Claude desktop app these show as linked sessions under the COS session).
+and in auto permission mode.
 
-- Brief with a self-contained prompt; when it is long, write it to a file the worker's
-  worktree can read and brief by that path.
+- Brief with a self-contained prompt; when it is long, write it to a path the worker can
+  read and brief by that path.
 - Opus for design-heavy or large work, Sonnet for docs and mechanical edits.
 - Don't run two workers on the same contract surface or generated files (`curation.lock`,
   schemas).
-- To continue a branch, start a new worktree session that runs `git fetch`,
+- Never reopen a finished or archived worker: a reopened worker can't remove its
+  worktree. To continue a branch, start a new worktree session that runs `git fetch`,
   `git reset --hard origin/<branch>` and pushes to `HEAD:<branch>`. The reset fails if
   the branch changes anything under `.claude/` (sandbox-protected: new skill links,
   settings, hooks); then drop the branch and redo the work from main.
 
 Every brief says:
-- Ask the COS and wait for its go before `gate.sh all`, flows or a real-seed build (one
-  heavy run at a time).
-- Open the PR, don't merge; put the PR number at the top of your final report.
+- Before `gate.sh all`, flows or a real-seed build (one heavy run at a time), report the
+  request, end your turn and wait for the COS's message. Never poll, and never run it
+  without the go.
+- Open the PR, don't merge; put the PR number at the top of the report you give once the
+  PR is open.
 - Stop your own servers before you finish. Don't exit or remove the worktree until told.
 
 ## Monitor
 
-- Follow each worker through its session reports.
+- Follow each worker's messages in its session.
 - Steer it with a follow-up message to that session. Point to a file for anything long.
 - One background `gh pr checks <n> --watch --fail-fast` per PR once it opens.
 - Never `pkill`/`killall`.
