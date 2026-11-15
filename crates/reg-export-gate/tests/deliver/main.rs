@@ -177,3 +177,40 @@ fn an_output_configured_inside_the_destination_overlaps() {
     d.write_project(&project);
     assert_eq!(export(&d, &receipt), Err((Code::Setup, "paths_overlap")));
 }
+
+#[test]
+fn a_schema_with_check_only_columns_is_not_delivered() {
+    // Regression: delivery re-checks only the exported columns, so it cannot
+    // re-prove the rules on the true figures; a check-only schema delivered
+    // anyway would leave those rules unenforced where `export` is the guard.
+    let cases = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .join("../../reg_export_gate/tests/cases/pass-check-only");
+    let d = Deployment::new("deliver-check-only");
+    let destination = d.root.join("destination");
+    std::fs::create_dir(&destination).expect("a destination");
+    chmod(&destination, 0o755);
+    let schemas = d.config.join("schemas");
+    for (from, to) in [
+        ("schema.json", "trial.schema.json"),
+        ("policy.json", "trial.policy.json"),
+    ] {
+        std::fs::copy(cases.join(from), schemas.join(to)).expect("a copy");
+        chmod(&schemas.join(to), 0o644);
+    }
+    let case: Value =
+        serde_json::from_slice(&std::fs::read(cases.join("case.json")).expect("case"))
+            .expect("JSON");
+    std::fs::remove_dir_all(&d.staging).expect("the trial staging");
+    materialize::materialize(
+        &d.staging,
+        case["candidate"].as_object().expect("a candidate"),
+    );
+    // Server-mode `check` passes it (advisory); `export` refuses it.
+    assert_eq!(d.check("trial"), Ok(1));
+    let receipt = sha256(&std::fs::read(d.root.join("output").join(RECEIPT)).expect("a receipt"));
+    assert_eq!(
+        export(&d, &receipt),
+        Err((Code::Setup, "check_only_unsupported"))
+    );
+    assert_eq!(entries(&destination), 0);
+}

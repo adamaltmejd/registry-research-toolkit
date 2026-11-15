@@ -5,6 +5,13 @@
 //! suppressed could carry a value. Null-ness is Arrow's validity, which is
 //! exactly what the rewrite writes. A policy may also bound a statistic: the
 //! smallest support it may rest on, and the significant digits of a double.
+//!
+//! Check-only columns hold the true figures behind published ones. A count's
+//! `units` is the true number of units behind it, a statistic's truth is the
+//! units of its support (or the support itself when that is check-only), and a
+//! share's numerator and denominator are true counts. The rules test those
+//! truths beside the published figures, whose floors stay. Integer rules
+//! compare in `i128`, so no sum or difference of two `int64` values wraps.
 
 use arrow_array::cast::AsArray;
 use arrow_array::types::{Float64Type, Int32Type, Int64Type};
@@ -12,7 +19,7 @@ use arrow_array::{Array, ArrayRef};
 use arrow_schema::DataType;
 
 use crate::structure::Candidate;
-use crate::{Code, ColumnType, Finding, Policy, Refusal, Role};
+use crate::{Code, Column, ColumnType, Finding, Policy, Refusal, Role};
 
 /// An integer column's cells, widened; the structure check admitted only
 /// `int32` and `int64` for an integer column.
@@ -40,9 +47,152 @@ fn rounded(v: f64, digits: u32) -> bool {
     format!("{v:.precision$e}").parse::<f64>() == Ok(v)
 }
 
+/// Whether `n` is below the minimum `min`.
+fn below(n: i64, min: u64) -> bool {
+    i128::from(n) < i128::from(min)
+}
+
+/// One decoded file: its columns by schema name.
+struct Table<'a> {
+    cand: &'a Candidate,
+}
+
+impl Table<'_> {
+    fn spec(&self, name: &str) -> &Column {
+        let at = self
+            .cand
+            .spec
+            .position(name)
+            .expect("the schema check found it");
+        &self.cand.spec.columns[at]
+    }
+
+    fn integers(&self, name: &str) -> Vec<Option<i64>> {
+        let at = self
+            .cand
+            .spec
+            .position(name)
+            .expect("the schema check found it");
+        integers(&self.cand.columns[at])
+    }
+}
+
+/// A count against its `units`: a non-null count has a non-null truth of at
+/// least `min_cell_count`, and a person count lies within its declared
+/// perturbation of its units, which are its truth.
+fn count_truth(
+    findings: &mut Vec<Finding>,
+    file: &str,
+    col: &Column,
+    published: &[Option<i64>],
+    units: &[Option<i64>],
+    policy: &Policy,
+) {
+    let rows = || published.iter().zip(units).filter(|(p, _)| p.is_some());
+    if rows().any(|(_, u)| u.is_none()) {
+        findings.push(Finding::column("unsupported_count", file, &col.name));
+    }
+    if rows().any(|(_, u)| u.is_some_and(|u| below(u, policy.min_cell_count))) {
+        findings.push(Finding::column("count_units_too_small", file, &col.name));
+    }
+    if col.role == Role::PersonCount {
+        let d = i128::from(col.perturbation.unwrap_or(0));
+        let beyond = rows().any(|(p, u)| match (p, u) {
+            (Some(p), Some(u)) => (i128::from(*p) - i128::from(*u)).abs() > d,
+            _ => false,
+        });
+        if beyond {
+            findings.push(Finding::column(
+                "count_perturbation_exceeded",
+                file,
+                &col.name,
+            ));
+        }
+    }
+}
+
+/// A statistic or share against its support: null wherever the support or
+/// its truth is null, and, under a minimum (the policy's, raised by the
+/// column's own), resting on a published support and a truth of at least it.
+fn statistic_support(
+    findings: &mut Vec<Finding>,
+    table: &Table,
+    col: &Column,
+    array: &ArrayRef,
+    policy: &Policy,
+) {
+    let file = table.cand.spec.name.as_str();
+    let support_name = col
+        .support
+        .as_deref()
+        .expect("a statistic names its support");
+    let support = table.integers(support_name);
+    let support_spec = table.spec(support_name);
+    // A check-only support is its own truth; a count's truth is its units.
+    let truth = match (support_spec.role, &support_spec.units) {
+        (Role::CheckOnly, _) => Some(support.clone()),
+        (_, Some(units)) => Some(table.integers(units)),
+        (_, None) => None,
+    };
+    let at = |v: &Option<Vec<Option<i64>>>, i: usize| v.as_ref().map(|t| t[i]);
+    let rows = || (0..array.len()).filter(|&i| array.is_valid(i));
+    if rows().any(|i| support[i].is_none() || at(&truth, i) == Some(None)) {
+        findings.push(Finding::column("unsupported_statistic", file, &col.name));
+    }
+    let min = match (policy.statistic_min_support, col.min_support) {
+        (Some(a), Some(b)) => Some(a.max(b)),
+        (a, b) => a.or(b),
+    };
+    if let Some(min) = min {
+        let small = rows().any(|i| {
+            support[i].is_some_and(|n| below(n, min))
+                || at(&truth, i).flatten().is_some_and(|n| below(n, min))
+        });
+        if small {
+            findings.push(Finding::column(
+                "statistic_support_too_small",
+                file,
+                &col.name,
+            ));
+        }
+    }
+}
+
+/// A share's own rules: a non-null share has a non-null numerator `k` and
+/// denominator `n`, and neither `k` nor its complement `n − k` is a small cell
+/// (1 to `min_cell_count − 1`) or negative.
+fn share_cells(
+    findings: &mut Vec<Finding>,
+    table: &Table,
+    col: &Column,
+    array: &ArrayRef,
+    policy: &Policy,
+) {
+    let file = table.cand.spec.name.as_str();
+    let k = table.integers(col.numerator.as_deref().expect("a share's numerator"));
+    let n = table.integers(col.denominator.as_deref().expect("a share's denominator"));
+    let min = i128::from(policy.min_cell_count);
+    let small = |x: i128| x < 0 || (1..min).contains(&x);
+    let rows = || (0..array.len()).filter(|&i| array.is_valid(i));
+    if rows().any(|i| k[i].is_none() || n[i].is_none()) {
+        findings.push(Finding::column("unsupported_share", file, &col.name));
+    }
+    let bad = rows().any(|i| match (k[i], n[i]) {
+        (Some(k), Some(n)) => {
+            let (k, n) = (i128::from(k), i128::from(n));
+            small(k) || small(n - k)
+        }
+        _ => false,
+    });
+    if bad {
+        findings.push(Finding::column("share_cell_too_small", file, &col.name));
+    }
+}
+
 pub(crate) fn check(candidates: &[Candidate], policy: &Policy) -> Result<(), Refusal> {
     let mut findings = Vec::new();
     for cand in candidates {
+        let table = Table { cand };
         let file = cand.spec.name.as_str();
         for (col, array) in cand.spec.columns.iter().zip(&cand.columns) {
             if col.ty == ColumnType::Double
@@ -55,38 +205,23 @@ pub(crate) fn check(candidates: &[Candidate], policy: &Policy) -> Result<(), Ref
                 findings.push(Finding::column("nan_value", file, &col.name));
             }
             if col.role.is_count() {
+                let published = integers(array);
                 // A negative count is below any minimum.
-                let below = |v: i64| u64::try_from(v).map_or(true, |v| v < policy.min_cell_count);
-                if integers(array).into_iter().flatten().any(below) {
+                if published
+                    .iter()
+                    .flatten()
+                    .any(|&v| below(v, policy.min_cell_count))
+                {
                     findings.push(Finding::column("min_cell_count", file, &col.name));
                 }
-            } else if col.role == Role::Statistic {
-                let support = col
-                    .support
-                    .as_deref()
-                    .expect("a statistic names its support");
-                let at = cand
-                    .spec
-                    .columns
-                    .iter()
-                    .position(|c| c.name == support)
-                    .expect("the schema check found the support");
-                let support = &cand.columns[at];
-                if (0..array.len()).any(|i| array.is_valid(i) && support.is_null(i)) {
-                    findings.push(Finding::column("unsupported_statistic", file, &col.name));
+                if let Some(units) = &col.units {
+                    let units = table.integers(units);
+                    count_truth(&mut findings, file, col, &published, &units, policy);
                 }
-                if let Some(min) = policy.statistic_min_support {
-                    let small = integers(support).into_iter().enumerate().any(|(i, n)| {
-                        array.is_valid(i)
-                            && n.is_some_and(|n| u64::try_from(n).map_or(true, |n| n < min))
-                    });
-                    if small {
-                        findings.push(Finding::column(
-                            "statistic_support_too_small",
-                            file,
-                            &col.name,
-                        ));
-                    }
+            } else if col.role.is_statistic() {
+                statistic_support(&mut findings, &table, col, array, policy);
+                if col.role == Role::Share {
+                    share_cells(&mut findings, &table, col, array, policy);
                 }
                 if let Some(digits) = policy.statistic_significant_digits
                     && col.ty == ColumnType::Double

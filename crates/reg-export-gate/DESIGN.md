@@ -194,6 +194,14 @@ passing set during the review and swap in another before the hash or the export.
    and the folder is removed). If that folder exists, the receipt was exported before:
    it is re-verified the same way and nothing is written.
 
+**Known limit: check-only columns are not delivered** (maintainer, 2026-11-15). The
+output holds no check-only columns, so step 3 could re-check only the published figures
+and not re-prove the rules on the true ones. Server-mode `check` is advisory and
+`export` is the guard, so a rule `export` cannot enforce must fail closed: `export`
+refuses any schema with a check-only column (`check_only_unsupported`, setup) before it
+reads the output. A server-mode project that needs those rules waits for a delivery
+step that can enforce them (for example, one that re-reads staging).
+
 Delivery rules, Rust only: `receipt_mismatch`, `destination_writable`, `hash_mismatch`.
 `export` writes no report: its reader is the reviewer, on stderr. Ownership and mode
 bits are what the gate reads. An ACL that grants the pipeline's user write access
@@ -213,3 +221,10 @@ the policy's two optional statistic rules (`statistic_support_too_small`,
 `statistic_not_rounded`) for the mock-stats pair. R reads a rounded rendering back
 through jsonlite (C `strtod`), since `as.numeric` is not correctly rounded at extreme
 exponents.
+
+The R file may lag. 0.5.0 (check-only columns, the truth rules, `units_required`) is
+Rust only (maintainer, 2026-11-15): R follows when a MONA project needs those rules.
+Until then the R gate refuses such schemas, since its objects are closed, and its corpus
+run skips the cases marked `gate_min` 0.5.0. Integer truth rules compare in `i128`
+here. R has no `i128`, so a port must use checked Arrow arithmetic and turn an
+overflow into the rule's finding, never into `internal_error`.

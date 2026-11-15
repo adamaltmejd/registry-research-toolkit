@@ -15,7 +15,7 @@ use arrow_array::{Array, ArrayRef};
 use arrow_schema::DataType;
 
 use crate::structure::Candidate;
-use crate::{Code, ColumnType, Finding, Refusal};
+use crate::{Code, ColumnType, Finding, Refusal, Role};
 
 fn two(d: &[u8]) -> u8 {
     (d[0] - b'0') * 10 + (d[1] - b'0')
@@ -124,6 +124,10 @@ pub(crate) fn check(candidates: &[Candidate]) -> Result<(), Refusal> {
     let mut findings = Vec::new();
     for cand in candidates {
         for (col, array) in cand.spec.columns.iter().zip(&cand.columns) {
+            // A check-only value is never exported, so it is not scanned.
+            if col.role == Role::CheckOnly {
+                continue;
+            }
             if texts(array, col.ty).iter().any(|t| identifier_shape(t)) {
                 findings.push(Finding::column(
                     "identifier_pattern",

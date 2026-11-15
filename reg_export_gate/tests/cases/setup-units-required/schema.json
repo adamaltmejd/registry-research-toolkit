@@ -1,0 +1,67 @@
+{
+  "format": "reg-export-gate/schema",
+  "format_version": 1,
+  "name": "check-only",
+  "version": 1,
+  "description": "Corpus schema: counts with their true units, a share over true counts, deciles with a raised minimum.",
+  "files": [
+    {
+      "name": "cells.parquet",
+      "columns": [
+        {
+          "name": "group",
+          "type": "string",
+          "role": "dimension"
+        },
+        {
+          "name": "units_true",
+          "type": "integer",
+          "role": "check_only"
+        },
+        {
+          "name": "k_true",
+          "type": "integer",
+          "role": "check_only"
+        },
+        {
+          "name": "n_true",
+          "type": "integer",
+          "role": "check_only"
+        },
+        {
+          "name": "n_rows",
+          "type": "integer",
+          "role": "count"
+        },
+        {
+          "name": "n_persons",
+          "type": "integer",
+          "role": "person_count",
+          "units": "units_true",
+          "perturbation": 2
+        },
+        {
+          "name": "share",
+          "type": "double",
+          "role": "share",
+          "support": "n_rows",
+          "numerator": "k_true",
+          "denominator": "n_true"
+        },
+        {
+          "name": "p50",
+          "type": "double",
+          "role": "statistic",
+          "support": "n_rows"
+        },
+        {
+          "name": "p10",
+          "type": "double",
+          "role": "statistic",
+          "support": "n_rows",
+          "min_support": 10
+        }
+      ]
+    }
+  ]
+}

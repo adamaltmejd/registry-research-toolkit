@@ -47,6 +47,56 @@ fn json_finding(f: &Value) -> Finding {
     }
 }
 
+/// `major.minor.patch` as a comparable triple.
+fn semver(v: &str) -> (u64, u64, u64) {
+    let mut parts = v
+        .split('.')
+        .map(|p| p.parse::<u64>().expect("a version part"));
+    let mut next = || parts.next().expect("three version parts");
+    (next(), next(), next())
+}
+
+/// Each schema file's name and its exported columns: all but the check-only ones.
+fn exported_columns(schema: &Value) -> Vec<(String, Vec<String>)> {
+    schema["files"]
+        .as_array()
+        .into_iter()
+        .flatten()
+        .map(|file| {
+            let exported = file["columns"]
+                .as_array()
+                .into_iter()
+                .flatten()
+                .filter(|col| col["role"] != "check_only")
+                .map(|col| col["name"].as_str().expect("a column name").to_owned())
+                .collect();
+            (file["name"].as_str().expect("a name").to_owned(), exported)
+        })
+        .collect()
+}
+
+/// The case's sentinel truths: distinctive values its check-only columns
+/// hold, as decimal text and as little-endian `int64` bytes (the rewrite
+/// writes integers as uncompressed `int64`).
+fn sentinel_needles(case: &Value) -> Vec<(i64, Vec<Vec<u8>>)> {
+    case["sentinels"]
+        .as_array()
+        .into_iter()
+        .flatten()
+        .map(|v| {
+            let v = v.as_i64().expect("an integer sentinel");
+            (
+                v,
+                vec![v.to_string().into_bytes(), v.to_le_bytes().to_vec()],
+            )
+        })
+        .collect()
+}
+
+fn holds(haystack: &[u8], needle: &[u8]) -> bool {
+    haystack.windows(needle.len()).any(|w| w == needle)
+}
+
 /// Finding order is not part of the contract (the R runner sorts too).
 fn sorted(mut findings: Vec<Finding>) -> Vec<Finding> {
     findings.sort_by_key(|f| (f.file.clone(), f.column.clone(), f.position, f.rule));
@@ -279,6 +329,19 @@ fn expect_binary(f: &mut Failures, name: &str, case_dir: &Path, case: &Value, li
     });
 }
 
+/// An exported file's column names, decoded.
+fn column_names(bytes: Vec<u8>) -> Vec<String> {
+    let reader = SerializedFileReader::new(Bytes::from(bytes)).expect("an exported Parquet file");
+    reader
+        .metadata()
+        .file_metadata()
+        .schema_descr()
+        .columns()
+        .iter()
+        .map(|c| c.name().to_owned())
+        .collect()
+}
+
 fn kv_metadata_free(bytes: Vec<u8>) -> bool {
     let reader = SerializedFileReader::new(Bytes::from(bytes)).expect("an exported Parquet file");
     reader
@@ -386,11 +449,18 @@ fn expect_pass(
             let found = bytes.windows(value.len()).any(|w| w == value.as_bytes());
             f.check(!found, || format!("{file} holds {value:?}"));
         }
-        f.check(kv_metadata_free(bytes), || {
+        f.check(kv_metadata_free(bytes.clone()), || {
             format!("{file} has key-value metadata")
         });
+        // The decoded columns are the schema's, less its check-only ones.
+        let exported: Vec<String> = exported_columns(&schema)
+            .into_iter()
+            .find(|(name, _)| name == file)
+            .map_or_else(Vec::new, |(_, exported)| exported);
+        f.check(column_names(bytes) == exported, || {
+            format!("{file} does not hold exactly the exported columns")
+        });
     }
-    // The receipt's hashes are those of the files as they landed.
     let receipt_bytes = std::fs::read(run.output.join(RECEIPT)).expect("a receipt");
     let receipt: Value = serde_json::from_slice(&receipt_bytes).expect("receipt JSON");
     // Top-level keys in the format's order, read from the text: a parsed map
@@ -414,31 +484,30 @@ fn expect_pass(
             && receipt.as_object().is_some_and(|m| m.len() == 6),
         || "receipt keys not the format's".into(),
     );
-    f.check(receipt["gate"]["version"] == VERSION, || {
-        "receipt gate version".into()
-    });
+    // The receipt is exactly its golden: these fields and no others, so no
+    // value can ride in it, and its hashes are those of the files as they
+    // landed.
     let file_hash = |p: &Path| sha256(&std::fs::read(p).expect("bytes"));
-    f.check(
-        receipt["schema"]["sha256"] == file_hash(schema_path),
-        || "receipt schema hash".into(),
-    );
     let policy_path = run.policy.as_deref().expect("a pass has a policy");
-    f.check(
-        receipt["policy"]["sha256"] == file_hash(policy_path),
-        || "receipt policy hash".into(),
-    );
-    let files = receipt["files"].as_array().expect("receipt files");
-    let names: Vec<&str> = files
-        .iter()
-        .filter_map(|file| file["name"].as_str())
-        .collect();
-    f.check(names == declared, || format!("receipt names {names:?}"));
-    for file in files {
-        let name = file["name"].as_str().unwrap_or_default();
-        f.check(file["sha256"] == file_hash(&run.output.join(name)), || {
-            format!("receipt hash of {name}")
-        });
-    }
+    let policy: Value =
+        serde_json::from_slice(&std::fs::read(policy_path).expect("policy")).expect("policy JSON");
+    let golden = serde_json::json!({
+        "format": "reg-export-gate/receipt",
+        "format_version": 1,
+        "gate": { "implementation": "rust", "version": VERSION },
+        "schema": {
+            "name": schema["name"], "version": schema["version"],
+            "sha256": file_hash(schema_path),
+        },
+        "policy": {
+            "name": policy["name"], "version": policy["version"],
+            "sha256": file_hash(policy_path),
+        },
+        "files": declared.iter().map(|name| serde_json::json!({
+            "name": name, "sha256": file_hash(&run.output.join(name)),
+        })).collect::<Vec<_>>(),
+    });
+    f.check(receipt == golden, || "receipt not its golden".into());
     // Deterministic: a second run over the same candidate writes the same bytes.
     let again = run_case(name, case_dir, case, 2);
     f.check(
@@ -465,11 +534,48 @@ fn expect_case(name: &str, case_dir: &Path, case: &Value) -> Vec<String> {
             format!("report holds {value:?}")
         });
     }
+    // The report is exactly its golden: the gate version, the result, the
+    // code and the findings the case expects (compared below), nothing more.
+    let refused = case["expect"]["result"] == "refused";
+    f.check(
+        report.as_object().is_some_and(|r| {
+            r.keys().map(String::as_str).collect::<BTreeSet<_>>()
+                == BTreeSet::from(["code", "findings", "gate_version", "result"])
+        }) && report["gate_version"] == VERSION
+            && report["result"] == if refused { "refused" } else { "pass" }
+            && (refused || report["code"].is_null())
+            && report["findings"].as_array().is_some_and(|fs| {
+                fs.iter().all(|f| {
+                    f.as_object().is_some_and(|f| {
+                        f.keys().map(String::as_str).collect::<BTreeSet<_>>()
+                            == BTreeSet::from(["column", "file", "position", "rule"])
+                    })
+                })
+            }),
+        || format!("report not its golden: {report_text}"),
+    );
+    // Sentinel truths reach neither the report nor any file the gate wrote.
+    let written: Vec<(String, Vec<u8>)> =
+        std::iter::once(("report".to_owned(), report_text.clone().into_bytes()))
+            .chain(
+                output_snapshot(&run.output)
+                    .into_iter()
+                    .flatten()
+                    .filter_map(|(name, bytes)| bytes.map(|b| (name, b))),
+            )
+            .collect();
+    for (value, needles) in sentinel_needles(case) {
+        for (name, bytes) in &written {
+            f.check(!needles.iter().any(|n| holds(bytes, n)), || {
+                format!("{name} holds the sentinel {value}")
+            });
+        }
+    }
     // Pass or refusal, staging is left as it was.
     f.check(snapshot(&run.staging) == run.staged, || {
         "staging changed".into()
     });
-    if case["expect"]["result"] == "refused" {
+    if refused {
         expect_refused(&mut f, case, &run, &report);
     } else {
         expect_pass(&mut f, name, case_dir, case, &run, &report);
@@ -492,6 +598,14 @@ fn corpus() {
         let case: Value =
             serde_json::from_slice(&std::fs::read(case_dir.join("case.json")).expect("case.json"))
                 .expect("JSON");
+        // The reference implements every case: one written for a later gate
+        // than this one fails rather than being skipped (the R runner skips).
+        if let Some(min) = case["gate_min"].as_str()
+            && semver(min) > semver(VERSION)
+        {
+            failures.push(format!("{name}: needs gate {min}, this is {VERSION}"));
+            continue;
+        }
         for failure in expect_case(&name, case_dir, &case) {
             failures.push(format!("{name}: {failure}"));
         }

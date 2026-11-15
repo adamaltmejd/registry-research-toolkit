@@ -1,0 +1,100 @@
+{
+  "gate_min": "0.5.0",
+  "description": "A published count whose true units are null refuses: a forgotten check-only column cannot pass as not applicable.",
+  "schema": "../pass-check-only/schema.json",
+  "policy": "../pass-check-only/policy.json",
+  "candidate": {
+    "cells.parquet": {
+      "columns": [
+        {
+          "name": "group",
+          "type": "string",
+          "values": [
+            "Stockholm",
+            "Uppsala"
+          ]
+        },
+        {
+          "name": "units_true",
+          "type": "int64",
+          "values": [
+            7340033,
+            null
+          ]
+        },
+        {
+          "name": "k_true",
+          "type": "int64",
+          "values": [
+            3670017,
+            0
+          ]
+        },
+        {
+          "name": "n_true",
+          "type": "int64",
+          "values": [
+            7340034,
+            7
+          ]
+        },
+        {
+          "name": "n_rows",
+          "type": "int32",
+          "values": [
+            7340041,
+            9
+          ]
+        },
+        {
+          "name": "n_persons",
+          "type": "int64",
+          "values": [
+            7340035,
+            5
+          ]
+        },
+        {
+          "name": "share",
+          "type": "double",
+          "values": [
+            0.5,
+            null
+          ]
+        },
+        {
+          "name": "p50",
+          "type": "double",
+          "values": [
+            1.5,
+            null
+          ]
+        },
+        {
+          "name": "p10",
+          "type": "double",
+          "values": [
+            1,
+            null
+          ]
+        }
+      ]
+    }
+  },
+  "expect": {
+    "result": "refused",
+    "code": "disclosure",
+    "findings": [
+      {
+        "file": "cells.parquet",
+        "column": "n_rows",
+        "rule": "unsupported_count"
+      },
+      {
+        "file": "cells.parquet",
+        "column": "n_persons",
+        "rule": "unsupported_count"
+      }
+    ]
+  }
+}

@@ -10,7 +10,7 @@ use std::time::{SystemTime, UNIX_EPOCH};
 use crate::config::{self, owner};
 use crate::export::{apart_from_roots, place, rewritten};
 use crate::structure::{self, Outcome};
-use crate::{Code, Finding, RECEIPT, Refusal, backstop, disclosure, schema, sha256_hex};
+use crate::{Code, Finding, RECEIPT, Refusal, Role, backstop, disclosure, schema, sha256_hex};
 
 /// Hex digits of the receipt's hash that name the export's folder at the
 /// destination.
@@ -126,6 +126,17 @@ pub(crate) fn export(config_dir: &Path, name: &str, receipt: &str) -> Result<Pat
         None => return Err(setup("output_parent_missing")),
     }
     let schema = schema::load_schema(Some(&project.schema))?;
+    // Delivery re-checks the output, which has no check-only columns, so it
+    // cannot re-prove the rules on the true figures. Server-mode `check` is
+    // advisory and `export` is the guard, so such a schema fails closed here.
+    if schema
+        .files
+        .iter()
+        .flat_map(|f| &f.columns)
+        .any(|c| c.role == Role::CheckOnly)
+    {
+        return Err(setup("check_only_unsupported"));
+    }
     let policy = schema::load_policy(Some(&project.policy), &schema)?;
 
     // The output, read once: exactly the schema's files and a receipt, the

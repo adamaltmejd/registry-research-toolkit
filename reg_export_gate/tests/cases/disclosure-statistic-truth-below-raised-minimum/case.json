@@ -1,0 +1,95 @@
+{
+  "gate_min": "0.5.0",
+  "description": "A decile with min_support 10 resting on a published count of 12 but 9 true persons refuses: the raised minimum is tested on the truth, not only on the perturbed support.",
+  "schema": "../pass-check-only/schema.json",
+  "policy": "../pass-check-only/policy.json",
+  "candidate": {
+    "cells.parquet": {
+      "columns": [
+        {
+          "name": "group",
+          "type": "string",
+          "values": [
+            "Stockholm",
+            "Uppsala"
+          ]
+        },
+        {
+          "name": "units_true",
+          "type": "int64",
+          "values": [
+            7340033,
+            9
+          ]
+        },
+        {
+          "name": "k_true",
+          "type": "int64",
+          "values": [
+            3670017,
+            0
+          ]
+        },
+        {
+          "name": "n_true",
+          "type": "int64",
+          "values": [
+            7340034,
+            7
+          ]
+        },
+        {
+          "name": "n_rows",
+          "type": "int32",
+          "values": [
+            7340041,
+            12
+          ]
+        },
+        {
+          "name": "n_persons",
+          "type": "int64",
+          "values": [
+            7340035,
+            9
+          ]
+        },
+        {
+          "name": "share",
+          "type": "double",
+          "values": [
+            0.5,
+            0
+          ]
+        },
+        {
+          "name": "p50",
+          "type": "double",
+          "values": [
+            1.5,
+            2
+          ]
+        },
+        {
+          "name": "p10",
+          "type": "double",
+          "values": [
+            1,
+            1
+          ]
+        }
+      ]
+    }
+  },
+  "expect": {
+    "result": "refused",
+    "code": "disclosure",
+    "findings": [
+      {
+        "file": "cells.parquet",
+        "column": "p10",
+        "rule": "statistic_support_too_small"
+      }
+    ]
+  }
+}

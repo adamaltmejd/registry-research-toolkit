@@ -1,0 +1,13 @@
+{
+  "format": "reg-export-gate/policy",
+  "format_version": 1,
+  "name": "check-only-min5",
+  "version": 1,
+  "schema": {
+    "name": "check-only",
+    "version": 1
+  },
+  "min_cell_count": 5,
+  "statistic_min_support": 5,
+  "count_units_required": true
+}
