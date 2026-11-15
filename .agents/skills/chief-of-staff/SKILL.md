@@ -75,16 +75,23 @@ The agent token has no `workflow` scope: the maintainer pushes commits that touc
 After every merge, for your own workers only:
 
 1. `gh pr view <n> --json state,headRefOid` shows `MERGED`.
-2. The desktop app archives the session on merge; if it did not, archive it. Archiving
+2. The desktop app archives the session on merge; if it did not, archive it. In auto
+   mode the first `archive_session` call can be refused because a hook adds a `session`
+   label to the input after auto mode reviewed it: resend once with exactly the input the
+   refusal quotes. Archiving
    detaches the worktree's HEAD and keeps the worktree in the app's pool for a later
    session (the app reuses or deletes it): a detached worktree under `.claude/worktrees/`
    is not a leftover. Workers never call ExitWorktree; it only removes worktrees a session
    made itself.
 3. Archiving leaves the local branch (`claude/<name>-<suffix>`): delete it with
-   `git branch -D <branch>` (the "could not lock config file" warnings are harmless).
+   `git branch -D <branch>` (the `error: could not lock config file .git/config` and
+   `warning: update of config-file failed` lines are expected; the delete succeeded when
+   git prints `Deleted branch <branch>`).
    Delete the remote branch if it is still there (GitHub normally deletes merged head
    branches).
 4. A worktree still on its branch after archiving goes to the maintainer as one exact `!`
-   command, e.g. `git worktree remove .claude/worktrees/<name> && git branch -D <branch>`.
+   command, e.g. `git worktree remove <path> && git branch -D <branch>`. Worktree folders
+   are pooled and reused, so the folder name need not match the session or branch: take
+   `<path>` from `git worktree list` (or the worker's `pwd`), not from the branch name.
    No loops over `.claude/worktrees/agent-*`. Add `--force` only when the extras were read
    and are disposable (e.g. an ignored `target/`).
