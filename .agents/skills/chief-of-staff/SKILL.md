@@ -78,11 +78,10 @@ After every merge, for your own workers only:
 2. The desktop app archives the session on merge; if it did not, archive it. In auto
    mode the first `archive_session` call can be refused because a hook adds a `session`
    label to the input after auto mode reviewed it: resend once with exactly the input the
-   refusal quotes. Archiving
-   detaches the worktree's HEAD and keeps the worktree in the app's pool for a later
-   session (the app reuses or deletes it): a detached worktree under `.claude/worktrees/`
-   is not a leftover. Workers never call ExitWorktree; it only removes worktrees a session
-   made itself.
+   refusal quotes. Archiving detaches the worktree's HEAD and keeps the worktree in the
+   app's pool for a later session (the app reuses or deletes it): a detached worktree
+   under `.claude/worktrees/` is not a leftover. Workers never call ExitWorktree; it only
+   removes worktrees a session made itself.
 3. Archiving leaves the local branch (`claude/<name>-<suffix>`): delete it with
    `git branch -D <branch>` (the `error: could not lock config file .git/config` and
    `warning: update of config-file failed` lines are expected; the delete succeeded when
@@ -95,3 +94,9 @@ After every merge, for your own workers only:
    `<path>` from `git worktree list` (or the worker's `pwd`), not from the branch name.
    No loops over `.claude/worktrees/agent-*`. Add `--force` only when the extras were read
    and are disposable (e.g. an ignored `target/`).
+5. Catch up the main checkout (`/Users/adam/code/registry-research-toolkit`): `git fetch
+   origin main`, then `git diff --name-only HEAD origin/main -- .claude`. Empty →
+   `git merge --ff-only origin/main` there. Non-empty → don't run it: the sandbox denies
+   writes under `.claude/` (settings, skill links, hooks), so git stops halfway with HEAD
+   old and a mixed working tree. Give the maintainer one exact `!` command instead:
+   `git -C /Users/adam/code/registry-research-toolkit pull --ff-only`.
