@@ -176,8 +176,15 @@ and to a sweep.
 Agents run it as `bash reg_webapp/dev/dev.sh <flags> [mode]` from the repo or worktree
 root, with no env-var prefix and no `cd X &&`: the sandbox exclusion in
 `.claude/settings.json` matches the command text, and a sandboxed run kills Chrome. The
-same holds for `bash scripts/gate.sh all` (trailing arguments and redirects allowed) and
-any step list with `flows`. The `run-reg-webapp` skill has the flags and modes.
+same holds for `bash scripts/gate.sh <steps>` (trailing arguments and redirects allowed).
+The `run-reg-webapp` skill has the flags and modes.
+
+Other sandbox limits: process substitution (`diff <(…)`) fails, so write to files in
+`$TMPDIR`; `mv` across filesystems warns on owner/group, so `cp` then `rm`. Skill bodies
+in `.agents/skills/` can be edited anywhere, but the links in `.claude/skills/` are
+protected: adding, removing or renaming a skill, and a checkout, rebase or reset across a
+commit that changes those links (fast-forwarding the main checkout included), is run by
+the maintainer with `!`.
 
 # Lint and test
 
@@ -236,8 +243,9 @@ enforced by `crates/xtask/tests/skill_gh_reads.rs`.
   review (a fresh agent that did not write the change counts) before it merges.
   Coordinate concurrent work and keep main to a single write path.
 - One worktree per PR. The desktop app archives a worker's session when its PR merges or
-  closes, and that removes the worktree. Anything that must outlive the PR (release
-  evidence, briefs, design notes, scratch worth keeping) goes in the main checkout's
+  closes, and the worktree goes with it (the app reuses or deletes it). Anything that
+  must outlive the PR (release evidence, briefs, design notes, scratch worth keeping)
+  goes in the main checkout's
   `.local/` (`/Users/adam/code/registry-research-toolkit/.local/`), never inside the
   worktree. Disposable output (`target/`, throwaway scratch) stays in the worktree and
   goes with it.

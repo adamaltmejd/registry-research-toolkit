@@ -53,13 +53,13 @@ GitHub enforces no checks, so confirm all four on the head you merge:
 2. Codex review:
    `codex exec -C <worktree> -s read-only 'Use $review-agent to review the changes on this branch against base branch origin/main'`.
    Run it bare: no `cd`, `timeout`, environment-variable prefix, `&&` chain or output
-   redirect. The sandbox exclusion `codex *` (in `.claude/settings.local.json`) matches
+   redirect. The sandbox exclusion `codex *` (in `.claude/settings.json`) matches
    the start of the command text, and a redirect also breaks it; inside the sandbox Codex
    fails with "Operation not permitted".
    If Codex can't start, a fresh Opus agent, noted in the PR.
 3. UI changes: a rendered `reg-webapp-design-reviewer` pass by a fresh agent.
 4. The worker's worktree is clean: it confirms `git status --porcelain` is empty and
-   `git rev-parse HEAD` equals the PR head. Auto-archive removes the worktree on merge,
+   `git rev-parse HEAD` equals the PR head. Auto-archive takes the worktree on merge,
    so read anything extra first: what is worth keeping goes to a new PR or to `.local/`
    in the main checkout; the rest is discarded.
 
@@ -75,12 +75,16 @@ The agent token has no `workflow` scope: the maintainer pushes commits that touc
 After every merge, for your own workers only:
 
 1. `gh pr view <n> --json state,headRefOid` shows `MERGED`.
-2. The desktop app archives the session on merge and removes its worktree. Check
-   `git worktree list` and `git branch --list '*<name>*'`. If the session was not
-   archived, archive it.
-3. Delete the remote branch if it is still there (GitHub normally deletes merged head
+2. The desktop app archives the session on merge; if it did not, archive it. Archiving
+   detaches the worktree's HEAD and keeps the worktree in the app's pool for a later
+   session (the app reuses or deletes it): a detached worktree under `.claude/worktrees/`
+   is not a leftover. Workers never call ExitWorktree; it only removes worktrees a session
+   made itself.
+3. Archiving leaves the local branch (`claude/<name>-<suffix>`): delete it with
+   `git branch -D <branch>` (the "could not lock config file" warnings are harmless).
+   Delete the remote branch if it is still there (GitHub normally deletes merged head
    branches).
-4. A leftover worktree or branch goes to the maintainer as one exact `!` command, e.g.
-   `git worktree remove .claude/worktrees/<name> && git branch -D <branch>`. No loops over
-   `.claude/worktrees/agent-*`. Add `--force` only when the extras were read and are
-   disposable (e.g. an ignored `target/`).
+4. A worktree still on its branch after archiving goes to the maintainer as one exact `!`
+   command, e.g. `git worktree remove .claude/worktrees/<name> && git branch -D <branch>`.
+   No loops over `.claude/worktrees/agent-*`. Add `--force` only when the extras were read
+   and are disposable (e.g. an ignored `target/`).

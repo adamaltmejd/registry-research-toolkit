@@ -6,9 +6,7 @@
       "reg_webapp/dev/dev.sh *",
       "bash */reg_webapp/dev/dev.sh *",
       "timeout * bash reg_webapp/dev/dev.sh *",
-      "bash scripts/gate.sh all",
-      "bash scripts/gate.sh all *",
-      "bash scripts/gate.sh *flows*",
+      "bash scripts/gate.sh *",
       "codex *"
     ],
     "filesystem": {
