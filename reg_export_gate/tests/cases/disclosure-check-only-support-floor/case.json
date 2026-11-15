@@ -1,0 +1,47 @@
+{
+  "gate_min": "0.5.0",
+  "description": "A statistic resting directly on a check-only support of 4 true units refuses under min_cell_count 5, though the policy sets no statistic_min_support: a check-only support has no published count to floor it, so the floor applies to its truth.",
+  "schema": "schema.json",
+  "policy": "policy.json",
+  "candidate": {
+    "means.parquet": {
+      "columns": [
+        {
+          "name": "group",
+          "type": "string",
+          "values": [
+            "Stockholm",
+            "Uppsala"
+          ]
+        },
+        {
+          "name": "units_true",
+          "type": "int64",
+          "values": [
+            12,
+            4
+          ]
+        },
+        {
+          "name": "mean",
+          "type": "double",
+          "values": [
+            1.5,
+            2.5
+          ]
+        }
+      ]
+    }
+  },
+  "expect": {
+    "result": "refused",
+    "code": "disclosure",
+    "findings": [
+      {
+        "file": "means.parquet",
+        "column": "mean",
+        "rule": "statistic_support_too_small"
+      }
+    ]
+  }
+}

@@ -261,8 +261,9 @@ output. In order:
      `perturbation` from its units is `count_perturbation_exceeded`.
    - A statistic's truth is the units of its support, or the support itself when that
      is check-only. A non-null statistic whose truth is null is
-     `unsupported_statistic`. Its minimum is the larger of `statistic_min_support` and
-     its own `min_support`, and it applies to the published support and to the truth:
+     `unsupported_statistic`. Its minimum is the largest of `statistic_min_support`, its
+     own `min_support` and, when its support is check-only, `min_cell_count` (a
+     published support has that floor as a count; a check-only one has no other), and it applies to the published support and to the truth:
      either below it is `statistic_support_too_small`.
    - A non-null share with a null numerator or denominator is `unsupported_share`.
      Either its numerator `k` or its complement `n − k` in `1..min_cell_count − 1`, or

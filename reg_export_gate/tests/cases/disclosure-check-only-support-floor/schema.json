@@ -1,0 +1,29 @@
+{
+  "format": "reg-export-gate/schema",
+  "format_version": 1,
+  "name": "direct-support",
+  "version": 1,
+  "files": [
+    {
+      "name": "means.parquet",
+      "columns": [
+        {
+          "name": "group",
+          "type": "string",
+          "role": "dimension"
+        },
+        {
+          "name": "units_true",
+          "type": "integer",
+          "role": "check_only"
+        },
+        {
+          "name": "mean",
+          "type": "double",
+          "role": "statistic",
+          "support": "units_true"
+        }
+      ]
+    }
+  ]
+}

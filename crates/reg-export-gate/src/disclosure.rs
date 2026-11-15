@@ -139,10 +139,13 @@ fn statistic_support(
     if rows().any(|i| support[i].is_none() || at(&truth, i) == Some(None)) {
         findings.push(Finding::column("unsupported_statistic", file, &col.name));
     }
-    let min = match (policy.statistic_min_support, col.min_support) {
-        (Some(a), Some(b)) => Some(a.max(b)),
-        (a, b) => a.or(b),
-    };
+    // A published support is floored by `min_cell_count` as a count; a
+    // check-only support is not, so its minimum is at least that floor.
+    let floor = (support_spec.role == Role::CheckOnly).then_some(policy.min_cell_count);
+    let min = [policy.statistic_min_support, col.min_support, floor]
+        .into_iter()
+        .flatten()
+        .max();
     if let Some(min) = min {
         let small = rows().any(|i| {
             support[i].is_some_and(|n| below(n, min))
