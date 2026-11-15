@@ -16,37 +16,32 @@ question tool in the COS session; decide what an earlier ruling settles.
 
 ## Launch
 
-One Rex tab per worker, in the COS's own Rex session:
+One worker session per task, started from the COS session, each in its own git worktree
+and in auto permission mode.
 
-```bash
-rex window new -s "$REX_SESSION" <name> --focus=false -c <repo> \
-  --shell /opt/homebrew/bin/bash -- \
-  claude -w <name> -n <name> --model <model> --permission-mode auto \
-  "Read and follow <brief path>"   # bash: zsh tabs lack cargo
-```
-
-- Brief by file path; long prompt and `rex send` text is truncated.
+- Brief with a self-contained prompt; when it is long, write it to a path the worker can
+  read and brief by that path.
 - Opus for design-heavy or large work, Sonnet for docs and mechanical edits.
 - Don't run two workers on the same contract surface or generated files (`curation.lock`,
   schemas).
-- Never resume a worker with `claude -r`: it can't remove its worktree. To continue a
-  branch, start a new `-w` worker that runs `git fetch`, `git reset --hard origin/<branch>`
-  and pushes to `HEAD:<branch>`. The reset fails if the branch changes anything under
-  `.claude/` (sandbox-protected: new skill links, settings, hooks); then drop the branch
-  and redo the work from main.
+- Never reopen a finished or archived worker: a reopened worker can't remove its
+  worktree. To continue a branch, start a new worktree session that runs `git fetch`,
+  `git reset --hard origin/<branch>` and pushes to `HEAD:<branch>`. The reset fails if
+  the branch changes anything under `.claude/` (sandbox-protected: new skill links,
+  settings, hooks); then drop the branch and redo the work from main.
 
 Every brief says:
-- You are a tab in a shared Rex session: never `rex session rename`.
-- Wait for the COS's go before `gate.sh all`, flows or a real-seed build (one heavy run
-  at a time).
-- Open the PR, don't merge; report the PR number in your tab.
+- Before `gate.sh all`, flows or a real-seed build (one heavy run at a time), report the
+  request, end your turn and wait for the COS's message. Never poll, and never run it
+  without the go.
+- Open the PR, don't merge; put the PR number at the top of the report you give once the
+  PR is open.
 - Stop your own servers before you finish. Don't exit or remove the worktree until told.
 
 ## Monitor
 
-- Read: `rex capture -s "$REX_SESSION" -w <tab> --trim`.
-- Send: `rex send -s "$REX_SESSION" -w <tab> '<short text>'`, then
-  `rex send-key -s "$REX_SESSION" -w <tab> enter`. Point to a file for anything long.
+- Follow each worker's messages in its session.
+- Steer it with a follow-up message to that session. Point to a file for anything long.
 - One background `gh pr checks <n> --watch --fail-fast` per PR once it opens.
 - Never `pkill`/`killall`.
 
@@ -57,6 +52,10 @@ GitHub enforces no checks, so confirm all three on the head you merge:
 1. CI green.
 2. Codex review:
    `codex exec -C <worktree> -s read-only 'Use $review-agent to review the changes on this branch against base branch origin/main'`.
+   Run it bare: no `cd`, `timeout`, environment-variable prefix, `&&` chain or output
+   redirect. The sandbox exclusion `codex *` (in `.claude/settings.local.json`) matches
+   the start of the command text, and a redirect also breaks it; inside the sandbox Codex
+   fails with "Operation not permitted".
    If Codex can't start, a fresh Opus agent, noted in the PR.
 3. UI changes: a rendered `reg-webapp-design-reviewer` pass by a fresh agent.
 
@@ -79,7 +78,7 @@ After every merge, for your own workers only:
    (after a squash merge it refuses without it). This removes the worktree and its local
    branch.
 4. Check `git worktree list` and `git branch --list '*<name>*'`.
-5. `git push origin --delete <branch>`, then `rex window close -s "$REX_SESSION" <tab>`.
+5. `git push origin --delete <branch>`, then archive the worker session.
 6. Anything left over goes to the maintainer as one exact `!` command, e.g.
    `git worktree remove .claude/worktrees/<name> && git branch -D <branch>`. No `--force`,
    no loops over `.claude/worktrees/agent-*`.
