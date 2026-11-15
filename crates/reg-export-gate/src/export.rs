@@ -17,7 +17,9 @@ use serde::Serialize;
 use serde_json::Value;
 
 use crate::structure::{Candidate, MAX_FILE_BYTES};
-use crate::{Code, ColumnType, Finding, Policy, RECEIPT, Refusal, Schema, VERSION, sha256_hex};
+use crate::{
+    Code, ColumnType, Finding, Policy, RECEIPT, Refusal, Role, Schema, VERSION, sha256_hex,
+};
 
 const RECEIPT_FORMAT: &str = "reg-export-gate/receipt";
 const REPORT: &str = "export_gate_report.json";
@@ -255,11 +257,16 @@ fn writer_properties() -> WriterProperties {
 
 /// A checked table written afresh: a new Arrow schema of the export types in
 /// the spec's order, with no key-value metadata (not even `ARROW:schema`), so
-/// nothing of the author's file but its values reaches the export.
+/// nothing of the author's file but its values reaches the export. Check-only
+/// columns are dropped here, and only here: the rules read them from the
+/// candidate, and the true figures never reach a written file.
 fn rewrite(cand: &Candidate) -> Option<Vec<u8>> {
     let mut fields = Vec::new();
     let mut arrays: Vec<ArrayRef> = Vec::new();
     for (col, array) in cand.spec.columns.iter().zip(&cand.columns) {
+        if col.role == Role::CheckOnly {
+            continue;
+        }
         let ty = export_type(col.ty);
         let array: ArrayRef = if array.data_type() == &DataType::Int32 {
             Arc::new(

@@ -1,0 +1,95 @@
+{
+  "gate_min": "0.5.0",
+  "description": "Under a policy with count_units_required, a count that names no units refuses at setup, located by file and column.",
+  "schema": "schema.json",
+  "policy": "../pass-check-only/policy.json",
+  "candidate": {
+    "cells.parquet": {
+      "columns": [
+        {
+          "name": "group",
+          "type": "string",
+          "values": [
+            "Stockholm",
+            "Uppsala"
+          ]
+        },
+        {
+          "name": "units_true",
+          "type": "int64",
+          "values": [
+            7340033,
+            7
+          ]
+        },
+        {
+          "name": "k_true",
+          "type": "int64",
+          "values": [
+            3670017,
+            0
+          ]
+        },
+        {
+          "name": "n_true",
+          "type": "int64",
+          "values": [
+            7340034,
+            7
+          ]
+        },
+        {
+          "name": "n_rows",
+          "type": "int32",
+          "values": [
+            7340041,
+            9
+          ]
+        },
+        {
+          "name": "n_persons",
+          "type": "int64",
+          "values": [
+            7340035,
+            5
+          ]
+        },
+        {
+          "name": "share",
+          "type": "double",
+          "values": [
+            0.5,
+            0
+          ]
+        },
+        {
+          "name": "p50",
+          "type": "double",
+          "values": [
+            1.5,
+            2
+          ]
+        },
+        {
+          "name": "p10",
+          "type": "double",
+          "values": [
+            1,
+            null
+          ]
+        }
+      ]
+    }
+  },
+  "expect": {
+    "result": "refused",
+    "code": "setup",
+    "findings": [
+      {
+        "file": "cells.parquet",
+        "column": "n_rows",
+        "rule": "units_required"
+      }
+    ]
+  }
+}

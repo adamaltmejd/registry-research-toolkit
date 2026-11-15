@@ -121,6 +121,52 @@ Every object is closed: an unknown key is a setup refusal.
 differently (a person count is the unit disclosure control protects); the format-1
 policy applies one minimum to both.
 
+#### Check-only columns (gate 0.5.0, Rust only)
+
+Some disclosure rules need figures the export does not hold: the true number of persons
+behind a perturbed count, or the true numerator of a share. A schema declares them as
+**check-only** columns: present in staging, read by the disclosure rules, never
+exported. The R gate does not read them yet. Its objects are closed, so it refuses such
+a schema (`schema_invalid`), which means it fails closed (maintainer, 2026-11-15: R
+follows when a MONA project needs these rules).
+
+```json
+{ "name": "units_true", "type": "integer", "role": "check_only" },
+{ "name": "k_true", "type": "integer", "role": "check_only" },
+{ "name": "n_true", "type": "integer", "role": "check_only" },
+{ "name": "n_rows", "type": "integer", "role": "count", "units": "units_true" },
+{ "name": "n_persons", "type": "integer", "role": "person_count",
+  "units": "units_true", "perturbation": 2 },
+{ "name": "share", "type": "double", "role": "share", "support": "n_rows",
+  "numerator": "k_true", "denominator": "n_true" },
+{ "name": "p10", "type": "double", "role": "statistic", "support": "n_rows",
+  "min_support": 10 }
+```
+
+- `check_only` is a role. Its type is `integer`, it has no floor of its own (true
+  values below the minimum are the point), it is not scanned by the backstop and never
+  exported, and some column in its file must reference it.
+- `units`, on a `count` or `person_count`, names a check-only column. It holds the true
+  number of units behind the cell: persons in a table of persons, otherwise the true
+  count itself (rows, keys). A null there beside a non-null count is refused, so a
+  check-only column the caller forgot cannot pass as "not applicable".
+- `perturbation`, on a `person_count` that names `units`, is the most its published
+  figure may differ from those units (default 0). It is allowed only there, where the
+  units are the count's own truth. A `count` (of rows or keys) in a table of persons
+  has persons as its units, a different quantity from the count, so no bound is
+  defined for it: the gate does not compare a published `count` with its units at
+  all. In a table without persons, the units hold the true count itself.
+- `support` may now also name a check-only column.
+- `share` is a role: a `double` statistic that is a proportion of two true counts. Its
+  `numerator` and `denominator` are both required and both name check-only columns.
+- `min_support`, on a `statistic` or `share`, raises the policy's
+  `statistic_min_support` for that column. It must exceed the policy's value when the
+  policy has one (`policy_schema_mismatch`), so a schema can never appear to lower the
+  policy.
+
+The rules are in "The check" below. The format version stays 1: these are additions,
+and a gate that predates them refuses them (`schema_invalid`, `policy_invalid`).
+
 ### Policy format (`format_version` 1)
 
 ```json
@@ -149,6 +195,13 @@ one its rule does not apply:
   carries 64 bits the other rules leave free; 3 digits leave about 10. R's own parser
   (`as.numeric`) is not correctly rounded at extreme exponents, so the R gate reads the
   rendering back through jsonlite (C `strtod`); the corpus pins two such values.
+- `count_units_required`, a boolean (Rust gate 0.5.0): every `count` and `person_count`
+  names its `units`, or setup refuses (`units_required`, located by file and column). A
+  statistic's or share's support is then a count with units or a check-only column, so
+  every statistic is tested on its truth, and a share's numerator and denominator are
+  required by its role. The mandate covers counts only. A share declared as a plain
+  `statistic`, or a non-median decile without `min_support`, still passes. The gate
+  cannot tell what a column means; the human review covers it.
 
 A gate that predates a field refuses a policy naming it (`policy_invalid`), so an older
 gate fails closed.
@@ -201,6 +254,28 @@ output. In order:
    `statistic` resting on a support below `statistic_min_support` is
    `statistic_support_too_small`, and a `double` statistic not rounded to
    `statistic_significant_digits` is `statistic_not_rounded`.
+
+   With check-only columns, the rules also test the truth:
+   - A non-null count whose `units` is null is `unsupported_count`. Units below
+     `min_cell_count` are `count_units_too_small`. A person count further than its
+     `perturbation` from its units is `count_perturbation_exceeded`.
+   - A statistic's truth is the units of its support, or the support itself when that
+     is check-only. A non-null statistic whose truth is null is
+     `unsupported_statistic`. Its minimum is the largest of `statistic_min_support`, its
+     own `min_support` and, when its support is check-only, `min_cell_count` (a
+     published support has that floor as a count; a check-only one has no other), and it applies to the published support and to the truth:
+     either below it is `statistic_support_too_small`.
+   - A non-null share with a null numerator or denominator is `unsupported_share`.
+     Either its numerator `k` or its complement `n − k` in `1..min_cell_count − 1`, or
+     negative, is `share_cell_too_small`. A share of 0 or 1 singles no one out and
+     passes.
+   - Integer rules compare exactly, with no wrap (the Rust gate uses `i128`).
+
+   The published floors stay: a published count below `min_cell_count`, or a published
+   support below the minimum, refuses even when its truth passes, since a count below 5
+   is never published (maintainer, 2026-11-05). This matches a caller that perturbs and
+   then nulls what falls below the floor. No rule refuses a published figure for
+   differing from its truth within the declared perturbation.
 4. **Backstop scan.** Every value is scanned for personnummer and samordningsnummer
    shapes (10 or 12 digits, optional `-` or `+`, a valid month and day or day + 60, not
    inside a longer digit run): strings as written, integers in full, dates as their day
@@ -208,7 +283,8 @@ output. In order:
    whole; the digits of a fraction would match by chance). This is a backstop only: a
    pattern scan cannot establish safety (#20), and a misclassified column can pass a
    count threshold (#17). Organisationsnummer share the shape and also match. Key-value
-   metadata is not scanned: the gate never exports it (below).
+   metadata is not scanned: the gate never exports it (below). Check-only columns are
+   not scanned either, for the same reason.
 
 Setup stops at its first finding; each of the four steps collects every finding over all
 files, and the check stops at the first step with a finding. On any refusal the output
@@ -233,7 +309,10 @@ The gate never exports the author's bytes. Only when every file passes does it w
 each checked table afresh, from the decoded data: new arrays of one Arrow type per
 schema type (`integer` → `int64`, `double` → `double`, `string` → `string`, `boolean` →
 `bool`, `date` → `date32[day]`), in the schema's column order, with no schema or field
-key-value metadata. It writes these files and `receipt.json` into a new folder beside
+key-value metadata. Check-only columns are dropped here and only here. The rules read
+them from the decoded tables, and the true figures reach no exported file, so they also
+reach no receipt hash. Findings never carry them either, since a finding names a rule,
+a schema file and the published column, never a value. It writes these files and `receipt.json` into a new folder beside
 the output folder (same volume), then renames that folder to the output folder, so the
 files and the receipt appear together. Staging is left as it was and is never exported.
 
@@ -271,23 +350,29 @@ The code is the category; the rule locates the finding. Both are stable.
   `output_not_gate_export`, `output_not_removable`, `schema_unreadable`,
   `schema_invalid`, `schema_version`, `schema_reserved_name`, `policy_missing`,
   `policy_unreadable`, `policy_invalid`, `policy_version`, `policy_schema_mismatch`,
-  `export_not_writable`, `move_failed`, `internal_error` (Rust: an IO or writer failure,
-  reported without its message). In the Rust gate's server mode only: `config_missing`,
-  `config_invalid`, `config_writable` (`crates/reg-export-gate/DESIGN.md`, "Server
-  mode"). In the R gate only: `jsonlite_missing`, `arrow_missing`, `arrow_too_old`,
-  `sha256_missing`, `internal_warning`, `internal_error:<R condition class>`.
+  `units_required`, `export_not_writable`, `move_failed`, `internal_error` (Rust: an IO
+  or writer failure, reported without its message). In the Rust gate's server mode
+  only: `config_missing`, `config_invalid`, `config_writable`
+  (`crates/reg-export-gate/DESIGN.md`, "Server mode"), and in its `export` only,
+  `check_only_unsupported`. In the R gate only: `jsonlite_missing`, `arrow_missing`,
+  `arrow_too_old`, `sha256_missing`, `internal_warning`, `internal_error:<R condition class>`.
 - `inventory`: `missing_file`, `extra_file`, `hidden_file`, `not_a_file`,
   `reserved_name`.
 - `structure`: `unreadable`, `too_large`, `missing_column`, `extra_column`,
   `column_order`, `column_type`.
 - `disclosure`: `nan_value`, `min_cell_count`, `unsupported_statistic`,
-  `statistic_support_too_small`, `statistic_not_rounded`.
+  `statistic_support_too_small`, `statistic_not_rounded`, and in the Rust gate (0.5.0)
+  `unsupported_count`, `count_units_too_small`, `count_perturbation_exceeded`,
+  `unsupported_share`, `share_cell_too_small`.
 - `backstop`: `identifier_pattern`.
 - `delivery` (the Rust gate's `export` only): `receipt_mismatch`,
   `destination_writable`, `hash_mismatch` (`crates/reg-export-gate/DESIGN.md`, "Export
   and delivery").
 
 `schema_version` and `policy_version` mean a `format_version` this gate does not read.
+`policy_schema_mismatch` means the policy does not fit the schema: it names another
+schema name or version, or a column's `min_support` does not exceed the policy's
+`statistic_min_support`.
 `paths_overlap` means staging and output are the same folder or one is inside the other;
 an existing output is resolved on disk first, so another spelling of staging (case,
 Unicode form, a symlink, a Windows short name) cannot pass as a different folder and be
@@ -362,7 +447,9 @@ The Rust binary and the R file are two implementations of one check, an exceptio
 expected pass or refusal code) runs against both, so their agreement is the oracle. The
 binary is the reference; `EXPORT_GATE_VERSION` in the R file is its pin, in every
 receipt: it names the binary version the R file imitates (0.4.0 today;
-`crates/reg-export-gate/DESIGN.md`, "The R gate follows").
+`crates/reg-export-gate/DESIGN.md`, "The R gate follows"). The R file may lag the
+binary: the binary is at 0.5.0 (check-only columns), which the R file does not
+implement yet, and the corpus marks such cases with `gate_min`.
 
 ### The R file
 
@@ -451,6 +538,16 @@ receipt: it names the binary version the R file imitates (0.4.0 today;
   is how many times its `values` follow one another. Other entries are
   `{"text": "...", "repeat": n}` (raw bytes, `repeat` optional) or `{"folder": true}`.
 - `output_before`: the output folder before the run, in the same form (optional).
+- `gate_min` (optional): the oldest gate version that implements the behavior the case
+  pins. The Rust runner fails a case whose `gate_min` is above its own version, since the
+  reference implements every case. The R runner skips it while `gate_min` is above
+  `EXPORT_GATE_VERSION`, naming the version needed, and runs it once the R file catches
+  up. A binary named by `REG_EXPORT_GATE` must be at least every case's `gate_min`.
+- `sentinels` (optional): distinctive true values the case's check-only columns hold
+  (for example 7340033). They are asserted absent from the report and from every file
+  the gate wrote, both as decimal text and as little-endian `int64` bytes. Small truths
+  such as 4 appear in any file by chance, so only distinctive values can be checked
+  this way.
 - `expect`: `{"result": "pass"}`, or
   `{"result": "refused", "code", "findings": [{"file", "column", "position", "rule"}]}`
   (an absent key is null) with `"output": "unchanged"` when the output folder is not the
@@ -462,7 +559,9 @@ was. A refusal asserts the code, the exact findings and no export. A pass assert
 output folder holding exactly the schema's files and `receipt.json`, no key-value
 metadata and none of the candidate's metadata or inner bytes in the exported files, the
 receipt's hashes recomputed from the files as they landed, and a second run writing the
-same receipt.
+same receipt. The Rust runner also holds the report, the receipt and the binary's stdout
+to their goldens exactly (no field beyond those the format names), and checks that each
+exported file decodes to exactly the schema's columns less its check-only ones.
 
 ## Out of scope
 

@@ -31,12 +31,22 @@ pub enum Role {
     Count,
     PersonCount,
     Statistic,
+    /// A statistic that is a proportion of two true counts.
+    Share,
+    /// A true, unperturbed figure: checked, never exported.
+    CheckOnly,
 }
 
 impl Role {
     #[must_use]
     pub fn is_count(self) -> bool {
         matches!(self, Role::Count | Role::PersonCount)
+    }
+
+    /// A statistic or a share: it rests on a support.
+    #[must_use]
+    pub fn is_statistic(self) -> bool {
+        matches!(self, Role::Statistic | Role::Share)
     }
 }
 
@@ -47,8 +57,24 @@ pub struct Column {
     #[serde(rename = "type")]
     pub ty: ColumnType,
     pub role: Role,
+    /// The count or check-only column a statistic or share rests on.
     #[serde(default)]
     pub support: Option<String>,
+    /// The check-only column holding the true number of units behind a count.
+    #[serde(default)]
+    pub units: Option<String>,
+    /// The most a person count's published figure may differ from its units.
+    #[serde(default)]
+    pub perturbation: Option<u64>,
+    /// A share's check-only numerator.
+    #[serde(default)]
+    pub numerator: Option<String>,
+    /// A share's check-only denominator.
+    #[serde(default)]
+    pub denominator: Option<String>,
+    /// Raises the policy's `statistic_min_support` for this statistic or share.
+    #[serde(default)]
+    pub min_support: Option<u64>,
     #[serde(default)]
     pub description: Option<String>,
 }
@@ -60,6 +86,14 @@ pub struct File {
     pub columns: Vec<Column>,
     #[serde(default)]
     pub description: Option<String>,
+}
+
+impl File {
+    /// The position of the column named `name`.
+    #[must_use]
+    pub fn position(&self, name: &str) -> Option<usize> {
+        self.columns.iter().position(|c| c.name == name)
+    }
 }
 
 #[derive(Clone, Debug, Deserialize)]
@@ -102,6 +136,9 @@ pub struct Policy {
     /// rule.
     #[serde(default)]
     pub statistic_significant_digits: Option<u32>,
+    /// Every count and person count must name its `units`; absent, false.
+    #[serde(default)]
+    pub count_units_required: bool,
     /// SHA-256 of the file as read, for the receipt.
     #[serde(skip)]
     pub sha256: String,
@@ -178,28 +215,76 @@ fn typed<T: DeserializeOwned>(bytes: &[u8]) -> Option<T> {
     serde_json::from_slice(bytes).ok()
 }
 
-fn valid_columns(columns: &[Column]) -> bool {
-    if columns.is_empty() {
-        return false;
+/// Whether a column's role, type and fields fit together; `role_of` gives the
+/// role of a column of the same file by name.
+fn valid_column(col: &Column, role_of: &impl Fn(&str) -> Option<Role>) -> bool {
+    let names = |name: &Option<String>, ok: fn(Role) -> bool| {
+        name.as_deref().and_then(role_of).is_some_and(ok)
+    };
+    let check_only: fn(Role) -> bool = |r| r == Role::CheckOnly;
+    let supports: fn(Role) -> bool = |r| r.is_count() || r == Role::CheckOnly;
+    let units = col.units.is_none() || names(&col.units, check_only);
+    let (support, perturbation, share_fields, min_support) = (
+        col.support.is_some(),
+        col.perturbation.is_some(),
+        col.numerator.is_some() || col.denominator.is_some(),
+        col.min_support.is_some(),
+    );
+    let statistic_fields = support || share_fields || min_support;
+    match col.role {
+        Role::Dimension | Role::CheckOnly => {
+            // A check-only column is a true count.
+            (col.role == Role::Dimension || col.ty == ColumnType::Integer)
+                && !statistic_fields
+                && col.units.is_none()
+                && !perturbation
+        }
+        // A count is a whole number; its suppression marker is null. A row
+        // count's units are not its truth, so no perturbation bound is defined
+        // for it.
+        Role::Count => col.ty == ColumnType::Integer && units && !statistic_fields && !perturbation,
+        Role::PersonCount => {
+            col.ty == ColumnType::Integer
+                && units
+                && (!perturbation || col.units.is_some())
+                && !statistic_fields
+        }
+        Role::Statistic | Role::Share => {
+            names(&col.support, supports)
+                && col.min_support.is_none_or(|n| n >= 1)
+                && col.units.is_none()
+                && !perturbation
+                && if col.role == Role::Share {
+                    col.ty == ColumnType::Double
+                        && names(&col.numerator, check_only)
+                        && names(&col.denominator, check_only)
+                } else {
+                    !share_fields
+                }
+        }
     }
+}
+
+fn valid_columns(columns: &[Column]) -> bool {
     let mut names = HashSet::new();
-    let counts: HashSet<&str> = columns
+    let unique = columns
         .iter()
-        .filter(|col| col.role.is_count())
-        .map(|col| col.name.as_str())
-        .collect();
-    columns.iter().all(|col| {
-        names.insert(col.name.as_str())
-            && is_column_name(&col.name)
-            // A count is a whole number; its suppression marker is null.
-            && (!col.role.is_count() || col.ty == ColumnType::Integer)
-            // A statistic names the count it rests on, and only a statistic does.
-            && match (&col.role, &col.support) {
-                (Role::Statistic, Some(support)) => counts.contains(support.as_str()),
-                (Role::Statistic, None) => false,
-                (_, support) => support.is_none(),
-            }
-    })
+        .all(|col| names.insert(col.name.as_str()) && is_column_name(&col.name));
+    let role_of = |name: &str| columns.iter().find(|c| c.name == name).map(|c| c.role);
+    // A check-only column no rule reads would be truth kept in staging for nothing.
+    let referenced = |name: &str| {
+        columns.iter().any(|c| {
+            [&c.support, &c.units, &c.numerator, &c.denominator]
+                .iter()
+                .any(|r| r.as_deref() == Some(name))
+        })
+    };
+    unique
+        // At least one column is exported.
+        && columns.iter().any(|col| col.role != Role::CheckOnly)
+        && columns.iter().all(|col| {
+            valid_column(col, &role_of) && (col.role != Role::CheckOnly || referenced(&col.name))
+        })
 }
 
 pub(crate) fn load_schema(path: Option<&Path>) -> Result<Schema, Refusal> {
@@ -269,8 +354,32 @@ pub(crate) fn load_policy(path: Option<&Path>, schema: &Schema) -> Result<Policy
     if !ok {
         return Err(invalid());
     }
-    if policy.schema.name != schema.name || policy.schema.version != schema.version {
+    // A column minimum raises the policy's, never lowers or restates it.
+    let lowers = |col: &Column| {
+        col.min_support
+            .zip(policy.statistic_min_support)
+            .is_some_and(|(own, policy)| own <= policy)
+    };
+    if policy.schema.name != schema.name
+        || policy.schema.version != schema.version
+        || schema.files.iter().flat_map(|f| &f.columns).any(lowers)
+    {
         return Err(setup("policy_schema_mismatch", file));
+    }
+    if policy.count_units_required {
+        for f in &schema.files {
+            let bare = f
+                .columns
+                .iter()
+                .find(|c| c.role.is_count() && c.units.is_none());
+            if let Some(col) = bare {
+                return Err(Refusal::setup(Finding::column(
+                    "units_required",
+                    &f.name,
+                    &col.name,
+                )));
+            }
+        }
     }
     Ok(policy)
 }

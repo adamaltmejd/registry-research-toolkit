@@ -1,0 +1,100 @@
+{
+  "gate_min": "0.5.0",
+  "description": "A person count of 5 beside 8 true persons refuses: 3 is past the declared perturbation of 2.",
+  "schema": "../pass-check-only/schema.json",
+  "policy": "../pass-check-only/policy.json",
+  "sentinels": [
+    7340033,
+    3670017,
+    7340034
+  ],
+  "candidate": {
+    "cells.parquet": {
+      "columns": [
+        {
+          "name": "group",
+          "type": "string",
+          "values": [
+            "Stockholm",
+            "Uppsala"
+          ]
+        },
+        {
+          "name": "units_true",
+          "type": "int64",
+          "values": [
+            7340033,
+            8
+          ]
+        },
+        {
+          "name": "k_true",
+          "type": "int64",
+          "values": [
+            3670017,
+            0
+          ]
+        },
+        {
+          "name": "n_true",
+          "type": "int64",
+          "values": [
+            7340034,
+            7
+          ]
+        },
+        {
+          "name": "n_rows",
+          "type": "int32",
+          "values": [
+            7340041,
+            9
+          ]
+        },
+        {
+          "name": "n_persons",
+          "type": "int64",
+          "values": [
+            7340035,
+            5
+          ]
+        },
+        {
+          "name": "share",
+          "type": "double",
+          "values": [
+            0.5,
+            0
+          ]
+        },
+        {
+          "name": "p50",
+          "type": "double",
+          "values": [
+            1.5,
+            2
+          ]
+        },
+        {
+          "name": "p10",
+          "type": "double",
+          "values": [
+            1,
+            null
+          ]
+        }
+      ]
+    }
+  },
+  "expect": {
+    "result": "refused",
+    "code": "disclosure",
+    "findings": [
+      {
+        "file": "cells.parquet",
+        "column": "n_persons",
+        "rule": "count_perturbation_exceeded"
+      }
+    ]
+  }
+}

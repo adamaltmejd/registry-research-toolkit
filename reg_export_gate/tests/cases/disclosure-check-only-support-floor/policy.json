@@ -1,0 +1,11 @@
+{
+  "format": "reg-export-gate/policy",
+  "format_version": 1,
+  "name": "direct-support-min5",
+  "version": 1,
+  "schema": {
+    "name": "direct-support",
+    "version": 1
+  },
+  "min_cell_count": 5
+}

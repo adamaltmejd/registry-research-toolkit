@@ -1,0 +1,92 @@
+{
+  "gate_min": "0.5.0",
+  "description": "Check-only columns are tested and never exported: the exported file holds exactly the schema's other columns, and the true figures (sentinels) appear in no exported file, receipt or report. A person count of 5 beside 7 true persons passes at perturbation 2, the margin's edge.",
+  "schema": "../pass-check-only/schema.json",
+  "policy": "../pass-check-only/policy.json",
+  "sentinels": [
+    7340033,
+    3670017,
+    7340034
+  ],
+  "candidate": {
+    "cells.parquet": {
+      "columns": [
+        {
+          "name": "group",
+          "type": "string",
+          "values": [
+            "Stockholm",
+            "Uppsala"
+          ]
+        },
+        {
+          "name": "units_true",
+          "type": "int64",
+          "values": [
+            7340033,
+            7
+          ]
+        },
+        {
+          "name": "k_true",
+          "type": "int64",
+          "values": [
+            3670017,
+            0
+          ]
+        },
+        {
+          "name": "n_true",
+          "type": "int64",
+          "values": [
+            7340034,
+            7
+          ]
+        },
+        {
+          "name": "n_rows",
+          "type": "int32",
+          "values": [
+            7340041,
+            9
+          ]
+        },
+        {
+          "name": "n_persons",
+          "type": "int64",
+          "values": [
+            7340035,
+            5
+          ]
+        },
+        {
+          "name": "share",
+          "type": "double",
+          "values": [
+            0.5,
+            0
+          ]
+        },
+        {
+          "name": "p50",
+          "type": "double",
+          "values": [
+            1.5,
+            2
+          ]
+        },
+        {
+          "name": "p10",
+          "type": "double",
+          "values": [
+            1,
+            null
+          ]
+        }
+      ]
+    }
+  },
+  "expect": {
+    "result": "pass"
+  }
+}
