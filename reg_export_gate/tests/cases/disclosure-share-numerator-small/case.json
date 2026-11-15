@@ -1,6 +1,6 @@
 {
   "gate_min": "0.5.0",
-  "description": "A share of 3 in 7 refuses: its numerator is a small cell.",
+  "description": "A share of 3 in 20 refuses: its numerator is a small cell, though its complement, 17, is not.",
   "schema": "../pass-check-only/schema.json",
   "policy": "../pass-check-only/policy.json",
   "candidate": {
@@ -35,7 +35,7 @@
           "type": "int64",
           "values": [
             7340034,
-            7
+            20
           ]
         },
         {
@@ -59,7 +59,7 @@
           "type": "double",
           "values": [
             0.5,
-            0.43
+            0.15
           ]
         },
         {

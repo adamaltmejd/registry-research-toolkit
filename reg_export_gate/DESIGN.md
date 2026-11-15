@@ -152,8 +152,10 @@ follows when a MONA project needs these rules).
   check-only column the caller forgot cannot pass as "not applicable".
 - `perturbation`, on a `person_count` that names `units`, is the most its published
   figure may differ from those units (default 0). It is allowed only there, where the
-  units are the count's own truth. A row count's units are persons, a different
-  quantity, so no bound is defined for it.
+  units are the count's own truth. A `count` (of rows or keys) in a table of persons
+  has persons as its units, a different quantity from the count, so no bound is
+  defined for it: the gate does not compare a published `count` with its units at
+  all. In a table without persons, the units hold the true count itself.
 - `support` may now also name a check-only column.
 - `share` is a role: a `double` statistic that is a proportion of two true counts. Its
   `numerator` and `denominator` are both required and both name check-only columns.
@@ -349,9 +351,10 @@ The code is the category; the rule locates the finding. Both are stable.
   `policy_unreadable`, `policy_invalid`, `policy_version`, `policy_schema_mismatch`,
   `units_required`, `export_not_writable`, `move_failed`, `internal_error` (Rust: an IO
   or writer failure, reported without its message). In the Rust gate's server mode
-  only: `config_missing`, `config_invalid`, `config_writable` (`crates/reg-export-gate/DESIGN.md`,
-  "Server mode"), and in its `export` only, `check_only_unsupported`. In the R gate only: `jsonlite_missing`, `arrow_missing`, `arrow_too_old`,
-  `sha256_missing`, `internal_warning`, `internal_error:<R condition class>`.
+  only: `config_missing`, `config_invalid`, `config_writable`
+  (`crates/reg-export-gate/DESIGN.md`, "Server mode"), and in its `export` only,
+  `check_only_unsupported`. In the R gate only: `jsonlite_missing`, `arrow_missing`,
+  `arrow_too_old`, `sha256_missing`, `internal_warning`, `internal_error:<R condition class>`.
 - `inventory`: `missing_file`, `extra_file`, `hidden_file`, `not_a_file`,
   `reserved_name`.
 - `structure`: `unreadable`, `too_large`, `missing_column`, `extra_column`,
@@ -543,7 +546,8 @@ implement yet, and the corpus marks such cases with `gate_min`.
   (for example 7340033). They are asserted absent from the report and from every file
   the gate wrote, both as decimal text and as little-endian `int64` bytes. Small truths
   such as 4 appear in any file by chance, so only distinctive values can be checked
-  this way.- `expect`: `{"result": "pass"}`, or
+  this way.
+- `expect`: `{"result": "pass"}`, or
   `{"result": "refused", "code", "findings": [{"file", "column", "position", "rule"}]}`
   (an absent key is null) with `"output": "unchanged"` when the output folder is not the
   gate's to clear.

@@ -38,7 +38,7 @@
           "name": "n_persons",
           "type": "integer",
           "role": "person_count",
-          "units": "units_true",
+          "units": "k_true",
           "perturbation": 2
         },
         {

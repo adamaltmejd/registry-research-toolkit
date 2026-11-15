@@ -3,6 +3,11 @@
   "description": "A person count of 5 beside 8 true persons refuses: 3 is past the declared perturbation of 2.",
   "schema": "../pass-check-only/schema.json",
   "policy": "../pass-check-only/policy.json",
+  "sentinels": [
+    7340033,
+    3670017,
+    7340034
+  ],
   "candidate": {
     "cells.parquet": {
       "columns": [

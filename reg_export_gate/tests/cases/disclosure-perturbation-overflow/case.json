@@ -1,6 +1,6 @@
 {
   "gate_min": "0.5.0",
-  "description": "True units at the int64 maximum beside a person count of 5 refuse as past the perturbation; the difference is computed without wrapping, never as an internal error.",
+  "description": "True units at the int64 minimum beside a person count of 5: their difference does not fit an int64, yet it is computed exactly and refuses as past the perturbation (beside the units being too small), never as an internal error.",
   "schema": "../pass-check-only/schema.json",
   "policy": "../pass-check-only/policy.json",
   "candidate": {
@@ -19,7 +19,7 @@
           "type": "int64",
           "values": [
             7340033,
-            9223372036854775807
+            -9223372036854775808
           ]
         },
         {
@@ -59,7 +59,7 @@
           "type": "double",
           "values": [
             0.5,
-            0
+            null
           ]
         },
         {
@@ -67,7 +67,7 @@
           "type": "double",
           "values": [
             1.5,
-            2
+            null
           ]
         },
         {
@@ -85,6 +85,16 @@
     "result": "refused",
     "code": "disclosure",
     "findings": [
+      {
+        "file": "cells.parquet",
+        "column": "n_rows",
+        "rule": "count_units_too_small"
+      },
+      {
+        "file": "cells.parquet",
+        "column": "n_persons",
+        "rule": "count_units_too_small"
+      },
       {
         "file": "cells.parquet",
         "column": "n_persons",
