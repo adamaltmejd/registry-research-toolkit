@@ -235,6 +235,12 @@ enforced by `crates/xtask/tests/skill_gh_reads.rs`.
 - Develop on an isolated branch or worktree. A PR needs green CI and an independent
   review (a fresh agent that did not write the change counts) before it merges.
   Coordinate concurrent work and keep main to a single write path.
+- One worktree per PR. The desktop app archives a worker's session when its PR merges or
+  closes, and that removes the worktree. Anything that must outlive the PR (release
+  evidence, briefs, design notes, scratch worth keeping) goes in the main checkout's
+  `.local/` (`/Users/adam/code/registry-research-toolkit/.local/`), never inside the
+  worktree. Disposable output (`target/`, throwaway scratch) stays in the worktree and
+  goes with it.
 - Renovate (`renovate.json`) opens the routine dependency PRs: tools, CI and the SPA's
   deps nightly; every Cargo manifest weekly, plus a separate weekly lockfile-maintenance
   PR (the next curation real-seed build proves the weekly ones). A red Renovate PR is

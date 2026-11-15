@@ -47,7 +47,7 @@ Every brief says:
 
 ## Merge
 
-GitHub enforces no checks, so confirm all three on the head you merge:
+GitHub enforces no checks, so confirm all four on the head you merge:
 
 1. CI green.
 2. Codex review:
@@ -58,6 +58,10 @@ GitHub enforces no checks, so confirm all three on the head you merge:
    fails with "Operation not permitted".
    If Codex can't start, a fresh Opus agent, noted in the PR.
 3. UI changes: a rendered `reg-webapp-design-reviewer` pass by a fresh agent.
+4. The worker's worktree is clean: it confirms `git status --porcelain` is empty and
+   `git rev-parse HEAD` equals the PR head. Auto-archive removes the worktree on merge,
+   so read anything extra first: what is worth keeping goes to a new PR or to `.local/`
+   in the main checkout; the rest is discarded.
 
 Then `gh pr merge <n> --squash --match-head-commit <sha>`. Not while a release deploy
 runs. After each merge, open PRs that touch the same files rebase (`gate.sh regen` where
@@ -71,14 +75,12 @@ The agent token has no `workflow` scope: the maintainer pushes commits that touc
 After every merge, for your own workers only:
 
 1. `gh pr view <n> --json state,headRefOid` shows `MERGED`.
-2. Have the worker confirm `git status --porcelain` is empty and `git rev-parse HEAD`
-   equals that `headRefOid`. If not, read what is extra: worth keeping goes to a new PR
-   (or an issue); the rest is discarded.
-3. Tell the worker to call ExitWorktree with action `remove` and `discard_changes: true`
-   (after a squash merge it refuses without it). This removes the worktree and its local
-   branch.
-4. Check `git worktree list` and `git branch --list '*<name>*'`.
-5. `git push origin --delete <branch>`, then archive the worker session.
-6. Anything left over goes to the maintainer as one exact `!` command, e.g.
-   `git worktree remove .claude/worktrees/<name> && git branch -D <branch>`. No `--force`,
-   no loops over `.claude/worktrees/agent-*`.
+2. The desktop app archives the session on merge and removes its worktree. Check
+   `git worktree list` and `git branch --list '*<name>*'`. If the session was not
+   archived, archive it.
+3. Delete the remote branch if it is still there (GitHub normally deletes merged head
+   branches).
+4. A leftover worktree or branch goes to the maintainer as one exact `!` command, e.g.
+   `git worktree remove .claude/worktrees/<name> && git branch -D <branch>`. No loops over
+   `.claude/worktrees/agent-*`. Add `--force` only when the extras were read and are
+   disposable (e.g. an ignored `target/`).
