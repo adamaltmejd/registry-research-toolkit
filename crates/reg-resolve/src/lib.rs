@@ -23,11 +23,13 @@
 //!   (`Deliveries::apart`): then it splits by spelling. A key documented only without a
 //!   column is no variable (F5).
 //! - **Owners (F2).** A column several variables claim in one table and window goes to
-//!   the one that holds it alone in the neighbouring releases ([`owners`]).
+//!   the one that holds it alone in the neighbouring releases ([`owners`]); with
+//!   concurrent releases a run is contested within one release.
 //! - **Segments.** Per variable and table, maximal runs of one form. Fields the
 //!   variable's own occurrences disagree on are left blank (F2 forms-differ; a family-only
 //!   disagreement under one source key and folded spelling is F6). A run another
-//!   variable still claims under the same folded spelling is ambiguous (F2).
+//!   variable still claims under the same folded spelling in the same release, or with
+//!   no release, is ambiguous (F2).
 //! - **Gaps (T5).** In a table with releases, the holes in the table's coverage (no
 //!   release), and the days inside a variable's hull a release covers without the
 //!   variable's column: documented without a column, or not documented.
