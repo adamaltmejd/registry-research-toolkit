@@ -1,0 +1,11 @@
+[[statement]]
+kind = "set"
+subject = "var:qp69"
+fields = { "label" = "Do you think that pupils should get grades in elementary school? (Questionnaire parents)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Asked in several questionnaires; this is the one in table \"Questionnaire parents\" (QP69).\nCodebook for UGU 2010 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-2010.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:qt619"
+fields = { "label" = "Do you think that pupils should get grades in elementary school? (Questionnaire teachers)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Asked in several questionnaires; this is the one in table \"Questionnaire teachers\" (QT619).\nCodebook for UGU 2010 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-2010.csv"
