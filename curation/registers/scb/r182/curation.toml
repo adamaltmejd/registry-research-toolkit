@@ -17762,3 +17762,9 @@ kind = "set"
 subject = "uoh-personal: OCCUP_CODE"
 fields = { "variable" = "occup-code" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v29507), never delivered together in one table, so they are one variable renamed between releases: AnstKat 2015-01-01..2015-12-31; anstkat 2017-01-01..2017-12-31; OCCUP_CODE 2019-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: OCCUP_CAT @2019 where key = 'v29507'"
+fields = { "variable" = "occup-cat" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column OCCUP_CAT of uoh-personal in 2021 under several variables (occup-cat (v29507), tjanstekategori (v3637)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."

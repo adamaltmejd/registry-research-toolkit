@@ -13740,3 +13740,9 @@ kind = "set"
 subject = "intradet-hogskoleexaminerade: F20 where key = 'v5120'"
 fields = { "variable" = "viljan-att-arbeta-mer-f20" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5120) in one table, renamed between survey rounds and never delivered together, so they are one variable: F16 2006-03-01..2008-03-31; F20 2010-03-01..2010-03-31."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F22 where key = 'v5020'"
+fields = { "variable" = "antal-manader-som-arbetslos-f22" }
+evidence = "Both measure total unemployment since leaving upper-secondary school in nonoverlapping periods [17167,17348) and [19358,19539). Both use the same complete code list: at most one month, 2–6 months, 7–12 months and over one year."

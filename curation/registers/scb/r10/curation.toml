@@ -5613,3 +5613,15 @@ kind = "set"
 subject = "var:bruna-bonor-brunabonor"
 fields = { "label" = "Bruna bönor (areal i ha) (Uppdragsregistret)" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Uppdragsregistret\"."
+
+[[statement]]
+kind = "set"
+subject = "foretag: totbete"
+fields = { "variable" = "totala-betesareal-i-hektar-totbete" }
+evidence = "Both have the identical definition of the farm's total pasture area in hectares and selector key v41873. Their enterprise-table observations meet at day 15706 without overlap; other supplied gaps remain unfilled."
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: totbete where key = 'v41873'"
+fields = { "variable" = "totala-betesareal-i-hektar-totbete" }
+evidence = "Both have the identical definition of the farm's total pasture area in hectares and selector key v41873. Their enterprise-table observations meet at day 15706 without overlap; other supplied gaps remain unfilled."
