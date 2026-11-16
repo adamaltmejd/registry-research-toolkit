@@ -20,7 +20,7 @@ use reg_core::manifest::{
     safe_file_name, stata_name,
 };
 use reg_core::project::{ColumnType, ExtractFormat, ProjectData};
-use rusqlite::Connection;
+use rusqlite::{Connection, named_params};
 use serde_json::Value;
 
 use super::{Issue, LogicalOrder, OrderEntry, check, project, reported_gaps, words};
@@ -564,19 +564,21 @@ fn not_in_database(
             let days = entry.period.days(server.open);
             elsewhere.extend(rows(
                 held,
-                "SELECT s.ord, s.name FROM holding_space s WHERE s.id <> ?5 AND EXISTS(
+                &format!(
+                    "SELECT s.ord, s.name FROM holding_space s WHERE s.id <> :space AND EXISTS(
                      SELECT 1 FROM holding_mapping m JOIN holding_column c ON c.id = m.column_id
                        JOIN holding_table h ON h.id = c.holding_id
-                     WHERE h.space = s.id AND m.table_pid = ?1 AND m.variable_pid = ?2
-                       AND m.start < ?4 AND m.end > ?3 AND (?6 IS NULL OR h.release = ?6))",
-                rusqlite::params![
-                    entry.table,
-                    entry.variable,
-                    days.0,
-                    days.1,
-                    space,
-                    entry.release
-                ],
+                     WHERE h.space = s.id AND m.table_pid = :table AND m.variable_pid = :variable
+                       AND m.start < :hi AND m.end > :lo AND {LANE})"
+                ),
+                named_params! {
+                    ":table": entry.table,
+                    ":variable": entry.variable,
+                    ":lo": days.0,
+                    ":hi": days.1,
+                    ":space": space,
+                    ":release": entry.release,
+                },
                 |r| Ok((r.get(0)?, r.get(1)?)),
             )?);
         }
@@ -603,17 +605,20 @@ fn not_in_database(
             .iter()
             .filter(|e| index[e.source.as_str()] == s && e.binding == b)
             .map(|e| {
-                held.query_row(
-                    "SELECT EXISTS(SELECT 1 FROM holding_mapping m
-                       JOIN holding_column c ON c.id = m.column_id
+                lane_rows(
+                    held,
+                    e,
+                    Some(space),
+                    "SELECT 1 FROM holding_mapping m JOIN holding_column c ON c.id = m.column_id
                        JOIN holding_table h ON h.id = c.holding_id
-                     WHERE h.space = ?3 AND m.table_pid = ?1 AND m.variable_pid = ?2)",
-                    rusqlite::params![e.table, e.variable, space],
-                    |r| r.get::<_, bool>(0),
+                     WHERE h.space = :space AND m.table_pid = :table
+                       AND m.variable_pid = :variable AND {LANE} LIMIT 1",
+                    |_| Ok(()),
                 )
             })
             .collect::<Result<Vec<_>, _>>()?
-            .contains(&true);
+            .iter()
+            .any(|found| !found.is_empty());
         let when = if held_other_years {
             " for the requested period"
         } else {
@@ -640,6 +645,34 @@ fn not_in_database(
     Ok(())
 }
 
+/// The files an entry draws on, for every query over holding table `h` with
+/// `:release` bound to the entry's: an entry of one release (a shared day of a
+/// concurrent table) draws only on the files that state that release, for its
+/// placements and for the evidence of its gaps alike.
+const LANE: &str = "(:release IS NULL OR h.release = :release)";
+
+/// The rows of `sql` for `entry` in database `space` (every database when `None`), with
+/// `:table`, `:variable`, `:space` and `:release` bound and `{LANE}` spelled out.
+fn lane_rows<T>(
+    held: &Connection,
+    entry: &OrderEntry,
+    space: Option<&str>,
+    sql: &str,
+    map: impl FnMut(&rusqlite::Row<'_>) -> rusqlite::Result<T>,
+) -> rusqlite::Result<Vec<T>> {
+    rows(
+        held,
+        &sql.replace("{LANE}", LANE),
+        named_params! {
+            ":table": entry.table,
+            ":variable": entry.variable,
+            ":space": space,
+            ":release": entry.release,
+        },
+        map,
+    )
+}
+
 /// The accepted placements of (table, variable) over `days` in database `space`
 /// (every database when `None`); a projection keeps only the days its parent does not
 /// also place, and only those inside the request. An entry of one release (a shared day
@@ -654,13 +687,23 @@ fn placements(
 ) -> Result<Vec<Placement>, Error> {
     let found: Vec<Placement> = rows(
         held,
-        "SELECT h.id, h.projection_of, c.id, m.start, m.end, m.caveat
+        &format!(
+            "SELECT h.id, h.projection_of, c.id, m.start, m.end, m.caveat
              FROM holding_mapping m JOIN holding_column c ON c.id = m.column_id
                JOIN holding_table h ON h.id = c.holding_id
-             WHERE m.table_pid = ?1 AND m.variable_pid = ?2 AND m.start < ?4 AND m.end > ?3
-               AND (?5 IS NULL OR h.space = ?5) AND (?6 IS NULL OR h.release = ?6)
-             ORDER BY h.id, c.ordinal, m.start",
-        rusqlite::params![table, variable, days.0, days.1, space, release],
+             WHERE m.table_pid = :table AND m.variable_pid = :variable
+               AND m.start < :hi AND m.end > :lo
+               AND (:space IS NULL OR h.space = :space) AND {LANE}
+             ORDER BY h.id, c.ordinal, m.start"
+        ),
+        named_params! {
+            ":table": table,
+            ":variable": variable,
+            ":lo": days.0,
+            ":hi": days.1,
+            ":space": space,
+            ":release": release,
+        },
         |r| {
             Ok(Placement {
                 holding: r.get(0)?,
@@ -794,29 +837,31 @@ fn gaps(
     if missing.is_empty() {
         return Ok(());
     }
-    let contested: Vec<Days> = merge(rows(
+    let days_of = |r: &rusqlite::Row<'_>| -> rusqlite::Result<Days> { Ok((r.get(0)?, r.get(1)?)) };
+    let contested: Vec<Days> = merge(lane_rows(
         held,
+        entry,
+        space,
         "SELECT n.start, n.end FROM holding_notice n
              JOIN holding_notice_candidate c ON c.notice_id = n.id
              JOIN holding_table h ON h.id = n.holding_id
              WHERE n.code = 'ambiguous_delivered_owners'
-               AND c.table_pid = ?1 AND c.variable_pid = ?2 AND (?3 IS NULL OR h.space = ?3)",
-        rusqlite::params![entry.table, entry.variable, space],
-        |r| Ok((r.get(0)?, r.get(1)?)),
+               AND c.table_pid = :table AND c.variable_pid = :variable
+               AND (:space IS NULL OR h.space = :space) AND {LANE}",
+        days_of,
     )?);
-    let windowed: Vec<Days> = merge(
-        rows(
-            held,
-            "SELECT DISTINCT p.start, p.end FROM holding_period p
+    let windowed: Vec<Days> = merge(lane_rows(
+        held,
+        entry,
+        space,
+        "SELECT DISTINCT p.start, p.end FROM holding_period p
                JOIN holding_table h ON h.id = p.holding_id
-             WHERE (?3 IS NULL OR h.space = ?3)
+             WHERE (:space IS NULL OR h.space = :space) AND {LANE}
                AND EXISTS(SELECT 1 FROM holding_mapping m JOIN holding_column c ON c.id = m.column_id
-               WHERE c.holding_id = p.holding_id AND m.table_pid = ?1 AND m.variable_pid = ?2
-                 AND m.window IS NOT NULL)",
-            rusqlite::params![entry.table, entry.variable, space],
-            |r| Ok((r.get(0)?, r.get(1)?)),
-        )?,
-    );
+               WHERE c.holding_id = p.holding_id AND m.table_pid = :table
+                 AND m.variable_pid = :variable AND m.window IS NOT NULL)",
+        days_of,
+    )?);
     let mut issue = |level, code: &str, piece: Days, message: String| {
         findings.push(Issue {
             source: Some(entry.source.clone()),

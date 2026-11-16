@@ -28,7 +28,8 @@ pub(crate) struct KeySegment {
     pub(crate) end: i64,
     state: String,
     entity: bool,
-    /// The release its segment belongs to (a concurrent table's), by name.
+    /// The release its segment belongs to (a concurrent table's), by name; for a
+    /// steward key column, the release its file states, as materialize places it.
     release: Option<String>,
     /// A curated row key. A base table also loads a key variable's other segments, which
     /// may shadow a key segment of no release ([`row_keys`] keeps keys only after).
@@ -128,7 +129,8 @@ fn steward_key_segments(
          )
          SELECT DISTINCT m.variable_pid,c.name,max(m.start,served.start,s.start),
                 min(m.end,served.end,s.end),s.state,json_extract(k.value,'$.period'),
-                EXISTS(SELECT 1 FROM json_each(k.value,'$.entity') e WHERE e.value=m.variable_pid)
+                EXISTS(SELECT 1 FROM json_each(k.value,'$.entity') e WHERE e.value=m.variable_pid),
+                h.release
          FROM held.holding_table h JOIN held.holding_column c ON c.holding_id=h.id
          JOIN held.holding_mapping m ON m.column_id=c.id JOIN json_each(h.key_requirements) k
          JOIN held.holding_column sc ON sc.holding_id=h.id
@@ -151,7 +153,7 @@ fn steward_key_segments(
                 end: r.get(3)?,
                 state: r.get(4)?,
                 entity: r.get(6)?,
-                release: None,
+                release: r.get(7)?,
                 row_key: true,
             },
             r.get::<_, Option<String>>(5)?,
@@ -192,13 +194,19 @@ fn merge_key_segments(out: Vec<KeySegment>) -> Vec<KeySegment> {
     let mut groups: BTreeMap<_, Vec<_>> = BTreeMap::new();
     for key in out {
         groups
-            .entry((key.variable, key.spelling, key.state, key.entity))
+            .entry((
+                key.variable,
+                key.spelling,
+                key.state,
+                key.entity,
+                key.release,
+            ))
             .or_default()
             .push((key.start, key.end));
     }
     groups
         .into_iter()
-        .flat_map(|((variable, spelling, state, entity), spans)| {
+        .flat_map(|((variable, spelling, state, entity, release), spans)| {
             reg_core::days::merge(spans)
                 .into_iter()
                 .map(move |(start, end)| KeySegment {
@@ -208,7 +216,7 @@ fn merge_key_segments(out: Vec<KeySegment>) -> Vec<KeySegment> {
                     end,
                     state: state.clone(),
                     entity,
-                    release: None,
+                    release: release.clone(),
                     row_key: true,
                 })
         })
