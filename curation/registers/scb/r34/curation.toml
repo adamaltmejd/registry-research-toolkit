@@ -28123,3 +28123,23 @@ relation = "continues"
 object = "scb/lisa/ku3yrkesstallning"
 at = "2019-01-01.."
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:sun2020niva-old"
+relation = "continues"
+object = "scb/lisa/sun2000niva-old"
+at = "2019-01-01.."
+evidence = "Operator ruling 2026-11-16 on #2499: SUN 2000 to SUN 2020 is a classification-version change with different code sets, so the two variables stay separate, joined by `continues`. Sun2000niva_old is delivered 1990-2018 and Sun2020Niva_Old from 2019, both as the highest education level aggregated to 7 Swedish levels; the column names carry the SUN version.\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A126\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A121"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-old"
+fields = { "label" = "Utbildningsnivå, aggregerad till 7 nivåer (SUN 2000)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-16 on #2499: the SUN version goes in the label; this variable is column Sun2000niva_old (1990-2018)."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-old"
+fields = { "label" = "Utbildningsnivå, aggregerad till 7 nivåer (SUN 2020)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-16 on #2499: the SUN version goes in the label; this variable is column Sun2020Niva_Old (2019-2024)."
