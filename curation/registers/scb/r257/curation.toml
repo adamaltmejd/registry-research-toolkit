@@ -8965,20 +8965,8 @@ evidence = "Variabeln avser egen FoU-verksamhet.\ncatalog:occurrence:247367\ncat
 [[statement]]
 kind = "set"
 subject = "var:inna-forvarv-existerande-kunskap"
-fields = { "sets" = ["kunskapsforvarv-for-innovation"] }
-evidence = "Variabeln avser kunskapsförvärv för innovation.\ncatalog:variable_text:28590:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:inna-forvarv-existerande-kunskap"
 fields = { "tags" = ["research"] }
 evidence = "Variabeln avser kunskapsförvärv för innovation.\ncatalog:variable_text:28590:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:inna-forvarv-maskiner"
-fields = { "sets" = ["utrustningsforvarv-for-innovation"] }
-evidence = "Variabeln avser utrustningsförvärv för innovation.\ncatalog:variable_text:28591:13149:14245"
 
 [[statement]]
 kind = "set"
@@ -9021,12 +9009,6 @@ kind = "set"
 subject = "var:sporadisk-fou-verksamhet"
 fields = { "tags" = ["research"] }
 evidence = "Id:t är en källkod och etiketten anger sporadisk FoU-verksamhet.\ncatalog:occurrence:248581\ncatalog:variable_text:28595:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:inna-marknadsintroduktion"
-fields = { "sets" = ["marknadsintroduktion-av-innovationer"] }
-evidence = "Variabeln avser marknadsintroduktion av innovationer.\ncatalog:variable_text:28596:13149:14245"
 
 [[statement]]
 kind = "set"
@@ -9045,12 +9027,6 @@ kind = "set"
 subject = "var:inna-rnd-contr-out"
 fields = { "tags" = ["research"] }
 evidence = "The source column has overlapping owners.\ncatalog:occurrence:248209\ncatalog:occurrence:248396"
-
-[[statement]]
-kind = "set"
-subject = "var:inna-utbildning"
-fields = { "sets" = ["utbildning-for-innovation"] }
-evidence = "Variabeln avser utbildning för innovation.\ncatalog:variable_text:28599:13149:14245"
 
 [[statement]]
 kind = "set"
@@ -9523,12 +9499,6 @@ evidence = "IPR är en bokstavskod som inte förekommer i etiketten. Id:t följe
 [[statement]]
 kind = "set"
 subject = "var:ipr-monsterskydd"
-fields = { "sets" = ["monsterskydd"] }
-evidence = "Variabeln mäter registrering av mönsterskydd.\ncatalog:variable_text:28723:16801:18262\ncatalog:variable_text:28723:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:ipr-monsterskydd"
 fields = { "tags" = ["business"] }
 evidence = "Variabeln mäter registrering av mönsterskydd.\ncatalog:variable_text:28723:16801:18262\ncatalog:variable_text:28723:18262:20089"
 
@@ -9603,12 +9573,6 @@ kind = "set"
 subject = "var:ipr-salt"
 fields = { "tags" = ["business"] }
 evidence = "Variabeln gäller försäljning eller utlicensiering av rättigheter. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion har belagt innehåll om försäljning av immateriella rättigheter. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: Ingen vald variabel är belagd som försäljning eller överlåtelse av immateriella rättigheter. membership-0293: Ingen vald variabel dokumenterar försäljning eller överlåtelse av immateriella rättigheter. membership-0294: Källan omfattar uttryckligen försäljning, vilket stöder medlemskap, men kombinationen med utlicensiering kräver definitionsgranskning. membership-0295: ipr-out-sell mäter uttryckligen försäljning eller överlåtelse. ipr-salt hålls utanför eftersom dess sammansatta fråga även omfattar den uttryckligen uteslutna utlicensieringen. membership-0296: Ingen vald variabel mäter belagd försäljning av immateriella rättigheter. membership-0297: Inga valda variabler belägger försäljning av immateriella rättigheter.\ncatalog:variable_text:28553:16801:18628\ncatalog:variable_text:28729:18262:20089\ncatalog:variable_text:28731:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:ipr-varumarke"
-fields = { "sets" = ["varumarkesskydd"] }
-evidence = "Variabeln mäter registrering av varumärke.\ncatalog:variable_text:28732:16801:18262\ncatalog:variable_text:28732:18262:20089"
 
 [[statement]]
 kind = "set"
@@ -10135,20 +10099,8 @@ evidence = "Källan anger förlängd produktlivscykel.\ncatalog:variable_text:28
 [[statement]]
 kind = "set"
 subject = "var:miljoinno-mangfald-intern"
-fields = { "sets" = ["miljoinnovation-biologisk-mangfald-i-foretaget"] }
-evidence = "Måttet gäller skydd av biologisk mångfald inom företaget.\ncatalog:variable_text:28792:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinno-mangfald-intern"
 fields = { "tags" = ["environment", "research"] }
 evidence = "Måttet gäller skydd av biologisk mångfald inom företaget.\ncatalog:variable_text:28792:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinno-mangfald-kons"
-fields = { "sets" = ["miljoinnovation-biologisk-mangfald-vid-slutkonsumtion"] }
-evidence = "Måttet gäller skydd av biologisk mångfald vid slutkonsumtion.\ncatalog:variable_text:28793:18993:20089"
 
 [[statement]]
 kind = "set"
@@ -10437,12 +10389,6 @@ kind = "set"
 subject = "var:koncerninterna-relationer-teknisk-kunskap-till-se"
 fields = { "tags" = ["business"] }
 evidence = "Id:t är en ogenomskinlig källkod för koncerninternt utbyte av teknisk kunskap.\ncatalog:variable_text:28909:16801:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:outlier"
-fields = { "sets" = ["outliermarkering"] }
-evidence = "Variabeln markerar en observation som inte är representativ för sitt stratum.\ncatalog:occurrence:248422\ncatalog:variable_text:28910:18262:19358"
 
 [[statement]]
 kind = "set"
@@ -11527,12 +11473,6 @@ evidence = "Variabeln avser stöd till innovationsaktiviteter från EU:s ramprog
 [[statement]]
 kind = "set"
 subject = "var:stora-n-per-stratum"
-fields = { "sets" = ["populationsstorlek-per-stratum"] }
-evidence = "Variabeln anger antal företagsenheter i populationen per stratum.\ncatalog:occurrence:248608\ncatalog:variable_text:29078:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:stora-n-per-stratum"
 fields = { "tags" = ["methods"] }
 evidence = "Variabeln anger antal företagsenheter i populationen per stratum.\ncatalog:occurrence:248608\ncatalog:variable_text:29078:18993:20089"
 
@@ -11679,12 +11619,6 @@ kind = "set"
 subject = "var:stratum"
 fields = { "tags" = ["methods"] }
 evidence = "Källan anger urvalsstratum.\ncatalog:variable_text:29092:11688:13514\ncatalog:variable_text:29092:16071:17897\ncatalog:variable_text:29092:18262:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:svarande-per-stratum"
-fields = { "sets" = ["svarande-per-stratum"] }
-evidence = "Variabeln anger antal svarande företagsenheter per stratum.\ncatalog:occurrence:248420\ncatalog:variable_text:29096:18262:19358"
 
 [[statement]]
 kind = "set"
@@ -12294,21 +12228,9 @@ evidence = "r103 and r148 identify the surveyed innovation obstacle as lack of i
 
 [[statement]]
 kind = "set"
-subject = "var:omsattningsandel-inno-ny-for-foretaget"
-fields = { "sets" = ["omsattningsandel-nya-endast-for-foretaget"] }
-evidence = "r158 defines turnover share from products new only to the firm and not its market, matching r185.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28755\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28846\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/omsattningsandel-nya-endast-for-foretaget"
-
-[[statement]]
-kind = "set"
 subject = "var:omsattningsandel-inno-ny-for-marknad"
 fields = { "sets" = ["omsattningsandel-marknadsnya-produkter"] }
 evidence = "r159 defines the turnover share from products new to the firm's market, matching r184.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28756\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28847\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/omsattningsandel-marknadsnya-produkter"
-
-[[statement]]
-kind = "set"
-subject = "var:omsattningsandel-oforandrade-varor"
-fields = { "sets" = ["omsattningsandel-oforandrade-produkter"] }
-evidence = "r160 defines turnover share from unchanged or marginally changed products, matching r186.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28757\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28848\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/omsattningsandel-oforandrade-produkter"
 
 [[statement]]
 kind = "set"
@@ -12546,38 +12468,8 @@ evidence = "#2100 group name: the slug read as words, then adjusted on review (d
 
 [[statement]]
 kind = "set"
-subject = "set:kunskapsforvarv-for-innovation"
-fields = { "label" = "Kunskapsförvärv för innovation" }
-evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:lanefinansiering"
 fields = { "label" = "Lånefinansiering" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:marknadsintroduktion-av-innovationer"
-fields = { "label" = "Marknadsintroduktion av innovationer" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:miljoinnovation-biologisk-mangfald-i-foretaget"
-fields = { "label" = "Miljöinnovation biologisk mångfald i företaget" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:miljoinnovation-biologisk-mangfald-vid-slutkonsumtion"
-fields = { "label" = "Miljöinnovation biologisk mångfald vid slutkonsumtion" }
-evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:monsterskydd"
-fields = { "label" = "Mönsterskydd" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
@@ -12594,33 +12486,9 @@ evidence = "#2100 group name: slug words restored from catalog wording, then adj
 
 [[statement]]
 kind = "set"
-subject = "set:omsattningsandel-nya-endast-for-foretaget"
-fields = { "label" = "Omsättningsandel nya endast för företaget" }
-evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (diacritics)."
-
-[[statement]]
-kind = "set"
-subject = "set:omsattningsandel-oforandrade-produkter"
-fields = { "label" = "Omsättningsandel oförändrade produkter" }
-evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (diacritics)."
-
-[[statement]]
-kind = "set"
 subject = "set:omsattningssummor-per-stratum"
 fields = { "label" = "Omsättningssummor per stratum" }
 evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
-
-[[statement]]
-kind = "set"
-subject = "set:outliermarkering"
-fields = { "label" = "Outliermarkering" }
-evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:populationsstorlek-per-stratum"
-fields = { "label" = "Populationsstorlek per stratum" }
-evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
 
 [[statement]]
 kind = "set"
@@ -12654,12 +12522,6 @@ evidence = "#2100 group name: slug words restored from catalog wording, then adj
 
 [[statement]]
 kind = "set"
-subject = "set:svarande-per-stratum"
-fields = { "label" = "Svarande per stratum" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:svarforutsagbar-teknisk-utveckling"
 fields = { "label" = "Svårförutsägbar teknisk utveckling" }
 evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
@@ -12690,33 +12552,15 @@ evidence = "#2100 group name: slug words restored from catalog wording; kept on 
 
 [[statement]]
 kind = "set"
-subject = "set:utbildning-for-innovation"
-fields = { "label" = "Utbildning för innovation" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:utlagd-fou-verksamhet"
 fields = { "label" = "Utlagd FoU-verksamhet" }
 evidence = "#2100 group name: slug words restored from the member and register labels, then adjusted on review (hyphen)."
 
 [[statement]]
 kind = "set"
-subject = "set:utrustningsforvarv-for-innovation"
-fields = { "label" = "Utrustningsförvärv för innovation" }
-evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:utvecklare-av-produktinnovation"
 fields = { "label" = "Utvecklare av produktinnovation" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:varumarkesskydd"
-fields = { "label" = "Varumärkesskydd" }
-evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
 
 [[statement]]
 kind = "set"
