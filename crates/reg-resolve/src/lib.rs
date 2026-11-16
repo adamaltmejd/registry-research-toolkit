@@ -1764,7 +1764,6 @@ pub(crate) fn placed(r: &Release) -> Option<Interval> {
     Some((r.from.clone()?, r.to.clone()?))
 }
 
-/// The period of an occurrence that is placed.
 /// The primary releases of each table with their periods, sorted (empty for a table with
 /// no placed primary), and each non-primary release's primary.
 pub(crate) struct Deliveries {
@@ -1812,6 +1811,7 @@ impl Deliveries {
     }
 }
 
+/// The period of an occurrence that is placed.
 pub(crate) fn span(r: &ResolvedOccurrence) -> &Interval {
     r.period.as_ref().expect("a placed occurrence")
 }
