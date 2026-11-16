@@ -319,13 +319,15 @@ pub(super) fn candidates(
                 }
                 None => owed.to_vec(),
             };
+            // Documented as the file's release reads it: another release's segment on a
+            // shared day documents nothing for this file.
             let documented = days::merge(
                 variable
                     .iter()
                     .filter(|s| {
                         s.state != "ambiguous" && s.timeless == (table.disposition == "timeless")
                     })
-                    .map(|s| (s.start, s.end))
+                    .flat_map(|s| reach.spans(s, &wanted))
                     .collect(),
             );
             if mapping.delivery.is_some() && !days::covered(&wanted, &documented) {

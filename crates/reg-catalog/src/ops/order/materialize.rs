@@ -470,6 +470,7 @@ fn reference(server: &Server, entry: &OrderEntry, (lo, hi): Days) -> Ref {
         binding: Some(entry.binding),
         table: entry.table.clone(),
         variable: entry.variable.clone(),
+        release: entry.release.clone(),
         period: server.period(lo, hi),
         spelling: entry.spelling.clone(),
     }
@@ -1245,6 +1246,7 @@ fn keys(
                             binding: None,
                             table: table.clone(),
                             variable: (*variable).to_owned(),
+                            release: None,
                             period: server.period(piece.0, piece.1),
                             spelling: name.clone(),
                         });

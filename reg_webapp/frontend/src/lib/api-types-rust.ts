@@ -364,6 +364,12 @@ export interface components {
             binding: number | null;
             /** @description The days of this reference the file holds. */
             period: components["schemas"]["Period"];
+            /**
+             * @description The release of the entry it serves: the one a shared day of a concurrent table
+             *     is ordered in (none elsewhere, and for a row key nobody requested). The runner
+             *     does not read it; the order reads it to cut each release's entries.
+             */
+            release?: string | null;
             source: string;
             /** @description The catalog's column name; the file uses `name`. */
             spelling: string;

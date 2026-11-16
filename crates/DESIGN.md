@@ -3167,7 +3167,10 @@ period and qualifier), and the catalog keeps every release's own columns.
   columns, authored windows) and its steward row keys; an entry with no release draws
   on every file. Its gaps (`coverage_gap`, `column_window_unavailable`) name the
   release and are judged by what that release's files and the unshared days deliver,
-  so another release's file on the same day hides none, and they clip the binding. Compile
+  so another release's file on the same day hides none, and they clip the binding. A
+  column's `refs` name that release, so the order keeps each release's entries and row
+  keys to its own files; the runner does not read `refs`, so the manifest version is
+  unchanged. Compile
   places one slice of a physical column once per variable and table, so two segments
   of one variable on one day place it once. A table's releases and shared days are
   read on its origin, as the order check reads them: the base catalog's, or the

@@ -105,13 +105,15 @@ fn claims(
                 .transpose()?
                 .unwrap_or_else(|| spans.clone());
             let variable = compile::mapping_segments(index, variables, mapping)?;
-            let documented: Vec<_> = variable
-                .iter()
-                .filter(|s| {
-                    s.state != "ambiguous" && s.timeless == (table.disposition == "timeless")
-                })
-                .map(|s| (s.start, s.end))
-                .collect();
+            let documented: Vec<_> = days::merge(
+                variable
+                    .iter()
+                    .filter(|s| {
+                        s.state != "ambiguous" && s.timeless == (table.disposition == "timeless")
+                    })
+                    .flat_map(|s| reach.spans(s, &wanted))
+                    .collect(),
+            );
             if mapping.delivery.is_some()
                 && (!days::covered(&wanted, &spans) || !days::covered(&wanted, &documented))
             {
