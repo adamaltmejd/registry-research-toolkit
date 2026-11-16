@@ -8527,3 +8527,27 @@ kind = "set"
 subject = "release:asylsokande-i-sverige/r20326"
 fields = { "table" = "asylsokande-inskrivna-31-12" }
 evidence = "SCB documents the 31 December file (persons registered in the reception system at year end) beside the year file (persons who applied for asylum during the year) for the same year, with other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "grund-bosattning: GrundForBosattning where key = 'v8180'"
+fields = { "variable" = "grund-for-bosattning" }
+evidence = "SCB documents GFBKod (1987-2005) and GrundForBosattning (2006-2008) in the year files under one VarId 8180; the two spellings never share a release. One variable on main; after the 31 December files moved to their own table (class C, maintainer ruling 2026-11-16) the default pass no longer joins the GrundForBosattning spelling to it, so the identity is stated."
+
+[[statement]]
+kind = "set"
+subject = "grund-bosattning-folkbokforda-31-12: GrundForBosattning where key = 'v8180'"
+fields = { "variable" = "grund-for-bosattning" }
+evidence = "SCB documents GFBKod (1990-2006) and GrundForBosattning (2007-2010) in the 31 December files under one VarId 8180; the two spellings never share a release. One variable on main; after the 31 December files moved to their own table (class C, maintainer ruling 2026-11-16) the default pass no longer joins the GrundForBosattning spelling to it, so the identity is stated."
+
+[[statement]]
+kind = "set"
+subject = "grund-bosattning: GFBKod"
+fields = { "variable" = "grund-for-bosattning" }
+evidence = "SCB documents GFBKod (1987-2005) and GrundForBosattning (2006-2008) in the year files under one VarId 8180; the two spellings never share a release. One variable on main; after the 31 December files moved to their own table (class C, maintainer ruling 2026-11-16) the default pass no longer joins the GrundForBosattning spelling to it, so the identity is stated."
+
+[[statement]]
+kind = "set"
+subject = "grund-bosattning-folkbokforda-31-12: GFBKod"
+fields = { "variable" = "grund-for-bosattning" }
+evidence = "SCB documents GFBKod (1990-2006) and GrundForBosattning (2007-2010) in the 31 December files under one VarId 8180; the two spellings never share a release. One variable on main; after the 31 December files moved to their own table (class C, maintainer ruling 2026-11-16) the default pass no longer joins the GrundForBosattning spelling to it, so the identity is stated."
