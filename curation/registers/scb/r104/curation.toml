@@ -1456,6 +1456,24 @@ evidence = "Row key: personnr identify a row: one row per panel pupil; school id
 
 [[statement]]
 kind = "set"
+subject = "elevpanel-7-betyg: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: one row per panel pupil; school ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
 subject = "elevpanel-8: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: one row per panel pupil; school unit ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "assert"
+subject = "table:elevpanel-7-betyg"
+fact = { "entity" = "table", "fields" = { "name" = "Elevpanel 7, betyg", "description" = "Elevernas ämnesbetyg i årskurs 8, insamlade i en kompletterande insamling hösten 2013. För de flesta elever avser betygen vårterminen 2013; för elever som läste årskurs 8 läsåret 2011/12 vårterminen 2012. Elever som vårterminen 2013 gick i en lägre årskurs har inga betyg. Elevpanelens vårterminsundersökningar finns i tabellen Elevpanel 7." } }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, class C): parallel files with different content in one table move to a table of their own. SCB Registerinformation, RegVerID 5510 \"Vårterminen 2013 - betyg\": \"Hösten 2013 utfördes en kompletterande insamling av elevernas ämnesbetyg i årskurs 8. För de flesta elever innebar detta betyg från vårterminen 2013, men om eleven läste årskurs 8 läsåret 2011/12 efterfrågades istället betyg från vårterminen 2012. Och om eleven vårterminen 2013 befann sig i en lägre årskurs än årskurs 8 angavs detta i blanketten och inga betyg lämnades.\" It sits beside the term survey \"Vårterminen 2013\" (5177) and shares 5 of its 32 columns with it."
+
+[[statement]]
+kind = "set"
+subject = "release:elevpanel-7/r5510"
+fields = { "table" = "elevpanel-7-betyg" }
+evidence = "SCB documents the grades file (RegVerID 5510) beside the spring-term survey of the same term (5177), with other content. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
