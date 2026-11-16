@@ -17711,9 +17711,9 @@ evidence = "Row key: personnr is the table's only identifier and names its unit 
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal-mobilitet: var:personnr"
+subject = "uoh-personal-mobilitet: var:lopnummer-anstallningar"
 fields.row_key = true
-evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+evidence = "Row key: lopnummer-anstallningar (LopNrTjanst, lopnrtjanst, U_SCBID; source key v2519) identifies a row in every mobility file (2015, 2017, 2021, 2023); the 2017 file has no person id, so personnr (2015, 2021, 2023) is an attribute here (maintainer ruling 2026-11-14 on row keys)."
 
 [[statement]]
 kind = "set"
