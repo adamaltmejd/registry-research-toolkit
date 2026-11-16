@@ -6206,6 +6206,102 @@ evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of
 
 [[statement]]
 kind = "set"
+subject = "var:atg-filler"
+fields = { "label" = "Filler (kolumn ATG_FILLER)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; filler columns stay orderable. The layouts label every filler \"Filler\", so the column name is what tells them apart. Column ATG_FILLER in arpost.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:atg-filler2"
+fields = { "label" = "Filler (kolumn ATG_FILLER2)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; filler columns stay orderable. The layouts label every filler \"Filler\", so the column name is what tells them apart. Column ATG_FILLER2 in arpost.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:filler"
+fields = { "label" = "Filler (kolumn FILLER)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; filler columns stay orderable. The layouts label every filler \"Filler\", so the column name is what tells them apart. Column FILLER in aepost, alpost, arpost, btpost, sopost.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:filler-1"
+fields = { "label" = "Filler (kolumn FILLER_1)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; filler columns stay orderable. The layouts label every filler \"Filler\", so the column name is what tells them apart. Column FILLER_1 in alpost, arpost, btpost, sopost.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:filler-2"
+fields = { "label" = "Filler (kolumn FILLER_2)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; filler columns stay orderable. The layouts label every filler \"Filler\", so the column name is what tells them apart. Column FILLER_2 in alpost, arpost, btpost.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:filler-3"
+fields = { "label" = "Filler (kolumn FILLER_3)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; filler columns stay orderable. The layouts label every filler \"Filler\", so the column name is what tells them apart. Column FILLER_3 in alpost, arpost.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:filler-4"
+fields = { "label" = "Filler (kolumn FILLER_4)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; filler columns stay orderable. The layouts label every filler \"Filler\", so the column name is what tells them apart. Column FILLER_4 in alpost, arpost.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:filler-5"
+fields = { "label" = "Filler (kolumn FILLER_5)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; filler columns stay orderable. The layouts label every filler \"Filler\", so the column name is what tells them apart. Column FILLER_5 in alpost, arpost.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:filler-6"
+fields = { "label" = "Filler (kolumn FILLER_6)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; filler columns stay orderable. The layouts label every filler \"Filler\", so the column name is what tells them apart. Column FILLER_6 in alpost, arpost.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:filler-7"
+fields = { "label" = "Filler (kolumn FILLER_7)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; filler columns stay orderable. The layouts label every filler \"Filler\", so the column name is what tells them apart. Column FILLER_7 in alpost, arpost.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:filler-8"
+fields = { "label" = "Filler (kolumn FILLER_8)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; filler columns stay orderable. The layouts label every filler \"Filler\", so the column name is what tells them apart. Column FILLER_8 in alpost, arpost.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:filler-9"
+fields = { "label" = "Filler (kolumn FILLER_9)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; filler columns stay orderable. The layouts label every filler \"Filler\", so the column name is what tells them apart. Column FILLER_9 in alpost, arpost.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:filler1"
+fields = { "label" = "Filler (kolumn FILLER1)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; filler columns stay orderable. The layouts label every filler \"Filler\", so the column name is what tells them apart. Column FILLER1 in alpost, arpost, btpost.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:filler2"
+fields = { "label" = "Filler (kolumn FILLER2)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; filler columns stay orderable. The layouts label every filler \"Filler\", so the column name is what tells them apart. Column FILLER2 in arpost, btpost.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:filler3"
+fields = { "label" = "Filler (kolumn FILLER3)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; filler columns stay orderable. The layouts label every filler \"Filler\", so the column name is what tells them apart. Column FILLER3 in arpost.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:filler4"
+fields = { "label" = "Filler (kolumn FILLER4)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; filler columns stay orderable. The layouts label every filler \"Filler\", so the column name is what tells them apart. Column FILLER4 in arpost.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
 subject = "arpost: ANTBT_1 @1992-01-01..1992-06-30"
 fields = { "variable" = "antbt" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. In VT92 ANTBT_1 holds the BT-record count (Antal betygsegment, 0-2) that ANTBT holds HT77-HT91; ANTBT is not delivered in VT92. In HT91 ANTBT_1 is another field (Sökanden antagen till högst prioriterat alt i urval nummer: blank, 1, 2, 3), delivered beside ANTBT.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Ansökan (ARPOST); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
