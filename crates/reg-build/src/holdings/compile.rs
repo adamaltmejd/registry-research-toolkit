@@ -198,12 +198,11 @@ pub(super) fn stated_release(
 /// shadowing rule (`reg_core::days::shadow`), with the table's release as the lane. A
 /// table that states a release is that release's file, so it places that release's
 /// segments and releaseless ones where they do not reach, never another release's. One
-/// that states none places as on an unshared day, and no shared day, which an order
-/// serves per release only.
+/// that states none places as on an unshared day; an order's entry of a release is not
+/// served from it ([`stated_release`]).
 pub(super) struct Reach<'a> {
     /// The release's catalog name ([`stated_release`]).
     pub release: Option<String>,
-    pub shared: &'a BTreeMap<String, Vec<Span>>,
     pub variables: &'a Variables<'a>,
 }
 
@@ -227,11 +226,7 @@ impl Reach<'_> {
             .map(|s| ((s.start, s.end), s.release.as_deref()))
             .collect();
         let served = days::shadow(&lines, self.release.as_deref()).swap_remove(at);
-        let spans = days::overlap(wanted, &served);
-        match (&self.release, self.shared.get(&segment.table)) {
-            (None, Some(shared)) => days::minus(&spans, shared),
-            _ => spans,
-        }
+        days::overlap(wanted, &served)
     }
 }
 
@@ -749,7 +744,6 @@ pub(super) fn write(
     let index = segment_index(base, db)?;
     let variables = by_variable(&index);
     let primaries = primaries(base, db)?;
-    let shared = shared_days(&primaries);
     renames_resolve(&index, rename_targets)?;
     let keyed = schema_keyed(&census);
     let mut authored = BTreeMap::new();
@@ -801,7 +795,6 @@ pub(super) fn write(
             let release = stated_release(&primaries, authored)?;
             let reach = Reach {
                 release: release.clone(),
-                shared: &shared,
                 variables: &variables,
             };
             if authored.partition.is_some() && authored.projection_of.is_some() {

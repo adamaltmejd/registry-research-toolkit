@@ -1,6 +1,6 @@
 # Synthetic: one file per release of demo/waves/t, whose releases "2017 - 2018" and
 # "2018 - 2019" share 2018. Each file states its release and its whole span, and is
-# placed by name. Appended to holdings.toml.
+# placed by name. Extra is only in the file of "2017 - 2018". Appended to holdings.toml.
 [[table]]
 physical_name = "Wave 2018"
 disposition = "dated"

@@ -248,7 +248,6 @@ pub(super) fn verify(
     variables: &compile::Variables<'_>,
     topology: &input::Topology,
     census: &reg_readers::holdings::ReadOutput,
-    shared: &BTreeMap<String, Vec<Span>>,
     primaries: &compile::Primaries,
 ) -> Result<()> {
     compile::renames_resolve(index, &census.rename_targets)?;
@@ -282,7 +281,6 @@ pub(super) fn verify(
                         variables,
                         &compile::Reach {
                             release: compile::stated_release(primaries, authored)?,
-                            shared,
                             variables,
                         },
                     )?,

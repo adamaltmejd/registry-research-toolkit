@@ -507,9 +507,7 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<()> {
     let tables = compile::segment_index(&base, &db)?;
     let variables = compile::by_variable(&tables);
     super::keys::verify(&db, &base, &variables, &topology)?;
-    super::verify_mappings::verify(
-        &db, &tables, &variables, &topology, &census, &shared, &primaries,
-    )?;
+    super::verify_mappings::verify(&db, &tables, &variables, &topology, &census, &primaries)?;
     // A documented position family only authorizes distinct positions in one file.
     // Other duplicates within one space still need a partition, projection, or carried
     // key; the same placement in two spaces is two databases' copies, and on a shared

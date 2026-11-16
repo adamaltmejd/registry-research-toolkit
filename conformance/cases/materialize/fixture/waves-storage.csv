@@ -1,4 +1,5 @@
 dbo,Wave 2018,BASE TABLE,Id,int,,10,0,1
 dbo,Wave 2018,BASE TABLE,Score,int,,10,0,2
+dbo,Wave 2018,BASE TABLE,Extra,int,,10,0,3
 dbo,Wave 2019,BASE TABLE,Id,int,,10,0,1
 dbo,Wave 2019,BASE TABLE,Score,int,,10,0,2

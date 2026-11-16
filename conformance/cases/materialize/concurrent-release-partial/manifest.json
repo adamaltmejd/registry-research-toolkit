@@ -1,0 +1,135 @@
+{
+  "clips": [
+    {
+      "binding": 0,
+      "ordered": [
+        {
+          "end": "2019-01-01",
+          "start": "2017-01-01"
+        }
+      ],
+      "requested": [
+        {
+          "end": "2020-01-01",
+          "start": "2017-01-01"
+        }
+      ],
+      "source": "w",
+      "variable": "demo/waves/extra"
+    }
+  ],
+  "extract_format": "dta",
+  "files": [
+    {
+      "columns": [
+        {
+          "name": "Extra",
+          "refs": [
+            {
+              "binding": 0,
+              "period": {
+                "end": "2018-01-01",
+                "start": "2017-01-01"
+              },
+              "source": "w",
+              "spelling": "Extra",
+              "table": "demo/waves/t",
+              "variable": "demo/waves/extra"
+            },
+            {
+              "binding": 0,
+              "period": {
+                "end": "2019-01-01",
+                "start": "2018-01-01"
+              },
+              "source": "w",
+              "spelling": "Extra",
+              "table": "demo/waves/t",
+              "variable": "demo/waves/extra"
+            }
+          ],
+          "role": "ordered",
+          "storage": {
+            "length": null,
+            "precision": 10,
+            "scale": 0,
+            "type": "int"
+          }
+        },
+        {
+          "name": "Id",
+          "refs": [
+            {
+              "binding": null,
+              "period": {
+                "end": "2019-01-01",
+                "start": "2017-01-01"
+              },
+              "source": "w",
+              "spelling": "Id",
+              "table": "demo/waves/t",
+              "variable": "demo/waves/id"
+            }
+          ],
+          "role": "row_key",
+          "storage": {
+            "length": null,
+            "precision": 10,
+            "scale": 0,
+            "type": "int"
+          }
+        }
+      ],
+      "delivery": "2017..2018",
+      "name": "wave_2018",
+      "schema": "dbo",
+      "table": "Wave 2018"
+    }
+  ],
+  "findings": [
+    {
+      "code": "coverage_gap",
+      "level": "warning",
+      "message": "There is no data on demo/waves/extra in the release \"2018 - 2019\" of demo/waves/t for 2018. That part of the period will not be delivered.",
+      "path": "/sources/0/bindings/0",
+      "period": {
+        "end": "2019-01-01",
+        "start": "2018-01-01"
+      },
+      "source": "w",
+      "successor_fqid": null,
+      "table": "demo/waves/t",
+      "variable": "demo/waves/extra"
+    },
+    {
+      "code": "coverage_gap",
+      "level": "warning",
+      "message": "There is no data on demo/waves/extra in demo/waves/t for 2019. That part of the period will not be delivered.",
+      "path": "/sources/0/bindings/0",
+      "period": {
+        "end": "2020-01-01",
+        "start": "2019-01-01"
+      },
+      "source": "w",
+      "successor_fqid": null,
+      "table": "demo/waves/t",
+      "variable": "demo/waves/extra"
+    }
+  ],
+  "provenance": {
+    "catalog": {
+      "release": "dev",
+      "schema": "17"
+    },
+    "holdings": {
+      "owner": "fixture"
+    },
+    "mode": "steward_holdings",
+    "project": {
+      "name": "Concurrent release partial holdings",
+      "schema_version": "6.3.0"
+    },
+    "steward": "fixture"
+  },
+  "version": 4
+}

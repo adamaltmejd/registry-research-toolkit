@@ -3157,14 +3157,16 @@ period and qualifier), and the catalog keeps every release's own columns.
   rule (`reg_core::days::shadow`), with the table's release as the lane: a release's
   file places its release's segments and releaseless ones where those do not reach,
   never another release's, so a column matched by name on a shared day goes to the
-  right release. A table that states no release places as on an unshared day, and no
-  shared day, since an order serves those days per release only (a file dated wholly
-  on shared days places nothing, and its declared key is `holdings_key_missing`). Two
-  tables of different
-  releases may place one variable on a shared day of its table: each is its release's
-  delivery, not a duplicate (`inventory_cell_conflict` still refuses two tables of one release,
-  or one of a release and one of none). An order entry of a release is placed only in
-  the files that state that release; an entry with no release in any file. Compile
+  right release. A table that states no release places as on an unshared day, its
+  shared days included, so its keys and other routes stay placed; a steward-derived
+  table (no `table_pids`) cannot state one. Two tables of different releases may place
+  one variable on a shared day of its table: each is its release's delivery, not a
+  duplicate (`inventory_cell_conflict` still refuses two tables of one release, or one
+  of a release and one of none). An order entry of a release is placed only in the
+  files that state that release; an entry with no release in any file. Its gaps
+  (`coverage_gap`, `column_window_unavailable`) name the release and are judged by what
+  that release's files and the unshared days deliver, so another release's file on the
+  same day hides none, and they clip the binding. Compile
   places one slice of a physical column once per variable and table, so two segments
   of one variable on one day place it once. A table's releases and shared days are
   read on its origin, as the order check reads them: the base catalog's, or the

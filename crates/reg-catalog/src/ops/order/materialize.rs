@@ -153,8 +153,9 @@ struct Draft {
 /// in declaration order.
 type ColumnKey = (u8, usize, usize, usize, i64, i64);
 
-/// Per (source, binding): its variable, requested days and held days.
-type Bindings = BTreeMap<(usize, usize), (String, Vec<Days>, Vec<Days>)>;
+/// Per (source, binding): its variable, requested days and held days by release (the
+/// entry's `release`; `None` off shared days).
+type Bindings = BTreeMap<(usize, usize), (String, Vec<Days>, BTreeMap<Option<String>, Vec<Days>>)>;
 
 #[allow(clippy::too_many_lines)]
 fn build(
@@ -175,6 +176,9 @@ fn build(
     let space = space.as_deref();
     let mut drafts: BTreeMap<i64, Draft> = BTreeMap::new();
     let mut bindings = Bindings::new();
+    // The holdings gap findings of an entry of one release, with that release: a shared
+    // day another release delivers does not hide them ([`clip`]).
+    let mut lane_gaps: Vec<(Issue, String)> = Vec::new();
     for (e, entry) in order.entries.iter().enumerate() {
         let s = index[entry.source.as_str()];
         let days = entry.period.days(open);
@@ -196,13 +200,14 @@ fn build(
                     .variable
                     .clone(),
                 vec![],
-                vec![],
+                BTreeMap::new(),
             )
         });
         binding.1.push(days);
+        let lane_held = binding.2.entry(entry.release.clone()).or_default();
         for p in &placements {
             let piece = (days.0.max(p.days.0), days.1.min(p.days.1));
-            binding.2.push(piece);
+            lane_held.push(piece);
             let draft = drafts.entry(p.holding).or_insert_with(|| Draft {
                 first: (s, entry.binding, e),
                 path: format!("/sources/{s}/bindings/{}", entry.binding),
@@ -243,6 +248,7 @@ fn build(
                 });
             }
         }
+        let before = findings.len();
         gaps(
             held,
             server,
@@ -253,6 +259,13 @@ fn build(
             &placements,
             &mut findings,
         )?;
+        if let Some(release) = &entry.release {
+            lane_gaps.extend(
+                findings[before..]
+                    .iter()
+                    .map(|f| (f.clone(), release.clone())),
+            );
+        }
     }
     // Per source, every day it requested of any table: a file's rows outside these are
     // extra, whichever file serves the rest.
@@ -277,6 +290,7 @@ fn build(
         order,
         &project.sources,
         &mut bindings,
+        &lane_gaps,
         &mut findings,
     );
     let format = project.extract_format.unwrap_or(ExtractFormat::Dta);
@@ -538,7 +552,7 @@ fn not_in_database(
         .map(|(i, s)| (s.name(), i))
         .collect();
     for (&(s, b), (variable, _, holds)) in bindings {
-        if !holds.is_empty() {
+        if holds.values().any(|days| !days.is_empty()) {
             continue;
         }
         let mut elsewhere: BTreeSet<(i64, String)> = BTreeSet::new();
@@ -841,6 +855,7 @@ fn gaps(
                 "column_window_unavailable",
                 &entry.variable,
                 &entry.table,
+                entry.release.as_deref(),
                 server,
                 piece,
             ),
@@ -851,7 +866,14 @@ fn gaps(
             IssueLevel::Warning,
             "coverage_gap",
             piece,
-            gap_message("coverage_gap", &entry.variable, &entry.table, server, piece),
+            gap_message(
+                "coverage_gap",
+                &entry.variable,
+                &entry.table,
+                entry.release.as_deref(),
+                server,
+                piece,
+            ),
         );
     }
     Ok(())
@@ -859,8 +881,19 @@ fn gaps(
 
 /// A `coverage_gap` or `column_window_unavailable` message over `days` in words; [`clip`]
 /// rewrites it when it reports only part of the gap.
-fn gap_message(code: &str, variable: &str, table: &str, server: &Server, (lo, hi): Days) -> String {
+fn gap_message(
+    code: &str,
+    variable: &str,
+    table: &str,
+    release: Option<&str>,
+    server: &Server,
+    (lo, hi): Days,
+) -> String {
     let days = words::plain_none(&[server.period(lo, hi)]);
+    let table = release.map_or_else(
+        || table.to_owned(),
+        |name| format!("the release \"{name}\" of {table}"),
+    );
     if code == "column_window_unavailable" {
         format!("The column for {variable} in {table} does not cover {days}.")
     } else {
@@ -870,19 +903,34 @@ fn gap_message(code: &str, variable: &str, table: &str, server: &Server, (lo, hi
 
 /// Per binding: a binding no placement holds at all blocks (its gaps become errors,
 /// `coverage_gap` as `mapping_missing`); each binding delivered over less than its
-/// request (logical availability and physical possession together) is a clip.
+/// request (logical availability and physical possession together) is a clip. A gap of
+/// one release's entry (`lane_gaps`) is judged by what that release delivers with the
+/// days no release shares, never by another release's file on the same day.
 fn clip(
     server: &Server,
     order: &LogicalOrder,
     sources: &[reg_core::project::Source],
     bindings: &mut Bindings,
+    lane_gaps: &[(Issue, String)],
     findings: &mut Vec<Issue>,
 ) -> Vec<Clip> {
     let open = server.open;
     let mut clips = Vec::new();
     for (&(s, b), (variable, requested, holds)) in bindings.iter_mut() {
         let path = format!("/sources/{s}/bindings/{b}");
-        let held = merge(std::mem::take(holds));
+        let by_release = std::mem::take(holds);
+        let held = merge(by_release.values().flatten().copied().collect());
+        // A release's delivery: its own entries' days and those of no release.
+        let lane = |name: &String| -> Vec<Days> {
+            merge(
+                [None, Some(name.clone())]
+                    .iter()
+                    .filter_map(|key| by_release.get(key))
+                    .flatten()
+                    .copied()
+                    .collect(),
+            )
+        };
         let source = sources[s].name();
         // The source's own request, not the logical entries: those are already cut to
         // catalog coverage, and the logical check may have left that cut unreported.
@@ -912,6 +960,7 @@ fn clip(
         let gap =
             |f: &Issue| ["coverage_gap", "column_window_unavailable"].contains(&f.code.as_str());
         let mut kept = Vec::with_capacity(findings.len());
+        let mut release_clipped = false;
         for f in std::mem::take(findings) {
             let Some(piece) = (f.path == path && gap(&f))
                 .then(|| f.period.as_ref().map(|p| p.days(open)))
@@ -920,13 +969,18 @@ fn clip(
                 kept.push(f);
                 continue;
             };
-            for sub in reported_gaps(&[piece], &asked, &held) {
+            let release = lane_gaps.iter().find(|(g, _)| *g == f).map(|(_, r)| r);
+            let delivered = release.map_or_else(|| held.clone(), lane);
+            let reported = reported_gaps(&[piece], &asked, &delivered);
+            release_clipped |= release.is_some() && !reported.is_empty();
+            for sub in reported {
                 let mut part = f.clone();
                 if sub != piece {
                     part.message = gap_message(
                         &part.code,
                         part.variable.as_deref().unwrap_or_default(),
                         part.table.as_deref().unwrap_or_default(),
+                        release.map(String::as_str),
                         server,
                         sub,
                     );
@@ -957,7 +1011,7 @@ fn clip(
                 });
             }
         }
-        if !reported_gaps(&minus(&asked, &held), &asked, &held).is_empty() {
+        if release_clipped || !reported_gaps(&minus(&asked, &held), &asked, &held).is_empty() {
             let periods = |days: &[Days]| days.iter().map(|&(a, z)| server.period(a, z)).collect();
             clips.push(Clip {
                 source: source.to_owned(),

@@ -35,3 +35,5 @@
 {"kind":"occurrence","provider":"demo","register":"waves","table":"t","release":"w2","column":"Id","source_key":"id","label":"Respondent","dtype":"int","identifier":true}
 {"kind":"occurrence","provider":"demo","register":"waves","table":"t","release":"w1","column":"Score","source_key":"score","label":"Wave score","dtype":"int"}
 {"kind":"occurrence","provider":"demo","register":"waves","table":"t","release":"w2","column":"Score","source_key":"score","label":"Wave score","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"waves","table":"t","release":"w1","column":"Extra","source_key":"extra","label":"Wave extra","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"waves","table":"t","release":"w2","column":"Extra","source_key":"extra","label":"Wave extra","dtype":"int"}
