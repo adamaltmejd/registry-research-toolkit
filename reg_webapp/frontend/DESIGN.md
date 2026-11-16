@@ -1271,7 +1271,9 @@ grow new visual language meanwhile.
   table has or the steward has data for (a year without data is not listed as
   delivered, #2220), "Delivered as" for a table the catalog merged from several of the
   provider's tables (each provider table's name with its years, the name an order uses;
-  absent otherwise), and the "Row identifier" columns. There is no order-file download: the
+  absent otherwise), "Deliveries" where the project names releases for years they share
+  (each named release with the shared years it delivers, so a year delivered twice reads
+  so; new rule, proposed by the implementer), and the "Row identifier" columns. There is no order-file download: the
   steward's instructions say how to order. With no project the page is one `EmptyState`,
   "No project yet", with "Create a project" and "Open a project file…". Below
   `breakpoint-narrow` a column's row on a card stacks: its name and Remove, its spans,
