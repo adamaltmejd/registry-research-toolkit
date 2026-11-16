@@ -1005,7 +1005,7 @@ evidence = "https://www.scb.se/vara-tjanster/bestall-data-och-statistik/mikrodat
 [[statement]]
 kind = "assert"
 subject = "arbetsstallen-deso: DeSO @2023 where key = 'v37894'"
-fact = { entity = "occurrence", fields = { label = "Demografiskt statistikområde", type = "text", length = 9 } }
+fact = { entity = "occurrence", fields = { type = "text", length = 9 } }
 evidence = "https://www.scb.se/vara-tjanster/bestall-data-och-statistik/mikrodata/aktuellt/ — 2025-11-14, Arbetsställen: DeSO_2018 för arbetsställens belägenhet, årgång 2023."
 
 [[statement]]
