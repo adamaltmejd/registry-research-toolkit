@@ -1007,18 +1007,6 @@ evidence = "Svin efter vikt hör till antal svin.\ncatalog:variable_text:35767:8
 
 [[statement]]
 kind = "set"
-subject = "var:antal-svin-under-20-kg-svinu"
-fields = { "sets" = ["antal-svin"] }
-evidence = "Svin efter vikt hör till antal svin.\ncatalog:variable_text:35768:9131:9496"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-svin-under-20-kg-svinu"
-fields = { "tags" = ["agriculture"] }
-evidence = "Svin efter vikt hör till antal svin.\ncatalog:variable_text:35768:9131:9496"
-
-[[statement]]
-kind = "set"
 subject = "var:areal-akermark"
 fields = { "sets" = ["akermarksstatus"] }
 evidence = "Astat delas med en annan identitet och värdemängden beskriver en statuskod.\ncatalog:occurrence:332582\ncatalog:occurrence:332667\ncatalog:occurrence:332755\ncatalog:valueset:8387"
@@ -1385,42 +1373,6 @@ evidence = "Arrenderad åkermark är ett brukningsindelat åkerarealmått.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:arrenderad-akermark-akerarend"
-fields = { "sets" = ["akerareal"] }
-evidence = "Arrenderad åkermark är ett brukningsindelat åkerarealmått.\ncatalog:variable_text:35803:13514:13879"
-
-[[statement]]
-kind = "set"
-subject = "var:arrenderad-akermark-akerarend"
-fields = { "tags" = ["agriculture"] }
-evidence = "Arrenderad åkermark är ett brukningsindelat åkerarealmått.\ncatalog:variable_text:35803:13514:13879"
-
-[[statement]]
-kind = "set"
-subject = "var:arrenderad-akermark-akerarrend"
-fields = { "sets" = ["akerareal"] }
-evidence = "Arrenderad åkermark är ett brukningsindelat åkerarealmått.\ncatalog:variable_text:35804:13514:13879"
-
-[[statement]]
-kind = "set"
-subject = "var:arrenderad-akermark-akerarrend"
-fields = { "tags" = ["agriculture"] }
-evidence = "Arrenderad åkermark är ett brukningsindelat åkerarealmått.\ncatalog:variable_text:35804:13514:13879"
-
-[[statement]]
-kind = "set"
-subject = "var:arrenderad-akermark-arraker"
-fields = { "sets" = ["akerareal"] }
-evidence = "Arrenderad åkermark är ett brukningsindelat åkerarealmått.\ncatalog:variable_text:35805:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:arrenderad-akermark-arraker"
-fields = { "tags" = ["agriculture"] }
-evidence = "Arrenderad åkermark är ett brukningsindelat åkerarealmått.\ncatalog:variable_text:35805:12053:12418"
-
-[[statement]]
-kind = "set"
 subject = "var:arrenderad-betesmark"
 fields = { "sets" = ["betesmarksareal"] }
 evidence = "Arrenderad betesmark är en del av betesmarksarealen.\ncatalog:variable_text:35806:16801:20454"
@@ -1580,18 +1532,6 @@ kind = "set"
 subject = "var:brukarkategori-brukkat"
 fields = { "tags" = ["agriculture"] }
 evidence = "Variabeln kodar brukarkategori.\ncatalog:variable_text:35819:10227:10957\ncatalog:variable_text:35820:6940:10227"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarkategori-bruknr"
-fields = { "sets" = ["brukarkategori"] }
-evidence = "Variabeln kodar brukarkategori.\ncatalog:variable_text:35819:10227:10957\ncatalog:variable_text:35821:6940:10227"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarkategori-bruknr"
-fields = { "tags" = ["agriculture"] }
-evidence = "Variabeln kodar brukarkategori.\ncatalog:variable_text:35819:10227:10957\ncatalog:variable_text:35821:6940:10227"
 
 [[statement]]
 kind = "set"
@@ -3905,18 +3845,6 @@ evidence = "Måttet avser total areal.\ncatalog:variable_text:35780:7305:10227\n
 
 [[statement]]
 kind = "set"
-subject = "var:totala-betesareal-i-hektar-bete-tot"
-fields = { "sets" = ["betesmarksareal"] }
-evidence = "Total betesareal ingår i kandidatgruppen.\ncatalog:variable_text:36034:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "var:totala-betesareal-i-hektar-bete-tot"
-fields = { "tags" = ["agriculture"] }
-evidence = "Total betesareal ingår i kandidatgruppen.\ncatalog:variable_text:36034:15340:15706"
-
-[[statement]]
-kind = "set"
 subject = "var:totala-betesareal-i-hektar-totbete"
 fields = { "sets" = ["betesmarksareal"] }
 evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:333879\ncatalog:occurrence:333880"
@@ -5583,3 +5511,105 @@ kind = "set"
 subject = "uppdragsregistret: var:lantbruk-foretags-id"
 fields.row_key = true
 evidence = "Row key: lantbruk-foretags-id identify a row: the table description names ftgid as the matching id per farm enterprise, so it keys rather than the proposed person-orgnr; property designation is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "djur: svinu"
+fields = { "variable" = "antal-svin-under-20-kg" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v44588), never delivered together in one table, so they are one variable renamed between releases: svinu 1992-01-01..1995-12-31; svin20 1994-01-01..1997-12-31."
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: svinu"
+fields = { "variable" = "antal-svin-under-20-kg" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v44588), never delivered together in one table, so they are one variable renamed between releases: svinu 1992-01-01..1995-12-31; svin20 1994-01-01..1997-12-31."
+
+[[statement]]
+kind = "set"
+subject = "foretag: akerarend"
+fields = { "variable" = "arrenderad-akermark" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v41879), never delivered together in one table, so they are one variable renamed between releases: ArrAker 1998-01-01..1999-12-31; arraker 2000-01-01..2003-12-31; akerarend 2007-01-01..2007-12-31; akerarrend 2007-01-01..2007-12-31; aker_arr 2010-01-01..2025-12-31."
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: akerarrend"
+fields = { "variable" = "arrenderad-akermark" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v41879), never delivered together in one table, so they are one variable renamed between releases: ArrAker 1998-01-01..1999-12-31; arraker 2000-01-01..2003-12-31; akerarend 2007-01-01..2007-12-31; akerarrend 2007-01-01..2007-12-31; aker_arr 2010-01-01..2025-12-31."
+
+[[statement]]
+kind = "set"
+subject = "foretag: arraker"
+fields = { "variable" = "arrenderad-akermark" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v41879), never delivered together in one table, so they are one variable renamed between releases: ArrAker 1998-01-01..1999-12-31; arraker 2000-01-01..2003-12-31; akerarend 2007-01-01..2007-12-31; akerarrend 2007-01-01..2007-12-31; aker_arr 2010-01-01..2025-12-31."
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: ArrAker"
+fields = { "variable" = "arrenderad-akermark" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v41879), never delivered together in one table, so they are one variable renamed between releases: ArrAker 1998-01-01..1999-12-31; arraker 2000-01-01..2003-12-31; akerarend 2007-01-01..2007-12-31; akerarrend 2007-01-01..2007-12-31; aker_arr 2010-01-01..2025-12-31."
+
+[[statement]]
+kind = "set"
+subject = "brukare: bruknr"
+fields = { "variable" = "brukarkategori" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v44519), never delivered together in one table, so they are one variable renamed between releases: bruknr 1989-01-01..1997-12-31; BrNr 1998-01-01..1999-12-31."
+
+[[statement]]
+kind = "set"
+subject = "uppdragsregistret: bete_tot"
+fields = { "variable" = "totala-betesareal-i-hektar-totbete" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v41873), never delivered together in one table, so they are one variable renamed between releases: bete 2003-01-01..2012-12-31; totbete 2000-01-01..2025-12-31; bete_tot 2012-01-01..2012-12-31."
+
+[[statement]]
+kind = "set"
+subject = "var:andra-vaxtslag"
+fields = { "label" = "Andra växtslag (areal i hektar) (Arealer)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Arealer\"."
+
+[[statement]]
+kind = "set"
+subject = "var:andra-vaxtslag-andravaxtslag"
+fields = { "label" = "Andra växtslag (areal i hektar) (Uppdragsregistret)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Uppdragsregistret\"."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svin-over-20-kg"
+fields = { "label" = "Antal svin över 20 kg (Djur)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Djur\"."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-svin-over-20-kg-svino-3"
+fields = { "label" = "Antal svin över 20 kg (Uppdragsregistret)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Uppdragsregistret\"."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarkategori"
+fields = { "label" = "Brukarkategori (Brukare)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Brukare\"."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarkategori-brukkat"
+fields = { "label" = "Brukarkategori (Företag)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Företag\"."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarkategori-ftgkat"
+fields = { "label" = "Brukarkategori (Uppdragsregistret)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Uppdragsregistret\"."
+
+[[statement]]
+kind = "set"
+subject = "var:bruna-bonor"
+fields = { "label" = "Bruna bönor (areal i ha) (Arealer)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Arealer\"."
+
+[[statement]]
+kind = "set"
+subject = "var:bruna-bonor-brunabonor"
+fields = { "label" = "Bruna bönor (areal i ha) (Uppdragsregistret)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Uppdragsregistret\"."

@@ -3109,90 +3109,6 @@ evidence = "Äktenskapslängd i dagar hör till civilståndets varaktighet.\ncat
 
 [[statement]]
 kind = "set"
-subject = "var:ald90"
-fields = { "sets" = ["alder"] }
-evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41608:7669:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ald90"
-fields = { "tags" = ["demographics"] }
-evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41608:7669:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:ald91"
-fields = { "sets" = ["alder"] }
-evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41609:8034:8035"
-
-[[statement]]
-kind = "set"
-subject = "var:ald91"
-fields = { "tags" = ["demographics"] }
-evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41609:8034:8035"
-
-[[statement]]
-kind = "set"
-subject = "var:ald92"
-fields = { "sets" = ["alder"] }
-evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41610:8400:8401"
-
-[[statement]]
-kind = "set"
-subject = "var:ald92"
-fields = { "tags" = ["demographics"] }
-evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41610:8400:8401"
-
-[[statement]]
-kind = "set"
-subject = "var:ald93"
-fields = { "sets" = ["alder"] }
-evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41611:8765:8766"
-
-[[statement]]
-kind = "set"
-subject = "var:ald93"
-fields = { "tags" = ["demographics"] }
-evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41611:8765:8766"
-
-[[statement]]
-kind = "set"
-subject = "var:ald94"
-fields = { "sets" = ["alder"] }
-evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41612:9130:9131"
-
-[[statement]]
-kind = "set"
-subject = "var:ald94"
-fields = { "tags" = ["demographics"] }
-evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41612:9130:9131"
-
-[[statement]]
-kind = "set"
-subject = "var:ald95"
-fields = { "sets" = ["alder"] }
-evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41613:9495:9496"
-
-[[statement]]
-kind = "set"
-subject = "var:ald95"
-fields = { "tags" = ["demographics"] }
-evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41613:9495:9496"
-
-[[statement]]
-kind = "set"
-subject = "var:ald96"
-fields = { "sets" = ["alder"] }
-evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41614:9861:9862"
-
-[[statement]]
-kind = "set"
-subject = "var:ald96"
-fields = { "tags" = ["demographics"] }
-evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41614:9861:9862"
-
-[[statement]]
-kind = "set"
 subject = "var:ald97"
 fields = { "sets" = ["alder"] }
 evidence = "Ålder vid årsslut hör till åldersgruppen och demografi.\ncatalog:variable_text:41615:10226:10227"
@@ -6861,48 +6777,6 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
-subject = "var:ald90"
-fields = { "label" = "Ålder 31/12 (familjer 1990–1997)" }
-evidence = "#2102 same-label cluster 'Ålder 31/12' (12 variables): judged different meaning, medium confidence; Opdef: AlderSamh is the samhörighetsperson's age; AldArSlut, Alder and AlderSlut are the person's own age at year end under successive/parallel names; ALD90-ALD97 are the yearly columns of familjer-1990-1997."
-
-[[statement]]
-kind = "set"
-subject = "var:ald91"
-fields = { "label" = "Ålder 31/12 (familjer 1990–1997)" }
-evidence = "#2102 same-label cluster 'Ålder 31/12' (12 variables): judged different meaning, medium confidence; Opdef: AlderSamh is the samhörighetsperson's age; AldArSlut, Alder and AlderSlut are the person's own age at year end under successive/parallel names; ALD90-ALD97 are the yearly columns of familjer-1990-1997."
-
-[[statement]]
-kind = "set"
-subject = "var:ald92"
-fields = { "label" = "Ålder 31/12 (familjer 1990–1997)" }
-evidence = "#2102 same-label cluster 'Ålder 31/12' (12 variables): judged different meaning, medium confidence; Opdef: AlderSamh is the samhörighetsperson's age; AldArSlut, Alder and AlderSlut are the person's own age at year end under successive/parallel names; ALD90-ALD97 are the yearly columns of familjer-1990-1997."
-
-[[statement]]
-kind = "set"
-subject = "var:ald93"
-fields = { "label" = "Ålder 31/12 (familjer 1990–1997)" }
-evidence = "#2102 same-label cluster 'Ålder 31/12' (12 variables): judged different meaning, medium confidence; Opdef: AlderSamh is the samhörighetsperson's age; AldArSlut, Alder and AlderSlut are the person's own age at year end under successive/parallel names; ALD90-ALD97 are the yearly columns of familjer-1990-1997."
-
-[[statement]]
-kind = "set"
-subject = "var:ald94"
-fields = { "label" = "Ålder 31/12 (familjer 1990–1997)" }
-evidence = "#2102 same-label cluster 'Ålder 31/12' (12 variables): judged different meaning, medium confidence; Opdef: AlderSamh is the samhörighetsperson's age; AldArSlut, Alder and AlderSlut are the person's own age at year end under successive/parallel names; ALD90-ALD97 are the yearly columns of familjer-1990-1997."
-
-[[statement]]
-kind = "set"
-subject = "var:ald95"
-fields = { "label" = "Ålder 31/12 (familjer 1990–1997)" }
-evidence = "#2102 same-label cluster 'Ålder 31/12' (12 variables): judged different meaning, medium confidence; Opdef: AlderSamh is the samhörighetsperson's age; AldArSlut, Alder and AlderSlut are the person's own age at year end under successive/parallel names; ALD90-ALD97 are the yearly columns of familjer-1990-1997."
-
-[[statement]]
-kind = "set"
-subject = "var:ald96"
-fields = { "label" = "Ålder 31/12 (familjer 1990–1997)" }
-evidence = "#2102 same-label cluster 'Ålder 31/12' (12 variables): judged different meaning, medium confidence; Opdef: AlderSamh is the samhörighetsperson's age; AldArSlut, Alder and AlderSlut are the person's own age at year end under successive/parallel names; ALD90-ALD97 are the yearly columns of familjer-1990-1997."
-
-[[statement]]
-kind = "set"
 subject = "var:ald97"
 fields = { "label" = "Ålder 31/12 (familjer 1990–1997)" }
 evidence = "#2102 same-label cluster 'Ålder 31/12' (12 variables): judged different meaning, medium confidence; Opdef: AlderSamh is the samhörighetsperson's age; AldArSlut, Alder and AlderSlut are the person's own age at year end under successive/parallel names; ALD90-ALD97 are the yearly columns of familjer-1990-1997."
@@ -8221,3 +8095,45 @@ kind = "set"
 subject = "inrikes-flyttningar-kvartal: var:bearbardatum"
 fields.row_key = true
 evidence = "Maintainer ruling, 2026-11-15: BearbArDatum är RTB:s bearbetningsdatum, inte flyttdatum, och är radnyckelns tidskomponent före 1998."
+
+[[statement]]
+kind = "set"
+subject = "familjer-1990-1997: ALD90"
+fields = { "variable" = "ald97" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v241), never delivered together in one table, so they are one variable renamed between releases: ALD90 1990-12-31..1990-12-31; ALD91 1991-12-31..1991-12-31; ALD92 1992-12-31..1992-12-31; ALD93 1993-12-31..1993-12-31; ALD94 1994-12-31..1994-12-31; ALD95 1995-12-31..1995-12-31; ALD96 1996-12-31..1996-12-31; ALD97 1997-12-31..1997-12-31."
+
+[[statement]]
+kind = "set"
+subject = "familjer-1990-1997: ALD91"
+fields = { "variable" = "ald97" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v241), never delivered together in one table, so they are one variable renamed between releases: ALD90 1990-12-31..1990-12-31; ALD91 1991-12-31..1991-12-31; ALD92 1992-12-31..1992-12-31; ALD93 1993-12-31..1993-12-31; ALD94 1994-12-31..1994-12-31; ALD95 1995-12-31..1995-12-31; ALD96 1996-12-31..1996-12-31; ALD97 1997-12-31..1997-12-31."
+
+[[statement]]
+kind = "set"
+subject = "familjer-1990-1997: ALD92"
+fields = { "variable" = "ald97" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v241), never delivered together in one table, so they are one variable renamed between releases: ALD90 1990-12-31..1990-12-31; ALD91 1991-12-31..1991-12-31; ALD92 1992-12-31..1992-12-31; ALD93 1993-12-31..1993-12-31; ALD94 1994-12-31..1994-12-31; ALD95 1995-12-31..1995-12-31; ALD96 1996-12-31..1996-12-31; ALD97 1997-12-31..1997-12-31."
+
+[[statement]]
+kind = "set"
+subject = "familjer-1990-1997: ALD93"
+fields = { "variable" = "ald97" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v241), never delivered together in one table, so they are one variable renamed between releases: ALD90 1990-12-31..1990-12-31; ALD91 1991-12-31..1991-12-31; ALD92 1992-12-31..1992-12-31; ALD93 1993-12-31..1993-12-31; ALD94 1994-12-31..1994-12-31; ALD95 1995-12-31..1995-12-31; ALD96 1996-12-31..1996-12-31; ALD97 1997-12-31..1997-12-31."
+
+[[statement]]
+kind = "set"
+subject = "familjer-1990-1997: ALD94"
+fields = { "variable" = "ald97" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v241), never delivered together in one table, so they are one variable renamed between releases: ALD90 1990-12-31..1990-12-31; ALD91 1991-12-31..1991-12-31; ALD92 1992-12-31..1992-12-31; ALD93 1993-12-31..1993-12-31; ALD94 1994-12-31..1994-12-31; ALD95 1995-12-31..1995-12-31; ALD96 1996-12-31..1996-12-31; ALD97 1997-12-31..1997-12-31."
+
+[[statement]]
+kind = "set"
+subject = "familjer-1990-1997: ALD95"
+fields = { "variable" = "ald97" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v241), never delivered together in one table, so they are one variable renamed between releases: ALD90 1990-12-31..1990-12-31; ALD91 1991-12-31..1991-12-31; ALD92 1992-12-31..1992-12-31; ALD93 1993-12-31..1993-12-31; ALD94 1994-12-31..1994-12-31; ALD95 1995-12-31..1995-12-31; ALD96 1996-12-31..1996-12-31; ALD97 1997-12-31..1997-12-31."
+
+[[statement]]
+kind = "set"
+subject = "familjer-1990-1997: ALD96"
+fields = { "variable" = "ald97" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v241), never delivered together in one table, so they are one variable renamed between releases: ALD90 1990-12-31..1990-12-31; ALD91 1991-12-31..1991-12-31; ALD92 1992-12-31..1992-12-31; ALD93 1993-12-31..1993-12-31; ALD94 1994-12-31..1994-12-31; ALD95 1995-12-31..1995-12-31; ALD96 1996-12-31..1996-12-31; ALD97 1997-12-31..1997-12-31."

@@ -4544,3 +4544,57 @@ kind = "set"
 subject = "grundutbildning-examina-aldre: var:den-termin-da-examensbeviset-utfardades"
 fields.row_key = true
 evidence = "Row key: den-termin-da-examensbeviset-utfardades (termin) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date; the delivered columns cannot always tell two events of one unit on that date apart, so rows are not guaranteed unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:examensdatum"
+fields = { "label" = "Examensdatum (Doktorander inom högskoleutbildning på forskarnivå, examina)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Doktorander inom högskoleutbildning på forskarnivå, examina\"."
+
+[[statement]]
+kind = "set"
+subject = "var:examensdatum-datum"
+fields = { "label" = "Examensdatum (Examina inom grundläggande högskoleutbildning)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Examina inom grundläggande högskoleutbildning\"."
+
+[[statement]]
+kind = "set"
+subject = "var:hogskolans-programinriktning-linr"
+fields = { "label" = "Högskolans programinriktning (Studerande vid universitet och högskolor, grundläggande utbildning - registrerade enligt 1993 års studieordning)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Studerande vid universitet och högskolor, grundläggande utbildning - registrerade enligt 1993 års studieordning\"."
+
+[[statement]]
+kind = "set"
+subject = "var:hogskolans-programinriktning-linrben"
+fields = { "label" = "Högskolans programinriktning (Studerande vid universitet och högskolor, grundläggande utbildning - avklarade poäng)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Studerande vid universitet och högskolor, grundläggande utbildning - avklarade poäng\"."
+
+[[statement]]
+kind = "set"
+subject = "var:poangomfattning-pomf"
+fields = { "label" = "Poängomfattning (Studerande vid universitet och högskolor, grundläggande utbildning - avklarade poäng)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Studerande vid universitet och högskolor, grundläggande utbildning - avklarade poäng\"."
+
+[[statement]]
+kind = "set"
+subject = "var:termin-for-examen"
+fields = { "label" = "Termin för examen (Doktorander inom högskoleutbildning på forskarnivå, examina)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Doktorander inom högskoleutbildning på forskarnivå, examina\"."
+
+[[statement]]
+kind = "set"
+subject = "var:tillgodoraknad-omfattning-forskarniva"
+fields = { "label" = "Poängomfattning (Forskarutbildning, beslut om tillgodoräknande)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Forskarutbildning, beslut om tillgodoräknande\"."
+
+[[statement]]
+kind = "set"
+subject = "var:typ-av-utlandsstudier-csn"
+fields = { "label" = "Utbytesstudier (Studiemedel för utlandsstudier på grundnivå och avancerad nivå)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Studiemedel för utlandsstudier på grundnivå och avancerad nivå\"."
+
+[[statement]]
+kind = "set"
+subject = "var:utbytesstudier-utbytstud"
+fields = { "label" = "Utbytesstudier (Studerande vid universitet och högskolor, grundläggande utbildning - registrerade enligt 1993 års studieordning)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Studerande vid universitet och högskolor, grundläggande utbildning - registrerade enligt 1993 års studieordning\"."

@@ -5539,12 +5539,6 @@ evidence = "Källkoden är opak och etiketten kolliderar med andra variabler.\nc
 
 [[statement]]
 kind = "set"
-subject = "var:bintj"
-fields = { "tags" = ["income"] }
-evidence = "Källkoden är opak och etiketten kolliderar med andra variabler.\ncatalog:variable_text:36393:365:2922"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-manader-med-introduktionsersattning"
 fields = { "sets" = ["introduktionsersattning"] }
 evidence = "BINTMAN är en källkod som inte läsbart återger etiketten.\ncatalog:variable_text:36394:11323:15340"
@@ -8449,18 +8443,6 @@ evidence = "Två källfält mäter ingående mervärdesskatt.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:injo"
-fields = { "sets" = ["inkomst-av-jordbruksfastighet"] }
-evidence = "Källkoden är opak och etiketten kolliderar.\ncatalog:variable_text:36661:-731:365"
-
-[[statement]]
-kind = "set"
-subject = "var:injo"
-fields = { "tags" = ["income"] }
-evidence = "Källkoden är opak och etiketten kolliderar.\ncatalog:variable_text:36661:-731:365"
-
-[[statement]]
-kind = "set"
 subject = "var:inkbesk"
 fields = { "sets" = ["kommunalt-beskattningsbar-inkomst"] }
 evidence = "Id:t innehåller läsbara stammar. Variabeln mäter kommunalt beskattningsbar inkomst.\ncatalog:occurrence-locators:variable:36662\ncatalog:variable_text:36662:3287:7670"
@@ -8692,18 +8674,6 @@ kind = "set"
 subject = "var:inlivr"
 fields = { "tags" = ["transfers"] }
 evidence = "Deklarerad livränta eller pension.\ncatalog:variable_text:36681:2922:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:inro"
-fields = { "sets" = ["inkomst-av-rorelse"] }
-evidence = "Variabeln mäter inkomst av rörelse.\ncatalog:variable_text:36682:-731:365"
-
-[[statement]]
-kind = "set"
-subject = "var:inro"
-fields = { "tags" = ["income"] }
-evidence = "Variabeln mäter inkomst av rörelse.\ncatalog:variable_text:36682:-731:365"
 
 [[statement]]
 kind = "set"
@@ -15733,12 +15703,6 @@ evidence = "Urvalskoden hör ihop med panelurvalets urvalskoder.\ncatalog:variab
 
 [[statement]]
 kind = "set"
-subject = "var:summa-underskott-aktiv-passiv-naringsverksamhet"
-fields = { "tags" = ["business"] }
-evidence = "Källkoden är opak och etiketten kolliderar.\ncatalog:variable_text:37337:8035:8401"
-
-[[statement]]
-kind = "set"
 subject = "var:underlag-skattesparkonto"
 fields = { "sets" = ["underlag-for-skattesparande"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:37338:3652:5113"
@@ -17021,12 +16985,6 @@ evidence = "The definition measures the share or degree of special survivor pens
 
 [[statement]]
 kind = "set"
-subject = "var:bintj"
-fields = { "sets" = ["inkomst-tjanst"] }
-evidence = "r115 measures B-category service income remaining after permitted deductions, matching the historical service-income scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:36238\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:347789"
-
-[[statement]]
-kind = "set"
 subject = "var:blkfa"
 fields = { "sets" = ["folkbokforingsort"] }
 evidence = "r455 defines combined population-registration geography; r61 identifies the latest registration change.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:36246\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:339077\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:36386"
@@ -17462,12 +17420,6 @@ kind = "set"
 subject = "var:summa-personskadelivranta-skada-fore-1962"
 fields = { "sets" = ["livranta"] }
 evidence = "r471 defines personal-injury annuities for injuries before 1962, within the candidate's annuity scope. | r471 defines personal-injury annuities for injuries before 1962, within the candidate's annuity scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:36989\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:36880"
-
-[[statement]]
-kind = "set"
-subject = "var:summa-underskott-aktiv-passiv-naringsverksamhet"
-fields = { "sets" = ["underskott-naringsverksamhet"] }
-evidence = "The operational definition combines active and passive deficits assessed for the current tax year (r17, r577), within the fixed group. | The operational definition combines active and passive deficits assessed for the current tax year (r17, r577), within the fixed group.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:36996\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:335200\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:37328"
 
 [[statement]]
 kind = "set"
@@ -19277,12 +19229,6 @@ evidence = "#2102 same-label cluster 'Inkomst av rörelse' (6 variables): judged
 
 [[statement]]
 kind = "set"
-subject = "var:bintj"
-fields = { "label" = "Inkomst av tjänst (B-inkomst)" }
-evidence = "#2102 same-label cluster 'Inkomst av tjänst' (6 variables): judged different meaning, high confidence; Opdefs: A-inkomst, B-inkomst and a derived sum (INTJ, later TTJ)."
-
-[[statement]]
-kind = "set"
 subject = "var:bkuinst"
 fields = { "label" = "Institutionell sektorkod (BKUINST)" }
 evidence = "#2102 same-label cluster 'Institutionell sektorkod' (3 variables): judged different meaning, medium confidence; Opdefs: BINST also includes näringsidkare, BKUINST (and its predecessor KUINST) excludes them."
@@ -19445,12 +19391,6 @@ evidence = "#2102 same-label cluster 'Inkomst av tjänst' (6 variables): judged 
 
 [[statement]]
 kind = "set"
-subject = "var:injo"
-fields = { "label" = "Inkomst av jordbruksfastighet (summa)" }
-evidence = "#2102 same-label cluster 'Inkomst av jordbruksfastighet' (6 variables): judged different meaning, high confidence; Opdefs: A-inkomst, B-inkomst and a derived sum; renamed across 1978 with the same meaning."
-
-[[statement]]
-kind = "set"
 subject = "var:inkbesk"
 fields = { "label" = "Kommunalt beskattningsbar inkomst (INKBESK)" }
 evidence = "#2102 same-label cluster 'Kommunalt beskattningsbar inkomst' (4 variables): judged different meaning, medium confidence; KBIN, KBESK and INKBESK are consecutive names; INKBFOR runs concurrently and contains förskottsbelopp per its opdef."
@@ -19484,12 +19424,6 @@ kind = "set"
 subject = "var:inkssku3"
 fields = { "label" = "Underlag för skatt (statligt skatteunderlag)" }
 evidence = "#2102 same-label cluster 'Underlag för skatt' (2 variables): judged different meaning, high confidence; Opdefs: INKSSKU3 is the statligt skatteunderlag, INKKSKU3 the kommunalt; concurrent 1978-80."
-
-[[statement]]
-kind = "set"
-subject = "var:inro"
-fields = { "label" = "Inkomst av rörelse (summa)" }
-evidence = "#2102 same-label cluster 'Inkomst av rörelse' (6 variables): judged different meaning, high confidence; Opdefs: A-inkomst, B-inkomst and a derived sum; renamed across 1978 with the same meaning."
 
 [[statement]]
 kind = "set"
@@ -19682,12 +19616,6 @@ kind = "set"
 subject = "var:studiemedel-lan-summa"
 fields = { "label" = "Studiemedel, lån (summa av lånetyper)" }
 evidence = "#2102 same-label cluster 'Studiemedel, lån' (2 variables): judged different meaning, high confidence; Opdef: ISMLAN sums studiemedel lån, utlandslån, merkostnadslån and tilläggslån; ISM is the single studiemedel lån component."
-
-[[statement]]
-kind = "set"
-subject = "var:summa-underskott-aktiv-passiv-naringsverksamhet"
-fields = { "label" = "Underskott av näringsverksamhet (summa aktiv och passiv)" }
-evidence = "#2102 same-label cluster 'Underskott av näringsverksamhet.' (4 variables): judged different meaning, medium confidence; Opdefs: USKNRV and NUNDER sum aktiv and passiv näringsverksamhet; UNRV and NUNDT are the previous year's underskott (a rename)."
 
 [[statement]]
 kind = "set"
@@ -20653,3 +20581,57 @@ kind = "set"
 subject = "tillaggsurval-utrikesfodda-taxeringshushall: var:personnr"
 fields.row_key = true
 evidence = "Row key: eget-personnr and personnr identify a row: one row per person in a tax household, keyed on the person id of each era; household, property and LINDA id numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: INJO"
+fields = { "variable" = "insjor" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v39897), never delivered together in one table, so they are one variable renamed between releases: INJO 1968-01-01..1970-12-31; INSJOR 1981-01-01..1990-12-31."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: INJO"
+fields = { "variable" = "insjor" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v39897), never delivered together in one table, so they are one variable renamed between releases: INJO 1968-01-01..1970-12-31; INSJOR 1981-01-01..1990-12-31."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: INRO"
+fields = { "variable" = "insror" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v40056), never delivered together in one table, so they are one variable renamed between releases: INRO 1968-01-01..1970-12-31; INSROR 1981-01-01..1990-12-31."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: INRO"
+fields = { "variable" = "insror" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v40056), never delivered together in one table, so they are one variable renamed between releases: INRO 1968-01-01..1970-12-31; INSROR 1981-01-01..1990-12-31."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: BINTJ"
+fields = { "variable" = "inbtj" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v1173), never delivered together in one table, so they are one variable renamed between releases: BINTJ 1971-01-01..1977-12-31; INBTJ 1979-01-01..1984-12-31."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: BINTJ"
+fields = { "variable" = "inbtj" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v1173), never delivered together in one table, so they are one variable renamed between releases: BINTJ 1971-01-01..1977-12-31; INBTJ 1979-01-01..1984-12-31."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-befolkningen: USKNRV"
+fields = { "variable" = "underskott-naringsverksamhet" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v646), never delivered together in one table, so they are one variable renamed between releases: USKNRV 1992-01-01..1992-12-31; NUNDER 1994-01-01..2018-12-31."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: USKNRV"
+fields = { "variable" = "underskott-naringsverksamhet" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v646), never delivered together in one table, so they are one variable renamed between releases: USKNRV 1992-01-01..1992-12-31; NUNDER 1994-01-01..2018-12-31."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: USKNRV"
+fields = { "variable" = "underskott-naringsverksamhet" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v646), never delivered together in one table, so they are one variable renamed between releases: USKNRV 1992-01-01..1992-12-31; NUNDER 1994-01-01..2018-12-31."

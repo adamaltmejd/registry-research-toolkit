@@ -27325,3 +27325,821 @@ kind = "set"
 subject = "individer: AntalSys @2024 where key = 'v15532'"
 fields.variable = "antal-sysselsatta-ast"
 evidence = "#2141 Q1 (maintainer ruling 2026-11-03): AntalSys in the individual table and Ast_AntalSys in the workplace table describe the number employed at the workplace, so the established shared identity also applies to the explicitly documented 2024 occurrences.\nhttps://www.scb.se/contentassets/0521204f13e649299dec73f091e691e0/lisa-variabellista-total-t-o-m-2024-2025.xlsx\nIndivid!A173:F173; Arbetsställe!A38:E38"
+
+[[statement]]
+kind = "set"
+subject = "var:agi1astkommun"
+fields = { "label" = "Arbetsställets kommun, största förvärvskällan (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:agi1astlan"
+fields = { "label" = "Län för arbetsstället, största förvärvskällan (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:agi1astnr"
+fields = { "label" = "Arbetsställenummer, största förvärvskällan (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:agi1cfarnr"
+fields = { "label" = "CFAR-Nummer, största förvärvskällan (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:agi1ink"
+fields = { "label" = "Total bruttolön eller företagarinkomst, största förvärvskällan (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:agi1peorgnr"
+fields = { "label" = "Företagets organisationsnummer, största förvärvskällan (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:agi1ssykar"
+fields = { "label" = "Mätår för yrkesuppgift, största förvärvskällan (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:agi1ssykkalla"
+fields = { "label" = "Källa för yrkesuppgift, största förvärvskällan (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:agi2astkommun"
+fields = { "label" = "Kommun för arbetsställe, näst största förvärvskälla (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:agi2astlan"
+fields = { "label" = "Län för arbetsstället, näst största förvärvskälla (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:agi2astnr"
+fields = { "label" = "Arbetsställenummer, näst största förvärvskällan (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:agi2cfarnr"
+fields = { "label" = "CFAR-Nummer, näst största förvärvskällan (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:agi2ink"
+fields = { "label" = "Total bruttolön eller företagarinkomst, näst största förvärvskällan (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:agi2peorgnr"
+fields = { "label" = "Företagets organisationsnummer, näst största förvärvskällan (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:agi2ssykar"
+fields = { "label" = "Mätår för yrkesuppgift, näst största förvärvskällan (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:agi2ssykkalla"
+fields = { "label" = "Källa för yrkesuppgift, näst största förvärvskällan (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:agi3astkommun"
+fields = { "label" = "Kommun för arbetsställe, tredje största förvärvskällan (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:agi3astlan"
+fields = { "label" = "Län för arbetsstället, tredje största förvärvskälla (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:agi3astnr"
+fields = { "label" = "Arbetsställenummer, tredje största förvärvskällan (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna. Spelling corrected: the provider label misspells förvärvskällan as förvävskällan; the definition spells it correctly."
+
+[[statement]]
+kind = "set"
+subject = "var:agi3cfarnr"
+fields = { "label" = "CFAR-Nummer, tredje största förvärvskällan (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:agi3ink"
+fields = { "label" = "Total bruttolön eller företagarinkomst, tredje största förvärvskällan (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:agi3peorgnr"
+fields = { "label" = "Företagets organisationsnummer, tredje största förvärvskällan (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:agi3yrkesstallning"
+fields = { "label" = "Yrkesställning, tredje största förvärvskällan (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-far-fodelselandnamnfar"
+fields = { "label" = "Födelseland far (landnamn)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. LISA variable documentation (FodelseLandnamnFar.md, LISA bakgrundsfakta 1990–2017): \"Faderns födelseland FodelseLandNamnFar\". The column carries the country name, beside the grouped FodGr columns."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-far-fodgrfar"
+fields = { "label" = "Födelseland far (grupperad EU15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. LISA variable documentation (FodGrFar.md, LISA bakgrundsfakta 1990–2017): \"Faderns födelseland, gruppering EU15\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-far-fodgrfar2"
+fields = { "label" = "Födelseland far (grupperad EU25)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. LISA variable documentation (FodGrFar2.md, LISA bakgrundsfakta 1990–2017): \"Faderns födelseland, gruppering EU25\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-far-fodgrfar3"
+fields = { "label" = "Födelseland far (grupperad EU27)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. LISA variable documentation (FodGrFar3.md, LISA bakgrundsfakta 1990–2017): \"Faderns födelseland, gruppering EU27\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-far-fodgrfar4"
+fields = { "label" = "Födelseland far (grupperad EU28)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. LISA variable documentation (FodGrFar4.md, LISA bakgrundsfakta 1990–2017): \"Faderns födelseland, gruppering EU28\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-far-fodgrfar5"
+fields = { "label" = "Födelseland far (grupperad EU27 2020)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The FodGrFar5 value set groups by \"EU27 (2020) utom Norden\" (code 02); FodGrFar to FodGrFar4 are the EU15, EU25, EU27 and EU28 groupings in the LISA documentation."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-fodelselandnamn"
+fields = { "label" = "Födelseland (landnamn)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. LISA variable documentation (FodelseLandnamn.md, LISA bakgrundsfakta 1990–2017): \"Eget födelseland FodelseLandNamn\". The column carries the country name, beside the grouped FodGr columns."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-fodgreg"
+fields = { "label" = "Födelseland (grupperad EU15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. LISA variable documentation (FodGrEg.md, LISA bakgrundsfakta 1990–2017): \"Eget födelseland, gruppering EU15\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-fodgreg2"
+fields = { "label" = "Födelseland (grupperad EU25)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. LISA variable documentation (FodGrEg2.md, LISA bakgrundsfakta 1990–2017): \"Eget födelseland, gruppering EU25\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-fodgreg3"
+fields = { "label" = "Födelseland (grupperad EU27)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. LISA variable documentation (FodGrEg3.md, LISA bakgrundsfakta 1990–2017): \"Eget födelseland, gruppering EU27\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-fodgreg4"
+fields = { "label" = "Födelseland (grupperad EU28)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. LISA variable documentation (FodGrEg4.md, LISA bakgrundsfakta 1990–2017): \"Eget födelseland, gruppering EU28\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-fodgreg5"
+fields = { "label" = "Födelseland (grupperad EU27 2020)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The FodGrEg5 value set groups by \"EU27 (2020) utom Norden\" (code 02); FodGrEg to FodGrEg4 are the EU15, EU25, EU27 and EU28 groupings in the LISA documentation."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-mor-fodelselandnamnmor"
+fields = { "label" = "Födelseland mor (landnamn)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. LISA variable documentation (FodelseLandnamnMor.md, LISA bakgrundsfakta 1990–2017): \"Moderns födelseland FodelseLandNamnMor\". The column carries the country name, beside the grouped FodGr columns."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-mor-fodgrmor"
+fields = { "label" = "Födelseland mor (grupperad EU15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. LISA variable documentation (FodGrMor.md, LISA bakgrundsfakta 1990–2017): \"Moderns födelseland, gruppering EU15\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-mor-fodgrmor2"
+fields = { "label" = "Födelseland mor (grupperad EU25)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. LISA variable documentation (FodGrMor2.md, LISA bakgrundsfakta 1990–2017): \"Moderns födelseland, gruppering EU25\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-mor-fodgrmor3"
+fields = { "label" = "Födelseland mor (grupperad EU27)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. LISA variable documentation (FodGrMor3.md, LISA bakgrundsfakta 1990–2017): \"Moderns födelseland, gruppering EU27\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-mor-fodgrmor4"
+fields = { "label" = "Födelseland mor (grupperad EU28)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. LISA variable documentation (FodGrMor4.md, LISA bakgrundsfakta 1990–2017): \"Moderns födelseland, gruppering EU28\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fodelseland-mor-fodgrmor5"
+fields = { "label" = "Födelseland mor (grupperad EU27 2020)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The FodGrMor5 value set groups by \"EU27 (2020) utom Norden\" (code 02); FodGrMor to FodGrMor4 are the EU15, EU25, EU27 and EU28 groupings in the LISA documentation."
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-antal-bruttodagar"
+fields = { "label" = "Föräldrapenning, antal bruttodagar (STORE)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. M4 (2026-09-27, applied as in Q5): a source-system break is two variables joined by `continues`, with the source in the label. LISA, Föräldrapenning, ersättningsbelopp (ForPeng_Belopp_MiDAS): \"Sedan 2014 används Försäkringskassans MiDAS som källa\"; Bilaga 4 STORE – MiDAS (LISA bakgrundsfakta 1990–2017)."
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-antal-bruttodagar-midas"
+fields = { "label" = "Föräldrapenning, antal bruttodagar (MiDAS)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. M4 (2026-09-27, applied as in Q5): a source-system break is two variables joined by `continues`, with the source in the label. LISA, Föräldrapenning, ersättningsbelopp (ForPeng_Belopp_MiDAS): \"Sedan 2014 används Försäkringskassans MiDAS som källa\"; Bilaga 4 STORE – MiDAS (LISA bakgrundsfakta 1990–2017)."
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-antal-nettodagar"
+fields = { "label" = "Föräldrapenning, antal nettodagar (STORE)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. M4 (2026-09-27, applied as in Q5): a source-system break is two variables joined by `continues`, with the source in the label. LISA, Föräldrapenning, ersättningsbelopp (ForPeng_Belopp_MiDAS): \"Sedan 2014 används Försäkringskassans MiDAS som källa\"; Bilaga 4 STORE – MiDAS (LISA bakgrundsfakta 1990–2017)."
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-antal-nettodagar-midas"
+fields = { "label" = "Föräldrapenning, antal nettodagar (MiDAS)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. M4 (2026-09-27, applied as in Q5): a source-system break is two variables joined by `continues`, with the source in the label. LISA, Föräldrapenning, ersättningsbelopp (ForPeng_Belopp_MiDAS): \"Sedan 2014 används Försäkringskassans MiDAS som källa\"; Bilaga 4 STORE – MiDAS (LISA bakgrundsfakta 1990–2017)."
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-ersattningsbelopp"
+fields = { "label" = "Föräldrapenning, ersättningsbelopp (STORE)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. M4 (2026-09-27, applied as in Q5): a source-system break is two variables joined by `continues`, with the source in the label. LISA, Föräldrapenning, ersättningsbelopp (ForPeng_Belopp_MiDAS): \"Sedan 2014 används Försäkringskassans MiDAS som källa\"; Bilaga 4 STORE – MiDAS (LISA bakgrundsfakta 1990–2017)."
+
+[[statement]]
+kind = "set"
+subject = "var:foraldrapenning-ersattningsbelopp-midas"
+fields = { "label" = "Föräldrapenning, ersättningsbelopp (MiDAS)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. M4 (2026-09-27, applied as in Q5): a source-system break is two variables joined by `continues`, with the source in the label. LISA, Föräldrapenning, ersättningsbelopp (ForPeng_Belopp_MiDAS): \"Sedan 2014 används Försäkringskassans MiDAS som källa\"; Bilaga 4 STORE – MiDAS (LISA bakgrundsfakta 1990–2017)."
+
+[[statement]]
+kind = "set"
+subject = "var:ku1astkommun"
+fields = { "label" = "Arbetsställets kommun, största förvärvskällan (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:ku1astlan"
+fields = { "label" = "Län för arbetsstället, största förvärvskällan (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:ku1astnr"
+fields = { "label" = "Arbetsställenummer, största förvärvskällan (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:ku1cfarnr"
+fields = { "label" = "CFAR-Nummer, största förvärvskällan (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:ku1ink"
+fields = { "label" = "Total bruttolön eller företagarinkomst, största förvärvskällan (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:ku1peorgnr"
+fields = { "label" = "Företagets organisationsnummer, största förvärvskällan (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:ku1ssykar"
+fields = { "label" = "Mätår för yrkesuppgift, största förvärvskällan (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:ku1ssykkalla"
+fields = { "label" = "Källa för yrkesuppgift, största förvärvskällan (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:ku2astkommun"
+fields = { "label" = "Kommun för arbetsställe, näst största förvärvskälla (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:ku2astlan"
+fields = { "label" = "Län för arbetsstället, näst största förvärvskälla (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:ku2astnr"
+fields = { "label" = "Arbetsställenummer, näst största förvärvskällan (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:ku2cfarnr"
+fields = { "label" = "CFAR-Nummer, näst största förvärvskällan (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:ku2ink"
+fields = { "label" = "Total bruttolön eller företagarinkomst, näst största förvärvskällan (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:ku2peorgnr"
+fields = { "label" = "Företagets organisationsnummer, näst största förvärvskällan (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:ku2ssykar"
+fields = { "label" = "Mätår för yrkesuppgift, näst största förvärvskällan (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:ku2ssykkalla"
+fields = { "label" = "Källa för yrkesuppgift, näst största förvärvskällan (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:ku3astkommun"
+fields = { "label" = "Kommun för arbetsställe, tredje största förvärvskällan (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:ku3astlan"
+fields = { "label" = "Län för arbetsstället, tredje största förvärvskälla (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:ku3astnr"
+fields = { "label" = "Arbetsställenummer, tredje största förvärvskällan (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna. Spelling corrected: the provider label misspells förvärvskällan as förvävskällan; the definition spells it correctly."
+
+[[statement]]
+kind = "set"
+subject = "var:ku3cfarnr"
+fields = { "label" = "CFAR-Nummer, tredje största förvärvskällan (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:ku3ink"
+fields = { "label" = "Total bruttolön eller företagarinkomst, tredje största förvärvskällan (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:ku3peorgnr"
+fields = { "label" = "Företagets organisationsnummer, tredje största förvärvskällan (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:ku3yrkesstallning"
+fields = { "label" = "Yrkesställning, tredje största förvärvskällan (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:land-inv-utvgreg"
+fields = { "label" = "Land vid in- och utvandring (grupperad EU15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. LISA variable documentation (Inv_UtvGrEg.md, LISA bakgrundsfakta 1990–2017): \"Land vid in- och utvandring, gruppering EU15\"."
+
+[[statement]]
+kind = "set"
+subject = "var:land-inv-utvgreg2"
+fields = { "label" = "Land vid in- och utvandring (grupperad EU25)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. LISA variable documentation (Inv_UtvGrEg2.md, LISA bakgrundsfakta 1990–2017): \"Land vid in- och utvandring, gruppering EU25\"."
+
+[[statement]]
+kind = "set"
+subject = "var:land-inv-utvgreg3"
+fields = { "label" = "Land vid in- och utvandring (grupperad EU27)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. LISA variable documentation (Inv_UtvGrEg3.md, LISA bakgrundsfakta 1990–2017): \"Land vid in- och utvandring, gruppering EU27\"."
+
+[[statement]]
+kind = "set"
+subject = "var:land-inv-utvgreg4"
+fields = { "label" = "Land vid in- och utvandring (grupperad EU28)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. LISA variable documentation (Inv_UtvGrEg4.md, LISA bakgrundsfakta 1990–2017): \"Land vid in- och utvandring, gruppering EU28\"."
+
+[[statement]]
+kind = "set"
+subject = "var:land-invutvland"
+fields = { "label" = "Land vid in- och utvandring (för egen gruppering)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. LISA variable documentation (InvUtvLand.md, LISA bakgrundsfakta 1990–2017): \"Land vid in-/utvandring (för egen gruppering)\"."
+
+[[statement]]
+kind = "set"
+subject = "var:sektorkod-nast-forvarvskalla"
+fields = { "label" = "Sektorkod, näst största förvärvskälla (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:sektorkod-nast-forvarvskalla-agi"
+fields = { "label" = "Sektorkod, näst största förvärvskälla (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:sektorkod-storsta-forvarvskalla"
+fields = { "label" = "Sektorkod, största förvärvskälla (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:sektorkod-storsta-forvarvskalla-agi"
+fields = { "label" = "Sektorkod, största förvärvskälla (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:sektorkod-tredje-forvarvskalla"
+fields = { "label" = "Sektorkod, tredje största förvärvskällan (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:sektorkod-tredje-forvarvskalla-agi"
+fields = { "label" = "Sektorkod, tredje största förvärvskällan (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk-overensstammelse"
+fields = { "label" = "Yrkeskodens överensstämmelse med det yrkesverksamma organisationsnumret (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:ssyk-overensstammelse-agi"
+fields = { "label" = "Yrkeskodens överensstämmelse med det yrkesverksamma organisationsnumret (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstepension-tjanst"
+fields = { "label" = "Tjänstepension, tjänst (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:tjanstepension-tjanst-agi"
+fields = { "label" = "Tjänstepension, tjänst (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesstallning-nast-forvarvskallan"
+fields = { "label" = "Yrkesställning, näst största förvärvskällan (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesstallning-nast-forvarvskallan-agi"
+fields = { "label" = "Yrkesställning, näst största förvärvskällan (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesstallning-storsta-forvarvskallan"
+fields = { "label" = "Yrkesställning, största förvärvskällan (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "set"
+subject = "var:yrkesstallning-storsta-forvarvskallan-agi"
+fields = { "label" = "Yrkesställning, största förvärvskällan (arbetsgivardeklaration)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:foraldrapenning-antal-bruttodagar-midas"
+relation = "continues"
+object = "scb/lisa/foraldrapenning-antal-bruttodagar"
+at = "2014-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. M4 (2026-09-27, applied as in Q5): a source-system break is two variables joined by `continues`, with the source in the label. LISA, Föräldrapenning, ersättningsbelopp (ForPeng_Belopp_MiDAS): \"Sedan 2014 används Försäkringskassans MiDAS som källa\"; Bilaga 4 STORE – MiDAS (LISA bakgrundsfakta 1990–2017)."
+
+[[statement]]
+kind = "link"
+subject = "var:foraldrapenning-antal-nettodagar-midas"
+relation = "continues"
+object = "scb/lisa/foraldrapenning-antal-nettodagar"
+at = "2014-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. M4 (2026-09-27, applied as in Q5): a source-system break is two variables joined by `continues`, with the source in the label. LISA, Föräldrapenning, ersättningsbelopp (ForPeng_Belopp_MiDAS): \"Sedan 2014 används Försäkringskassans MiDAS som källa\"; Bilaga 4 STORE – MiDAS (LISA bakgrundsfakta 1990–2017)."
+
+[[statement]]
+kind = "link"
+subject = "var:foraldrapenning-ersattningsbelopp-midas"
+relation = "continues"
+object = "scb/lisa/foraldrapenning-ersattningsbelopp"
+at = "2014-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. M4 (2026-09-27, applied as in Q5): a source-system break is two variables joined by `continues`, with the source in the label. LISA, Föräldrapenning, ersättningsbelopp (ForPeng_Belopp_MiDAS): \"Sedan 2014 används Försäkringskassans MiDAS som källa\"; Bilaga 4 STORE – MiDAS (LISA bakgrundsfakta 1990–2017)."
+
+[[statement]]
+kind = "link"
+subject = "var:agi2astnr"
+relation = "continues"
+object = "scb/lisa/ku2astnr"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:agi1astnr"
+relation = "continues"
+object = "scb/lisa/ku1astnr"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:agi3astnr"
+relation = "continues"
+object = "scb/lisa/ku3astnr"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:agi1astkommun"
+relation = "continues"
+object = "scb/lisa/ku1astkommun"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:agi2cfarnr"
+relation = "continues"
+object = "scb/lisa/ku2cfarnr"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:agi1cfarnr"
+relation = "continues"
+object = "scb/lisa/ku1cfarnr"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:agi3cfarnr"
+relation = "continues"
+object = "scb/lisa/ku3cfarnr"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:agi2peorgnr"
+relation = "continues"
+object = "scb/lisa/ku2peorgnr"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:agi1peorgnr"
+relation = "continues"
+object = "scb/lisa/ku1peorgnr"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:agi3peorgnr"
+relation = "continues"
+object = "scb/lisa/ku3peorgnr"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:agi2astkommun"
+relation = "continues"
+object = "scb/lisa/ku2astkommun"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:agi3astkommun"
+relation = "continues"
+object = "scb/lisa/ku3astkommun"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:agi2ssykkalla"
+relation = "continues"
+object = "scb/lisa/ku2ssykkalla"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:agi1ssykkalla"
+relation = "continues"
+object = "scb/lisa/ku1ssykkalla"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:agi2astlan"
+relation = "continues"
+object = "scb/lisa/ku2astlan"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:agi1astlan"
+relation = "continues"
+object = "scb/lisa/ku1astlan"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:agi3astlan"
+relation = "continues"
+object = "scb/lisa/ku3astlan"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:agi2ssykar"
+relation = "continues"
+object = "scb/lisa/ku2ssykar"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:agi1ssykar"
+relation = "continues"
+object = "scb/lisa/ku1ssykar"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:sektorkod-nast-forvarvskalla-agi"
+relation = "continues"
+object = "scb/lisa/sektorkod-nast-forvarvskalla"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:sektorkod-storsta-forvarvskalla-agi"
+relation = "continues"
+object = "scb/lisa/sektorkod-storsta-forvarvskalla"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:sektorkod-tredje-forvarvskalla-agi"
+relation = "continues"
+object = "scb/lisa/sektorkod-tredje-forvarvskalla"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:tjanstepension-tjanst-agi"
+relation = "continues"
+object = "scb/lisa/tjanstepension-tjanst"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:agi2ink"
+relation = "continues"
+object = "scb/lisa/ku2ink"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:agi1ink"
+relation = "continues"
+object = "scb/lisa/ku1ink"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:agi3ink"
+relation = "continues"
+object = "scb/lisa/ku3ink"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:ssyk-overensstammelse-agi"
+relation = "continues"
+object = "scb/lisa/ssyk-overensstammelse"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:yrkesstallning-nast-forvarvskallan-agi"
+relation = "continues"
+object = "scb/lisa/yrkesstallning-nast-forvarvskallan"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:yrkesstallning-storsta-forvarvskallan-agi"
+relation = "continues"
+object = "scb/lisa/yrkesstallning-storsta-forvarvskallan"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:agi3yrkesstallning"
+relation = "continues"
+object = "scb/lisa/ku3yrkesstallning"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. Förändringar i LISA 2019: \"Från och med referensår 2019 … De månatliga arbetsgivardeklarationerna på individnivå (AGI) ersätter de årliga\" kontrolluppgifterna."
+
+[[statement]]
+kind = "link"
+subject = "var:sun2020niva-old"
+relation = "continues"
+object = "scb/lisa/sun2000niva-old"
+at = "2019-01-01.."
+evidence = "Operator ruling 2026-11-16 on #2499: SUN 2000 to SUN 2020 is a classification-version change with different code sets, so the two variables stay separate, joined by `continues`. Sun2000niva_old is delivered 1990-2018 and Sun2020Niva_Old from 2019, both as the highest education level aggregated to 7 Swedish levels; the column names carry the SUN version.\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A126\ncatalog/source/SCB/lisa-variabellista-total-t-o-m-2024-2025.xlsx:Individ!A121"
+
+[[statement]]
+kind = "set"
+subject = "var:sun2000niva-old"
+fields = { "label" = "Utbildningsnivå, aggregerad till 7 nivåer (SUN 2000)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-16 on #2499: the SUN version goes in the label; this variable is column Sun2000niva_old (1990-2018)."
+
+[[statement]]
+kind = "set"
+subject = "var:sun2020niva-old"
+fields = { "label" = "Utbildningsnivå, aggregerad till 7 nivåer (SUN 2020)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-16 on #2499: the SUN version goes in the label; this variable is column Sun2020Niva_Old (2019-2024)."
