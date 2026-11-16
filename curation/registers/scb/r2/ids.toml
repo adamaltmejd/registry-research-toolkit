@@ -1,7 +1,7 @@
 # Public ids of scb/r2 (today's scb/rtb), from the slug pins at fe08cf2a9.
 public = "rtb"
 [tables]
-"Asylsökande i Sverige" = "asylsokande-i-sverige-31-12"
+"Asylsökande i Sverige" = "asylsokande-i-sverige"
 "Civilståndsändringar" = "civilstandsandringar-skilda"
 "Döda" = "doda-kvartal"
 "Dödfödda" = "dodfodda"
@@ -9,7 +9,7 @@ public = "rtb"
 "Familjer från 1998-" = "familjer-fran-1998"
 "Folkbokförda personer" = "folkbokforda-personer-kvartal"
 "Födda" = "fodda-kvartal"
-"Grund för bosättning för immigranter" = "grund-bosattning-31-12"
+"Grund för bosättning för immigranter" = "grund-bosattning"
 "Hushåll" = "hushall"
 "In- och utvandringar 1968-1997" = "flyttningar-1968-1997"
 "Inrikes flyttningar" = "inrikes-flyttningar-kvartal"
