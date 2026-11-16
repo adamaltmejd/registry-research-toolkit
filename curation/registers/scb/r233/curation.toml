@@ -310,18 +310,6 @@ evidence = "Behörighetskodningen hör till gruppen och utbildningstemat.\ncatal
 
 [[statement]]
 kind = "set"
-subject = "var:behorighet-gy-impro-ak9"
-fields = { "sets" = ["gymnasiebehorighet"] }
-evidence = "Behörighetskodningen hör till gruppen och utbildningstemat.\ncatalog:variable_text:22969:18550:18551"
-
-[[statement]]
-kind = "set"
-subject = "var:behorighet-gy-impro-ak9"
-fields = { "tags" = ["education"] }
-evidence = "Behörighetskodningen hör till gruppen och utbildningstemat.\ncatalog:variable_text:22969:18550:18551"
-
-[[statement]]
-kind = "set"
 subject = "var:behorighet-gy-nt-ak9"
 fields = { "sets" = ["gymnasiebehorighet"] }
 evidence = "Behörighetskodningen hör till gruppen och utbildningstemat.\ncatalog:variable_text:22970:20011:20012"
@@ -1090,18 +1078,6 @@ evidence = "Stv är en ogenomskinlig källkodförkortning för studieväg; 2 kom
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-3-mor"
-fields = { "sets" = ["foraldrars-utbildningsniva"] }
-evidence = "SUN är en bokstavskod som saknas i etiketten; variabeln mäter moderns utbildningsnivå.\ncatalog:occurrence-locators:variable:23040\ncatalog:variable_text:23040:16358:16359"
-
-[[statement]]
-kind = "set"
-subject = "var:sun-niva-3-mor"
-fields = { "tags" = ["education"] }
-evidence = "SUN är en bokstavskod som saknas i etiketten; variabeln mäter moderns utbildningsnivå.\ncatalog:occurrence-locators:variable:23040\ncatalog:variable_text:23040:16358:16359"
-
-[[statement]]
-kind = "set"
 subject = "var:sun-niva-mor"
 fields = { "sets" = ["foraldrars-utbildningsniva"] }
 evidence = "SUN är en bokstavskod som saknas i etiketten; variabeln mäter moderns utbildningsnivå.\ncatalog:occurrence-locators:variable:23041\ncatalog:variable_text:23041:18184:18185"
@@ -1147,18 +1123,6 @@ kind = "set"
 subject = "var:moderns-utbildningsniva-sun-2020-grupperad"
 fields = { "tags" = ["education"] }
 evidence = "Suffixet 2 är en räknare som inte kommer från källkolumnen; variabeln mäter grupperad utbildningsnivå för modern.\ncatalog:occurrence-locators:variable:23044\ncatalog:variable_text:23044:20011:20012"
-
-[[statement]]
-kind = "set"
-subject = "var:sun2000niva-3-far"
-fields = { "sets" = ["foraldrars-utbildningsniva"] }
-evidence = "Faderns utbildningsnivå hör till föräldragruppen och utbildningstemat.\ncatalog:variable_text:23045:16358:16359"
-
-[[statement]]
-kind = "set"
-subject = "var:sun2000niva-3-far"
-fields = { "tags" = ["education"] }
-evidence = "Faderns utbildningsnivå hör till föräldragruppen och utbildningstemat.\ncatalog:variable_text:23045:16358:16359"
 
 [[statement]]
 kind = "set"
@@ -1622,12 +1586,6 @@ evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (7 variab
 
 [[statement]]
 kind = "set"
-subject = "var:behorighet-gy-impro-ak9"
-fields = { "label" = "Behörighet till gymnasieskolan (programinriktat individuellt val, årskurs 9)" }
-evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (7 variables): judged different meaning, medium confidence; Concurrent flags: overall eligibility under the pre-2011 rules, five programme groups, and programinriktat individuellt val (Beh_IMPRO_Ak9 to 2020, BEH_IMV_AK9 from 2021, same opdef, treated as one variable)."
-
-[[statement]]
-kind = "set"
 subject = "var:behorighet-gy-nt-ak9"
 fields = { "label" = "Behörighet till gymnasieskolan (NT-program, årskurs 9)" }
 evidence = "#2102 same-label cluster 'Behörighet till gymnasieskolan' (7 variables): judged different meaning, medium confidence; Concurrent flags: overall eligibility under the pre-2011 rules, five programme groups, and programinriktat individuellt val (Beh_IMPRO_Ak9 to 2020, BEH_IMV_AK9 from 2021, same opdef, treated as one variable)."
@@ -1796,21 +1754,9 @@ evidence = "#2102 same-label cluster 'Studieväg i gymnasieskolan' (3 variables)
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-3-mor"
-fields = { "label" = "Moderns utbildningsnivå (SUN 2000, detaljerad)" }
-evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, detailed vs grouped; SUN2000Niva3_Mor and SUN2000Niva_Mor share a value set over adjacent periods."
-
-[[statement]]
-kind = "set"
 subject = "var:sun-niva-mor"
 fields = { "label" = "Moderns utbildningsnivå (SUN 2000, detaljerad)" }
 evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (5 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, detailed vs grouped; SUN2000Niva3_Mor and SUN2000Niva_Mor share a value set over adjacent periods."
-
-[[statement]]
-kind = "set"
-subject = "var:sun2000niva-3-far"
-fields = { "label" = "Faderns utbildningsnivå (SUN 2000, detaljerad)" }
-evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (5 variables): judged different meaning, high confidence; SUN 2000 vs SUN 2020, each detailed vs grouped; SUN2000Niva3_Far and SUN2000Niva_Far are the same detailed variable renamed."
 
 [[statement]]
 kind = "set"
@@ -1993,3 +1939,21 @@ kind = "set"
 subject = "elever-per-15-oktober: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elever-per-15-oktober: Beh_IMPRO_Ak9"
+fields = { "variable" = "beh-imv-ak9" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v30392) in one table, renamed between survey rounds and never delivered together, so they are one variable: Beh_IMPRO_Ak9 2016-10-15..2020-10-15; BEH_IMV_AK9 2021-10-15..2024-10-15."
+
+[[statement]]
+kind = "set"
+subject = "elever-per-15-oktober: SUN2000Niva3_Far"
+fields = { "variable" = "sun2000niva-far" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v8074) in one table, renamed between survey rounds and never delivered together, so they are one variable: SUN2000Niva3_Far 1999-10-15..2014-10-15; SUN2000Niva_Far 2015-10-15..2019-10-15."
+
+[[statement]]
+kind = "set"
+subject = "elever-per-15-oktober: SUN2000Niva3_Mor"
+fields = { "variable" = "sun-niva-mor" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v8073) in one table, renamed between survey rounds and never delivered together, so they are one variable: SUN2000Niva3_Mor 1999-10-15..2014-10-15; SUN2000Niva_Mor 2015-10-15..2019-10-15."

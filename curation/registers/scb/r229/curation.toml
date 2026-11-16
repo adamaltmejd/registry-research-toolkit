@@ -3229,66 +3229,6 @@ evidence = "Källkolumnen har en annan ägare i en tidigare period.\ncatalog:occ
 
 [[statement]]
 kind = "set"
-subject = "var:t8a1"
-fields = { "sets" = ["utbildningstidens-omfattning"] }
-evidence = "T8a1 är en ogenomskinlig källkod.\ncatalog:variable_text:39908:9496:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:t8a1"
-fields = { "tags" = ["education"] }
-evidence = "T8a1 är en ogenomskinlig källkod.\ncatalog:variable_text:39908:9496:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:t8b1"
-fields = { "sets" = ["utbildningstidens-omfattning"] }
-evidence = "T8b1 är en ogenomskinlig källkod.\ncatalog:variable_text:39909:9496:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:t8b1"
-fields = { "tags" = ["education"] }
-evidence = "T8b1 är en ogenomskinlig källkod.\ncatalog:variable_text:39909:9496:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:t8c1"
-fields = { "sets" = ["utbildningstidens-omfattning"] }
-evidence = "T8c1 är en ogenomskinlig källkod.\ncatalog:variable_text:39910:9496:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:t8c1"
-fields = { "tags" = ["education"] }
-evidence = "T8c1 är en ogenomskinlig källkod.\ncatalog:variable_text:39910:9496:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:t8d1"
-fields = { "sets" = ["utbildningstidens-omfattning"] }
-evidence = "T8d1 är en ogenomskinlig källkod.\ncatalog:variable_text:39911:9496:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:t8d1"
-fields = { "tags" = ["education"] }
-evidence = "T8d1 är en ogenomskinlig källkod.\ncatalog:variable_text:39911:9496:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:t8e1"
-fields = { "sets" = ["utbildningstidens-omfattning"] }
-evidence = "T8e1 är en ogenomskinlig källkod.\ncatalog:variable_text:39912:9496:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:t8e1"
-fields = { "tags" = ["education"] }
-evidence = "T8e1 är en ogenomskinlig källkod.\ncatalog:variable_text:39912:9496:12418"
-
-[[statement]]
-kind = "set"
 subject = "var:t9a1"
 fields = { "sets" = ["utbildningstidens-omfattning"] }
 evidence = "T9a1 är en ogenomskinlig källkod.\ncatalog:variable_text:39913:14610:14791"
@@ -4700,36 +4640,6 @@ evidence = "#2102 same-label cluster 'Kurs/utbildningsanordnare, kurs 5' (4 vari
 
 [[statement]]
 kind = "set"
-subject = "var:t8a1"
-fields = { "label" = "Omfattning för kurs/utbildning 1, antal dagar (intervjufråga)" }
-evidence = "#2102 same-label cluster 'Omfattning för kurs/utbildning 1, antal dagar' (4 variables): judged different meaning, medium confidence; t8a1 is the interview question (opdef), xplangd1 is derived from two half-year surveys for the first half-year (opdef); gxpld1 has the identical opdef but runs beside xplangd1 and is qualified by its column code; T9A1 (2006-10) has no text and continues t8a1."
-
-[[statement]]
-kind = "set"
-subject = "var:t8b1"
-fields = { "label" = "Omfattning för kurs/utbildning 2, antal dagar (intervjufråga)" }
-evidence = "#2102 same-label cluster 'Omfattning för kurs/utbildning 2, antal dagar' (4 variables): judged different meaning, medium confidence; t8b1 is the interview question (opdef), xplangd2 is derived from two half-year surveys for the first half-year (opdef); gxpld2 has the identical opdef but runs beside xplangd2 and is qualified by its column code; T9B1 (2006-10) has no text and continues t8b1."
-
-[[statement]]
-kind = "set"
-subject = "var:t8c1"
-fields = { "label" = "Omfattning för kurs/utbildning 3, antal dagar (intervjufråga)" }
-evidence = "#2102 same-label cluster 'Omfattning för kurs/utbildning 3, antal dagar' (4 variables): judged different meaning, medium confidence; t8c1 is the interview question (opdef), xplangd3 is derived from two half-year surveys for the first half-year (opdef); gxpld3 has the identical opdef but runs beside xplangd3 and is qualified by its column code; T9C1 (2006-10) has no text and continues t8c1."
-
-[[statement]]
-kind = "set"
-subject = "var:t8d1"
-fields = { "label" = "Omfattning för kurs/utbildning 4, antal dagar (intervjufråga)" }
-evidence = "#2102 same-label cluster 'Omfattning för kurs/utbildning 4, antal dagar' (4 variables): judged different meaning, medium confidence; t8d1 is the interview question (opdef), xplangd4 is derived from two half-year surveys for the first half-year (opdef); gxpld4 has the identical opdef but runs beside xplangd4 and is qualified by its column code; T9D1 (2006-10) has no text and continues t8d1."
-
-[[statement]]
-kind = "set"
-subject = "var:t8e1"
-fields = { "label" = "Omfattning för kurs/utbildning 5, antal dagar (intervjufråga)" }
-evidence = "#2102 same-label cluster 'Omfattning för kurs/utbildning 5, antal dagar' (4 variables): judged different meaning, medium confidence; t8e1 is the interview question (opdef), xplangd0 is derived from two half-year surveys for the second half-year (opdef); gxpld10 has the identical opdef but runs beside xplangd0 and is qualified by its column code; T9E1 (2006-10) has no text and continues t8e1."
-
-[[statement]]
-kind = "set"
 subject = "var:t9a1"
 fields = { "label" = "Omfattning för kurs/utbildning 1, antal dagar (intervjufråga)" }
 evidence = "#2102 same-label cluster 'Omfattning för kurs/utbildning 1, antal dagar' (4 variables): judged different meaning, medium confidence; t8a1 is the interview question (opdef), xplangd1 is derived from two half-year surveys for the first half-year (opdef); gxpld1 has the identical opdef but runs beside xplangd1 and is qualified by its column code; T9A1 (2006-10) has no text and continues t8a1."
@@ -5041,3 +4951,33 @@ kind = "set"
 subject = "kalenderar: var:lopnummer"
 fields.row_key = true
 evidence = "Row key: lopnummer is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "halvarsvis: t8a1"
+fields = { "variable" = "t9a1" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17491) in one table, renamed between survey rounds and never delivered together, so they are one variable: t8a1 1995-01-01..2003-12-31; T9A1 2006-01-01..2010-06-30."
+
+[[statement]]
+kind = "set"
+subject = "halvarsvis: t8b1"
+fields = { "variable" = "t9b1" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17500) in one table, renamed between survey rounds and never delivered together, so they are one variable: t8b1 1995-01-01..2003-12-31; T9B1 2006-01-01..2010-06-30."
+
+[[statement]]
+kind = "set"
+subject = "halvarsvis: t8c1"
+fields = { "variable" = "t9c1" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17492) in one table, renamed between survey rounds and never delivered together, so they are one variable: t8c1 1995-01-01..2003-12-31; T9C1 2006-01-01..2010-06-30."
+
+[[statement]]
+kind = "set"
+subject = "halvarsvis: t8d1"
+fields = { "variable" = "t9d1" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17493) in one table, renamed between survey rounds and never delivered together, so they are one variable: t8d1 1995-01-01..2003-12-31; T9D1 2006-01-01..2010-06-30."
+
+[[statement]]
+kind = "set"
+subject = "halvarsvis: t8e1"
+fields = { "variable" = "t9e1" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17494) in one table, renamed between survey rounds and never delivered together, so they are one variable: t8e1 1995-01-01..2003-12-31; T9E1 2006-01-01..2010-06-30."

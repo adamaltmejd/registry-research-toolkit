@@ -1183,18 +1183,6 @@ evidence = "Faderns födelseland hör till födelseland och demografi.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:fritypgr"
-fields = { "sets" = ["inriktning-for-fristaende-skola"] }
-evidence = "Variabeln kodar inriktning för fristående grundskola.\ncatalog:valueset:11959\ncatalog:variable_text:23185:12965:13149"
-
-[[statement]]
-kind = "set"
-subject = "var:fritypgr"
-fields = { "tags" = ["education"] }
-evidence = "Variabeln kodar inriktning för fristående grundskola.\ncatalog:valueset:11959\ncatalog:variable_text:23185:12965:13149"
-
-[[statement]]
-kind = "set"
 subject = "var:fritypgy"
 fields = { "sets" = ["inriktning-for-fristaende-skola"] }
 evidence = "Variabeln kodar inriktning för fristående gymnasieskola.\ncatalog:occurrence:216472\ncatalog:variable_text:23186:12965:13149"
@@ -2839,30 +2827,6 @@ evidence = "Hman och det ensamma prefixet U är ogenomskinliga källkoder.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:u-jtal"
-fields = { "sets" = ["jamforelsetal-for-utbildningsansokan"] }
-evidence = "U och J är källbokstäver som inte är läsbara stammar av etiketten.\ncatalog:variable_text:23336:11504:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:u-jtal"
-fields = { "tags" = ["education"] }
-evidence = "U och J är källbokstäver som inte är läsbara stammar av etiketten.\ncatalog:variable_text:23336:11504:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:u-sgrupp"
-fields = { "sets" = ["sokgrupp"] }
-evidence = "U och S är enskilda källbokstäver.\ncatalog:variable_text:23337:11504:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:u-sgrupp"
-fields = { "tags" = ["education"] }
-evidence = "U och S är enskilda källbokstäver.\ncatalog:variable_text:23337:11504:11688"
-
-[[statement]]
-kind = "set"
 subject = "var:studievag-sokt-utbildning"
 fields = { "sets" = ["studievag-i-gymnasieskolan"] }
 evidence = "Det inledande u är en ogenomskinlig bokstavskod i källkolumnen.\ncatalog:variable_text:23341:19905:20089"
@@ -3335,12 +3299,6 @@ evidence = "#2102 same-label cluster 'Behörighet till gymnasielinje' (6 variabl
 
 [[statement]]
 kind = "set"
-subject = "var:fritypgr"
-fields = { "label" = "Inriktning av fristående skola/skolenhet (grundskola, slutbetyg)" }
-evidence = "#2102 same-label cluster 'Inriktning av fristående skola/skolenhet' (5 variables): judged different meaning, medium confidence; Opdefs separate the grundskola the student finished (FriTypGr, Inriktning; same value set) from the gymnasieskola applied to; FriTypGy has an older value set (01/03/05) than InriktningGy/_HT (11-15)."
-
-[[statement]]
-kind = "set"
 subject = "var:fritypgy"
 fields = { "label" = "Inriktning av fristående skola/skolenhet (gymnasieskola, äldre indelning)" }
 evidence = "#2102 same-label cluster 'Inriktning av fristående skola/skolenhet' (5 variables): judged different meaning, medium confidence; Opdefs separate the grundskola the student finished (FriTypGr, Inriktning; same value set) from the gymnasieskola applied to; FriTypGy has an older value set (01/03/05) than InriktningGy/_HT (11-15)."
@@ -3416,18 +3374,6 @@ kind = "set"
 subject = "var:grupp6"
 fields = { "label" = "Sökgrupp för ansökan till gymnasieprogram (sökt i 6:e hand, GRUPP6)" }
 evidence = "#2102 same-label cluster 'Sökgrupp för ansökan till gymnasieprogram' (14 variables): judged different meaning, medium confidence; Opdefs: GRUPP1-6 renamed SGRUPP1-6 are the sökgrupp for the education chosen in 1st-6th hand; U_SGrupp and SGrupp are the single sökgrupp from 1994."
-
-[[statement]]
-kind = "set"
-subject = "var:hman-ak9"
-fields = { "label" = "Huvudman (avslutad grundskola, årskurs 9)" }
-evidence = "#2102 same-label cluster 'Huvudman' (5 variables): judged different meaning, medium confidence; U_Hman and Hman are one variable (rename); Hman_Ar9/Hman_Ak9 are the huvudman of the school finishing grundskolan (opdefs); Hman_HT has the same opdef as Hman but is concurrent, so only its HT suffix distinguishes it."
-
-[[statement]]
-kind = "set"
-subject = "var:hman-ar9"
-fields = { "label" = "Huvudman (avslutad grundskola, årskurs 9)" }
-evidence = "#2102 same-label cluster 'Huvudman' (5 variables): judged different meaning, medium confidence; U_Hman and Hman are one variable (rename); Hman_Ar9/Hman_Ak9 are the huvudman of the school finishing grundskolan (opdefs); Hman_HT has the same opdef as Hman but is concurrent, so only its HT suffix distinguishes it."
 
 [[statement]]
 kind = "set"
@@ -3575,18 +3521,6 @@ evidence = "#2102 same-label cluster 'Skola' (11 variables): judged different me
 
 [[statement]]
 kind = "set"
-subject = "var:skolans-identitetsnummer"
-fields = { "label" = "Skolans identitetsnummer (avslutad grundskola, årskurs 9)" }
-evidence = "#2102 same-label cluster 'Skolans identitetsnummer' (3 variables): judged different meaning, medium confidence; Opdefs: SkID_Ar9 and Skolid_Ak9 are the identity of the school finishing grundskolan; SkolID is a concurrent column with gymnasium names in its value set."
-
-[[statement]]
-kind = "set"
-subject = "var:skolans-identitetsnummer-skid-ar9"
-fields = { "label" = "Skolans identitetsnummer (avslutad grundskola, årskurs 9)" }
-evidence = "#2102 same-label cluster 'Skolans identitetsnummer' (3 variables): judged different meaning, medium confidence; Opdefs: SkID_Ar9 and Skolid_Ak9 are the identity of the school finishing grundskolan; SkolID is a concurrent column with gymnasium names in its value set."
-
-[[statement]]
-kind = "set"
 subject = "var:skolenhetskod"
 fields = { "label" = "Skolenhet (val av utbildning)" }
 evidence = "#2102 same-label cluster 'Skolenhet' (3 variables): judged different meaning, high confidence; Opdefs: skolenhet for the chosen education, skolenhet where the student is admitted (HT), and skolenhet finishing årskurs 9."
@@ -3607,18 +3541,6 @@ evidence = "#2102 same-label cluster 'Skolenhet' (3 variables): judged different
 kind = "set"
 subject = "var:skolkod"
 fields = { "label" = "Skola (gymnasieskola som eleven sökt till)" }
-evidence = "#2102 same-label cluster 'Skola' (11 variables): judged different meaning, medium confidence; Opdefs: final admitted school (ISKENH), school applied to in 1st-6th hand (SKOLA1-6), school applied to (SkolKod), and the grundskola school (Skol_Ar9, Skolkod_Ak9); Vy_Skolkod has no text, so it is qualified by its column code."
-
-[[statement]]
-kind = "set"
-subject = "var:skolkod-ak9"
-fields = { "label" = "Skola (avslutad grundskola, årskurs 9)" }
-evidence = "#2102 same-label cluster 'Skola' (11 variables): judged different meaning, medium confidence; Opdefs: final admitted school (ISKENH), school applied to in 1st-6th hand (SKOLA1-6), school applied to (SkolKod), and the grundskola school (Skol_Ar9, Skolkod_Ak9); Vy_Skolkod has no text, so it is qualified by its column code."
-
-[[statement]]
-kind = "set"
-subject = "var:skolkod-ar9"
-fields = { "label" = "Skola (avslutad grundskola, årskurs 9)" }
 evidence = "#2102 same-label cluster 'Skola' (11 variables): judged different meaning, medium confidence; Opdefs: final admitted school (ISKENH), school applied to in 1st-6th hand (SKOLA1-6), school applied to (SkolKod), and the grundskola school (Skol_Ar9, Skolkod_Ak9); Vy_Skolkod has no text, so it is qualified by its column code."
 
 [[statement]]
@@ -4084,3 +4006,57 @@ kind = "assert"
 subject = "sokande-antagna-1985-1993: PersonNr @1985..1990 where key = 'v57'"
 fact = { entity = "occurrence", fields = { label = "Personnummer", identifier = true } }
 evidence = "private:ev-3906"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: FriTypGr"
+fields = { "variable" = "inriktning" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v8190) in one table, renamed between survey rounds and never delivered together, so they are one variable: FriTypGr 2005-07-01..2005-12-31; Inriktning 2006-07-01..2007-12-31."
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: U_Jtal"
+fields = { "variable" = "jmftal" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v36734) in one table, renamed between survey rounds and never delivered together, so they are one variable: U_JTal 1994-07-01..1995-12-31; U_Jtal 1996-07-01..2001-12-31; JmfTal 2014-07-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: U_Sgrupp"
+fields = { "variable" = "sgrupp" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35158) in one table, renamed between survey rounds and never delivered together, so they are one variable: U_SGrupp 1994-07-01..1995-12-31; U_Sgrupp 1996-07-01..2001-12-31; SGrupp 2007-07-01..2007-12-31; Sgrupp 2005-07-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "var:hman-ak9"
+fields = { "label" = "Huvudman (avslutad grundskola, årskurs 9) (Antagna och Bakgrund - elev, 2017 och senare)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Antagna och Bakgrund - elev, 2017 och senare\"."
+
+[[statement]]
+kind = "set"
+subject = "var:hman-ar9"
+fields = { "label" = "Huvudman (avslutad grundskola, årskurs 9) (Bakgrund - elev, 1994 – 2016)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Bakgrund - elev, 1994 – 2016\"."
+
+[[statement]]
+kind = "set"
+subject = "var:skolans-identitetsnummer"
+fields = { "label" = "Skolans identitetsnummer (avslutad grundskola, årskurs 9) (Antagna och Bakgrund - elev, 2017 och senare)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Antagna och Bakgrund - elev, 2017 och senare\"."
+
+[[statement]]
+kind = "set"
+subject = "var:skolans-identitetsnummer-skid-ar9"
+fields = { "label" = "Skolans identitetsnummer (avslutad grundskola, årskurs 9) (Bakgrund - elev, 1994 – 2016)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Bakgrund - elev, 1994 – 2016\"."
+
+[[statement]]
+kind = "set"
+subject = "var:skolkod-ak9"
+fields = { "label" = "Skola (avslutad grundskola, årskurs 9) (Antagna och Bakgrund - elev, 2017 och senare)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Antagna och Bakgrund - elev, 2017 och senare\"."
+
+[[statement]]
+kind = "set"
+subject = "var:skolkod-ar9"
+fields = { "label" = "Skola (avslutad grundskola, årskurs 9) (Bakgrund - elev, 1994 – 2016)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Bakgrund - elev, 1994 – 2016\"."

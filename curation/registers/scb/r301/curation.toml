@@ -1999,18 +1999,6 @@ evidence = "Källkolumnens namn är en opak kod.\ncatalog:variable_text:885:1680
 
 [[statement]]
 kind = "set"
-subject = "var:droplevel"
-fields = { "sets" = ["utbildningsniva"] }
-evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:886:15156:15522"
-
-[[statement]]
-kind = "set"
-subject = "var:droplevel"
-fields = { "tags" = ["education"] }
-evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:886:15156:15522"
-
-[[statement]]
-kind = "set"
 subject = "var:farbtid"
 fields = { "sets" = ["utbildning-under-arbetstid"] }
 evidence = "Variabeln avser utbildning på betald arbetstid.\ncatalog:variable_text:888:12965:13330"
@@ -2359,18 +2347,6 @@ evidence = "Id:t är en ogenomskinlig källkod. Den delade etiketten kräver dis
 
 [[statement]]
 kind = "set"
-subject = "var:skal-formell-utbildning-oka-kunskap-intressant-amne"
-fields = { "sets" = ["skal-till-utbildningsdeltagande"] }
-evidence = "Id:t är en ogenomskinlig källkod. Den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:917:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:skal-formell-utbildning-oka-kunskap-intressant-amne"
-fields = { "tags" = ["education"] }
-evidence = "Id:t är en ogenomskinlig källkod. Den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:917:16801:17167"
-
-[[statement]]
-kind = "set"
 subject = "var:skal-formell-utbildning-utbildningsbevis"
 fields = { "sets" = ["skal-till-utbildningsdeltagande"] }
 evidence = "Id:t är en ogenomskinlig källkod. Den delade etiketten kräver disambiguering enligt D-12.\ncatalog:variable_text:918:18993:19358"
@@ -2488,18 +2464,6 @@ kind = "set"
 subject = "var:missnoje-formell-utbildning-administration"
 fields = { "tags" = ["education"] }
 evidence = "Källmnemoniken är opak och etiketten delas med andra kolumner.\ncatalog:variable_text:927:15156:15522"
-
-[[statement]]
-kind = "set"
-subject = "var:feduse"
-fields = { "sets" = ["kunskapsanvandning"] }
-evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:928:15156:15522"
-
-[[statement]]
-kind = "set"
-subject = "var:feduse"
-fields = { "tags" = ["education"] }
-evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:928:15156:15522"
 
 [[statement]]
 kind = "set"
@@ -2671,18 +2635,6 @@ evidence = "Födelseland ingår i kandidatgruppen och är en demografisk uppgift
 
 [[statement]]
 kind = "set"
-subject = "var:fodelseland-iso-2"
-fields = { "sets" = ["fodelseland"] }
-evidence = "Suffixet 2 är en räknare som inte kommer från källkolumnen. Födelseland ingår i kandidatgruppen och är en demografisk uppgift.\ncatalog:occurrence-locators:variable:943\ncatalog:register:37\ncatalog:variable_text:943:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:fodelseland-iso-2"
-fields = { "tags" = ["demographics"] }
-evidence = "Suffixet 2 är en räknare som inte kommer från källkolumnen. Födelseland ingår i kandidatgruppen och är en demografisk uppgift.\ncatalog:occurrence-locators:variable:943\ncatalog:register:37\ncatalog:variable_text:943:12965:13330"
-
-[[statement]]
-kind = "set"
 subject = "var:fodelseland-iso-far"
 fields = { "sets" = ["fodelseland"] }
 evidence = "Faderns födelseland ingår i kandidatgruppen och är en demografisk uppgift.\ncatalog:occurrence:1859\ncatalog:register:37"
@@ -2776,18 +2728,6 @@ kind = "set"
 subject = "var:formell-utbildning-kostnad"
 fields = { "tags" = ["education"] }
 evidence = "Källan ändrar variabelns innehåll mellan antal betalare och finansieringskodning.\ncatalog:valueset:10300\ncatalog:valueset:396\ncatalog:variable_text:951:15156:15522\ncatalog:variable_text:951:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:frsprak"
-fields = { "sets" = ["sprak-som-personen-kan-anvanda"] }
-evidence = "Variabeln anger ett språk personen kan använda.\ncatalog:variable_text:952:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:frsprak2"
-fields = { "sets" = ["sprak-som-personen-kan-anvanda"] }
-evidence = "Variabeln anger ett språk personen kan använda.\ncatalog:variable_text:953:12965:13330"
 
 [[statement]]
 kind = "set"
@@ -3355,42 +3295,6 @@ evidence = "Källmnemoniken innehåller en opak bokstavskod och etiketten kollid
 
 [[statement]]
 kind = "set"
-subject = "var:ifarbtid"
-fields = { "sets" = ["utbildning-under-arbetstid"] }
-evidence = "Variabeln gäller utbildning på betald arbetstid.\ncatalog:variable_text:1004:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:ifarbtid"
-fields = { "tags" = ["education", "employment"] }
-evidence = "Variabeln gäller utbildning på betald arbetstid.\ncatalog:variable_text:1004:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:ifarbtid2"
-fields = { "sets" = ["utbildning-under-arbetstid"] }
-evidence = "Variabeln gäller utbildning på betald arbetstid.\ncatalog:variable_text:1005:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:ifarbtid2"
-fields = { "tags" = ["education", "employment"] }
-evidence = "Variabeln gäller utbildning på betald arbetstid.\ncatalog:variable_text:1005:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:ifarbtid3"
-fields = { "sets" = ["utbildning-under-arbetstid"] }
-evidence = "Variabeln gäller utbildning på betald arbetstid.\ncatalog:variable_text:1006:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:ifarbtid3"
-fields = { "tags" = ["education", "employment"] }
-evidence = "Variabeln gäller utbildning på betald arbetstid.\ncatalog:variable_text:1006:12965:13330"
-
-[[statement]]
-kind = "set"
 subject = "var:ifeurohjalp1"
 fields = { "sets" = ["utbildningskostnader"] }
 evidence = "Kostnaden gäller studiehjälpmedel.\ncatalog:variable_text:1007:12965:13330"
@@ -3424,78 +3328,6 @@ kind = "set"
 subject = "var:ifeurohjalp3"
 fields = { "tags" = ["education"] }
 evidence = "Kostnaden gäller studiehjälpmedel.\ncatalog:variable_text:1009:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:ifinr"
-fields = { "sets" = ["utbildningsinriktning"] }
-evidence = "Utbildningsinriktningen ingår i gruppen.\ncatalog:variable_text:1010:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:ifinr"
-fields = { "tags" = ["education"] }
-evidence = "Utbildningsinriktningen ingår i gruppen.\ncatalog:variable_text:1010:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:ifinr2"
-fields = { "sets" = ["utbildningsinriktning"] }
-evidence = "Utbildningsinriktningen ingår i gruppen.\ncatalog:variable_text:1011:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:ifinr2"
-fields = { "tags" = ["education"] }
-evidence = "Utbildningsinriktningen ingår i gruppen.\ncatalog:variable_text:1011:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:ifinr3"
-fields = { "sets" = ["utbildningsinriktning"] }
-evidence = "Utbildningsinriktningen ingår i gruppen.\ncatalog:variable_text:1012:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:ifinr3"
-fields = { "tags" = ["education"] }
-evidence = "Utbildningsinriktningen ingår i gruppen.\ncatalog:variable_text:1012:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:ifsyfte"
-fields = { "sets" = ["utbildningens-syfte"] }
-evidence = "Variabeln mäter utbildningens syfte.\ncatalog:variable_text:1013:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:ifsyfte"
-fields = { "tags" = ["education"] }
-evidence = "Variabeln mäter utbildningens syfte.\ncatalog:variable_text:1013:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:ifsyfte2"
-fields = { "sets" = ["utbildningens-syfte"] }
-evidence = "Variabeln mäter utbildningens syfte.\ncatalog:variable_text:1014:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:ifsyfte2"
-fields = { "tags" = ["education"] }
-evidence = "Variabeln mäter utbildningens syfte.\ncatalog:variable_text:1014:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:ifsyfte3"
-fields = { "sets" = ["utbildningens-syfte"] }
-evidence = "Variabeln mäter utbildningens syfte.\ncatalog:variable_text:1015:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:ifsyfte3"
-fields = { "tags" = ["education"] }
-evidence = "Variabeln mäter utbildningens syfte.\ncatalog:variable_text:1015:12965:13330"
 
 [[statement]]
 kind = "set"
@@ -3556,30 +3388,6 @@ kind = "set"
 subject = "var:inffield2"
 fields = { "tags" = ["education"] }
 evidence = "Källkolumnens namn är en opak kod; etiketten delas och målet behöver R6-prövning.\ncatalog:variable_text:1020:15156:15522"
-
-[[statement]]
-kind = "set"
-subject = "var:infinr"
-fields = { "sets" = ["utbildningsinriktning"] }
-evidence = "Utbildningsinriktningen ingår i gruppen.\ncatalog:variable_text:1021:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:infinr"
-fields = { "tags" = ["education"] }
-evidence = "Utbildningsinriktningen ingår i gruppen.\ncatalog:variable_text:1021:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:infinr2"
-fields = { "sets" = ["utbildningsinriktning"] }
-evidence = "Utbildningsinriktningen ingår i gruppen.\ncatalog:variable_text:1022:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:infinr2"
-fields = { "tags" = ["education"] }
-evidence = "Utbildningsinriktningen ingår i gruppen.\ncatalog:variable_text:1022:12965:13330"
 
 [[statement]]
 kind = "set"
@@ -4180,12 +3988,6 @@ kind = "set"
 subject = "var:langmother"
 fields = { "sets" = ["modersmal"] }
 evidence = "Langmother är en källmnemonik för modersmål. Gruppen omfattar personens första och andra modersmål.\ncatalog:occurrence:1723\ncatalog:variable_text:1076:15156:15522\ncatalog:variable_text:1076:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:langmother2"
-fields = { "sets" = ["modersmal"] }
-evidence = "Langmother är en källmnemonik för modersmål. Gruppen omfattar personens första och andra modersmål.\ncatalog:occurrence:1724\ncatalog:variable_text:1077:15156:15522\ncatalog:variable_text:1077:16801:17167"
 
 [[statement]]
 kind = "set"
@@ -5359,18 +5161,6 @@ evidence = "Källmnemoniken är opak och etiketten kolliderar.\ncatalog:variable
 
 [[statement]]
 kind = "set"
-subject = "var:nfepurp"
-fields = { "sets" = ["utbildningens-syfte"] }
-evidence = "NFEPURP är en opak källkod; etiketten kolliderar.\ncatalog:variable_text:1181:15156:15522"
-
-[[statement]]
-kind = "set"
-subject = "var:nfepurp"
-fields = { "tags" = ["education"] }
-evidence = "NFEPURP är en opak källkod; etiketten kolliderar.\ncatalog:variable_text:1181:15156:15522"
-
-[[statement]]
-kind = "set"
 subject = "var:nfepurp10"
 fields = { "sets" = ["utbildningens-syfte"] }
 evidence = "NFEPURP är en opak källkod.\ncatalog:variable_text:1182:15156:15522"
@@ -5380,30 +5170,6 @@ kind = "set"
 subject = "var:nfepurp10"
 fields = { "tags" = ["education"] }
 evidence = "NFEPURP är en opak källkod.\ncatalog:variable_text:1182:15156:15522"
-
-[[statement]]
-kind = "set"
-subject = "var:nfepurp2"
-fields = { "sets" = ["utbildningens-syfte"] }
-evidence = "NFEPURP är en opak källkod; etiketten kolliderar.\ncatalog:variable_text:1183:15156:15522"
-
-[[statement]]
-kind = "set"
-subject = "var:nfepurp2"
-fields = { "tags" = ["education"] }
-evidence = "NFEPURP är en opak källkod; etiketten kolliderar.\ncatalog:variable_text:1183:15156:15522"
-
-[[statement]]
-kind = "set"
-subject = "var:nfepurp3"
-fields = { "sets" = ["utbildningens-syfte"] }
-evidence = "NFEPURP är en opak källkod; etiketten kolliderar.\ncatalog:variable_text:1184:15156:15522"
-
-[[statement]]
-kind = "set"
-subject = "var:nfepurp3"
-fields = { "tags" = ["education"] }
-evidence = "NFEPURP är en opak källkod; etiketten kolliderar.\ncatalog:variable_text:1184:15156:15522"
 
 [[statement]]
 kind = "set"
@@ -6631,39 +6397,9 @@ evidence = "Informationssökningen gäller utbildning.\ncatalog:variable_text:12
 
 [[statement]]
 kind = "set"
-subject = "var:sprak"
-fields = { "sets" = ["sprak-som-personen-kan-anvanda"] }
-evidence = "Variabeln anger ett språk personen kan använda.\ncatalog:variable_text:1288:12965:13330"
-
-[[statement]]
-kind = "set"
 subject = "var:sprak-niva-fold"
 fields = { "sets" = ["kunskapsniva-i-sprak"] }
 evidence = "Samma begrepp är perioduppdelat med scb/aes/langlevel1.\ncatalog:occurrence:1452\ncatalog:occurrence:1721"
-
-[[statement]]
-kind = "set"
-subject = "var:sprak2"
-fields = { "sets" = ["sprak-som-personen-kan-anvanda"] }
-evidence = "Variabeln anger ett språk personen kan använda.\ncatalog:variable_text:1290:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:sprak3"
-fields = { "sets" = ["sprak-som-personen-kan-anvanda"] }
-evidence = "Variabeln anger ett språk personen kan använda.\ncatalog:variable_text:1291:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:sprak4"
-fields = { "sets" = ["sprak-som-personen-kan-anvanda"] }
-evidence = "Variabeln anger ett språk personen kan använda.\ncatalog:variable_text:1292:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:sprak5"
-fields = { "sets" = ["sprak-som-personen-kan-anvanda"] }
-evidence = "Variabeln anger ett språk personen kan använda.\ncatalog:variable_text:1293:12965:13330"
 
 [[statement]]
 kind = "set"
@@ -6895,18 +6631,6 @@ evidence = "Källans etikett och operationella fråga anger olika utbildningsfor
 
 [[statement]]
 kind = "set"
-subject = "var:syss"
-fields = { "sets" = ["huvudsaklig-sysselsattning"] }
-evidence = "Variabeln kodar huvudsaklig sysselsättning.\ncatalog:variable_text:1313:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:syss"
-fields = { "tags" = ["employment"] }
-evidence = "Variabeln kodar huvudsaklig sysselsättning.\ncatalog:variable_text:1313:12965:13330"
-
-[[statement]]
-kind = "set"
 subject = "var:undervisningsmaterial-icke-formell-utbildning-andra"
 fields = { "sets" = ["undervisningsmaterial"] }
 evidence = "Variabeln gäller undervisningsmaterial i andra aktiviteten.\ncatalog:variable_text:1315:18993:19358"
@@ -7000,18 +6724,6 @@ kind = "set"
 subject = "var:urbaniseringsgrad-eu"
 fields = { "tags" = ["geography"] }
 evidence = "Urbaniseringsgrad anger bostadsområdets geografiska egenskaper.\ncatalog:variable_text:1322:18993:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildning"
-fields = { "sets" = ["utbildningsniva"] }
-evidence = "Variabeln anger utbildningsnivå.\ncatalog:variable_text:1323:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildning"
-fields = { "tags" = ["education"] }
-evidence = "Variabeln anger utbildningsnivå.\ncatalog:variable_text:1323:12965:13330"
 
 [[statement]]
 kind = "set"
@@ -7147,18 +6859,6 @@ evidence = "AES DIFFTYPE: number of difficulties with participation (2011, vs933
 
 [[statement]]
 kind = "set"
-subject = "var:frsprak"
-fields = { "tags" = ["language-religion"] }
-evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:978\ncatalog:variable_text:978:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:frsprak2"
-fields = { "tags" = ["language-religion"] }
-evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:979\ncatalog:variable_text:979:12965:13330"
-
-[[statement]]
-kind = "set"
 subject = "var:langbest"
 fields = { "tags" = ["language-religion"] }
 evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1089\ncatalog:variable_text:1089:15156:15522\ncatalog:variable_text:1089:16801:17167\ncatalog:variable_text:1089:18993:19358"
@@ -7207,12 +6907,6 @@ evidence = "The catalog labels and definitions explicitly concern language or re
 
 [[statement]]
 kind = "set"
-subject = "var:langmother2"
-fields = { "tags" = ["language-religion"] }
-evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1100\ncatalog:variable_text:1100:15156:15522\ncatalog:variable_text:1100:16801:17167"
-
-[[statement]]
-kind = "set"
 subject = "var:langused"
 fields = { "tags" = ["language-religion"] }
 evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1101\ncatalog:variable_text:1101:15156:15522\ncatalog:variable_text:1101:16801:17167\ncatalog:variable_text:1101:18993:19358"
@@ -7231,39 +6925,9 @@ evidence = "The catalog labels and definitions explicitly concern language or re
 
 [[statement]]
 kind = "set"
-subject = "var:sprak"
-fields = { "tags" = ["language-religion"] }
-evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1261\ncatalog:variable_text:1261:12965:13330"
-
-[[statement]]
-kind = "set"
 subject = "var:sprak-niva-fold"
 fields = { "tags" = ["language-religion"] }
 evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1262\ncatalog:variable_text:1262:15156:15522"
-
-[[statement]]
-kind = "set"
-subject = "var:sprak2"
-fields = { "tags" = ["language-religion"] }
-evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1263\ncatalog:variable_text:1263:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:sprak3"
-fields = { "tags" = ["language-religion"] }
-evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1264\ncatalog:variable_text:1264:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:sprak4"
-fields = { "tags" = ["language-religion"] }
-evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1265\ncatalog:variable_text:1265:12965:13330"
-
-[[statement]]
-kind = "set"
-subject = "var:sprak5"
-fields = { "tags" = ["language-religion"] }
-evidence = "The catalog labels and definitions explicitly concern language or religion. The authorized language and religion theme covers this measure; preserve existing themes.\ncatalog:variable:1266\ncatalog:variable_text:1266:12965:13330"
 
 [[statement]]
 kind = "set"
@@ -7803,12 +7467,6 @@ evidence = "#2102 same-label cluster 'Utbildningsnivå ISCED' (4 variables): jud
 
 [[statement]]
 kind = "set"
-subject = "var:droplevel"
-fields = { "label" = "Utbildningsnivå ISCED (ej fullföljd utbildning)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå ISCED' (4 variables): judged different meaning, high confidence; Opdefs: highest attained level (utbildning, HATLEVEL) versus level of the interrupted education (droplevel, DROPEDUCLEVEL)."
-
-[[statement]]
-kind = "set"
 subject = "var:farbtid"
 fields = { "label" = "Arbetstid formell utbildning (formell utbildning 1)" }
 evidence = "#2102 same-label cluster 'Arbetstid formell utbildning' (3 variables): judged different meaning, high confidence; farbtid and farbtid2 are formal education 1 and 2 (2005-06); the 2011-23 column covers the latest formal education in the last 12 months."
@@ -7860,12 +7518,6 @@ kind = "set"
 subject = "var:fedreasonmain"
 fields = { "label" = "Skäl till deltagande, formell utbildning (viktigaste skälet)" }
 evidence = "#2102 same-label cluster 'Skäl till deltagande, formell utbildning' (13 variables): judged different meaning, high confidence; Separate tick-box reasons (FEDREASON_01-09, 01A/01B, 06_7) plus FEDREASONMAIN for the single most important reason; opdefs name each."
-
-[[statement]]
-kind = "set"
-subject = "var:feduse"
-fields = { "label" = "Kunskapsanvändning, formell utbildning (hittills haft)" }
-evidence = "#2102 same-label cluster 'Kunskapsanvändning, formell utbildning' (3 variables): judged different meaning, medium confidence; FEDUSEB asks for expected future use, FEDUSEA for use so far; FEDUSE (2011-12) has the same scale and is taken as the use-so-far item over time."
 
 [[statement]]
 kind = "set"
@@ -7923,18 +7575,6 @@ evidence = "#2102 same-label cluster 'Födelseland, ISO-kod' (4 variables): judg
 
 [[statement]]
 kind = "set"
-subject = "var:frsprak"
-fields = { "label" = "Språk som personen kan använda (bäst kända språket förutom modersmål)" }
-evidence = "#2102 same-label cluster 'Språk som personen kan använda' (19 variables): judged different meaning, medium confidence; Numbered language slots (sprak1-5 and LANGUSED_1-7, same slots over time), best/second-best foreign language, proficiency levels and a language count are different items."
-
-[[statement]]
-kind = "set"
-subject = "var:frsprak2"
-fields = { "label" = "Språk som personen kan använda (näst bäst kända språket förutom modersmål)" }
-evidence = "#2102 same-label cluster 'Språk som personen kan använda' (19 variables): judged different meaning, medium confidence; Numbered language slots (sprak1-5 and LANGUSED_1-7, same slots over time), best/second-best foreign language, proficiency levels and a language count are different items."
-
-[[statement]]
-kind = "set"
 subject = "var:fsyfte1"
 fields = { "label" = "Syfte formell utbildning (första formella utbildningen)" }
 evidence = "#2102 same-label cluster 'Syfte formell utbildning' (2 variables): judged different meaning, high confidence; Opdefs: first and second formal education."
@@ -7983,24 +7623,6 @@ evidence = "#2102 same-label cluster 'Icke-formell utbildning, kostnadsvariabler
 
 [[statement]]
 kind = "set"
-subject = "var:ifarbtid"
-fields = { "label" = "Arbetstid icke-formell utbildning (graderad, aktivitet 1)" }
-evidence = "#2102 same-label cluster 'Arbetstid icke-formell utbildning' (13 variables): judged different meaning, medium confidence; Graded paid-working-time scale per activity 1-3 (ifarbtid, NFEWORKTIME) differs from the derived yes/no per activity 1-7 (NFEACTnn_WORKTIME); activity numbers separate the rest."
-
-[[statement]]
-kind = "set"
-subject = "var:ifarbtid2"
-fields = { "label" = "Arbetstid icke-formell utbildning (graderad, aktivitet 2)" }
-evidence = "#2102 same-label cluster 'Arbetstid icke-formell utbildning' (13 variables): judged different meaning, medium confidence; Graded paid-working-time scale per activity 1-3 (ifarbtid, NFEWORKTIME) differs from the derived yes/no per activity 1-7 (NFEACTnn_WORKTIME); activity numbers separate the rest."
-
-[[statement]]
-kind = "set"
-subject = "var:ifarbtid3"
-fields = { "label" = "Arbetstid icke-formell utbildning (graderad, aktivitet 3)" }
-evidence = "#2102 same-label cluster 'Arbetstid icke-formell utbildning' (13 variables): judged different meaning, medium confidence; Graded paid-working-time scale per activity 1-3 (ifarbtid, NFEWORKTIME) differs from the derived yes/no per activity 1-7 (NFEACTnn_WORKTIME); activity numbers separate the rest."
-
-[[statement]]
-kind = "set"
 subject = "var:ifeurohjalp1"
 fields = { "label" = "Kostnader studiehjälpmedel icke-formell utbildning (icke-formell utbildning 1)" }
 evidence = "#2102 same-label cluster 'Kostnader studiehjälpmedel icke-formell utbildning' (3 variables): judged different meaning, high confidence; Opdefs: non-formal education 1, 2 and 3."
@@ -8019,42 +7641,6 @@ evidence = "#2102 same-label cluster 'Kostnader studiehjälpmedel icke-formell u
 
 [[statement]]
 kind = "set"
-subject = "var:ifinr"
-fields = { "label" = "Inriktning icke-formell utbildning (aktivitet 1)" }
-evidence = "#2102 same-label cluster 'Inriktning icke-formell utbildning' (6 variables): judged different meaning, medium confidence; Numbered activity slots 1-3: ifinr1-3 (2005-06) and NFEFIELD1-3 (2011-23) are the same slots in different periods; slots differ in meaning."
-
-[[statement]]
-kind = "set"
-subject = "var:ifinr2"
-fields = { "label" = "Inriktning icke-formell utbildning (aktivitet 2)" }
-evidence = "#2102 same-label cluster 'Inriktning icke-formell utbildning' (6 variables): judged different meaning, medium confidence; Numbered activity slots 1-3: ifinr1-3 (2005-06) and NFEFIELD1-3 (2011-23) are the same slots in different periods; slots differ in meaning."
-
-[[statement]]
-kind = "set"
-subject = "var:ifinr3"
-fields = { "label" = "Inriktning icke-formell utbildning (aktivitet 3)" }
-evidence = "#2102 same-label cluster 'Inriktning icke-formell utbildning' (6 variables): judged different meaning, medium confidence; Numbered activity slots 1-3: ifinr1-3 (2005-06) and NFEFIELD1-3 (2011-23) are the same slots in different periods; slots differ in meaning."
-
-[[statement]]
-kind = "set"
-subject = "var:ifsyfte"
-fields = { "label" = "Syfte icke-formell utbildning (aktivitet 1)" }
-evidence = "#2102 same-label cluster 'Syfte icke-formell utbildning' (14 variables): judged different meaning, medium confidence; Activity slots 1-7 across three waves (ifsyfte, NFEPURP, NFEACTnn_PURP) are the same slots over time; INFPURP is a separate yes/no item about self-taught learning."
-
-[[statement]]
-kind = "set"
-subject = "var:ifsyfte2"
-fields = { "label" = "Syfte icke-formell utbildning (aktivitet 2)" }
-evidence = "#2102 same-label cluster 'Syfte icke-formell utbildning' (14 variables): judged different meaning, medium confidence; Activity slots 1-7 across three waves (ifsyfte, NFEPURP, NFEACTnn_PURP) are the same slots over time; INFPURP is a separate yes/no item about self-taught learning."
-
-[[statement]]
-kind = "set"
-subject = "var:ifsyfte3"
-fields = { "label" = "Syfte icke-formell utbildning (aktivitet 3)" }
-evidence = "#2102 same-label cluster 'Syfte icke-formell utbildning' (14 variables): judged different meaning, medium confidence; Activity slots 1-7 across three waves (ifsyfte, NFEPURP, NFEACTnn_PURP) are the same slots over time; INFPURP is a separate yes/no item about self-taught learning."
-
-[[statement]]
-kind = "set"
 subject = "var:inffield"
 fields = { "label" = "Inriktning informell utbildning (informell utbildning 1)" }
 evidence = "#2102 same-label cluster 'Inriktning informell utbildning' (5 variables): judged different meaning, medium confidence; Numbered informal-activity slots: infinr1-3 (2005-06) and INFFIELD1/2 (2011-12) are the same slots in disjoint periods."
@@ -8062,18 +7648,6 @@ evidence = "#2102 same-label cluster 'Inriktning informell utbildning' (5 variab
 [[statement]]
 kind = "set"
 subject = "var:inffield2"
-fields = { "label" = "Inriktning informell utbildning (informell utbildning 2)" }
-evidence = "#2102 same-label cluster 'Inriktning informell utbildning' (5 variables): judged different meaning, medium confidence; Numbered informal-activity slots: infinr1-3 (2005-06) and INFFIELD1/2 (2011-12) are the same slots in disjoint periods."
-
-[[statement]]
-kind = "set"
-subject = "var:infinr"
-fields = { "label" = "Inriktning informell utbildning (informell utbildning 1)" }
-evidence = "#2102 same-label cluster 'Inriktning informell utbildning' (5 variables): judged different meaning, medium confidence; Numbered informal-activity slots: infinr1-3 (2005-06) and INFFIELD1/2 (2011-12) are the same slots in disjoint periods."
-
-[[statement]]
-kind = "set"
-subject = "var:infinr2"
 fields = { "label" = "Inriktning informell utbildning (informell utbildning 2)" }
 evidence = "#2102 same-label cluster 'Inriktning informell utbildning' (5 variables): judged different meaning, medium confidence; Numbered informal-activity slots: infinr1-3 (2005-06) and INFFIELD1/2 (2011-12) are the same slots in disjoint periods."
 
@@ -8267,12 +7841,6 @@ evidence = "#2102 same-label cluster 'Modersmål' (5 variables): judged differen
 kind = "set"
 subject = "var:langmother"
 fields = { "label" = "Modersmål (första)" }
-evidence = "#2102 same-label cluster 'Modersmål' (5 variables): judged different meaning, medium confidence; First and second mother tongue (opdefs); modersmal (2005-06), LANGMOTHER1 and LANGMOTH1 are the first over time with different code lists."
-
-[[statement]]
-kind = "set"
-subject = "var:langmother2"
-fields = { "label" = "Modersmål (andra)" }
 evidence = "#2102 same-label cluster 'Modersmål' (5 variables): judged different meaning, medium confidence; First and second mother tongue (opdefs); modersmal (2005-06), LANGMOTHER1 and LANGMOTH1 are the first over time with different code lists."
 
 [[statement]]
@@ -8505,24 +8073,6 @@ evidence = "#2102 same-label cluster 'Utbildningsaktiviter under det senaste år
 
 [[statement]]
 kind = "set"
-subject = "var:nfepurp"
-fields = { "label" = "Syfte icke-formell utbildning (aktivitet 1)" }
-evidence = "#2102 same-label cluster 'Syfte icke-formell utbildning' (14 variables): judged different meaning, medium confidence; Activity slots 1-7 across three waves (ifsyfte, NFEPURP, NFEACTnn_PURP) are the same slots over time; INFPURP is a separate yes/no item about self-taught learning."
-
-[[statement]]
-kind = "set"
-subject = "var:nfepurp2"
-fields = { "label" = "Syfte icke-formell utbildning (aktivitet 2)" }
-evidence = "#2102 same-label cluster 'Syfte icke-formell utbildning' (14 variables): judged different meaning, medium confidence; Activity slots 1-7 across three waves (ifsyfte, NFEPURP, NFEACTnn_PURP) are the same slots over time; INFPURP is a separate yes/no item about self-taught learning."
-
-[[statement]]
-kind = "set"
-subject = "var:nfepurp3"
-fields = { "label" = "Syfte icke-formell utbildning (aktivitet 3)" }
-evidence = "#2102 same-label cluster 'Syfte icke-formell utbildning' (14 variables): judged different meaning, medium confidence; Activity slots 1-7 across three waves (ifsyfte, NFEPURP, NFEACTnn_PURP) are the same slots over time; INFPURP is a separate yes/no item about self-taught learning."
-
-[[statement]]
-kind = "set"
 subject = "var:nfeuseb"
 fields = { "label" = "Kunskapsanvändning, icke-formell utbildning (första aktiviteten, förväntad framtida användning)" }
 evidence = "#2102 same-label cluster 'Kunskapsanvändning, icke-formell utbildning' (4 variables): judged different meaning, high confidence; Opdefs: use so far (NFEUSEA) versus expected future use (NFEUSEB), each for the first and second activity."
@@ -8577,12 +8127,6 @@ evidence = "#2102 same-label cluster 'Skäl till deltagande, formell utbildning'
 
 [[statement]]
 kind = "set"
-subject = "var:skal-formell-utbildning-oka-kunskap-intressant-amne"
-fields = { "label" = "Skäl till deltagande, formell utbildning (öka kunskaper i ämne som intresserar)" }
-evidence = "#2102 same-label cluster 'Skäl till deltagande, formell utbildning' (13 variables): judged different meaning, high confidence; Separate tick-box reasons (FEDREASON_01-09, 01A/01B, 06_7) plus FEDREASONMAIN for the single most important reason; opdefs name each."
-
-[[statement]]
-kind = "set"
 subject = "var:skal-formell-utbildning-starta-eget-foretag"
 fields = { "label" = "Skäl till deltagande, formell utbildning (starta eget företag)" }
 evidence = "#2102 same-label cluster 'Skäl till deltagande, formell utbildning' (13 variables): judged different meaning, high confidence; Separate tick-box reasons (FEDREASON_01-09, 01A/01B, 06_7) plus FEDREASONMAIN for the single most important reason; opdefs name each."
@@ -8613,38 +8157,8 @@ evidence = "#2102 same-label cluster 'Skäl till deltagande, formell utbildning'
 
 [[statement]]
 kind = "set"
-subject = "var:sprak"
-fields = { "label" = "Språk som personen kan använda (språk 1)" }
-evidence = "#2102 same-label cluster 'Språk som personen kan använda' (19 variables): judged different meaning, medium confidence; Numbered language slots (sprak1-5 and LANGUSED_1-7, same slots over time), best/second-best foreign language, proficiency levels and a language count are different items."
-
-[[statement]]
-kind = "set"
 subject = "var:sprak-niva-fold"
 fields = { "label" = "Språk som personen kan använda (kunskapsnivå i bästa språket)" }
-evidence = "#2102 same-label cluster 'Språk som personen kan använda' (19 variables): judged different meaning, medium confidence; Numbered language slots (sprak1-5 and LANGUSED_1-7, same slots over time), best/second-best foreign language, proficiency levels and a language count are different items."
-
-[[statement]]
-kind = "set"
-subject = "var:sprak2"
-fields = { "label" = "Språk som personen kan använda (språk 2)" }
-evidence = "#2102 same-label cluster 'Språk som personen kan använda' (19 variables): judged different meaning, medium confidence; Numbered language slots (sprak1-5 and LANGUSED_1-7, same slots over time), best/second-best foreign language, proficiency levels and a language count are different items."
-
-[[statement]]
-kind = "set"
-subject = "var:sprak3"
-fields = { "label" = "Språk som personen kan använda (språk 3)" }
-evidence = "#2102 same-label cluster 'Språk som personen kan använda' (19 variables): judged different meaning, medium confidence; Numbered language slots (sprak1-5 and LANGUSED_1-7, same slots over time), best/second-best foreign language, proficiency levels and a language count are different items."
-
-[[statement]]
-kind = "set"
-subject = "var:sprak4"
-fields = { "label" = "Språk som personen kan använda (språk 4)" }
-evidence = "#2102 same-label cluster 'Språk som personen kan använda' (19 variables): judged different meaning, medium confidence; Numbered language slots (sprak1-5 and LANGUSED_1-7, same slots over time), best/second-best foreign language, proficiency levels and a language count are different items."
-
-[[statement]]
-kind = "set"
-subject = "var:sprak5"
-fields = { "label" = "Språk som personen kan använda (språk 5)" }
 evidence = "#2102 same-label cluster 'Språk som personen kan använda' (19 variables): judged different meaning, medium confidence; Numbered language slots (sprak1-5 and LANGUSED_1-7, same slots over time), best/second-best foreign language, proficiency levels and a language count are different items."
 
 [[statement]]
@@ -8748,12 +8262,6 @@ kind = "set"
 subject = "var:uppmanare-utbildning-forsta-slumpvalda-aktivitet"
 fields = { "label" = "Uppmanare till utbildning (första aktiviteten)" }
 evidence = "#2102 same-label cluster 'Uppmanare till utbildning' (2 variables): judged different meaning, high confidence; Opdefs name the first and second randomly selected activity."
-
-[[statement]]
-kind = "set"
-subject = "var:utbildning"
-fields = { "label" = "Utbildningsnivå ISCED (högsta nivå)" }
-evidence = "#2102 same-label cluster 'Utbildningsnivå ISCED' (4 variables): judged different meaning, high confidence; Opdefs: highest attained level (utbildning, HATLEVEL) versus level of the interrupted education (droplevel, DROPEDUCLEVEL)."
 
 [[statement]]
 kind = "set"
@@ -9044,3 +8552,171 @@ kind = "set"
 subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: var:eget-personnr"
 fields.row_key = true
 evidence = "Row key: eget-personnr identify a row: one row per surveyed person; lopnummer and uenr are survey respondent numbers for the same person (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: ifarbtid1"
+fields = { "variable" = "nfeworktime" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v24835) in one table, renamed between survey rounds and never delivered together, so they are one variable: ifarbtid1 2005-07-01..2006-06-30; NFEWORKTIME1 2011-07-01..2012-06-30."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: ifarbtid2"
+fields = { "variable" = "nfeworktime2" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v24835) in one table, renamed between survey rounds and never delivered together, so they are one variable: ifarbtid2 2005-07-01..2006-06-30; NFEWORKTIME2 2011-07-01..2012-06-30."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: ifarbtid3"
+fields = { "variable" = "nfeworktime3" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v24835) in one table, renamed between survey rounds and never delivered together, so they are one variable: ifarbtid3 2005-07-01..2006-06-30; NFEWORKTIME3 2011-07-01..2012-06-30."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: fodland"
+fields = { "variable" = "fodelseland-iso" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v6550) in one table, renamed between survey rounds and never delivered together, so they are one variable: fodland 2005-07-01..2006-06-30; BIRTHPLACE 2011-07-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: syss"
+fields = { "variable" = "mainstat" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5068) in one table, renamed between survey rounds and never delivered together, so they are one variable: syss 2005-07-01..2006-06-30; MAINSTAT 2011-07-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: ifinr1"
+fields = { "variable" = "inriktning-icke-formell-forsta-slumpvalda-aktivitet" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v24829) in one table, renamed between survey rounds and never delivered together, so they are one variable: ifinr1 2005-07-01..2006-06-30; NFEFIELD1 2011-07-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: ifinr2"
+fields = { "variable" = "inriktning-icke-formell-andra-slumpvalda-aktivitet" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v24829) in one table, renamed between survey rounds and never delivered together, so they are one variable: ifinr2 2005-07-01..2006-06-30; NFEFIELD2 2011-07-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: ifinr3"
+fields = { "variable" = "nfefield3" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v24829) in one table, renamed between survey rounds and never delivered together, so they are one variable: ifinr3 2005-07-01..2006-06-30; NFEFIELD3 2011-07-01..2012-06-30."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: infinr1"
+fields = { "variable" = "inffield" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v24960) in one table, renamed between survey rounds and never delivered together, so they are one variable: infinr1 2005-07-01..2006-06-30; INFFIELD1 2011-07-01..2012-06-30."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: infinr2"
+fields = { "variable" = "inffield2" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v24960) in one table, renamed between survey rounds and never delivered together, so they are one variable: infinr2 2005-07-01..2006-06-30; INFFIELD2 2011-07-01..2012-06-30."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: FEDUSE"
+fields = { "variable" = "kunskapsanvandning-formell-utbildning-hittills" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35144) in one table, renamed between survey rounds and never delivered together, so they are one variable: FEDUSE 2011-07-01..2012-06-30; FEDUSEA 2016-01-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: LANGMOTHER2"
+fields = { "variable" = "langmoth2" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v8700) in one table, renamed between survey rounds and never delivered together, so they are one variable: LANGMOTHER2 2011-07-01..2016-12-31; LANGMOTH2 2022-01-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: FEDREASON_07"
+fields = { "variable" = "skal-formell-oka-kunskap-fardighet-intresserande-amne" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35190) in one table, renamed between survey rounds and never delivered together, so they are one variable: FEDREASON_07 2016-01-01..2016-12-31; fedreason_07 2011-07-01..2012-06-30; FEDREASON_06_7 2022-01-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: frsprak1"
+fields = { "variable" = "langbest" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v24959) in one table, renamed between survey rounds and never delivered together, so they are one variable: frsprak1 2005-07-01..2006-06-30; LANGBEST1 2016-01-01..2022-12-31; langbest1 2011-07-01..2012-06-30."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: frsprak2"
+fields = { "variable" = "langbest2" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v24959) in one table, renamed between survey rounds and never delivered together, so they are one variable: frsprak2 2005-07-01..2006-06-30; LANGBEST2 2016-01-01..2022-12-31; langbest2 2011-07-01..2012-06-30."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: sprak1"
+fields = { "variable" = "langused-1" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v24959) in one table, renamed between survey rounds and never delivered together, so they are one variable: sprak1 2005-07-01..2006-06-30; LANGUSED_1 2011-07-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: sprak2"
+fields = { "variable" = "sprakkunskaper-forutom-modersmal-andra-spraket" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v24959) in one table, renamed between survey rounds and never delivered together, so they are one variable: sprak2 2005-07-01..2006-06-30; LANGUSED_2 2011-07-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: sprak3"
+fields = { "variable" = "sprakkunskaper-forutom-modersmal-tredje-spraket" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v24959) in one table, renamed between survey rounds and never delivered together, so they are one variable: sprak3 2005-07-01..2006-06-30; LANGUSED_3 2011-07-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: sprak4"
+fields = { "variable" = "sprakkunskaper-forutom-modersmal-fjarde-spraket" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v24959) in one table, renamed between survey rounds and never delivered together, so they are one variable: sprak4 2005-07-01..2006-06-30; LANGUSED_4 2011-07-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: sprak5"
+fields = { "variable" = "sprakkunskaper-forutom-modersmal-femte-spraket" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v24959) in one table, renamed between survey rounds and never delivered together, so they are one variable: sprak5 2005-07-01..2006-06-30; LANGUSED_5 2011-07-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: ifsyfte1"
+fields = { "variable" = "nfeact01-purp" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v24832) in one table, renamed between survey rounds and never delivered together, so they are one variable: ifsyfte1 2005-07-01..2006-06-30; NFEPURP1 2011-07-01..2012-06-30; NFEACT01_PURP 2016-01-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: NFEPURP1"
+fields = { "variable" = "nfeact01-purp" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v24832) in one table, renamed between survey rounds and never delivered together, so they are one variable: ifsyfte1 2005-07-01..2006-06-30; NFEPURP1 2011-07-01..2012-06-30; NFEACT01_PURP 2016-01-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: ifsyfte2"
+fields = { "variable" = "nfeact02-purp" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v24832) in one table, renamed between survey rounds and never delivered together, so they are one variable: ifsyfte2 2005-07-01..2006-06-30; NFEPURP2 2011-07-01..2012-06-30; NFEACT02_PURP 2016-01-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: NFEPURP2"
+fields = { "variable" = "nfeact02-purp" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v24832) in one table, renamed between survey rounds and never delivered together, so they are one variable: ifsyfte2 2005-07-01..2006-06-30; NFEPURP2 2011-07-01..2012-06-30; NFEACT02_PURP 2016-01-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: ifsyfte3"
+fields = { "variable" = "nfeact03-purp" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v24832) in one table, renamed between survey rounds and never delivered together, so they are one variable: ifsyfte3 2005-07-01..2006-06-30; NFEPURP3 2011-07-01..2012-06-30; NFEACT03_PURP 2016-01-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: NFEPURP3"
+fields = { "variable" = "nfeact03-purp" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v24832) in one table, renamed between survey rounds and never delivered together, so they are one variable: ifsyfte3 2005-07-01..2006-06-30; NFEPURP3 2011-07-01..2012-06-30; NFEACT03_PURP 2016-01-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: droplevel"
+fields = { "variable" = "dropeduclevel" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v24801) in one table, renamed between survey rounds and never delivered together, so they are one variable: droplevel 2011-07-01..2012-06-30; DROPEDUCLEVEL 2016-01-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "undersokningen-om-vuxnas-deltagande-i-utbildning-aes: utbildning"
+fields = { "variable" = "hogsta-utbildningsniva-isced" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v24801) in one table, renamed between survey rounds and never delivered together, so they are one variable: utbildning 2005-07-01..2006-06-30; HATLEVEL 2011-07-01..2022-12-31."
