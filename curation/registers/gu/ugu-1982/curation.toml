@@ -1,0 +1,611 @@
+[[statement]]
+kind = "set"
+subject = "var:qs12a15a"
+fields = { "label" = "Talk to anybody (Questionnaire students grade 12)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Asked in several questionnaires; this is the one in table \"Questionnaire students grade 12\" (QS12A15A).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:qs12a15c"
+fields = { "label" = "Understand when some speaks (Questionnaire students grade 12)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Asked in several questionnaires; this is the one in table \"Questionnaire students grade 12\" (QS12A15C).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:qs12a16a"
+fields = { "label" = "Mental arithmetic /rough calculation (Questionnaire students grade 12)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Asked in several questionnaires; this is the one in table \"Questionnaire students grade 12\" (QS12A16A).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:qs12a16b"
+fields = { "label" = "Calculate percentages (Questionnaire students grade 12)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Asked in several questionnaires; this is the one in table \"Questionnaire students grade 12\" (QS12A16B).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:qs64a"
+fields = { "label" = "Talk to anybody (Questionnaire students grade 6)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Asked in several questionnaires; this is the one in table \"Questionnaire students grade 6\" (QS64A).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:qs64c"
+fields = { "label" = "Understand when some speaks (Questionnaire students grade 6)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Asked in several questionnaires; this is the one in table \"Questionnaire students grade 6\" (QS64C).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:qs65a"
+fields = { "label" = "Mental arithmetic /rough calculation (Questionnaire students grade 6)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Asked in several questionnaires; this is the one in table \"Questionnaire students grade 6\" (QS65A).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:qs65d"
+fields = { "label" = "Calculate percentages (Questionnaire students grade 6)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Asked in several questionnaires; this is the one in table \"Questionnaire students grade 6\" (QS65D).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs3class"
+fields = { "label" = "Class character (school year 3)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS3CLASS is school year 3 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs3clnrflytt"
+fields = { "label" = "Class number (school year 3)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS3CLNRflytt is school year 3 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs3lang"
+fields = { "label" = "Home language (school year 3)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS3LANG is school year 3 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs3mdate"
+fields = { "label" = "Date of move (school year 3)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS3MDATE is school year 3 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs3mov"
+fields = { "label" = "Moved from the class (school year 3)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS3MOV is school year 3 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs3munkoll"
+fields = { "label" = "Municipality (school year 3)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS3MUNKoll is school year 3 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs3rtr"
+fields = { "label" = "Remedial training (school year 3)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS3RTR is school year 3 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs3sch"
+fields = { "label" = "The name of school (school year 3)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS3SCH is school year 3 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs3stgr"
+fields = { "label" = "Special teaching group (school year 3)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS3STGR is school year 3 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs3stu"
+fields = { "label" = "Special tuition (school year 3)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS3STU is school year 3 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs3sv2"
+fields = { "label" = "Studied swedish as a second language (school year 3)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS3SV2 is school year 3 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs4ald"
+fields = { "label" = "Mixed age group (school year 4)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS4ALD is school year 4 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs4class"
+fields = { "label" = "Class character (school year 4)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS4CLASS is school year 4 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs4clnr-kolla"
+fields = { "label" = "Class number (school year 4)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS4CLNR_kolla is school year 4 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs4cmun"
+fields = { "label" = "Municipality (school year 4)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS4CMUN is school year 4 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs4lang"
+fields = { "label" = "Home language (school year 4)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS4LANG is school year 4 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs4mdate"
+fields = { "label" = "Date of move (school year 4)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS4MDATE is school year 4 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs4mov"
+fields = { "label" = "Moved from the class (school year 4)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS4MOV is school year 4 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs4rc"
+fields = { "label" = "Reduced course of studies (school year 4)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS4RC is school year 4 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs4rtr"
+fields = { "label" = "Remedial training (school year 4)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS4RTR is school year 4 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs4sch"
+fields = { "label" = "The name of school (school year 4)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS4SCH is school year 4 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs4stat"
+fields = { "label" = "The pupils status (school year 4)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS4STAT is school year 4 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs4stgr"
+fields = { "label" = "Special teaching group (school year 4)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS4STGR is school year 4 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs4stu"
+fields = { "label" = "Special tuition (school year 4)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS4STU is school year 4 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs4sv2"
+fields = { "label" = "Studied swedish as a second language (school year 4)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS4SV2 is school year 4 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs5ald"
+fields = { "label" = "Mixed age group (school year 5)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS5ALD is school year 5 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs5class"
+fields = { "label" = "Class character (school year 5)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS5CLASS is school year 5 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs5clnr-kolla"
+fields = { "label" = "Class number (school year 5)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS5CLNR_kolla is school year 5 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs5cmun"
+fields = { "label" = "Municipality (school year 5)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS5CMUN is school year 5 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs5lang"
+fields = { "label" = "Home language (school year 5)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS5LANG is school year 5 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs5mdate"
+fields = { "label" = "Date of move (school year 5)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS5MDATE is school year 5 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs5mov"
+fields = { "label" = "Moved from the class (school year 5)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS5MOV is school year 5 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs5rc"
+fields = { "label" = "Reduced course of studies (school year 5)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS5RC is school year 5 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs5rtr"
+fields = { "label" = "Remedial training (school year 5)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS5RTR is school year 5 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs5sch"
+fields = { "label" = "The name of school (school year 5)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS5SCH is school year 5 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs5stat"
+fields = { "label" = "The pupils status (school year 5)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS5STAT is school year 5 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs5stgr"
+fields = { "label" = "Special teaching group (school year 5)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS5STGR is school year 5 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs5stu"
+fields = { "label" = "Special tuition (school year 5)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS5STU is school year 5 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs5sv2"
+fields = { "label" = "Studied swedish as a second language (school year 5)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS5SV2 is school year 5 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs6ald"
+fields = { "label" = "Mixed age group (school year 6)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS6ALD is school year 6 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs6class"
+fields = { "label" = "Class character (school year 6)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS6CLASS is school year 6 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs6clnr-kolla"
+fields = { "label" = "Class number (school year 6)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS6CLNR_kolla is school year 6 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs6cmun"
+fields = { "label" = "Municipality (school year 6)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS6CMUN is school year 6 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs6lang"
+fields = { "label" = "Home language (school year 6)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS6LANG is school year 6 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs6mdate"
+fields = { "label" = "Date of move (school year 6)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS6MDATE is school year 6 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs6mov"
+fields = { "label" = "Moved from the class (school year 6)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS6MOV is school year 6 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs6rc"
+fields = { "label" = "Reduced course of studies (school year 6)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS6RC is school year 6 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs6rtr"
+fields = { "label" = "Remedial training (school year 6)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS6RTR is school year 6 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs6stat"
+fields = { "label" = "The pupils status (school year 6)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS6STAT is school year 6 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs6stgr"
+fields = { "label" = "Special teaching group (school year 6)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS6STGR is school year 6 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs6stu"
+fields = { "label" = "Special tuition (school year 6)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS6STU is school year 6 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs6sv2"
+fields = { "label" = "Studied swedish as a second language (school year 6)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS6SV2 is school year 6 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs7ald"
+fields = { "label" = "Mixed age group (school year 7)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS7ALD is school year 7 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs7clnr-kolla"
+fields = { "label" = "Class number (school year 7)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS7CLNR_kolla is school year 7 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs7cmun"
+fields = { "label" = "Municipality (school year 7)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS7CMUN is school year 7 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs7csch"
+fields = { "label" = "Choice from the school (school year 7)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS7CSCH is school year 7 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs7lang"
+fields = { "label" = "Home language (school year 7)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS7LANG is school year 7 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs7mdate"
+fields = { "label" = "Date of move (school year 7)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS7MDATE is school year 7 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs7mov"
+fields = { "label" = "Moved from the class (school year 7)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS7MOV is school year 7 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs7rc"
+fields = { "label" = "Reduced course of studies (school year 7)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS7RC is school year 7 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs7sch"
+fields = { "label" = "The name of school (school year 7)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS7SCH is school year 7 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs7stat"
+fields = { "label" = "The pupils status (school year 7)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS7STAT is school year 7 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs7stgr"
+fields = { "label" = "Special teaching group (school year 7)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS7STGR is school year 7 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs7stu"
+fields = { "label" = "Special tuition (school year 7)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS7STU is school year 7 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs7sv2"
+fields = { "label" = "Studied swedish as a second language (school year 7)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS7SV2 is school year 7 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs8ald"
+fields = { "label" = "Mixed age group (school year 8)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS8ALD is school year 8 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs8ch"
+fields = { "label" = "The pupils choice during autumn term (school year 8)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS8CH is school year 8 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs8class"
+fields = { "label" = "Class character (school year 8)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS8CLASS is school year 8 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs8cmun"
+fields = { "label" = "Municipality (school year 8)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS8CMUN is school year 8 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs8cs"
+fields = { "label" = "The pupils choice during spring term (school year 8)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS8CS is school year 8 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs8csch"
+fields = { "label" = "Choice from the school (school year 8)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS8CSCH is school year 8 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs8gs"
+fields = { "label" = "Grading system (school year 8)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS8GS is school year 8 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs8lang"
+fields = { "label" = "Home language (school year 8)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS8LANG is school year 8 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs8mdate"
+fields = { "label" = "Date of move (school year 8)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS8MDATE is school year 8 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs8mov"
+fields = { "label" = "Moved from the class (school year 8)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS8MOV is school year 8 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs8rc"
+fields = { "label" = "Reduced course of studies (school year 8)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS8RC is school year 8 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs8sch"
+fields = { "label" = "The name of school (school year 8)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS8SCH is school year 8 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs8stat"
+fields = { "label" = "The pupils status (school year 8)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS8STAT is school year 8 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs8stgr"
+fields = { "label" = "Special teaching group (school year 8)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS8STGR is school year 8 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs8stu"
+fields = { "label" = "Special tuition (school year 8)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS8STU is school year 8 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs8sv2"
+fields = { "label" = "Studied swedish as a second language (school year 8)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS8SV2 is school year 8 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs9ald"
+fields = { "label" = "Mixed age group (school year 9)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS9ALD is school year 9 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs9ch"
+fields = { "label" = "The pupils choice during autumn term (school year 9)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS9CH is school year 9 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs9class"
+fields = { "label" = "Class character (school year 9)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS9CLASS is school year 9 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs9cmun"
+fields = { "label" = "Municipality (school year 9)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS9CMUN is school year 9 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs9cs"
+fields = { "label" = "The pupils choice during spring term (school year 9)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS9CS is school year 9 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs9gs"
+fields = { "label" = "Grading system (school year 9)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS9GS is school year 9 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs9lang"
+fields = { "label" = "Home language (school year 9)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS9LANG is school year 9 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs9mdate"
+fields = { "label" = "Date of move (school year 9)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS9MDATE is school year 9 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs9mov"
+fields = { "label" = "Moved from the class (school year 9)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS9MOV is school year 9 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs9sch"
+fields = { "label" = "The name of school (school year 9)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS9SCH is school year 9 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs9stat"
+fields = { "label" = "The pupils status (school year 9)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS9STAT is school year 9 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs9stu"
+fields = { "label" = "Special tuition (school year 9)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS9STU is school year 9 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
+
+[[statement]]
+kind = "set"
+subject = "var:rs9sv2"
+fields = { "label" = "Studied swedish as a second language (school year 9)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label; UGU variables stay separate, with the grade or wave in the label. Repeated per school year in the background table; RS9SV2 is school year 9 (the codebook names the year in the labels of this table that state one, e.g. \"... at school year 3\" for RS3 columns).\nCodebook for UGU 1982 (https://www.gu.se/utvardering-genom-uppfoljning/kodbocker; inputs release gu-ugu-codebooks-2026-11-06)\ncatalog/source/transcriptions/gu/ugu-1982.csv"
