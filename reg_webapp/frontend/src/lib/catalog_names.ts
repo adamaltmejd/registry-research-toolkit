@@ -293,6 +293,16 @@ export function tableShowRead(ref: string): Read<TableShow> {
   });
 }
 
+/** Forget a failed `tableShowRead`, so the next render reads it again (Retry). */
+export function retryTableShowRead(ref: string): void {
+  const key = `table:${ref}`;
+  const current = reads[key];
+  if (!current || current.loading || current.value) return;
+  const { [key]: _, ...rest } = reads;
+  reads = rest;
+  notify();
+}
+
 const graphKey = (ref: string) => `graph:${ref}`;
 
 /** A variable's one-hop succession, shared by its variable or group page. */

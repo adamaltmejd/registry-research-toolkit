@@ -13,6 +13,7 @@ import type { ValidationResultModel } from "./api";
 import type { ProjectSourcePeriod } from "./project_data";
 import init, {
   check_project,
+  fold_identity,
   initSync,
   merge,
   overlap,
@@ -48,6 +49,12 @@ function requireReady(): void {
   if (!ready) {
     throw new Error("reg-core is not initialised: await initRegCore() first");
   }
+}
+
+/** `reg_core::fold_identity`: the fold an order matches release names under. */
+export function foldIdentity(text: string): string {
+  requireReady();
+  return fold_identity(text);
 }
 
 /** The `project_data.json` `schema_version` this build reads; a new draft takes it. */

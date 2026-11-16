@@ -8,6 +8,7 @@ import {
 } from "./api";
 import {
   registerRead,
+  retryTableShowRead,
   tableSegmentsReads,
   tableShowRead,
 } from "./catalog_names";
@@ -542,6 +543,12 @@ function Sources({
               sharedDays={
                 tableShows[source.table]?.value?.shared_release_days ?? []
               }
+              sharedDaysError={
+                !!tableShows[source.table] &&
+                !tableShows[source.table].loading &&
+                !tableShows[source.table].value
+              }
+              onRetrySharedDays={() => retryTableShowRead(source.table)}
               table={tables.find((table) => table.fqid === source.table)}
               sharedHeading={catalogSources.some(
                 (other) =>
@@ -552,6 +559,7 @@ function Sources({
               bounds={bounds}
               loading={
                 !!register?.loading ||
+                !!tableShows[source.table]?.loading ||
                 catalogBindings(source).some(
                   (binding) =>
                     columnRead(source.table, binding.variable)?.loading,

@@ -1282,7 +1282,10 @@ grow new visual language meanwhile.
   choose is ordered for these years." under it, and closing on each pick, since a pick can
   clear the finding above it; the choice writes the source's `releases` and none removes it. A named release that
   serves none of the shared years stays listed, "(not for these years)", so its finding
-  can be cleared on the card (new rule, proposed by the implementer).
+  can be cleared on the card, and a name the project spells otherwise shows as the
+  catalog spells it (an order matches it under the identity fold). If the table's
+  deliveries do not load, the card says so in an `err` row with Retry in place of the
+  choice (new rule, proposed by the implementer).
 - **ColumnList:** a `label` header that names whose items they are ("Variables in
   Aktivitetsstöd", on a group page too, where the group's folded row is selected; one
   line, truncated with an ellipsis, the whole of it as hover text) (#1825). The header

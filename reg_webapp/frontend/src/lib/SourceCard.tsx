@@ -38,6 +38,7 @@ import {
   type ProjectStudyWindow,
 } from "./project_data";
 import {
+  foldIdentity,
   overlapIntervals,
   sourcePeriodIntervals,
   sourcePeriodYears,
@@ -77,6 +78,8 @@ export function SourceCard({
   names,
   segments,
   sharedDays = [],
+  sharedDaysError = false,
+  onRetrySharedDays,
   table,
   axis,
   bounds,
@@ -95,6 +98,9 @@ export function SourceCard({
   /** The days two of the table's releases share (its `show`); none
    * elsewhere. */
   sharedDays?: NonNullable<TableShow["shared_release_days"]>;
+  /** The read of those days failed: the choice cannot be offered. */
+  sharedDaysError?: boolean;
+  onRetrySharedDays?: () => void;
   table: Table | undefined;
   axis: [number, number];
   bounds: [number, number];
@@ -183,7 +189,20 @@ export function SourceCard({
   });
   const sharedYears = catalogPeriodRuns(shared.flatMap((days) => days.periods));
   const offered = [...new Set(shared.flatMap((days) => days.releases))];
-  const named = source.releases ?? [];
+  // A project's names as the catalog spells them: an order matches a name
+  // exactly, else under the identity fold, so "Wave A" names "WAVE A".
+  const named = [
+    ...new Set(
+      (source.releases ?? []).map(
+        (name) =>
+          offered.find((option) => option === name) ??
+          offered.find(
+            (option) => foldIdentity(option) === foldIdentity(name),
+          ) ??
+          name,
+      ),
+    ),
+  ];
   // A named release that serves none of these years stays a choice, so its
   // finding can be cleared here.
   const releaseOptions = [
@@ -471,6 +490,19 @@ export function SourceCard({
           </span>
         )}
       </p>
+      {sharedDaysError && (
+        <StatusRow
+          tone="error"
+          action={
+            onRetrySharedDays && (
+              <Button onPress={onRetrySharedDays}>Retry</Button>
+            )
+          }
+        >
+          The table's deliveries did not load, so they cannot be chosen here.
+          Retry, or reload the page.
+        </StatusRow>
+      )}
       {!loading && releaseOptions.length > 0 && (
         <div className={styles.releases}>
           <div className={styles.controls}>

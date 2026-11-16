@@ -17,6 +17,14 @@ pub fn project_schema_version() -> String {
     SCHEMA_VERSION.into()
 }
 
+/// `reg_core::fold_identity`: the fold an order matches release names under, so the SPA
+/// shows a project's release name as the catalog spells it.
+#[wasm_bindgen]
+#[must_use]
+pub fn fold_identity(s: &str) -> String {
+    reg_core::fold_identity(s)
+}
+
 /// `reg_core::project::check` over JSON text, as the `{ok, issues}` JSON the server's
 /// validate operation writes. Any JSON value is checked (a non-object root is
 /// `invalid_root`); text `serde_json` cannot read (not JSON, or nested past its
