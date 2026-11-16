@@ -1,0 +1,76 @@
+{
+  "catalog": {
+    "catalog_version": "dev",
+    "schema_version": "17"
+  },
+  "clips": [],
+  "entries": [
+    {
+      "binding": 0,
+      "classification": null,
+      "delivered_table": "Leveranser",
+      "release": null,
+      "display_name": null,
+      "length": null,
+      "period": {
+        "end": "2004-01-01",
+        "start": "2003-01-01"
+      },
+      "provider": "demo",
+      "register": "demo/conc",
+      "source": "s",
+      "spelling": "Z",
+      "table": "demo/conc/t",
+      "table_name": "Leveranser",
+      "type": "integer",
+      "value_set": null,
+      "variable": "demo/conc/zalder",
+      "variable_name": "Ålder"
+    },
+    {
+      "binding": 0,
+      "classification": null,
+      "delivered_table": "Leveranser",
+      "release": "2003 - 2004",
+      "display_name": null,
+      "length": null,
+      "period": {
+        "end": "2005-01-01",
+        "start": "2004-01-01"
+      },
+      "provider": "demo",
+      "register": "demo/conc",
+      "source": "s",
+      "spelling": "Z",
+      "table": "demo/conc/t",
+      "table_name": "Leveranser",
+      "type": "integer",
+      "value_set": null,
+      "variable": "demo/conc/zalder",
+      "variable_name": "Ålder"
+    }
+  ],
+  "findings": [
+    {
+      "code": "row_key_undeclared",
+      "level": "info",
+      "message": "demo/conc/t has no stated row identifier, so its file carries only the columns you choose",
+      "path": "/sources/0",
+      "period": null,
+      "source": "s",
+      "successor_fqid": null,
+      "successor_name": null,
+      "table": "demo/conc/t",
+      "table_name": "Leveranser",
+      "variable": null,
+      "variable_name": null
+    }
+  ],
+  "manual": [],
+  "project": {
+    "name": "Order case",
+    "reg_meta_version": "0.64.0",
+    "schema_version": "6.3.0"
+  },
+  "row_keys": []
+}

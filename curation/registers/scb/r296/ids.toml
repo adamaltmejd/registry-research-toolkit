@@ -78,6 +78,7 @@ public = "prisindex"
 "kn4kod" = ["Prisindex i producent- och importled (PPI): KN4Kod"]
 "kn4namn" = ["Prisindex i producent- och importled (PPI): KN4Namn"]
 "kn8beskrivning" = ["Prisindex i producent- och importled (PPI): KN8Beskrivning"]
+"kn8kod" = ["ppi-indata: KN8Kod # v29268"]
 "kn8kod-2" = ["Prisindex i producent- och importled (PPI): KN8Kod @ 2018-01-01", "ppi-indata: KN8Kod @ 2018-01-01"]
 "kodid" = ["ppi-indata: KodId @ 2013-01-01"]
 "kodnamn" = ["ppi-indata: KodNamn @ 2017-01-01"]

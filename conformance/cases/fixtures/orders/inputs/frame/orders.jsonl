@@ -198,3 +198,5 @@
 {"kind":"release","provider":"demo","register":"conc","table":"u","release":"r4","name":"2004","from":"2004-01-01","to":"2004-12-31","grain":"year","edition":"final"}
 {"kind":"occurrence","provider":"demo","register":"conc","table":"t","release":"r2","column":"S","source_key":"k6","label":"Avgift","dtype":"int"}
 {"kind":"occurrence","provider":"demo","register":"conc","table":"u","release":"r4","column":"T","source_key":"k6","label":"Avgift","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"conc","table":"t","release":"r2","column":"Z","source_key":"k7","label":"Ålder","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"conc","table":"t","release":"r3","column":"Z","source_key":"k8","label":"Yrke","dtype":"char"}
