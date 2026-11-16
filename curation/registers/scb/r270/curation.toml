@@ -732,12 +732,6 @@ evidence = "Arbetsställets geografiska läge omfattas inte av kommungruppen.\nc
 
 [[statement]]
 kind = "set"
-subject = "var:kommunindelning"
-fields = { "tags" = ["geography"] }
-evidence = "Kommunindelning för uppdraget.\ncatalog:variable_text:13044:12053:12418\ncatalog:variable_text:13044:14975:15340"
-
-[[statement]]
-kind = "set"
 subject = "var:kommunkod"
 fields = { "tags" = ["geography"] }
 evidence = "Kommunangivelse i kodform.\ncatalog:variable_text:13045:12053:12418"
@@ -942,18 +936,6 @@ evidence = "Politiskt parti.\ncatalog:variable_text:13062:16436:16801"
 
 [[statement]]
 kind = "set"
-subject = "var:parti-kort"
-fields = { "sets" = ["partitillhorighet"] }
-evidence = "Politiskt parti.\ncatalog:variable_text:13063:14975:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:parti-kort"
-fields = { "tags" = ["democracy"] }
-evidence = "Politiskt parti.\ncatalog:variable_text:13063:14975:15340"
-
-[[statement]]
-kind = "set"
 subject = "var:partikortnamn"
 fields = { "sets" = ["partitillhorighet"] }
 evidence = "Förkortad partibeteckning.\ncatalog:variable_text:13064:19358:19723"
@@ -978,18 +960,6 @@ evidence = "Politiskt parti.\ncatalog:variable_text:13065:19358:19723"
 
 [[statement]]
 kind = "set"
-subject = "var:pos"
-fields = { "sets" = ["position-i-politiskt-organ"] }
-evidence = "Position i nämnd.\ncatalog:variable_text:13067:13514:13879"
-
-[[statement]]
-kind = "set"
-subject = "var:pos"
-fields = { "tags" = ["democracy"] }
-evidence = "Position i nämnd.\ncatalog:variable_text:13067:13514:13879"
-
-[[statement]]
-kind = "set"
 subject = "var:position"
 fields = { "sets" = ["position-i-politiskt-organ"] }
 evidence = "Position i nämnd.\ncatalog:variable_text:13068:19358:19723"
@@ -999,18 +969,6 @@ kind = "set"
 subject = "var:position"
 fields = { "tags" = ["democracy"] }
 evidence = "Position i nämnd.\ncatalog:variable_text:13068:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:position-position-text"
-fields = { "sets" = ["position-i-politiskt-organ"] }
-evidence = "Position i nämnd.\ncatalog:variable_text:13069:14975:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:position-position-text"
-fields = { "tags" = ["democracy"] }
-evidence = "Position i nämnd.\ncatalog:variable_text:13069:14975:15340"
 
 [[statement]]
 kind = "set"
@@ -1434,12 +1392,6 @@ evidence = "Both occurrences describe municipal division locating the elected as
 
 [[statement]]
 kind = "set"
-subject = "var:kommunindelning"
-fields = { "sets" = ["kommun"] }
-evidence = "The complete supplied history consistently defines municipal division, with later occurrences locating the elected assignment (r8, r10, r11, r12, r21). This fits kommun.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:13025\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:133484\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:133527\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:133561\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:133594\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:13043"
-
-[[statement]]
-kind = "set"
 subject = "var:kommunkod"
 fields = { "sets" = ["kommun"] }
 evidence = "The source definition explicitly identifies a municipality code (r15, r22), which the fixed kommun definition includes.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:13026\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:133694\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:13044"
@@ -1578,12 +1530,6 @@ evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different me
 
 [[statement]]
 kind = "set"
-subject = "var:kommunindelning"
-fields = { "label" = "Kommun för förtroendeuppdrag (kod)" }
-evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different meaning, medium confidence; k_rtb has its own coded municipality (RTB); kommun (name, no code list) and kommunkod/llkk (codes, consecutive) all carry the opdef 'region i vilken förtroendeuppdraget utförs'."
-
-[[statement]]
-kind = "set"
 subject = "var:landsting-old"
 fields = { "label" = "Landstingets namn (tidigare namnsättning)" }
 evidence = "#2102 same-label cluster 'Landstingets namn' (2 variables): judged different meaning, high confidence; Opdefs: Landsting is the name under the new naming, Landsting_old under the previous naming; they overlap in 2007-2008."
@@ -1614,12 +1560,6 @@ evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different mea
 
 [[statement]]
 kind = "set"
-subject = "var:parti-kort"
-fields = { "label" = "Parti (kortnamn)" }
-evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; parti holds party codes, partinamn the name; Parti_kort (2011-12) and PartiKortNamn (2019-24) are the short name in disjoint periods (opdef 'Förkortat partinamn') and share a label."
-
-[[statement]]
-kind = "set"
 subject = "var:partikortnamn"
 fields = { "label" = "Parti (kortnamn)" }
 evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different meaning, medium confidence; parti holds party codes, partinamn the name; Parti_kort (2011-12) and PartiKortNamn (2019-24) are the short name in disjoint periods (opdef 'Förkortat partinamn') and share a label."
@@ -1632,20 +1572,8 @@ evidence = "#2102 same-label cluster 'Parti' (4 variables): judged different mea
 
 [[statement]]
 kind = "set"
-subject = "var:pos"
-fields = { "label" = "Position i nämnd (text)" }
-evidence = "#2102 same-label cluster 'Position' (5 variables): judged different meaning, medium confidence; position holds detailed codes 1-6, poskod grouped codes 1-4 and 9; pos, Position__text and Positionstext are the text version in disjoint periods (pos opdef: klartext)."
-
-[[statement]]
-kind = "set"
 subject = "var:position"
 fields = { "label" = "Position i nämnd (kod)" }
-evidence = "#2102 same-label cluster 'Position' (5 variables): judged different meaning, medium confidence; position holds detailed codes 1-6, poskod grouped codes 1-4 and 9; pos, Position__text and Positionstext are the text version in disjoint periods (pos opdef: klartext)."
-
-[[statement]]
-kind = "set"
-subject = "var:position-position-text"
-fields = { "label" = "Position i nämnd (text)" }
 evidence = "#2102 same-label cluster 'Position' (5 variables): judged different meaning, medium confidence; position holds detailed codes 1-6, poskod grouped codes 1-4 and 9; pos, Position__text and Positionstext are the text version in disjoint periods (pos opdef: klartext)."
 
 [[statement]]
@@ -1811,3 +1739,75 @@ kind = "set"
 subject = "fortroendevalda-i-regioner-landsting: var:personnr"
 fields.row_key = true
 evidence = "Row key: eget-personnr and personnr identify a row: person table; both columns carry the personnummer of the elected person (fold personnr) in successive eras, 2006-2007 and 2010-2023 (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: kommunkod"
+fields = { "variable" = "kommun-fortroendeuppdrag" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v36), never delivered together in one table, so they are one variable renamed between releases: kommunkod 2003-01-01..2015-12-31; llkk 2019-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: Parti_kort"
+fields = { "variable" = "partikortnamn" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v7942), never delivered together in one table, so they are one variable renamed between releases: Parti_kort 2011-01-01..2011-12-31; PartiKortNamn 2019-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: Parti_kort"
+fields = { "variable" = "partikortnamn" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v7942), never delivered together in one table, so they are one variable renamed between releases: Parti_kort 2011-01-01..2011-12-31; PartiKortNamn 2019-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: pos"
+fields = { "variable" = "positionstext" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v17647), never delivered together in one table, so they are one variable renamed between releases: pos 2007-01-01..2007-12-31; Position__text 2011-01-01..2011-12-31; Positionstext 2015-01-01..2015-12-31."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: pos"
+fields = { "variable" = "positionstext" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v17647), never delivered together in one table, so they are one variable renamed between releases: pos 2007-01-01..2007-12-31; Position__text 2011-01-01..2011-12-31; Positionstext 2015-01-01..2015-12-31."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: Position__text"
+fields = { "variable" = "positionstext" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v17647), never delivered together in one table, so they are one variable renamed between releases: pos 2007-01-01..2007-12-31; Position__text 2011-01-01..2011-12-31; Positionstext 2015-01-01..2015-12-31."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: Position__text"
+fields = { "variable" = "positionstext" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v17647), never delivered together in one table, so they are one variable renamed between releases: pos 2007-01-01..2007-12-31; Position__text 2011-01-01..2011-12-31; Positionstext 2015-01-01..2015-12-31."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: llkk"
+fields = { "variable" = "kommun-fortroendeuppdrag" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v36), never delivered together in one table, so they are one variable renamed between releases: kommunkod 2003-01-01..2015-12-31; llkk 2019-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: PartiKortNamn"
+fields = { "variable" = "partikortnamn" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v7942), never delivered together in one table, so they are one variable renamed between releases: Parti_kort 2011-01-01..2011-12-31; PartiKortNamn 2019-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: PartiKortNamn"
+fields = { "variable" = "partikortnamn" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v7942), never delivered together in one table, so they are one variable renamed between releases: Parti_kort 2011-01-01..2011-12-31; PartiKortNamn 2019-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda: Positionstext"
+fields = { "variable" = "positionstext" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v17647), never delivered together in one table, so they are one variable renamed between releases: pos 2007-01-01..2007-12-31; Position__text 2011-01-01..2011-12-31; Positionstext 2015-01-01..2015-12-31."
+
+[[statement]]
+kind = "set"
+subject = "fortroendevalda-i-regioner-landsting: Positionstext"
+fields = { "variable" = "positionstext" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v17647), never delivered together in one table, so they are one variable renamed between releases: pos 2007-01-01..2007-12-31; Position__text 2011-01-01..2011-12-31; Positionstext 2015-01-01..2015-12-31."

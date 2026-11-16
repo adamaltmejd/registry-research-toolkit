@@ -11317,12 +11317,6 @@ evidence = "Mäter övertidens frekvens.\ncatalog:variable_text:3719:12053:12418
 
 [[statement]]
 kind = "set"
-subject = "var:overtid-med-ersattning-2"
-fields = { "tags" = ["employment"] }
-evidence = "Suffixet är en räknare som inte finns i källkolumnen.\ncatalog:variable_text:3721:17897:18262"
-
-[[statement]]
-kind = "set"
 subject = "var:overtid-minst-10-timmar"
 fields = { "tags" = ["employment"] }
 evidence = "Den tidiga värdemängden är utelämnad medan senare värden uttrycker en tiotimmarströskel.\ncatalog:valueset:10775\ncatalog:valueset:8732\ncatalog:variable_text:3722:18628:18993"
@@ -14007,12 +14001,6 @@ evidence = "The question asks how often work extends beyond ordinary working hou
 
 [[statement]]
 kind = "set"
-subject = "var:overtid-med-ersattning-2"
-fields = { "sets" = ["overtidsarbete"] }
-evidence = "The question and operational definitions measure occurrence of compensated overtime in the main job (r287).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3720\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3727"
-
-[[statement]]
-kind = "set"
 subject = "var:overtid-mertid-totalt-huvudsysslan-anstallda-2021"
 fields = { "sets" = ["overtidsarbete"] }
 evidence = "The question measures occurrence of overtime or additional hours with or without compensation (r266).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:3721\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:3590"
@@ -15093,12 +15081,6 @@ evidence = "#2102 same-label cluster 'Konflikt/bråk på arbetsplatsen (varit i)
 
 [[statement]]
 kind = "set"
-subject = "var:overtid-med-ersattning-2"
-fields = { "label" = "Övertid med ersättning i huvudsysslan, anställda (arbetar övertid)" }
-evidence = "#2102 same-label cluster 'Övertid med ersättning i huvudsysslan, anställda' (3 variables): judged different meaning, medium confidence; enbers is 'arbetar enbart övertid som ger ersättning' while HUOTERS and hsoters (a rename) are 'arbetar övertid som ger ersättning'."
-
-[[statement]]
-kind = "set"
 subject = "var:permitte05-3922"
 fields = { "label" = "Hot om permittering eller uppsägning? (version 2005)" }
 evidence = "#2102 same-label cluster 'Hot om permittering eller uppsägning?' (2 variables): judged different meaning, medium confidence; PERMITTE is derived from item 5B (Ja/Nej) while Permitte05 is the 2005 item with a Ja-only code list that runs concurrently."
@@ -15832,3 +15814,15 @@ kind = "set"
 subject = "arbetsmiljoundersokningen-2015: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "arbetsmiljoundersokningen: HUOTERS"
+fields = { "variable" = "hsoters" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v6771), never delivered together in one table, so they are one variable renamed between releases: HUOTERS 2011-01-01..2019-12-31; hsoters 2021-01-01..2021-12-31."
+
+[[statement]]
+kind = "set"
+subject = "arbetsmiljoundersokningen-2015: HUOTERS"
+fields = { "variable" = "hsoters" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v6771), never delivered together in one table, so they are one variable renamed between releases: HUOTERS 2011-01-01..2019-12-31; hsoters 2021-01-01..2021-12-31."

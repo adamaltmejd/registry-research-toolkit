@@ -18377,3 +18377,45 @@ kind = "set"
 subject = "aku-januari-2021: var:matmanad"
 fields.row_key = true
 evidence = "Row key: matmanad (MMan) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+
+
+
+
+
+
+
+[[statement]]
+kind = "set"
+subject = "var:hsotejerstim"
+fields = { "label" = "Antal övertidstimmar utan ersättning i huvudsysslan, anställda (AKU fr.o.m. januari 2021)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"AKU fr.o.m. januari 2021\"."
+
+[[statement]]
+kind = "set"
+subject = "var:hsyrke"
+fields = { "label" = "Yrke i huvudsysslan (AKU fr.o.m. januari 2021)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"AKU fr.o.m. januari 2021\"."
+
+[[statement]]
+kind = "set"
+subject = "var:huotejerstim"
+fields = { "label" = "Antal övertidstimmar utan ersättning i huvudsysslan, anställda (AKU april 2005 - dec 2020)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"AKU april 2005 - dec 2020\"."
+
+[[statement]]
+kind = "set"
+subject = "var:huyrke"
+fields = { "label" = "Yrke i huvudsysslan (AKU april 2005 - dec 2020)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"AKU april 2005 - dec 2020\"."
+
+
+
+
+
+
+
+
+
+
+

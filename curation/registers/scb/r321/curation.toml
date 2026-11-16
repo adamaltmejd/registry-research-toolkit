@@ -10954,3 +10954,183 @@ kind = "set"
 subject = "var:tv-radio-eller-webbsandningar-fr24a"
 fields = { "label" = "TV-, radio- eller webbsändningar (Ja/Nej) (Kommuner)" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr42_4"
+fields = { "variable" = "brukarrepresentation-individ-familjeomsorg-2024" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: BRUKARSYSIFO 2012-01-01..2012-12-31; Fr27_4 2016-01-01..2016-12-31; Fr40_4 2020-01-01..2020-12-31; Fr42_4 2024-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr37 where key = 'v35982'"
+fields = { "variable" = "deltar-i-ideburet-offentligt-partnerskap-iop-fr37" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35982) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr23 2016-01-01..2016-12-31; Fr36 2020-01-01..2020-12-31; Fr37 2024-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "regioner: Fr12"
+fields = { "variable" = "fr1" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28632) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr8a_text 2016-01-01..2016-12-31; Fr11_text 2020-01-01..2020-12-31; Fr12 2024-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr16 where key = 'v28632'"
+fields = { "variable" = "fr16" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28632) in one table, renamed between survey rounds and never delivered together, so they are one variable: fr10c_text 2016-01-01..2016-12-31; Fr14_text 2020-01-01..2020-12-31; Fr16 2024-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr21 where key = 'v42791'"
+fields = { "variable" = "fr21" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v42791) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr19_text 2020-01-01..2020-12-31; Fr21 2024-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "regioner: Fr39_1"
+fields = { "variable" = "fr39" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr26_1 2016-01-01..2016-12-31; Fr39_1 2020-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr42_1 where key = 'v28613'"
+fields = { "variable" = "fr42" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: BRUKARSYSFS 2012-01-01..2012-12-31; Fr27_1 2016-01-01..2016-12-31; Fr40_1 2020-01-01..2020-12-31; Fr42_1 2024-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr42_2 where key = 'v28613'"
+fields = { "variable" = "fr42-2-28613" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: BRUKARSYSGS 2012-01-01..2012-12-31; Fr27_2 2016-01-01..2016-12-31; Fr40_2 2020-01-01..2020-12-31; Fr42_2 2024-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr42_3 where key = 'v28613'"
+fields = { "variable" = "fr42-3-28613" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: BRUKARSYSGYM 2012-01-01..2012-12-31; Fr27_3 2016-01-01..2016-12-31; Fr40_3 2020-01-01..2020-12-31; Fr42_3 2024-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr42_5"
+fields = { "variable" = "fr42-5-28613" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: BRUKARSYSALD 2012-01-01..2012-12-31; Fr27_5 2016-01-01..2016-12-31; Fr40_5 2020-01-01..2020-12-31; Fr42_5 2024-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr42_6"
+fields = { "variable" = "fr42-6" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: BRUKARSYSFUNK 2012-01-01..2012-12-31; Fr27_6 2016-01-01..2016-12-31; Fr40_6 2020-01-01..2020-12-31; Fr42_6 2024-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr42_7"
+fields = { "variable" = "fr42-7" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr27_7 2016-01-01..2016-12-31; Fr40_7 2020-01-01..2020-12-31; Fr42_7 2024-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr42_8"
+fields = { "variable" = "fr42-8" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr27_8 2016-01-01..2016-12-31; Fr40_8 2020-01-01..2020-12-31; Fr42_8 2024-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr43_1"
+fields = { "variable" = "fr43" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35983) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr28_1 2016-01-01..2016-12-31; Fr41_1 2020-01-01..2020-12-31; Fr43_1 2024-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr43_2"
+fields = { "variable" = "fr43-2" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35983) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr28_2 2016-01-01..2016-12-31; Fr41_2 2020-01-01..2020-12-31; Fr43_2 2024-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr43_3"
+fields = { "variable" = "fr43-3" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35983) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr28_3 2016-01-01..2016-12-31; Fr41_3 2020-01-01..2020-12-31; Fr43_3 2024-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr43_4"
+fields = { "variable" = "fr43-4" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35983) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr28_4 2016-01-01..2016-12-31; Fr41_4 2020-01-01..2020-12-31; Fr43_4 2024-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr43_5"
+fields = { "variable" = "fr43-5" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35983) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr28_5 2016-01-01..2016-12-31; Fr41_5 2020-01-01..2020-12-31; Fr43_5 2024-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr43_6"
+fields = { "variable" = "fr43-6" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35983) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr28_6 2016-01-01..2016-12-31; Fr41_6 2020-01-01..2020-12-31; Fr43_6 2024-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr43_7"
+fields = { "variable" = "fr43-7" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35983) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr28_7 2016-01-01..2016-12-31; Fr41_7 2020-01-01..2020-12-31; Fr43_7 2024-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "regioner: Fr35"
+fields = { "variable" = "ideburet-offentligt-partnerskap-iop" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35982) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr21 2016-01-01..2016-12-31; Fr35 2020-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr43_8"
+fields = { "variable" = "ingen-strategi-samarbete-verksamhetsutveckling" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35983) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr28_8 2016-01-01..2016-12-31; Fr41_8 2020-01-01..2020-12-31; Fr43_8 2024-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr44_3"
+fields = { "variable" = "inget-medborgarkontor" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28617) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr42_3 2020-01-01..2020-12-31; Fr44_3 2024-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "regioner: Fr17 where key = 'v42791'"
+fields = { "variable" = "inkomna-e-forslag-fr17" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v42791) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr16_text 2020-01-01..2020-12-31; Fr17 2024-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "regioner: Fr38_7"
+fields = { "variable" = "landsting-fullmaktige-inga-ekonomiska-verksamhetsmal-bolag" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v29350) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr24_5 2016-01-01..2016-12-31; Fr38_7 2020-01-01..2020-12-31."
+
+[[statement]]
+kind = "set"
+subject = "regioner: Fr39_2"
+fields = { "variable" = "region-brukarrepresentation-utover-delegering-annat" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr26_2 2016-01-01..2016-12-31; Fr39_2 2020-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "regioner: Fr41_3"
+fields = { "variable" = "region-inte-medborgarkontor" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28617) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr27_3 2016-01-01..2016-12-31; Fr41_3 2020-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "regioner: Fr21 where key = 'v28634'"
+fields = { "variable" = "tv-radio-eller-webbsandningar-fr21" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28634) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr10 2016-01-01..2016-12-31; Fr21 2020-01-01..2020-12-31."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr22 where key = 'v28634'"
+fields = { "variable" = "tv-radio-eller-webbsandningar-fr22" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28634) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr12 2016-01-01..2016-12-31; Fr22 2020-01-01..2020-12-31."
+
+[[statement]]
+kind = "set"
+subject = "regioner: VARDAVTALPRIV"
+fields = { "variable" = "vardavtalpriv" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28608) in one table, renamed between survey rounds and never delivered together, so they are one variable: PRIVSJUKH 2003-01-01..2008-12-31; VARDAVTALPRIV 2012-01-01..2012-12-31."

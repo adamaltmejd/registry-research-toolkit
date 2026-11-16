@@ -2088,3 +2088,537 @@ kind = "set"
 subject = "manad-1: var:ar-manad"
 fields.row_key = true
 evidence = "Row key: ar-manad (Ar_manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sjukfall"
+fields = { "label" = "Antal sjukfall pågående någon gång under perioden (sjukfall från dag 1)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Antal_sjukfall\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 1\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds every sjukfall that reaches Försäkringskassan"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sjukfall-dag15"
+fields = { "label" = "Antal sjukfall pågående någon gång under perioden (sjukfall från dag 15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Antal_sjukfall\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 15\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 15 dagar eller längre, counting days from day 15"
+
+[[statement]]
+kind = "set"
+subject = "var:antal-sjukfall-dag30"
+fields = { "label" = "Antal sjukfall pågående någon gång under perioden (sjukfall från dag 30)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Antal_sjukfall\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 30\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 30 dagar eller längre, counting days from day 30"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-askp-belopp-brutto"
+fields = { "label" = "Utbetalt belopp arbetsskadesjukpenning före skatt under året (sjukfall från dag 1)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_askp_belopp_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 1\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds every sjukfall that reaches Försäkringskassan"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-askp-belopp-brutto-dag15"
+fields = { "label" = "Utbetalt belopp arbetsskadesjukpenning före skatt under året (sjukfall från dag 15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_askp_belopp_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 15\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 15 dagar eller längre, counting days from day 15"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-askp-belopp-brutto-dag30"
+fields = { "label" = "Utbetalt belopp arbetsskadesjukpenning före skatt under året (sjukfall från dag 30)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_askp_belopp_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 30\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 30 dagar eller längre, counting days from day 30"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-askp-dagar-brutto"
+fields = { "label" = "Antal ersatta bruttodagar med arbetsskadesjukpenning under året (sjukfall från dag 1)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_askp_dagar_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 1\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds every sjukfall that reaches Försäkringskassan"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-askp-dagar-brutto-dag15"
+fields = { "label" = "Antal ersatta bruttodagar med arbetsskadesjukpenning under året (sjukfall från dag 15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_askp_dagar_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 15\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 15 dagar eller längre, counting days from day 15"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-askp-dagar-brutto-dag30"
+fields = { "label" = "Antal ersatta bruttodagar med arbetsskadesjukpenning under året (sjukfall från dag 30)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_askp_dagar_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 30\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 30 dagar eller längre, counting days from day 30"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-askp-dagar-netto"
+fields = { "label" = "Antal ersatta nettodagar med arbetsskadesjukpenning under året (sjukfall från dag 1)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_askp_dagar_netto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 1\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds every sjukfall that reaches Försäkringskassan"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-askp-dagar-netto-dag15"
+fields = { "label" = "Antal ersatta nettodagar med arbetsskadesjukpenning under året (sjukfall från dag 15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_askp_dagar_netto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 15\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 15 dagar eller längre, counting days from day 15"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-askp-dagar-netto-dag30"
+fields = { "label" = "Antal ersatta nettodagar med arbetsskadesjukpenning under året (sjukfall från dag 30)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_askp_dagar_netto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 30\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 30 dagar eller längre, counting days from day 30"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-belopp-a-brutto"
+fields = { "label" = "Utbetalt belopp för A-inkomst före skatt från Försäkringskassan under året (sjukfall från dag 1)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_belopp_a_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 1\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds every sjukfall that reaches Försäkringskassan"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-belopp-a-brutto-dag15"
+fields = { "label" = "Utbetalt belopp för A-inkomst före skatt från Försäkringskassan under året (sjukfall från dag 15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_belopp_a_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 15\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 15 dagar eller längre, counting days from day 15"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-belopp-a-brutto-dag30"
+fields = { "label" = "Utbetalt belopp för A-inkomst före skatt från Försäkringskassan under året (sjukfall från dag 30)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_belopp_a_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 30\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 30 dagar eller längre, counting days from day 30"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-belopp-b-brutto"
+fields = { "label" = "Utbetalt belopp för B-inkomst före skatt från Försäkringskassan under året (sjukfall från dag 1)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_belopp_b_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 1\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds every sjukfall that reaches Försäkringskassan"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-belopp-b-brutto-dag15"
+fields = { "label" = "Utbetalt belopp för B-inkomst före skatt från Försäkringskassan under året (sjukfall från dag 15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_belopp_b_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 15\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 15 dagar eller längre, counting days from day 15"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-belopp-b-brutto-dag30"
+fields = { "label" = "Utbetalt belopp för B-inkomst före skatt från Försäkringskassan under året (sjukfall från dag 30)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_belopp_b_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 30\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 30 dagar eller längre, counting days from day 30"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-belopp-brutto"
+fields = { "label" = "Utbetalt belopp före skatt från Försäkringskassan under året (sjukfall från dag 1)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_belopp_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 1\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds every sjukfall that reaches Försäkringskassan"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-belopp-brutto-dag15"
+fields = { "label" = "Utbetalt belopp före skatt från Försäkringskassan under året (sjukfall från dag 15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_belopp_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 15\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 15 dagar eller längre, counting days from day 15"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-belopp-brutto-dag30"
+fields = { "label" = "Utbetalt belopp före skatt från Försäkringskassan under året (sjukfall från dag 30)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_belopp_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 30\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 30 dagar eller längre, counting days from day 30"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-belopp-o-brutto"
+fields = { "label" = "Utbetalt belopp för övriga inkomster (ej A- eller B-inkomst) före skatt från Försäkringskassan under året (sjukfall från dag 1)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_belopp_o_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 1\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds every sjukfall that reaches Försäkringskassan"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-belopp-o-brutto-dag15"
+fields = { "label" = "Utbetalt belopp för övriga inkomster (ej A- eller B-inkomst) före skatt från Försäkringskassan under året (sjukfall från dag 15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_belopp_o_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 15\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 15 dagar eller längre, counting days from day 15"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-belopp-o-brutto-dag30"
+fields = { "label" = "Utbetalt belopp för övriga inkomster (ej A- eller B-inkomst) före skatt från Försäkringskassan under året (sjukfall från dag 30)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_belopp_o_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 30\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 30 dagar eller längre, counting days from day 30"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-dagar-brutto"
+fields = { "label" = "Antal ersatta bruttodagar under året (sjukfall från dag 1)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_dagar_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 1\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds every sjukfall that reaches Försäkringskassan"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-dagar-brutto-dag15"
+fields = { "label" = "Antal ersatta bruttodagar under året (sjukfall från dag 15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_dagar_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 15\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 15 dagar eller längre, counting days from day 15"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-dagar-brutto-dag30"
+fields = { "label" = "Antal ersatta bruttodagar under året (sjukfall från dag 30)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_dagar_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 30\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 30 dagar eller längre, counting days from day 30"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-dagar-netto"
+fields = { "label" = "Antal ersatta nettodagar under året (sjukfall från dag 1)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_dagar_netto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 1\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds every sjukfall that reaches Försäkringskassan"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-dagar-netto-dag15"
+fields = { "label" = "Antal ersatta nettodagar under året (sjukfall från dag 15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_dagar_netto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 15\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 15 dagar eller längre, counting days from day 15"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-dagar-netto-dag30"
+fields = { "label" = "Antal ersatta nettodagar under året (sjukfall från dag 30)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_dagar_netto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 30\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 30 dagar eller längre, counting days from day 30"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-dagar-tot"
+fields = { "label" = "Antal sjukfallsdagar totalt under året (sjukfall från dag 1)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_dagar_tot\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 1\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds every sjukfall that reaches Försäkringskassan"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-dagar-tot-dag15"
+fields = { "label" = "Antal sjukfallsdagar totalt under året (sjukfall från dag 15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_dagar_tot\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 15\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 15 dagar eller längre, counting days from day 15"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-dagar-tot-dag30"
+fields = { "label" = "Antal sjukfallsdagar totalt under året (sjukfall från dag 30)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_dagar_tot\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 30\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 30 dagar eller längre, counting days from day 30"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-fb-sjp-belopp-brutto"
+fields = { "label" = "Utbetalt belopp förebyggande sjukpenning före skatt under året (sjukfall från dag 1)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_fb_sjp_belopp_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 1\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds every sjukfall that reaches Försäkringskassan"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-fb-sjp-belopp-brutto-dag15"
+fields = { "label" = "Utbetalt belopp förebyggande sjukpenning före skatt under året (sjukfall från dag 15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_fb_sjp_belopp_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 15\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 15 dagar eller längre, counting days from day 15"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-fb-sjp-belopp-brutto-dag30"
+fields = { "label" = "Utbetalt belopp förebyggande sjukpenning före skatt under året (sjukfall från dag 30)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_fb_sjp_belopp_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 30\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 30 dagar eller längre, counting days from day 30"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-fb-sjp-dagar-brutto"
+fields = { "label" = "Antal ersatta bruttodagar med förebyggande sjukpenning under året (sjukfall från dag 1)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_fb_sjp_dagar_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 1\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds every sjukfall that reaches Försäkringskassan"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-fb-sjp-dagar-brutto-dag15"
+fields = { "label" = "Antal ersatta bruttodagar med förebyggande sjukpenning under året (sjukfall från dag 15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_fb_sjp_dagar_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 15\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 15 dagar eller längre, counting days from day 15"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-fb-sjp-dagar-brutto-dag30"
+fields = { "label" = "Antal ersatta bruttodagar med förebyggande sjukpenning under året (sjukfall från dag 30)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_fb_sjp_dagar_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 30\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 30 dagar eller längre, counting days from day 30"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-fb-sjp-dagar-netto"
+fields = { "label" = "Antal ersatta nettodagar med förebyggande sjukpenning under året (sjukfall från dag 1)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_fb_sjp_dagar_netto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 1\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds every sjukfall that reaches Försäkringskassan"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-fb-sjp-dagar-netto-dag15"
+fields = { "label" = "Antal ersatta nettodagar med förebyggande sjukpenning under året (sjukfall från dag 15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_fb_sjp_dagar_netto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 15\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 15 dagar eller längre, counting days from day 15"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-fb-sjp-dagar-netto-dag30"
+fields = { "label" = "Antal ersatta nettodagar med förebyggande sjukpenning under året (sjukfall från dag 30)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_fb_sjp_dagar_netto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 30\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 30 dagar eller längre, counting days from day 30"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-karens-dagar"
+fields = { "label" = "Antal karensdagar under året (sjukfall från dag 1)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_karens_dagar\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 1\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds every sjukfall that reaches Försäkringskassan"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-karens-dagar-dag15"
+fields = { "label" = "Antal karensdagar under året (sjukfall från dag 15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_karens_dagar\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 15\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 15 dagar eller längre, counting days from day 15"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-karens-dagar-dag30"
+fields = { "label" = "Antal karensdagar under året (sjukfall från dag 30)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_karens_dagar\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 30\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 30 dagar eller längre, counting days from day 30"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-rehabp-belopp-brutto"
+fields = { "label" = "Utbetalt belopp rehabiliteringspenning före skatt under året (sjukfall från dag 1)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_rehabp_belopp_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 1\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds every sjukfall that reaches Försäkringskassan"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-rehabp-belopp-brutto-dag15"
+fields = { "label" = "Utbetalt belopp rehabiliteringspenning före skatt under året (sjukfall från dag 15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_rehabp_belopp_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 15\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 15 dagar eller längre, counting days from day 15"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-rehabp-belopp-brutto-dag30"
+fields = { "label" = "Utbetalt belopp rehabiliteringspenning före skatt under året (sjukfall från dag 30)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_rehabp_belopp_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 30\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 30 dagar eller längre, counting days from day 30"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-rehabp-dagar-brutto"
+fields = { "label" = "Antal ersatta bruttodagar med rehabiliteringspenning under året (sjukfall från dag 1)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_rehabp_dagar_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 1\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds every sjukfall that reaches Försäkringskassan"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-rehabp-dagar-brutto-dag15"
+fields = { "label" = "Antal ersatta bruttodagar med rehabiliteringspenning under året (sjukfall från dag 15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_rehabp_dagar_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 15\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 15 dagar eller längre, counting days from day 15"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-rehabp-dagar-brutto-dag30"
+fields = { "label" = "Antal ersatta bruttodagar med rehabiliteringspenning under året (sjukfall från dag 30)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_rehabp_dagar_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 30\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 30 dagar eller längre, counting days from day 30"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-rehabp-dagar-netto"
+fields = { "label" = "Antal ersatta nettodagar med rehabiliteringspenning under året (sjukfall från dag 1)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_rehabp_dagar_netto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 1\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds every sjukfall that reaches Försäkringskassan"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-rehabp-dagar-netto-dag15"
+fields = { "label" = "Antal ersatta nettodagar med rehabiliteringspenning under året (sjukfall från dag 15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_rehabp_dagar_netto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 15\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 15 dagar eller längre, counting days from day 15"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-rehabp-dagar-netto-dag30"
+fields = { "label" = "Antal ersatta nettodagar med rehabiliteringspenning under året (sjukfall från dag 30)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_rehabp_dagar_netto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 30\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 30 dagar eller längre, counting days from day 30"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-sjl-dagar"
+fields = { "label" = "Antal sjuklönedagar under året (sjukfall från dag 1)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_sjl_dagar\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 1\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds every sjukfall that reaches Försäkringskassan"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-sjl-dagar-dag15"
+fields = { "label" = "Antal sjuklönedagar under året (sjukfall från dag 15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_sjl_dagar\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 15\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 15 dagar eller längre, counting days from day 15"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-sjl-dagar-dag30"
+fields = { "label" = "Antal sjuklönedagar under året (sjukfall från dag 30)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_sjl_dagar\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 30\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 30 dagar eller längre, counting days from day 30"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-sjp-belopp-brutto"
+fields = { "label" = "Utbetalt belopp sjukpenning före skatt under året (sjukfall från dag 1)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_sjp_belopp_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 1\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds every sjukfall that reaches Försäkringskassan"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-sjp-belopp-brutto-dag15"
+fields = { "label" = "Utbetalt belopp sjukpenning före skatt under året (sjukfall från dag 15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_sjp_belopp_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 15\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 15 dagar eller längre, counting days from day 15"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-sjp-belopp-brutto-dag30"
+fields = { "label" = "Utbetalt belopp sjukpenning före skatt under året (sjukfall från dag 30)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_sjp_belopp_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 30\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 30 dagar eller längre, counting days from day 30"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-sjp-dagar-brutto"
+fields = { "label" = "Antal ersatta bruttodagar med sjukpenning under året (sjukfall från dag 1)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_sjp_dagar_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 1\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds every sjukfall that reaches Försäkringskassan"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-sjp-dagar-brutto-dag15"
+fields = { "label" = "Antal ersatta bruttodagar med sjukpenning under året (sjukfall från dag 15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_sjp_dagar_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 15\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 15 dagar eller längre, counting days from day 15"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-sjp-dagar-brutto-dag30"
+fields = { "label" = "Antal ersatta bruttodagar med sjukpenning under året (sjukfall från dag 30)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_sjp_dagar_brutto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 30\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 30 dagar eller längre, counting days from day 30"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-sjp-dagar-netto"
+fields = { "label" = "Antal ersatta nettodagar med sjukpenning under året (sjukfall från dag 1)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_sjp_dagar_netto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 1\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds every sjukfall that reaches Försäkringskassan"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-sjp-dagar-netto-dag15"
+fields = { "label" = "Antal ersatta nettodagar med sjukpenning under året (sjukfall från dag 15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_sjp_dagar_netto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 15\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 15 dagar eller längre, counting days from day 15"
+
+[[statement]]
+kind = "set"
+subject = "var:ar-sjp-dagar-netto-dag30"
+fields = { "label" = "Antal ersatta nettodagar med sjukpenning under året (sjukfall från dag 30)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Ar_sjp_dagar_netto\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 30\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 30 dagar eller längre, counting days from day 30"
+
+[[statement]]
+kind = "set"
+subject = "var:delforman1"
+fields = { "label" = "Ersatt delförmån, klartext (delsjukfall)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Delforman1\"; the label is written from the provider definition. The suffix separates the two variables: the variable sits in the Delfall tables and its definition describes the delsjukfall."
+
+[[statement]]
+kind = "set"
+subject = "var:delforman1-kod"
+fields = { "label" = "Ersatt delförmån, kod (delsjukfall)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Delforman1_kod\"; the label is written from the provider definition. The suffix separates the two variables: the variable sits in the Delfall tables and its definition describes the delsjukfall."
+
+[[statement]]
+kind = "set"
+subject = "var:delforman1-kod-sista-dag"
+fields = { "label" = "Ersatt delförmån, kod (sista ersatta dagen)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Delforman1_kod\"; the label is written from the provider definition. The suffix separates the two variables: the variable sits in the year, quarter and month tables and its definition gives the value on the last compensated day."
+
+[[statement]]
+kind = "set"
+subject = "var:delforman1-sista-dag"
+fields = { "label" = "Ersatt delförmån, klartext (sista ersatta dagen)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Delforman1\"; the label is written from the provider definition. The suffix separates the two variables: the variable sits in the year, quarter and month tables and its definition gives the value on the last compensated day."
+
+[[statement]]
+kind = "set"
+subject = "var:delforman2"
+fields = { "label" = "Ytterligare ersatt delförmån, klartext (delsjukfall)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Delforman2\"; the label is written from the provider definition. The suffix separates the two variables: the variable sits in the Delfall tables and its definition describes the delsjukfall."
+
+[[statement]]
+kind = "set"
+subject = "var:delforman2-kod"
+fields = { "label" = "Ytterligare ersatt delförmån, kod (delsjukfall)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Delforman2_kod\"; the label is written from the provider definition. The suffix separates the two variables: the variable sits in the Delfall tables and its definition describes the delsjukfall."
+
+[[statement]]
+kind = "set"
+subject = "var:delforman2-kod-sista-dag"
+fields = { "label" = "Ytterligare ersatt delförmån, kod (sista ersatta dagen)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Delforman2_kod\"; the label is written from the provider definition. The suffix separates the two variables: the variable sits in the year, quarter and month tables and its definition gives the value on the last compensated day."
+
+[[statement]]
+kind = "set"
+subject = "var:delforman2-sista-dag"
+fields = { "label" = "Ytterligare ersatt delförmån, klartext (sista ersatta dagen)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Delforman2\"; the label is written from the provider definition. The suffix separates the two variables: the variable sits in the year, quarter and month tables and its definition gives the value on the last compensated day."
+
+[[statement]]
+kind = "set"
+subject = "var:inflode"
+fields = { "label" = "Antal sjukfall påbörjade under perioden (sjukfall från dag 1)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Inflode\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 1\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds every sjukfall that reaches Försäkringskassan"
+
+[[statement]]
+kind = "set"
+subject = "var:inflode-dag15"
+fields = { "label" = "Antal sjukfall påbörjade under perioden (sjukfall från dag 15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Inflode\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 15\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 15 dagar eller längre, counting days from day 15"
+
+[[statement]]
+kind = "set"
+subject = "var:inflode-dag30"
+fields = { "label" = "Antal sjukfall påbörjade under perioden (sjukfall från dag 30)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Inflode\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 30\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 30 dagar eller längre, counting days from day 30"
+
+[[statement]]
+kind = "set"
+subject = "var:inkomsttyp"
+fields = { "label" = "Inkomsttyp (SGI), klartext (delsjukfall)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Inkomsttyp\"; the label is written from the provider definition. The suffix separates the two variables: the variable sits in the Delfall tables and its definition describes the delsjukfall."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomsttyp-kod"
+fields = { "label" = "Inkomsttyp (SGI), kod (delsjukfall)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Inkomsttyp_kod\"; the label is written from the provider definition. The suffix separates the two variables: the variable sits in the Delfall tables and its definition describes the delsjukfall."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomsttyp-kod-sista-dag"
+fields = { "label" = "Inkomsttyp (SGI), kod (sista ersatta dagen)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Inkomsttyp_kod\"; the label is written from the provider definition. The suffix separates the two variables: the variable sits in the year, quarter and month tables and its definition gives the value on the last compensated day."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomsttyp-sista-dag"
+fields = { "label" = "Inkomsttyp (SGI), klartext (sista ersatta dagen)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Inkomsttyp\"; the label is written from the provider definition. The suffix separates the two variables: the variable sits in the year, quarter and month tables and its definition gives the value on the last compensated day."
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning"
+fields = { "label" = "Omfattning, sjukskrivningsgrad (delsjukfall)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Omfattning\"; the label is written from the provider definition. The suffix separates the two variables: the variable sits in the Delfall tables and its definition describes the delsjukfall."
+
+[[statement]]
+kind = "set"
+subject = "var:omfattning-sista-dag"
+fields = { "label" = "Omfattning, sjukskrivningsgrad (sista ersatta dagen)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Omfattning\"; the label is written from the provider definition. The suffix separates the two variables: the variable sits in the year, quarter and month tables and its definition gives the value on the last compensated day."
+
+[[statement]]
+kind = "set"
+subject = "var:status"
+fields = { "label" = "Sjukfallet pågående vid periodens slut (sjukfall från dag 1)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Status\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 1\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds every sjukfall that reaches Försäkringskassan"
+
+[[statement]]
+kind = "set"
+subject = "var:status-dag15"
+fields = { "label" = "Sjukfallet pågående vid periodens slut (sjukfall från dag 15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Status\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 15\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 15 dagar eller längre, counting days from day 15"
+
+[[statement]]
+kind = "set"
+subject = "var:status-dag30"
+fields = { "label" = "Sjukfallet pågående vid periodens slut (sjukfall från dag 30)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Status\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 30\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 30 dagar eller längre, counting days from day 30"
+
+[[statement]]
+kind = "set"
+subject = "var:utflode"
+fields = { "label" = "Antal sjukfall avslutade under perioden, exkl. de senaste två månaderna (sjukfall från dag 1)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Utflode\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 1\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds every sjukfall that reaches Försäkringskassan"
+
+[[statement]]
+kind = "set"
+subject = "var:utflode-dag15"
+fields = { "label" = "Antal sjukfall avslutade under perioden, exkl. de senaste två månaderna (sjukfall från dag 15)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Utflode\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 15\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 15 dagar eller längre, counting days from day 15"
+
+[[statement]]
+kind = "set"
+subject = "var:utflode-dag30"
+fields = { "label" = "Antal sjukfall avslutade under perioden, exkl. de senaste två månaderna (sjukfall från dag 30)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. The provider label is the raw column name \"Utflode\"; the label is written from the provider definition. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"År 30\" (MiDAS - Ohälsa - Sjukpenning och rehabiliteringspenning), which holds sjukfall 30 dagar eller längre, counting days from day 30"

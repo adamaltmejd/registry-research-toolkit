@@ -488,18 +488,6 @@ evidence = "Folkbokföringskommun är en kommunanknytning.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:funiva1-sv"
-fields = { "sets" = ["faderns-utbildningsniva"] }
-evidence = "Id:t innehåller den enskilda bokstavskoden SV och källan anger faderns utbildningsnivå.\ncatalog:variable_text:22242:12053:12234"
-
-[[statement]]
-kind = "set"
-subject = "var:funiva1-sv"
-fields = { "tags" = ["education"] }
-evidence = "Id:t innehåller den enskilda bokstavskoden SV och källan anger faderns utbildningsnivå.\ncatalog:variable_text:22242:12053:12234"
-
-[[statement]]
-kind = "set"
 subject = "var:huvudman"
 fields = { "sets" = [] }
 evidence = "Skolans huvudman är en utbildningsuppgift.\ncatalog:variable_text:22243:20089:20270"
@@ -773,18 +761,6 @@ kind = "set"
 subject = "var:antal-vg-poang-i-matematik"
 fields = { "tags" = ["education"] }
 evidence = "MA är en källmnemonik i denna förkortningsfamilj.\ncatalog:occurrence:204863\ncatalog:variable_text:22266:15340:15522"
-
-[[statement]]
-kind = "set"
-subject = "var:muniva1-sv"
-fields = { "sets" = ["moderns-utbildningsniva"] }
-evidence = "Id:t innehåller den enskilda bokstavskoden SV och källan anger moderns utbildningsnivå.\ncatalog:variable_text:22267:12053:12234"
-
-[[statement]]
-kind = "set"
-subject = "var:muniva1-sv"
-fields = { "tags" = ["education"] }
-evidence = "Id:t innehåller den enskilda bokstavskoden SV och källan anger moderns utbildningsnivå.\ncatalog:variable_text:22267:12053:12234"
 
 [[statement]]
 kind = "set"
@@ -1905,18 +1881,6 @@ evidence = "#2102 same-label cluster 'Poäng på betygsnivå A' (2 variables): j
 
 [[statement]]
 kind = "set"
-subject = "var:funiva1-sv"
-fields = { "label" = "Faderns utbildningsnivå (3 nivåer)" }
-evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (8 variables): judged different meaning, medium confidence; Opdefs and value sets separate 3-level grouping, older 7-level grouping, SUN 2000 detailed/grouped and SUN 2020 detailed/grouped; SunNiva_Far and SunNiva_old_Far carry the same 7-level opdef and are kept as one variable."
-
-[[statement]]
-kind = "set"
-subject = "var:muniva1-sv"
-fields = { "label" = "Moderns utbildningsnivå (3 nivåer)" }
-evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, medium confidence; Opdefs and value sets separate 3-level grouping, older 7-level grouping, SUN 2000 detailed/grouped and SUN 2020 detailed/grouped; SunNiva_Mor and SunNiva_old_Mor carry the same 7-level opdef and are kept as one variable."
-
-[[statement]]
-kind = "set"
 subject = "var:no-a-delt"
 fields = { "label" = "Deltagande i prov A i NO (delprov A3)" }
 evidence = "#2102 same-label cluster 'Deltagande i prov A i NO' (4 variables): judged different meaning, medium confidence; Opdefs: A1, A2 and A3 are separate sub-tests; NO_A_DELT (from 2023) has the opdef 'delprov A3' and starts when NO_A3_DELT ends, with a changed value set."
@@ -2097,20 +2061,8 @@ evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (8 variables): j
 
 [[statement]]
 kind = "set"
-subject = "var:utl-bakg-sv"
-fields = { "label" = "Utländsk/svensk bakgrund (3 grupper)" }
-evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (4 variables): judged different meaning, medium confidence; Value sets differ: two groups (UTLBAKGR), three groups (UTL_BAKG_SV and UTLBAKGR2, same coding in disjoint periods) and four groups (UtlSvBakg)."
-
-[[statement]]
-kind = "set"
 subject = "var:utlbakgr-alt"
 fields = { "label" = "Utländsk/svensk bakgrund (UTLBAKGR)" }
-evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (4 variables): judged different meaning, medium confidence; Value sets differ: two groups (UTLBAKGR), three groups (UTL_BAKG_SV and UTLBAKGR2, same coding in disjoint periods) and four groups (UtlSvBakg)."
-
-[[statement]]
-kind = "set"
-subject = "var:utlbakgr2"
-fields = { "label" = "Utländsk/svensk bakgrund (3 grupper)" }
 evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (4 variables): judged different meaning, medium confidence; Value sets differ: two groups (UTLBAKGR), three groups (UTL_BAKG_SV and UTLBAKGR2, same coding in disjoint periods) and four groups (UtlSvBakg)."
 
 [[statement]]
@@ -2186,3 +2138,63 @@ kind = "set"
 subject = "amne-sv-eng-ma-no-so: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "amne-sv-eng-ma: FUNIVA1_SV"
+fields = { "variable" = "sunniva-far-omkodad" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v8074), never delivered together in one table, so they are one variable renamed between releases: FUNIVA1_SV 2003-01-01..2003-06-30; SunNiva_Far_Omkodad 2004-01-01..2014-06-30."
+
+[[statement]]
+kind = "set"
+subject = "amne-sv-eng-ma: MUNIVA1_SV"
+fields = { "variable" = "sun-niva-mor-omkodad" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v8073), never delivered together in one table, so they are one variable renamed between releases: MUNIVA1_SV 2003-01-01..2003-06-30; SunNiva_MOR_Omkodad 2013-01-01..2014-06-30; SunNiva_Mor_Omkodad 2004-01-01..2012-06-30."
+
+[[statement]]
+kind = "set"
+subject = "var:utl-bakg-sv"
+fields = { "label" = "Utländsk/svensk bakgrund (3 grupper) (Ämne: SV, ENG, MA)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Ämne: SV, ENG, MA\"."
+
+[[statement]]
+kind = "set"
+subject = "var:utlbakgr2"
+fields = { "label" = "Utländsk/svensk bakgrund (3 grupper) (Ämne: SV, ENG, MA, NO, SO)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Ämne: SV, ENG, MA, NO, SO\"."
+
+[[statement]]
+kind = "set"
+subject = "amne-no: SunNiva_Mor_Omkodad"
+fields = { "variable" = "sun-niva-mor-omkodad" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v8073), never delivered together in one table, so they are one variable renamed between releases: MUNIVA1_SV 2003-01-01..2003-06-30; SunNiva_MOR_Omkodad 2013-01-01..2014-06-30; SunNiva_Mor_Omkodad 2004-01-01..2012-06-30."
+
+[[statement]]
+kind = "set"
+subject = "amne-sv-eng-ma: SunNiva_Mor_Omkodad"
+fields = { "variable" = "sun-niva-mor-omkodad" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v8073), never delivered together in one table, so they are one variable renamed between releases: MUNIVA1_SV 2003-01-01..2003-06-30; SunNiva_MOR_Omkodad 2013-01-01..2014-06-30; SunNiva_Mor_Omkodad 2004-01-01..2012-06-30."
+
+[[statement]]
+kind = "set"
+subject = "amne-sv-eng-ma-no-so: SunNiva_MOR_Omkodad"
+fields = { "variable" = "sun-niva-mor-omkodad" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v8073), never delivered together in one table, so they are one variable renamed between releases: MUNIVA1_SV 2003-01-01..2003-06-30; SunNiva_MOR_Omkodad 2013-01-01..2014-06-30; SunNiva_Mor_Omkodad 2004-01-01..2012-06-30."
+
+[[statement]]
+kind = "set"
+subject = "amne-no: SunNiva_Far_Omkodad"
+fields = { "variable" = "sunniva-far-omkodad" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v8074), never delivered together in one table, so they are one variable renamed between releases: FUNIVA1_SV 2003-01-01..2003-06-30; SunNiva_Far_Omkodad 2004-01-01..2014-06-30."
+
+[[statement]]
+kind = "set"
+subject = "amne-sv-eng-ma: SunNiva_Far_Omkodad"
+fields = { "variable" = "sunniva-far-omkodad" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v8074), never delivered together in one table, so they are one variable renamed between releases: FUNIVA1_SV 2003-01-01..2003-06-30; SunNiva_Far_Omkodad 2004-01-01..2014-06-30."
+
+[[statement]]
+kind = "set"
+subject = "amne-sv-eng-ma-no-so: SunNiva_Far_Omkodad"
+fields = { "variable" = "sunniva-far-omkodad" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v8074), never delivered together in one table, so they are one variable renamed between releases: FUNIVA1_SV 2003-01-01..2003-06-30; SunNiva_Far_Omkodad 2004-01-01..2014-06-30."

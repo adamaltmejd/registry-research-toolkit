@@ -1267,18 +1267,6 @@ evidence = "Variabeln avser intresse för högskolestudier.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:kalvikt"
-fields = { "sets" = ["upprakningsvikter"] }
-evidence = "Kalibrerad uppräkningsvikt.\ncatalog:occurrence:217965"
-
-[[statement]]
-kind = "set"
-subject = "var:kalvikt"
-fields = { "tags" = ["methods"] }
-evidence = "Kalibrerad uppräkningsvikt.\ncatalog:occurrence:217965"
-
-[[statement]]
-kind = "set"
 subject = "var:kalvikt-alla"
 fields = { "sets" = ["upprakningsvikter"] }
 evidence = "Kalibrerad uppräkningsvikt.\ncatalog:occurrence:217825"
@@ -1819,18 +1807,6 @@ evidence = "Pgmgrp är en opak källkod; etiketten kolliderar och behöver käll
 
 [[statement]]
 kind = "set"
-subject = "var:pgrgrp"
-fields = { "sets" = ["gymnasieprogram"] }
-evidence = "Pgrgrp är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23519:13695:14061"
-
-[[statement]]
-kind = "set"
-subject = "var:pgrgrp"
-fields = { "tags" = ["education"] }
-evidence = "Pgrgrp är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23519:13695:14061"
-
-[[statement]]
-kind = "set"
 subject = "var:gymnasieprogram-grupperat-hogskoleforberedande-yrkesprogram"
 fields = { "sets" = ["gymnasieprogram"] }
 evidence = "Prggrp är en opak källkod; etiketten kolliderar och behöver källdisambiguering.\ncatalog:variable_text:23520:18809:19174"
@@ -2212,18 +2188,6 @@ kind = "set"
 subject = "var:utbild"
 fields = { "tags" = ["education"] }
 evidence = "Kodning av gymnasieprogram.\ncatalog:occurrence:218049\ncatalog:valueset:637"
-
-[[statement]]
-kind = "set"
-subject = "var:vikt"
-fields = { "sets" = ["upprakningsvikter"] }
-evidence = "Kalibrerad uppräkningsvikt.\ncatalog:occurrence:217885\ncatalog:occurrence:217931"
-
-[[statement]]
-kind = "set"
-subject = "var:vikt"
-fields = { "tags" = ["methods"] }
-evidence = "Kalibrerad uppräkningsvikt.\ncatalog:occurrence:217885\ncatalog:occurrence:217931"
 
 [[statement]]
 kind = "set"
@@ -2708,12 +2672,6 @@ evidence = "#2102 same-label cluster 'Lilla n per stratum' (2 variables): judged
 
 [[statement]]
 kind = "set"
-subject = "var:pgrgrp"
-fields = { "label" = "Gymnasieprogram, grupperat (4 grupper)" }
-evidence = "#2102 same-label cluster 'Gymnasieprogram, grupperat' (6 variables): judged different meaning, medium confidence; Value sets: four groups (NV, SP, TE, övriga; PgrGrp, PGMgrp, pgm are one variable over time), five groups with introduktionsprogram (pgm2), three programme types (typpgm), five groups with yrkesprogram (PrgGrp)."
-
-[[statement]]
-kind = "set"
 subject = "var:typ-av-gymnasieprogram-program"
 fields = { "label" = "Typ av gymnasieprogram (programkod)" }
 evidence = "#2102 same-label cluster 'Typ av gymnasieprogram' (4 variables): judged different meaning, medium confidence; Value sets: three programme types (typpgm), five groups with introduktionsprogram (pgm), programme codes (program), two programme types (TypPgr)."
@@ -2952,3 +2910,27 @@ kind = "set"
 subject = "gymnasieungdomars-studieintresse: var:uenr"
 fields.row_key = true
 evidence = "Row key: personnr-urval and uenr identify a row: survey of persons keys on the sampled person; UENR is added because it is the only person id 2005-2010 (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieungdomars-studieintresse: PgrGrp"
+fields = { "variable" = "gymnasieprogram-fyra-grupper-2009-10" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v14645), never delivered together in one table, so they are one variable renamed between releases: PgrGrp 2005-07-01..2008-06-30; PGMgrp 2009-07-01..2010-06-30."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieungdomars-studieintresse: kalvikt"
+fields = { "variable" = "wk" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v4736), never delivered together in one table, so they are one variable renamed between releases: Vikt 2005-07-01..2008-06-30; kalvikt 2009-07-01..2010-06-30; wk 2013-07-01..2022-06-30."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieungdomars-studieintresse: Vikt"
+fields = { "variable" = "wk" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v4736), never delivered together in one table, so they are one variable renamed between releases: Vikt 2005-07-01..2008-06-30; kalvikt 2009-07-01..2010-06-30; wk 2013-07-01..2022-06-30."
+
+[[statement]]
+kind = "set"
+subject = "gymnasieungdomars-studieintresse: wk"
+fields = { "variable" = "wk" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v4736), never delivered together in one table, so they are one variable renamed between releases: Vikt 2005-07-01..2008-06-30; kalvikt 2009-07-01..2010-06-30; wk 2013-07-01..2022-06-30."

@@ -613,18 +613,6 @@ evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\
 
 [[statement]]
 kind = "set"
-subject = "var:mbohelarz"
-fields = { "sets" = ["imputeringsstatus"] }
-evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6716:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:mbohelarz"
-fields = { "tags" = ["methods"] }
-evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6716:16436:16801"
-
-[[statement]]
-kind = "set"
 subject = "var:mfbolanz"
 fields = { "sets" = ["imputeringsstatus"] }
 evidence = "Källkoden är opak för etiketten Imputerat; etiketten kolliderar.\ncatalog:variable_text:6717:19723:20089"
@@ -1447,12 +1435,6 @@ evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged differen
 
 [[statement]]
 kind = "set"
-subject = "var:mbohelarz"
-fields = { "label" = "Imputerat: helårsboende" }
-evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; Opdefs: one imputation flag per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same Helårsboende flag, MBBOLANZ and MFBOLANZ flag the loan indicator and the loan amount."
-
-[[statement]]
-kind = "set"
 subject = "var:mfbolanz"
 fields = { "label" = "Imputerat: bostadslån (belopp)" }
 evidence = "#2102 same-label cluster 'Imputerat' (26 variables): judged different meaning, high confidence; Opdefs: one imputation flag per source variable; MBOHELARZ (2015-2016) and MBBOHELARZ (2017-2018) are the same Helårsboende flag, MBBOLANZ and MFBOLANZ flag the loan indicator and the loan amount."
@@ -1566,3 +1548,9 @@ kind = "set"
 subject = "individer: var:eget-personnr"
 fields.row_key = true
 evidence = "Row key: eget-personnr identify a row: one row per person; household ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "hushall: MBOHELARZ"
+fields = { "variable" = "mbbohelarz" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v35989), never delivered together in one table, so they are one variable renamed between releases: MBOHELARZ 2015-01-01..2015-12-31; MBBOHELARZ 2017-01-01..2017-12-31."

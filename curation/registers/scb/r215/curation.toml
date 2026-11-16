@@ -2329,18 +2329,6 @@ evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten
 
 [[statement]]
 kind = "set"
-subject = "var:ovrig-art-1-rom-eller-yngel-text-sotvatten-2015"
-fields = { "sets" = ["artangivelse-for-ovriga-odlade-arter"] }
-evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55122:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:ovrig-art-1-rom-eller-yngel-text-sotvatten-2015"
-fields = { "tags" = ["forestry-fishing"] }
-evidence = "Källkoden innehåller bokstavskoder som inte återfinns i etiketten.\ncatalog:variable_text:55122:16436:16801"
-
-[[statement]]
-kind = "set"
 subject = "var:ryrblf"
 fields = { "sets" = ["forsaljning-av-vattenbruksorganismer"] }
 evidence = "Källmnemoniken är ogenomskinlig och etiketten kolliderar.\ncatalog:variable_text:55123:17532:20089"
@@ -3697,18 +3685,6 @@ evidence = "Antal sysselsatta efter nationalitet är en personalgrupp.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:arbetskostnad-anstallda-ej-foretagare-period-16801-17167"
-fields = { "sets" = ["arbetskostnader"] }
-evidence = "TK är en opak källkod. Variabeln mäter arbetskostnader.\ncatalog:variable_text:55236:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:arbetskostnad-anstallda-ej-foretagare-period-16801-17167"
-fields = { "tags" = ["business"] }
-evidence = "TK är en opak källkod. Variabeln mäter arbetskostnader.\ncatalog:variable_text:55236:16801:17167"
-
-[[statement]]
-kind = "set"
 subject = "var:arbetskostnad-anstallda-ej-foretagare-period-17532-20089"
 fields = { "sets" = ["arbetskostnader"] }
 evidence = "TK är en opak källkod. Variabeln mäter arbetskostnader.\ncatalog:variable_text:55237:17532:20089"
@@ -4285,12 +4261,6 @@ evidence = "#2102 same-label cluster 'Recirkulerande system för odling av sätt
 
 [[statement]]
 kind = "set"
-subject = "var:arbetskostnad-anstallda-ej-foretagare-period-16801-17167"
-fields = { "label" = "Arbetskostnad anställda (ej företagare)" }
-evidence = "#2102 same-label cluster 'Arbetskostnad anställda' (3 variables): judged different meaning, high confidence; Opdefs: TK_av and Tk_avlon are the same cost for paid labour excluding business owners over two periods (renames); TK_for is the cost for business owners."
-
-[[statement]]
-kind = "set"
 subject = "var:arbetskostnad-anstallda-ej-foretagare-period-17532-20089"
 fields = { "label" = "Arbetskostnad anställda (ej företagare)" }
 evidence = "#2102 same-label cluster 'Arbetskostnad anställda' (3 variables): judged different meaning, high confidence; Opdefs: TK_av and Tk_avlon are the same cost for paid labour excluding business owners over two periods (renames); TK_for is the cost for business owners."
@@ -4791,12 +4761,6 @@ evidence = "#2102 same-label cluster 'Antal odlingar' (6 variables): judged diff
 kind = "set"
 subject = "var:ovrig-art-1-rom-eller-yngel-text-havet"
 fields = { "label" = "Övrig art, rom eller yngel (1), havet" }
-evidence = "#2102 same-label cluster 'Övrig art, rom eller yngel (1)' (3 variables): judged different meaning, high confidence; RYOvrtext (2015) och RYOvrpText (från 2017) är båda sötvatten enligt opdef och samma variabel över tid; RYOvrpText_salt (havet) löper samtidigt."
-
-[[statement]]
-kind = "set"
-subject = "var:ovrig-art-1-rom-eller-yngel-text-sotvatten-2015"
-fields = { "label" = "Övrig art, rom eller yngel (1), sötvatten" }
 evidence = "#2102 same-label cluster 'Övrig art, rom eller yngel (1)' (3 variables): judged different meaning, high confidence; RYOvrtext (2015) och RYOvrpText (från 2017) är båda sötvatten enligt opdef och samma variabel över tid; RYOvrpText_salt (havet) löper samtidigt."
 
 [[statement]]
@@ -5628,3 +5592,21 @@ kind = "set"
 subject = "vattenbruk: var:orgnr"
 fields.row_key = true
 evidence = "Row key: orgnr and organisationsnummer-peorgnr identify a row: the organisation number of each era identifies the aquaculture firm; the informationless farm id is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: TK_av"
+fields = { "variable" = "arbetskostnad-anstallda-ej-foretagare-period-17532-20089" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v16988), never delivered together in one table, so they are one variable renamed between releases: TK_av 2016-01-01..2016-12-31; Tk_avlon 2018-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "vattenbruk: RYOvrtext"
+fields = { "variable" = "ovrig-art-1-rom-eller-yngel-text-sotvatten-fran-2017" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v39999), never delivered together in one table, so they are one variable renamed between releases: RYOvrtext 2015-01-01..2015-12-31; RYOvrpText 2017-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: Tk_avlon"
+fields = { "variable" = "arbetskostnad-anstallda-ej-foretagare-period-17532-20089" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v16988), never delivered together in one table, so they are one variable renamed between releases: TK_av 2016-01-01..2016-12-31; Tk_avlon 2018-01-01..2024-12-31."

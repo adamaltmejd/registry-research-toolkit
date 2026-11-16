@@ -404,18 +404,6 @@ evidence = "Juridisk form beskriver organisationens struktur.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:kommun"
-fields = { "sets" = ["skolkommun"] }
-evidence = "Kommunen avser fritidshemmets läge.\ncatalog:variable_text:21109:14167:14168"
-
-[[statement]]
-kind = "set"
-subject = "var:kommun"
-fields = { "tags" = ["geography"] }
-evidence = "Kommunen avser fritidshemmets läge.\ncatalog:variable_text:21109:14167:14168"
-
-[[statement]]
-kind = "set"
 subject = "var:kommunfth"
 fields = { "sets" = ["skolkommun"] }
 evidence = "Kommunen avser fritidshemmets läge.\ncatalog:variable_text:21110:20011:20012"
@@ -524,18 +512,6 @@ evidence = "Kommunen avser fritidshemmets läge.\ncatalog:variable_text:21127:20
 
 [[statement]]
 kind = "set"
-subject = "var:fritidshemmets-belagenhetskommun"
-fields = { "sets" = ["skolkommun"] }
-evidence = "SKom innehåller en enstaka bokstav som källkod och är inte en läsbar förkortning av etiketten Kommun.\ncatalog:variable_text:21128:17089:17090"
-
-[[statement]]
-kind = "set"
-subject = "var:fritidshemmets-belagenhetskommun"
-fields = { "tags" = ["geography"] }
-evidence = "SKom innehåller en enstaka bokstav som källkod och är inte en läsbar förkortning av etiketten Kommun.\ncatalog:variable_text:21128:17089:17090"
-
-[[statement]]
-kind = "set"
 subject = "var:stodundervisning"
 fields = { "sets" = [] }
 evidence = "Variabeln gäller deltagande i undervisning.\ncatalog:variable_text:21129:20011:20012"
@@ -773,18 +749,6 @@ kind = "set"
 subject = "var:utbildningsform"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln gäller utbildningsform.\ncatalog:variable_text:21149:20011:20012"
-
-[[statement]]
-kind = "set"
-subject = "var:utl-bakg"
-fields = { "sets" = ["utlandsk-svensk-bakgrund"] }
-evidence = "Bakgrundsklassificeringen ingår i kandidatgruppen.\ncatalog:variable_text:21150:14167:14168"
-
-[[statement]]
-kind = "set"
-subject = "var:utl-bakg"
-fields = { "tags" = ["demographics"] }
-evidence = "Bakgrundsklassificeringen ingår i kandidatgruppen.\ncatalog:variable_text:21150:14167:14168"
 
 [[statement]]
 kind = "set"
@@ -894,12 +858,6 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
-subject = "var:fritidshemmets-belagenhetskommun"
-fields = { "label" = "Kommun (skolkommun)" }
-evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different meaning, medium confidence; Kommun, SKom and Skolkommun are one column renamed over adjacent periods (the sibling grundskola-elever register describes Skolkommun as the school's municipality); KommunFTH is a concurrent column from 2022 for the municipality where the fritidshem lies. The fritidshem opdefs for the first three repeat the fritidshem wording, so the split is inferred."
-
-[[statement]]
-kind = "set"
 subject = "var:hmanfth"
 fields = { "label" = "Huvudman (HMANFTH)" }
 evidence = "#2102 same-label cluster 'Huvudman' (4 variables): judged different meaning, medium confidence; Hman is the school unit's huvudman and HMANFTH the fritidshem's; the two name columns follow the same split."
@@ -927,12 +885,6 @@ kind = "set"
 subject = "var:inskriven-fritidshem-oavsett-vistelsetid"
 fields = { "label" = "Inskriven i fritidshem (oavsett vistelsetid)" }
 evidence = "#2102 same-label cluster 'Inskriven i fritidshem' (2 variables): judged different meaning, high confidence; Opdefs: FTH is enrolment regardless of hours, OBtidFTH enrolment at obekväm tid."
-
-[[statement]]
-kind = "set"
-subject = "var:kommun"
-fields = { "label" = "Kommun (skolkommun)" }
-evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different meaning, medium confidence; Kommun, SKom and Skolkommun are one column renamed over adjacent periods (the sibling grundskola-elever register describes Skolkommun as the school's municipality); KommunFTH is a concurrent column from 2022 for the municipality where the fritidshem lies. The fritidshem opdefs for the first three repeat the fritidshem wording, so the split is inferred."
 
 [[statement]]
 kind = "set"
@@ -1050,12 +1002,6 @@ evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variab
 
 [[statement]]
 kind = "set"
-subject = "var:utl-bakg"
-fields = { "label" = "Utländsk/svensk bakgrund (uppgift saknas som egen kod)" }
-evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (3 variables): judged different meaning, medium confidence; UtlBakGr sets a missing birth country to Sverige and has no missing code; Utl_BakG and UtlBakGr2 share an identical opdef and a value set with an 'Uppgift saknas' code."
-
-[[statement]]
-kind = "set"
 subject = "var:utlbakgr"
 fields = { "label" = "Utländsk/svensk bakgrund (UtlBakGr)" }
 evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (3 variables): judged different meaning, medium confidence; UtlBakGr sets a missing birth country to Sverige and has no missing code; Utl_BakG and UtlBakGr2 share an identical opdef and a value set with an 'Uppgift saknas' code."
@@ -1103,3 +1049,45 @@ kind = "set"
 subject = "specialskola: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "grundskola: SKom"
+fields = { "variable" = "skolkommun" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v36), never delivered together in one table, so they are one variable renamed between releases: Kommun 2008-10-15..2008-10-15; SKom 2009-10-15..2016-10-15; Skolkommun 2017-10-15..2024-10-15."
+
+[[statement]]
+kind = "set"
+subject = "grundskola: Kommun"
+fields = { "variable" = "skolkommun" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v36), never delivered together in one table, so they are one variable renamed between releases: Kommun 2008-10-15..2008-10-15; SKom 2009-10-15..2016-10-15; Skolkommun 2017-10-15..2024-10-15."
+
+[[statement]]
+kind = "set"
+subject = "grundskola: Utl_BakG"
+fields = { "variable" = "utlbakgr2" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v67), never delivered together in one table, so they are one variable renamed between releases: Utl_BakG 2008-10-15..2008-10-15; UtlBakGr2 2009-10-15..2016-10-15."
+
+[[statement]]
+kind = "set"
+subject = "anpassad-grundskola: Skolkommun"
+fields = { "variable" = "skolkommun" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v36), never delivered together in one table, so they are one variable renamed between releases: Kommun 2008-10-15..2008-10-15; SKom 2009-10-15..2016-10-15; Skolkommun 2017-10-15..2024-10-15."
+
+[[statement]]
+kind = "set"
+subject = "grundskola: Skolkommun"
+fields = { "variable" = "skolkommun" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v36), never delivered together in one table, so they are one variable renamed between releases: Kommun 2008-10-15..2008-10-15; SKom 2009-10-15..2016-10-15; Skolkommun 2017-10-15..2024-10-15."
+
+[[statement]]
+kind = "set"
+subject = "specialskola: Skolkommun"
+fields = { "variable" = "skolkommun" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v36), never delivered together in one table, so they are one variable renamed between releases: Kommun 2008-10-15..2008-10-15; SKom 2009-10-15..2016-10-15; Skolkommun 2017-10-15..2024-10-15."
+
+[[statement]]
+kind = "set"
+subject = "grundskola: UtlBakGr2"
+fields = { "variable" = "utlbakgr2" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v67), never delivered together in one table, so they are one variable renamed between releases: Utl_BakG 2008-10-15..2008-10-15; UtlBakGr2 2009-10-15..2016-10-15."

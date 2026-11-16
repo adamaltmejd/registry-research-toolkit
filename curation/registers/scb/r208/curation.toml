@@ -5851,18 +5851,6 @@ evidence = "Grödvis partiellt bortfall hör till gruppen och undersökningsmeto
 
 [[statement]]
 kind = "set"
-subject = "var:po"
-fields = { "sets" = ["produktionsomrade"] }
-evidence = "PO är en bokstavskod för produktionsområde; etiketten kolliderar och kräver källdisambiguering.\ncatalog:variable_text:42706:16801:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:po"
-fields = { "tags" = ["geography"] }
-evidence = "PO är en bokstavskod för produktionsområde; etiketten kolliderar och kräver källdisambiguering.\ncatalog:variable_text:42706:16801:18262"
-
-[[statement]]
-kind = "set"
 subject = "var:produktionsomrade-18-omraden"
 fields = { "sets" = ["produktionsomrade"] }
 evidence = "PO är en bokstavskod för produktionsområde; etiketten kolliderar och kräver källdisambiguering.\ncatalog:variable_text:42707:19723:20089"
@@ -8629,12 +8617,6 @@ evidence = "#2102 same-label cluster 'Partiellt bortfall av gröda' (39 variable
 
 [[statement]]
 kind = "set"
-subject = "var:po"
-fields = { "label" = "Produktionsområde (8 områden, där arealen finns)" }
-evidence = "#2102 same-label cluster 'Produktionsområde' (4 variables): judged different meaning, medium confidence; po (2016-2020) and po8 (2021-2025) share opdef and are consecutive (rename); po18 is the 18-area division and OrdPo8 is brukningscentrums PO8 per opdef."
-
-[[statement]]
-kind = "set"
 subject = "var:po8"
 fields = { "label" = "Produktionsområde (8 områden, där arealen finns)" }
 evidence = "#2102 same-label cluster 'Produktionsområde' (4 variables): judged different meaning, medium confidence; po (2016-2020) and po8 (2021-2025) share opdef and are consecutive (rename); po18 is the 18-area division and OrdPo8 is brukningscentrums PO8 per opdef."
@@ -8754,3 +8736,15 @@ kind = "set"
 subject = "skord-av-spannmal-trindsad-och-oljevaxter: var:foretagsidentitet"
 fields.row_key = true
 evidence = "Row key: foretagsidentitet identify a row: the survey firm id identifies the surveyed farm (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "skord-av-spannmal-trindsad-och-oljevaxter: po"
+fields = { "variable" = "po8" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v2432), never delivered together in one table, so they are one variable renamed between releases: po 2016-01-01..2019-12-31; po8 2021-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "skord-av-spannmal-trindsad-och-oljevaxter: po8"
+fields = { "variable" = "po8" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v2432), never delivered together in one table, so they are one variable renamed between releases: po 2016-01-01..2019-12-31; po8 2021-01-01..2024-12-31."

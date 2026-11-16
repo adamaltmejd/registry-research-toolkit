@@ -968,18 +968,6 @@ evidence = "Samma kommunnamn som kommunnamn-namn, uppdelat på påföljande peri
 
 [[statement]]
 kind = "set"
-subject = "var:kommunnamn"
-fields = { "sets" = ["kommun"] }
-evidence = "Kommunnamn i klartext.\ncatalog:variable_text:34245:13879:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:kommunnamn"
-fields = { "tags" = ["geography"] }
-evidence = "Kommunnamn i klartext.\ncatalog:variable_text:34245:13879:16436"
-
-[[statement]]
-kind = "set"
 subject = "var:kommunnamn-namn"
 fields = { "sets" = ["kommun"] }
 evidence = "Samma kommunnamn som kommun-namn, uppdelat på påföljande perioder.\ncatalog:occurrence:301101\ncatalog:occurrence:301117"
@@ -2011,3 +1999,21 @@ kind = "set"
 subject = "kommunalekonomisk-utjamning-regioner: <none> @2007..2013 where key = 'v8504'"
 fields = { "variable" = "none" }
 evidence = "Gap markers of VarId 8504 (lanets-folkmangd-den-1-november): the neighbouring-owner rule gives its only column listings to the variable that holds the column alone in the neighbouring releases, so the variable has no column left; its documented-without-column listings are withheld with it (maintainer 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "lss-utjamning: Kommunnamn"
+fields = { "variable" = "kommunnamn-namn" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v446), never delivered together in one table, so they are one variable renamed between releases: Namn 2007-01-01..2023-12-31; namn 2015-01-01..2017-12-31; Kommunnamn 2008-01-01..2014-12-31."
+
+[[statement]]
+kind = "set"
+subject = "kommunalekonomisk-utjamning-kommuner: Namn"
+fields = { "variable" = "kommunnamn-namn" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v446), never delivered together in one table, so they are one variable renamed between releases: Namn 2007-01-01..2023-12-31; namn 2015-01-01..2017-12-31; Kommunnamn 2008-01-01..2014-12-31."
+
+[[statement]]
+kind = "set"
+subject = "lss-utjamning: namn where key = 'v446'"
+fields = { "variable" = "kommunnamn-namn" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v446), never delivered together in one table, so they are one variable renamed between releases: Namn 2007-01-01..2023-12-31; namn 2015-01-01..2017-12-31; Kommunnamn 2008-01-01..2014-12-31."

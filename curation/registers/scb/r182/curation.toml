@@ -10690,30 +10690,6 @@ evidence = "Anställningsformen grupperas med typ av anställning och taggas som
 
 [[statement]]
 kind = "set"
-subject = "var:anstallningskategori"
-fields = { "sets" = [] }
-evidence = "Kategorikod för anställning.\ncatalog:valueset:8038\ncatalog:variable_text:13148:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:anstallningskategori"
-fields = { "tags" = ["employment"] }
-evidence = "Kategorikod för anställning.\ncatalog:valueset:8038\ncatalog:variable_text:13148:16436:16801"
-
-[[statement]]
-kind = "set"
-subject = "var:anstkattext"
-fields = { "sets" = [] }
-evidence = "Text för anställningskategori.\ncatalog:variable_text:13149:17167:17532"
-
-[[statement]]
-kind = "set"
-subject = "var:anstkattext"
-fields = { "tags" = ["employment"] }
-evidence = "Text för anställningskategori.\ncatalog:variable_text:13149:17167:17532"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-anstallda"
 fields = { "sets" = [] }
 evidence = "Antal anställda.\ncatalog:variable_text:13150:19358:19723"
@@ -11377,12 +11353,6 @@ kind = "set"
 subject = "var:ford3-text"
 fields = { "tags" = ["research"] }
 evidence = "FORD3 är en opak källkod; etiketten anger forskningsämnesgrupp.\ncatalog:variable_text:13235:19358:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:forskamneomrtext"
-fields = { "tags" = ["research"] }
-evidence = "Text för forskningsämnesområde ingår i ämnesindelningen.\ncatalog:variable_text:13237:17167:17532"
 
 [[statement]]
 kind = "set"
@@ -15952,12 +15922,6 @@ evidence = "r350 and r354 explicitly define text names for research-subject grou
 
 [[statement]]
 kind = "set"
-subject = "var:forskamneomrtext"
-fields = { "sets" = ["forskningsamnesindelning"] }
-evidence = "r448 defines the six standardized research-subject areas; r364 records their text representation.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:13280\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:136658\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:13302"
-
-[[statement]]
-kind = "set"
 subject = "var:forskningsamne"
 fields = { "sets" = ["forskningsamnesindelning"] }
 evidence = "r449 explicitly defines the three-level Swedish research-subject classification; omitted code labels do not decide this membership.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:13284\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:13306"
@@ -16990,18 +16954,6 @@ evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt utbild
 
 [[statement]]
 kind = "set"
-subject = "var:anstallningskategori"
-fields = { "label" = "Anställningskategori (kod)" }
-evidence = "#2102 same-label cluster 'Anställningskategori' (4 variables): judged different meaning, high confidence; Code columns (AnstKat, OCCUP_CODE, same code list, consecutive) vs text columns (anstkattext, OCCUP_CAT, consecutive)."
-
-[[statement]]
-kind = "set"
-subject = "var:anstkattext"
-fields = { "label" = "Anställningskategori (text)" }
-evidence = "#2102 same-label cluster 'Anställningskategori' (4 variables): judged different meaning, high confidence; Code columns (AnstKat, OCCUP_CODE, same code list, consecutive) vs text columns (anstkattext, OCCUP_CAT, consecutive)."
-
-[[statement]]
-kind = "set"
 subject = "var:arbetstid-administration"
 fields = { "label" = "Andel av arbetstid som ägnades åt administration vid sidan av egen forskning/undervisning (individandel)" }
 evidence = "#2102 same-label cluster 'Andel av arbetstid som ägnades åt administration vid sidan av egen forskning/undervisning' (3 variables): judged different meaning, medium confidence; Opdefs: F35 is the individual's answer, F35upp the answer multiplied by the uppräkningsfaktor; OBS_VALUE (2023+) has no description."
@@ -17128,50 +17080,8 @@ evidence = "#2102 same-label cluster 'Forskningsämnesområde' (6 variables): ju
 
 [[statement]]
 kind = "set"
-subject = "var:field1-text"
-fields = { "label" = "Forskningsämnesområde (text)" }
-evidence = "#2102 same-label cluster 'Forskningsämnesområde' (6 variables): judged different meaning, medium confidence; Code columns (ForskAmneOmr, FIELD1, FORD1, one code list) vs text columns (ForskamneOmrText, FIELD1_TEXT, FORD1_TEXT); ForskAmneOmr precedes FIELD1/FORD1, which are parallel in the personnel and economy tables."
-
-[[statement]]
-kind = "set"
-subject = "var:field3"
-fields = { "label" = "Forskningsämnesgrupp (kod)" }
-evidence = "#2102 same-label cluster 'Forskningsämnesgrupp' (4 variables): judged different meaning, medium confidence; Code columns (FIELD3 in the personnel table, FORD3 in the economy table, same code list and period) vs their text columns; the parallel-table pairs share a label."
-
-[[statement]]
-kind = "set"
-subject = "var:field3-text"
-fields = { "label" = "Forskningsämnesgrupp (text)" }
-evidence = "#2102 same-label cluster 'Forskningsämnesgrupp' (4 variables): judged different meaning, medium confidence; Code columns (FIELD3 in the personnel table, FORD3 in the economy table, same code list and period) vs their text columns; the parallel-table pairs share a label."
-
-[[statement]]
-kind = "set"
 subject = "var:ford1"
 fields = { "label" = "Forskningsämnesområde (kod)" }
-evidence = "#2102 same-label cluster 'Forskningsämnesområde' (6 variables): judged different meaning, medium confidence; Code columns (ForskAmneOmr, FIELD1, FORD1, one code list) vs text columns (ForskamneOmrText, FIELD1_TEXT, FORD1_TEXT); ForskAmneOmr precedes FIELD1/FORD1, which are parallel in the personnel and economy tables."
-
-[[statement]]
-kind = "set"
-subject = "var:ford1-text"
-fields = { "label" = "Forskningsämnesområde (text)" }
-evidence = "#2102 same-label cluster 'Forskningsämnesområde' (6 variables): judged different meaning, medium confidence; Code columns (ForskAmneOmr, FIELD1, FORD1, one code list) vs text columns (ForskamneOmrText, FIELD1_TEXT, FORD1_TEXT); ForskAmneOmr precedes FIELD1/FORD1, which are parallel in the personnel and economy tables."
-
-[[statement]]
-kind = "set"
-subject = "var:ford3"
-fields = { "label" = "Forskningsämnesgrupp (kod)" }
-evidence = "#2102 same-label cluster 'Forskningsämnesgrupp' (4 variables): judged different meaning, medium confidence; Code columns (FIELD3 in the personnel table, FORD3 in the economy table, same code list and period) vs their text columns; the parallel-table pairs share a label."
-
-[[statement]]
-kind = "set"
-subject = "var:ford3-text"
-fields = { "label" = "Forskningsämnesgrupp (text)" }
-evidence = "#2102 same-label cluster 'Forskningsämnesgrupp' (4 variables): judged different meaning, medium confidence; Code columns (FIELD3 in the personnel table, FORD3 in the economy table, same code list and period) vs their text columns; the parallel-table pairs share a label."
-
-[[statement]]
-kind = "set"
-subject = "var:forskamneomrtext"
-fields = { "label" = "Forskningsämnesområde (text)" }
 evidence = "#2102 same-label cluster 'Forskningsämnesområde' (6 variables): judged different meaning, medium confidence; Code columns (ForskAmneOmr, FIELD1, FORD1, one code list) vs text columns (ForskamneOmrText, FIELD1_TEXT, FORD1_TEXT); ForskAmneOmr precedes FIELD1/FORD1, which are parallel in the personnel and economy tables."
 
 [[statement]]
@@ -17786,3 +17696,75 @@ kind = "set"
 subject = "uoh-personal: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: AnstKat"
+fields = { "variable" = "occup-code" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v29507), never delivered together in one table, so they are one variable renamed between releases: AnstKat 2015-01-01..2015-12-31; anstkat 2017-01-01..2017-12-31; OCCUP_CODE 2019-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: anstkattext"
+fields = { "variable" = "occup-cat" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v29507), never delivered together in one table, so they are one variable renamed between releases: anstkattext 2017-01-01..2017-12-31; OCCUP_CAT 2019-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: ForskamneOmrText"
+fields = { "variable" = "field1-text" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v39021), never delivered together in one table, so they are one variable renamed between releases: ForskamneOmrText 2017-01-01..2017-12-31; FIELD1_TEXT 2021-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "var:field1-text"
+fields = { "label" = "Forskningsämnesområde (text) (UoH personal)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"UoH personal\"."
+
+[[statement]]
+kind = "set"
+subject = "var:field3"
+fields = { "label" = "Forskningsämnesgrupp (kod) (UoH personal)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"UoH personal\"."
+
+[[statement]]
+kind = "set"
+subject = "var:field3-text"
+fields = { "label" = "Forskningsämnesgrupp (text) (UoH personal)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"UoH personal\"."
+
+[[statement]]
+kind = "set"
+subject = "var:ford1-text"
+fields = { "label" = "Forskningsämnesområde (text) (UoH ekonomi)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"UoH ekonomi\"."
+
+[[statement]]
+kind = "set"
+subject = "var:ford3"
+fields = { "label" = "Forskningsämnesgrupp (kod) (UoH ekonomi)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"UoH ekonomi\"."
+
+[[statement]]
+kind = "set"
+subject = "var:ford3-text"
+fields = { "label" = "Forskningsämnesgrupp (text) (UoH ekonomi)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"UoH ekonomi\"."
+
+[[statement]]
+kind = "set"
+subject = "var:storleksklass-antal-anstallda"
+fields = { "label" = "Storleksklass, antal anställda (Privata icke vinstdrivande organisationer (PNP))" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Privata icke vinstdrivande organisationer (PNP)\"."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: OCCUP_CODE"
+fields = { "variable" = "occup-code" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v29507), never delivered together in one table, so they are one variable renamed between releases: AnstKat 2015-01-01..2015-12-31; anstkat 2017-01-01..2017-12-31; OCCUP_CODE 2019-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal: OCCUP_CAT @2019 where key = 'v29507'"
+fields = { "variable" = "occup-cat" }
+evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column OCCUP_CAT of uoh-personal in 2021 under several variables (occup-cat (v29507), tjanstekategori (v3637)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."

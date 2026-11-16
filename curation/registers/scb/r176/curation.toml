@@ -1237,30 +1237,6 @@ evidence = "Uppräkningsfaktor och uppräkningstal är samma begrepp i de separa
 
 [[statement]]
 kind = "set"
-subject = "var:upprf"
-fields = { "sets" = ["upprakningsfaktor"] }
-evidence = "Upprf och upprakningsfaktor beskriver samma faktor i separata perioder.\ncatalog:occurrence:380956\ncatalog:occurrence:381104\ncatalog:variable_text:38325:12784:13149"
-
-[[statement]]
-kind = "set"
-subject = "var:upprf"
-fields = { "tags" = ["methods"] }
-evidence = "Upprf och upprakningsfaktor beskriver samma faktor i separata perioder.\ncatalog:occurrence:380956\ncatalog:occurrence:381104\ncatalog:variable_text:38325:12784:13149"
-
-[[statement]]
-kind = "set"
-subject = "var:upprftot"
-fields = { "sets" = ["upprakningsfaktor"] }
-evidence = "Källan beskriver ett statistiskt uppräkningstal.\ncatalog:variable_text:38326:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:upprftot"
-fields = { "tags" = ["methods"] }
-evidence = "Källan beskriver ett statistiskt uppräkningstal.\ncatalog:variable_text:38326:12053:12418"
-
-[[statement]]
-kind = "set"
 subject = "var:resultatrapport"
 fields = { "sets" = [] }
 evidence = "V1 är en opak källkolumn; ja-nej-värdena avser resultatrapport.\ncatalog:valueset:10571\ncatalog:variable_text:38327:16436:18628"
@@ -1650,3 +1626,21 @@ kind = "set"
 subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: var:person-orgnr"
 fields.row_key = true
 evidence = "Row key: person-orgnr identify a row: rows are product sales of a retail firm, keyed on its organisation number; rows are not unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: upprf where key = 'v466'"
+fields = { "variable" = "upprakningstal-upprakningsfaktor" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v466), never delivered together in one table, so they are one variable renamed between releases: UpprfTot 2003-01-01..2003-12-31; upprf 2005-01-01..2010-12-31; Uppräkningsfaktor 2015-01-01..2020-12-31."
+
+[[statement]]
+kind = "set"
+subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: UpprfTot"
+fields = { "variable" = "upprakningstal-upprakningsfaktor" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v466), never delivered together in one table, so they are one variable renamed between releases: UpprfTot 2003-01-01..2003-12-31; upprf 2005-01-01..2010-12-31; Uppräkningsfaktor 2015-01-01..2020-12-31."
+
+[[statement]]
+kind = "set"
+subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: Uppräkningsfaktor where key = 'v466'"
+fields = { "variable" = "upprakningstal-upprakningsfaktor" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v466), never delivered together in one table, so they are one variable renamed between releases: UpprfTot 2003-01-01..2003-12-31; upprf 2005-01-01..2010-12-31; Uppräkningsfaktor 2015-01-01..2020-12-31."

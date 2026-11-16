@@ -13589,3 +13589,39 @@ kind = "set"
 subject = "individ-2021: var:eget-personnr"
 fields.row_key = true
 evidence = "Row key: eget-personnr identify a row: one row per household member, keyed on the member personnummer; the household id is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12"
+fields = { "label" = "Ålder 31/12 (Hushåll 2021-)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Hushåll 2021-\"."
+
+[[statement]]
+kind = "set"
+subject = "var:alder-31-12-alderslut"
+fields = { "label" = "Ålder 31/12 (Individ 2021-)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Individ 2021-\"."
+
+[[statement]]
+kind = "set"
+subject = "var:bcdz"
+fields = { "label" = "Decilgrupp, disponibel inkomst (Hushåll 2003-2012)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Hushåll 2003-2012\"."
+
+[[statement]]
+kind = "set"
+subject = "var:bdecilz"
+fields = { "label" = "Decilgrupp, disponibel inkomst (Hushåll 1999-2001)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Hushåll 1999-2001\"."
+
+[[statement]]
+kind = "set"
+subject = "var:h-region-indelning-2003"
+fields = { "label" = "H-region (Hushåll 2003-2012)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Hushåll 2003-2012\"."
+
+[[statement]]
+kind = "set"
+subject = "var:hreg"
+fields = { "label" = "H-region (Hushåll 1999-2001)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Hushåll 1999-2001\"."

@@ -1499,12 +1499,6 @@ evidence = "#2102 same-label cluster 'Telefonnummer' (2 variables): judged diffe
 
 [[statement]]
 kind = "set"
-subject = "var:jenamnkoncmod"
-fields = { "label" = "Namn, juridiska enheten (koncernmoder)" }
-evidence = "#2102 same-label cluster 'Namn, juridiska enheten' (4 variables): judged different meaning, medium confidence; Opdefs: JENamn and Namn are the legal unit's name (same variable in the workplace and legal-unit tables), JENamnKoncMod and NamnKoncMod the group parent's legal name (likewise); the two pairs share labels."
-
-[[statement]]
-kind = "set"
 subject = "var:kommun-for-arbetsstalle-haekommun"
 fields = { "label" = "Kommun för arbetsställe (huvudarbetsställe)" }
 evidence = "#2102 same-label cluster 'Kommun för arbetsställe' (2 variables): judged different meaning, high confidence; Opdef: HAEKommun applies to the main workplace; Kommun is the workplace's own (arbetsstalleenheter)."
@@ -1514,12 +1508,6 @@ kind = "set"
 subject = "var:lan-for-arbetsstallet-haelan"
 fields = { "label" = "Län för arbetsstället (huvudarbetsställe)" }
 evidence = "#2102 same-label cluster 'Län för arbetsstället' (2 variables): judged different meaning, high confidence; Opdef: HAELan applies to the main workplace; Lan is the workplace's own (arbetsstalleenheter)."
-
-[[statement]]
-kind = "set"
-subject = "var:namnkoncmod"
-fields = { "label" = "Namn, juridiska enheten (koncernmoder)" }
-evidence = "#2102 same-label cluster 'Namn, juridiska enheten' (4 variables): judged different meaning, medium confidence; Opdefs: JENamn and Namn are the legal unit's name (same variable in the workplace and legal-unit tables), JENamnKoncMod and NamnKoncMod the group parent's legal name (likewise); the two pairs share labels."
 
 [[statement]]
 kind = "set"
@@ -1714,3 +1702,27 @@ kind = "set"
 subject = "juridiska-enheter: var:person-orgnr"
 fields.row_key = true
 evidence = "Row key: person-orgnr identify a row: legal unit table keys on its own org number; group parent and main workplace ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:jenamnkoncmod"
+fields = { "label" = "Namn, juridiska enheten (koncernmoder) (Arbetsställeenheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Arbetsställeenheter\"."
+
+[[statement]]
+kind = "set"
+subject = "var:namn-juridiska-enheten"
+fields = { "label" = "Namn, juridiska enheten (Arbetsställeenheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Arbetsställeenheter\"."
+
+[[statement]]
+kind = "set"
+subject = "var:namn-juridiska-enheten-2"
+fields = { "label" = "Namn, juridiska enheten (Juridiska enheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Juridiska enheter\"."
+
+[[statement]]
+kind = "set"
+subject = "var:namnkoncmod"
+fields = { "label" = "Namn, juridiska enheten (koncernmoder) (Juridiska enheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Juridiska enheter\"."

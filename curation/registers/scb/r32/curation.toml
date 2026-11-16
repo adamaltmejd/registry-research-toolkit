@@ -6398,3 +6398,9 @@ kind = "set"
 subject = "vy-fob: AntUtRikFodHh"
 fields = { "variable" = "utrikes-fodda" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v42199), never delivered together in one table, so they are one variable renamed between releases: AntUtRikFodHh 1985-01-01..1990-12-31; AntUtrFodHh 1990-01-01..1990-12-31."
+
+[[statement]]
+kind = "set"
+subject = "vy-fob: LopNrLgh_1990"
+fields = { "variable" = "lagenhetslopnummer-lopnrlgh-1990" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v41499), never delivered together in one table, so they are one variable renamed between releases: LopNrLgh_1960 1960-01-01..1960-12-31; LopNrLgh_1965 1965-01-01..1965-12-31; LopNrLgh_1970 1970-01-01..1970-12-31; LopNrLgh_1975 1975-01-01..1975-12-31; LopNrLgh_1980 1980-01-01..1980-12-31; LopNrLgh_1985 1985-01-01..1985-12-31; LopNrLgh_1990 1990-01-01..1990-12-31."

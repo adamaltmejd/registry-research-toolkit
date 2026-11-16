@@ -907,18 +907,6 @@ evidence = "Ri är en ogenomskinlig källförkortning för riksdagsval.\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:lan"
-fields = { "sets" = ["lanstillhorighet"] }
-evidence = "Variabeln anger länstillhörighet.\ncatalog:variable_text:2870:16071:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:lan"
-fields = { "tags" = ["geography"] }
-evidence = "Variabeln anger länstillhörighet.\ncatalog:variable_text:2870:16071:16436"
-
-[[statement]]
-kind = "set"
 subject = "var:lan11"
 fields = { "sets" = ["lanstillhorighet"] }
 evidence = "Variabeln anger länstillhörighet vid omvalet.\ncatalog:variable_text:2871:14975:15340"
@@ -1699,18 +1687,6 @@ evidence = "Variabeln anger valdistrikt.\ncatalog:variable_text:2941:18993:19358
 
 [[statement]]
 kind = "set"
-subject = "var:valdistrikt-kod-ordinarie-val-2010"
-fields = { "sets" = ["valdistrikt"] }
-evidence = "Sifferändelsen 2 kommer inte från källkolumnen.\ncatalog:variable_text:2942:16071:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:valdistrikt-kod-ordinarie-val-2010"
-fields = { "tags" = ["democracy", "geography"] }
-evidence = "Sifferändelsen 2 kommer inte från källkolumnen.\ncatalog:variable_text:2942:16071:16436"
-
-[[statement]]
-kind = "set"
 subject = "var:valdistrikt11"
 fields = { "sets" = ["valdistrikt"] }
 evidence = "Variabeln anger valdistrikt vid omval.\ncatalog:variable_text:2943:14975:15340"
@@ -2055,12 +2031,6 @@ evidence = "#2102 same-label cluster 'Kalibrerad vikt för svarande i AKU vid la
 
 [[statement]]
 kind = "set"
-subject = "var:lan"
-fields = { "label" = "Län (ordinarie val)" }
-evidence = "#2102 same-label cluster 'Län' (3 variables): judged different meaning, high confidence; Opdefs: ordinary election 2010 versus the 2011 re-elections; ll (2018-2023) continues the ordinary-election column."
-
-[[statement]]
-kind = "set"
 subject = "var:lan11"
 fields = { "label" = "Län (omvalen 2011)" }
 evidence = "#2102 same-label cluster 'Län' (3 variables): judged different meaning, high confidence; Opdefs: ordinary election 2010 versus the 2011 re-elections; ll (2018-2023) continues the ordinary-election column."
@@ -2188,12 +2158,6 @@ evidence = "#2102 same-label cluster 'Utländsk/svensk bakgrund' (2 variables): 
 [[statement]]
 kind = "set"
 subject = "var:valdistrikt"
-fields = { "label" = "Valdistrikt (kod, ordinarie val)" }
-evidence = "#2102 same-label cluster 'Valdistrikt' (4 variables): judged different meaning, high confidence; Opdefs: district code for the ordinary election (llkkdddd continues it), code for the 2011 re-elections, and a name column."
-
-[[statement]]
-kind = "set"
-subject = "var:valdistrikt-kod-ordinarie-val-2010"
 fields = { "label" = "Valdistrikt (kod, ordinarie val)" }
 evidence = "#2102 same-label cluster 'Valdistrikt' (4 variables): judged different meaning, high confidence; Opdefs: district code for the ordinary election (llkkdddd continues it), code for the 2011 re-elections, and a name column."
 
@@ -2336,3 +2300,21 @@ kind = "set"
 subject = "valdeltagande: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: one row per person in the turnout sample; the uenr sample numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "valdeltagande: lan"
+fields = { "variable" = "ll" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v49), never delivered together in one table, so they are one variable renamed between releases: lan 1991-01-01..2014-12-31; ll 2018-01-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "valdeltagande: valdistrikt"
+fields = { "variable" = "valdistrikt" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v69), never delivered together in one table, so they are one variable renamed between releases: valdistrikt 1998-01-01..2014-12-31; llkkdddd 2018-01-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "valdeltagande: ll"
+fields = { "variable" = "ll" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v49), never delivered together in one table, so they are one variable renamed between releases: lan 1991-01-01..2014-12-31; ll 2018-01-01..2022-12-31."

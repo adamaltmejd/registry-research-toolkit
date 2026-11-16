@@ -794,18 +794,6 @@ evidence = "#2102 same-label cluster 'Produktionsområde' (3 variables): judged 
 
 [[statement]]
 kind = "set"
-subject = "var:produktionsomrade-8-2007-2013"
-fields = { "label" = "Produktionsområde (8 områden)" }
-evidence = "#2102 same-label cluster 'Produktionsområde' (3 variables): judged different meaning, high confidence; PO and po8 are the same 8-area division (identical opdef); po18 is the 18-area division."
-
-[[statement]]
-kind = "set"
-subject = "var:produktionsomrade-8-fran-2016"
-fields = { "label" = "Produktionsområde (8 områden)" }
-evidence = "#2102 same-label cluster 'Produktionsområde' (3 variables): judged different meaning, high confidence; PO and po8 are the same 8-area division (identical opdef); po18 is the 18-area division."
-
-[[statement]]
-kind = "set"
 subject = "var:status"
 fields = { "label" = "Blankettens statuskod (Status)" }
 evidence = "#2102 same-label cluster 'Blankettens statuskod (svar, ej svar etc)' (3 variables): judged different meaning, medium confidence; Status has no text; Resultatkod is a two-digit code incl. collection mode; Bortfall (Ej utsänd/svar/bortfall) shows whether the object responded."
@@ -865,3 +853,14 @@ subject = "godselmedelsanvandning-2016: var:foretagsidentitet"
 fields.row_key = true
 evidence = "Row key: foretagsidentitet identifies a row, the holding, as in the 2008-2013 table; the farmer's orgnr (a personnr for sole traders) and addid are attributes (maintainer ruling 2026-11-14; ambiguous-table review)."
 
+[[statement]]
+kind = "set"
+subject = "var:produktionsomrade-8-2007-2013"
+fields = { "label" = "Produktionsområde (8 områden) (Gödselmedelsanvändning i jordbruket 2007-2013)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Gödselmedelsanvändning i jordbruket 2007-2013\"."
+
+[[statement]]
+kind = "set"
+subject = "var:produktionsomrade-8-fran-2016"
+fields = { "label" = "Produktionsområde (8 områden) (Gödselmedelsanvändning i jordbruket fr o m 2016)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Gödselmedelsanvändning i jordbruket fr o m 2016\"."
