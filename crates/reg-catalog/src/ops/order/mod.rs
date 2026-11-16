@@ -1091,7 +1091,7 @@ fn check_source(
         server, conn, index, source, &serving, &named,
     )?);
     let (row_keys, mut keyed) =
-        rows::row_keys(server, keys, space, index, source, &serving, &named)?;
+        rows::row_keys(server, keys, conn, space, index, source, &serving, &named)?;
     rows::unbound(&mut keyed, &checked.findings);
     keyed.sort_by_key(Issue::key);
     checked.findings.extend(keyed);

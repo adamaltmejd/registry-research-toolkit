@@ -4,6 +4,7 @@
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
+use reg_core::days;
 use reg_core::issue::Period;
 use reg_core::manifest::{self, Manifest, Storage, StorageFamily};
 use reg_core::project::{Binding, ColumnType, ExtractFormat, ManualBinding, ProjectData, Source};
@@ -978,13 +979,28 @@ impl Context<'_> {
                         .any(|&(start, end)| s_start < end && start < s_end)
                 })
         };
-        // A release's column reads its own segments and the releaseless ones, never
-        // another release's on the days they share.
+        // The order's rule (crates/DESIGN.md, "Concurrent releases"): a release's column
+        // reads its own segments, never another release's, and a releaseless segment only
+        // on the column's days no release segment it reads covers (on an unshared day, any
+        // release's), so a shadowed releaseless form adds no type or codes.
+        let reads = |s: &Segment| {
+            s.table == r.table
+                && r.release
+                    .is_none_or(|own| s.release.as_deref().is_none_or(|x| x == own))
+        };
+        let keyed = days::merge(
+            overlapping()
+                .filter(|s| s.release.is_some() && reads(s))
+                .map(|s| s.period.days(open))
+                .collect(),
+        );
+        let wanted = days::merge(periods.clone());
         let in_table = || {
             overlapping().filter(|s| {
-                s.table == r.table
-                    && r.release
-                        .is_none_or(|own| s.release.as_deref().is_none_or(|x| x == own))
+                reads(s)
+                    && (s.release.is_some()
+                        || !days::minus(&days::overlap(&[s.period.days(open)], &wanted), &keyed)
+                            .is_empty())
             })
         };
         let mut found: Vec<&Segment> = match r.placement {

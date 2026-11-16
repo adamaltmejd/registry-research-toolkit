@@ -211,11 +211,14 @@ fn merge_key_segments(out: Vec<KeySegment>) -> Vec<KeySegment> {
 /// and the releaseless ones; a day none of them is named for blocks the source and has
 /// none. Row keys join the order unbound, so their window findings are made here,
 /// located at the source: an ambiguous row-key segment inside the served days is an
-/// `ambiguous_window`, a preliminary one a `preliminary_data` warning.
-#[allow(clippy::too_many_lines)]
+/// `ambiguous_window`, a preliminary one a `preliminary_data` warning. Key columns read
+/// `conn`, the base connection; shared days read `origin`, the serving table's own, as
+/// entries do: a table only the holdings database defines has a held id.
+#[allow(clippy::too_many_lines, clippy::too_many_arguments)]
 pub(super) fn row_keys(
     server: &Server,
     conn: &Connection,
+    origin: &Connection,
     space: Option<&str>,
     index: usize,
     source: &CatalogSource,
@@ -226,7 +229,7 @@ pub(super) fn row_keys(
     let mut findings = Vec::new();
     for s in serving {
         let rows = key_segments(server, conn, space, s)?;
-        let shared = super::releases::shared(conn, s, named)?;
+        let shared = super::releases::shared(origin, s, named)?;
         let shared_days: Vec<(i64, i64)> =
             super::days(&shared.iter().map(|x| x.days.clone()).collect::<Vec<_>>());
         // Day-number pieces `[start, end)` of each column on the served days, by release.
