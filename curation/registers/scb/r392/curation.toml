@@ -1309,14 +1309,14 @@ caveat = "SCB's Registerinformation export documents the individual AGI data for
 
 [[statement]]
 kind = "assert"
-subject = "individuppgifter-agi: ERSATTNINGS_BELOPP @2021..2023 where key = 'v6111'"
+subject = "individuppgifter-agi-sociala-ersattningar: ERSATTNINGS_BELOPP @2021..2023 where key = 'v6111'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Utbetalt ersättningsbelopp", "definition" = "Utbetald ersättning enligt social kontrolluppgift.", "type" = "integer", "sensitive" = true, "identifier" = false } }
 evidence = "private:ev-3903"
 caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly social-benefit files for 2021-2023. SCB delivers this column, in 2019-2020 as in 2021-2023, as four positions of one row per person and month (ERSATTNINGS_BELOPP1 to ERSATTNINGS_BELOPP4); stewards map them as position slots of this variable. Label, definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "assert"
-subject = "individuppgifter-agi: ERSATTNINGS_KOD @2021..2023 where key = 'v6112'"
+subject = "individuppgifter-agi-sociala-ersattningar: ERSATTNINGS_KOD @2021..2023 where key = 'v6112'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Ersättningskod", "definition" = "Kod på sociala kontrolluppgiften som anger vilken typ av ersättning som avses.", "type" = "integer", "sensitive" = true, "identifier" = false } }
 evidence = "private:ev-3904"
 caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly social-benefit files for 2021-2023. SCB delivers this column, in 2019-2020 as in 2021-2023, as four positions of one row per person and month (ERSATTNINGS_KOD1 to ERSATTNINGS_KOD4); stewards map them as position slots of this variable. Label, definition and type follow the export's 2020 edition."
@@ -1377,7 +1377,7 @@ evidence = "SCB's Registerinformation export codes FORMAN_SOM_PENSION_EJ_ULAG_SA
 
 [[statement]]
 kind = "set"
-subject = "individuppgifter-agi: ERSATTNINGS_KOD @2021..2023 where key = 'v6112'"
+subject = "individuppgifter-agi-sociala-ersattningar: ERSATTNINGS_KOD @2021..2023 where key = 'v6112'"
 fields = { "value_set" = "a82b212087e4acdd4408f7dfdb391b38ba0af7222241226c34afc28abb2f335f" }
 evidence = "SCB's Registerinformation export codes ERSATTNINGS_KOD (key v6112) with this value set in its 2019 and 2020 editions. The 2021-2023 occurrence follows the export's 2020 edition, as its assert states, so it carries the same code list."
 
@@ -1397,6 +1397,18 @@ evidence = "Row key: person-samordnings-orgnr identify a row: one row per paymen
 
 [[statement]]
 kind = "set"
+subject = "individuppgifter-agi-sociala-ersattningar: var:person-samordnings-orgnr"
+fields.row_key = true
+evidence = "Row key: person-samordnings-orgnr and referensperiod identify a row: one row per recipient and month, with the benefit code and amount in four positions on that row (the ERSATTNINGS_* assertions' caveats); the payer person-orgnr is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi-sociala-ersattningar: var:referensperiod"
+fields.row_key = true
+evidence = "Row key: referensperiod (Perioden) is the month of a row; the file holds one row per recipient and month, so the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
 subject = "individuppgifter-agi: var:redovisningsperiod"
 fields.row_key = true
 evidence = "Row key: redovisningsperiod (period) is the period of a row; one delivered file holds several periods, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
@@ -1405,80 +1417,80 @@ evidence = "Row key: redovisningsperiod (period) is the period of a row; one del
 
 [[statement]]
 kind = "assert"
-subject = "individuppgifter-agi: ERSATTNINGS_KOD1 @2019..2023"
+subject = "individuppgifter-agi-sociala-ersattningar: ERSATTNINGS_KOD1 @2019..2023"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Ersättningskod, position 1", "definition" = "Kod på sociala kontrolluppgiften som anger vilken typ av ersättning som avses, i position 1 av fyra på raden.", "type" = "integer", "sensitive" = true, "identifier" = false } }
 evidence = "private:ev-3904"
 caveat = "SCB delivers the social-benefit code as four positions per person and month (ERSATTNINGS_KOD1 to ERSATTNINGS_KOD4). SCB's Registerinformation export documents the column once, as ERSATTNINGS_KOD for 2019-2020; label, definition and type follow that export's 2020 edition."
 
 [[statement]]
 kind = "set"
-subject = "individuppgifter-agi: ERSATTNINGS_KOD1 @2019..2023"
+subject = "individuppgifter-agi-sociala-ersattningar: ERSATTNINGS_KOD1 @2019..2023"
 fields = { "value_set" = "a82b212087e4acdd4408f7dfdb391b38ba0af7222241226c34afc28abb2f335f" }
 evidence = "SCB's Registerinformation export codes ERSATTNINGS_KOD (key v6112) with this value set in its 2019 and 2020 editions; each delivered position carries the same code."
 
 [[statement]]
 kind = "assert"
-subject = "individuppgifter-agi: ERSATTNINGS_BELOPP1 @2019..2023"
+subject = "individuppgifter-agi-sociala-ersattningar: ERSATTNINGS_BELOPP1 @2019..2023"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Utbetalt ersättningsbelopp, position 1", "definition" = "Utbetald ersättning enligt social kontrolluppgift, för ersättningskoden i position 1 av fyra på raden.", "type" = "integer", "sensitive" = true, "identifier" = false } }
 evidence = "private:ev-3903"
 caveat = "SCB delivers the social-benefit amount as four positions per person and month (ERSATTNINGS_BELOPP1 to ERSATTNINGS_BELOPP4), each paired with the code in the same position. SCB's Registerinformation export documents the column once, as ERSATTNINGS_BELOPP for 2019-2020; label, definition and type follow that export's 2020 edition."
 
 [[statement]]
 kind = "assert"
-subject = "individuppgifter-agi: ERSATTNINGS_KOD2 @2019..2023"
+subject = "individuppgifter-agi-sociala-ersattningar: ERSATTNINGS_KOD2 @2019..2023"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Ersättningskod, position 2", "definition" = "Kod på sociala kontrolluppgiften som anger vilken typ av ersättning som avses, i position 2 av fyra på raden.", "type" = "integer", "sensitive" = true, "identifier" = false } }
 evidence = "private:ev-3904"
 caveat = "SCB delivers the social-benefit code as four positions per person and month (ERSATTNINGS_KOD1 to ERSATTNINGS_KOD4). SCB's Registerinformation export documents the column once, as ERSATTNINGS_KOD for 2019-2020; label, definition and type follow that export's 2020 edition."
 
 [[statement]]
 kind = "set"
-subject = "individuppgifter-agi: ERSATTNINGS_KOD2 @2019..2023"
+subject = "individuppgifter-agi-sociala-ersattningar: ERSATTNINGS_KOD2 @2019..2023"
 fields = { "value_set" = "a82b212087e4acdd4408f7dfdb391b38ba0af7222241226c34afc28abb2f335f" }
 evidence = "SCB's Registerinformation export codes ERSATTNINGS_KOD (key v6112) with this value set in its 2019 and 2020 editions; each delivered position carries the same code."
 
 [[statement]]
 kind = "assert"
-subject = "individuppgifter-agi: ERSATTNINGS_BELOPP2 @2019..2023"
+subject = "individuppgifter-agi-sociala-ersattningar: ERSATTNINGS_BELOPP2 @2019..2023"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Utbetalt ersättningsbelopp, position 2", "definition" = "Utbetald ersättning enligt social kontrolluppgift, för ersättningskoden i position 2 av fyra på raden.", "type" = "integer", "sensitive" = true, "identifier" = false } }
 evidence = "private:ev-3903"
 caveat = "SCB delivers the social-benefit amount as four positions per person and month (ERSATTNINGS_BELOPP1 to ERSATTNINGS_BELOPP4), each paired with the code in the same position. SCB's Registerinformation export documents the column once, as ERSATTNINGS_BELOPP for 2019-2020; label, definition and type follow that export's 2020 edition."
 
 [[statement]]
 kind = "assert"
-subject = "individuppgifter-agi: ERSATTNINGS_KOD3 @2019..2023"
+subject = "individuppgifter-agi-sociala-ersattningar: ERSATTNINGS_KOD3 @2019..2023"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Ersättningskod, position 3", "definition" = "Kod på sociala kontrolluppgiften som anger vilken typ av ersättning som avses, i position 3 av fyra på raden.", "type" = "integer", "sensitive" = true, "identifier" = false } }
 evidence = "private:ev-3904"
 caveat = "SCB delivers the social-benefit code as four positions per person and month (ERSATTNINGS_KOD1 to ERSATTNINGS_KOD4). SCB's Registerinformation export documents the column once, as ERSATTNINGS_KOD for 2019-2020; label, definition and type follow that export's 2020 edition."
 
 [[statement]]
 kind = "set"
-subject = "individuppgifter-agi: ERSATTNINGS_KOD3 @2019..2023"
+subject = "individuppgifter-agi-sociala-ersattningar: ERSATTNINGS_KOD3 @2019..2023"
 fields = { "value_set" = "a82b212087e4acdd4408f7dfdb391b38ba0af7222241226c34afc28abb2f335f" }
 evidence = "SCB's Registerinformation export codes ERSATTNINGS_KOD (key v6112) with this value set in its 2019 and 2020 editions; each delivered position carries the same code."
 
 [[statement]]
 kind = "assert"
-subject = "individuppgifter-agi: ERSATTNINGS_BELOPP3 @2019..2023"
+subject = "individuppgifter-agi-sociala-ersattningar: ERSATTNINGS_BELOPP3 @2019..2023"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Utbetalt ersättningsbelopp, position 3", "definition" = "Utbetald ersättning enligt social kontrolluppgift, för ersättningskoden i position 3 av fyra på raden.", "type" = "integer", "sensitive" = true, "identifier" = false } }
 evidence = "private:ev-3903"
 caveat = "SCB delivers the social-benefit amount as four positions per person and month (ERSATTNINGS_BELOPP1 to ERSATTNINGS_BELOPP4), each paired with the code in the same position. SCB's Registerinformation export documents the column once, as ERSATTNINGS_BELOPP for 2019-2020; label, definition and type follow that export's 2020 edition."
 
 [[statement]]
 kind = "assert"
-subject = "individuppgifter-agi: ERSATTNINGS_KOD4 @2019..2023"
+subject = "individuppgifter-agi-sociala-ersattningar: ERSATTNINGS_KOD4 @2019..2023"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Ersättningskod, position 4", "definition" = "Kod på sociala kontrolluppgiften som anger vilken typ av ersättning som avses, i position 4 av fyra på raden.", "type" = "integer", "sensitive" = true, "identifier" = false } }
 evidence = "private:ev-3904"
 caveat = "SCB delivers the social-benefit code as four positions per person and month (ERSATTNINGS_KOD1 to ERSATTNINGS_KOD4). SCB's Registerinformation export documents the column once, as ERSATTNINGS_KOD for 2019-2020; label, definition and type follow that export's 2020 edition."
 
 [[statement]]
 kind = "set"
-subject = "individuppgifter-agi: ERSATTNINGS_KOD4 @2019..2023"
+subject = "individuppgifter-agi-sociala-ersattningar: ERSATTNINGS_KOD4 @2019..2023"
 fields = { "value_set" = "a82b212087e4acdd4408f7dfdb391b38ba0af7222241226c34afc28abb2f335f" }
 evidence = "SCB's Registerinformation export codes ERSATTNINGS_KOD (key v6112) with this value set in its 2019 and 2020 editions; each delivered position carries the same code."
 
 [[statement]]
 kind = "assert"
-subject = "individuppgifter-agi: ERSATTNINGS_BELOPP4 @2019..2023"
+subject = "individuppgifter-agi-sociala-ersattningar: ERSATTNINGS_BELOPP4 @2019..2023"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Utbetalt ersättningsbelopp, position 4", "definition" = "Utbetald ersättning enligt social kontrolluppgift, för ersättningskoden i position 4 av fyra på raden.", "type" = "integer", "sensitive" = true, "identifier" = false } }
 evidence = "private:ev-3903"
 caveat = "SCB delivers the social-benefit amount as four positions per person and month (ERSATTNINGS_BELOPP1 to ERSATTNINGS_BELOPP4), each paired with the code in the same position. SCB's Registerinformation export documents the column once, as ERSATTNINGS_BELOPP for 2019-2020; label, definition and type follow that export's 2020 edition."
@@ -1632,3 +1644,35 @@ kind = "set"
 subject = "set:utbetald-ersattning"
 fields = { "axes" = [{ "id" = "position", "label" = "Position" }] }
 evidence = "Maintainer rulings 2026-11-10 and 2026-11-16: SCB delivers the social-benefit code and amount as four positions per row; global documents each position column as its own variable with a position label, in one set with a position axis. Each position value is shared by a code and an amount member."
+
+[[statement]]
+kind = "assert"
+subject = "table:individuppgifter-agi-sociala-ersattningar"
+fact = { "entity" = "table", "fields" = { "name" = "Individuppgifter (AGI), sociala ersättningar", "description" = "Utbetalningar av skattepliktiga sociala ersättningar från statliga eller privata aktörer: ersättningskod och utbetalt belopp. Löne- och förmånsutbetalningar från arbetsgivare finns i tabellen Individuppgifter (AGI)." } }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, class C): parallel files with different content in one table move to a table of their own. SCB Registerinformation documents Individuppgifter (AGI) as two files per year: \"2019, löne- och förmånsutbetalningar\" (RegVerID 14575) and \"2020, löne- och förmånsutb\" (17967): \"Versionen innehåller uppgifter om löne- och förmånsutbetalningar från arbetsgivare\"; and \"2019, sociala ersättningar\" (15110) and \"2020, sociala ersättningar\" (17968): \"Versionen innehåller uppgifter om utbetalningar av skattepliktiga sociala ersättningar från statliga eller privata aktörer\". The social-benefit file has 5 columns, 3 of them shared with the 43 of the wage file. The social-benefit file is this table."
+
+[[statement]]
+kind = "set"
+subject = "release:individuppgifter-agi/r15110"
+fields = { "table" = "individuppgifter-agi-sociala-ersattningar" }
+evidence = "SCB documents the social-benefit file (sociala ersättningar) beside the wage and benefit file for the same year, with other content. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:individuppgifter-agi/r17968"
+fields = { "table" = "individuppgifter-agi-sociala-ersattningar" }
+evidence = "SCB documents the social-benefit file (sociala ersättningar) beside the wage and benefit file for the same year, with other content. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi-sociala-ersattningar: PersonNr @2021..2023 where key = 'v22865'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Person-/samordnings-/organisationsnummer", "definition" = "Identitetsbegrepp för en aktör.", "type" = "text", "length" = 12, "sensitive" = true, "identifier" = true } }
+evidence = "private:ev-3903"
+caveat = "SCB's Registerinformation export documents the social-benefit file for 2019-2020 only, with PersonNr as the recipient id. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly social-benefit files for 2021-2023, which carry the recipient id beside the benefit code and amount. The delivery carries it pseudonymised as a serial number. Label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi-sociala-ersattningar: Perioden @2021..2023 where key = 'v28808'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Referensperiod", "definition" = "Den period uppgifterna avser.", "type" = "text", "sensitive" = true, "identifier" = false } }
+evidence = "private:ev-3903"
+caveat = "SCB's Registerinformation export documents the social-benefit file for 2019-2020 only, with Perioden as the month a row refers to. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly social-benefit files for 2021-2023, one row per recipient and month, which carry the period column. Label, definition and type follow the export's 2020 edition."

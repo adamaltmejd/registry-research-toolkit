@@ -8,7 +8,7 @@ caveat = "Exact source limitations for this native family; applies only to annot
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal: hskodklartext"
+subject = "uoh-personal-mobilitet: hskodklartext"
 fields = { "variable" = "larosate" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/fou.toml:16573\n\nComplete accepted native family, all own original fields/parent/edition/coding references and actual support/primary witnesses. Keep stable source-native quantity across disjoint physical representations; simultaneous fields remain separate unless source explicitly establishes the same measurement context. No inferred quarter/month, encoding, expansion, formula or statistical equivalence. Batch51-Investment-FoU48-complete-role-review.json; exact full-register physical-coordinate collision census Batch51-Investment-FoU-physical-coordinate-collision-census.json."
 caveat = "Exact source limitations for this native family; applies only to annotated physical owners. Detailed operation/context remains unavailable where absent; simultaneously delivered literal fields remain distinct, without inferred suffix semantics."
@@ -22,14 +22,14 @@ caveat = "Exact source limitations for this native family; applies only to annot
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal: name_inst @2021"
+subject = "uoh-personal-mobilitet: name_inst @2021"
 fields = { "variable" = "larosate" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/fou.toml:16524\n\nComplete accepted native family, all own original fields/parent/edition/coding references and actual support/primary witnesses. Keep stable source-native quantity across disjoint physical representations; simultaneous fields remain separate unless source explicitly establishes the same measurement context. No inferred quarter/month, encoding, expansion, formula or statistical equivalence. Batch51-Investment-FoU48-complete-role-review.json; exact full-register physical-coordinate collision census Batch51-Investment-FoU-physical-coordinate-collision-census.json."
 caveat = "Exact source limitations for this native family; applies only to annotated physical owners. Detailed operation/context remains unavailable where absent; simultaneously delivered literal fields remain distinct, without inferred suffix semantics."
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal: name_inst @2023"
+subject = "uoh-personal-mobilitet: name_inst @2023"
 fields = { "variable" = "larosate" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/fou.toml:16545\n\nComplete accepted native family, all own original fields/parent/edition/coding references and actual support/primary witnesses. Keep stable source-native quantity across disjoint physical representations; simultaneous fields remain separate unless source explicitly establishes the same measurement context. No inferred quarter/month, encoding, expansion, formula or statistical equivalence. Batch51-Investment-FoU48-complete-role-review.json; exact full-register physical-coordinate collision census Batch51-Investment-FoU-physical-coordinate-collision-census.json."
 caveat = "Exact source limitations for this native family; applies only to annotated physical owners. Detailed operation/context remains unavailable where absent; simultaneously delivered literal fields remain distinct, without inferred suffix semantics."
@@ -8860,7 +8860,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2019.toml:25\
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal: mun_code @2021 where key = 'v36'"
+subject = "uoh-personal-mobilitet: mun_code @2021 where key = 'v36'"
 fields = { "classification" = "class/lkf/lkf2021" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
 
@@ -8872,7 +8872,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2022.toml:28\
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal: mun_code @2023"
+subject = "uoh-personal-mobilitet: mun_code @2023"
 fields = { "classification" = "class/lkf/lkf2023" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
 
@@ -10390,7 +10390,19 @@ evidence = "STRAT and Stratum share their source key, label, definition and oper
 
 [[statement]]
 kind = "set"
+subject = "uoh-personal-mobilitet: strat"
+fields = { "variable" = "stratum" }
+evidence = "STRAT and Stratum share their source key, label, definition and operational texts across disjoint periods and must merge into one fresh family."
+
+[[statement]]
+kind = "set"
 subject = "uoh-personal: stratum"
+fields = { "variable" = "stratum" }
+evidence = "STRAT and Stratum share their source key, label, definition and operational texts across disjoint periods and must merge into one fresh family."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal-mobilitet: stratum"
 fields = { "variable" = "stratum" }
 evidence = "STRAT and Stratum share their source key, label, definition and operational texts across disjoint periods and must merge into one fresh family."
 
@@ -17494,7 +17506,7 @@ evidence = "Held with the register until the catalog models its dimension values
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal: COUNTRY @2023 where key = 'v6290'"
+subject = "uoh-personal-mobilitet: COUNTRY @2023 where key = 'v6290'"
 fields = { "variable" = "nuts" }
 evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column COUNTRY of uoh-personal in 2023 under several variables (lan-country (v49), nuts (v6290)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
 
@@ -17506,13 +17518,13 @@ evidence = "Held with the register until the catalog models its dimension values
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal: ForskAmneOmr @2017 where key = 'v39021'"
+subject = "uoh-personal-mobilitet: ForskAmneOmr @2017 where key = 'v39021'"
 fields = { "variable" = "forskningsamnesomrade" }
 evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column ForskAmneOmr of uoh-personal in 2017 under several variables (forskningsamne-forskamneomr (v17260), forskningsamnesomrade (v39021)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal: MUN_CODE @2021 where key = 'v36'"
+subject = "uoh-personal-mobilitet: MUN_CODE @2021 where key = 'v36'"
 fields = { "variable" = "kommun" }
 evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column MUN_CODE of uoh-personal in 2021 under several variables (kommun (v36), lan-mun-code (v49)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
 
@@ -17524,7 +17536,7 @@ evidence = "Held with the register until the catalog models its dimension values
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal: OCCUP_CAT @2021 where key = 'v29507'"
+subject = "uoh-personal-mobilitet: OCCUP_CAT @2021 where key = 'v29507'"
 fields = { "variable" = "occup-cat" }
 evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column OCCUP_CAT of uoh-personal in 2021 under several variables (occup-cat (v29507), tjanstekategori (v3637)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
 
@@ -17536,7 +17548,7 @@ evidence = "Held with the register until the catalog models its dimension values
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal: OCCUP_CAT @2023 where key = 'v29507'"
+subject = "uoh-personal-mobilitet: OCCUP_CAT @2023 where key = 'v29507'"
 fields = { "variable" = "occup-cat" }
 evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column OCCUP_CAT of uoh-personal in 2023 under several variables (occup-cat (v29507), tjanstekategori (v3637)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
 
@@ -17554,7 +17566,7 @@ evidence = "Held with the register until the catalog models its dimension values
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal: QUALIFICATION @2021 where key = 'v30435'"
+subject = "uoh-personal-mobilitet: QUALIFICATION @2021 where key = 'v30435'"
 fields = { "variable" = "utbildningsniva-isced2011" }
 evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column QUALIFICATION of uoh-personal in 2021 under several variables (utbildningsniva (v66), utbildningsniva-isced2011 (v30435)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
 
@@ -17566,7 +17578,7 @@ evidence = "Held with the register until the catalog models its dimension values
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal: QUALIFICATION @2023 where key = 'v30435'"
+subject = "uoh-personal-mobilitet: QUALIFICATION @2023 where key = 'v30435'"
 fields = { "variable" = "utbildningsniva-isced2011" }
 evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column QUALIFICATION of uoh-personal in 2023 under several variables (utbildningsniva (v66), utbildningsniva-isced2011 (v30435)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
 
@@ -17578,7 +17590,7 @@ evidence = "Held with the register until the catalog models its dimension values
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal: TIME_PERIOD @2021 where key = 'v28808'"
+subject = "uoh-personal-mobilitet: TIME_PERIOD @2021 where key = 'v28808'"
 fields = { "variable" = "referensperiod" }
 evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column TIME_PERIOD of uoh-personal in 2021 under several variables (ar (v73), referensperiod (v28808)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
 
@@ -17590,13 +17602,13 @@ evidence = "Held with the register until the catalog models its dimension values
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal: TIME_PERIOD @2023 where key = 'v28808'"
+subject = "uoh-personal-mobilitet: TIME_PERIOD @2023 where key = 'v28808'"
 fields = { "variable" = "referensperiod" }
 evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column TIME_PERIOD of uoh-personal in 2023 under several variables (ar (v73), referensperiod (v28808)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal: U_SCBID @2021 where key = 'v2519'"
+subject = "uoh-personal-mobilitet: U_SCBID @2021 where key = 'v2519'"
 fields = { "variable" = "lopnummer-anstallningar" }
 evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column U_SCBID of uoh-personal in 2021 under several variables (lopnummer-anstallningar (v2519), lopnummer-for-individ (v6172)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
 
@@ -17608,7 +17620,7 @@ evidence = "Held with the register until the catalog models its dimension values
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal: U_SCBID @2023 where key = 'v2519'"
+subject = "uoh-personal-mobilitet: U_SCBID @2023 where key = 'v2519'"
 fields = { "variable" = "lopnummer-anstallningar" }
 evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column U_SCBID of uoh-personal in 2023 under several variables (lopnummer-anstallningar (v2519), lopnummer-for-individ (v6172)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
 
@@ -17699,19 +17711,31 @@ evidence = "Row key: personnr is the table's only identifier and names its unit 
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal: AnstKat"
+subject = "uoh-personal-mobilitet: var:personnr"
+fields.row_key = true
+evidence = "Row key: a row of the mobility file is one employment of one person, so its key is the person id plus the employment serial number (maintainer ruling 2026-11-14 on row keys). personnr is delivered as PersonNr (2015) and SCBID (2021, 2023); the 2017 file has no person id."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal-mobilitet: var:lopnummer-anstallningar"
+fields.row_key = true
+evidence = "Row key: lopnummer-anstallningar (LopNrTjanst, lopnrtjanst, U_SCBID; source key v2519) numbers a person's employments (1 for a single employment, 1-9 for several), so it identifies a row only together with personnr. It is delivered in every mobility file (2015, 2017, 2021, 2023); in 2017, which has no person id, it is the only key the delivery carries (maintainer ruling 2026-11-14 on row keys)."
+
+[[statement]]
+kind = "set"
+subject = "uoh-personal-mobilitet: AnstKat"
 fields = { "variable" = "occup-code" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v29507), never delivered together in one table, so they are one variable renamed between releases: AnstKat 2015-01-01..2015-12-31; anstkat 2017-01-01..2017-12-31; OCCUP_CODE 2019-01-01..2023-12-31."
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal: anstkattext"
+subject = "uoh-personal-mobilitet: anstkattext"
 fields = { "variable" = "occup-cat" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v29507), never delivered together in one table, so they are one variable renamed between releases: anstkattext 2017-01-01..2017-12-31; OCCUP_CAT 2019-01-01..2023-12-31."
 
 [[statement]]
 kind = "set"
-subject = "uoh-personal: ForskamneOmrText"
+subject = "uoh-personal-mobilitet: ForskamneOmrText"
 fields = { "variable" = "field1-text" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v39021), never delivered together in one table, so they are one variable renamed between releases: ForskamneOmrText 2017-01-01..2017-12-31; FIELD1_TEXT 2021-01-01..2023-12-31."
 
@@ -17765,6 +17789,42 @@ evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of
 
 [[statement]]
 kind = "set"
+subject = "uoh-personal-mobilitet: OCCUP_CODE"
+fields = { "variable" = "occup-code" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v29507), never delivered together in one table, so they are one variable renamed between releases: AnstKat 2015-01-01..2015-12-31; anstkat 2017-01-01..2017-12-31; OCCUP_CODE 2019-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
 subject = "uoh-personal: OCCUP_CAT @2019 where key = 'v29507'"
 fields = { "variable" = "occup-cat" }
 evidence = "Held with the register until the catalog models its dimension values (maintainer 2026-11-14, option 2; COS 2026-11-14): SCB Registerinformation documents column OCCUP_CAT of uoh-personal in 2021 under several variables (occup-cat (v29507), tjanstekategori (v3637)); the listing keeps its own variable, as before the neighbouring-owner rule, and the window stays ambiguous."
+
+[[statement]]
+kind = "assert"
+subject = "table:uoh-personal-mobilitet"
+fact = { "entity" = "table", "fields" = { "name" = "UoH personal, tilläggsfrågor om mobilitet", "description" = "Frågor om den forskande och undervisande personalens internationella mobilitet, som Universitetskanslersämbetet (UKÄ) lagt till i SCB:s tidsanvändningsundersökning för högskolans personal, för 2015, 2017, 2021 och 2023. Huvudundersökningen finns i tabellen UoH personal." } }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, class C): parallel files with different content in one table move to a table of their own. SCB Registerinformation, RegVerID 9978 \"2015 Tilläggsfrågor om mobilitet (UKÄ)\", 12469 (2017), 18431 (2021) and 19506 (2023): \"Universitetskanslersämbetet (UKÄ) önskar bättre kunskap om den forskande och undervisande personalens internationella mobilitet. Som ett led i detta lades frågor till i den tidsanvändningsundersökning SCB genomför vartannat år och som riktar sig till högskolans personal.\" Each sits beside the main UoH personal file of the same year (9956, 12470, 18421, 19474: \"Att mäta antal personer och årsverken som används för forskning och utveckling inom universitet och högskolor\")."
+
+[[statement]]
+kind = "set"
+subject = "release:uoh-personal/r9978"
+fields = { "table" = "uoh-personal-mobilitet" }
+evidence = "SCB documents the UKÄ mobility supplement beside the main UoH personal file of the same year, with other content. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:uoh-personal/r12469"
+fields = { "table" = "uoh-personal-mobilitet" }
+evidence = "SCB documents the UKÄ mobility supplement beside the main UoH personal file of the same year, with other content. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:uoh-personal/r18431"
+fields = { "table" = "uoh-personal-mobilitet" }
+evidence = "SCB documents the UKÄ mobility supplement beside the main UoH personal file of the same year, with other content. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:uoh-personal/r19506"
+fields = { "table" = "uoh-personal-mobilitet" }
+evidence = "SCB documents the UKÄ mobility supplement beside the main UoH personal file of the same year, with other content. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
