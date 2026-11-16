@@ -3129,7 +3129,11 @@ period and qualifier), and the catalog keeps every release's own columns.
   releases of one shared day delivers that day once per release, each in its own
   entries and row keys: an entry or row key over a shared day names its `release`, and
   is delivered under that release's own name (`eras`). On a shared day a named release
-  serves its own segments plus releaseless ones it has none for. Other days are served
+  serves its own segments plus releaseless ones where its own do not reach. That
+  shadowing rule is one function, `reg_core::days::shadow`, which the order's columns,
+  its row keys and reg-mock all apply per variable. Coverage is checked per named
+  release: a shared day one named release lacks a column for is `period_clipped`,
+  naming that release, even when another named release delivers it. Other days are served
   as before, `release` null: an entry merges across releases where spelling, type,
   value set and classification agree, so per-release segments change no order that
   meets no shared day, and a segment of no release gives way to a release's own on the

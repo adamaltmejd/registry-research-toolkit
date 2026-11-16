@@ -16,6 +16,9 @@ use crate::{Error, rows};
 type Columns = BTreeSet<(String, String)>;
 /// A row-key column over half-open day numbers `lo..hi`: (lo, hi, (variable, spelling)).
 type KeyPiece = (i64, i64, (String, String));
+/// A key segment over half-open day numbers in a lane (the named release of a shared
+/// day, `None` elsewhere): (lane, lo, hi, segment).
+type LanePiece<'a> = (Option<&'a String>, i64, i64, &'a KeySegment);
 
 #[derive(Clone)]
 pub(crate) struct KeySegment {
@@ -204,6 +207,30 @@ fn merge_key_segments(out: Vec<KeySegment>) -> Vec<KeySegment> {
         .collect()
 }
 
+/// `pieces` as each lane reads them, by release shadowing per key variable
+/// (`reg_core::days::shadow`), as the order's columns are.
+fn shadowed(pieces: Vec<LanePiece<'_>>) -> Vec<LanePiece<'_>> {
+    let mut groups: BTreeMap<(Option<&String>, &str), Vec<LanePiece<'_>>> = BTreeMap::new();
+    for piece in pieces {
+        groups
+            .entry((piece.0, piece.3.variable.as_str()))
+            .or_default()
+            .push(piece);
+    }
+    let mut out = Vec::new();
+    for ((lane, _), group) in groups {
+        let spans: Vec<((i64, i64), Option<&str>)> = group
+            .iter()
+            .map(|(_, lo, hi, key)| ((*lo, *hi), key.release.as_deref()))
+            .collect();
+        let kept = reg_core::days::shadow(&spans, lane.map(String::as_str));
+        for ((_, _, _, key), keep) in group.into_iter().zip(kept) {
+            out.extend(keep.into_iter().map(|(lo, hi)| (lane, lo, hi, key)));
+        }
+    }
+    out
+}
+
 /// A source's row keys: per serving table, the requested days cut where its row-key
 /// columns change, each piece with the columns over it (sorted by variable and
 /// spelling); days without a row-key column are left out. On a day two primary releases
@@ -233,7 +260,7 @@ pub(super) fn row_keys(
         let shared_days: Vec<(i64, i64)> =
             super::days(&shared.iter().map(|x| x.days.clone()).collect::<Vec<_>>());
         // Day-number pieces `[start, end)` of each column on the served days, by release.
-        let mut pieces: Vec<(Option<&String>, i64, i64, &KeySegment)> = Vec::new();
+        let mut pieces: Vec<LanePiece<'_>> = Vec::new();
         for key in rows.iter() {
             for (lo, hi) in super::days(&s.requested) {
                 let (lo, hi) = (key.start.max(lo), key.end.min(hi));
@@ -249,13 +276,12 @@ pub(super) fn row_keys(
                         continue;
                     }
                     for name in &x.chosen {
-                        if key.release.as_ref().is_none_or(|r| r == name) {
-                            pieces.push((Some(name), a, b, key));
-                        }
+                        pieces.push((Some(name), a, b, key));
                     }
                 }
             }
         }
+        let pieces = shadowed(pieces);
         let mut found: Vec<(&str, i64, i64, &str)> = Vec::new();
         for (_, lo, hi, key) in &pieces {
             let found_here = match key.state.as_str() {

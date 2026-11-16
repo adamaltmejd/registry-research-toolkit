@@ -1,0 +1,22 @@
+{
+  "note": "Coverage per named release (crates/DESIGN.md, \"Concurrent releases\"): `antal` (column `Y`) is delivered only in \"2004 - 2005\". An order over 2004 naming both releases sharing it gets one entry, from \"2004 - 2005\", and a `period_clipped` naming \"2003 - 2004\", which has no `antal` that year. Fails if the release that covers the day hides the other's gap (no finding), or if the other release serves `antal` from a segment it does not hold. Oracle: the fixture's JSONL.",
+  "fixture": "orders",
+  "project": {
+    "schema_version": "6.3.0",
+    "reg_meta_version": "0.64.0",
+    "name": "Order case",
+    "sources": [
+      {
+        "name": "s",
+        "table": "demo/conc/t",
+        "period": 2004,
+        "releases": ["2003 - 2004", "2004 - 2005"],
+        "bindings": [
+          {
+            "variable": "demo/conc/antal"
+          }
+        ]
+      }
+    ]
+  }
+}

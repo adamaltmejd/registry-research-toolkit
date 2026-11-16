@@ -291,10 +291,12 @@ fn materialize(
     let at = Located { scope, b, variable };
     let mut pieces = Vec::new();
     let mut blocked = Vec::new();
+    let mut lanes = Vec::new();
     for k in 0..scope.serving.len() {
-        let (served, days) = served(scope, k, variable.id)?;
-        pieces.extend(served);
-        blocked.extend(days);
+        let one = served(scope, k, variable.id)?;
+        pieces.extend(one.pieces);
+        blocked.extend(one.blocked);
+        lanes.extend(one.lanes);
     }
     // A blocked day (`release_ambiguous`, at the source) is neither served nor clipped.
     let wanted = gaps(scope.requested, blocked);
@@ -373,6 +375,33 @@ fn materialize(
                 Some(days),
                 format!(
                     "There is no data on {} in {} for {}. That part of the period will not be delivered.",
+                    variable.pid,
+                    scope.table,
+                    span(scope.server, days)
+                ),
+            ));
+        }
+    }
+    // Coverage per named release: a shared day another release serves would hide this
+    // one's gap in the union above (days none serves are clipped there already).
+    for (name, days) in &lanes {
+        let own = merge(
+            pieces
+                .iter()
+                .filter(|p| p.lane.as_ref() == Some(name))
+                .map(|p| p.days.clone())
+                .collect(),
+        );
+        let missing = overlap(&gaps(std::slice::from_ref(days), own), &ordered);
+        for days in &missing {
+            outcome.findings.push(at.issue(
+                IssueLevel::Info,
+                "period_clipped",
+                scope.table,
+                Some(days),
+                format!(
+                    "There is no data on {} in the release \"{name}\" of {} for {}. Only the \
+                     other named releases deliver it there.",
                     variable.pid,
                     scope.table,
                     span(scope.server, days)
@@ -519,8 +548,8 @@ pub(super) fn in_chain(scope: &Scope, variable: i64) -> Result<bool, Error> {
 /// giving way to a release's own. On a day several share, each release the source names
 /// serves its own segments, and a releaseless one where its own do not reach (it is in
 /// every primary its days meet), each as an entry of that release; with none named the
-/// day blocks (`release_ambiguous`) and serves nothing.
-fn served(scope: &Scope, k: usize, variable: i64) -> Result<(Vec<Piece>, Vec<Interval>), Error> {
+/// day blocks (`release_ambiguous`) and serves nothing. Shadowing is `reg_core::days::shadow`.
+fn served(scope: &Scope, k: usize, variable: i64) -> Result<Served, Error> {
     let s = &scope.serving[k];
     let rows: Vec<Piece> = rows(
         scope.conn,
@@ -545,14 +574,9 @@ fn served(scope: &Scope, k: usize, variable: i64) -> Result<(Vec<Piece>, Vec<Int
     }
     let shared = super::releases::shared(scope.conn, s, scope.named)?;
     let days: Vec<Interval> = shared.iter().map(|x| x.days.clone()).collect();
-    let alone = cut(pieces.clone(), |_| &days);
-    let keyed: Vec<Interval> = alone
-        .iter()
-        .filter(|p| p.release.is_some())
-        .map(|p| p.days.clone())
-        .collect();
-    let mut out = cut(alone, |p| if p.release.is_some() { &[] } else { &keyed });
+    let mut out = shadowed(&cut(pieces.clone(), |_| &days), None);
     let mut blocked = Vec::new();
+    let mut lanes = Vec::new();
     for x in shared {
         if x.chosen.is_empty() {
             blocked.push(x.days);
@@ -567,30 +591,46 @@ fn served(scope: &Scope, k: usize, variable: i64) -> Result<(Vec<Piece>, Vec<Int
             })
             .collect();
         for name in &x.chosen {
-            let own: Vec<Interval> = here
-                .iter()
-                .filter(|p| p.release.as_ref() == Some(name))
-                .map(|p| p.days.clone())
-                .collect();
-            let mine = here
-                .iter()
-                .filter(|p| p.release.as_ref().is_none_or(|r| r == name))
-                .cloned();
-            out.extend(
-                cut(
-                    mine.collect(),
-                    |p| if p.release.is_some() { &[] } else { &own },
-                )
-                .into_iter()
-                .map(|p| Piece {
-                    lane: Some(name.clone()),
-                    ..p
-                }),
-            );
+            out.extend(shadowed(&here, Some(name)));
+            lanes.push((name.clone(), x.days.clone()));
         }
     }
     out.sort_by(|a, b| (&a.days, &a.lane).cmp(&(&b.days, &b.lane)));
-    Ok((out, blocked))
+    Ok(Served {
+        pieces: out,
+        blocked,
+        lanes,
+    })
+}
+
+/// [`served`]'s answer for one serving table.
+struct Served {
+    pieces: Vec<Piece>,
+    /// Shared days no named release covers (`release_ambiguous`).
+    blocked: Vec<Interval>,
+    /// Each named release with the shared days it is to serve.
+    lanes: Vec<(String, Interval)>,
+}
+
+/// `pieces` (one variable in one table) as `lane` reads them, by release shadowing
+/// (`reg_core::days::shadow`), each kept piece in that lane.
+fn shadowed(pieces: &[Piece], lane: Option<&String>) -> Vec<Piece> {
+    let spans: Vec<((i64, i64), Option<&str>)> = pieces
+        .iter()
+        .map(|p| (days(std::slice::from_ref(&p.days))[0], p.release.as_deref()))
+        .collect();
+    let kept = reg_core::days::shadow(&spans, lane.map(String::as_str));
+    pieces
+        .iter()
+        .zip(kept)
+        .flat_map(|(p, keep)| {
+            keep.into_iter().map(|(lo, hi)| Piece {
+                days: interval(lo, hi),
+                lane: lane.cloned(),
+                ..p.clone()
+            })
+        })
+        .collect()
 }
 
 /// Each piece less the days `away` gives for it.
