@@ -1,0 +1,10 @@
+{
+  "note": "Concurrent releases (crates/DESIGN.md, \"Concurrent releases\"): `conc/t`'s releases \"2003 - 2004\" and \"2004 - 2005\" share 2004. `kommun` is `A` in the first and third release and `B` in the second, merged into one variable, so in 2004 it has two rows, one per release, each naming its release. Fails if a row loses its release, if the two releases' rows merge into one over 2004, or if a row of one release spans the other's days. Oracle: the fixture's JSONL and its curation.",
+  "fixture": "orders",
+  "requests": [
+    {
+      "operation": "segments",
+      "path": "/api/segments/demo/conc/kommun"
+    }
+  ]
+}

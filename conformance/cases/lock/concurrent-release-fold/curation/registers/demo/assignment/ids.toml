@@ -1,0 +1,7 @@
+[tables]
+t = "t"
+
+[variables]
+alpha = ["t: A"]
+beta = ["t: B"]
+gamma = ["t: C"]

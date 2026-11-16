@@ -6,7 +6,8 @@
 //! two builds from the same pins write the same bytes. A subject is named by keys that
 //! survive a rebuild, never by catalog row id: a register, table, release or variable by
 //! its public id (a release as `<table>/<delivery name>`), a segment as
-//! `<variable>@<table>@<start>`, an occurrence as `<table>/<source key>@<start>`. Days
+//! `<variable>@<table>@<start>` (`<variable>@<table>/<delivery name>@<start>` when it holds
+//! one release), an occurrence as `<table>/<source key>@<start>`. Days
 //! are ISO dates; a period is inclusive.
 
 use std::path::Path;
@@ -46,9 +47,13 @@ fn lines(catalog: &Catalog) -> Vec<Line> {
                     (
                         "segment",
                         format!(
-                            "{}@{}@{}",
+                            "{}@{}{}@{}",
                             pid_of_variable(r, v),
                             pid_of_table(r, segment.table),
+                            segment.release.map_or_else(String::new, |x| format!(
+                                "/{}",
+                                r.releases[x].release.name
+                            )),
                             segment.period.0
                         ),
                     )

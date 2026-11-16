@@ -24,11 +24,26 @@ SELECT set_id FROM var_set_axis GROUP BY set_id HAVING MIN(ord) <> 0 OR MAX(ord)
 SELECT pid FROM ident WHERE kind = 'register'
   AND name_fold <> lower(substr(pid, length(rtrim(pid, replace(pid, '/', ''))) + 1));
 
--- (4) no overlap within (variable, table): one folded spelling at a time
+-- (4) no overlap within (variable, table, release): one folded spelling at a time in
+-- one delivery (a NULL release is one group)
 SELECT id FROM (
   SELECT id, start, LAG(end) OVER (
-    PARTITION BY variable_id, table_id ORDER BY start) AS prev_end
+    PARTITION BY variable_id, table_id, release_id ORDER BY start) AS prev_end
   FROM segment) WHERE start < prev_end;
+-- (4b) a segment's release is a primary of its table that covers it, and only a table
+-- whose primaries share a day holds segments per release
+SELECT s.id FROM segment s JOIN release r ON r.id = s.release_id
+WHERE r.table_id <> s.table_id OR r.is_primary IS NOT 1 OR s.start < r.start OR s.end > r.end;
+SELECT DISTINCT s.table_id FROM segment s WHERE s.release_id IS NOT NULL AND NOT EXISTS (
+  SELECT 1 FROM release a JOIN release b ON b.table_id = a.table_id AND b.id <> a.id
+  WHERE a.table_id = s.table_id AND a.is_primary = 1 AND b.is_primary = 1
+    AND a.start < b.end AND b.start < a.end);
+-- and there an occurrence of a release never sits in a segment of no release
+SELECT o.id FROM occurrence o JOIN segment s ON s.id = o.segment_id
+WHERE o.release_id IS NOT NULL AND s.release_id IS NULL AND EXISTS (
+  SELECT 1 FROM release a JOIN release b ON b.table_id = a.table_id AND b.id <> a.id
+  WHERE a.table_id = s.table_id AND a.is_primary = 1 AND b.is_primary = 1
+    AND a.start < b.end AND b.start < a.end);
 
 -- (5) ambiguity is marked and symmetric
 SELECT a.id FROM segment a JOIN segment b
@@ -46,6 +61,11 @@ SELECT o.id FROM occurrence o
   JOIN spelling sp ON sp.id = o.spelling_id
 WHERE o.variable_id <> s.variable_id OR o.table_id <> s.table_id OR sp.fold_id <> s.fold_id
    OR o.start < s.start OR o.end > s.end
+   -- an occurrence of a release sits in its release's segment, or its period's primary's
+   OR (o.release_id IS NOT NULL AND s.release_id IS NOT NULL AND s.release_id <> o.release_id
+       AND NOT EXISTS (SELECT 1 FROM release r JOIN release p ON p.id = s.release_id
+         WHERE r.id = o.release_id AND p.table_id = r.table_id AND p.start = r.start
+           AND p.end = r.end AND p.qualifier = r.qualifier))
    OR (s.state <> 'ambiguous' AND (
          (s.valueset_id IS NOT NULL AND o.valueset_id IS NOT s.valueset_id)
       OR (s.class_version_id IS NOT NULL AND o.class_version_id IS NOT s.class_version_id)
@@ -66,12 +86,10 @@ WHERE g.variable_id IS NULL OR g.s <> v.start OR g.e <> v.end;
 -- (9) one primary per parsed (table, period, qualifier)
 SELECT table_id, start, end, qualifier FROM release WHERE parse_state <> 'unparsed'
 GROUP BY table_id, start, end, qualifier HAVING SUM(is_primary) <> 1;
--- primaries of one table delivered under different table names never overlap, so each
--- day has one delivered table (an order names it per era)
-SELECT a.id FROM release a JOIN release b
-  ON b.table_id = a.table_id AND b.id <> a.id AND b.delivered_text <> a.delivered_text
- AND a.start < b.end AND b.start < a.end
-WHERE a.is_primary = 1 AND b.is_primary = 1;
+-- (9c) primary releases of one table have distinct names: an order names a primary by
+-- it. An edition collision (F8) may repeat a name: only one of the pair is primary.
+SELECT r.table_id, n.body FROM release r JOIN text n ON n.id = r.name_text
+WHERE r.is_primary = 1 GROUP BY r.table_id, n.body HAVING COUNT(*) > 1;
 
 -- (10) value-set structure (the hash is re-verified by `catalog verify`, not SQL)
 SELECT valueset_id FROM vs_item GROUP BY valueset_id HAVING MAX(ord) + 1 <> COUNT(*);

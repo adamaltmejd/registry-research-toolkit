@@ -1,0 +1,11 @@
+[[statement]]
+kind = "set"
+subject = "t: B"
+fields = { variable = "alpha" }
+evidence = "B shares 2004 with A only across releases: no release holds both."
+
+[[statement]]
+kind = "set"
+subject = "t: C"
+fields = { variable = "alpha" }
+evidence = "C sits beside B in the 2003 - 2004 release."

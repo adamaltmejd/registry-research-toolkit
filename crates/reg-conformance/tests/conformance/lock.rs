@@ -62,9 +62,18 @@ fn assignments_refuse_concurrent_folds_at_lock() {
     // Regression: assignment resolution accepts concurrent different folds in one
     // table, leaving only artifact verify to reject the resulting segment. The
     // one-day overlap must refuse beside nonconcurrent and cross-table allowed twins.
-    let case = cases().join("lock/concurrent-fold-assignment");
+    // In a table whose releases share days the test is per release: two spellings in
+    // different releases over a shared day merge, two in one release refuse; fails if
+    // the shared day refuses the first or the release lets the second through.
+    for name in ["concurrent-fold-assignment", "concurrent-release-fold"] {
+        concurrent_fold_case(name);
+    }
+}
+
+fn concurrent_fold_case(name: &str) {
+    let case = cases().join("lock").join(name);
     let expected = read_json(&case.join("expected.json")).unwrap();
-    let dir = scratch("concurrent-fold");
+    let dir = scratch(name);
     let curation = curation_copy(&case, dir.path());
     let statements = curation.join("registers/demo/assignment/curation.toml");
     let inputs = case.join("inputs");
@@ -78,7 +87,8 @@ fn assignments_refuse_concurrent_folds_at_lock() {
         "{}",
         refused.stderr
     );
-    // Bystander assignments at lines 1 and 7 must not receive this refusal.
+    // Bystander assignments must not receive this refusal (`expected.json` lists every
+    // located line).
     let located: Vec<String> = refused
         .stderr
         .lines()

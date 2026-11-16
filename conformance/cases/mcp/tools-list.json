@@ -932,6 +932,10 @@
             "period": {
               "$ref": "#/$defs/Period"
             },
+            "release": {
+              "description": "In a table whose releases share days, the name of the release the row belongs to\n(`show` lists them); absent elsewhere.",
+              "type": "string"
+            },
             "role": {
               "type": "string"
             },
@@ -2474,6 +2478,10 @@
             },
             "period": {
               "$ref": "#/$defs/Period"
+            },
+            "release": {
+              "description": "In a table whose releases share days, the name of the release the row belongs to\n(`show` lists them); absent elsewhere.",
+              "type": "string"
             },
             "role": {
               "type": "string"

@@ -225,6 +225,8 @@ pub struct Resolved {
 pub struct ResolvedTable {
     /// The table, named: the implicit one by its register, an implied one by its handle.
     pub table: Table,
+    /// Two of its placed primary releases share a day: its segments are held per release.
+    pub concurrent: bool,
     /// The table's id segment; `None` for the implicit table, which takes the
     /// register's id.
     pub slug: Option<String>,
@@ -274,6 +276,10 @@ pub struct Variable {
 pub struct Segment {
     /// Index into [`Resolved::tables`].
     pub table: usize,
+    /// In a table with concurrent releases, the primary release (index into
+    /// [`Resolved::releases`]) whose occurrences the segment holds; `None` elsewhere, and
+    /// for occurrences no single primary release contains.
+    pub release: Option<usize>,
     pub period: Interval,
     pub spelling: String,
     pub dtype: Option<String>,
@@ -535,6 +541,7 @@ fn resolve_pass(
         table_index.insert(handle.to_owned(), tables.len());
         tables.push(ResolvedTable {
             table,
+            concurrent: false,
             slug,
             timeless: false,
             spans: Vec::new(),
@@ -617,6 +624,48 @@ fn resolve_pass(
                     ),
                 });
             }
+        }
+    }
+
+    // Concurrent releases (T6): two placed primaries of one table share a day. Each keeps
+    // its own segments, and an order names which serves a shared day.
+    let mut primaries: Vec<Vec<(Interval, usize)>> = vec![Vec::new(); tables.len()];
+    for (i, r) in releases.iter().enumerate() {
+        if r.primary == Some(true)
+            && let Some(period) = placed(&r.release)
+        {
+            primaries[r.table].push((period, i));
+        }
+    }
+    for (t, own) in primaries.iter_mut().enumerate() {
+        own.sort();
+        let mut shared: Vec<(usize, usize)> = Vec::new();
+        for (a, (p, x)) in own.iter().enumerate() {
+            for (q, y) in &own[a + 1..] {
+                // Sorted by start: no later release starts inside `p` once one starts after it.
+                if q.0 > p.1 {
+                    break;
+                }
+                if intersect(p, q).is_some() {
+                    shared.push((*x, *y));
+                }
+            }
+        }
+        if let Some(&(x, y)) = shared.first() {
+            tables[t].concurrent = true;
+            findings.push(Finding {
+                code: "T6:concurrent-releases",
+                severity: "notice",
+                subject: Subject::Table(t),
+                period: None,
+                message: format!(
+                    "{} pair(s) of deliveries share days, first {:?} and {:?}; each keeps its \
+                     own columns, and an order names which serves a shared day",
+                    shared.len(),
+                    releases[x].release.name,
+                    releases[y].release.name
+                ),
+            });
         }
     }
 
@@ -968,6 +1017,29 @@ fn resolve_pass(
         keep
     });
 
+    // The release each used occurrence's segment belongs to in a concurrent table: its own
+    // primary (a worse edition's is its period's primary), else, for an occurrence of no
+    // release, the one primary that contains it whole.
+    let deliveries: Vec<Option<usize>> = resolved
+        .iter()
+        .map(|r| {
+            if r.status != "used" || !tables[r.table].concurrent {
+                return None;
+            }
+            if let Some(x) = r.release {
+                return Some(primary_of.get(&x).copied().unwrap_or(x));
+            }
+            let mut containing = primaries[r.table]
+                .iter()
+                .filter(|(p, _)| covers(p, span(r)))
+                .map(|(_, x)| *x);
+            match (containing.next(), containing.next()) {
+                (Some(x), None) => Some(x),
+                _ => None,
+            }
+        })
+        .collect();
+
     // Variables and their segments.
     let mut variables: Vec<Variable> = Vec::new();
     let mut population_keys = BTreeSet::new();
@@ -1036,206 +1108,261 @@ fn resolve_pass(
         }
         let mut segments = Vec::new();
         for &t in &tables_used {
-            let own: Vec<usize> = used
-                .iter()
-                .copied()
-                .filter(|&i| resolved[i].table == t)
-                .collect();
-            // A segment holds whole occurrences: the variable's occurrences that
-            // overlap form one component, and adjacent components of one form join.
-            let mut sorted = own.clone();
-            sorted.sort_by(|&a, &b| span(&resolved[a]).cmp(span(&resolved[b])));
-            let mut components: Vec<(Interval, Vec<usize>)> = Vec::new();
-            for i in sorted {
-                let p = span(&resolved[i]).clone();
-                match components.last_mut() {
-                    Some((span, members)) if p.0 <= span.1 => {
-                        if p.1 > span.1 {
-                            span.1 = p.1;
-                        }
-                        members.push(i);
-                    }
-                    _ => components.push((p, vec![i])),
-                }
+            // In a concurrent table each release holds its own segments, in release order;
+            // occurrences no single primary contains form the `None` group, first.
+            // Keyed by the release's (period, handle); each group is (release, its occurrences).
+            type Groups<'a> = BTreeMap<Option<(Interval, &'a str)>, (Option<usize>, Vec<usize>)>;
+            let mut groups: Groups = BTreeMap::new();
+            for &i in used.iter().filter(|&&i| resolved[i].table == t) {
+                let x = deliveries[i];
+                let order = x.map(|x| {
+                    (
+                        placed(&releases[x].release).expect("a primary is placed"),
+                        releases[x].release.release.as_str(),
+                    )
+                });
+                groups.entry(order).or_insert((x, Vec::new())).1.push(i);
             }
-            let mut runs: Vec<Segment> = Vec::new();
-            let mut last_same_family = true;
-            for (period, covering) in components {
-                if defaults.is_some()
-                    && covering
-                        .iter()
-                        .map(|&i| fold_identity(&resolved[i].occurrence.column))
-                        .collect::<BTreeSet<_>>()
-                        .len()
-                        > 1
-                {
-                    // simplify: quadratic within an overlap component; use an interval
-                    // sweep if a component grows past a few thousand occurrences.
-                    let overlap = covering.iter().enumerate().find_map(|(at, &a)| {
-                        covering[at + 1..].iter().find_map(|&b| {
-                            let left = fold_identity(&resolved[a].occurrence.column);
-                            let right = fold_identity(&resolved[b].occurrence.column);
-                            (left != right)
-                                .then(|| intersect(span(&resolved[a]), span(&resolved[b])))
-                                .flatten()
-                                .map(|period| (left, right, period))
-                        })
-                    });
-                    let (left, right, overlap) = overlap
-                        .expect("a connected overlap component with different folds has an overlapping different-fold pair");
-                    for &i in &covering {
-                        if intersect(span(&resolved[i]), &overlap).is_some() {
+            // Within one release a variable has one column; an occurrence of no release
+            // cannot share a day with a different spelling in a release.
+            if defaults.is_some()
+                && let Some((_, loose)) = groups.get(&None)
+            {
+                for &a in loose {
+                    for &b in groups
+                        .values()
+                        .filter(|(x, _)| x.is_some())
+                        .flat_map(|(_, m)| m)
+                    {
+                        let left = fold_identity(&resolved[a].occurrence.column);
+                        let right = fold_identity(&resolved[b].occurrence.column);
+                        let Some(overlap) = (left != right)
+                            .then(|| intersect(span(&resolved[a]), span(&resolved[b])))
+                            .flatten()
+                        else {
+                            continue;
+                        };
+                        for i in [a, b] {
                             let row = &resolved[i].occurrence;
                             affected.extend(std::iter::once(&row.locator).chain(&row.also).map(
                                 |at| OccurrenceKey::new(occurrence_context.identity(row), at),
                             ));
                         }
+                        return Err(format!(
+                            "D-11: set variable would give variable {key:?} the spelling {left:?} in no delivery and {right:?} in delivery {:?} of table {:?} over {}..{}; state the first per delivery or retain separate variables",
+                            releases[deliveries[b].expect("a release group")]
+                                .release
+                                .name,
+                            tables[t].table.table,
+                            overlap.0,
+                            overlap.1
+                        ));
                     }
-                    return Err(format!(
-                        "D-11: set variable would merge concurrent folded spellings {left:?} and {right:?} in table {:?} over {}..{} into variable {key:?}; retain separate variables",
-                        tables[t].table.table, overlap.0, overlap.1
-                    ));
-                }
-                let top = latest(&resolved, &covering).expect("a component has a member");
-                let forms = agreement_forms(covering.iter().map(|&i| &resolved[i]));
-                let o = &resolved[top].occurrence;
-                let classifications: BTreeSet<_> = covering
-                    .iter()
-                    .map(|&i| resolved[i].occurrence.classification.clone())
-                    .collect();
-                let roles: BTreeSet<_> = covering
-                    .iter()
-                    .filter_map(|&i| resolved[i].occurrence.role.as_deref())
-                    .collect();
-                if roles.len() > 1 {
-                    conflicts.insert("role".into());
-                }
-                // A form field is stated only where every occurrence agrees on it.
-                let agreed = |field: fn(&Form) -> &Option<String>| {
-                    let values: BTreeSet<&Option<String>> = forms.iter().map(field).collect();
-                    match values.len() {
-                        1 => values.into_iter().next().cloned().flatten(),
-                        _ => None,
-                    }
-                };
-                // Occurrences that disagree on form still place: the fields they disagree on
-                // stay unset (maintainer 2026-11-14).
-                let state = if covering.iter().all(|&i| resolved[i].preliminary) {
-                    "preliminary"
-                } else {
-                    "clear"
-                };
-                // Flags hold if any covering occurrence states them: under-flagging is the
-                // dangerous direction. A curated row key holds the same way.
-                let flag = |f: fn(&Occurrence) -> Option<bool>| {
-                    covering
-                        .iter()
-                        .map(|&i| f(&resolved[i].occurrence))
-                        .max()
-                        .flatten()
-                };
-                for (name, f) in [
-                    (
-                        "sensitive",
-                        (|o| o.sensitive) as fn(&Occurrence) -> Option<bool>,
-                    ),
-                    ("identifier", |o| o.identifier),
-                ] {
-                    let stated: BTreeSet<bool> = covering
-                        .iter()
-                        .filter_map(|&i| f(&resolved[i].occurrence))
-                        .collect();
-                    if stated.len() > 1 {
-                        conflicts.insert(name.to_owned());
-                    }
-                }
-                let widest = widest_dtype(
-                    covering
-                        .iter()
-                        .filter_map(|&i| resolved[i].occurrence.dtype.as_deref()),
-                );
-                let has_known = covering
-                    .iter()
-                    .any(|&i| family(resolved[i].occurrence.dtype.as_deref()).is_some());
-                let lengths: BTreeSet<i64> = covering
-                    .iter()
-                    .filter(|&&i| {
-                        !has_known || family(resolved[i].occurrence.dtype.as_deref()).is_some()
-                    })
-                    .filter_map(|&i| resolved[i].occurrence.length)
-                    .collect();
-                let same_family = forms
-                    .iter()
-                    .map(|f| &f.dtype)
-                    .collect::<BTreeSet<_>>()
-                    .len()
-                    == 1;
-                let length = if same_family || lengths.len() == 1 {
-                    lengths.last().copied()
-                } else {
-                    None
-                };
-                let segment = Segment {
-                    table: t,
-                    period,
-                    spelling: o.column.clone(),
-                    dtype: if same_family {
-                        widest.map(str::to_owned)
-                    } else {
-                        None
-                    },
-                    length,
-                    format: o.format.clone(),
-                    valueset: agreed(|f| &f.valueset),
-                    classification: if classifications.len() == 1 {
-                        classifications.into_iter().next().flatten()
-                    } else {
-                        None
-                    },
-                    coded: coded(o),
-                    sensitive: flag(|o| o.sensitive),
-                    identifier: flag(|o| o.identifier),
-                    role: role(
-                        covering
-                            .iter()
-                            .map(|&i| &resolved[i].occurrence)
-                            .find(|o| o.role.is_some())
-                            .unwrap_or(o),
-                    ),
-                    row_key: flag(|o| o.row_key) == Some(true),
-                    state,
-                };
-                let index = match runs.last_mut() {
-                    Some(prev)
-                        if next_iso_day(&prev.period.1) == segment.period.0
-                            && same_form(prev, &segment)
-                            && ((same_family && last_same_family)
-                                || prev.length == segment.length) =>
-                    {
-                        prev.period.1 = segment.period.1;
-                        prev.spelling = segment.spelling;
-                        prev.dtype = widest_dtype(
-                            prev.dtype
-                                .as_deref()
-                                .into_iter()
-                                .chain(segment.dtype.as_deref()),
-                        )
-                        .map(str::to_owned);
-                        prev.length = prev.length.max(segment.length);
-                        last_same_family &= same_family;
-                        runs.len() - 1
-                    }
-                    _ => {
-                        last_same_family = same_family;
-                        runs.push(segment);
-                        runs.len() - 1
-                    }
-                };
-                for i in covering {
-                    resolved[i].segment = Some(segments.len() + index);
                 }
             }
-            segments.extend(runs);
+            for (release, own) in groups.into_values() {
+                // A segment holds whole occurrences: the variable's occurrences that
+                // overlap form one component, and adjacent components of one form join.
+                let mut sorted = own.clone();
+                sorted.sort_by(|&a, &b| span(&resolved[a]).cmp(span(&resolved[b])));
+                let mut components: Vec<(Interval, Vec<usize>)> = Vec::new();
+                for i in sorted {
+                    let p = span(&resolved[i]).clone();
+                    match components.last_mut() {
+                        Some((span, members)) if p.0 <= span.1 => {
+                            if p.1 > span.1 {
+                                span.1 = p.1;
+                            }
+                            members.push(i);
+                        }
+                        _ => components.push((p, vec![i])),
+                    }
+                }
+                let mut runs: Vec<Segment> = Vec::new();
+                let mut last_same_family = true;
+                for (period, covering) in components {
+                    if defaults.is_some()
+                        && covering
+                            .iter()
+                            .map(|&i| fold_identity(&resolved[i].occurrence.column))
+                            .collect::<BTreeSet<_>>()
+                            .len()
+                            > 1
+                    {
+                        // simplify: quadratic within an overlap component; use an interval
+                        // sweep if a component grows past a few thousand occurrences.
+                        let overlap = covering.iter().enumerate().find_map(|(at, &a)| {
+                            covering[at + 1..].iter().find_map(|&b| {
+                                let left = fold_identity(&resolved[a].occurrence.column);
+                                let right = fold_identity(&resolved[b].occurrence.column);
+                                (left != right)
+                                    .then(|| intersect(span(&resolved[a]), span(&resolved[b])))
+                                    .flatten()
+                                    .map(|period| (left, right, period))
+                            })
+                        });
+                        let (left, right, overlap) = overlap
+                        .expect("a connected overlap component with different folds has an overlapping different-fold pair");
+                        for &i in &covering {
+                            if intersect(span(&resolved[i]), &overlap).is_some() {
+                                let row = &resolved[i].occurrence;
+                                affected.extend(
+                                    std::iter::once(&row.locator).chain(&row.also).map(|at| {
+                                        OccurrenceKey::new(occurrence_context.identity(row), at)
+                                    }),
+                                );
+                            }
+                        }
+                        let within = release.map_or_else(String::new, |x| {
+                            format!(" delivery {:?} of", releases[x].release.name)
+                        });
+                        return Err(format!(
+                            "D-11: set variable would merge concurrent folded spellings {left:?} and {right:?} in{within} table {:?} over {}..{} into variable {key:?}; retain separate variables",
+                            tables[t].table.table, overlap.0, overlap.1
+                        ));
+                    }
+                    let top = latest(&resolved, &covering).expect("a component has a member");
+                    let forms = agreement_forms(covering.iter().map(|&i| &resolved[i]));
+                    let o = &resolved[top].occurrence;
+                    let classifications: BTreeSet<_> = covering
+                        .iter()
+                        .map(|&i| resolved[i].occurrence.classification.clone())
+                        .collect();
+                    let roles: BTreeSet<_> = covering
+                        .iter()
+                        .filter_map(|&i| resolved[i].occurrence.role.as_deref())
+                        .collect();
+                    if roles.len() > 1 {
+                        conflicts.insert("role".into());
+                    }
+                    // A form field is stated only where every occurrence agrees on it.
+                    let agreed = |field: fn(&Form) -> &Option<String>| {
+                        let values: BTreeSet<&Option<String>> = forms.iter().map(field).collect();
+                        match values.len() {
+                            1 => values.into_iter().next().cloned().flatten(),
+                            _ => None,
+                        }
+                    };
+                    // Occurrences that disagree on form still place: the fields they disagree on
+                    // stay unset (maintainer 2026-11-14).
+                    let state = if covering.iter().all(|&i| resolved[i].preliminary) {
+                        "preliminary"
+                    } else {
+                        "clear"
+                    };
+                    // Flags hold if any covering occurrence states them: under-flagging is the
+                    // dangerous direction. A curated row key holds the same way.
+                    let flag = |f: fn(&Occurrence) -> Option<bool>| {
+                        covering
+                            .iter()
+                            .map(|&i| f(&resolved[i].occurrence))
+                            .max()
+                            .flatten()
+                    };
+                    for (name, f) in [
+                        (
+                            "sensitive",
+                            (|o| o.sensitive) as fn(&Occurrence) -> Option<bool>,
+                        ),
+                        ("identifier", |o| o.identifier),
+                    ] {
+                        let stated: BTreeSet<bool> = covering
+                            .iter()
+                            .filter_map(|&i| f(&resolved[i].occurrence))
+                            .collect();
+                        if stated.len() > 1 {
+                            conflicts.insert(name.to_owned());
+                        }
+                    }
+                    let widest = widest_dtype(
+                        covering
+                            .iter()
+                            .filter_map(|&i| resolved[i].occurrence.dtype.as_deref()),
+                    );
+                    let has_known = covering
+                        .iter()
+                        .any(|&i| family(resolved[i].occurrence.dtype.as_deref()).is_some());
+                    let lengths: BTreeSet<i64> = covering
+                        .iter()
+                        .filter(|&&i| {
+                            !has_known || family(resolved[i].occurrence.dtype.as_deref()).is_some()
+                        })
+                        .filter_map(|&i| resolved[i].occurrence.length)
+                        .collect();
+                    let same_family = forms
+                        .iter()
+                        .map(|f| &f.dtype)
+                        .collect::<BTreeSet<_>>()
+                        .len()
+                        == 1;
+                    let length = if same_family || lengths.len() == 1 {
+                        lengths.last().copied()
+                    } else {
+                        None
+                    };
+                    let segment = Segment {
+                        table: t,
+                        release,
+                        period,
+                        spelling: o.column.clone(),
+                        dtype: if same_family {
+                            widest.map(str::to_owned)
+                        } else {
+                            None
+                        },
+                        length,
+                        format: o.format.clone(),
+                        valueset: agreed(|f| &f.valueset),
+                        classification: if classifications.len() == 1 {
+                            classifications.into_iter().next().flatten()
+                        } else {
+                            None
+                        },
+                        coded: coded(o),
+                        sensitive: flag(|o| o.sensitive),
+                        identifier: flag(|o| o.identifier),
+                        role: role(
+                            covering
+                                .iter()
+                                .map(|&i| &resolved[i].occurrence)
+                                .find(|o| o.role.is_some())
+                                .unwrap_or(o),
+                        ),
+                        row_key: flag(|o| o.row_key) == Some(true),
+                        state,
+                    };
+                    let index = match runs.last_mut() {
+                        Some(prev)
+                            if next_iso_day(&prev.period.1) == segment.period.0
+                                && same_form(prev, &segment)
+                                && ((same_family && last_same_family)
+                                    || prev.length == segment.length) =>
+                        {
+                            prev.period.1 = segment.period.1;
+                            prev.spelling = segment.spelling;
+                            prev.dtype = widest_dtype(
+                                prev.dtype
+                                    .as_deref()
+                                    .into_iter()
+                                    .chain(segment.dtype.as_deref()),
+                            )
+                            .map(str::to_owned);
+                            prev.length = prev.length.max(segment.length);
+                            last_same_family &= same_family;
+                            runs.len() - 1
+                        }
+                        _ => {
+                            last_same_family = same_family;
+                            runs.push(segment);
+                            runs.len() - 1
+                        }
+                    };
+                    for i in covering {
+                        resolved[i].segment = Some(segments.len() + index);
+                    }
+                }
+                segments.extend(runs);
+            }
         }
         if !conflicts.is_empty() {
             findings.push(Finding {
@@ -1736,7 +1863,8 @@ fn edition_forms_differ(
 }
 
 fn same_form(a: &Segment, b: &Segment) -> bool {
-    fold_identity(&a.spelling) == fold_identity(&b.spelling)
+    a.release == b.release
+        && fold_identity(&a.spelling) == fold_identity(&b.spelling)
         && (
             a.state,
             family(a.dtype.as_deref()),

@@ -21,6 +21,7 @@
 mod breaks;
 mod eras;
 mod materialize;
+mod releases;
 pub(crate) mod rows;
 mod successor;
 mod window;
@@ -1076,12 +1077,51 @@ fn check_source(
     if !followed.is_empty() {
         serving = combine_serving(serving, followed);
     }
+    checked
+        .findings
+        .extend(ambiguous(server, conn, index, source, &serving)?);
     let (row_keys, mut keyed) = rows::row_keys(server, keys, space, index, source, &serving)?;
     rows::unbound(&mut keyed, &checked.findings);
     keyed.sort_by_key(Issue::key);
     checked.findings.extend(keyed);
     checked.row_keys = row_keys;
     Ok(checked)
+}
+
+/// `release_ambiguous`: per serving table, each run of requested days two of its primary
+/// releases share, located at the source.
+fn ambiguous(
+    server: &Server,
+    conn: &Connection,
+    index: usize,
+    source: &CatalogSource,
+    serving: &[Serving],
+) -> Result<Vec<Issue>, Error> {
+    let mut found = Vec::new();
+    for s in serving {
+        for (days, names) in releases::shared(conn, s)? {
+            let names: Vec<String> = names.iter().map(|n| format!("\"{n}\"")).collect();
+            found.push(Issue {
+                source: Some(source.name.clone()),
+                table: Some(s.table.pid.clone()),
+                period: Some(period(server, &days)),
+                ..Issue::new(
+                    IssueLevel::Error,
+                    "release_ambiguous",
+                    format!("/sources/{index}"),
+                    format!(
+                        "{} was delivered in more than one release covering {}: {}. The order \
+                         cannot tell which to use; choose a period outside those days",
+                        s.table.pid,
+                        span(server, &days),
+                        names.join(", ")
+                    ),
+                )
+            });
+        }
+    }
+    found.sort_by_key(Issue::key);
+    Ok(found)
 }
 
 /// Coalesce followed table windows once for row keys.

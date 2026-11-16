@@ -279,7 +279,9 @@ every order (`row_keys`), `show` lists them and `schema` lines flag them.
   the reader's grammar.
 - A name the grammar cannot place is `unparsed`: a finding, with no period.
 - Within one period, the final edition is preferred over the preliminary one.
-  Overlapping deliveries of different periods cover their union; neither is preferred.
+  Primary releases of different periods that share days are concurrent: each keeps its
+  own segments, the table's coverage is their union, neither is preferred, and an order
+  over a shared day blocks (below, "Concurrent releases").
 
 **Identity.**
 
@@ -293,7 +295,8 @@ every order (`row_keys`), `show` lists them and `schema` lines flag them.
   comparison uses the preferred edition of each period, so a preliminary and a final
   delivery of one year never split a key. That key splits by spelling.
 - Case never distinguishes columns.
-- A variable has at most one spelling per table at a time.
+- A variable has at most one spelling per table and release at a time; outside a table
+  with concurrent releases, per table.
 - A shared name under different keys is a review proposal, never a merge.
 - One column several variables claim in one table and window goes to the variable that
   holds it alone in the nearest releases before and after (the nearest sole holder on
@@ -418,6 +421,10 @@ every order (`row_keys`), `show` lists them and `schema` lines flag them.
   releases or variables. Selectors and premises use the immutable phase view.
   Assignments cannot merge concurrent different folded spellings in one table;
   resolution refuses with `D-11` at lock, before a malformed segment can be published.
+  In a table with concurrent releases the test is per release: two spellings in
+  different releases over a shared day merge, two in one release refuse, the message
+  naming the release (`in delivery "<name>" of table`). A releaseless occurrence
+  (below) that would put a second spelling beside a release's on one day refuses too.
   Assignments may merge one folded spelling documented under two source keys, such as
   SCB's Flergenerationsregistret `antalbarn`, one column under a VarId per parent
   (maintainer, 2026-11-09). A selector matching overlapping occurrences that differ in
@@ -529,7 +536,8 @@ every order (`row_keys`), `show` lists them and `schema` lines flag them.
   and `message`, sorted in that field order, so two builds from the same pins write the
   same bytes. A subject is named by keys that survive a rebuild: a register, table or
   variable by its public id, a release as `<table>/<delivery name>`, a segment as
-  `<variable>@<table>@<start>`, an occurrence as `<table>/<source key>@<start>`. No
+  `<variable>@<table>@<start>` (`<variable>@<table>/<delivery name>@<start>` for one
+  release's segment in a table with concurrent releases), an occurrence as `<table>/<source key>@<start>`. No
   reader operation serves findings; #2318 decides what an opt-in MCP tool adds back.
   `reg-build verify` needs no finding for the F6 type exemption: an untyped segment
   whose own occurrences state two or more type families is exactly the segment
@@ -766,7 +774,8 @@ release assets are left unchanged.
   notices, since a variable needs a segment. An occurrence documented to end before it
   starts is refused, located at its source row.
 - **Segments hold whole occurrences.** The variable's overlapping occurrences in one
-  table form one segment; adjacent ones of one form join. Occurrences that disagree
+  table form one segment; adjacent ones of one form join. In a table with concurrent
+  releases this holds per release ("Concurrent releases"). Occurrences that disagree
   on label, type family, value set or classification still place: the fields they
   disagree on are left blank, and the segment gets one `F2:forms-differ` review, except a
   family-only disagreement under one source key and one folded spelling, which gets one
@@ -1085,7 +1094,9 @@ release assets are left unchanged.
 - **Edition and qualifier are not part of a request.** The primary segments serve every
   order (final over preliminary); the builder stores no selection segments. Naming an
   edition or a qualifier is deferred until curation, so the periods grammar and the
-  source stay without them until a use is shown.
+  source stay without them until a use is shown. A day two primary releases share is
+  the exception the release name will settle ("Concurrent releases"); until a source can
+  name one, such a day blocks.
 - **Implicit tables are not in `ident`.** A 2-part ref resolves through `ident` to the
   register. Where a table is expected, the table is `tbl WHERE pid = ?`, and the
   implicit table has the register's pid. A 2-part table value naming a register with
@@ -1333,7 +1344,8 @@ for the open sentinels; a timeless table has `{start: null, end: null}`.
 
 **Findings.** Errors block: `fqid_unresolved`, `table_is_register`, `retired_ref`,
 `variable_not_in_table`, `outside_availability`, `ambiguous_window`,
-`classification_incompatible`, `period_default_on_dated_table`,
+`release_ambiguous` (a requested day two primary releases of a serving table share,
+located at the source), `classification_incompatible`, `period_default_on_dated_table`,
 `period_on_timeless_table`, `period_not_orderable` and `project_empty` (no sources; a
 whole-project finding) and `source_outside_window` (a dated source period wholly outside
 the study window). Warnings and infos do not: `classification_version_ambiguous`,
@@ -3054,9 +3066,54 @@ still name the table the provider delivers for each era.
   `delivered_table`. An entry or piece whose days span releases with different
   delivered names splits at the first day of each era, so each part names one delivered
   table. Eras come from the table's primary releases, and in composed mode its held
-  releases too. A table with no releases is delivered under its own name.
-- **Verify.** Primary releases of one table with different delivered names must not
-  overlap, so every ordered day has one delivered table.
+  releases too: a day takes the delivered name of the release covering it (the
+  latest-starting where several do, which only a blocked shared day or a base and a held
+  release can be), and a day none covers keeps the era before it. A table with no
+  releases is delivered under its own name.
+- **Verify.** Two overlapping primary releases may have different delivered names: an
+  ordered day still has one, because a shared day blocks ("Concurrent releases").
+
+## Concurrent releases
+
+A provider can deliver one table in releases whose periods overlap: SCB's CIS survey
+covers three years per release, two years apart, so neighbouring releases share a
+year and mostly spell each question differently. Check (9) allows it (one primary per
+period and qualifier), and the catalog keeps every release's own columns.
+
+- **Derived, not curated.** A table has concurrent releases when two of its placed
+  primary releases share a day. The build reports each such table once,
+  `T6:concurrent-releases` (a notice naming the first sharing pair and their count), so
+  a pin that makes a table concurrent shows in `reg-build diff`. A misplaced release is
+  fixed where it is wrong (`period` on the release).
+- **Segments per release.** Every segment of such a table belongs to one primary
+  release, `segment.release_id` (schema 17), across the whole table, not only on shared
+  days: one rule per table. An occurrence of a non-primary release counts as the
+  primary it competes with. A releaseless occurrence takes the one primary that
+  contains it whole, else no release. Elsewhere `release_id` is null and segments are
+  as before. On 0.86.0 this is 24 tables and about 3.6% more segments.
+- **Checks.** (4) no overlap holds per variable, table and release. (4b) a segment's
+  release is a primary of its own table that covers it; only a table with concurrent
+  releases has keyed segments, and there an occurrence of a release never sits in a
+  segment of no release. (7) an occurrence and its segment name the same release, or
+  releases of one period and qualifier. (9c) primary release names are unique per
+  table, since orders will name primaries by them; an edition collision (F8) may
+  repeat a name, because only one of the pair is primary.
+- **Identity.** `D-11` is tested per release (Identity, `set variable`): one variable
+  may be `A` in one release and `B` in another over a shared day.
+- **Reading.** `segments` rows name their `release` in such a table, ordered by start,
+  table, release, column. In an order, a requested day two primary releases of a
+  serving table share blocks the source with `release_ambiguous`, listing the
+  releases, so nothing is picked silently and no day is delivered twice. Other days
+  are served as before: an entry merges across releases where spelling, type, value set
+  and classification agree, so per-release segments change no order that meets no
+  shared day, and a segment of no release gives way to a release's own on the days it
+  covers. The project document cannot name a release yet; when it can (`releases`, the
+  release names `show` lists), the named releases serve the shared days and entries
+  name their release.
+- **Holdings.** Compile places one slice of a physical column once per variable and
+  table, so two segments of one variable on one day place it once. The holdings
+  database's own releases do not yet mark shared days (`releases.rs`, `simplify:`): a
+  steward table routed to one release is the holdings schema's to model.
 
 ## Series breaks
 

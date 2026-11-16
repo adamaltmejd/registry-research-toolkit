@@ -269,6 +269,7 @@ fn candidates(db: &Connection, holdings: Option<&Connection>) -> Vec<(String, Op
 /// On a steward pair the sample is the reference tables the holdings place something
 /// in, each bound to the variables placed in it: a table bound to an unheld variable
 /// is blocked, so a sample of all tables would leave the order checks covering little.
+#[allow(clippy::too_many_lines)]
 fn census(db: &Connection, holdings: Option<&Connection>) -> (Vec<Sampled>, i64) {
     let pids = candidates(db, holdings);
     // (table, variable, database) of every placement of a declared, unheld key component.
@@ -334,11 +335,10 @@ fn census(db: &Connection, holdings: Option<&Connection>) -> (Vec<Sampled>, i64)
         }
         let segments = clipped(db, holdings, table_id, bounds);
         // An ambiguous segment of a bound variable or of a row key (row keys join every
-        // order) blocks, and so does a bound variable with no segment over the period;
-        // a preliminary segment orders with a warning. A steward takes its row keys from
-        // its declared keys (ops/order/rows.rs), so there a declared key component the
-        // holdings place in the serving table joins; on the reference catalog a curated
-        // row key.
+        // order) blocks, as do a bound variable with no segment over the period and a day
+        // two releases share; a preliminary segment orders with a warning. A steward's row
+        // keys are its declared keys (ops/order/rows.rs): a declared key component the
+        // holdings place in the serving table joins; on the reference catalog, a curated one.
         // simplify: the declared components per holding, without the server's overlap of
         // the key mapping with the served mapping and the semantic segment. Ceiling: a key
         // placed only in years its table does not serve is modelled as joining. It
@@ -351,7 +351,8 @@ fn census(db: &Connection, holdings: Option<&Connection>) -> (Vec<Sampled>, i64)
         let covered: HashSet<&str> = segments.iter().map(|s| s.variable.as_str()).collect();
         let mut blocked = segments.iter().any(|s| {
             s.state.as_deref() == Some("ambiguous") && (variables.contains(&s.variable) || joins(s))
-        }) || variables.iter().any(|v| !covered.contains(v.as_str()));
+        }) || variables.iter().any(|v| !covered.contains(v.as_str()))
+            || shares_days(db, table_id, bounds);
         // A steward server also blocks what its holdings cannot deliver (#2210).
         if let Some(holdings) = holdings
             && !blocked
@@ -437,6 +438,27 @@ fn clipped(
         }
     }
     segments
+}
+
+/// Whether two primary releases of a table serving the period share a day inside its
+/// serving window and the period: such a day blocks the order (`release_ambiguous`).
+fn shares_days(db: &Connection, table_id: i64, bounds: Option<(i64, i64)>) -> bool {
+    serving(db, table_id)
+        .into_iter()
+        .any(|(id, _, w_lo, w_hi)| {
+            let lo = [bounds.map(|b| b.0), w_lo].into_iter().flatten().max();
+            let hi = [bounds.map(|b| b.1), w_hi].into_iter().flatten().min();
+            db.query_row(
+                "SELECT EXISTS(SELECT 1 FROM release a JOIN release b
+               ON b.table_id = a.table_id AND b.id > a.id AND b.is_primary = 1
+             WHERE a.table_id = ?1 AND a.is_primary = 1
+               AND max(a.start, b.start, coalesce(?2, a.start))
+                 < min(a.end, b.end, coalesce(?3, a.end)))",
+                rusqlite::params![id, lo, hi],
+                |r| r.get(0),
+            )
+            .unwrap_or_else(|e| panic!("{id}: {e}"))
+        })
 }
 
 /// The table and its dated `continues` successors, followed transitively, as (table

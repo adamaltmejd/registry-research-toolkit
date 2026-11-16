@@ -61,6 +61,11 @@ pub struct Segment {
     table: String,
     /// The table's name, as `show` gives it.
     table_name: String,
+    /// In a table whose releases share days, the name of the release the row belongs to
+    /// (`show` lists them); absent elsewhere.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[schema(nullable = false)]
+    release: Option<String>,
     /// The column name it is delivered under; on a data holder's catalog, the holder's column.
     column: String,
     period: Period,
@@ -257,13 +262,14 @@ fn variable_pids(server: &Server, values: &[&str]) -> Result<Vec<String>, Error>
     Ok(pids)
 }
 
-/// The list's order: by start day, then table, column, file and variable (a table
+/// The list's order: by start day, then table, release, column, file and variable (a table
 /// read's variables can share the rest).
 fn sort(rows: &mut [Row]) {
     rows.sort_by(|a, b| {
         (
             a.start,
             &a.segment.table,
+            &a.segment.release,
             &a.segment.column,
             &a.segment.file,
             &a.segment.variable,
@@ -271,6 +277,7 @@ fn sort(rows: &mut [Row]) {
             .cmp(&(
                 b.start,
                 &b.segment.table,
+                &b.segment.release,
                 &b.segment.column,
                 &b.segment.file,
                 &b.segment.variable,
@@ -431,7 +438,9 @@ fn segment_rows(
 ) -> Result<Vec<Row>, Error> {
     let sql = "SELECT s.id, t.pid, s.start, s.end, sp.exact, s.dtype, s.length, s.format,
                 s.valueset_id, cv.pid, s.coded, s.sensitive, s.identifier,
-                s.role, s.state
+                s.role, s.state,
+                (SELECT n.body FROM release r JOIN text n ON n.id = r.name_text
+                 WHERE r.id = s.release_id)
          FROM segment s
            JOIN tbl t ON t.id = s.table_id
            JOIN spelling sp ON sp.id = s.spelling_id
@@ -463,6 +472,7 @@ fn segment_rows(
                     identifier: row.get(12)?,
                     role: row.get(13)?,
                     state: stated(row.get(14)?, "clear"),
+                    release: row.get(15)?,
                     ..Segment::default()
                 },
             })

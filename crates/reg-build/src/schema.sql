@@ -236,6 +236,9 @@ CREATE TABLE segment (
   id               INTEGER PRIMARY KEY,
   variable_id      INTEGER NOT NULL REFERENCES variable(id),
   table_id         INTEGER NOT NULL REFERENCES tbl(id),
+  -- In a table with concurrent releases, the primary release whose occurrences it holds
+  -- (crates/DESIGN.md, "Concurrent releases"); NULL elsewhere.
+  release_id       INTEGER REFERENCES release(id),
   fold_id          INTEGER NOT NULL REFERENCES name_fold(id),
   start            INTEGER NOT NULL,
   end              INTEGER NOT NULL,
@@ -253,7 +256,7 @@ CREATE TABLE segment (
   state            TEXT NOT NULL CHECK (state IN ('clear','ambiguous','preliminary')),
   CHECK (start < end)
 ) STRICT;
-CREATE UNIQUE INDEX segment_variable ON segment(variable_id, table_id, start);
+CREATE UNIQUE INDEX segment_variable ON segment(variable_id, table_id, release_id, start);
 CREATE INDEX segment_table    ON segment(table_id, start);
 CREATE INDEX segment_fold     ON segment(fold_id);
 CREATE INDEX segment_valueset ON segment(valueset_id, variable_id) WHERE valueset_id IS NOT NULL;
