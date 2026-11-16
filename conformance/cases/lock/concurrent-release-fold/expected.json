@@ -1,0 +1,7 @@
+{
+  "exit_code": 1,
+  "located_errors": [
+    "registers/demo/assignment/curation.toml:1: D-11: set variable would merge concurrent folded spellings \"b\" and \"c\" in delivery \"2003 - 2004\" of table \"t\" over 2003-01-01..2004-12-31 into variable \"alpha\"; retain separate variables",
+    "registers/demo/assignment/curation.toml:7: D-11: set variable would merge concurrent folded spellings \"b\" and \"c\" in delivery \"2003 - 2004\" of table \"t\" over 2003-01-01..2004-12-31 into variable \"alpha\"; retain separate variables"
+  ]
+}

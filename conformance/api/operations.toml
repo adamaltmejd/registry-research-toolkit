@@ -41,7 +41,7 @@
 # cursor encodes (generation_id, last key), so a cursor from another generation is
 # `stale_cursor`.
 
-contract_version = "6.3.0"
+contract_version = "6.4.0"
 
 [[operation]]
 name = "search"
@@ -106,7 +106,9 @@ params = { ref = "ref", variable = "string[]?", period = "period?", table = "ref
 result = "Page<Segment>"
 errors = ["invalid_ref", "not_found", "retired_ref", "table_is_register", "ambiguous_ref", "invalid_period", "invalid_cursor", "stale_cursor"]
 note = """A variable's one per-period list: per table, column name and period one row, \
-`ORDER BY start, table, column, file, variable`, offset-paged. With `variable` (up to \
+`ORDER BY start, table, release, column, file, variable`, offset-paged. In a table whose \
+releases share days (crates/DESIGN.md, "Concurrent releases") each row names its \
+`release`, so a shared day has one row per release; elsewhere `release` is absent. With `variable` (up to \
 200 variable refs) the ref is a table (a register with an implicit table names it) and \
 the list is those variables' rows in that table, one list in the same order, so a \
 project's table reads its columns in one request rather than one per column (#2232); \

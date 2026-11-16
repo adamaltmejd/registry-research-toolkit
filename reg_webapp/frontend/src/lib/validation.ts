@@ -66,6 +66,7 @@ const TITLES: Readonly<Record<string, string>> = {
   row_key_undeclared: "This table has no stated row identifier",
   source_outside_window: "Table is outside the study years",
   table_succession_undated: "The table succession has no stated date",
+  release_ambiguous: "The table was delivered more than once for these years",
   period_default_on_dated_table: "Choose years for this dated table",
   period_on_timeless_table: "This table has no years",
   period_not_orderable: "These years cannot be read",

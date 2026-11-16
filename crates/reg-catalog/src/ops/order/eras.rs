@@ -71,30 +71,41 @@ pub(super) fn split(
     Ok(())
 }
 
-/// The eras of the table `pid` from its primary placed releases.
+/// The eras of the table `pid` from its primary placed releases. At each release's first
+/// day and the day after its last, the era is the one release covering that day, the
+/// latest-starting where several do (a concurrent table, whose shared days an order
+/// blocks, or the base and holdings databases in composed mode, the smaller name first);
+/// a day none covers keeps the era before it.
 fn read(conn: &Connection, composed: bool, pid: &str) -> Result<Eras, Error> {
     let part = |db: &str| {
         format!(
-            "SELECT r.start, n.body FROM {db}.release r JOIN {db}.tbl t ON t.id = r.table_id
+            "SELECT r.start, r.end, n.body FROM {db}.release r JOIN {db}.tbl t ON t.id = r.table_id
              JOIN {db}.text n ON n.id = r.delivered_text
              WHERE t.pid = ?1 AND r.is_primary = 1"
         )
     };
     let sql = if composed {
-        format!("{} UNION {} ORDER BY 1, 2", part("main"), part("held"))
+        format!("{} UNION {} ORDER BY 1, 3", part("main"), part("held"))
     } else {
-        format!("{} ORDER BY 1, 2", part("main"))
+        format!("{} ORDER BY 1, 3", part("main"))
     };
-    let starts: Vec<(i64, String)> = rows(conn, &sql, [pid], |r| Ok((r.get(0)?, r.get(1)?)))?;
+    let releases: Vec<(i64, i64, String)> =
+        rows(conn, &sql, [pid], |r| Ok((r.get(0)?, r.get(1)?, r.get(2)?)))?;
+    let mut bounds: Vec<i64> = releases.iter().flat_map(|r| [r.0, r.1]).collect();
+    bounds.sort_unstable();
+    bounds.dedup();
     let mut eras: Eras = Vec::new();
-    // One era per first day: verify keeps one database's primaries from overlapping, but in
-    // composed mode the base and holdings databases can each start one there.
-    for (start, name) in starts {
-        if eras
-            .last()
-            .is_none_or(|(first, last)| *last != name && *first != start)
-        {
-            eras.push((start, name));
+    for day in bounds {
+        let Some(name) = releases
+            .iter()
+            .filter(|(start, end, _)| *start <= day && day < *end)
+            .min_by_key(|(start, _, name)| (std::cmp::Reverse(*start), name))
+            .map(|(_, _, name)| name)
+        else {
+            continue;
+        };
+        if eras.last().is_none_or(|(_, last)| last != name) {
+            eras.push((day, name.clone()));
         }
     }
     Ok(eras)

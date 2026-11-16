@@ -1,0 +1,11 @@
+repo = "fixture"
+commit = "fixture"
+
+[[provider]]
+pid = "demo"
+name = "Demo"
+
+[[input]]
+name = "frame"
+reader = "frame"
+path = "frame"

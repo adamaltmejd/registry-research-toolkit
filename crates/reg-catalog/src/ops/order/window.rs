@@ -66,6 +66,8 @@ struct Piece {
     state: String,
     /// Its source row ends at the open sentinel: no coverage end is stated.
     open: bool,
+    /// Its segment belongs to one release of a concurrent table.
+    keyed: bool,
 }
 
 /// The segments a binding reads, keyed by the connection's own table and variable ids,
@@ -78,7 +80,8 @@ pub(super) fn segments(scope: &Scope) -> String {
         format!(
             "SELECT {ids}, x.start AS start, x.end AS end, sp.exact AS exact, \
              x.dtype AS dtype, x.length AS length, vs.hash AS vs_hash, vs.n_items AS vs_n, \
-             cv.pid AS cv_pid, COALESCE(x.sensitive, 0) AS sensitive, x.state AS state
+             cv.pid AS cv_pid, COALESCE(x.sensitive, 0) AS sensitive, x.state AS state, \
+             x.release_id IS NOT NULL AS keyed
              FROM {db}.segment x {joins} JOIN {db}.spelling sp ON sp.id = x.spelling_id
              LEFT JOIN {db}.valueset vs ON vs.id = x.valueset_id
              LEFT JOIN {db}.class_version cv ON cv.id = x.class_version_id"
@@ -366,6 +369,9 @@ fn materialize(
             ));
         }
     }
+    // A shared day blocks the source (`release_ambiguous`); what the releases deliver
+    // there is no entry and meets no per-window check.
+    let pieces = unshared(scope, pieces)?;
     outcome.findings.extend(windows(&at, &pieces));
     outcome.findings.extend(editions(&at, &pieces)?);
     outcome.findings.extend(replaced(&at)?);
@@ -500,14 +506,16 @@ pub(super) fn in_chain(scope: &Scope, variable: i64) -> Result<bool, Error> {
 }
 
 /// The pieces serving table `k` gives the variable over its requested days: the primary
-/// segments, clipped to them.
+/// segments, clipped to them. In a concurrent table a segment of no one release (a
+/// releaseless delivery spanning several) gives way on the days a release's own segment
+/// covers, so no day is served twice outside the shared days the source blocks.
 fn served(scope: &Scope, k: usize, variable: i64) -> Result<Vec<Piece>, Error> {
     let s = &scope.serving[k];
     let rows: Vec<Piece> = rows(
         scope.conn,
         &format!(
             "SELECT start, end, exact, dtype, length, vs_hash, vs_n, cv_pid, sensitive, \
-             state, end = ?3
+             state, end = ?3, keyed
              FROM ({}) WHERE variable_id = ?1 AND table_id = ?2
              ORDER BY start",
             segments(scope)
@@ -524,7 +532,42 @@ fn served(scope: &Scope, k: usize, variable: i64) -> Result<Vec<Piece>, Error> {
             });
         }
     }
-    Ok(pieces)
+    let keyed: Vec<Interval> = pieces
+        .iter()
+        .filter(|p| p.keyed)
+        .map(|p| p.days.clone())
+        .collect();
+    Ok(cut(pieces, |p| if p.keyed { &[] } else { &keyed }))
+}
+
+/// The pieces less the days two primary releases of their serving table share.
+fn unshared(scope: &Scope, pieces: Vec<Piece>) -> Result<Vec<Piece>, Error> {
+    let mut shared = Vec::with_capacity(scope.serving.len());
+    for s in scope.serving {
+        let days: Vec<Interval> = super::releases::shared(scope.conn, s)?
+            .into_iter()
+            .map(|(days, _)| days)
+            .collect();
+        shared.push(days);
+    }
+    Ok(cut(pieces, |p| &shared[p.serving]))
+}
+
+/// Each piece less the days `away` gives for it.
+fn cut<'a>(pieces: Vec<Piece>, away: impl Fn(&Piece) -> &'a [Interval]) -> Vec<Piece> {
+    pieces
+        .into_iter()
+        .flat_map(|p| {
+            let away = away(&p);
+            let days = if away.is_empty() {
+                vec![p.days.clone()]
+            } else {
+                gaps(std::slice::from_ref(&p.days), away.to_vec())
+            };
+            days.into_iter()
+                .map(move |days| Piece { days, ..p.clone() })
+        })
+        .collect()
 }
 
 /// A [`segments`] row as [`served`] selects it, then `open`.
@@ -541,6 +584,7 @@ fn piece(serving: usize, row: &Row) -> rusqlite::Result<Piece> {
         sensitive: row.get(8)?,
         state: row.get(9)?,
         open: row.get(10)?,
+        keyed: row.get(11)?,
     })
 }
 

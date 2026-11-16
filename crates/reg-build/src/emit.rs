@@ -400,6 +400,9 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                         pid_of_variable(r, v),
                         pid_of_table(r, segment.table),
                         start(&segment.period.0),
+                        segment
+                            .release
+                            .map(|x| r.releases[x].release.release.clone()),
                     ),
                     (ri, v, s),
                 ));
@@ -700,6 +703,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                         Cell::Int(segment_id[&(ri, v, s)]),
                         Cell::Int(vid),
                         Cell::Int(table_id[&(ri, segment.table)]),
+                        opt_int(segment.release.map(|x| release_id[&(ri, x)])),
                         Cell::Fold(reg_core::fold_identity(&segment.spelling)),
                         Cell::Int(start(&segment.period.0)),
                         Cell::Int(end(&segment.period.1)),

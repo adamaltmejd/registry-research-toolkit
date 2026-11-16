@@ -4130,6 +4130,10 @@
           "period": {
             "$ref": "#/components/schemas/Period"
           },
+          "release": {
+            "type": "string",
+            "description": "In a table whose releases share days, the name of the release the row belongs to\n(`show` lists them); absent elsewhere."
+          },
           "role": {
             "type": "string"
           },

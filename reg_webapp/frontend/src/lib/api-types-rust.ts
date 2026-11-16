@@ -1125,6 +1125,11 @@ export interface components {
             /** Format: int64 */
             length?: number;
             period: components["schemas"]["Period"];
+            /**
+             * @description In a table whose releases share days, the name of the release the row belongs to
+             *     (`show` lists them); absent elsewhere.
+             */
+            release?: string;
             role: string;
             sensitive?: boolean;
             /** @description On a data holder with several databases, the id of the database the file is in. */

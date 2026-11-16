@@ -1,0 +1,12 @@
+{
+  "note": "Fails if admission compares schema versions as numbers (17.0 equals 17) instead of requiring the exact text.",
+  "manifest": {
+    "schema_version": "17.0"
+  },
+  "requests": [
+    {
+      "operation": "context",
+      "path": "/api/context"
+    }
+  ]
+}

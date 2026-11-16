@@ -1,0 +1,9 @@
+{"kind":"register","provider":"demo","register":"assignment","name":"Assignment fixture"}
+{"kind":"table","provider":"demo","register":"assignment","table":"t","name":"T"}
+{"kind":"release","provider":"demo","register":"assignment","table":"t","release":"r1","name":"2001 - 2002","from":"2001-01-01","to":"2002-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"assignment","table":"t","release":"r2","name":"2003 - 2004","from":"2003-01-01","to":"2004-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"assignment","table":"t","release":"r3","name":"2004 - 2005","from":"2004-01-01","to":"2005-12-31","grain":"year","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"assignment","table":"t","release":"r1","column":"A","source_key":"v1","label":"Alpha"}
+{"kind":"occurrence","provider":"demo","register":"assignment","table":"t","release":"r3","column":"A","source_key":"v1","label":"Alpha"}
+{"kind":"occurrence","provider":"demo","register":"assignment","table":"t","release":"r2","column":"B","source_key":"v2","label":"Beta"}
+{"kind":"occurrence","provider":"demo","register":"assignment","table":"t","release":"r2","column":"C","source_key":"v3","label":"Gamma"}

@@ -1,0 +1,10 @@
+# Concurrent releases (crates/DESIGN.md, "Concurrent releases"): the releases
+# "2003 - 2004" and "2004 - 2005" share 2004. The provider spells the municipality `A`
+# in the first and third release and `B` in the second; one variable takes both, since
+# no release holds both spellings.
+
+[[statement]]
+kind = "set"
+subject = "t: B"
+fields = { variable = "kommun" }
+evidence = "B in the 2003 - 2004 release is the A column of the other releases, renamed."

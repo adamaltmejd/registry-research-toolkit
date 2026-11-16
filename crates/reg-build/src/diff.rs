@@ -513,6 +513,8 @@ fn tables(p: &Pair) -> Result<Section> {
 #[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
 struct Seg {
     table: String,
+    /// The delivery a segment of a concurrent table holds (schema 17).
+    release: Option<String>,
     start: i64,
     end: i64,
     spelling: String,
@@ -528,7 +530,8 @@ struct Seg {
 
 impl Seg {
     fn json(&self) -> Value {
-        json!({"table": self.table, "start": iso_day(self.start), "end": iso_day(self.end),
+        json!({"table": self.table, "release": self.release,
+               "start": iso_day(self.start), "end": iso_day(self.end),
                "spelling": self.spelling, "dtype": self.dtype, "valueset": self.valueset,
                "state": self.state, "coded": self.coded, "sensitive": self.sensitive,
                "identifier": self.identifier, "role": self.role,
@@ -538,8 +541,11 @@ impl Seg {
     fn text(&self) -> String {
         let flag = |v: Option<i64>| v.map_or_else(|| "-".to_owned(), |v| v.to_string());
         format!(
-            "{} {} {} dtype={} vs={} {} coded={} sensitive={} identifier={} {} row_key={}",
+            "{}{} {} {} dtype={} vs={} {} coded={} sensitive={} identifier={} {} row_key={}",
             self.table,
+            self.release
+                .as_deref()
+                .map_or_else(String::new, |r| format!("/{r}")),
             span(self.start, self.end),
             self.spelling,
             self.dtype.as_deref().unwrap_or("-"),
@@ -566,11 +572,22 @@ fn segments(conn: &Connection) -> Result<BTreeMap<String, BTreeSet<Seg>>> {
     } else {
         "s.role = 'row_key'"
     };
+    // Before schema 17 no segment held a release.
+    let keyed: bool = conn.query_row(
+        "SELECT count(*) = 1 FROM pragma_table_info('segment') WHERE name = 'release_id'",
+        [],
+        |r| r.get(0),
+    )?;
+    let release = if keyed {
+        "(SELECT n.body FROM release r JOIN text n ON n.id = r.name_text WHERE r.id = s.release_id)"
+    } else {
+        "NULL"
+    };
     let rows = query(
         conn,
         &format!(
             "SELECT v.pid, t.pid, s.start, s.end, sp.exact, s.dtype, coalesce(vs.hash, ''),
-                    s.state, s.coded, s.sensitive, s.identifier, s.role, {row_key}
+                    s.state, s.coded, s.sensitive, s.identifier, s.role, {row_key}, {release}
              FROM segment s
              JOIN variable v ON v.id = s.variable_id
              JOIN tbl t ON t.id = s.table_id
@@ -593,6 +610,7 @@ fn segments(conn: &Connection) -> Result<BTreeMap<String, BTreeSet<Seg>>> {
                     identifier: r.get(10)?,
                     role: r.get(11)?,
                     row_key: r.get(12)?,
+                    release: r.get(13)?,
                 },
             ))
         },
