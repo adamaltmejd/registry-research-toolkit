@@ -1,4 +1,7 @@
 [variables]
 antal = ["t: Y"]
+avgift = ["t: S"]
+avgift-bilaga = ["u: T"]
 belopp = ["t: X"]
 kommun = ["t: A", "t: B"]
+personal = ["t: P", "t: Q"]

@@ -19,7 +19,8 @@
 //!   key's spellings or type families are F7.
 //! - **Identity.** Occurrences with one source key are one variable, unless the key
 //!   covers two folded spellings in overlapping periods anywhere in the register, among
-//!   used occurrences (after shadowing): then it splits by spelling. A key documented only without a
+//!   used occurrences (after shadowing), other than a pair in two releases of one table
+//!   (`Deliveries::apart`): then it splits by spelling. A key documented only without a
 //!   column is no variable (F5).
 //! - **Owners (F2).** A column several variables claim in one table and window goes to
 //!   the one that holds it alone in the neighbouring releases ([`owners`]).
@@ -669,6 +670,11 @@ fn resolve_pass(
         }
     }
 
+    let delivered = Deliveries {
+        primaries,
+        primary_of,
+    };
+
     // Periods and the T1 clamp.
     let bound = |table: &Table| -> Option<Interval> {
         let from = table.from.as_deref().or(register.from.as_deref());
@@ -698,7 +704,7 @@ fn resolve_pass(
         };
         // A colliding twin of the primary's edition is not preliminary.
         let preliminary = release.is_some_and(|r| {
-            primary_of.get(&r).is_some_and(|&p| {
+            delivered.primary_of.get(&r).is_some_and(|&p| {
                 rank(&releases[r].release.edition) > rank(&releases[p].release.edition)
             })
         });
@@ -783,7 +789,7 @@ fn resolve_pass(
         .collect();
     let mut shadowed = Vec::new();
     for (i, r) in resolved.iter().enumerate() {
-        let Some(&primary) = r.release.and_then(|x| primary_of.get(&x)) else {
+        let Some(&primary) = r.release.and_then(|x| delivered.primary_of.get(&x)) else {
             continue;
         };
         if r.status == "used" && primary_keys.contains(&(primary, r.occurrence.source_key.as_str()))
@@ -813,7 +819,7 @@ fn resolve_pass(
         }
     }
     let empty = BTreeMap::new();
-    for (&x, &primary) in &primary_of {
+    for (&x, &primary) in &delivered.primary_of {
         let own = forms.get(&x).unwrap_or(&empty);
         let differ: Vec<&str> = own
             .iter()
@@ -871,30 +877,30 @@ fn resolve_pass(
         Ok(value)
     };
     // Identity: a key splits by fold when two folds overlap anywhere in the register,
-    // among used rows. Shadowing leaves a worse edition's row only where the primary
-    // lacks its key, so a preliminary and a final edition of one period never split it.
-    let mut by_key: BTreeMap<String, BTreeMap<String, Vec<Interval>>> = BTreeMap::new();
+    // among used rows, except where the two are in different releases of one table
+    // (`Deliveries::apart`, the test D-11 applies to a curated merge). Shadowing leaves a
+    // worse edition's row only where the primary lacks its key, so a preliminary and a
+    // final edition of one period never split it.
+    let mut by_key: BTreeMap<&str, Vec<(String, &ResolvedOccurrence)>> = BTreeMap::new();
     for r in &resolved {
         if r.status == "used" {
             by_key
-                .entry(r.occurrence.source_key.clone())
+                .entry(r.occurrence.source_key.as_str())
                 .or_default()
-                .entry(fold_identity(&r.occurrence.column))
-                .or_default()
-                .push(span(r).clone());
+                .push((fold_identity(&r.occurrence.column), r));
         }
     }
     let mut split = BTreeSet::new();
-    for (key, folds) in &by_key {
-        let merged: Vec<Vec<Interval>> = folds.values().map(|p| merge(p.clone())).collect();
-        let overlaps = merged.iter().enumerate().any(|(i, a)| {
-            merged[i + 1..].iter().any(|b| {
-                a.iter()
-                    .any(|x| b.iter().any(|y| intersect(x, y).is_some()))
+    for (key, rows) in &by_key {
+        // simplify: quadratic in one key's used occurrences (tens); sweep by start if a
+        // key reaches thousands.
+        let overlaps = rows.iter().enumerate().any(|(i, (fa, a))| {
+            rows[i + 1..].iter().any(|(fb, b)| {
+                fa != fb && intersect(span(a), span(b)).is_some() && !delivered.apart(&tables, a, b)
             })
         });
         if overlaps {
-            split.insert(key.clone());
+            split.insert((*key).to_owned());
         }
     }
     report.split_keys = split.len();
@@ -1017,26 +1023,13 @@ fn resolve_pass(
         keep
     });
 
-    // The release each used occurrence's segment belongs to in a concurrent table: its own
-    // primary (a worse edition's is its period's primary), else, for an occurrence of no
-    // release, the one primary that contains it whole.
+    // The release each used occurrence's segment belongs to (`Deliveries::of`).
     let deliveries: Vec<Option<usize>> = resolved
         .iter()
         .map(|r| {
-            if r.status != "used" || !tables[r.table].concurrent {
-                return None;
-            }
-            if let Some(x) = r.release {
-                return Some(primary_of.get(&x).copied().unwrap_or(x));
-            }
-            let mut containing = primaries[r.table]
-                .iter()
-                .filter(|(p, _)| covers(p, span(r)))
-                .map(|(_, x)| *x);
-            match (containing.next(), containing.next()) {
-                (Some(x), None) => Some(x),
-                _ => None,
-            }
+            (r.status == "used")
+                .then(|| delivered.of(&tables, r))
+                .flatten()
         })
         .collect();
 
@@ -1772,6 +1765,53 @@ pub(crate) fn placed(r: &Release) -> Option<Interval> {
 }
 
 /// The period of an occurrence that is placed.
+/// The primary releases of each table with their periods, sorted (empty for a table with
+/// no placed primary), and each non-primary release's primary.
+pub(crate) struct Deliveries {
+    pub(crate) primaries: Vec<Vec<(Interval, usize)>>,
+    pub(crate) primary_of: BTreeMap<usize, usize>,
+}
+
+impl Deliveries {
+    /// The release an occurrence is delivered in, in a table with concurrent releases:
+    /// its own primary (a worse edition's is its period's primary), else, for an
+    /// occurrence of no release, the one primary that contains it whole; `None`
+    /// elsewhere. Its segment is that release's, and "within one release a variable has
+    /// one column and a column has one variable" (crates/DESIGN.md, "Concurrent
+    /// releases") is tested on it: default identity, D-11, ambiguity and owners.
+    pub(crate) fn of(&self, tables: &[ResolvedTable], r: &ResolvedOccurrence) -> Option<usize> {
+        if !tables[r.table].concurrent {
+            return None;
+        }
+        if let Some(x) = r.release {
+            return Some(self.primary_of.get(&x).copied().unwrap_or(x));
+        }
+        let mut containing = self.primaries[r.table]
+            .iter()
+            .filter(|(p, _)| covers(p, span(r)))
+            .map(|(_, x)| *x);
+        match (containing.next(), containing.next()) {
+            (Some(x), None) => Some(x),
+            _ => None,
+        }
+    }
+
+    /// Whether two overlapping occurrences may differ in folded spelling under one
+    /// variable: they are in two different releases of one table.
+    pub(crate) fn apart(
+        &self,
+        tables: &[ResolvedTable],
+        a: &ResolvedOccurrence,
+        b: &ResolvedOccurrence,
+    ) -> bool {
+        a.table == b.table
+            && matches!(
+                (self.of(tables, a), self.of(tables, b)),
+                (Some(x), Some(y)) if x != y
+            )
+    }
+}
+
 pub(crate) fn span(r: &ResolvedOccurrence) -> &Interval {
     r.period.as_ref().expect("a placed occurrence")
 }

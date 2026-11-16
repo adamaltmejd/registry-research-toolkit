@@ -294,7 +294,11 @@ every order (`row_keys`), `show` lists them and `schema` lines flag them.
 - Occurrences with one key in one register are one variable. The exception is a key that
   covers two folded spellings in overlapping periods anywhere in the register. The
   comparison uses the preferred edition of each period, so a preliminary and a final
-  delivery of one year never split a key. That key splits by spelling.
+  delivery of one year never split a key. That key splits by spelling. Two spellings
+  in different releases of one table do not split it ("Concurrent releases"): within one
+  release a variable still has one column, so it is the pair D-11 lets curation merge.
+  Overlap across tables, inside one release or with an occurrence of no release splits
+  as before.
 - Case never distinguishes columns.
 - A variable has at most one spelling per table and release at a time; outside a table
   with concurrent releases, per table.
@@ -3119,7 +3123,10 @@ period and qualifier), and the catalog keeps every release's own columns.
   table, since orders will name primaries by them; an edition collision (F8) may
   repeat a name, because only one of the pair is primary.
 - **Identity.** `D-11` is tested per release (Identity, `set variable`): one variable
-  may be `A` in one release and `B` in another over a shared day.
+  may be `A` in one release and `B` in another over a shared day. Default identity uses the
+  same test: a source key spelled differently in two releases of one table is one
+  variable (Identity), which merged 84 keys on 0.86.0 (CIS 74, breg 5, prisindex 3, rtb
+  and hreg 1 each).
 - **Reading.** `segments` rows name their `release` in such a table, ordered by start,
   table, release, column. In an order, a requested day two primary releases of a
   serving table share is served only by the releases the source names in `releases`

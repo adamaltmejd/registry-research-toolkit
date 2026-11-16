@@ -192,3 +192,9 @@
 {"kind":"occurrence","provider":"demo","register":"conc","table":"t","release":"r3","column":"A","source_key":"k2","label":"Kommun","dtype":"char"}
 {"kind":"occurrence","provider":"demo","register":"conc","table":"t","release":"r2","column":"B","source_key":"k3","label":"Kommun","dtype":"char"}
 {"kind":"occurrence","provider":"demo","register":"conc","table":"t","release":"r3","column":"Y","source_key":"k4","label":"Antal","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"conc","table":"t","release":"r2","column":"P","source_key":"k5","label":"Personal","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"conc","table":"t","release":"r3","column":"Q","source_key":"k5","label":"Personal","dtype":"int"}
+{"kind":"table","provider":"demo","register":"conc","table":"u","name":"Bilaga"}
+{"kind":"release","provider":"demo","register":"conc","table":"u","release":"r4","name":"2004","from":"2004-01-01","to":"2004-12-31","grain":"year","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"conc","table":"t","release":"r2","column":"S","source_key":"k6","label":"Avgift","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"conc","table":"u","release":"r4","column":"T","source_key":"k6","label":"Avgift","dtype":"int"}
