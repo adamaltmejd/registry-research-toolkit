@@ -2362,24 +2362,6 @@ evidence = "Det avslutande S är en opak bokstavskod.\ncatalog:variable_text:263
 [[statement]]
 kind = "set"
 subject = "var:medverkande-hogskola"
-fields = { "sets" = ["medverkande-hogskola"] }
-evidence = "Båda variablerna anger medverkande högskola.\ncatalog:variable_text:26373:11323:14245\ncatalog:variable_text:26374:13879:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:medverkande-hogskola"
-fields = { "tags" = ["education"] }
-evidence = "Båda variablerna anger medverkande högskola.\ncatalog:variable_text:26373:11323:14245\ncatalog:variable_text:26374:13879:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:medverkande-hogskola-medverkhskod"
-fields = { "sets" = ["medverkande-hogskola"] }
-evidence = "Båda variablerna anger medverkande högskola.\ncatalog:variable_text:26373:11323:14245\ncatalog:variable_text:26374:13879:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:medverkande-hogskola-medverkhskod"
 fields = { "tags" = ["education"] }
 evidence = "Båda variablerna anger medverkande högskola.\ncatalog:variable_text:26373:11323:14245\ncatalog:variable_text:26374:13879:19358"
 
@@ -3414,12 +3396,6 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 kind = "set"
 subject = "set:lasar"
 fields = { "label" = "Läsår" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:medverkande-hogskola"
-fields = { "label" = "Medverkande högskola" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
 
 [[statement]]

@@ -1,0 +1,14 @@
+{
+  "note": "Default identity across concurrent releases (crates/DESIGN.md, \"Identity\"): source key `k5` is spelled `P` in `conc/t`'s release \"2003 - 2004\" and `Q` in \"2004 - 2005\", which share 2004, so it stays one variable, `personal`, with a segment per release. Its twin `k6` is spelled `S` in `conc/t` and `T` in the other table `conc/u` over 2004: overlap across tables still splits the key, so `avgift` has only `S`. Fails if spellings in two releases of one table split a key (a second variable, `personal` loses a row), or if overlap across tables stops splitting one (`avgift` gains `T`). Oracle: the fixture's JSONL.",
+  "fixture": "orders",
+  "requests": [
+    {
+      "operation": "segments",
+      "path": "/api/segments/demo/conc/personal"
+    },
+    {
+      "operation": "segments",
+      "path": "/api/segments/demo/conc/avgift"
+    }
+  ]
+}

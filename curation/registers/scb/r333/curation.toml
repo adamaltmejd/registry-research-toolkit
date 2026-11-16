@@ -1237,18 +1237,6 @@ evidence = "Adoptivfaderns ålder är ett åldersmått.\ncatalog:occurrence-loca
 
 [[statement]]
 kind = "set"
-subject = "var:alder-31-12-adoptivfar-alderadfar"
-fields = { "sets" = ["alder"] }
-evidence = "Adoptivfaderns ålder är ett åldersmått.\ncatalog:occurrence-locators:variable:6387"
-
-[[statement]]
-kind = "set"
-subject = "var:alder-31-12-adoptivfar-alderadfar"
-fields = { "tags" = ["demographics"] }
-evidence = "Adoptivfaderns ålder är ett åldersmått.\ncatalog:occurrence-locators:variable:6387"
-
-[[statement]]
-kind = "set"
 subject = "var:alder-31-12-adoptivmor"
 fields = { "sets" = ["alder"] }
 evidence = "Adoptivmoderns ålder är ett åldersmått.\ncatalog:occurrence-locators:variable:6388"
@@ -1258,18 +1246,6 @@ kind = "set"
 subject = "var:alder-31-12-adoptivmor"
 fields = { "tags" = ["demographics"] }
 evidence = "Adoptivmoderns ålder är ett åldersmått.\ncatalog:occurrence-locators:variable:6388"
-
-[[statement]]
-kind = "set"
-subject = "var:alder-31-12-adoptivmor-alderadmor"
-fields = { "sets" = ["alder"] }
-evidence = "Adoptivmoderns ålder är ett åldersmått.\ncatalog:occurrence-locators:variable:6389"
-
-[[statement]]
-kind = "set"
-subject = "var:alder-31-12-adoptivmor-alderadmor"
-fields = { "tags" = ["demographics"] }
-evidence = "Adoptivmoderns ålder är ett åldersmått.\ncatalog:occurrence-locators:variable:6389"
 
 [[statement]]
 kind = "set"
@@ -1285,18 +1261,6 @@ evidence = "Faderns ålder är ett åldersmått.\ncatalog:occurrence-locators:va
 
 [[statement]]
 kind = "set"
-subject = "var:alder-31-12-biologisk-far-alderbiofar"
-fields = { "sets" = ["alder"] }
-evidence = "Faderns ålder är ett åldersmått.\ncatalog:occurrence-locators:variable:6391"
-
-[[statement]]
-kind = "set"
-subject = "var:alder-31-12-biologisk-far-alderbiofar"
-fields = { "tags" = ["demographics"] }
-evidence = "Faderns ålder är ett åldersmått.\ncatalog:occurrence-locators:variable:6391"
-
-[[statement]]
-kind = "set"
 subject = "var:alder-31-12-biologisk-mor"
 fields = { "sets" = ["alder"] }
 evidence = "Moderns ålder är ett åldersmått.\ncatalog:occurrence-locators:variable:6392"
@@ -1306,18 +1270,6 @@ kind = "set"
 subject = "var:alder-31-12-biologisk-mor"
 fields = { "tags" = ["demographics"] }
 evidence = "Moderns ålder är ett åldersmått.\ncatalog:occurrence-locators:variable:6392"
-
-[[statement]]
-kind = "set"
-subject = "var:alder-31-12-biologisk-mor-alderbiomor"
-fields = { "sets" = ["alder"] }
-evidence = "Moderns ålder är ett åldersmått.\ncatalog:occurrence-locators:variable:6393"
-
-[[statement]]
-kind = "set"
-subject = "var:alder-31-12-biologisk-mor-alderbiomor"
-fields = { "tags" = ["demographics"] }
-evidence = "Moderns ålder är ett åldersmått.\ncatalog:occurrence-locators:variable:6393"
 
 [[statement]]
 kind = "set"
@@ -2854,18 +2806,6 @@ kind = "set"
 subject = "var:foraldrar-doda"
 fields = { "tags" = ["family-household", "mortality"] }
 evidence = "Kodning av föräldrars död.\ncatalog:occurrence-locators:variable:6528\ncatalog:valueset:9704"
-
-[[statement]]
-kind = "set"
-subject = "var:foraldrar-doda-avlidnaforaldrar"
-fields = { "sets" = ["avlidna-foraldrar"] }
-evidence = "Kodning av föräldrars död.\ncatalog:occurrence-locators:variable:6529\ncatalog:valueset:7605"
-
-[[statement]]
-kind = "set"
-subject = "var:foraldrar-doda-avlidnaforaldrar"
-fields = { "tags" = ["family-household", "mortality"] }
-evidence = "Kodning av föräldrars död.\ncatalog:occurrence-locators:variable:6529\ncatalog:valueset:7605"
 
 [[statement]]
 kind = "set"

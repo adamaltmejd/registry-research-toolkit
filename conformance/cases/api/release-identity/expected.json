@@ -1,0 +1,20 @@
+[
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/column": ["P", "Q"],
+      "/data/items/*/release": ["2003 - 2004", "2004 - 2005"],
+      "/data/items/*/period": [
+        {"start": "2003-01-01", "end": "2005-01-01"},
+        {"start": "2004-01-01", "end": "2006-01-01"}
+      ]
+    }
+  },
+  {
+    "status": 200,
+    "json": {
+      "/data/items/*/column": ["S"],
+      "/data/items/*/table": ["demo/conc/t"]
+    }
+  }
+]
