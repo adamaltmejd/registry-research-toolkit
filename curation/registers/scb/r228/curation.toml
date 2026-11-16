@@ -2836,3 +2836,15 @@ kind = "set"
 subject = "individ: FKUVP"
 fields = { "variable" = "obligationer-fordran-fkuvpr" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v15525), never delivered together in one table, so they are one variable renamed between releases: FKUVP 1999-12-31..1999-12-31; FKUVPR 2000-12-31..2007-12-31."
+
+[[statement]]
+kind = "set"
+subject = "hushall: FKUVPR"
+fields = { "variable" = "obligationer-fordran-fkuvpr" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v15525), never delivered together in one table, so they are one variable renamed between releases: FKUVP 1999-12-31..1999-12-31; FKUVPR 2000-12-31..2007-12-31."
+
+[[statement]]
+kind = "set"
+subject = "individ: FKUVPR"
+fields = { "variable" = "obligationer-fordran-fkuvpr" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v15525), never delivered together in one table, so they are one variable renamed between releases: FKUVP 1999-12-31..1999-12-31; FKUVPR 2000-12-31..2007-12-31."

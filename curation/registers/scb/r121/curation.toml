@@ -96271,3 +96271,159 @@ kind = "set"
 subject = "var:va21"
 fields = { "label" = "Övriga skulder (Finansbolag)" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Finansbolag\"."
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: V7322"
+fields = { "variable" = "ackumulerade-overavskrivningar-v7322" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4310), never delivered together in one table, so they are one variable renamed between releases: V0330 2000-01-01..2010-12-31; V7322 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: V7322"
+fields = { "variable" = "ackumulerade-overavskrivningar-v7322" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4310), never delivered together in one table, so they are one variable renamed between releases: V0330 2000-01-01..2010-12-31; V7322 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: V7412"
+fields = { "variable" = "aktiverat-arbete-for-egen-rakning-v7412" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4313), never delivered together in one table, so they are one variable renamed between releases: V0402 2000-01-01..2010-12-31; V7412 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: V7412"
+fields = { "variable" = "aktiverat-arbete-for-egen-rakning-v7412" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4313), never delivered together in one table, so they are one variable renamed between releases: V0402 2000-01-01..2010-12-31; V7412 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: V7659"
+fields = { "variable" = "andel-i-handelsbolag-inklusive-kapitalvinst-forlust-pa-v7659" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17767), never delivered together in one table, so they are one variable renamed between releases: V0635 2000-01-01..2010-12-31; V7659 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n3b: V7659"
+fields = { "variable" = "andel-i-handelsbolag-inklusive-kapitalvinst-forlust-pa-v7659" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17767), never delivered together in one table, so they are one variable renamed between releases: V0635 2000-01-01..2010-12-31; V7659 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: V7660"
+fields = { "variable" = "andel-i-handelsbolag-inklusive-kapitalvinst-forlust-pa-v7660" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17768), never delivered together in one table, so they are one variable renamed between releases: V0636 2000-01-01..2010-12-31; V7660 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V7602"
+fields = { "variable" = "andra-intakter-som-ska-tas-upp-men-som-inte-bokforts-v7602" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v16765), never delivered together in one table, so they are one variable renamed between releases: V0603 2000-01-01..2010-12-31; V7602 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V7701"
+fields = { "variable" = "andra-kostnader-som-ska-dras-av-men-som-inte-bokforts-v7701" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v16766), never delivered together in one table, so they are one variable renamed between releases: V0610 2000-01-01..2010-12-31; V7701 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: V7331"
+fields = { "variable" = "avsattningar-for-pensioner-v7331" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4226), never delivered together in one table, so they are one variable renamed between releases: V0320 2000-01-01..2010-12-31; V7331 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n3a: V6504"
+fields = { "variable" = "avyttring-av-vardepapper-a-min-andel-av-kapitalvinst-v6504" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17828), never delivered together in one table, so they are one variable renamed between releases: V0893 2003-01-01..2011-12-31; V7803 2007-01-01..2023-12-31; V6504 2012-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n3a: V6602"
+fields = { "variable" = "avyttring-av-vardepapper-b-min-andel-av-kapitalforlust-v6602" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17829), never delivered together in one table, so they are one variable renamed between releases: V0894 2003-01-01..2011-12-31; V7903 2007-01-01..2023-12-31; V6602 2012-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: V7752"
+fields = { "variable" = "bokforda-intakter-som-inte-ska-tas-upp-ackordsvinster-v7752" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17773), never delivered together in one table, so they are one variable renamed between releases: V0656 2000-01-01..2010-12-31; V7752 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V7200"
+fields = { "variable" = "immateriella-anlaggningstillgangar-enskilda-naringsidkare" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4209), never delivered together in one table, so they are one variable renamed between releases: V0234 2000-01-01..2010-12-31; V7200 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: V7323"
+fields = { "variable" = "ovriga-obeskattade-reserver-v7323" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4245), never delivered together in one table, so they are one variable renamed between releases: V0339 2000-01-01..2010-12-31; V7323 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: V7323"
+fields = { "variable" = "ovriga-obeskattade-reserver-v7323" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4245), never delivered together in one table, so they are one variable renamed between releases: V0339 2000-01-01..2010-12-31; V7323 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: V7528"
+fields = { "variable" = "skattekostnader-skatt-pa-arets-resultat" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4317), never delivered together in one table, so they are one variable renamed between releases: V0598 2000-01-01..2006-12-31; V7528 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: BENENSKSATS"
+fields = { "variable" = "skattesats-energiskatt-benensksats" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v39788), never delivered together in one table, so they are one variable renamed between releases: BENENSATS 2008-01-01..2008-12-31; BENENSKSATS 2014-01-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: OLJENSKSATS"
+fields = { "variable" = "skattesats-energiskatt-oljensksats" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v39788), never delivered together in one table, so they are one variable renamed between releases: OLJENSATS 2008-01-01..2008-12-31; OLJENSKSATS 2015-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: OVRENSKSATS"
+fields = { "variable" = "skattesats-energiskatt-ovrensksats" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v39788), never delivered together in one table, so they are one variable renamed between releases: OVRENSATS 2008-01-01..2008-12-31; OVRENSKSATS 2015-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: BENCO2SKSATS"
+fields = { "variable" = "skattesats-koldioxidskatt-benco2sksats" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v39789), never delivered together in one table, so they are one variable renamed between releases: BENCO2SATS 2008-01-01..2008-12-31; BENCO2SKSATS 2014-01-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: OLJCO2SKSATS"
+fields = { "variable" = "skattesats-koldioxidskatt-oljco2sksats" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v39789), never delivered together in one table, so they are one variable renamed between releases: OLJCO2SATS 2008-01-01..2008-12-31; OLJCO2SKSATS 2015-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: OVRCO2SKSATS"
+fields = { "variable" = "skattesats-koldioxidskatt-ovrco2sksats" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v39789), never delivered together in one table, so they are one variable renamed between releases: OVRCO2SATS 2008-01-01..2008-12-31; OVRCO2SKSATS 2015-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: V7370"
+fields = { "variable" = "upplupna-kostnader-och-forutbetalda-intakter-v7370" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4251), never delivered together in one table, so they are one variable renamed between releases: V0305 2000-01-01..2010-12-31; V7370 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: V7370"
+fields = { "variable" = "upplupna-kostnader-och-forutbetalda-intakter-v7370" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4251), never delivered together in one table, so they are one variable renamed between releases: V0305 2000-01-01..2010-12-31; V7370 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n3a: V6604"
+fields = { "variable" = "uppskov-med-kapitalvinst-enligt-blankett-n4-835-v6604" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17832), never delivered together in one table, so they are one variable renamed between releases: V0835 2000-01-01..2011-12-31; V7904 2007-01-01..2023-12-31; V6604 2012-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."

@@ -20635,3 +20635,39 @@ kind = "set"
 subject = "tillaggsurval-utrikesfodda-taxeringshushall: USKNRV"
 fields = { "variable" = "underskott-naringsverksamhet" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v646), never delivered together in one table, so they are one variable renamed between releases: USKNRV 1992-01-01..1992-12-31; NUNDER 1994-01-01..2018-12-31."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: INBTJ"
+fields = { "variable" = "inbtj" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v1173), never delivered together in one table, so they are one variable renamed between releases: BINTJ 1971-01-01..1977-12-31; INBTJ 1979-01-01..1984-12-31."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: INBTJ"
+fields = { "variable" = "inbtj" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v1173), never delivered together in one table, so they are one variable renamed between releases: BINTJ 1971-01-01..1977-12-31; INBTJ 1979-01-01..1984-12-31."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: INSJOR"
+fields = { "variable" = "insjor" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v39897), never delivered together in one table, so they are one variable renamed between releases: INJO 1968-01-01..1970-12-31; INSJOR 1981-01-01..1990-12-31."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: INSJOR"
+fields = { "variable" = "insjor" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v39897), never delivered together in one table, so they are one variable renamed between releases: INJO 1968-01-01..1970-12-31; INSJOR 1981-01-01..1990-12-31."
+
+[[statement]]
+kind = "set"
+subject = "panelurval-taxeringshushall: INSROR"
+fields = { "variable" = "insror" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v40056), never delivered together in one table, so they are one variable renamed between releases: INRO 1968-01-01..1970-12-31; INSROR 1981-01-01..1990-12-31."
+
+[[statement]]
+kind = "set"
+subject = "tillaggsurval-utrikesfodda-taxeringshushall: INSROR"
+fields = { "variable" = "insror" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v40056), never delivered together in one table, so they are one variable renamed between releases: INRO 1968-01-01..1970-12-31; INSROR 1981-01-01..1990-12-31."

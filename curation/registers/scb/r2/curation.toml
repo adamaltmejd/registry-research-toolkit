@@ -8137,3 +8137,9 @@ kind = "set"
 subject = "familjer-1990-1997: ALD96"
 fields = { "variable" = "ald97" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v241), never delivered together in one table, so they are one variable renamed between releases: ALD90 1990-12-31..1990-12-31; ALD91 1991-12-31..1991-12-31; ALD92 1992-12-31..1992-12-31; ALD93 1993-12-31..1993-12-31; ALD94 1994-12-31..1994-12-31; ALD95 1995-12-31..1995-12-31; ALD96 1996-12-31..1996-12-31; ALD97 1997-12-31..1997-12-31."
+
+[[statement]]
+kind = "set"
+subject = "familjer-1990-1997: ALD97"
+fields = { "variable" = "ald97" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v241), never delivered together in one table, so they are one variable renamed between releases: ALD90 1990-12-31..1990-12-31; ALD91 1991-12-31..1991-12-31; ALD92 1992-12-31..1992-12-31; ALD93 1993-12-31..1993-12-31; ALD94 1994-12-31..1994-12-31; ALD95 1995-12-31..1995-12-31; ALD96 1996-12-31..1996-12-31; ALD97 1997-12-31..1997-12-31."

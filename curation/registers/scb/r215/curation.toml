@@ -5604,3 +5604,9 @@ kind = "set"
 subject = "vattenbruk: RYOvrtext"
 fields = { "variable" = "ovrig-art-1-rom-eller-yngel-text-sotvatten-fran-2017" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v39999), never delivered together in one table, so they are one variable renamed between releases: RYOvrtext 2015-01-01..2015-12-31; RYOvrpText 2017-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "kostnadsenkaten: Tk_avlon"
+fields = { "variable" = "arbetskostnad-anstallda-ej-foretagare-period-17532-20089" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v16988), never delivered together in one table, so they are one variable renamed between releases: TK_av 2016-01-01..2016-12-31; Tk_avlon 2018-01-01..2024-12-31."

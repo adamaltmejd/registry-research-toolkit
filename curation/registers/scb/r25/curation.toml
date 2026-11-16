@@ -29231,3 +29231,9 @@ relation = "continues"
 object = "scb/iot/ovriga-skattepliktiga-ers-tjanst"
 at = "2019-01-01.."
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: INBTJ"
+fields = { "variable" = "inbtj" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v1173), never delivered together in one table, so they are one variable renamed between releases: BINTJ 1971-01-01..1977-12-31; INBTJ 1980-01-01..1984-12-31."

@@ -5429,3 +5429,15 @@ kind = "set"
 subject = "var:bakgrund-boforaldrar"
 fields = { "description" = "Svensk eller utländsk bakgrund för boföräldrarna, härledd utifrån boföräldrarnas födelseland i Befolkningsregistret; från 2014 utifrån barnets och boföräldrarnas födelseland." }
 evidence = "Batch 4 merged the members of set:boforaldrars-bakgrund into this variable, so the set is removed and its curated description moves here. Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna har samma definition och källa; från 2014 anges även barnets födelseland som underlag.\ncatalog:variable_text:13530:10956:10957\ncatalog:variable_text:13530:11322:11323\ncatalog:variable_text:13530:16435:16436\ncatalog:variable_text:13531:10591:10592\ncatalog:variable_text:13531:10956:10957"
+
+[[statement]]
+kind = "set"
+subject = "barn: AvstandBarnFar"
+fields = { "variable" = "avstand-barn-och-far-avstandbarnfar" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v19548), never delivered together in one table, so they are one variable renamed between releases: AvstandBarnBioFar 1998-12-31..1999-12-31; AvstandBarnFar 1999-12-31..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "barn-uppfoljning: AvstandBarnFar"
+fields = { "variable" = "avstand-barn-och-far-avstandbarnfar" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v19548), never delivered together in one table, so they are one variable renamed between releases: AvstandBarnBioFar 1998-12-31..1999-12-31; AvstandBarnFar 1999-12-31..2024-12-31."

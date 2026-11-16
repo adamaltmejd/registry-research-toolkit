@@ -1638,3 +1638,9 @@ kind = "set"
 subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: UpprfTot"
 fields = { "variable" = "upprakningstal-upprakningsfaktor" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v466), never delivered together in one table, so they are one variable renamed between releases: UpprfTot 2003-01-01..2003-12-31; upprf 2005-01-01..2010-12-31; Uppräkningsfaktor 2015-01-01..2020-12-31."
+
+[[statement]]
+kind = "set"
+subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: Uppräkningsfaktor where key = 'v466'"
+fields = { "variable" = "upprakningstal-upprakningsfaktor" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v466), never delivered together in one table, so they are one variable renamed between releases: UpprfTot 2003-01-01..2003-12-31; upprf 2005-01-01..2010-12-31; Uppräkningsfaktor 2015-01-01..2020-12-31."

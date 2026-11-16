@@ -1067,3 +1067,27 @@ kind = "set"
 subject = "grundskola: Utl_BakG"
 fields = { "variable" = "utlbakgr2" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v67), never delivered together in one table, so they are one variable renamed between releases: Utl_BakG 2008-10-15..2008-10-15; UtlBakGr2 2009-10-15..2016-10-15."
+
+[[statement]]
+kind = "set"
+subject = "anpassad-grundskola: Skolkommun"
+fields = { "variable" = "skolkommun" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v36), never delivered together in one table, so they are one variable renamed between releases: Kommun 2008-10-15..2008-10-15; SKom 2009-10-15..2016-10-15; Skolkommun 2017-10-15..2024-10-15."
+
+[[statement]]
+kind = "set"
+subject = "grundskola: Skolkommun"
+fields = { "variable" = "skolkommun" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v36), never delivered together in one table, so they are one variable renamed between releases: Kommun 2008-10-15..2008-10-15; SKom 2009-10-15..2016-10-15; Skolkommun 2017-10-15..2024-10-15."
+
+[[statement]]
+kind = "set"
+subject = "specialskola: Skolkommun"
+fields = { "variable" = "skolkommun" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v36), never delivered together in one table, so they are one variable renamed between releases: Kommun 2008-10-15..2008-10-15; SKom 2009-10-15..2016-10-15; Skolkommun 2017-10-15..2024-10-15."
+
+[[statement]]
+kind = "set"
+subject = "grundskola: UtlBakGr2"
+fields = { "variable" = "utlbakgr2" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v67), never delivered together in one table, so they are one variable renamed between releases: Utl_BakG 2008-10-15..2008-10-15; UtlBakGr2 2009-10-15..2016-10-15."

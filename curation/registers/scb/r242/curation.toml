@@ -2312,3 +2312,9 @@ kind = "set"
 subject = "valdeltagande: valdistrikt"
 fields = { "variable" = "valdistrikt" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v69), never delivered together in one table, so they are one variable renamed between releases: valdistrikt 1998-01-01..2014-12-31; llkkdddd 2018-01-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "valdeltagande: ll"
+fields = { "variable" = "ll" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v49), never delivered together in one table, so they are one variable renamed between releases: lan 1991-01-01..2014-12-31; ll 2018-01-01..2022-12-31."

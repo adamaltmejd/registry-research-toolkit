@@ -8381,3 +8381,585 @@ kind = "set"
 subject = "var:antbt-1"
 fields = { "label" = "Sökanden antagen till högst prioriterat alternativ i urval nummer" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. ANTBT_1 is this field in HT91 only (blank, 1, 2, 3); its VT92 occurrence, the BT-record count, belongs to antbt. Layout label: Sökanden antagen till högst prioriterat alt i urval nummer\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls), posten Ansökan (ARPOST); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "arpost: ANTOMG"
+fields = { "variable" = "antomg" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Antagningsomgång då sökande antagits till högst prioriterade alternativ. Columns: ANTB 1977-07-01..1987-07-01; ANTOMG 1987-07-01..1989-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "smpost: MERIT_AR"
+fields = { "variable" = "ar-merit-ar" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: År. Columns: AR 1977-07-01..1987-07-01; MERIT_AR 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_AK_1"
+fields = { "variable" = "arskurs-betgr-ak-1" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Årskurs (betygsgrupp 1). Columns: BETGR_AK1 1977-07-01..1989-07-01; BETGR_AK_1 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_AK_10"
+fields = { "variable" = "arskurs-betgr-ak-10" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Årskurs (betygsgrupp 10). Columns: BETGR_AK10 1977-07-01..1989-07-01; BETGR_AK_10 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_AK_11"
+fields = { "variable" = "arskurs-betgr-ak-11" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Årskurs (betygsgrupp 11). Columns: BETGR_AK11 1977-07-01..1989-07-01; BETGR_AK_11 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_AK_13"
+fields = { "variable" = "arskurs-betgr-ak-13" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Årskurs (betygsgrupp 13). Columns: BETGR_AK13 1977-07-01..1989-07-01; BETGR_AK_13 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_AK_14"
+fields = { "variable" = "arskurs-betgr-ak-14" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Årskurs (betygsgrupp 14). Columns: BETGR_AK14 1977-07-01..1989-07-01; BETGR_AK_14 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_AK_15"
+fields = { "variable" = "arskurs-betgr-ak-15" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Årskurs (betygsgrupp 15). Columns: BETGR_AK15 1977-07-01..1989-07-01; BETGR_AK_15 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_AK_16"
+fields = { "variable" = "arskurs-betgr-ak-16" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Årskurs (betygsgrupp 16). Columns: BETGR_AK16 1977-07-01..1989-07-01; BETGR_AK_16 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_AK_17"
+fields = { "variable" = "arskurs-betgr-ak-17" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Årskurs (betygsgrupp 17). Columns: BETGR_AK17 1977-07-01..1989-07-01; BETGR_AK_17 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_AK_18"
+fields = { "variable" = "arskurs-betgr-ak-18" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Årskurs (betygsgrupp 18). Columns: BETGR_AK18 1977-07-01..1989-07-01; BETGR_AK_18 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_AK_2"
+fields = { "variable" = "arskurs-betgr-ak-2" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Årskurs (betygsgrupp 2). Columns: BETGR_AK2 1977-07-01..1989-07-01; BETGR_AK_2 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_AK_29"
+fields = { "variable" = "arskurs-betgr-ak-29" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Årskurs (betygsgrupp 29). Columns: BETGR_AK29 1977-07-01..1989-07-01; BETGR_AK_29 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_AK_3"
+fields = { "variable" = "arskurs-betgr-ak-3" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Årskurs (betygsgrupp 3). Columns: BETGR_AK3 1977-07-01..1989-07-01; BETGR_AK_3 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_AK_34"
+fields = { "variable" = "arskurs-betgr-ak-34" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Årskurs (betygsgrupp 34). Columns: BETGR_AK34 1977-07-01..1989-07-01; BETGR_AK_34 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_AK_4"
+fields = { "variable" = "arskurs-betgr-ak-4" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Årskurs (betygsgrupp 4). Columns: BETGR_AK4 1977-07-01..1989-07-01; BETGR_AK_4 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_AK_5"
+fields = { "variable" = "arskurs-betgr-ak-5" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Årskurs (betygsgrupp 5). Columns: BETGR_AK5 1977-07-01..1989-07-01; BETGR_AK_5 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_AK_6"
+fields = { "variable" = "arskurs-betgr-ak-6" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Årskurs (betygsgrupp 6). Columns: BETGR_AK6 1977-07-01..1989-07-01; BETGR_AK_6 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_AK_7"
+fields = { "variable" = "arskurs-betgr-ak-7" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Årskurs (betygsgrupp 7). Columns: BETGR_AK7 1977-07-01..1989-07-01; BETGR_AK_7 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_AK_8"
+fields = { "variable" = "arskurs-betgr-ak-8" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Årskurs (betygsgrupp 8). Columns: BETGR_AK8 1977-07-01..1989-07-01; BETGR_AK_8 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_AK_9"
+fields = { "variable" = "arskurs-betgr-ak-9" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Årskurs (betygsgrupp 9). Columns: BETGR_AK9 1977-07-01..1989-07-01; BETGR_AK_9 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "smpost: MERIT_AK"
+fields = { "variable" = "arskurs-merit-ak" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Årskurs. Columns: AK 1977-07-01..1987-07-01; MERIT_AK 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "arpost: BEH_BEHS1_1"
+fields = { "variable" = "beh-behs1-1" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Behörighetsgivande bakgrund 1: studiekod del 1. Columns: BEH_BEHS1 1977-07-01..1989-07-01; BEH_BEHS1_1 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "arpost: BEH_BEHS2_1"
+fields = { "variable" = "beh-behs2-1" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Behörighetsgivande bakgrund 1: studiekod del 2. Columns: BEH_BEHS2 1977-07-01..1989-07-01; BEH_BEHS2_1 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "arpost: BEH_BEHAR_1"
+fields = { "variable" = "behorighetsgivande-bakgrund-ar-beh-behar-1" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Behörighetsgivande bakgrund 1: År. Columns: BEH_BEHAR 1977-07-01..1989-07-01; BEH_BEHAR_1 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "arpost: BEH_BEHAR_2"
+fields = { "variable" = "behorighetsgivande-bakgrund-ar-beh-behar-2" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Behörighetsgivande bakgrund 2: År. Columns: BEH_BEHAR2 1977-07-01..1989-07-01; BEH_BEHAR_2 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "arpost: BEH_BEHAR_3"
+fields = { "variable" = "behorighetsgivande-bakgrund-ar-beh-behar-3" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Behörighetsgivande bakgrund 3: År. Columns: BEH_BEHAR3 1977-07-01..1989-07-01; BEH_BEHAR_3 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "arpost: ATG_BT1"
+fields = { "variable" = "betyg-1-fran-gymnasiet-eller-komvux-atg-bt1" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Betyg 1 från gymnasiet eller komvux. Columns: ATG_ATG_BT1 1987-07-01..1989-07-01; ATG_ATGBT1 1989-07-01..1991-07-01; ATG_BT1 1991-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "arpost: ATG_BT2"
+fields = { "variable" = "betyg-2-fran-gymnasiet-eller-komvux-atg-bt2" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Betyg 2 från gymnasiet eller komvux. Columns: ATG_BT2 1986-07-01..1992-07-01; ATG_ATG_BT2 1987-07-01..1989-07-01; ATG_ATGBT2 1989-07-01..1991-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "alpost: KVOT_BETPOENG"
+fields = { "variable" = "betygspoang-kvot-betpoeng" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Betygspoäng (kvotgruppsuppgift 1). Columns: KVOT_BETPOAENG1 1982-07-01..1987-07-01; KVOT_BETPOENG 1987-07-01..1989-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "alpost: KVOT_BETPOENG2"
+fields = { "variable" = "betygspoang-kvot-betpoeng2" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Betygspoäng (kvotgruppsuppgift 2). Columns: KVOT_BETPOAENG2 1982-07-01..1987-07-01; KVOT_BETPOENG2 1987-07-01..1989-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "alpost: KVOT_BETPOENG3"
+fields = { "variable" = "betygspoang-kvot-betpoeng3" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Betygspoäng (kvotgruppsuppgift 3). Columns: KVOT_BETPOAENG3 1982-07-01..1987-07-01; KVOT_BETPOENG3 1987-07-01..1989-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "alpost: KVOT_BETPOENG4"
+fields = { "variable" = "betygspoang-kvot-betpoeng4" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Betygspoäng (kvotgruppsuppgift 4). Columns: KVOT_BETPOAENG4 1982-07-01..1987-07-01; KVOT_BETPOENG4 1987-07-01..1989-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "alpost: KVOT_BETPOENG5"
+fields = { "variable" = "betygspoang-kvot-betpoeng5" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Betygspoäng (kvotgruppsuppgift 5). Columns: KVOT_BETPOAENG5 1982-07-01..1987-07-01; KVOT_BETPOENG5 1987-07-01..1989-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "alpost: KVOT_BETPOENG6"
+fields = { "variable" = "betygspoang-kvot-betpoeng6" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Betygspoäng (kvotgruppsuppgift 6). Columns: KVOT_BETPOAENG6 1982-07-01..1987-07-01; KVOT_BETPOENG6 1987-07-01..1989-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "alpost: KVOT_BETPOENG7"
+fields = { "variable" = "betygspoang-kvot-betpoeng7" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Betygspoäng (kvotgruppsuppgift 7). Columns: KVOT_BETPOAENG7 1982-07-01..1987-07-01; KVOT_BETPOENG7 1987-07-01..1989-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "alpost: KVOT_BETPOENG8"
+fields = { "variable" = "betygspoang-kvot-betpoeng8" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Betygspoäng (kvotgruppsuppgift 8). Columns: KVOT_BETPOAENG8 1982-07-01..1987-07-01; KVOT_BETPOENG8 1987-07-01..1989-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_BETYG_1"
+fields = { "variable" = "betygsvarde-betgr-betyg-1" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Betygsvärde (betygsgrupp 1). Columns: BETGR_BETYG1 1977-07-01..1989-07-01; BETGR_BETYG_1 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_BETYG_10"
+fields = { "variable" = "betygsvarde-betgr-betyg-10" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Betygsvärde (betygsgrupp 10). Columns: BETGR_BETYG10 1977-07-01..1989-07-01; BETGR_BETYG_10 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_BETYG_11"
+fields = { "variable" = "betygsvarde-betgr-betyg-11" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Betygsvärde (betygsgrupp 11). Columns: BETGR_BETYG11 1977-07-01..1989-07-01; BETGR_BETYG_11 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_BETYG_14"
+fields = { "variable" = "betygsvarde-betgr-betyg-14" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Betygsvärde (betygsgrupp 14). Columns: BETGR_BETYG14 1977-07-01..1989-07-01; BETGR_BETYG_14 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_BETYG_15"
+fields = { "variable" = "betygsvarde-betgr-betyg-15" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Betygsvärde (betygsgrupp 15). Columns: BETGR_BETYG15 1977-07-01..1989-07-01; BETGR_BETYG_15 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_BETYG_16"
+fields = { "variable" = "betygsvarde-betgr-betyg-16" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Betygsvärde (betygsgrupp 16). Columns: BETGR_BETYG16 1977-07-01..1989-07-01; BETGR_BETYG_16 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_BETYG_17"
+fields = { "variable" = "betygsvarde-betgr-betyg-17" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Betygsvärde (betygsgrupp 17). Columns: BETGR_BETYG17 1977-07-01..1989-07-01; BETGR_BETYG_17 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_BETYG_19"
+fields = { "variable" = "betygsvarde-betgr-betyg-19" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Betygsvärde (betygsgrupp 19). Columns: BETGR_BETYG18 1977-07-01..1989-07-01; BETGR_BETYG_19 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_BETYG_2"
+fields = { "variable" = "betygsvarde-betgr-betyg-2" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Betygsvärde (betygsgrupp 2). Columns: BETGR_BETYG2 1977-07-01..1989-07-01; BETGR_BETYG_2 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_BETYG_3"
+fields = { "variable" = "betygsvarde-betgr-betyg-3" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Betygsvärde (betygsgrupp 3). Columns: BETGR_BETYG3 1977-07-01..1989-07-01; BETGR_BETYG_3 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_BETYG_34"
+fields = { "variable" = "betygsvarde-betgr-betyg-34" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Betygsvärde (betygsgrupp 34). Columns: BETGR_BETYG34 1977-07-01..1989-07-01; BETGR_BETYG_34 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_BETYG_4"
+fields = { "variable" = "betygsvarde-betgr-betyg-4" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Betygsvärde (betygsgrupp 4). Columns: BETGR_BETYG4 1977-07-01..1989-07-01; BETGR_BETYG_4 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_BETYG_5"
+fields = { "variable" = "betygsvarde-betgr-betyg-5" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Betygsvärde (betygsgrupp 5). Columns: BETGR_BETYG5 1977-07-01..1989-07-01; BETGR_BETYG_5 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_BETYG_6"
+fields = { "variable" = "betygsvarde-betgr-betyg-6" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Betygsvärde (betygsgrupp 6). Columns: BETGR_BETYG6 1977-07-01..1989-07-01; BETGR_BETYG_6 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_BETYG_8"
+fields = { "variable" = "betygsvarde-betgr-betyg-8" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Betygsvärde (betygsgrupp 8). Columns: BETGR_BETYG8 1977-07-01..1989-07-01; BETGR_BETYG_8 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "btpost: BETGR_BETYG_9"
+fields = { "variable" = "betygsvarde-betgr-betyg-9" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Betygsvärde (betygsgrupp 9). Columns: BETGR_BETYG9 1977-07-01..1989-07-01; BETGR_BETYG_9 1989-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "smpost: MERIT_BETYG"
+fields = { "variable" = "betygsvarde-merit-betyg" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Betygsvärde. Columns: BETYG 1977-07-01..1987-07-01; MERIT_BETYG 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "arpost: ATG_ATGDI"
+fields = { "variable" = "ca-beviljad-dispens-atg-atgdi" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: CA-beviljad dispens. Columns: ATG_ATGDI 1977-07-01..1991-07-01; ATG_ATG_DI 1987-07-01..1989-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "smpost: MERIT_DISP"
+fields = { "variable" = "dispens-merit-disp" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Dispens. Columns: DISP 1977-07-01..1987-07-01; MERIT_DISP 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "arpost: ATG_ATGFO"
+fields = { "variable" = "folkskoleomdome-atg-atgfo" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Folkskoleomdöme. Columns: ATG_ATGFO 1977-07-01..1991-07-01; ATG_ATG_FO 1987-07-01..1989-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "arpost: KMPLI"
+fields = { "variable" = "kmpli" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Återsökande som utskrivits på kompletteringslista. Columns: AR_KMPLI 1989-07-01..1991-07-01; KMPLI 1991-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE1_1"
+fields = { "variable" = "kod-for-amne-1-amnen-amne1-1" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 1, sökalternativ 1. Columns: AEMNEN1_AEMNE1 1982-07-01..1987-07-01; AMNEN_AMNE1_1 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE1_10"
+fields = { "variable" = "kod-for-amne-1-amnen-amne1-10" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 1, sökalternativ 10. Columns: AEMNEN10_AEMNE1 1982-07-01..1987-07-01; AMNEN_AMNE1_10 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE1_11"
+fields = { "variable" = "kod-for-amne-1-amnen-amne1-11" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 1, sökalternativ 11. Columns: AEMNEN11_AEMNE1 1982-07-01..1987-07-01; AMNEN_AMNE1_11 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE1_12"
+fields = { "variable" = "kod-for-amne-1-amnen-amne1-12" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 1, sökalternativ 12. Columns: AEMNEN12_AEMNE1 1982-07-01..1987-07-01; AMNEN_AMNE1_12 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE1_2"
+fields = { "variable" = "kod-for-amne-1-amnen-amne1-2" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 1, sökalternativ 2. Columns: AEMNEN2_AEMNE1 1982-07-01..1987-07-01; AMNEN_AMNE1_2 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE1_3"
+fields = { "variable" = "kod-for-amne-1-amnen-amne1-3" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 1, sökalternativ 3. Columns: AEMNEN3_AEMNE1 1982-07-01..1987-07-01; AMNEN_AMNE1_3 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE1_4"
+fields = { "variable" = "kod-for-amne-1-amnen-amne1-4" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 1, sökalternativ 4. Columns: AEMNEN4_AEMNE1 1982-07-01..1987-07-01; AMNEN_AMNE1_4 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE1_5"
+fields = { "variable" = "kod-for-amne-1-amnen-amne1-5" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 1, sökalternativ 5. Columns: AEMNEN5_AEMNE1 1982-07-01..1987-07-01; AMNEN_AMNE1_5 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE1_6"
+fields = { "variable" = "kod-for-amne-1-amnen-amne1-6" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 1, sökalternativ 6. Columns: AEMNEN6_AEMNE1 1982-07-01..1987-07-01; AMNEN_AMNE1_6 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE1_7"
+fields = { "variable" = "kod-for-amne-1-amnen-amne1-7" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 1, sökalternativ 7. Columns: AEMNEN7_AEMNE1 1982-07-01..1987-07-01; AMNEN_AMNE1_7 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE1_8"
+fields = { "variable" = "kod-for-amne-1-amnen-amne1-8" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 1, sökalternativ 8. Columns: AEMNEN8_AEMNE1 1982-07-01..1987-07-01; AMNEN_AMNE1_8 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE1_9"
+fields = { "variable" = "kod-for-amne-1-amnen-amne1-9" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 1, sökalternativ 9. Columns: AEMNEN9_AEMNE1 1982-07-01..1987-07-01; AMNEN_AMNE1_9 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE2_1"
+fields = { "variable" = "kod-for-amne-2-amnen-amne2-1" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 2, sökalternativ 1. Columns: AEMNEN1_AEMNE2 1982-07-01..1987-07-01; AMNEN_AMNE2_1 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE2_10"
+fields = { "variable" = "kod-for-amne-2-amnen-amne2-10" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 2, sökalternativ 10. Columns: AEMNEN10_AEMNE2 1982-07-01..1987-07-01; AMNEN_AMNE2_10 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE2_11"
+fields = { "variable" = "kod-for-amne-2-amnen-amne2-11" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 2, sökalternativ 11. Columns: AEMNEN11_AEMNE2 1982-07-01..1987-07-01; AMNEN_AMNE2_11 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE2_12"
+fields = { "variable" = "kod-for-amne-2-amnen-amne2-12" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 2, sökalternativ 12. Columns: AEMNEN12_AEMNE2 1982-07-01..1987-07-01; AMNEN_AMNE2_12 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE2_2"
+fields = { "variable" = "kod-for-amne-2-amnen-amne2-2" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 2, sökalternativ 2. Columns: AEMNEN2_AEMNE2 1982-07-01..1987-07-01; AMNEN_AMNE2_2 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE2_3"
+fields = { "variable" = "kod-for-amne-2-amnen-amne2-3" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 2, sökalternativ 3. Columns: AEMNEN3_AEMNE2 1982-07-01..1987-07-01; AMNEN_AMNE2_3 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE2_4"
+fields = { "variable" = "kod-for-amne-2-amnen-amne2-4" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 2, sökalternativ 4. Columns: AEMNEN4_AEMNE2 1982-07-01..1987-07-01; AMNEN_AMNE2_4 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE2_5"
+fields = { "variable" = "kod-for-amne-2-amnen-amne2-5" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 2, sökalternativ 5. Columns: AEMNEN5_AEMNE2 1982-07-01..1987-07-01; AMNEN_AMNE2_5 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE2_6"
+fields = { "variable" = "kod-for-amne-2-amnen-amne2-6" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 2, sökalternativ 6. Columns: AEMNEN6_AEMNE2 1982-07-01..1987-07-01; AMNEN_AMNE2_6 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE2_7"
+fields = { "variable" = "kod-for-amne-2-amnen-amne2-7" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 2, sökalternativ 7. Columns: AEMNEN7_AEMNE2 1982-07-01..1987-07-01; AMNEN_AMNE2_7 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE2_8"
+fields = { "variable" = "kod-for-amne-2-amnen-amne2-8" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 2, sökalternativ 8. Columns: AEMNEN8_AEMNE2 1982-07-01..1987-07-01; AMNEN_AMNE2_8 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE2_9"
+fields = { "variable" = "kod-for-amne-2-amnen-amne2-9" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 2, sökalternativ 9. Columns: AEMNEN9_AEMNE2 1982-07-01..1987-07-01; AMNEN_AMNE2_9 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE3_1"
+fields = { "variable" = "kod-for-amne-3-amnen-amne3-1" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 3, sökalternativ 1. Columns: AEMNEN1_AEMNE3 1982-07-01..1987-07-01; AMNEN_AMNE3_1 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE3_10"
+fields = { "variable" = "kod-for-amne-3-amnen-amne3-10" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 3, sökalternativ 10. Columns: AEMNEN10_AEMNE3 1982-07-01..1987-07-01; AMNEN_AMNE3_10 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE3_11"
+fields = { "variable" = "kod-for-amne-3-amnen-amne3-11" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 3, sökalternativ 11. Columns: AEMNEN11_AEMNE3 1982-07-01..1987-07-01; AMNEN_AMNE3_11 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE3_12"
+fields = { "variable" = "kod-for-amne-3-amnen-amne3-12" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 3, sökalternativ 12. Columns: AEMNEN12_AEMNE3 1982-07-01..1987-07-01; AMNEN_AMNE3_12 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE3_2"
+fields = { "variable" = "kod-for-amne-3-amnen-amne3-2" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 3, sökalternativ 2. Columns: AEMNEN2_AEMNE3 1982-07-01..1987-07-01; AMNEN_AMNE3_2 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE3_3"
+fields = { "variable" = "kod-for-amne-3-amnen-amne3-3" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 3, sökalternativ 3. Columns: AEMNEN3_AEMNE3 1982-07-01..1987-07-01; AMNEN_AMNE3_3 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE3_4"
+fields = { "variable" = "kod-for-amne-3-amnen-amne3-4" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 3, sökalternativ 4. Columns: AEMNEN4_AEMNE3 1982-07-01..1987-07-01; AMNEN_AMNE3_4 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE3_5"
+fields = { "variable" = "kod-for-amne-3-amnen-amne3-5" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 3, sökalternativ 5. Columns: AEMNEN5_AEMNE3 1982-07-01..1987-07-01; AMNEN_AMNE3_5 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE3_6"
+fields = { "variable" = "kod-for-amne-3-amnen-amne3-6" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 3, sökalternativ 6. Columns: AEMNEN6_AEMNE3 1982-07-01..1987-07-01; AMNEN_AMNE3_6 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE3_7"
+fields = { "variable" = "kod-for-amne-3-amnen-amne3-7" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 3, sökalternativ 7. Columns: AEMNEN7_AEMNE3 1982-07-01..1987-07-01; AMNEN_AMNE3_7 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE3_8"
+fields = { "variable" = "kod-for-amne-3-amnen-amne3-8" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 3, sökalternativ 8. Columns: AEMNEN8_AEMNE3 1982-07-01..1987-07-01; AMNEN_AMNE3_8 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "sopost: AMNEN_AMNE3_9"
+fields = { "variable" = "kod-for-amne-3-amnen-amne3-9" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Kod för ämne 3, sökalternativ 9. Columns: AEMNEN9_AEMNE3 1982-07-01..1987-07-01; AMNEN_AMNE3_9 1987-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "arpost: ATG_MP"
+fields = { "variable" = "musikprovspoang-atg-mp" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Musikprovspoäng. Columns: ATG_ATG_MP 1988-07-01..1989-07-01; ATG_ATGMP 1989-07-01..1991-07-01; ATG_MP 1991-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "smpost: MERIT_BEHS2"
+fields = { "variable" = "studiekod-del-2-merit-behs2" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Studiekod del 2. Columns: BEHS2 1977-07-01..1982-07-01; MERIT_BEHS2 1982-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
+
+[[statement]]
+kind = "set"
+subject = "arpost: ATG_UPA_UP"
+fields = { "variable" = "utlandsk-examenspoang-atg-upa-up" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns share one: the layouts rename the column between eras without changing what it holds (same label and codes), so they are one variable. Label: Utländsk examenspoäng. Columns: ATG_ATGUP 1986-07-01..1991-07-01; ATG_ATG_UP 1987-07-01..1989-07-01; ATG_UPA_UP 1991-07-01..1992-07-01.\nA1:s Postbeskrivning (A1_HTyy_VTyy.xls; HT89 och VT90: UHAE_A1_HT89.xls, UHAE_A1_VT90.xls); catalog/evidence/riksarkivet/a1/\ncatalog/source/transcriptions/riksarkivet/a1.csv"
