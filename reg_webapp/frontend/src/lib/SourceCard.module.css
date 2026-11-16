@@ -46,3 +46,13 @@
 .sourceFindings {
   margin-bottom: var(--space-3);
 }
+.releases {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  margin-bottom: var(--space-3);
+  min-width: 0;
+}
+.releases .note {
+  margin: 0;
+}

@@ -185,7 +185,8 @@ export function variableSpans({
           })
           .sort((a, b) => a.from - b.from);
         if (!segments.length) return [];
-        const spellings = row.map((column) => column.spelling);
+        // One name per spelling: releases that share years repeat it.
+        const spellings = [...new Set(row.map((column) => column.spelling))];
         const years = segmentYears(row.flatMap((column) => column.segments));
         return [
           {

@@ -31,23 +31,30 @@ export type TablePeriodMetadata = Pick<
 export interface VariableColumn {
   id: string;
   table: string;
+  /** In a table whose releases share years, the release it is in; null
+   * elsewhere. */
+  release: string | null;
   spelling: string;
   segments: CatalogSegment[];
 }
 
-/** A delivery column's identity is its table and exact column name. A steward's
- * yearly files of one table are the same column delivered in several files. */
+/** A delivery column's identity is its table, its release where the table's
+ * releases share years, and its exact column name. A steward's yearly files of
+ * one table are the same column delivered in several files; one name in two
+ * releases that share a year is two columns, each over its own years. */
 export function variableColumns(
   segments: readonly CatalogSegment[],
 ): VariableColumn[] {
   const columns = new Map<string, VariableColumn>();
   for (const segment of segments) {
-    const id = JSON.stringify([segment.table, segment.column]);
+    const release = segment.release ?? null;
+    const id = JSON.stringify([segment.table, release, segment.column]);
     let column = columns.get(id);
     if (!column) {
       column = {
         id,
         table: segment.table,
+        release,
         spelling: segment.column,
         segments: [],
       };
@@ -101,7 +108,8 @@ export function columnInSource(
 
 /** A variable's columns in one table, as rows that never overlap in time:
  * successive spellings share a row; columns delivered side by side in one
- * file (a slot's members) take a row each (#2408). */
+ * file (a slot's members) take a row each (#2408). Releases that share a
+ * year take a row each there (crates/DESIGN.md, "Concurrent releases"). */
 export function columnRows(
   columns: readonly VariableColumn[],
 ): VariableColumn[][] {
@@ -126,8 +134,25 @@ export function columnRows(
     );
     // Only where one row takes it: after a slot's members, which row a
     // later column continues is unknown, and sharing one would read as a
-    // rename of that member.
-    const row = free.length === 1 ? free[0] : undefined;
+    // rename of that member. A release's column is no slot member: it
+    // continues the free row that last had its name, the latest such, so
+    // releases that share years keep two rows, not one each.
+    const row =
+      free.length === 1
+        ? free[0]
+        : column.release === null
+          ? undefined
+          : free
+              .filter((placed) => placed.at(-1)?.spelling === column.spelling)
+              .toSorted((a, b) => {
+                const [x, y] = [a, b].map((placed) =>
+                  placed.reduce(
+                    (most, c) => (first(c) > most ? first(c) : most),
+                    "",
+                  ),
+                );
+                return x < y ? 1 : x > y ? -1 : 0;
+              })[0];
     if (row) row.push(column);
     else rows.push([column]);
   }

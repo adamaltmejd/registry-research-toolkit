@@ -6,7 +6,11 @@ import {
   errMessage,
   stewardConfig,
 } from "./api";
-import { registerRead, tableSegmentsReads } from "./catalog_names";
+import {
+  registerRead,
+  tableSegmentsReads,
+  tableShowRead,
+} from "./catalog_names";
 import { DeliverySummary } from "./DeliverySummary";
 import { stewardDatabases } from "./databases";
 import { IssueLink, LocatedIssue } from "./Finding";
@@ -372,6 +376,8 @@ function Check({
 
 const readRegisters = (refs: readonly string[]) =>
   Object.fromEntries(refs.map((ref) => [ref, registerRead(ref)]));
+const readTables = (refs: readonly string[]) =>
+  Object.fromEntries(refs.map((ref) => [ref, tableShowRead(ref)]));
 const columnKey = (table: string, variable: string) =>
   JSON.stringify([table, variable]);
 /** Every source's columns' rows in its table, keyed by `columnKey`. */
@@ -435,6 +441,20 @@ function Sources({
     for (const row of read.value ?? [])
       segments.set(row.variable, [...(segments.get(row.variable) ?? []), row]);
   }
+  // Only a table whose releases share years (its rows name a release) is
+  // read whole, for those years; a source that names releases keeps its
+  // choice editable after its years move off them.
+  const tableShows = useCatalogRead(
+    readTables,
+    useDistinct([
+      ...[...segments.values()].flatMap((rows) =>
+        rows.flatMap((row) => (row.release ? [row.table] : [])),
+      ),
+      ...catalogSources.flatMap((source) =>
+        source.releases?.length ? [source.table] : [],
+      ),
+    ]),
+  );
   const columnRead = (table: string, variable: string) =>
     segmentReads[columnKey(table, variable)];
   const names = useCatalogNames([
@@ -519,6 +539,9 @@ function Sources({
               raw={raw}
               names={names}
               segments={segments}
+              sharedDays={
+                tableShows[source.table]?.value?.shared_release_days ?? []
+              }
               table={tables.find((table) => table.fqid === source.table)}
               sharedHeading={catalogSources.some(
                 (other) =>

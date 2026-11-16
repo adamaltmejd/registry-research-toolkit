@@ -5,6 +5,7 @@ import {
   type CatalogSegment,
   errMessage,
   type RegisterShow,
+  type TableShow,
 } from "./api";
 import { catalogHref } from "./catalog";
 import {
@@ -50,6 +51,7 @@ import {
   removeBinding,
   removeSource,
   setSourcePeriod,
+  setSourceReleases,
 } from "./source_edits";
 import { columnDateRuns, tableYears } from "./study_window";
 import { Button } from "./ui/Button";
@@ -74,6 +76,7 @@ export function SourceCard({
   raw,
   names,
   segments,
+  sharedDays = [],
   table,
   axis,
   bounds,
@@ -89,6 +92,9 @@ export function SourceCard({
   raw: string | null;
   names: ReadonlyMap<string, string>;
   segments: ReadonlyMap<string, CatalogSegment[]>;
+  /** The days two of the table's releases share (its `show`); none
+   * elsewhere. */
+  sharedDays?: NonNullable<TableShow["shared_release_days"]>;
   table: Table | undefined;
   axis: [number, number];
   bounds: [number, number];
@@ -168,6 +174,22 @@ export function SourceCard({
     : "intervals" in period
       ? period.intervals
       : null;
+  // The shared days the stored period asks for, cut to it: an order names the
+  // releases that serve them (crates/DESIGN.md, "Concurrent releases").
+  const asked = "error" in period ? [] : period.intervals;
+  const shared = sharedDays.flatMap((days) => {
+    const cut = asked ? catalogPeriodWithin(days.period, asked) : [days.period];
+    return cut.length ? [{ periods: cut, releases: days.releases }] : [];
+  });
+  const sharedYears = catalogPeriodRuns(shared.flatMap((days) => days.periods));
+  const offered = [...new Set(shared.flatMap((days) => days.releases))];
+  const named = source.releases ?? [];
+  // A named release that serves none of these years stays a choice, so its
+  // finding can be cleared here.
+  const releaseOptions = [
+    ...offered,
+    ...named.filter((name) => !offered.includes(name)),
+  ];
   const spans: LaneSpanModel[] = [];
   // `bindingIndex` is the column's place in the file, manual columns included.
   const lanes: LaneModel[] = source.bindings.flatMap(
@@ -244,7 +266,10 @@ export function SourceCard({
           )
           .sort((a, b) => a.from - b.from);
         if (!segments.length) return;
-        const spellings = drawn.map(({ column }) => column.spelling);
+        // One name per spelling: releases that share years repeat it.
+        const spellings = [
+          ...new Set(drawn.map(({ column }) => column.spelling)),
+        ];
         // The text reads in the table's grain, as the delivery summary does
         // (#2416); the drawing keeps the cut.
         const yearsOf = (pieces: readonly { period: CatalogPeriod }[]) =>
@@ -446,6 +471,42 @@ export function SourceCard({
           </span>
         )}
       </p>
+      {!loading && releaseOptions.length > 0 && (
+        <div className={styles.releases}>
+          <div className={styles.controls}>
+            <Select
+              selectionMode="multiple"
+              label={
+                sharedYears ? `Deliveries for ${sharedYears}` : "Deliveries"
+              }
+              aria-label={`Deliveries of ${tableName}${sharedYears ? ` for ${sharedYears}` : ""}`}
+              placeholder="Choose deliveries"
+              value={named}
+              options={releaseOptions.map((name) => ({
+                id: name,
+                name: offered.includes(name)
+                  ? name
+                  : `${name} (not for these years)`,
+              }))}
+              onChange={(names) =>
+                edit(
+                  setSourceReleases(
+                    draft,
+                    sourceIndex,
+                    releaseOptions.filter((name) => names.includes(name)),
+                  ),
+                )
+              }
+            />
+          </div>
+          {sharedYears && (
+            <p className={styles.note}>
+              These years were delivered more than once. Each delivery you
+              choose is ordered for them.
+            </p>
+          )}
+        </div>
+      )}
       {loading && (
         <div aria-busy="true">
           <StatusRow tone="info">Loading years…</StatusRow>
