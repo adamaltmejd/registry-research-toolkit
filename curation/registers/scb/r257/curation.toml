@@ -1,7 +1,7 @@
 
 [[statement]]
 kind = "assert"
-subject = "innovation-i-foretagssektorn: COOP_NO @2018..2020"
+subject = "innovation-i-foretagssektorn: COOP_NO @2018..2020 where release = 'r17817'"
 fact = { "entity" = "occurrence", "fields" = { "type" = "decimal", "label" = "COOP_NO (enligt leverans)", "definition" = "Den levererade kolumnen COOP_NO i CIS2020. SCB beskriver inte kolumnen. SCB:s fråga om samarbete inom övriga aktiviteter (39102) ligger i kolumnen COOP_OTH.", "sensitive" = false, "identifier" = false } }
 evidence = "Re-dated to its release (PROPOSAL §4.7, accepted 2026-11-16): the one-year date was the year in the delivery file's name (CIS<year> is the wave ending that year), an overlap workaround superseded by concurrent releases.\nprivate:ev-2332"
 caveat = "Kolumnnamnet och kolumnerna för enskilda samarbetspartner som slutar på _NO tyder på att kolumnen anger att företaget inte har samarbetat om innovation, men det är inte fastställt."
@@ -13002,12 +13002,6 @@ evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-r
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: rrdex"
-fields = { "variable" = "inna-utlagd-fou" }
-evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, section 4 item 7): groups held because their releases overlap merge where the sources show one concept; concurrent releases of one table may now spell one variable differently. Same column INNA_RND_CONTR_OUT in 2016-2018, 2018-2020 (v15616) and 2020-2022, 2022-2024 (v46604), same value set 0=Nej;1=Ja; wording \"Samma verksamhet som egen FoU men utförd av andra\" vs \"Anger om företaget bedrev utlagd FoU\". Split evidence: \"The source column has overlapping owners.\" Both already in set utlagd-fou-verksamhet."
-
-[[statement]]
-kind = "set"
 subject = "innovation-i-foretagssektorn: H16b"
 fields = { "variable" = "introduktion-metoder-ansvar-beslut" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, section 4 item 7): groups held because their releases overlap merge where the sources show one concept; concurrent releases of one table may now spell one variable differently. Same column INNO_PCS_WR_DEC_HRM in 2016-2018, 2018-2020 (v20941) and 2020-2022, 2022-2024 (v46607), same 0=Nej;1=Ja. Wording moves from \"Nya metoder för att organisera ansvar och beslutsfattande\" to \"arbetsfördelning, beslutsfattande och personalförvaltning\", the same area with a slightly wider phrase. Split evidence: \"Samma källkolumn har överlappande ägare.\""
@@ -13027,12 +13021,6 @@ evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-r
 [[statement]]
 kind = "set"
 subject = "innovation-i-foretagssektorn: ORGWKP"
-fields = { "variable" = "introduktion-metoder-ansvar-beslut" }
-evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, section 4 item 7): groups held because their releases overlap merge where the sources show one concept; concurrent releases of one table may now spell one variable differently. Same column INNO_PCS_WR_DEC_HRM in 2016-2018, 2018-2020 (v20941) and 2020-2022, 2022-2024 (v46607), same 0=Nej;1=Ja. Wording moves from \"Nya metoder för att organisera ansvar och beslutsfattande\" to \"arbetsfördelning, beslutsfattande och personalförvaltning\", the same area with a slightly wider phrase. Split evidence: \"Samma källkolumn har överlappande ägare.\""
-
-[[statement]]
-kind = "set"
-subject = "innovation-i-foretagssektorn: orgwkp"
 fields = { "variable" = "introduktion-metoder-ansvar-beslut" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, section 4 item 7): groups held because their releases overlap merge where the sources show one concept; concurrent releases of one table may now spell one variable differently. Same column INNO_PCS_WR_DEC_HRM in 2016-2018, 2018-2020 (v20941) and 2020-2022, 2022-2024 (v46607), same 0=Nej;1=Ja. Wording moves from \"Nya metoder för att organisera ansvar och beslutsfattande\" to \"arbetsfördelning, beslutsfattande och personalförvaltning\", the same area with a slightly wider phrase. Split evidence: \"Samma källkolumn har överlappande ägare.\""
 
@@ -13062,12 +13050,6 @@ evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-r
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: mktpdp"
-fields = { "variable" = "introduktion-metoder-marknadsforing" }
-evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, section 4 item 7): groups held because their releases overlap merge where the sources show one concept; concurrent releases of one table may now spell one variable differently. Same column INNO_PCS_SLS_SERV in 2016-2018, 2018-2020 (v20949) and 2020-2022, 2022-2024 (v46606), same 0=Nej;1=Ja; both describe marketing methods (reklam, varumärke/paketering, prissättning). Split evidence: \"Samma källkolumn har överlappande ägare.\""
-
-[[statement]]
-kind = "set"
 subject = "innovation-i-foretagssektorn: H16c"
 fields = { "variable" = "introduktion-metoder-externa-relationer" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, section 4 item 7): groups held because their releases overlap merge where the sources show one concept; concurrent releases of one table may now spell one variable differently. Same column INNO_PCS_OPROC_EXTREL in 2016-2018, 2018-2020 (v20942) and 2020-2022, 2022-2024 (v46608), same 0=Nej;1=Ja. The newer text adds \"tillvägagångssätt\" to \"externa relationer\" (\"Nya eller väsentligt förbättrade affärsmetoder för att organisera tillvägagångssätt eller externa relationer\"), a mild widening. Split evidence: \"Samma källkolumn har överlappande ägare.\""
@@ -13087,12 +13069,6 @@ evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-r
 [[statement]]
 kind = "set"
 subject = "innovation-i-foretagssektorn: ORGEXR"
-fields = { "variable" = "introduktion-metoder-externa-relationer" }
-evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, section 4 item 7): groups held because their releases overlap merge where the sources show one concept; concurrent releases of one table may now spell one variable differently. Same column INNO_PCS_OPROC_EXTREL in 2016-2018, 2018-2020 (v20942) and 2020-2022, 2022-2024 (v46608), same 0=Nej;1=Ja. The newer text adds \"tillvägagångssätt\" to \"externa relationer\" (\"Nya eller väsentligt förbättrade affärsmetoder för att organisera tillvägagångssätt eller externa relationer\"), a mild widening. Split evidence: \"Samma källkolumn har överlappande ägare.\""
-
-[[statement]]
-kind = "set"
-subject = "innovation-i-foretagssektorn: orgexr"
 fields = { "variable" = "introduktion-metoder-externa-relationer" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, section 4 item 7): groups held because their releases overlap merge where the sources show one concept; concurrent releases of one table may now spell one variable differently. Same column INNO_PCS_OPROC_EXTREL in 2016-2018, 2018-2020 (v20942) and 2020-2022, 2022-2024 (v46608), same 0=Nej;1=Ja. The newer text adds \"tillvägagångssätt\" to \"externa relationer\" (\"Nya eller väsentligt förbättrade affärsmetoder för att organisera tillvägagångssätt eller externa relationer\"), a mild widening. Split evidence: \"Samma källkolumn har överlappande ägare.\""
 
@@ -13140,12 +13116,6 @@ evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-r
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: funeu"
-fields = { "variable" = "stod-for-innovationsverksamhet-eu" }
-evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, section 4 item 7): groups held because their releases overlap merge where the sources show one concept; concurrent releases of one table may now spell one variable differently. Same column FUND_EU_OTH_RNDINN in 2016-2018, 2018-2020 (v36984) and 2020-2022, 2022-2024 (v46494); older spellings funeu/FUNEU are already in the survivor. Both ask whether the company got EU support for innovation. Split evidence: \"Samma källkolumn har överlappande ägare. Variabeln gäller EU-stöd till innovationsaktiviteter.\" The answer code for Nej changes from 2 to 0 between the two VarIds (1=Ja;2=Nej, then 0=Nej;1=Ja), a recoding within one column."
-
-[[statement]]
-kind = "set"
 subject = "innovation-i-foretagssektorn: FUND_AUT_LOC_REG_RNDINN where key = 'v29914'"
 fields = { "variable" = "stod-for-innovationsverksamhet-kommun" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, section 4 item 7): groups held because their releases overlap merge where the sources show one concept; concurrent releases of one table may now spell one variable differently. Same column FUND_AUT_LOC_REG_RNDINN in 2016-2018, 2018-2020 (v29914) and 2020-2022, 2022-2024 (v46496). Both variables already belong to set kommunalt-stod. Split evidence: \"Samma källkolumn är mappad till två variabler under överlappande perioder.\" The answer code for Nej changes from 2 to 0 between the two VarIds (1=Ja;2=Nej, then 0=Nej;1=Ja), a recoding within one column."
@@ -13159,12 +13129,6 @@ evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-r
 [[statement]]
 kind = "set"
 subject = "innovation-i-foretagssektorn: FUNLOC"
-fields = { "variable" = "stod-for-innovationsverksamhet-kommun" }
-evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, section 4 item 7): groups held because their releases overlap merge where the sources show one concept; concurrent releases of one table may now spell one variable differently. Same column FUND_AUT_LOC_REG_RNDINN in 2016-2018, 2018-2020 (v29914) and 2020-2022, 2022-2024 (v46496). Both variables already belong to set kommunalt-stod. Split evidence: \"Samma källkolumn är mappad till två variabler under överlappande perioder.\" The answer code for Nej changes from 2 to 0 between the two VarIds (1=Ja;2=Nej, then 0=Nej;1=Ja), a recoding within one column."
-
-[[statement]]
-kind = "set"
-subject = "innovation-i-foretagssektorn: funloc"
 fields = { "variable" = "stod-for-innovationsverksamhet-kommun" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, section 4 item 7): groups held because their releases overlap merge where the sources show one concept; concurrent releases of one table may now spell one variable differently. Same column FUND_AUT_LOC_REG_RNDINN in 2016-2018, 2018-2020 (v29914) and 2020-2022, 2022-2024 (v46496). Both variables already belong to set kommunalt-stod. Split evidence: \"Samma källkolumn är mappad till två variabler under överlappande perioder.\" The answer code for Nej changes from 2 to 0 between the two VarIds (1=Ja;2=Nej, then 0=Nej;1=Ja), a recoding within one column."
 
@@ -13186,8 +13150,3 @@ subject = "innovation-i-foretagssektorn: FUNGMT"
 fields = { "variable" = "stod-for-innovationsverksamhet-staten" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, section 4 item 7): groups held because their releases overlap merge where the sources show one concept; concurrent releases of one table may now spell one variable differently. Same column FUND_GOV_CTL_RNDINN in 2016-2018, 2018-2020 (v36983) and 2020-2022, 2022-2024 (v46495). Both variables already belong to set statligt-stod. Split evidence: \"Samma källkolumn är mappad till två variabler under överlappande perioder.\" The answer code for Nej changes from 2 to 0 between the two VarIds (1=Ja;2=Nej, then 0=Nej;1=Ja), a recoding within one column."
 
-[[statement]]
-kind = "set"
-subject = "innovation-i-foretagssektorn: fungmt"
-fields = { "variable" = "stod-for-innovationsverksamhet-staten" }
-evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, section 4 item 7): groups held because their releases overlap merge where the sources show one concept; concurrent releases of one table may now spell one variable differently. Same column FUND_GOV_CTL_RNDINN in 2016-2018, 2018-2020 (v36983) and 2020-2022, 2022-2024 (v46495). Both variables already belong to set statligt-stod. Split evidence: \"Samma källkolumn är mappad till två variabler under överlappande perioder.\" The answer code for Nej changes from 2 to 0 between the two VarIds (1=Ja;2=Nej, then 0=Nej;1=Ja), a recoding within one column."
