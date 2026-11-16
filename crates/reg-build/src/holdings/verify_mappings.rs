@@ -78,6 +78,7 @@ fn claims(
     column: &reg_readers::holdings::Column,
     index: &BTreeMap<String, Vec<compile::Segment>>,
     variables: &compile::Variables<'_>,
+    reach: &compile::Reach<'_>,
 ) -> Result<Vec<Claim>> {
     let decision = table.column.iter().find(|c| c.name == column.name);
     let spans = compile::column_periods(decision, &compile::table_periods(table)?)?;
@@ -125,7 +126,7 @@ fn claims(
             {
                 claims.push(claim(
                     segment,
-                    &wanted,
+                    reach.spans(segment, &wanted),
                     mapping.carried,
                     mapping.caveat.clone(),
                     mapping.delivery.clone(),
@@ -140,7 +141,13 @@ fn claims(
                 .iter()
                 .filter(|s| target.matches(s) && s.timeless == (table.disposition == "timeless"))
             {
-                claims.push(claim(segment, &spans, false, None, None));
+                claims.push(claim(
+                    segment,
+                    reach.spans(segment, &spans),
+                    false,
+                    None,
+                    None,
+                ));
             }
         }
     }
@@ -150,7 +157,7 @@ fn claims(
 
 fn claim(
     segment: &compile::Segment,
-    wanted: &[Span],
+    spans: Vec<Span>,
     carried: bool,
     caveat: Option<String>,
     window: Option<String>,
@@ -164,7 +171,7 @@ fn claim(
             caveat,
             window,
         },
-        spans: days::overlap(wanted, &[(segment.start, segment.end)]),
+        spans,
         ambiguous: segment.state == "ambiguous",
     }
 }
@@ -241,6 +248,8 @@ pub(super) fn verify(
     variables: &compile::Variables<'_>,
     topology: &input::Topology,
     census: &reg_readers::holdings::ReadOutput,
+    shared: &BTreeMap<String, Vec<Span>>,
+    primaries: &compile::Primaries,
 ) -> Result<()> {
     compile::renames_resolve(index, &census.rename_targets)?;
     let keyed = compile::schema_keyed(&census.tables);
@@ -266,7 +275,17 @@ pub(super) fn verify(
             let location = format!("census:row={}:column={}", table.source_row, column.ordinal);
             let mut compare = || -> Result<Option<&str>> {
                 let (mut expected, mut contested) = expected(
-                    &claims(authored, column, index, variables)?,
+                    &claims(
+                        authored,
+                        column,
+                        index,
+                        variables,
+                        &compile::Reach {
+                            release: compile::stated_release(primaries, authored)?,
+                            shared,
+                            variables,
+                        },
+                    )?,
                     authored,
                     &tables,
                     keyed,

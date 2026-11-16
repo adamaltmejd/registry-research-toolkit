@@ -1,0 +1,24 @@
+{
+  "note": "Concurrent releases (crates/DESIGN.md, \"Concurrent releases\"): demo/waves/t's releases \"2017 - 2018\" and \"2018 - 2019\" share 2018, and the steward holds one file per release (Wave 2018, Wave 2019), each stating its release. An order over 2017..2019 naming both releases gets 2018 twice, and each release's entry is placed in its own file: Wave 2018 extracts 2017..2018, Wave 2019 extracts 2018..2019. Fails if holdings refuse the two files' placements on 2018 as a duplicate, if auto-mapping places a file on the other release's segments, or if materialize serves a release's entry from the other release's file (each file would then also carry the other's 2018 refs) or leaves it unplaced (`coverage_gap`). Oracle: the base frame's releases, the topology's `release` and `delivery`, and the source's `releases`.",
+  "project": {
+    "schema_version": "6.3.0",
+    "reg_meta_version": "0.87.0",
+    "name": "Concurrent release files",
+    "sources": [
+      {
+        "name": "w",
+        "table": "demo/waves/t",
+        "period": {
+          "from": 2017,
+          "to": 2019
+        },
+        "releases": ["2017 - 2018", "2018 - 2019"],
+        "bindings": [
+          {
+            "variable": "demo/waves/score"
+          }
+        ]
+      }
+    ]
+  }
+}

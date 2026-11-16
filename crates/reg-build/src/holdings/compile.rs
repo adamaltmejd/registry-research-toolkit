@@ -23,14 +23,17 @@ pub(super) struct Segment {
     pub dtype: Option<String>,
     pub length: Option<i64>,
     pub timeless: bool,
+    /// The primary release it belongs to in a table with concurrent releases, by name.
+    pub release: Option<String>,
 }
 
 pub(super) fn segments(db: &Connection) -> Result<Vec<Segment>> {
     rows(
         db,
-        "SELECT t.pid,v.pid,s.start,s.end,sp.exact,s.role,s.state,s.dtype,s.length,t.timeless
+        "SELECT t.pid,v.pid,s.start,s.end,sp.exact,s.role,s.state,s.dtype,s.length,t.timeless,n.body
       FROM segment s JOIN tbl t ON t.id=s.table_id JOIN variable v ON v.id=s.variable_id
-      JOIN spelling sp ON sp.id=s.spelling_id ORDER BY t.pid,v.pid,s.start",
+      JOIN spelling sp ON sp.id=s.spelling_id LEFT JOIN release r ON r.id=s.release_id
+      LEFT JOIN text n ON n.id=r.name_text ORDER BY t.pid,v.pid,s.start,n.body",
         [],
         |r| {
             Ok(Segment {
@@ -44,6 +47,7 @@ pub(super) fn segments(db: &Connection) -> Result<Vec<Segment>> {
                 dtype: r.get(7)?,
                 length: r.get(8)?,
                 timeless: r.get(9)?,
+                release: r.get(10)?,
             })
         },
     )
@@ -90,6 +94,144 @@ pub(super) fn table_periods(table: &input::Table) -> Result<Vec<Span>> {
         _ => Err(
             "holdings_disposition_invalid: disposition needs explicit coverage or reason".into(),
         ),
+    }
+}
+
+/// Per table, its placed primary releases (catalog name and days), each table's read
+/// on its origin as the order check reads them: the base catalog's, or the holdings
+/// database's for a table only it defines.
+pub(super) type Primaries = BTreeMap<String, Vec<(String, Span)>>;
+
+pub(super) fn primaries(base: &Connection, db: &Connection) -> Result<Primaries> {
+    let sql = "SELECT t.pid,n.body,r.start,r.end FROM release r JOIN tbl t ON t.id=r.table_id
+      JOIN text n ON n.id=r.name_text WHERE r.is_primary=1 AND r.start IS NOT NULL";
+    let read = |conn: &Connection| {
+        rows(conn, sql, [], |r| {
+            Ok((r.get::<_, String>(0)?, (r.get(1)?, (r.get(2)?, r.get(3)?))))
+        })
+    };
+    let based: BTreeSet<String> = rows(base, "SELECT pid FROM tbl", [], |r| r.get(0))?
+        .into_iter()
+        .collect();
+    let mut out = Primaries::new();
+    for (table, release) in read(base)?.into_iter().chain(
+        read(db)?
+            .into_iter()
+            .filter(|(table, _)| !based.contains(table)),
+    ) {
+        out.entry(table).or_default().push(release);
+    }
+    Ok(out)
+}
+
+/// Per table, the days two or more of its placed primary releases share
+/// (crates/DESIGN.md, "Concurrent releases"): an order serves them per named release.
+pub(super) fn shared_days(primaries: &Primaries) -> BTreeMap<String, Vec<Span>> {
+    primaries
+        .iter()
+        .filter_map(|(table, releases)| {
+            let spans: Vec<Span> = releases.iter().map(|(_, span)| *span).collect();
+            let shared: Vec<Span> = days::slices(spans.iter().copied())
+                .into_iter()
+                .filter(|slice| {
+                    spans
+                        .iter()
+                        .filter(|s| days::covered(&[*slice], &[**s]))
+                        .count()
+                        > 1
+                })
+                .collect();
+            (!shared.is_empty()).then(|| (table.clone(), days::merge(shared)))
+        })
+        .collect()
+}
+
+/// The catalog name of the release a physical table states (`release`), resolved
+/// among the placed primary releases of its routed tables as an order resolves a
+/// source's `releases`: exactly, else under the identity fold. Only a dated table
+/// states one, and its delivery lies inside that release's period.
+pub(super) fn stated_release(
+    primaries: &Primaries,
+    table: &input::Table,
+) -> Result<Option<String>> {
+    let Some(name) = &table.release else {
+        return Ok(None);
+    };
+    let refuse = |why: &str| -> crate::error::Error {
+        format!("holdings_release_invalid: release {name:?} {why}").into()
+    };
+    if table.disposition != "dated" {
+        return Err(refuse("is stated by a table that is not dated"));
+    }
+    let routed: Vec<&(String, Span)> = table
+        .routes
+        .iter()
+        .filter_map(|route| primaries.get(route))
+        .flatten()
+        .collect();
+    let folded = reg_core::fold_identity(name);
+    let exact: Vec<_> = routed.iter().filter(|(body, _)| body == name).collect();
+    let matched = if exact.is_empty() {
+        routed
+            .iter()
+            .filter(|(body, _)| reg_core::fold_identity(body) == folded)
+            .collect()
+    } else {
+        exact
+    };
+    let names: BTreeSet<&str> = matched.iter().map(|(body, _)| body.as_str()).collect();
+    let [body] = names.into_iter().collect::<Vec<_>>()[..] else {
+        return Err(refuse("names no one primary release of a routed table"));
+    };
+    let delivery = table_periods(table)?;
+    if !matched
+        .iter()
+        .any(|(_, span)| days::covered(&delivery, &[*span]))
+    {
+        return Err(refuse("does not cover the table's delivery"));
+    }
+    Ok(Some(body.to_owned()))
+}
+
+/// The days a physical table may place of the segments it meets (crates/DESIGN.md,
+/// "Concurrent releases"): the days each serves an order under the shared release
+/// shadowing rule (`reg_core::days::shadow`), with the table's release as the lane. A
+/// table that states a release is that release's file, so it places that release's
+/// segments and releaseless ones where they do not reach, never another release's. One
+/// that states none places as on an unshared day, and no shared day, which an order
+/// serves per release only.
+pub(super) struct Reach<'a> {
+    /// The release's catalog name ([`stated_release`]).
+    pub release: Option<String>,
+    pub shared: &'a BTreeMap<String, Vec<Span>>,
+    pub variables: &'a Variables<'a>,
+}
+
+impl Reach<'_> {
+    /// `wanted`'s days of `segment` the table may place.
+    pub(super) fn spans(&self, segment: &Segment, wanted: &[Span]) -> Vec<Span> {
+        let siblings: Vec<&Segment> = self
+            .variables
+            .get(segment.variable.as_str())
+            .into_iter()
+            .flatten()
+            .filter(|s| s.table == segment.table)
+            .copied()
+            .collect();
+        let at = siblings
+            .iter()
+            .position(|s| std::ptr::eq(*s, segment))
+            .expect("a segment is among its variable's segments");
+        let lines: Vec<(Span, Option<&str>)> = siblings
+            .iter()
+            .map(|s| ((s.start, s.end), s.release.as_deref()))
+            .collect();
+        let served = days::shadow(&lines, self.release.as_deref()).swap_remove(at);
+        let spans = days::overlap(wanted, &served);
+        match (&self.release, self.shared.get(&segment.table)) {
+            (None, Some(shared)) => days::minus(&spans, shared),
+            _ => spans,
+        }
     }
 }
 
@@ -155,6 +297,7 @@ pub(super) fn candidates(
     owed: &[Span],
     index: &BTreeMap<String, Vec<Segment>>,
     variables: &Variables<'_>,
+    reach: &Reach<'_>,
 ) -> Result<Vec<Candidate>> {
     let mut out = Vec::new();
     if let Some(decision) = decision
@@ -197,7 +340,7 @@ pub(super) fn candidates(
                 if segment.timeless != (table.disposition == "timeless") {
                     continue;
                 }
-                let spans = days::overlap(&wanted, &[(segment.start, segment.end)]);
+                let spans = reach.spans(segment, &wanted);
                 if !spans.is_empty() {
                     out.push(Candidate {
                         segment: segment.clone(),
@@ -220,7 +363,7 @@ pub(super) fn candidates(
                 {
                     continue;
                 }
-                let spans = days::overlap(owed, &[(segment.start, segment.end)]);
+                let spans = reach.spans(segment, owed);
                 if !spans.is_empty() {
                     out.push(Candidate {
                         segment: segment.clone(),
@@ -605,6 +748,8 @@ pub(super) fn write(
 ) -> Result<(usize, usize, usize, usize)> {
     let index = segment_index(base, db)?;
     let variables = by_variable(&index);
+    let primaries = primaries(base, db)?;
+    let shared = shared_days(&primaries);
     renames_resolve(&index, rename_targets)?;
     let keyed = schema_keyed(&census);
     let mut authored = BTreeMap::new();
@@ -653,6 +798,12 @@ pub(super) fn write(
         let result = (|| -> Result<()> {
             super::keys::validate_shapes(id, &authored.key)?;
             let spans = table_periods(authored)?;
+            let release = stated_release(&primaries, authored)?;
+            let reach = Reach {
+                release: release.clone(),
+                shared: &shared,
+                variables: &variables,
+            };
             if authored.partition.is_some() && authored.projection_of.is_some() {
                 return Err(
                     "inventory_cell_conflict: partition and projection are exclusive".into(),
@@ -712,9 +863,9 @@ pub(super) fn write(
                 ).into());
             }
             // The period column and its encoding are set together once the columns exist.
-            tx.execute("INSERT INTO holding_table(id,physical_name,space,key_requirements,schema_name,table_type,file_name,disposition,delivery,partition,projection_of,
-          projection_token,reason) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)",params![id,table.name,spaces.of(&table),serde_json::to_string(&authored.key)?,schema_name,table_type,
-          file_name,authored.disposition,authored.delivery.as_deref().map(canonical_period).transpose()?,authored.partition,projection,authored.projection_token,
+            tx.execute("INSERT INTO holding_table(id,physical_name,space,key_requirements,schema_name,table_type,file_name,disposition,delivery,release,partition,projection_of,
+          projection_token,reason) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",params![id,table.name,spaces.of(&table),serde_json::to_string(&authored.key)?,schema_name,table_type,
+          file_name,authored.disposition,authored.delivery.as_deref().map(canonical_period).transpose()?,release,authored.partition,projection,authored.projection_token,
           authored.reason]).map_err(|_|"holdings_table_invalid: duplicate name or invalid topology".to_owned())?;
             for (start, end) in &spans {
                 tx.execute(
@@ -853,8 +1004,9 @@ pub(super) fn write(
                     if hold.is_some() || unmap.is_some() || spans.is_empty() {
                         return Ok(());
                     }
-                    let candidates =
-                        candidates(authored, column, decision, &owed, &index, &variables)?;
+                    let candidates = candidates(
+                        authored, column, decision, &owed, &index, &variables, &reach,
+                    )?;
                     let accepted = placements(&tx, id, cid, &candidates, &owed, &authored.key)?;
                     if accepted.is_empty() && authored.key.iter().any(|key| key.hold.is_some()) {
                         return Ok(());

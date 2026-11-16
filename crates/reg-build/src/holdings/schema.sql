@@ -23,6 +23,10 @@ CREATE TABLE holding_table (
  file_name TEXT NOT NULL UNIQUE,
  disposition TEXT NOT NULL CHECK(disposition IN ('dated','timeless','unknown','lookup','excluded')),
  delivery TEXT,
+ -- The primary release of a routed table this file is, by its catalog name: in a table
+ -- with concurrent releases it places only that release's segments and serves that
+ -- release's entries on shared days (crates/DESIGN.md, "Concurrent releases").
+ release TEXT,
  partition TEXT,
  projection_of INTEGER REFERENCES holding_table(id),
  projection_token TEXT,
@@ -30,6 +34,7 @@ CREATE TABLE holding_table (
  period_encoding TEXT CHECK(period_encoding IN ('date','year','yyyymm','yyyymmdd')),
  reason TEXT,
  CHECK((disposition = 'dated') = (delivery IS NOT NULL)),
+ CHECK(release IS NULL OR disposition = 'dated'),
  CHECK(partition IS NULL OR projection_of IS NULL),
  CHECK((projection_of IS NULL) = (projection_token IS NULL)),
  CHECK((period_column_id IS NULL) = (period_encoding IS NULL)),

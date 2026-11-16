@@ -178,15 +178,14 @@ fn build(
     for (e, entry) in order.entries.iter().enumerate() {
         let s = index[entry.source.as_str()];
         let days = entry.period.days(open);
-        // simplify: a holding states no release yet, so an entry of one release (a shared
-        // day of a concurrent table) places nowhere and `gaps` reports it unheld; placing
-        // it by (table, variable, days) could deliver another release's file. The holdings
-        // PR adds `holding_table.release` and places such an entry in its release's files.
-        let placements = if entry.release.is_some() {
-            Vec::new()
-        } else {
-            placements(held, &entry.table, &entry.variable, days, space)?
-        };
+        let placements = placements(
+            held,
+            &entry.table,
+            &entry.variable,
+            days,
+            entry.release.as_deref(),
+            space,
+        )?;
         // Keyed by the project binding's own variable: a followed successor's entry
         // names the successor, but its logical clip is recorded under the binding.
         let binding = bindings.entry((s, entry.binding)).or_insert_with(|| {
@@ -437,7 +436,7 @@ fn held_as_stated(
     let Some(stated) = stated else {
         return Ok(false);
     };
-    let placements = placements(held, table, variable, period.days(server.open), space)?;
+    let placements = placements(held, table, variable, period.days(server.open), None, space)?;
     if placements.is_empty() {
         return Ok(false);
     }
@@ -555,8 +554,15 @@ fn not_in_database(
                      SELECT 1 FROM holding_mapping m JOIN holding_column c ON c.id = m.column_id
                        JOIN holding_table h ON h.id = c.holding_id
                      WHERE h.space = s.id AND m.table_pid = ?1 AND m.variable_pid = ?2
-                       AND m.start < ?4 AND m.end > ?3)",
-                rusqlite::params![entry.table, entry.variable, days.0, days.1, space],
+                       AND m.start < ?4 AND m.end > ?3 AND (?6 IS NULL OR h.release = ?6))",
+                rusqlite::params![
+                    entry.table,
+                    entry.variable,
+                    days.0,
+                    days.1,
+                    space,
+                    entry.release
+                ],
                 |r| Ok((r.get(0)?, r.get(1)?)),
             )?);
         }
@@ -622,12 +628,14 @@ fn not_in_database(
 
 /// The accepted placements of (table, variable) over `days` in database `space`
 /// (every database when `None`); a projection keeps only the days its parent does not
-/// also place, and only those inside the request.
+/// also place, and only those inside the request. An entry of one release (a shared day
+/// of a concurrent table) is placed only in the files that state that release.
 fn placements(
     held: &Connection,
     table: &str,
     variable: &str,
     days: Days,
+    release: Option<&str>,
     space: Option<&str>,
 ) -> Result<Vec<Placement>, Error> {
     let found: Vec<Placement> = rows(
@@ -636,9 +644,9 @@ fn placements(
              FROM holding_mapping m JOIN holding_column c ON c.id = m.column_id
                JOIN holding_table h ON h.id = c.holding_id
              WHERE m.table_pid = ?1 AND m.variable_pid = ?2 AND m.start < ?4 AND m.end > ?3
-               AND (?5 IS NULL OR h.space = ?5)
+               AND (?5 IS NULL OR h.space = ?5) AND (?6 IS NULL OR h.release = ?6)
              ORDER BY h.id, c.ordinal, m.start",
-        rusqlite::params![table, variable, days.0, days.1, space],
+        rusqlite::params![table, variable, days.0, days.1, space, release],
         |r| {
             Ok(Placement {
                 holding: r.get(0)?,

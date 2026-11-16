@@ -27,3 +27,11 @@
 {"kind":"occurrence","provider":"demo","register":"keyed","table":"visits","column":"Score","source_key":"score","label":"Visit score","dtype":"int","from":"2017-01-01","to":"2022-12-31"}
 {"kind":"occurrence","provider":"demo","register":"keyed","table":"visits","column":"Year","source_key":"year","label":"Visit year","dtype":"int","from":"2017-01-01","to":"2022-12-31"}
 {"kind":"occurrence","provider":"demo","register":"held","table":"linked","column":"RelativeId","source_key":"relative-id","label":"Relative identifier, ordinary orderable column","dtype":"int","identifier":true,"from":"2017-01-01","to":"2021-12-31"}
+{"kind":"register","provider":"demo","register":"waves","name":"Survey waves"}
+{"kind":"table","provider":"demo","register":"waves","table":"t","name":"Waves"}
+{"kind":"release","provider":"demo","register":"waves","table":"t","release":"w1","name":"2017 - 2018","from":"2017-01-01","to":"2018-12-31","grain":"year","edition":"final"}
+{"kind":"release","provider":"demo","register":"waves","table":"t","release":"w2","name":"2018 - 2019","from":"2018-01-01","to":"2019-12-31","grain":"year","edition":"final"}
+{"kind":"occurrence","provider":"demo","register":"waves","table":"t","release":"w1","column":"Id","source_key":"id","label":"Respondent","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"waves","table":"t","release":"w2","column":"Id","source_key":"id","label":"Respondent","dtype":"int","identifier":true}
+{"kind":"occurrence","provider":"demo","register":"waves","table":"t","release":"w1","column":"Score","source_key":"score","label":"Wave score","dtype":"int"}
+{"kind":"occurrence","provider":"demo","register":"waves","table":"t","release":"w2","column":"Score","source_key":"score","label":"Wave score","dtype":"int"}
