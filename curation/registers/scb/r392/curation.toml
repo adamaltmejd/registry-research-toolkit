@@ -704,20 +704,20 @@ evidence = "private:ev-3646"
 [[statement]]
 kind = "set"
 subject = "var:avdr-skatt-sink"
-fields = { "description" = "Avdragen skatt, SINK. Uppgiften avser utomlands bosatta som inte omfattas av artistskatten." }
-evidence = "private:ev-3647"
+fields = { "description" = "Avdragen skatt, SINK. Uppgiften avser utomlands bosatta som inte omfattas av artistskatten. Kolumnen levereras också i filerna med sociala ersättningar 2021–2023, men finns inte i den tabellens dokumentation." }
+evidence = "private:ev-3647\n\nThe last sentence: the social-benefit asserts for AVDR_SKATT_SINK below (SCB delivery report; Registerinformation documents the social-benefit table for 2019-2020 without the column)."
 
 [[statement]]
 kind = "set"
 subject = "var:avdragen-preliminar-a-skatt-arbetsgivare"
-fields = { "description" = "Avdragen preliminär skatt" }
-evidence = "private:ev-3648"
+fields = { "description" = "Avdragen preliminär skatt. Kolumnen levereras också i filerna med sociala ersättningar 2021–2023, men finns inte i den tabellens dokumentation." }
+evidence = "private:ev-3648\n\nThe last sentence: the social-benefit asserts for AVDR_PREL_SKATT below (SCB delivery report; Registerinformation documents the social-benefit table for 2019-2020 without the column)."
 
 [[statement]]
 kind = "set"
 subject = "var:avrakning-avgiftsfri-ers"
-fields = { "description" = "Avräkning från avgiftsfri ersättning" }
-evidence = "private:ev-3649"
+fields = { "description" = "Avräkning från avgiftsfri ersättning. Kolumnen levereras också i filerna med sociala ersättningar 2021–2023, men finns inte i den tabellens dokumentation." }
+evidence = "private:ev-3649\n\nThe last sentence: the social-benefit asserts for AVRAKNING_AVGIFTSFRI_ERS below (SCB delivery report; Registerinformation documents the social-benefit table for 2019-2020 without the column)."
 
 [[statement]]
 kind = "set"
@@ -1312,14 +1312,14 @@ kind = "assert"
 subject = "individuppgifter-agi-sociala-ersattningar: ERSATTNINGS_BELOPP @2021..2023 where key = 'v6111'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Utbetalt ersättningsbelopp", "definition" = "Utbetald ersättning enligt social kontrolluppgift.", "type" = "integer", "sensitive" = true, "identifier" = false } }
 evidence = "private:ev-3903"
-caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly social-benefit files for 2021-2023. SCB delivers this column, in 2019-2020 as in 2021-2023, as four positions of one row per person and month (ERSATTNINGS_BELOPP1 to ERSATTNINGS_BELOPP4); stewards map them as position slots of this variable. Label, definition and type follow the export's 2020 edition."
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly social-benefit files for 2021-2023. SCB delivers this column, in 2019-2020 as in 2021-2023, as four positions of one row per person and month (ERSATTNINGS_BELOPP1 to ERSATTNINGS_BELOPP4); stewards map each position to its own variable, ersattningsbelopp-1 to ersattningsbelopp-4. Label, definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "assert"
 subject = "individuppgifter-agi-sociala-ersattningar: ERSATTNINGS_KOD @2021..2023 where key = 'v6112'"
 fact = { "entity" = "occurrence", "fields" = { "label" = "Ersättningskod", "definition" = "Kod på sociala kontrolluppgiften som anger vilken typ av ersättning som avses.", "type" = "integer", "sensitive" = true, "identifier" = false } }
 evidence = "private:ev-3904"
-caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly social-benefit files for 2021-2023. SCB delivers this column, in 2019-2020 as in 2021-2023, as four positions of one row per person and month (ERSATTNINGS_KOD1 to ERSATTNINGS_KOD4); stewards map them as position slots of this variable. Label, definition and type follow the export's 2020 edition."
+caveat = "SCB's Registerinformation export documents the individual AGI data for 2019-2020 only. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly social-benefit files for 2021-2023. SCB delivers this column, in 2019-2020 as in 2021-2023, as four positions of one row per person and month (ERSATTNINGS_KOD1 to ERSATTNINGS_KOD4); stewards map each position to its own variable, ersattningskod-1 to ersattningskod-4. Label, definition and type follow the export's 2020 edition."
 
 [[statement]]
 kind = "set"
@@ -1676,3 +1676,24 @@ subject = "individuppgifter-agi-sociala-ersattningar: Perioden @2021..2023 where
 fact = { "entity" = "occurrence", "fields" = { "label" = "Referensperiod", "definition" = "Den period uppgifterna avser.", "type" = "text", "sensitive" = true, "identifier" = false } }
 evidence = "private:ev-3903"
 caveat = "SCB's Registerinformation export documents the social-benefit file for 2019-2020 only, with Perioden as the month a row refers to. The years 2021-2023 rest on SCB's delivery lists and on deliveries of the final monthly social-benefit files for 2021-2023, one row per recipient and month, which carry the period column. Label, definition and type follow the export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi-sociala-ersattningar: AVDR_PREL_SKATT @2021..2023 where key = 'v21816'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Avdragen preliminär A-skatt enligt från arbetsgivare", "definition" = "Avdragen preliminär A-skatt enligt från arbetsgivare.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "SCB delivers AVDR_PREL_SKATT (bigint) in the final monthly social-benefit files for 2021-2023: SCB's delivery report for the 2023-2024 delivery lists it on every social-benefit file from January to December 2021, and the delivered social-benefit files for 2022-2023 carry it; the 2019-2020 social-benefit files do not. SCB's Registerinformation export documents the social-benefit table for 2019-2020 only, without this column. Same column and key as in the wage table (private:ev-3857); label, definition and type follow the export's 2020 edition there."
+caveat = "Not in the social-benefit table's documentation: the column rests on SCB's delivery report and on the delivered files."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi-sociala-ersattningar: AVDR_SKATT_SINK @2021..2023 where key = 'v41324'"
+fact = { "entity" = "occurrence", "fields" = { "definition" = "Avdragen särskild inkomstskatt för utomlands bosatta.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "SCB delivers AVDR_SKATT_SINK (bigint) in the final monthly social-benefit files for 2021-2023: SCB's delivery report for the 2023-2024 delivery lists it on every social-benefit file from January to December 2021, and the delivered social-benefit files for 2022-2023 carry it; the 2019-2020 social-benefit files do not. SCB's Registerinformation export documents the social-benefit table for 2019-2020 only, without this column. Same column and key as in the wage table (private:ev-3859); definition and type follow the export's 2020 edition there."
+caveat = "Not in the social-benefit table's documentation: the column rests on SCB's delivery report and on the delivered files."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi-sociala-ersattningar: AVRAKNING_AVGIFTSFRI_ERS @2021..2023 where key = 'v41333'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Avräkning från avgiftsfri ersättning", "definition" = "Ersättning som redovisats i tidigare redovisningsperioder och som nu är avgiftspliktig.", "type" = "integer", "sensitive" = false, "identifier" = false } }
+evidence = "SCB delivers AVRAKNING_AVGIFTSFRI_ERS (int) in the final monthly social-benefit files for 2021-2023: SCB's delivery report for the 2023-2024 delivery lists it on every social-benefit file from January to December 2021, and the delivered social-benefit files for 2022-2023 carry it; the 2019-2020 social-benefit files do not. SCB's Registerinformation export documents the social-benefit table for 2019-2020 only, without this column. Same column and key as in the wage table (private:ev-3860); label, definition and type follow the export's 2020 edition there."
+caveat = "Not in the social-benefit table's documentation: the column rests on SCB's delivery report and on the delivered files."
