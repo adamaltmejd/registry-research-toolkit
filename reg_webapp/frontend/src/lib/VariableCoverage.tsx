@@ -218,14 +218,13 @@ export function useVariableCoverage({
       variableColumns(subject.segments),
     ]),
   );
-  // A bound table whose rows name a release is read whole for the days its
-  // releases share: there a source takes only the releases it names.
+  // A bound table is read whole for the days its releases share: there a
+  // source takes only the releases it names, releaseless rows included.
   const tableShows = useCatalogRead(
     tableShowReads,
     useDistinct(
       subjects.flatMap((subject) =>
         subject.segments.flatMap((segment) =>
-          segment.release &&
           bindingSources(draft, subject.fqid, segment.table).length > 0
             ? [segment.table]
             : [],

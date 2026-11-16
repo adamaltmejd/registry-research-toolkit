@@ -440,19 +440,12 @@ function Sources({
     for (const row of read.value ?? [])
       segments.set(row.variable, [...(segments.get(row.variable) ?? []), row]);
   }
-  // Only a table whose releases share years (its rows name a release) is
-  // read whole, for those years; a source that names releases keeps its
-  // choice editable after its years move off them.
+  // Each source table is read whole for the years its releases share: only
+  // the table says so, since a source can bind only releaseless rows of a
+  // table whose releases share years.
   const tableShows = useCatalogRead(
     tableShowReads,
-    useDistinct([
-      ...[...segments.values()].flatMap((rows) =>
-        rows.flatMap((row) => (row.release ? [row.table] : [])),
-      ),
-      ...catalogSources.flatMap((source) =>
-        source.releases?.length ? [source.table] : [],
-      ),
-    ]),
+    useDistinct(catalogSources.map((source) => source.table)),
   );
   const columnRead = (table: string, variable: string) =>
     segmentReads[columnKey(table, variable)];
