@@ -8790,4 +8790,16 @@ evidence = "Row key: cfar-nummer identifies a row: the local unit number is nest
 kind = "set"
 subject = "fek-slutdata-verksamhetsenhet: var:person-orgnr"
 fields.row_key = true
-evidence = "Row key: person-orgnr identify a row: results per activity unit but no activity unit id is offered, so the firm person-orgnr is the key and rows may not be unique; fenr is an attribute (maintainer ruling 2026-11-14)."
+evidence = "private:ev-3907"
+
+[[statement]]
+kind = "assert"
+subject = "fek-slutdata-verksamhetsenhet: VELopNr @2019..2021 where key = 'v4810'"
+fact = { entity = "occurrence", fields = { label = "Löpnummer för verksamhetsenhet", definition = "Löpnummer på verksamhetsenhet inom ett organisationsnummer.", type = "integer", identifier = true } }
+evidence = "private:ev-3907"
+
+[[statement]]
+kind = "set"
+subject = "fek-slutdata-verksamhetsenhet: var:velopnr"
+fields.row_key = true
+evidence = "private:ev-3907"

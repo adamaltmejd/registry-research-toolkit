@@ -28785,3 +28785,83 @@ kind = "set"
 subject = "bostadshushall-vx: var:hushallsid"
 fields.row_key = true
 evidence = "Row key: hushallsid identifies a row: a household table keys on its household id (maintainer ruling 2026-11-14, rule 3)."
+
+# Årsvisa urvalsregister 1960–1966.
+
+[[statement]]
+kind = "assert"
+subject = "release:individer-och-dodsbon/1961"
+fact = { entity = "release", name = "1961", period = "1961" }
+evidence = "private:ev-3905"
+
+[[statement]]
+kind = "assert"
+subject = "release:individer-och-dodsbon/1962"
+fact = { entity = "release", name = "1962", period = "1962" }
+evidence = "private:ev-3905"
+
+[[statement]]
+kind = "assert"
+subject = "release:individer-och-dodsbon/1963"
+fact = { entity = "release", name = "1963", period = "1963" }
+evidence = "private:ev-3905"
+
+[[statement]]
+kind = "assert"
+subject = "release:individer-och-dodsbon/1964"
+fact = { entity = "release", name = "1964", period = "1964" }
+evidence = "private:ev-3905"
+
+[[statement]]
+kind = "assert"
+subject = "release:individer-och-dodsbon/1965"
+fact = { entity = "release", name = "1965", period = "1965" }
+evidence = "private:ev-3905"
+
+[[statement]]
+kind = "assert"
+subject = "release:individer-och-dodsbon/1966"
+fact = { entity = "release", name = "1966", period = "1966" }
+evidence = "private:ev-3905"
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: PersonNr @1960 where key = 'v4544' and release = 'r13667'"
+fact = { entity = "occurrence", fields = { label = "Eget personnummer", identifier = true } }
+evidence = "private:ev-3905"
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: PersonNr @1961 where key = 'v4544' and release = '1961'"
+fact = { entity = "occurrence", fields = { label = "Eget personnummer", identifier = true } }
+evidence = "private:ev-3905"
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: PersonNr @1962 where key = 'v4544' and release = '1962'"
+fact = { entity = "occurrence", fields = { label = "Eget personnummer", identifier = true } }
+evidence = "private:ev-3905"
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: PersonNr @1963 where key = 'v4544' and release = '1963'"
+fact = { entity = "occurrence", fields = { label = "Eget personnummer", identifier = true } }
+evidence = "private:ev-3905"
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: PersonNr @1964 where key = 'v4544' and release = '1964'"
+fact = { entity = "occurrence", fields = { label = "Eget personnummer", identifier = true } }
+evidence = "private:ev-3905"
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: PersonNr @1965 where key = 'v4544' and release = '1965'"
+fact = { entity = "occurrence", fields = { label = "Eget personnummer", identifier = true } }
+evidence = "private:ev-3905"
+
+[[statement]]
+kind = "assert"
+subject = "individer-och-dodsbon: PersonNr @1966 where key = 'v4544' and release = '1966'"
+fact = { entity = "occurrence", fields = { label = "Eget personnummer", identifier = true } }
+evidence = "private:ev-3905"
