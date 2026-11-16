@@ -1941,3 +1941,45 @@ kind = "set"
 subject = "tjansteprisindex-tpi: var:berakningsperiod-period"
 fields.row_key = true
 evidence = "Row key: berakningsperiod-period (Period) is the period of a row; one delivered file holds several periods, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "tjansteprisindex-tpi: BeskrivnSv where key = 'v30830'"
+fields = { "variable" = "produktgruppsnamn" }
+evidence = "PR 3 of concurrent releases (default identity) would merge source key v30830 across the Indata and Utdata releases of tjansteprisindex-tpi, which share years and spell it differently: BeskrivnSv (Indata 2014) and NamnSV (Utdata 2014). Indata and Utdata are parallel files with different content (class C, maintainer 2026-11-16: keep these keys split until the class C split gives Indata its own table), so each spelling stays its own variable."
+
+[[statement]]
+kind = "set"
+subject = "tjansteprisindex-tpi: NamnSV where key = 'v30830'"
+fields = { "variable" = "produktgruppsnamn-namnsv" }
+evidence = "PR 3 of concurrent releases (default identity) would merge source key v30830 across the Indata and Utdata releases of tjansteprisindex-tpi, which share years and spell it differently: BeskrivnSv (Indata 2014) and NamnSV (Utdata 2014). Indata and Utdata are parallel files with different content (class C, maintainer 2026-11-16: keep these keys split until the class C split gives Indata its own table), so each spelling stays its own variable."
+
+[[statement]]
+kind = "set"
+subject = "tjansteprisindex-tpi: Period where key = 'v27318'"
+fields = { "variable" = "berakningsperiod-period" }
+evidence = "PR 3 of concurrent releases (default identity) would merge source key v27318 across the Indata and Utdata releases of tjansteprisindex-tpi, which share years and spell it differently: Period (2012, 2013, Utdata 2014), PeriodId (Indata 2014) and UndersokningsKvartal (2007-2011). Indata and Utdata are parallel files with different content (class C, maintainer 2026-11-16: keep these keys split until the class C split gives Indata its own table), so each spelling stays its own variable."
+
+[[statement]]
+kind = "set"
+subject = "tjansteprisindex-tpi: PeriodId where key = 'v27318'"
+fields = { "variable" = "berakningsperiod-periodid" }
+evidence = "PR 3 of concurrent releases (default identity) would merge source key v27318 across the Indata and Utdata releases of tjansteprisindex-tpi, which share years and spell it differently: Period (2012, 2013, Utdata 2014), PeriodId (Indata 2014) and UndersokningsKvartal (2007-2011). Indata and Utdata are parallel files with different content (class C, maintainer 2026-11-16: keep these keys split until the class C split gives Indata its own table), so each spelling stays its own variable."
+
+[[statement]]
+kind = "set"
+subject = "tjansteprisindex-tpi: UndersokningsKvartal where key = 'v27318'"
+fields = { "variable" = "berakningsperiod-undersokningskvartal" }
+evidence = "PR 3 of concurrent releases (default identity) would merge source key v27318 across the Indata and Utdata releases of tjansteprisindex-tpi, which share years and spell it differently: Period (2012, 2013, Utdata 2014), PeriodId (Indata 2014) and UndersokningsKvartal (2007-2011). Indata and Utdata are parallel files with different content (class C, maintainer 2026-11-16: keep these keys split until the class C split gives Indata its own table), so each spelling stays its own variable."
+
+[[statement]]
+kind = "set"
+subject = "ppi: Period where key = 'v29392'"
+fields = { "variable" = "period-ppi-period" }
+evidence = "PR 3 of concurrent releases (default identity) would merge source key v29392 across the Indata and Utdata releases of ppi, which share years and spell it differently: Period (Utdata 2017-2026) and PeriodId (Indata 2013-2025). Indata and Utdata are parallel files with different content (class C, maintainer 2026-11-16: keep these keys split until the class C split gives Indata its own table), so each spelling stays its own variable."
+
+[[statement]]
+kind = "set"
+subject = "ppi: PeriodId where key = 'v29392'"
+fields = { "variable" = "period-ppi-periodid" }
+evidence = "PR 3 of concurrent releases (default identity) would merge source key v29392 across the Indata and Utdata releases of ppi, which share years and spell it differently: Period (Utdata 2017-2026) and PeriodId (Indata 2013-2025). Indata and Utdata are parallel files with different content (class C, maintainer 2026-11-16: keep these keys split until the class C split gives Indata its own table), so each spelling stays its own variable."
