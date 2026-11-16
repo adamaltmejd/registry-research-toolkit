@@ -609,7 +609,7 @@ fn placed(holdings: &Connection, pid: &str, space: &str) -> HashSet<String> {
 /// The whole-table project; on a steward pair it names the sampled database.
 fn project(pid: &str, space: Option<&str>, period: &Value, variables: &[String]) -> Value {
     let mut project = json!({
-        "schema_version": "6.2.0",
+        "schema_version": "6.3.0",
         "reg_meta_version": "0.64.0",
         "name": "Release order",
         "sources": [{

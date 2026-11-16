@@ -194,10 +194,11 @@ tool = "schema"
 params = { ref = "ref", period = "period?", table = "ref?", limit = "limit?", cursor = "cursor?" }
 result = "Page<SchemaLine>"
 errors = ["invalid_ref", "not_found", "retired_ref", "table_is_register", "ambiguous_ref", "invalid_period", "invalid_cursor", "stale_cursor"]
-note = """One line per (table, variable, folded spelling) over `period` (schema §2.1, \
+note = """One line per (table, release, variable, folded spelling) over `period` (schema §2.1, \
 "Schema of a table"): for a table (`segment_table`), a register's tables, or one \
 variable's tables (`segment_variable`). `table` narrows a register ref. Keyset-paged \
-on (table pid, variable pid, start). Row keys are the lines with `row_key` true."""
+on (table pid, variable pid, start, release). `release` is set only in a table two of \
+whose releases share days, where lines of one variable in two releases may overlap. Row keys are the lines with `row_key` true."""
 
 [[operation]]
 name = "diff"
@@ -348,7 +349,7 @@ register list), provider (registers [{fqid, name, period}]), register \
 (name, description, period, tables [{fqid, name, role, implicit, timeless, \
 cadence, period}], variables [{fqid, name, period}], unplaced [release names]), table \
 (name, description, register, role, implicit, timeless, cadence, spans \
-[Period], releases? [Release], row_keys [{fqid, spelling, period}]), variable (name, \
+[Period], releases? [Release], shared_release_days? [{period, releases [name]}] (the days two primary releases share, when any; not on a steward), row_keys [{fqid, spelling, period}]), variable (name, \
 optional description, register, period, sets/tags [{fqid, name}] when non-empty, \
 optional evidence {texts, source_only, spellings, statements, documents}), \
 set (name, optional description, register, ordered axes [{id, label}], \
@@ -415,6 +416,7 @@ tables = "[{fqid, name, spans [Period], gaps? [{period, reason}], releases? [Rel
 
 [shape.SchemaLine]
 table = "string"
+release = "string?; in a table two of whose releases share days, the release the line is in (crates/DESIGN.md, \"Concurrent releases\"); absent elsewhere"
 variable = "string; fqid"
 name = "string; the variable's label"
 spelling = "string"

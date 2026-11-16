@@ -2,7 +2,7 @@
   "note": "Concurrent releases (crates/DESIGN.md, \"Concurrent releases\"): the releases \"2003 - 2004\" and \"2004 - 2005\" of `conc/t` both deliver 2004. An order over 2003-2005 that names no release blocks with one `release_ambiguous` for 2004, located at the source and listing both releases; 2003 and 2005 alone would order. Fails if a shared day is served from both releases (a silent union) or from one picked silently. Oracle: the fixture's JSONL.",
   "fixture": "orders",
   "project": {
-    "schema_version": "6.2.0",
+    "schema_version": "6.3.0",
     "reg_meta_version": "0.64.0",
     "name": "Order case",
     "sources": [

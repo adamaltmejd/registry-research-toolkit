@@ -176,6 +176,11 @@ pub enum Show {
         /// Absent when none, and on a data holder's catalog.
         #[serde(skip_serializing_if = "Vec::is_empty")]
         releases: Vec<Release>,
+        /// Days two or more of the table's releases both deliver: an order over them names
+        /// the releases to use (`releases` on the project source). Absent when none, and on
+        /// a data holder's catalog.
+        #[serde(skip_serializing_if = "Vec::is_empty")]
+        shared_release_days: Vec<ShowSharedDays>,
         row_keys: Vec<ShowRowKey>,
         /// The variables in this table, each over the years it has here.
         variables: Vec<ShowTableVariable>,
@@ -399,6 +404,14 @@ pub struct ShowTable {
     /// Absent when none.
     #[serde(skip_serializing_if = "Vec::is_empty")]
     series_breaks: Vec<ShowSeriesBreak>,
+}
+
+/// Days two or more releases of a table share, with those releases.
+#[derive(Serialize, ToSchema)]
+pub struct ShowSharedDays {
+    period: Period,
+    /// The releases sharing the days, by name, in start order.
+    releases: Vec<String>,
 }
 
 /// The row-key column's period in this table.
@@ -945,6 +958,17 @@ fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Er
             vec![]
         } else {
             shape::releases(server, conn, entity.id)?
+        },
+        shared_release_days: if server.catalog.steward().is_some() {
+            vec![]
+        } else {
+            super::order::releases::sharing(conn, entity.id)?
+                .into_iter()
+                .map(|((lo, hi), releases)| ShowSharedDays {
+                    period: server.period(lo, hi),
+                    releases,
+                })
+                .collect()
         },
         row_keys,
         variables,

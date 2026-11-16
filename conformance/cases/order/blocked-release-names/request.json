@@ -1,0 +1,25 @@
+{
+  "note": "A source's `releases` must name primary releases of its table that meet its period. Over 2004-2005, \"2001 - 2002\" names a release of `conc/t` that covers none of it (`release_outside_period`) and \"2004-2005\" names none (`release_unresolved`, listing the table's releases); each refusal is located at its item, beside a valid name (\"2003 - 2004\", which serves the shared 2004, so no `release_ambiguous`). Fails if a misspelled or out-of-period name is ignored. Oracle: the fixture's JSONL.",
+  "fixture": "orders",
+  "project": {
+    "schema_version": "6.3.0",
+    "reg_meta_version": "0.64.0",
+    "name": "Order case",
+    "sources": [
+      {
+        "name": "s",
+        "table": "demo/conc/t",
+        "period": {
+          "from": 2004,
+          "to": 2005
+        },
+        "releases": ["2001 - 2002", "2004-2005", "2003 - 2004"],
+        "bindings": [
+          {
+            "variable": "demo/conc/belopp"
+          }
+        ]
+      }
+    ]
+  }
+}

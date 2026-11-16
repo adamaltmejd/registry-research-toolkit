@@ -5,7 +5,7 @@
   },
   "project": {
     "name": "Order case",
-    "schema_version": "6.2.0",
+    "schema_version": "6.3.0",
     "reg_meta_version": "0.64.0"
   },
   "entries": [
@@ -17,6 +17,7 @@
       "table": "demo/pins",
       "table_name": "Classification pins",
       "delivered_table": "Classification pins",
+      "release": null,
       "variable": "demo/pins/kod",
       "variable_name": "Code",
       "display_name": null,
@@ -41,6 +42,7 @@
       "table": "demo/pins",
       "table_name": "Classification pins",
       "delivered_table": "Classification pins",
+      "release": null,
       "variable": "demo/pins/kod",
       "variable_name": "Code",
       "display_name": null,
@@ -64,6 +66,7 @@
       "table": "demo/pins",
       "table_name": "Classification pins",
       "delivered_table": "Classification pins",
+      "release": null,
       "period": {
         "start": "2018-01-01",
         "end": "2020-01-01"

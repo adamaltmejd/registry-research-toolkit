@@ -152,6 +152,34 @@ pub mod days {
             .all(|(a, b)| by.iter().any(|(c, d)| c <= a && b <= d))
     }
 
+    /// Release shadowing (crates/DESIGN.md, "Concurrent releases"): the days each of one
+    /// variable's segments in one table serves for `lane`, aligned with `segments` (each a
+    /// span and its release). With a lane (a release the source names, on days two
+    /// releases share) that release's segments serve, a releaseless one where they do
+    /// not reach and another release's not at all. Without one (an unshared day) every
+    /// release's segments serve and a releaseless one gives way to them. Every reader of
+    /// a concurrent table's segments for an order applies it: the order's columns and row
+    /// keys, and reg-mock.
+    #[must_use]
+    pub fn shadow(segments: &[(Span, Option<&str>)], lane: Option<&str>) -> Vec<Vec<Span>> {
+        let reads = |release: Option<&str>| lane.is_none() || release.is_none() || release == lane;
+        let keyed = merge(
+            segments
+                .iter()
+                .filter(|(_, release)| release.is_some() && reads(*release))
+                .map(|(span, _)| *span)
+                .collect(),
+        );
+        segments
+            .iter()
+            .map(|&(span, release)| match release {
+                _ if !reads(release) => Vec::new(),
+                Some(_) => vec![span],
+                None => minus(&[span], &keyed),
+            })
+            .collect()
+    }
+
     /// The spans between consecutive distinct endpoints of `spans`, ascending,
     /// including those no span covers.
     #[must_use]

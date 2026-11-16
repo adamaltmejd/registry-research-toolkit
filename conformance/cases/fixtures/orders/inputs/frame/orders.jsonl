@@ -191,3 +191,4 @@
 {"kind":"occurrence","provider":"demo","register":"conc","table":"t","release":"r1","column":"A","source_key":"k2","label":"Kommun","dtype":"char"}
 {"kind":"occurrence","provider":"demo","register":"conc","table":"t","release":"r3","column":"A","source_key":"k2","label":"Kommun","dtype":"char"}
 {"kind":"occurrence","provider":"demo","register":"conc","table":"t","release":"r2","column":"B","source_key":"k3","label":"Kommun","dtype":"char"}
+{"kind":"occurrence","provider":"demo","register":"conc","table":"t","release":"r3","column":"Y","source_key":"k4","label":"Antal","dtype":"int"}

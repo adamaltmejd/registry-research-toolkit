@@ -39,10 +39,31 @@ pub(super) fn split(
             eras.insert(table.clone(), read(conn, composed, table)?);
         }
     }
+    // A piece of one release (a shared day) is delivered under that release's name, uncut.
+    let mut by_release: BTreeMap<(String, String), String> = BTreeMap::new();
+    for (table, release) in entries
+        .iter()
+        .map(|e| (&e.table, &e.release))
+        .chain(row_keys.iter().map(|k| (&k.table, &k.release)))
+    {
+        if let Some(release) = release
+            && let std::collections::btree_map::Entry::Vacant(slot) =
+                by_release.entry((table.clone(), release.clone()))
+        {
+            slot.insert(delivered(conn, table, release)?);
+        }
+    }
     let open = server.open;
     *entries = std::mem::take(entries)
         .into_iter()
         .flat_map(|entry| {
+            if let Some(release) = &entry.release {
+                let at = (entry.table.clone(), release.clone());
+                return vec![OrderEntry {
+                    delivered_table: by_release[&at].clone(),
+                    ..entry
+                }];
+            }
             let (lo, hi) = entry.period.days(open);
             pieces(&eras[&entry.table], lo, hi)
                 .into_iter()
@@ -57,6 +78,13 @@ pub(super) fn split(
     *row_keys = std::mem::take(row_keys)
         .into_iter()
         .flat_map(|keys| {
+            if let Some(release) = &keys.release {
+                let at = (keys.table.clone(), release.clone());
+                return vec![OrderRowKeys {
+                    delivered_table: by_release[&at].clone(),
+                    ..keys
+                }];
+            }
             let (lo, hi) = keys.period.days(open);
             pieces(&eras[&keys.table], lo, hi)
                 .into_iter()
@@ -71,11 +99,23 @@ pub(super) fn split(
     Ok(())
 }
 
+/// The delivered name of the primary release `release` of table `pid` (the base
+/// database's: a release name comes from its segments, `releases::shared`).
+fn delivered(conn: &Connection, pid: &str, release: &str) -> Result<String, Error> {
+    Ok(conn.query_row(
+        "SELECT d.body FROM main.release r JOIN main.tbl t ON t.id = r.table_id
+         JOIN main.text n ON n.id = r.name_text JOIN main.text d ON d.id = r.delivered_text
+         WHERE t.pid = ?1 AND n.body = ?2 AND r.is_primary = 1",
+        [pid, release],
+        |row| row.get(0),
+    )?)
+}
+
 /// The eras of the table `pid` from its primary placed releases. At each release's first
 /// day and the day after its last, the era is the one release covering that day, the
 /// latest-starting where several do (a concurrent table, whose shared days an order
-/// blocks, or the base and holdings databases in composed mode, the smaller name first);
-/// a day none covers keeps the era before it.
+/// serves per named release, or the base and holdings databases in composed mode, the
+/// smaller name first); a day none covers keeps the era before it.
 fn read(conn: &Connection, composed: bool, pid: &str) -> Result<Eras, Error> {
     let part = |db: &str| {
         format!(

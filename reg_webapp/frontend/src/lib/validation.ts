@@ -67,6 +67,8 @@ const TITLES: Readonly<Record<string, string>> = {
   source_outside_window: "Table is outside the study years",
   table_succession_undated: "The table succession has no stated date",
   release_ambiguous: "The table was delivered more than once for these years",
+  release_unresolved: "The table has no release by this name",
+  release_outside_period: "This release has none of the requested years",
   period_default_on_dated_table: "Choose years for this dated table",
   period_on_timeless_table: "This table has no years",
   period_not_orderable: "These years cannot be read",

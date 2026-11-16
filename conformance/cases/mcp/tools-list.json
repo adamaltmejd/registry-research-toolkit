@@ -1172,6 +1172,13 @@
                   },
                   "type": "array"
                 },
+                "shared_release_days": {
+                  "description": "Days two or more of the table's releases both deliver: an order over them names\nthe releases to use (`releases` on the project source). Absent when none, and on\na data holder's catalog.",
+                  "items": {
+                    "$ref": "#/$defs/ShowSharedDays"
+                  },
+                  "type": "array"
+                },
                 "spans": {
                   "items": {
                     "$ref": "#/$defs/Period"
@@ -1852,6 +1859,26 @@
             "name",
             "segments",
             "facets"
+          ],
+          "type": "object"
+        },
+        "ShowSharedDays": {
+          "description": "Days two or more releases of a table share, with those releases.",
+          "properties": {
+            "period": {
+              "$ref": "#/$defs/Period"
+            },
+            "releases": {
+              "description": "The releases sharing the days, by name, in start order.",
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "period",
+            "releases"
           ],
           "type": "object"
         },
@@ -3909,6 +3936,10 @@
               "$ref": "#/$defs/Period",
               "description": "Its period, cut to the requested one."
             },
+            "release": {
+              "description": "In a table two of whose releases share days, the release this column is in (an\norder names it in `releases`); absent elsewhere. Lines of one variable in two\nreleases may overlap.",
+              "type": "string"
+            },
             "role": {
               "type": "string"
             },
@@ -4995,6 +5026,13 @@
             "register": {
               "type": "string"
             },
+            "release": {
+              "description": "On a day two primary releases of the table share, the release this entry is\ndelivered in (one entry per release the source names); `null` elsewhere.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
             "source": {
               "description": "The project source's name.",
               "type": "string"
@@ -5043,6 +5081,7 @@
             "table",
             "table_name",
             "delivered_table",
+            "release",
             "variable",
             "variable_name",
             "display_name",
@@ -5162,6 +5201,13 @@
             "period": {
               "$ref": "#/$defs/Period"
             },
+            "release": {
+              "description": "The release, as for an entry.",
+              "type": [
+                "string",
+                "null"
+              ]
+            },
             "source": {
               "type": "string"
             },
@@ -5178,6 +5224,7 @@
             "table",
             "table_name",
             "delivered_table",
+            "release",
             "period",
             "columns"
           ],

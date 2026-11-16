@@ -4,6 +4,7 @@
 use std::collections::{BTreeMap, BTreeSet};
 use std::path::Path;
 
+use reg_core::days;
 use reg_core::issue::Period;
 use reg_core::manifest::{self, Manifest, Storage, StorageFamily};
 use reg_core::project::{Binding, ColumnType, ExtractFormat, ManualBinding, ProjectData, Source};
@@ -279,14 +280,24 @@ fn storage_type(sql: &str) -> Option<ColumnType> {
 /// A file name when no delivery layout is known: the table's public id with `_` for
 /// `/` and `-`, then the year (`scb/lsum/individer-sociala-agi-ku`, 2019 →
 /// `scb_lsum_individer_sociala_agi_ku_2019`). Public ids are already lowercase ASCII
-/// slugs, so no further normalization is needed.
+/// slugs, so no further normalization is needed. A release of a shared day (a concurrent
+/// table's) delivers other rows than the table's other releases, so its file is its own,
+/// suffixed by the release name's words in lowercase (`2003 - 2004` → `_2003_2004`).
 #[must_use]
-pub fn standard_file_name(table: &str, year: Option<i32>) -> String {
-    let stem = table.replace(['/', '-'], "_");
-    match year {
-        Some(year) => format!("{stem}_{year}"),
-        None => stem,
+pub fn standard_file_name(table: &str, year: Option<i32>, release: Option<&str>) -> String {
+    let mut name = table.replace(['/', '-'], "_");
+    if let Some(year) = year {
+        name = format!("{name}_{year}");
     }
+    for word in release
+        .into_iter()
+        .flat_map(|r| r.split(|c: char| !c.is_alphanumeric()))
+        .filter(|w| !w.is_empty())
+    {
+        name.push('_');
+        name.push_str(&word.to_lowercase());
+    }
+    name
 }
 
 /// The years a period touches, or `None` for a timeless (all-open) period.
@@ -446,6 +457,8 @@ struct Context<'a> {
 
 /// A physical column's name and its references.
 type NamedRefs<'a> = (&'a str, Vec<Column<'a>>);
+/// A standard file: table, year (none for a timeless table) and release (a shared day's).
+type FileKey<'a> = (&'a str, Option<i32>, Option<&'a str>);
 
 /// One reference of a physical column: a variable in a table over a period.
 #[derive(Clone)]
@@ -455,6 +468,8 @@ struct Column<'a> {
     binding: Option<usize>,
     table: &'a str,
     variable: &'a str,
+    /// The release of a shared day, in the standard layout: a file of its own.
+    release: Option<&'a str>,
     period: &'a Period,
     /// The held file and column, in the delivery layout.
     placement: Option<(&'a str, &'a str)>,
@@ -469,13 +484,14 @@ impl Context<'_> {
     fn standard_files(&self, order: &LogicalOrder, refusals: &mut Vec<Refusal>) -> Vec<Built> {
         // Keyed by table, not by file name: two tables whose names collide stay two
         // files, and check_files refuses the shared name.
-        let mut files: BTreeMap<(&str, Option<i32>), Vec<NamedRefs<'_>>> = BTreeMap::new();
+        let mut files: BTreeMap<FileKey<'_>, Vec<NamedRefs<'_>>> = BTreeMap::new();
         let ordered = order.entries.iter().map(|e| Column {
             name: &e.spelling,
             source: &e.source,
             binding: Some(e.binding),
             table: &e.table,
             variable: &e.variable,
+            release: e.release.as_deref(),
             period: &e.period,
             placement: None,
             year_periods: Vec::new(),
@@ -487,6 +503,7 @@ impl Context<'_> {
                 binding: None,
                 table: &k.table,
                 variable: &c.variable,
+                release: k.release.as_deref(),
                 period: &k.period,
                 placement: None,
                 year_periods: Vec::new(),
@@ -509,7 +526,9 @@ impl Context<'_> {
                     .map(|y| within(year_period(y), column.period))
                     .into_iter()
                     .collect();
-                let refs = files.entry((column.table, year)).or_default();
+                let refs = files
+                    .entry((column.table, year, column.release))
+                    .or_default();
                 let at = refs.iter().position(|(name, _)| *name == column.name);
                 let i = at.unwrap_or_else(|| {
                     refs.push((column.name, Vec::new()));
@@ -519,8 +538,9 @@ impl Context<'_> {
             }
         }
         let mut built_files = Vec::new();
-        for ((table, year), columns) in files {
-            let mut built = Built::new(standard_file_name(table, year), year.into_iter().collect());
+        for ((table, year, release), columns) in files {
+            let name = standard_file_name(table, year, release);
+            let mut built = Built::new(name, year.into_iter().collect());
             for (name, refs) in columns {
                 if let Some(column) = self.resolve(&built.file.name, name, &refs, None, refusals) {
                     built.push_with(column, &refs);
@@ -586,6 +606,8 @@ impl Context<'_> {
                         binding: r.binding,
                         table: &r.table,
                         variable: &r.variable,
+                        // The order file names the files: a release's are its own.
+                        release: None,
                         period: &r.period,
                         placement: Some((&file.table, &column.name)),
                         year_periods: file_years.clone(),
@@ -957,7 +979,41 @@ impl Context<'_> {
                         .any(|&(start, end)| s_start < end && start < s_end)
                 })
         };
-        let in_table = || overlapping().filter(|s| s.table == r.table);
+        // Release shadowing, as the order applies it (`reg_core::days::shadow`): a
+        // release's column reads its own segments, never another release's, and a
+        // releaseless one only on the column's days they do not cover, so a shadowed
+        // releaseless form adds no type or codes.
+        let wanted = days::merge(periods.clone());
+        let table: Vec<&Segment> = overlapping().filter(|s| s.table == r.table).collect();
+        let spans: Vec<(usize, days::Span, Option<&str>)> = table
+            .iter()
+            .enumerate()
+            .flat_map(|(i, s)| {
+                days::overlap(&[s.period.days(open)], &wanted)
+                    .into_iter()
+                    .map(move |span| (i, span, s.release.as_deref()))
+            })
+            .collect();
+        let kept = days::shadow(
+            &spans
+                .iter()
+                .map(|&(_, span, release)| (span, release))
+                .collect::<Vec<_>>(),
+            r.release,
+        );
+        let serving: BTreeSet<usize> = spans
+            .iter()
+            .zip(kept)
+            .filter(|(_, keep)| !keep.is_empty())
+            .map(|(&(i, _, _), _)| i)
+            .collect();
+        let in_table = || {
+            table
+                .iter()
+                .enumerate()
+                .filter(|(i, _)| serving.contains(i))
+                .map(|(_, s)| *s)
+        };
         let mut found: Vec<&Segment> = match r.placement {
             Some((file, name)) => in_table()
                 .filter(|s| s.file.as_deref() == Some(file) && s.column.as_deref() == Some(name))

@@ -29,7 +29,7 @@ use crate::validation::{IssueLevel, ValidationIssue, ValidationResult};
 
 const PROJECT_REQUIRED: [&str; 4] = ["schema_version", "reg_meta_version", "name", "sources"];
 const PROJECT_OPTIONAL: [&str; 4] = ["panels", "window", "extract_format", "linkage"];
-const SOURCE_KEYS: [&str; 5] = ["name", "table", "manual", "period", "bindings"];
+const SOURCE_KEYS: [&str; 6] = ["name", "table", "manual", "period", "releases", "bindings"];
 const MANUAL_ORIGIN_KEYS: [&str; 2] = ["provider", "register"];
 const MANUAL_BINDING_KEYS: [&str; 2] = ["manual", "display_name"];
 const MANUAL_COLUMN_KEYS: [&str; 3] = ["column", "type", "codes"];
@@ -584,6 +584,17 @@ fn check_source<'a>(
     if let Some(period) = required(source, "period", base, "source 'period'", issues) {
         check_period(period, format!("{base}/period"), issues);
     }
+    if let Some(releases) = source.get("releases") {
+        if kind == Some(Kind::Manual) {
+            issues.error(
+                "unexpected_field",
+                format!("{base}/releases"),
+                "a source entered by hand has no catalog releases to name".into(),
+            );
+        } else {
+            check_releases(releases, &format!("{base}/releases"), issues);
+        }
+    }
 
     let Some(bindings) = required(source, "bindings", base, "source 'bindings'", issues) else {
         return;
@@ -718,6 +729,43 @@ fn non_blank<'a>(
         return None;
     }
     Some(value)
+}
+
+/// A catalog source's `releases`: a non-empty array of non-blank release names, each
+/// once under the identity fold, as the order check matches a name folded when no name
+/// matches exactly.
+/// simplify: the catalog keeps primary release names distinct exactly (check 9c), not
+/// folded, so a table with two names that differ only in case could not name both; none
+/// does on 0.86.0. Fold check 9c if one appears.
+fn check_releases(releases: &Value, rbase: &str, issues: &mut Issues) {
+    let Some(names) = releases.as_array().filter(|r| !r.is_empty()) else {
+        issues.error(
+            "invalid_field_type",
+            rbase.into(),
+            "source 'releases' must be a non-empty array of release names".into(),
+        );
+        return;
+    };
+    let mut seen: Vec<(String, usize)> = Vec::new();
+    for (k, name) in names.iter().enumerate() {
+        let Some(name) = name.as_str().filter(|n| !n.trim().is_empty()) else {
+            issues.error(
+                "invalid_field_type",
+                format!("{rbase}/{k}"),
+                "a release name must be a non-blank string".into(),
+            );
+            continue;
+        };
+        let folded = crate::fold_identity(name);
+        match seen.iter().find(|(f, _)| *f == folded) {
+            Some((_, first)) => issues.error(
+                "duplicate_release",
+                format!("{rbase}/{k}"),
+                format!("release {} duplicates {rbase}/{first}", q(name)),
+            ),
+            None => seen.push((folded, k)),
+        }
+    }
 }
 
 /// A manual source's closed `{"provider", "register"}`: free-text names, not ids.

@@ -5,7 +5,7 @@
   },
   "project": {
     "name": "Order case",
-    "schema_version": "6.2.0",
+    "schema_version": "6.3.0",
     "reg_meta_version": "0.64.0"
   },
   "entries": [
@@ -17,6 +17,7 @@
       "table": "demo/imp",
       "table_name": "Implicitregistret",
       "delivered_table": "Implicitregistret",
+      "release": null,
       "variable": "demo/imp/ink",
       "variable_name": "Inkomst",
       "display_name": null,
@@ -37,6 +38,7 @@
       "table": "demo/imp",
       "table_name": "Implicitregistret",
       "delivered_table": "Implicitregistret",
+      "release": null,
       "period": {
         "start": "2018-01-01",
         "end": "2020-01-01"

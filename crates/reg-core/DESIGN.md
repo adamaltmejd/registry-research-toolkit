@@ -82,6 +82,13 @@ literal kind namespaces; malformed forms cannot resolve as another kind.
 - **A source has no `edition` or `qualifier`.** Selecting an edition or a qualifier is
   deferred until curation; the primary segments serve every order (final over
   preliminary), and the closed source object refuses a document that carries either.
+- **`Source.releases`** (contract 6.3.0 on) is an optional, non-empty list of release
+  names on a catalog source: the releases that serve days two of the table's releases
+  share ([../DESIGN.md](../DESIGN.md), "Concurrent releases"). Structurally each name is
+  a non-blank string (`invalid_field_type`) and distinct from the earlier ones under
+  case folding (`duplicate_release`, which names the first): a repeat would deliver one
+  release twice. A manual source has no catalog releases (`unexpected_field`). Whether a
+  name is one of the table's releases is the order check's.
 - **A panel is a named grouping of sources** with a comment: its members are source
   names. The keys a panel needs come from the catalog (a table's curated row keys, or a
   steward's declared keys), not from the document.

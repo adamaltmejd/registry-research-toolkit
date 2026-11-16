@@ -27,6 +27,8 @@ pub(super) struct Scope<'a> {
     pub chain: &'a [i64],
     /// Every requested day (inclusive ISO intervals, ascending).
     pub requested: &'a [Interval],
+    /// The primary releases the source names (`releases`), by catalog name.
+    pub named: &'a [String],
     /// The steward's composed view over a base table: its variables' held segments
     /// (reference occurrences) join the base ones.
     pub composed: bool,
@@ -66,8 +68,10 @@ struct Piece {
     state: String,
     /// Its source row ends at the open sentinel: no coverage end is stated.
     open: bool,
-    /// Its segment belongs to one release of a concurrent table.
-    keyed: bool,
+    /// The release its segment belongs to (a concurrent table's), by name.
+    release: Option<String>,
+    /// On a shared day, the release it is delivered in: an entry of its own.
+    lane: Option<String>,
 }
 
 /// The segments a binding reads, keyed by the connection's own table and variable ids,
@@ -81,8 +85,10 @@ pub(super) fn segments(scope: &Scope) -> String {
             "SELECT {ids}, x.start AS start, x.end AS end, sp.exact AS exact, \
              x.dtype AS dtype, x.length AS length, vs.hash AS vs_hash, vs.n_items AS vs_n, \
              cv.pid AS cv_pid, COALESCE(x.sensitive, 0) AS sensitive, x.state AS state, \
-             x.release_id IS NOT NULL AS keyed
+             rn.body AS release
              FROM {db}.segment x {joins} JOIN {db}.spelling sp ON sp.id = x.spelling_id
+             LEFT JOIN {db}.release rl ON rl.id = x.release_id
+             LEFT JOIN {db}.text rn ON rn.id = rl.name_text
              LEFT JOIN {db}.valueset vs ON vs.id = x.valueset_id
              LEFT JOIN {db}.class_version cv ON cv.id = x.class_version_id"
         )
@@ -284,9 +290,16 @@ fn materialize(
 ) -> Result<Outcome, Error> {
     let at = Located { scope, b, variable };
     let mut pieces = Vec::new();
+    let mut blocked = Vec::new();
+    let mut lanes = Vec::new();
     for k in 0..scope.serving.len() {
-        pieces.extend(served(scope, k, variable.id)?);
+        let one = served(scope, k, variable.id)?;
+        pieces.extend(one.pieces);
+        blocked.extend(one.blocked);
+        lanes.extend(one.lanes);
     }
+    // A blocked day (`release_ambiguous`, at the source) is neither served nor clipped.
+    let wanted = gaps(scope.requested, blocked);
     if let Some(version) = &variable.classification {
         // Ambiguous windows must still block: their unresolved version is not a clip.
         pieces.retain(|p| p.state == "ambiguous" || p.class_version.as_ref() == Some(version));
@@ -323,8 +336,12 @@ fn materialize(
             return Ok(outcome);
         }
     }
-    pieces.sort_by(|a, b| a.days.cmp(&b.days));
+    pieces.sort_by(|a, b| (&a.days, &a.lane).cmp(&(&b.days, &b.lane)));
     let ordered = merge(pieces.iter().map(|p| p.days.clone()).collect());
+    if wanted.is_empty() {
+        outcome.findings.extend(replaced(&at)?);
+        return Ok(outcome);
+    }
     if ordered.is_empty() {
         let requested = hull(scope.requested);
         outcome.findings.push(at.issue(
@@ -341,11 +358,7 @@ fn materialize(
         outcome.findings.extend(replaced(&at)?);
         return Ok(outcome);
     }
-    let removed = reported_intervals(
-        &gaps(scope.requested, ordered.clone()),
-        scope.requested,
-        &ordered,
-    );
+    let removed = reported_intervals(&gaps(&wanted, ordered.clone()), &wanted, &ordered);
     if !removed.is_empty() {
         outcome.clip = Some(OrderClip {
             source: scope.source.name.clone(),
@@ -369,12 +382,32 @@ fn materialize(
             ));
         }
     }
-    // A shared day blocks the source (`release_ambiguous`); what the releases deliver
-    // there is no entry and meets no per-window check.
-    let pieces = unshared(scope, pieces)?;
-    if pieces.is_empty() {
-        outcome.findings.extend(replaced(&at)?);
-        return Ok(outcome);
+    // Coverage per named release: a shared day another release serves would hide this
+    // one's gap in the union above (days none serves are clipped there already).
+    for (name, days) in &lanes {
+        let own = merge(
+            pieces
+                .iter()
+                .filter(|p| p.lane.as_ref() == Some(name))
+                .map(|p| p.days.clone())
+                .collect(),
+        );
+        let missing = overlap(&gaps(std::slice::from_ref(days), own), &ordered);
+        for days in &missing {
+            outcome.findings.push(at.issue(
+                IssueLevel::Info,
+                "period_clipped",
+                scope.table,
+                Some(days),
+                format!(
+                    "There is no data on {} in the release \"{name}\" of {} for {}. Only the \
+                     other named releases deliver it there.",
+                    variable.pid,
+                    scope.table,
+                    span(scope.server, days)
+                ),
+            ));
+        }
     }
     outcome.findings.extend(windows(&at, &pieces));
     outcome.findings.extend(editions(&at, &pieces)?);
@@ -509,17 +542,20 @@ pub(super) fn in_chain(scope: &Scope, variable: i64) -> Result<bool, Error> {
     Ok(false)
 }
 
-/// The pieces serving table `k` gives the variable over its requested days: the primary
-/// segments, clipped to them. In a concurrent table a segment of no one release (a
-/// releaseless delivery spanning several) gives way on the days a release's own segment
-/// covers, so no day is served twice outside the shared days the source blocks.
-fn served(scope: &Scope, k: usize, variable: i64) -> Result<Vec<Piece>, Error> {
+/// The pieces serving table `k` gives the variable over its requested days, and the days
+/// that block there. On a day one primary release covers, the primary segments clipped
+/// to the request, a segment of no one release (a releaseless delivery spanning several)
+/// giving way to a release's own. On a day several share, each release the source names
+/// serves its own segments, and a releaseless one where its own do not reach (it is in
+/// every primary its days meet), each as an entry of that release; with none named the
+/// day blocks (`release_ambiguous`) and serves nothing. Shadowing is `reg_core::days::shadow`.
+fn served(scope: &Scope, k: usize, variable: i64) -> Result<Served, Error> {
     let s = &scope.serving[k];
     let rows: Vec<Piece> = rows(
         scope.conn,
         &format!(
             "SELECT start, end, exact, dtype, length, vs_hash, vs_n, cv_pid, sensitive, \
-             state, end = ?3, keyed
+             state, end = ?3, release
              FROM ({}) WHERE variable_id = ?1 AND table_id = ?2
              ORDER BY start",
             segments(scope)
@@ -536,25 +572,65 @@ fn served(scope: &Scope, k: usize, variable: i64) -> Result<Vec<Piece>, Error> {
             });
         }
     }
-    let keyed: Vec<Interval> = pieces
-        .iter()
-        .filter(|p| p.keyed)
-        .map(|p| p.days.clone())
-        .collect();
-    Ok(cut(pieces, |p| if p.keyed { &[] } else { &keyed }))
+    let shared = super::releases::shared(scope.conn, s, scope.named)?;
+    let days: Vec<Interval> = shared.iter().map(|x| x.days.clone()).collect();
+    let mut out = shadowed(&cut(pieces.clone(), |_| &days), None);
+    let mut blocked = Vec::new();
+    let mut lanes = Vec::new();
+    for x in shared {
+        if x.chosen.is_empty() {
+            blocked.push(x.days);
+            continue;
+        }
+        let here: Vec<Piece> = pieces
+            .iter()
+            .flat_map(|p| {
+                overlap(std::slice::from_ref(&p.days), std::slice::from_ref(&x.days))
+                    .into_iter()
+                    .map(|days| Piece { days, ..p.clone() })
+            })
+            .collect();
+        for name in &x.chosen {
+            out.extend(shadowed(&here, Some(name)));
+            lanes.push((name.clone(), x.days.clone()));
+        }
+    }
+    out.sort_by(|a, b| (&a.days, &a.lane).cmp(&(&b.days, &b.lane)));
+    Ok(Served {
+        pieces: out,
+        blocked,
+        lanes,
+    })
 }
 
-/// The pieces less the days two primary releases of their serving table share.
-fn unshared(scope: &Scope, pieces: Vec<Piece>) -> Result<Vec<Piece>, Error> {
-    let mut shared = Vec::with_capacity(scope.serving.len());
-    for s in scope.serving {
-        let days: Vec<Interval> = super::releases::shared(scope.conn, s)?
-            .into_iter()
-            .map(|(days, _)| days)
-            .collect();
-        shared.push(days);
-    }
-    Ok(cut(pieces, |p| &shared[p.serving]))
+/// [`served`]'s answer for one serving table.
+struct Served {
+    pieces: Vec<Piece>,
+    /// Shared days no named release covers (`release_ambiguous`).
+    blocked: Vec<Interval>,
+    /// Each named release with the shared days it is to serve.
+    lanes: Vec<(String, Interval)>,
+}
+
+/// `pieces` (one variable in one table) as `lane` reads them, by release shadowing
+/// (`reg_core::days::shadow`), each kept piece in that lane.
+fn shadowed(pieces: &[Piece], lane: Option<&String>) -> Vec<Piece> {
+    let spans: Vec<((i64, i64), Option<&str>)> = pieces
+        .iter()
+        .map(|p| (days(std::slice::from_ref(&p.days))[0], p.release.as_deref()))
+        .collect();
+    let kept = reg_core::days::shadow(&spans, lane.map(String::as_str));
+    pieces
+        .iter()
+        .zip(kept)
+        .flat_map(|(p, keep)| {
+            keep.into_iter().map(|(lo, hi)| Piece {
+                days: interval(lo, hi),
+                lane: lane.cloned(),
+                ..p.clone()
+            })
+        })
+        .collect()
 }
 
 /// Each piece less the days `away` gives for it.
@@ -588,7 +664,8 @@ fn piece(serving: usize, row: &Row) -> rusqlite::Result<Piece> {
         sensitive: row.get(8)?,
         state: row.get(9)?,
         open: row.get(10)?,
-        keyed: row.get(11)?,
+        release: row.get(11)?,
+        lane: None,
     })
 }
 
@@ -636,17 +713,27 @@ fn windows(at: &Located, pieces: &[Piece]) -> Vec<Issue> {
     found
 }
 
-/// The runs of adjacent pieces in one table that pass `test`, as (serving index, days).
+/// The runs of adjacent pieces in one table and one release's entries that pass `test`,
+/// as (serving index, days), each once.
 fn runs(pieces: &[Piece], test: &dyn Fn(&Piece) -> bool) -> Vec<(usize, Interval)> {
-    let mut runs: Vec<(usize, Interval)> = Vec::new();
-    for p in pieces.iter().filter(|p| test(p)) {
+    let mut passing: Vec<&Piece> = pieces.iter().filter(|p| test(p)).collect();
+    passing.sort_by(|a, b| (&a.lane, a.serving, &a.days).cmp(&(&b.lane, b.serving, &b.days)));
+    let mut runs: Vec<(Option<&String>, usize, Interval)> = Vec::new();
+    for p in passing {
         match runs.last_mut() {
-            Some((k, days)) if *k == p.serving && next_iso_day(&days.1) == p.days.0 => {
+            Some((lane, k, days))
+                if *lane == p.lane.as_ref()
+                    && *k == p.serving
+                    && next_iso_day(&days.1) == p.days.0 =>
+            {
                 days.1.clone_from(&p.days.1);
             }
-            _ => runs.push((p.serving, p.days.clone())),
+            _ => runs.push((p.lane.as_ref(), p.serving, p.days.clone())),
         }
     }
+    let mut runs: Vec<(usize, Interval)> = runs.into_iter().map(|(_, k, d)| (k, d)).collect();
+    runs.sort_by(|a, b| (&a.1, a.0).cmp(&(&b.1, b.0)));
+    runs.dedup();
     runs
 }
 
@@ -777,49 +864,90 @@ fn replaced(at: &Located) -> Result<Vec<Issue>, Error> {
         .collect())
 }
 
-/// The entries: adjacent pieces of one table merge when spelling, type and value set
-/// and classification agree, so a flag-only boundary never splits one; the latest
-/// piece's length stands, and an entry is sensitive when any of its pieces is. More
-/// than one spelling/type/value-set form is a `form_change`, naming what changes at
-/// each boundary.
+/// One entry being built: its latest piece, its days and whether any piece is sensitive.
+struct Merged<'p> {
+    last: &'p Piece,
+    days: Interval,
+    sensitive: bool,
+}
+
+/// The entries: adjacent pieces of one table and one release's entries merge when
+/// spelling, type and value set and classification agree, so a flag-only boundary never
+/// splits one; the latest piece's length stands, and an entry is sensitive when any of
+/// its pieces is. More than one spelling/type/value-set form along a release's time line
+/// (the unshared days and that release's shared ones) is a `form_change`, naming what
+/// changes at each boundary; two releases' entries on one day are not a change.
+#[allow(clippy::too_many_lines)]
 fn entries(
     at: &Located,
     binding: &CatalogBinding,
     pieces: &[Piece],
 ) -> (Vec<OrderEntry>, Option<Issue>) {
     let scope = at.scope;
-    let mut merged: Vec<&Piece> = Vec::new();
-    let mut spans: Vec<Interval> = Vec::new();
-    let mut sensitive: Vec<bool> = Vec::new();
-    for p in pieces {
-        let joins = merged.last().is_some_and(|last| {
-            last.serving == p.serving
-                && next_iso_day(&spans[spans.len() - 1].1) == p.days.0
-                && (&last.spelling, &last.dtype, &last.valueset)
-                    == (&p.spelling, &p.dtype, &p.valueset)
-                && last.class_version == p.class_version
-        });
-        if joins {
-            let n = merged.len() - 1;
-            merged[n] = p;
-            spans[n].1.clone_from(&p.days.1);
-            sensitive[n] |= p.sensitive;
-        } else {
-            merged.push(p);
-            spans.push(p.days.clone());
-            sensitive.push(p.sensitive);
+    let mut lanes: Vec<Option<&String>> = pieces.iter().map(|p| p.lane.as_ref()).collect();
+    lanes.sort();
+    lanes.dedup();
+    let mut by_lane: Vec<(Option<&String>, Vec<Merged>)> = Vec::new();
+    for lane in lanes {
+        let mut merged: Vec<Merged> = Vec::new();
+        for p in pieces.iter().filter(|p| p.lane.as_ref() == lane) {
+            match merged.last_mut() {
+                Some(m)
+                    if m.last.serving == p.serving
+                        && next_iso_day(&m.days.1) == p.days.0
+                        && (&m.last.spelling, &m.last.dtype, &m.last.valueset)
+                            == (&p.spelling, &p.dtype, &p.valueset)
+                        && m.last.class_version == p.class_version =>
+                {
+                    m.last = p;
+                    m.days.1.clone_from(&p.days.1);
+                    m.sensitive |= p.sensitive;
+                }
+                _ => merged.push(Merged {
+                    last: p,
+                    days: p.days.clone(),
+                    sensitive: p.sensitive,
+                }),
+            }
         }
+        by_lane.push((lane, merged));
     }
-    let changes: Vec<String> = merged
-        .windows(2)
-        .zip(&spans[1..])
-        .filter_map(|(pair, days)| {
-            changed(pair[0], pair[1])
-                .map(|what| format!("From {}, {what}.", words::plain_start(&days.0)))
+    let unshared: &[Merged] = by_lane
+        .iter()
+        .find(|(lane, _)| lane.is_none())
+        .map_or(&[], |(_, m)| m);
+    let mut timelines: Vec<Vec<&Merged>> = by_lane
+        .iter()
+        .filter(|(lane, _)| lane.is_some())
+        .map(|(_, own)| {
+            let mut line: Vec<&Merged> = unshared.iter().chain(own).collect();
+            line.sort_by(|a, b| a.days.cmp(&b.days));
+            line
         })
         .collect();
+    if timelines.is_empty() {
+        timelines.push(unshared.iter().collect());
+    }
+    // By boundary day, each once: two releases' time lines share their unshared days.
+    let mut changes: Vec<(&String, String)> = Vec::new();
+    for line in &timelines {
+        for pair in line.windows(2) {
+            if let Some(what) = changed(pair[0].last, pair[1].last) {
+                let from = &pair[1].days.0;
+                changes.push((from, format!("From {}, {what}.", words::plain_start(from))));
+            }
+        }
+    }
+    changes.sort();
+    changes.dedup();
+    let changes: Vec<String> = changes.into_iter().map(|(_, text)| text).collect();
+    let mut all: Vec<(Option<&String>, &Merged)> = by_lane
+        .iter()
+        .flat_map(|(lane, merged)| merged.iter().map(move |m| (*lane, m)))
+        .collect();
+    all.sort_by(|a, b| (&a.1.days, a.0).cmp(&(&b.1.days, b.0)));
     let change = (!changes.is_empty()).then(|| {
-        let days = (spans[0].0.clone(), spans[spans.len() - 1].1.clone());
+        let days = hull(&all.iter().map(|(_, m)| m.days.clone()).collect::<Vec<_>>());
         at.issue(
             IssueLevel::Info,
             "form_change",
@@ -829,7 +957,8 @@ fn entries(
         )
     });
     let mut entries = Vec::new();
-    for ((p, days), sensitive) in merged.into_iter().zip(&spans).zip(sensitive) {
+    for (lane, m) in all {
+        let p = m.last;
         let table = &scope.serving[p.serving].table;
         entries.push(OrderEntry {
             source: scope.source.name.clone(),
@@ -839,10 +968,11 @@ fn entries(
             table: table.pid.clone(),
             table_name: String::new(),
             delivered_table: String::new(),
+            release: lane.cloned(),
             variable: at.variable.pid.clone(),
             variable_name: String::new(),
             display_name: binding.display_name.clone(),
-            period: period(scope.server, days),
+            period: period(scope.server, &m.days),
             spelling: p.spelling.clone(),
             dtype: p.dtype.clone(),
             length: p.length,
@@ -851,7 +981,7 @@ fn entries(
                 .clone()
                 .map(|(hash, n_items)| OrderValueSet { hash, n_items }),
             classification: p.class_version.clone(),
-            sensitive,
+            sensitive: m.sensitive,
         });
     }
     (entries, change)

@@ -5,7 +5,7 @@
   },
   "project": {
     "name": "Order case",
-    "schema_version": "6.2.0",
+    "schema_version": "6.3.0",
     "reg_meta_version": "0.64.0"
   },
   "entries": [
@@ -17,6 +17,7 @@
       "table": "demo/rad",
       "table_name": "Barnregistret",
       "delivered_table": "Barnregistret",
+      "release": null,
       "variable": "demo/rad/vikt",
       "variable_name": "Födelsevikt",
       "display_name": null,
@@ -37,6 +38,7 @@
       "table": "demo/rad",
       "table_name": "Barnregistret",
       "delivered_table": "Barnregistret",
+      "release": null,
       "period": {
         "start": "2020-01-01",
         "end": "2021-01-01"

@@ -214,7 +214,9 @@ mechanisms are documented in the owning DESIGN.md and only summarized here.
   names and drops the subtype and format fields. Contract 6.1.0 adds optional top-level
   `linkage.database`, the steward database an order draws from. Contract 6.2.0 adds
   manual items: a source or binding entered by hand (`manual` in place of `table` or
-  `variable`) for data the catalog does not document. `reg-core` accepts
+  `variable`) for data the catalog does not document. Contract 6.3.0 adds optional
+  `releases` on a catalog source, naming the releases that serve days two of the
+  table's releases share. `reg-core` accepts
   exactly its `SCHEMA_VERSION` and refuses any other with an
   `unsupported_schema_version` issue rather than migrating it
   ([`crates/reg-core/DESIGN.md`](crates/reg-core/DESIGN.md)). Pre-v1 there are no

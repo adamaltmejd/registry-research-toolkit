@@ -19,7 +19,7 @@ the `register-metadata-search` skill.
 
 ## Drafting a project
 
-1. Set the document's `schema_version` to `"6.2.0"`. Set `reg_meta_version` (required)
+1. Set the document's `schema_version` to `"6.3.0"`. Set `reg_meta_version` (required)
    to the serving catalog's release tag, `reg_meta/vX.Y.Z`. Read `meta.catalog_version`
    from a catalog tool response and format its release version `X.Y.Z` as that tag. If
    it is not a release version (for example, `dev`), ask which catalog release to use.
@@ -37,7 +37,12 @@ the `register-metadata-search` skill.
    into their own source by period. A `binding_type_differs` warning from `validate`
    then names both types; report it to the user, as the catalog may need fixing. A panel
    lists source names. A source cannot select an edition or a qualifier; final data is
-   served over preliminary where both exist.
+   served over preliminary where both exist. A few tables were delivered in releases
+   whose years overlap (`show` on the table lists them under `shared_release_days`). A
+   source whose period meets such a year blocks with `release_ambiguous` until it names
+   the releases to use in `releases` (`["2003 - 2004"]`); each named release is
+   delivered on its own, and its entries say which release they come from. Ask the user
+   which release they want, or pick a period outside the shared years.
 3. Write periods in the document's own grammar, which is not the `period` argument of
    the read tools: `{"from": 2015, "to": 2019}` is a range, `[2015, 2019]` is two
    separate years, `2019` is one year. A range string such as `"2015..2019"` is refused
@@ -101,7 +106,7 @@ one source and a year list in the other:
 
 ```json
 {
-  "schema_version": "6.2.0",
+  "schema_version": "6.3.0",
   "reg_meta_version": "reg_meta/v0.84.1",
   "name": "example",
   "sources": [
@@ -129,7 +134,7 @@ one source and a year list in the other:
 
 ## Questions about my project
 
-1. Read the user's `project_data.json`. If its `schema_version` is not `"6.2.0"`, say so
+1. Read the user's `project_data.json`. If its `schema_version` is not `"6.3.0"`, say so
    and stop: the server reads one version exactly.
 2. Call `order` with `operation: "order"` and the document as `project`. It returns the
    logical order: per source, the table, the period and the entries, each with the

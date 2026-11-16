@@ -62,6 +62,12 @@ pub struct SchemaPage {
 #[derive(Serialize, ToSchema)]
 pub struct SchemaLine {
     table: String,
+    /// In a table two of whose releases share days, the release this column is in (an
+    /// order names it in `releases`); absent elsewhere. Lines of one variable in two
+    /// releases may overlap.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[schema(nullable = false)]
+    release: Option<String>,
     variable: String,
     /// The variable's label.
     name: String,
@@ -233,12 +239,13 @@ fn scope(
     })
 }
 
-/// One (table, variable, folded spelling) over the request: the fields are those of
-/// its latest segment inside the request.
+/// One (table, release, variable, folded spelling) over the request: the fields are those
+/// of its latest segment inside the request.
 struct Line {
     /// Index of the database origin `valueset_id` belongs to.
     origin: usize,
     table: String,
+    release: Option<String>,
     variable: String,
     name: String,
     folded: String,
@@ -272,12 +279,14 @@ fn lines(
         for &(origin, id, variable) in &table.locals {
             let mut stmt = origins[origin].prepare_cached(
                 "SELECT v.pid, l.body, f.folded, sp.exact, s.dtype, s.length, s.valueset_id,
-                        s.role, s.state, s.start, s.end, s.row_key
+                        s.role, s.state, s.start, s.end, s.row_key, rn.body
                  FROM segment s
                    JOIN variable v ON v.id = s.variable_id
                    JOIN text l ON l.id = v.label_text
                    JOIN name_fold f ON f.id = s.fold_id
                    JOIN spelling sp ON sp.id = s.spelling_id
+                   LEFT JOIN release r ON r.id = s.release_id
+                   LEFT JOIN text rn ON rn.id = r.name_text
                  WHERE s.table_id = ?1 AND (?2 IS NULL OR s.variable_id = ?2)
                    AND s.start < ?4 AND ?3 < s.end",
             )?;
@@ -285,6 +294,7 @@ fn lines(
                 Ok(Line {
                     origin,
                     table: table.pid.clone(),
+                    release: row.get(12)?,
                     variable: row.get(0)?,
                     name: row.get(1)?,
                     folded: row.get(2)?,
@@ -318,8 +328,9 @@ fn lines(
         }
     }
     segments.sort_by(|a, b| {
-        (&a.table, &a.variable, &a.folded, a.start).cmp(&(
+        (&a.table, &a.release, &a.variable, &a.folded, a.start).cmp(&(
             &b.table,
+            &b.release,
             &b.variable,
             &b.folded,
             b.start,
@@ -332,6 +343,7 @@ fn lines(
         match out.last_mut() {
             Some(last)
                 if last.table == segment.table
+                    && last.release == segment.release
                     && last.variable == segment.variable
                     && last.folded == segment.folded =>
             {
@@ -344,22 +356,28 @@ fn lines(
             _ => out.push(segment),
         }
     }
-    out.sort_by(|a, b| {
-        (&a.table, &a.variable, a.start, &a.spelling).cmp(&(
-            &b.table,
-            &b.variable,
-            b.start,
-            &b.spelling,
-        ))
-    });
+    out.sort_by(|a, b| a.key().cmp(&b.key()));
     Ok(out)
 }
 
 impl Line {
+    /// The page order and cursor key: (table, variable, start, spelling, release name or
+    /// empty; a release name is never empty).
+    fn key(&self) -> (&str, &str, i64, &str, &str) {
+        (
+            &self.table,
+            &self.variable,
+            self.start,
+            &self.spelling,
+            self.release.as_deref().unwrap_or_default(),
+        )
+    }
+
     fn shape(self, server: &Server, origins: &[Connection]) -> Result<SchemaLine, Error> {
         let conn = &origins[self.origin];
         Ok(SchemaLine {
             table: self.table,
+            release: self.release,
             variable: self.variable,
             name: self.name,
             spelling: self.spelling,
@@ -378,29 +396,22 @@ impl Line {
 
 const SEPARATOR: char = '\u{1f}';
 
-/// A cursor's position: the key of the last line returned.
-fn position(text: &str) -> Result<(String, String, i64, String), Error> {
-    let mut parts = text.split(SEPARATOR);
-    match (
-        parts.next(),
-        parts.next(),
-        parts.next(),
-        parts.next(),
-        parts.next(),
-    ) {
-        (Some(table), Some(variable), Some(start), Some(spelling), None) => start
-            .parse()
-            .map(|start| {
-                (
-                    table.to_owned(),
-                    variable.to_owned(),
-                    start,
-                    spelling.to_owned(),
-                )
-            })
-            .map_err(|_| cursor::invalid("Cursor is malformed.")),
-        _ => Err(cursor::invalid("Cursor is malformed.")),
-    }
+/// A cursor's position: the key of the last line returned ([`Line::key`]).
+fn position(text: &str) -> Result<(String, String, i64, String, String), Error> {
+    let parts: Vec<&str> = text.split(SEPARATOR).collect();
+    let &[table, variable, start, spelling, release] = parts.as_slice() else {
+        return Err(cursor::invalid("Cursor is malformed."));
+    };
+    let start = start
+        .parse()
+        .map_err(|_| cursor::invalid("Cursor is malformed."))?;
+    Ok((
+        table.to_owned(),
+        variable.to_owned(),
+        start,
+        spelling.to_owned(),
+        release.to_owned(),
+    ))
 }
 
 fn schema(server: &Server, params: &Params) -> Result<Value, Error> {
@@ -428,28 +439,22 @@ fn schema(server: &Server, params: &Params) -> Result<Value, Error> {
     let mut rest: Vec<Line> = lines(server, &origins, &scope.tables, request)?
         .into_iter()
         .filter(|l| {
-            after
-                .as_ref()
-                .is_none_or(|(table, variable, start, spelling)| {
-                    (
-                        l.table.as_str(),
-                        l.variable.as_str(),
-                        l.start,
-                        l.spelling.as_str(),
-                    ) > (table.as_str(), variable.as_str(), *start, spelling.as_str())
-                })
+            after.as_ref().is_none_or(|(t, v, start, s, r)| {
+                l.key() > (t.as_str(), v.as_str(), *start, s.as_str(), r.as_str())
+            })
         })
         .take(limit + 1)
         .collect();
     let next_cursor = cursor::next(&mut rest, limit, |last| {
+        let (table, variable, start, spelling, release) = last.key();
         Some(cursor::token(
             server,
             params,
             "",
             offset + limit,
             &format!(
-                "{}{SEPARATOR}{}{SEPARATOR}{}{SEPARATOR}{}",
-                last.table, last.variable, last.start, last.spelling
+                "{table}{SEPARATOR}{variable}{SEPARATOR}{start}{SEPARATOR}{spelling}\
+                 {SEPARATOR}{release}"
             ),
         ))
     });
@@ -461,6 +466,9 @@ fn schema(server: &Server, params: &Params) -> Result<Value, Error> {
 }
 
 /// One line per variable at a period: the one with the latest start.
+// simplify: on a day two releases share, the last line in key order stands (at one start,
+// the later release name), so `diff` compares one release's column there; key `diff` by
+// release if a concurrent table's diff is ever asked about.
 fn by_variable(lines: Vec<Line>) -> BTreeMap<String, Line> {
     let mut map = BTreeMap::new();
     for line in lines {

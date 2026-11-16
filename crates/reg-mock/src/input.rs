@@ -35,6 +35,8 @@ pub struct Entry {
     pub source: String,
     pub binding: usize,
     pub table: String,
+    /// The release of a shared day (a concurrent table's); `None` elsewhere.
+    pub release: Option<String>,
     pub variable: String,
     pub period: Period,
     pub spelling: String,
@@ -44,6 +46,7 @@ pub struct Entry {
 pub struct RowKeys {
     pub source: String,
     pub table: String,
+    pub release: Option<String>,
     pub period: Period,
     pub columns: Vec<RowKeyColumn>,
 }
@@ -66,6 +69,9 @@ pub struct SegmentPage {
 pub struct Segment {
     pub variable: String,
     pub table: String,
+    /// The release it belongs to, in a table two of whose releases share days.
+    #[serde(default)]
+    pub release: Option<String>,
     pub period: Period,
     #[serde(rename = "type", default)]
     pub dtype: Option<String>,

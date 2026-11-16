@@ -1,3 +1,4 @@
 [variables]
+antal = ["t: Y"]
 belopp = ["t: X"]
 kommun = ["t: A", "t: B"]
