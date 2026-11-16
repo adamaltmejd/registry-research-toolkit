@@ -11053,12 +11053,6 @@ evidence = "#2102 same-label cluster 'Lilla n per stratum' (3 variables): judged
 
 [[statement]]
 kind = "set"
-subject = "var:manadslon"
-fields = { "label" = "Månadslön (intervall, lägsta klass 0-19 999 kr)" }
-evidence = "#2102 same-label cluster 'Månadslön' (6 variables): judged different meaning, medium confidence; LonManad has no value set (an amount); the others are salary-interval codes whose bands start at 0-9 999, 0-14 999 or 0-19 999 kr depending on survey."
-
-[[statement]]
-kind = "set"
 subject = "var:manadslon-f16"
 fields = { "label" = "Månadslön (intervall, F16)" }
 evidence = "#2102 same-label cluster 'Månadslön' (6 variables): judged different meaning, medium confidence; LonManad has no value set (an amount); the others are salary-interval codes whose bands start at 0-9 999, 0-14 999 or 0-19 999 kr depending on survey."
@@ -11079,12 +11073,6 @@ evidence = "#2102 same-label cluster 'Månadslön' (6 variables): judged differe
 kind = "set"
 subject = "var:manadslon-lonmanad"
 fields = { "label" = "Månadslön (kronor)" }
-evidence = "#2102 same-label cluster 'Månadslön' (6 variables): judged different meaning, medium confidence; LonManad has no value set (an amount); the others are salary-interval codes whose bands start at 0-9 999, 0-14 999 or 0-19 999 kr depending on survey."
-
-[[statement]]
-kind = "set"
-subject = "var:manadslon-lonny"
-fields = { "label" = "Månadslön (intervall, lägsta klass 0-19 999 kr)" }
 evidence = "#2102 same-label cluster 'Månadslön' (6 variables): judged different meaning, medium confidence; LonManad has no value set (an amount); the others are salary-interval codes whose bands start at 0-9 999, 0-14 999 or 0-19 999 kr depending on survey."
 
 [[statement]]
@@ -11665,24 +11653,6 @@ evidence = "#2102 same-label cluster 'Skäl att studera' (6 variables): held in 
 
 [[statement]]
 kind = "set"
-subject = "var:studier-istallet-for-arbete-studarb"
-fields = { "label" = "Studier istället för arbete (antal terminer)" }
-evidence = "#2102 same-label cluster 'Studier istället för arbete' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Up to 2012 the codes give number of terms (1-4 terms, 5=Nej); from 2014 plain 1=Ja/2=Nej. F23 repeats F20's wording, F18 adds 'för att undvika arbetslöshet' in its opdef. Proposed labels kept."
-
-[[statement]]
-kind = "set"
-subject = "var:studier-istallet-arbete"
-fields = { "label" = "Studier istället för arbete (antal terminer)" }
-evidence = "#2102 same-label cluster 'Studier istället för arbete' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Up to 2012 the codes give number of terms (1-4 terms, 5=Nej); from 2014 plain 1=Ja/2=Nej. F23 repeats F20's wording, F18 adds 'för att undvika arbetslöshet' in its opdef. Proposed labels kept."
-
-[[statement]]
-kind = "set"
-subject = "var:studier-istallet-for-arbete-f08"
-fields = { "label" = "Studier istället för arbete (antal terminer)" }
-evidence = "#2102 same-label cluster 'Studier istället för arbete' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Up to 2012 the codes give number of terms (1-4 terms, 5=Nej); from 2014 plain 1=Ja/2=Nej. F23 repeats F20's wording, F18 adds 'för att undvika arbetslöshet' in its opdef. Proposed labels kept."
-
-[[statement]]
-kind = "set"
 subject = "var:studier-istallet-for-arbete-f17"
 fields = { "label" = "Studier istället för arbete (ja/nej)" }
 evidence = "#2102 same-label cluster 'Studier istället för arbete' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Up to 2012 the codes give number of terms (1-4 terms, 5=Nej); from 2014 plain 1=Ja/2=Nej. F23 repeats F20's wording, F18 adds 'för att undvika arbetslöshet' in its opdef. Proposed labels kept."
@@ -11701,32 +11671,8 @@ evidence = "#2102 same-label cluster 'Studier istället för arbete' (8 variable
 
 [[statement]]
 kind = "set"
-subject = "var:arbentim"
-fields = { "label" = "Arbete (mätveckan)" }
-evidence = "#2102 same-label cluster 'Arbete' (8 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; fr4, ArbEnTim, Arbete, F11 and F15 ask whether the person had work in the measurement week (opdef 'minst en timme' appears only in fr4, F15 and Arbete 2014, so it is dropped); F5 asks about side employment, F4_F5_Arbete is a derived flag per its opdef, and F10 holds both the measurement-week question (2008-2012) and the side-job question (2017), so it is qualified by its code."
-
-[[statement]]
-kind = "set"
-subject = "var:arbete"
-fields = { "label" = "Arbete (mätveckan)" }
-evidence = "#2102 same-label cluster 'Arbete' (8 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; fr4, ArbEnTim, Arbete, F11 and F15 ask whether the person had work in the measurement week (opdef 'minst en timme' appears only in fr4, F15 and Arbete 2014, so it is dropped); F5 asks about side employment, F4_F5_Arbete is a derived flag per its opdef, and F10 holds both the measurement-week question (2008-2012) and the side-job question (2017), so it is qualified by its code."
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-matveckan-hogskoleexaminerade"
-fields = { "label" = "Arbete (mätveckan)" }
-evidence = "#2102 same-label cluster 'Arbete' (8 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; fr4, ArbEnTim, Arbete, F11 and F15 ask whether the person had work in the measurement week (opdef 'minst en timme' appears only in fr4, F15 and Arbete 2014, so it is dropped); F5 asks about side employment, F4_F5_Arbete is a derived flag per its opdef, and F10 holds both the measurement-week question (2008-2012) and the side-job question (2017), so it is qualified by its code."
-
-[[statement]]
-kind = "set"
 subject = "var:arbete-2"
 fields = { "label" = "Arbete (F10)" }
-evidence = "#2102 same-label cluster 'Arbete' (8 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; fr4, ArbEnTim, Arbete, F11 and F15 ask whether the person had work in the measurement week (opdef 'minst en timme' appears only in fr4, F15 and Arbete 2014, so it is dropped); F5 asks about side employment, F4_F5_Arbete is a derived flag per its opdef, and F10 holds both the measurement-week question (2008-2012) and the side-job question (2017), so it is qualified by its code."
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-4"
-fields = { "label" = "Arbete (mätveckan)" }
 evidence = "#2102 same-label cluster 'Arbete' (8 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; fr4, ArbEnTim, Arbete, F11 and F15 ask whether the person had work in the measurement week (opdef 'minst en timme' appears only in fr4, F15 and Arbete 2014, so it is dropped); F5 asks about side employment, F4_F5_Arbete is a derived flag per its opdef, and F10 holds both the measurement-week question (2008-2012) and the side-job question (2017), so it is qualified by its code."
 
 [[statement]]
@@ -11779,38 +11725,14 @@ evidence = "#2102 same-label cluster 'Född i Sverige/utomlands' (7 variables): 
 
 [[statement]]
 kind = "set"
-subject = "var:huvarb"
-fields = { "label" = "Huvudsaklig sysselsättning (mätveckan)" }
-evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (14 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs separate the measurement-week question (fr1, HuvArb, F10 2008-10, F09/f09, f09org, F14) from the current-position questions ('idag' in F2/F5, 'nuvarande' in F4); F1 and F9 ask without a time reference and F1 2023 is free text, F3/HuvSyss have no opdef and F3_txt has no code list, so those are qualified by code."
-
-[[statement]]
-kind = "set"
 subject = "var:huvsyss"
 fields = { "label" = "Huvudsaklig sysselsättning (HuvSyss)" }
 evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (14 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs separate the measurement-week question (fr1, HuvArb, F10 2008-10, F09/f09, f09org, F14) from the current-position questions ('idag' in F2/F5, 'nuvarande' in F4); F1 and F9 ask without a time reference and F1 2023 is free text, F3/HuvSyss have no opdef and F3_txt has no code list, so those are qualified by code."
 
 [[statement]]
 kind = "set"
-subject = "var:huvudsaklig-sysselsattning-hogskoleexaminerade-matveckan"
-fields = { "label" = "Huvudsaklig sysselsättning (mätveckan)" }
-evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (14 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs separate the measurement-week question (fr1, HuvArb, F10 2008-10, F09/f09, f09org, F14) from the current-position questions ('idag' in F2/F5, 'nuvarande' in F4); F1 and F9 ask without a time reference and F1 2023 is free text, F3/HuvSyss have no opdef and F3_txt has no code list, so those are qualified by code."
-
-[[statement]]
-kind = "set"
-subject = "var:f09"
-fields = { "label" = "Huvudsaklig sysselsättning (mätveckan)" }
-evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (14 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs separate the measurement-week question (fr1, HuvArb, F10 2008-10, F09/f09, f09org, F14) from the current-position questions ('idag' in F2/F5, 'nuvarande' in F4); F1 and F9 ask without a time reference and F1 2023 is free text, F3/HuvSyss have no opdef and F3_txt has no code list, so those are qualified by code."
-
-[[statement]]
-kind = "set"
 subject = "var:f09org"
 fields = { "label" = "Huvudsaklig sysselsättning (mätveckan, f09org)" }
-evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (14 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs separate the measurement-week question (fr1, HuvArb, F10 2008-10, F09/f09, f09org, F14) from the current-position questions ('idag' in F2/F5, 'nuvarande' in F4); F1 and F9 ask without a time reference and F1 2023 is free text, F3/HuvSyss have no opdef and F3_txt has no code list, so those are qualified by code."
-
-[[statement]]
-kind = "set"
-subject = "var:huvudsaklig-sysselsattning-3"
-fields = { "label" = "Huvudsaklig sysselsättning (mätveckan)" }
 evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (14 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs separate the measurement-week question (fr1, HuvArb, F10 2008-10, F09/f09, f09org, F14) from the current-position questions ('idag' in F2/F5, 'nuvarande' in F4); F1 and F9 ask without a time reference and F1 2023 is free text, F3/HuvSyss have no opdef and F3_txt has no code list, so those are qualified by code."
 
 [[statement]]
@@ -13026,3 +12948,579 @@ kind = "set"
 subject = "intradet-gymnasieavgangna: KunErbj"
 fields = { "variable" = "tillrackligt-med-kunskap-och-formaga-i-arbete-f23" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5204) in one table, renamed between survey rounds and never delivered together, so they are one variable: KunErbj 2006-03-01..2006-04-01; F23 2008-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "var:aktivt-sokt-arbete-f06"
+fields = { "label" = "Aktivt sökt arbete (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:aktivt-sokt-arbete-f07"
+fields = { "label" = "Aktivt sökt arbete (Inträdet på arbetsmarknaden bland högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:aktivt-sokt-arbete-soktarb"
+fields = { "label" = "Aktivt sökt arbete (Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar-arbtidve"
+fields = { "label" = "Antal arbetade timmar (Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar-f12"
+fields = { "label" = "Antal arbetade timmar (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar-f18"
+fields = { "label" = "Antal arbetade timmar (Högskolestuderande)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Högskolestuderande\"."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-arbetade-timmar-f19"
+fields = { "label" = "Antal arbetade timmar (Inträdet på arbetsmarknaden bland högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-manader-som-arbetslos-f06"
+fields = { "label" = "Antal månader som arbetslös (Inträdet på arbetsmarknaden bland högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-manader-som-arbetslos-f22"
+fields = { "label" = "Antal månader som arbetslös (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-manader-som-arbetslos-tidarblos"
+fields = { "label" = "Antal månader som arbetslös (Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:arbentim"
+fields = { "label" = "Arbete (mätveckan) (Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete"
+fields = { "label" = "Arbete (mätveckan) (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-4"
+fields = { "label" = "Arbete (mätveckan) (Högskolestuderande)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Högskolestuderande\"."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-i-usa-arbusa"
+fields = { "label" = "Arbete i USA (Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-i-usa-f08-3"
+fields = { "label" = "Arbete i USA (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-i-usa-f09-3"
+fields = { "label" = "Arbete i USA (Inträdet på arbetsmarknaden bland högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-i-usa-f13-03"
+fields = { "label" = "Arbete i USA (Högskolestuderande)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Högskolestuderande\"."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-inom-europa-utom-norden-arbeur"
+fields = { "label" = "Arbete inom Europa (utom Norden) (Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-inom-europa-utom-norden-f08-2"
+fields = { "label" = "Arbete inom Europa (utom Norden) (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-inom-europa-utom-norden-f09-2"
+fields = { "label" = "Arbete inom Europa (utom Norden) (Inträdet på arbetsmarknaden bland högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-inom-europa-utom-norden-f13-02"
+fields = { "label" = "Arbete inom Europa (utom Norden) (Högskolestuderande)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Högskolestuderande\"."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-inom-norden-arbnord"
+fields = { "label" = "Arbete inom Norden (Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-inom-norden-f08-1"
+fields = { "label" = "Arbete inom Norden (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-inom-norden-f09-1"
+fields = { "label" = "Arbete inom Norden (Inträdet på arbetsmarknaden bland högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-inom-norden-f13-01"
+fields = { "label" = "Arbete inom Norden (Högskolestuderande)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Högskolestuderande\"."
+
+[[statement]]
+kind = "set"
+subject = "var:arbete-matveckan-hogskoleexaminerade"
+fields = { "label" = "Arbete (mätveckan) (Inträdet på arbetsmarknaden bland högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:arbovutb"
+fields = { "label" = "Överensstämmelse mellan utbildning och arbete (Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-kurser-m-m-senaste-12-manaderna-f21"
+fields = { "label" = "Deltagit i kurser m.m senaste 12 månaderna (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:deltagit-i-kurser-m-m-senaste-12-manaderna-f24"
+fields = { "label" = "Deltagit i kurser m.m senaste 12 månaderna (Inträdet på arbetsmarknaden bland högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:enkatlopnummer"
+fields = { "label" = "Löpnummer (Inträdet på arbetsmarknaden bland högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:f09"
+fields = { "label" = "Huvudsaklig sysselsättning (mätveckan) (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:f36"
+fields = { "label" = "Nöjdhet med utbildning (Inträdet på arbetsmarknaden bland högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fardighetstraning-argumentera-och-overtyga-andra-bedfard11"
+fields = { "label" = "Färdighetsträning - argumentera och övertyga andra (Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fardighetstraning-argumentera-och-overtyga-andra-f19-04"
+fields = { "label" = "Färdighetsträning - argumentera och övertyga andra (Högskolestuderande)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Högskolestuderande\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fardighetstraning-argumentera-och-overtyga-andra-f27-11"
+fields = { "label" = "Färdighetsträning - argumentera och övertyga andra (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fardighetstraning-argumentera-och-overtyga-andra-f34-9"
+fields = { "label" = "Färdighetsträning - argumentera och övertyga andra (Inträdet på arbetsmarknaden bland högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-andra-studier-komvux"
+fields = { "label" = "Framtidsplaner_Andra studier, t.ex. Komvux, folkhögskola (Högskolestuderande)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Högskolestuderande\"."
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-andra-studier-t-ex-komvux-folkhogskola-f24-6"
+fields = { "label" = "Framtidsplaner_Andra studier, t.ex. Komvux, folkhögskola (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-annat"
+fields = { "label" = "Framtidsplaner_Annat (Högskolestuderande)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Högskolestuderande\"."
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-annat-f24-8"
+fields = { "label" = "Framtidsplaner_Annat (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-fortsatta-nuvarande-jobb"
+fields = { "label" = "Framtidsplaner_Fortsätta på mitt nuvarande jobb (Högskolestuderande)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Högskolestuderande\"."
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-fortsatta-pa-mitt-nuvarande-jobb-f24-1"
+fields = { "label" = "Framtidsplaner_Fortsätta på mitt nuvarande jobb (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-skaffa-ett-jobb"
+fields = { "label" = "Framtidsplaner_Skaffa ett jobb (Högskolestuderande)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Högskolestuderande\"."
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-skaffa-ett-jobb-f24-3"
+fields = { "label" = "Framtidsplaner_Skaffa ett jobb (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-skaffa-ett-nytt-jobb"
+fields = { "label" = "Framtidsplaner_Skaffa ett nytt jobb (Högskolestuderande)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Högskolestuderande\"."
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-skaffa-ett-nytt-jobb-f24-2"
+fields = { "label" = "Framtidsplaner_Skaffa ett nytt jobb (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-starta-eget-foretag"
+fields = { "label" = "Framtidsplaner_Starta eget företag (Högskolestuderande)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Högskolestuderande\"."
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-starta-eget-foretag-f24-4"
+fields = { "label" = "Framtidsplaner_Starta eget företag (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-studera-hogskola-yh"
+fields = { "label" = "Framtidsplaner_Studera på universitet/högskola eller yrkeshögskola (Högskolestuderande)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Högskolestuderande\"."
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-studera-pa-universitet-hogskola-eller-f24-5"
+fields = { "label" = "Framtidsplaner_Studera på universitet/högskola eller yrkeshögskola (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-vet-inte"
+fields = { "label" = "Framtidsplaner_Vet inte (Högskolestuderande)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Högskolestuderande\"."
+
+[[statement]]
+kind = "set"
+subject = "var:framtidsplaner-vet-inte-f24-9"
+fields = { "label" = "Framtidsplaner_Vet inte (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:huvarb"
+fields = { "label" = "Huvudsaklig sysselsättning (mätveckan) (Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-sysselsattning-3"
+fields = { "label" = "Huvudsaklig sysselsättning (mätveckan) (Högskolestuderande)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Högskolestuderande\"."
+
+[[statement]]
+kind = "set"
+subject = "var:huvudsaklig-sysselsattning-hogskoleexaminerade-matveckan"
+fields = { "label" = "Huvudsaklig sysselsättning (mätveckan) (Inträdet på arbetsmarknaden bland högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:kannedom-arbete-annat"
+fields = { "label" = "Kännedom om arbete - på något annat sätt (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:kannedom-arbete-arbetsformedling"
+fields = { "label" = "Kännedom om arbete - genom arbetsförmedlingen (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:kannedom-arbete-arbetsgivare"
+fields = { "label" = "Kännedom om arbete - genom kontakter med arbetsgivaren (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:kannedom-arbete-foraldrar"
+fields = { "label" = "Kännedom om arbete - genom föräldrar, vänner, bekanta (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:kannedom-arbete-internet"
+fields = { "label" = "Kännedom om arbete - genom internet (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:kannedom-arbete-tidning"
+fields = { "label" = "Kännedom om arbete - genom tidningsannonser (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:kannedom-om-arbete-genom-arbetsformedlingen-f25-2"
+fields = { "label" = "Kännedom om arbete - genom arbetsförmedlingen (Inträdet på arbetsmarknaden bland högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:kannedom-om-arbete-genom-foraldrar-vanner-bekanta-f25-7"
+fields = { "label" = "Kännedom om arbete - genom föräldrar, vänner, bekanta (Inträdet på arbetsmarknaden bland högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:kannedom-om-arbete-genom-internet-f25-3"
+fields = { "label" = "Kännedom om arbete - genom internet (Inträdet på arbetsmarknaden bland högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:kannedom-om-arbete-genom-kontakter-med-arbetsgivaren-f25-4"
+fields = { "label" = "Kännedom om arbete - genom kontakter med arbetsgivaren (Inträdet på arbetsmarknaden bland högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:kannedom-om-arbete-genom-tidningsannonser-f25-1"
+fields = { "label" = "Kännedom om arbete - genom tidningsannonser (Inträdet på arbetsmarknaden bland högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:kannedom-om-arbete-pa-nagot-annat-satt-f25-8"
+fields = { "label" = "Kännedom om arbete - på något annat sätt (Inträdet på arbetsmarknaden bland högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:kunskap-och-formaga-till-nytta-i-arbete-f22"
+fields = { "label" = "Kunskap och förmåga till nytta i arbete (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:kunskap-och-formaga-till-nytta-i-arbete-f25"
+fields = { "label" = "Kunskap och förmåga till nytta i arbete (Inträdet på arbetsmarknaden bland högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:kvar-pa-forsta-arbete-f03"
+fields = { "label" = "Kvar på första arbete (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:kvar-pa-forsta-arbete-f04"
+fields = { "label" = "Kvar på första arbete (Inträdet på arbetsmarknaden bland högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:kvar-pa-forsta-arbete-f8"
+fields = { "label" = "Kvar på första arbete (Högskolestuderande)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Högskolestuderande\"."
+
+[[statement]]
+kind = "set"
+subject = "var:lopnummer"
+fields = { "label" = "Löpnummer (Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:manadslon"
+fields = { "label" = "Månadslön (intervall, lägsta klass 0-19 999 kr) (Högskolestuderande)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Högskolestuderande\"."
+
+[[statement]]
+kind = "set"
+subject = "var:manadslon-lonny"
+fields = { "label" = "Månadslön (intervall, lägsta klass 0-19 999 kr) (Inträdet på arbetsmarknaden bland högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:nojdhet-med-utbildning-2"
+fields = { "label" = "Nöjdhet med utbildning (Högskolestuderande)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Högskolestuderande\"."
+
+[[statement]]
+kind = "set"
+subject = "var:nojdhet-med-utbildning-4"
+fields = { "label" = "Nöjdhet med utbildning (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:studier-i-ovriga-varlden"
+fields = { "label" = "Studier i övriga världen (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:studier-i-ovriga-varlden-f38-4"
+fields = { "label" = "Studier i övriga världen (Inträdet på arbetsmarknaden bland högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:studier-i-ovriga-varlden-studut4"
+fields = { "label" = "Studier i övriga världen (Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:studier-i-usa"
+fields = { "label" = "Studier i USA (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:studier-i-usa-f38-3"
+fields = { "label" = "Studier i USA (Inträdet på arbetsmarknaden bland högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:studier-i-usa-studut3"
+fields = { "label" = "Studier i USA (Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:studier-istallet-arbete"
+fields = { "label" = "Studier istället för arbete (antal terminer) (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:studier-istallet-for-arbete-f08"
+fields = { "label" = "Studier istället för arbete (antal terminer) (Inträdet på arbetsmarknaden bland högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:studier-istallet-for-arbete-studarb"
+fields = { "label" = "Studier istället för arbete (antal terminer) (Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:utb-arbete-overensstammelse-2"
+fields = { "label" = "Överensstämmelse mellan utbildning och arbete (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:utb-arbete-overensstammelse-4"
+fields = { "label" = "Överensstämmelse mellan utbildning och arbete (Högskolestuderande)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Högskolestuderande\"."
+
+[[statement]]
+kind = "set"
+subject = "var:utb-arbete-overensstammelse-5"
+fields = { "label" = "Överensstämmelse mellan utbildning och arbete (Inträdet på arbetsmarknaden bland högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:utbnojd"
+fields = { "label" = "Nöjdhet med utbildning (Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsomrade-f13"
+fields = { "label" = "Verksamhetsområde (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsomrade-f14"
+fields = { "label" = "Verksamhetsområde (Inträdet på arbetsmarknaden bland högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:verksamhetsomrade-verkomr"
+fields = { "label" = "Verksamhetsområde (Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:viljan-att-arbeta-mer-arbtidno"
+fields = { "label" = "Viljan att arbeta mer (Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna och högskoleexaminerade\"."
+
+[[statement]]
+kind = "set"
+subject = "var:viljan-att-arbeta-mer-f15"
+fields = { "label" = "Viljan att arbeta mer (Inträdet på arbetsmarknaden bland gymnasieavgångna)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland gymnasieavgångna\"."
+
+[[statement]]
+kind = "set"
+subject = "var:viljan-att-arbeta-mer-f20"
+fields = { "label" = "Viljan att arbeta mer (Inträdet på arbetsmarknaden bland högskoleexaminerade)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Inträdet på arbetsmarknaden bland högskoleexaminerade\"."

@@ -8763,21 +8763,9 @@ evidence = "#2102 same-label cluster 'Hjälp med aktiviteter' (14 variables): ju
 
 [[statement]]
 kind = "set"
-subject = "var:hinnamed1"
-fields = { "label" = "Mycket att göra (urvalsperson)" }
-evidence = "#2102 same-label cluster 'Mycket att göra' (3 variables): judged different meaning, medium confidence; Opdefs: hinnamed1 is the sampled person's answer, hinnamed1ms the partner's; F21 (2021) asks the same question of the sampled person."
-
-[[statement]]
-kind = "set"
 subject = "var:hinnamed1ms"
 fields = { "label" = "Mycket att göra (urvalspersonens partner)" }
 evidence = "#2102 same-label cluster 'Mycket att göra' (3 variables): judged different meaning, medium confidence; Opdefs: hinnamed1 is the sampled person's answer, hinnamed1ms the partner's; F21 (2021) asks the same question of the sampled person."
-
-[[statement]]
-kind = "set"
-subject = "var:hinnamed2"
-fields = { "label" = "Tidsbrist (urvalsperson)" }
-evidence = "#2102 same-label cluster 'Tidsbrist' (3 variables): judged different meaning, medium confidence; Opdef: hinnamed2ms is the partner's answer; hinnamed2 and F19 (2021 tidsstudien, same question and scale) are the sampled person's."
 
 [[statement]]
 kind = "set"
@@ -8859,12 +8847,6 @@ evidence = "#2102 same-label cluster 'Deltagande i religiöst samfund eller reli
 
 [[statement]]
 kind = "set"
-subject = "var:kon"
-fields = { "label" = "Kön (urvalsperson)" }
-evidence = "#2102 same-label cluster 'Kön' (5 variables): judged different meaning, medium confidence; Opdefs: MSSEX and konms are the partner's sex, UPSEX and sex the sampled person's; kon (2021 tidsstudien) is taken as the sampled person's."
-
-[[statement]]
-kind = "set"
 subject = "var:konms"
 fields = { "label" = "Kön (urvalspersonens make/maka/sambo)" }
 evidence = "#2102 same-label cluster 'Kön' (5 variables): judged different meaning, medium confidence; Opdefs: MSSEX and konms are the partner's sex, UPSEX and sex the sampled person's; kon (2021 tidsstudien) is taken as the sampled person's."
@@ -8934,12 +8916,6 @@ kind = "set"
 subject = "var:mathelpofta"
 fields = { "label" = "Hjälp med matlagning- hur ofta (fått hjälp)" }
 evidence = "#2102 same-label cluster 'Hjälp med matlagning- hur ofta' (2 variables): judged different meaning, high confidence; Opdefs: gmathelpofta is how often help was given, mathelpofta received."
-
-[[statement]]
-kind = "set"
-subject = "var:mycket-gora-svart-hinna-vardagar"
-fields = { "label" = "Mycket att göra (urvalsperson)" }
-evidence = "#2102 same-label cluster 'Mycket att göra' (3 variables): judged different meaning, medium confidence; Opdefs: hinnamed1 is the sampled person's answer, hinnamed1ms the partner's; F21 (2021) asks the same question of the sampled person."
 
 [[statement]]
 kind = "set"
@@ -9087,12 +9063,6 @@ evidence = "#2102 same-label cluster 'SEI_TA2000' (4 variables): judged differen
 
 [[statement]]
 kind = "set"
-subject = "var:sex"
-fields = { "label" = "Kön (urvalsperson)" }
-evidence = "#2102 same-label cluster 'Kön' (5 variables): judged different meaning, medium confidence; Opdefs: MSSEX and konms are the partner's sex, UPSEX and sex the sampled person's; kon (2021 tidsstudien) is taken as the sampled person's."
-
-[[statement]]
-kind = "set"
 subject = "var:skiftform"
 fields = { "label" = "Huvudsaklig arbetstidsform (urvalsperson)" }
 evidence = "#2102 same-label cluster 'Huvudsaklig arbetstidsform' (2 variables): judged different meaning, high confidence; Opdefs: skiftform describes the sampled person, skiftformms the sampled person's partner."
@@ -9138,12 +9108,6 @@ kind = "set"
 subject = "var:sun2020niva-grov"
 fields = { "label" = "Utbildningsnivå (SUN 2020, grov nivå)" }
 evidence = "#2102 same-label cluster 'Utbildningsnivå' (3 variables): judged different meaning, high confidence; Opdefs: SUNms is the partner's and sun the respondent's 5-digit SUN code; SUN2020Niva_Grov is a coarse level from the 2021 study."
-
-[[statement]]
-kind = "set"
-subject = "var:tidsbrist-avsta-saker-vardagar"
-fields = { "label" = "Tidsbrist (urvalsperson)" }
-evidence = "#2102 same-label cluster 'Tidsbrist' (3 variables): judged different meaning, medium confidence; Opdef: hinnamed2ms is the partner's answer; hinnamed2 and F19 (2021 tidsstudien, same question and scale) are the sampled person's."
 
 [[statement]]
 kind = "set"
@@ -9314,3 +9278,39 @@ kind = "set"
 subject = "tidsanvandningsundersokningen: ALDGRUP1"
 fields = { "variable" = "aldgrp" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v749) in one table, renamed between survey rounds and never delivered together, so they are one variable: ALDGRUP1 1990-07-01..1991-07-01; ALDGRP1 2010-07-01..2011-07-01; aldgrp1 2000-07-01..2001-07-01."
+
+[[statement]]
+kind = "set"
+subject = "var:hinnamed1"
+fields = { "label" = "Mycket att göra (urvalsperson) (Tidsanvändningsundersökningen)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Tidsanvändningsundersökningen\"."
+
+[[statement]]
+kind = "set"
+subject = "var:hinnamed2"
+fields = { "label" = "Tidsbrist (urvalsperson) (Tidsanvändningsundersökningen)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Tidsanvändningsundersökningen\"."
+
+[[statement]]
+kind = "set"
+subject = "var:kon"
+fields = { "label" = "Kön (urvalsperson) (Tidsstudien)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Tidsstudien\"."
+
+[[statement]]
+kind = "set"
+subject = "var:mycket-gora-svart-hinna-vardagar"
+fields = { "label" = "Mycket att göra (urvalsperson) (Tidsstudien)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Tidsstudien\"."
+
+[[statement]]
+kind = "set"
+subject = "var:sex"
+fields = { "label" = "Kön (urvalsperson) (Tidsanvändningsundersökningen)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Tidsanvändningsundersökningen\"."
+
+[[statement]]
+kind = "set"
+subject = "var:tidsbrist-avsta-saker-vardagar"
+fields = { "label" = "Tidsbrist (urvalsperson) (Tidsstudien)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Tidsstudien\"."

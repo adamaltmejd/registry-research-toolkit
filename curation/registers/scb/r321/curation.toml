@@ -6919,24 +6919,6 @@ evidence = "#2100 group name: slug words restored from catalog wording; kept on 
 
 [[statement]]
 kind = "set"
-subject = "var:annat-arvode-fortroendevalda-kommuner"
-fields = { "label" = "Typ av arvode till förtroendevalda (annat arvode)" }
-evidence = "#2102 same-label cluster 'Typ av arvode till förtroendevalda' (12 variables): judged different meaning, high confidence; Six remuneration types (sammanträdes-, inläsnings-, månads-, förlorad arbetsförtjänst, annat, inget annat) as Ja/Nej columns, each present as a kommun (Fr7_n) and a region (Fr6_n) column with identical wording."
-
-[[statement]]
-kind = "set"
-subject = "var:annat-arvode-fortroendevalda-regioner"
-fields = { "label" = "Typ av arvode till förtroendevalda (annat arvode)" }
-evidence = "#2102 same-label cluster 'Typ av arvode till förtroendevalda' (12 variables): judged different meaning, high confidence; Six remuneration types (sammanträdes-, inläsnings-, månads-, förlorad arbetsförtjänst, annat, inget annat) as Ja/Nej columns, each present as a kommun (Fr7_n) and a region (Fr6_n) column with identical wording."
-
-[[statement]]
-kind = "set"
-subject = "var:antal-behandlade-bifallna-medborgarforslag-regioner"
-fields = { "label" = "Inkomna medborgarförslag (antal bifallna)" }
-evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
-
-[[statement]]
-kind = "set"
 subject = "var:antal-folkinitiativ-beslut-folkomrostning-mandatperiod"
 fields = { "label" = "Folkinitiativ till folkomröstning (antal beslut om folkomröstning)" }
 evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
@@ -6976,18 +6958,6 @@ kind = "set"
 subject = "var:antkoop"
 fields = { "label" = "Brukarkooperativ inom organisationens ansvarsområde (antal)" }
 evidence = "#2102 same-label cluster 'Brukarkooperativ inom organisationens ansvarsområde' (19 variables): judged different meaning, high confidence; 2012 has one flag and one count column per service area (service area decoded from the column suffix; ARBF is not explained); 2003-09 has separate antal, område and Ja/Nej columns."
-
-[[statement]]
-kind = "set"
-subject = "var:arvode-forlorad-arbetsfortjanst-fortroendevalda-kommuner"
-fields = { "label" = "Typ av arvode till förtroendevalda (förlorad arbetsförtjänst)" }
-evidence = "#2102 same-label cluster 'Typ av arvode till förtroendevalda' (12 variables): judged different meaning, high confidence; Six remuneration types (sammanträdes-, inläsnings-, månads-, förlorad arbetsförtjänst, annat, inget annat) as Ja/Nej columns, each present as a kommun (Fr7_n) and a region (Fr6_n) column with identical wording."
-
-[[statement]]
-kind = "set"
-subject = "var:arvode-forlorad-arbetsfortjanst-fortroendevalda-regioner"
-fields = { "label" = "Typ av arvode till förtroendevalda (förlorad arbetsförtjänst)" }
-evidence = "#2102 same-label cluster 'Typ av arvode till förtroendevalda' (12 variables): judged different meaning, high confidence; Six remuneration types (sammanträdes-, inläsnings-, månads-, förlorad arbetsförtjänst, annat, inget annat) as Ja/Nej columns, each present as a kommun (Fr7_n) and a region (Fr6_n) column with identical wording."
 
 [[statement]]
 kind = "set"
@@ -7291,12 +7261,6 @@ evidence = "#2102 same-label cluster 'Förekomst av beslut om medborgardialoger'
 
 [[statement]]
 kind = "set"
-subject = "var:fr1"
-fields = { "label" = "Inkomna medborgarförslag (antal inkomna)" }
-evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
-
-[[statement]]
-kind = "set"
 subject = "var:fr10"
 fields = { "label" = "Förekomst av anställda politiska sekreterare (Fr10)" }
 evidence = "#2102 same-label cluster 'Förekomst av anställda politiska sekreterare' (7 variables): judged different meaning, high confidence; POLSEKRANT is the count of political secretaries (opdef); the other six are the Ja/Nej flag repeated across survey years and respondent types."
@@ -7351,20 +7315,8 @@ evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables):
 
 [[statement]]
 kind = "set"
-subject = "var:fr16"
-fields = { "label" = "Inkomna medborgarförslag (antal bifallna)" }
-evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
-
-[[statement]]
-kind = "set"
 subject = "var:fr17-text"
 fields = { "label" = "Inkomna e-förslag (Fr17_text)" }
-evidence = "#2102 same-label cluster 'Inkomna e-förslag' (9 variables): judged different meaning, medium confidence; Opdefs name three counts (received, handled, approved e-proposals); Fr17_text, Fr18_text and Fr19 each map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
-
-[[statement]]
-kind = "set"
-subject = "var:fr18"
-fields = { "label" = "Inkomna e-förslag (antal behandlade)" }
 evidence = "#2102 same-label cluster 'Inkomna e-förslag' (9 variables): judged different meaning, medium confidence; Opdefs name three counts (received, handled, approved e-proposals); Fr17_text, Fr18_text and Fr19 each map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
 
 [[statement]]
@@ -7396,12 +7348,6 @@ kind = "set"
 subject = "var:fr1a-9"
 fields = { "label" = "Politisk majoritet - annat parti (Fr1a_9)" }
 evidence = "#2102 same-label cluster 'Politisk majoritet - annat parti' (7 variables): judged different meaning, medium confidence; Opdefs: LOKPARTI holds the party name in clear text, MAJ flags local parties in the majority, MAJLP flags parties other than the Riksdag parties, Fr1a_9_text is the free-text survey answer; Fr1a_9..11 (2020) are identical 0/1 flags with no stated difference, so qualified by column code."
-
-[[statement]]
-kind = "set"
-subject = "var:fr2"
-fields = { "label" = "Inkomna e-förslag (antal behandlade)" }
-evidence = "#2102 same-label cluster 'Inkomna e-förslag' (9 variables): judged different meaning, medium confidence; Opdefs name three counts (received, handled, approved e-proposals); Fr17_text, Fr18_text and Fr19 each map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
 
 [[statement]]
 kind = "set"
@@ -7597,18 +7543,6 @@ evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering ti
 
 [[statement]]
 kind = "set"
-subject = "var:fr42-7"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (annat område)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
-
-[[statement]]
-kind = "set"
-subject = "var:fr42-8"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (ingen brukarrepresentation)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
-
-[[statement]]
-kind = "set"
 subject = "var:fr43"
 fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (förskolan)" }
 evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
@@ -7654,18 +7588,6 @@ kind = "set"
 subject = "var:fr5-text"
 fields = { "label" = "Förekomst av folkomröstning (antal)" }
 evidence = "#2102 same-label cluster 'Förekomst av folkomröstning' (12 variables): judged different meaning, high confidence; Opdefs: Ja/Nej flags (Förekomst av folkomröstning) differ from count columns (Anger antal folkomröstningar), repeated over survey years and respondent types."
-
-[[statement]]
-kind = "set"
-subject = "var:fr6-6"
-fields = { "label" = "Typ av arvode till förtroendevalda (inget annat arvode)" }
-evidence = "#2102 same-label cluster 'Typ av arvode till förtroendevalda' (12 variables): judged different meaning, high confidence; Six remuneration types (sammanträdes-, inläsnings-, månads-, förlorad arbetsförtjänst, annat, inget annat) as Ja/Nej columns, each present as a kommun (Fr7_n) and a region (Fr6_n) column with identical wording."
-
-[[statement]]
-kind = "set"
-subject = "var:fr7-6"
-fields = { "label" = "Typ av arvode till förtroendevalda (inget annat arvode)" }
-evidence = "#2102 same-label cluster 'Typ av arvode till förtroendevalda' (12 variables): judged different meaning, high confidence; Six remuneration types (sammanträdes-, inläsnings-, månads-, förlorad arbetsförtjänst, annat, inget annat) as Ja/Nej columns, each present as a kommun (Fr7_n) and a region (Fr6_n) column with identical wording."
 
 [[statement]]
 kind = "set"
@@ -7723,21 +7645,9 @@ evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling 
 
 [[statement]]
 kind = "set"
-subject = "var:inget-medborgarkontor"
-fields = { "label" = "Medborgarkontor (har inte medborgarkontor)" }
-evidence = "#2102 same-label cluster 'Medborgarkontor' (19 variables): judged different meaning, medium confidence; Opdefs name sub-items per survey wave (physical office, web portal/call centre/customer service, no office), plus a count and an overall flag in 2003-13; Fr29_1..3 (kommuner 2016) only carry the generic opdef, so they are qualified by column code."
-
-[[statement]]
-kind = "set"
 subject = "var:inkomna-e-forslag-fr17"
 fields = { "label" = "Inkomna e-förslag (antal inkomna)" }
 evidence = "#2102 same-label cluster 'Inkomna e-förslag' (9 variables): judged different meaning, medium confidence; Opdefs name three counts (received, handled, approved e-proposals); Fr17_text, Fr18_text and Fr19 each map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
-
-[[statement]]
-kind = "set"
-subject = "var:inkomna-medborgarforslag-fr10a"
-fields = { "label" = "Inkomna medborgarförslag (antal inkomna)" }
-evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
 
 [[statement]]
 kind = "set"
@@ -7753,27 +7663,9 @@ evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables):
 
 [[statement]]
 kind = "set"
-subject = "var:inlasningsarvode-fortroendevalda-kommuner"
-fields = { "label" = "Typ av arvode till förtroendevalda (inläsningsarvode)" }
-evidence = "#2102 same-label cluster 'Typ av arvode till förtroendevalda' (12 variables): judged different meaning, high confidence; Six remuneration types (sammanträdes-, inläsnings-, månads-, förlorad arbetsförtjänst, annat, inget annat) as Ja/Nej columns, each present as a kommun (Fr7_n) and a region (Fr6_n) column with identical wording."
-
-[[statement]]
-kind = "set"
-subject = "var:inlasningsarvode-fortroendevalda-regioner"
-fields = { "label" = "Typ av arvode till förtroendevalda (inläsningsarvode)" }
-evidence = "#2102 same-label cluster 'Typ av arvode till förtroendevalda' (12 variables): judged different meaning, high confidence; Six remuneration types (sammanträdes-, inläsnings-, månads-, förlorad arbetsförtjänst, annat, inget annat) as Ja/Nej columns, each present as a kommun (Fr7_n) and a region (Fr6_n) column with identical wording."
-
-[[statement]]
-kind = "set"
 subject = "var:interreligiosa-rad-regioner-2019"
 fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (interreligiösa råd, Fr23_6)" }
 evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
-
-[[statement]]
-kind = "set"
-subject = "var:klagomalshantering"
-fields = { "label" = "Klagomålshantering (alla eller vissa förvaltningar)" }
-evidence = "#2102 same-label cluster 'Klagomålshantering' (5 variables): judged different meaning, high confidence; Ja/Nej coding in 2003-2016 versus three-level coding (alla/vissa förvaltningar/nej) in 2020; respondent group differs per column."
 
 [[statement]]
 kind = "set"
@@ -7789,12 +7681,6 @@ evidence = "#2102 same-label cluster 'Klagomålshantering' (5 variables): judged
 
 [[statement]]
 kind = "set"
-subject = "var:klagomalshantering-fr43"
-fields = { "label" = "Klagomålshantering (alla eller vissa förvaltningar)" }
-evidence = "#2102 same-label cluster 'Klagomålshantering' (5 variables): judged different meaning, high confidence; Ja/Nej coding in 2003-2016 versus three-level coding (alla/vissa förvaltningar/nej) in 2020; respondent group differs per column."
-
-[[statement]]
-kind = "set"
 subject = "var:klagomalshantering-klagom"
 fields = { "label" = "Klagomålshantering (ja/nej)" }
 evidence = "#2102 same-label cluster 'Klagomålshantering' (5 variables): judged different meaning, high confidence; Ja/Nej coding in 2003-2016 versus three-level coding (alla/vissa förvaltningar/nej) in 2020; respondent group differs per column."
@@ -7803,18 +7689,6 @@ evidence = "#2102 same-label cluster 'Klagomålshantering' (5 variables): judged
 kind = "set"
 subject = "var:kommun-fullmaktige-ekonomiska-mal-vissa-bolag"
 fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (ekonomiska mål, vissa bolag)" }
-evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
-
-[[statement]]
-kind = "set"
-subject = "var:kommun-fullmaktige-hallbarhetsmal-samtliga-bolag"
-fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (hållbarhetsmål, samtliga bolag)" }
-evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
-
-[[statement]]
-kind = "set"
-subject = "var:kommun-fullmaktige-hallbarhetsmal-vissa-bolag"
-fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (hållbarhetsmål, vissa bolag)" }
 evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
 
 [[statement]]
@@ -7906,18 +7780,6 @@ kind = "set"
 subject = "var:maj"
 fields = { "label" = "Politisk majoritet - annat parti (lokalt parti i majoriteten)" }
 evidence = "#2102 same-label cluster 'Politisk majoritet - annat parti' (7 variables): judged different meaning, medium confidence; Opdefs: LOKPARTI holds the party name in clear text, MAJ flags local parties in the majority, MAJLP flags parties other than the Riksdag parties, Fr1a_9_text is the free-text survey answer; Fr1a_9..11 (2020) are identical 0/1 flags with no stated difference, so qualified by column code."
-
-[[statement]]
-kind = "set"
-subject = "var:manadsarvode-fortroendevalda-kommuner"
-fields = { "label" = "Typ av arvode till förtroendevalda (månadsarvode)" }
-evidence = "#2102 same-label cluster 'Typ av arvode till förtroendevalda' (12 variables): judged different meaning, high confidence; Six remuneration types (sammanträdes-, inläsnings-, månads-, förlorad arbetsförtjänst, annat, inget annat) as Ja/Nej columns, each present as a kommun (Fr7_n) and a region (Fr6_n) column with identical wording."
-
-[[statement]]
-kind = "set"
-subject = "var:manadsarvode-fortroendevalda-regioner"
-fields = { "label" = "Typ av arvode till förtroendevalda (månadsarvode)" }
-evidence = "#2102 same-label cluster 'Typ av arvode till förtroendevalda' (12 variables): judged different meaning, high confidence; Six remuneration types (sammanträdes-, inläsnings-, månads-, förlorad arbetsförtjänst, annat, inget annat) as Ja/Nej columns, each present as a kommun (Fr7_n) and a region (Fr6_n) column with identical wording."
 
 [[statement]]
 kind = "set"
@@ -8110,66 +7972,6 @@ kind = "set"
 subject = "var:medskapprivifo"
 fields = { "label" = "Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet (individ- och familjeomsorg)" }
 evidence = "#2102 same-label cluster 'Förekomst av utvecklade former av brukarmedverkan/Medskapande i andra aktörers verksamhet' (8 variables): judged different meaning, medium confidence; One overall column plus one per service area (suffixes ALD, ANNAT, FS, FUNK, GS, GYM, IFO decoded), all in 2012; the overall column MEDSKAPPRIV has the opdef 'Enbart Nej-svar'."
-
-[[statement]]
-kind = "set"
-subject = "var:mojlighet-att-lamna-e-forslag"
-fields = { "label" = "Möjlighet att lämna e-förslag (ja/nej)" }
-evidence = "#2102 same-label cluster 'Möjlighet att lämna e-förslag' (4 variables): judged different meaning, high confidence; 2020 value sets distinguish when the possibility was introduced; 2024 value sets are plain Ja/Nej; kommuner and regioner are separate columns."
-
-[[statement]]
-kind = "set"
-subject = "var:mojlighet-att-lamna-e-forslag-fr14"
-fields = { "label" = "Möjlighet att lämna e-förslag (med införandetidpunkt)" }
-evidence = "#2102 same-label cluster 'Möjlighet att lämna e-förslag' (4 variables): judged different meaning, high confidence; 2020 value sets distinguish when the possibility was introduced; 2024 value sets are plain Ja/Nej; kommuner and regioner are separate columns."
-
-[[statement]]
-kind = "set"
-subject = "var:mojlighet-att-lamna-e-forslag-fr15"
-fields = { "label" = "Möjlighet att lämna e-förslag (med införandetidpunkt)" }
-evidence = "#2102 same-label cluster 'Möjlighet att lämna e-förslag' (4 variables): judged different meaning, high confidence; 2020 value sets distinguish when the possibility was introduced; 2024 value sets are plain Ja/Nej; kommuner and regioner are separate columns."
-
-[[statement]]
-kind = "set"
-subject = "var:mojlighet-att-lamna-e-forslag-fr15a"
-fields = { "label" = "Möjlighet att lämna e-förslag (ja/nej)" }
-evidence = "#2102 same-label cluster 'Möjlighet att lämna e-förslag' (4 variables): judged different meaning, high confidence; 2020 value sets distinguish when the possibility was introduced; 2024 value sets are plain Ja/Nej; kommuner and regioner are separate columns."
-
-[[statement]]
-kind = "set"
-subject = "var:mojlighet-att-lamna-medborgarforslag"
-fields = { "label" = "Möjlighet att lämna medborgarförslag (ja/nej)" }
-evidence = "#2102 same-label cluster 'Möjlighet att lämna medborgarförslag' (7 variables): judged different meaning, high confidence; Four different value-set designs across survey rounds (introduced before/after 2007, after 2015, before/after 2019, Ja/Nej); kommuner and regioner are separate columns."
-
-[[statement]]
-kind = "set"
-subject = "var:mojlighet-att-lamna-medborgarforslag-fr10"
-fields = { "label" = "Möjlighet att lämna medborgarförslag (infört före eller efter 2019)" }
-evidence = "#2102 same-label cluster 'Möjlighet att lämna medborgarförslag' (7 variables): judged different meaning, high confidence; Four different value-set designs across survey rounds (introduced before/after 2007, after 2015, before/after 2019, Ja/Nej); kommuner and regioner are separate columns."
-
-[[statement]]
-kind = "set"
-subject = "var:mojlighet-att-lamna-medborgarforslag-fr11"
-fields = { "label" = "Möjlighet att lämna medborgarförslag (infört före eller efter 2019)" }
-evidence = "#2102 same-label cluster 'Möjlighet att lämna medborgarförslag' (7 variables): judged different meaning, high confidence; Four different value-set designs across survey rounds (introduced before/after 2007, after 2015, before/after 2019, Ja/Nej); kommuner and regioner are separate columns."
-
-[[statement]]
-kind = "set"
-subject = "var:mojlighet-att-lamna-medborgarforslag-fr11a"
-fields = { "label" = "Möjlighet att lämna medborgarförslag (ja/nej)" }
-evidence = "#2102 same-label cluster 'Möjlighet att lämna medborgarförslag' (7 variables): judged different meaning, high confidence; Four different value-set designs across survey rounds (introduced before/after 2007, after 2015, before/after 2019, Ja/Nej); kommuner and regioner are separate columns."
-
-[[statement]]
-kind = "set"
-subject = "var:mojlighet-att-lamna-medborgarforslag-fr7"
-fields = { "label" = "Möjlighet att lämna medborgarförslag (infört efter 2015)" }
-evidence = "#2102 same-label cluster 'Möjlighet att lämna medborgarförslag' (7 variables): judged different meaning, high confidence; Four different value-set designs across survey rounds (introduced before/after 2007, after 2015, before/after 2019, Ja/Nej); kommuner and regioner are separate columns."
-
-[[statement]]
-kind = "set"
-subject = "var:mojlighet-att-lamna-medborgarforslag-fr9"
-fields = { "label" = "Möjlighet att lämna medborgarförslag (infört efter 2015)" }
-evidence = "#2102 same-label cluster 'Möjlighet att lämna medborgarförslag' (7 variables): judged different meaning, high confidence; Four different value-set designs across survey rounds (introduced before/after 2007, after 2015, before/after 2019, Ja/Nej); kommuner and regioner are separate columns."
 
 [[statement]]
 kind = "set"
@@ -8389,26 +8191,8 @@ evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgruppe
 
 [[statement]]
 kind = "set"
-subject = "var:region-brukarrepresentation-utover-delegering-annat"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (annat område)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
-
-[[statement]]
-kind = "set"
 subject = "var:region-fullmaktige-ekonomiska-mal-vissa-bolag"
 fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (ekonomiska mål, vissa bolag)" }
-evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
-
-[[statement]]
-kind = "set"
-subject = "var:region-fullmaktige-hallbarhetsmal-samtliga-bolag"
-fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (hållbarhetsmål, samtliga bolag)" }
-evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
-
-[[statement]]
-kind = "set"
-subject = "var:region-fullmaktige-hallbarhetsmal-vissa-bolag"
-fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (hållbarhetsmål, vissa bolag)" }
 evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
 
 [[statement]]
@@ -8422,18 +8206,6 @@ kind = "set"
 subject = "var:region-fullmaktige-verksamhetsmal-vissa-bolag"
 fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (verksamhetsmål, vissa bolag)" }
 evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
-
-[[statement]]
-kind = "set"
-subject = "var:region-inte-brukarrepresentation-nagot-ansvarsomrade"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (ingen brukarrepresentation)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
-
-[[statement]]
-kind = "set"
-subject = "var:region-inte-medborgarkontor"
-fields = { "label" = "Medborgarkontor (har inte medborgarkontor)" }
-evidence = "#2102 same-label cluster 'Medborgarkontor' (19 variables): judged different meaning, medium confidence; Opdefs name sub-items per survey wave (physical office, web portal/call centre/customer service, no office), plus a count and an overall flag in 2003-13; Fr29_1..3 (kommuner 2016) only carry the generic opdef, so they are qualified by column code."
 
 [[statement]]
 kind = "set"
@@ -8497,18 +8269,6 @@ evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling 
 
 [[statement]]
 kind = "set"
-subject = "var:sammantradesarvode-fortroendevalda-kommuner"
-fields = { "label" = "Typ av arvode till förtroendevalda (sammanträdesarvode)" }
-evidence = "#2102 same-label cluster 'Typ av arvode till förtroendevalda' (12 variables): judged different meaning, high confidence; Six remuneration types (sammanträdes-, inläsnings-, månads-, förlorad arbetsförtjänst, annat, inget annat) as Ja/Nej columns, each present as a kommun (Fr7_n) and a region (Fr6_n) column with identical wording."
-
-[[statement]]
-kind = "set"
-subject = "var:sammantradesarvode-fortroendevalda-regioner"
-fields = { "label" = "Typ av arvode till förtroendevalda (sammanträdesarvode)" }
-evidence = "#2102 same-label cluster 'Typ av arvode till förtroendevalda' (12 variables): judged different meaning, high confidence; Six remuneration types (sammanträdes-, inläsnings-, månads-, förlorad arbetsförtjänst, annat, inget annat) as Ja/Nej columns, each present as a kommun (Fr7_n) and a region (Fr6_n) column with identical wording."
-
-[[statement]]
-kind = "set"
 subject = "var:sjforgant"
 fields = { "label" = "Självförvaltningsorgan med uppdrag om drift (antal)" }
 evidence = "#2102 same-label cluster 'Självförvaltningsorgan med uppdrag om drift' (2 variables): judged different meaning, high confidence; SJFORG is the Ja/Nej question; SJFORGANT counts the självförvaltningsorgan (opdef)."
@@ -8524,30 +8284,6 @@ kind = "set"
 subject = "var:styrproant"
 fields = { "label" = "Professionella nämnder/styrelser (antal)" }
 evidence = "#2102 same-label cluster 'Professionella nämnder/styrelser' (7 variables): judged different meaning, medium confidence; Ja/Nej flags (STYRPRO, PROFNAMND, Fr2, Fr3) differ from the count columns (STYRPROANT, PROFNAMNDANT, Fr2_text); PROFNAMND and PROFNAMNDANT have swapped-looking opdefs, so the split follows the column names."
-
-[[statement]]
-kind = "set"
-subject = "var:tv-radio-eller-webbsandningar-fr21"
-fields = { "label" = "TV-, radio- eller webbsändningar (även tillgängligt i efterhand)" }
-evidence = "#2102 same-label cluster 'TV-, radio- eller webbsändningar' (7 variables): judged different meaning, high confidence; Three answer designs: how often (varje gång/vissa gånger/aldrig), four options incl. availability afterwards on the website, and plain Ja/Nej; the Fr10/Fr12/Fr21/Fr22 pairs are the same design in the kommun and region questionnaires."
-
-[[statement]]
-kind = "set"
-subject = "var:tv-radio-eller-webbsandningar-fr22"
-fields = { "label" = "TV-, radio- eller webbsändningar (även tillgängligt i efterhand)" }
-evidence = "#2102 same-label cluster 'TV-, radio- eller webbsändningar' (7 variables): judged different meaning, high confidence; Three answer designs: how often (varje gång/vissa gånger/aldrig), four options incl. availability afterwards on the website, and plain Ja/Nej; the Fr10/Fr12/Fr21/Fr22 pairs are the same design in the kommun and region questionnaires."
-
-[[statement]]
-kind = "set"
-subject = "var:tv-radio-eller-webbsandningar-fr22a"
-fields = { "label" = "TV-, radio- eller webbsändningar (Ja/Nej)" }
-evidence = "#2102 same-label cluster 'TV-, radio- eller webbsändningar' (7 variables): judged different meaning, high confidence; Three answer designs: how often (varje gång/vissa gånger/aldrig), four options incl. availability afterwards on the website, and plain Ja/Nej; the Fr10/Fr12/Fr21/Fr22 pairs are the same design in the kommun and region questionnaires."
-
-[[statement]]
-kind = "set"
-subject = "var:tv-radio-eller-webbsandningar-fr24a"
-fields = { "label" = "TV-, radio- eller webbsändningar (Ja/Nej)" }
-evidence = "#2102 same-label cluster 'TV-, radio- eller webbsändningar' (7 variables): judged different meaning, high confidence; Three answer designs: how often (varje gång/vissa gånger/aldrig), four options incl. availability afterwards on the website, and plain Ja/Nej; the Fr10/Fr12/Fr21/Fr22 pairs are the same design in the kommun and region questionnaires."
 
 [[statement]]
 kind = "set"
@@ -10666,3 +10402,555 @@ kind = "set"
 subject = "regioner: Fr10 where key = 'v28634'"
 fields = { "variable" = "tv-radio-eller-webbsandningar-fr21" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28634) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr10 2016-01-01..2017-01-01; Fr21 2020-01-01..2021-01-01."
+
+[[statement]]
+kind = "set"
+subject = "var:andra-organ-an-namnder-och-styrelser-under-fullmaktige-fr3"
+fields = { "label" = "Andra organ än nämnder och styrelser under fullmäktige (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:andra-organ-under-fullmaktige"
+fields = { "label" = "Andra organ än nämnder och styrelser under fullmäktige (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:annat-arvode-fortroendevalda-kommuner"
+fields = { "label" = "Typ av arvode till förtroendevalda (annat arvode) (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:annat-arvode-fortroendevalda-regioner"
+fields = { "label" = "Typ av arvode till förtroendevalda (annat arvode) (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-politiska-sekreterare"
+fields = { "label" = "Antal anställda politiska sekreterare (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-anstallda-politiska-sekreterare-fr8-text"
+fields = { "label" = "Antal anställda politiska sekreterare (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-behandlade-bifallna-medborgarforslag-regioner"
+fields = { "label" = "Inkomna medborgarförslag (antal bifallna) (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:arvode-forlorad-arbetsfortjanst-fortroendevalda-kommuner"
+fields = { "label" = "Typ av arvode till förtroendevalda (förlorad arbetsförtjänst) (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:arvode-forlorad-arbetsfortjanst-fortroendevalda-regioner"
+fields = { "label" = "Typ av arvode till förtroendevalda (förlorad arbetsförtjänst) (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:beslut-om-foraldraledighet"
+fields = { "label" = "Beslut om föräldraledighet (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:beslut-om-foraldraledighet-fr7"
+fields = { "label" = "Beslut om föräldraledighet (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:beslut-om-medborgardialoger"
+fields = { "label" = "Beslut om medborgardialoger (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:beslut-om-medborgardialoger-fr27"
+fields = { "label" = "Beslut om medborgardialoger (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:borttagen-mojlighet-att-lamna-e-forslag-fr15c"
+fields = { "label" = "Borttagen möjlighet att lämna e-förslag (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:borttagen-mojlighet-att-lamna-medborgarforslag-fr11c"
+fields = { "label" = "Borttagen möjlighet att lämna medborgarförslag (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:brukarrepresentation-utover-delegering-till-fr42-7-text"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan - fritext (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:delagda-bolag"
+fields = { "label" = "Delägda bolag (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:delagda-bolag-fr36c"
+fields = { "label" = "Delägda bolag (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:delta-i-medborgardialoger-via-webbplats"
+fields = { "label" = "Delta i medborgardialoger via webbplats (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:delta-i-medborgardialoger-via-webbplats-fr26b"
+fields = { "label" = "Delta i medborgardialoger via webbplats (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:deltar-i-ideburet-offentligt-partnerskap-iop-fr37"
+fields = { "label" = "Deltar i idéburet offentligt partnerskap (IOP) (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:deltar-i-offentlig-privat-samverkan-ops-fr34"
+fields = { "label" = "Deltar i offentlig-privat samverkan (OPS) (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:e-forslag-mojlighet-borttagen"
+fields = { "label" = "Borttagen möjlighet att lämna e-förslag (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:e-forslag-mojlighet-tidpunkt"
+fields = { "label" = "Tidpunkt för möjlighet att lämna e-förslag (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-av-bolag"
+fields = { "label" = "Förekomst av bolag (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-av-bolag-fr36a"
+fields = { "label" = "Förekomst av bolag (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-av-namndsammantraden"
+fields = { "label" = "Förekomst av nämndsammanträden (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:forekomst-av-namndsammantraden-fr23a"
+fields = { "label" = "Förekomst av nämndsammanträden (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fr1"
+fields = { "label" = "Inkomna medborgarförslag (antal inkomna) (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fr16"
+fields = { "label" = "Inkomna medborgarförslag (antal bifallna) (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fr18"
+fields = { "label" = "Inkomna e-förslag (antal behandlade) (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fr2"
+fields = { "label" = "Inkomna e-förslag (antal behandlade) (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fr3"
+fields = { "label" = "Professionella nämnder/styrelser (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fr42-7"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (annat område) (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fr42-8"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (ingen brukarrepresentation) (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fr6-6"
+fields = { "label" = "Typ av arvode till förtroendevalda (inget annat arvode) (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fr7-6"
+fields = { "label" = "Typ av arvode till förtroendevalda (inget annat arvode) (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fullmaktigesammantraden-webb-tillgang"
+fields = { "label" = "Tillänglighet på webb fullmäktigesammanträdena (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:helagda-bolag"
+fields = { "label" = "Helägda bolag (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:helagda-bolag-fr36b"
+fields = { "label" = "Helägda bolag (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:ideburet-offentligt-partnerskap-iop"
+fields = { "label" = "Deltar i idéburet offentligt partnerskap (IOP) (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:inget-medborgarkontor"
+fields = { "label" = "Medborgarkontor (har inte medborgarkontor) (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:inget-rad-fokusgrupper"
+fields = { "label" = "Inget råd/kommitté för särskilda fokusgrupper (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:inget-rad-kommitte-for-sarskilda-fokusgrupper-fr24-8"
+fields = { "label" = "Inget råd/kommitté för särskilda fokusgrupper (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:inkomna-medborgarforslag-fr10a"
+fields = { "label" = "Inkomna medborgarförslag (antal inkomna) (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:inlasningsarvode-fortroendevalda-kommuner"
+fields = { "label" = "Typ av arvode till förtroendevalda (inläsningsarvode) (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:inlasningsarvode-fortroendevalda-regioner"
+fields = { "label" = "Typ av arvode till förtroendevalda (inläsningsarvode) (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:klagomalshantering"
+fields = { "label" = "Klagomålshantering (alla eller vissa förvaltningar) (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:klagomalshantering-fr43"
+fields = { "label" = "Klagomålshantering (alla eller vissa förvaltningar) (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-fullmaktige-hallbarhetsmal-samtliga-bolag"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (hållbarhetsmål, samtliga bolag) (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun-fullmaktige-hallbarhetsmal-vissa-bolag"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (hållbarhetsmål, vissa bolag) (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:manadsarvode-fortroendevalda-kommuner"
+fields = { "label" = "Typ av arvode till förtroendevalda (månadsarvode) (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:manadsarvode-fortroendevalda-regioner"
+fields = { "label" = "Typ av arvode till förtroendevalda (månadsarvode) (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarforslag-mojlighet-borttagen"
+fields = { "label" = "Borttagen möjlighet att lämna medborgarförslag (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:medborgarforslag-mojlighet-tidpunkt"
+fields = { "label" = "Tidpunkt för möjlighet att lämna medborgarförslag (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-e-forslag"
+fields = { "label" = "Möjlighet att lämna e-förslag (ja/nej) (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-e-forslag-fr14"
+fields = { "label" = "Möjlighet att lämna e-förslag (med införandetidpunkt) (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-e-forslag-fr15"
+fields = { "label" = "Möjlighet att lämna e-förslag (med införandetidpunkt) (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-e-forslag-fr15a"
+fields = { "label" = "Möjlighet att lämna e-förslag (ja/nej) (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-medborgarforslag"
+fields = { "label" = "Möjlighet att lämna medborgarförslag (ja/nej) (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-medborgarforslag-fr10"
+fields = { "label" = "Möjlighet att lämna medborgarförslag (infört före eller efter 2019) (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-medborgarforslag-fr11"
+fields = { "label" = "Möjlighet att lämna medborgarförslag (infört före eller efter 2019) (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-medborgarforslag-fr11a"
+fields = { "label" = "Möjlighet att lämna medborgarförslag (ja/nej) (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-medborgarforslag-fr7"
+fields = { "label" = "Möjlighet att lämna medborgarförslag (infört efter 2015) (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:mojlighet-att-lamna-medborgarforslag-fr9"
+fields = { "label" = "Möjlighet att lämna medborgarförslag (infört efter 2015) (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:offentlig-privat-samverkan-ops"
+fields = { "label" = "Deltar i offentlig-privat samverkan (OPS) (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:organ-for-demokratifragor"
+fields = { "label" = "Organ för demokratifrågor (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:organ-for-demokratifragor-fr28b"
+fields = { "label" = "Organ för demokratifrågor (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:organ-for-demokratifragor-text"
+fields = { "label" = "Organ för demokratifrågor text (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:organ-for-demokratifragor-text-fr28b-text"
+fields = { "label" = "Organ för demokratifrågor text (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:partistod-till-ungdomsforbund"
+fields = { "label" = "Partistöd till ungdomsförbund (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:partistod-till-ungdomsforbund-fr5"
+fields = { "label" = "Partistöd till ungdomsförbund (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:professionella-namnder-styrelser"
+fields = { "label" = "Professionella nämnder/styrelser (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-fokusgrupper-textsvar"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper textsvar (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:rad-kommitte-for-sarskilda-fokusgrupper-textsvar-fr24-7-text"
+fields = { "label" = "Råd/kommitté för särskilda fokusgrupper textsvar (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:region-brukarrepresentation-utover-delegering-annat"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (annat område) (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:region-brukarrepresentation-utover-delegering-annat-fritext"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan - fritext (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:region-fullmaktige-hallbarhetsmal-samtliga-bolag"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (hållbarhetsmål, samtliga bolag) (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:region-fullmaktige-hallbarhetsmal-vissa-bolag"
+fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (hållbarhetsmål, vissa bolag) (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:region-inte-brukarrepresentation-nagot-ansvarsomrade"
+fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (ingen brukarrepresentation) (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:region-inte-medborgarkontor"
+fields = { "label" = "Medborgarkontor (har inte medborgarkontor) (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:region-strategi-samarbete-verksamhetsutveckling-fritext"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter - fritext (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:sammantradesarvode-fortroendevalda-kommuner"
+fields = { "label" = "Typ av arvode till förtroendevalda (sammanträdesarvode) (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:sammantradesarvode-fortroendevalda-regioner"
+fields = { "label" = "Typ av arvode till förtroendevalda (sammanträdesarvode) (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:strategi-om-samarbete-rorande-utveckling-av-fr43-7-text"
+fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter - fritext (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:tidpunkt-for-mojlighet-att-lamna-e-forslag-fr15b"
+fields = { "label" = "Tidpunkt för möjlighet att lämna e-förslag (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:tidpunkt-for-mojlighet-att-lamna-medborgarforslag-fr11b"
+fields = { "label" = "Tidpunkt för möjlighet att lämna medborgarförslag (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:tillanglighet-pa-webb-fullmaktigesammantradena-fr22b"
+fields = { "label" = "Tillänglighet på webb fullmäktigesammanträdena (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:tv-radio-eller-webbsandningar-fr21"
+fields = { "label" = "TV-, radio- eller webbsändningar (även tillgängligt i efterhand) (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:tv-radio-eller-webbsandningar-fr22"
+fields = { "label" = "TV-, radio- eller webbsändningar (även tillgängligt i efterhand) (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:tv-radio-eller-webbsandningar-fr22a"
+fields = { "label" = "TV-, radio- eller webbsändningar (Ja/Nej) (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:tv-radio-eller-webbsandningar-fr24a"
+fields = { "label" = "TV-, radio- eller webbsändningar (Ja/Nej) (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Kommuner\"."
