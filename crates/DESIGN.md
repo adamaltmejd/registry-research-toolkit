@@ -310,9 +310,10 @@ every order (`row_keys`), `show` lists them and `schema` lines flag them.
   duplicates and are shadowed (`F2:neighbour-owner`, a notice). A duplicate gives its
   variable no name, delivered alias or table, so the column resolves to its owner alone.
   In a table with concurrent releases a run is contested within one release (with the
-  listings of no release), and the neighbours are still read from the whole column.
-  A variable left with no used occurrence is withheld. When the neighbours disagree, neither side has a sole
-  holder, the holder does not claim the whole run, or a losing listing reaches past it,
+  listings of no release), and the neighbours are still read from the whole column. A
+  listing of no release is shadowed only when every release its days meet shadows it.
+  A variable left with no used occurrence is withheld. When the neighbours disagree,
+  neither side has a sole holder, the holder does not claim the whole run, or a losing listing reaches past it,
   the builder does not guess: curation settles the column (`set variable = "none"` on
   the stray listing, or a merge where the claimants are one concept for different row
   kinds), with the more plausible owner where the source does not settle it, and

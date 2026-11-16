@@ -10,7 +10,8 @@
 //! In a table with concurrent releases a run is contested only among the claims of one
 //! release (and claims of no release, which are in every release their days meet), as
 //! ambiguity is (crates/DESIGN.md, "Concurrent releases"); the neighbours are still read
-//! from the column's whole timeline.
+//! from the column's whole timeline. A listing of no release is shadowed only when every
+//! release its days meet shadows it; otherwise the settlement does not apply.
 
 use std::collections::{BTreeMap, BTreeSet};
 
@@ -83,20 +84,109 @@ pub(crate) fn apply(
                 })
                 .collect()
         };
-        for set in &sets {
+        // Each release's settlements; one applies only where every listing it shadows
+        // loses in each release its days meet (a listing of no release is in several).
+        let mut decisions: Vec<(usize, Vec<usize>, Interval)> = Vec::new();
+        for (s, set) in sets.iter().enumerate() {
             let column = Column {
                 table: *t,
                 fold,
                 claims: set,
                 neighbours: &neighbours,
             };
-            column.settle(resolved, pinned, tables, findings, &mut lost, &mut settled);
+            for (losing, run) in column.settle(resolved, pinned, tables, findings, &mut settled) {
+                decisions.push((s, losing, run));
+            }
+        }
+        let meets = meets(resolved, claims, &lane_of, &lanes, delivered, *t);
+        let accepted = agreed(&decisions, &meets);
+        let table = &tables[*t].table.table;
+        for ((_, losing, run), _) in decisions.iter().zip(&accepted).filter(|(_, a)| **a) {
+            lost.extend(losing.iter().copied());
+            let first = losing[0];
+            if settled.insert((first, run.clone())) {
+                findings.push(Finding {
+                    code: "F2:neighbour-owner",
+                    severity: "notice",
+                    subject: Subject::Occurrence(first),
+                    period: Some(run.clone()),
+                    message: format!(
+                        "{fold} in table {table:?} is documented under several variables; the \
+                         one that holds it in the neighbouring releases keeps it"
+                    ),
+                });
+            }
         }
     }
     for &i in &lost {
         resolved[i].status = "shadowed";
     }
     lost
+}
+
+/// The sets a listing is in on its days (`sets` order); `None` where a release it meets
+/// has no claims here, so the listing holds that release's column alone and is never lost.
+fn meets(
+    resolved: &[ResolvedOccurrence],
+    claims: &[(usize, usize)],
+    lane_of: &[Option<usize>],
+    lanes: &BTreeSet<usize>,
+    delivered: &Deliveries,
+    table: usize,
+) -> BTreeMap<usize, Vec<Option<usize>>> {
+    let lane_index: BTreeMap<usize, usize> =
+        lanes.iter().enumerate().map(|(s, &l)| (l, s)).collect();
+    claims
+        .iter()
+        .zip(lane_of)
+        .map(|(&(_, i), lane)| {
+            let at = match lane {
+                _ if lanes.is_empty() => vec![Some(0)],
+                Some(l) => vec![lane_index.get(l).copied()],
+                None => delivered.primaries[table]
+                    .iter()
+                    .filter(|(p, _)| reg_core::intersect(p, span(&resolved[i])).is_some())
+                    .map(|(_, x)| lane_index.get(x).copied())
+                    .collect(),
+            };
+            (i, at)
+        })
+        .collect()
+}
+
+/// Which settlements apply: drop any that shadows a listing some other release it meets
+/// does not also shadow, until none changes.
+fn agreed(
+    decisions: &[(usize, Vec<usize>, Interval)],
+    meets: &BTreeMap<usize, Vec<Option<usize>>>,
+) -> Vec<bool> {
+    let mut accepted = vec![true; decisions.len()];
+    loop {
+        let mut lost_in: BTreeMap<usize, BTreeSet<usize>> = BTreeMap::new();
+        for ((s, losing, _), _) in decisions.iter().zip(&accepted).filter(|(_, a)| **a) {
+            for &i in losing {
+                lost_in.entry(i).or_default().insert(*s);
+            }
+        }
+        let lost_everywhere = |i: &usize| {
+            let at = &meets[i];
+            !at.is_empty()
+                && at
+                    .iter()
+                    .all(|s| s.is_some_and(|s| lost_in.get(i).is_some_and(|l| l.contains(&s))))
+        };
+        let mut changed = false;
+        for ((_, losing, _), a) in decisions.iter().zip(accepted.iter_mut()) {
+            if *a && !losing.iter().all(lost_everywhere) {
+                *a = false;
+                changed = true;
+            }
+        }
+        if !changed {
+            break;
+        }
+    }
+    accepted
 }
 
 /// One column's claims within one release, and the whole column's runs for neighbours.
@@ -114,9 +204,9 @@ impl Column<'_> {
         pinned: &BTreeSet<usize>,
         tables: &[ResolvedTable],
         findings: &mut Vec<Finding>,
-        lost: &mut BTreeSet<usize>,
         settled: &mut BTreeSet<(usize, Interval)>,
-    ) {
+    ) -> Vec<(Vec<usize>, Interval)> {
+        let mut decisions = Vec::new();
         let (fold, table) = (self.fold, &tables[self.table].table.table);
         let runs = holder_runs(resolved, self.claims);
         let sole =
@@ -181,24 +271,11 @@ impl Column<'_> {
                 continue;
             }
             // A losing listing that reaches past the run would take its sole days too.
-            if losing.iter().all(|&i| covers(&run, span(&resolved[i])))
-                && let Some(&first) = losing.first()
-            {
-                lost.extend(losing);
-                if settled.insert((first, run.clone())) {
-                    findings.push(Finding {
-                        code: "F2:neighbour-owner",
-                        severity: "notice",
-                        subject: Subject::Occurrence(first),
-                        period: Some(run.clone()),
-                        message: format!(
-                            "{fold} in table {table:?} is documented under several variables; the \
-                             one that holds it in the neighbouring releases keeps it"
-                        ),
-                    });
-                }
+            if !losing.is_empty() && losing.iter().all(|&i| covers(&run, span(&resolved[i]))) {
+                decisions.push((losing, run));
             }
         }
+        decisions
     }
 }
 
