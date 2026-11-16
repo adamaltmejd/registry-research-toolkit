@@ -4456,3 +4456,147 @@ kind = "set"
 subject = "taxeringsenheter: var:taxeringsenhetens-identitetsnummer"
 fields.row_key = true
 evidence = "Row key: taxeringsenhetens-identitetsnummer identify a row: taxation unit table keys on the taxation unit id; the owner org number is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:egendisponerad-bostadsyta"
+fields = { "label" = "Egendisponerad yta, bostäder (Fastigheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Fastigheter\"."
+
+[[statement]]
+kind = "set"
+subject = "var:egendisponerad-lokalyta"
+fields = { "label" = "Egendisponerad yta, lokaler (Fastigheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Fastigheter\"."
+
+[[statement]]
+kind = "set"
+subject = "var:egendisponerad-yta-bostader-bostadsytaegen"
+fields = { "label" = "Egendisponerad yta, bostäder (Taxeringsenheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Taxeringsenheter\"."
+
+[[statement]]
+kind = "set"
+subject = "var:egendisponerad-yta-lokaler-lokalytaegen"
+fields = { "label" = "Egendisponerad yta, lokaler (Taxeringsenheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Taxeringsenheter\"."
+
+[[statement]]
+kind = "set"
+subject = "var:lokalarea-vakant"
+fields = { "label" = "Lokalarea, vakant (Fastigheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Fastigheter\"."
+
+[[statement]]
+kind = "set"
+subject = "var:lokalarea-vakant-lokalytavakant"
+fields = { "label" = "Lokalarea, vakant (Taxeringsenheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Taxeringsenheter\"."
+
+[[statement]]
+kind = "set"
+subject = "var:namnare"
+fields = { "label" = "Nämnare (Ägare)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Ägare\"."
+
+[[statement]]
+kind = "set"
+subject = "var:namnare-talnamnare"
+fields = { "label" = "Nämnare (Taxeringsenheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Taxeringsenheter\"."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrig-bostadsyta"
+fields = { "label" = "Övrig bostadsyta (Taxeringsenheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Taxeringsenheter\"."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrig-bostadsyta-ytaovrigbost"
+fields = { "label" = "Övrig bostadsyta (Fastigheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Fastigheter\"."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrig-lokalyta"
+fields = { "label" = "Övrig lokalyta (Taxeringsenheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Taxeringsenheter\"."
+
+[[statement]]
+kind = "set"
+subject = "var:ovrig-lokalyta-ytaovriglok"
+fields = { "label" = "Övrig lokalyta (Fastigheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Fastigheter\"."
+
+[[statement]]
+kind = "set"
+subject = "var:taljare"
+fields = { "label" = "Täljare (Ägare)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Ägare\"."
+
+[[statement]]
+kind = "set"
+subject = "var:taljare-taltaljare"
+fields = { "label" = "Täljare (Taxeringsenheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Taxeringsenheter\"."
+
+[[statement]]
+kind = "set"
+subject = "var:total-lokalyta"
+fields = { "label" = "Total lokalyta (Fastigheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Fastigheter\"."
+
+[[statement]]
+kind = "set"
+subject = "var:total-lokalyta-ytalokaltot"
+fields = { "label" = "Total lokalyta (Taxeringsenheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Taxeringsenheter\"."
+
+[[statement]]
+kind = "set"
+subject = "var:uthyrd-bostadsyta"
+fields = { "label" = "Uthyrd bostadsyta (Taxeringsenheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Taxeringsenheter\"."
+
+[[statement]]
+kind = "set"
+subject = "var:uthyrd-bostadsyta-ytauthyrdbost"
+fields = { "label" = "Uthyrd bostadsyta (Fastigheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Fastigheter\"."
+
+[[statement]]
+kind = "set"
+subject = "var:uthyrd-lokalyta"
+fields = { "label" = "Uthyrd lokalyta (Fastigheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Fastigheter\"."
+
+[[statement]]
+kind = "set"
+subject = "var:uthyrd-lokalyta-lokalytauthyrd"
+fields = { "label" = "Uthyrd lokalyta (Taxeringsenheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Taxeringsenheter\"."
+
+[[statement]]
+kind = "set"
+subject = "var:vakant-bostadsyta"
+fields = { "label" = "Vakant bostadsyta (Fastigheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Fastigheter\"."
+
+[[statement]]
+kind = "set"
+subject = "var:vakant-bostadsyta-bostadsytavakant"
+fields = { "label" = "Vakant bostadsyta (Taxeringsenheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Taxeringsenheter\"."
+
+[[statement]]
+kind = "set"
+subject = "var:vakant-lokalyta"
+fields = { "label" = "Vakant lokalyta (Fastigheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Fastigheter\"."
+
+[[statement]]
+kind = "set"
+subject = "var:vakant-lokalyta-lokalytavakant"
+fields = { "label" = "Vakant lokalyta (Taxeringsenheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Taxeringsenheter\"."

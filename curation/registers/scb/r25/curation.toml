@@ -28835,3 +28835,399 @@ kind = "set"
 subject = "individer-och-dodsbon: ANPENS"
 fields = { "variable" = "underlag-allman-pensionsavgift-annat" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v631), never delivered together in one table, so they are one variable renamed between releases: ANPENS 1995-01-01..1995-12-31; AAPENSF 1999-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag"
+fields = { "label" = "Avdrag (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:avdrag-agi-ku"
+fields = { "label" = "Avdrag (arbetsgivardeklaration och kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:avdragen-preliminar-a-skatt-arbetsgivare"
+fields = { "label" = "Avdragen preliminär A-skatt från arbetsgivare (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019. Spelling corrected: the provider label reads \"enligt från arbetsgivare\", which is ungrammatical."
+
+[[statement]]
+kind = "set"
+subject = "var:avdragen-preliminar-a-skatt-arbetsgivare-agi-ku"
+fields = { "label" = "Avdragen preliminär A-skatt från arbetsgivare (arbetsgivardeklaration och kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019. Spelling corrected: the provider label reads \"enligt från arbetsgivare\", which is ungrammatical."
+
+[[statement]]
+kind = "set"
+subject = "var:bilforman-utom-drivmedel"
+fields = { "label" = "Bilförmån utom drivmedel (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:bilforman-utom-drivmedel-agi-ku"
+fields = { "label" = "Bilförmån utom drivmedel (arbetsgivardeklaration och kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsbidrag"
+fields = { "label" = "Bostadsbidrag (Bostadshushåll)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Bostadshushåll\"."
+
+[[statement]]
+kind = "set"
+subject = "var:bostadsbidrag-ibostbvxhb"
+fields = { "label" = "Bostadsbidrag (Bostadshushåll, växelvis boende barn (VX))" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Bostadshushåll, växelvis boende barn (VX)\"."
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-vid-bilforman"
+fields = { "label" = "Drivmedel vid bilförmån (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:drivmedel-vid-bilforman-agi-ku"
+fields = { "label" = "Drivmedel vid bilförmån (arbetsgivardeklaration och kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ekonomiskt-bistand-socialbidrag"
+fields = { "label" = "Ekonomiskt bistånd (socialbidrag) (Bostadshushåll)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Bostadshushåll\"."
+
+[[statement]]
+kind = "set"
+subject = "var:ekonomiskt-bistand-socialbidrag-isocbvxhb"
+fields = { "label" = "Ekonomiskt bistånd (socialbidrag) (Bostadshushåll, växelvis boende barn (VX))" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Bostadshushåll, växelvis boende barn (VX)\"."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-grund-egenavgifter-tjanst"
+fields = { "label" = "Ersättning som grundar egenavgifter, tjänst 4 b (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattning-grund-egenavgifter-tjanst-agi-ku"
+fields = { "label" = "Ersättning som grundar egenavgifter, tjänst 4 b (arbetsgivardeklaration och kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:familjestod-totalt"
+fields = { "label" = "Familjestöd, totalt (Bostadshushåll)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Bostadshushåll\"."
+
+[[statement]]
+kind = "set"
+subject = "var:familjestod-totalt-ifamvxhb"
+fields = { "label" = "Familjestöd, totalt (Bostadshushåll, växelvis boende barn (VX))" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Bostadshushåll, växelvis boende barn (VX)\"."
+
+[[statement]]
+kind = "set"
+subject = "var:hushall-inkluderas-inkomststatistiken"
+fields = { "label" = "Hushållet inkluderas i inkomststatistiken (Bostadshushåll)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Bostadshushåll\"."
+
+[[statement]]
+kind = "set"
+subject = "var:hushallet-inkluderas-i-inkomststatistiken-binkstatvxhb"
+fields = { "label" = "Hushållet inkluderas i inkomststatistiken (Bostadshushåll, växelvis boende barn (VX))" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Bostadshushåll, växelvis boende barn (VX)\"."
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstyp"
+fields = { "label" = "Hushållstyp (Bostadshushåll)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Bostadshushåll\"."
+
+[[statement]]
+kind = "set"
+subject = "var:hushallstyp-bhtypvxhb"
+fields = { "label" = "Hushållstyp (Bostadshushåll, växelvis boende barn (VX))" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Bostadshushåll, växelvis boende barn (VX)\"."
+
+[[statement]]
+kind = "set"
+subject = "var:hyresersattning"
+fields = { "label" = "Hyresersättning (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:hyresersattning-agi-ku"
+fields = { "label" = "Hyresersättning (arbetsgivardeklaration och kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:konsumtionsenhetsvikt-2004"
+fields = { "label" = "Konsumtionsenhetsvikt, 2004 års norm (Bostadshushåll)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Bostadshushåll\"."
+
+[[statement]]
+kind = "set"
+subject = "var:konsumtionsenhetsvikt-2004-ars-norm-bke04vxhb"
+fields = { "label" = "Konsumtionsenhetsvikt, 2004 års norm (Bostadshushåll, växelvis boende barn (VX))" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Bostadshushåll, växelvis boende barn (VX)\"."
+
+[[statement]]
+kind = "set"
+subject = "var:kontant-bruttolon-mm"
+fields = { "label" = "Kontant bruttolön, semesterersättning, provision m.m. (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:kontant-bruttolon-mm-agi-ku"
+fields = { "label" = "Kontant bruttolön, semesterersättning, provision m.m. (arbetsgivardeklaration och kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ordinarie-organisationsnummer"
+fields = { "label" = "Ordinarie organisationsnummer (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ordinarie-organisationsnummer-agi-ku"
+fields = { "label" = "Ordinarie organisationsnummer (arbetsgivardeklaration och kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kostnadsersattningar"
+fields = { "label" = "Övriga kostnadsersättningar (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-kostnadsersattningar-agi-ku"
+fields = { "label" = "Övriga kostnadsersättningar (arbetsgivardeklaration och kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-skattepliktiga-ers-tjanst"
+fields = { "label" = "Övriga skattepliktiga ersättningar, tjänst (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:ovriga-skattepliktiga-ers-tjanst-agi-ku"
+fields = { "label" = "Övriga skattepliktiga ersättningar, tjänst (arbetsgivardeklaration och kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:skattefria-transfereringar-hushall"
+fields = { "label" = "Summa skattefria positiva transfereringar i hushållet (Bostadshushåll)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Bostadshushåll\"."
+
+[[statement]]
+kind = "set"
+subject = "var:skattepliktiga-ersattningar-ej-sociala"
+fields = { "label" = "Skattepliktiga ersättningar, ej underlag för sociala avgifter eller särskild löneskatt (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:skattepliktiga-ersattningar-ej-sociala-agi-ku"
+fields = { "label" = "Skattepliktiga ersättningar, ej underlag för sociala avgifter eller särskild löneskatt (arbetsgivardeklaration och kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:skattepliktiga-formaner-ej-lon"
+fields = { "label" = "Andra skattepliktiga förmåner än kontant lön (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:skattepliktiga-formaner-ej-lon-agi-ku"
+fields = { "label" = "Andra skattepliktiga förmåner än kontant lön (arbetsgivardeklaration och kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:skattepliktiga-transfereringar-hushall"
+fields = { "label" = "Summa skattepliktiga positiva transfereringar i hushållet (Bostadshushåll)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Bostadshushåll\"."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-skattefria-positiva-transfereringar-i-ctrapsfvxhb"
+fields = { "label" = "Summa skattefria positiva transfereringar i hushållet (Bostadshushåll, växelvis boende barn (VX))" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Bostadshushåll, växelvis boende barn (VX)\"."
+
+[[statement]]
+kind = "set"
+subject = "var:summa-skattepliktiga-positiva-transfereringar-i-ctrapspvxhb"
+fields = { "label" = "Summa skattepliktiga positiva transfereringar i hushållet (Bostadshushåll, växelvis boende barn (VX))" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Bostadshushåll, växelvis boende barn (VX)\"."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-skattereduktion-rot-forman"
+fields = { "label" = "Underlag för skattereduktion för ROT-arbete som förmån (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019. Spelling corrected: the provider label has a stray space in ROT-arbete."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-skattereduktion-rot-forman-agi-ku"
+fields = { "label" = "Underlag för skattereduktion för ROT-arbete som förmån (arbetsgivardeklaration och kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019. Spelling corrected: the provider label has a stray space in ROT-arbete."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-skattereduktion-rut-forman"
+fields = { "label" = "Underlag för skattereduktion för RUT-arbete som förmån (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019. Spelling corrected: the provider label has a stray space in RUT-arbete."
+
+[[statement]]
+kind = "set"
+subject = "var:underlag-skattereduktion-rut-forman-agi-ku"
+fields = { "label" = "Underlag för skattereduktion för RUT-arbete som förmån (arbetsgivardeklaration och kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019. Spelling corrected: the provider label has a stray space in RUT-arbete."
+
+[[statement]]
+kind = "set"
+subject = "var:vissa-ej-skattepliktiga-ersattningar"
+fields = { "label" = "Vissa ej skattepliktiga ersättningar (kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "set"
+subject = "var:vissa-ej-skattepliktiga-ersattningar-agi-ku"
+fields = { "label" = "Vissa ej skattepliktiga ersättningar (arbetsgivardeklaration och kontrolluppgift)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "link"
+subject = "var:skattepliktiga-formaner-ej-lon-agi-ku"
+relation = "continues"
+object = "scb/iot/skattepliktiga-formaner-ej-lon"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "link"
+subject = "var:avdrag-agi-ku"
+relation = "continues"
+object = "scb/iot/avdrag"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "link"
+subject = "var:avdragen-preliminar-a-skatt-arbetsgivare-agi-ku"
+relation = "continues"
+object = "scb/iot/avdragen-preliminar-a-skatt-arbetsgivare"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "link"
+subject = "var:bilforman-utom-drivmedel-agi-ku"
+relation = "continues"
+object = "scb/iot/bilforman-utom-drivmedel"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "link"
+subject = "var:drivmedel-vid-bilforman-agi-ku"
+relation = "continues"
+object = "scb/iot/drivmedel-vid-bilforman"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "link"
+subject = "var:hyresersattning-agi-ku"
+relation = "continues"
+object = "scb/iot/hyresersattning"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "link"
+subject = "var:ordinarie-organisationsnummer-agi-ku"
+relation = "continues"
+object = "scb/iot/ordinarie-organisationsnummer"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "link"
+subject = "var:skattepliktiga-ersattningar-ej-sociala-agi-ku"
+relation = "continues"
+object = "scb/iot/skattepliktiga-ersattningar-ej-sociala"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "link"
+subject = "var:underlag-skattereduktion-rot-forman-agi-ku"
+relation = "continues"
+object = "scb/iot/underlag-skattereduktion-rot-forman"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "link"
+subject = "var:underlag-skattereduktion-rut-forman-agi-ku"
+relation = "continues"
+object = "scb/iot/underlag-skattereduktion-rut-forman"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "link"
+subject = "var:vissa-ej-skattepliktiga-ersattningar-agi-ku"
+relation = "continues"
+object = "scb/iot/vissa-ej-skattepliktiga-ersattningar"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "link"
+subject = "var:ersattning-grund-egenavgifter-tjanst-agi-ku"
+relation = "continues"
+object = "scb/iot/ersattning-grund-egenavgifter-tjanst"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "link"
+subject = "var:kontant-bruttolon-mm-agi-ku"
+relation = "continues"
+object = "scb/iot/kontant-bruttolon-mm"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "link"
+subject = "var:ovriga-kostnadsersattningar-agi-ku"
+relation = "continues"
+object = "scb/iot/ovriga-kostnadsersattningar"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
+
+[[statement]]
+kind = "link"
+subject = "var:ovriga-skattepliktiga-ers-tjanst-agi-ku"
+relation = "continues"
+object = "scb/iot/ovriga-skattepliktiga-ers-tjanst"
+at = "2019-01-01.."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q5 (same ruling, M4 2026-09-27): a source-system break is two variables joined by `continues`, with the source in the label. SCB, 'Det statistiska registrets framställning och kvalitet: Inkomst- och taxeringsregistret 2019', K5.1 'Övergången från KU till AGI': monthly AGI plus the remaining annual KU from 2019."
