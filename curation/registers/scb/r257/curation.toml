@@ -13375,12 +13375,6 @@ evidence = "Row key: orgnr-12 and fenr and foretagsenhetsnummer-scbid identify a
 
 [[statement]]
 kind = "set"
-subject = "innovation-i-foretagssektorn: var:foretagsenhetsnummer-scbid"
-fields.row_key = true
-evidence = "Row key: orgnr-12 and fenr and foretagsenhetsnummer-scbid identify a row: one row per surveyed enterprise unit, keyed on the enterprise id of each era; the merger and outsourcing variables are survey answers, not ids (maintainer ruling 2026-11-14)."
-
-[[statement]]
-kind = "set"
 subject = "innovation-i-foretagssektorn: var:orgnr-12"
 fields.row_key = true
 evidence = "Row key: orgnr-12 and fenr and foretagsenhetsnummer-scbid identify a row: one row per surveyed enterprise unit, keyed on the enterprise id of each era; the merger and outsourcing variables are survey answers, not ids (maintainer ruling 2026-11-14)."
