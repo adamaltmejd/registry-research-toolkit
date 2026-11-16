@@ -1,0 +1,22 @@
+{
+  "note": "Ambiguity within one release (crates/DESIGN.md, \"Concurrent releases\"): `conc/t`'s releases \"2003 - 2004\" and \"2004 - 2005\" share 2004 and both deliver a column `Z`, holding age in the first (`zalder`) and occupation in the second (`zyrke`). Two releases reusing a column name for different variables do not contest it, so `zalder` is clear and orders from \"2003 - 2004\". Fails if a column claimed by different variables in different releases is marked ambiguous (the order blocks with `ambiguous_window`). Oracle: the fixture's JSONL.",
+  "fixture": "orders",
+  "project": {
+    "schema_version": "6.3.0",
+    "reg_meta_version": "0.64.0",
+    "name": "Order case",
+    "sources": [
+      {
+        "name": "s",
+        "table": "demo/conc/t",
+        "period": {"from": 2003, "to": 2004},
+        "releases": ["2003 - 2004"],
+        "bindings": [
+          {
+            "variable": "demo/conc/zalder"
+          }
+        ]
+      }
+    ]
+  }
+}

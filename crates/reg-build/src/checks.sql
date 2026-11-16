@@ -45,10 +45,12 @@ WHERE o.release_id IS NOT NULL AND s.release_id IS NULL AND EXISTS (
   WHERE a.table_id = s.table_id AND a.is_primary = 1 AND b.is_primary = 1
     AND a.start < b.end AND b.start < a.end);
 
--- (5) ambiguity is marked and symmetric
+-- (5) ambiguity is marked and symmetric, within one release: two releases' segments do
+-- not contest, a segment of no release contests every release
 SELECT a.id FROM segment a JOIN segment b
   ON b.table_id = a.table_id AND b.fold_id = a.fold_id AND b.variable_id <> a.variable_id
  AND a.start < b.end AND b.start < a.end
+ AND (a.release_id IS NULL OR b.release_id IS NULL OR a.release_id = b.release_id)
 WHERE a.state <> 'ambiguous';
 
 -- (6) segment inside table coverage

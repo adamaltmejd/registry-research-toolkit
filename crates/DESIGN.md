@@ -309,9 +309,11 @@ every order (`row_keys`), `show` lists them and `schema` lines flag them.
   each side, across gaps and other contested runs); the other listings are
   duplicates and are shadowed (`F2:neighbour-owner`, a notice). A duplicate gives its
   variable no name, delivered alias or table, so the column resolves to its owner alone.
-  A variable left with no
-  used occurrence is withheld. When the neighbours disagree, neither side has a sole
-  holder, the holder does not claim the whole run, or a losing listing reaches past it,
+  In a table with concurrent releases a run is contested within one release (with the
+  listings of no release), and the neighbours are still read from the whole column. A
+  listing of no release is shadowed only when every release its days meet shadows it.
+  A variable left with no used occurrence is withheld. When the neighbours disagree,
+  neither side has a sole holder, the holder does not claim the whole run, or a losing listing reaches past it,
   the builder does not guess: curation settles the column (`set variable = "none"` on
   the stray listing, or a merge where the claimants are one concept for different row
   kinds), with the more plausible owner where the source does not settle it, and
@@ -798,7 +800,9 @@ release assets are left unchanged.
   never publishes `unspecified`. No length is invented. Adjacent agreeing known forms
   join with the same widest-form rule. Labels compare ignoring case and spacing.
   Another variable still claiming its folded spelling in any overlap, after the
-  neighbouring-owner rule, makes the whole segment ambiguous.
+  neighbouring-owner rule, makes the whole segment ambiguous; in a table with concurrent
+  releases only a claim in the same release, or in no release, counts ("Concurrent
+  releases").
 - **The implicit table** takes its register's id, so `ident` holds that id once, as the
   register's, and the namespace check covers explicit tables only.
 - **The ledger** is `curation/registers/<provider>/<register>/ids.toml`: `[tables]` maps
@@ -3122,7 +3126,12 @@ period and qualifier), and the catalog keeps every release's own columns.
   segment of no release. (7) an occurrence and its segment name the same release, or
   releases of one period and qualifier. (9c) primary release names are unique per
   table, since orders will name primaries by them; an edition collision (F8) may
-  repeat a name, because only one of the pair is primary.
+  repeat a name, because only one of the pair is primary. (5) two variables' segments of
+  one fold that overlap are `ambiguous` only within one release: segments of two
+  releases do not contest a column, and a segment of no release contests every release.
+  On 0.86.0 that clears 50 segments in `scb/fou` (uoh-ekonomi 24, uoh-personal 26).
+  The neighbouring-owner rule (Identity) counts a contest the same way, per release, and
+  still reads its neighbours from the column's whole timeline.
 - **Identity.** `D-11` is tested per release (Identity, `set variable`): one variable
   may be `A` in one release and `B` in another over a shared day. Default identity uses the
   same test: a source key spelled differently in two releases of one table is one
