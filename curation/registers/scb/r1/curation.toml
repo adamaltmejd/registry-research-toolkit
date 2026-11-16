@@ -1931,3 +1931,22 @@ kind = "set"
 subject = "verksamhetsenheter: var:verksamhetsenhetens-identitetsnummer"
 fields.row_key = true
 evidence = "Row key: verksamhetsenhetens-identitetsnummer identify a row: a kind-of-activity unit table keyed on its own id; enterprise and legal unit ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:faxnummer"
+fields = { "label" = "Faxnummer (Arbetsställeenheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Arbetsställeenheter\"."
+
+[[statement]]
+kind = "set"
+subject = "var:faxnummer-juridisk-enhet"
+fields = { "label" = "Faxnummer (Juridiska enheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Juridiska enheter\"."
+
+[[statement]]
+kind = "set"
+subject = "var:juridisk-form"
+fields = { "label" = "Juridisk form (Juridiska enheter)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Juridiska enheter\"."
+

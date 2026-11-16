@@ -32143,3 +32143,39 @@ kind = "set"
 subject = "tandvardsregister: var:scbid"
 fields.row_key = true
 evidence = "Row key: scbid identify a row: one row per person; household ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-dagar-aktivitetsstod"
+fields = { "label" = "Totalt antal dagar med aktivitetsstöd (Arbetslöshetsregister)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Arbetslöshetsregister\"."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-dagar-arbetsloshet"
+fields = { "label" = "Antal dagar i arbetslöshet (Arbetslöshetsregister)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Arbetslöshetsregister\"."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-dagar-i-arbetsloshet-wdageak"
+fields = { "label" = "Antal dagar i arbetslöshet (Individregister)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Individregister\"."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-man-med-underhallsstod-givet-bmanu"
+fields = { "label" = "Antal mån med underhållsstöd givet (Individregister)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Individregister\"."
+
+[[statement]]
+kind = "set"
+subject = "var:antal-man-underhallsstod-givet"
+fields = { "label" = "Antal mån med underhållsstöd givet (Barnregister)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Barnregister\"."
+
+[[statement]]
+kind = "set"
+subject = "var:totalt-antal-dagar-med-aktivitetsstod-wdagutb"
+fields = { "label" = "Totalt antal dagar med aktivitetsstöd (Individregister)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Individregister\"."

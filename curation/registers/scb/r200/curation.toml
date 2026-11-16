@@ -12325,3 +12325,15 @@ kind = "set"
 subject = "gasforetag: var:foretagets-id-nummer"
 fields.row_key = true
 evidence = "Row key: foretagets-id-nummer identify a row: a firm table whose only identifier is the firm id (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:postort-for-arbetsstallet"
+fields = { "label" = "Postort för arbetsstället (Elproducerande industriföretag (ind))" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Elproducerande industriföretag (ind)\"."
+
+[[statement]]
+kind = "set"
+subject = "var:postort-for-arbetsstallet-foretagspostort"
+fields = { "label" = "Postort för arbetsstället (Gasföretag)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Gasföretag\"."
