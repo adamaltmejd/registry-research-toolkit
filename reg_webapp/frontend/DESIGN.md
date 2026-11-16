@@ -292,8 +292,7 @@ source and provenance, timeless, implicit, cadence, edition, primary, population
 releases, and a table's row keys (Operator Q2, #2252). The one exception is a table
 whose releases share years (SCB's CIS waves): its project card offers the releases
 that share the source's years, by the name `show` gives them, since an order must name
-them (`.local/overlapping-releases/PROPOSAL.md` §3.9, approved plan; the control below is
-a new rule, proposed by the implementer). A fact that is not stated has
+them (new rule, proposed by the implementer). A fact that is not stated has
 no row. A yes/no fact (identifier, sensitive) shows only when yes.
 
 ## Colors
@@ -1279,9 +1278,9 @@ grow new visual language meanwhile.
   `breakpoint-narrow` a column's row on a card stacks: its name and Remove, its spans,
   then Type. On a table whose releases share years within the card's years, the card
   has a multiple `Select`, "Deliveries for <the shared years>", placeholder "Choose
-  deliveries", listing those releases by name in start order, with "These years were
-  delivered more than once. Each delivery you choose is ordered for them." under it; the
-  choice writes the source's `releases` and none removes it. A named release that
+  deliveries", listing those releases by name in start order, with "Each delivery you
+  choose is ordered for these years." under it, and closing on each pick, since a pick can
+  clear the finding above it; the choice writes the source's `releases` and none removes it. A named release that
   serves none of the shared years stays listed, "(not for these years)", so its finding
   can be cleared on the card (new rule, proposed by the implementer).
 - **ColumnList:** a `label` header that names whose items they are ("Variables in

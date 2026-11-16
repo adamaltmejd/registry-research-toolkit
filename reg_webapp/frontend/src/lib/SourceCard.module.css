@@ -56,3 +56,7 @@
 .releases .note {
   margin: 0;
 }
+/* A list of release names, not a sentence: it need not span the card. */
+.releases .controls > * {
+  flex: 0 1 24rem;
+}

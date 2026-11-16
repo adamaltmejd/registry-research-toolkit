@@ -479,7 +479,6 @@ export function SourceCard({
               label={
                 sharedYears ? `Deliveries for ${sharedYears}` : "Deliveries"
               }
-              aria-label={`Deliveries of ${tableName}${sharedYears ? ` for ${sharedYears}` : ""}`}
               placeholder="Choose deliveries"
               value={named}
               options={releaseOptions.map((name) => ({
@@ -501,8 +500,7 @@ export function SourceCard({
           </div>
           {sharedYears && (
             <p className={styles.note}>
-              These years were delivered more than once. Each delivery you
-              choose is ordered for them.
+              Each delivery you choose is ordered for these years.
             </p>
           )}
         </div>

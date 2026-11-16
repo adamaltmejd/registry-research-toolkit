@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Select as AriaSelect,
   Button,
@@ -43,6 +44,7 @@ export function Select(props: Props) {
     placeholder,
     options,
   } = props;
+  const [open, setOpen] = useState(false);
   const parts = (
     <>
       <Label className={labelHidden ? "visually-hidden" : "micro-label"}>
@@ -80,7 +82,15 @@ export function Select(props: Props) {
         selectionMode="multiple"
         value={[...props.value]}
         placeholder={placeholder}
-        onChange={(keys) => onChange(keys.map(String))}
+        // Each pick closes, as a single choice does: a pick can change the
+        // page above the trigger (a finding it clears), and the popover
+        // would stay where the trigger was.
+        isOpen={open}
+        onOpenChange={setOpen}
+        onChange={(keys) => {
+          setOpen(false);
+          onChange(keys.map(String));
+        }}
       >
         {parts}
       </AriaSelect>
