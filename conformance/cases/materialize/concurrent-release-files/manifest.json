@@ -1,0 +1,155 @@
+{
+  "clips": [],
+  "extract_format": "dta",
+  "files": [
+    {
+      "columns": [
+        {
+          "name": "Score",
+          "refs": [
+            {
+              "binding": 0,
+              "period": {
+                "end": "2018-01-01",
+                "start": "2017-01-01"
+              },
+              "source": "w",
+              "spelling": "Score",
+              "table": "demo/waves/t",
+              "variable": "demo/waves/score"
+            },
+            {
+              "binding": 0,
+              "period": {
+                "end": "2019-01-01",
+                "start": "2018-01-01"
+              },
+              "release": "2017 - 2018",
+              "source": "w",
+              "spelling": "Score",
+              "table": "demo/waves/t",
+              "variable": "demo/waves/score"
+            }
+          ],
+          "role": "ordered",
+          "storage": {
+            "length": null,
+            "precision": 10,
+            "scale": 0,
+            "type": "int"
+          }
+        },
+        {
+          "name": "Id",
+          "refs": [
+            {
+              "binding": null,
+              "period": {
+                "end": "2019-01-01",
+                "start": "2017-01-01"
+              },
+              "source": "w",
+              "spelling": "Id",
+              "table": "demo/waves/t",
+              "variable": "demo/waves/id"
+            }
+          ],
+          "role": "row_key",
+          "storage": {
+            "length": null,
+            "precision": 10,
+            "scale": 0,
+            "type": "int"
+          }
+        }
+      ],
+      "delivery": "2017..2018",
+      "name": "wave_2018",
+      "schema": "dbo",
+      "table": "Wave 2018"
+    },
+    {
+      "columns": [
+        {
+          "name": "Score",
+          "refs": [
+            {
+              "binding": 0,
+              "period": {
+                "end": "2019-01-01",
+                "start": "2018-01-01"
+              },
+              "release": "2018 - 2019",
+              "source": "w",
+              "spelling": "Score",
+              "table": "demo/waves/t",
+              "variable": "demo/waves/score"
+            },
+            {
+              "binding": 0,
+              "period": {
+                "end": "2020-01-01",
+                "start": "2019-01-01"
+              },
+              "source": "w",
+              "spelling": "Score",
+              "table": "demo/waves/t",
+              "variable": "demo/waves/score"
+            }
+          ],
+          "role": "ordered",
+          "storage": {
+            "length": null,
+            "precision": 10,
+            "scale": 0,
+            "type": "int"
+          }
+        },
+        {
+          "name": "Id",
+          "refs": [
+            {
+              "binding": null,
+              "period": {
+                "end": "2020-01-01",
+                "start": "2018-01-01"
+              },
+              "source": "w",
+              "spelling": "Id",
+              "table": "demo/waves/t",
+              "variable": "demo/waves/id"
+            }
+          ],
+          "role": "row_key",
+          "storage": {
+            "length": null,
+            "precision": 10,
+            "scale": 0,
+            "type": "int"
+          }
+        }
+      ],
+      "delivery": "2018..2019",
+      "name": "wave_2019",
+      "schema": "dbo",
+      "table": "Wave 2019"
+    }
+  ],
+  "findings": [],
+  "provenance": {
+    "catalog": {
+      "release": "dev",
+      "schema": "17"
+    },
+    "holdings": {
+      "owner": "fixture"
+    },
+    "mode": "steward_holdings",
+    "project": {
+      "name": "Concurrent release files",
+      "schema_version": "6.3.0"
+    },
+    "steward": "fixture"
+  },
+  "version": 4
+}

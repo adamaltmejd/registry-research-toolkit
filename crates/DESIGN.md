@@ -2188,12 +2188,14 @@ Holdings schema 7 replaces the unique `holding_table.physical_name` with a uniqu
 
 Holdings schema 8 adds `holding_space` and `holding_table.space` (see "Linkage spaces").
 
+Holdings schema 10 adds `holding_table.release` (see "Concurrent releases").
+
 The following tables describe the physical layer's grains; all intervals use the
 catalog's half-open day convention:
 
   | Table             | Columns and meaning                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
   | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-  | `holding_table`   | `id`, exact `physical_name`, `schema_name`, `table_type`, compiled `file_name`, `disposition` (`dated`, `timeless`, `unknown`, `lookup`, `excluded`), `delivery`, `partition`, optional `projection_of` and `projection_token`, optional `period_column_id` and `period_encoding`, pinned `key_requirements` and reason. One row per physical table. `delivery` is the canonical authored dated period-set spelling, NULL for non-dated dispositions; `_default`/`unknown` are not stored values. It is not a provider release id or final/preliminary selector. |
+  | `holding_table`   | `id`, exact `physical_name`, `schema_name`, `table_type`, compiled `file_name`, `disposition` (`dated`, `timeless`, `unknown`, `lookup`, `excluded`), `delivery`, optional `release` (the catalog name of the primary release the file is), `partition`, optional `projection_of` and `projection_token`, optional `period_column_id` and `period_encoding`, pinned `key_requirements` and reason. One row per physical table. `delivery` is the canonical authored dated period-set spelling, NULL for non-dated dispositions; `_default`/`unknown` are not stored values. It is not a provider release id or final/preliminary selector. |
   | `holding_route`   | `holding_id`, public `table_pid`: the table's default logical routes.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
   | `holding_period`  | `holding_id`, `start`, `end`: disjoint normalized delivered intervals; no intervals for unknown/excluded disposition. Timeless is explicit, never inferred from missing dates.                                                                                                                                                                                                                                                                                                                                                                                   |
   | `holding_column`  | `id`, `holding_id`, exact `name`, source ordinal, storage type, length, precision, scale, optional slot family/kind/index as topology evidence, `disposition` (`candidate`, `hold`, `unmap`) with its reason and follow-up issue. Includes every census column, even when it maps to nothing.                                                                                                                                                                                                                                                                    |
@@ -3144,12 +3146,35 @@ period and qualifier), and the catalog keeps every release's own columns.
   concurrent table is in one on 0.86.0). `show` lists a table's shared days and the
   releases sharing each (`shared_release_days`); `schema` gives each line its
   `release`.
-- **Holdings.** Compile places one slice of a physical column once per variable and
-  table, so two segments of one variable on one day place it once. The holdings
-  database's own releases do not yet mark shared days (`releases.rs`, `simplify:`), so a
-  steward order entry that names a release gets no placement and reports
-  `coverage_gap` (`materialize.rs`, `simplify:`): a steward table routed to one release
-  is the holdings schema's to model.
+- **Holdings.** A physical table that is one release's file states it: `release` in
+  the topology, a primary release of a routed table matched as an order matches
+  `releases` (exactly, else case-folded), stored by its catalog name in
+  `holding_table.release` (holdings schema 10). Only a dated table states one, and its
+  `delivery` lies inside that release's period; otherwise `holdings_release_invalid`.
+  A stated release applies in every routed table: another concurrent table's segments
+  of other releases are not placed.
+  A table places a segment on the days it serves an order under the one shadowing
+  rule (`reg_core::days::shadow`), with the table's release as the lane: a release's
+  file places its release's segments and releaseless ones where those do not reach,
+  never another release's, so a column matched by name on a shared day goes to the
+  right release. A table that states no release places as on an unshared day, its
+  shared days included, so its keys and other routes stay placed; a steward-derived
+  table (no `table_pids`) cannot state one. Two tables of different releases may place
+  one variable on a shared day of its table: each is its release's delivery, not a
+  duplicate (`inventory_cell_conflict` still refuses two tables of one release, or one
+  of a release and one of none). An order entry of a release draws only on the
+  files that state that release, for its placements, its gap evidence (contested
+  columns, authored windows) and its steward row keys; an entry with no release draws
+  on every file. Its gaps (`coverage_gap`, `column_window_unavailable`) name the
+  release and are judged by what that release's files and the unshared days deliver,
+  so another release's file on the same day hides none, and they clip the binding. A
+  column's `refs` name that release, so the order keeps each release's entries and row
+  keys to its own files; the runner does not read `refs`, so the manifest version is
+  unchanged. Compile
+  places one slice of a physical column once per variable and table, so two segments
+  of one variable on one day place it once. A table's releases and shared days are
+  read on its origin, as the order check reads them: the base catalog's, or the
+  holdings database's for a table only it defines.
 
 ## Series breaks
 

@@ -20,7 +20,7 @@ use reg_core::manifest::{
     safe_file_name, stata_name,
 };
 use reg_core::project::{ColumnType, ExtractFormat, ProjectData};
-use rusqlite::Connection;
+use rusqlite::{Connection, named_params};
 use serde_json::Value;
 
 use super::{Issue, LogicalOrder, OrderEntry, check, project, reported_gaps, words};
@@ -153,8 +153,9 @@ struct Draft {
 /// in declaration order.
 type ColumnKey = (u8, usize, usize, usize, i64, i64);
 
-/// Per (source, binding): its variable, requested days and held days.
-type Bindings = BTreeMap<(usize, usize), (String, Vec<Days>, Vec<Days>)>;
+/// Per (source, binding): its variable, requested days and held days by release (the
+/// entry's `release`; `None` off shared days).
+type Bindings = BTreeMap<(usize, usize), (String, Vec<Days>, BTreeMap<Option<String>, Vec<Days>>)>;
 
 #[allow(clippy::too_many_lines)]
 fn build(
@@ -175,18 +176,20 @@ fn build(
     let space = space.as_deref();
     let mut drafts: BTreeMap<i64, Draft> = BTreeMap::new();
     let mut bindings = Bindings::new();
+    // The holdings gap findings of an entry of one release, with that release: a shared
+    // day another release delivers does not hide them ([`clip`]).
+    let mut lane_gaps: Vec<(Issue, String)> = Vec::new();
     for (e, entry) in order.entries.iter().enumerate() {
         let s = index[entry.source.as_str()];
         let days = entry.period.days(open);
-        // simplify: a holding states no release yet, so an entry of one release (a shared
-        // day of a concurrent table) places nowhere and `gaps` reports it unheld; placing
-        // it by (table, variable, days) could deliver another release's file. The holdings
-        // PR adds `holding_table.release` and places such an entry in its release's files.
-        let placements = if entry.release.is_some() {
-            Vec::new()
-        } else {
-            placements(held, &entry.table, &entry.variable, days, space)?
-        };
+        let placements = placements(
+            held,
+            &entry.table,
+            &entry.variable,
+            days,
+            entry.release.as_deref(),
+            space,
+        )?;
         // Keyed by the project binding's own variable: a followed successor's entry
         // names the successor, but its logical clip is recorded under the binding.
         let binding = bindings.entry((s, entry.binding)).or_insert_with(|| {
@@ -197,13 +200,14 @@ fn build(
                     .variable
                     .clone(),
                 vec![],
-                vec![],
+                BTreeMap::new(),
             )
         });
         binding.1.push(days);
+        let lane_held = binding.2.entry(entry.release.clone()).or_default();
         for p in &placements {
             let piece = (days.0.max(p.days.0), days.1.min(p.days.1));
-            binding.2.push(piece);
+            lane_held.push(piece);
             let draft = drafts.entry(p.holding).or_insert_with(|| Draft {
                 first: (s, entry.binding, e),
                 path: format!("/sources/{s}/bindings/{}", entry.binding),
@@ -244,6 +248,7 @@ fn build(
                 });
             }
         }
+        let before = findings.len();
         gaps(
             held,
             server,
@@ -254,6 +259,13 @@ fn build(
             &placements,
             &mut findings,
         )?;
+        if let Some(release) = &entry.release {
+            lane_gaps.extend(
+                findings[before..]
+                    .iter()
+                    .map(|f| (f.clone(), release.clone())),
+            );
+        }
     }
     // Per source, every day it requested of any table: a file's rows outside these are
     // extra, whichever file serves the rest.
@@ -278,6 +290,7 @@ fn build(
         order,
         &project.sources,
         &mut bindings,
+        &lane_gaps,
         &mut findings,
     );
     let format = project.extract_format.unwrap_or(ExtractFormat::Dta);
@@ -437,7 +450,7 @@ fn held_as_stated(
     let Some(stated) = stated else {
         return Ok(false);
     };
-    let placements = placements(held, table, variable, period.days(server.open), space)?;
+    let placements = placements(held, table, variable, period.days(server.open), None, space)?;
     if placements.is_empty() {
         return Ok(false);
     }
@@ -457,6 +470,7 @@ fn reference(server: &Server, entry: &OrderEntry, (lo, hi): Days) -> Ref {
         binding: Some(entry.binding),
         table: entry.table.clone(),
         variable: entry.variable.clone(),
+        release: entry.release.clone(),
         period: server.period(lo, hi),
         spelling: entry.spelling.clone(),
     }
@@ -539,7 +553,7 @@ fn not_in_database(
         .map(|(i, s)| (s.name(), i))
         .collect();
     for (&(s, b), (variable, _, holds)) in bindings {
-        if !holds.is_empty() {
+        if holds.values().any(|days| !days.is_empty()) {
             continue;
         }
         let mut elsewhere: BTreeSet<(i64, String)> = BTreeSet::new();
@@ -551,12 +565,21 @@ fn not_in_database(
             let days = entry.period.days(server.open);
             elsewhere.extend(rows(
                 held,
-                "SELECT s.ord, s.name FROM holding_space s WHERE s.id <> ?5 AND EXISTS(
+                &format!(
+                    "SELECT s.ord, s.name FROM holding_space s WHERE s.id <> :space AND EXISTS(
                      SELECT 1 FROM holding_mapping m JOIN holding_column c ON c.id = m.column_id
                        JOIN holding_table h ON h.id = c.holding_id
-                     WHERE h.space = s.id AND m.table_pid = ?1 AND m.variable_pid = ?2
-                       AND m.start < ?4 AND m.end > ?3)",
-                rusqlite::params![entry.table, entry.variable, days.0, days.1, space],
+                     WHERE h.space = s.id AND m.table_pid = :table AND m.variable_pid = :variable
+                       AND m.start < :hi AND m.end > :lo AND {LANE})"
+                ),
+                named_params! {
+                    ":table": entry.table,
+                    ":variable": entry.variable,
+                    ":lo": days.0,
+                    ":hi": days.1,
+                    ":space": space,
+                    ":release": entry.release,
+                },
                 |r| Ok((r.get(0)?, r.get(1)?)),
             )?);
         }
@@ -583,17 +606,20 @@ fn not_in_database(
             .iter()
             .filter(|e| index[e.source.as_str()] == s && e.binding == b)
             .map(|e| {
-                held.query_row(
-                    "SELECT EXISTS(SELECT 1 FROM holding_mapping m
-                       JOIN holding_column c ON c.id = m.column_id
+                lane_rows(
+                    held,
+                    e,
+                    Some(space),
+                    "SELECT 1 FROM holding_mapping m JOIN holding_column c ON c.id = m.column_id
                        JOIN holding_table h ON h.id = c.holding_id
-                     WHERE h.space = ?3 AND m.table_pid = ?1 AND m.variable_pid = ?2)",
-                    rusqlite::params![e.table, e.variable, space],
-                    |r| r.get::<_, bool>(0),
+                     WHERE h.space = :space AND m.table_pid = :table
+                       AND m.variable_pid = :variable AND {LANE} LIMIT 1",
+                    |_| Ok(()),
                 )
             })
             .collect::<Result<Vec<_>, _>>()?
-            .contains(&true);
+            .iter()
+            .any(|found| !found.is_empty());
         let when = if held_other_years {
             " for the requested period"
         } else {
@@ -620,25 +646,65 @@ fn not_in_database(
     Ok(())
 }
 
+/// The files an entry draws on, for every query over holding table `h` with
+/// `:release` bound to the entry's: an entry of one release (a shared day of a
+/// concurrent table) draws only on the files that state that release, for its
+/// placements and for the evidence of its gaps alike.
+const LANE: &str = "(:release IS NULL OR h.release = :release)";
+
+/// The rows of `sql` for `entry` in database `space` (every database when `None`), with
+/// `:table`, `:variable`, `:space` and `:release` bound and `{LANE}` spelled out.
+fn lane_rows<T>(
+    held: &Connection,
+    entry: &OrderEntry,
+    space: Option<&str>,
+    sql: &str,
+    map: impl FnMut(&rusqlite::Row<'_>) -> rusqlite::Result<T>,
+) -> rusqlite::Result<Vec<T>> {
+    rows(
+        held,
+        &sql.replace("{LANE}", LANE),
+        named_params! {
+            ":table": entry.table,
+            ":variable": entry.variable,
+            ":space": space,
+            ":release": entry.release,
+        },
+        map,
+    )
+}
+
 /// The accepted placements of (table, variable) over `days` in database `space`
 /// (every database when `None`); a projection keeps only the days its parent does not
-/// also place, and only those inside the request.
+/// also place, and only those inside the request. An entry of one release (a shared day
+/// of a concurrent table) is placed only in the files that state that release.
 fn placements(
     held: &Connection,
     table: &str,
     variable: &str,
     days: Days,
+    release: Option<&str>,
     space: Option<&str>,
 ) -> Result<Vec<Placement>, Error> {
     let found: Vec<Placement> = rows(
         held,
-        "SELECT h.id, h.projection_of, c.id, m.start, m.end, m.caveat
+        &format!(
+            "SELECT h.id, h.projection_of, c.id, m.start, m.end, m.caveat
              FROM holding_mapping m JOIN holding_column c ON c.id = m.column_id
                JOIN holding_table h ON h.id = c.holding_id
-             WHERE m.table_pid = ?1 AND m.variable_pid = ?2 AND m.start < ?4 AND m.end > ?3
-               AND (?5 IS NULL OR h.space = ?5)
-             ORDER BY h.id, c.ordinal, m.start",
-        rusqlite::params![table, variable, days.0, days.1, space],
+             WHERE m.table_pid = :table AND m.variable_pid = :variable
+               AND m.start < :hi AND m.end > :lo
+               AND (:space IS NULL OR h.space = :space) AND {LANE}
+             ORDER BY h.id, c.ordinal, m.start"
+        ),
+        named_params! {
+            ":table": table,
+            ":variable": variable,
+            ":lo": days.0,
+            ":hi": days.1,
+            ":space": space,
+            ":release": release,
+        },
         |r| {
             Ok(Placement {
                 holding: r.get(0)?,
@@ -772,29 +838,31 @@ fn gaps(
     if missing.is_empty() {
         return Ok(());
     }
-    let contested: Vec<Days> = merge(rows(
+    let days_of = |r: &rusqlite::Row<'_>| -> rusqlite::Result<Days> { Ok((r.get(0)?, r.get(1)?)) };
+    let contested: Vec<Days> = merge(lane_rows(
         held,
+        entry,
+        space,
         "SELECT n.start, n.end FROM holding_notice n
              JOIN holding_notice_candidate c ON c.notice_id = n.id
              JOIN holding_table h ON h.id = n.holding_id
              WHERE n.code = 'ambiguous_delivered_owners'
-               AND c.table_pid = ?1 AND c.variable_pid = ?2 AND (?3 IS NULL OR h.space = ?3)",
-        rusqlite::params![entry.table, entry.variable, space],
-        |r| Ok((r.get(0)?, r.get(1)?)),
+               AND c.table_pid = :table AND c.variable_pid = :variable
+               AND (:space IS NULL OR h.space = :space) AND {LANE}",
+        days_of,
     )?);
-    let windowed: Vec<Days> = merge(
-        rows(
-            held,
-            "SELECT DISTINCT p.start, p.end FROM holding_period p
+    let windowed: Vec<Days> = merge(lane_rows(
+        held,
+        entry,
+        space,
+        "SELECT DISTINCT p.start, p.end FROM holding_period p
                JOIN holding_table h ON h.id = p.holding_id
-             WHERE (?3 IS NULL OR h.space = ?3)
+             WHERE (:space IS NULL OR h.space = :space) AND {LANE}
                AND EXISTS(SELECT 1 FROM holding_mapping m JOIN holding_column c ON c.id = m.column_id
-               WHERE c.holding_id = p.holding_id AND m.table_pid = ?1 AND m.variable_pid = ?2
-                 AND m.window IS NOT NULL)",
-            rusqlite::params![entry.table, entry.variable, space],
-            |r| Ok((r.get(0)?, r.get(1)?)),
-        )?,
-    );
+               WHERE c.holding_id = p.holding_id AND m.table_pid = :table
+                 AND m.variable_pid = :variable AND m.window IS NOT NULL)",
+        days_of,
+    )?);
     let mut issue = |level, code: &str, piece: Days, message: String| {
         findings.push(Issue {
             source: Some(entry.source.clone()),
@@ -833,6 +901,7 @@ fn gaps(
                 "column_window_unavailable",
                 &entry.variable,
                 &entry.table,
+                entry.release.as_deref(),
                 server,
                 piece,
             ),
@@ -843,7 +912,14 @@ fn gaps(
             IssueLevel::Warning,
             "coverage_gap",
             piece,
-            gap_message("coverage_gap", &entry.variable, &entry.table, server, piece),
+            gap_message(
+                "coverage_gap",
+                &entry.variable,
+                &entry.table,
+                entry.release.as_deref(),
+                server,
+                piece,
+            ),
         );
     }
     Ok(())
@@ -851,8 +927,19 @@ fn gaps(
 
 /// A `coverage_gap` or `column_window_unavailable` message over `days` in words; [`clip`]
 /// rewrites it when it reports only part of the gap.
-fn gap_message(code: &str, variable: &str, table: &str, server: &Server, (lo, hi): Days) -> String {
+fn gap_message(
+    code: &str,
+    variable: &str,
+    table: &str,
+    release: Option<&str>,
+    server: &Server,
+    (lo, hi): Days,
+) -> String {
     let days = words::plain_none(&[server.period(lo, hi)]);
+    let table = release.map_or_else(
+        || table.to_owned(),
+        |name| format!("the release \"{name}\" of {table}"),
+    );
     if code == "column_window_unavailable" {
         format!("The column for {variable} in {table} does not cover {days}.")
     } else {
@@ -862,19 +949,34 @@ fn gap_message(code: &str, variable: &str, table: &str, server: &Server, (lo, hi
 
 /// Per binding: a binding no placement holds at all blocks (its gaps become errors,
 /// `coverage_gap` as `mapping_missing`); each binding delivered over less than its
-/// request (logical availability and physical possession together) is a clip.
+/// request (logical availability and physical possession together) is a clip. A gap of
+/// one release's entry (`lane_gaps`) is judged by what that release delivers with the
+/// days no release shares, never by another release's file on the same day.
 fn clip(
     server: &Server,
     order: &LogicalOrder,
     sources: &[reg_core::project::Source],
     bindings: &mut Bindings,
+    lane_gaps: &[(Issue, String)],
     findings: &mut Vec<Issue>,
 ) -> Vec<Clip> {
     let open = server.open;
     let mut clips = Vec::new();
     for (&(s, b), (variable, requested, holds)) in bindings.iter_mut() {
         let path = format!("/sources/{s}/bindings/{b}");
-        let held = merge(std::mem::take(holds));
+        let by_release = std::mem::take(holds);
+        let held = merge(by_release.values().flatten().copied().collect());
+        // A release's delivery: its own entries' days and those of no release.
+        let lane = |name: &String| -> Vec<Days> {
+            merge(
+                [None, Some(name.clone())]
+                    .iter()
+                    .filter_map(|key| by_release.get(key))
+                    .flatten()
+                    .copied()
+                    .collect(),
+            )
+        };
         let source = sources[s].name();
         // The source's own request, not the logical entries: those are already cut to
         // catalog coverage, and the logical check may have left that cut unreported.
@@ -904,6 +1006,7 @@ fn clip(
         let gap =
             |f: &Issue| ["coverage_gap", "column_window_unavailable"].contains(&f.code.as_str());
         let mut kept = Vec::with_capacity(findings.len());
+        let mut release_clipped = false;
         for f in std::mem::take(findings) {
             let Some(piece) = (f.path == path && gap(&f))
                 .then(|| f.period.as_ref().map(|p| p.days(open)))
@@ -912,13 +1015,18 @@ fn clip(
                 kept.push(f);
                 continue;
             };
-            for sub in reported_gaps(&[piece], &asked, &held) {
+            let release = lane_gaps.iter().find(|(g, _)| *g == f).map(|(_, r)| r);
+            let delivered = release.map_or_else(|| held.clone(), lane);
+            let reported = reported_gaps(&[piece], &asked, &delivered);
+            release_clipped |= release.is_some() && !reported.is_empty();
+            for sub in reported {
                 let mut part = f.clone();
                 if sub != piece {
                     part.message = gap_message(
                         &part.code,
                         part.variable.as_deref().unwrap_or_default(),
                         part.table.as_deref().unwrap_or_default(),
+                        release.map(String::as_str),
                         server,
                         sub,
                     );
@@ -949,7 +1057,7 @@ fn clip(
                 });
             }
         }
-        if !reported_gaps(&minus(&asked, &held), &asked, &held).is_empty() {
+        if release_clipped || !reported_gaps(&minus(&asked, &held), &asked, &held).is_empty() {
             let periods = |days: &[Days]| days.iter().map(|&(a, z)| server.period(a, z)).collect();
             clips.push(Clip {
                 source: source.to_owned(),
@@ -1138,6 +1246,7 @@ fn keys(
                             binding: None,
                             table: table.clone(),
                             variable: (*variable).to_owned(),
+                            release: None,
                             period: server.period(piece.0, piece.1),
                             spelling: name.clone(),
                         });

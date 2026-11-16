@@ -25,6 +25,7 @@ struct StoredColumn {
 #[allow(clippy::too_many_lines)]
 fn sources(
     db: &Connection,
+    primaries: &compile::Primaries,
     root: &Path,
 ) -> Result<(
     input::Topology,
@@ -128,18 +129,19 @@ fn sources(
             return Err(format!("{location}: holdings_space_source_mismatch").into());
         }
         #[allow(clippy::type_complexity)]
-        let (placement, disposition, delivery, recorded, binding, parent_in_schema): (
+        let (placement, disposition, delivery, recorded, binding, parent_in_schema, release): (
             (Option<String>, Option<String>, Option<String>),
             String,
             Option<String>,
             String,
             (Option<String>, Option<String>),
             bool,
+            Option<String>,
         ) = db.query_row(
             // A schema-keyed projection's parent is in the projection's own schema.
             "SELECT p.physical_name,h.projection_token,h.partition,h.disposition,h.delivery,
                 h.key_requirements,c.name,h.period_encoding,
-                p.id IS NULL OR NOT ?2 OR p.schema_name IS h.schema_name
+                p.id IS NULL OR NOT ?2 OR p.schema_name IS h.schema_name,h.release
              FROM holding_table h LEFT JOIN holding_table p ON p.id=h.projection_of
              LEFT JOIN holding_column c ON c.id=h.period_column_id WHERE h.id=?1",
             rusqlite::params![id, keyed],
@@ -151,6 +153,7 @@ fn sources(
                     r.get(5)?,
                     (r.get(6)?, r.get(7)?),
                     r.get(8)?,
+                    r.get(9)?,
                 ))
             },
         )?;
@@ -171,6 +174,14 @@ fn sources(
             return Err(format!(
                 "{location}: holdings_period_source_mismatch: authored table disposition or delivery differs"
             ).into());
+        }
+        if compile::stated_release(primaries, spec).map_err(|e| format!("{location}: {e}"))?
+            != release
+        {
+            return Err(format!(
+                "{location}: holdings_release_source_mismatch: stored release differs from the authored one"
+            )
+            .into());
         }
         let recorded: Vec<input::RowKey> = serde_json::from_str(&recorded)
             .map_err(|_| format!("{location}: holdings_row_key_invalid"))?;
@@ -345,7 +356,9 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<()> {
     }
     // Before the source re-read: a leak refuses even when the steward checkout is gone.
     super::scope::check(&db)?;
-    let (topology, census, declarations) = sources(&db, root)?;
+    let primaries = compile::primaries(&base, &db)?;
+    let shared = compile::shared_days(&primaries);
+    let (topology, census, declarations) = sources(&db, &primaries, root)?;
     for key in ["steward", "scope"] {
         if !serde_json::from_str::<serde_json::Value>(&meta(&db, key)?)
             .map_err(|_| "holdings_presentation_invalid")?
@@ -494,12 +507,14 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<()> {
     let tables = compile::segment_index(&base, &db)?;
     let variables = compile::by_variable(&tables);
     super::keys::verify(&db, &base, &variables, &topology)?;
-    super::verify_mappings::verify(&db, &tables, &variables, &topology, &census)?;
+    super::verify_mappings::verify(&db, &tables, &variables, &topology, &census, &primaries)?;
     // A documented position family only authorizes distinct positions in one file.
     // Other duplicates within one space still need a partition, projection, or carried
-    // key; the same placement in two spaces is two databases' copies.
+    // key; the same placement in two spaces is two databases' copies, and on a shared
+    // day of its table, in two releases' files, each release's own delivery.
     let mut duplicates = db.prepare(
-        "SELECT ha.id,hb.id,a.table_pid,a.variable_pid,max(a.start,b.start),min(a.end,b.end) FROM holding_mapping a JOIN holding_mapping b ON a.id<b.id AND a.table_pid=b.table_pid AND a.variable_pid=b.variable_pid
+        "SELECT ha.id,hb.id,a.table_pid,a.variable_pid,max(a.start,b.start),min(a.end,b.end),
+        ha.release IS NOT NULL AND hb.release IS NOT NULL AND ha.release!=hb.release FROM holding_mapping a JOIN holding_mapping b ON a.id<b.id AND a.table_pid=b.table_pid AND a.variable_pid=b.variable_pid
       AND a.start<b.end AND b.start<a.end JOIN holding_column ca ON ca.id=a.column_id JOIN holding_column cb ON cb.id=b.column_id
       JOIN holding_table ha ON ha.id=ca.holding_id JOIN holding_table hb ON hb.id=cb.holding_id AND hb.space=ha.space
       WHERE a.carried=0 AND b.carried=0 AND NOT(ha.id!=hb.id AND ha.partition IS NOT NULL AND hb.partition IS NOT NULL AND ha.partition!=hb.partition)
@@ -517,9 +532,17 @@ pub(super) fn pair(path: &Path, catalog: &Path, root: &Path) -> Result<()> {
             r.get::<_, String>(3)?,
             r.get::<_, i64>(4)?,
             r.get::<_, i64>(5)?,
+            r.get::<_, bool>(6)?,
         ))
     })? {
-        let (left, right, table, variable, start, end) = row?;
+        let (left, right, table, variable, start, end, releases) = row?;
+        if releases
+            && shared
+                .get(&table)
+                .is_some_and(|shared| days::covered(&[(start, end)], shared))
+        {
+            continue;
+        }
         conflicts.insert(format!("holdings:tables={left},{right}:route={table}:variable={variable}:period={start}..{end}: inventory_cell_conflict: undeclared duplicate physical placement"));
     }
     if !conflicts.is_empty() {

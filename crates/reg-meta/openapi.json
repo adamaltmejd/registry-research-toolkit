@@ -1488,6 +1488,13 @@
             "$ref": "#/components/schemas/Period",
             "description": "The days of this reference the file holds."
           },
+          "release": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The release of the entry it serves: the one a shared day of a concurrent table\nis ordered in (none elsewhere, and for a row key nobody requested). The runner\ndoes not read it; the order reads it to cut each release's entries."
+          },
           "source": {
             "type": "string"
           },
