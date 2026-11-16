@@ -1769,10 +1769,10 @@ evidence = "Row key: personnr and personnr-2 identify a row: person table; both 
 kind = "set"
 subject = "hogutbildade-utrikes-fodda: F24e where key = 'v25070'"
 fields = { "variable" = "svart-fa-arbete-utb-svar-bedoma" }
-evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v25070) in one table, renamed between survey rounds and never delivered together, so they are one variable: F24e 2015-01-01..2016-01-01; f24f 2018-01-01..2019-01-01."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v25070) in one table, renamed between survey rounds and never delivered together, so they are one variable: F24e 2015-01-01..2015-12-31; f24f 2018-01-01..2018-12-31."
 
 [[statement]]
 kind = "set"
 subject = "hogutbildade-utrikes-fodda: F24f where key = 'v25064'"
 fields = { "variable" = "f24g" }
-evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v25064) in one table, renamed between survey rounds and never delivered together, so they are one variable: F24f 2015-01-01..2016-01-01; F24g 2018-01-01..2019-01-01."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v25064) in one table, renamed between survey rounds and never delivered together, so they are one variable: F24f 2015-01-01..2015-12-31; F24g 2018-01-01..2018-12-31."

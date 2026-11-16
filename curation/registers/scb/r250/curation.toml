@@ -1448,4 +1448,4 @@ evidence = "Row key: termin (Termin) is the period of a row; one delivered file 
 kind = "set"
 subject = "elever: Utim"
 fields = { "variable" = "ant-utim-tot" }
-evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v14688) in one table, renamed between survey rounds and never delivered together, so they are one variable: Utim 1999-10-15..2014-10-16; Ant_Utim_Tot 2015-10-15..2023-10-16."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v14688) in one table, renamed between survey rounds and never delivered together, so they are one variable: Utim 1999-10-15..2014-10-15; Ant_Utim_Tot 2015-10-15..2023-10-15."

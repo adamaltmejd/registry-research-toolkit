@@ -9259,25 +9259,25 @@ evidence = "Row key: personnr is the table's only identifier and names its unit 
 kind = "set"
 subject = "tidsanvandningsundersokningen: UPBORN"
 fields = { "variable" = "fodelsear" }
-evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v1378) in one table, renamed between survey rounds and never delivered together, so they are one variable: UPBORN 1990-07-01..1991-07-01; born 2000-07-01..2001-07-01."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v1378) in one table, renamed between survey rounds and never delivered together, so they are one variable: UPBORN 1990-07-01..1991-06-30; born 2000-07-01..2001-06-30."
 
 [[statement]]
 kind = "set"
 subject = "tidsanvandningsundersokningen: UPSEX"
 fields = { "variable" = "sex" }
-evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v44) in one table, renamed between survey rounds and never delivered together, so they are one variable: UPSEX 1990-07-01..1991-07-01; sex 2000-07-01..2011-07-01."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v44) in one table, renamed between survey rounds and never delivered together, so they are one variable: UPSEX 1990-07-01..1991-06-30; sex 2000-07-01..2011-06-30."
 
 [[statement]]
 kind = "set"
 subject = "tidsanvandningsundersokningen: MSSEX"
 fields = { "variable" = "konms" }
-evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v44) in one table, renamed between survey rounds and never delivered together, so they are one variable: MSSEX 1990-07-01..1991-07-01; konms 2000-07-01..2001-07-01."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v44) in one table, renamed between survey rounds and never delivered together, so they are one variable: MSSEX 1990-07-01..1991-06-30; konms 2000-07-01..2001-06-30."
 
 [[statement]]
 kind = "set"
 subject = "tidsanvandningsundersokningen: ALDGRUP1"
 fields = { "variable" = "aldgrp" }
-evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v749) in one table, renamed between survey rounds and never delivered together, so they are one variable: ALDGRUP1 1990-07-01..1991-07-01; ALDGRP1 2010-07-01..2011-07-01; aldgrp1 2000-07-01..2001-07-01."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v749) in one table, renamed between survey rounds and never delivered together, so they are one variable: ALDGRUP1 1990-07-01..1991-06-30; ALDGRP1 2010-07-01..2011-06-30; aldgrp1 2000-07-01..2001-06-30."
 
 [[statement]]
 kind = "set"

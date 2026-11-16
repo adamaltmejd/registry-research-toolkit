@@ -1944,16 +1944,16 @@ evidence = "Row key: personnr identify a row: the table is about one pupil; pare
 kind = "set"
 subject = "elever-per-15-oktober: Beh_IMPRO_Ak9"
 fields = { "variable" = "beh-imv-ak9" }
-evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v30392) in one table, renamed between survey rounds and never delivered together, so they are one variable: Beh_IMPRO_Ak9 2016-10-15..2020-10-16; BEH_IMV_AK9 2021-10-15..2024-10-16."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v30392) in one table, renamed between survey rounds and never delivered together, so they are one variable: Beh_IMPRO_Ak9 2016-10-15..2020-10-15; BEH_IMV_AK9 2021-10-15..2024-10-15."
 
 [[statement]]
 kind = "set"
 subject = "elever-per-15-oktober: SUN2000Niva3_Far"
 fields = { "variable" = "sun2000niva-far" }
-evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v8074) in one table, renamed between survey rounds and never delivered together, so they are one variable: SUN2000Niva3_Far 1999-10-15..2014-10-16; SUN2000Niva_Far 2015-10-15..2019-10-16."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v8074) in one table, renamed between survey rounds and never delivered together, so they are one variable: SUN2000Niva3_Far 1999-10-15..2014-10-15; SUN2000Niva_Far 2015-10-15..2019-10-15."
 
 [[statement]]
 kind = "set"
 subject = "elever-per-15-oktober: SUN2000Niva3_Mor"
 fields = { "variable" = "sun-niva-mor" }
-evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v8073) in one table, renamed between survey rounds and never delivered together, so they are one variable: SUN2000Niva3_Mor 1999-10-15..2014-10-16; SUN2000Niva_Mor 2015-10-15..2019-10-16."
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v8073) in one table, renamed between survey rounds and never delivered together, so they are one variable: SUN2000Niva3_Mor 1999-10-15..2014-10-15; SUN2000Niva_Mor 2015-10-15..2019-10-15."
