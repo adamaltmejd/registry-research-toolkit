@@ -17711,9 +17711,15 @@ evidence = "Row key: personnr is the table's only identifier and names its unit 
 
 [[statement]]
 kind = "set"
+subject = "uoh-personal-mobilitet: var:personnr"
+fields.row_key = true
+evidence = "Row key: a row of the mobility file is one employment of one person, so its key is the person id plus the employment serial number (maintainer ruling 2026-11-14 on row keys). personnr is delivered as PersonNr (2015) and SCBID (2021, 2023); the 2017 file has no person id."
+
+[[statement]]
+kind = "set"
 subject = "uoh-personal-mobilitet: var:lopnummer-anstallningar"
 fields.row_key = true
-evidence = "Row key: lopnummer-anstallningar (LopNrTjanst, lopnrtjanst, U_SCBID; source key v2519) identifies a row in every mobility file (2015, 2017, 2021, 2023); the 2017 file has no person id, so personnr (2015, 2021, 2023) is an attribute here (maintainer ruling 2026-11-14 on row keys)."
+evidence = "Row key: lopnummer-anstallningar (LopNrTjanst, lopnrtjanst, U_SCBID; source key v2519) numbers a person's employments (1 for a single employment, 1-9 for several), so it identifies a row only together with personnr. It is delivered in every mobility file (2015, 2017, 2021, 2023); in 2017, which has no person id, it is the only key the delivery carries (maintainer ruling 2026-11-14 on row keys)."
 
 [[statement]]
 kind = "set"
