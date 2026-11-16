@@ -30,6 +30,9 @@ pub(crate) struct KeySegment {
     entity: bool,
     /// The release its segment belongs to (a concurrent table's), by name.
     release: Option<String>,
+    /// A curated row key. A base table also loads a key variable's other segments, which
+    /// may shadow a key segment of no release ([`row_keys`] keeps keys only after).
+    row_key: bool,
 }
 
 /// The steward branch of [`key_segments`] per (table pid, database). Its query scans
@@ -56,10 +59,12 @@ fn key_segments(
     if server.catalog.steward().is_none() {
         return Ok(Arc::new(rows(
             conn,
-            "SELECT v.pid,sp.exact,s.start,s.end,s.state,n.body FROM segment s
+            "SELECT v.pid,sp.exact,s.start,s.end,s.state,n.body,s.row_key FROM segment s
              JOIN variable v ON v.id=s.variable_id JOIN spelling sp ON sp.id=s.spelling_id
              LEFT JOIN release r ON r.id=s.release_id LEFT JOIN text n ON n.id=r.name_text
-             WHERE s.table_id=? AND s.row_key=1 ORDER BY v.pid,sp.exact,s.start",
+             WHERE s.table_id=?1 AND s.variable_id IN
+               (SELECT variable_id FROM segment WHERE table_id=?1 AND row_key=1)
+             ORDER BY v.pid,sp.exact,s.start",
             [serving.table.id],
             |r| {
                 Ok(KeySegment {
@@ -70,6 +75,7 @@ fn key_segments(
                     state: r.get(4)?,
                     entity: true,
                     release: r.get(5)?,
+                    row_key: r.get(6)?,
                 })
             },
         )?));
@@ -146,6 +152,7 @@ fn steward_key_segments(
                 state: r.get(4)?,
                 entity: r.get(6)?,
                 release: None,
+                row_key: true,
             },
             r.get::<_, Option<String>>(5)?,
         ))
@@ -202,6 +209,7 @@ fn merge_key_segments(out: Vec<KeySegment>) -> Vec<KeySegment> {
                     state: state.clone(),
                     entity,
                     release: None,
+                    row_key: true,
                 })
         })
         .collect()
@@ -281,7 +289,10 @@ pub(super) fn row_keys(
                 }
             }
         }
-        let pieces = shadowed(pieces);
+        // Shadow first, then keep the keys: a release's non-key segment still shadows a
+        // releaseless key segment of its variable.
+        let mut pieces = shadowed(pieces);
+        pieces.retain(|(_, _, _, key)| key.row_key);
         let mut found: Vec<(&str, i64, i64, &str)> = Vec::new();
         for (_, lo, hi, key) in &pieces {
             let found_here = match key.state.as_str() {
