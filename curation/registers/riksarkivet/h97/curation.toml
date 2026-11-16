@@ -55,8 +55,8 @@ evidence = "Same column name, different code spaces: 14GX points at Ämnen i pro
 [[statement]]
 kind = "set"
 subject = "nya-kurser-programgymnasiet: AEMN_KOD"
-fields = { "variable" = "amneskod-nya-kurser-programgymnasiet" }
-evidence = "Same column name, different code spaces: 14GX points at Ämnen i programgymnasiet (14FX, six characters), the other tables at Ämnen (14XX).\nÄmneskod: Ämneskod. Den angivna främmande nyckeln täcker långt ifrån samtliga de koder som används. Se tabell Ämnen i programgymnasiet (14FX).\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls), tabellen Nya kurser i programgymnasiet (14GX); catalog/evidence/riksarkivet/h97/"
+fields = { "variable" = "amneskod-aemn-kod-pg" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): same-label variables are merged where they are one variable. Here AEMN_KOD in 14GX holds the same codes as AEMN_KOD_PG, those of Ämnen i programgymnasiet (14FX), so it joins that variable.\n\nSame column name, different code spaces: 14GX points at Ämnen i programgymnasiet (14FX, six characters), the other tables at Ämnen (14XX).\nÄmneskod: Ämneskod. Den angivna främmande nyckeln täcker långt ifrån samtliga de koder som används. Se tabell Ämnen i programgymnasiet (14FX).\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls), tabellen Nya kurser i programgymnasiet (14GX); catalog/evidence/riksarkivet/h97/"
 
 [[statement]]
 kind = "set"
@@ -133,12 +133,6 @@ evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläg
 [[statement]]
 kind = "set"
 subject = "var:amneskod-aemn-kod-pg"
-fields = { "tags" = ["education"] }
-evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
-
-[[statement]]
-kind = "set"
-subject = "var:amneskod-nya-kurser-programgymnasiet"
 fields = { "tags" = ["education"] }
 evidence = "Antagningssystemet H97 gäller anmälan och antagning till grundläggande högskoleutbildning.\nH97:s Postbeskrivning (H97_1993_1999.xls, H97_2000_2001.xls, H97_2002_2005.xls); catalog/evidence/riksarkivet/h97/"
 
