@@ -1173,7 +1173,7 @@
                   "type": "array"
                 },
                 "shared_release_days": {
-                  "description": "Days two or more of the table's releases both deliver: an order over them names\nthe releases to use (`releases` on the project source). Absent when none, and on\na data holder's catalog.",
+                  "description": "Days two or more of the table's releases both deliver: an order over them names\nthe releases to use (`releases` on the project source). Absent when none. Served\non a data holder's catalog too: the order names these releases there as well.",
                   "items": {
                     "$ref": "#/$defs/ShowSharedDays"
                   },
@@ -4390,6 +4390,13 @@
             "period": {
               "$ref": "#/$defs/Period",
               "description": "The days of this reference the file holds."
+            },
+            "release": {
+              "description": "The release of the entry it serves: the one a shared day of a concurrent table\nis ordered in (none elsewhere, and for a row key nobody requested). The runner\ndoes not read it; the order reads it to cut each release's entries.",
+              "type": [
+                "string",
+                "null"
+              ]
             },
             "source": {
               "type": "string"

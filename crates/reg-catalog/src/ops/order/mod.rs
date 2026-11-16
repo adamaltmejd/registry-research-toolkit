@@ -234,9 +234,9 @@ fn checked(
 
 /// The logical order cut to what the steward's files deliver: the order file's clips
 /// replace the logical ones (they start from the same requests), each entry keeps only
-/// its binding's delivered days under the file column's own name ([`held_names`]), and
-/// each row key the days its table's entries keep, so a `coverage_gap` is not reported
-/// as delivered.
+/// its binding's delivered days in its own release under the file column's own name
+/// ([`held_names`]), and each row key the days its table's entries of its release
+/// keep, so a `coverage_gap` is not reported as delivered.
 fn delivered(
     server: &Server,
     order: &mut LogicalOrder,
@@ -263,6 +263,7 @@ fn delivered(
                     && r.binding == Some(entry.binding)
                     && r.table == entry.table
                     && r.variable == entry.variable
+                    && r.release == entry.release
             })
             .map(|(r, name)| (r.period.days(open), name))
             .collect()
@@ -291,27 +292,7 @@ fn delivered(
                 .collect::<Vec<_>>()
         })
         .collect();
-    // A row identifier is delivered only over days some entry of its table is.
-    order.row_keys = std::mem::take(&mut order.row_keys)
-        .into_iter()
-        .flat_map(|keys| {
-            let days = reg_core::days::merge(
-                order
-                    .entries
-                    .iter()
-                    .filter(|e| e.source == keys.source && e.table == keys.table)
-                    .map(|e| e.period.days(open))
-                    .collect(),
-            );
-            reg_core::days::overlap(&[keys.period.days(open)], &days)
-                .into_iter()
-                .map(|(lo, hi)| OrderRowKeys {
-                    period: server.period(lo, hi),
-                    ..keys.clone()
-                })
-                .collect::<Vec<_>>()
-        })
-        .collect();
+    delivered_keys(server, order);
     let names = refs::names(
         server,
         manifest
@@ -346,6 +327,35 @@ fn delivered(
         .map(|issue| NamedIssue::name(issue, &names))
         .collect();
     Ok(())
+}
+
+/// Each row identifier cut to the days some entry of its table, in its release, is
+/// delivered over.
+fn delivered_keys(server: &Server, order: &mut LogicalOrder) {
+    order.row_keys = std::mem::take(&mut order.row_keys)
+        .into_iter()
+        .flat_map(|keys| {
+            let days = reg_core::days::merge(
+                order
+                    .entries
+                    .iter()
+                    .filter(|e| {
+                        e.source == keys.source
+                            && e.table == keys.table
+                            && e.release == keys.release
+                    })
+                    .map(|e| e.period.days(server.open))
+                    .collect(),
+            );
+            reg_core::days::overlap(&[keys.period.days(server.open)], &days)
+                .into_iter()
+                .map(|(lo, hi)| OrderRowKeys {
+                    period: server.period(lo, hi),
+                    ..keys.clone()
+                })
+                .collect::<Vec<_>>()
+        })
+        .collect();
 }
 
 /// The stretches of `piece` by the file column name delivering them (#2409): a held

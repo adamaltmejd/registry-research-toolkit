@@ -69,6 +69,9 @@ pub(super) struct Table {
     pub schema_name: Option<String>,
     pub disposition: String,
     pub delivery: Option<String>,
+    /// The primary release of a routed table the file is (crates/DESIGN.md, "Concurrent
+    /// releases").
+    pub release: Option<String>,
     #[serde(default)]
     #[serde(rename = "table_pids")]
     pub routes: Vec<String>,

@@ -231,6 +231,11 @@ pub struct Ref {
     pub binding: Option<usize>,
     pub table: String,
     pub variable: String,
+    /// The release of the entry it serves: the one a shared day of a concurrent table
+    /// is ordered in (none elsewhere, and for a row key nobody requested). The runner
+    /// does not read it; the order reads it to cut each release's entries.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub release: Option<String>,
     /// The days of this reference the file holds.
     pub period: Period,
     /// The catalog's column name; the file uses `name`.

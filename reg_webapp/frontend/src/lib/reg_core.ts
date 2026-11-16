@@ -13,11 +13,13 @@ import type { ValidationResultModel } from "./api";
 import type { ProjectSourcePeriod } from "./project_data";
 import init, {
   check_project,
+  fold_identity,
   initSync,
   merge,
   overlap,
   project_schema_version,
   render,
+  serve,
   source_period_from_wire,
   source_period_intervals,
   source_period_to_wire,
@@ -48,6 +50,12 @@ function requireReady(): void {
   if (!ready) {
     throw new Error("reg-core is not initialised: await initRegCore() first");
   }
+}
+
+/** `reg_core::fold_identity`: the fold an order matches release names under. */
+export function foldIdentity(text: string): string {
+  requireReady();
+  return fold_identity(text);
 }
 
 /** The `project_data.json` `schema_version` this build reads; a new draft takes it. */
@@ -133,6 +141,25 @@ export function studyWindowInterval(window: {
 export function mergeIntervals(intervals: readonly Interval[]): Interval[] {
   requireReady();
   return JSON.parse(merge(JSON.stringify(intervals))) as Interval[];
+}
+
+/** `reg_core::days::serve`: the days each of one variable's segments in one table
+ * serves a source over `requested`, aligned with `segments` (each its days and
+ * release). Unshared days serve every release, a releaseless segment giving way;
+ * each `shared` span (its days, the releases sharing it) only the `named` among
+ * them, and nothing when none is. As the order serves them. */
+export function serveIntervals(
+  segments: readonly (readonly [Interval, string | null])[],
+  requested: readonly Interval[],
+  shared: readonly (readonly [Interval, readonly string[]])[],
+  named: readonly string[],
+): Interval[][] {
+  requireReady();
+  const served = JSON.parse(
+    serve(JSON.stringify([segments, requested, shared, named])),
+  ) as Interval[][] | null;
+  if (served === null) throw new Error("reg-core could not read the segments");
+  return served;
 }
 
 /** The intervals two ascending, disjoint lists share. */

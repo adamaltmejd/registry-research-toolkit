@@ -1,0 +1,24 @@
+{
+  "note": "Concurrent releases (crates/DESIGN.md, \"Concurrent releases\"): demo/waves/t's releases \"2017 - 2018\" and \"2018 - 2019\" share 2018, and the steward holds Extra only in the file of \"2017 - 2018\" (Wave 2018). An order over 2017..2019 naming both releases gets Extra from Wave 2018 for 2017 and that release's 2018; \"2018 - 2019\"'s 2018 and the unshared 2019 are not held, each a `coverage_gap` (the release's own naming it), and the binding is clipped to 2017..2018. Fails if the other release's file on 2018 hides that release's gap (Wave 2018 delivers 2018, so a gap judged over every release's held days is dropped), or if the gap does not name its release. Oracle: the fixture's census and topology and the source's `releases`.",
+  "project": {
+    "schema_version": "6.3.0",
+    "reg_meta_version": "0.87.0",
+    "name": "Concurrent release partial holdings",
+    "sources": [
+      {
+        "name": "w",
+        "table": "demo/waves/t",
+        "period": {
+          "from": 2017,
+          "to": 2019
+        },
+        "releases": ["2017 - 2018", "2018 - 2019"],
+        "bindings": [
+          {
+            "variable": "demo/waves/extra"
+          }
+        ]
+      }
+    ]
+  }
+}

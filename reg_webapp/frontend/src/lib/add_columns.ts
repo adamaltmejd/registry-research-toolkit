@@ -1,5 +1,10 @@
-import type { CatalogSegment, RegisterShow } from "./api";
-import { catalogLastDate } from "./catalog_period";
+import type {
+  CatalogPeriod,
+  CatalogSegment,
+  RegisterShow,
+  TableShow,
+} from "./api";
+import { catalogLastDate, catalogPeriodWithin } from "./catalog_period";
 import { periodCoverageUnion } from "./period";
 import {
   isCatalogBinding,
@@ -13,10 +18,12 @@ import {
 } from "./project_data";
 import {
   checkProject,
+  foldIdentity,
   type Interval,
   mergeIntervals,
   overlapIntervals,
   renderIntervals,
+  serveIntervals,
   sourcePeriodFromWire,
   sourcePeriodIntervals,
   studyWindowInterval,
@@ -31,23 +38,30 @@ export type TablePeriodMetadata = Pick<
 export interface VariableColumn {
   id: string;
   table: string;
+  /** In a table whose releases share years, the release it is in; null
+   * elsewhere. */
+  release: string | null;
   spelling: string;
   segments: CatalogSegment[];
 }
 
-/** A delivery column's identity is its table and exact column name. A steward's
- * yearly files of one table are the same column delivered in several files. */
+/** A delivery column's identity is its table, its release where the table's
+ * releases share years, and its exact column name. A steward's yearly files of
+ * one table are the same column delivered in several files; one name in two
+ * releases that share a year is two columns, each over its own years. */
 export function variableColumns(
   segments: readonly CatalogSegment[],
 ): VariableColumn[] {
   const columns = new Map<string, VariableColumn>();
   for (const segment of segments) {
-    const id = JSON.stringify([segment.table, segment.column]);
+    const release = segment.release ?? null;
+    const id = JSON.stringify([segment.table, release, segment.column]);
     let column = columns.get(id);
     if (!column) {
       column = {
         id,
         table: segment.table,
+        release,
         spelling: segment.column,
         segments: [],
       };
@@ -83,25 +97,95 @@ const segmentDays = (segment: CatalogSegment): Interval => [
   catalogLastDate(segment.period) ?? "9999-12-31",
 ];
 
-/** Whether a source's period takes any of the column's rows: a binding has
- * no column, so the column is in the project only where its years meet the
- * source's (#2408). An unbounded period takes every column. */
-export function columnInSource(
-  column: VariableColumn,
+/** Days two or more of a table's releases share, with those releases (`show`). */
+export type SharedDays = NonNullable<TableShow["shared_release_days"]>;
+
+/** A source's `releases` as the catalog spells them: an order matches a name
+ * exactly, else under the identity fold, so "Wave A" names "WAVE A". */
+export function sourceReleaseNames(
   source: ProjectSource,
-): boolean {
-  const period = sourcePeriodIntervals(source.period);
-  if ("error" in period) return false;
-  if (period.intervals === null) return true;
-  const { intervals } = period;
-  return column.segments.some(
-    (segment) => overlapIntervals(intervals, [segmentDays(segment)]).length > 0,
+  shared: SharedDays,
+): string[] {
+  if (!isCatalogSource(source)) return [];
+  const known = [...new Set(shared.flatMap((days) => days.releases))];
+  return [
+    ...new Set(
+      (source.releases ?? []).map(
+        (name) =>
+          known.find((release) => release === name) ??
+          known.find(
+            (release) => foldIdentity(release) === foldIdentity(name),
+          ) ??
+          name,
+      ),
+    ),
+  ];
+}
+
+const EVERY_DAY: Interval = ["0001-01-01", "9999-12-31"];
+
+/** A part of a catalog row a source takes. */
+export interface ServedPiece {
+  segment: CatalogSegment;
+  period: CatalogPeriod;
+}
+
+/** The parts of each of a variable's columns in one table that `source` takes,
+ * by column id; none is a column the source does not take. A binding has no
+ * column, so a column is in only where its years meet the source's (#2408),
+ * or `within` while a thumb moves (null: every day); on days two of the
+ * table's releases share, only the releases the source names serve, a
+ * releaseless column giving way, as the order serves them
+ * (`reg_core::days::serve`). Takes all of the variable's columns there: one
+ * release's rows shadow a releaseless one's. */
+export function columnsInSource(
+  columns: readonly VariableColumn[],
+  source: ProjectSource,
+  shared: SharedDays,
+  within?: readonly Interval[] | null,
+): Map<string, ServedPiece[]> {
+  const out = new Map(
+    columns.map((column) => [column.id, [] as ServedPiece[]]),
   );
+  let requested = within;
+  if (requested === undefined) {
+    const period = sourcePeriodIntervals(source.period);
+    if ("error" in period) return out;
+    requested = period.intervals;
+  }
+  const rows = columns.flatMap((column) =>
+    column.segments.map((segment) => ({ id: column.id, segment })),
+  );
+  const served = serveIntervals(
+    rows.map(({ segment }) => [segmentDays(segment), segment.release ?? null]),
+    requested ?? [EVERY_DAY],
+    shared.map((days) => [
+      [
+        days.period.start ?? EVERY_DAY[0],
+        catalogLastDate(days.period) ?? EVERY_DAY[1],
+      ],
+      days.releases,
+    ]),
+    sourceReleaseNames(source, shared),
+  );
+  rows.forEach(({ id, segment }, i) => {
+    const days = served[i] ?? [];
+    const [first, last] = segmentDays(segment);
+    // Served whole: the row as the catalog has it, open ends kept.
+    const whole =
+      days.length === 1 && days[0]?.[0] === first && days[0]?.[1] === last;
+    const periods = whole
+      ? [segment.period]
+      : catalogPeriodWithin(segment.period, days);
+    out.get(id)?.push(...periods.map((period) => ({ segment, period })));
+  });
+  return out;
 }
 
 /** A variable's columns in one table, as rows that never overlap in time:
  * successive spellings share a row; columns delivered side by side in one
- * file (a slot's members) take a row each (#2408). */
+ * file (a slot's members) take a row each (#2408). Releases that share a
+ * year take a row each there (crates/DESIGN.md, "Concurrent releases"). */
 export function columnRows(
   columns: readonly VariableColumn[],
 ): VariableColumn[][] {
@@ -126,8 +210,25 @@ export function columnRows(
     );
     // Only where one row takes it: after a slot's members, which row a
     // later column continues is unknown, and sharing one would read as a
-    // rename of that member.
-    const row = free.length === 1 ? free[0] : undefined;
+    // rename of that member. A release's column is no slot member: it
+    // continues the free row that last had its name, the latest such, so
+    // releases that share years keep two rows, not one each.
+    const row =
+      free.length === 1
+        ? free[0]
+        : column.release === null
+          ? undefined
+          : free
+              .filter((placed) => placed.at(-1)?.spelling === column.spelling)
+              .toSorted((a, b) => {
+                const [x, y] = [a, b].map((placed) =>
+                  placed.reduce(
+                    (most, c) => (first(c) > most ? first(c) : most),
+                    "",
+                  ),
+                );
+                return x < y ? 1 : x > y ? -1 : 0;
+              })[0];
     if (row) row.push(column);
     else rows.push([column]);
   }

@@ -23,6 +23,7 @@ import {
   registerRead,
   registerSubjectNames,
   segmentsRead,
+  tableShowReads,
 } from "./catalog_names";
 import { segmentYears, sourcePeriodLabel } from "./catalog_period";
 import {
@@ -217,6 +218,26 @@ export function useVariableCoverage({
       variableColumns(subject.segments),
     ]),
   );
+  // A bound table is read whole for the days its releases share: there a
+  // source takes only the releases it names, releaseless rows included.
+  const tableShows = useCatalogRead(
+    tableShowReads,
+    useDistinct(
+      subjects.flatMap((subject) =>
+        subject.segments.flatMap((segment) =>
+          bindingSources(draft, subject.fqid, segment.table).length > 0
+            ? [segment.table]
+            : [],
+        ),
+      ),
+    ),
+  );
+  const sharedDays = new Map(
+    Object.entries(tableShows).map(([table, read]) => [
+      table,
+      read.value?.shared_release_days ?? [],
+    ]),
+  );
   // What is picked is a variable in a table, its lane (#2408): a project
   // binds a variable once per table, so a press stages every column of that
   // table inside the years to add, or, once bound, the binding's removal.
@@ -300,6 +321,7 @@ export function useVariableCoverage({
         idPrefix: prefix(subject),
         readOnly: !allowAdd,
         database,
+        sharedDays,
         notInDatabase: new Set(
           (validation?.issues ?? []).flatMap((issue) =>
             issue.code === "not_in_database" &&

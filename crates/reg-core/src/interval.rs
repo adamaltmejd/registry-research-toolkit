@@ -180,6 +180,49 @@ pub mod days {
             .collect()
     }
 
+    /// The days each of one variable's segments in one table serves a source over
+    /// `requested`, aligned with `segments` and merged (crates/DESIGN.md, "Concurrent
+    /// releases"). Days no two primaries share are read with no lane; each `shared` span
+    /// (its days and the releases sharing them) is read once per release `named` among
+    /// those sharing it, and serves nothing when none is (`release_ambiguous`). The
+    /// order's `window::served` applies the same rule to its pieces; the SPA reads this.
+    #[must_use]
+    pub fn serve(
+        segments: &[(Span, Option<&str>)],
+        requested: &[Span],
+        shared: &[(Span, Vec<&str>)],
+        named: &[&str],
+    ) -> Vec<Vec<Span>> {
+        let mut out = vec![Vec::new(); segments.len()];
+        let mut read = |region: &[Span], lane: Option<&str>| {
+            let pieces: Vec<(usize, Span, Option<&str>)> = segments
+                .iter()
+                .enumerate()
+                .flat_map(|(i, &(span, release))| {
+                    overlap(&[span], region)
+                        .into_iter()
+                        .map(move |piece| (i, piece, release))
+                })
+                .collect();
+            let spans: Vec<(Span, Option<&str>)> = pieces
+                .iter()
+                .map(|&(_, span, release)| (span, release))
+                .collect();
+            for ((i, _, _), kept) in pieces.iter().zip(shadow(&spans, lane)) {
+                out[*i].extend(kept);
+            }
+        };
+        let days: Vec<Span> = shared.iter().map(|(span, _)| *span).collect();
+        read(&minus(&merge(requested.to_vec()), &merge(days)), None);
+        for (span, sharing) in shared {
+            let region = overlap(&[*span], requested);
+            for name in sharing.iter().filter(|n| named.contains(n)) {
+                read(&region, Some(name));
+            }
+        }
+        out.into_iter().map(merge).collect()
+    }
+
     /// The spans between consecutive distinct endpoints of `spans`, ascending,
     /// including those no span covers.
     #[must_use]

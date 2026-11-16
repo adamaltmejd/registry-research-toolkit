@@ -1,0 +1,28 @@
+# Synthetic: one file per release of demo/waves/t, whose releases "2017 - 2018" and
+# "2018 - 2019" share 2018. Each file states its release and its whole span, and is
+# placed by name. Extra is only in the file of "2017 - 2018". Appended to holdings.toml.
+[[table]]
+physical_name = "Wave 2018"
+disposition = "dated"
+delivery = "2017..2018"
+release = "2017 - 2018"
+table_pids = ["demo/waves/t"]
+locator = "fixture:wave-2018"
+
+[[table.key]]
+entity = ["demo/waves/id"]
+time = []
+locator = "fixture:wave-2018-key"
+
+[[table]]
+physical_name = "Wave 2019"
+disposition = "dated"
+delivery = "2018..2019"
+release = "2018 - 2019"
+table_pids = ["demo/waves/t"]
+locator = "fixture:wave-2019"
+
+[[table.key]]
+entity = ["demo/waves/id"]
+time = []
+locator = "fixture:wave-2019-key"

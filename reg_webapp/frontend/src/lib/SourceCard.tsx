@@ -1,14 +1,19 @@
 import { useRef, useState } from "react";
-import { columnInSource, columnRows, variableColumns } from "./add_columns";
+import {
+  columnRows,
+  columnsInSource,
+  sourceReleaseNames,
+  variableColumns,
+} from "./add_columns";
 import {
   type CatalogPeriod,
   type CatalogSegment,
   errMessage,
   type RegisterShow,
+  type TableShow,
 } from "./api";
 import { catalogHref } from "./catalog";
 import {
-  catalogLastDate,
   catalogPeriodRuns,
   catalogPeriodWithin,
   inTableGrain,
@@ -37,7 +42,6 @@ import {
   type ProjectStudyWindow,
 } from "./project_data";
 import {
-  overlapIntervals,
   sourcePeriodIntervals,
   sourcePeriodYears,
   studyWindowInterval,
@@ -50,6 +54,7 @@ import {
   removeBinding,
   removeSource,
   setSourcePeriod,
+  setSourceReleases,
 } from "./source_edits";
 import { columnDateRuns, tableYears } from "./study_window";
 import { Button } from "./ui/Button";
@@ -74,6 +79,9 @@ export function SourceCard({
   raw,
   names,
   segments,
+  sharedDays = [],
+  sharedDaysError = false,
+  onRetrySharedDays,
   table,
   axis,
   bounds,
@@ -89,6 +97,12 @@ export function SourceCard({
   raw: string | null;
   names: ReadonlyMap<string, string>;
   segments: ReadonlyMap<string, CatalogSegment[]>;
+  /** The days two of the table's releases share (its `show`); none
+   * elsewhere. */
+  sharedDays?: NonNullable<TableShow["shared_release_days"]>;
+  /** The read of those days failed: the choice cannot be offered. */
+  sharedDaysError?: boolean;
+  onRetrySharedDays?: () => void;
   table: Table | undefined;
   axis: [number, number];
   bounds: [number, number];
@@ -168,6 +182,22 @@ export function SourceCard({
     : "intervals" in period
       ? period.intervals
       : null;
+  // The shared days the stored period asks for, cut to it: an order names the
+  // releases that serve them (crates/DESIGN.md, "Concurrent releases").
+  const asked = "error" in period ? [] : period.intervals;
+  const shared = sharedDays.flatMap((days) => {
+    const cut = asked ? catalogPeriodWithin(days.period, asked) : [days.period];
+    return cut.length ? [{ periods: cut, releases: days.releases }] : [];
+  });
+  const sharedYears = catalogPeriodRuns(shared.flatMap((days) => days.periods));
+  const offered = [...new Set(shared.flatMap((days) => days.releases))];
+  const named = sourceReleaseNames(source, sharedDays);
+  // A named release that serves none of these years stays a choice, so its
+  // finding can be cleared here.
+  const releaseOptions = [
+    ...offered,
+    ...named.filter((name) => !offered.includes(name)),
+  ];
   const spans: LaneSpanModel[] = [];
   // `bindingIndex` is the column's place in the file, manual columns included.
   const lanes: LaneModel[] = source.bindings.flatMap(
@@ -188,6 +218,11 @@ export function SourceCard({
         (segment) => segment.table === source.table,
       );
       const columns = variableColumns(onTable);
+      // What the stored source takes, and what the dragged window would.
+      const taken = columnsInSource(columns, source, sharedDays);
+      const drawnTaken = dragging
+        ? columnsInSource(columns, source, sharedDays, within)
+        : taken;
       // The server's verdict that the chosen database lacks the column: its lane
       // draws it blocked, as the variable page draws a column outside the study
       // years, not with the plain in-project fill (#2343).
@@ -196,22 +231,11 @@ export function SourceCard({
       );
       const candidates = [
         ...new Set(
-          onTable
-            .filter((segment) => {
-              if ("error" in period) return false;
-              if (period.intervals === null) return true;
-              return (
-                overlapIntervals(period.intervals, [
-                  [
-                    segment.period.start ?? "0001-01-01",
-                    catalogLastDate(segment.period) ?? "9999-12-31",
-                  ],
-                ]).length > 0
-              );
-            })
-            .flatMap((segment) =>
+          [...taken.values()].flatMap((pieces) =>
+            pieces.flatMap(({ segment }) =>
               segment.classification ? [segment.classification] : [],
             ),
+          ),
         ),
       ];
       const pinOptions = [
@@ -225,13 +249,7 @@ export function SourceCard({
       // column is drawn over those days and one outside them is not drawn.
       columnRows(columns).forEach((row, index) => {
         const drawn = row.flatMap((column) => {
-          const inProject = within
-            ? column.segments.flatMap((segment) =>
-                catalogPeriodWithin(segment.period, within).map((period) => ({
-                  period,
-                })),
-              )
-            : column.segments;
+          const inProject = drawnTaken.get(column.id) ?? [];
           return inProject.length ? [{ column, inProject }] : [];
         });
         // In date order, so a spelling that returns draws its changes.
@@ -244,7 +262,10 @@ export function SourceCard({
           )
           .sort((a, b) => a.from - b.from);
         if (!segments.length) return;
-        const spellings = drawn.map(({ column }) => column.spelling);
+        // One name per spelling: releases that share years repeat it.
+        const spellings = [
+          ...new Set(drawn.map(({ column }) => column.spelling)),
+        ];
         // The text reads in the table's grain, as the delivery summary does
         // (#2416); the drawing keeps the cut.
         const yearsOf = (pieces: readonly { period: CatalogPeriod }[]) =>
@@ -318,7 +339,7 @@ export function SourceCard({
                       entity="column"
                       name={column.spelling}
                       state={
-                        !elsewhere && columnInSource(column, source)
+                        !elsewhere && !!taken.get(column.id)?.length
                           ? "in"
                           : "out"
                       }
@@ -446,6 +467,53 @@ export function SourceCard({
           </span>
         )}
       </p>
+      {sharedDaysError && (
+        <StatusRow
+          tone="error"
+          action={
+            onRetrySharedDays && (
+              <Button onPress={onRetrySharedDays}>Retry</Button>
+            )
+          }
+        >
+          The table's deliveries did not load, so they cannot be chosen here.
+          Retry, or reload the page.
+        </StatusRow>
+      )}
+      {!loading && releaseOptions.length > 0 && (
+        <div className={styles.releases}>
+          <div className={styles.controls}>
+            <Select
+              selectionMode="multiple"
+              label={
+                sharedYears ? `Deliveries for ${sharedYears}` : "Deliveries"
+              }
+              placeholder="Choose deliveries"
+              value={named}
+              options={releaseOptions.map((name) => ({
+                id: name,
+                name: offered.includes(name)
+                  ? name
+                  : `${name} (not for these years)`,
+              }))}
+              onChange={(names) =>
+                edit(
+                  setSourceReleases(
+                    draft,
+                    sourceIndex,
+                    releaseOptions.filter((name) => names.includes(name)),
+                  ),
+                )
+              }
+            />
+          </div>
+          {sharedYears && (
+            <p className={styles.note}>
+              Each delivery you choose is ordered for these years.
+            </p>
+          )}
+        </div>
+      )}
       {loading && (
         <div aria-busy="true">
           <StatusRow tone="info">Loading years…</StatusRow>

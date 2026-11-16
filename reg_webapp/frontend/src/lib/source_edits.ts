@@ -126,3 +126,20 @@ export function setSourcePeriod(
     ),
   };
 }
+
+/** The releases a catalog source names for the days two of its table's
+ * releases share; none removes the field, since an empty list is refused. */
+export function setSourceReleases(
+  project: ProjectData,
+  sourceIndex: number,
+  releases: readonly string[],
+): ProjectData {
+  return {
+    ...project,
+    sources: project.sources.map((source, index) => {
+      if (index !== sourceIndex || !isCatalogSource(source)) return source;
+      const { releases: _, ...rest } = source;
+      return releases.length ? { ...rest, releases: [...releases] } : rest;
+    }),
+  };
+}

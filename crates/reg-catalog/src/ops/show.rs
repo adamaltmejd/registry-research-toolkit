@@ -177,8 +177,8 @@ pub enum Show {
         #[serde(skip_serializing_if = "Vec::is_empty")]
         releases: Vec<Release>,
         /// Days two or more of the table's releases both deliver: an order over them names
-        /// the releases to use (`releases` on the project source). Absent when none, and on
-        /// a data holder's catalog.
+        /// the releases to use (`releases` on the project source). Absent when none. Served
+        /// on a data holder's catalog too: the order names these releases there as well.
         #[serde(skip_serializing_if = "Vec::is_empty")]
         shared_release_days: Vec<ShowSharedDays>,
         row_keys: Vec<ShowRowKey>,
@@ -959,17 +959,15 @@ fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Er
         } else {
             shape::releases(server, conn, entity.id)?
         },
-        shared_release_days: if server.catalog.steward().is_some() {
-            vec![]
-        } else {
-            super::order::releases::sharing(conn, entity.id)?
-                .into_iter()
-                .map(|((lo, hi), releases)| ShowSharedDays {
-                    period: server.period(lo, hi),
-                    releases,
-                })
-                .collect()
-        },
+        // The release names an order must give (`releases`), so a steward serves
+        // them too, unlike the releases themselves.
+        shared_release_days: super::order::releases::sharing(conn, entity.id)?
+            .into_iter()
+            .map(|((lo, hi), releases)| ShowSharedDays {
+                period: server.period(lo, hi),
+                releases,
+            })
+            .collect(),
         row_keys,
         variables,
         series_breaks: series_breaks(server, conn, "table", entity.id)?,
@@ -1313,9 +1311,21 @@ fn row_keys(server: &Server, conn: &Connection, pid: &str) -> Result<Vec<ShowRow
     let mut found: Vec<(i64, String, String, i64)> = if server.catalog.steward().is_some() {
         let attached = server.catalog.connect()?;
         server.catalog.attach_holdings(&attached)?;
-        super::order::rows::steward_keys(server, &attached, pid, None)?
-            .iter()
-            .map(|k| (k.start, k.variable.clone(), k.spelling.clone(), k.end))
+        // A key column split by release or file is one row key here.
+        let mut spans: BTreeMap<(String, String), Vec<(i64, i64)>> = BTreeMap::new();
+        for k in super::order::rows::steward_keys(server, &attached, pid, None)?.iter() {
+            spans
+                .entry((k.variable.clone(), k.spelling.clone()))
+                .or_default()
+                .push((k.start, k.end));
+        }
+        spans
+            .into_iter()
+            .flat_map(|((variable, spelling), spans)| {
+                reg_core::days::merge(spans)
+                    .into_iter()
+                    .map(move |(start, end)| (start, variable.clone(), spelling.clone(), end))
+            })
             .collect()
     } else {
         rows(
