@@ -1,0 +1,25 @@
+{
+  "note": "Concurrent releases (crates/DESIGN.md, \"Concurrent releases\"): `conc/t`'s releases \"2003 - 2004\" and \"2004 - 2005\" share 2004, and the municipality is spelled `A` in \"2001 - 2002\" and \"2004 - 2005\" and `B` in \"2003 - 2004\". An order over 2001-2005 naming both releases gets 2004 twice, one entry per release with its own spelling and `release`; the unshared days have `release: null`, merging only where the form agrees. `form_change` follows one timeline per release, the unshared days plus that release's shared ones: \"2003 - 2004\"'s changes at 2003 (A to B) and 2005 (B to A), \"2004 - 2005\"'s at 2003 and 2004 (B to A); the two entries on 2004 are not compared with each other. Fails if a named release's day is dropped or served from the other release, if a shared-day entry lacks its release, if unshared days carry one, or if the two entries on one day are reported as a form change. Oracle: the fixture's JSONL and the source's `releases`.",
+  "fixture": "orders",
+  "project": {
+    "schema_version": "6.3.0",
+    "reg_meta_version": "0.64.0",
+    "name": "Order case",
+    "sources": [
+      {
+        "name": "s",
+        "table": "demo/conc/t",
+        "period": {
+          "from": 2001,
+          "to": 2005
+        },
+        "releases": ["2003 - 2004", "2004 - 2005"],
+        "bindings": [
+          {
+            "variable": "demo/conc/kommun"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -2674,6 +2674,7 @@
           "table",
           "table_name",
           "delivered_table",
+          "release",
           "variable",
           "variable_name",
           "display_name",
@@ -2724,6 +2725,13 @@
           },
           "register": {
             "type": "string"
+          },
+          "release": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "On a day two primary releases of the table share, the release this entry is\ndelivered in (one entry per release the source names); `null` elsewhere."
           },
           "source": {
             "type": "string",
@@ -2865,6 +2873,7 @@
           "table",
           "table_name",
           "delivered_table",
+          "release",
           "period",
           "columns"
         ],
@@ -2881,6 +2890,13 @@
           },
           "period": {
             "$ref": "#/components/schemas/Period"
+          },
+          "release": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "The release, as for an entry."
           },
           "source": {
             "type": "string"
@@ -3080,6 +3096,13 @@
           },
           "period": {
             "$ref": "#/components/schemas/ProjectSourcePeriod"
+          },
+          "releases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The releases of the table that serve the days two of its primary releases share,\nby name as `show` lists them, matched under the identity fold. Days one release\ncovers are served whether or not it is named. Absent: a shared day blocks the\norder (`release_ambiguous`). An explicit `null` is `invalid_field_type`."
           },
           "table": {
             "type": "string",
@@ -3790,6 +3813,10 @@
             "$ref": "#/components/schemas/Period",
             "description": "Its period, cut to the requested one."
           },
+          "release": {
+            "type": "string",
+            "description": "In a table two of whose releases share days, the release this column is in (an\norder names it in `releases`); absent elsewhere. Lines of one variable in two\nreleases may overlap."
+          },
           "role": {
             "type": "string"
           },
@@ -4395,6 +4422,13 @@
                   "$ref": "#/components/schemas/ShowSeriesBreak"
                 },
                 "description": "The table's series breaks and its releases'. Absent when none."
+              },
+              "shared_release_days": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ShowSharedDays"
+                },
+                "description": "Days two or more of the table's releases both deliver: an order over them names\nthe releases to use (`releases` on the project source). Absent when none, and on\na data holder's catalog."
               },
               "spans": {
                 "type": "array",
@@ -5062,6 +5096,26 @@
               "$ref": "#/components/schemas/ShowSeriesBreak"
             },
             "description": "The member's series breaks, as its `show` has them. Absent when none."
+          }
+        }
+      },
+      "ShowSharedDays": {
+        "type": "object",
+        "description": "Days two or more releases of a table share, with those releases.",
+        "required": [
+          "period",
+          "releases"
+        ],
+        "properties": {
+          "period": {
+            "$ref": "#/components/schemas/Period"
+          },
+          "releases": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "The releases sharing the days, by name, in start order."
           }
         }
       },

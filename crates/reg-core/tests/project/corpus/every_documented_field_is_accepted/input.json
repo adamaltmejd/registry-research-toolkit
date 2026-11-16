@@ -1,5 +1,5 @@
 {
-  "schema_version": "6.2.0",
+  "schema_version": "6.3.0",
   "reg_meta_version": "reg_meta/v1.0.0",
   "name": "every_documented_field",
   "window": {
@@ -15,6 +15,9 @@
       "name": "lisa_2018",
       "table": "scb/lisa/individer-15plus",
       "period": 2018,
+      "releases": [
+        "2018"
+      ],
       "bindings": [
         {
           "variable": "scb/lisa/lopnr",

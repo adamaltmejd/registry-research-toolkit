@@ -9,6 +9,7 @@
       "binding": 0,
       "classification": null,
       "delivered_table": "Leveranser",
+      "release": null,
       "display_name": null,
       "length": null,
       "period": {
@@ -47,7 +48,7 @@
   "project": {
     "name": "Order case",
     "reg_meta_version": "0.64.0",
-    "schema_version": "6.2.0"
+    "schema_version": "6.3.0"
   },
   "row_keys": []
 }

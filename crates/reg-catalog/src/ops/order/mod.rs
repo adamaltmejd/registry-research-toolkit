@@ -21,7 +21,7 @@
 mod breaks;
 mod eras;
 mod materialize;
-mod releases;
+pub(super) mod releases;
 pub(crate) mod rows;
 mod successor;
 mod window;
@@ -576,6 +576,10 @@ pub struct OrderEntry {
     /// rename (crates/DESIGN.md, "Merged variants"); `table_name` for a table with no
     /// releases.
     delivered_table: String,
+    /// On a day two primary releases of the table share, the release this entry is
+    /// delivered in (one entry per release the source names); `null` elsewhere.
+    #[schema(required = true)]
+    release: Option<String>,
     variable: String,
     /// The variable's name, as `show` gives it.
     variable_name: String,
@@ -645,6 +649,9 @@ pub struct OrderRowKeys {
     table_name: String,
     /// The name of the table the provider delivered the period in, as for an entry.
     delivered_table: String,
+    /// The release, as for an entry.
+    #[schema(required = true)]
+    release: Option<String>,
     period: Period,
     columns: Vec<RowKeyColumn>,
 }
@@ -1023,6 +1030,8 @@ fn check_source(
         return Ok(checked);
     };
     let requested = merge(items.clone());
+    let (named, refused) = releases::named(server, conn, &table, index, source, &requested)?;
+    own.extend(refused);
     let (mut serving, undated, chain) = serving(server, conn, table, &requested)?;
     for (successor, continued, past) in undated {
         let mut finding = issue(
@@ -1063,6 +1072,7 @@ fn check_source(
         serving: &serving,
         chain: &chain,
         requested: &requested,
+        named: &named,
         composed,
     };
     for (b, binding) in source.catalog_bindings() {
@@ -1077,51 +1087,16 @@ fn check_source(
     if !followed.is_empty() {
         serving = combine_serving(serving, followed);
     }
-    checked
-        .findings
-        .extend(ambiguous(server, conn, index, source, &serving)?);
-    let (row_keys, mut keyed) = rows::row_keys(server, keys, space, index, source, &serving)?;
+    checked.findings.extend(releases::ambiguous(
+        server, conn, index, source, &serving, &named,
+    )?);
+    let (row_keys, mut keyed) =
+        rows::row_keys(server, keys, space, index, source, &serving, &named)?;
     rows::unbound(&mut keyed, &checked.findings);
     keyed.sort_by_key(Issue::key);
     checked.findings.extend(keyed);
     checked.row_keys = row_keys;
     Ok(checked)
-}
-
-/// `release_ambiguous`: per serving table, each run of requested days two of its primary
-/// releases share, located at the source.
-fn ambiguous(
-    server: &Server,
-    conn: &Connection,
-    index: usize,
-    source: &CatalogSource,
-    serving: &[Serving],
-) -> Result<Vec<Issue>, Error> {
-    let mut found = Vec::new();
-    for s in serving {
-        for (days, names) in releases::shared(conn, s)? {
-            let names: Vec<String> = names.iter().map(|n| format!("\"{n}\"")).collect();
-            found.push(Issue {
-                source: Some(source.name.clone()),
-                table: Some(s.table.pid.clone()),
-                period: Some(period(server, &days)),
-                ..Issue::new(
-                    IssueLevel::Error,
-                    "release_ambiguous",
-                    format!("/sources/{index}"),
-                    format!(
-                        "{} was delivered in more than one release covering {}: {}. The order \
-                         cannot tell which to use; choose a period outside those days",
-                        s.table.pid,
-                        span(server, &days),
-                        names.join(", ")
-                    ),
-                )
-            });
-        }
-    }
-    found.sort_by_key(Issue::key);
-    Ok(found)
 }
 
 /// Coalesce followed table windows once for row keys.

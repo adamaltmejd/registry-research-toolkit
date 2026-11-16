@@ -1,0 +1,42 @@
+{
+  "schema_version": "6.3.0",
+  "reg_meta_version": "reg_meta/v1.0.0",
+  "name": "releases_shape",
+  "sources": [
+    {
+      "name": "empty",
+      "table": "scb/cis/innovation",
+      "period": 2004,
+      "releases": [],
+      "bindings": [{"variable": "scb/cis/emp"}]
+    },
+    {
+      "name": "folded_twice",
+      "table": "scb/cis/innovation",
+      "period": 2004,
+      "releases": ["Wave A", "2004 - 2006", "wave a"],
+      "bindings": [{"variable": "scb/cis/emp"}]
+    },
+    {
+      "name": "blank",
+      "table": "scb/cis/innovation",
+      "period": 2004,
+      "releases": [" ", 2004],
+      "bindings": [{"variable": "scb/cis/emp"}]
+    },
+    {
+      "name": "null",
+      "table": "scb/cis/innovation",
+      "period": 2004,
+      "releases": null,
+      "bindings": [{"variable": "scb/cis/emp"}]
+    },
+    {
+      "name": "by_hand",
+      "manual": {"provider": "UHR", "register": "NyA"},
+      "period": 2004,
+      "releases": ["2004"],
+      "bindings": [{"manual": {"column": "Urval", "type": "text"}}]
+    }
+  ]
+}

@@ -14,6 +14,8 @@ use crate::{Error, rows};
 
 /// Row-key columns as (variable pid, spelling).
 type Columns = BTreeSet<(String, String)>;
+/// A row-key column over half-open day numbers `lo..hi`: (lo, hi, (variable, spelling)).
+type KeyPiece = (i64, i64, (String, String));
 
 #[derive(Clone)]
 pub(crate) struct KeySegment {
@@ -23,6 +25,8 @@ pub(crate) struct KeySegment {
     pub(crate) end: i64,
     state: String,
     entity: bool,
+    /// The release its segment belongs to (a concurrent table's), by name.
+    release: Option<String>,
 }
 
 /// The steward branch of [`key_segments`] per (table pid, database). Its query scans
@@ -49,8 +53,9 @@ fn key_segments(
     if server.catalog.steward().is_none() {
         return Ok(Arc::new(rows(
             conn,
-            "SELECT v.pid,sp.exact,s.start,s.end,s.state FROM segment s
+            "SELECT v.pid,sp.exact,s.start,s.end,s.state,n.body FROM segment s
              JOIN variable v ON v.id=s.variable_id JOIN spelling sp ON sp.id=s.spelling_id
+             LEFT JOIN release r ON r.id=s.release_id LEFT JOIN text n ON n.id=r.name_text
              WHERE s.table_id=? AND s.row_key=1 ORDER BY v.pid,sp.exact,s.start",
             [serving.table.id],
             |r| {
@@ -61,6 +66,7 @@ fn key_segments(
                     end: r.get(3)?,
                     state: r.get(4)?,
                     entity: true,
+                    release: r.get(5)?,
                 })
             },
         )?));
@@ -136,6 +142,7 @@ fn steward_key_segments(
                 end: r.get(3)?,
                 state: r.get(4)?,
                 entity: r.get(6)?,
+                release: None,
             },
             r.get::<_, Option<String>>(5)?,
         ))
@@ -191,6 +198,7 @@ fn merge_key_segments(out: Vec<KeySegment>) -> Vec<KeySegment> {
                     end,
                     state: state.clone(),
                     entity,
+                    release: None,
                 })
         })
         .collect()
@@ -198,10 +206,13 @@ fn merge_key_segments(out: Vec<KeySegment>) -> Vec<KeySegment> {
 
 /// A source's row keys: per serving table, the requested days cut where its row-key
 /// columns change, each piece with the columns over it (sorted by variable and
-/// spelling); days without a row-key column are left out. Row keys join the order
-/// unbound, so their window findings are made here, located at the source: an
-/// ambiguous row-key segment inside the requested days is an `ambiguous_window`, a
-/// preliminary one a `preliminary_data` warning.
+/// spelling); days without a row-key column are left out. On a day two primary releases
+/// share, each release the source names gets its own pieces, from its own key columns
+/// and the releaseless ones; a day none of them is named for blocks the source and has
+/// none. Row keys join the order unbound, so their window findings are made here,
+/// located at the source: an ambiguous row-key segment inside the served days is an
+/// `ambiguous_window`, a preliminary one a `preliminary_data` warning.
+#[allow(clippy::too_many_lines)]
 pub(super) fn row_keys(
     server: &Server,
     conn: &Connection,
@@ -209,82 +220,117 @@ pub(super) fn row_keys(
     index: usize,
     source: &CatalogSource,
     serving: &[Serving],
+    named: &[String],
 ) -> Result<(Vec<OrderRowKeys>, Vec<Issue>), Error> {
     let mut out = Vec::new();
     let mut findings = Vec::new();
     for s in serving {
         let rows = key_segments(server, conn, space, s)?;
-        // Day-number pieces `[start, end)` of each column inside the requested days.
-        let mut pieces = Vec::new();
-        for KeySegment {
-            variable,
-            spelling,
-            start,
-            end,
-            state,
-            ..
-        } in rows.iter()
-        {
-            for (lo, hi) in &s.requested {
-                let (lo, hi) = ((*start).max(day(lo)), (*end).min(day(hi) + 1));
+        let shared = super::releases::shared(conn, s, named)?;
+        let shared_days: Vec<(i64, i64)> =
+            super::days(&shared.iter().map(|x| x.days.clone()).collect::<Vec<_>>());
+        // Day-number pieces `[start, end)` of each column on the served days, by release.
+        let mut pieces: Vec<(Option<&String>, i64, i64, &KeySegment)> = Vec::new();
+        for key in rows.iter() {
+            for (lo, hi) in super::days(&s.requested) {
+                let (lo, hi) = (key.start.max(lo), key.end.min(hi));
                 if lo >= hi {
                     continue;
                 }
-                let found = match state.as_str() {
-                    "ambiguous" => Some((
-                        IssueLevel::Error,
-                        "ambiguous_window",
-                        "shares its column with another variable in",
-                        "; pick a shorter period or ask the maintainer",
-                    )),
-                    "preliminary" => Some((
-                        IssueLevel::Warning,
-                        "preliminary_data",
-                        "in",
-                        " is preliminary data: no final release covers it",
-                    )),
-                    _ => None,
-                };
-                if let Some((level, code, verb, tail)) = found {
-                    let period = server.period(lo, hi);
-                    let over = super::words::plain(std::slice::from_ref(&period));
-                    findings.push(Issue {
-                        source: Some(source.name.clone()),
-                        variable: Some(variable.clone()),
-                        table: Some(s.table.pid.clone()),
-                        period: Some(period),
-                        ..Issue::new(
-                            level,
-                            code,
-                            format!("/sources/{index}"),
-                            format!("Row key {variable} {verb} {} for {over}{tail}", s.table.pid),
-                        )
-                    });
+                for (a, b) in reg_core::days::minus(&[(lo, hi)], &shared_days) {
+                    pieces.push((None, a, b, key));
                 }
-                pieces.push((lo, hi, (variable.clone(), spelling.clone())));
+                for (x, (xa, xb)) in shared.iter().zip(&shared_days) {
+                    let (a, b) = (lo.max(*xa), hi.min(*xb));
+                    if a >= b {
+                        continue;
+                    }
+                    for name in &x.chosen {
+                        if key.release.as_ref().is_none_or(|r| r == name) {
+                            pieces.push((Some(name), a, b, key));
+                        }
+                    }
+                }
             }
         }
-        let mut keyed: Vec<(i64, i64, Columns)> = Vec::new();
-        for (lo, hi) in reg_core::days::slices(pieces.iter().map(|(lo, hi, _)| (*lo, *hi))) {
-            let columns: Columns = pieces
-                .iter()
-                .filter(|(a, b, _)| *a <= lo && hi <= *b)
-                .map(|(_, _, column)| column.clone())
-                .collect();
-            if columns.is_empty() {
+        let mut found: Vec<(&str, i64, i64, &str)> = Vec::new();
+        for (_, lo, hi, key) in &pieces {
+            let found_here = match key.state.as_str() {
+                "ambiguous" => Some((
+                    IssueLevel::Error,
+                    "ambiguous_window",
+                    "shares its column with another variable in",
+                    "; pick a shorter period or ask the maintainer",
+                )),
+                "preliminary" => Some((
+                    IssueLevel::Warning,
+                    "preliminary_data",
+                    "in",
+                    " is preliminary data: no final release covers it",
+                )),
+                _ => None,
+            };
+            let Some((level, code, verb, tail)) = found_here else {
+                continue;
+            };
+            // Each release's pieces of one segment repeat its days: one finding.
+            if found.contains(&(key.variable.as_str(), *lo, *hi, code)) {
                 continue;
             }
-            match keyed.last_mut() {
-                Some((_, end, last)) if *end == lo && *last == columns => *end = hi,
-                _ => keyed.push((lo, hi, columns)),
-            }
+            found.push((key.variable.as_str(), *lo, *hi, code));
+            let period = server.period(*lo, *hi);
+            let over = super::words::plain(std::slice::from_ref(&period));
+            findings.push(Issue {
+                source: Some(source.name.clone()),
+                variable: Some(key.variable.clone()),
+                table: Some(s.table.pid.clone()),
+                period: Some(period),
+                ..Issue::new(
+                    level,
+                    code,
+                    format!("/sources/{index}"),
+                    format!(
+                        "Row key {} {verb} {} for {over}{tail}",
+                        key.variable, s.table.pid
+                    ),
+                )
+            });
         }
-        out.extend(keyed.into_iter().map(|(lo, hi, columns)| {
+        let mut lanes: BTreeMap<Option<&String>, Vec<KeyPiece>> = BTreeMap::new();
+        for (lane, lo, hi, key) in pieces {
+            lanes.entry(lane).or_default().push((
+                lo,
+                hi,
+                (key.variable.clone(), key.spelling.clone()),
+            ));
+        }
+        let mut keyed: Vec<(i64, Option<&String>, i64, Columns)> = Vec::new();
+        for (lane, pieces) in lanes {
+            let mut run: Vec<(i64, Option<&String>, i64, Columns)> = Vec::new();
+            for (lo, hi) in reg_core::days::slices(pieces.iter().map(|(lo, hi, _)| (*lo, *hi))) {
+                let columns: Columns = pieces
+                    .iter()
+                    .filter(|(a, b, _)| *a <= lo && hi <= *b)
+                    .map(|(_, _, column)| column.clone())
+                    .collect();
+                if columns.is_empty() {
+                    continue;
+                }
+                match run.last_mut() {
+                    Some((_, _, end, last)) if *end == lo && *last == columns => *end = hi,
+                    _ => run.push((lo, lane, hi, columns)),
+                }
+            }
+            keyed.extend(run);
+        }
+        keyed.sort_by(|a, b| (a.0, a.1).cmp(&(b.0, b.1)));
+        out.extend(keyed.into_iter().map(|(lo, lane, hi, columns)| {
             OrderRowKeys {
                 source: source.name.clone(),
                 table: s.table.pid.clone(),
                 table_name: String::new(),
                 delivered_table: String::new(),
+                release: lane.cloned(),
                 period: server.period(lo, hi),
                 columns: columns
                     .into_iter()

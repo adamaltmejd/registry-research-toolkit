@@ -178,7 +178,15 @@ fn build(
     for (e, entry) in order.entries.iter().enumerate() {
         let s = index[entry.source.as_str()];
         let days = entry.period.days(open);
-        let placements = placements(held, &entry.table, &entry.variable, days, space)?;
+        // simplify: a holding states no release yet, so an entry of one release (a shared
+        // day of a concurrent table) places nowhere and `gaps` reports it unheld; placing
+        // it by (table, variable, days) could deliver another release's file. The holdings
+        // PR adds `holding_table.release` and places such an entry in its release's files.
+        let placements = if entry.release.is_some() {
+            Vec::new()
+        } else {
+            placements(held, &entry.table, &entry.variable, days, space)?
+        };
         // Keyed by the project binding's own variable: a followed successor's entry
         // names the successor, but its logical clip is recorded under the binding.
         let binding = bindings.entry((s, entry.binding)).or_insert_with(|| {

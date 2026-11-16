@@ -5,7 +5,7 @@
   },
   "project": {
     "name": "Order case",
-    "schema_version": "6.2.0",
+    "schema_version": "6.3.0",
     "reg_meta_version": "0.64.0"
   },
   "entries": [
@@ -17,6 +17,7 @@
       "table": "demo/suc/gammal",
       "table_name": "Gammal tabell",
       "delivered_table": "Gammal tabell",
+      "release": null,
       "variable": "demo/suc/ink",
       "variable_name": "Inkomst",
       "display_name": null,
@@ -38,6 +39,7 @@
       "table": "demo/suc/ny",
       "table_name": "Ny tabell",
       "delivered_table": "Ny tabell",
+      "release": null,
       "variable": "demo/suc/ink",
       "variable_name": "Inkomst",
       "display_name": null,

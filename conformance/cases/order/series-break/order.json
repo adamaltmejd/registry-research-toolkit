@@ -21,6 +21,7 @@
       "table": "demo/brott/b",
       "table_name": "Tabell B",
       "delivered_table": "Tabell B",
+      "release": null,
       "type": "integer",
       "value_set": null,
       "variable": "demo/brott/ink",
@@ -42,6 +43,7 @@
       "table": "demo/brott/b",
       "table_name": "Tabell B",
       "delivered_table": "Tabell B",
+      "release": null,
       "type": "integer",
       "value_set": null,
       "variable": "demo/brott/civ",
@@ -130,7 +132,7 @@
   "project": {
     "name": "Order case",
     "reg_meta_version": "0.64.0",
-    "schema_version": "6.2.0"
+    "schema_version": "6.3.0"
   },
   "row_keys": []
 }

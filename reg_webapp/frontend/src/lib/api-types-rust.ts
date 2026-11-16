@@ -709,6 +709,11 @@ export interface components {
             period: components["schemas"]["Period"];
             provider: string;
             register: string;
+            /**
+             * @description On a day two primary releases of the table share, the release this entry is
+             *     delivered in (one entry per release the source names); `null` elsewhere.
+             */
+            release: string | null;
             /** @description The project source's name. */
             source: string;
             /**
@@ -761,6 +766,8 @@ export interface components {
             /** @description The name of the table the provider delivered the period in, as for an entry. */
             delivered_table: string;
             period: components["schemas"]["Period"];
+            /** @description The release, as for an entry. */
+            release: string | null;
             source: string;
             table: string;
             /** @description The table's name. */
@@ -819,6 +826,13 @@ export interface components {
             bindings: components["schemas"]["ProjectBinding"][];
             name: string;
             period: components["schemas"]["ProjectSourcePeriod"];
+            /**
+             * @description The releases of the table that serve the days two of its primary releases share,
+             *     by name as `show` lists them, matched under the identity fold. Days one release
+             *     covers are served whether or not it is named. Absent: a shared day blocks the
+             *     order (`release_ambiguous`). An explicit `null` is `invalid_field_type`.
+             */
+            releases?: string[];
             /**
              * @description A table's public id: `<provider>/<register>` for a register's implicit table,
              *     else `<provider>/<register>/<table>`.
@@ -1032,6 +1046,12 @@ export interface components {
             name: string;
             /** @description Its period, cut to the requested one. */
             period: components["schemas"]["Period"];
+            /**
+             * @description In a table two of whose releases share days, the release this column is in (an
+             *     order names it in `releases`); absent elsewhere. Lines of one variable in two
+             *     releases may overlap.
+             */
+            release?: string;
             role: string;
             /** @description One of the table's row keys, curated; never inferred from `identifier`. */
             row_key: boolean;
@@ -1196,6 +1216,12 @@ export interface components {
             row_keys: components["schemas"]["ShowRowKey"][];
             /** @description The table's series breaks and its releases'. Absent when none. */
             series_breaks?: components["schemas"]["ShowSeriesBreak"][];
+            /**
+             * @description Days two or more of the table's releases both deliver: an order over them names
+             *     the releases to use (`releases` on the project source). Absent when none, and on
+             *     a data holder's catalog.
+             */
+            shared_release_days?: components["schemas"]["ShowSharedDays"][];
             spans: components["schemas"]["Period"][];
             timeless: boolean;
             /** @description The variables in this table, each over the years it has here. */
@@ -1409,6 +1435,12 @@ export interface components {
             segments: components["schemas"]["Segment"][];
             /** @description The member's series breaks, as its `show` has them. Absent when none. */
             series_breaks?: components["schemas"]["ShowSeriesBreak"][];
+        };
+        /** @description Days two or more releases of a table share, with those releases. */
+        ShowSharedDays: {
+            period: components["schemas"]["Period"];
+            /** @description The releases sharing the days, by name, in start order. */
+            releases: string[];
         };
         /** @description A register's table; the implicit one has the register's fqid. */
         ShowTable: {

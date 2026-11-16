@@ -116,6 +116,13 @@
         "period": {
           "$ref": "#/$defs/ProjectSourcePeriod"
         },
+        "releases": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "The releases of the table that serve the days two of its primary releases share,\nby name as `show` lists them, matched under the identity fold. Days one release\ncovers are served whether or not it is named. Absent: a shared day blocks the\norder (`release_ambiguous`). An explicit `null` is `invalid_field_type`."
+        },
         "table": {
           "type": "string",
           "description": "A table's public id: `<provider>/<register>` for a register's implicit table,\nelse `<provider>/<register>/<table>`."

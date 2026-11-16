@@ -5,7 +5,7 @@
   },
   "project": {
     "name": "Order case",
-    "schema_version": "6.2.0",
+    "schema_version": "6.3.0",
     "reg_meta_version": "0.64.0"
   },
   "entries": [
@@ -17,6 +17,7 @@
       "table": "demo/und/ett",
       "table_name": "Tabell ett",
       "delivered_table": "Tabell ett",
+      "release": null,
       "variable": "demo/und/ink",
       "variable_name": "Inkomst",
       "display_name": null,

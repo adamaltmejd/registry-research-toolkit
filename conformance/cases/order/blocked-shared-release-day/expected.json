@@ -4,7 +4,7 @@
       "level": "error",
       "code": "release_ambiguous",
       "path": "/sources/0",
-      "message": "demo/conc/t was delivered in more than one release covering 2004: \"2003 - 2004\", \"2004 - 2005\". The order cannot tell which to use; choose a period outside those days",
+      "message": "demo/conc/t was delivered in more than one release covering 2004: \"2003 - 2004\", \"2004 - 2005\". Name the releases to use in the source's \"releases\", or choose a period outside those days",
       "source": "s",
       "table": "demo/conc/t",
       "table_name": "Leveranser",

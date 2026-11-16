@@ -2,7 +2,7 @@
   "note": "Concurrent releases (crates/DESIGN.md, \"Concurrent releases\"): `conc/t`'s releases \"2003 - 2004\" and \"2004 - 2005\" share 2004, so its segments are held per release, but 2001-2003 meets no shared day. `X` is one form in all releases, so the order over 2001-2003 is one entry, across the boundary between \"2001 - 2002\" and \"2003 - 2004\". Fails if per-release segments split an entry on days no two releases share, or if the unshared days block. Oracle: the fixture's JSONL.",
   "fixture": "orders",
   "project": {
-    "schema_version": "6.2.0",
+    "schema_version": "6.3.0",
     "reg_meta_version": "0.64.0",
     "name": "Order case",
     "sources": [

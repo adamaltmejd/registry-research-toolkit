@@ -108,7 +108,10 @@ the table's public id with `_` for `/` and `-`, one file per year,
 `scb_lsum_individer_sociala_agi_ku_2019` (maintainer, 2026-11-05). Columns keep the
 catalog's names, and each year's column takes that year's segment, since a value set or
 type can change between years. Sources reading one table and year share its file, as in
-the delivery layout. Names never mark the data as mock, so a pipeline switches between
+the delivery layout. An order entry or row key that names a `release` (a day two of the
+table's releases share) goes in that release's own file, the name suffixed with the
+release name's lowercase words (`_2003_2004`), and its columns read that release's
+segments and the releaseless ones. Names never mark the data as mock, so a pipeline switches between
 real and mock by its input directory alone. Renames in the rules adopt the delivery's
 names once known.
 

@@ -281,7 +281,8 @@ every order (`row_keys`), `show` lists them and `schema` lines flag them.
 - Within one period, the final edition is preferred over the preliminary one.
   Primary releases of different periods that share days are concurrent: each keeps its
   own segments, the table's coverage is their union, neither is preferred, and an order
-  over a shared day blocks (below, "Concurrent releases").
+  over a shared day is served by the releases it names, and blocks if it names none
+  (below, "Concurrent releases").
 
 **Identity.**
 
@@ -1095,8 +1096,8 @@ release assets are left unchanged.
   order (final over preliminary); the builder stores no selection segments. Naming an
   edition or a qualifier is deferred until curation, so the periods grammar and the
   source stay without them until a use is shown. A day two primary releases share is
-  the exception the release name will settle ("Concurrent releases"); until a source can
-  name one, such a day blocks.
+  the exception: the source names the releases that serve it (`releases`, "Concurrent
+  releases"), and such a day blocks unless it does.
 - **Implicit tables are not in `ident`.** A 2-part ref resolves through `ident` to the
   register. Where a table is expected, the table is `tbl WHERE pid = ?`, and the
   implicit table has the register's pid. A 2-part table value naming a register with
@@ -1305,7 +1306,7 @@ with `--catalog <steward>` ("Holdings").
 
 ## The logical order
 
-`order` runs the order check of design v4 §9 on a 6.2.0 project and returns the logical
+`order` runs the order check of design v4 §9 on a 6.3.0 project and returns the logical
 order of schema §2.3 as `data`, or the error `order_blocked`. `validate` runs the same
 check and returns the same findings as issues. Both transports call the one
 implementation in `reg-catalog`, which is what makes their results identical, except
@@ -1344,8 +1345,10 @@ for the open sentinels; a timeless table has `{start: null, end: null}`.
 
 **Findings.** Errors block: `fqid_unresolved`, `table_is_register`, `retired_ref`,
 `variable_not_in_table`, `outside_availability`, `ambiguous_window`,
-`release_ambiguous` (a requested day two primary releases of a serving table share,
-located at the source), `classification_incompatible`, `period_default_on_dated_table`,
+`release_ambiguous` (a requested day two primary releases of a serving table share and
+the source names none of, located at the source), `release_unresolved` and
+`release_outside_period` (a named release the table lacks or that has no requested day,
+located at the name), `classification_incompatible`, `period_default_on_dated_table`,
 `period_on_timeless_table`, `period_not_orderable` and `project_empty` (no sources; a
 whole-project finding) and `source_outside_window` (a dated source period wholly outside
 the study window). Warnings and infos do not: `classification_version_ambiguous`,
@@ -1435,7 +1438,7 @@ and `sun2000niva`.
 {
   "data": {
     "catalog": {"generation_id": "9f2c…", "catalog_version": "0.65.0", "schema_version": "4"},
-    "project": {"name": "income-panel", "schema_version": "6.2.0",
+    "project": {"name": "income-panel", "schema_version": "6.3.0",
                 "reg_meta_version": "0.65.0", "project_hash": "51ab…"},
     "entries": [
       {"source": "lisa", "binding": 0, "provider": "scb", "register": "scb/lisa",
@@ -2312,7 +2315,7 @@ promised (the runner deliberately has no `ORDER BY`).
 holdings pair come from startup configuration, with no request owner override. Add
 optional `extract_format = dta|parquet|csv` to project schema 5.2.0 ("Project document
 5.2.0"), defaulting to `dta` in order authoring. `project.rs::SCHEMA_VERSION` admits
-6.2.0 exactly; every other version is `unsupported_schema_version`. Older projects are
+6.3.0 exactly; every other version is `unsupported_schema_version`. Older projects are
 re-authored, not migrated or admitted by a compatibility path (AGENTS.md, "Maturity and
 compatibility"; ARCHITECTURE.md, "Project schema version"). When the optional field is
 absent, use the authoring default without inserting it before project hashing. The
@@ -2667,6 +2670,20 @@ delivered (#2220). Each entry also carries the column name the held files use ov
 days, split where that name changes, as row keys already do: a held file can name a
 column otherwise than the catalog (`AvgAr` for `avgar`). Days several differently named
 columns deliver at once (a slot family's members) keep the catalog spelling (#2409).
+
+### Project document 6.3.0
+
+`schema_version` `6.3.0` adds the optional catalog-source field `releases`: the names
+of the primary releases that serve the days two of the table's releases share
+("Concurrent releases"; maintainer ruling 2026-11-16: an order names a release by its
+name, required only on shared days). The structural layer refuses an empty list or a
+non-string or blank name (`invalid_field_type`), a name repeating an earlier one under
+case folding (`duplicate_release`), and `releases` on a manual source
+(`unexpected_field`: a hand-entered source has no catalog releases). The order check
+resolves each name (`release_unresolved`, `release_outside_period`). Each order entry
+and row key gains `release`, the release it is delivered from on a shared day and
+`null` elsewhere. Every `project_hash` changes. A 6.2.0 document is re-authored by
+setting `schema_version`; 6.2.0 below holds otherwise.
 
 ### Project document 6.2.0
 
@@ -3065,7 +3082,8 @@ still name the table the provider delivers for each era.
 - **Orders** (contract 6.3.0). Every order entry and row-key piece has
   `delivered_table`. An entry or piece whose days span releases with different
   delivered names splits at the first day of each era, so each part names one delivered
-  table. Eras come from the table's primary releases, and in composed mode its held
+  table. One that names a `release` (a shared day, "Concurrent releases") takes that
+  release's delivered name, unsplit. Eras come from the table's primary releases, and in composed mode its held
   releases too: a day takes the delivered name of the release covering it (the
   latest-starting where several do, which only a blocked shared day or a base and a held
   release can be), and a day none covers keeps the era before it. A table with no
@@ -3102,18 +3120,32 @@ period and qualifier), and the catalog keeps every release's own columns.
   may be `A` in one release and `B` in another over a shared day.
 - **Reading.** `segments` rows name their `release` in such a table, ordered by start,
   table, release, column. In an order, a requested day two primary releases of a
-  serving table share blocks the source with `release_ambiguous`, listing the
-  releases, so nothing is picked silently and no day is delivered twice. Other days
-  are served as before: an entry merges across releases where spelling, type, value set
-  and classification agree, so per-release segments change no order that meets no
-  shared day, and a segment of no release gives way to a release's own on the days it
-  covers. The project document cannot name a release yet; when it can (`releases`, the
-  release names `show` lists), the named releases serve the shared days and entries
-  name their release.
+  serving table share is served only by the releases the source names in `releases`
+  (project 6.3.0); a shared day none of them covers blocks the source with
+  `release_ambiguous`, listing the releases, so nothing is picked silently. A name is
+  matched exactly, then case-folded, against the primaries of the source's table; one
+  that matches none is `release_unresolved` and one with no requested day is
+  `release_outside_period` (both errors at `/sources/<i>/releases/<k>`). Naming two
+  releases of one shared day delivers that day once per release, each in its own
+  entries and row keys: an entry or row key over a shared day names its `release`, and
+  is delivered under that release's own name (`eras`). On a shared day a named release
+  serves its own segments plus releaseless ones it has none for. Other days are served
+  as before, `release` null: an entry merges across releases where spelling, type,
+  value set and classification agree, so per-release segments change no order that
+  meets no shared day, and a segment of no release gives way to a release's own on the
+  days it covers. `form_change` compares spellings along one timeline per release (the
+  unshared days plus that release's shared ones), so two releases spelling a column
+  differently on one day are not a change. Names resolve against the source's table
+  only, not a predecessor's in a table succession (`releases.rs`, `simplify:`: no
+  concurrent table is in one on 0.86.0). `show` lists a table's shared days and the
+  releases sharing each (`shared_release_days`); `schema` gives each line its
+  `release`.
 - **Holdings.** Compile places one slice of a physical column once per variable and
   table, so two segments of one variable on one day place it once. The holdings
-  database's own releases do not yet mark shared days (`releases.rs`, `simplify:`): a
-  steward table routed to one release is the holdings schema's to model.
+  database's own releases do not yet mark shared days (`releases.rs`, `simplify:`), so a
+  steward order entry that names a release gets no placement and reports
+  `coverage_gap` (`materialize.rs`, `simplify:`): a steward table routed to one release
+  is the holdings schema's to model.
 
 ## Series breaks
 

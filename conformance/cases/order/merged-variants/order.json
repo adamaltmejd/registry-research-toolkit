@@ -9,6 +9,7 @@
       "binding": 0,
       "classification": null,
       "delivered_table": "Individer 16+",
+      "release": null,
       "display_name": null,
       "length": null,
       "period": {
@@ -30,6 +31,7 @@
       "binding": 0,
       "classification": null,
       "delivered_table": "Individer 15+",
+      "release": null,
       "display_name": null,
       "length": null,
       "period": {
@@ -71,7 +73,7 @@
   "project": {
     "name": "Order case",
     "reg_meta_version": "0.64.0",
-    "schema_version": "6.2.0"
+    "schema_version": "6.3.0"
   },
   "row_keys": [
     {
@@ -83,6 +85,7 @@
         }
       ],
       "delivered_table": "Individer 16+",
+      "release": null,
       "period": {
         "end": "2010-01-01",
         "start": "2008-01-01"
@@ -100,6 +103,7 @@
         }
       ],
       "delivered_table": "Individer 15+",
+      "release": null,
       "period": {
         "end": "2012-01-01",
         "start": "2010-01-01"

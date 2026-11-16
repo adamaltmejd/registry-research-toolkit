@@ -1,0 +1,40 @@
+{
+  "issues": [
+    {
+      "level": "error",
+      "code": "invalid_field_type",
+      "path": "/sources/0/releases",
+      "message": "source 'releases' must be a non-empty array of release names"
+    },
+    {
+      "level": "error",
+      "code": "duplicate_release",
+      "path": "/sources/1/releases/2",
+      "message": "release 'wave a' duplicates /sources/1/releases/0"
+    },
+    {
+      "level": "error",
+      "code": "invalid_field_type",
+      "path": "/sources/2/releases/0",
+      "message": "a release name must be a non-blank string"
+    },
+    {
+      "level": "error",
+      "code": "invalid_field_type",
+      "path": "/sources/2/releases/1",
+      "message": "a release name must be a non-blank string"
+    },
+    {
+      "level": "error",
+      "code": "invalid_field_type",
+      "path": "/sources/3/releases",
+      "message": "source 'releases' must be a non-empty array of release names"
+    },
+    {
+      "level": "error",
+      "code": "unexpected_field",
+      "path": "/sources/4/releases",
+      "message": "a source entered by hand has no catalog releases to name"
+    }
+  ]
+}

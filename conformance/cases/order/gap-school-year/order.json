@@ -39,6 +39,7 @@
       "table": "demo/las",
       "table_name": "Läsårsregistret",
       "delivered_table": "Läsårsregistret",
+      "release": null,
       "type": "integer",
       "value_set": null,
       "variable": "demo/las/betyg",
@@ -81,7 +82,7 @@
   "project": {
     "name": "Order case",
     "reg_meta_version": "0.81.5",
-    "schema_version": "6.2.0"
+    "schema_version": "6.3.0"
   },
   "row_keys": [],
   "manual": []

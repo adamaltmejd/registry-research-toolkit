@@ -23,7 +23,7 @@ use crate::{
 };
 
 /// The `project_data.json` contract this runtime reads, exactly.
-pub const SCHEMA_VERSION: &str = "6.2.0";
+pub const SCHEMA_VERSION: &str = "6.3.0";
 
 /// The project in `raw`, or the issues that reject it without a catalog: the single
 /// entry point the server's validate and order operations share.
@@ -321,6 +321,13 @@ pub struct CatalogSource {
     /// else `<provider>/<register>/<table>`.
     pub table: String,
     pub period: SourcePeriod,
+    /// The releases of the table that serve the days two of its primary releases share,
+    /// by name as `show` lists them, matched under the identity fold. Days one release
+    /// covers are served whether or not it is named. Absent: a shared day blocks the
+    /// order (`release_ambiguous`). An explicit `null` is `invalid_field_type`.
+    #[serde(default)]
+    #[cfg_attr(feature = "openapi", schema(nullable = false))]
+    pub releases: Option<Vec<String>>,
     /// At least one catalog binding; the others may be entered by hand.
     pub bindings: Vec<Binding>,
 }
