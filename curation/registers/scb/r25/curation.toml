@@ -3601,18 +3601,6 @@ evidence = "Beloppet är annan inkomst enligt kontrolluppgift 31.\ncatalog:varia
 
 [[statement]]
 kind = "set"
-subject = "var:anpens"
-fields = { "sets" = ["underlag-allman-pensionsavgift"] }
-evidence = "Källkolumnen är en opak kod för avgiftsunderlaget.\ncatalog:variable_text:30495:9131:9496"
-
-[[statement]]
-kind = "set"
-subject = "var:anpens"
-fields = { "tags" = ["taxation"] }
-evidence = "Källkolumnen är en opak kod för avgiftsunderlaget.\ncatalog:variable_text:30495:9131:9496"
-
-[[statement]]
-kind = "set"
 subject = "var:anstalld-antal-manader"
 fields = { "sets" = [] }
 evidence = "Antalet månader avser anställning.\ncatalog:variable_text:30496:12784:17897"
@@ -5854,18 +5842,6 @@ kind = "set"
 subject = "var:institutionell-sektor-foretag-huvudsaklig-sysselsattning"
 fields = { "tags" = ["business"] }
 evidence = "Källkoden är ogenomskinlig; etiketten kolliderar och behöver disambiguering.\ncatalog:variable_text:30711:17897:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:bintj"
-fields = { "sets" = ["inkomst-tjanst"] }
-evidence = "Källkolumnen är en opak kod; etiketten delas med andra variabler.\ncatalog:variable_text:30712:365:2922"
-
-[[statement]]
-kind = "set"
-subject = "var:bintj"
-fields = { "tags" = ["income"] }
-evidence = "Källkolumnen är en opak kod; etiketten delas med andra variabler.\ncatalog:variable_text:30712:365:2922"
 
 [[statement]]
 kind = "set"
@@ -12484,18 +12460,6 @@ kind = "set"
 subject = "var:livrdel"
 fields = { "tags" = ["transfers"] }
 evidence = "Skattepliktig summa av pension och livränta ingår i gruppen.\ncatalog:variable_text:31320:6574:7670"
-
-[[statement]]
-kind = "set"
-subject = "var:folkbokforingsort-vid-taxeringsuttag"
-fields = { "sets" = ["folkbokforingsort"] }
-evidence = "LKF är en bokstavskod som inte återges i etiketten.\ncatalog:variable_text:31321:2922:6209"
-
-[[statement]]
-kind = "set"
-subject = "var:folkbokforingsort-vid-taxeringsuttag"
-fields = { "tags" = ["geography"] }
-evidence = "LKF är en bokstavskod som inte återges i etiketten.\ncatalog:variable_text:31321:2922:6209"
 
 [[statement]]
 kind = "set"
@@ -24741,12 +24705,6 @@ evidence = "#2102 same-label cluster 'Inkomst av rörelse' (5 variables): judged
 
 [[statement]]
 kind = "set"
-subject = "var:bintj"
-fields = { "label" = "Inkomst av tjänst (B-inkomst)" }
-evidence = "#2102 same-label cluster 'Inkomst av tjänst' (10 variables): judged different meaning, medium confidence; Opdefs separate A-income (AINTJ/INATJ) and B-income (BINTJ/INBTJ), the sum of declared income (SUMTJ/TSUM), the plain total (INTJ, TTJ share the opdef) and Nordic foreign-taxed income (TTJU, TTJUHB)."
-
-[[statement]]
-kind = "set"
 subject = "var:bkuabd"
 fields = { "label" = "Delägare m.fl. i fåmansföretag (kontrolluppgift 31)" }
 evidence = "#2102 same-label cluster 'Delägare m.fl. i fåmansföretag' (4 variables): judged different meaning, high confidence; Opdefs tie each flag to its control statement form: BKUABD to KU31, BKUABDA to KU32, BKUABIR to KU20, BKUABUR to KU25."
@@ -25145,12 +25103,6 @@ evidence = "#2102 same-label cluster 'Summa förvärvs- och kapitalinkomst, fami
 kind = "set"
 subject = "var:folkbokforingsort-31-december-indelning-1-januari"
 fields = { "label" = "Aktuell folkbokföringsort (31 december inkomståret, AKBF)" }
-evidence = "#2102 same-label cluster 'Aktuell folkbokföringsort' (4 variables): judged different meaning, high confidence; Opdefs separate the place at tax-data extraction (LKF, BLKFA) from the place at 31 December of the income year (AKBF, BLKFF); each pair is the same variable over time."
-
-[[statement]]
-kind = "set"
-subject = "var:folkbokforingsort-vid-taxeringsuttag"
-fields = { "label" = "Aktuell folkbokföringsort (vid taxeringsuttag)" }
 evidence = "#2102 same-label cluster 'Aktuell folkbokföringsort' (4 variables): judged different meaning, high confidence; Opdefs separate the place at tax-data extraction (LKF, BLKFA) from the place at 31 December of the income year (AKBF, BLKFF); each pair is the same variable over time."
 
 [[statement]]
@@ -28865,3 +28817,21 @@ kind = "assert"
 subject = "individer-och-dodsbon: PersonNr @1966 where key = 'v4544' and release = '1966'"
 fact = { entity = "occurrence", fields = { label = "Eget personnummer", identifier = true } }
 evidence = "private:ev-3905"
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: LKF"
+fields = { "variable" = "aktuell-folkbokforingsort-taxeringsuttag" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5629), never delivered together in one table, so they are one variable renamed between releases: LKF 1978-01-01..1986-12-31; BLKFA 1994-01-01..1995-12-31; blkfa 1996-01-01..1996-12-31."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: BINTJ"
+fields = { "variable" = "inbtj" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v1173), never delivered together in one table, so they are one variable renamed between releases: BINTJ 1971-01-01..1977-12-31; INBTJ 1980-01-01..1984-12-31."
+
+[[statement]]
+kind = "set"
+subject = "individer-och-dodsbon: ANPENS"
+fields = { "variable" = "underlag-allman-pensionsavgift-annat" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v631), never delivered together in one table, so they are one variable renamed between releases: ANPENS 1995-01-01..1995-12-31; AAPENSF 1999-01-01..2024-12-31."

@@ -2257,18 +2257,6 @@ evidence = "Studieskulden är en skuld hos individen.\ncatalog:variable_text:146
 
 [[statement]]
 kind = "set"
-subject = "var:ackumulerade-overavskrivningar"
-fields = { "sets" = [] }
-evidence = "Avskrivningarna är en företagsredovisningspost.\ncatalog:variable_text:14668:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:ackumulerade-overavskrivningar"
-fields = { "tags" = ["business"] }
-evidence = "Avskrivningarna är en företagsredovisningspost.\ncatalog:variable_text:14668:10957:14975"
-
-[[statement]]
-kind = "set"
 subject = "var:ackumulerade-overavskrivningar-v7322"
 fields = { "sets" = [] }
 evidence = "Avskrivningarna är en företagsredovisningspost.\ncatalog:variable_text:14669:13514:19723"
@@ -3325,18 +3313,6 @@ evidence = "Utdelningen är kapitalinkomst från aktier.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:aktiverat-arbete-for-egen-rakning"
-fields = { "sets" = [] }
-evidence = "Posten avser företagsredovisning.\ncatalog:variable_text:14759:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:aktiverat-arbete-for-egen-rakning"
-fields = { "tags" = ["business"] }
-evidence = "Posten avser företagsredovisning.\ncatalog:variable_text:14759:10957:14975"
-
-[[statement]]
-kind = "set"
 subject = "var:aktiverat-arbete-for-egen-rakning-v7412"
 fields = { "sets" = [] }
 evidence = "Posten avser företagsredovisning.\ncatalog:variable_text:14760:13514:19723"
@@ -3644,7 +3620,7 @@ evidence = "The identifier retains readable label stems and the source-column su
 [[statement]]
 kind = "set"
 subject = "var:andel-i-handelsbolag-inklusive-kapitalvinst-forlust-pa-v7659"
-fields = { "tags" = ["business"] }
+fields = { "tags" = ["business", "finance", "taxation"] }
 evidence = "The identifier retains readable label stems and the source-column suffix; the item is business accounting.\ncatalog:variable_text:14786:13514:19723"
 
 [[statement]]
@@ -3656,7 +3632,7 @@ evidence = "The identifier retains readable label stems and the source-column su
 [[statement]]
 kind = "set"
 subject = "var:andel-i-handelsbolag-inklusive-kapitalvinst-forlust-pa-v7660"
-fields = { "tags" = ["business"] }
+fields = { "tags" = ["business", "finance"] }
 evidence = "The identifier retains readable label stems and the source-column suffix; the item is business accounting.\ncatalog:variable_text:14787:13514:19723"
 
 [[statement]]
@@ -3805,18 +3781,6 @@ evidence = "Posten avser finansiella tillgångar.\ncatalog:variable_text:14800:1
 
 [[statement]]
 kind = "set"
-subject = "var:andra-intakter-ej-bokforda"
-fields = { "sets" = [] }
-evidence = "Posten är en skattejustering av intäkter.\ncatalog:variable_text:14801:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:andra-intakter-ej-bokforda"
-fields = { "tags" = ["business", "taxation"] }
-evidence = "Posten är en skattejustering av intäkter.\ncatalog:variable_text:14801:10957:14975"
-
-[[statement]]
-kind = "set"
 subject = "var:andra-intakter-som-ska-tas-upp-men-som-inte-bokforts-v7602"
 fields = { "sets" = [] }
 evidence = "Posten är en skattejustering av intäkter.\ncatalog:variable_text:14802:13514:19723"
@@ -3826,18 +3790,6 @@ kind = "set"
 subject = "var:andra-intakter-som-ska-tas-upp-men-som-inte-bokforts-v7602"
 fields = { "tags" = ["business", "taxation"] }
 evidence = "Posten är en skattejustering av intäkter.\ncatalog:variable_text:14802:13514:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:andra-kostnader-ej-bokforda"
-fields = { "sets" = [] }
-evidence = "Posten är en skattejustering av kostnader.\ncatalog:variable_text:14803:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:andra-kostnader-ej-bokforda"
-fields = { "tags" = ["business", "taxation"] }
-evidence = "Posten är en skattejustering av kostnader.\ncatalog:variable_text:14803:10957:14975"
 
 [[statement]]
 kind = "set"
@@ -14077,18 +14029,6 @@ evidence = "Variabeln avser företagens avsättningar.\ncatalog:variable_text:15
 
 [[statement]]
 kind = "set"
-subject = "var:avsattningar-for-pensioner"
-fields = { "sets" = [] }
-evidence = "Variabeln avser företagens pensionsavsättningar.\ncatalog:variable_text:15680:14610:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:avsattningar-for-pensioner"
-fields = { "tags" = ["business"] }
-evidence = "Variabeln avser företagens pensionsavsättningar.\ncatalog:variable_text:15680:14610:14975"
-
-[[statement]]
-kind = "set"
 subject = "var:avsattningar-for-pensioner-mm"
 fields = { "sets" = [] }
 evidence = "Källkolumnens etikett och ägare ändras.\ncatalog:occurrence:160961\ncatalog:occurrence:161596"
@@ -14353,18 +14293,6 @@ evidence = "Kapitalvinst på värdepapper som tas upp till beskattning.\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:avyttring-av-vardepapper-a-min-andel-av-kapitalvinst-v7803"
-fields = { "sets" = [] }
-evidence = "Kapitalvinst på värdepapper som tas upp till beskattning.\ncatalog:variable_text:15706:13514:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:avyttring-av-vardepapper-a-min-andel-av-kapitalvinst-v7803"
-fields = { "tags" = ["finance", "taxation"] }
-evidence = "Kapitalvinst på värdepapper som tas upp till beskattning.\ncatalog:variable_text:15706:13514:19723"
-
-[[statement]]
-kind = "set"
 subject = "var:avyttring-av-vardepapper-b-min-andel-av-kapitalforlust-v6602"
 fields = { "sets" = [] }
 evidence = "Avdragsgill kapitalförlust på värdepapper.\ncatalog:variable_text:15707:15340:19723"
@@ -14374,18 +14302,6 @@ kind = "set"
 subject = "var:avyttring-av-vardepapper-b-min-andel-av-kapitalforlust-v6602"
 fields = { "tags" = ["finance", "taxation"] }
 evidence = "Avdragsgill kapitalförlust på värdepapper.\ncatalog:variable_text:15707:15340:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:avyttring-av-vardepapper-b-min-andel-av-kapitalforlust-v7903"
-fields = { "sets" = [] }
-evidence = "Avdragsgill kapitalförlust på värdepapper.\ncatalog:variable_text:15708:13514:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:avyttring-av-vardepapper-b-min-andel-av-kapitalforlust-v7903"
-fields = { "tags" = ["finance", "taxation"] }
-evidence = "Avdragsgill kapitalförlust på värdepapper.\ncatalog:variable_text:15708:13514:19723"
 
 [[statement]]
 kind = "set"
@@ -14494,30 +14410,6 @@ kind = "set"
 subject = "var:avyttring-fastighet-kapitalvinst"
 fields = { "tags" = ["property", "taxation"] }
 evidence = "Variabeln avser beskattningsbar kapitalvinst.\ncatalog:variable_text:15717:10957:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:avyttring-vardepapper-kapitalforlust"
-fields = { "sets" = [] }
-evidence = "Variabeln avser avdragsgill kapitalförlust.\ncatalog:variable_text:15718:12053:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:avyttring-vardepapper-kapitalforlust"
-fields = { "tags" = ["finance", "taxation"] }
-evidence = "Variabeln avser avdragsgill kapitalförlust.\ncatalog:variable_text:15718:12053:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:avyttring-vardepapper-kapitalvinst"
-fields = { "sets" = [] }
-evidence = "Variabeln avser beskattningsbar kapitalvinst.\ncatalog:variable_text:15719:12053:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:avyttring-vardepapper-kapitalvinst"
-fields = { "tags" = ["finance", "taxation"] }
-evidence = "Variabeln avser beskattningsbar kapitalvinst.\ncatalog:variable_text:15719:12053:15340"
 
 [[statement]]
 kind = "set"
@@ -16777,18 +16669,6 @@ evidence = "Återbetalningsberättigad bränslemängd.\ncatalog:variable_text:15
 
 [[statement]]
 kind = "set"
-subject = "var:benco2sats"
-fields = { "sets" = [] }
-evidence = "Skattesats för koldioxidskatt.\ncatalog:variable_text:15922:13879:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:benco2sats"
-fields = { "tags" = ["taxation"] }
-evidence = "Skattesats för koldioxidskatt.\ncatalog:variable_text:15922:13879:14245"
-
-[[statement]]
-kind = "set"
 subject = "var:benco2skatt"
 fields = { "sets" = [] }
 evidence = "Koldioxidskatt.\ncatalog:variable_text:15923:13879:16071"
@@ -16798,18 +16678,6 @@ kind = "set"
 subject = "var:benco2skatt"
 fields = { "tags" = ["taxation"] }
 evidence = "Koldioxidskatt.\ncatalog:variable_text:15923:13879:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:benensats"
-fields = { "sets" = [] }
-evidence = "Variabeln avser energiskattesats för bensin.\ncatalog:variable_text:15924:13879:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:benensats"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "Variabeln avser energiskattesats för bensin.\ncatalog:variable_text:15924:13879:14245"
 
 [[statement]]
 kind = "set"
@@ -17038,18 +16906,6 @@ kind = "set"
 subject = "var:utgaende-lager-bensin-framstallning-el"
 fields = { "tags" = ["energy"] }
 evidence = "Källkoden är ogenomskinlig.\ncatalog:variable_text:15943:18628:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:benutglager"
-fields = { "sets" = [] }
-evidence = "Variabeln avser utgående lager av bränsle.\ncatalog:variable_text:15944:17167:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:benutglager"
-fields = { "tags" = ["energy"] }
-evidence = "Variabeln avser utgående lager av bränsle.\ncatalog:variable_text:15944:17167:17897"
 
 [[statement]]
 kind = "set"
@@ -19162,18 +19018,6 @@ kind = "set"
 subject = "var:bokforda-intakter-ej-tas-upp"
 fields = { "tags" = ["business", "taxation"] }
 evidence = "Variabeln avser företagsintäkter i beskattningen.\ncatalog:variable_text:16149:13514:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:bokforda-intakter-ej-tas-upp-ackord"
-fields = { "sets" = [] }
-evidence = "Variabeln avser företagsintäkter i beskattningen.\ncatalog:variable_text:16150:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:bokforda-intakter-ej-tas-upp-ackord"
-fields = { "tags" = ["business", "taxation"] }
-evidence = "Variabeln avser företagsintäkter i beskattningen.\ncatalog:variable_text:16150:10957:14975"
 
 [[statement]]
 kind = "set"
@@ -27877,30 +27721,6 @@ evidence = "Samma källkolumn har olika ägare i angränsande perioder.\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:fotfgco2ss"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig källkod; etiketten anger koldioxidskattesats.\ncatalog:variable_text:16938:13879:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:fotfgco2ss"
-fields = { "tags" = ["taxation"] }
-evidence = "Id:t är en ogenomskinlig källkod; etiketten anger koldioxidskattesats.\ncatalog:variable_text:16938:13879:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:fotfgenss"
-fields = { "sets" = [] }
-evidence = "Id:t är en ogenomskinlig källkod; etiketten anger energiskattesats.\ncatalog:variable_text:16940:13879:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:fotfgenss"
-fields = { "tags" = ["taxation"] }
-evidence = "Id:t är en ogenomskinlig källkod; etiketten anger energiskattesats.\ncatalog:variable_text:16940:13879:14245"
-
-[[statement]]
-kind = "set"
 subject = "var:koldioxidskatt-yrkesmassig-luftfart-fotogen-januari-april"
 fields = { "sets" = [] }
 evidence = "Källmnemoniken är opak och etiketten kräver kolumndisambiguering.\ncatalog:variable_text:16941:18993:19723"
@@ -28954,18 +28774,6 @@ kind = "set"
 subject = "var:gasco2sksats"
 fields = { "tags" = ["energy", "taxation"] }
 evidence = "Källans enhet ändras mellan perioderna.\ncatalog:variable_text:17038:16436:17167\ncatalog:variable_text:17038:17167:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:koldioxidskattesats-gasol-bat-skepp"
-fields = { "sets" = [] }
-evidence = "Id:t är en källmnemonik som inte återger etiketten.\ncatalog:variable_text:17039:13879:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:koldioxidskattesats-gasol-bat-skepp"
-fields = { "tags" = ["taxation"] }
-evidence = "Id:t är en källmnemonik som inte återger etiketten.\ncatalog:variable_text:17039:13879:14245"
 
 [[statement]]
 kind = "set"
@@ -43153,18 +42961,6 @@ evidence = "Variabeln mäter bränslemängd.\ncatalog:variable_text:18298:17532:
 
 [[statement]]
 kind = "set"
-subject = "var:oljco2sats"
-fields = { "sets" = [] }
-evidence = "Fältet avser koldioxidskatt på olja.\ncatalog:variable_text:18299:13879:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:oljco2sats"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "Fältet avser koldioxidskatt på olja.\ncatalog:variable_text:18299:13879:14245"
-
-[[statement]]
-kind = "set"
 subject = "var:oljco2skatt"
 fields = { "sets" = [] }
 evidence = "Fältet avser koldioxidskatt på olja.\ncatalog:variable_text:18300:13879:14245\ncatalog:variable_text:18300:15706:16071"
@@ -43174,18 +42970,6 @@ kind = "set"
 subject = "var:oljco2skatt"
 fields = { "tags" = ["energy", "taxation"] }
 evidence = "Fältet avser koldioxidskatt på olja.\ncatalog:variable_text:18300:13879:14245\ncatalog:variable_text:18300:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:oljensats"
-fields = { "sets" = [] }
-evidence = "Fältet avser energiskatt på olja.\ncatalog:variable_text:18301:13879:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:oljensats"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "Fältet avser energiskatt på olja.\ncatalog:variable_text:18301:13879:14245"
 
 [[statement]]
 kind = "set"
@@ -44833,18 +44617,6 @@ evidence = "Källan beskriver återbetalningsberättigad bränslemängd.\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "var:ovrco2sats"
-fields = { "sets" = [] }
-evidence = "Fältet avser skatt på bränsle.\ncatalog:variable_text:18484:13879:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:ovrco2sats"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "Fältet avser skatt på bränsle.\ncatalog:variable_text:18484:13879:14245"
-
-[[statement]]
-kind = "set"
 subject = "var:ovrco2skatt"
 fields = { "sets" = [] }
 evidence = "Fältet avser skatt på bränsle.\ncatalog:variable_text:18485:13879:14245\ncatalog:variable_text:18485:15706:16071"
@@ -44854,18 +44626,6 @@ kind = "set"
 subject = "var:ovrco2skatt"
 fields = { "tags" = ["energy", "taxation"] }
 evidence = "Fältet avser skatt på bränsle.\ncatalog:variable_text:18485:13879:14245\ncatalog:variable_text:18485:15706:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:ovrensats"
-fields = { "sets" = [] }
-evidence = "Fältet avser energiskatt.\ncatalog:variable_text:18486:13879:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:ovrensats"
-fields = { "tags" = ["energy", "taxation"] }
-evidence = "Fältet avser energiskatt.\ncatalog:variable_text:18486:13879:14245"
 
 [[statement]]
 kind = "set"
@@ -45382,18 +45142,6 @@ kind = "set"
 subject = "var:ovriga-lokal-och-fastighetsutgifter"
 fields = { "tags" = ["business"] }
 evidence = "Utgifterna ingår i företagens resultaträkning.\ncatalog:variable_text:18535:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:ovriga-obeskattade-reserver"
-fields = { "sets" = [] }
-evidence = "Reserverna ingår i företagsredovisning.\ncatalog:variable_text:18536:14245:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:ovriga-obeskattade-reserver"
-fields = { "tags" = ["business"] }
-evidence = "Reserverna ingår i företagsredovisning.\ncatalog:variable_text:18536:14245:14975"
 
 [[statement]]
 kind = "set"
@@ -50533,18 +50281,6 @@ evidence = "Fältet anger företagets geografiska säte.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:sateslan-lansate"
-fields = { "sets" = [] }
-evidence = "The variable codes the county of the firm's seat.\ncatalog:variable_text:18995:16436:16801\ncatalog:variable_text:18995:16801:17897"
-
-[[statement]]
-kind = "set"
-subject = "var:sateslan-lansate"
-fields = { "tags" = ["geography"] }
-evidence = "The variable codes the county of the firm's seat.\ncatalog:variable_text:18995:16436:16801\ncatalog:variable_text:18995:16801:17897"
-
-[[statement]]
-kind = "set"
 subject = "var:savpe"
 fields = { "sets" = [] }
 evidence = "SAVPE is an opaque source mnemonic; the source label identifies the quantity.\ncatalog:variable_text:18996:13879:17532"
@@ -51250,18 +50986,6 @@ kind = "set"
 subject = "var:skattefri-utdelning-k10"
 fields = { "tags" = ["income"] }
 evidence = "The variable measures dividend income.\ncatalog:variable_text:19063:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:skattekostnader"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter företagets skattekostnader.\ncatalog:variable_text:19064:10957:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:skattekostnader"
-fields = { "tags" = ["business", "taxation"] }
-evidence = "Variabeln mäter företagets skattekostnader.\ncatalog:variable_text:19064:10957:13514"
 
 [[statement]]
 kind = "set"
@@ -52412,7 +52136,7 @@ evidence = "Enheterna skiljer sig mellan perioderna.\ncatalog:variable_text:1916
 [[statement]]
 kind = "set"
 subject = "var:skattesats-koldioxidskatt-oljco2sksats"
-fields = { "tags" = ["taxation"] }
+fields = { "tags" = ["energy", "taxation"] }
 evidence = "Enheterna skiljer sig mellan perioderna.\ncatalog:variable_text:19162:16436:17167\ncatalog:variable_text:19162:17167:19723"
 
 [[statement]]
@@ -52496,7 +52220,7 @@ evidence = "Enheterna skiljer sig mellan perioderna.\ncatalog:variable_text:1916
 [[statement]]
 kind = "set"
 subject = "var:skattesats-koldioxidskatt-ovrco2sksats"
-fields = { "tags" = ["taxation"] }
+fields = { "tags" = ["energy", "taxation"] }
 evidence = "Enheterna skiljer sig mellan perioderna.\ncatalog:variable_text:19169:16436:17167\ncatalog:variable_text:19169:17167:19723"
 
 [[statement]]
@@ -53989,18 +53713,6 @@ evidence = "Variabeln mäter finansiella anläggningstillgångar.\ncatalog:varia
 
 [[statement]]
 kind = "set"
-subject = "var:summa-immateriella-anlaggningstillgangar"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter företagens immateriella tillgångar.\ncatalog:variable_text:19304:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:summa-immateriella-anlaggningstillgangar"
-fields = { "tags" = ["business"] }
-evidence = "Variabeln mäter företagens immateriella tillgångar.\ncatalog:variable_text:19304:10957:14975"
-
-[[statement]]
-kind = "set"
 subject = "var:summa-kortfristiga-fordringar"
 fields = { "sets" = [] }
 evidence = "Variabeln mäter företagens kortfristiga fordringar.\ncatalog:variable_text:19305:10957:14975"
@@ -54262,18 +53974,6 @@ kind = "set"
 subject = "var:summa-skuldbelopp-formogenhet"
 fields = { "tags" = ["wealth"] }
 evidence = "Variabeln mäter skulder i förmögenhetsuppgifter.\ncatalog:variable_text:19328:11323:11688\ncatalog:variable_text:19328:12418:12784"
-
-[[statement]]
-kind = "set"
-subject = "var:summa-tillgangar"
-fields = { "sets" = [] }
-evidence = "Variabeln mäter företagets tillgångar.\ncatalog:variable_text:19329:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:summa-tillgangar"
-fields = { "tags" = ["business"] }
-evidence = "Variabeln mäter företagets tillgångar.\ncatalog:variable_text:19329:10957:14975"
 
 [[statement]]
 kind = "set"
@@ -57241,18 +56941,6 @@ evidence = "Samma begrepp är uppdelat mellan perioder med in-och-upplaning-fran
 
 [[statement]]
 kind = "set"
-subject = "var:upplupna-kostnader-forutbetalda-intakter"
-fields = { "sets" = [] }
-evidence = "Bokslutspost.\ncatalog:variable_text:19589:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:upplupna-kostnader-forutbetalda-intakter"
-fields = { "tags" = ["business"] }
-evidence = "Bokslutspost.\ncatalog:variable_text:19589:10957:14975"
-
-[[statement]]
-kind = "set"
 subject = "var:upplupna-kostnader-och-forutbetalda-intakter-v7370"
 fields = { "sets" = [] }
 evidence = "Bokslutspost.\ncatalog:variable_text:19590:13514:19723"
@@ -57313,18 +57001,6 @@ evidence = "Utgifterna avser egen FoU.\ncatalog:variable_text:19594:17167:17532"
 
 [[statement]]
 kind = "set"
-subject = "var:uppskov-kapitalvinst-n4-835"
-fields = { "sets" = [] }
-evidence = "Uppskov med kapitalvinst.\ncatalog:variable_text:19595:10957:15340"
-
-[[statement]]
-kind = "set"
-subject = "var:uppskov-kapitalvinst-n4-835"
-fields = { "tags" = ["taxation"] }
-evidence = "Uppskov med kapitalvinst.\ncatalog:variable_text:19595:10957:15340"
-
-[[statement]]
-kind = "set"
 subject = "var:uppskov-med-kapitalvinst-enligt-blankett-n4-835-v6604"
 fields = { "sets" = [] }
 evidence = "Variabeln avser uppskov med kapitalvinst.\ncatalog:variable_text:19596:15340:19723"
@@ -57334,18 +57010,6 @@ kind = "set"
 subject = "var:uppskov-med-kapitalvinst-enligt-blankett-n4-835-v6604"
 fields = { "tags" = ["taxation"] }
 evidence = "Variabeln avser uppskov med kapitalvinst.\ncatalog:variable_text:19596:15340:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:uppskov-med-kapitalvinst-enligt-blankett-n4-835-v7904"
-fields = { "sets" = [] }
-evidence = "Variabeln avser uppskov med kapitalvinst.\ncatalog:variable_text:19597:13514:19723"
-
-[[statement]]
-kind = "set"
-subject = "var:uppskov-med-kapitalvinst-enligt-blankett-n4-835-v7904"
-fields = { "tags" = ["taxation"] }
-evidence = "Variabeln avser uppskov med kapitalvinst.\ncatalog:variable_text:19597:13514:19723"
 
 [[statement]]
 kind = "set"
@@ -59914,30 +59578,6 @@ kind = "set"
 subject = "var:v0634"
 fields = { "tags" = ["business", "finance"] }
 evidence = "V0634 är en opak källkod; etiketten anger bokförd vinst eller kapitalvinst på handelsbolagsandel.\ncatalog:variable_text:19820:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:v0635"
-fields = { "sets" = [] }
-evidence = "V0635 är en opak källkod; etiketten anger skattemässigt överskott eller kapitalvinst på handelsbolagsandel.\ncatalog:variable_text:19821:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:v0635"
-fields = { "tags" = ["finance", "taxation"] }
-evidence = "V0635 är en opak källkod; etiketten anger skattemässigt överskott eller kapitalvinst på handelsbolagsandel.\ncatalog:variable_text:19821:10957:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:v0636"
-fields = { "sets" = [] }
-evidence = "V0636 är en opak källkod; etiketten anger bokförd förlust eller kapitalförlust på handelsbolagsandel.\ncatalog:variable_text:19822:14610:14975"
-
-[[statement]]
-kind = "set"
-subject = "var:v0636"
-fields = { "tags" = ["business", "finance"] }
-evidence = "V0636 är en opak källkod; etiketten anger bokförd förlust eller kapitalförlust på handelsbolagsandel.\ncatalog:variable_text:19822:14610:14975"
 
 [[statement]]
 kind = "set"
@@ -79659,18 +79299,6 @@ evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsl
 
 [[statement]]
 kind = "set"
-subject = "var:benco2sats"
-fields = { "label" = "Skattesats, koldioxidskatt (båt och skepp, bensin)" }
-evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables): judged different meaning, medium confidence; 156 concurrent carbon-tax-rate columns, one per fuel, use and year basis; qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; identical-text 2008 SATS/SS and 2014+ SKSATS columns with disjoint periods, and NV to NUV (2023), are treated as renames and share a label."
-
-[[statement]]
-kind = "set"
-subject = "var:benensats"
-fields = { "label" = "Skattesats, energiskatt (båt och skepp, bensin)" }
-evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
-
-[[statement]]
-kind = "set"
 subject = "var:benensksatsm"
 fields = { "label" = "Skattesats, energiskatt (BENENSKSATSM1)" }
 evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
@@ -79740,12 +79368,6 @@ kind = "set"
 subject = "var:bentotm"
 fields = { "label" = "Återbetalningsberättigad mängd, bränsle (BENTOTM1)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
-
-[[statement]]
-kind = "set"
-subject = "var:benutglager"
-fields = { "label" = "Utgående lager, punktskatter (framställning av el, bensin)" }
-evidence = "#2102 same-label cluster 'Utgående lager, punktskatter' (22 variables): judged different meaning, medium confidence; 22 columns for different fuels and uses per the opdefs; BENUTGLAGER/BENUTG, OLJKV1UTG/FARHALVAR1UTG and DIEOVUTGLAGER/DIEHALVAR1UTG have identical opdefs and adjacent periods, so are treated as renames."
 
 [[statement]]
 kind = "set"
@@ -82131,18 +81753,6 @@ evidence = "#2102 same-label cluster 'Förutbetalda kostn och andra upplupna int
 
 [[statement]]
 kind = "set"
-subject = "var:fotfgco2ss"
-fields = { "label" = "Skattesats, koldioxidskatt (yrkesmässig luftfart, flygfotogen, föregående år)" }
-evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables): judged different meaning, medium confidence; 156 concurrent carbon-tax-rate columns, one per fuel, use and year basis; qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; identical-text 2008 SATS/SS and 2014+ SKSATS columns with disjoint periods, and NV to NUV (2023), are treated as renames and share a label."
-
-[[statement]]
-kind = "set"
-subject = "var:fotfgenss"
-fields = { "label" = "Skattesats, energiskatt (yrkesmässig luftfart, flygfotogen, föregående år)" }
-evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
-
-[[statement]]
-kind = "set"
 subject = "var:fotjaapco2sksats"
 fields = { "label" = "Skattesats, koldioxidskatt (yrkesmässig luftfart, flygfotogen, januari-april)" }
 evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables): judged different meaning, medium confidence; 156 concurrent carbon-tax-rate columns, one per fuel, use and year basis; qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; identical-text 2008 SATS/SS and 2014+ SKSATS columns with disjoint periods, and NV to NUV (2023), are treated as renames and share a label."
@@ -83141,12 +82751,6 @@ evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables
 kind = "set"
 subject = "var:koldioxidskattesats-diesel-jord-skogsbruk-oktober-december"
 fields = { "label" = "Skattesats, koldioxidskatt (jord- och skogsbruk, diesel, oktober-december)" }
-evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables): judged different meaning, medium confidence; 156 concurrent carbon-tax-rate columns, one per fuel, use and year basis; qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; identical-text 2008 SATS/SS and 2014+ SKSATS columns with disjoint periods, and NV to NUV (2023), are treated as renames and share a label."
-
-[[statement]]
-kind = "set"
-subject = "var:koldioxidskattesats-gasol-bat-skepp"
-fields = { "label" = "Skattesats, koldioxidskatt (båt och skepp, gasol)" }
 evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables): judged different meaning, medium confidence; 156 concurrent carbon-tax-rate columns, one per fuel, use and year basis; qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; identical-text 2008 SATS/SS and 2014+ SKSATS columns with disjoint periods, and NV to NUV (2023), are treated as renames and share a label."
 
 [[statement]]
@@ -84297,18 +83901,6 @@ evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsl
 
 [[statement]]
 kind = "set"
-subject = "var:oljco2sats"
-fields = { "label" = "Skattesats, koldioxidskatt (båt och skepp, olja)" }
-evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables): judged different meaning, medium confidence; 156 concurrent carbon-tax-rate columns, one per fuel, use and year basis; qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; identical-text 2008 SATS/SS and 2014+ SKSATS columns with disjoint periods, and NV to NUV (2023), are treated as renames and share a label."
-
-[[statement]]
-kind = "set"
-subject = "var:oljensats"
-fields = { "label" = "Skattesats, energiskatt (båt och skepp, olja)" }
-evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
-
-[[statement]]
-kind = "set"
 subject = "var:oljinghalvar1"
 fields = { "label" = "Ingående lager, återbetalningar och punktskatter (jord- och skogsbruk, eldningsolja, första halvåret)" }
 evidence = "#2102 same-label cluster 'Ingående lager, återbetalningar och punktskatter' (21 variables): judged different meaning, medium confidence; 21 concurrent columns whose opdefs name use and fuel; where opdefs collide with another column or contradict the name (DIEHALVAR1ING, FARHALVAR1ING, DIEING, BENING) the raw code is used; BENINGLAGER and FARING share an opdef and successive periods."
@@ -84996,18 +84588,6 @@ kind = "set"
 subject = "var:ovratermngkv1"
 fields = { "label" = "Återbetalningsberättigad mängd, bränsle (industri utsläppsrätter, kvartal 1, övrigt bränsle)" }
 evidence = "#2102 same-label cluster 'Återbetalningsberättigad mängd, bränsle' (208 variables): judged different meaning, medium confidence; 208 concurrent columns in punktskatter-for-energi, each a different fuel, use, time slice (föregående/innevarande år, år 1-3, halvår, month spans) or emissions-trading variant per the opdefs; where a column's opdef contradicts its column name or comes from another column, only the column code is used."
-
-[[statement]]
-kind = "set"
-subject = "var:ovrco2sats"
-fields = { "label" = "Skattesats, koldioxidskatt (båt och skepp, övrigt bränsle)" }
-evidence = "#2102 same-label cluster 'Skattesats, koldioxidskatt' (156 variables): judged different meaning, medium confidence; 156 concurrent carbon-tax-rate columns, one per fuel, use and year basis; qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; identical-text 2008 SATS/SS and 2014+ SKSATS columns with disjoint periods, and NV to NUV (2023), are treated as renames and share a label."
-
-[[statement]]
-kind = "set"
-subject = "var:ovrensats"
-fields = { "label" = "Skattesats, energiskatt (båt och skepp, övrigt bränsle)" }
-evidence = "#2102 same-label cluster 'Skattesats, energiskatt' (163 variables): judged different meaning, medium confidence; 163 concurrent tax-rate columns, one per fuel, use and year basis (föregående/innevarande år, år 1-3, period, quarter); qualifiers come from the opdefs where they agree with the column name and otherwise from the raw column code, because many opdefs are misaligned with their column names; BEN/OVR/OLJ ENSATS (2008) and FOT FG/NV ENSS are treated as renames of the 2014+ ENSKSATS columns and NV to NUV (2023) likewise."
 
 [[statement]]
 kind = "set"
@@ -96319,3 +95899,339 @@ kind = "set"
 subject = "rot-och-rut: var:orgnr"
 fields.row_key = true
 evidence = "Row key: orgnr identify a row: company table keys on BORGNR; the löpnummer replacing it in MONA is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: V0330"
+fields = { "variable" = "ackumulerade-overavskrivningar-v7322" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4310), never delivered together in one table, so they are one variable renamed between releases: V0330 2000-01-01..2010-12-31; V7322 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V0330"
+fields = { "variable" = "ackumulerade-overavskrivningar-v7322" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4310), never delivered together in one table, so they are one variable renamed between releases: V0330 2000-01-01..2010-12-31; V7322 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: V0330"
+fields = { "variable" = "ackumulerade-overavskrivningar-v7322" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4310), never delivered together in one table, so they are one variable renamed between releases: V0330 2000-01-01..2010-12-31; V7322 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: V0402"
+fields = { "variable" = "aktiverat-arbete-for-egen-rakning-v7412" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4313), never delivered together in one table, so they are one variable renamed between releases: V0402 2000-01-01..2010-12-31; V7412 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V0402"
+fields = { "variable" = "aktiverat-arbete-for-egen-rakning-v7412" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4313), never delivered together in one table, so they are one variable renamed between releases: V0402 2000-01-01..2010-12-31; V7412 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: V0402"
+fields = { "variable" = "aktiverat-arbete-for-egen-rakning-v7412" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4313), never delivered together in one table, so they are one variable renamed between releases: V0402 2000-01-01..2010-12-31; V7412 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: V0636"
+fields = { "variable" = "andel-i-handelsbolag-inklusive-kapitalvinst-forlust-pa-v7660" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17768), never delivered together in one table, so they are one variable renamed between releases: V0636 2000-01-01..2010-12-31; V7660 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: V0636"
+fields = { "variable" = "andel-i-handelsbolag-inklusive-kapitalvinst-forlust-pa-v7660" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17768), never delivered together in one table, so they are one variable renamed between releases: V0636 2000-01-01..2010-12-31; V7660 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: V0635"
+fields = { "variable" = "andel-i-handelsbolag-inklusive-kapitalvinst-forlust-pa-v7659" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17767), never delivered together in one table, so they are one variable renamed between releases: V0635 2000-01-01..2010-12-31; V7659 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: V0635"
+fields = { "variable" = "andel-i-handelsbolag-inklusive-kapitalvinst-forlust-pa-v7659" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17767), never delivered together in one table, so they are one variable renamed between releases: V0635 2000-01-01..2010-12-31; V7659 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V0603"
+fields = { "variable" = "andra-intakter-som-ska-tas-upp-men-som-inte-bokforts-v7602" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v16765), never delivered together in one table, so they are one variable renamed between releases: V0603 2000-01-01..2010-12-31; V7602 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: V0603"
+fields = { "variable" = "andra-intakter-som-ska-tas-upp-men-som-inte-bokforts-v7602" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v16765), never delivered together in one table, so they are one variable renamed between releases: V0603 2000-01-01..2010-12-31; V7602 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V0610"
+fields = { "variable" = "andra-kostnader-som-ska-dras-av-men-som-inte-bokforts-v7701" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v16766), never delivered together in one table, so they are one variable renamed between releases: V0610 2000-01-01..2010-12-31; V7701 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: V0610"
+fields = { "variable" = "andra-kostnader-som-ska-dras-av-men-som-inte-bokforts-v7701" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v16766), never delivered together in one table, so they are one variable renamed between releases: V0610 2000-01-01..2010-12-31; V7701 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: V0320"
+fields = { "variable" = "avsattningar-for-pensioner-v7331" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4226), never delivered together in one table, so they are one variable renamed between releases: V0320 2000-01-01..2010-12-31; V7331 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V0320"
+fields = { "variable" = "avsattningar-for-pensioner-v7331" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4226), never delivered together in one table, so they are one variable renamed between releases: V0320 2000-01-01..2010-12-31; V7331 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: V0320"
+fields = { "variable" = "avsattningar-for-pensioner-v7331" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4226), never delivered together in one table, so they are one variable renamed between releases: V0320 2000-01-01..2010-12-31; V7331 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n3b: V7803"
+fields = { "variable" = "avyttring-av-vardepapper-a-min-andel-av-kapitalvinst-v6504" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17828), never delivered together in one table, so they are one variable renamed between releases: V0893 2003-01-01..2011-12-31; V7803 2007-01-01..2023-12-31; V6504 2012-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n3a: V0893"
+fields = { "variable" = "avyttring-av-vardepapper-a-min-andel-av-kapitalvinst-v6504" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17828), never delivered together in one table, so they are one variable renamed between releases: V0893 2003-01-01..2011-12-31; V7803 2007-01-01..2023-12-31; V6504 2012-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n3b: V0893"
+fields = { "variable" = "avyttring-av-vardepapper-a-min-andel-av-kapitalvinst-v6504" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17828), never delivered together in one table, so they are one variable renamed between releases: V0893 2003-01-01..2011-12-31; V7803 2007-01-01..2023-12-31; V6504 2012-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n3b: V7903"
+fields = { "variable" = "avyttring-av-vardepapper-b-min-andel-av-kapitalforlust-v6602" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17829), never delivered together in one table, so they are one variable renamed between releases: V0894 2003-01-01..2011-12-31; V7903 2007-01-01..2023-12-31; V6602 2012-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n3a: V0894"
+fields = { "variable" = "avyttring-av-vardepapper-b-min-andel-av-kapitalforlust-v6602" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17829), never delivered together in one table, so they are one variable renamed between releases: V0894 2003-01-01..2011-12-31; V7903 2007-01-01..2023-12-31; V6602 2012-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n3b: V0894"
+fields = { "variable" = "avyttring-av-vardepapper-b-min-andel-av-kapitalforlust-v6602" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17829), never delivered together in one table, so they are one variable renamed between releases: V0894 2003-01-01..2011-12-31; V7903 2007-01-01..2023-12-31; V6602 2012-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: V0656"
+fields = { "variable" = "bokforda-intakter-som-inte-ska-tas-upp-ackordsvinster-v7752" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17773), never delivered together in one table, so they are one variable renamed between releases: V0656 2000-01-01..2010-12-31; V7752 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: V0656"
+fields = { "variable" = "bokforda-intakter-som-inte-ska-tas-upp-ackordsvinster-v7752" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17773), never delivered together in one table, so they are one variable renamed between releases: V0656 2000-01-01..2010-12-31; V7752 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: V0598"
+fields = { "variable" = "skattekostnader-skatt-pa-arets-resultat" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4317), never delivered together in one table, so they are one variable renamed between releases: V0598 2000-01-01..2006-12-31; V7528 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: BENENSATS"
+fields = { "variable" = "skattesats-energiskatt-benensksats" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v39788), never delivered together in one table, so they are one variable renamed between releases: BENENSATS 2008-01-01..2008-12-31; BENENSKSATS 2014-01-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: OLJENSATS"
+fields = { "variable" = "skattesats-energiskatt-oljensksats" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v39788), never delivered together in one table, so they are one variable renamed between releases: OLJENSATS 2008-01-01..2008-12-31; OLJENSKSATS 2015-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: OVRENSATS"
+fields = { "variable" = "skattesats-energiskatt-ovrensksats" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v39788), never delivered together in one table, so they are one variable renamed between releases: OVRENSATS 2008-01-01..2008-12-31; OVRENSKSATS 2015-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: FOTFGENSS"
+fields = { "variable" = "skattesats-energiskatt-fotfgensksats" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v39788), never delivered together in one table, so they are one variable renamed between releases: FOTFGENSS 2008-01-01..2008-12-31; FOTFGENSKSATS 2014-01-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: BENCO2SATS"
+fields = { "variable" = "skattesats-koldioxidskatt-benco2sksats" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v39789), never delivered together in one table, so they are one variable renamed between releases: BENCO2SATS 2008-01-01..2008-12-31; BENCO2SKSATS 2014-01-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: GASCO3SATS"
+fields = { "variable" = "gasco2sksats" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v39789), never delivered together in one table, so they are one variable renamed between releases: GASCO3SATS 2008-01-01..2008-12-31; GASCO2SKSATS 2015-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: OLJCO2SATS"
+fields = { "variable" = "skattesats-koldioxidskatt-oljco2sksats" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v39789), never delivered together in one table, so they are one variable renamed between releases: OLJCO2SATS 2008-01-01..2008-12-31; OLJCO2SKSATS 2015-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: OVRCO2SATS"
+fields = { "variable" = "skattesats-koldioxidskatt-ovrco2sksats" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v39789), never delivered together in one table, so they are one variable renamed between releases: OVRCO2SATS 2008-01-01..2008-12-31; OVRCO2SKSATS 2015-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: FOTFGCO2SS"
+fields = { "variable" = "skattesats-koldioxidskatt-fotfgco2sksats" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v39789), never delivered together in one table, so they are one variable renamed between releases: FOTFGCO2SS 2008-01-01..2008-12-31; FOTFGCO2SKSATS 2014-01-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: V0299"
+fields = { "variable" = "summa-tillgangar-sum-tillg" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4214), never delivered together in one table, so they are one variable renamed between releases: V0299 2000-01-01..2010-12-31; sum_tillg 2018-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V0299"
+fields = { "variable" = "summa-tillgangar-sum-tillg" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4214), never delivered together in one table, so they are one variable renamed between releases: V0299 2000-01-01..2010-12-31; sum_tillg 2018-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: V0299"
+fields = { "variable" = "summa-tillgangar-sum-tillg" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4214), never delivered together in one table, so they are one variable renamed between releases: V0299 2000-01-01..2010-12-31; sum_tillg 2018-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n8: LanSate"
+fields = { "variable" = "sateslan" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v1058), never delivered together in one table, so they are one variable renamed between releases: LanSate 2009-01-01..2018-12-31; BLAN 2012-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "bolagsverket: LanSate"
+fields = { "variable" = "sateslan" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v1058), never delivered together in one table, so they are one variable renamed between releases: LanSate 2009-01-01..2018-12-31; BLAN 2012-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: LanSate"
+fields = { "variable" = "sateslan" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v1058), never delivered together in one table, so they are one variable renamed between releases: LanSate 2009-01-01..2018-12-31; BLAN 2012-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "energi-tabell: LanSate"
+fields = { "variable" = "sateslan" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v1058), never delivered together in one table, so they are one variable renamed between releases: LanSate 2009-01-01..2018-12-31; BLAN 2012-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: LanSate"
+fields = { "variable" = "sateslan" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v1058), never delivered together in one table, so they are one variable renamed between releases: LanSate 2009-01-01..2018-12-31; BLAN 2012-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: LanSate"
+fields = { "variable" = "sateslan" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v1058), never delivered together in one table, so they are one variable renamed between releases: LanSate 2009-01-01..2018-12-31; BLAN 2012-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: V0305"
+fields = { "variable" = "upplupna-kostnader-och-forutbetalda-intakter-v7370" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4251), never delivered together in one table, so they are one variable renamed between releases: V0305 2000-01-01..2010-12-31; V7370 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V0305"
+fields = { "variable" = "upplupna-kostnader-och-forutbetalda-intakter-v7370" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4251), never delivered together in one table, so they are one variable renamed between releases: V0305 2000-01-01..2010-12-31; V7370 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: V0305"
+fields = { "variable" = "upplupna-kostnader-och-forutbetalda-intakter-v7370" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4251), never delivered together in one table, so they are one variable renamed between releases: V0305 2000-01-01..2010-12-31; V7370 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n3a: V0835"
+fields = { "variable" = "uppskov-med-kapitalvinst-enligt-blankett-n4-835-v6604" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17832), never delivered together in one table, so they are one variable renamed between releases: V0835 2000-01-01..2011-12-31; V7904 2007-01-01..2023-12-31; V6604 2012-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n3b: V0835"
+fields = { "variable" = "uppskov-med-kapitalvinst-enligt-blankett-n4-835-v6604" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17832), never delivered together in one table, so they are one variable renamed between releases: V0835 2000-01-01..2011-12-31; V7904 2007-01-01..2023-12-31; V6604 2012-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "bilaga-n3b: V7904"
+fields = { "variable" = "uppskov-med-kapitalvinst-enligt-blankett-n4-835-v6604" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17832), never delivered together in one table, so they are one variable renamed between releases: V0835 2000-01-01..2011-12-31; V7904 2007-01-01..2023-12-31; V6604 2012-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "punktskatter-for-energi: BENUTGLAGER"
+fields = { "variable" = "utgaende-lager-bensin-framstallning-el" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v39748), never delivered together in one table, so they are one variable renamed between releases: BENUTGLAGER 2017-01-01..2018-12-31; BENUTG 2021-01-01..2023-12-31."
+
+[[statement]]
+kind = "set"
+subject = "aktiebolag: V0339"
+fields = { "variable" = "ovriga-obeskattade-reserver-v7323" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4245), never delivered together in one table, so they are one variable renamed between releases: V0339 2000-01-01..2010-12-31; V7323 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V0339"
+fields = { "variable" = "ovriga-obeskattade-reserver-v7323" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4245), never delivered together in one table, so they are one variable renamed between releases: V0339 2000-01-01..2010-12-31; V7323 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: V0339"
+fields = { "variable" = "ovriga-obeskattade-reserver-v7323" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4245), never delivered together in one table, so they are one variable renamed between releases: V0339 2000-01-01..2010-12-31; V7323 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "deklarationsuppgifter: V0234"
+fields = { "variable" = "immateriella-anlaggningstillgangar-enskilda-naringsidkare" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4209), never delivered together in one table, so they are one variable renamed between releases: V0234 2000-01-01..2010-12-31; V7200 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "handelsbolag: V0234"
+fields = { "variable" = "immateriella-anlaggningstillgangar-enskilda-naringsidkare" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4209), never delivered together in one table, so they are one variable renamed between releases: V0234 2000-01-01..2010-12-31; V7200 2007-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."

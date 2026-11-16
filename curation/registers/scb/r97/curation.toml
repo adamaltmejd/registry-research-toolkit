@@ -13092,18 +13092,6 @@ evidence = "ISU771 är en opak källkod.\ncatalog:variable_text:24723:1826:2191"
 
 [[statement]]
 kind = "set"
-subject = "var:itn014"
-fields = { "sets" = ["egenavgifter"] }
-evidence = "Källkoden är opak.\ncatalog:variable_text:24724:1826:2191"
-
-[[statement]]
-kind = "set"
-subject = "var:itn014"
-fields = { "tags" = ["taxation"] }
-evidence = "Källkoden är opak.\ncatalog:variable_text:24724:1826:2191"
-
-[[statement]]
-kind = "set"
 subject = "var:itn70"
 fields = { "sets" = ["skatteandel"] }
 evidence = "Källkoden är opak.\ncatalog:variable_text:24725:1826:2191"
@@ -13431,12 +13419,6 @@ kind = "set"
 subject = "var:boende-ranta-fritidsfastighet"
 fields = { "tags" = ["finance", "housing"] }
 evidence = "Id:t är en opak källkod.\ncatalog:variable_text:24753:9496:10227"
-
-[[statement]]
-kind = "set"
-subject = "var:katomboh"
-fields = { "tags" = ["consumption", "housing"] }
-evidence = "Tomträttsavgälden grupperas med motsvarande belopp.\ncatalog:variable_text:24754:10227:11323"
 
 [[statement]]
 kind = "set"
@@ -14667,18 +14649,6 @@ kind = "set"
 subject = "var:kostnadsersattning-tjanst"
 fields = { "tags" = ["employment"] }
 evidence = "Kostnadsersättning i tjänsten.\ncatalog:variable_text:24866:12053:16071"
-
-[[statement]]
-kind = "set"
-subject = "var:kov017"
-fields = { "sets" = ["traffindikator"] }
-evidence = "Källkoden är ogenomskinlig; etiketten anger träffindikator.\ncatalog:variable_text:24262:9496:9862\ncatalog:variable_text:24867:1826:2191"
-
-[[statement]]
-kind = "set"
-subject = "var:kov017"
-fields = { "tags" = ["methods"] }
-evidence = "Källkoden är ogenomskinlig; etiketten anger träffindikator.\ncatalog:variable_text:24262:9496:9862\ncatalog:variable_text:24867:1826:2191"
 
 [[statement]]
 kind = "set"
@@ -18654,18 +18624,6 @@ evidence = "Realisationsförlust vid återfört uppskov.\ncatalog:variable_text:
 
 [[statement]]
 kind = "set"
-subject = "var:reaforlust-naringsfastighet"
-fields = { "sets" = ["kapitalforlust"] }
-evidence = "Realisationsförlust på näringsfastighet.\ncatalog:variable_text:25237:9496:10957"
-
-[[statement]]
-kind = "set"
-subject = "var:reaforlust-naringsfastighet"
-fields = { "tags" = ["income", "property"] }
-evidence = "Realisationsförlust på näringsfastighet.\ncatalog:variable_text:25237:9496:10957"
-
-[[statement]]
-kind = "set"
 subject = "var:reaforlust-naringsfastighet-kfna2"
 fields = { "sets" = ["kapitalforlust"] }
 evidence = "Realisationsförlust på näringsfastighet.\ncatalog:variable_text:25238:12053:12418"
@@ -18771,18 +18729,6 @@ kind = "set"
 subject = "var:reavinst-aterforing-andelsbyteslagen"
 fields = { "tags" = ["income"] }
 evidence = "Reavinst vid återföring enligt andelsbyteslagen.\ncatalog:variable_text:25246:10592:10957\ncatalog:variable_text:25246:12053:12418"
-
-[[statement]]
-kind = "set"
-subject = "var:reavinst-naringsfastighet"
-fields = { "sets" = ["kapitalvinst"] }
-evidence = "Reavinst på näringsfastighet.\ncatalog:variable_text:25247:9496:10957"
-
-[[statement]]
-kind = "set"
-subject = "var:reavinst-naringsfastighet"
-fields = { "tags" = ["income", "property"] }
-evidence = "Reavinst på näringsfastighet.\ncatalog:variable_text:25247:9496:10957"
 
 [[statement]]
 kind = "set"
@@ -25038,12 +24984,6 @@ evidence = "r85 and r108 specify purchase costs for personal property, supportin
 
 [[statement]]
 kind = "set"
-subject = "var:katomboh"
-fields = { "sets" = ["tomtrattsavgald"] }
-evidence = "The source explicitly identifies tomträttsavgäld and explains that income-register amounts are summed at household level (r251). | The source explicitly identifies tomträttsavgäld and explains that income-register amounts are summed at household level (r251).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:24699\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:229909"
-
-[[statement]]
-kind = "set"
 subject = "var:katomboz"
 fields = { "sets" = ["tomtrattsavgald"] }
 evidence = "r204 defines ground rent reported through control statements; r206 documents another HEK ground-rent measure. | r204 defines ground rent reported through control statements; r206 provides a supported partner independently of the ambiguous rental-property charges.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:24700\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:24736\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:24777"
@@ -29162,12 +29102,6 @@ evidence = "#2102 same-label cluster 'Utbetalt från Försäkringskassan' (5 var
 
 [[statement]]
 kind = "set"
-subject = "var:katomboh"
-fields = { "label" = "Tomträttsavgäld (hushåll)" }
-evidence = "#2102 same-label cluster 'Tomträttsavgäld' (5 variables): judged different meaning, medium confidence; Opdefs: KATOMEG is for eget hem, KATOMFR for fritidsfastighet, KATOMBOH is summed at household level; KATOMBOZ (kosthushall, disjoint period, no text) is taken as the continuation of KATOMBOH; KKUTOMT has no text."
-
-[[statement]]
-kind = "set"
 subject = "var:katomboz"
 fields = { "label" = "Tomträttsavgäld (hushåll)" }
 evidence = "#2102 same-label cluster 'Tomträttsavgäld' (5 variables): judged different meaning, medium confidence; Opdefs: KATOMEG is for eget hem, KATOMFR for fritidsfastighet, KATOMBOH is summed at household level; KATOMBOZ (kosthushall, disjoint period, no text) is taken as the continuation of KATOMBOH; KKUTOMT has no text."
@@ -29429,12 +29363,6 @@ kind = "set"
 subject = "var:korrigeringsfaktor-gk"
 fields = { "label" = "Korrigeringsfaktor (för order statistics, deciler och percentiler)" }
 evidence = "#2102 same-label cluster 'Korrigeringsfaktor' (2 variables): judged different meaning, high confidence; Opdefs: BSMEDV is the calibrated uppräkningsfaktor for household weights, GK is used for order statistics such as deciles and percentiles."
-
-[[statement]]
-kind = "set"
-subject = "var:kov017"
-fields = { "label" = "Träffindikator (SCBTB-registret)" }
-evidence = "#2102 same-label cluster 'Träffindikator' (3 variables): judged different meaning, medium confidence; Opdefs: KOV017 and BTBTR (identical text and codes, disjoint periods) indicate a hit in the SCBTB register, WTRDREG a hit in the DR register."
 
 [[statement]]
 kind = "set"
@@ -32256,3 +32184,33 @@ kind = "set"
 subject = "individregister: var:eget-personnr"
 fields.row_key = true
 evidence = "Row key: eget-personnr identify a row: person table keys on the own personnummer of the person; family, household, partner, parent, workplace and firm ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "individregister: ITN014"
+fields = { "variable" = "segen" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v727), never delivered together in one table, so they are one variable renamed between releases: ITN014 1975-01-01..1975-12-31; SEGEN 1996-01-01..2013-12-31."
+
+[[statement]]
+kind = "set"
+subject = "individregister: KFNA"
+fields = { "variable" = "kfna" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4733), never delivered together in one table, so they are one variable renamed between releases: KFNA 1996-01-01..1999-12-31; KFNA1 2000-01-01..2003-12-31."
+
+[[statement]]
+kind = "set"
+subject = "individregister: KVNA"
+fields = { "variable" = "kvna" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4734), never delivered together in one table, so they are one variable renamed between releases: KVNA 1996-01-01..1999-12-31; KVNA1 2000-01-01..2003-12-31."
+
+[[statement]]
+kind = "set"
+subject = "kosthushall: KATOMBOH"
+fields = { "variable" = "katomboz" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v2557), never delivered together in one table, so they are one variable renamed between releases: KATOMBOH 1998-01-01..2000-12-31; KATOMBOZ 2004-01-01..2013-12-31."
+
+[[statement]]
+kind = "set"
+subject = "individregister: KOV017"
+fields = { "variable" = "btbtr" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v42888), never delivered together in one table, so they are one variable renamed between releases: KOV017 1975-01-01..1975-12-31; BTBTR 1996-01-01..1996-12-31."

@@ -1963,18 +1963,6 @@ evidence = "Arbetsmarknadsstatus vid uppföljning hör till samma begrepp.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:avstand-barn-far"
-fields = { "sets" = ["avstand-barn-foralder"] }
-evidence = "Avståndet mellan barn och far hör till avståndsmåtten.\ncatalog:occurrence-locators:variable:6449"
-
-[[statement]]
-kind = "set"
-subject = "var:avstand-barn-far"
-fields = { "tags" = ["geography"] }
-evidence = "Avståndet mellan barn och far hör till avståndsmåtten.\ncatalog:occurrence-locators:variable:6449"
-
-[[statement]]
-kind = "set"
 subject = "var:avstand-barn-mor"
 fields = { "sets" = ["avstand-barn-foralder"] }
 evidence = "Avståndet mellan barn och mor hör till avståndsmåtten.\ncatalog:occurrence-locators:variable:6450"
@@ -2024,50 +2012,14 @@ evidence = "Avståndet till den andra föräldern hör till avståndsmåtten.\nc
 [[statement]]
 kind = "set"
 subject = "var:bakgrund-bioforaldrar"
-fields = { "sets" = ["biologiska-foraldrars-bakgrund"] }
-evidence = "Kodningen beskriver biologiska föräldrars bakgrund.\ncatalog:occurrence-locators:variable:6454"
-
-[[statement]]
-kind = "set"
-subject = "var:bakgrund-bioforaldrar"
 fields = { "tags" = ["demographics"] }
 evidence = "Kodningen beskriver biologiska föräldrars bakgrund.\ncatalog:occurrence-locators:variable:6454"
-
-[[statement]]
-kind = "set"
-subject = "var:bakgrund-bioforaldrar-biobakgrund"
-fields = { "sets" = ["biologiska-foraldrars-bakgrund"] }
-evidence = "Kodningen beskriver biologiska föräldrars bakgrund.\ncatalog:occurrence-locators:variable:6455"
-
-[[statement]]
-kind = "set"
-subject = "var:bakgrund-bioforaldrar-biobakgrund"
-fields = { "tags" = ["demographics"] }
-evidence = "Kodningen beskriver biologiska föräldrars bakgrund.\ncatalog:occurrence-locators:variable:6455"
-
-[[statement]]
-kind = "set"
-subject = "var:bakgrund-boforaldrar"
-fields = { "sets" = ["boforaldrars-bakgrund"] }
-evidence = "Kodningen beskriver boföräldrars bakgrund.\ncatalog:occurrence-locators:variable:6456"
 
 [[statement]]
 kind = "set"
 subject = "var:bakgrund-boforaldrar"
 fields = { "tags" = ["demographics"] }
 evidence = "Kodningen beskriver boföräldrars bakgrund.\ncatalog:occurrence-locators:variable:6456"
-
-[[statement]]
-kind = "set"
-subject = "var:bakgrund-boforaldrar-bobakgrund"
-fields = { "sets" = ["boforaldrars-bakgrund"] }
-evidence = "Kodningen beskriver boföräldrars bakgrund.\ncatalog:occurrence-locators:variable:6457"
-
-[[statement]]
-kind = "set"
-subject = "var:bakgrund-boforaldrar-bobakgrund"
-fields = { "tags" = ["demographics"] }
-evidence = "Kodningen beskriver boföräldrars bakgrund.\ncatalog:occurrence-locators:variable:6457"
 
 [[statement]]
 kind = "set"
@@ -4555,21 +4507,9 @@ evidence = "#2100 group name: slug words restored from the member and register l
 
 [[statement]]
 kind = "set"
-subject = "set:biologiska-foraldrars-bakgrund"
-fields = { "label" = "Biologiska föräldrars bakgrund" }
-evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
-
-[[statement]]
-kind = "set"
 subject = "set:boforalder-emigrerat-eller-dott"
 fields = { "label" = "Boförälder emigrerat eller dött" }
 evidence = "#2100 group name: slug words restored from catalog wording; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:boforaldrars-bakgrund"
-fields = { "label" = "Boföräldrars bakgrund" }
-evidence = "#2100 group name: slug words restored from catalog wording, then adjusted on review (casing)."
 
 [[statement]]
 kind = "set"
@@ -5305,18 +5245,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 
 [[statement]]
 kind = "set"
-subject = "set:biologiska-foraldrars-bakgrund"
-fields = { "description" = "Svensk eller utländsk bakgrund för barnet och de biologiska föräldrarna, härledd utifrån de biologiska föräldrarnas födelseland i Flergenerationsregistret och från 2014 utifrån barnets och föräldrarnas födelseland i Befolkningsregistret." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBarnets födelseland nämns först från 2014 (W4); före dess bara föräldrarnas (W0–W2).\ncatalog:variable_text:13528:10956:10957\ncatalog:variable_text:13528:11322:11323\ncatalog:variable_text:13528:13513:13514\ncatalog:variable_text:13528:16435:16436\ncatalog:variable_text:13529:10591:10592\ncatalog:variable_text:13529:10956:10957"
-
-[[statement]]
-kind = "set"
-subject = "set:boforaldrars-bakgrund"
-fields = { "description" = "Svensk eller utländsk bakgrund för boföräldrarna, härledd utifrån boföräldrarnas födelseland i Befolkningsregistret; från 2014 utifrån barnets och boföräldrarnas födelseland." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna har samma definition och källa; från 2014 anges även barnets födelseland som underlag.\ncatalog:variable_text:13530:10956:10957\ncatalog:variable_text:13530:11322:11323\ncatalog:variable_text:13530:16435:16436\ncatalog:variable_text:13531:10591:10592\ncatalog:variable_text:13531:10956:10957"
-
-[[statement]]
-kind = "set"
 subject = "set:disponibel-inkomst"
 fields = { "description" = "Hushållets disponibla inkomst enligt 2004 års definition, och disponibel inkomst per konsumtionsenhet (ekonomisk standard): den disponibla inkomsten dividerad med summan av vikterna för hushållets medlemmar enligt en konsumtionsenhetsskala. Vikterna fastställs av SCB och bygger på budgetberäkningar för normal försörjning i olika hushållstyper, bland annat boende, barnomsorg, mat och semester." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nDen ena medlemmen är hushållets disponibla inkomst, den andra samma inkomst viktad per konsumtionsenhet.\ncatalog:variable_text:13558:16435:16436\ncatalog:variable_text:13559:16435:16436\ncatalog:variable_text:13559:19357:19358"
@@ -5447,3 +5375,45 @@ kind = "set"
 subject = "familjer: var:familjeidentitet-rtb"
 fields.row_key = true
 evidence = "Row key: familjeidentitet and familjeidentitet-rtb identify a row: a family table keyed on the family id: familjeidentitet-rtb to 2014, familjeidentitet from 2015; parents and property are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "barn: AvstandBarnBioFar"
+fields = { "variable" = "avstand-barn-och-far-avstandbarnfar" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v19548), never delivered together in one table, so they are one variable renamed between releases: AvstandBarnBioFar 1998-12-31..1999-12-31; AvstandBarnFar 1999-12-31..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "barn-uppfoljning: AvstandBarnBioFar"
+fields = { "variable" = "avstand-barn-och-far-avstandbarnfar" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v19548), never delivered together in one table, so they are one variable renamed between releases: AvstandBarnBioFar 1998-12-31..1999-12-31; AvstandBarnFar 1999-12-31..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "barn: BioBakgrund"
+fields = { "variable" = "bakgrund-bioforaldrar" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v15167), never delivered together in one table, so they are one variable renamed between releases: BioBakgrund 1998-12-31..1999-12-31; BakgrundBio 1999-12-31..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "barn-uppfoljning: BioBakgrund"
+fields = { "variable" = "bakgrund-bioforaldrar" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v15167), never delivered together in one table, so they are one variable renamed between releases: BioBakgrund 1998-12-31..1999-12-31; BakgrundBio 1999-12-31..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "barn: BoBakgrund"
+fields = { "variable" = "bakgrund-boforaldrar" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v15168), never delivered together in one table, so they are one variable renamed between releases: BoBakgrund 1999-12-31..1999-12-31; Bobakgrund 1998-12-31..1998-12-31; BakgrundBo 1999-12-31..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "barn-uppfoljning: Bobakgrund"
+fields = { "variable" = "bakgrund-boforaldrar" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v15168), never delivered together in one table, so they are one variable renamed between releases: BoBakgrund 1999-12-31..1999-12-31; Bobakgrund 1998-12-31..1998-12-31; BakgrundBo 1999-12-31..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "familjer: BoBakgrund"
+fields = { "variable" = "bakgrund-boforaldrar" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v15168), never delivered together in one table, so they are one variable renamed between releases: BoBakgrund 1999-12-31..1999-12-31; Bobakgrund 1998-12-31..1998-12-31; BakgrundBo 1999-12-31..2024-12-31."
