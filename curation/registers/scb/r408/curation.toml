@@ -1431,12 +1431,6 @@ evidence = "#2102 same-label cluster 'Källtid' (16 variables): judged different
 
 [[statement]]
 kind = "set"
-subject = "var:anstallning"
-fields = { "label" = "Anställning (referensmånaden)" }
-evidence = "#2102 same-label cluster 'Anställning' (57 variables): judged different meaning, medium confidence; Each IndMan column is a Ja/Nej employment flag for a different month: reference month, months before it (opdefs) or a calendar month 2020-01..2023-12; the 2024 IndMan and IndMan0 are the reference-month flag; anstallningar (sus table) has no opdef and is taken as the employment count."
-
-[[statement]]
-kind = "set"
 subject = "var:anstallning-fem-manader-fore-referensmanaden"
 fields = { "label" = "Anställning (fem månader före referensmånaden)" }
 evidence = "#2102 same-label cluster 'Anställning' (57 variables): judged different meaning, medium confidence; Each IndMan column is a Ja/Nej employment flag for a different month: reference month, months before it (opdefs) or a calendar month 2020-01..2023-12; the 2024 IndMan and IndMan0 are the reference-month flag; anstallningar (sus table) has no opdef and is taken as the employment count."
@@ -1536,12 +1530,6 @@ kind = "set"
 subject = "var:indimputbas"
 fields = { "label" = "Imputerat värde (uppgift om anställning)" }
 evidence = "#2102 same-label cluster 'Imputerat värde' (2 variables): judged different meaning, high confidence; Opdefs: imputation of employer data versus imputation of the employment, both concurrent."
-
-[[statement]]
-kind = "set"
-subject = "var:indman"
-fields = { "label" = "Anställning (referensmånaden)" }
-evidence = "#2102 same-label cluster 'Anställning' (57 variables): judged different meaning, medium confidence; Each IndMan column is a Ja/Nej employment flag for a different month: reference month, months before it (opdefs) or a calendar month 2020-01..2023-12; the 2024 IndMan and IndMan0 are the reference-month flag; anstallningar (sus table) has no opdef and is taken as the employment count."
 
 [[statement]]
 kind = "set"
@@ -2030,3 +2018,15 @@ kind = "set"
 subject = "anstallningar-laps: var:referensperiod"
 fields.row_key = true
 evidence = "Row key: referensperiod (Period) is the period of a row; one delivered file holds several periods, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:anstallning"
+fields = { "label" = "Anställning (referensmånaden)" }
+evidence = "#2102 same-label cluster 'Anställning' (57 variables): judged different meaning, medium confidence; Each IndMan column is a Ja/Nej employment flag for a different month: reference month, months before it (opdefs) or a calendar month 2020-01..2023-12; the 2024 IndMan and IndMan0 are the reference-month flag; anstallningar (sus table) has no opdef and is taken as the employment count."
+
+[[statement]]
+kind = "set"
+subject = "var:indman"
+fields = { "label" = "Anställning (referensmånaden)" }
+evidence = "#2102 same-label cluster 'Anställning' (57 variables): judged different meaning, medium confidence; Each IndMan column is a Ja/Nej employment flag for a different month: reference month, months before it (opdefs) or a calendar month 2020-01..2023-12; the 2024 IndMan and IndMan0 are the reference-month flag; anstallningar (sus table) has no opdef and is taken as the employment count."

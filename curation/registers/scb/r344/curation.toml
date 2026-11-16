@@ -1777,12 +1777,6 @@ evidence = "#2102 same-label cluster 'Huvudman' (2 variables): judged different 
 
 [[statement]]
 kind = "set"
-subject = "var:kommun"
-fields = { "label" = "Kommun (skolans kommun)" }
-evidence = "#2102 same-label cluster 'Kommun' (3 variables): judged different meaning, medium confidence; Opdefs: Kommun and Skolkommun both give the municipality of the school (different tables, same meaning), KommunFTH the municipality of the fritidshem."
-
-[[statement]]
-kind = "set"
 subject = "var:kommunfth"
 fields = { "label" = "Kommun (fritidshemmets kommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (3 variables): judged different meaning, medium confidence; Opdefs: Kommun and Skolkommun both give the municipality of the school (different tables, same meaning), KommunFTH the municipality of the fritidshem."
@@ -1870,12 +1864,6 @@ kind = "set"
 subject = "var:modersmal-sprak"
 fields = { "label" = "Modersmål, ämne (språk)" }
 evidence = "#2102 same-label cluster 'Modersmål, ämne' (2 variables): judged different meaning, high confidence; Opdefs: ML_Betyg is the grade in the subject, ML_Sprak the language in the subject."
-
-[[statement]]
-kind = "set"
-subject = "var:skolkommun"
-fields = { "label" = "Kommun (skolans kommun)" }
-evidence = "#2102 same-label cluster 'Kommun' (3 variables): judged different meaning, medium confidence; Opdefs: Kommun and Skolkommun both give the municipality of the school (different tables, same meaning), KommunFTH the municipality of the fritidshem."
 
 [[statement]]
 kind = "set"
@@ -2070,3 +2058,15 @@ kind = "set"
 subject = "elever: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: the personnummer identifies the pupil; parents, school and organiser ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:kommun"
+fields = { "label" = "Kommun (skolans kommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (3 variables): judged different meaning, medium confidence; Opdefs: Kommun and Skolkommun both give the municipality of the school (different tables, same meaning), KommunFTH the municipality of the fritidshem."
+
+[[statement]]
+kind = "set"
+subject = "var:skolkommun"
+fields = { "label" = "Kommun (skolans kommun)" }
+evidence = "#2102 same-label cluster 'Kommun' (3 variables): judged different meaning, medium confidence; Opdefs: Kommun and Skolkommun both give the municipality of the school (different tables, same meaning), KommunFTH the municipality of the fritidshem."

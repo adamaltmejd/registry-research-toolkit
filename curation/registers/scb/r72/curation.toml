@@ -946,26 +946,8 @@ evidence = "Upplåtelseform beskriver boendeformen.\ncatalog:variable_text:39640
 [[statement]]
 kind = "set"
 subject = "var:ursprunglig-byggnadsperiod"
-fields = { "sets" = ["ursprunglig-byggnadsperiod"] }
-evidence = "Kodningen grupperas med övrig ursprunglig byggnadsperiod.\ncatalog:variable_text:39641:19358:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:ursprunglig-byggnadsperiod"
 fields = { "tags" = ["housing"] }
 evidence = "Kodningen grupperas med övrig ursprunglig byggnadsperiod.\ncatalog:variable_text:39641:19358:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:ursprunglig-byggnadsperiod-byggnadsperiod"
-fields = { "sets" = ["ursprunglig-byggnadsperiod"] }
-evidence = "Kodningen grupperas med övrig ursprunglig byggnadsperiod.\ncatalog:variable_text:39642:15340:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:ursprunglig-byggnadsperiod-byggnadsperiod"
-fields = { "tags" = ["housing"] }
-evidence = "Kodningen grupperas med övrig ursprunglig byggnadsperiod.\ncatalog:variable_text:39642:15340:20089"
 
 [[statement]]
 kind = "set"
@@ -1102,12 +1084,6 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
-subject = "set:ursprunglig-byggnadsperiod"
-fields = { "label" = "Ursprunglig byggnadsperiod" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:varmesystem"
 fields = { "label" = "Värmesystem" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
@@ -1191,3 +1167,9 @@ kind = "set"
 subject = "rivning-av-flerbostadshus: var:husbeteckning"
 fields.row_key = true
 evidence = "Row key: fastighetsbeteckning and husbeteckning identify a row: the property designation and the house designation within it identify the demolished building (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "rivning-av-flerbostadshus: Byggnadsperiod"
+fields = { "variable" = "ursprunglig-byggnadsperiod" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v2298), never delivered together in one table, so they are one variable renamed between releases: ByggAr 1999-01-01..2024-12-31; Byggnadsperiod 2012-01-01..2024-12-31."

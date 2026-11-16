@@ -224,30 +224,6 @@ evidence = "Gatuadress anger verksamhetens läge.\ncatalog:occurrence-locators:v
 
 [[statement]]
 kind = "set"
-subject = "var:chef"
-fields = { "sets" = ["typ-av-tjanst"] }
-evidence = "Koderna anger chefsfunktion.\ncatalog:occurrence-locators:variable:12890\ncatalog:valueset:8210\ncatalog:valueset:9070"
-
-[[statement]]
-kind = "set"
-subject = "var:chef"
-fields = { "tags" = ["employment"] }
-evidence = "Koderna anger chefsfunktion.\ncatalog:occurrence-locators:variable:12890\ncatalog:valueset:8210\ncatalog:valueset:9070"
-
-[[statement]]
-kind = "set"
-subject = "var:chefomf"
-fields = { "sets" = ["tjanstgoringsomfattning"] }
-evidence = "Avser tjänstgöringsomfattning för chef.\ncatalog:occurrence-locators:variable:12891"
-
-[[statement]]
-kind = "set"
-subject = "var:chefomf"
-fields = { "tags" = ["employment"] }
-evidence = "Avser tjänstgöringsomfattning för chef.\ncatalog:occurrence-locators:variable:12891"
-
-[[statement]]
-kind = "set"
 subject = "var:driftform"
 fields = { "sets" = [] }
 evidence = "Driftsformen beskriver verksamhetens organisation.\ncatalog:occurrence-locators:variable:12892"
@@ -963,18 +939,6 @@ evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (4 variables): 
 
 [[statement]]
 kind = "set"
-subject = "var:chef"
-fields = { "label" = "Typ av tjänst (förskolechef)" }
-evidence = "#2102 same-label cluster 'Typ av tjänst' (4 variables): judged different meaning, medium confidence; Separate J/N flags for förskolechef, förskollärare and resurs/stödpersonal; Chef (2014-2018) and Rektor (2019-) both have the opdef 'tjänst som förskolechef' and are adjacent, so one variable renamed."
-
-[[statement]]
-kind = "set"
-subject = "var:chefomf"
-fields = { "label" = "Tjänstgöringsomfattning (chefs- eller rektorsbefattning)" }
-evidence = "#2102 same-label cluster 'Tjänstgöringsomfattning' (4 variables): judged different meaning, medium confidence; Omfatt is total scope; Barnomfatt is the scope in work with children for förskolechefer (0 otherwise), while ChefOmf and the adjacent RektorOmf have parallel opdefs (chefs-/rektorsbefattning, same variable renamed)."
-
-[[statement]]
-kind = "set"
 subject = "var:forsk"
 fields = { "label" = "Typ av tjänst (förskollärare)" }
 evidence = "#2102 same-label cluster 'Typ av tjänst' (4 variables): judged different meaning, medium confidence; Separate J/N flags for förskolechef, förskollärare and resurs/stödpersonal; Chef (2014-2018) and Rektor (2019-) both have the opdef 'tjänst som förskolechef' and are adjacent, so one variable renamed."
@@ -1184,3 +1148,15 @@ kind = "set"
 subject = "personal-individ: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: the table is about one staff member; preschool workplace and principal org number are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "personal-individ: ChefOmf"
+fields = { "variable" = "rektoromf" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v109), never delivered together in one table, so they are one variable renamed between releases: ChefOmf 2014-10-15..2018-10-15; RektorOmf 2019-10-15..2024-10-15."
+
+[[statement]]
+kind = "set"
+subject = "personal-individ: Chef"
+fields = { "variable" = "rektor" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v31277), never delivered together in one table, so they are one variable renamed between releases: Chef 2014-10-15..2018-10-15; Rektor 2019-10-15..2024-10-15."

@@ -1987,18 +1987,6 @@ evidence = "Id:t återger källans innebörd. Variabeln mäter värdet av obliga
 
 [[statement]]
 kind = "set"
-subject = "var:obligationer-fordran-fkuvp"
-fields = { "sets" = ["obligationsinnehavets-varde"] }
-evidence = "Id:t återger obligationsfordran och suffixet motsvarar källkolumnen. Variabeln mäter ett finansiellt innehav.\ncatalog:occurrence-locators:variable:12736\ncatalog:variable_text:12736:10956:10957"
-
-[[statement]]
-kind = "set"
-subject = "var:obligationer-fordran-fkuvp"
-fields = { "tags" = ["finance", "wealth"] }
-evidence = "Id:t återger obligationsfordran och suffixet motsvarar källkolumnen. Variabeln mäter ett finansiellt innehav.\ncatalog:occurrence-locators:variable:12736\ncatalog:variable_text:12736:10956:10957"
-
-[[statement]]
-kind = "set"
 subject = "var:obligationer-fordran-fkuvpr"
 fields = { "sets" = ["obligationsinnehavets-varde"] }
 evidence = "Id:t återger obligationsfordran och suffixet motsvarar källkolumnen. Variabeln mäter ett finansiellt innehav.\ncatalog:occurrence-locators:variable:12737\ncatalog:variable_text:12737:13878:13879"
@@ -2836,3 +2824,15 @@ kind = "set"
 subject = "individ: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: person table; family id, search-person and other person or org numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "hushall: FKUVP"
+fields = { "variable" = "obligationer-fordran-fkuvpr" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v15525), never delivered together in one table, so they are one variable renamed between releases: FKUVP 1999-12-31..1999-12-31; FKUVPR 2000-12-31..2007-12-31."
+
+[[statement]]
+kind = "set"
+subject = "individ: FKUVP"
+fields = { "variable" = "obligationer-fordran-fkuvpr" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v15525), never delivered together in one table, so they are one variable renamed between releases: FKUVP 1999-12-31..1999-12-31; FKUVPR 2000-12-31..2007-12-31."

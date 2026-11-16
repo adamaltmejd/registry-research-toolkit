@@ -1333,12 +1333,6 @@ evidence = "Fr27 är en ogenomskinlig frågekod. Etiketten kolliderar med den h�
 
 [[statement]]
 kind = "set"
-subject = "var:fr29"
-fields = { "tags" = ["democracy"] }
-evidence = "Fr29 är en ogenomskinlig frågekod. Den generiska etiketten kolliderar med andra folkomröstningsvariabler och kräver målgranskning.\ncatalog:valueset:222\ncatalog:variable_text:41008:12539:12570"
-
-[[statement]]
-kind = "set"
 subject = "var:fr29-emu"
 fields = { "sets" = [] }
 evidence = "Identitetsfaktumet och frågans hypotetiska innehåll kräver samordnarens granskning.\ncatalog:occurrence:401652\ncatalog:valueset:13033\ncatalog:variable_text:41009:11992:12022"
@@ -1384,18 +1378,6 @@ kind = "set"
 subject = "var:parti-med-storst-sympati"
 fields = { "tags" = ["democracy"] }
 evidence = "Fr3 är en ogenomskinlig frågekod för partiet med störst sympati.\ncatalog:occurrence:405951\ncatalog:valueset:7479"
-
-[[statement]]
-kind = "set"
-subject = "var:fr30"
-fields = { "sets" = [] }
-evidence = "Fr30 är en ogenomskinlig frågekod. Den generiska etiketten kolliderar och kräver målgranskning.\ncatalog:valueset:11772\ncatalog:variable_text:41013:12539:12570"
-
-[[statement]]
-kind = "set"
-subject = "var:fr30"
-fields = { "tags" = ["democracy"] }
-evidence = "Fr30 är en ogenomskinlig frågekod. Den generiska etiketten kolliderar och kräver målgranskning.\ncatalog:valueset:11772\ncatalog:variable_text:41013:12539:12570"
 
 [[statement]]
 kind = "set"
@@ -2233,27 +2215,9 @@ evidence = "Yrkesverksamhet härleds från frågor om arbete föregående vecka.
 
 [[statement]]
 kind = "set"
-subject = "var:fr-euro-folkdel"
-fields = { "sets" = ["deltagande-folkomrostning"] }
-evidence = "All supplied occurrences explicitly ask about participation in the 2003 euro referendum (r22, r24, r26).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40836\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:402344\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:402433\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:402526"
-
-[[statement]]
-kind = "set"
-subject = "var:fr29"
-fields = { "sets" = ["deltagande-folkomrostning"] }
-evidence = "The questions explicitly ask whether the respondent participated in the euro referendum (r17, r20), with Yes/No responses (r70).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:40844\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:402147\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:402237\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:222"
-
-[[statement]]
-kind = "set"
 subject = "var:fr-euro-folkrost"
 fields = { "description" = "Anger vilket röstalternativ personen valde i folkomröstningen om euron, med svarsalternativen ja, nej och blankt." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nDen befintliga beskrivningen anger deltagande, men svarskoderna anger röstalternativ.\ncatalog:valueset:11772\ncatalog:variable_text:40973:12904:12935\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:402345:opdef_text; rel070-base/reg_meta.db:occurrence:402434:opdef_text; rel070-base/reg_meta.db:occurrence:402527:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove the questionnaire/event year; retain the referendum and response meaning without a calendar date. Evidence: rel070-base/reg_meta.db occurrences 402345, 402434, 402527."
-
-[[statement]]
-kind = "set"
-subject = "var:fr30"
-fields = { "description" = "Anger vilket röstalternativ personen valde i folkomröstningen om euron, med svarsalternativen ja, nej och blankt." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nSvarskoderna anger röstalternativ snarare än enbart deltagande.\ncatalog:valueset:11772\ncatalog:variable_text:41013:12539:12570\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:402150:opdef_text; rel070-base/reg_meta.db:occurrence:402241:opdef_text. One variable, one description.\n\nMaintainer ruling 2026-11-02: one description states facts about the variable, never its documentation. Undocumented periods do not establish measurement changes. Remove the questionnaire/event year; retain the referendum and response meaning without a calendar date. Evidence: rel070-base/reg_meta.db occurrences 402150, 402241."
 
 [[statement]]
 kind = "set"
@@ -2296,12 +2260,6 @@ kind = "set"
 subject = "set:bostadstyp"
 fields = { "label" = "Bostadstyp" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
-subject = "set:deltagande-folkomrostning"
-fields = { "label" = "Deltagande folkomröstning" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
 
 [[statement]]
 kind = "set"
@@ -2503,20 +2461,8 @@ evidence = "#2102 same-label cluster 'Bostadstyp' (2 variables): judged differen
 
 [[statement]]
 kind = "set"
-subject = "var:fr29"
-fields = { "label" = "Röstat i folkomröstning (euron 2003, deltagande)" }
-evidence = "#2102 same-label cluster 'Röstat i folkomröstning' (6 variables): judged different meaning, medium confidence; Opdefs show four items: hypothetical EMU vote, participation in the 2003 euro referendum, how one voted in it, and how one voted in the 1994 EU referendum; fr29/fr_euro_folkdel and fr30/fr_euro_folkrost repeat the same questions in later years."
-
-[[statement]]
-kind = "set"
 subject = "var:fr29-emu"
 fields = { "label" = "Röstat i folkomröstning (EMU, hur man skulle rösta)" }
-evidence = "#2102 same-label cluster 'Röstat i folkomröstning' (6 variables): judged different meaning, medium confidence; Opdefs show four items: hypothetical EMU vote, participation in the 2003 euro referendum, how one voted in it, and how one voted in the 1994 EU referendum; fr29/fr_euro_folkdel and fr30/fr_euro_folkrost repeat the same questions in later years."
-
-[[statement]]
-kind = "set"
-subject = "var:fr30"
-fields = { "label" = "Röstat i folkomröstning (euron 2003, röstalternativ)" }
 evidence = "#2102 same-label cluster 'Röstat i folkomröstning' (6 variables): judged different meaning, medium confidence; Opdefs show four items: hypothetical EMU vote, participation in the 2003 euro referendum, how one voted in it, and how one voted in the 1994 EU referendum; fr29/fr_euro_folkdel and fr30/fr_euro_folkrost repeat the same questions in later years."
 
 [[statement]]
@@ -2629,12 +2575,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 
 [[statement]]
 kind = "set"
-subject = "set:deltagande-folkomrostning"
-fields = { "description" = "Om personen röstade i folkomröstningen om införande av euron som valuta i Sverige i september 2003, enligt svar i undersökningarna 2003–2005." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna ställer samma fråga om deltagande i euroomröstningen 2003.\ncatalog:variable_text:47783:12723:12753\ncatalog:variable_text:47783:12904:12935\ncatalog:variable_text:47783:13088:13118\ncatalog:variable_text:47791:12357:12387\ncatalog:variable_text:47791:12539:12570"
-
-[[statement]]
-kind = "set"
 subject = "set:eu-sympati"
 fields = { "description" = "Om personen är för eller mot det svenska medlemskapet i EU, i den aktuella undersökningen och, från 2011, svaret vid föregående undersökning på frågan om personen i huvudsak är för eller mot medlemskapet eller saknar bestämd åsikt (2024 och 2025 svaret från maj föregående år)." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna avser samma fråga, i den aktuella respektive föregående undersökningen; frågenummer och blankett är utelämnade.\ncatalog:variable_text:47769:11078:11109\ncatalog:variable_text:47769:11262:11292\ncatalog:variable_text:47769:11443:11474\ncatalog:variable_text:47769:11808:11839\ncatalog:variable_text:47769:12173:12204\ncatalog:variable_text:47769:12539:12570\ncatalog:variable_text:47769:12723:12753\ncatalog:variable_text:47769:14730:14761\ncatalog:variable_text:47769:16740:16770\ncatalog:variable_text:47770:15095:15126\ncatalog:variable_text:47770:19844:19875\ncatalog:variable_text:47770:20209:20240"
@@ -2742,3 +2682,21 @@ kind = "set"
 subject = "november: var:uppgiftslamnarens-personnr"
 fields.row_key = true
 evidence = "Row key: uppgiftslamnarens-personnr identify a row: the respondent personnummer identifies the surveyed person (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "november: fr29"
+fields = { "variable" = "fr-euro-folkdel" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v31253), never delivered together in one table, so they are one variable renamed between releases: fr29 2003-11-01..2004-05-31; fr_euro_folkdel 2004-11-01..2005-11-30."
+
+[[statement]]
+kind = "set"
+subject = "november: fr30"
+fields = { "variable" = "fr-euro-folkrost" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v31253), never delivered together in one table, so they are one variable renamed between releases: fr30 2003-11-01..2004-05-31; fr_euro_folkrost 2004-11-01..2005-11-30."
+
+[[statement]]
+kind = "set"
+subject = "var:fr-euro-folkdel"
+fields = { "description" = "Om personen röstade i folkomröstningen om införande av euron som valuta i Sverige i september 2003, enligt svar i undersökningarna 2003–2005." }
+evidence = "The variables of set:deltagande-folkomrostning were merged into this one, so the set is removed and its curated description moves here. Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording; a group reads as one bigger variable (#2322).\n\nBåda medlemmarna ställer samma fråga om deltagande i euroomröstningen 2003.\ncatalog:variable_text:47783:12723:12753\ncatalog:variable_text:47783:12904:12935\ncatalog:variable_text:47783:13088:13118\ncatalog:variable_text:47791:12357:12387\ncatalog:variable_text:47791:12539:12570"

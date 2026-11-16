@@ -5095,18 +5095,6 @@ evidence = "Frågekod är ogenomskinlig.\ncatalog:variable_text:53756:13514:1369
 
 [[statement]]
 kind = "set"
-subject = "var:f2-10"
-fields = { "sets" = ["orsaker-till-studieavbrott"] }
-evidence = "Frågekod är ogenomskinlig; etiketten kolliderar.\ncatalog:variable_text:53757:13514:13695"
-
-[[statement]]
-kind = "set"
-subject = "var:f2-10"
-fields = { "tags" = ["education"] }
-evidence = "Frågekod är ogenomskinlig; etiketten kolliderar.\ncatalog:variable_text:53757:13514:13695"
-
-[[statement]]
-kind = "set"
 subject = "var:f2-11"
 fields = { "sets" = ["orsaker-till-studieavbrott"] }
 evidence = "Frågekod är ogenomskinlig; etiketten kolliderar.\ncatalog:variable_text:53758:13514:13695"
@@ -18205,18 +18193,6 @@ evidence = "#2102 same-label cluster 'Orsak till studieuppehåll' (12 variables)
 
 [[statement]]
 kind = "set"
-subject = "var:fodar"
-fields = { "label" = "Ålder (födelseår)" }
-evidence = "#2102 same-label cluster 'Ålder' (5 variables): judged different meaning, medium confidence; Opdefs: Alder is age in 2005, F18_1 age when getting a job, Alderslut derived from personnummer (reference not stated); FodAr/FodlAr have no text but their names decode to birth year and they occur in parallel survey tables."
-
-[[statement]]
-kind = "set"
-subject = "var:fodlar"
-fields = { "label" = "Ålder (födelseår)" }
-evidence = "#2102 same-label cluster 'Ålder' (5 variables): judged different meaning, medium confidence; Opdefs: Alder is age in 2005, F18_1 age when getting a job, Alderslut derived from personnummer (reference not stated); FodAr/FodlAr have no text but their names decode to birth year and they occur in parallel survey tables."
-
-[[statement]]
-kind = "set"
 subject = "var:foraldral"
 fields = { "label" = "Orsak till studieuppehåll (föräldraledig)" }
 evidence = "#2102 same-label cluster 'Orsak till studieuppehåll' (12 variables): judged different meaning, high confidence; Opdefs F17a-F17l: twelve different answer options (reasons) as separate Ja/Nej flags."
@@ -20148,3 +20124,21 @@ kind = "set"
 subject = "ungdomar-utan-fullfoljd-gymnasieutbildning: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "ungdomar-utan-fullfoljd-gymnasieutbildning: F2_10"
+fields = { "variable" = "f4b-13" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v15691), never delivered together in one table, so they are one variable renamed between releases: F2_10 2007-01-01..2007-06-30; F4b_13 2015-07-01..2015-12-31."
+
+[[statement]]
+kind = "set"
+subject = "var:fodar"
+fields = { "label" = "Ålder (födelseår)" }
+evidence = "#2102 same-label cluster 'Ålder' (5 variables): judged different meaning, medium confidence; Opdefs: Alder is age in 2005, F18_1 age when getting a job, Alderslut derived from personnummer (reference not stated); FodAr/FodlAr have no text but their names decode to birth year and they occur in parallel survey tables."
+
+[[statement]]
+kind = "set"
+subject = "var:fodlar"
+fields = { "label" = "Ålder (födelseår)" }
+evidence = "#2102 same-label cluster 'Ålder' (5 variables): judged different meaning, medium confidence; Opdefs: Alder is age in 2005, F18_1 age when getting a job, Alderslut derived from personnummer (reference not stated); FodAr/FodlAr have no text but their names decode to birth year and they occur in parallel survey tables."

@@ -1646,18 +1646,6 @@ evidence = "Kursinriktning.\ncatalog:variable_text:11580:12784:20089"
 
 [[statement]]
 kind = "set"
-subject = "var:kursinriktning-folkhogskolan-kinriktning"
-fields = { "sets" = ["kursinriktning"] }
-evidence = "Kursinriktning.\ncatalog:variable_text:11581:12784:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:kursinriktning-folkhogskolan-kinriktning"
-fields = { "tags" = ["education"] }
-evidence = "Kursinriktning.\ncatalog:variable_text:11581:12784:16436"
-
-[[statement]]
-kind = "set"
 subject = "var:kurskommun"
 fields = { "sets" = ["kursort"] }
 evidence = "Samma kurskommun är korrekt uppdelad mellan perioder med scb/folkhogskolan/kommun-for-kurs.\ncatalog:occurrence:100020\ncatalog:occurrence:100084\ncatalog:occurrence:100148"
@@ -1697,18 +1685,6 @@ kind = "set"
 subject = "var:kursort-folkhogskolan"
 fields = { "tags" = ["geography"] }
 evidence = "Kursort kodad som kommun.\ncatalog:variable_text:11587:16071:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:kursort-folkhogskolan-kursort"
-fields = { "sets" = ["kursort"] }
-evidence = "Kursort kodad som kommun.\ncatalog:variable_text:11588:13879:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:kursort-folkhogskolan-kursort"
-fields = { "tags" = ["geography"] }
-evidence = "Kursort kodad som kommun.\ncatalog:variable_text:11588:13879:16436"
 
 [[statement]]
 kind = "set"
@@ -1865,18 +1841,6 @@ kind = "set"
 subject = "var:omfattning-folkhogskolan"
 fields = { "tags" = ["education"] }
 evidence = "Kategori för studieomfattning.\ncatalog:variable_text:11602:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:omfattning-folkhogskolan-heldel"
-fields = { "sets" = ["studieomfattning"] }
-evidence = "Kategori för studieomfattning.\ncatalog:variable_text:11603:12784:16436"
-
-[[statement]]
-kind = "set"
-subject = "var:omfattning-folkhogskolan-heldel"
-fields = { "tags" = ["education"] }
-evidence = "Kategori för studieomfattning.\ncatalog:variable_text:11603:12784:16436"
 
 [[statement]]
 kind = "set"
@@ -3453,3 +3417,39 @@ kind = "set"
 subject = "deltagarregister: var:termin-for-kursen"
 fields.row_key = true
 evidence = "Row key: termin-for-kursen (Termin) is the period of a row; one delivered file holds several terms, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: Heldel"
+fields = { "variable" = "omfattning-folkhogskolan" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v8622), never delivered together in one table, so they are one variable renamed between releases: Omfattning 2005-01-01..2024-12-31; HelDel 2007-01-01..2014-12-31; Heldel 2005-01-01..2008-12-31; heldel 2005-01-01..2006-12-31."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: heldel"
+fields = { "variable" = "omfattning-folkhogskolan" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v8622), never delivered together in one table, so they are one variable renamed between releases: Omfattning 2005-01-01..2024-12-31; HelDel 2007-01-01..2014-12-31; Heldel 2005-01-01..2008-12-31; heldel 2005-01-01..2006-12-31."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: KInriktning"
+fields = { "variable" = "kursinriktning" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v8617), never delivered together in one table, so they are one variable renamed between releases: KursInr 2005-01-01..2024-12-31; KInriktning 2005-01-01..2014-12-31; Kinriktning 2005-01-01..2006-12-31; kinriktning 2009-01-01..2009-12-31."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: Kinriktning"
+fields = { "variable" = "kursinriktning" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v8617), never delivered together in one table, so they are one variable renamed between releases: KursInr 2005-01-01..2024-12-31; KInriktning 2005-01-01..2014-12-31; Kinriktning 2005-01-01..2006-12-31; kinriktning 2009-01-01..2009-12-31."
+
+[[statement]]
+kind = "set"
+subject = "grupper-hostterminen: Kursort"
+fields = { "variable" = "kursort-folkhogskolan" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v8621), never delivered together in one table, so they are one variable renamed between releases: KursOrt 2007-01-01..2014-12-31; Kursort 2005-01-01..2008-12-31; kursort 2005-01-01..2009-12-31; Kommun 2010-01-01..2019-12-31."
+
+[[statement]]
+kind = "set"
+subject = "grupper-varterminen: kursort"
+fields = { "variable" = "kursort-folkhogskolan" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v8621), never delivered together in one table, so they are one variable renamed between releases: KursOrt 2007-01-01..2014-12-31; Kursort 2005-01-01..2008-12-31; kursort 2005-01-01..2009-12-31; Kommun 2010-01-01..2019-12-31."

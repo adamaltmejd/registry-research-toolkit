@@ -123,18 +123,6 @@ evidence = "Belopp för budgetanslag.\ncatalog:variable_text:44550:17897:18628"
 
 [[statement]]
 kind = "set"
-subject = "var:anslagsnamn-25190"
-fields = { "sets" = ["anslagsnamn"] }
-evidence = "Siffersuffixet saknas i källkolumnen.\ncatalog:variable_text:44551:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:anslagsnamn-25190"
-fields = { "tags" = ["public-finance"] }
-evidence = "Siffersuffixet saknas i källkolumnen.\ncatalog:variable_text:44551:18628:18993"
-
-[[statement]]
-kind = "set"
 subject = "var:anslagsnr"
 fields = { "sets" = ["anslagsnummer"] }
 evidence = "Kod för budgetanslag.\ncatalog:variable_text:44552:18628:18993"
@@ -168,12 +156,6 @@ kind = "set"
 subject = "var:budgetitem"
 fields = { "tags" = ["public-finance"] }
 evidence = "Kod för budgetanslag.\ncatalog:variable_text:44554:20089:20454"
-
-[[statement]]
-kind = "set"
-subject = "var:budgetitem-name"
-fields = { "sets" = ["anslagsnamn"] }
-evidence = "Budgetanslagets namn.\ncatalog:variable_text:44555:18993:19358"
 
 [[statement]]
 kind = "set"
@@ -1030,12 +1012,6 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
-subject = "set:anslagsnamn"
-fields = { "label" = "Anslagsnamn" }
-evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:anslagsnummer"
 fields = { "label" = "Anslagsnummer" }
 evidence = "#2100 group name: a member label slugifies to the group slug; kept on review."
@@ -1180,12 +1156,6 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
-subject = "set:anslagsnamn"
-fields = { "description" = "Namnet på anslaget; från 2019 hämtat från budgetpropositionen." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF ger namn på anslag; källan budgetpropositionen står bara i OP 2019–2022.\ncatalog:variable_text:51349:14610:14975\ncatalog:variable_text:51349:17897:18628\ncatalog:variable_text:51349:18628:18993\ncatalog:variable_text:51353:18993:19358"
-
-[[statement]]
-kind = "set"
 subject = "set:anslagsnummer"
 fields = { "description" = "Anslagets nummer i statsbudgeten, hämtat från budgetpropositionen och från 2023 från den beslutade statsbudgeten; 2023 och 2025 ingår även anslag som tillkommit i beslutade ändringsbudgetar. 2010 består numret av två siffror för utgiftsområde, två för politikområde och två för löpnummer." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nÄndringsbudgetarna nämns bara 2023 och 2025; nummeruppbyggnaden står i OP för nr2010.\ncatalog:variable_text:51350:18628:18993\ncatalog:variable_text:51352:18993:19358\ncatalog:variable_text:51352:19358:19723\ncatalog:variable_text:51352:19723:20089\ncatalog:variable_text:51352:20089:20454\ncatalog:variable_text:51397:13514:13879\ncatalog:variable_text:51398:14610:14975\ncatalog:variable_text:51399:17897:18628"
@@ -1213,3 +1183,15 @@ kind = "set"
 subject = "var:socioeconomics"
 fields = { "description" = "Funktionell uppdelning av de totala statliga budgetanslagen för FoU efter de socioekonomiska mål eller syften som staten eftersträvar, enligt Eurostats nomenklatur NABS 2007." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma definition; rättar 'stften' till 'syften'.\ncatalog:variable_text:51422:18993:19358\ncatalog:variable_text:51422:19358:20454"
+
+[[statement]]
+kind = "set"
+subject = "statliga-anslag-till-forskning-och-utveckling: anslagsnamn"
+fields = { "variable" = "budgetitem-name" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v25190), never delivered together in one table, so they are one variable renamed between releases: ANSLAGSNAMN 2015-01-01..2020-12-31; Anslagsnamn 2021-01-01..2021-12-31; anslagsnamn 2010-01-01..2010-12-31; BUDGETITEM_NAME 2022-01-01..2022-12-31."
+
+[[statement]]
+kind = "set"
+subject = "var:budgetitem-name"
+fields = { "description" = "Namnet på anslaget; från 2019 hämtat från budgetpropositionen." }
+evidence = "The variables of set:anslagsnamn were merged into this one, so the set is removed and its curated description moves here. Maintainer ruling 2026-11-02: one variable, one description; a group reads as one bigger variable. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nDEF ger namn på anslag; källan budgetpropositionen står bara i OP 2019–2022.\ncatalog:variable_text:51349:14610:14975\ncatalog:variable_text:51349:17897:18628\ncatalog:variable_text:51349:18628:18993\ncatalog:variable_text:51353:18993:19358"

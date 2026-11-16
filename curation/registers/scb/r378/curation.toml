@@ -412,18 +412,6 @@ evidence = "Juridisk form beskriver enhetens organisationsform.\ncatalog:variabl
 
 [[statement]]
 kind = "set"
-subject = "var:kommun"
-fields = { "sets" = ["kommuntillhorighet"] }
-evidence = "Skolans kommun är geografisk kommuntillhörighet.\ncatalog:variable_text:12963:14167:14168"
-
-[[statement]]
-kind = "set"
-subject = "var:kommun"
-fields = { "tags" = ["geography"] }
-evidence = "Skolans kommun är geografisk kommuntillhörighet.\ncatalog:variable_text:12963:14167:14168"
-
-[[statement]]
-kind = "set"
 subject = "var:kommunfth"
 fields = { "sets" = ["kommuntillhorighet"] }
 evidence = "Fritidshemmets kommun är geografisk kommuntillhörighet.\ncatalog:variable_text:12964:20011:20012"
@@ -541,18 +529,6 @@ kind = "set"
 subject = "var:skolkommun"
 fields = { "tags" = ["geography"] }
 evidence = "Skolans kommun är geografisk kommuntillhörighet.\ncatalog:variable_text:12984:20011:20012"
-
-[[statement]]
-kind = "set"
-subject = "var:skom"
-fields = { "sets" = ["kommuntillhorighet"] }
-evidence = "SKom är en ogenomskinlig källförkortning för kommun.\ncatalog:variable_text:12985:17089:17090"
-
-[[statement]]
-kind = "set"
-subject = "var:skom"
-fields = { "tags" = ["geography"] }
-evidence = "SKom är en ogenomskinlig källförkortning för kommun.\ncatalog:variable_text:12985:17089:17090"
 
 [[statement]]
 kind = "set"
@@ -934,12 +910,6 @@ evidence = "#2102 same-label cluster 'Huvudman' (2 variables): judged different 
 
 [[statement]]
 kind = "set"
-subject = "var:kommun"
-fields = { "label" = "Kommun (skolkommun)" }
-evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different meaning, high confidence; Kommun, SKom and Skolkommun are consecutive columns for the school's municipality (same variable); KommunFTH is the municipality of the fritidshem per opdef."
-
-[[statement]]
-kind = "set"
 subject = "var:kommunfth"
 fields = { "label" = "Kommun (fritidshemmets kommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different meaning, high confidence; Kommun, SKom and Skolkommun are consecutive columns for the school's municipality (same variable); KommunFTH is the municipality of the fritidshem per opdef."
@@ -959,12 +929,6 @@ evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): j
 [[statement]]
 kind = "set"
 subject = "var:skolkommun"
-fields = { "label" = "Kommun (skolkommun)" }
-evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different meaning, high confidence; Kommun, SKom and Skolkommun are consecutive columns for the school's municipality (same variable); KommunFTH is the municipality of the fritidshem per opdef."
-
-[[statement]]
-kind = "set"
-subject = "var:skom"
 fields = { "label" = "Kommun (skolkommun)" }
 evidence = "#2102 same-label cluster 'Kommun' (4 variables): judged different meaning, high confidence; Kommun, SKom and Skolkommun are consecutive columns for the school's municipality (same variable); KommunFTH is the municipality of the fritidshem per opdef."
 
@@ -1107,3 +1071,15 @@ kind = "set"
 subject = "specialskola: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "grundskola: Kommun"
+fields = { "variable" = "skolkommun" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v36), never delivered together in one table, so they are one variable renamed between releases: Kommun 2008-10-15..2008-10-15; SKom 2009-10-15..2016-10-15; Skolkommun 2017-10-15..2024-10-15."
+
+[[statement]]
+kind = "set"
+subject = "grundskola: SKom"
+fields = { "variable" = "skolkommun" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v36), never delivered together in one table, so they are one variable renamed between releases: Kommun 2008-10-15..2008-10-15; SKom 2009-10-15..2016-10-15; Skolkommun 2017-10-15..2024-10-15."

@@ -786,4 +786,3 @@ kind = "set"
 subject = "avgifter-hyror-for-nybyggda-lagenheter: var:id-nummer"
 fields.row_key = true
 evidence = "Row key: Idnr (id-nummer) keys 2006, which has no Fastbet column; #2477 placed the 2006 Idnr in id-nummer. A key is variable-wide, so 2007-2013 key Fastbet plus Idnr (maintainer ruling 2026-11-14)."
-

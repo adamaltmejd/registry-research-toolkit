@@ -1058,18 +1058,6 @@ evidence = "Variabeln mäter moderns omkodade utbildningsnivå.\ncatalog:variabl
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-mor-omkodad-2"
-fields = { "sets" = ["moderns-utbildningsniva"] }
-evidence = "Suffixet 2 är ett räknarsuffix som inte finns i källkolumnen. Den delade etiketten kräver kolumndisambiguering.\ncatalog:variable_text:22185:15340:15522"
-
-[[statement]]
-kind = "set"
-subject = "var:sun-niva-mor-omkodad-2"
-fields = { "tags" = ["education"] }
-evidence = "Suffixet 2 är ett räknarsuffix som inte finns i källkolumnen. Den delade etiketten kräver kolumndisambiguering.\ncatalog:variable_text:22185:15340:15522"
-
-[[statement]]
-kind = "set"
 subject = "var:sun-niva-old-mor"
 fields = { "sets" = ["moderns-utbildningsniva"] }
 evidence = "Variabeln mäter moderns utbildningsnivå.\ncatalog:variable_text:22186:15340:15522"
@@ -1199,18 +1187,6 @@ kind = "set"
 subject = "var:sunniva-far"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln kodar faderns utbildningsnivå.\ncatalog:variable_text:22196:15340:15522"
-
-[[statement]]
-kind = "set"
-subject = "var:sunniva-far-omkodad"
-fields = { "sets" = ["faderns-utbildningsniva"] }
-evidence = "Variabeln kodar faderns omkodade utbildningsnivå.\ncatalog:variable_text:22197:15340:15522"
-
-[[statement]]
-kind = "set"
-subject = "var:sunniva-far-omkodad"
-fields = { "tags" = ["education"] }
-evidence = "Variabeln kodar faderns omkodade utbildningsnivå.\ncatalog:variable_text:22197:15340:15522"
 
 [[statement]]
 kind = "set"
@@ -1729,12 +1705,6 @@ evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): j
 
 [[statement]]
 kind = "set"
-subject = "var:sun-niva-mor-omkodad-2"
-fields = { "label" = "Moderns utbildningsnivå (SUN 2000, grupperad i tre nivåer)" }
-evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Several SUN codings: 3-digit SUN 2000, 6-level, 3-level (renamed to Sun2000Niva_Mor_Omkodad), old 7-level, grouped SUN 2000, SUN 2020 and grouped SUN 2020."
-
-[[statement]]
-kind = "set"
 subject = "var:sun-niva-old-mor"
 fields = { "label" = "Moderns utbildningsnivå (SUN 2000, äldre indelning i sju nivåer)" }
 evidence = "#2102 same-label cluster 'Moderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Several SUN codings: 3-digit SUN 2000, 6-level, 3-level (renamed to Sun2000Niva_Mor_Omkodad), old 7-level, grouped SUN 2000, SUN 2020 and grouped SUN 2020."
@@ -1797,12 +1767,6 @@ evidence = "#2102 same-label cluster 'Föräldrarnas utbildningsnivå' (4 variab
 kind = "set"
 subject = "var:sunniva-far"
 fields = { "label" = "Faderns utbildningsnivå (SUN 2000, SunNiva_Far)" }
-evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Several SUN codings: 3-digit SUN 2000, 6-level, 3-level (renamed to Sun2000Niva_Far_Omkodad), old 7-level, grouped SUN 2000, SUN 2020 and grouped SUN 2020."
-
-[[statement]]
-kind = "set"
-subject = "var:sunniva-far-omkodad"
-fields = { "label" = "Faderns utbildningsnivå (SUN 2000, grupperad i tre nivåer)" }
 evidence = "#2102 same-label cluster 'Faderns utbildningsnivå' (8 variables): judged different meaning, high confidence; Several SUN codings: 3-digit SUN 2000, 6-level, 3-level (renamed to Sun2000Niva_Far_Omkodad), old 7-level, grouped SUN 2000, SUN 2020 and grouped SUN 2020."
 
 [[statement]]
@@ -1878,3 +1842,15 @@ kind = "set"
 subject = "grundskola-nationella-prov-ak-6: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "grundskola-nationella-prov-ak-6: SunNiva_Far_Omkodad"
+fields = { "variable" = "sun2000niva-far-omkodad" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v8074), never delivered together in one table, so they are one variable renamed between releases: SunNiva_Far_Omkodad 2012-01-01..2012-06-30; Sun2000Niva_Far_Omkodad 2013-01-01..2014-06-30."
+
+[[statement]]
+kind = "set"
+subject = "grundskola-nationella-prov-ak-6: SunNiva_Mor_Omkodad"
+fields = { "variable" = "sun-niva-mor-omkodad" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v8073), never delivered together in one table, so they are one variable renamed between releases: SunNiva_Mor_Omkodad 2012-01-01..2012-06-30; Sun2000Niva_Mor_Omkodad 2013-01-01..2014-06-30."

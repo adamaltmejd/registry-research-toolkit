@@ -110962,12 +110962,6 @@ evidence = "#2102 same-label cluster 'Oro för hushållets ekonomi' (3 variables
 
 [[statement]]
 kind = "set"
-subject = "var:oro-hushallets-ekonomi-narmaste-aret"
-fields = { "label" = "Oro för hushållets ekonomi (ja/nej)" }
-evidence = "#2102 same-label cluster 'Oro för hushållets ekonomi' (3 variables): judged different meaning, high confidence; TR0051A and PSTR0051A are the same Ja/Nej item before and after 2021; TR0051M (opdef: derived) is the graded version."
-
-[[statement]]
-kind = "set"
 subject = "var:oro-vald-eller-hotelser-gar-ut-bostadsomradet"
 fields = { "label" = "Oro hotelser (TR0056)" }
 evidence = "#2102 same-label cluster 'Oro hotelser' (2 variables): judged different meaning, low confidence; TR0056 and TR0057 are separate items with identical codes; nothing says how they differ, so raw codes."
@@ -111031,12 +111025,6 @@ kind = "set"
 subject = "var:posttyp-km1119"
 fields = { "label" = "Posttyp (KM1119)" }
 evidence = "#2102 same-label cluster 'Posttyp' (2 variables): judged different meaning, low confidence; KI1119 and KM1119 are concurrent columns with no code list or text; raw codes."
-
-[[statement]]
-kind = "set"
-subject = "var:pstr0051a"
-fields = { "label" = "Oro för hushållets ekonomi (ja/nej)" }
-evidence = "#2102 same-label cluster 'Oro för hushållets ekonomi' (3 variables): judged different meaning, high confidence; TR0051A and PSTR0051A are the same Ja/Nej item before and after 2021; TR0051M (opdef: derived) is the graded version."
 
 [[statement]]
 kind = "set"
@@ -114566,3 +114554,15 @@ kind = "set"
 subject = "individer-16plus-ulf-1989-old: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identifies a row: one row per surveyed person (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "var:oro-hushallets-ekonomi-narmaste-aret"
+fields = { "label" = "Oro för hushållets ekonomi (ja/nej)" }
+evidence = "#2102 same-label cluster 'Oro för hushållets ekonomi' (3 variables): judged different meaning, high confidence; TR0051A and PSTR0051A are the same Ja/Nej item before and after 2021; TR0051M (opdef: derived) is the graded version."
+
+[[statement]]
+kind = "set"
+subject = "var:pstr0051a"
+fields = { "label" = "Oro för hushållets ekonomi (ja/nej)" }
+evidence = "#2102 same-label cluster 'Oro för hushållets ekonomi' (3 variables): judged different meaning, high confidence; TR0051A and PSTR0051A are the same Ja/Nej item before and after 2021; TR0051M (opdef: derived) is the graded version."

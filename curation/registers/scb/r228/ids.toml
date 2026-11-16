@@ -207,5 +207,4 @@ public = "formogenhetsreg"
 "utlandsk-skatt-pa-utdelning-delagare" = ["Individ: SKUUTL"]
 "alder-31-12-bald" = ["Individ: BALD"]
 "kon-bkon" = ["Individ: BKON"]
-"obligationer-fordran-fkuvp" = ["Hushåll: FKUVP"]
-"obligationer-fordran-fkuvpr" = ["Hushåll: FKUVPR"]
+"obligationer-fordran-fkuvpr" = ["Hushåll: FKUVPR", "Hushåll: FKUVP"]
