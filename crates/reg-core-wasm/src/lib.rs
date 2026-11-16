@@ -146,6 +146,59 @@ pub fn render(json: &str) -> String {
     json!(intervals(json).map(|i| reg_core::render(&i))).to_string()
 }
 
+/// `reg_core::days::serve` over inclusive ISO intervals: `[segments, requested, shared,
+/// named]`, with segments `[[[lo, hi], release | null]]`, requested `[[lo, hi]]`, shared
+/// `[[[lo, hi], [release]]]` and named `[release]`, answering each segment's served days as a JSON list of `[lo, hi]`,
+/// aligned; `null` for text that is not that shape or a bound that is not a date.
+#[wasm_bindgen]
+#[must_use]
+pub fn serve(json: &str) -> String {
+    type Ask = (
+        Vec<(Interval, Option<String>)>,
+        Vec<Interval>,
+        Vec<(Interval, Vec<String>)>,
+        Vec<String>,
+    );
+    let span = |(lo, hi): &Interval| {
+        Some((
+            reg_core::iso_day_number(lo)?,
+            reg_core::iso_day_number(hi)? + 1,
+        ))
+    };
+    let served =
+        serde_json::from_str::<Ask>(json)
+            .ok()
+            .and_then(|(segments, requested, shared, named)| {
+                let segments = segments
+                    .iter()
+                    .map(|(i, release)| Some((span(i)?, release.as_deref())))
+                    .collect::<Option<Vec<_>>>()?;
+                let requested = requested.iter().map(span).collect::<Option<Vec<_>>>()?;
+                let shared = shared
+                    .iter()
+                    .map(|(i, names)| Some((span(i)?, names.iter().map(String::as_str).collect())))
+                    .collect::<Option<Vec<_>>>()?;
+                let named: Vec<&str> = named.iter().map(String::as_str).collect();
+                Some(
+                    reg_core::days::serve(&segments, &requested, &shared, &named)
+                        .into_iter()
+                        .map(|spans| {
+                            spans
+                                .into_iter()
+                                .map(|(lo, hi)| {
+                                    (
+                                        reg_core::issue::iso_day(lo),
+                                        reg_core::issue::iso_day(hi - 1),
+                                    )
+                                })
+                                .collect::<Vec<Interval>>()
+                        })
+                        .collect::<Vec<_>>(),
+                )
+            });
+    json!(served).to_string()
+}
+
 /// The source period in JSON text once its structural check accepts it, so that
 /// `SourcePeriod::intervals` cannot panic; else why not.
 fn checked_period(json: &str) -> Result<SourcePeriod, String> {

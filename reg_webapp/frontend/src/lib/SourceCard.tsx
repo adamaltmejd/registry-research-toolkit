@@ -1,5 +1,10 @@
 import { useRef, useState } from "react";
-import { columnInSource, columnRows, variableColumns } from "./add_columns";
+import {
+  columnRows,
+  columnsInSource,
+  sourceReleaseNames,
+  variableColumns,
+} from "./add_columns";
 import {
   type CatalogPeriod,
   type CatalogSegment,
@@ -9,7 +14,6 @@ import {
 } from "./api";
 import { catalogHref } from "./catalog";
 import {
-  catalogLastDate,
   catalogPeriodRuns,
   catalogPeriodWithin,
   inTableGrain,
@@ -38,8 +42,6 @@ import {
   type ProjectStudyWindow,
 } from "./project_data";
 import {
-  foldIdentity,
-  overlapIntervals,
   sourcePeriodIntervals,
   sourcePeriodYears,
   studyWindowInterval,
@@ -189,20 +191,7 @@ export function SourceCard({
   });
   const sharedYears = catalogPeriodRuns(shared.flatMap((days) => days.periods));
   const offered = [...new Set(shared.flatMap((days) => days.releases))];
-  // A project's names as the catalog spells them: an order matches a name
-  // exactly, else under the identity fold, so "Wave A" names "WAVE A".
-  const named = [
-    ...new Set(
-      (source.releases ?? []).map(
-        (name) =>
-          offered.find((option) => option === name) ??
-          offered.find(
-            (option) => foldIdentity(option) === foldIdentity(name),
-          ) ??
-          name,
-      ),
-    ),
-  ];
+  const named = sourceReleaseNames(source, sharedDays);
   // A named release that serves none of these years stays a choice, so its
   // finding can be cleared here.
   const releaseOptions = [
@@ -229,6 +218,11 @@ export function SourceCard({
         (segment) => segment.table === source.table,
       );
       const columns = variableColumns(onTable);
+      // What the stored source takes, and what the dragged window would.
+      const taken = columnsInSource(columns, source, sharedDays);
+      const drawnTaken = dragging
+        ? columnsInSource(columns, source, sharedDays, within)
+        : taken;
       // The server's verdict that the chosen database lacks the column: its lane
       // draws it blocked, as the variable page draws a column outside the study
       // years, not with the plain in-project fill (#2343).
@@ -237,22 +231,11 @@ export function SourceCard({
       );
       const candidates = [
         ...new Set(
-          onTable
-            .filter((segment) => {
-              if ("error" in period) return false;
-              if (period.intervals === null) return true;
-              return (
-                overlapIntervals(period.intervals, [
-                  [
-                    segment.period.start ?? "0001-01-01",
-                    catalogLastDate(segment.period) ?? "9999-12-31",
-                  ],
-                ]).length > 0
-              );
-            })
-            .flatMap((segment) =>
+          [...taken.values()].flatMap((pieces) =>
+            pieces.flatMap(({ segment }) =>
               segment.classification ? [segment.classification] : [],
             ),
+          ),
         ),
       ];
       const pinOptions = [
@@ -266,13 +249,7 @@ export function SourceCard({
       // column is drawn over those days and one outside them is not drawn.
       columnRows(columns).forEach((row, index) => {
         const drawn = row.flatMap((column) => {
-          const inProject = within
-            ? column.segments.flatMap((segment) =>
-                catalogPeriodWithin(segment.period, within).map((period) => ({
-                  period,
-                })),
-              )
-            : column.segments;
+          const inProject = drawnTaken.get(column.id) ?? [];
           return inProject.length ? [{ column, inProject }] : [];
         });
         // In date order, so a spelling that returns draws its changes.
@@ -362,7 +339,7 @@ export function SourceCard({
                       entity="column"
                       name={column.spelling}
                       state={
-                        !elsewhere && columnInSource(column, source)
+                        !elsewhere && !!taken.get(column.id)?.length
                           ? "in"
                           : "out"
                       }

@@ -10,7 +10,7 @@ import {
   registerRead,
   retryTableShowRead,
   tableSegmentsReads,
-  tableShowRead,
+  tableShowReads,
 } from "./catalog_names";
 import { DeliverySummary } from "./DeliverySummary";
 import { stewardDatabases } from "./databases";
@@ -377,8 +377,6 @@ function Check({
 
 const readRegisters = (refs: readonly string[]) =>
   Object.fromEntries(refs.map((ref) => [ref, registerRead(ref)]));
-const readTables = (refs: readonly string[]) =>
-  Object.fromEntries(refs.map((ref) => [ref, tableShowRead(ref)]));
 const columnKey = (table: string, variable: string) =>
   JSON.stringify([table, variable]);
 /** Every source's columns' rows in its table, keyed by `columnKey`. */
@@ -446,7 +444,7 @@ function Sources({
   // read whole, for those years; a source that names releases keeps its
   // choice editable after its years move off them.
   const tableShows = useCatalogRead(
-    readTables,
+    tableShowReads,
     useDistinct([
       ...[...segments.values()].flatMap((rows) =>
         rows.flatMap((row) => (row.release ? [row.table] : [])),

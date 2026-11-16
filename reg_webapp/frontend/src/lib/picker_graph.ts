@@ -1,9 +1,10 @@
 /** Projection of 5.1 catalog segments onto the variable page's lanes. */
 import {
   bindingSources,
-  columnInSource,
   columnRows,
+  columnsInSource,
   columnWindowPeriod,
+  type SharedDays,
   type VariableColumn,
 } from "./add_columns";
 import type { Graph, VariableShow } from "./api";
@@ -44,6 +45,7 @@ export function variableSpans({
   readOnly = false,
   database = null,
   notInDatabase = new Set(),
+  sharedDays = new Map(),
   tableName = (table) => names.get(table) ?? "Table name unavailable",
 }: {
   columns: readonly VariableColumn[];
@@ -64,6 +66,9 @@ export function variableSpans({
   /** The tables whose binding of this variable the project's check says the
    * database lacks over its years (`not_in_database`). */
   notInDatabase?: ReadonlySet<string>;
+  /** Per table, the days two of its releases share (`show`): there a source
+   * takes only the releases it names. */
+  sharedDays?: ReadonlyMap<string, SharedDays>;
   /** How the accessible name names a table. */
   tableName?: (table: string) => string;
 }): LaneSpanModel[] {
@@ -85,26 +90,35 @@ export function variableSpans({
             source.period,
           )
       : undefined;
+    const here = columns
+      .filter((column) => column.table === table)
+      .map((all) => {
+        const column = {
+          ...all,
+          segments: inDatabase(all.segments, database),
+        };
+        const absent = column.segments.length === 0;
+        return { all, column, absent, drawn: absent ? all : column };
+      });
+    // Every column of the table at once: a release's rows shadow a
+    // releaseless one's on the days it serves.
+    const taken = sources.map((source) =>
+      columnsInSource(
+        here.map(({ drawn }) => drawn),
+        source,
+        sharedDays.get(table) ?? [],
+      ),
+    );
     const parts = new Map(
-      columns
-        .filter((column) => column.table === table)
-        .map((all) => {
-          const column = {
-            ...all,
-            segments: inDatabase(all.segments, database),
-          };
-          const absent = column.segments.length === 0;
-          const drawn = absent ? all : column;
-          return [
-            all.id,
-            {
-              drawn,
-              absent,
-              inside: !absent && columnWindowPeriod(column, selection) !== null,
-              taken: sources.some((source) => columnInSource(drawn, source)),
-            },
-          ];
-        }),
+      here.map(({ all, column, absent, drawn }) => [
+        all.id,
+        {
+          drawn,
+          absent,
+          inside: !absent && columnWindowPeriod(column, selection) !== null,
+          taken: taken.some((served) => !!served.get(drawn.id)?.length),
+        },
+      ]),
     );
     const every = [...parts.values()];
     const absent = every.every((part) => part.absent);
