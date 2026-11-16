@@ -1009,7 +1009,14 @@ fn resolve_pass(
                 Err(e) => Some(Err(e)),
             })
             .collect::<Result<BTreeSet<usize>, String>>()?;
-        duplicates = owners::apply(&mut resolved, &groups, &pinned, &tables, &mut findings);
+        duplicates = owners::apply(
+            &mut resolved,
+            &groups,
+            &pinned,
+            &tables,
+            &delivered,
+            &mut findings,
+        );
     }
     // A variable needs a used occurrence. One documented only outside its tables'
     // coverage, or only as a losing duplicate listing, is withheld.
@@ -1499,7 +1506,9 @@ fn resolve_pass(
         }
     }
     // Rival claimants: segments of two variables under one folded spelling, in one
-    // table, that overlap are both ambiguous.
+    // table, that overlap are both ambiguous, unless they are in two different releases
+    // (within one release a column has one variable). A segment of no release is in
+    // every release its days meet, so it contests them all.
     let mut by_fold: BTreeMap<(usize, String), Vec<(usize, usize)>> = BTreeMap::new();
     for (v, variable) in variables.iter().enumerate() {
         for (s, segment) in variable.segments.iter().enumerate() {
@@ -1513,12 +1522,10 @@ fn resolve_pass(
     for members in by_fold.values() {
         for (a, &(va, sa)) in members.iter().enumerate() {
             for &(vb, sb) in &members[a + 1..] {
+                let (a, b) = (&variables[va].segments[sa], &variables[vb].segments[sb]);
                 if va != vb
-                    && intersect(
-                        &variables[va].segments[sa].period,
-                        &variables[vb].segments[sb].period,
-                    )
-                    .is_some()
+                    && (a.release.is_none() || b.release.is_none() || a.release == b.release)
+                    && intersect(&a.period, &b.period).is_some()
                 {
                     contested.insert((va, sa));
                     contested.insert((vb, sb));

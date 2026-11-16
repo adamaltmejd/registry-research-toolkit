@@ -6,12 +6,19 @@
 //! ones, or a holder that does not claim the whole run stays ambiguous. The rule never
 //! shadows a curated variable assignment, and skips a column in a table when any used
 //! claimant there is marked `long_format`.
+//!
+//! In a table with concurrent releases a run is contested only among the claims of one
+//! release (and claims of no release, which are in every release their days meet), as
+//! ambiguity is (crates/DESIGN.md, "Concurrent releases"); the neighbours are still read
+//! from the column's whole timeline.
 
 use std::collections::{BTreeMap, BTreeSet};
 
 use reg_core::{Interval, fold_identity, next_iso_day};
 
-use crate::{Finding, ResolvedOccurrence, ResolvedTable, Subject, covers, pieces, span};
+use crate::{
+    Deliveries, Finding, ResolvedOccurrence, ResolvedTable, Subject, covers, pieces, span,
+};
 
 /// Shadow the losing listings of every contested run a neighbouring owner settles.
 /// `groups` are the variables' member occurrences, in variable order. Returns the
@@ -21,6 +28,7 @@ pub(crate) fn apply(
     groups: &[&Vec<usize>],
     pinned: &BTreeSet<usize>,
     tables: &[ResolvedTable],
+    delivered: &Deliveries,
     findings: &mut Vec<Finding>,
 ) -> BTreeSet<usize> {
     // (table, fold) -> the used occurrences claiming it, with their group.
@@ -37,6 +45,7 @@ pub(crate) fn apply(
         }
     }
     let mut lost = BTreeSet::new();
+    let mut settled = BTreeSet::new();
     for ((t, fold), claims) in &columns {
         if claims
             .iter()
@@ -52,8 +61,66 @@ pub(crate) fn apply(
         {
             continue;
         }
-        let runs = holder_runs(resolved, claims);
-        let sole = |k: usize| (runs[k].1.len() == 1).then(|| *runs[k].1.first().expect("one"));
+        let neighbours = holder_runs(resolved, claims);
+        let lane_of: Vec<Option<usize>> = claims
+            .iter()
+            .map(|&(_, i)| delivered.of(tables, &resolved[i]))
+            .collect();
+        let lanes: BTreeSet<usize> = lane_of.iter().flatten().copied().collect();
+        // Each release's claims with those of no release; one set where none has a release.
+        let sets: Vec<Vec<(usize, usize)>> = if lanes.is_empty() {
+            vec![claims.clone()]
+        } else {
+            lanes
+                .iter()
+                .map(|&lane| {
+                    claims
+                        .iter()
+                        .zip(&lane_of)
+                        .filter(|(_, l)| l.is_none_or(|l| l == lane))
+                        .map(|(c, _)| *c)
+                        .collect()
+                })
+                .collect()
+        };
+        for set in &sets {
+            let column = Column {
+                table: *t,
+                fold,
+                claims: set,
+                neighbours: &neighbours,
+            };
+            column.settle(resolved, pinned, tables, findings, &mut lost, &mut settled);
+        }
+    }
+    for &i in &lost {
+        resolved[i].status = "shadowed";
+    }
+    lost
+}
+
+/// One column's claims within one release, and the whole column's runs for neighbours.
+struct Column<'a> {
+    table: usize,
+    fold: &'a str,
+    claims: &'a [(usize, usize)],
+    neighbours: &'a [(Interval, BTreeSet<usize>)],
+}
+
+impl Column<'_> {
+    fn settle(
+        &self,
+        resolved: &[ResolvedOccurrence],
+        pinned: &BTreeSet<usize>,
+        tables: &[ResolvedTable],
+        findings: &mut Vec<Finding>,
+        lost: &mut BTreeSet<usize>,
+        settled: &mut BTreeSet<(usize, Interval)>,
+    ) {
+        let (fold, table) = (self.fold, &tables[self.table].table.table);
+        let runs = holder_runs(resolved, self.claims);
+        let sole =
+            |(_, h): &(Interval, BTreeSet<usize>)| (h.len() == 1).then(|| *h.first().expect("one"));
         let mut k = 0;
         while k < runs.len() {
             if runs[k].1.len() < 2 {
@@ -68,65 +135,71 @@ pub(crate) fn apply(
                 end += 1;
             }
             let run: Interval = (runs[k].0.0.clone(), runs[end - 1].0.1.clone());
-            let before = (0..k).rev().find_map(sole);
-            let after = (end..runs.len()).find_map(sole);
+            let start = k;
+            k = end;
+            let before = self
+                .neighbours
+                .iter()
+                .rev()
+                .filter(|(p, _)| p.1 < run.0)
+                .find_map(sole);
+            let after = self
+                .neighbours
+                .iter()
+                .filter(|(p, _)| p.0 > run.1)
+                .find_map(sole);
             let owner = match (before, after) {
                 (Some(a), Some(b)) if a != b => None,
                 (a, b) => a.or(b),
             };
-            if let Some(owner) = owner
-                && runs[k..end].iter().all(|(_, h)| h.contains(&owner))
-            {
-                let losing: Vec<usize> = claims
-                    .iter()
-                    .filter(|&&(g, i)| {
-                        g != owner && reg_core::intersect(span(&resolved[i]), &run).is_some()
-                    })
-                    .map(|&(_, i)| i)
-                    .collect();
-                // A curated assignment is final; say which pin keeps the run ambiguous.
-                if let Some(&i) = losing.iter().find(|&i| pinned.contains(i)) {
+            let Some(owner) = owner else { continue };
+            if !runs[start..end].iter().all(|(_, h)| h.contains(&owner)) {
+                continue;
+            }
+            let losing: Vec<usize> = self
+                .claims
+                .iter()
+                .filter(|&&(g, i)| {
+                    g != owner && reg_core::intersect(span(&resolved[i]), &run).is_some()
+                })
+                .map(|&(_, i)| i)
+                .collect();
+            // A curated assignment is final; say which pin keeps the run ambiguous.
+            if let Some(&i) = losing.iter().find(|&i| pinned.contains(i)) {
+                if settled.insert((i, run.clone())) {
                     findings.push(Finding {
                         code: "F2:pinned-claim",
                         severity: "review",
                         subject: Subject::Occurrence(i),
                         period: Some(run.clone()),
                         message: format!(
-                            "{fold} in table {:?}: the neighbouring releases would give the \
-                             column to another variable, but curation assigns this listing",
-                            tables[*t].table.table
+                            "{fold} in table {table:?}: the neighbouring releases would give the \
+                             column to another variable, but curation assigns this listing"
                         ),
                     });
-                    k = end;
-                    continue;
                 }
-                // A losing listing that reaches past the run would take its sole days too.
-                if losing.iter().all(|&i| covers(&run, span(&resolved[i]))) {
-                    let Some(&first) = losing.first() else {
-                        k = end;
-                        continue;
-                    };
-                    lost.extend(losing);
+                continue;
+            }
+            // A losing listing that reaches past the run would take its sole days too.
+            if losing.iter().all(|&i| covers(&run, span(&resolved[i])))
+                && let Some(&first) = losing.first()
+            {
+                lost.extend(losing);
+                if settled.insert((first, run.clone())) {
                     findings.push(Finding {
                         code: "F2:neighbour-owner",
                         severity: "notice",
                         subject: Subject::Occurrence(first),
                         period: Some(run.clone()),
                         message: format!(
-                            "{fold} in table {:?} is documented under several variables; the \
-                             one that holds it in the neighbouring releases keeps it",
-                            tables[*t].table.table
+                            "{fold} in table {table:?} is documented under several variables; the \
+                             one that holds it in the neighbouring releases keeps it"
                         ),
                     });
                 }
             }
-            k = end;
         }
     }
-    for &i in &lost {
-        resolved[i].status = "shadowed";
-    }
-    lost
 }
 
 /// The column's elementary pieces with the groups holding each; adjacent pieces with one
