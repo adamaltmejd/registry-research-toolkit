@@ -20,6 +20,24 @@ type KeyPiece = (i64, i64, (String, String));
 /// day, `None` elsewhere): (lane, lo, hi, segment).
 type LanePiece<'a> = (Option<&'a String>, i64, i64, &'a KeySegment);
 
+/// The lanes a key column serves: a catalog segment serves every lane. A steward key
+/// column serves the unshared days and, on a shared day, only the release its file
+/// states (none for a file stating no release), as materialize places an entry.
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord)]
+enum Serves {
+    Every,
+    File(Option<String>),
+}
+
+impl Serves {
+    fn lane(&self, lane: Option<&String>) -> bool {
+        match (self, lane) {
+            (Self::Every, _) | (Self::File(_), None) => true,
+            (Self::File(stated), Some(lane)) => stated.as_ref() == Some(lane),
+        }
+    }
+}
+
 #[derive(Clone)]
 pub(crate) struct KeySegment {
     pub(crate) variable: String,
@@ -28,9 +46,11 @@ pub(crate) struct KeySegment {
     pub(crate) end: i64,
     state: String,
     entity: bool,
-    /// The release its segment belongs to (a concurrent table's), by name; for a
-    /// steward key column, the release its file states, as materialize places it.
+    /// The release its segment belongs to (a concurrent table's), by name: the release
+    /// shadowing of [`shadowed`] and so the state a lane reads.
     release: Option<String>,
+    /// The lanes the column serves ([`Serves`]).
+    serves: Serves,
     /// A curated row key. A base table also loads a key variable's other segments, which
     /// may shadow a key segment of no release ([`row_keys`] keeps keys only after).
     row_key: bool,
@@ -76,6 +96,7 @@ fn key_segments(
                     state: r.get(4)?,
                     entity: true,
                     release: r.get(5)?,
+                    serves: Serves::Every,
                     row_key: r.get(6)?,
                 })
             },
@@ -119,18 +140,20 @@ fn steward_key_segments(
 ) -> Result<Vec<KeySegment>, Error> {
     let mut mappings = conn.prepare(
         "WITH semantics AS (
-           SELECT t.pid AS table_pid,v.pid AS variable_pid,s.start,s.end,s.state
+           SELECT t.pid AS table_pid,v.pid AS variable_pid,s.start,s.end,s.state,n.body AS release
            FROM main.segment s JOIN main.tbl t ON t.id=s.table_id
            JOIN main.variable v ON v.id=s.variable_id
+           LEFT JOIN main.release r ON r.id=s.release_id LEFT JOIN main.text n ON n.id=r.name_text
            UNION ALL
-           SELECT t.pid,v.pid,s.start,s.end,s.state
+           SELECT t.pid,v.pid,s.start,s.end,s.state,n.body
            FROM held.segment s JOIN held.tbl t ON t.id=s.table_id
            JOIN held.variable v ON v.id=s.variable_id
+           LEFT JOIN held.release r ON r.id=s.release_id LEFT JOIN held.text n ON n.id=r.name_text
          )
          SELECT DISTINCT m.variable_pid,c.name,max(m.start,served.start,s.start),
                 min(m.end,served.end,s.end),s.state,json_extract(k.value,'$.period'),
                 EXISTS(SELECT 1 FROM json_each(k.value,'$.entity') e WHERE e.value=m.variable_pid),
-                h.release
+                h.release,s.release
          FROM held.holding_table h JOIN held.holding_column c ON c.holding_id=h.id
          JOIN held.holding_mapping m ON m.column_id=c.id JOIN json_each(h.key_requirements) k
          JOIN held.holding_column sc ON sc.holding_id=h.id
@@ -153,7 +176,8 @@ fn steward_key_segments(
                 end: r.get(3)?,
                 state: r.get(4)?,
                 entity: r.get(6)?,
-                release: r.get(7)?,
+                release: r.get(8)?,
+                serves: Serves::File(r.get(7)?),
                 row_key: true,
             },
             r.get::<_, Option<String>>(5)?,
@@ -200,26 +224,30 @@ fn merge_key_segments(out: Vec<KeySegment>) -> Vec<KeySegment> {
                 key.state,
                 key.entity,
                 key.release,
+                key.serves,
             ))
             .or_default()
             .push((key.start, key.end));
     }
     groups
         .into_iter()
-        .flat_map(|((variable, spelling, state, entity, release), spans)| {
-            reg_core::days::merge(spans)
-                .into_iter()
-                .map(move |(start, end)| KeySegment {
-                    variable: variable.clone(),
-                    spelling: spelling.clone(),
-                    start,
-                    end,
-                    state: state.clone(),
-                    entity,
-                    release: release.clone(),
-                    row_key: true,
-                })
-        })
+        .flat_map(
+            |((variable, spelling, state, entity, release, serves), spans)| {
+                reg_core::days::merge(spans)
+                    .into_iter()
+                    .map(move |(start, end)| KeySegment {
+                        variable: variable.clone(),
+                        spelling: spelling.clone(),
+                        start,
+                        end,
+                        state: state.clone(),
+                        entity,
+                        release: release.clone(),
+                        serves: serves.clone(),
+                        row_key: true,
+                    })
+            },
+        )
         .collect()
 }
 
@@ -250,13 +278,14 @@ fn shadowed(pieces: Vec<LanePiece<'_>>) -> Vec<LanePiece<'_>> {
 /// A source's row keys: per serving table, the requested days cut where its row-key
 /// columns change, each piece with the columns over it (sorted by variable and
 /// spelling); days without a row-key column are left out. On a day two primary releases
-/// share, each release the source names gets its own pieces, from its own key columns
-/// and the releaseless ones; a day none of them is named for blocks the source and has
-/// none. Row keys join the order unbound, so their window findings are made here,
-/// located at the source: an ambiguous row-key segment inside the served days is an
-/// `ambiguous_window`, a preliminary one a `preliminary_data` warning. Key columns read
-/// `conn`, the base connection; shared days read `origin`, the serving table's own, as
-/// entries do: a table only the holdings database defines has a held id.
+/// share, each release the source names gets its own pieces, from the key columns that
+/// serve it ([`Serves`]), each read by its release shadowing; a day none of them is
+/// named for blocks the source and has none. Row keys join the order unbound, so their
+/// window findings are made here, located at the source: an ambiguous row-key segment
+/// inside the served days is an `ambiguous_window`, a preliminary one a
+/// `preliminary_data` warning. Key columns read `conn`, the base connection; shared
+/// days read `origin`, the serving table's own, as entries do: a table only the
+/// holdings database defines has a held id.
 #[allow(clippy::too_many_lines, clippy::too_many_arguments)]
 pub(super) fn row_keys(
     server: &Server,
@@ -291,7 +320,7 @@ pub(super) fn row_keys(
                     if a >= b {
                         continue;
                     }
-                    for name in &x.chosen {
+                    for name in x.chosen.iter().filter(|name| key.serves.lane(Some(name))) {
                         pieces.push((Some(name), a, b, key));
                     }
                 }

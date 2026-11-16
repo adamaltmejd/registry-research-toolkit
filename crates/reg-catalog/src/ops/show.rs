@@ -1313,9 +1313,21 @@ fn row_keys(server: &Server, conn: &Connection, pid: &str) -> Result<Vec<ShowRow
     let mut found: Vec<(i64, String, String, i64)> = if server.catalog.steward().is_some() {
         let attached = server.catalog.connect()?;
         server.catalog.attach_holdings(&attached)?;
-        super::order::rows::steward_keys(server, &attached, pid, None)?
-            .iter()
-            .map(|k| (k.start, k.variable.clone(), k.spelling.clone(), k.end))
+        // A key column split by release or file is one row key here.
+        let mut spans: BTreeMap<(String, String), Vec<(i64, i64)>> = BTreeMap::new();
+        for k in super::order::rows::steward_keys(server, &attached, pid, None)?.iter() {
+            spans
+                .entry((k.variable.clone(), k.spelling.clone()))
+                .or_default()
+                .push((k.start, k.end));
+        }
+        spans
+            .into_iter()
+            .flat_map(|((variable, spelling), spans)| {
+                reg_core::days::merge(spans)
+                    .into_iter()
+                    .map(move |(start, end)| (start, variable.clone(), spelling.clone(), end))
+            })
             .collect()
     } else {
         rows(
