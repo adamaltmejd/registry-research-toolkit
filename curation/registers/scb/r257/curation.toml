@@ -5460,60 +5460,6 @@ evidence = "Variabeln mäter företagets aktivitet och övertäckning.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:andel-omsattning-fran-varor-tjanster-nya-endast-for-q7b"
-fields = { "tags" = ["business", "research"] }
-evidence = "Källan anger omsättningsandel för produkter nya endast för företaget.\ncatalog:variable_text:27852:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-omsattning-fran-varor-tjanster-nya-endast-for-turnin"
-fields = { "tags" = ["business", "research"] }
-evidence = "Källan anger omsättningsandel för produkter nya endast för företaget.\ncatalog:variable_text:27853:13879:15706\ncatalog:variable_text:27853:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-omsattning-fran-varor-tjanster-nya-for-foretagets-q7a"
-fields = { "tags" = ["business", "research"] }
-evidence = "Andelen avser produkter som är nya för företagets marknad.\ncatalog:variable_text:27854:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-omsattning-fran-varor-tjanster-nya-for-tur-prd-new-mkt"
-fields = { "tags" = ["business", "research"] }
-evidence = "Källan anger en omsättningsandel från marknadsnya produkter, men samma källkolumn är överlappande mappad till en variabel med belopp i KSEK.\ncatalog:occurrence:248447\ncatalog:occurrence:248652\ncatalog:variable_text:27855:16801:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-omsattning-fran-varor-tjanster-nya-for-turnmar"
-fields = { "tags" = ["business", "research"] }
-evidence = "Andelen avser produkter som är nya för företagets marknad.\ncatalog:variable_text:27856:13879:15706\ncatalog:variable_text:27856:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-omsattning-fran-varor-tjanster-nya-tur-prd-new-ent"
-fields = { "tags" = ["business", "research"] }
-evidence = "Den överlappande kopplingen till samma källkolumn behöver utredas. Variabeln avser omsättningsandel från företagsnya produkter.\ncatalog:occurrence:248446\ncatalog:occurrence:248651\ncatalog:variable_text:27857:16801:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-omsattning-fran-varor-tjanster-som-var-oforandrade-q7c"
-fields = { "tags" = ["business", "research"] }
-evidence = "Andel av omsättning från oförändrade produkter.\ncatalog:variable_text:27858:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-omsattning-fran-varor-tjanster-som-var-tur-prd-ninn"
-fields = { "tags" = ["business", "research"] }
-evidence = "Samma källkolumn är knuten till två variabler med överlappande perioder. Gruppen avser omsättningsandel för oförändrade produkter.\ncatalog:occurrence:248448\ncatalog:occurrence:248653\ncatalog:variable_text:27859:16801:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-omsattning-fran-varor-tjanster-som-var-turntot"
-fields = { "tags" = ["business", "research"] }
-evidence = "The share belongs with its documented counterparts.\ncatalog:variable_text:27860:16071:17167"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-anstallda"
 fields = { "sets" = [] }
 evidence = "Källan anger antal anställda och kandidaten omfattar företagets anställda.\ncatalog:variable_text:27862:10957:14975\ncatalog:variable_text:27862:18993:20089"
@@ -5526,18 +5472,6 @@ evidence = "Källan anger antal anställda och kandidaten omfattar företagets a
 
 [[statement]]
 kind = "set"
-subject = "var:antal-anstallda-emp2022"
-fields = { "sets" = [] }
-evidence = "Källan anger antal anställda i företagsenheten.\ncatalog:occurrence:248354\ncatalog:variable_text:27863:18262:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-anstallda-emp2022"
-fields = { "tags" = ["employment"] }
-evidence = "Källan anger antal anställda i företagsenheten.\ncatalog:occurrence:248354\ncatalog:variable_text:27863:18262:19358"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-anstallda-foretaget"
 fields = { "sets" = [] }
 evidence = "Variabeln anger företagets antal anställda.\ncatalog:occurrence:247352\ncatalog:variable_text:27864:13149:14245"
@@ -5547,18 +5481,6 @@ kind = "set"
 subject = "var:antal-anstallda-foretaget"
 fields = { "tags" = ["employment"] }
 evidence = "Variabeln anger företagets antal anställda.\ncatalog:occurrence:247352\ncatalog:variable_text:27864:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-anstallda-pa-foretaget-q4fdb"
-fields = { "sets" = [] }
-evidence = "Variabeln anger företagets antal anställda.\ncatalog:occurrence:247149\ncatalog:variable_text:27865:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-anstallda-pa-foretaget-q4fdb"
-fields = { "tags" = ["employment"] }
-evidence = "Variabeln anger företagets antal anställda.\ncatalog:occurrence:247149\ncatalog:variable_text:27865:11688:13514"
 
 [[statement]]
 kind = "set"
@@ -7887,18 +7809,6 @@ kind = "set"
 subject = "var:finansieringskalla-lanefinansiering"
 fields = { "tags" = ["business", "finance"] }
 evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:248170\ncatalog:occurrence:248375"
-
-[[statement]]
-kind = "set"
-subject = "var:foretagsenhetsnummer-scbid"
-fields = { "sets" = [] }
-evidence = "Reviewed memberships; legacy groups default dissolve.\n"
-
-[[statement]]
-kind = "set"
-subject = "var:foretagsenhetsnummer-scbid"
-fields = { "tags" = [] }
-evidence = "Reviewed memberships; legacy groups default dissolve.\n"
 
 [[statement]]
 kind = "set"
@@ -8232,30 +8142,6 @@ evidence = "Variabeln avser företagets geografiska försäljningsmarknad.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:geografisk-marknad-eu-kandidat-land-eu-och-efta-mareur"
-fields = { "sets" = [] }
-evidence = "Variabeln avser företagets geografiska försäljningsmarknad.\ncatalog:variable_text:28435:13879:15706\ncatalog:variable_text:28435:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:geografisk-marknad-eu-kandidat-land-eu-och-efta-mareur"
-fields = { "tags" = ["business"] }
-evidence = "Variabeln avser företagets geografiska försäljningsmarknad.\ncatalog:variable_text:28435:13879:15706\ncatalog:variable_text:28435:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:geografisk-marknad-eu-kandidat-land-eu-och-efta-q2c"
-fields = { "sets" = [] }
-evidence = "Variabeln avser företagets geografiska försäljningsmarknad.\ncatalog:variable_text:28436:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:geografisk-marknad-eu-kandidat-land-eu-och-efta-q2c"
-fields = { "tags" = ["business"] }
-evidence = "Variabeln avser företagets geografiska försäljningsmarknad.\ncatalog:variable_text:28436:11688:13514"
-
-[[statement]]
-kind = "set"
 subject = "var:geografisk-marknad-nationellt"
 fields = { "sets" = [] }
 evidence = "The indicator measures a geographic sales market.\ncatalog:variable_text:28437:13149:14245"
@@ -8265,30 +8151,6 @@ kind = "set"
 subject = "var:geografisk-marknad-nationellt"
 fields = { "tags" = ["business"] }
 evidence = "The indicator measures a geographic sales market.\ncatalog:variable_text:28437:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:geografisk-marknad-nationellt-marnat"
-fields = { "sets" = [] }
-evidence = "The indicator measures a geographic sales market.\ncatalog:variable_text:28438:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:geografisk-marknad-nationellt-marnat"
-fields = { "tags" = ["business"] }
-evidence = "The indicator measures a geographic sales market.\ncatalog:variable_text:28438:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:geografisk-marknad-nationellt-q2b"
-fields = { "sets" = [] }
-evidence = "The indicator measures a geographic sales market.\ncatalog:variable_text:28439:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:geografisk-marknad-nationellt-q2b"
-fields = { "tags" = ["business"] }
-evidence = "The indicator measures a geographic sales market.\ncatalog:variable_text:28439:11688:13514"
 
 [[statement]]
 kind = "set"
@@ -8304,30 +8166,6 @@ evidence = "The indicator measures a geographic sales market.\ncatalog:variable_
 
 [[statement]]
 kind = "set"
-subject = "var:geografisk-marknad-ovriga-lander-maroth"
-fields = { "sets" = [] }
-evidence = "The indicator measures a geographic sales market.\ncatalog:variable_text:28441:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:geografisk-marknad-ovriga-lander-maroth"
-fields = { "tags" = ["business"] }
-evidence = "The indicator measures a geographic sales market.\ncatalog:variable_text:28441:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:geografisk-marknad-ovriga-lander-q2d"
-fields = { "sets" = [] }
-evidence = "The indicator measures a geographic sales market.\ncatalog:variable_text:28442:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:geografisk-marknad-ovriga-lander-q2d"
-fields = { "tags" = ["business"] }
-evidence = "The indicator measures a geographic sales market.\ncatalog:variable_text:28442:11688:13514"
-
-[[statement]]
-kind = "set"
 subject = "var:geografisk-marknad-regional-lokal"
 fields = { "sets" = [] }
 evidence = "The indicator measures a geographic sales market.\ncatalog:variable_text:28443:13149:14245"
@@ -8337,30 +8175,6 @@ kind = "set"
 subject = "var:geografisk-marknad-regional-lokal"
 fields = { "tags" = ["business"] }
 evidence = "The indicator measures a geographic sales market.\ncatalog:variable_text:28443:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:geografisk-marknad-regional-lokal-marloc"
-fields = { "sets" = [] }
-evidence = "The indicator measures a geographic sales market.\ncatalog:variable_text:28444:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:geografisk-marknad-regional-lokal-marloc"
-fields = { "tags" = ["business"] }
-evidence = "The indicator measures a geographic sales market.\ncatalog:variable_text:28444:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:geografisk-marknad-regional-lokal-q2a"
-fields = { "sets" = [] }
-evidence = "The indicator measures a geographic sales market.\ncatalog:variable_text:28445:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:geografisk-marknad-regional-lokal-q2a"
-fields = { "tags" = ["business"] }
-evidence = "The indicator measures a geographic sales market.\ncatalog:variable_text:28445:11688:13514"
 
 [[statement]]
 kind = "set"
@@ -8694,18 +8508,6 @@ evidence = "Källan anger huvudkontorets läge.\ncatalog:variable_text:28539:131
 
 [[statement]]
 kind = "set"
-subject = "var:huvudkontoret-belaget-q1a"
-fields = { "sets" = [] }
-evidence = "Källan anger huvudkontorets läge.\ncatalog:variable_text:28540:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:huvudkontoret-belaget-q1a"
-fields = { "tags" = ["geography"] }
-evidence = "Källan anger huvudkontorets läge.\ncatalog:variable_text:28540:11688:13514"
-
-[[statement]]
-kind = "set"
 subject = "var:syfte-marknadsforing-marknadsandelar"
 fields = { "sets" = [] }
 evidence = "Frågekoden är opak; etiketten anger syftet.\ncatalog:variable_text:28541:13149:14245"
@@ -8775,54 +8577,6 @@ kind = "set"
 subject = "var:icke-innovationsaktiva-fanns-inget-behov-reas-ninn-nneed"
 fields = { "tags" = ["research"] }
 evidence = "Samma källkolumn har överlappande ägare med olika populationer.\ncatalog:occurrence:248424\ncatalog:occurrence:248613"
-
-[[statement]]
-kind = "set"
-subject = "var:immaterialla-rattigheter-och-licensiering-prodsg"
-fields = { "sets" = ["monsterskydd"] }
-evidence = "The variable concerns registered design protection.\ncatalog:variable_text:28551:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:immaterialla-rattigheter-och-licensiering-prodsg"
-fields = { "tags" = ["business"] }
-evidence = "The variable concerns registered design protection.\ncatalog:variable_text:28551:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:immateriella-rattigheter-och-licensiering-patent-propat"
-fields = { "sets" = [] }
-evidence = "The variable concerns patent applications.\ncatalog:variable_text:28552:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:immateriella-rattigheter-och-licensiering-patent-propat"
-fields = { "tags" = ["business"] }
-evidence = "The variable concerns patent applications.\ncatalog:variable_text:28552:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:immateriella-rattigheter-och-licensiering-salt-ipr-out-sell"
-fields = { "sets" = ["forsaljning-av-immateriella-rattigheter"] }
-evidence = "Samma källkolumn har överlappande ägare. Variabeln gäller försäljning eller utlicensiering av rättigheter.\ncatalog:occurrence:248227\ncatalog:occurrence:248416\ncatalog:variable_text:28553:16801:18628\n\nDefinition pass 2026-11-02: The questionnaire combines sale and out-licensing in one response.\nrel070-base/reg_meta.db:occurrence:248053\nrel070-base/reg_meta.db:occurrence:248227"
-
-[[statement]]
-kind = "set"
-subject = "var:immateriella-rattigheter-och-licensiering-salt-ipr-out-sell"
-fields = { "tags" = ["business"] }
-evidence = "Samma källkolumn har överlappande ägare. Variabeln gäller försäljning eller utlicensiering av rättigheter.\ncatalog:occurrence:248227\ncatalog:occurrence:248416\ncatalog:variable_text:28553:16801:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:immateriella-rattigheter-och-licensiering-varumarke-protm"
-fields = { "sets" = ["varumarkesskydd"] }
-evidence = "The variable concerns trademark registration.\ncatalog:variable_text:28554:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:immateriella-rattigheter-och-licensiering-varumarke-protm"
-fields = { "tags" = ["business"] }
-evidence = "The variable concerns trademark registration.\ncatalog:variable_text:28554:16071:17167"
 
 [[statement]]
 kind = "set"
@@ -9498,18 +9252,6 @@ evidence = "The variable measures occurrence of innovation cooperation.\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:innovationssamarbete-f12"
-fields = { "sets" = [] }
-evidence = "The variable measures occurrence of innovation cooperation.\ncatalog:variable_text:28622:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationssamarbete-f12"
-fields = { "tags" = ["research"] }
-evidence = "The variable measures occurrence of innovation cooperation.\ncatalog:variable_text:28622:13149:14245"
-
-[[statement]]
-kind = "set"
 subject = "var:innovationssamarbete-konsulter-privata-coop-prv-cn-eu-efta"
 fields = { "sets" = [] }
 evidence = "Id innehåller ogenomskinliga källkoder och ingår i coop-familjen.\ncatalog:variable_text:28623:18993:20089"
@@ -9531,30 +9273,6 @@ kind = "set"
 subject = "var:innovationssamarbete-konsulter-privata-coop-prv-cn-nat"
 fields = { "tags" = ["research"] }
 evidence = "Id innehåller ogenomskinliga källkoder och ingår i coop-familjen.\ncatalog:variable_text:28624:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationssamarbete-kunder-klienter-coop-pub-clcu-neu-efta"
-fields = { "sets" = [] }
-evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:28627:16801:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationssamarbete-kunder-klienter-coop-pub-clcu-neu-efta"
-fields = { "tags" = ["research"] }
-evidence = "Id överstiger 60 tecken.\ncatalog:variable_text:28627:16801:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationssamarbete-q12"
-fields = { "sets" = [] }
-evidence = "The variable measures occurrence of innovation cooperation.\ncatalog:variable_text:28628:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationssamarbete-q12"
-fields = { "tags" = ["research"] }
-evidence = "The variable measures occurrence of innovation cooperation.\ncatalog:variable_text:28628:11688:13514"
 
 [[statement]]
 kind = "set"
@@ -9591,186 +9309,6 @@ kind = "set"
 subject = "var:innovationsutgifter-tjanster-material"
 fields = { "tags" = ["business", "research"] }
 evidence = "Den tidigare perioden avser material och den senare tjänster eller material.\ncatalog:occurrence:247991\ncatalog:occurrence:248368"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-andra-forberedelser-q10g"
-fields = { "sets" = ["andra-innovationsforberedelser"] }
-evidence = "Variabeln avser andra innovationsförberedelser.\ncatalog:variable_text:28632:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-andra-forberedelser-q10g"
-fields = { "tags" = ["research"] }
-evidence = "Variabeln avser andra innovationsförberedelser.\ncatalog:variable_text:28632:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-egen-fou-egfou"
-fields = { "sets" = [] }
-evidence = "Variabeln avser egen FoU-verksamhet.\ncatalog:occurrence:247819\ncatalog:variable_text:28633:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-egen-fou-egfou"
-fields = { "tags" = ["research"] }
-evidence = "Variabeln avser egen FoU-verksamhet.\ncatalog:occurrence:247819\ncatalog:variable_text:28633:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-egen-fou-inna-ih-rnd"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn är mappad till två variabler under överlappande perioder.\ncatalog:occurrence:248207\ncatalog:occurrence:248392"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-egen-fou-inna-ih-rnd"
-fields = { "tags" = ["research"] }
-evidence = "Samma källkolumn är mappad till två variabler under överlappande perioder.\ncatalog:occurrence:248207\ncatalog:occurrence:248392"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-egen-fou-q10a"
-fields = { "sets" = [] }
-evidence = "Variabeln avser egen FoU-verksamhet.\ncatalog:occurrence:247106\ncatalog:variable_text:28635:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-egen-fou-q10a"
-fields = { "tags" = ["research"] }
-evidence = "Variabeln avser egen FoU-verksamhet.\ncatalog:occurrence:247106\ncatalog:variable_text:28635:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-forvarv-av-existerande-kunskap-q10d"
-fields = { "sets" = ["kunskapsforvarv-for-innovation"] }
-evidence = "Variabeln avser kunskapsförvärv för innovation.\ncatalog:variable_text:28636:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-forvarv-av-existerande-kunskap-q10d"
-fields = { "tags" = ["research"] }
-evidence = "Variabeln avser kunskapsförvärv för innovation.\ncatalog:variable_text:28636:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-forvarv-av-existerande-kunskap-roek"
-fields = { "sets" = ["kunskapsforvarv-for-innovation"] }
-evidence = "Variabeln avser kunskapsförvärv för innovation.\ncatalog:variable_text:28637:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-forvarv-av-existerande-kunskap-roek"
-fields = { "tags" = ["research"] }
-evidence = "Variabeln avser kunskapsförvärv för innovation.\ncatalog:variable_text:28637:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-forvarv-av-maskiner-utrustning-q10c"
-fields = { "sets" = ["utrustningsforvarv-for-innovation"] }
-evidence = "Variabeln avser utrustningsförvärv för innovation.\ncatalog:variable_text:28638:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-forvarv-av-maskiner-utrustning-q10c"
-fields = { "tags" = ["research"] }
-evidence = "Variabeln avser utrustningsförvärv för innovation.\ncatalog:variable_text:28638:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-forvarv-av-maskiner-utrustning-rmac"
-fields = { "sets" = ["utrustningsforvarv-for-innovation"] }
-evidence = "Variabeln avser utrustningsförvärv för innovation.\ncatalog:variable_text:28639:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-forvarv-av-maskiner-utrustning-rmac"
-fields = { "tags" = ["research"] }
-evidence = "Variabeln avser utrustningsförvärv för innovation.\ncatalog:variable_text:28639:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-marknadsintroduktion-av-q10f"
-fields = { "sets" = ["marknadsintroduktion-av-innovationer"] }
-evidence = "Variabeln avser marknadsintroduktion av innovationer.\ncatalog:variable_text:28640:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-marknadsintroduktion-av-q10f"
-fields = { "tags" = ["research"] }
-evidence = "Variabeln avser marknadsintroduktion av innovationer.\ncatalog:variable_text:28640:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-marknadsintroduktion-av-rmar"
-fields = { "sets" = ["marknadsintroduktion-av-innovationer"] }
-evidence = "Variabeln avser marknadsintroduktion av innovationer.\ncatalog:variable_text:28641:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-marknadsintroduktion-av-rmar"
-fields = { "tags" = ["research"] }
-evidence = "Variabeln avser marknadsintroduktion av innovationer.\ncatalog:variable_text:28641:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-utbildning-q10e"
-fields = { "sets" = ["utbildning-for-innovation"] }
-evidence = "Variabeln avser utbildning för innovation.\ncatalog:variable_text:28642:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-utbildning-q10e"
-fields = { "tags" = ["education", "research"] }
-evidence = "Variabeln avser utbildning för innovation.\ncatalog:variable_text:28642:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-utbildning-rtr"
-fields = { "sets" = ["utbildning-for-innovation"] }
-evidence = "Variabeln avser utbildning för innovation.\ncatalog:variable_text:28643:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-utbildning-rtr"
-fields = { "tags" = ["education", "research"] }
-evidence = "Variabeln avser utbildning för innovation.\ncatalog:variable_text:28643:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-utlagd-fou-inna-rnd-contr-out"
-fields = { "sets" = ["utlagd-fou-verksamhet"] }
-evidence = "The source column has overlapping owners.\ncatalog:occurrence:248209\ncatalog:occurrence:248396"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-utlagd-fou-inna-rnd-contr-out"
-fields = { "tags" = ["research"] }
-evidence = "The source column has overlapping owners.\ncatalog:occurrence:248209\ncatalog:occurrence:248396"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-utlagd-fou-q10b"
-fields = { "sets" = ["utlagd-fou-verksamhet"] }
-evidence = "The variable measures outsourced research and development.\ncatalog:variable_text:28645:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-utlagd-fou-q10b"
-fields = { "tags" = ["research"] }
-evidence = "The variable measures outsourced research and development.\ncatalog:variable_text:28645:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-utlagd-fou-rrdex"
-fields = { "sets" = ["utlagd-fou-verksamhet"] }
-evidence = "The variable measures outsourced research and development.\ncatalog:variable_text:28646:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:innovationsverksamhet-utlagd-fou-rrdex"
-fields = { "tags" = ["research"] }
-evidence = "The variable measures outsourced research and development.\ncatalog:variable_text:28646:16071:17167"
 
 [[statement]]
 kind = "set"
@@ -9816,42 +9354,6 @@ evidence = "Variabeln avser införande av leveransmetoder som innovation. Coordi
 
 [[statement]]
 kind = "set"
-subject = "var:introduktion-av-leveransmetoder-inno-pcs-log"
-fields = { "sets" = [] }
-evidence = "Variabeln avser införande av leveransmetoder som innovation. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter introduktion av leveransmetoder. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: FInpslg är odefinierad och belägger inte leveransinnovation. membership-0293: Ingen vald variabel dokumenterar introduktion av leveransmetoder; minskad svarstid är ett syfte. membership-0294: Båda mäter introduktion av logistik-, leverans- eller distributionsmetoder och har skyddade medlemskap. membership-0295: De skyddade variablerna omfattar nya logistik-, leverans- och distributionsmetoder. De specificerade logistikinnovationerna mäter införda metoder inom samma avgränsning. lgoth saknar precisering av metod och tas inte med här. membership-0296: Ingen vald variabel mäter belagd introduktion av leveransmetoder. membership-0297: Inga valda variabler mäter introduktion av leveransmetoder. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter införande eller typer av logistikinnovation. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: Ingen vald variabel är belagd som införande eller typ av logistikinnovation. membership-0293: Ingen vald variabel dokumenterar införande av logistikinnovationer eller deras typer. membership-0294: Båda beskrivningarna anger uttryckligen införande av nya eller förbättrade logistik-, leverans- eller distributionsmetoder, vilket omfattas av kandidatdefinitionen. membership-0295: Variablerna mäter införande av specificerade eller andra logistikinnovationer. Frågorna om betydelse, drivkrafter och hinder utesluts. membership-0296: Risker i leverantörskedjor mäter inte införande av logistikinnovationer. membership-0297: Inga valda variabler mäter införande eller typer av logistikinnovation.\ncatalog:variable_text:28298:11688:18628\ncatalog:variable_text:28456:13149:14245\ncatalog:variable_text:28686:13149:14245\ncatalog:variable_text:28687:18993:20089\ncatalog:variable_text:28688:16071:17167\ncatalog:variable_text:28689:11688:13514\ncatalog:variable_text:28757:16071:17167\ncatalog:variable_text:28758:16071:17167\ncatalog:variable_text:28760:16071:17167\ncatalog:variable_text:28763:16071:17167\ncatalog:variable_text:28764:16071:17167\ncatalog:variable_text:28765:16071:17167\ncatalog:variable_text:28767:16071:17167\ncatalog:variable_text:28769:16071:17167\ncatalog:variable_text:28975:18993:20089\ncatalog:variable_text:28976:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-leveransmetoder-inno-pcs-log"
-fields = { "tags" = ["research"] }
-evidence = "Variabeln avser införande av leveransmetoder som innovation. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter introduktion av leveransmetoder. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: FInpslg är odefinierad och belägger inte leveransinnovation. membership-0293: Ingen vald variabel dokumenterar introduktion av leveransmetoder; minskad svarstid är ett syfte. membership-0294: Båda mäter introduktion av logistik-, leverans- eller distributionsmetoder och har skyddade medlemskap. membership-0295: De skyddade variablerna omfattar nya logistik-, leverans- och distributionsmetoder. De specificerade logistikinnovationerna mäter införda metoder inom samma avgränsning. lgoth saknar precisering av metod och tas inte med här. membership-0296: Ingen vald variabel mäter belagd introduktion av leveransmetoder. membership-0297: Inga valda variabler mäter introduktion av leveransmetoder. Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0290: Inga valda variabler i denna sektion mäter införande eller typer av logistikinnovation. membership-0291: Inga valda variabler har belagt innehåll inom definitionen i denna sektion. membership-0292: Ingen vald variabel är belagd som införande eller typ av logistikinnovation. membership-0293: Ingen vald variabel dokumenterar införande av logistikinnovationer eller deras typer. membership-0294: Båda beskrivningarna anger uttryckligen införande av nya eller förbättrade logistik-, leverans- eller distributionsmetoder, vilket omfattas av kandidatdefinitionen. membership-0295: Variablerna mäter införande av specificerade eller andra logistikinnovationer. Frågorna om betydelse, drivkrafter och hinder utesluts. membership-0296: Risker i leverantörskedjor mäter inte införande av logistikinnovationer. membership-0297: Inga valda variabler mäter införande eller typer av logistikinnovation.\ncatalog:variable_text:28298:11688:18628\ncatalog:variable_text:28456:13149:14245\ncatalog:variable_text:28686:13149:14245\ncatalog:variable_text:28687:18993:20089\ncatalog:variable_text:28688:16071:17167\ncatalog:variable_text:28689:11688:13514\ncatalog:variable_text:28757:16071:17167\ncatalog:variable_text:28758:16071:17167\ncatalog:variable_text:28760:16071:17167\ncatalog:variable_text:28763:16071:17167\ncatalog:variable_text:28764:16071:17167\ncatalog:variable_text:28765:16071:17167\ncatalog:variable_text:28767:16071:17167\ncatalog:variable_text:28769:16071:17167\ncatalog:variable_text:28975:18993:20089\ncatalog:variable_text:28976:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-leveransmetoder-inpslg"
-fields = { "sets" = [] }
-evidence = "Variabeln avser införande av leveransmetoder som innovation.\ncatalog:variable_text:28688:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-leveransmetoder-inpslg"
-fields = { "tags" = ["research"] }
-evidence = "Variabeln avser införande av leveransmetoder som innovation.\ncatalog:variable_text:28688:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-leveransmetoder-q8b"
-fields = { "sets" = [] }
-evidence = "Variabeln avser införande av leveransmetoder som innovation.\ncatalog:variable_text:28689:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-leveransmetoder-q8b"
-fields = { "tags" = ["research"] }
-evidence = "Variabeln avser införande av leveransmetoder som innovation.\ncatalog:variable_text:28689:11688:13514"
-
-[[statement]]
-kind = "set"
 subject = "var:introduktion-av-nya-affarsmetoder"
 fields = { "sets" = [] }
 evidence = "Variabeln avser införande av affärsmetoder.\ncatalog:variable_text:28690:16071:17167"
@@ -9861,78 +9363,6 @@ kind = "set"
 subject = "var:introduktion-av-nya-affarsmetoder"
 fields = { "tags" = ["research"] }
 evidence = "Variabeln avser införande av affärsmetoder.\ncatalog:variable_text:28690:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-nya-metoder-for-ansvar-inno-pcs-wr-dec-hrm"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:248215\ncatalog:occurrence:248405"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-nya-metoder-for-ansvar-inno-pcs-wr-dec-hrm"
-fields = { "tags" = ["research"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:248215\ncatalog:occurrence:248405"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-nya-metoder-for-ansvar-och-beslut-orgwkp"
-fields = { "sets" = [] }
-evidence = "Källan avser införande av metoder för ansvar och beslut.\ncatalog:variable_text:28692:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-nya-metoder-for-ansvar-och-beslut-orgwkp"
-fields = { "tags" = ["research"] }
-evidence = "Källan avser införande av metoder för ansvar och beslut.\ncatalog:variable_text:28692:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-nya-metoder-for-inno-pcs-oproc-extrel"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:248212\ncatalog:occurrence:248402"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-nya-metoder-for-inno-pcs-oproc-extrel"
-fields = { "tags" = ["research"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:248212\ncatalog:occurrence:248402"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-nya-metoder-for-inno-pcs-sls-serv"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:248214\ncatalog:occurrence:248404"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-nya-metoder-for-inno-pcs-sls-serv"
-fields = { "tags" = ["research"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:248214\ncatalog:occurrence:248404"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-nya-metoder-for-marknadsforing-mktpdp"
-fields = { "sets" = [] }
-evidence = "Källan anger introduktion av marknadsföringsmetoder.\ncatalog:variable_text:28695:13879:15706\ncatalog:variable_text:28695:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-nya-metoder-for-marknadsforing-mktpdp"
-fields = { "tags" = ["research"] }
-evidence = "Källan anger introduktion av marknadsföringsmetoder.\ncatalog:variable_text:28695:13879:15706\ncatalog:variable_text:28695:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-nya-metoder-for-organsiering-av-orgexr"
-fields = { "sets" = [] }
-evidence = "Variabeln avser metoder för externa relationer.\ncatalog:variable_text:28696:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-nya-metoder-for-organsiering-av-orgexr"
-fields = { "tags" = ["research"] }
-evidence = "Variabeln avser metoder för externa relationer.\ncatalog:variable_text:28696:16071:17167"
 
 [[statement]]
 kind = "set"
@@ -9948,42 +9378,6 @@ evidence = "Variabeln avser införande av produktionsmetoder som innovation.\nca
 
 [[statement]]
 kind = "set"
-subject = "var:introduktion-av-produktionsmetoder-inno-pcs-prd"
-fields = { "sets" = [] }
-evidence = "Variabeln avser införande av produktionsmetoder som innovation.\ncatalog:variable_text:28698:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-produktionsmetoder-inno-pcs-prd"
-fields = { "tags" = ["research"] }
-evidence = "Variabeln avser införande av produktionsmetoder som innovation.\ncatalog:variable_text:28698:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-produktionsmetoder-inpspd"
-fields = { "sets" = [] }
-evidence = "Variabeln avser införande av produktionsmetoder som innovation.\ncatalog:variable_text:28699:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-produktionsmetoder-inpspd"
-fields = { "tags" = ["research"] }
-evidence = "Variabeln avser införande av produktionsmetoder som innovation.\ncatalog:variable_text:28699:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-produktionsmetoder-q8a"
-fields = { "sets" = [] }
-evidence = "Variabeln avser införande av produktionsmetoder som innovation.\ncatalog:variable_text:28700:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-produktionsmetoder-q8a"
-fields = { "tags" = ["research"] }
-evidence = "Variabeln avser införande av produktionsmetoder som innovation.\ncatalog:variable_text:28700:11688:13514"
-
-[[statement]]
-kind = "set"
 subject = "var:introduktion-av-stodverksamheter"
 fields = { "sets" = [] }
 evidence = "Variabeln avser införande av stödverksamheter som innovation.\ncatalog:variable_text:28701:13149:14245"
@@ -9993,42 +9387,6 @@ kind = "set"
 subject = "var:introduktion-av-stodverksamheter"
 fields = { "tags" = ["research"] }
 evidence = "Variabeln avser införande av stödverksamheter som innovation.\ncatalog:variable_text:28701:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-stodverksamheter-for-foretagets-inpssu"
-fields = { "sets" = [] }
-evidence = "Variabeln avser införande av stödverksamheter som innovation.\ncatalog:variable_text:28702:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-stodverksamheter-for-foretagets-inpssu"
-fields = { "tags" = ["research"] }
-evidence = "Variabeln avser införande av stödverksamheter som innovation.\ncatalog:variable_text:28702:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-stodverksamheter-for-foretagets-q8c"
-fields = { "sets" = [] }
-evidence = "Variabeln avser införande av stödverksamheter som innovation.\ncatalog:variable_text:28703:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-stodverksamheter-for-foretagets-q8c"
-fields = { "tags" = ["research"] }
-evidence = "Variabeln avser införande av stödverksamheter som innovation.\ncatalog:variable_text:28703:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-stodverksamheter-for-inno-pcs-acct"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare med olika avgränsningar.\ncatalog:occurrence:248210\ncatalog:occurrence:248399"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-stodverksamheter-for-inno-pcs-acct"
-fields = { "tags" = ["research"] }
-evidence = "Samma källkolumn har överlappande ägare med olika avgränsningar.\ncatalog:occurrence:248210\ncatalog:occurrence:248399"
 
 [[statement]]
 kind = "set"
@@ -10044,42 +9402,6 @@ evidence = "Källan anger tjänsteinnovation.\ncatalog:variable_text:28705:13149
 
 [[statement]]
 kind = "set"
-subject = "var:introduktion-av-tjanster-inno-prd-serv"
-fields = { "sets" = [] }
-evidence = "Källan anger tjänsteinnovation.\ncatalog:variable_text:28706:16801:18262\ncatalog:variable_text:28706:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-tjanster-inno-prd-serv"
-fields = { "tags" = ["research"] }
-evidence = "Källan anger tjänsteinnovation.\ncatalog:variable_text:28706:16801:18262\ncatalog:variable_text:28706:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-tjanster-inpdsv"
-fields = { "sets" = [] }
-evidence = "Källan anger tjänsteinnovation.\ncatalog:variable_text:28707:13879:15706\ncatalog:variable_text:28707:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-tjanster-inpdsv"
-fields = { "tags" = ["research"] }
-evidence = "Källan anger tjänsteinnovation.\ncatalog:variable_text:28707:13879:15706\ncatalog:variable_text:28707:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-tjanster-q5b"
-fields = { "sets" = [] }
-evidence = "Källan anger tjänsteinnovation.\ncatalog:variable_text:28708:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-tjanster-q5b"
-fields = { "tags" = ["research"] }
-evidence = "Källan anger tjänsteinnovation.\ncatalog:variable_text:28708:11688:13514"
-
-[[statement]]
-kind = "set"
 subject = "var:introduktion-av-varor"
 fields = { "sets" = [] }
 evidence = "Källan anger varuinnovation.\ncatalog:variable_text:28709:13149:14245"
@@ -10089,42 +9411,6 @@ kind = "set"
 subject = "var:introduktion-av-varor"
 fields = { "tags" = ["research"] }
 evidence = "Källan anger varuinnovation.\ncatalog:variable_text:28709:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-varor-inno-prd-gd"
-fields = { "sets" = [] }
-evidence = "Id:t beskriver introduktion av varor och familjen behålls samlat.\ncatalog:variable_text:28710:16801:18262\ncatalog:variable_text:28710:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-varor-inno-prd-gd"
-fields = { "tags" = ["research"] }
-evidence = "Id:t beskriver introduktion av varor och familjen behålls samlat.\ncatalog:variable_text:28710:16801:18262\ncatalog:variable_text:28710:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-varor-inpdgd"
-fields = { "sets" = [] }
-evidence = "Källan anger varuinnovation.\ncatalog:variable_text:28711:13879:15706\ncatalog:variable_text:28711:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-varor-inpdgd"
-fields = { "tags" = ["research"] }
-evidence = "Källan anger varuinnovation.\ncatalog:variable_text:28711:13879:15706\ncatalog:variable_text:28711:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-varor-q5a"
-fields = { "sets" = [] }
-evidence = "Källan anger varuinnovation.\ncatalog:variable_text:28712:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:introduktion-av-varor-q5a"
-fields = { "tags" = ["research"] }
-evidence = "Källan anger varuinnovation.\ncatalog:variable_text:28712:11688:13514"
 
 [[statement]]
 kind = "set"
@@ -10524,30 +9810,6 @@ evidence = "Källan anger koncerntillhörighet.\ncatalog:variable_text:28750:131
 
 [[statement]]
 kind = "set"
-subject = "var:koncernmarkering-gp"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:247828\ncatalog:occurrence:248008"
-
-[[statement]]
-kind = "set"
-subject = "var:koncernmarkering-gp"
-fields = { "tags" = ["business"] }
-evidence = "Samma källkolumn har överlappande ägare.\ncatalog:occurrence:247828\ncatalog:occurrence:248008"
-
-[[statement]]
-kind = "set"
-subject = "var:koncernmarkering-q1"
-fields = { "sets" = [] }
-evidence = "Källan anger koncerntillhörighet.\ncatalog:variable_text:28752:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:koncernmarkering-q1"
-fields = { "tags" = ["business"] }
-evidence = "Källan anger koncerntillhörighet.\ncatalog:variable_text:28752:11688:13514"
-
-[[statement]]
-kind = "set"
 subject = "var:koncerntillhorighet"
 fields = { "sets" = [] }
 evidence = "Källan anger koncerntillhörighet.\ncatalog:variable_text:28753:18993:20089"
@@ -10557,18 +9819,6 @@ kind = "set"
 subject = "var:koncerntillhorighet"
 fields = { "tags" = ["business"] }
 evidence = "Källan anger koncerntillhörighet.\ncatalog:variable_text:28753:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:koncerntillhorighet-koncern"
-fields = { "sets" = [] }
-evidence = "Källan anger koncerntillhörighet.\ncatalog:variable_text:28754:18262:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:koncerntillhorighet-koncern"
-fields = { "tags" = ["business"] }
-evidence = "Källan anger koncerntillhörighet.\ncatalog:variable_text:28754:18262:19358"
 
 [[statement]]
 kind = "set"
@@ -10764,18 +10014,6 @@ evidence = "Den tidigare leveranskolumnens betydelse är inte fastställd.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:lilla-n-per-stratum-nsamp"
-fields = { "sets" = [] }
-evidence = "Variabeln anger urvalsstorlek per stratum.\ncatalog:variable_text:28771:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:lilla-n-per-stratum-nsamp"
-fields = { "tags" = ["methods"] }
-evidence = "Variabeln anger urvalsstorlek per stratum.\ncatalog:variable_text:28771:18993:20089"
-
-[[statement]]
-kind = "set"
 subject = "var:logistikinnovation-annat-hinder"
 fields = { "sets" = ["hinder-for-logistikinnovation"] }
 evidence = "Variabeln avser hinder för logistikinnovation.\ncatalog:variable_text:28774:16071:17167"
@@ -10845,30 +10083,6 @@ kind = "set"
 subject = "var:mest-vardefull-samarbetspartner"
 fields = { "tags" = ["research"] }
 evidence = "Variabeln kodar den mest värdefulla innovationspartnern.\ncatalog:variable_text:28784:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:mest-vardefull-samarbetspartner-pmos"
-fields = { "sets" = [] }
-evidence = "Variabeln kodar den mest värdefulla innovationspartnern.\ncatalog:variable_text:28785:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:mest-vardefull-samarbetspartner-pmos"
-fields = { "tags" = ["research"] }
-evidence = "Variabeln kodar den mest värdefulla innovationspartnern.\ncatalog:variable_text:28785:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:mest-vardefull-samarbetspartner-q14"
-fields = { "sets" = [] }
-evidence = "Variabeln kodar den mest värdefulla innovationspartnern.\ncatalog:variable_text:28786:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:mest-vardefull-samarbetspartner-q14"
-fields = { "tags" = ["research"] }
-evidence = "Variabeln kodar den mest värdefulla innovationspartnern.\ncatalog:variable_text:28786:11688:13514"
 
 [[statement]]
 kind = "set"
@@ -10956,54 +10170,6 @@ evidence = "Källan anger återvinning i företaget.\ncatalog:variable_text:2879
 
 [[statement]]
 kind = "set"
-subject = "var:miljoinnovation-atervunnit-avfall-vatten-eller-eco-rec"
-fields = { "sets" = [] }
-evidence = "Källorna beskriver samma miljöfördel i separata perioder; den senare kodningen anger förekomst.\ncatalog:occurrence:248148\ncatalog:occurrence:248512\ncatalog:valueset:10571"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-atervunnit-avfall-vatten-eller-eco-rec"
-fields = { "tags" = ["environment", "research"] }
-evidence = "Källorna beskriver samma miljöfördel i separata perioder; den senare kodningen anger förekomst.\ncatalog:occurrence:248148\ncatalog:occurrence:248512\ncatalog:valueset:10571"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-atervunnit-avfall-vatten-eller-material-j20f"
-fields = { "sets" = [] }
-evidence = "Återvinning i företaget.\ncatalog:variable_text:28796:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-atervunnit-avfall-vatten-eller-material-j20f"
-fields = { "tags" = ["environment", "research"] }
-evidence = "Återvinning i företaget.\ncatalog:variable_text:28796:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-ersatt-andel-fossila-branslen-eco-rep"
-fields = { "sets" = [] }
-evidence = "Källorna beskriver samma miljöfördel i separata perioder; den senare kodningen anger förekomst.\ncatalog:occurrence:248149\ncatalog:occurrence:248513\ncatalog:valueset:10571"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-ersatt-andel-fossila-branslen-eco-rep"
-fields = { "tags" = ["energy", "environment", "research"] }
-evidence = "Källorna beskriver samma miljöfördel i separata perioder; den senare kodningen anger förekomst.\ncatalog:occurrence:248149\ncatalog:occurrence:248513\ncatalog:valueset:10571"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-forlangt-produktens-livscykel-eco-ext"
-fields = { "sets" = [] }
-evidence = "Källorna beskriver samma miljöfördel i separata perioder; den senare kodningen anger förekomst.\ncatalog:occurrence:248143\ncatalog:occurrence:248507\ncatalog:valueset:10571"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-forlangt-produktens-livscykel-eco-ext"
-fields = { "tags" = ["environment", "research"] }
-evidence = "Källorna beskriver samma miljöfördel i separata perioder; den senare kodningen anger förekomst.\ncatalog:occurrence:248143\ncatalog:occurrence:248507\ncatalog:valueset:10571"
-
-[[statement]]
-kind = "set"
 subject = "var:miljoinnovation-fororeningar-foretaget"
 fields = { "sets" = [] }
 evidence = "Variabeln avser minskade föroreningar i företaget genom miljöinnovation.\ncatalog:occurrence:248346\ncatalog:variable_text:28799:18262:19358"
@@ -11028,30 +10194,6 @@ evidence = "Definitionen anger miljöinnovation genom materialersättning.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:miljoinnovation-materialersattning-eco-sub"
-fields = { "sets" = [] }
-evidence = "Källorna beskriver samma miljöfördel i olika perioder, med olika svarsskalor, för eco-sub och miljoinnovation-materialersattning-eco-sub.\ncatalog:occurrence:248150\ncatalog:occurrence:248514"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-materialersattning-eco-sub"
-fields = { "tags" = ["environment", "research"] }
-evidence = "Källorna beskriver samma miljöfördel i olika perioder, med olika svarsskalor, för eco-sub och miljoinnovation-materialersattning-eco-sub.\ncatalog:occurrence:248150\ncatalog:occurrence:248514"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-materialersattning-j20d"
-fields = { "sets" = [] }
-evidence = "Definitionen anger miljöinnovation genom materialersättning.\ncatalog:variable_text:28802:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-materialersattning-j20d"
-fields = { "tags" = ["environment", "research"] }
-evidence = "Definitionen anger miljöinnovation genom materialersättning.\ncatalog:variable_text:28802:13149:14245"
-
-[[statement]]
-kind = "set"
 subject = "var:miljoinnovation-minskad-materialatgang"
 fields = { "sets" = [] }
 evidence = "Variabeln avser minskad material- eller vattenanvändning genom miljöinnovation.\ncatalog:occurrence:248345\ncatalog:variable_text:28803:18262:19358"
@@ -11061,150 +10203,6 @@ kind = "set"
 subject = "var:miljoinnovation-minskad-materialatgang"
 fields = { "tags" = ["environment", "research"] }
 evidence = "Variabeln avser minskad material- eller vattenanvändning genom miljöinnovation.\ncatalog:occurrence:248345\ncatalog:variable_text:28803:18262:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-minskad-materialatgang-eco-mat"
-fields = { "sets" = [] }
-evidence = "This variable records a yes/no response, while its earlier counterpart records the degree of the environmental benefit.\ncatalog:occurrence:248144\ncatalog:occurrence:248508\ncatalog:valueset:10571\ncatalog:valueset:1832"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-minskad-materialatgang-eco-mat"
-fields = { "tags" = ["environment", "research"] }
-evidence = "This variable records a yes/no response, while its earlier counterpart records the degree of the environmental benefit.\ncatalog:occurrence:248144\ncatalog:occurrence:248508\ncatalog:valueset:10571\ncatalog:valueset:1832"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-minskad-materialatgang-j20a"
-fields = { "sets" = [] }
-evidence = "Variabeln avser minskad material- eller vattenanvändning genom miljöinnovation.\ncatalog:occurrence:247407\ncatalog:variable_text:28805:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-minskad-materialatgang-j20a"
-fields = { "tags" = ["environment", "research"] }
-evidence = "Variabeln avser minskad material- eller vattenanvändning genom miljöinnovation.\ncatalog:occurrence:247407\ncatalog:variable_text:28805:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-reducerad-energianvandning-eco-eno"
-fields = { "sets" = [] }
-evidence = "Samma begrepp är uppdelat per period mellan denna variabel och scb/innovation-foretag/eco-eno. Gruppen omfattar miljöfördelen i företaget.\ncatalog:occurrence:248141\ncatalog:occurrence:248505\ncatalog:variable_text:28806:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-reducerad-energianvandning-eco-eno"
-fields = { "tags" = ["energy", "environment", "research"] }
-evidence = "Samma begrepp är uppdelat per period mellan denna variabel och scb/innovation-foretag/eco-eno. Gruppen omfattar miljöfördelen i företaget.\ncatalog:occurrence:248141\ncatalog:occurrence:248505\ncatalog:variable_text:28806:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-reducerad-energianvandning-eco-eno-sg"
-fields = { "sets" = [] }
-evidence = "Gruppen omfattar miljöfördelen i företaget.\ncatalog:occurrence:248342\ncatalog:variable_text:28807:18262:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-reducerad-energianvandning-eco-eno-sg"
-fields = { "tags" = ["energy", "environment", "research"] }
-evidence = "Gruppen omfattar miljöfördelen i företaget.\ncatalog:occurrence:248342\ncatalog:variable_text:28807:18262:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-reducerad-energianvandning-eco-enu"
-fields = { "sets" = [] }
-evidence = "Samma begrepp är uppdelat per period mellan denna variabel och scb/innovation-foretag/eco-enu. Gruppen omfattar miljöfördelen vid slutkonsumtion.\ncatalog:occurrence:248142\ncatalog:occurrence:248506\ncatalog:variable_text:28808:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-reducerad-energianvandning-eco-enu"
-fields = { "tags" = ["energy", "environment", "research"] }
-evidence = "Samma begrepp är uppdelat per period mellan denna variabel och scb/innovation-foretag/eco-enu. Gruppen omfattar miljöfördelen vid slutkonsumtion.\ncatalog:occurrence:248142\ncatalog:occurrence:248506\ncatalog:variable_text:28808:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-reducerade-fororeningar-eco-pos"
-fields = { "sets" = [] }
-evidence = "This variable records a yes/no response, while its earlier counterpart records the degree of the environmental benefit.\ncatalog:occurrence:248146\ncatalog:occurrence:248510\ncatalog:valueset:10571\ncatalog:valueset:1832"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-reducerade-fororeningar-eco-pos"
-fields = { "tags" = ["environment", "research"] }
-evidence = "This variable records a yes/no response, while its earlier counterpart records the degree of the environmental benefit.\ncatalog:occurrence:248146\ncatalog:occurrence:248510\ncatalog:valueset:10571\ncatalog:valueset:1832"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-reducerade-fororeningar-foretaget-eco-pol"
-fields = { "sets" = [] }
-evidence = "This variable records a yes/no response, while its earlier counterpart records the degree of the environmental benefit.\ncatalog:occurrence:248145\ncatalog:occurrence:248509\ncatalog:valueset:10571\ncatalog:valueset:1832"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-reducerade-fororeningar-foretaget-eco-pol"
-fields = { "tags" = ["environment", "research"] }
-evidence = "This variable records a yes/no response, while its earlier counterpart records the degree of the environmental benefit.\ncatalog:occurrence:248145\ncatalog:occurrence:248509\ncatalog:valueset:10571\ncatalog:valueset:1832"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-reducerade-fororeningar-foretaget-j20e"
-fields = { "sets" = [] }
-evidence = "Variabeln avser minskade föroreningar i företaget genom miljöinnovation.\ncatalog:occurrence:247411\ncatalog:variable_text:28811:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-reducerade-fororeningar-foretaget-j20e"
-fields = { "tags" = ["environment", "research"] }
-evidence = "Variabeln avser minskade föroreningar i företaget genom miljöinnovation.\ncatalog:occurrence:247411\ncatalog:variable_text:28811:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-reducerade-fororeningar-slutkonsumtion-j20h"
-fields = { "sets" = [] }
-evidence = "Variabeln avser minskade föroreningar vid slutkonsumtion genom miljöinnovation.\ncatalog:occurrence:247414\ncatalog:variable_text:28812:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-reducerade-fororeningar-slutkonsumtion-j20h"
-fields = { "tags" = ["environment", "research"] }
-evidence = "Variabeln avser minskade föroreningar vid slutkonsumtion genom miljöinnovation.\ncatalog:occurrence:247414\ncatalog:variable_text:28812:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-skydd-av-biologisk-mangfald-eco-biu-sg"
-fields = { "sets" = ["miljoinnovation-biologisk-mangfald-vid-slutkonsumtion"] }
-evidence = "Källan avser miljöfördelar vid slutkonsumtion genom skydd av biologisk mångfald.\ncatalog:occurrence:248341\ncatalog:variable_text:28813:18262:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-skydd-av-biologisk-mangfald-eco-biu-sg"
-fields = { "tags" = ["environment", "research"] }
-evidence = "Källan avser miljöfördelar vid slutkonsumtion genom skydd av biologisk mångfald.\ncatalog:occurrence:248341\ncatalog:variable_text:28813:18262:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-skydd-av-biologiska-mangfald-eco-bio-sg"
-fields = { "sets" = ["miljoinnovation-biologisk-mangfald-i-foretaget"] }
-evidence = "Källan avser miljöfördelar inom företaget genom skydd av biologisk mångfald.\ncatalog:occurrence:248340\ncatalog:variable_text:28814:18262:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-skydd-av-biologiska-mangfald-eco-bio-sg"
-fields = { "tags" = ["environment", "research"] }
-evidence = "Källan avser miljöfördelar inom företaget genom skydd av biologisk mångfald.\ncatalog:occurrence:248340\ncatalog:variable_text:28814:18262:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-underlattat-atervinning-efter-eco-rea"
-fields = { "sets" = [] }
-evidence = "Källorna beskriver samma miljöfördel i separata perioder; den senare kodningen anger förekomst.\ncatalog:occurrence:248147\ncatalog:occurrence:248511\ncatalog:valueset:10571"
-
-[[statement]]
-kind = "set"
-subject = "var:miljoinnovation-underlattat-atervinning-efter-eco-rea"
-fields = { "tags" = ["environment", "research"] }
-evidence = "Källorna beskriver samma miljöfördel i separata perioder; den senare kodningen anger förekomst.\ncatalog:occurrence:248147\ncatalog:occurrence:248511\ncatalog:valueset:10571"
 
 [[statement]]
 kind = "set"
@@ -11232,18 +10230,6 @@ evidence = "Variabeln klassificerar produktionsenhetens näringsgren.\ncatalog:o
 
 [[statement]]
 kind = "set"
-subject = "var:naringsgren-sni"
-fields = { "sets" = ["naringsgren"] }
-evidence = "Variabeln klassificerar produktionsenhetens näringsgren.\ncatalog:occurrence:248430\ncatalog:variable_text:28824:18262:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:naringsgren-sni"
-fields = { "tags" = ["business"] }
-evidence = "Variabeln klassificerar produktionsenhetens näringsgren.\ncatalog:occurrence:248430\ncatalog:variable_text:28824:18262:19358"
-
-[[statement]]
-kind = "set"
 subject = "var:nettoomsattning"
 fields = { "sets" = [] }
 evidence = "Variabeln avser företagsenhetens nettoomsättning.\ncatalog:occurrence:248649\ncatalog:variable_text:28825:18993:20089"
@@ -11253,18 +10239,6 @@ kind = "set"
 subject = "var:nettoomsattning"
 fields = { "tags" = ["business"] }
 evidence = "Variabeln avser företagsenhetens nettoomsättning.\ncatalog:occurrence:248649\ncatalog:variable_text:28825:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:nettoomsattning-tur2022"
-fields = { "sets" = [] }
-evidence = "Variabeln avser företagsenhetens nettoomsättning.\ncatalog:occurrence:248444\ncatalog:variable_text:28826:18262:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:nettoomsattning-tur2022"
-fields = { "tags" = ["business"] }
-evidence = "Variabeln avser företagsenhetens nettoomsättning.\ncatalog:occurrence:248444\ncatalog:variable_text:28826:18262:19358"
 
 [[statement]]
 kind = "set"
@@ -11301,66 +10275,6 @@ kind = "set"
 subject = "var:nuts"
 fields = { "tags" = ["geography"] }
 evidence = "Källan anger endast NUTS.\ncatalog:variable_text:28836:11688:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:nya-eller-vasentligt-forbattrade-varor-inno-prd-new-ent"
-fields = { "tags" = ["research"] }
-evidence = "Id:t har läsbara ordstammar och etiketten beskriver produktinnovationer nya för företaget.\ncatalog:variable_text:28837:16801:18262\ncatalog:variable_text:28837:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:nya-eller-vasentligt-forbattrade-varor-inno-prd-new-mkt"
-fields = { "tags" = ["research"] }
-evidence = "Id:t har läsbara ordstammar och etiketten beskriver produktinnovationer nya för marknaden.\ncatalog:variable_text:28838:16801:18262\ncatalog:variable_text:28838:18262:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:nya-eller-vasentligt-forbattrade-varor-tjanster-for-newfrm"
-fields = { "tags" = ["research"] }
-evidence = "Källan anger produktinnovation ny för företaget.\ncatalog:variable_text:28839:13879:15706\ncatalog:variable_text:28839:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:nya-eller-vasentligt-forbattrade-varor-tjanster-for-q6b"
-fields = { "tags" = ["research"] }
-evidence = "Källan anger produktinnovation ny för företaget.\ncatalog:variable_text:28840:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:nya-eller-vasentligt-forbattrade-varor-tjanster-pa-newmkt"
-fields = { "tags" = ["research"] }
-evidence = "Källan anger produktinnovation ny för marknaden.\ncatalog:variable_text:28841:13879:15706\ncatalog:variable_text:28841:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:nya-eller-vasentligt-forbattrade-varor-tjanster-pa-q6a"
-fields = { "tags" = ["research"] }
-evidence = "Källan anger produktinnovation ny för marknaden.\ncatalog:variable_text:28842:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:omsattning-per-stratum-lillans-tur"
-fields = { "sets" = ["omsattningssummor-per-stratum"] }
-evidence = "Variabeln mäter populationens omsättningssumma per stratum.\ncatalog:variable_text:28871:18262:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:omsattning-per-stratum-lillans-tur"
-fields = { "tags" = ["business"] }
-evidence = "Variabeln mäter populationens omsättningssumma per stratum.\ncatalog:variable_text:28871:18262:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:omsattning-svarande-storan-tur"
-fields = { "sets" = ["omsattningssummor-per-stratum"] }
-evidence = "Variabeln mäter svarandes omsättningssumma per stratum.\ncatalog:variable_text:28872:18262:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:omsattning-svarande-storan-tur"
-fields = { "tags" = ["business"] }
-evidence = "Variabeln mäter svarandes omsättningssumma per stratum.\ncatalog:variable_text:28872:18262:19358"
 
 [[statement]]
 kind = "set"
@@ -11538,18 +10452,6 @@ evidence = "Variabeln markerar en observation som inte är representativ för si
 
 [[statement]]
 kind = "set"
-subject = "var:outlier-outlfl"
-fields = { "sets" = ["outliermarkering"] }
-evidence = "Variabeln markerar en observation som inte är representativ för sitt stratum.\ncatalog:occurrence:248611\ncatalog:variable_text:28911:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:outlier-outlfl"
-fields = { "tags" = ["methods"] }
-evidence = "Variabeln markerar en observation som inte är representativ för sitt stratum.\ncatalog:occurrence:248611\ncatalog:variable_text:28911:18993:20089"
-
-[[statement]]
-kind = "set"
 subject = "var:overtackning"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig källkod och etiketten anger övertäckning.\ncatalog:occurrence:248612\ncatalog:variable_text:28912:18993:20089"
@@ -11571,30 +10473,6 @@ kind = "set"
 subject = "var:pagaende-innovationsaktivitet"
 fields = { "tags" = ["research"] }
 evidence = "Variabeln avser pågående innovationsaktivitet.\ncatalog:occurrence:247366\ncatalog:variable_text:28913:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:pagaende-innovationsaktivitet-inna-ongo"
-fields = { "sets" = [] }
-evidence = "Variabeln avser pågående innovationsaktivitet.\ncatalog:occurrence:248582\ncatalog:variable_text:28914:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:pagaende-innovationsaktivitet-inna-ongo"
-fields = { "tags" = ["research"] }
-evidence = "Variabeln avser pågående innovationsaktivitet.\ncatalog:occurrence:248582\ncatalog:variable_text:28914:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:pagaende-innovationsaktivitet-inong"
-fields = { "sets" = [] }
-evidence = "Variabeln avser pågående innovationsaktivitet.\ncatalog:occurrence:247848\ncatalog:variable_text:28915:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:pagaende-innovationsaktivitet-inong"
-fields = { "tags" = ["research"] }
-evidence = "Variabeln avser pågående innovationsaktivitet.\ncatalog:occurrence:247848\ncatalog:variable_text:28915:16071:17167"
 
 [[statement]]
 kind = "set"
@@ -12588,18 +11466,6 @@ evidence = "Källan anger endast SNI 2002.\ncatalog:variable_text:29053:11688:18
 
 [[statement]]
 kind = "set"
-subject = "var:stod-for-innovationsaktiviteter-eu-h2020-fund-eu-hp-rndinn"
-fields = { "sets" = [] }
-evidence = "Variabeln avser stöd till innovationsaktiviteter från EU:s ramprogram.\ncatalog:variable_text:29068:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:stod-for-innovationsaktiviteter-eu-h2020-fund-eu-hp-rndinn"
-fields = { "tags" = ["research"] }
-evidence = "Variabeln avser stöd till innovationsaktiviteter från EU:s ramprogram.\ncatalog:variable_text:29068:18993:20089"
-
-[[statement]]
-kind = "set"
 subject = "var:stod-for-innovationsverksamhet-eu"
 fields = { "sets" = [] }
 evidence = "Variabeln avser EU-stöd till innovationsverksamhet enligt etiketten.\ncatalog:variable_text:29069:12418:13514\ncatalog:variable_text:29069:14610:15706\ncatalog:variable_text:29069:16071:17167"
@@ -12609,30 +11475,6 @@ kind = "set"
 subject = "var:stod-for-innovationsverksamhet-eu"
 fields = { "tags" = ["research"] }
 evidence = "Variabeln avser EU-stöd till innovationsverksamhet enligt etiketten.\ncatalog:variable_text:29069:12418:13514\ncatalog:variable_text:29069:14610:15706\ncatalog:variable_text:29069:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:stod-for-innovationsverksamhet-eu-fund-eu-oth-rndinn"
-fields = { "sets" = [] }
-evidence = "Samma källkolumn har överlappande ägare. Etiketten anger EU-stöd till innovationsverksamhet.\ncatalog:occurrence:248177\ncatalog:occurrence:248383\ncatalog:variable_text:29070:16801:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:stod-for-innovationsverksamhet-eu-fund-eu-oth-rndinn"
-fields = { "tags" = ["research"] }
-evidence = "Samma källkolumn har överlappande ägare. Etiketten anger EU-stöd till innovationsverksamhet.\ncatalog:occurrence:248177\ncatalog:occurrence:248383\ncatalog:variable_text:29070:16801:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:stod-for-innovationsverksamhet-fund-aut-loc-reg-rndinn"
-fields = { "sets" = ["kommunalt-stod"] }
-evidence = "Samma källkolumn är mappad till två variabler under överlappande perioder.\ncatalog:occurrence:248169\ncatalog:occurrence:248373"
-
-[[statement]]
-kind = "set"
-subject = "var:stod-for-innovationsverksamhet-fund-aut-loc-reg-rndinn"
-fields = { "tags" = ["public-finance", "research"] }
-evidence = "Samma källkolumn är mappad till två variabler under överlappande perioder.\ncatalog:occurrence:248169\ncatalog:occurrence:248373"
 
 [[statement]]
 kind = "set"
@@ -12660,18 +11502,6 @@ evidence = "Etiketten anger statligt stöd till innovationsverksamhet.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:stod-for-innovationsverksamhet-staten-fund-gov-ctl-rndinn"
-fields = { "sets" = ["statligt-stod"] }
-evidence = "Samma källkolumn är mappad till två variabler under överlappande perioder.\ncatalog:occurrence:248179\ncatalog:occurrence:248385"
-
-[[statement]]
-kind = "set"
-subject = "var:stod-for-innovationsverksamhet-staten-fund-gov-ctl-rndinn"
-fields = { "tags" = ["public-finance", "research"] }
-evidence = "Samma källkolumn är mappad till två variabler under överlappande perioder.\ncatalog:occurrence:248179\ncatalog:occurrence:248385"
-
-[[statement]]
-kind = "set"
 subject = "var:stod-fran-eu-h2020"
 fields = { "sets" = [] }
 evidence = "Variabeln avser stöd från EU:s ramprogram.\ncatalog:variable_text:29075:18993:20089"
@@ -12681,18 +11511,6 @@ kind = "set"
 subject = "var:stod-fran-eu-h2020"
 fields = { "tags" = ["business"] }
 evidence = "Variabeln avser stöd från EU:s ramprogram.\ncatalog:variable_text:29075:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:stod-fran-eu-h2020-fund-eu-hp2020"
-fields = { "sets" = [] }
-evidence = "Variabeln avser stöd från EU:s ramprogram.\ncatalog:variable_text:29076:16801:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:stod-fran-eu-h2020-fund-eu-hp2020"
-fields = { "tags" = ["business"] }
-evidence = "Variabeln avser stöd från EU:s ramprogram.\ncatalog:variable_text:29076:16801:19358"
 
 [[statement]]
 kind = "set"
@@ -12717,18 +11535,6 @@ kind = "set"
 subject = "var:stora-n-per-stratum"
 fields = { "tags" = ["methods"] }
 evidence = "Variabeln anger antal företagsenheter i populationen per stratum.\ncatalog:occurrence:248608\ncatalog:variable_text:29078:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:stora-n-per-stratum-storan"
-fields = { "sets" = ["populationsstorlek-per-stratum"] }
-evidence = "Variabeln anger antal företagsenheter i populationen per stratum.\ncatalog:occurrence:248431\ncatalog:variable_text:29079:18262:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:stora-n-per-stratum-storan"
-fields = { "tags" = ["methods"] }
-evidence = "Variabeln anger antal företagsenheter i populationen per stratum.\ncatalog:occurrence:248431\ncatalog:variable_text:29079:18262:19358"
 
 [[statement]]
 kind = "set"
@@ -12876,18 +11682,6 @@ evidence = "Källan anger urvalsstratum.\ncatalog:variable_text:29092:11688:1351
 
 [[statement]]
 kind = "set"
-subject = "var:stratum-strat"
-fields = { "sets" = [] }
-evidence = "Den äldre levererade kolumnens betydelse är inte fastställd.\ncatalog:occurrence:247230\ncatalog:occurrence:248647"
-
-[[statement]]
-kind = "set"
-subject = "var:stratum-strat"
-fields = { "tags" = ["methods"] }
-evidence = "Den äldre levererade kolumnens betydelse är inte fastställd.\ncatalog:occurrence:247230\ncatalog:occurrence:248647"
-
-[[statement]]
-kind = "set"
 subject = "var:svarande-per-stratum"
 fields = { "sets" = ["svarande-per-stratum"] }
 evidence = "Variabeln anger antal svarande företagsenheter per stratum.\ncatalog:occurrence:248420\ncatalog:variable_text:29096:18262:19358"
@@ -12897,18 +11691,6 @@ kind = "set"
 subject = "var:svarande-per-stratum"
 fields = { "tags" = ["methods"] }
 evidence = "Variabeln anger antal svarande företagsenheter per stratum.\ncatalog:occurrence:248420\ncatalog:variable_text:29096:18262:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:svarande-per-stratum-nresp"
-fields = { "sets" = ["svarande-per-stratum"] }
-evidence = "Variabeln anger antal svarande företagsenheter per stratum.\ncatalog:occurrence:248609\ncatalog:variable_text:29097:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:svarande-per-stratum-nresp"
-fields = { "tags" = ["methods"] }
-evidence = "Variabeln anger antal svarande företagsenheter per stratum.\ncatalog:occurrence:248609\ncatalog:variable_text:29097:18993:20089"
 
 [[statement]]
 kind = "set"
@@ -12969,30 +11751,6 @@ kind = "set"
 subject = "var:totala-innovationsutgifter"
 fields = { "tags" = ["business", "research"] }
 evidence = "Källan anger totala innovationsutgifter.\ncatalog:variable_text:29104:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:totala-innovationsutgifter-q11e"
-fields = { "sets" = [] }
-evidence = "Källan anger totala innovationsutgifter.\ncatalog:variable_text:29105:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:totala-innovationsutgifter-q11e"
-fields = { "tags" = ["business", "research"] }
-evidence = "Källan anger totala innovationsutgifter.\ncatalog:variable_text:29105:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:totala-innovationsutgifter-rallx"
-fields = { "sets" = [] }
-evidence = "Källan anger totala innovationsutgifter.\ncatalog:variable_text:29106:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:totala-innovationsutgifter-rallx"
-fields = { "tags" = ["business", "research"] }
-evidence = "Källan anger totala innovationsutgifter.\ncatalog:variable_text:29106:16071:17167"
 
 [[statement]]
 kind = "set"
@@ -13368,42 +12126,6 @@ evidence = "Källan anger geografisk fördelning av innovationssamarbetspartner.
 
 [[statement]]
 kind = "set"
-subject = "var:uppskjuten-eller-avbruten-innovationsaktivitet-inaba"
-fields = { "sets" = [] }
-evidence = "Variabeln avser uppskjuten eller avbruten innovationsaktivitet.\ncatalog:occurrence:247841\ncatalog:variable_text:29162:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:uppskjuten-eller-avbruten-innovationsaktivitet-inaba"
-fields = { "tags" = ["research"] }
-evidence = "Variabeln avser uppskjuten eller avbruten innovationsaktivitet.\ncatalog:occurrence:247841\ncatalog:variable_text:29162:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:uppskjuten-eller-avbruten-innovationsaktivitet-inna-abdn"
-fields = { "sets" = [] }
-evidence = "Variabeln avser uppskjuten eller avbruten innovationsaktivitet.\ncatalog:occurrence:248577\ncatalog:variable_text:29163:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:uppskjuten-eller-avbruten-innovationsaktivitet-inna-abdn"
-fields = { "tags" = ["research"] }
-evidence = "Variabeln avser uppskjuten eller avbruten innovationsaktivitet.\ncatalog:occurrence:248577\ncatalog:variable_text:29163:18993:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:utgifter-all-ovrig-innovationsverksamhet-exp-inno-inn-xrnd"
-fields = { "sets" = [] }
-evidence = "Samma kolumn har överlappande ägare med olika beskrivning av utgifternas omfattning.\ncatalog:occurrence:248165\ncatalog:occurrence:248364"
-
-[[statement]]
-kind = "set"
-subject = "var:utgifter-all-ovrig-innovationsverksamhet-exp-inno-inn-xrnd"
-fields = { "tags" = ["business", "research"] }
-evidence = "Samma kolumn har överlappande ägare med olika beskrivning av utgifternas omfattning.\ncatalog:occurrence:248165\ncatalog:occurrence:248364"
-
-[[statement]]
-kind = "set"
 subject = "var:utgifter-for-egen-fou"
 fields = { "sets" = [] }
 evidence = "Källan anger utgifter för egen FoU.\ncatalog:variable_text:29165:13149:14245"
@@ -13416,54 +12138,6 @@ evidence = "Källan anger utgifter för egen FoU.\ncatalog:variable_text:29165:1
 
 [[statement]]
 kind = "set"
-subject = "var:utgifter-for-egen-fou-exp-inno-rnd-ih"
-fields = { "sets" = [] }
-evidence = "Källan anger utgifter för egen FoU.\ncatalog:variable_text:29166:16801:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:utgifter-for-egen-fou-exp-inno-rnd-ih"
-fields = { "tags" = ["business", "research"] }
-evidence = "Källan anger utgifter för egen FoU.\ncatalog:variable_text:29166:16801:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:utgifter-for-egen-fou-q11a"
-fields = { "sets" = [] }
-evidence = "Källan anger utgifter för egen FoU.\ncatalog:variable_text:29167:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:utgifter-for-egen-fou-q11a"
-fields = { "tags" = ["business", "research"] }
-evidence = "Källan anger utgifter för egen FoU.\ncatalog:variable_text:29167:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:utgifter-for-egen-fou-rrdinx"
-fields = { "sets" = [] }
-evidence = "Källan anger utgifter för egen FoU.\ncatalog:variable_text:29168:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:utgifter-for-egen-fou-rrdinx"
-fields = { "tags" = ["business", "research"] }
-evidence = "Källan anger utgifter för egen FoU.\ncatalog:variable_text:29168:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:utgifter-for-forvarv-av-maskin-utrustning-programvara-q11c"
-fields = { "sets" = [] }
-evidence = "Källan anger utgifter för förvärv.\ncatalog:variable_text:29169:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:utgifter-for-forvarv-av-maskin-utrustning-programvara-q11c"
-fields = { "tags" = ["business", "research"] }
-evidence = "Källan anger utgifter för förvärv.\ncatalog:variable_text:29169:11688:13514"
-
-[[statement]]
-kind = "set"
 subject = "var:utgifter-for-utlagd-fou"
 fields = { "sets" = [] }
 evidence = "Källan anger utgifter för utlagd FoU.\ncatalog:variable_text:29170:13149:14245"
@@ -13473,66 +12147,6 @@ kind = "set"
 subject = "var:utgifter-for-utlagd-fou"
 fields = { "tags" = ["business", "research"] }
 evidence = "Källan anger utgifter för utlagd FoU.\ncatalog:variable_text:29170:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:utgifter-for-utlagd-fou-exp-inno-rnd-contr-out"
-fields = { "sets" = [] }
-evidence = "Källan anger utgifter för utlagd FoU.\ncatalog:variable_text:29171:16801:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:utgifter-for-utlagd-fou-exp-inno-rnd-contr-out"
-fields = { "tags" = ["business", "research"] }
-evidence = "Källan anger utgifter för utlagd FoU.\ncatalog:variable_text:29171:16801:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:utgifter-for-utlagd-fou-q11b"
-fields = { "sets" = [] }
-evidence = "Källan anger utgifter för utlagd FoU.\ncatalog:variable_text:29172:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:utgifter-for-utlagd-fou-q11b"
-fields = { "tags" = ["business", "research"] }
-evidence = "Källan anger utgifter för utlagd FoU.\ncatalog:variable_text:29172:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:utgifter-for-utlagd-fou-rrdexx"
-fields = { "sets" = [] }
-evidence = "Källan anger utgifter för utlagd FoU.\ncatalog:variable_text:29173:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:utgifter-for-utlagd-fou-rrdexx"
-fields = { "tags" = ["business", "research"] }
-evidence = "Källan anger utgifter för utlagd FoU.\ncatalog:variable_text:29173:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:utgifter-forvarv-av-existerande-kunskap-q11d"
-fields = { "sets" = [] }
-evidence = "Källan anger utgifter för kunskapsförvärv.\ncatalog:variable_text:29174:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:utgifter-forvarv-av-existerande-kunskap-q11d"
-fields = { "tags" = ["business", "research"] }
-evidence = "Källan anger utgifter för kunskapsförvärv.\ncatalog:variable_text:29174:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:utgifter-forvarv-av-existerande-kunskap-roekx"
-fields = { "sets" = [] }
-evidence = "Källan anger utgifter för kunskapsförvärv.\ncatalog:variable_text:29175:16071:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:utgifter-forvarv-av-existerande-kunskap-roekx"
-fields = { "tags" = ["business", "research"] }
-evidence = "Källan anger utgifter för kunskapsförvärv.\ncatalog:variable_text:29175:16071:17167"
 
 [[statement]]
 kind = "set"
@@ -13584,18 +12198,6 @@ evidence = "Källan kodar utvecklare av processinnovationer.\ncatalog:variable_t
 
 [[statement]]
 kind = "set"
-subject = "var:utvecklare-av-processinnovationer-q81"
-fields = { "sets" = [] }
-evidence = "Källan kodar utvecklare av processinnovationer.\ncatalog:variable_text:29180:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:utvecklare-av-processinnovationer-q81"
-fields = { "tags" = ["research"] }
-evidence = "Källan kodar utvecklare av processinnovationer.\ncatalog:variable_text:29180:11688:13514"
-
-[[statement]]
-kind = "set"
 subject = "var:utvecklare-av-produktinnovationer"
 fields = { "sets" = ["utvecklare-av-produktinnovation"] }
 evidence = "Källans definition anger utvecklare av produktinnovationer.\ncatalog:variable_text:29181:13149:14245"
@@ -13605,18 +12207,6 @@ kind = "set"
 subject = "var:utvecklare-av-produktinnovationer"
 fields = { "tags" = ["research"] }
 evidence = "Källans definition anger utvecklare av produktinnovationer.\ncatalog:variable_text:29181:13149:14245"
-
-[[statement]]
-kind = "set"
-subject = "var:utvecklare-av-produktionnavationer-q51"
-fields = { "sets" = ["utvecklare-av-produktinnovation"] }
-evidence = "Källans definition anger utvecklare av produktinnovationer.\ncatalog:variable_text:29182:11688:13514"
-
-[[statement]]
-kind = "set"
-subject = "var:utvecklare-av-produktionnavationer-q51"
-fields = { "tags" = ["research"] }
-evidence = "Källans definition anger utvecklare av produktinnovationer.\ncatalog:variable_text:29182:11688:13514"
 
 [[statement]]
 kind = "set"
@@ -13692,60 +12282,6 @@ evidence = "r137 defines turnover share from world-first product innovations; r1
 
 [[statement]]
 kind = "set"
-subject = "var:andel-omsattning-fran-varor-tjanster-nya-endast-for-q7b"
-fields = { "sets" = ["omsattningsandel-nya-endast-for-foretaget"] }
-evidence = "r138 defines turnover share from products new only to the firm and not its market, matching r185.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27763\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27853\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/omsattningsandel-nya-endast-for-foretaget"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-omsattning-fran-varor-tjanster-nya-endast-for-turnin"
-fields = { "sets" = ["omsattningsandel-nya-endast-for-foretaget"] }
-evidence = "r139 defines turnover share from products new only to the firm and not its market, matching r185.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27764\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27854\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/omsattningsandel-nya-endast-for-foretaget"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-omsattning-fran-varor-tjanster-nya-for-foretagets-q7a"
-fields = { "sets" = ["omsattningsandel-marknadsnya-produkter"] }
-evidence = "r140 defines turnover share from products new to the firm and its market, matching r184.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27765\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27855\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/omsattningsandel-marknadsnya-produkter"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-omsattning-fran-varor-tjanster-nya-for-tur-prd-new-mkt"
-fields = { "sets" = ["omsattningsandel-marknadsnya-produkter"] }
-evidence = "r141 defines a percentage turnover share from market-new products, matching r184.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27766\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27856\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/omsattningsandel-marknadsnya-produkter"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-omsattning-fran-varor-tjanster-nya-for-turnmar"
-fields = { "sets" = ["omsattningsandel-marknadsnya-produkter"] }
-evidence = "r142 defines turnover share from products introduced before market competitors, matching r184.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27767\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27857\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/omsattningsandel-marknadsnya-produkter"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-omsattning-fran-varor-tjanster-nya-tur-prd-new-ent"
-fields = { "sets" = ["omsattningsandel-nya-endast-for-foretaget"] }
-evidence = "r143 defines turnover share from products new only to the firm and explicitly not its market, matching r185.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27768\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27858\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/omsattningsandel-nya-endast-for-foretaget"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-omsattning-fran-varor-tjanster-som-var-oforandrade-q7c"
-fields = { "sets" = ["omsattningsandel-oforandrade-produkter"] }
-evidence = "r144 defines turnover share from unchanged or marginally changed products, including resale, matching r186.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27769\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27859\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/omsattningsandel-oforandrade-produkter"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-omsattning-fran-varor-tjanster-som-var-tur-prd-ninn"
-fields = { "sets" = ["omsattningsandel-oforandrade-produkter"] }
-evidence = "r145 defines a percentage turnover share from unchanged or marginally changed products, matching r186.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27770\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27860\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/omsattningsandel-oforandrade-produkter"
-
-[[statement]]
-kind = "set"
-subject = "var:andel-omsattning-fran-varor-tjanster-som-var-turntot"
-fields = { "sets" = ["omsattningsandel-oforandrade-produkter"] }
-evidence = "r146 defines turnover share from unchanged or marginally changed products, including resale, matching r186.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:27771\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:27861\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/omsattningsandel-oforandrade-produkter"
-
-[[statement]]
-kind = "set"
 subject = "var:hinder-brist-pa-finansiering-inom-foretaget"
 fields = { "sets" = ["intern-finansieringsbrist-som-innovationshinder"] }
 evidence = "r147 explicitly measures financing shortages within the firm or group as an innovation obstacle, matching r183.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28347\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28447\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/intern-finansieringsbrist-som-innovationshinder"
@@ -13755,42 +12291,6 @@ kind = "set"
 subject = "var:hinder-for-innovationsverksamhet-brist-intern-finansiering"
 fields = { "sets" = ["intern-finansieringsbrist-som-innovationshinder"] }
 evidence = "r103 and r148 identify the surveyed innovation obstacle as lack of internal financing, matching r183.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28351\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:248016\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28451\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/intern-finansieringsbrist-som-innovationshinder"
-
-[[statement]]
-kind = "set"
-subject = "var:nya-eller-vasentligt-forbattrade-varor-inno-prd-new-ent"
-fields = { "sets" = ["produktinnovationens-nyhetsgrad"] }
-evidence = "r152 defines product innovations new only to the firm and already available through competitors, matching r187.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28707\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28802\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/produktinnovationens-nyhetsgrad"
-
-[[statement]]
-kind = "set"
-subject = "var:nya-eller-vasentligt-forbattrade-varor-inno-prd-new-mkt"
-fields = { "sets" = ["produktinnovationens-nyhetsgrad"] }
-evidence = "r153 defines market-new product innovations and explicitly describes introduction before competitors, matching r187.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28708\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28803\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/produktinnovationens-nyhetsgrad"
-
-[[statement]]
-kind = "set"
-subject = "var:nya-eller-vasentligt-forbattrade-varor-tjanster-for-newfrm"
-fields = { "sets" = ["produktinnovationens-nyhetsgrad"] }
-evidence = "r154 defines product innovations new only to the firm, within r187's novelty scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28709\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28804\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/produktinnovationens-nyhetsgrad"
-
-[[statement]]
-kind = "set"
-subject = "var:nya-eller-vasentligt-forbattrade-varor-tjanster-for-q6b"
-fields = { "sets" = ["produktinnovationens-nyhetsgrad"] }
-evidence = "r155 defines product innovations new only to the firm and already offered by competitors, matching r187.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28710\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28805\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/produktinnovationens-nyhetsgrad"
-
-[[statement]]
-kind = "set"
-subject = "var:nya-eller-vasentligt-forbattrade-varor-tjanster-pa-newmkt"
-fields = { "sets" = ["produktinnovationens-nyhetsgrad"] }
-evidence = "r156 defines product innovations introduced before market competitors, matching r187.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28711\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28806\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/produktinnovationens-nyhetsgrad"
-
-[[statement]]
-kind = "set"
-subject = "var:nya-eller-vasentligt-forbattrade-varor-tjanster-pa-q6a"
-fields = { "sets" = ["produktinnovationens-nyhetsgrad"] }
-evidence = "r157 defines product innovations introduced before market competitors, within r187's novelty scope.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:28712\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:28807\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/innovation-foretag/produktinnovationens-nyhetsgrad"
 
 [[statement]]
 kind = "set"
@@ -13878,12 +12378,6 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBesk
 
 [[statement]]
 kind = "set"
-subject = "var:utgifter-forvarv-maskiner-programvara"
-fields = { "description" = "Utgifter för förvärv av maskiner, utrustning och programvara." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger förvärvet i stället för utgifterna som mäts.\ncatalog:variable_text:29177:13149:14245"
-
-[[statement]]
-kind = "set"
 subject = "var:coop-prv-clcu-neu-nefta"
 fields = { "description" = "Anger om företaget har bedrivit samarbete inom innovationsaktiviteter inklusive FoU med kunder eller klienter i privat sektor lokaliserade utanför EU och EFTA." }
 evidence = "Docs description review 2026-11-02; one variable, one description. The exact column, partner label and outside-EU/EFTA geography agree in each Swedish 2016–2018, 2018–2020, 2020–2022 and 2022–2024 export. Question 24 in the 2024 Swedish form and the harmonised 2018/2022 partner matrices independently confirm the geography. Only spelling/grammar is cleaned.\nhttps://metadata.scb.se/export.aspx; sheet Blad1, extracted row 57, column COOP_PRV_CLCU_NEU_NEFTA; staged:8a8bec00bfa3b46222f9325f2824dc18a28158672a1653218eea2c34febae5ca:page:1:chars:17384-17747\nhttps://metadata.scb.se/export.aspx; sheet Blad1, extracted row 60, column COOP_PRV_CLCU_NEU_NEFTA; staged:3787aa169caa2212b08ff09ef307a86dffc8b770749d8655a2662aadf297129a:page:1:chars:18804-19176\nhttps://metadata.scb.se/export.aspx; sheet Blad1, extracted row 60, column COOP_PRV_CLCU_NEU_NEFTA; staged:8afdce6745f0bbb0a16d2da9bc469baa72582aa298934d62c75b38a7b5ac6581:page:1:chars:20957-21331\nhttps://metadata.scb.se/export.aspx; sheet Blad1, extracted row 74, column COOP_PRV_CLCU_NEU_NEFTA; staged:76be0764168051b062f67f63af596d95680740ed158e363b6e2e06f3c608cbb7:page:1:chars:24651-25025\nhttps://www.scb.se/contentassets/f8eeca915e4a4ab79eb0721e8955298f/visningsexemplar-innovation-i-foretagssektorn-20222024.pdf; question 24, partner row and outside-EU/EFTA column; staged:182a1b49cb38aeaa4b7522c501dd2339adf95c80c7b68e4293df8c93cf148f70:page:20:chars:0-2411\nhttps://ec.europa.eu/eurostat/cache/website/cis/Questionnaires/CIS2018.pdf; question 3.16; staged:89dab6215d033d47b265c71c488d728cbbf62a614845a676ea734566eab40102:page:12:chars:0-3673\nhttps://ec.europa.eu/eurostat/cache/website/cis/Questionnaires/CIS2022.pdf; question 3.12; staged:68a61657a506a0015b415c2b15835dac1d0d93d9a112e2e8e4961d260974ffdc:page:11:chars:0-3082"
@@ -13902,27 +12396,9 @@ evidence = "Docs description review 2026-11-02; one variable, one description. T
 
 [[statement]]
 kind = "set"
-subject = "var:innovationssamarbete-kunder-klienter-coop-pub-clcu-neu-efta"
-fields = { "description" = "Anger om företaget har bedrivit samarbete inom innovationsaktiviteter inklusive FoU med kunder eller klienter inom offentlig sektor lokaliserade utanför EU och EFTA." }
-evidence = "Docs description review 2026-11-02; one variable, one description. The definitions establish one meaning across spellings. Identity review: D-11 in crates/reg-resolve/src/lib.rs refuses their merge because COOP_PUB_CLCU_NEU_EFTA and COOP_PUB_CLCU_NEU_NEFTA overlap in 2020 in this table. Retain both ids until the separate resolver/design question is settled; do not alter source columns or coverage to bypass the refusal. Each matching Swedish wave export explicitly defines the same public-sector partner and outside-EU/EFTA geography; no equivalence is inferred from the suffix alone.\nhttps://metadata.scb.se/export.aspx; sheet Blad1, extracted row 54, column COOP_PUB_CLCU_NEU_EFTA; staged:8a8bec00bfa3b46222f9325f2824dc18a28158672a1653218eea2c34febae5ca:page:1:chars:16302-16681\nhttps://metadata.scb.se/export.aspx; sheet Blad1, extracted row 57, column COOP_PUB_CLCU_NEU_EFTA; staged:3787aa169caa2212b08ff09ef307a86dffc8b770749d8655a2662aadf297129a:page:1:chars:17695-18083\nhttps://www.scb.se/contentassets/f8eeca915e4a4ab79eb0721e8955298f/visningsexemplar-innovation-i-foretagssektorn-20222024.pdf; question 24; staged:182a1b49cb38aeaa4b7522c501dd2339adf95c80c7b68e4293df8c93cf148f70:page:20:chars:0-2411\nhttps://ec.europa.eu/eurostat/cache/website/cis/Questionnaires/CIS2018.pdf; question 3.16; staged:89dab6215d033d47b265c71c488d728cbbf62a614845a676ea734566eab40102:page:12:chars:0-3673"
-
-[[statement]]
-kind = "set"
-subject = "var:utgifter-for-forvarv-av-maskin-utrustning-programvara-q11c"
+subject = "var:utgifter-forvarv-maskiner-programvara"
 fields = { "description" = "Utgifter för förvärv av maskiner, utrustning och programvara. Investeringar i utrustning för FoU redovisas under utgifter för egen FoU." }
 evidence = "Docs description review 2026-11-02; one variable, one description. Q11c and the Swedish label agree in the 2002–2004 and 2004–2006 waves. Own visual reading of the scanned 2004 questionnaire confirms question 11c; the 2006 questionnaire and wave-specific variable appendix state the same exclusion. Whole three-year releases are selected, with release guards.\nhttps://www.scb.se/contentassets/9e6a00ac2fc7421cabab329528166232/uf0315_do_2002-2004.pdf; question 11c (printed form page 4); staged:e42b5a88d7f1c1df980398d440ea29fe8e9f9d225249924a0799041240824437:page:11:chars:0-73\nhttps://www.scb.se/contentassets/9e6a00ac2fc7421cabab329528166232/uf0315_do_2002-2004.pdf; page 58; staged:e42b5a88d7f1c1df980398d440ea29fe8e9f9d225249924a0799041240824437:page:58:chars:0-1732\nhttps://www.scb.se/contentassets/9e6a00ac2fc7421cabab329528166232/uf0315_do_2004-2006.pdf; question 11c; staged:25dd4b7f5efbf979e60cf326f23b760768463114160c17475ac695ded9c092ae:page:12:chars:0-6399\nhttps://www.scb.se/contentassets/9e6a00ac2fc7421cabab329528166232/uf0315_do_2004-2006.pdf; page 59; staged:25dd4b7f5efbf979e60cf326f23b760768463114160c17475ac695ded9c092ae:page:59:chars:0-1635"
-
-[[statement]]
-kind = "set"
-subject = "var:utgifter-forvarv-av-existerande-kunskap-q11d"
-fields = { "description" = "Utgifter för inköp av existerande know-how, expertis, upphovsrätt, patent eller icke-patenterade uppfinningar med mera i syfte att utveckla nya eller väsentligt förbättrade produkter eller processer." }
-evidence = "Docs description review 2026-11-02; one variable, one description. The exact Q11d column and label are defined in both Swedish wave exports. Questionnaire question 10d supplies the activity definition and 11d asks its expenditure; the wording is cleaned from the Swedish variable definition, not inferred from the English cross-check.\nhttps://www.scb.se/contentassets/9e6a00ac2fc7421cabab329528166232/uf0315_do_2002-2004.pdf; questions 10d and 11d (printed form page 4); staged:e42b5a88d7f1c1df980398d440ea29fe8e9f9d225249924a0799041240824437:page:11:chars:0-73\nhttps://www.scb.se/contentassets/9e6a00ac2fc7421cabab329528166232/uf0315_do_2004-2006.pdf; questions 10d and 11d; staged:25dd4b7f5efbf979e60cf326f23b760768463114160c17475ac695ded9c092ae:page:12:chars:0-6399\nhttps://metadata.scb.se/export.aspx; sheet Blad1, extracted row 64, column Q11d; staged:6245267adc39878fead76485449e627b6a27281ca97771f8c2dc7389d3146139:page:1:chars:20920-21294\nhttps://metadata.scb.se/export.aspx; sheet Blad1, extracted row 64, column Q11d; staged:c2353129b60d312f449f7571d6f6ee4d38350dcf8e5b72fd64150e661c684048:page:1:chars:21023-21397"
-
-[[statement]]
-kind = "set"
-subject = "var:immateriella-rattigheter-och-licensiering-salt-ipr-out-sell"
-fields = { "description" = "Anger om företaget har licensierat ut eller sålt patent, mönsterskydd, upphovsrätt eller varumärke till ett annat företag, universitet eller forskningsinstitut under undersökningsperioden." }
-evidence = "Definition pass 2026-11-02: The questionnaire combines sale and out-licensing in one response.\nrel070-base/reg_meta.db:occurrence:248053\nrel070-base/reg_meta.db:occurrence:248227"
 
 [[statement]]
 kind = "set"
@@ -14241,12 +12717,6 @@ kind = "set"
 subject = "set:varumarkesskydd"
 fields = { "label" = "Varumärkesskydd" }
 evidence = "#2100 group name: the slug read as words, then adjusted on review (diacritics)."
-
-[[statement]]
-kind = "set"
-subject = "var:antal-anstallda-emp2022"
-fields = { "label" = "Antal anställda (EMP2022)" }
-evidence = "#2102 same-label cluster 'Antal anställda' (2 variables): judged different meaning, low confidence; EMP and EMP2022 are concurrent 2020-2023 with the same opdef; no text explains the year tag."
 
 [[statement]]
 kind = "set"
@@ -14721,12 +13191,6 @@ kind = "set"
 subject = "var:ente-y"
 fields = { "label" = "Företagets startår" }
 evidence = "Kolumnen anger startår; etiketten \"Ålder\" motsägs av den operationella definitionen. 0.74.0 catalog, key v6267, releases r20007; reg_meta.db:occurrence:248758"
-
-[[statement]]
-kind = "set"
-subject = "var:utgifter-forvarv-av-existerande-kunskap-roekx"
-fields = { "description" = "Utgifter för inköp av existerande know-how, expertis, upphovsrätt, patent eller icke-patenterade uppfinningar med mera i syfte att utveckla nya eller väsentligt förbättrade produkter eller processer." }
-evidence = "Förslag från tidigare granskning enligt SCB:s definition.\n0.74.0 catalog, key v15613, releases r11529, r4114, r5168; reg_meta.db:occurrence:247795,247920,248154"
 
 [[statement]]
 kind = "set"

@@ -2373,18 +2373,6 @@ evidence = "Båda variablerna anger medverkande högskola.\ncatalog:variable_tex
 
 [[statement]]
 kind = "set"
-subject = "var:medverkande-hogskola-medverkhskod"
-fields = { "sets" = ["medverkande-hogskola"] }
-evidence = "Båda variablerna anger medverkande högskola.\ncatalog:variable_text:26373:11323:14245\ncatalog:variable_text:26374:13879:19358"
-
-[[statement]]
-kind = "set"
-subject = "var:medverkande-hogskola-medverkhskod"
-fields = { "tags" = ["education"] }
-evidence = "Båda variablerna anger medverkande högskola.\ncatalog:variable_text:26373:11323:14245\ncatalog:variable_text:26374:13879:19358"
-
-[[statement]]
-kind = "set"
 subject = "var:meritvarde-urval"
 fields = { "sets" = [] }
 evidence = "Meritvärdet används vid antagning till utbildning.\ncatalog:variable_text:26375:16953:20454"
