@@ -1183,18 +1183,6 @@ evidence = "Faderns födelseland hör till födelseland och demografi.\ncatalog:
 
 [[statement]]
 kind = "set"
-subject = "var:fritypgr"
-fields = { "sets" = ["inriktning-for-fristaende-skola"] }
-evidence = "Variabeln kodar inriktning för fristående grundskola.\ncatalog:valueset:11959\ncatalog:variable_text:23185:12965:13149"
-
-[[statement]]
-kind = "set"
-subject = "var:fritypgr"
-fields = { "tags" = ["education"] }
-evidence = "Variabeln kodar inriktning för fristående grundskola.\ncatalog:valueset:11959\ncatalog:variable_text:23185:12965:13149"
-
-[[statement]]
-kind = "set"
 subject = "var:fritypgy"
 fields = { "sets" = ["inriktning-for-fristaende-skola"] }
 evidence = "Variabeln kodar inriktning för fristående gymnasieskola.\ncatalog:occurrence:216472\ncatalog:variable_text:23186:12965:13149"
@@ -2839,30 +2827,6 @@ evidence = "Hman och det ensamma prefixet U är ogenomskinliga källkoder.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:u-jtal"
-fields = { "sets" = ["jamforelsetal-for-utbildningsansokan"] }
-evidence = "U och J är källbokstäver som inte är läsbara stammar av etiketten.\ncatalog:variable_text:23336:11504:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:u-jtal"
-fields = { "tags" = ["education"] }
-evidence = "U och J är källbokstäver som inte är läsbara stammar av etiketten.\ncatalog:variable_text:23336:11504:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:u-sgrupp"
-fields = { "sets" = ["sokgrupp"] }
-evidence = "U och S är enskilda källbokstäver.\ncatalog:variable_text:23337:11504:11688"
-
-[[statement]]
-kind = "set"
-subject = "var:u-sgrupp"
-fields = { "tags" = ["education"] }
-evidence = "U och S är enskilda källbokstäver.\ncatalog:variable_text:23337:11504:11688"
-
-[[statement]]
-kind = "set"
 subject = "var:studievag-sokt-utbildning"
 fields = { "sets" = ["studievag-i-gymnasieskolan"] }
 evidence = "Det inledande u är en ogenomskinlig bokstavskod i källkolumnen.\ncatalog:variable_text:23341:19905:20089"
@@ -3332,12 +3296,6 @@ kind = "set"
 subject = "var:beh6"
 fields = { "label" = "Behörighet till gymnasielinje (vald i 6:e hand)" }
 evidence = "#2102 same-label cluster 'Behörighet till gymnasielinje' (6 variables): judged different meaning, high confidence; Opdefs: eligibility for the programme chosen in 1st, 2nd, 3rd, 4th, 5th and 6th hand."
-
-[[statement]]
-kind = "set"
-subject = "var:fritypgr"
-fields = { "label" = "Inriktning av fristående skola/skolenhet (grundskola, slutbetyg)" }
-evidence = "#2102 same-label cluster 'Inriktning av fristående skola/skolenhet' (5 variables): judged different meaning, medium confidence; Opdefs separate the grundskola the student finished (FriTypGr, Inriktning; same value set) from the gymnasieskola applied to; FriTypGy has an older value set (01/03/05) than InriktningGy/_HT (11-15)."
 
 [[statement]]
 kind = "set"
@@ -4084,3 +4042,21 @@ kind = "assert"
 subject = "sokande-antagna-1985-1993: PersonNr @1985..1990 where key = 'v57'"
 fact = { entity = "occurrence", fields = { label = "Personnummer", identifier = true } }
 evidence = "private:ev-3906"
+
+[[statement]]
+kind = "set"
+subject = "bakgrund-elev-1994-2016: FriTypGr"
+fields = { "variable" = "inriktning" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v8190) in one table, renamed between survey rounds and never delivered together, so they are one variable: FriTypGr 2005-07-01..2006-01-01; Inriktning 2006-07-01..2008-01-01."
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: U_Jtal"
+fields = { "variable" = "jmftal" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v36734) in one table, renamed between survey rounds and never delivered together, so they are one variable: U_JTal 1994-07-01..1996-01-01; U_Jtal 1996-07-01..2002-01-01; JmfTal 2014-07-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "sokande-1994-och-senare: U_Sgrupp"
+fields = { "variable" = "sgrupp" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35158) in one table, renamed between survey rounds and never delivered together, so they are one variable: U_SGrupp 1994-07-01..1996-01-01; U_Sgrupp 1996-07-01..2002-01-01; SGrupp 2007-07-01..2008-01-01; Sgrupp 2005-07-01..2025-01-01."

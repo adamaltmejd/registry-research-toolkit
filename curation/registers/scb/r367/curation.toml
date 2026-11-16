@@ -687,18 +687,6 @@ evidence = "Variabeln klassificerar ålder.\ncatalog:variable_text:45162:11139:1
 
 [[statement]]
 kind = "set"
-subject = "var:aldgrup"
-fields = { "sets" = ["alder"] }
-evidence = "Variabeln klassificerar ålder.\ncatalog:variable_text:45163:7486:7851"
-
-[[statement]]
-kind = "set"
-subject = "var:aldgrup"
-fields = { "tags" = ["demographics"] }
-evidence = "Variabeln klassificerar ålder.\ncatalog:variable_text:45163:7486:7851"
-
-[[statement]]
-kind = "set"
 subject = "var:andra-hobbies"
 fields = { "sets" = ["tid-for-hobbies"] }
 evidence = "Aktiviteten är en hobbykomponent.\ncatalog:variable_text:45164:14791:15156"
@@ -4425,18 +4413,6 @@ evidence = "Antal barn efter ålder.\ncatalog:variable_text:45525:14791:15156"
 
 [[statement]]
 kind = "set"
-subject = "var:kon-maka-make-sambo"
-fields = { "sets" = ["kon"] }
-evidence = "Id:t är en ogenomskinlig källkod; etiketten kolliderar och målet kräver disambiguering.\ncatalog:variable_text:45526:7486:7851"
-
-[[statement]]
-kind = "set"
-subject = "var:kon-maka-make-sambo"
-fields = { "tags" = ["demographics"] }
-evidence = "Id:t är en ogenomskinlig källkod; etiketten kolliderar och målet kräver disambiguering.\ncatalog:variable_text:45526:7486:7851"
-
-[[statement]]
-kind = "set"
 subject = "var:musikutovning"
 fields = { "sets" = ["tid-for-hobbies"] }
 evidence = "Mäter tid för en hobbyaktivitet.\ncatalog:variable_text:45527:14791:15156"
@@ -6747,18 +6723,6 @@ evidence = "Tid för underhållsarbete.\ncatalog:variable_text:45740:14791:15156
 
 [[statement]]
 kind = "set"
-subject = "var:fodelsear-urvalsperson"
-fields = { "sets" = ["fodelsear"] }
-evidence = "UP är en opak källkod; etiketten anger födelseår.\ncatalog:variable_text:45742:7486:7851"
-
-[[statement]]
-kind = "set"
-subject = "var:fodelsear-urvalsperson"
-fields = { "tags" = ["demographics"] }
-evidence = "UP är en opak källkod; etiketten anger födelseår.\ncatalog:variable_text:45742:7486:7851"
-
-[[statement]]
-kind = "set"
 subject = "var:upplevd-halsa"
 fields = { "sets" = [] }
 evidence = "Självskattad hälsa.\ncatalog:variable_text:45743:18628:18993"
@@ -6768,18 +6732,6 @@ kind = "set"
 subject = "var:upplevd-halsa"
 fields = { "tags" = ["health"] }
 evidence = "Självskattad hälsa.\ncatalog:variable_text:45743:18628:18993"
-
-[[statement]]
-kind = "set"
-subject = "var:kon-urvalsperson"
-fields = { "sets" = ["kon"] }
-evidence = "Id:t är en ogenomskinlig källkod; etiketten kolliderar och målet kräver disambiguering.\ncatalog:variable_text:45744:7486:7851"
-
-[[statement]]
-kind = "set"
-subject = "var:kon-urvalsperson"
-fields = { "tags" = ["demographics"] }
-evidence = "Id:t är en ogenomskinlig källkod; etiketten kolliderar och målet kräver disambiguering.\ncatalog:variable_text:45744:7486:7851"
 
 [[statement]]
 kind = "set"
@@ -8445,12 +8397,6 @@ evidence = "#2102 same-label cluster 'Åldersgrupp' (3 variables): judged differ
 
 [[statement]]
 kind = "set"
-subject = "var:aldgrup"
-fields = { "label" = "Åldersgrupp (<20, 20–34, 35–49, 50–64, 65+)" }
-evidence = "#2102 same-label cluster 'Åldersgrupp' (3 variables): judged different meaning, high confidence; Opdefs and code lists: ALDGRUP2 uses bands <20/20-24/25-44/45-64/65+, ALDGRUP1 and ALDGRP1 (same bands, successive surveys) use <20/20-34/35-49/50-64/65+."
-
-[[statement]]
-kind = "set"
 subject = "var:annhelpant"
 fields = { "label" = "Hjälp med annan hjälp-antal gånger (fått hjälp)" }
 evidence = "#2102 same-label cluster 'Hjälp med annan hjälp-antal gånger' (2 variables): judged different meaning, high confidence; Opdefs: gannhelpant counts help the household gave, annhelpant help it had."
@@ -8603,12 +8549,6 @@ evidence = "#2102 same-label cluster 'Födelseår' (3 variables): judged differe
 kind = "set"
 subject = "var:fodelsear-maka-make-sambo"
 fields = { "label" = "Födelseår (urvalspersonens make/maka/sambo)" }
-evidence = "#2102 same-label cluster 'Födelseår' (3 variables): judged different meaning, medium confidence; Opdefs: UPBORN is the sampled person's birth year, MSBORN the partner's; born (2000-01) is taken as the sampled person's."
-
-[[statement]]
-kind = "set"
-subject = "var:fodelsear-urvalsperson"
-fields = { "label" = "Födelseår (urvalsperson)" }
 evidence = "#2102 same-label cluster 'Födelseår' (3 variables): judged different meaning, medium confidence; Opdefs: UPBORN is the sampled person's birth year, MSBORN the partner's; born (2000-01) is taken as the sampled person's."
 
 [[statement]]
@@ -8920,18 +8860,6 @@ evidence = "#2102 same-label cluster 'Deltagande i religiöst samfund eller reli
 [[statement]]
 kind = "set"
 subject = "var:kon"
-fields = { "label" = "Kön (urvalsperson)" }
-evidence = "#2102 same-label cluster 'Kön' (5 variables): judged different meaning, medium confidence; Opdefs: MSSEX and konms are the partner's sex, UPSEX and sex the sampled person's; kon (2021 tidsstudien) is taken as the sampled person's."
-
-[[statement]]
-kind = "set"
-subject = "var:kon-maka-make-sambo"
-fields = { "label" = "Kön (urvalspersonens make/maka/sambo)" }
-evidence = "#2102 same-label cluster 'Kön' (5 variables): judged different meaning, medium confidence; Opdefs: MSSEX and konms are the partner's sex, UPSEX and sex the sampled person's; kon (2021 tidsstudien) is taken as the sampled person's."
-
-[[statement]]
-kind = "set"
-subject = "var:kon-urvalsperson"
 fields = { "label" = "Kön (urvalsperson)" }
 evidence = "#2102 same-label cluster 'Kön' (5 variables): judged different meaning, medium confidence; Opdefs: MSSEX and konms are the partner's sex, UPSEX and sex the sampled person's; kon (2021 tidsstudien) is taken as the sampled person's."
 
@@ -9362,3 +9290,27 @@ kind = "set"
 subject = "tidsstudien: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: UPBORN"
+fields = { "variable" = "fodelsear" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v1378) in one table, renamed between survey rounds and never delivered together, so they are one variable: UPBORN 1990-07-01..1991-07-01; born 2000-07-01..2001-07-01."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: UPSEX"
+fields = { "variable" = "sex" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v44) in one table, renamed between survey rounds and never delivered together, so they are one variable: UPSEX 1990-07-01..1991-07-01; sex 2000-07-01..2011-07-01."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: MSSEX"
+fields = { "variable" = "konms" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v44) in one table, renamed between survey rounds and never delivered together, so they are one variable: MSSEX 1990-07-01..1991-07-01; konms 2000-07-01..2001-07-01."
+
+[[statement]]
+kind = "set"
+subject = "tidsanvandningsundersokningen: ALDGRUP1"
+fields = { "variable" = "aldgrp" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v749) in one table, renamed between survey rounds and never delivered together, so they are one variable: ALDGRUP1 1990-07-01..1991-07-01; ALDGRP1 2010-07-01..2011-07-01; aldgrp1 2000-07-01..2001-07-01."

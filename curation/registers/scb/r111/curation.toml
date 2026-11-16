@@ -637,18 +637,6 @@ evidence = "Ålder är en demografisk uppgift och ingår i åldersgruppen.\ncata
 
 [[statement]]
 kind = "set"
-subject = "var:aktivt-sokt-arbete"
-fields = { "sets" = ["arbetssokande"] }
-evidence = "Aktivt arbetssökande är en kodning inom gruppen.\ncatalog:occurrence:249155\ncatalog:variable_text:29321:13208:13239"
-
-[[statement]]
-kind = "set"
-subject = "var:aktivt-sokt-arbete"
-fields = { "tags" = ["employment"] }
-evidence = "Aktivt arbetssökande är en kodning inom gruppen.\ncatalog:occurrence:249155\ncatalog:variable_text:29321:13208:13239"
-
-[[statement]]
-kind = "set"
 subject = "var:aktivt-sokt-arbete-f06"
 fields = { "sets" = ["arbetssokande"] }
 evidence = "Variabeln mäter aktivt arbetssökande.\ncatalog:occurrence:249372\ncatalog:variable_text:29322:14669:14700"
@@ -670,18 +658,6 @@ kind = "set"
 subject = "var:aktivt-sokt-arbete-f07"
 fields = { "tags" = ["employment"] }
 evidence = "Variabeln mäter aktivt arbetssökande.\ncatalog:occurrence:250238\ncatalog:variable_text:29323:14669:14700"
-
-[[statement]]
-kind = "set"
-subject = "var:aktivt-sokt-arbete-f7"
-fields = { "sets" = ["arbetssokande"] }
-evidence = "Variabeln mäter aktivt arbetssökande.\ncatalog:occurrence:250202\ncatalog:variable_text:29324:13939:13970"
-
-[[statement]]
-kind = "set"
-subject = "var:aktivt-sokt-arbete-f7"
-fields = { "tags" = ["employment"] }
-evidence = "Variabeln mäter aktivt arbetssökande.\ncatalog:occurrence:250202\ncatalog:variable_text:29324:13939:13970"
 
 [[statement]]
 kind = "set"
@@ -805,18 +781,6 @@ evidence = "Variabeln anger anställningsform.\ncatalog:occurrence:249157\ncatal
 
 [[statement]]
 kind = "set"
-subject = "var:antal-arbetade-timmar"
-fields = { "sets" = ["arbetstid"] }
-evidence = "Arbetade timmar hör till arbetstid.\ncatalog:variable_text:29335:13208:13239"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-arbetade-timmar"
-fields = { "tags" = ["employment"] }
-evidence = "Arbetade timmar hör till arbetstid.\ncatalog:variable_text:29335:13208:13239"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-arbetade-timmar-arbtidve"
 fields = { "sets" = ["arbetstid"] }
 evidence = "Arbetade timmar hör till arbetstid.\ncatalog:variable_text:29336:12478:12509"
@@ -841,30 +805,6 @@ evidence = "Källkolumnen har andra ägare i andra perioder.\ncatalog:occurrence
 
 [[statement]]
 kind = "set"
-subject = "var:antal-arbetade-timmar-f14"
-fields = { "sets" = ["arbetstid"] }
-evidence = "Källkolumnen har en annan ägare i en annan period.\ncatalog:occurrence:249384\ncatalog:occurrence:249501"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-arbetade-timmar-f14"
-fields = { "tags" = ["employment"] }
-evidence = "Källkolumnen har en annan ägare i en annan period.\ncatalog:occurrence:249384\ncatalog:occurrence:249501"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-arbetade-timmar-f15"
-fields = { "sets" = ["arbetstid"] }
-evidence = "Arbetade timmar hör till arbetstid; källhistoriken bevarar skillnaden mellan mätperiod och normal vecka.\ncatalog:variable_text:29339:13208:13239\ncatalog:variable_text:29339:13939:13970"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-arbetade-timmar-f15"
-fields = { "tags" = ["employment"] }
-evidence = "Arbetade timmar hör till arbetstid; källhistoriken bevarar skillnaden mellan mätperiod och normal vecka.\ncatalog:variable_text:29339:13208:13239\ncatalog:variable_text:29339:13939:13970"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-arbetade-timmar-f18"
 fields = { "sets" = ["arbetstid"] }
 evidence = "Källkolumnen har en annan ägare i en annan period.\ncatalog:occurrence:248927\ncatalog:occurrence:249020"
@@ -886,18 +826,6 @@ kind = "set"
 subject = "var:antal-arbetade-timmar-f19"
 fields = { "tags" = ["employment"] }
 evidence = "Källkolumnen har en annan ägare i en annan period.\ncatalog:occurrence:250149\ncatalog:occurrence:250258"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-arbetade-timmar-fr7"
-fields = { "sets" = ["arbetstid"] }
-evidence = "Arbetade timmar hör till arbetstid.\ncatalog:variable_text:29342:11017:11048\ncatalog:variable_text:29342:11747:11778"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-arbetade-timmar-fr7"
-fields = { "tags" = ["employment"] }
-evidence = "Arbetade timmar hör till arbetstid.\ncatalog:variable_text:29342:11017:11048\ncatalog:variable_text:29342:11747:11778"
 
 [[statement]]
 kind = "set"
@@ -925,18 +853,6 @@ evidence = "Avklarade högskolepoäng mäter utbildningsresultat.\ncatalog:varia
 
 [[statement]]
 kind = "set"
-subject = "var:antal-manader-arbetslos"
-fields = { "sets" = ["arbetsloshetens-langd"] }
-evidence = "Variabeln mäter arbetslöshetens längd.\ncatalog:occurrence:249271\ncatalog:occurrence:249371"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-manader-arbetslos"
-fields = { "tags" = ["employment"] }
-evidence = "Variabeln mäter arbetslöshetens längd.\ncatalog:occurrence:249271\ncatalog:occurrence:249371"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-manader-forsta-arbete-min6man"
 fields = { "sets" = ["tid-till-forsta-arbete"] }
 evidence = "Identitetsfakta gäller flera andra begrepp i samma källkolumner.\ncatalog:occurrence:249389\ncatalog:occurrence:249503\ncatalog:occurrence:249516\ncatalog:occurrence:249568\ncatalog:occurrence:249569\ncatalog:occurrence:249644\ncatalog:occurrence:249646\ncatalog:occurrence:249649\ncatalog:occurrence:249713\ncatalog:occurrence:249715"
@@ -961,30 +877,6 @@ evidence = "Variabeln mäter arbetslöshetens längd.\ncatalog:occurrence:250237
 
 [[statement]]
 kind = "set"
-subject = "var:antal-manader-som-arbetslos-f15"
-fields = { "sets" = ["arbetsloshetens-langd"] }
-evidence = "Källkolumnen har andra ägare för andra begrepp.\ncatalog:occurrence:249385\ncatalog:occurrence:249502\ncatalog:occurrence:249645"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-manader-som-arbetslos-f15"
-fields = { "tags" = ["employment"] }
-evidence = "Källkolumnen har andra ägare för andra begrepp.\ncatalog:occurrence:249385\ncatalog:occurrence:249502\ncatalog:occurrence:249645"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-manader-som-arbetslos-f19"
-fields = { "sets" = ["arbetsloshetens-langd"] }
-evidence = "Källkolumnen har andra ägare för andra begrepp.\ncatalog:occurrence:249568\ncatalog:occurrence:249649\ncatalog:occurrence:249718"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-manader-som-arbetslos-f19"
-fields = { "tags" = ["employment"] }
-evidence = "Källkolumnen har andra ägare för andra begrepp.\ncatalog:occurrence:249568\ncatalog:occurrence:249649\ncatalog:occurrence:249718"
-
-[[statement]]
-kind = "set"
 subject = "var:antal-manader-som-arbetslos-f22"
 fields = { "sets" = ["arbetsloshetens-langd"] }
 evidence = "Källkolumnen har andra ägare för andra begrepp.\ncatalog:occurrence:249409\ncatalog:occurrence:249572\ncatalog:occurrence:249654"
@@ -994,54 +886,6 @@ kind = "set"
 subject = "var:antal-manader-som-arbetslos-f22"
 fields = { "tags" = ["employment"] }
 evidence = "Källkolumnen har andra ägare för andra begrepp.\ncatalog:occurrence:249409\ncatalog:occurrence:249572\ncatalog:occurrence:249654"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-manader-som-arbetslos-f6"
-fields = { "sets" = ["arbetsloshetens-langd"] }
-evidence = "Variabeln mäter arbetslöshetens längd.\ncatalog:occurrence:250103\ncatalog:occurrence:250201"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-manader-som-arbetslos-f6"
-fields = { "tags" = ["employment"] }
-evidence = "Variabeln mäter arbetslöshetens längd.\ncatalog:occurrence:250103\ncatalog:occurrence:250201"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-manader-som-arbetslos-fr19"
-fields = { "sets" = ["arbetsloshetens-langd"] }
-evidence = "Källkolumnen används också för arbetslöshetens förekomst.\ncatalog:occurrence:249808\ncatalog:occurrence:249904"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-manader-som-arbetslos-fr19"
-fields = { "tags" = ["employment"] }
-evidence = "Källkolumnen används också för arbetslöshetens förekomst.\ncatalog:occurrence:249808\ncatalog:occurrence:249904"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-manader-som-arbetslos-fr20"
-fields = { "sets" = ["arbetsloshetens-langd"] }
-evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:occurrence:249810\ncatalog:occurrence:249906"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-manader-som-arbetslos-fr20"
-fields = { "tags" = ["employment"] }
-evidence = "Källkolumnen har en annan ägare för ett annat begrepp.\ncatalog:occurrence:249810\ncatalog:occurrence:249906"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-manader-som-arbetslos-manarlos"
-fields = { "sets" = ["arbetsloshetens-langd"] }
-evidence = "Variabeln mäter arbetslöshetens längd.\ncatalog:occurrence:249232"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-manader-som-arbetslos-manarlos"
-fields = { "tags" = ["employment"] }
-evidence = "Variabeln mäter arbetslöshetens längd.\ncatalog:occurrence:249232"
 
 [[statement]]
 kind = "set"
@@ -1279,18 +1123,6 @@ evidence = "Källkolumnen används också för tid till första arbete.\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:arbete-europa-utom-norden"
-fields = { "sets" = ["arbete-utomlands"] }
-evidence = "Variabeln gäller arbete utomlands inom ett geografiskt delområde.\ncatalog:variable_text:29383:13208:13239"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-europa-utom-norden"
-fields = { "tags" = ["employment"] }
-evidence = "Variabeln gäller arbete utomlands inom ett geografiskt delområde.\ncatalog:variable_text:29383:13208:13239"
-
-[[statement]]
-kind = "set"
 subject = "var:arbete-hemifran"
 fields = { "sets" = ["arbete-hemifran"] }
 evidence = "F15 har en annan ägare i en tidigare period.\ncatalog:occurrence:248924\ncatalog:occurrence:249102"
@@ -1375,18 +1207,6 @@ evidence = "F24 har en annan ägare i en senare period.\ncatalog:occurrence:2494
 
 [[statement]]
 kind = "set"
-subject = "var:arbete-i-usa"
-fields = { "sets" = ["arbete-utomlands"] }
-evidence = "Variabeln gäller arbete utomlands i ett angivet land.\ncatalog:variable_text:29391:13208:13239"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-i-usa"
-fields = { "tags" = ["employment"] }
-evidence = "Variabeln gäller arbete utomlands i ett angivet land.\ncatalog:variable_text:29391:13208:13239"
-
-[[statement]]
-kind = "set"
 subject = "var:arbete-i-usa-arbusa"
 fields = { "sets" = ["arbete-utomlands"] }
 evidence = "Variabeln gäller arbete utomlands i ett angivet land.\ncatalog:variable_text:29392:12478:12509"
@@ -1432,18 +1252,6 @@ kind = "set"
 subject = "var:arbete-i-usa-f13-03"
 fields = { "tags" = ["employment"] }
 evidence = "Samma källkolumn har en annan ägare i en senare period.\ncatalog:occurrence:248920\ncatalog:occurrence:248997"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-i-usa-f9-3"
-fields = { "sets" = ["arbete-utomlands"] }
-evidence = "Variabeln gäller arbete utomlands i ett angivet land.\ncatalog:variable_text:29396:13939:13970"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-i-usa-f9-3"
-fields = { "tags" = ["employment"] }
-evidence = "Variabeln gäller arbete utomlands i ett angivet land.\ncatalog:variable_text:29396:13939:13970"
 
 [[statement]]
 kind = "set"
@@ -1495,30 +1303,6 @@ evidence = "Samma källkolumn har en annan ägare i en senare period.\ncatalog:o
 
 [[statement]]
 kind = "set"
-subject = "var:arbete-inom-europa-utom-norden-f9-2"
-fields = { "sets" = ["arbete-utomlands"] }
-evidence = "Variabeln gäller arbete utomlands inom ett geografiskt delområde.\ncatalog:variable_text:29401:13939:13970"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-inom-europa-utom-norden-f9-2"
-fields = { "tags" = ["employment"] }
-evidence = "Variabeln gäller arbete utomlands inom ett geografiskt delområde.\ncatalog:variable_text:29401:13939:13970"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-inom-norden"
-fields = { "sets" = ["arbete-utomlands"] }
-evidence = "Variabeln gäller arbete utomlands inom ett geografiskt delområde.\ncatalog:variable_text:29402:13208:13239"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-inom-norden"
-fields = { "tags" = ["employment"] }
-evidence = "Variabeln gäller arbete utomlands inom ett geografiskt delområde.\ncatalog:variable_text:29402:13208:13239"
-
-[[statement]]
-kind = "set"
 subject = "var:arbete-inom-norden-arbnord"
 fields = { "sets" = ["arbete-utomlands"] }
 evidence = "Variabeln gäller arbete utomlands inom ett geografiskt delområde.\ncatalog:variable_text:29403:12478:12509"
@@ -1564,18 +1348,6 @@ kind = "set"
 subject = "var:arbete-inom-norden-f13-01"
 fields = { "tags" = ["employment"] }
 evidence = "Samma källkolumn har en annan ägare i en senare period.\ncatalog:occurrence:248918\ncatalog:occurrence:248995"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-inom-norden-f9-1"
-fields = { "sets" = ["arbete-utomlands"] }
-evidence = "Variabeln gäller arbete utomlands inom ett geografiskt delområde.\ncatalog:variable_text:29407:13939:13970"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-inom-norden-f9-1"
-fields = { "tags" = ["employment"] }
-evidence = "Variabeln gäller arbete utomlands inom ett geografiskt delområde.\ncatalog:variable_text:29407:13939:13970"
 
 [[statement]]
 kind = "set"
@@ -2269,18 +2041,6 @@ evidence = "Variabeln mäter krav i arbetet.\ncatalog:variable_text:29465:14669:
 
 [[statement]]
 kind = "set"
-subject = "var:arbetsuppgifter-kritiskt-tankande"
-fields = { "sets" = ["kritiskt-tankande-i-arbetet"] }
-evidence = "Uppgiften gäller krav på kritiskt tänkande i arbetet.\ncatalog:variable_text:29466:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:arbetsuppgifter-kritiskt-tankande"
-fields = { "tags" = ["employment"] }
-evidence = "Uppgiften gäller krav på kritiskt tänkande i arbetet.\ncatalog:variable_text:29466:17167:17348"
-
-[[statement]]
-kind = "set"
 subject = "var:arbetsuppgifternas-krav-pa-yrkesspecifika-kunskaper-f10-07"
 fields = { "sets" = ["yrkesspecifika-kunskaper-i-arbetet"] }
 evidence = "Namnet anger kritiskt tänkande, medan källan anger yrkesspecifika kunskaper.\ncatalog:occurrence:249087\ncatalog:variable_text:29467:18628:18809"
@@ -2536,18 +2296,6 @@ kind = "set"
 subject = "var:bedfard4"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln avser utbildningens färdighetsträning.\ncatalog:occurrence:249973"
-
-[[statement]]
-kind = "set"
-subject = "var:bedomn"
-fields = { "sets" = ["utbildningsniva-for-arbetet"] }
-evidence = "Värdena avser tillräcklig utbildningsnivå.\ncatalog:occurrence:249189\ncatalog:valueset:10482"
-
-[[statement]]
-kind = "set"
-subject = "var:bedomn"
-fields = { "tags" = ["education", "employment"] }
-evidence = "Värdena avser tillräcklig utbildningsnivå.\ncatalog:occurrence:249189\ncatalog:valueset:10482"
 
 [[statement]]
 kind = "set"
@@ -2857,18 +2605,6 @@ evidence = "F25 har olika ägare mellan perioderna.\ncatalog:occurrence:249575\n
 
 [[statement]]
 kind = "set"
-subject = "var:corona-syss-annat-satt-3"
-fields = { "sets" = ["pandemins-paverkan-pa-sysselsattningen"] }
-evidence = "F25_txt har olika ägare mellan perioderna.\ncatalog:occurrence:249658\ncatalog:occurrence:249735"
-
-[[statement]]
-kind = "set"
-subject = "var:corona-syss-annat-satt-3"
-fields = { "tags" = ["employment"] }
-evidence = "F25_txt har olika ägare mellan perioderna.\ncatalog:occurrence:249658\ncatalog:occurrence:249735"
-
-[[statement]]
-kind = "set"
 subject = "var:corona-syss-forandrats"
 fields = { "sets" = ["pandemins-paverkan-pa-sysselsattningen"] }
 evidence = "F16 har olika ägare mellan perioderna.\ncatalog:occurrence:248925\ncatalog:occurrence:249103"
@@ -2926,18 +2662,6 @@ kind = "set"
 subject = "var:deltagande-kurs"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln avser deltagande i kurs eller utbildning.\ncatalog:occurrence:249905\ncatalog:variable_text:29525:11747:11778"
-
-[[statement]]
-kind = "set"
-subject = "var:deltagit-i-kurser-m-m-senaste-12-manaderna-f20"
-fields = { "sets" = ["utbildningsdeltagande"] }
-evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:occurrence:250151\ncatalog:occurrence:250259"
-
-[[statement]]
-kind = "set"
-subject = "var:deltagit-i-kurser-m-m-senaste-12-manaderna-f20"
-fields = { "tags" = ["education"] }
-evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:occurrence:250151\ncatalog:occurrence:250259"
 
 [[statement]]
 kind = "set"
@@ -3013,30 +2737,6 @@ evidence = "Variabeln klassificerar programtyp.\ncatalog:variable_text:29532:186
 
 [[statement]]
 kind = "set"
-subject = "var:examen2017"
-fields = { "sets" = ["examensforekomst"] }
-evidence = "Variabeln anger examensförekomst.\ncatalog:variable_text:29533:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:examen2017"
-fields = { "tags" = ["education"] }
-evidence = "Variabeln anger examensförekomst.\ncatalog:variable_text:29533:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:examengr"
-fields = { "sets" = ["examensforekomst"] }
-evidence = "Variabeln anger examensförekomst.\ncatalog:variable_text:29534:15796:15826"
-
-[[statement]]
-kind = "set"
-subject = "var:examengr"
-fields = { "tags" = ["education"] }
-evidence = "Variabeln anger examensförekomst.\ncatalog:variable_text:29534:15796:15826"
-
-[[statement]]
-kind = "set"
 subject = "var:examenskod"
 fields = { "sets" = ["examenstyp"] }
 evidence = "Variabeln kodar examen.\ncatalog:variable_text:29535:13208:13239"
@@ -3109,18 +2809,6 @@ evidence = "F1 är en ogenomskinlig frågekod; etiketten anger examensförekomst
 
 [[statement]]
 kind = "set"
-subject = "var:forekomst-examen-sverige-enkat"
-fields = { "sets" = ["examensforekomst"] }
-evidence = "F1 och old är en ogenomskinlig källkod; etiketten anger examensförekomst.\ncatalog:variable_text:29541:15796:15826"
-
-[[statement]]
-kind = "set"
-subject = "var:forekomst-examen-sverige-enkat"
-fields = { "tags" = ["education"] }
-evidence = "F1 och old är en ogenomskinlig källkod; etiketten anger examensförekomst.\ncatalog:variable_text:29541:15796:15826"
-
-[[statement]]
-kind = "set"
 subject = "var:f10"
 fields = { "sets" = ["utbildningens-nytta-i-arbetet"] }
 evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:occurrence:249496\ncatalog:occurrence:249549"
@@ -3130,12 +2818,6 @@ kind = "set"
 subject = "var:f10"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:occurrence:249496\ncatalog:occurrence:249549"
-
-[[statement]]
-kind = "set"
-subject = "var:f10-0"
-fields = { "sets" = ["kritiskt-tankande-i-arbetet"] }
-evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:29543:18628:18809"
 
 [[statement]]
 kind = "set"
@@ -3619,18 +3301,6 @@ evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:29587:15
 
 [[statement]]
 kind = "set"
-subject = "var:f23-08"
-fields = { "sets" = ["kritiskt-tankande-i-arbetet"] }
-evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:29588:15796:15826"
-
-[[statement]]
-kind = "set"
-subject = "var:f23-08"
-fields = { "tags" = ["employment"] }
-evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:29588:15796:15826"
-
-[[statement]]
-kind = "set"
 subject = "var:f23-8"
 fields = { "sets" = ["problemlosning-i-arbetet"] }
 evidence = "F23_8 är en ogenomskinlig källkod.\ncatalog:occurrence:249085\ncatalog:variable_text:29589:18628:18809"
@@ -3688,18 +3358,6 @@ kind = "set"
 subject = "var:kannedom-arbete-praktik-examensarbete"
 fields = { "tags" = ["employment"] }
 evidence = "F25_6 är en ogenomskinlig källkod.\ncatalog:occurrence:250063\ncatalog:variable_text:29593:13208:13239"
-
-[[statement]]
-kind = "set"
-subject = "var:f27-txt"
-fields = { "sets" = ["ovriga-enkatkommentarer"] }
-evidence = "F27_txt är en ogenomskinlig frågekod.\ncatalog:variable_text:29594:18262:18444"
-
-[[statement]]
-kind = "set"
-subject = "var:f28-txt"
-fields = { "sets" = ["ovriga-enkatkommentarer"] }
-evidence = "F28_txt är en ogenomskinlig frågekod.\ncatalog:variable_text:29595:17167:17348"
 
 [[statement]]
 kind = "set"
@@ -3772,12 +3430,6 @@ kind = "set"
 subject = "var:f3-txt"
 fields = { "tags" = ["employment"] }
 evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:occurrence:249518\ncatalog:occurrence:249670"
-
-[[statement]]
-kind = "set"
-subject = "var:f30"
-fields = { "tags" = ["education"] }
-evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:occurrence:250192\ncatalog:occurrence:250278"
 
 [[statement]]
 kind = "set"
@@ -4111,18 +3763,6 @@ evidence = "F8 är en opak frågekod.\ncatalog:occurrence:249139\ncatalog:variab
 
 [[statement]]
 kind = "set"
-subject = "var:gymnasieprogram-yrkes-eller-hogskoleforberedande"
-fields = { "sets" = ["gymnasieprogram"] }
-evidence = "F9_ny är en opak frågekod; källan anger gymnasieprogram.\ncatalog:valueset:6085\ncatalog:variable_text:29642:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:gymnasieprogram-yrkes-eller-hogskoleforberedande"
-fields = { "tags" = ["education"] }
-evidence = "F9_ny är en opak frågekod; källan anger gymnasieprogram.\ncatalog:valueset:6085\ncatalog:variable_text:29642:17167:17348"
-
-[[statement]]
-kind = "set"
 subject = "var:faderns-utbildningsniva"
 fields = { "sets" = ["foraldrarnas-utbildningsniva"] }
 evidence = "Faderns utbildningsnivå ingår i gruppen för föräldrars utbildning.\ncatalog:variable_text:29643:14669:14700"
@@ -4279,18 +3919,6 @@ evidence = "Id:t anger kritiskt tänkande men frågan avser yrkesspecifika kunsk
 
 [[statement]]
 kind = "set"
-subject = "var:fardighetstraning-argumentera"
-fields = { "sets" = ["fardighetstraning-i-argumentation"] }
-evidence = "Frågan gäller utbildningens färdighetsträning.\ncatalog:occurrence:248947\ncatalog:variable_text:29656:15796:15826"
-
-[[statement]]
-kind = "set"
-subject = "var:fardighetstraning-argumentera"
-fields = { "tags" = ["education"] }
-evidence = "Frågan gäller utbildningens färdighetsträning.\ncatalog:occurrence:248947\ncatalog:variable_text:29656:15796:15826"
-
-[[statement]]
-kind = "set"
 subject = "var:fardighetstraning-argumentera-och-overtyga-andra-bedfard11"
 fields = { "sets" = ["fardighetstraning-i-argumentation"] }
 evidence = "Frågan gäller utbildningens färdighetsträning.\ncatalog:occurrence:249966\ncatalog:variable_text:29657:12478:12509"
@@ -4315,18 +3943,6 @@ evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:oc
 
 [[statement]]
 kind = "set"
-subject = "var:fardighetstraning-argumentera-och-overtyga-andra-f19-06"
-fields = { "sets" = ["fardighetstraning-i-argumentation"] }
-evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:occurrence:249026\ncatalog:occurrence:249111"
-
-[[statement]]
-kind = "set"
-subject = "var:fardighetstraning-argumentera-och-overtyga-andra-f19-06"
-fields = { "tags" = ["education"] }
-evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:occurrence:249026\ncatalog:occurrence:249111"
-
-[[statement]]
-kind = "set"
 subject = "var:fardighetstraning-argumentera-och-overtyga-andra-f27-11"
 fields = { "sets" = ["fardighetstraning-i-argumentation"] }
 evidence = "Frågan gäller utbildningens färdighetsträning.\ncatalog:occurrence:249430\ncatalog:variable_text:29660:14669:14700"
@@ -4339,30 +3955,6 @@ evidence = "Frågan gäller utbildningens färdighetsträning.\ncatalog:occurren
 
 [[statement]]
 kind = "set"
-subject = "var:fardighetstraning-argumentera-och-overtyga-andra-f28-9"
-fields = { "sets" = ["fardighetstraning-i-argumentation"] }
-evidence = "Frågan gäller utbildningens färdighetsträning.\ncatalog:occurrence:250184\ncatalog:variable_text:29661:13939:13970"
-
-[[statement]]
-kind = "set"
-subject = "var:fardighetstraning-argumentera-och-overtyga-andra-f28-9"
-fields = { "tags" = ["education"] }
-evidence = "Frågan gäller utbildningens färdighetsträning.\ncatalog:occurrence:250184\ncatalog:variable_text:29661:13939:13970"
-
-[[statement]]
-kind = "set"
-subject = "var:fardighetstraning-argumentera-och-overtyga-andra-f29-9"
-fields = { "sets" = ["fardighetstraning-i-argumentation"] }
-evidence = "Frågan gäller utbildningens färdighetsträning.\ncatalog:occurrence:250084\ncatalog:variable_text:29662:13208:13239"
-
-[[statement]]
-kind = "set"
-subject = "var:fardighetstraning-argumentera-och-overtyga-andra-f29-9"
-fields = { "tags" = ["education"] }
-evidence = "Frågan gäller utbildningens färdighetsträning.\ncatalog:occurrence:250084\ncatalog:variable_text:29662:13208:13239"
-
-[[statement]]
-kind = "set"
 subject = "var:fardighetstraning-argumentera-och-overtyga-andra-f34-9"
 fields = { "sets" = ["fardighetstraning-i-argumentation"] }
 evidence = "Frågan gäller utbildningens färdighetsträning.\ncatalog:occurrence:250297\ncatalog:variable_text:29663:14669:14700"
@@ -4372,18 +3964,6 @@ kind = "set"
 subject = "var:fardighetstraning-argumentera-och-overtyga-andra-f34-9"
 fields = { "tags" = ["education"] }
 evidence = "Frågan gäller utbildningens färdighetsträning.\ncatalog:occurrence:250297\ncatalog:variable_text:29663:14669:14700"
-
-[[statement]]
-kind = "set"
-subject = "var:fardighetstraning-argumentera-och-overtyga-andra-faarg"
-fields = { "sets" = ["fardighetstraning-i-argumentation"] }
-evidence = "Frågan gäller utbildningens färdighetsträning.\ncatalog:occurrence:249192\ncatalog:variable_text:29664:13208:13239"
-
-[[statement]]
-kind = "set"
-subject = "var:fardighetstraning-argumentera-och-overtyga-andra-faarg"
-fields = { "tags" = ["education"] }
-evidence = "Frågan gäller utbildningens färdighetsträning.\ncatalog:occurrence:249192\ncatalog:variable_text:29664:13208:13239"
 
 [[statement]]
 kind = "set"
@@ -4951,18 +4531,6 @@ evidence = "Koden är ogenomskinlig och etiketten anger månad och år.\ncatalog
 
 [[statement]]
 kind = "set"
-subject = "var:huvudsaklig-sysselsattning-mars-2000-och-2002"
-fields = { "sets" = ["huvudsaklig-sysselsattning"] }
-evidence = "Frågekoden är ogenomskinlig; etiketten anger huvudsaklig sysselsättning.\ncatalog:variable_text:29713:11747:11778"
-
-[[statement]]
-kind = "set"
-subject = "var:huvudsaklig-sysselsattning-mars-2000-och-2002"
-fields = { "tags" = ["employment"] }
-evidence = "Frågekoden är ogenomskinlig; etiketten anger huvudsaklig sysselsättning.\ncatalog:variable_text:29713:11747:11778"
-
-[[statement]]
-kind = "set"
 subject = "var:manadslon-angiven-fore-skatt-mars-2002"
 fields = { "sets" = ["lon"] }
 evidence = "Fr11man är en ogenomskinlig frågekod.\ncatalog:variable_text:29714:11747:11778"
@@ -5221,12 +4789,6 @@ evidence = "Id:t är en ogenomskinlig frågekod.\ncatalog:variable_text:29735:11
 
 [[statement]]
 kind = "set"
-subject = "var:fr23c"
-fields = { "tags" = ["education"] }
-evidence = "Id:t är en ogenomskinlig källkod; den kolliderande etiketten kräver särskiljning.\ncatalog:variable_text:29736:11017:11048"
-
-[[statement]]
-kind = "set"
 subject = "var:studier-utomlands-gymnasieutbildning"
 fields = { "sets" = [] }
 evidence = "Id:t är en ogenomskinlig frågekod; den gemensamma etiketten kräver disambiguering. Coordinator group membership: Union of complete disjoint source-table decisions; no singleton judgement before union. membership-0299: Ingen vald variabel mäter utlandsstudiernas utbildningsnivå. membership-0300: Valda utbildningsnivåer gäller allmän utbildningsnivå, inte nivån på utlandsstudier. membership-0301: Ingen vald variabel i sektionen anger utbildningsnivå på utlandsstudier. membership-0302: Variabeln anger uttryckligen nivån på utlandsstudier. Skyddat medlemskap behålls. membership-0303: Stutniv1–stutniv4 anger uttryckliga nivåalternativ för utlandsstudier. Fr24a–fr24e hålls utanför tills nivåinnehållet belagts; tidigare gruppförslag ensamt avgör inte medlemskapet. membership-0304: Ingen vald variabel mäter utbildningsnivån på utlandsstudier; valda utlandsstudievariabler anger geografiskt innehåll. membership-0305: Utbildningsnivå före YH anger inte nivån på utlandsstudier.\ncatalog:variable_text:29606:13939:13970\ncatalog:variable_text:29607:13208:13239\ncatalog:variable_text:29610:14669:14700\ncatalog:variable_text:29737:11017:11048\ncatalog:variable_text:29738:11017:11048\ncatalog:variable_text:29739:11017:11048\ncatalog:variable_text:29740:11017:11048\ncatalog:variable_text:29741:11017:11048\ncatalog:variable_text:29843:19174:19358\ncatalog:variable_text:29942:14669:14700\ncatalog:variable_text:30105:14669:14700\ncatalog:variable_text:30122:12478:12509\ncatalog:variable_text:30123:12478:12509\ncatalog:variable_text:30124:12478:12509\ncatalog:variable_text:30125:12478:12509\ncatalog:variable_text:30178:18628:18809\ncatalog:variable_text:30180:19174:19358"
@@ -5362,12 +4924,6 @@ kind = "set"
 subject = "var:annan-kurs-utbildning"
 fields = { "tags" = ["education"] }
 evidence = "Fr3g är en ogenomskinlig källkod.\ncatalog:occurrence:249918\ncatalog:variable_text:29748:11747:11778"
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-minst-en-timme-mars-2000-och-2002"
-fields = { "tags" = ["employment"] }
-evidence = "Fr4 är en opak frågekod.\ncatalog:variable_text:29749:11747:11778"
 
 [[statement]]
 kind = "set"
@@ -5749,18 +5305,6 @@ evidence = "Variabeln avser framtida studieplaner.\ncatalog:variable_text:29781:
 
 [[statement]]
 kind = "set"
-subject = "var:framtidsplaner-andra-studier-t-ex-komvux-folkhogskola-f19-06"
-fields = { "sets" = ["studieplaner"] }
-evidence = "Variabeln avser framtida studieplaner.\ncatalog:variable_text:29782:16161:16191"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-andra-studier-t-ex-komvux-folkhogskola-f19-06"
-fields = { "tags" = ["education"] }
-evidence = "Variabeln avser framtida studieplaner.\ncatalog:variable_text:29782:16161:16191"
-
-[[statement]]
-kind = "set"
 subject = "var:framtidsplaner-andra-studier-t-ex-komvux-folkhogskola-f24-6"
 fields = { "sets" = ["studieplaner"] }
 evidence = "Variabeln avser framtida studieplaner.\ncatalog:variable_text:29783:19358:19539"
@@ -5770,30 +5314,6 @@ kind = "set"
 subject = "var:framtidsplaner-andra-studier-t-ex-komvux-folkhogskola-f24-6"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln avser framtida studieplaner.\ncatalog:variable_text:29783:19358:19539"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-andra-studier-t-ex-komvux-folkhogskola-f26-6"
-fields = { "sets" = ["studieplaner"] }
-evidence = "F26_6 har olika ägare mellan perioderna.\ncatalog:occurrence:249418\ncatalog:occurrence:249664"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-andra-studier-t-ex-komvux-folkhogskola-f26-6"
-fields = { "tags" = ["education"] }
-evidence = "F26_6 har olika ägare mellan perioderna.\ncatalog:occurrence:249418\ncatalog:occurrence:249664"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-andra-studier-t-ex-komvux-folkhogskola-f27-06"
-fields = { "sets" = ["studieplaner"] }
-evidence = "F27_06 har olika ägare mellan perioderna.\ncatalog:occurrence:249425\ncatalog:occurrence:249582"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-andra-studier-t-ex-komvux-folkhogskola-f27-06"
-fields = { "tags" = ["education"] }
-evidence = "F27_06 har olika ägare mellan perioderna.\ncatalog:occurrence:249425\ncatalog:occurrence:249582"
 
 [[statement]]
 kind = "set"
@@ -5803,30 +5323,12 @@ evidence = "Variabeln avser andra framtidsplaner.\ncatalog:variable_text:29786:1
 
 [[statement]]
 kind = "set"
-subject = "var:framtidsplaner-annat-f19-08"
-fields = { "sets" = ["andra-framtidsplaner"] }
-evidence = "Variabeln avser andra framtidsplaner.\ncatalog:variable_text:29787:16161:16191"
-
-[[statement]]
-kind = "set"
 subject = "var:framtidsplaner-annat-f24-8"
 fields = { "sets" = ["andra-framtidsplaner"] }
 evidence = "Variabeln avser andra framtidsplaner.\ncatalog:variable_text:29788:19358:19539"
 
 [[statement]]
 kind = "set"
-subject = "var:framtidsplaner-annat-f26-8"
-fields = { "sets" = ["andra-framtidsplaner"] }
-evidence = "Variabeln avser andra framtidsplaner.\ncatalog:variable_text:29789:18262:18444"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-annat-f27-08"
-fields = { "sets" = ["andra-framtidsplaner"] }
-evidence = "Samma källkolumn har en annan ägare i en tidigare period.\ncatalog:occurrence:249427\ncatalog:occurrence:249584"
-
-[[statement]]
-kind = "set"
 subject = "var:framtidsplaner-fortsatta-nuvarande-jobb"
 fields = { "sets" = ["planer-att-fortsatta-pa-nuvarande-jobb"] }
 evidence = "Variabeln gäller planer att fortsätta på nuvarande arbete.\ncatalog:variable_text:29791:18628:18809"
@@ -5836,18 +5338,6 @@ kind = "set"
 subject = "var:framtidsplaner-fortsatta-nuvarande-jobb"
 fields = { "tags" = ["employment"] }
 evidence = "Variabeln gäller planer att fortsätta på nuvarande arbete.\ncatalog:variable_text:29791:18628:18809"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-fortsatta-pa-mitt-nuvarande-jobb-f19-01"
-fields = { "sets" = ["planer-att-fortsatta-pa-nuvarande-jobb"] }
-evidence = "Variabeln gäller planer att fortsätta på nuvarande arbete.\ncatalog:variable_text:29792:16161:16191"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-fortsatta-pa-mitt-nuvarande-jobb-f19-01"
-fields = { "tags" = ["employment"] }
-evidence = "Variabeln gäller planer att fortsätta på nuvarande arbete.\ncatalog:variable_text:29792:16161:16191"
 
 [[statement]]
 kind = "set"
@@ -5863,30 +5353,6 @@ evidence = "Variabeln gäller planer att fortsätta på nuvarande arbete.\ncatal
 
 [[statement]]
 kind = "set"
-subject = "var:framtidsplaner-fortsatta-pa-mitt-nuvarande-jobb-f26-1"
-fields = { "sets" = ["planer-att-fortsatta-pa-nuvarande-jobb"] }
-evidence = "Samma källkolumn har en annan ägare i en tidigare period.\ncatalog:occurrence:249413\ncatalog:occurrence:249659"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-fortsatta-pa-mitt-nuvarande-jobb-f26-1"
-fields = { "tags" = ["employment"] }
-evidence = "Samma källkolumn har en annan ägare i en tidigare period.\ncatalog:occurrence:249413\ncatalog:occurrence:249659"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-fortsatta-pa-mitt-nuvarande-jobb-f27-01"
-fields = { "sets" = ["planer-att-fortsatta-pa-nuvarande-jobb"] }
-evidence = "Samma källkolumn har en annan ägare i en tidigare period.\ncatalog:occurrence:249420\ncatalog:occurrence:249577"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-fortsatta-pa-mitt-nuvarande-jobb-f27-01"
-fields = { "tags" = ["employment"] }
-evidence = "Samma källkolumn har en annan ägare i en tidigare period.\ncatalog:occurrence:249420\ncatalog:occurrence:249577"
-
-[[statement]]
-kind = "set"
 subject = "var:framtidsplaner-skaffa-ett-jobb"
 fields = { "sets" = ["planer-att-skaffa-jobb"] }
 evidence = "Variabeln gäller planer att skaffa ett arbete.\ncatalog:variable_text:29796:18628:18809"
@@ -5896,18 +5362,6 @@ kind = "set"
 subject = "var:framtidsplaner-skaffa-ett-jobb"
 fields = { "tags" = ["employment"] }
 evidence = "Variabeln gäller planer att skaffa ett arbete.\ncatalog:variable_text:29796:18628:18809"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-skaffa-ett-jobb-f19-03"
-fields = { "sets" = ["planer-att-skaffa-jobb"] }
-evidence = "Variabeln gäller planer att skaffa ett arbete.\ncatalog:variable_text:29797:16161:16191"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-skaffa-ett-jobb-f19-03"
-fields = { "tags" = ["employment"] }
-evidence = "Variabeln gäller planer att skaffa ett arbete.\ncatalog:variable_text:29797:16161:16191"
 
 [[statement]]
 kind = "set"
@@ -5923,30 +5377,6 @@ evidence = "Variabeln gäller planer att skaffa ett arbete.\ncatalog:variable_te
 
 [[statement]]
 kind = "set"
-subject = "var:framtidsplaner-skaffa-ett-jobb-f26-3"
-fields = { "sets" = ["planer-att-skaffa-jobb"] }
-evidence = "Samma källkolumn har en annan ägare i en tidigare period.\ncatalog:occurrence:249415\ncatalog:occurrence:249661"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-skaffa-ett-jobb-f26-3"
-fields = { "tags" = ["employment"] }
-evidence = "Samma källkolumn har en annan ägare i en tidigare period.\ncatalog:occurrence:249415\ncatalog:occurrence:249661"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-skaffa-ett-jobb-f27-03"
-fields = { "sets" = ["planer-att-skaffa-jobb"] }
-evidence = "Samma källkolumn har en annan ägare i en tidigare period.\ncatalog:occurrence:249422\ncatalog:occurrence:249579"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-skaffa-ett-jobb-f27-03"
-fields = { "tags" = ["employment"] }
-evidence = "Samma källkolumn har en annan ägare i en tidigare period.\ncatalog:occurrence:249422\ncatalog:occurrence:249579"
-
-[[statement]]
-kind = "set"
 subject = "var:framtidsplaner-skaffa-ett-nytt-jobb"
 fields = { "sets" = ["planer-att-byta-jobb"] }
 evidence = "Variabeln gäller planer att skaffa ett nytt arbete.\ncatalog:variable_text:29801:18628:18809"
@@ -5956,18 +5386,6 @@ kind = "set"
 subject = "var:framtidsplaner-skaffa-ett-nytt-jobb"
 fields = { "tags" = ["employment"] }
 evidence = "Variabeln gäller planer att skaffa ett nytt arbete.\ncatalog:variable_text:29801:18628:18809"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-skaffa-ett-nytt-jobb-f19-02"
-fields = { "sets" = ["planer-att-byta-jobb"] }
-evidence = "Variabeln gäller planer att skaffa ett nytt arbete.\ncatalog:variable_text:29802:16161:16191"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-skaffa-ett-nytt-jobb-f19-02"
-fields = { "tags" = ["employment"] }
-evidence = "Variabeln gäller planer att skaffa ett nytt arbete.\ncatalog:variable_text:29802:16161:16191"
 
 [[statement]]
 kind = "set"
@@ -5983,30 +5401,6 @@ evidence = "Variabeln gäller planer att skaffa ett nytt arbete.\ncatalog:variab
 
 [[statement]]
 kind = "set"
-subject = "var:framtidsplaner-skaffa-ett-nytt-jobb-f26-2"
-fields = { "sets" = ["planer-att-byta-jobb"] }
-evidence = "Samma källkolumn har en annan ägare i en tidigare period.\ncatalog:occurrence:249414\ncatalog:occurrence:249660"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-skaffa-ett-nytt-jobb-f26-2"
-fields = { "tags" = ["employment"] }
-evidence = "Samma källkolumn har en annan ägare i en tidigare period.\ncatalog:occurrence:249414\ncatalog:occurrence:249660"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-skaffa-ett-nytt-jobb-f27-02"
-fields = { "sets" = ["planer-att-byta-jobb"] }
-evidence = "Samma källkolumn har en annan ägare i en tidigare period.\ncatalog:occurrence:249421\ncatalog:occurrence:249578"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-skaffa-ett-nytt-jobb-f27-02"
-fields = { "tags" = ["employment"] }
-evidence = "Samma källkolumn har en annan ägare i en tidigare period.\ncatalog:occurrence:249421\ncatalog:occurrence:249578"
-
-[[statement]]
-kind = "set"
 subject = "var:framtidsplaner-starta-eget-foretag"
 fields = { "sets" = ["planer-att-starta-foretag"] }
 evidence = "Variabeln gäller planer att starta företag.\ncatalog:variable_text:29806:18628:18809"
@@ -6016,18 +5410,6 @@ kind = "set"
 subject = "var:framtidsplaner-starta-eget-foretag"
 fields = { "tags" = ["business"] }
 evidence = "Variabeln gäller planer att starta företag.\ncatalog:variable_text:29806:18628:18809"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-starta-eget-foretag-f19-04"
-fields = { "sets" = ["planer-att-starta-foretag"] }
-evidence = "Variabeln gäller planer att starta företag.\ncatalog:variable_text:29807:16161:16191"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-starta-eget-foretag-f19-04"
-fields = { "tags" = ["business"] }
-evidence = "Variabeln gäller planer att starta företag.\ncatalog:variable_text:29807:16161:16191"
 
 [[statement]]
 kind = "set"
@@ -6043,30 +5425,6 @@ evidence = "Variabeln gäller planer att starta företag.\ncatalog:variable_text
 
 [[statement]]
 kind = "set"
-subject = "var:framtidsplaner-starta-eget-foretag-f26-4"
-fields = { "sets" = ["planer-att-starta-foretag"] }
-evidence = "Samma källkolumn har en annan ägare i en tidigare period.\ncatalog:occurrence:249416\ncatalog:occurrence:249662"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-starta-eget-foretag-f26-4"
-fields = { "tags" = ["business"] }
-evidence = "Samma källkolumn har en annan ägare i en tidigare period.\ncatalog:occurrence:249416\ncatalog:occurrence:249662"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-starta-eget-foretag-f27-04"
-fields = { "sets" = ["planer-att-starta-foretag"] }
-evidence = "Samma källkolumn har en annan ägare i en tidigare period.\ncatalog:occurrence:249423\ncatalog:occurrence:249580"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-starta-eget-foretag-f27-04"
-fields = { "tags" = ["business"] }
-evidence = "Samma källkolumn har en annan ägare i en tidigare period.\ncatalog:occurrence:249423\ncatalog:occurrence:249580"
-
-[[statement]]
-kind = "set"
 subject = "var:framtidsplaner-studera-hogskola-yh"
 fields = { "sets" = ["studieplaner"] }
 evidence = "Id:t är läsbart och källan beskriver planer för fortsatta studier.\ncatalog:variable_text:29811:17167:17348\ncatalog:variable_text:29811:18628:18809"
@@ -6079,18 +5437,6 @@ evidence = "Id:t är läsbart och källan beskriver planer för fortsatta studie
 
 [[statement]]
 kind = "set"
-subject = "var:framtidsplaner-studera-pa-universitet-hogskola-eller-f19-05"
-fields = { "sets" = ["studieplaner"] }
-evidence = "Variabeln avser framtida studieplaner.\ncatalog:variable_text:29812:16161:16191"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-studera-pa-universitet-hogskola-eller-f19-05"
-fields = { "tags" = ["education"] }
-evidence = "Variabeln avser framtida studieplaner.\ncatalog:variable_text:29812:16161:16191"
-
-[[statement]]
-kind = "set"
 subject = "var:framtidsplaner-studera-pa-universitet-hogskola-eller-f24-5"
 fields = { "sets" = ["studieplaner"] }
 evidence = "Variabeln avser framtida studieplaner.\ncatalog:variable_text:29813:19358:19539"
@@ -6100,30 +5446,6 @@ kind = "set"
 subject = "var:framtidsplaner-studera-pa-universitet-hogskola-eller-f24-5"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln avser framtida studieplaner.\ncatalog:variable_text:29813:19358:19539"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-studera-pa-universitet-hogskola-eller-f26-5"
-fields = { "sets" = ["studieplaner"] }
-evidence = "F26_5 har olika ägare mellan perioderna.\ncatalog:occurrence:249417\ncatalog:occurrence:249663"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-studera-pa-universitet-hogskola-eller-f26-5"
-fields = { "tags" = ["education"] }
-evidence = "F26_5 har olika ägare mellan perioderna.\ncatalog:occurrence:249417\ncatalog:occurrence:249663"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-studera-pa-universitet-hogskola-eller-f27-05"
-fields = { "sets" = ["studieplaner"] }
-evidence = "F27_05 har olika ägare mellan perioderna.\ncatalog:occurrence:249424\ncatalog:occurrence:249581"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-studera-pa-universitet-hogskola-eller-f27-05"
-fields = { "tags" = ["education"] }
-evidence = "F27_05 har olika ägare mellan perioderna.\ncatalog:occurrence:249424\ncatalog:occurrence:249581"
 
 [[statement]]
 kind = "set"
@@ -6133,27 +5455,9 @@ evidence = "Variabeln anger ovisshet om framtidsplaner.\ncatalog:variable_text:2
 
 [[statement]]
 kind = "set"
-subject = "var:framtidsplaner-vet-inte-f19-9"
-fields = { "sets" = ["ovissa-framtidsplaner"] }
-evidence = "Variabeln anger ovisshet om framtidsplaner.\ncatalog:variable_text:29817:16161:16191"
-
-[[statement]]
-kind = "set"
 subject = "var:framtidsplaner-vet-inte-f24-9"
 fields = { "sets" = ["ovissa-framtidsplaner"] }
 evidence = "Variabeln anger ovisshet om framtidsplaner.\ncatalog:variable_text:29818:19358:19539"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-vet-inte-f26-9"
-fields = { "sets" = ["ovissa-framtidsplaner"] }
-evidence = "Variabeln anger ovisshet om framtidsplaner.\ncatalog:variable_text:29819:18262:18444"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-vet-inte-f27-09"
-fields = { "sets" = ["ovissa-framtidsplaner"] }
-evidence = "Samma källkolumn har en annan ägare i en tidigare period.\ncatalog:occurrence:249428\ncatalog:occurrence:249585"
 
 [[statement]]
 kind = "set"
@@ -6499,18 +5803,6 @@ evidence = "Samma källkolumn har en annan ägare i en senare period.\ncatalog:o
 
 [[statement]]
 kind = "set"
-subject = "var:huvudsaklig-sysselsattning-4"
-fields = { "sets" = ["huvudsaklig-sysselsattning"] }
-evidence = "Samma källkolumn har en annan ägare i en senare period.\ncatalog:occurrence:250331\ncatalog:occurrence:250392"
-
-[[statement]]
-kind = "set"
-subject = "var:huvudsaklig-sysselsattning-4"
-fields = { "tags" = ["employment"] }
-evidence = "Samma källkolumn har en annan ägare i en senare period.\ncatalog:occurrence:250331\ncatalog:occurrence:250392"
-
-[[statement]]
-kind = "set"
 subject = "var:huvudsaklig-sysselsattning-5"
 fields = { "sets" = ["huvudsaklig-sysselsattning"] }
 evidence = "Samma källkolumn har en annan ägare i en senare period.\ncatalog:occurrence:249517\ncatalog:occurrence:249669"
@@ -6673,18 +5965,6 @@ evidence = "Variabeln anger insamlingssätt.\ncatalog:variable_text:29867:15796:
 
 [[statement]]
 kind = "set"
-subject = "var:kal-bak"
-fields = { "sets" = [] }
-evidence = "Id:t innehåller en ogenomskinlig kalibreringskod; etiketten delas med andra variabler.\ncatalog:variable_text:29868:18262:18444"
-
-[[statement]]
-kind = "set"
-subject = "var:kal-bak"
-fields = { "tags" = ["methods"] }
-evidence = "Id:t innehåller en ogenomskinlig kalibreringskod; etiketten delas med andra variabler.\ncatalog:variable_text:29868:18262:18444"
-
-[[statement]]
-kind = "set"
 subject = "var:kal-beh"
 fields = { "sets" = [] }
 evidence = "Id:t innehåller en ogenomskinlig kalibreringskod; etiketten delas med andra variabler.\ncatalog:valueset:11764\ncatalog:variable_text:29869:18262:18444"
@@ -6718,18 +5998,6 @@ kind = "set"
 subject = "var:kal-fu"
 fields = { "tags" = ["methods"] }
 evidence = "Id:t innehåller en ogenomskinlig kalibreringskod; etiketten delas med andra variabler.\ncatalog:variable_text:29871:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:kal-fut"
-fields = { "sets" = [] }
-evidence = "Id:t innehåller en ogenomskinlig kalibreringskod; etiketten delas med andra variabler.\ncatalog:variable_text:29872:18262:18444"
-
-[[statement]]
-kind = "set"
-subject = "var:kal-fut"
-fields = { "tags" = ["methods"] }
-evidence = "Id:t innehåller en ogenomskinlig kalibreringskod; etiketten delas med andra variabler.\ncatalog:variable_text:29872:18262:18444"
 
 [[statement]]
 kind = "set"
@@ -7129,30 +6397,6 @@ evidence = "Variabeln anger personens kön.\ncatalog:variable_text:29905:19358:1
 
 [[statement]]
 kind = "set"
-subject = "var:kunskap-nytta-arbete"
-fields = { "sets" = ["utbildningens-nytta-i-arbetet"] }
-evidence = "Variabeln mäter kunskapens nytta i arbetet.\ncatalog:occurrence:249227\ncatalog:variable_text:29906:13208:13239"
-
-[[statement]]
-kind = "set"
-subject = "var:kunskap-nytta-arbete"
-fields = { "tags" = ["education", "employment"] }
-evidence = "Variabeln mäter kunskapens nytta i arbetet.\ncatalog:occurrence:249227\ncatalog:variable_text:29906:13208:13239"
-
-[[statement]]
-kind = "set"
-subject = "var:kunskap-och-formaga-till-nytta-i-arbete-f21"
-fields = { "sets" = ["utbildningens-nytta-i-arbetet"] }
-evidence = "Variabeln mäter kunskapens nytta i arbetet.\ncatalog:occurrence:250152\ncatalog:variable_text:29907:13939:13970"
-
-[[statement]]
-kind = "set"
-subject = "var:kunskap-och-formaga-till-nytta-i-arbete-f21"
-fields = { "tags" = ["education", "employment"] }
-evidence = "Variabeln mäter kunskapens nytta i arbetet.\ncatalog:occurrence:250152\ncatalog:variable_text:29907:13939:13970"
-
-[[statement]]
-kind = "set"
 subject = "var:kunskap-och-formaga-till-nytta-i-arbete-f22"
 fields = { "sets" = ["utbildningens-nytta-i-arbetet"] }
 evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:occurrence:249409\ncatalog:occurrence:249572"
@@ -7177,30 +6421,6 @@ evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:oc
 
 [[statement]]
 kind = "set"
-subject = "var:kurser-12-manader"
-fields = { "sets" = ["utbildningsdeltagande"] }
-evidence = "Variabeln mäter kursdeltagande.\ncatalog:occurrence:249228\ncatalog:variable_text:29910:13208:13239"
-
-[[statement]]
-kind = "set"
-subject = "var:kurser-12-manader"
-fields = { "tags" = ["education"] }
-evidence = "Variabeln mäter kursdeltagande.\ncatalog:occurrence:249228\ncatalog:variable_text:29910:13208:13239"
-
-[[statement]]
-kind = "set"
-subject = "var:kvar-pa-forsta-arbete"
-fields = { "sets" = ["kvar-pa-forsta-arbetet"] }
-evidence = "Variabeln anger om personen är kvar på sitt första arbete.\ncatalog:variable_text:29911:13208:13239"
-
-[[statement]]
-kind = "set"
-subject = "var:kvar-pa-forsta-arbete"
-fields = { "tags" = ["employment"] }
-evidence = "Variabeln anger om personen är kvar på sitt första arbete.\ncatalog:variable_text:29911:13208:13239"
-
-[[statement]]
-kind = "set"
 subject = "var:kvar-pa-forsta-arbete-f03"
 fields = { "sets" = ["kvar-pa-forsta-arbetet"] }
 evidence = "Variabeln anger om personen är kvar på sitt första arbete.\ncatalog:variable_text:29912:13939:13970\ncatalog:variable_text:29912:14669:14700"
@@ -7222,30 +6442,6 @@ kind = "set"
 subject = "var:kvar-pa-forsta-arbete-f04"
 fields = { "tags" = ["employment"] }
 evidence = "Variabeln anger om personen är kvar på sitt första arbete.\ncatalog:variable_text:29913:14669:14700"
-
-[[statement]]
-kind = "set"
-subject = "var:kvar-pa-forsta-arbete-f11"
-fields = { "sets" = ["kvar-pa-forsta-arbetet"] }
-evidence = "Källkolumnen har en annan ägare i en annan period.\ncatalog:occurrence:248916\ncatalog:occurrence:248993"
-
-[[statement]]
-kind = "set"
-subject = "var:kvar-pa-forsta-arbete-f11"
-fields = { "tags" = ["employment"] }
-evidence = "Källkolumnen har en annan ägare i en annan period.\ncatalog:occurrence:248916\ncatalog:occurrence:248993"
-
-[[statement]]
-kind = "set"
-subject = "var:kvar-pa-forsta-arbete-f4"
-fields = { "sets" = ["kvar-pa-forsta-arbetet"] }
-evidence = "Variabeln anger om personen är kvar på sitt första arbete.\ncatalog:variable_text:29915:13208:13239\ncatalog:variable_text:29915:13939:13970"
-
-[[statement]]
-kind = "set"
-subject = "var:kvar-pa-forsta-arbete-f4"
-fields = { "tags" = ["employment"] }
-evidence = "Variabeln anger om personen är kvar på sitt första arbete.\ncatalog:variable_text:29915:13208:13239\ncatalog:variable_text:29915:13939:13970"
 
 [[statement]]
 kind = "set"
@@ -7585,18 +6781,6 @@ evidence = "Sifferändelsen är en tilldelad räknare och inte källkolumnens nu
 
 [[statement]]
 kind = "set"
-subject = "var:nojdhet-med-arbete-3"
-fields = { "sets" = ["nojdhet-med-arbetet"] }
-evidence = "Källkolumnen har andra ägare i andra perioder.\ncatalog:occurrence:248927\ncatalog:occurrence:249020\ncatalog:occurrence:249105"
-
-[[statement]]
-kind = "set"
-subject = "var:nojdhet-med-arbete-3"
-fields = { "tags" = ["employment"] }
-evidence = "Källkolumnen har andra ägare i andra perioder.\ncatalog:occurrence:248927\ncatalog:occurrence:249020\ncatalog:occurrence:249105"
-
-[[statement]]
-kind = "set"
 subject = "var:nojdhet-arbete-22-26-april-2013"
 fields = { "sets" = ["nojdhet-med-arbetet"] }
 evidence = "Sifferändelsen är en tilldelad räknare och inte källkolumnens nummer.\ncatalog:variable_text:29948:15796:15826"
@@ -7630,18 +6814,6 @@ kind = "set"
 subject = "var:nojdhet-med-arbete-6"
 fields = { "tags" = ["employment"] }
 evidence = "Källkolumnen har en annan ägare i en annan period.\ncatalog:occurrence:250066\ncatalog:occurrence:250167"
-
-[[statement]]
-kind = "set"
-subject = "var:nojdhet-med-arbete-alternativ"
-fields = { "sets" = ["nojdhet-med-arbetet"] }
-evidence = "Variabeln gäller nöjdhet med arbetet.\ncatalog:variable_text:29952:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:nojdhet-med-arbete-alternativ"
-fields = { "tags" = ["employment"] }
-evidence = "Variabeln gäller nöjdhet med arbetet.\ncatalog:variable_text:29952:17167:17348"
 
 [[statement]]
 kind = "set"
@@ -7855,27 +7027,9 @@ evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:oc
 
 [[statement]]
 kind = "set"
-subject = "var:nojdhet-universitets-hogskoleutbildning"
-fields = { "tags" = ["education"] }
-evidence = "Suffixet 3 är inte en del av källkolumnen.\ncatalog:occurrence:248949\ncatalog:variable_text:29971:15796:15826"
-
-[[statement]]
-kind = "set"
 subject = "var:nojdhet-med-utbildning-4"
 fields = { "tags" = ["education"] }
 evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:occurrence:249438\ncatalog:occurrence:249586"
-
-[[statement]]
-kind = "set"
-subject = "var:nojdhet-med-utbildning-5"
-fields = { "tags" = ["education"] }
-evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:occurrence:250092\ncatalog:occurrence:250193"
-
-[[statement]]
-kind = "set"
-subject = "var:nojdutb"
-fields = { "tags" = ["education"] }
-evidence = "Variabeln mäter nöjdhet med utbildningen.\ncatalog:occurrence:249235\ncatalog:variable_text:29974:13208:13239"
 
 [[statement]]
 kind = "set"
@@ -8125,12 +7279,6 @@ evidence = "Variabeln anger en orsak till bristande utbildningsmatchning.\ncatal
 
 [[statement]]
 kind = "set"
-subject = "var:overens"
-fields = { "tags" = ["education", "employment"] }
-evidence = "Variabeln avser överensstämmelse mellan utbildning och arbete.\ncatalog:occurrence:249237"
-
-[[statement]]
-kind = "set"
 subject = "var:overensstammelse-gymnasieutbildning"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Källkolumnerna har andra ägare för andra begrepp.\ncatalog:occurrence:249519\ncatalog:occurrence:249530\ncatalog:occurrence:249590\ncatalog:occurrence:249600"
@@ -8170,18 +7318,6 @@ kind = "set"
 subject = "var:ovriga-kommentarer-till-enkaten-3"
 fields = { "sets" = ["ovriga-enkatkommentarer"] }
 evidence = "F29 har olika ägare mellan perioderna.\ncatalog:occurrence:249339\ncatalog:occurrence:249588"
-
-[[statement]]
-kind = "set"
-subject = "var:planer"
-fields = { "sets" = ["studieplaner"] }
-evidence = "Variabeln avser studieplaner.\ncatalog:variable_text:30015:13208:13239"
-
-[[statement]]
-kind = "set"
-subject = "var:planer"
-fields = { "tags" = ["education"] }
-evidence = "Variabeln avser studieplaner.\ncatalog:variable_text:30015:13208:13239"
 
 [[statement]]
 kind = "set"
@@ -8290,18 +7426,6 @@ kind = "set"
 subject = "var:procent-av-heltid"
 fields = { "tags" = ["employment"] }
 evidence = "Andel av heltid är ett arbetstidsmått.\ncatalog:variable_text:30024:11747:11778\ncatalog:variable_text:30024:12478:12509"
-
-[[statement]]
-kind = "set"
-subject = "var:proggr"
-fields = { "sets" = ["programtyp-i-hogskolan"] }
-evidence = "Variabeln klassificerar högskolans programtyp.\ncatalog:variable_text:30025:15796:15826"
-
-[[statement]]
-kind = "set"
-subject = "var:proggr"
-fields = { "tags" = ["education"] }
-evidence = "Variabeln klassificerar högskolans programtyp.\ncatalog:variable_text:30025:15796:15826"
 
 [[statement]]
 kind = "set"
@@ -8941,27 +8065,9 @@ evidence = "Variabeln gäller studier utomlands inom ett geografiskt delområde.
 
 [[statement]]
 kind = "set"
-subject = "var:studier-i-ovriga-varlden-f32-4"
-fields = { "tags" = ["education"] }
-evidence = "Variabeln gäller studier utomlands inom ett geografiskt delområde.\ncatalog:variable_text:30093:13939:13970"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-i-ovriga-varlden-f33-4"
-fields = { "tags" = ["education"] }
-evidence = "Samma källkolumn har en annan ägare i en senare period.\ncatalog:occurrence:250097\ncatalog:occurrence:250284"
-
-[[statement]]
-kind = "set"
 subject = "var:studier-i-ovriga-varlden-f38-4"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln gäller studier utomlands inom ett geografiskt delområde.\ncatalog:variable_text:30095:14669:14700"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-i-ovriga-varlden-studovr"
-fields = { "tags" = ["education"] }
-evidence = "Variabeln gäller studier utomlands inom ett geografiskt delområde.\ncatalog:variable_text:30096:13208:13239"
 
 [[statement]]
 kind = "set"
@@ -8989,27 +8095,9 @@ evidence = "Variabeln gäller studier utomlands i ett angivet land.\ncatalog:var
 
 [[statement]]
 kind = "set"
-subject = "var:studier-i-usa-f32-3"
-fields = { "tags" = ["education"] }
-evidence = "Variabeln gäller studier utomlands i ett angivet land.\ncatalog:variable_text:30100:13939:13970"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-i-usa-f33-3"
-fields = { "tags" = ["education"] }
-evidence = "Samma källkolumn har en annan ägare i en senare period.\ncatalog:occurrence:250096\ncatalog:occurrence:250283"
-
-[[statement]]
-kind = "set"
 subject = "var:studier-i-usa-f38-3"
 fields = { "tags" = ["education"] }
 evidence = "Variabeln gäller studier utomlands i ett angivet land.\ncatalog:variable_text:30102:14669:14700"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-i-usa-studusa"
-fields = { "tags" = ["education"] }
-evidence = "Variabeln gäller studier utomlands i ett angivet land.\ncatalog:variable_text:30103:13208:13239"
 
 [[statement]]
 kind = "set"
@@ -9091,18 +8179,6 @@ evidence = "F23 har olika ägare i observerade perioder.\ncatalog:occurrence:249
 
 [[statement]]
 kind = "set"
-subject = "var:studier-istallet-for-arbete-f8"
-fields = { "sets" = ["studier-istallet-for-arbete"] }
-evidence = "Variabeln gäller studier i stället för arbete.\ncatalog:variable_text:30113:13208:13239\ncatalog:variable_text:30113:13939:13970"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-istallet-for-arbete-f8"
-fields = { "tags" = ["education", "employment"] }
-evidence = "Variabeln gäller studier i stället för arbete.\ncatalog:variable_text:30113:13208:13239\ncatalog:variable_text:30113:13939:13970"
-
-[[statement]]
-kind = "set"
 subject = "var:studier-istallet-for-arbete-studarb"
 fields = { "sets" = ["studier-istallet-for-arbete"] }
 evidence = "Variabeln gäller studier i stället för arbete.\ncatalog:variable_text:30114:12478:12509"
@@ -9112,18 +8188,6 @@ kind = "set"
 subject = "var:studier-istallet-for-arbete-studarb"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Variabeln gäller studier i stället för arbete.\ncatalog:variable_text:30114:12478:12509"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-istallet-for-arbete-studist"
-fields = { "sets" = ["studier-istallet-for-arbete"] }
-evidence = "Variabeln gäller studier i stället för arbete.\ncatalog:variable_text:30115:13208:13239"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-istallet-for-arbete-studist"
-fields = { "tags" = ["education", "employment"] }
-evidence = "Variabeln gäller studier i stället för arbete.\ncatalog:variable_text:30115:13208:13239"
 
 [[statement]]
 kind = "set"
@@ -9229,18 +8293,6 @@ evidence = "Variabeln anger deltagande i suburval.\ncatalog:variable_text:30126:
 
 [[statement]]
 kind = "set"
-subject = "var:sun4inr"
-fields = { "sets" = ["utbildningsinriktning"] }
-evidence = "SUN4Inr är en källmnemonik med klassifikationskod som inte finns i etiketten.\ncatalog:variable_text:30127:18078:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:sun4inr"
-fields = { "tags" = ["education"] }
-evidence = "SUN4Inr är en källmnemonik med klassifikationskod som inte finns i etiketten.\ncatalog:variable_text:30127:18078:18262"
-
-[[statement]]
-kind = "set"
 subject = "var:sun4inr-utb"
 fields = { "sets" = ["utbildningsinriktning"] }
 evidence = "SUN4Inr_Utb är en källkod. Etiketten delas med SUN5Inr_Utb och förslaget behöver därför särskiljas med källkolumnen.\ncatalog:variable_text:30128:19174:19358\ncatalog:variable_text:30131:19174:19358"
@@ -9262,18 +8314,6 @@ kind = "set"
 subject = "var:sun4inrklartext"
 fields = { "tags" = ["education"] }
 evidence = "SUN4Inr är en källmnemonik med klassifikationskod som inte finns i etiketten.\ncatalog:variable_text:30129:18078:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:sun5inr"
-fields = { "sets" = ["utbildningsinriktning"] }
-evidence = "SUN5Inr är en källmnemonik med klassifikationskod som inte finns i etiketten.\ncatalog:variable_text:30130:18078:18262"
-
-[[statement]]
-kind = "set"
-subject = "var:sun5inr"
-fields = { "tags" = ["education"] }
-evidence = "SUN5Inr är en källmnemonik med klassifikationskod som inte finns i etiketten.\ncatalog:variable_text:30130:18078:18262"
 
 [[statement]]
 kind = "set"
@@ -9409,18 +8449,6 @@ evidence = "Samma källkolumn har en annan ägare i en senare period.\ncatalog:o
 
 [[statement]]
 kind = "set"
-subject = "var:tillracklig-kunskap"
-fields = { "sets" = ["tillracklig-kunskap-och-formaga-i-arbetet"] }
-evidence = "Variabeln gäller kunskap och förmåga i arbetet.\ncatalog:variable_text:30143:13208:13239"
-
-[[statement]]
-kind = "set"
-subject = "var:tillracklig-kunskap"
-fields = { "tags" = ["employment"] }
-evidence = "Variabeln gäller kunskap och förmåga i arbetet.\ncatalog:variable_text:30143:13208:13239"
-
-[[statement]]
-kind = "set"
 subject = "var:tillracklig-utbildningsniva"
 fields = { "sets" = ["utbildningsniva-for-arbetet"] }
 evidence = "F10 har olika ägare mellan perioderna.\ncatalog:occurrence:248915\ncatalog:occurrence:248992"
@@ -9430,18 +8458,6 @@ kind = "set"
 subject = "var:tillracklig-utbildningsniva"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F10 har olika ägare mellan perioderna.\ncatalog:occurrence:248915\ncatalog:occurrence:248992"
-
-[[statement]]
-kind = "set"
-subject = "var:tillracklig-utbildningsniva-2"
-fields = { "sets" = ["utbildningsniva-for-arbetet"] }
-evidence = "F14 har olika ägare mellan perioderna.\ncatalog:occurrence:248923\ncatalog:occurrence:249001\ncatalog:occurrence:249101"
-
-[[statement]]
-kind = "set"
-subject = "var:tillracklig-utbildningsniva-2"
-fields = { "tags" = ["education", "employment"] }
-evidence = "F14 har olika ägare mellan perioderna.\ncatalog:occurrence:248923\ncatalog:occurrence:249001\ncatalog:occurrence:249101"
 
 [[statement]]
 kind = "set"
@@ -9481,18 +8497,6 @@ evidence = "F9 har olika ägare mellan perioderna.\ncatalog:occurrence:249060\nc
 
 [[statement]]
 kind = "set"
-subject = "var:tillracklig-utbildningsniva-examen"
-fields = { "sets" = ["utbildningsniva-for-arbetet"] }
-evidence = "F19 har olika ägare mellan perioderna.\ncatalog:occurrence:250149\ncatalog:occurrence:250258"
-
-[[statement]]
-kind = "set"
-subject = "var:tillracklig-utbildningsniva-examen"
-fields = { "tags" = ["education", "employment"] }
-evidence = "F19 har olika ägare mellan perioderna.\ncatalog:occurrence:250149\ncatalog:occurrence:250258"
-
-[[statement]]
-kind = "set"
 subject = "var:tillracklig-utbildningsniva-examen-arbete-matveckan"
 fields = { "sets" = ["utbildningsniva-for-arbetet"] }
 evidence = "Suffixet 2 är en räknare som inte kommer från källkolumnen F23.\ncatalog:variable_text:30150:14669:14700"
@@ -9502,30 +8506,6 @@ kind = "set"
 subject = "var:tillracklig-utbildningsniva-examen-arbete-matveckan"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Suffixet 2 är en räknare som inte kommer från källkolumnen F23.\ncatalog:variable_text:30150:14669:14700"
-
-[[statement]]
-kind = "set"
-subject = "var:tillracklig-utbildningsniva-examen-forsta-arbete-matveckan"
-fields = { "sets" = ["utbildningsniva-for-arbetet"] }
-evidence = "Suffixet 3 är en räknare som inte kommer från källkolumnen F3.\ncatalog:variable_text:30151:13939:13970"
-
-[[statement]]
-kind = "set"
-subject = "var:tillracklig-utbildningsniva-examen-forsta-arbete-matveckan"
-fields = { "tags" = ["education", "employment"] }
-evidence = "Suffixet 3 är en räknare som inte kommer från källkolumnen F3.\ncatalog:variable_text:30151:13939:13970"
-
-[[statement]]
-kind = "set"
-subject = "var:tillrackligt-med-kunskap-och-formaga-i-arbete-f22"
-fields = { "sets" = ["tillracklig-kunskap-och-formaga-i-arbetet"] }
-evidence = "Samma källkolumn har en annan ägare i en senare period.\ncatalog:occurrence:250153\ncatalog:occurrence:250260"
-
-[[statement]]
-kind = "set"
-subject = "var:tillrackligt-med-kunskap-och-formaga-i-arbete-f22"
-fields = { "tags" = ["employment"] }
-evidence = "Samma källkolumn har en annan ägare i en senare period.\ncatalog:occurrence:250153\ncatalog:occurrence:250260"
 
 [[statement]]
 kind = "set"
@@ -9655,21 +8635,9 @@ evidence = "Samma urvalsstorlek är korrekt uppdelad per period mot lilla-n-per-
 
 [[statement]]
 kind = "set"
-subject = "var:utb-arbete-overensstammelse"
-fields = { "tags" = ["education", "employment"] }
-evidence = "F12 återanvänds för en fråga om arbetslöshet; denna variabel avser utbildningens överensstämmelse med arbetet.\ncatalog:occurrence:248917\ncatalog:occurrence:248994\ncatalog:variable_text:30165:17167:17348"
-
-[[statement]]
-kind = "set"
 subject = "var:utb-arbete-overensstammelse-2"
 fields = { "tags" = ["education", "employment"] }
 evidence = "F17 återanvänds för en fråga om studier i stället för arbete.\ncatalog:occurrence:249475\ncatalog:occurrence:249504\ncatalog:variable_text:30166:15431:15461"
-
-[[statement]]
-kind = "set"
-subject = "var:utb-arbete-overensstammelse-3"
-fields = { "tags" = ["education", "employment"] }
-evidence = "Suffixet 3 är en räknare som inte kommer från källkolumnen F18.\ncatalog:occurrence:250148\ncatalog:variable_text:30167:13939:13970"
 
 [[statement]]
 kind = "set"
@@ -9748,30 +8716,6 @@ kind = "set"
 subject = "var:utbildning-forberett-arbete-studier-3"
 fields = { "tags" = ["education", "employment"] }
 evidence = "Källkolumnen har andra ägare i andra perioder.\ncatalog:occurrence:249573\ncatalog:occurrence:249655\ncatalog:occurrence:249724"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildning-forberett-arbete-studier-4"
-fields = { "sets" = ["utbildningens-forberedelse"] }
-evidence = "Källkolumnen har andra ägare i andra perioder.\ncatalog:occurrence:249477\ncatalog:occurrence:249575\ncatalog:occurrence:249657"
-
-[[statement]]
-kind = "set"
-subject = "var:utbildning-forberett-arbete-studier-4"
-fields = { "tags" = ["education", "employment"] }
-evidence = "Källkolumnen har andra ägare i andra perioder.\ncatalog:occurrence:249477\ncatalog:occurrence:249575\ncatalog:occurrence:249657"
-
-[[statement]]
-kind = "set"
-subject = "var:gymnasieutbildning-forberett-arbetslivet"
-fields = { "sets" = ["utbildningens-forberedelse"] }
-evidence = "Sifferändelsen är en tilldelad räknare och inte källkolumnens nummer.\ncatalog:variable_text:30177:17167:17348"
-
-[[statement]]
-kind = "set"
-subject = "var:gymnasieutbildning-forberett-arbetslivet"
-fields = { "tags" = ["education"] }
-evidence = "Sifferändelsen är en tilldelad räknare och inte källkolumnens nummer.\ncatalog:variable_text:30177:17167:17348"
 
 [[statement]]
 kind = "set"
@@ -9937,18 +8881,6 @@ evidence = "Källkolumnerna har andra ägare i andra perioder. Coordinator group
 
 [[statement]]
 kind = "set"
-subject = "var:verksamhetsomrade"
-fields = { "sets" = ["verksamhetsomrade-och-naringsgren"] }
-evidence = "Kodningen anger verksamhetsområde.\ncatalog:variable_text:30194:13208:13239"
-
-[[statement]]
-kind = "set"
-subject = "var:verksamhetsomrade"
-fields = { "tags" = ["business"] }
-evidence = "Kodningen anger verksamhetsområde.\ncatalog:variable_text:30194:13208:13239"
-
-[[statement]]
-kind = "set"
 subject = "var:verksamhetsomrade-f13"
 fields = { "sets" = ["verksamhetsomrade-och-naringsgren"] }
 evidence = "Samma källkolumn har en annan ägare i en senare period.\ncatalog:occurrence:249474\ncatalog:occurrence:249500"
@@ -10033,18 +8965,6 @@ evidence = "Variabeln är en statistisk vikt.\ncatalog:occurrence:249863\ncatalo
 
 [[statement]]
 kind = "set"
-subject = "var:viljan-att-arbeta-mer"
-fields = { "sets" = ["vilja-att-arbeta-mer"] }
-evidence = "Variabeln gäller önskad arbetstid.\ncatalog:variable_text:30202:13208:13239"
-
-[[statement]]
-kind = "set"
-subject = "var:viljan-att-arbeta-mer"
-fields = { "tags" = ["employment"] }
-evidence = "Variabeln gäller önskad arbetstid.\ncatalog:variable_text:30202:13208:13239"
-
-[[statement]]
-kind = "set"
 subject = "var:viljan-att-arbeta-mer-arbtidno"
 fields = { "sets" = ["vilja-att-arbeta-mer"] }
 evidence = "Variabeln gäller önskad arbetstid.\ncatalog:variable_text:30203:12478:12509"
@@ -10066,18 +8986,6 @@ kind = "set"
 subject = "var:viljan-att-arbeta-mer-f15"
 fields = { "tags" = ["employment"] }
 evidence = "Källkolumnen har en annan ägare i en annan period.\ncatalog:occurrence:249385\ncatalog:occurrence:249502"
-
-[[statement]]
-kind = "set"
-subject = "var:viljan-att-arbeta-mer-f16"
-fields = { "sets" = ["vilja-att-arbeta-mer"] }
-evidence = "Variabeln gäller önskad arbetstid.\ncatalog:variable_text:30206:13208:13239\ncatalog:variable_text:30206:13939:13970"
-
-[[statement]]
-kind = "set"
-subject = "var:viljan-att-arbeta-mer-f16"
-fields = { "tags" = ["employment"] }
-evidence = "Variabeln gäller önskad arbetstid.\ncatalog:variable_text:30206:13208:13239\ncatalog:variable_text:30206:13939:13970"
 
 [[statement]]
 kind = "set"
@@ -10321,12 +9229,6 @@ evidence = "The definition and later questions ask whether work lasting at least
 
 [[statement]]
 kind = "set"
-subject = "var:arbete-minst-en-timme-mars-2000-och-2002"
-fields = { "sets" = ["forekomst-av-arbete"] }
-evidence = "Both questions ask whether any work occurred during a specified week, including one hour and employment during leave (r132, r134).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29327\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249825\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249919"
-
-[[statement]]
-kind = "set"
 subject = "var:arbovutb"
 fields = { "sets" = ["utbildningens-overensstammelse-med-arbetet"] }
 evidence = "r93 measures work–education correspondence, and r112 confirms educational field matching, satisfying r198.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29413\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249957\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:11703\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/utbildningens-overensstammelse-med-arbetet"
@@ -10396,12 +9298,6 @@ kind = "set"
 subject = "var:f3-03"
 fields = { "sets" = ["orsaker-till-ej-uppnadda-examenskrav"] }
 evidence = "r70 records obtaining employment as a cause of insufficient credits for a degree certificate.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29501\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249043"
-
-[[statement]]
-kind = "set"
-subject = "var:f30"
-fields = { "sets" = ["nojdhet-med-utbildningen"] }
-evidence = "The definition measures satisfaction with education, supported by a complete satisfied/dissatisfied response scale (r207, r159).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29505\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:1064\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:29603"
 
 [[statement]]
 kind = "set"
@@ -10477,12 +9373,6 @@ evidence = "r98 explicitly asks about studying abroad, with geographical partici
 
 [[statement]]
 kind = "set"
-subject = "var:fr23c"
-fields = { "sets" = ["studier-utomlands"] }
-evidence = "r97 explicitly asks about studying abroad, with geographical participation codes in r121 despite its work-related valueset name.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29607\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249818\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:4151"
-
-[[statement]]
-kind = "set"
 subject = "var:fr3f"
 fields = { "sets" = ["studier-utomlands"] }
 evidence = "r99 explicitly measures whether the respondent undertook a course or education through studying abroad.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29608\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249917"
@@ -10552,24 +9442,6 @@ kind = "set"
 subject = "var:nojdhet-med-utbildning-4"
 fields = { "sets" = ["nojdhet-med-utbildningen"] }
 evidence = "Both operational definitions ask satisfaction with the completed upper-secondary education (r103, r108).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29854\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249338\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249438"
-
-[[statement]]
-kind = "set"
-subject = "var:nojdhet-med-utbildning-5"
-fields = { "sets" = ["nojdhet-med-utbildningen"] }
-evidence = "The definition measures satisfaction with education, and the complete code list contains satisfied and dissatisfied responses (r227, r159).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29855\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:1064\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:29965"
-
-[[statement]]
-kind = "set"
-subject = "var:nojdhet-universitets-hogskoleutbildning"
-fields = { "sets" = ["nojdhet-med-utbildningen"] }
-evidence = "The operational question explicitly asks overall satisfaction with university or higher education (r84).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29857\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:248949"
-
-[[statement]]
-kind = "set"
-subject = "var:nojdutb"
-fields = { "sets" = ["nojdhet-med-utbildningen"] }
-evidence = "The definition measures satisfaction with education, and the complete codes provide satisfied/dissatisfied categories (r228, r182).\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29858\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9509\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:29967"
 
 [[statement]]
 kind = "set"
@@ -10747,12 +9619,6 @@ evidence = "Other reasons are explicitly an option in the question asking why wo
 
 [[statement]]
 kind = "set"
-subject = "var:overens"
-fields = { "sets" = ["utbildningens-overensstammelse-med-arbetet"] }
-evidence = "r163 defines work–education correspondence, and r121 specifies educational field matching, satisfying r198.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29900\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:4164\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:30003\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/utbildningens-overensstammelse-med-arbetet"
-
-[[statement]]
-kind = "set"
 subject = "var:overensstammelse-gymnasieutbildning"
 fields = { "sets" = ["utbildningens-overensstammelse-med-arbetet"] }
 evidence = "r75, r80 and r85 explicitly ask whether work matches the field of upper-secondary education, satisfying r198.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29901\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249590\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249671\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249738\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/utbildningens-overensstammelse-med-arbetet"
@@ -10927,27 +9793,9 @@ evidence = "r93 and r96 explicitly measure studies outside Europe and the USA af
 
 [[statement]]
 kind = "set"
-subject = "var:studier-i-ovriga-varlden-f32-4"
-fields = { "sets" = ["studier-utomlands"] }
-evidence = "r106 explicitly measures studies in the rest of the world after completing education.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29998\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250197"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-i-ovriga-varlden-f33-4"
-fields = { "sets" = ["studier-utomlands"] }
-evidence = "r169 defines studies in the rest of the world; its occurrence uses the complete yes/no codes in r123.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:29999\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250097\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6703\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:30091"
-
-[[statement]]
-kind = "set"
 subject = "var:studier-i-ovriga-varlden-f38-4"
 fields = { "sets" = ["studier-utomlands"] }
 evidence = "r108 measures study participation in the rest of the world after completing education, supported by geographical yes/no codes in r126.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30000\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250309\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:9124"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-i-ovriga-varlden-studovr"
-fields = { "sets" = ["studier-utomlands"] }
-evidence = "r90 measures studies in the rest of the world after secondary education; r125 supplies geographical yes/no codes.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30001\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249247\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8850"
 
 [[statement]]
 kind = "set"
@@ -10963,27 +9811,9 @@ evidence = "r92 and r95 define studies in the USA; r124 and r119 explicitly code
 
 [[statement]]
 kind = "set"
-subject = "var:studier-i-usa-f32-3"
-fields = { "sets" = ["studier-utomlands"] }
-evidence = "r105 explicitly measures whether the person studied in the USA after completing education.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30005\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250196"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-i-usa-f33-3"
-fields = { "sets" = ["studier-utomlands"] }
-evidence = "r175 defines studies in the USA; its occurrence uses the complete yes/no codes in r123.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30006\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250096\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:6703\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:30098"
-
-[[statement]]
-kind = "set"
 subject = "var:studier-i-usa-f38-3"
 fields = { "sets" = ["studier-utomlands"] }
 evidence = "r104 explicitly measures post-education studies in the USA; r118 confirms the geographic participation meaning included by r197.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30007\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250308\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:3437\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/studier-utomlands"
-
-[[statement]]
-kind = "set"
-subject = "var:studier-i-usa-studusa"
-fields = { "sets" = ["studier-utomlands"] }
-evidence = "r56 explicitly measures studies in the USA, and r129 confirms USA-study responses within r197.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30008\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249248\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:7489\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/studier-utomlands"
 
 [[statement]]
 kind = "set"
@@ -11053,21 +9883,9 @@ evidence = "The definition identifies form status; codes distinguish not receive
 
 [[statement]]
 kind = "set"
-subject = "var:utb-arbete-overensstammelse"
-fields = { "sets" = ["utbildningens-overensstammelse-med-arbetet"] }
-evidence = "r47 explicitly asks whether work matches the field of university education, satisfying r198.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30076\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:248994\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/utbildningens-overensstammelse-med-arbetet"
-
-[[statement]]
-kind = "set"
 subject = "var:utb-arbete-overensstammelse-2"
 fields = { "sets" = ["utbildningens-overensstammelse-med-arbetet"] }
 evidence = "r57, r60 and r63 measure work–education correspondence; r121 and r131 establish field matching within r198.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30077\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249287\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249387\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:249475\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:4164\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:8626\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/utbildningens-overensstammelse-med-arbetet"
-
-[[statement]]
-kind = "set"
-subject = "var:utb-arbete-overensstammelse-3"
-fields = { "sets" = ["utbildningens-overensstammelse-med-arbetet"] }
-evidence = "r100 describes correspondence between work and completed higher education; r121 establishes field-match responses within r198.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:30078\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:250148\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:valueset:4164\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/utbildningens-overensstammelse-med-arbetet"
 
 [[statement]]
 kind = "set"
@@ -11149,18 +9967,6 @@ evidence = "Part of #2040. scb/intradet-pa-arbetsmarknaden/huvudsaklig-sysselsat
 
 [[statement]]
 kind = "set"
-subject = "var:f27-txt"
-fields = { "tags" = ["methods"] }
-evidence = "The prompt requests comments on questionnaire questions (r129), supporting methods through survey-quality feedback. The employment and education context in r326 does not identify a single substantive topic.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29499\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
-
-[[statement]]
-kind = "set"
-subject = "var:f28-txt"
-fields = { "tags" = ["methods"] }
-evidence = "The prompt requests comments on questionnaire questions (r130), supporting methods through survey-quality feedback. The mixed substantive themes in r326 do not identify a more specific subject.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29500\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
-
-[[statement]]
-kind = "set"
 subject = "var:f5-02"
 fields = { "sets" = ["orsaker-till-ej-uppnadda-examenskrav"] }
 evidence = "r136 explicitly defines this named matching-job alternative as a cause of unmet examination requirements. The certificate wording in r81 does not establish mere certificate abstention, so r324's exclusion is not demonstrated.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:occurrence:248957\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29512\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/intradet-pa-arbetsmarknaden/orsaker-till-ej-uppnadda-examenskrav"
@@ -11173,27 +9979,9 @@ evidence = "This residual future-plan option (r143) belongs alongside job-seekin
 
 [[statement]]
 kind = "set"
-subject = "var:framtidsplaner-annat-f19-08"
-fields = { "tags" = ["employment"] }
-evidence = "This residual future-plan response (r144) shares a battery with job-seeking (r151), supporting employment as a broad search theme alongside the register context (r326).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29617\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29628\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
-
-[[statement]]
-kind = "set"
 subject = "var:framtidsplaner-annat-f24-8"
 fields = { "tags" = ["employment"] }
 evidence = "This residual autumn-2023 planning response (r145) shares its future-plan battery with job-seeking (r152), supporting the employment search theme alongside r326.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29618\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29629\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-annat-f26-8"
-fields = { "tags" = ["employment"] }
-evidence = "This residual autumn-2020 planning response (r146) shares its future-plan battery with job-seeking (r153), supporting the employment search theme alongside the register context (r326).\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29619\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29630\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-annat-f27-08"
-fields = { "tags" = ["employment"] }
-evidence = "This residual autumn-2017 planning response (r147) shares a future-plan battery with job-seeking (r154), supporting employment as a broad search theme alongside r326.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29620\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29631\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
 
 [[statement]]
 kind = "set"
@@ -11209,27 +9997,9 @@ evidence = "This uncertainty response belongs to future planning (r155), with si
 
 [[statement]]
 kind = "set"
-subject = "var:framtidsplaner-vet-inte-f19-9"
-fields = { "tags" = ["employment"] }
-evidence = "This uncertainty response concerns future plans (r156), with a job-seeking sibling (r151). Employment is therefore a supported broad battery theme, consistent with r326.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29628\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29648\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
-
-[[statement]]
-kind = "set"
 subject = "var:framtidsplaner-vet-inte-f24-9"
 fields = { "tags" = ["employment"] }
 evidence = "The autumn-2023 uncertainty response (r157) belongs to future planning alongside seeking a job (r152), supporting the employment search theme in r326's register context.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29629\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29649\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-vet-inte-f26-9"
-fields = { "tags" = ["employment"] }
-evidence = "The uncertainty response concerns future activity (r158), alongside a job-seeking sibling (r153). Employment is a supported battery theme, consistent with r326.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29630\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29650\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
-
-[[statement]]
-kind = "set"
-subject = "var:framtidsplaner-vet-inte-f27-09"
-fields = { "tags" = ["employment"] }
-evidence = "This uncertainty response concerns autumn-2017 plans (r159), alongside a job-seeking sibling (r154). Employment is a supported broad battery theme, consistent with r326.\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29631\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:29651\ngit:8efd09b1328bdb25629b74dc7405917bbac8e088:curation"
 
 [[statement]]
 kind = "set"
@@ -11605,12 +10375,6 @@ evidence = "#2100 group name: a member label slugifies to the group slug; kept o
 
 [[statement]]
 kind = "set"
-subject = "set:kritiskt-tankande-i-arbetet"
-fields = { "label" = "Kritiskt tänkande i arbetet" }
-evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
-
-[[statement]]
-kind = "set"
 subject = "set:kvar-pa-forsta-arbetet"
 fields = { "label" = "Kvar på första arbetet" }
 evidence = "#2100 group name: slug words restored from the member and register labels; kept on review."
@@ -11941,12 +10705,6 @@ evidence = "#2102 same-label cluster 'Arbete inom olika områden' (4 variables):
 
 [[statement]]
 kind = "set"
-subject = "var:bedomn"
-fields = { "label" = "Tillräcklig utbildningsnivå (gymnasieavgångna)" }
-evidence = "#2102 same-label cluster 'Tillräcklig utbildningsnivå' (7 variables): judged different meaning, medium confidence; Value sets show four answer scales (2004 scale, KY scale, scale to avancerad nivå, scale with forskarnivå) and the high-school-student items ask about the first job (F10) versus the measurement week (F21), concurrent in 2013."
-
-[[statement]]
-kind = "set"
 subject = "var:blankettstatus"
 fields = { "label" = "Blankettens statuskod (svar, ej svar etc) (resultatkod)" }
 evidence = "#2102 same-label cluster 'Blankettens statuskod (svar, ej svar etc)' (3 variables): judged different meaning, high confidence; Three concurrent columns with different code lists: result code, information source (Infokalla) and unit status (UEStatus)."
@@ -11961,12 +10719,6 @@ evidence = "#2102 same-label cluster 'Har din huvudsakliga sysselsättning påve
 kind = "set"
 subject = "var:corona-syss-annat-satt-2"
 fields = { "label" = "Har din huvudsakliga sysselsättning påverkats på något annat sätt av coronapandemin? (ja/nej)" }
-evidence = "#2102 same-label cluster 'Har din huvudsakliga sysselsättning påverkats på något annat sätt av coronapandemin?' (3 variables): judged different meaning, medium confidence; F25 is the coded ja/nej/vet inte answer; F25_txt (2020) and F23 (2023) are the free-text description, a rename over time."
-
-[[statement]]
-kind = "set"
-subject = "var:corona-syss-annat-satt-3"
-fields = { "label" = "Har din huvudsakliga sysselsättning påverkats på något annat sätt av coronapandemin? (fritext)" }
 evidence = "#2102 same-label cluster 'Har din huvudsakliga sysselsättning påverkats på något annat sätt av coronapandemin?' (3 variables): judged different meaning, medium confidence; F25 is the coded ja/nej/vet inte answer; F25_txt (2020) and F23 (2023) are the free-text description, a rename over time."
 
 [[statement]]
@@ -11992,18 +10744,6 @@ kind = "set"
 subject = "var:exakategori"
 fields = { "label" = "Programtyp, högskoleutbildning (vid urvalsdragningen, generella program och fristående kurser samlade)" }
 evidence = "#2102 same-label cluster 'Programtyp, högskoleutbildning' (4 variables): judged different meaning, medium confidence; Opdefs: ProgGr and Yrkgen give the programme type at sample draw, ProgGr_Ex the type at reporting (the examination programme for the examined), and exakategori merges two categories and adds code 88."
-
-[[statement]]
-kind = "set"
-subject = "var:examen2017"
-fields = { "label" = "Förekomst av examen (högskoleregistret)" }
-evidence = "#2102 same-label cluster 'Förekomst av examen' (5 variables): judged different meaning, medium confidence; Register-derived examined/not examined flags (ExamenGr, examen2017, F1_exam) versus the survey yes/no answers (F1_old, F1) with an enkät non-response code."
-
-[[statement]]
-kind = "set"
-subject = "var:examengr"
-fields = { "label" = "Förekomst av examen (högskoleregistret)" }
-evidence = "#2102 same-label cluster 'Förekomst av examen' (5 variables): judged different meaning, medium confidence; Register-derived examined/not examined flags (ExamenGr, examen2017, F1_exam) versus the survey yes/no answers (F1_old, F1) with an enkät non-response code."
 
 [[statement]]
 kind = "set"
@@ -12067,18 +10807,6 @@ evidence = "#2102 same-label cluster 'Har din huvudsakliga sysselsättning påve
 
 [[statement]]
 kind = "set"
-subject = "var:f27-txt"
-fields = { "label" = "Övriga kommentarer till enkäten (fritext)" }
-evidence = "#2102 same-label cluster 'Övriga kommentarer till enkäten' (5 variables): judged different meaning, medium confidence; Opdefs: F28 is the yes/no on commenting, F29 the interviewer's comments, and F28_txt/F27_txt/F25_txt the free-text comment renamed over the years."
-
-[[statement]]
-kind = "set"
-subject = "var:f28-txt"
-fields = { "label" = "Övriga kommentarer till enkäten (fritext)" }
-evidence = "#2102 same-label cluster 'Övriga kommentarer till enkäten' (5 variables): judged different meaning, medium confidence; Opdefs: F28 is the yes/no on commenting, F29 the interviewer's comments, and F28_txt/F27_txt/F25_txt the free-text comment renamed over the years."
-
-[[statement]]
-kind = "set"
 subject = "var:f3-03"
 fields = { "label" = "Orsak  till att examenskrav inte nåtts (fick ett arbete)" }
 evidence = "#2102 same-label cluster 'Orsak  till att examenskrav inte nåtts' (4 variables): judged different meaning, high confidence; Opdefs: four concurrent yes/no columns, one per reason alternative."
@@ -12139,12 +10867,6 @@ evidence = "#2102 same-label cluster 'Förekomst av examen' (5 variables): judge
 
 [[statement]]
 kind = "set"
-subject = "var:forekomst-examen-sverige-enkat"
-fields = { "label" = "Förekomst av examen (enkätsvar)" }
-evidence = "#2102 same-label cluster 'Förekomst av examen' (5 variables): judged different meaning, medium confidence; Register-derived examined/not examined flags (ExamenGr, examen2017, F1_exam) versus the survey yes/no answers (F1_old, F1) with an enkät non-response code."
-
-[[statement]]
-kind = "set"
 subject = "var:forskarutbildning-utomlands"
 fields = { "label" = "Studier utomlands (forskarutbildning)" }
 evidence = "#2102 same-label cluster 'Studier utomlands' (14 variables): judged different meaning, medium confidence; Opdefs: fr24a-e are five concurrent type-of-education alternatives; fr23c/fr21 hold where (Europe, outside Europe or no); the remaining members are the 'no, have not studied abroad' alternative renamed over time."
@@ -12152,12 +10874,6 @@ evidence = "#2102 same-label cluster 'Studier utomlands' (14 variables): judged 
 [[statement]]
 kind = "set"
 subject = "var:fr21"
-fields = { "label" = "Studier utomlands (Europa, utanför Europa eller nej)" }
-evidence = "#2102 same-label cluster 'Studier utomlands' (14 variables): judged different meaning, medium confidence; Opdefs: fr24a-e are five concurrent type-of-education alternatives; fr23c/fr21 hold where (Europe, outside Europe or no); the remaining members are the 'no, have not studied abroad' alternative renamed over time."
-
-[[statement]]
-kind = "set"
-subject = "var:fr23c"
 fields = { "label" = "Studier utomlands (Europa, utanför Europa eller nej)" }
 evidence = "#2102 same-label cluster 'Studier utomlands' (14 variables): judged different meaning, medium confidence; Opdefs: fr24a-e are five concurrent type-of-education alternatives; fr23c/fr21 hold where (Europe, outside Europe or no); the remaining members are the 'no, have not studied abroad' alternative renamed over time."
 
@@ -12182,12 +10898,6 @@ evidence = "#2102 same-label cluster 'Funktionella analysregioner' (3 variables)
 [[statement]]
 kind = "set"
 subject = "var:gymnasieprogram"
-fields = { "label" = "Gymnasieprogram (yrkes- eller högskoleförberedande)" }
-evidence = "#2102 same-label cluster 'Gymnasieprogram' (5 variables): judged different meaning, medium confidence; Programme code columns (Program, GYprogr, Utbild_Sl) versus the grouped yrkesprogram/högskoleförberedande question (F9_ny, F9)."
-
-[[statement]]
-kind = "set"
-subject = "var:gymnasieprogram-yrkes-eller-hogskoleforberedande"
 fields = { "label" = "Gymnasieprogram (yrkes- eller högskoleförberedande)" }
 evidence = "#2102 same-label cluster 'Gymnasieprogram' (5 variables): judged different meaning, medium confidence; Programme code columns (Program, GYprogr, Utbild_Sl) versus the grouped yrkesprogram/högskoleförberedande question (F9_ny, F9)."
 
@@ -12223,12 +10933,6 @@ evidence = "#2102 same-label cluster 'Arbete inom olika områden' (4 variables):
 
 [[statement]]
 kind = "set"
-subject = "var:kal-bak"
-fields = { "label" = "Kalibreringsvariabel (kön och inrikes/utrikes född)" }
-evidence = "#2102 same-label cluster 'Kalibreringsvariabel' (13 variables): judged different meaning, medium confidence; Opdefs name different calibration bases (examen/kön/programtyp, parents' education, kön/gymnasieprogram, kön/behörighet, hemkommun, betygspoäng, födelseland); members with the same basis across 2017, 2020 and 2023 share a label, and kal_bak/help3 are grouped with help3 by their value labels (kön and svensk/utländsk bakgrund)."
-
-[[statement]]
-kind = "set"
 subject = "var:kal-beh"
 fields = { "label" = "Kalibreringsvariabel (kön och behörighet)" }
 evidence = "#2102 same-label cluster 'Kalibreringsvariabel' (13 variables): judged different meaning, medium confidence; Opdefs name different calibration bases (examen/kön/programtyp, parents' education, kön/gymnasieprogram, kön/behörighet, hemkommun, betygspoäng, födelseland); members with the same basis across 2017, 2020 and 2023 share a label, and kal_bak/help3 are grouped with help3 by their value labels (kön and svensk/utländsk bakgrund)."
@@ -12243,12 +10947,6 @@ evidence = "#2102 same-label cluster 'Kalibreringsvariabel' (13 variables): judg
 kind = "set"
 subject = "var:kal-fu"
 fields = { "label" = "Kalibreringsvariabel (föräldrars utbildningsnivå och examen)" }
-evidence = "#2102 same-label cluster 'Kalibreringsvariabel' (13 variables): judged different meaning, medium confidence; Opdefs name different calibration bases (examen/kön/programtyp, parents' education, kön/gymnasieprogram, kön/behörighet, hemkommun, betygspoäng, födelseland); members with the same basis across 2017, 2020 and 2023 share a label, and kal_bak/help3 are grouped with help3 by their value labels (kön and svensk/utländsk bakgrund)."
-
-[[statement]]
-kind = "set"
-subject = "var:kal-fut"
-fields = { "label" = "Kalibreringsvariabel (kön och föräldrars utbildningsnivå)" }
 evidence = "#2102 same-label cluster 'Kalibreringsvariabel' (13 variables): judged different meaning, medium confidence; Opdefs name different calibration bases (examen/kön/programtyp, parents' education, kön/gymnasieprogram, kön/behörighet, hemkommun, betygspoäng, födelseland); members with the same basis across 2017, 2020 and 2023 share a label, and kal_bak/help3 are grouped with help3 by their value labels (kön and svensk/utländsk bakgrund)."
 
 [[statement]]
@@ -12523,12 +11221,6 @@ evidence = "#2102 same-label cluster 'Planer på studier' (6 variables): judged 
 
 [[statement]]
 kind = "set"
-subject = "var:proggr"
-fields = { "label" = "Programtyp, högskoleutbildning (vid urvalsdragningen)" }
-evidence = "#2102 same-label cluster 'Programtyp, högskoleutbildning' (4 variables): judged different meaning, medium confidence; Opdefs: ProgGr and Yrkgen give the programme type at sample draw, ProgGr_Ex the type at reporting (the examination programme for the examined), and exakategori merges two categories and adds code 88."
-
-[[statement]]
-kind = "set"
 subject = "var:proggr-ex"
 fields = { "label" = "Programtyp, högskoleutbildning (vid redovisningen)" }
 evidence = "#2102 same-label cluster 'Programtyp, högskoleutbildning' (4 variables): judged different meaning, medium confidence; Opdefs: ProgGr and Yrkgen give the programme type at sample draw, ProgGr_Ex the type at reporting (the examination programme for the examined), and exakategori merges two categories and adds code 88."
@@ -12709,12 +11401,6 @@ evidence = "#2102 same-label cluster 'Studier utomlands' (14 variables): judged 
 
 [[statement]]
 kind = "set"
-subject = "var:sun4inr"
-fields = { "label" = "Utbildningsinriktning (SUN, 4 positioner)" }
-evidence = "#2102 same-label cluster 'Utbildningsinriktning' (6 variables): judged different meaning, medium confidence; SUN orientation at 4 and 5 positions, each as a code column and a plain-text column; the _Utb columns (2022-2023) continue the plain SUN4Inr/SUN5Inr codes."
-
-[[statement]]
-kind = "set"
 subject = "var:sun4inr-utb"
 fields = { "label" = "Utbildningsinriktning (SUN, 4 positioner)" }
 evidence = "#2102 same-label cluster 'Utbildningsinriktning' (6 variables): judged different meaning, medium confidence; SUN orientation at 4 and 5 positions, each as a code column and a plain-text column; the _Utb columns (2022-2023) continue the plain SUN4Inr/SUN5Inr codes."
@@ -12723,12 +11409,6 @@ evidence = "#2102 same-label cluster 'Utbildningsinriktning' (6 variables): judg
 kind = "set"
 subject = "var:sun4inrklartext"
 fields = { "label" = "Utbildningsinriktning (SUN, 4 positioner, klartext)" }
-evidence = "#2102 same-label cluster 'Utbildningsinriktning' (6 variables): judged different meaning, medium confidence; SUN orientation at 4 and 5 positions, each as a code column and a plain-text column; the _Utb columns (2022-2023) continue the plain SUN4Inr/SUN5Inr codes."
-
-[[statement]]
-kind = "set"
-subject = "var:sun5inr"
-fields = { "label" = "Utbildningsinriktning (SUN, 5 positioner)" }
 evidence = "#2102 same-label cluster 'Utbildningsinriktning' (6 variables): judged different meaning, medium confidence; SUN orientation at 4 and 5 positions, each as a code column and a plain-text column; the _Utb columns (2022-2023) continue the plain SUN4Inr/SUN5Inr codes."
 
 [[statement]]
@@ -12769,20 +11449,8 @@ evidence = "#2102 same-label cluster 'Sysselsättningsstatus, november' (3 varia
 
 [[statement]]
 kind = "set"
-subject = "var:tillracklig-kunskap"
-fields = { "label" = "Tillräckligt med kunskap och förmåga i arbete (gymnasieavgångna)" }
-evidence = "#2102 same-label cluster 'Tillräckligt med kunskap och förmåga i arbete' (4 variables): judged different meaning, medium confidence; Two surveys (gymnasieavgångna: KunErbj then F23; högskoleexaminerade: F22 then F26) concurrent in 2006, with the question renumbered within each."
-
-[[statement]]
-kind = "set"
 subject = "var:tillracklig-utbildningsniva"
 fields = { "label" = "Tillräcklig utbildningsnivå (högskolestuderande, första arbetet)" }
-evidence = "#2102 same-label cluster 'Tillräcklig utbildningsnivå' (7 variables): judged different meaning, medium confidence; Value sets show four answer scales (2004 scale, KY scale, scale to avancerad nivå, scale with forskarnivå) and the high-school-student items ask about the first job (F10) versus the measurement week (F21), concurrent in 2013."
-
-[[statement]]
-kind = "set"
-subject = "var:tillracklig-utbildningsniva-2"
-fields = { "label" = "Tillräcklig utbildningsnivå (högskolestuderande, skala med forskarnivå)" }
 evidence = "#2102 same-label cluster 'Tillräcklig utbildningsnivå' (7 variables): judged different meaning, medium confidence; Value sets show four answer scales (2004 scale, KY scale, scale to avancerad nivå, scale with forskarnivå) and the high-school-student items ask about the first job (F10) versus the measurement week (F21), concurrent in 2013."
 
 [[statement]]
@@ -12805,20 +11473,8 @@ evidence = "#2102 same-label cluster 'Tillräcklig utbildningsnivå' (7 variable
 
 [[statement]]
 kind = "set"
-subject = "var:tillracklig-utbildningsniva-examen"
-fields = { "label" = "Tillräcklig utbildningsnivå/examen (arbete i mätveckan)" }
-evidence = "#2102 same-label cluster 'Tillräcklig utbildningsnivå/examen' (4 variables): judged different meaning, medium confidence; Opdefs: work in the measurement week (F19, F23) versus the first work in the measurement week (F3, F03), each pair renamed between 2006-2008 and 2010."
-
-[[statement]]
-kind = "set"
 subject = "var:tillracklig-utbildningsniva-examen-arbete-matveckan"
 fields = { "label" = "Tillräcklig utbildningsnivå/examen (arbete i mätveckan)" }
-evidence = "#2102 same-label cluster 'Tillräcklig utbildningsnivå/examen' (4 variables): judged different meaning, medium confidence; Opdefs: work in the measurement week (F19, F23) versus the first work in the measurement week (F3, F03), each pair renamed between 2006-2008 and 2010."
-
-[[statement]]
-kind = "set"
-subject = "var:tillracklig-utbildningsniva-examen-forsta-arbete-matveckan"
-fields = { "label" = "Tillräcklig utbildningsnivå/examen (första arbetet i mätveckan)" }
 evidence = "#2102 same-label cluster 'Tillräcklig utbildningsnivå/examen' (4 variables): judged different meaning, medium confidence; Opdefs: work in the measurement week (F19, F23) versus the first work in the measurement week (F3, F03), each pair renamed between 2006-2008 and 2010."
 
 [[statement]]
@@ -12826,12 +11482,6 @@ kind = "set"
 subject = "var:tillracklig-utbildningsniva-examen-forsta-arbetet-matveckan"
 fields = { "label" = "Tillräcklig utbildningsnivå/examen (första arbetet i mätveckan)" }
 evidence = "#2102 same-label cluster 'Tillräcklig utbildningsnivå/examen' (4 variables): judged different meaning, medium confidence; Opdefs: work in the measurement week (F19, F23) versus the first work in the measurement week (F3, F03), each pair renamed between 2006-2008 and 2010."
-
-[[statement]]
-kind = "set"
-subject = "var:tillrackligt-med-kunskap-och-formaga-i-arbete-f22"
-fields = { "label" = "Tillräckligt med kunskap och förmåga i arbete (högskoleexaminerade)" }
-evidence = "#2102 same-label cluster 'Tillräckligt med kunskap och förmåga i arbete' (4 variables): judged different meaning, medium confidence; Two surveys (gymnasieavgångna: KunErbj then F23; högskoleexaminerade: F22 then F26) concurrent in 2006, with the question renumbered within each."
 
 [[statement]]
 kind = "set"
@@ -12961,18 +11611,6 @@ evidence = "#2102 same-label cluster 'Nöjdhet med arbete' (11 variables): held 
 
 [[statement]]
 kind = "set"
-subject = "var:nojdhet-med-arbete-3"
-fields = { "label" = "Nöjdhet med arbete (totalt)" }
-evidence = "#2102 same-label cluster 'Nöjdhet med arbete' (11 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Overall-satisfaction items differ in framing: 'mätveckan' (ArbNojd, F25, F22, F11), 'Totalt sett' (F18, F13); F11 has a five-point scale with 'varken nöjd eller missnöjd'; F26/F31 have no wording beyond 'Fråga 31', so the pid is qualified by both codes. F17_01/F16_01/F11_01/F12_01 are aspect items per opdef."
-
-[[statement]]
-kind = "set"
-subject = "var:nojdhet-med-arbete-alternativ"
-fields = { "label" = "Nöjdhet med arbete (arbetsuppgifterna)" }
-evidence = "#2102 same-label cluster 'Nöjdhet med arbete' (11 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Overall-satisfaction items differ in framing: 'mätveckan' (ArbNojd, F25, F22, F11), 'Totalt sett' (F18, F13); F11 has a five-point scale with 'varken nöjd eller missnöjd'; F26/F31 have no wording beyond 'Fråga 31', so the pid is qualified by both codes. F17_01/F16_01/F11_01/F12_01 are aspect items per opdef."
-
-[[statement]]
-kind = "set"
 subject = "var:f11-0"
 fields = { "label" = "Nöjdhet med arbete (arbetsuppgifterna)" }
 evidence = "#2102 same-label cluster 'Nöjdhet med arbete' (11 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Overall-satisfaction items differ in framing: 'mätveckan' (ArbNojd, F25, F22, F11), 'Totalt sett' (F18, F13); F11 has a five-point scale with 'varken nöjd eller missnöjd'; F26/F31 have no wording beyond 'Fråga 31', so the pid is qualified by both codes. F17_01/F16_01/F11_01/F12_01 are aspect items per opdef."
@@ -13033,18 +11671,6 @@ evidence = "#2102 same-label cluster 'Studier istället för arbete' (8 variable
 
 [[statement]]
 kind = "set"
-subject = "var:studier-istallet-for-arbete-f8"
-fields = { "label" = "Studier istället för arbete (antal terminer)" }
-evidence = "#2102 same-label cluster 'Studier istället för arbete' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Up to 2012 the codes give number of terms (1-4 terms, 5=Nej); from 2014 plain 1=Ja/2=Nej. F23 repeats F20's wording, F18 adds 'för att undvika arbetslöshet' in its opdef. Proposed labels kept."
-
-[[statement]]
-kind = "set"
-subject = "var:studier-istallet-for-arbete-studist"
-fields = { "label" = "Studier istället för arbete (antal terminer)" }
-evidence = "#2102 same-label cluster 'Studier istället för arbete' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Up to 2012 the codes give number of terms (1-4 terms, 5=Nej); from 2014 plain 1=Ja/2=Nej. F23 repeats F20's wording, F18 adds 'för att undvika arbetslöshet' in its opdef. Proposed labels kept."
-
-[[statement]]
-kind = "set"
 subject = "var:studier-istallet-arbete"
 fields = { "label" = "Studier istället för arbete (antal terminer)" }
 evidence = "#2102 same-label cluster 'Studier istället för arbete' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Up to 2012 the codes give number of terms (1-4 terms, 5=Nej); from 2014 plain 1=Ja/2=Nej. F23 repeats F20's wording, F18 adds 'för att undvika arbetslöshet' in its opdef. Proposed labels kept."
@@ -13072,12 +11698,6 @@ kind = "set"
 subject = "var:studier-istallet-for-arbete-f18"
 fields = { "label" = "Studier istället för arbete (ja/nej, för att undvika arbetslöshet)" }
 evidence = "#2102 same-label cluster 'Studier istället för arbete' (8 variables): held in #2127 for occurrence-level label overrides; labels checked against every occurrence's opdef, code list and table; Up to 2012 the codes give number of terms (1-4 terms, 5=Nej); from 2014 plain 1=Ja/2=Nej. F23 repeats F20's wording, F18 adds 'för att undvika arbetslöshet' in its opdef. Proposed labels kept."
-
-[[statement]]
-kind = "set"
-subject = "var:arbete-minst-en-timme-mars-2000-och-2002"
-fields = { "label" = "Arbete (mätveckan)" }
-evidence = "#2102 same-label cluster 'Arbete' (8 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; fr4, ArbEnTim, Arbete, F11 and F15 ask whether the person had work in the measurement week (opdef 'minst en timme' appears only in fr4, F15 and Arbete 2014, so it is dropped); F5 asks about side employment, F4_F5_Arbete is a derived flag per its opdef, and F10 holds both the measurement-week question (2008-2012) and the side-job question (2017), so it is qualified by its code."
 
 [[statement]]
 kind = "set"
@@ -13159,12 +11779,6 @@ evidence = "#2102 same-label cluster 'Född i Sverige/utomlands' (7 variables): 
 
 [[statement]]
 kind = "set"
-subject = "var:huvudsaklig-sysselsattning-mars-2000-och-2002"
-fields = { "label" = "Huvudsaklig sysselsättning (mätveckan)" }
-evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (14 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs separate the measurement-week question (fr1, HuvArb, F10 2008-10, F09/f09, f09org, F14) from the current-position questions ('idag' in F2/F5, 'nuvarande' in F4); F1 and F9 ask without a time reference and F1 2023 is free text, F3/HuvSyss have no opdef and F3_txt has no code list, so those are qualified by code."
-
-[[statement]]
-kind = "set"
 subject = "var:huvarb"
 fields = { "label" = "Huvudsaklig sysselsättning (mätveckan)" }
 evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (14 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs separate the measurement-week question (fr1, HuvArb, F10 2008-10, F09/f09, f09org, F14) from the current-position questions ('idag' in F2/F5, 'nuvarande' in F4); F1 and F9 ask without a time reference and F1 2023 is free text, F3/HuvSyss have no opdef and F3_txt has no code list, so those are qualified by code."
@@ -13225,12 +11839,6 @@ evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (14 variables
 
 [[statement]]
 kind = "set"
-subject = "var:huvudsaklig-sysselsattning-4"
-fields = { "label" = "Huvudsaklig sysselsättning (idag)" }
-evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (14 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs separate the measurement-week question (fr1, HuvArb, F10 2008-10, F09/f09, f09org, F14) from the current-position questions ('idag' in F2/F5, 'nuvarande' in F4); F1 and F9 ask without a time reference and F1 2023 is free text, F3/HuvSyss have no opdef and F3_txt has no code list, so those are qualified by code."
-
-[[statement]]
-kind = "set"
 subject = "var:huvudsaklig-sysselsattning-7"
 fields = { "label" = "Huvudsaklig sysselsättning (nuvarande)" }
 evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (14 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs separate the measurement-week question (fr1, HuvArb, F10 2008-10, F09/f09, f09org, F14) from the current-position questions ('idag' in F2/F5, 'nuvarande' in F4); F1 and F9 ask without a time reference and F1 2023 is free text, F3/HuvSyss have no opdef and F3_txt has no code list, so those are qualified by code."
@@ -13240,18 +11848,6 @@ kind = "set"
 subject = "var:huvudsaklig-sysselsattning-8"
 fields = { "label" = "Huvudsaklig sysselsättning (idag)" }
 evidence = "#2102 same-label cluster 'Huvudsaklig sysselsättning' (14 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; Opdefs separate the measurement-week question (fr1, HuvArb, F10 2008-10, F09/f09, f09org, F14) from the current-position questions ('idag' in F2/F5, 'nuvarande' in F4); F1 and F9 ask without a time reference and F1 2023 is free text, F3/HuvSyss have no opdef and F3_txt has no code list, so those are qualified by code."
-
-[[statement]]
-kind = "set"
-subject = "var:gymnasieutbildning-forberett-arbetslivet"
-fields = { "label" = "Utbildning har förberett för arbete/studier (för arbetslivet)" }
-evidence = "#2102 same-label cluster 'Utbildning har förberett för arbete/studier' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; F26/F19 ask about preparation for working life, F25/F23 for university/college studies (opdef); F21 asks the first in 2020 and the second in 2023, so it is qualified by its code."
-
-[[statement]]
-kind = "set"
-subject = "var:utbildning-forberett-arbete-studier-4"
-fields = { "label" = "Utbildning har förberett för arbete/studier (för studier på universitet/högskola)" }
-evidence = "#2102 same-label cluster 'Utbildning har förberett för arbete/studier' (5 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; F26/F19 ask about preparation for working life, F25/F23 for university/college studies (opdef); F21 asks the first in 2020 and the second in 2023, so it is qualified by its code."
 
 [[statement]]
 kind = "set"
@@ -13287,12 +11883,6 @@ evidence = "#2102 same-label cluster 'Verksamhetsområde' (6 variables): held in
 kind = "set"
 subject = "var:ovrarbut"
 fields = { "label" = "Överensstämmelse mellan utbildning och arbete (arbete utomlands)" }
-evidence = "#2102 same-label cluster 'Överensstämmelse mellan utbildning och arbete' (9 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; OvrArbUt's opdef refers to work abroad; the other columns ask about the match of the main work with the education. F12/F7 use a four-step scale (Helt/Till stor del/Till viss del/Inte alls) instead of the three-step list of the others."
-
-[[statement]]
-kind = "set"
-subject = "var:utb-arbete-overensstammelse"
-fields = { "label" = "Överensstämmelse mellan utbildning och arbete (fyrgradig skala)" }
 evidence = "#2102 same-label cluster 'Överensstämmelse mellan utbildning och arbete' (9 variables): held in #2127 at low confidence; labels checked against every occurrence's opdef, code list and table, column code where no source text separates the members; OvrArbUt's opdef refers to work abroad; the other columns ask about the match of the main work with the education. F12/F7 use a four-step scale (Helt/Till stor del/Till viss del/Inte alls) instead of the three-step list of the others."
 
 [[statement]]
@@ -13824,3 +12414,615 @@ kind = "set"
 subject = "yh-examinerade: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: one row per graduate, keyed on personnr; programme and round numbers and the 2019 scbid are attributes; rows are not unique for repeat graduates (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: Aktivt"
+fields = { "variable" = "aktivt-sokt-arbete-f06" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5043) in one table, renamed between survey rounds and never delivered together, so they are one variable: Aktivt 2006-03-01..2006-04-01; F06 2008-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-hogskoleexaminerade: F7"
+fields = { "variable" = "aktivt-sokt-arbete-f07" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5043) in one table, renamed between survey rounds and never delivered together, so they are one variable: F7 2006-03-01..2008-04-01; F07 2010-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: ArbTid"
+fields = { "variable" = "antal-arbetade-timmar-f12" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v6306) in one table, renamed between survey rounds and never delivered together, so they are one variable: ArbTid 2006-03-01..2006-04-01; F14 2008-03-01..2010-04-01; F12 2014-04-01..2014-05-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F14 where key = 'v6306'"
+fields = { "variable" = "antal-arbetade-timmar-f12" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v6306) in one table, renamed between survey rounds and never delivered together, so they are one variable: ArbTid 2006-03-01..2006-04-01; F14 2008-03-01..2010-04-01; F12 2014-04-01..2014-05-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna-hogskoleexaminerade: fr7"
+fields = { "variable" = "antal-arbetade-timmar-arbtidve" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v6306) in one table, renamed between survey rounds and never delivered together, so they are one variable: fr7 2000-03-01..2002-04-01; ArbTidVe 2004-03-01..2004-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-hogskoleexaminerade: F15"
+fields = { "variable" = "antal-arbetade-timmar-f19" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v6306) in one table, renamed between survey rounds and never delivered together, so they are one variable: F15 2006-03-01..2008-04-01; F19 2010-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: f05"
+fields = { "variable" = "antal-manader-som-arbetslos-f22" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5020) in one table, renamed between survey rounds and never delivered together, so they are one variable: ManArLos 2006-03-01..2006-04-01; F05 2008-03-01..2010-04-01; f05 2012-04-01..2012-05-01; F15 2014-04-01..2014-05-01; F17 2023-01-01..2023-07-01; F22 2017-01-01..2017-07-01; F19 2020-01-01..2020-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F15 where key = 'v5020'"
+fields = { "variable" = "antal-manader-som-arbetslos-f22" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5020) in one table, renamed between survey rounds and never delivered together, so they are one variable: ManArLos 2006-03-01..2006-04-01; F05 2008-03-01..2010-04-01; f05 2012-04-01..2012-05-01; F15 2014-04-01..2014-05-01; F17 2023-01-01..2023-07-01; F22 2017-01-01..2017-07-01; F19 2020-01-01..2020-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F19 where key = 'v5020'"
+fields = { "variable" = "antal-manader-som-arbetslos-f22" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5020) in one table, renamed between survey rounds and never delivered together, so they are one variable: ManArLos 2006-03-01..2006-04-01; F05 2008-03-01..2010-04-01; f05 2012-04-01..2012-05-01; F15 2014-04-01..2014-05-01; F17 2023-01-01..2023-07-01; F22 2017-01-01..2017-07-01; F19 2020-01-01..2020-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: ManArLos"
+fields = { "variable" = "antal-manader-som-arbetslos-f22" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5020) in one table, renamed between survey rounds and never delivered together, so they are one variable: ManArLos 2006-03-01..2006-04-01; F05 2008-03-01..2010-04-01; f05 2012-04-01..2012-05-01; F15 2014-04-01..2014-05-01; F17 2023-01-01..2023-07-01; F22 2017-01-01..2017-07-01; F19 2020-01-01..2020-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-hogskoleexaminerade: F6"
+fields = { "variable" = "antal-manader-som-arbetslos-f06" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5020) in one table, renamed between survey rounds and never delivered together, so they are one variable: F6 2006-03-01..2008-04-01; F06 2010-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna-hogskoleexaminerade: fr19 where key = 'v5020'"
+fields = { "variable" = "antal-manader-som-arbetslos-tidarblos" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5020) in one table, renamed between survey rounds and never delivered together, so they are one variable: fr20 2000-03-01..2000-04-01; fr19 2002-03-01..2002-04-01; TidArbLos 2004-03-01..2004-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna-hogskoleexaminerade: fr20 where key = 'v5020'"
+fields = { "variable" = "antal-manader-som-arbetslos-tidarblos" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5020) in one table, renamed between survey rounds and never delivered together, so they are one variable: fr20 2000-03-01..2000-04-01; fr19 2002-03-01..2002-04-01; TidArbLos 2004-03-01..2004-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna-hogskoleexaminerade: fr4"
+fields = { "variable" = "arbentim" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5078) in one table, renamed between survey rounds and never delivered together, so they are one variable: fr4 2000-03-01..2002-04-01; ArbEnTim 2004-03-01..2004-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: ArbUtUsa"
+fields = { "variable" = "arbete-i-usa-f08-3" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5057) in one table, renamed between survey rounds and never delivered together, so they are one variable: ArbUtUsa 2006-03-01..2006-04-01; F08_3 2008-03-01..2010-04-01; f08_3 2012-04-01..2012-05-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-hogskoleexaminerade: F9_3"
+fields = { "variable" = "arbete-i-usa-f09-3" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5057) in one table, renamed between survey rounds and never delivered together, so they are one variable: F9_3 2006-03-01..2008-04-01; F09_3 2010-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: ArbUtEu"
+fields = { "variable" = "arbete-inom-europa-utom-norden-f08-2" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5054) in one table, renamed between survey rounds and never delivered together, so they are one variable: ArbUtEu 2006-03-01..2006-04-01; F08_2 2008-03-01..2010-04-01; f08_2 2012-04-01..2012-05-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-hogskoleexaminerade: F9_2"
+fields = { "variable" = "arbete-inom-europa-utom-norden-f09-2" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5054) in one table, renamed between survey rounds and never delivered together, so they are one variable: F9_2 2006-03-01..2008-04-01; F09_2 2010-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: ArbUtNor"
+fields = { "variable" = "arbete-inom-norden-f08-1" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5050) in one table, renamed between survey rounds and never delivered together, so they are one variable: ArbUtNor 2006-03-01..2006-04-01; F08_1 2008-03-01..2010-04-01; f08_1 2012-04-01..2012-05-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-hogskoleexaminerade: F9_1"
+fields = { "variable" = "arbete-inom-norden-f09-1" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5050) in one table, renamed between survey rounds and never delivered together, so they are one variable: F9_1 2006-03-01..2008-04-01; F09_1 2010-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: F15_08"
+fields = { "variable" = "f10-0" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v29906) in one table, renamed between survey rounds and never delivered together, so they are one variable: F23_08 2013-04-01..2013-05-01; F15_08 2017-01-01..2017-07-01; F10_06 2021-01-01..2021-07-01."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: F23_08"
+fields = { "variable" = "f10-0" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v29906) in one table, renamed between survey rounds and never delivered together, so they are one variable: F23_08 2013-04-01..2013-05-01; F15_08 2017-01-01..2017-07-01; F10_06 2021-01-01..2021-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F19_06"
+fields = { "variable" = "framtidsplaner-andra-studier-t-ex-komvux-folkhogskola-f24-6" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v30817) in one table, renamed between survey rounds and never delivered together, so they are one variable: F19_06 2014-04-01..2014-05-01; F27_06 2017-01-01..2017-07-01; F26_6 2020-01-01..2020-07-01; F24_6 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F26_6 where key = 'v30817'"
+fields = { "variable" = "framtidsplaner-andra-studier-t-ex-komvux-folkhogskola-f24-6" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v30817) in one table, renamed between survey rounds and never delivered together, so they are one variable: F19_06 2014-04-01..2014-05-01; F27_06 2017-01-01..2017-07-01; F26_6 2020-01-01..2020-07-01; F24_6 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F27_06 where key = 'v30817'"
+fields = { "variable" = "framtidsplaner-andra-studier-t-ex-komvux-folkhogskola-f24-6" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v30817) in one table, renamed between survey rounds and never delivered together, so they are one variable: F19_06 2014-04-01..2014-05-01; F27_06 2017-01-01..2017-07-01; F26_6 2020-01-01..2020-07-01; F24_6 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F19_08"
+fields = { "variable" = "framtidsplaner-annat-f24-8" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v30819) in one table, renamed between survey rounds and never delivered together, so they are one variable: F19_08 2014-04-01..2014-05-01; F27_08 2017-01-01..2017-07-01; F26_8 2020-01-01..2020-07-01; F24_8 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F26_8"
+fields = { "variable" = "framtidsplaner-annat-f24-8" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v30819) in one table, renamed between survey rounds and never delivered together, so they are one variable: F19_08 2014-04-01..2014-05-01; F27_08 2017-01-01..2017-07-01; F26_8 2020-01-01..2020-07-01; F24_8 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F27_08 where key = 'v30819'"
+fields = { "variable" = "framtidsplaner-annat-f24-8" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v30819) in one table, renamed between survey rounds and never delivered together, so they are one variable: F19_08 2014-04-01..2014-05-01; F27_08 2017-01-01..2017-07-01; F26_8 2020-01-01..2020-07-01; F24_8 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F19_01"
+fields = { "variable" = "framtidsplaner-fortsatta-pa-mitt-nuvarande-jobb-f24-1" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v30812) in one table, renamed between survey rounds and never delivered together, so they are one variable: F19_01 2014-04-01..2014-05-01; F27_01 2017-01-01..2017-07-01; F26_1 2020-01-01..2020-07-01; F24_1 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F26_1 where key = 'v30812'"
+fields = { "variable" = "framtidsplaner-fortsatta-pa-mitt-nuvarande-jobb-f24-1" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v30812) in one table, renamed between survey rounds and never delivered together, so they are one variable: F19_01 2014-04-01..2014-05-01; F27_01 2017-01-01..2017-07-01; F26_1 2020-01-01..2020-07-01; F24_1 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F27_01 where key = 'v30812'"
+fields = { "variable" = "framtidsplaner-fortsatta-pa-mitt-nuvarande-jobb-f24-1" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v30812) in one table, renamed between survey rounds and never delivered together, so they are one variable: F19_01 2014-04-01..2014-05-01; F27_01 2017-01-01..2017-07-01; F26_1 2020-01-01..2020-07-01; F24_1 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F19_03"
+fields = { "variable" = "framtidsplaner-skaffa-ett-jobb-f24-3" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v30814) in one table, renamed between survey rounds and never delivered together, so they are one variable: F19_03 2014-04-01..2014-05-01; F27_03 2017-01-01..2017-07-01; F26_3 2020-01-01..2020-07-01; F24_3 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F26_3 where key = 'v30814'"
+fields = { "variable" = "framtidsplaner-skaffa-ett-jobb-f24-3" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v30814) in one table, renamed between survey rounds and never delivered together, so they are one variable: F19_03 2014-04-01..2014-05-01; F27_03 2017-01-01..2017-07-01; F26_3 2020-01-01..2020-07-01; F24_3 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F27_03 where key = 'v30814'"
+fields = { "variable" = "framtidsplaner-skaffa-ett-jobb-f24-3" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v30814) in one table, renamed between survey rounds and never delivered together, so they are one variable: F19_03 2014-04-01..2014-05-01; F27_03 2017-01-01..2017-07-01; F26_3 2020-01-01..2020-07-01; F24_3 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F19_02"
+fields = { "variable" = "framtidsplaner-skaffa-ett-nytt-jobb-f24-2" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v30813) in one table, renamed between survey rounds and never delivered together, so they are one variable: F19_02 2014-04-01..2014-05-01; F27_02 2017-01-01..2017-07-01; F26_2 2020-01-01..2020-07-01; F24_2 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F26_2 where key = 'v30813'"
+fields = { "variable" = "framtidsplaner-skaffa-ett-nytt-jobb-f24-2" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v30813) in one table, renamed between survey rounds and never delivered together, so they are one variable: F19_02 2014-04-01..2014-05-01; F27_02 2017-01-01..2017-07-01; F26_2 2020-01-01..2020-07-01; F24_2 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F27_02 where key = 'v30813'"
+fields = { "variable" = "framtidsplaner-skaffa-ett-nytt-jobb-f24-2" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v30813) in one table, renamed between survey rounds and never delivered together, so they are one variable: F19_02 2014-04-01..2014-05-01; F27_02 2017-01-01..2017-07-01; F26_2 2020-01-01..2020-07-01; F24_2 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F19_04"
+fields = { "variable" = "framtidsplaner-starta-eget-foretag-f24-4" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v30815) in one table, renamed between survey rounds and never delivered together, so they are one variable: F19_04 2014-04-01..2014-05-01; F27_04 2017-01-01..2017-07-01; F26_4 2020-01-01..2020-07-01; F24_4 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F26_4 where key = 'v30815'"
+fields = { "variable" = "framtidsplaner-starta-eget-foretag-f24-4" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v30815) in one table, renamed between survey rounds and never delivered together, so they are one variable: F19_04 2014-04-01..2014-05-01; F27_04 2017-01-01..2017-07-01; F26_4 2020-01-01..2020-07-01; F24_4 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F27_04 where key = 'v30815'"
+fields = { "variable" = "framtidsplaner-starta-eget-foretag-f24-4" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v30815) in one table, renamed between survey rounds and never delivered together, so they are one variable: F19_04 2014-04-01..2014-05-01; F27_04 2017-01-01..2017-07-01; F26_4 2020-01-01..2020-07-01; F24_4 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F19_05"
+fields = { "variable" = "framtidsplaner-studera-pa-universitet-hogskola-eller-f24-5" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v30816) in one table, renamed between survey rounds and never delivered together, so they are one variable: F19_05 2014-04-01..2014-05-01; F27_05 2017-01-01..2017-07-01; F26_5 2020-01-01..2020-07-01; F24_5 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F26_5 where key = 'v30816'"
+fields = { "variable" = "framtidsplaner-studera-pa-universitet-hogskola-eller-f24-5" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v30816) in one table, renamed between survey rounds and never delivered together, so they are one variable: F19_05 2014-04-01..2014-05-01; F27_05 2017-01-01..2017-07-01; F26_5 2020-01-01..2020-07-01; F24_5 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F27_05 where key = 'v30816'"
+fields = { "variable" = "framtidsplaner-studera-pa-universitet-hogskola-eller-f24-5" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v30816) in one table, renamed between survey rounds and never delivered together, so they are one variable: F19_05 2014-04-01..2014-05-01; F27_05 2017-01-01..2017-07-01; F26_5 2020-01-01..2020-07-01; F24_5 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F19_9"
+fields = { "variable" = "framtidsplaner-vet-inte-f24-9" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v30820) in one table, renamed between survey rounds and never delivered together, so they are one variable: F19_9 2014-04-01..2014-05-01; F27_09 2017-01-01..2017-07-01; F26_9 2020-01-01..2020-07-01; F24_9 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F26_9"
+fields = { "variable" = "framtidsplaner-vet-inte-f24-9" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v30820) in one table, renamed between survey rounds and never delivered together, so they are one variable: F19_9 2014-04-01..2014-05-01; F27_09 2017-01-01..2017-07-01; F26_9 2020-01-01..2020-07-01; F24_9 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F27_09 where key = 'v30820'"
+fields = { "variable" = "framtidsplaner-vet-inte-f24-9" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v30820) in one table, renamed between survey rounds and never delivered together, so they are one variable: F19_9 2014-04-01..2014-05-01; F27_09 2017-01-01..2017-07-01; F26_9 2020-01-01..2020-07-01; F24_9 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: F24_07"
+fields = { "variable" = "fardighetstraning-argumentera-och-overtyga-andra-f19-04" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5233) in one table, renamed between survey rounds and never delivered together, so they are one variable: F24_07 2013-04-01..2013-05-01; F19_06 2017-01-01..2017-07-01; F19_04 2021-01-01..2021-07-01."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: F19_06 where key = 'v5233'"
+fields = { "variable" = "fardighetstraning-argumentera-och-overtyga-andra-f19-04" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5233) in one table, renamed between survey rounds and never delivered together, so they are one variable: F24_07 2013-04-01..2013-05-01; F19_06 2017-01-01..2017-07-01; F19_04 2021-01-01..2021-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: FaArg"
+fields = { "variable" = "fardighetstraning-argumentera-och-overtyga-andra-f27-11" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5233) in one table, renamed between survey rounds and never delivered together, so they are one variable: FaArg 2006-03-01..2006-04-01; F27_11 2008-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-hogskoleexaminerade: F28_9"
+fields = { "variable" = "fardighetstraning-argumentera-och-overtyga-andra-f34-9" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5233) in one table, renamed between survey rounds and never delivered together, so they are one variable: F29_9 2006-03-01..2006-04-01; F28_9 2008-03-01..2008-04-01; F34_9 2010-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-hogskoleexaminerade: F29_9"
+fields = { "variable" = "fardighetstraning-argumentera-och-overtyga-andra-f34-9" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5233) in one table, renamed between survey rounds and never delivered together, so they are one variable: F29_9 2006-03-01..2006-04-01; F28_9 2008-03-01..2008-04-01; F34_9 2010-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: F1_old"
+fields = { "variable" = "forekomst-av-examen" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v29880) in one table, renamed between survey rounds and never delivered together, so they are one variable: F1_old 2013-04-01..2013-05-01; F1 2017-01-01..2017-07-01."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: examen2017"
+fields = { "variable" = "forekomst-examen-hogskoleregister-vt2021" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v29880) in one table, renamed between survey rounds and never delivered together, so they are one variable: ExamenGr 2013-04-01..2013-05-01; examen2017 2017-01-01..2017-07-01; F1_exam 2021-01-01..2021-07-01."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: ExamenGr"
+fields = { "variable" = "forekomst-examen-hogskoleregister-vt2021" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v29880) in one table, renamed between survey rounds and never delivered together, so they are one variable: ExamenGr 2013-04-01..2013-05-01; examen2017 2017-01-01..2017-07-01; F1_exam 2021-01-01..2021-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F9_ny"
+fields = { "variable" = "gymnasieprogram" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v4693) in one table, renamed between survey rounds and never delivered together, so they are one variable: F9_ny 2017-01-01..2017-07-01; F9 2020-01-01..2020-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F25_txt where key = 'v42179'"
+fields = { "variable" = "corona-syss-annat-satt" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v42179) in one table, renamed between survey rounds and never delivered together, so they are one variable: F25_txt 2020-01-01..2020-07-01; F23 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "yh-examinerade: F2 where key = 'v5068'"
+fields = { "variable" = "huvudsaklig-sysselsattning-8" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5068) in one table, renamed between survey rounds and never delivered together, so they are one variable: F2 2019-07-01..2020-01-01; F5 2022-07-01..2023-01-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna-hogskoleexaminerade: fr1"
+fields = { "variable" = "huvarb" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5068) in one table, renamed between survey rounds and never delivered together, so they are one variable: fr1 2000-03-01..2002-04-01; HuvArb 2004-03-01..2004-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: kal_fut"
+fields = { "variable" = "help" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v37407) in one table, renamed between survey rounds and never delivered together, so they are one variable: kal_fut 2020-01-01..2020-07-01; help1 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: kal_bak"
+fields = { "variable" = "kalibreringsvariabel-help3" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v37407) in one table, renamed between survey rounds and never delivered together, so they are one variable: kal_bak 2020-01-01..2020-07-01; help3 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: ArbKvar"
+fields = { "variable" = "kvar-pa-forsta-arbete-f03" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5018) in one table, renamed between survey rounds and never delivered together, so they are one variable: ArbKvar 2006-03-01..2006-04-01; F03 2008-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-hogskoleexaminerade: F4"
+fields = { "variable" = "kvar-pa-forsta-arbete-f04" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5018) in one table, renamed between survey rounds and never delivered together, so they are one variable: F4 2006-03-01..2008-04-01; F04 2010-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: F11 where key = 'v5018'"
+fields = { "variable" = "kvar-pa-forsta-arbete-f8" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5018) in one table, renamed between survey rounds and never delivered together, so they are one variable: F11 2013-04-01..2013-05-01; F8 2017-01-01..2017-07-01."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: F16_01"
+fields = { "variable" = "f11-0" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5215) in one table, renamed between survey rounds and never delivered together, so they are one variable: F16_01 2017-01-01..2017-07-01; F11_01 2021-01-01..2021-07-01."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: F18 where key = 'v5215'"
+fields = { "variable" = "nojdhet-med-arbete-2" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5215) in one table, renamed between survey rounds and never delivered together, so they are one variable: F18 2017-01-01..2017-07-01; F13 2021-01-01..2021-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-hogskoleexaminerade: F30 where key = 'v5242'"
+fields = { "variable" = "f36" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5242) in one table, renamed between survey rounds and never delivered together, so they are one variable: F31 2006-03-01..2006-04-01; F30 2008-03-01..2008-04-01; F36 2010-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-hogskoleexaminerade: F31 where key = 'v5242'"
+fields = { "variable" = "f36" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5242) in one table, renamed between survey rounds and never delivered together, so they are one variable: F31 2006-03-01..2006-04-01; F30 2008-03-01..2008-04-01; F36 2010-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: F25"
+fields = { "variable" = "nojdhet-med-utbildning-2" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5242) in one table, renamed between survey rounds and never delivered together, so they are one variable: F25 2013-04-01..2013-05-01; F21 2017-01-01..2021-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: NojdUtb"
+fields = { "variable" = "nojdhet-med-utbildning-4" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5242) in one table, renamed between survey rounds and never delivered together, so they are one variable: NojdUtb 2006-03-01..2006-04-01; F28 2008-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: Planer"
+fields = { "variable" = "planer-pa-studier" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5250) in one table, renamed between survey rounds and never delivered together, so they are one variable: Planer 2006-03-01..2006-04-01; F31 2008-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: ProgGr"
+fields = { "variable" = "programtyp-hogskoleutbildning-urvalsdragning" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v29881) in one table, renamed between survey rounds and never delivered together, so they are one variable: ProgGr 2013-04-01..2013-05-01; Yrkgen 2017-01-01..2017-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: StudUsa"
+fields = { "variable" = "studier-i-usa" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5246) in one table, renamed between survey rounds and never delivered together, so they are one variable: StudUsa 2006-03-01..2006-04-01; F29_3 2008-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-hogskoleexaminerade: F32_3"
+fields = { "variable" = "studier-i-usa-f38-3" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5246) in one table, renamed between survey rounds and never delivered together, so they are one variable: F33_3 2006-03-01..2006-04-01; F32_3 2008-03-01..2008-04-01; F38_3 2010-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-hogskoleexaminerade: F33_3 where key = 'v5246'"
+fields = { "variable" = "studier-i-usa-f38-3" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5246) in one table, renamed between survey rounds and never delivered together, so they are one variable: F33_3 2006-03-01..2006-04-01; F32_3 2008-03-01..2008-04-01; F38_3 2010-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: StudOvr"
+fields = { "variable" = "studier-i-ovriga-varlden" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5247) in one table, renamed between survey rounds and never delivered together, so they are one variable: StudOvr 2006-03-01..2006-04-01; F29_4 2008-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-hogskoleexaminerade: F32_4"
+fields = { "variable" = "studier-i-ovriga-varlden-f38-4" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5247) in one table, renamed between survey rounds and never delivered together, so they are one variable: F33_4 2006-03-01..2006-04-01; F32_4 2008-03-01..2008-04-01; F38_4 2010-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-hogskoleexaminerade: F33_4 where key = 'v5247'"
+fields = { "variable" = "studier-i-ovriga-varlden-f38-4" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5247) in one table, renamed between survey rounds and never delivered together, so they are one variable: F33_4 2006-03-01..2006-04-01; F32_4 2008-03-01..2008-04-01; F38_4 2010-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: StudIst"
+fields = { "variable" = "studier-istallet-arbete" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5046) in one table, renamed between survey rounds and never delivered together, so they are one variable: StudIst 2006-03-01..2006-04-01; F07 2008-03-01..2010-04-01; f07 2012-04-01..2012-05-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-hogskoleexaminerade: F8"
+fields = { "variable" = "studier-istallet-for-arbete-f08" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5046) in one table, renamed between survey rounds and never delivered together, so they are one variable: F8 2006-03-01..2008-04-01; F08 2010-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna-hogskoleexaminerade: fr23c"
+fields = { "variable" = "fr21" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5248) in one table, renamed between survey rounds and never delivered together, so they are one variable: fr23c 2000-03-01..2000-04-01; fr21 2002-03-01..2002-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: Bedomn"
+fields = { "variable" = "tillracklig-utbildningsniva-3" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5124) in one table, renamed between survey rounds and never delivered together, so they are one variable: Bedomn 2006-03-01..2006-04-01; F18 2008-03-01..2010-04-01; f18 2012-04-01..2012-05-01."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: F14 where key = 'v5124'"
+fields = { "variable" = "tillracklig-utbildningsniva-5" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5124) in one table, renamed between survey rounds and never delivered together, so they are one variable: F14 2017-01-01..2017-07-01; F9 2021-01-01..2021-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-hogskoleexaminerade: F19 where key = 'v5701'"
+fields = { "variable" = "tillracklig-utbildningsniva-examen-arbete-matveckan" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5701) in one table, renamed between survey rounds and never delivered together, so they are one variable: F19 2006-03-01..2008-04-01; F23 2010-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-hogskoleexaminerade: F3"
+fields = { "variable" = "tillracklig-utbildningsniva-examen-forsta-arbetet-matveckan" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5701) in one table, renamed between survey rounds and never delivered together, so they are one variable: F3 2006-03-01..2008-04-01; F03 2010-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-hogskoleexaminerade: F22 where key = 'v5204'"
+fields = { "variable" = "tillrackligt-med-kunskap-och-formaga-i-arbete-f26" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5204) in one table, renamed between survey rounds and never delivered together, so they are one variable: F22 2006-03-01..2008-04-01; F26 2010-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F26"
+fields = { "variable" = "utbildning-forberett-arbete-studier" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v37064) in one table, renamed between survey rounds and never delivered together, so they are one variable: F26 2017-01-01..2017-07-01; F19 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F25 where key = 'v37064'"
+fields = { "variable" = "utbildning-forberett-arbete-studier-3" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v37064) in one table, renamed between survey rounds and never delivered together, so they are one variable: F25 2017-01-01..2017-07-01; F23 2020-01-01..2020-07-01."
+
+[[statement]]
+kind = "set"
+subject = "yh-examinerade: SUN4Inr"
+fields = { "variable" = "sun4inr-utb" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v65) in one table, renamed between survey rounds and never delivered together, so they are one variable: SUN4Inr 2019-07-01..2020-01-01; SUN4Inr_Utb 2022-07-01..2023-01-01."
+
+[[statement]]
+kind = "set"
+subject = "yh-examinerade: SUN5Inr"
+fields = { "variable" = "sun5inr-utb" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v65) in one table, renamed between survey rounds and never delivered together, so they are one variable: SUN5Inr 2019-07-01..2020-01-01; SUN5Inr_Utb 2022-07-01..2023-01-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: Omrade"
+fields = { "variable" = "verksamhetsomrade-f13" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5118) in one table, renamed between survey rounds and never delivered together, so they are one variable: Omrade 2006-03-01..2006-04-01; F13 2008-03-01..2008-04-01; f13 2012-04-01..2012-05-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: Vilja"
+fields = { "variable" = "viljan-att-arbeta-mer-f15" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5120) in one table, renamed between survey rounds and never delivered together, so they are one variable: Vilja 2006-03-01..2006-04-01; F13 2014-04-01..2014-05-01; F15 2008-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-hogskoleexaminerade: F16"
+fields = { "variable" = "viljan-att-arbeta-mer-f20" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5120) in one table, renamed between survey rounds and never delivered together, so they are one variable: F16 2006-03-01..2008-04-01; F20 2010-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: Overens"
+fields = { "variable" = "utb-arbete-overensstammelse-2" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5123) in one table, renamed between survey rounds and never delivered together, so they are one variable: Overens 2006-03-01..2006-04-01; F17 2008-03-01..2010-04-01; f17 2012-04-01..2012-05-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-hogskoleexaminerade: F18"
+fields = { "variable" = "utb-arbete-overensstammelse-5" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5123) in one table, renamed between survey rounds and never delivered together, so they are one variable: F18 2006-03-01..2008-04-01; F22 2010-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "hogskolestuderande: F12 where key = 'v5123'"
+fields = { "variable" = "utb-arbete-overensstammelse-6" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5123) in one table, renamed between survey rounds and never delivered together, so they are one variable: F12 2017-01-01..2017-07-01; F7 2021-01-01..2021-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F27_txt"
+fields = { "variable" = "ovriga-kommentarer-till-enkaten" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v36110) in one table, renamed between survey rounds and never delivered together, so they are one variable: F28_txt 2017-01-01..2017-07-01; F27_txt 2020-01-01..2020-07-01; F25_txt 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: F28_txt"
+fields = { "variable" = "ovriga-kommentarer-till-enkaten" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v36110) in one table, renamed between survey rounds and never delivered together, so they are one variable: F28_txt 2017-01-01..2017-07-01; F27_txt 2020-01-01..2020-07-01; F25_txt 2023-01-01..2023-07-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-hogskoleexaminerade: F20 where key = 'v5201'"
+fields = { "variable" = "deltagit-i-kurser-m-m-senaste-12-manaderna-f24" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5201) in one table, renamed between survey rounds and never delivered together, so they are one variable: F20 2006-03-01..2008-04-01; F24 2010-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: Kurs"
+fields = { "variable" = "deltagit-i-kurser-m-m-senaste-12-manaderna-f21" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5201) in one table, renamed between survey rounds and never delivered together, so they are one variable: Kurs 2006-03-01..2006-04-01; F21 2008-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: KunNytta"
+fields = { "variable" = "kunskap-och-formaga-till-nytta-i-arbete-f22" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5203) in one table, renamed between survey rounds and never delivered together, so they are one variable: KunNytta 2006-03-01..2006-04-01; F22 2008-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-hogskoleexaminerade: F21"
+fields = { "variable" = "kunskap-och-formaga-till-nytta-i-arbete-f25" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5203) in one table, renamed between survey rounds and never delivered together, so they are one variable: F21 2006-03-01..2008-04-01; F25 2010-03-01..2010-04-01."
+
+[[statement]]
+kind = "set"
+subject = "intradet-gymnasieavgangna: KunErbj"
+fields = { "variable" = "tillrackligt-med-kunskap-och-formaga-i-arbete-f23" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v5204) in one table, renamed between survey rounds and never delivered together, so they are one variable: KunErbj 2006-03-01..2006-04-01; F23 2008-03-01..2010-04-01."

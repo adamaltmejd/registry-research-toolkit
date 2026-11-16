@@ -980,18 +980,6 @@ evidence = "Tidigare uppnådd utbildningsnivå är ett utbildningsmått och ing�
 
 [[statement]]
 kind = "set"
-subject = "var:utim"
-fields = { "sets" = ["utbildningstimmar"] }
-evidence = "Utbildningstimmar under mätveckan är ett utbildningsmått.\ncatalog:variable_text:34553:16358:16359"
-
-[[statement]]
-kind = "set"
-subject = "var:utim"
-fields = { "tags" = ["education"] }
-evidence = "Utbildningstimmar under mätveckan är ett utbildningsmått.\ncatalog:variable_text:34553:16358:16359"
-
-[[statement]]
-kind = "set"
 subject = "var:valid"
 fields = { "sets" = [] }
 evidence = "Validering av kunskaper är ett utbildningsmått.\ncatalog:variable_text:34554:19905:20089"
@@ -1258,12 +1246,6 @@ evidence = "#2102 same-label cluster 'Kommun för skola/skolenhet' (4 variables)
 
 [[statement]]
 kind = "set"
-subject = "var:utim"
-fields = { "label" = "Antal utbildningstimmar under mätveckan (totalt)" }
-evidence = "#2102 same-label cluster 'Antal utbildningstimmar under mätveckan' (4 variables): judged different meaning, high confidence; Opdefs: Ant_Utim_Arb is arbetsplatsförlagd, Ant_Utim_Skola skolförlagd; Utim and Ant_Utim_Tot share the opdef (total hours during mätveckan)."
-
-[[statement]]
-kind = "set"
 subject = "var:yrkeskod-text"
 fields = { "label" = "Yrkespaket (klartext)" }
 evidence = "#2102 same-label cluster 'Yrkespaket' (2 variables): judged different meaning, high confidence; Yrkespaketkod holds the code (value set), Yrkeskod_text the name in clear text (opdef)."
@@ -1461,3 +1443,9 @@ kind = "set"
 subject = "kursdeltagare-kalenderar: var:termin"
 fields.row_key = true
 evidence = "Row key: termin (Termin) is the period of a row; one delivered file holds several terms, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "elever: Utim"
+fields = { "variable" = "ant-utim-tot" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v14688) in one table, renamed between survey rounds and never delivered together, so they are one variable: Utim 1999-10-15..2014-10-16; Ant_Utim_Tot 2015-10-15..2023-10-16."

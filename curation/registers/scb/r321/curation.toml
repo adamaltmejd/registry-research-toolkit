@@ -505,12 +505,6 @@ evidence = "Identitetsunderlaget visar en perioduppdelning med olika uttryckliga
 
 [[statement]]
 kind = "set"
-subject = "var:brukarrepresentation-fr27"
-fields = { "tags" = ["democracy", "education"] }
-evidence = "Källan beskriver brukarrepresentation inom förskola.\ncatalog:occurrence:382641"
-
-[[statement]]
-kind = "set"
 subject = "var:brukarrepresentation-utover-delegering"
 fields = { "tags" = ["democracy"] }
 evidence = "Identitetsunderlaget visar en perioduppdelning med olika uttryckliga avgränsningar.\ncatalog:occurrence:382357\ncatalog:occurrence:382412"
@@ -526,42 +520,6 @@ kind = "set"
 subject = "var:brukarsys-utover-delegering"
 fields = { "tags" = ["democracy"] }
 evidence = "Identitetsunderlaget visar en perioduppdelning med olika uttryckliga avgränsningar.\ncatalog:occurrence:382905\ncatalog:occurrence:382969"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysald"
-fields = { "tags" = ["democracy"] }
-evidence = "Variabeln hör till brukarrepresentation.\ncatalog:occurrence:382492"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysfs"
-fields = { "tags" = ["democracy"] }
-evidence = "Variabeln hör till brukarrepresentation.\ncatalog:occurrence:382493"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysfunk"
-fields = { "tags" = ["democracy"] }
-evidence = "Variabeln hör till brukarrepresentation.\ncatalog:occurrence:382494"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysgs"
-fields = { "tags" = ["democracy"] }
-evidence = "Variabeln hör till brukarrepresentation.\ncatalog:occurrence:382495"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysgym"
-fields = { "tags" = ["democracy"] }
-evidence = "Variabeln hör till brukarrepresentation.\ncatalog:occurrence:382496"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysifo"
-fields = { "tags" = ["democracy"] }
-evidence = "Variabeln hör till brukarrepresentation.\ncatalog:occurrence:382497"
 
 [[statement]]
 kind = "set"
@@ -616,42 +574,6 @@ kind = "set"
 subject = "var:delta-i-medborgardialoger-via-webbplats-fr26b"
 fields = { "tags" = ["democracy", "digital"] }
 evidence = "Mäter deltagande i medborgardialog via webbplats.\ncatalog:occurrence:383329"
-
-[[statement]]
-kind = "set"
-subject = "var:deltar-i-ideburet-offentligt-partnerskap-iop-fr21"
-fields = { "sets" = ["ideburet-offentligt-partnerskap"] }
-evidence = "Samma källkolumn har olika ägare för olika begrepp i separata perioder.\ncatalog:occurrence:383152\ncatalog:occurrence:383220"
-
-[[statement]]
-kind = "set"
-subject = "var:deltar-i-ideburet-offentligt-partnerskap-iop-fr21"
-fields = { "tags" = [] }
-evidence = "Samma källkolumn har olika ägare för olika begrepp i separata perioder.\ncatalog:occurrence:383152\ncatalog:occurrence:383220"
-
-[[statement]]
-kind = "set"
-subject = "var:deltar-i-ideburet-offentligt-partnerskap-iop-fr23"
-fields = { "sets" = ["ideburet-offentligt-partnerskap"] }
-evidence = "Samma källkolumn har olika ägare för olika begrepp i separata perioder.\ncatalog:occurrence:382633\ncatalog:occurrence:382821"
-
-[[statement]]
-kind = "set"
-subject = "var:deltar-i-ideburet-offentligt-partnerskap-iop-fr23"
-fields = { "tags" = [] }
-evidence = "Samma källkolumn har olika ägare för olika begrepp i separata perioder.\ncatalog:occurrence:382633\ncatalog:occurrence:382821"
-
-[[statement]]
-kind = "set"
-subject = "var:deltar-i-ideburet-offentligt-partnerskap-iop-fr36"
-fields = { "sets" = ["ideburet-offentligt-partnerskap"] }
-evidence = "Samma källkolumn har olika ägare för olika begrepp i separata perioder.\ncatalog:occurrence:382734\ncatalog:occurrence:382847"
-
-[[statement]]
-kind = "set"
-subject = "var:deltar-i-ideburet-offentligt-partnerskap-iop-fr36"
-fields = { "tags" = [] }
-evidence = "Samma källkolumn har olika ägare för olika begrepp i separata perioder.\ncatalog:occurrence:382734\ncatalog:occurrence:382847"
 
 [[statement]]
 kind = "set"
@@ -1243,18 +1165,6 @@ evidence = "Fr10b är en opak frågekod.\ncatalog:occurrence:383285\ncatalog:var
 
 [[statement]]
 kind = "set"
-subject = "var:antal-medborgarforslag-behandlade-bifallna-kommunfullmaktige"
-fields = { "sets" = ["inkomna-medborgarforslag"] }
-evidence = "Id:t är en opak frågekod; etiketten kolliderar och kräver källkolumn som särskiljning.\ncatalog:occurrence:382605\ncatalog:variable_text:38450:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-medborgarforslag-behandlade-bifallna-kommunfullmaktige"
-fields = { "tags" = ["democracy"] }
-evidence = "Id:t är en opak frågekod; etiketten kolliderar och kräver källkolumn som särskiljning.\ncatalog:occurrence:382605\ncatalog:variable_text:38450:16801:17167"
-
-[[statement]]
-kind = "set"
 subject = "var:fr11"
 fields = { "sets" = ["folkomrostningar"] }
 evidence = "Samma källkolumn har olika ägare för olika begrepp i separata perioder.\ncatalog:occurrence:382692\ncatalog:occurrence:382788"
@@ -1495,18 +1405,6 @@ evidence = "Fr14 är en opak frågekod.\ncatalog:occurrence:382613\ncatalog:vari
 
 [[statement]]
 kind = "set"
-subject = "var:antal-bifallna-medborgarforslag-kommuner"
-fields = { "sets" = ["inkomna-medborgarforslag"] }
-evidence = "Id:t är en opak frågekod; etiketten kolliderar och kräver källkolumn som särskiljning.\ncatalog:occurrence:382695\ncatalog:variable_text:38471:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-bifallna-medborgarforslag-kommuner"
-fields = { "tags" = ["democracy"] }
-evidence = "Id:t är en opak frågekod; etiketten kolliderar och kräver källkolumn som särskiljning.\ncatalog:occurrence:382695\ncatalog:variable_text:38471:18262:18628"
-
-[[statement]]
-kind = "set"
 subject = "var:fr15"
 fields = { "sets" = ["inkomna-medborgarforslag"] }
 evidence = "Samma källkolumn har olika ägare i olika perioder.\ncatalog:occurrence:382696\ncatalog:occurrence:382797"
@@ -1528,18 +1426,6 @@ kind = "set"
 subject = "var:fr16"
 fields = { "tags" = ["democracy"] }
 evidence = "Samma källkolumn har olika ägare i olika perioder.\ncatalog:occurrence:382697\ncatalog:occurrence:382798"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-inkomna-e-forslag-regioner"
-fields = { "sets" = ["inkomna-e-forslag"] }
-evidence = "Fr16-text är en opak källkod; etiketten anger inkomna e-förslag.\ncatalog:occurrence:383203\ncatalog:variable_text:38474:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-inkomna-e-forslag-regioner"
-fields = { "tags" = ["democracy", "digital"] }
-evidence = "Fr16-text är en opak källkod; etiketten anger inkomna e-förslag.\ncatalog:occurrence:383203\ncatalog:variable_text:38474:18262:18628"
 
 [[statement]]
 kind = "set"
@@ -1588,18 +1474,6 @@ kind = "set"
 subject = "var:fr19"
 fields = { "tags" = ["democracy", "digital"] }
 evidence = "Katalogen anger skilda ägare till samma källkolumner.\ncatalog:occurrence:382619\ncatalog:occurrence:382803\ncatalog:occurrence:383140\ncatalog:occurrence:383298"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-bifallna-e-forslag-kommuner"
-fields = { "sets" = ["inkomna-e-forslag"] }
-evidence = "Fr19-text är en opak källkod; etiketten anger inkomna e-förslag.\ncatalog:occurrence:382700\ncatalog:variable_text:38479:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:antal-bifallna-e-forslag-kommuner"
-fields = { "tags" = ["democracy", "digital"] }
-evidence = "Fr19-text är en opak källkod; etiketten anger inkomna e-förslag.\ncatalog:occurrence:382700\ncatalog:variable_text:38479:18262:18628"
 
 [[statement]]
 kind = "set"
@@ -1879,18 +1753,6 @@ evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:oc
 
 [[statement]]
 kind = "set"
-subject = "var:fr24-5-29350"
-fields = { "sets" = ["fullmaktiges-mal-for-bolag"] }
-evidence = "Samma källkolumn har olika ägare i olika perioder.\ncatalog:occurrence:383159\ncatalog:occurrence:383322"
-
-[[statement]]
-kind = "set"
-subject = "var:fr24-5-29350"
-fields = { "tags" = ["business"] }
-evidence = "Samma källkolumn har olika ägare i olika perioder.\ncatalog:occurrence:383159\ncatalog:occurrence:383322"
-
-[[statement]]
-kind = "set"
 subject = "var:rad-interreligiosa-2019-2023"
 fields = { "sets" = ["rad-for-sarskilda-fokusgrupper"] }
 evidence = "Fr24 är en opak frågekod.\ncatalog:occurrence:382721\ncatalog:occurrence:383323\ncatalog:variable_text:38504:19723:20089"
@@ -1927,12 +1789,6 @@ evidence = "Fr25b är en opak frågekod.\ncatalog:occurrence:382825\ncatalog:var
 
 [[statement]]
 kind = "set"
-subject = "var:fr26"
-fields = { "tags" = ["democracy", "healthcare"] }
-evidence = "Id:t är en opak frågekod; etiketten kolliderar och kräver källkolumn som särskiljning.\ncatalog:occurrence:383160\ncatalog:variable_text:38507:16801:17167"
-
-[[statement]]
-kind = "set"
 subject = "var:fr26-2"
 fields = { "sets" = ["rad-for-sarskilda-fokusgrupper"] }
 evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:occurrence:382637\ncatalog:occurrence:382827"
@@ -1942,12 +1798,6 @@ kind = "set"
 subject = "var:fr26-2"
 fields = { "tags" = ["democracy"] }
 evidence = "Samma källkolumn har en annan ägare i en annan period.\ncatalog:occurrence:382637\ncatalog:occurrence:382827"
-
-[[statement]]
-kind = "set"
-subject = "var:fr26-2-28613"
-fields = { "tags" = ["democracy"] }
-evidence = "Id:t är en opak frågekod med ett tillagt suffix; etiketten kräver särskiljning.\ncatalog:occurrence:383161\ncatalog:variable_text:38509:16801:17167"
 
 [[statement]]
 kind = "set"
@@ -2080,156 +1930,6 @@ kind = "set"
 subject = "var:medborgarkontor-webbportal-callcenter-kundtjanst"
 fields = { "tags" = [] }
 evidence = "Fr27-2 är en opak källkod och etiketten anger medborgarkontor.\ncatalog:occurrence:383163\ncatalog:variable_text:38520:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-utover-delegering-grundskola"
-fields = { "tags" = ["democracy", "education"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382642\ncatalog:variable_text:38521:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:har-inte-medborgarkontor"
-fields = { "sets" = ["medborgarkontor"] }
-evidence = "Fr27-3 är en opak källkod och etiketten anger medborgarkontor.\ncatalog:occurrence:383164\ncatalog:variable_text:38522:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:har-inte-medborgarkontor"
-fields = { "tags" = [] }
-evidence = "Fr27-3 är en opak källkod och etiketten anger medborgarkontor.\ncatalog:occurrence:383164\ncatalog:variable_text:38522:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-utover-delegering-gymnasieskola"
-fields = { "tags" = ["democracy", "education"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382643\ncatalog:variable_text:38523:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-utover-delegering-individ-familjeomsorg"
-fields = { "tags" = ["democracy", "social-care"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382644\ncatalog:variable_text:38524:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:fr27-5"
-fields = { "tags" = ["democracy", "social-care"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382645\ncatalog:variable_text:38525:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:fr27-6"
-fields = { "tags" = ["democracy", "disability", "social-care"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382646\ncatalog:variable_text:38526:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:fr27-7"
-fields = { "tags" = ["democracy"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382647\ncatalog:variable_text:38527:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:fr27-8"
-fields = { "tags" = ["democracy"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382648\ncatalog:variable_text:38528:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:fr28"
-fields = { "sets" = ["strategi-for-samarbete-om-verksamhetsutveckling"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382649\ncatalog:variable_text:38529:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:fr28"
-fields = { "tags" = ["democracy", "education"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382649\ncatalog:variable_text:38529:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:fr28-2"
-fields = { "sets" = ["strategi-for-samarbete-om-verksamhetsutveckling"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382650\ncatalog:variable_text:38530:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:fr28-2"
-fields = { "tags" = ["democracy", "education"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382650\ncatalog:variable_text:38530:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:fr28-3"
-fields = { "sets" = ["strategi-for-samarbete-om-verksamhetsutveckling"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382651\ncatalog:variable_text:38531:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:fr28-3"
-fields = { "tags" = ["democracy", "education"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382651\ncatalog:variable_text:38531:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:fr28-4"
-fields = { "sets" = ["strategi-for-samarbete-om-verksamhetsutveckling"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382652\ncatalog:variable_text:38532:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:fr28-4"
-fields = { "tags" = ["democracy", "social-care"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382652\ncatalog:variable_text:38532:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:strategi-samarbete-utveckling-omsorg-aldre"
-fields = { "sets" = ["strategi-for-samarbete-om-verksamhetsutveckling"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382653\ncatalog:variable_text:38533:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:strategi-samarbete-utveckling-omsorg-aldre"
-fields = { "tags" = ["democracy", "social-care"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382653\ncatalog:variable_text:38533:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:fr28-6"
-fields = { "sets" = ["strategi-for-samarbete-om-verksamhetsutveckling"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382654\ncatalog:variable_text:38534:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:fr28-6"
-fields = { "tags" = ["democracy", "disability", "social-care"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382654\ncatalog:variable_text:38534:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:fr28-7"
-fields = { "sets" = ["strategi-for-samarbete-om-verksamhetsutveckling"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382655\ncatalog:variable_text:38535:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:fr28-7"
-fields = { "tags" = ["democracy"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382655\ncatalog:variable_text:38535:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:fr28-8"
-fields = { "sets" = ["strategi-for-samarbete-om-verksamhetsutveckling"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382656\ncatalog:variable_text:38536:16801:17167"
-
-[[statement]]
-kind = "set"
-subject = "var:fr28-8"
-fields = { "tags" = ["democracy"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382656\ncatalog:variable_text:38536:16801:17167"
 
 [[statement]]
 kind = "set"
@@ -2606,7 +2306,7 @@ evidence = "Id:t är en opak frågekod.\ncatalog:occurrence:383348\ncatalog:vari
 [[statement]]
 kind = "set"
 subject = "var:fr39"
-fields = { "tags" = ["democracy"] }
+fields = { "tags" = ["democracy", "healthcare"] }
 evidence = "Den operativa betydelsen ändras mellan perioderna.\ncatalog:occurrence:383249\ncatalog:occurrence:383349"
 
 [[statement]]
@@ -2701,18 +2401,6 @@ evidence = "Fr3b är en opak källkod och etiketten anger heltäckande kommun- e
 
 [[statement]]
 kind = "set"
-subject = "var:kommun-brukarrepresentation-utover-delegering-forskola"
-fields = { "tags" = ["democracy", "education"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382744\ncatalog:variable_text:38578:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:fr40-2"
-fields = { "tags" = ["democracy", "education"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382745\ncatalog:variable_text:38579:18262:18628"
-
-[[statement]]
-kind = "set"
 subject = "var:region-strategi-samarbete-verksamhetsutveckling-annat"
 fields = { "sets" = ["strategi-for-samarbete-om-verksamhetsutveckling"] }
 evidence = "Id:t är en opak frågekod med ett tillagt suffix.\ncatalog:occurrence:383355\ncatalog:variable_text:38580:19723:20089"
@@ -2737,12 +2425,6 @@ evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med käl
 
 [[statement]]
 kind = "set"
-subject = "var:fr40-3"
-fields = { "tags" = ["democracy", "education"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382746\ncatalog:variable_text:38582:18262:18628"
-
-[[statement]]
-kind = "set"
 subject = "var:region-inte-strategi-samarbete-verksamhetsutveckling"
 fields = { "sets" = ["strategi-for-samarbete-om-verksamhetsutveckling"] }
 evidence = "Id:t är en opak frågekod med ett tillagt suffix.\ncatalog:occurrence:383357\ncatalog:variable_text:38583:19723:20089"
@@ -2752,36 +2434,6 @@ kind = "set"
 subject = "var:region-inte-strategi-samarbete-verksamhetsutveckling"
 fields = { "tags" = ["democracy"] }
 evidence = "Id:t är en opak frågekod med ett tillagt suffix.\ncatalog:occurrence:383357\ncatalog:variable_text:38583:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-individ-familjeomsorg-2020"
-fields = { "tags" = ["democracy", "social-care"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382747\ncatalog:variable_text:38584:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-aldreomsorg-2020"
-fields = { "tags" = ["democracy", "social-care"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382748\ncatalog:variable_text:38585:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-omsorg-funktionsnedsattning-2020"
-fields = { "tags" = ["democracy", "disability", "social-care"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382749\ncatalog:variable_text:38586:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-annat-omrade-2020"
-fields = { "tags" = ["democracy"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382750\ncatalog:variable_text:38587:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:kommun-inte-brukarrepresentation-2020"
-fields = { "tags" = ["democracy"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382751\ncatalog:variable_text:38588:18262:18628"
 
 [[statement]]
 kind = "set"
@@ -2809,18 +2461,6 @@ evidence = "Fr41-2 är en opak källkod och etiketten anger medborgarkontor.\nca
 
 [[statement]]
 kind = "set"
-subject = "var:fr41-2-35983"
-fields = { "sets" = ["strategi-for-samarbete-om-verksamhetsutveckling"] }
-evidence = "Id:t är en opak frågekod med ett tillagt suffix.\ncatalog:occurrence:382753\ncatalog:variable_text:38591:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:fr41-2-35983"
-fields = { "tags" = ["democracy", "education"] }
-evidence = "Id:t är en opak frågekod med ett tillagt suffix.\ncatalog:occurrence:382753\ncatalog:variable_text:38591:18262:18628"
-
-[[statement]]
-kind = "set"
 subject = "var:region-inte-medborgarkontor"
 fields = { "sets" = ["medborgarkontor"] }
 evidence = "Fr41-3 är en opak källkod och etiketten anger medborgarkontor.\ncatalog:variable_text:38592:19723:20089"
@@ -2830,78 +2470,6 @@ kind = "set"
 subject = "var:region-inte-medborgarkontor"
 fields = { "tags" = [] }
 evidence = "Fr41-3 är en opak källkod och etiketten anger medborgarkontor.\ncatalog:variable_text:38592:19723:20089"
-
-[[statement]]
-kind = "set"
-subject = "var:fr41-3-35983"
-fields = { "sets" = ["strategi-for-samarbete-om-verksamhetsutveckling"] }
-evidence = "Id:t är en opak frågekod med ett tillagt suffix.\ncatalog:occurrence:382754\ncatalog:variable_text:38593:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:fr41-3-35983"
-fields = { "tags" = ["democracy", "education"] }
-evidence = "Id:t är en opak frågekod med ett tillagt suffix.\ncatalog:occurrence:382754\ncatalog:variable_text:38593:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:fr41-4"
-fields = { "sets" = ["strategi-for-samarbete-om-verksamhetsutveckling"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382755\ncatalog:variable_text:38594:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:fr41-4"
-fields = { "tags" = ["democracy", "social-care"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382755\ncatalog:variable_text:38594:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:fr41-5"
-fields = { "sets" = ["strategi-for-samarbete-om-verksamhetsutveckling"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382756\ncatalog:variable_text:38595:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:fr41-5"
-fields = { "tags" = ["democracy", "social-care"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382756\ncatalog:variable_text:38595:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:fr41-6"
-fields = { "sets" = ["strategi-for-samarbete-om-verksamhetsutveckling"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382757\ncatalog:variable_text:38596:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:fr41-6"
-fields = { "tags" = ["democracy", "disability", "social-care"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382757\ncatalog:variable_text:38596:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:fr41-7"
-fields = { "sets" = ["strategi-for-samarbete-om-verksamhetsutveckling"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382758\ncatalog:variable_text:38597:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:fr41-7"
-fields = { "tags" = ["democracy"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382758\ncatalog:variable_text:38597:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:fr41-8"
-fields = { "sets" = ["strategi-for-samarbete-om-verksamhetsutveckling"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382759\ncatalog:variable_text:38598:18262:18628"
-
-[[statement]]
-kind = "set"
-subject = "var:fr41-8"
-fields = { "tags" = ["democracy"] }
-evidence = "Id:t är en opak frågekod; etiketten kräver särskiljning med källkolumn.\ncatalog:occurrence:382759\ncatalog:variable_text:38598:18262:18628"
 
 [[statement]]
 kind = "set"
@@ -2962,18 +2530,6 @@ kind = "set"
 subject = "var:fr42-2-28613"
 fields = { "tags" = ["democracy", "education"] }
 evidence = "Samma källkolumn har olika ägare i olika perioder.\ncatalog:occurrence:382761\ncatalog:occurrence:382865"
-
-[[statement]]
-kind = "set"
-subject = "var:fr42-3"
-fields = { "sets" = ["medborgarkontor"] }
-evidence = "Katalogen anger skilda ägare till samma källkolumn.\ncatalog:occurrence:382762\ncatalog:occurrence:382866"
-
-[[statement]]
-kind = "set"
-subject = "var:fr42-3"
-fields = { "tags" = [] }
-evidence = "Katalogen anger skilda ägare till samma källkolumn.\ncatalog:occurrence:382762\ncatalog:occurrence:382866"
 
 [[statement]]
 kind = "set"
@@ -3778,30 +3334,6 @@ kind = "set"
 subject = "var:inkomna-medborgarforslag-fr10b"
 fields = { "tags" = ["democracy"] }
 evidence = "Samma källkolumn har olika ägare i olika perioder.\ncatalog:occurrence:382604\ncatalog:occurrence:382691"
-
-[[statement]]
-kind = "set"
-subject = "var:inkomna-medborgarforslag-fr11"
-fields = { "sets" = ["inkomna-medborgarforslag"] }
-evidence = "Källan anger antal inkomna medborgarförslag.\ncatalog:occurrence:383198"
-
-[[statement]]
-kind = "set"
-subject = "var:inkomna-medborgarforslag-fr11"
-fields = { "tags" = ["democracy"] }
-evidence = "Källan anger antal inkomna medborgarförslag.\ncatalog:occurrence:383198"
-
-[[statement]]
-kind = "set"
-subject = "var:inkomna-medborgarforslag-fr8a"
-fields = { "sets" = ["inkomna-medborgarforslag"] }
-evidence = "Källan anger antal inkomna medborgarförslag.\ncatalog:occurrence:383192"
-
-[[statement]]
-kind = "set"
-subject = "var:inkomna-medborgarforslag-fr8a"
-fields = { "tags" = ["democracy"] }
-evidence = "Källan anger antal inkomna medborgarförslag.\ncatalog:occurrence:383192"
 
 [[statement]]
 kind = "set"
@@ -5185,18 +4717,6 @@ evidence = "Mäter antal politiska sekreterare.\ncatalog:occurrence:383094"
 
 [[statement]]
 kind = "set"
-subject = "var:privlak"
-fields = { "sets" = ["vardavtal-med-privata-lakare"] }
-evidence = "Mäter förekomst av vårdavtal med privata läkare.\ncatalog:occurrence:382946\ncatalog:occurrence:383009"
-
-[[statement]]
-kind = "set"
-subject = "var:privlak"
-fields = { "tags" = ["healthcare"] }
-evidence = "Mäter förekomst av vårdavtal med privata läkare.\ncatalog:occurrence:382946\ncatalog:occurrence:383009"
-
-[[statement]]
-kind = "set"
 subject = "var:privlakant"
 fields = { "sets" = ["vardavtal-med-privata-lakare"] }
 evidence = "Mäter antal vårdavtal med privata läkare.\ncatalog:occurrence:382947\ncatalog:occurrence:383010"
@@ -5206,18 +4726,6 @@ kind = "set"
 subject = "var:privlakant"
 fields = { "tags" = ["healthcare"] }
 evidence = "Mäter antal vårdavtal med privata läkare.\ncatalog:occurrence:382947\ncatalog:occurrence:383010"
-
-[[statement]]
-kind = "set"
-subject = "var:privsjukh"
-fields = { "sets" = ["vardavtal-med-privata-sjukhus"] }
-evidence = "Mäter förekomst av vårdavtal med privata sjukhus.\ncatalog:occurrence:382948\ncatalog:occurrence:383011"
-
-[[statement]]
-kind = "set"
-subject = "var:privsjukh"
-fields = { "tags" = ["healthcare"] }
-evidence = "Mäter förekomst av vårdavtal med privata sjukhus.\ncatalog:occurrence:382948\ncatalog:occurrence:383011"
 
 [[statement]]
 kind = "set"
@@ -5458,18 +4966,6 @@ kind = "set"
 subject = "var:samarbete-verksamhetsutveckling-fr40"
 fields = { "tags" = ["democracy", "healthcare"] }
 evidence = "Källan avser en strategi för gemensam verksamhetsutveckling.\ncatalog:occurrence:383354"
-
-[[statement]]
-kind = "set"
-subject = "var:samarbete-verksamhetsutveckling-fr41"
-fields = { "sets" = ["strategi-for-samarbete-om-verksamhetsutveckling"] }
-evidence = "Källan avser en strategi för gemensam verksamhetsutveckling i förskolan.\ncatalog:occurrence:382752"
-
-[[statement]]
-kind = "set"
-subject = "var:samarbete-verksamhetsutveckling-fr41"
-fields = { "tags" = ["democracy", "education"] }
-evidence = "Källan avser en strategi för gemensam verksamhetsutveckling i förskolan.\ncatalog:occurrence:382752"
 
 [[statement]]
 kind = "set"
@@ -5932,30 +5428,6 @@ kind = "set"
 subject = "var:tjanstegarantier-servicedeklarationer-for-service-servdekl"
 fields = { "tags" = [] }
 evidence = "Variabeln anger förekomst av tjänstegarantier eller servicedeklarationer.\ncatalog:variable_text:38877:12053:12418\ncatalog:variable_text:38877:13879:14245\ncatalog:variable_text:38877:15340:15706"
-
-[[statement]]
-kind = "set"
-subject = "var:tv-radio-eller-webbsandningar"
-fields = { "sets" = ["sandningar-av-sammantraden"] }
-evidence = "Källan avser sändningar från fullmäktiges sammanträden.\ncatalog:occurrence:382607\ncatalog:valueset:9582"
-
-[[statement]]
-kind = "set"
-subject = "var:tv-radio-eller-webbsandningar"
-fields = { "tags" = ["democracy"] }
-evidence = "Källan avser sändningar från fullmäktiges sammanträden.\ncatalog:occurrence:382607\ncatalog:valueset:9582"
-
-[[statement]]
-kind = "set"
-subject = "var:tv-radio-eller-webbsandningar-fr10"
-fields = { "sets" = ["sandningar-av-sammantraden"] }
-evidence = "Samma källkolumn har olika ägare i olika perioder.\ncatalog:occurrence:383127\ncatalog:occurrence:383197"
-
-[[statement]]
-kind = "set"
-subject = "var:tv-radio-eller-webbsandningar-fr10"
-fields = { "tags" = ["democracy"] }
-evidence = "Samma källkolumn har olika ägare i olika perioder.\ncatalog:occurrence:383127\ncatalog:occurrence:383197"
 
 [[statement]]
 kind = "set"
@@ -6565,63 +6037,15 @@ evidence = "r115, r70 and r81 explicitly measure other bodies directly under the
 
 [[statement]]
 kind = "set"
-subject = "var:brukarrepresentation-aldreomsorg-2020"
-fields = { "sets" = ["brukarrepresentation"] }
-evidence = "r150 and r75 define representation beyond delegation within elderly care.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38254\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382748\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38583"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-annat-omrade-2020"
-fields = { "sets" = ["brukarrepresentation"] }
-evidence = "r152 and r77 define representation beyond delegation within another area.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38255\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382750\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38585"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-fr27"
-fields = { "sets" = ["brukarrepresentation"] }
-evidence = "r118 and r62 define representation beyond delegation within preschool.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38257\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382641\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38380"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-individ-familjeomsorg-2020"
-fields = { "sets" = ["brukarrepresentation"] }
-evidence = "r149 and r74 define representation beyond delegation within individual and family care.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38258\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382747\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38582"
-
-[[statement]]
-kind = "set"
 subject = "var:brukarrepresentation-individ-familjeomsorg-2024"
 fields = { "sets" = ["brukarrepresentation"] }
 evidence = "r157 and r85 define representation beyond delegation within individual and family care.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38259\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382867\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38605"
 
 [[statement]]
 kind = "set"
-subject = "var:brukarrepresentation-omsorg-funktionsnedsattning-2020"
-fields = { "sets" = ["brukarrepresentation"] }
-evidence = "r151 and r76 define representation beyond delegation within care for people with disabilities.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38260\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382749\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38584"
-
-[[statement]]
-kind = "set"
 subject = "var:brukarrepresentation-utover-delegering"
 fields = { "sets" = ["brukarrepresentation"] }
 evidence = "r119, r51 and r94 explicitly define representation beyond delegation; the operational text describes which representation system exists.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38261\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382412\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382968\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38381"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-utover-delegering-grundskola"
-fields = { "sets" = ["brukarrepresentation"] }
-evidence = "r135 and r63 define representation beyond delegation within compulsory school.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38262\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382642\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38521"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-utover-delegering-gymnasieskola"
-fields = { "sets" = ["brukarrepresentation"] }
-evidence = "r136 and r64 define representation beyond delegation within upper secondary school.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38263\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382643\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38523"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-utover-delegering-individ-familjeomsorg"
-fields = { "sets" = ["brukarrepresentation"] }
-evidence = "r137 and r65 define representation beyond delegation within individual and family care.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38264\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382644\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38524"
 
 [[statement]]
 kind = "set"
@@ -6634,42 +6058,6 @@ kind = "set"
 subject = "var:brukarsys-utover-delegering"
 fields = { "sets" = ["brukarrepresentation"] }
 evidence = "r121 explicitly defines representation beyond delegation throughout its supplied history; r54 and r95 describe whether a system exists.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38266\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382491\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382969\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38383"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysald"
-fields = { "sets" = ["brukarrepresentation"] }
-evidence = "r122 explicitly defines representation beyond delegation, matching the group without interpreting the column abbreviation.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38267\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38384"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysfs"
-fields = { "sets" = ["brukarrepresentation"] }
-evidence = "r123 explicitly defines representation beyond delegation, matching the group without interpreting the column abbreviation.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38268\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38385"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysfunk"
-fields = { "sets" = ["brukarrepresentation"] }
-evidence = "r124 explicitly defines representation beyond delegation, matching the group without interpreting the column abbreviation.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38269\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38386"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysgs"
-fields = { "sets" = ["brukarrepresentation"] }
-evidence = "r125 explicitly defines representation beyond delegation, matching the group without interpreting the column abbreviation.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38270\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38387"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysgym"
-fields = { "sets" = ["brukarrepresentation"] }
-evidence = "r126 explicitly defines representation beyond delegation, matching the group without interpreting the column abbreviation.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38271\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38388"
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysifo"
-fields = { "sets" = ["brukarrepresentation"] }
-evidence = "r127 explicitly defines representation beyond delegation, matching the group without interpreting the column abbreviation.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38272\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38389"
 
 [[statement]]
 kind = "set"
@@ -6703,57 +6091,9 @@ evidence = "r132 and r103 measure whether committee meetings with citizens' atte
 
 [[statement]]
 kind = "set"
-subject = "var:fr26"
-fields = { "sets" = ["brukarrepresentation"] }
-evidence = "r133 and r97 define representation beyond delegation within healthcare.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38365\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:383160\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38507"
-
-[[statement]]
-kind = "set"
-subject = "var:fr26-2-28613"
-fields = { "sets" = ["brukarrepresentation"] }
-evidence = "r134 and r98 define representation beyond delegation within another area, which the group includes.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38367\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:383161\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38509"
-
-[[statement]]
-kind = "set"
-subject = "var:fr27-5"
-fields = { "sets" = ["brukarrepresentation"] }
-evidence = "r138 and r66 define representation beyond delegation within elderly care.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38375\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382645\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38525"
-
-[[statement]]
-kind = "set"
-subject = "var:fr27-6"
-fields = { "sets" = ["brukarrepresentation"] }
-evidence = "r139 and r67 define representation beyond delegation within care for people with disabilities.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38376\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382646\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38526"
-
-[[statement]]
-kind = "set"
-subject = "var:fr27-7"
-fields = { "sets" = ["brukarrepresentation"] }
-evidence = "r140 and r68 define representation beyond delegation within another area.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38377\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382647\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38527"
-
-[[statement]]
-kind = "set"
-subject = "var:fr27-8"
-fields = { "sets" = ["brukarrepresentation"] }
-evidence = "r141 and r69 measure absence of representation beyond delegation, a negative indicator of the group's concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38378\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382648\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38528"
-
-[[statement]]
-kind = "set"
 subject = "var:fr39"
 fields = { "sets" = ["brukarrepresentation"] }
 evidence = "r142, r100 and r105 consistently define representation beyond delegation within healthcare.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38393\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:383249\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:383349\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38566"
-
-[[statement]]
-kind = "set"
-subject = "var:fr40-2"
-fields = { "sets" = ["brukarrepresentation"] }
-evidence = "r147 and r72 define representation beyond delegation within compulsory school.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38396\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382745\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38577"
-
-[[statement]]
-kind = "set"
-subject = "var:fr40-3"
-fields = { "sets" = ["brukarrepresentation"] }
-evidence = "r148 and r73 define representation beyond delegation within upper secondary school.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38397\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382746\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38580"
 
 [[statement]]
 kind = "set"
@@ -6802,18 +6142,6 @@ kind = "set"
 subject = "var:klagomalshantering-fr43"
 fields = { "tags" = ["democracy"] }
 evidence = "Coordinator-approved audit correction: Def: 'fastställd rutin för att samla in och hantera klagomål över organisationens service' in the Lokal demokrati municipal survey; complaint handling is a citizen-influence/accountability channel.\naudit:29f8167a91203f9f2752bf008aa1b2d3464f2a70cdde5d3829c69911f74caf1d:line:11\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38475\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:383257\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38681"
-
-[[statement]]
-kind = "set"
-subject = "var:kommun-brukarrepresentation-utover-delegering-forskola"
-fields = { "sets" = ["brukarrepresentation"] }
-evidence = "r146 and r71 define representation beyond delegation within preschool.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38480\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382744\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38576"
-
-[[statement]]
-kind = "set"
-subject = "var:kommun-inte-brukarrepresentation-2020"
-fields = { "sets" = ["brukarrepresentation"] }
-evidence = "r153 and r78 measure absence of representation beyond delegation, a negative indicator of the group's concept.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:38486\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:382751\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:variable:38586"
 
 [[statement]]
 kind = "set"
@@ -7609,18 +6937,6 @@ evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables):
 
 [[statement]]
 kind = "set"
-subject = "var:antal-bifallna-e-forslag-kommuner"
-fields = { "label" = "Inkomna e-förslag (antal bifallna)" }
-evidence = "#2102 same-label cluster 'Inkomna e-förslag' (9 variables): judged different meaning, medium confidence; Opdefs name three counts (received, handled, approved e-proposals); Fr17_text, Fr18_text and Fr19 each map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
-
-[[statement]]
-kind = "set"
-subject = "var:antal-bifallna-medborgarforslag-kommuner"
-fields = { "label" = "Inkomna medborgarförslag (antal bifallna)" }
-evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
-
-[[statement]]
-kind = "set"
 subject = "var:antal-folkinitiativ-beslut-folkomrostning-mandatperiod"
 fields = { "label" = "Folkinitiativ till folkomröstning (antal beslut om folkomröstning)" }
 evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
@@ -7639,12 +6955,6 @@ evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 va
 
 [[statement]]
 kind = "set"
-subject = "var:antal-inkomna-e-forslag-regioner"
-fields = { "label" = "Inkomna e-förslag (antal inkomna)" }
-evidence = "#2102 same-label cluster 'Inkomna e-förslag' (9 variables): judged different meaning, medium confidence; Opdefs name three counts (received, handled, approved e-proposals); Fr17_text, Fr18_text and Fr19 each map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
-
-[[statement]]
-kind = "set"
 subject = "var:antal-inkomna-folkinitiativ-kommun-mandatperiod"
 fields = { "label" = "Folkinitiativ till folkomröstning (antal inkomna, Fr12a_text)" }
 evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
@@ -7660,12 +6970,6 @@ kind = "set"
 subject = "var:antal-inkomna-folkinitiativ-regioner-2020"
 fields = { "label" = "Folkinitiativ till folkomröstning (antal inkomna, Fr9a_text)" }
 evidence = "#2102 same-label cluster 'Folkinitiativ till folkomröstning' (23 variables): judged different meaning, high confidence; Each survey wave has a Ja/Nej flag, a count of received initiatives and a count leading to a referendum decision per opdef; the 2011 variants count initiatives since 1 January 2011."
-
-[[statement]]
-kind = "set"
-subject = "var:antal-medborgarforslag-behandlade-bifallna-kommunfullmaktige"
-fields = { "label" = "Inkomna medborgarförslag (antal bifallna)" }
-evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
 
 [[statement]]
 kind = "set"
@@ -7795,98 +7099,14 @@ evidence = "#2102 same-label cluster 'Brukarrepresentation' (2 variables): judge
 
 [[statement]]
 kind = "set"
-subject = "var:brukarrepresentation-aldreomsorg-2020"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (äldreomsorg)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-annat-omrade-2020"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (annat område)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-fr27"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (förskola)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-individ-familjeomsorg-2020"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (individ- och familjeomsorg)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
-
-[[statement]]
-kind = "set"
 subject = "var:brukarrepresentation-individ-familjeomsorg-2024"
 fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (individ- och familjeomsorg)" }
 evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
 
 [[statement]]
 kind = "set"
-subject = "var:brukarrepresentation-omsorg-funktionsnedsattning-2020"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (funktionsnedsättning)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
-
-[[statement]]
-kind = "set"
 subject = "var:brukarrepresentation-utover-delegering"
 fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (område)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-utover-delegering-grundskola"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (grundskola)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-utover-delegering-gymnasieskola"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (gymnasieskola)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-utover-delegering-individ-familjeomsorg"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (individ- och familjeomsorg)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysald"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (äldreomsorg)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysfs"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (förskola)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysfunk"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (funktionsnedsättning)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysgs"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (grundskola)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysgym"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (gymnasieskola)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysifo"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (individ- och familjeomsorg)" }
 evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
 
 [[statement]]
@@ -8245,27 +7465,9 @@ evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgruppe
 
 [[statement]]
 kind = "set"
-subject = "var:fr24-5-29350"
-fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (inga ekonomiska mål eller verksamhetsmål)" }
-evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
-
-[[statement]]
-kind = "set"
-subject = "var:fr26"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (hälso- och sjukvård)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
-
-[[statement]]
-kind = "set"
 subject = "var:fr26-2"
 fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (äldre, Fr26_2)" }
 evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
-
-[[statement]]
-kind = "set"
-subject = "var:fr26-2-28613"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (annat område)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
 
 [[statement]]
 kind = "set"
@@ -8302,72 +7504,6 @@ kind = "set"
 subject = "var:fr26-5"
 fields = { "label" = "Råd/kommitté för särskilda fokusgrupper (personer med utländsk bakgrund, Fr26_5)" }
 evidence = "#2102 same-label cluster 'Råd/kommitté för särskilda fokusgrupper' (40 variables): judged different meaning, high confidence; Each column asks about råd with one specific focus group (opdefs name ungdomar, äldre, nationella minoriteter, funktionsnedsättning, utländsk bakgrund, interreligiösa, annan grupp); FOKUSGRUPP is a different, older question about which group."
-
-[[statement]]
-kind = "set"
-subject = "var:fr27-5"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (äldreomsorg)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
-
-[[statement]]
-kind = "set"
-subject = "var:fr27-6"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (funktionsnedsättning)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
-
-[[statement]]
-kind = "set"
-subject = "var:fr27-7"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (annat område)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
-
-[[statement]]
-kind = "set"
-subject = "var:fr27-8"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (ingen brukarrepresentation)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
-
-[[statement]]
-kind = "set"
-subject = "var:fr28"
-fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (förskolan)" }
-evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
-
-[[statement]]
-kind = "set"
-subject = "var:fr28-2"
-fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (grundskolan)" }
-evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
-
-[[statement]]
-kind = "set"
-subject = "var:fr28-3"
-fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (gymnasieskolan)" }
-evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
-
-[[statement]]
-kind = "set"
-subject = "var:fr28-4"
-fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (individ- och familjeomsorg)" }
-evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
-
-[[statement]]
-kind = "set"
-subject = "var:fr28-6"
-fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (omsorg om personer med funktionsnedsättning)" }
-evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
-
-[[statement]]
-kind = "set"
-subject = "var:fr28-7"
-fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (annan verksamhet)" }
-evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
-
-[[statement]]
-kind = "set"
-subject = "var:fr28-8"
-fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (ingen strategi)" }
-evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
 
 [[statement]]
 kind = "set"
@@ -8413,18 +7549,6 @@ evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering ti
 
 [[statement]]
 kind = "set"
-subject = "var:fr40-2"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (grundskola)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
-
-[[statement]]
-kind = "set"
-subject = "var:fr40-3"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (gymnasieskola)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
-
-[[statement]]
-kind = "set"
 subject = "var:fr41"
 fields = { "label" = "Medborgarkontor (fysiskt)" }
 evidence = "#2102 same-label cluster 'Medborgarkontor' (19 variables): judged different meaning, medium confidence; Opdefs name sub-items per survey wave (physical office, web portal/call centre/customer service, no office), plus a count and an overall flag in 2003-13; Fr29_1..3 (kommuner 2016) only carry the generic opdef, so they are qualified by column code."
@@ -8434,48 +7558,6 @@ kind = "set"
 subject = "var:fr41-2"
 fields = { "label" = "Medborgarkontor (webbportal, callcenter eller kundtjänst)" }
 evidence = "#2102 same-label cluster 'Medborgarkontor' (19 variables): judged different meaning, medium confidence; Opdefs name sub-items per survey wave (physical office, web portal/call centre/customer service, no office), plus a count and an overall flag in 2003-13; Fr29_1..3 (kommuner 2016) only carry the generic opdef, so they are qualified by column code."
-
-[[statement]]
-kind = "set"
-subject = "var:fr41-2-35983"
-fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (grundskolan)" }
-evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
-
-[[statement]]
-kind = "set"
-subject = "var:fr41-3-35983"
-fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (gymnasieskolan)" }
-evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
-
-[[statement]]
-kind = "set"
-subject = "var:fr41-4"
-fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (individ- och familjeomsorg)" }
-evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
-
-[[statement]]
-kind = "set"
-subject = "var:fr41-5"
-fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (omsorg om äldre)" }
-evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
-
-[[statement]]
-kind = "set"
-subject = "var:fr41-6"
-fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (omsorg om personer med funktionsnedsättning)" }
-evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
-
-[[statement]]
-kind = "set"
-subject = "var:fr41-7"
-fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (annan verksamhet)" }
-evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
-
-[[statement]]
-kind = "set"
-subject = "var:fr41-8"
-fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (ingen strategi)" }
-evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
 
 [[statement]]
 kind = "set"
@@ -8494,12 +7576,6 @@ kind = "set"
 subject = "var:fr42-2-28613"
 fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (grundskola)" }
 evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
-
-[[statement]]
-kind = "set"
-subject = "var:fr42-3"
-fields = { "label" = "Medborgarkontor (har inte medborgarkontor)" }
-evidence = "#2102 same-label cluster 'Medborgarkontor' (19 variables): judged different meaning, medium confidence; Opdefs name sub-items per survey wave (physical office, web portal/call centre/customer service, no office), plus a count and an overall flag in 2003-13; Fr29_1..3 (kommuner 2016) only carry the generic opdef, so they are qualified by column code."
 
 [[statement]]
 kind = "set"
@@ -8641,12 +7717,6 @@ evidence = "#2102 same-label cluster 'Medborgarkontor' (19 variables): judged di
 
 [[statement]]
 kind = "set"
-subject = "var:har-inte-medborgarkontor"
-fields = { "label" = "Medborgarkontor (har inte medborgarkontor)" }
-evidence = "#2102 same-label cluster 'Medborgarkontor' (19 variables): judged different meaning, medium confidence; Opdefs name sub-items per survey wave (physical office, web portal/call centre/customer service, no office), plus a count and an overall flag in 2003-13; Fr29_1..3 (kommuner 2016) only carry the generic opdef, so they are qualified by column code."
-
-[[statement]]
-kind = "set"
 subject = "var:ingen-strategi-samarbete-verksamhetsutveckling"
 fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (ingen strategi)" }
 evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
@@ -8673,18 +7743,6 @@ evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables):
 kind = "set"
 subject = "var:inkomna-medborgarforslag-fr10b"
 fields = { "label" = "Inkomna medborgarförslag (antal behandlade)" }
-evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
-
-[[statement]]
-kind = "set"
-subject = "var:inkomna-medborgarforslag-fr11"
-fields = { "label" = "Inkomna medborgarförslag (antal inkomna)" }
-evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
-
-[[statement]]
-kind = "set"
-subject = "var:inkomna-medborgarforslag-fr8a"
-fields = { "label" = "Inkomna medborgarförslag (antal inkomna)" }
 evidence = "#2102 same-label cluster 'Inkomna medborgarförslag' (18 variables): judged different meaning, medium confidence; Opdefs and column names (MBFANT/BEH/BIF) give three counts (received, handled, approved citizen proposals) per survey wave; Fr12_text, Fr13_text and Fr14 map to different items in the kommun and region questionnaires (the pid mixes items), so they are qualified by column code."
 
 [[statement]]
@@ -8743,12 +7801,6 @@ evidence = "#2102 same-label cluster 'Klagomålshantering' (5 variables): judged
 
 [[statement]]
 kind = "set"
-subject = "var:kommun-brukarrepresentation-utover-delegering-forskola"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (förskola)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
-
-[[statement]]
-kind = "set"
 subject = "var:kommun-fullmaktige-ekonomiska-mal-vissa-bolag"
 fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (ekonomiska mål, vissa bolag)" }
 evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
@@ -8770,12 +7822,6 @@ kind = "set"
 subject = "var:kommun-fullmaktige-verksamhetsmal-samtliga-bolag"
 fields = { "label" = "Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag (verksamhetsmål, samtliga bolag)" }
 evidence = "#2102 same-label cluster 'Fastställande i fullmäktige av ek.- och verksamh.mål för kommunens bolag' (32 variables): judged different meaning, medium confidence; Opdefs name the goal type (ekonomiska mål, verksamhetsmål, hållbarhetsmål) and scope (samtliga or vissa bolag), the same item across 2012, 2016 and 2020; Fr26_5 and Fr39_7 only repeat the generic opdef of EKVERKMAL and keep the base label; the 2024 Fr41 items combine alla/vissa in one question."
-
-[[statement]]
-kind = "set"
-subject = "var:kommun-inte-brukarrepresentation-2020"
-fields = { "label" = "Brukarrepresentation utöver delegering till självförvaltningsorgan (ingen brukarrepresentation)" }
-evidence = "#2102 same-label cluster 'Brukarrepresentation utöver delegering till självförvaltningsorgan' (38 variables): judged different meaning, high confidence; Overall flag plus one sub-item column per service area and survey year (2012, 2016, 2020, 2024); opdefs name the area (förskola, grundskola, gymnasieskola, IFO, äldreomsorg, funktionsnedsättning, hälso- och sjukvård, annat, ingen); the same area gets the same label across years."
 
 [[statement]]
 kind = "set"
@@ -9451,12 +8497,6 @@ evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling 
 
 [[statement]]
 kind = "set"
-subject = "var:samarbete-verksamhetsutveckling-fr41"
-fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (förskolan)" }
-evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
-
-[[statement]]
-kind = "set"
 subject = "var:sammantradesarvode-fortroendevalda-kommuner"
 fields = { "label" = "Typ av arvode till förtroendevalda (sammanträdesarvode)" }
 evidence = "#2102 same-label cluster 'Typ av arvode till förtroendevalda' (12 variables): judged different meaning, high confidence; Six remuneration types (sammanträdes-, inläsnings-, månads-, förlorad arbetsförtjänst, annat, inget annat) as Ja/Nej columns, each present as a kommun (Fr7_n) and a region (Fr6_n) column with identical wording."
@@ -9475,12 +8515,6 @@ evidence = "#2102 same-label cluster 'Självförvaltningsorgan med uppdrag om dr
 
 [[statement]]
 kind = "set"
-subject = "var:strategi-samarbete-utveckling-omsorg-aldre"
-fields = { "label" = "Strategi om samarbete rörande utveckling av verksamheter (omsorg om äldre)" }
-evidence = "#2102 same-label cluster 'Strategi om samarbete rörande utveckling av verksamheter' (27 variables): judged different meaning, high confidence; Opdefs name the verksamhet per item (förskolan, grundskolan, gymnasieskolan, individ- och familjeomsorg, äldre, funktionsnedsättning, annan verksamhet, ingen strategi) for each survey year; the region questionnaire (Fr40) asks about hälso- och sjukvård, annat and ingen strategi without medborgare."
-
-[[statement]]
-kind = "set"
 subject = "var:styrpro"
 fields = { "label" = "Professionella nämnder/styrelser (STYRPRO)" }
 evidence = "#2102 same-label cluster 'Professionella nämnder/styrelser' (7 variables): judged different meaning, medium confidence; Ja/Nej flags (STYRPRO, PROFNAMND, Fr2, Fr3) differ from the count columns (STYRPROANT, PROFNAMNDANT, Fr2_text); PROFNAMND and PROFNAMNDANT have swapped-looking opdefs, so the split follows the column names."
@@ -9490,18 +8524,6 @@ kind = "set"
 subject = "var:styrproant"
 fields = { "label" = "Professionella nämnder/styrelser (antal)" }
 evidence = "#2102 same-label cluster 'Professionella nämnder/styrelser' (7 variables): judged different meaning, medium confidence; Ja/Nej flags (STYRPRO, PROFNAMND, Fr2, Fr3) differ from the count columns (STYRPROANT, PROFNAMNDANT, Fr2_text); PROFNAMND and PROFNAMNDANT have swapped-looking opdefs, so the split follows the column names."
-
-[[statement]]
-kind = "set"
-subject = "var:tv-radio-eller-webbsandningar"
-fields = { "label" = "TV-, radio- eller webbsändningar (även tillgängligt i efterhand)" }
-evidence = "#2102 same-label cluster 'TV-, radio- eller webbsändningar' (7 variables): judged different meaning, high confidence; Three answer designs: how often (varje gång/vissa gånger/aldrig), four options incl. availability afterwards on the website, and plain Ja/Nej; the Fr10/Fr12/Fr21/Fr22 pairs are the same design in the kommun and region questionnaires."
-
-[[statement]]
-kind = "set"
-subject = "var:tv-radio-eller-webbsandningar-fr10"
-fields = { "label" = "TV-, radio- eller webbsändningar (även tillgängligt i efterhand)" }
-evidence = "#2102 same-label cluster 'TV-, radio- eller webbsändningar' (7 variables): judged different meaning, high confidence; Three answer designs: how often (varje gång/vissa gånger/aldrig), four options incl. availability afterwards on the website, and plain Ja/Nej; the Fr10/Fr12/Fr21/Fr22 pairs are the same design in the kommun and region questionnaires."
 
 [[statement]]
 kind = "set"
@@ -9823,37 +8845,7 @@ evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys 
 
 [[statement]]
 kind = "set"
-subject = "var:brukarrepresentation-aldreomsorg-2020"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-annat-omrade-2020"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-fr27"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-individ-familjeomsorg-2020"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
 subject = "var:brukarrepresentation-individ-familjeomsorg-2024"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-omsorg-funktionsnedsattning-2020"
 fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
 evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
 
@@ -9861,24 +8853,6 @@ evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys 
 kind = "set"
 subject = "var:brukarrepresentation-utover-delegering"
 fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-utover-delegering-grundskola"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-utover-delegering-gymnasieskola"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:brukarrepresentation-utover-delegering-individ-familjeomsorg"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
 evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
 
 [[statement]]
@@ -9891,42 +8865,6 @@ evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys 
 kind = "set"
 subject = "var:brukarsys-utover-delegering"
 fields = { "facets" = { "population" = { "value" = "kommuner-och-regioner", "label" = "Kommuner och regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysald"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysfs"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysfunk"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysgs"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysgym"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:brukarsysifo"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
 evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
 
 [[statement]]
@@ -9957,24 +8895,6 @@ evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys 
 kind = "set"
 subject = "var:delta-i-medborgardialoger-via-webbplats-fr26b"
 fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:deltar-i-ideburet-offentligt-partnerskap-iop-fr21"
-fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:deltar-i-ideburet-offentligt-partnerskap-iop-fr23"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:deltar-i-ideburet-offentligt-partnerskap-iop-fr36"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
 evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
 
 [[statement]]
@@ -10093,20 +9013,8 @@ evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys 
 
 [[statement]]
 kind = "set"
-subject = "var:fr26"
-fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
 subject = "var:fr26-2"
 fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:fr26-2-28613"
-fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
 evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
 
 [[statement]]
@@ -10129,128 +9037,8 @@ evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys 
 
 [[statement]]
 kind = "set"
-subject = "var:fr27-5"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:fr27-6"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:fr27-7"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:fr27-8"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:fr28"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:fr28-2"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:fr28-3"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:fr28-4"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:fr28-6"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:fr28-7"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:fr28-8"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
 subject = "var:fr39"
 fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:fr40-2"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:fr40-3"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:fr41-2-35983"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:fr41-3-35983"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:fr41-4"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:fr41-5"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:fr41-6"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:fr41-7"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:fr41-8"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
 evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
 
 [[statement]]
@@ -10425,18 +9213,6 @@ evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys 
 kind = "set"
 subject = "var:interreligiosa-rad-regioner-2019"
 fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:kommun-brukarrepresentation-utover-delegering-forskola"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:kommun-inte-brukarrepresentation-2020"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
 evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
 
 [[statement]]
@@ -11029,12 +9805,6 @@ evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys 
 
 [[statement]]
 kind = "set"
-subject = "var:samarbete-verksamhetsutveckling-fr41"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
 subject = "var:samlat-kommunala-bolag-under-ett-moderbolag-fr23"
 fields = { "facets" = { "population" = { "value" = "regioner", "label" = "Regioner" } } }
 evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
@@ -11114,12 +9884,6 @@ evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys 
 [[statement]]
 kind = "set"
 subject = "var:strategi-om-samarbete-rorande-utveckling-av-fr43-7-text"
-fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
-evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
-
-[[statement]]
-kind = "set"
-subject = "var:strategi-samarbete-utveckling-omsorg-aldre"
 fields = { "facets" = { "population" = { "value" = "kommuner", "label" = "Kommuner" } } }
 evidence = "#2141 Q2 (maintainer 2026-11-03): the kommuner and regioner surveys ask the same question; kept as separate variables in one concept group with a population facet, not a fold. Value from the tables the variable occurs in."
 
@@ -11566,3 +10330,339 @@ kind = "set"
 subject = "var:fr45-5"
 fields = { "label" = "Webbplats med medborgarförslag (följa hanteringen, Fr45_5)" }
 evidence = "#2102 same-label cluster 'Webbplats med medborgarförslag' (10 variables): judged different meaning, medium confidence; Two items per year: information about medborgarförslag and following their handling (opdefs 2008, 2016 kommun, Fr45_5, Fr42_5); the 2012 FORS/FORSANT opdefs contradict each other and the region 2016 Fr30_9/Fr30_10 have no text, so those are qualified by column code."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr40_7"
+fields = { "variable" = "fr42-7" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr27_7 2016-01-01..2017-01-01; Fr40_7 2020-01-01..2021-01-01; Fr42_7 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr27_7"
+fields = { "variable" = "fr42-7" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr27_7 2016-01-01..2017-01-01; Fr40_7 2020-01-01..2021-01-01; Fr42_7 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "regioner: Fr26_2"
+fields = { "variable" = "region-brukarrepresentation-utover-delegering-annat" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr26_2 2016-01-01..2017-01-01; Fr39_2 2020-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr40_6"
+fields = { "variable" = "fr42-6" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: BRUKARSYSFUNK 2012-01-01..2013-01-01; Fr27_6 2016-01-01..2017-01-01; Fr40_6 2020-01-01..2021-01-01; Fr42_6 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: BRUKARSYSFUNK"
+fields = { "variable" = "fr42-6" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: BRUKARSYSFUNK 2012-01-01..2013-01-01; Fr27_6 2016-01-01..2017-01-01; Fr40_6 2020-01-01..2021-01-01; Fr42_6 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr27_6"
+fields = { "variable" = "fr42-6" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: BRUKARSYSFUNK 2012-01-01..2013-01-01; Fr27_6 2016-01-01..2017-01-01; Fr40_6 2020-01-01..2021-01-01; Fr42_6 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr27_1"
+fields = { "variable" = "fr42" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: BRUKARSYSFS 2012-01-01..2013-01-01; Fr27_1 2016-01-01..2017-01-01; Fr40_1 2020-01-01..2021-01-01; Fr42_1 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: BRUKARSYSFS"
+fields = { "variable" = "fr42" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: BRUKARSYSFS 2012-01-01..2013-01-01; Fr27_1 2016-01-01..2017-01-01; Fr40_1 2020-01-01..2021-01-01; Fr42_1 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr40_1"
+fields = { "variable" = "fr42" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: BRUKARSYSFS 2012-01-01..2013-01-01; Fr27_1 2016-01-01..2017-01-01; Fr40_1 2020-01-01..2021-01-01; Fr42_1 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr27_2"
+fields = { "variable" = "fr42-2-28613" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: BRUKARSYSGS 2012-01-01..2013-01-01; Fr27_2 2016-01-01..2017-01-01; Fr40_2 2020-01-01..2021-01-01; Fr42_2 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: BRUKARSYSGS"
+fields = { "variable" = "fr42-2-28613" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: BRUKARSYSGS 2012-01-01..2013-01-01; Fr27_2 2016-01-01..2017-01-01; Fr40_2 2020-01-01..2021-01-01; Fr42_2 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr40_2"
+fields = { "variable" = "fr42-2-28613" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: BRUKARSYSGS 2012-01-01..2013-01-01; Fr27_2 2016-01-01..2017-01-01; Fr40_2 2020-01-01..2021-01-01; Fr42_2 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr27_3"
+fields = { "variable" = "fr42-3-28613" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: BRUKARSYSGYM 2012-01-01..2013-01-01; Fr27_3 2016-01-01..2017-01-01; Fr40_3 2020-01-01..2021-01-01; Fr42_3 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: BRUKARSYSGYM"
+fields = { "variable" = "fr42-3-28613" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: BRUKARSYSGYM 2012-01-01..2013-01-01; Fr27_3 2016-01-01..2017-01-01; Fr40_3 2020-01-01..2021-01-01; Fr42_3 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr40_3"
+fields = { "variable" = "fr42-3-28613" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: BRUKARSYSGYM 2012-01-01..2013-01-01; Fr27_3 2016-01-01..2017-01-01; Fr40_3 2020-01-01..2021-01-01; Fr42_3 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "regioner: Fr26_1"
+fields = { "variable" = "fr39" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr26_1 2016-01-01..2017-01-01; Fr39_1 2020-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr40_4"
+fields = { "variable" = "brukarrepresentation-individ-familjeomsorg-2024" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: BRUKARSYSIFO 2012-01-01..2013-01-01; Fr27_4 2016-01-01..2017-01-01; Fr40_4 2020-01-01..2021-01-01; Fr42_4 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr27_4"
+fields = { "variable" = "brukarrepresentation-individ-familjeomsorg-2024" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: BRUKARSYSIFO 2012-01-01..2013-01-01; Fr27_4 2016-01-01..2017-01-01; Fr40_4 2020-01-01..2021-01-01; Fr42_4 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: BRUKARSYSIFO"
+fields = { "variable" = "brukarrepresentation-individ-familjeomsorg-2024" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: BRUKARSYSIFO 2012-01-01..2013-01-01; Fr27_4 2016-01-01..2017-01-01; Fr40_4 2020-01-01..2021-01-01; Fr42_4 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr27_8"
+fields = { "variable" = "fr42-8" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr27_8 2016-01-01..2017-01-01; Fr40_8 2020-01-01..2021-01-01; Fr42_8 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr40_8"
+fields = { "variable" = "fr42-8" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr27_8 2016-01-01..2017-01-01; Fr40_8 2020-01-01..2021-01-01; Fr42_8 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr40_5"
+fields = { "variable" = "fr42-5-28613" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: BRUKARSYSALD 2012-01-01..2013-01-01; Fr27_5 2016-01-01..2017-01-01; Fr40_5 2020-01-01..2021-01-01; Fr42_5 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: BRUKARSYSALD"
+fields = { "variable" = "fr42-5-28613" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: BRUKARSYSALD 2012-01-01..2013-01-01; Fr27_5 2016-01-01..2017-01-01; Fr40_5 2020-01-01..2021-01-01; Fr42_5 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr27_5"
+fields = { "variable" = "fr42-5-28613" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28613) in one table, renamed between survey rounds and never delivered together, so they are one variable: BRUKARSYSALD 2012-01-01..2013-01-01; Fr27_5 2016-01-01..2017-01-01; Fr40_5 2020-01-01..2021-01-01; Fr42_5 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "regioner: Fr21 where key = 'v35982'"
+fields = { "variable" = "ideburet-offentligt-partnerskap-iop" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35982) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr21 2016-01-01..2017-01-01; Fr35 2020-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr23 where key = 'v35982'"
+fields = { "variable" = "deltar-i-ideburet-offentligt-partnerskap-iop-fr37" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35982) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr23 2016-01-01..2017-01-01; Fr36 2020-01-01..2021-01-01; Fr37 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr36 where key = 'v35982'"
+fields = { "variable" = "deltar-i-ideburet-offentligt-partnerskap-iop-fr37" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35982) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr23 2016-01-01..2017-01-01; Fr36 2020-01-01..2021-01-01; Fr37 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "regioner: Fr24_5 where key = 'v29350'"
+fields = { "variable" = "landsting-fullmaktige-inga-ekonomiska-verksamhetsmal-bolag" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v29350) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr24_5 2016-01-01..2017-01-01; Fr38_7 2020-01-01..2021-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr19_text"
+fields = { "variable" = "fr21" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v42791) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr19_text 2020-01-01..2021-01-01; Fr21 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "regioner: Fr16_text"
+fields = { "variable" = "inkomna-e-forslag-fr17" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v42791) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr16_text 2020-01-01..2021-01-01; Fr17 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr14_text"
+fields = { "variable" = "fr16" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28632) in one table, renamed between survey rounds and never delivered together, so they are one variable: fr10c_text 2016-01-01..2017-01-01; Fr14_text 2020-01-01..2021-01-01; Fr16 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: fr10c_text"
+fields = { "variable" = "fr16" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28632) in one table, renamed between survey rounds and never delivered together, so they are one variable: fr10c_text 2016-01-01..2017-01-01; Fr14_text 2020-01-01..2021-01-01; Fr16 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "regioner: Fr11_text"
+fields = { "variable" = "fr1" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28632) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr8a_text 2016-01-01..2017-01-01; Fr11_text 2020-01-01..2021-01-01; Fr12 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "regioner: Fr8a_text"
+fields = { "variable" = "fr1" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28632) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr8a_text 2016-01-01..2017-01-01; Fr11_text 2020-01-01..2021-01-01; Fr12 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "regioner: PRIVLAK"
+fields = { "variable" = "avtlakvarders" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28610) in one table, renamed between survey rounds and never delivered together, so they are one variable: PRIVLAK 2003-01-01..2009-01-01; AVTLAKVARDERS 2012-01-01..2013-01-01."
+
+[[statement]]
+kind = "set"
+subject = "regioner: PRIVSJUKH"
+fields = { "variable" = "vardavtalpriv" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28608) in one table, renamed between survey rounds and never delivered together, so they are one variable: PRIVSJUKH 2003-01-01..2009-01-01; VARDAVTALPRIV 2012-01-01..2013-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr42_3 where key = 'v28617'"
+fields = { "variable" = "inget-medborgarkontor" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28617) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr42_3 2020-01-01..2021-01-01; Fr44_3 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "regioner: Fr27_3"
+fields = { "variable" = "region-inte-medborgarkontor" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28617) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr27_3 2016-01-01..2017-01-01; Fr41_3 2020-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr28_7"
+fields = { "variable" = "fr43-7" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35983) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr28_7 2016-01-01..2017-01-01; Fr41_7 2020-01-01..2021-01-01; Fr43_7 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr41_7"
+fields = { "variable" = "fr43-7" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35983) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr28_7 2016-01-01..2017-01-01; Fr41_7 2020-01-01..2021-01-01; Fr43_7 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr28_1"
+fields = { "variable" = "fr43" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35983) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr28_1 2016-01-01..2017-01-01; Fr41_1 2020-01-01..2021-01-01; Fr43_1 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr41_1"
+fields = { "variable" = "fr43" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35983) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr28_1 2016-01-01..2017-01-01; Fr41_1 2020-01-01..2021-01-01; Fr43_1 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr28_2"
+fields = { "variable" = "fr43-2" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35983) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr28_2 2016-01-01..2017-01-01; Fr41_2 2020-01-01..2021-01-01; Fr43_2 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr41_2"
+fields = { "variable" = "fr43-2" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35983) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr28_2 2016-01-01..2017-01-01; Fr41_2 2020-01-01..2021-01-01; Fr43_2 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr28_3"
+fields = { "variable" = "fr43-3" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35983) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr28_3 2016-01-01..2017-01-01; Fr41_3 2020-01-01..2021-01-01; Fr43_3 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr41_3"
+fields = { "variable" = "fr43-3" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35983) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr28_3 2016-01-01..2017-01-01; Fr41_3 2020-01-01..2021-01-01; Fr43_3 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr28_4"
+fields = { "variable" = "fr43-4" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35983) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr28_4 2016-01-01..2017-01-01; Fr41_4 2020-01-01..2021-01-01; Fr43_4 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr41_4"
+fields = { "variable" = "fr43-4" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35983) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr28_4 2016-01-01..2017-01-01; Fr41_4 2020-01-01..2021-01-01; Fr43_4 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr28_8"
+fields = { "variable" = "ingen-strategi-samarbete-verksamhetsutveckling" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35983) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr28_8 2016-01-01..2017-01-01; Fr41_8 2020-01-01..2021-01-01; Fr43_8 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr41_8"
+fields = { "variable" = "ingen-strategi-samarbete-verksamhetsutveckling" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35983) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr28_8 2016-01-01..2017-01-01; Fr41_8 2020-01-01..2021-01-01; Fr43_8 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr28_6"
+fields = { "variable" = "fr43-6" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35983) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr28_6 2016-01-01..2017-01-01; Fr41_6 2020-01-01..2021-01-01; Fr43_6 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr41_6"
+fields = { "variable" = "fr43-6" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35983) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr28_6 2016-01-01..2017-01-01; Fr41_6 2020-01-01..2021-01-01; Fr43_6 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr41_5"
+fields = { "variable" = "fr43-5" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35983) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr28_5 2016-01-01..2017-01-01; Fr41_5 2020-01-01..2021-01-01; Fr43_5 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr28_5"
+fields = { "variable" = "fr43-5" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v35983) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr28_5 2016-01-01..2017-01-01; Fr41_5 2020-01-01..2021-01-01; Fr43_5 2024-01-01..2025-01-01."
+
+[[statement]]
+kind = "set"
+subject = "kommuner: Fr12"
+fields = { "variable" = "tv-radio-eller-webbsandningar-fr22" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28634) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr12 2016-01-01..2017-01-01; Fr22 2020-01-01..2021-01-01."
+
+[[statement]]
+kind = "set"
+subject = "regioner: Fr10 where key = 'v28634'"
+fields = { "variable" = "tv-radio-eller-webbsandningar-fr21" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v28634) in one table, renamed between survey rounds and never delivered together, so they are one variable: Fr10 2016-01-01..2017-01-01; Fr21 2020-01-01..2021-01-01."
