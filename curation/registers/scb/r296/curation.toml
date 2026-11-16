@@ -1,6 +1,6 @@
 [[statement]]
 kind = "set"
-subject = "ppi: beskrivnsv @2013..2016"
+subject = "ppi-indata: beskrivnsv @2013..2016"
 fields = { "coded" = false }
 evidence = "python-builder-pre-cutover:curation/registers/scb/prisindex.toml:586\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
 caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
@@ -14,7 +14,7 @@ caveat = "The source documents a stored description/text component. Its attached
 
 [[statement]]
 kind = "set"
-subject = "ppi: beskrivnsv where release = 'r11106'"
+subject = "ppi-indata: beskrivnsv where release = 'r11106'"
 fields = { "coded" = false }
 evidence = "python-builder-pre-cutover:curation/registers/scb/prisindex.toml:586\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
 caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
@@ -35,7 +35,7 @@ caveat = "The source documents a stored description/text component. Its attached
 
 [[statement]]
 kind = "set"
-subject = "ppi: beskrivnsv where release = 'r11707'"
+subject = "ppi-indata: beskrivnsv where release = 'r11707'"
 fields = { "coded" = false }
 evidence = "python-builder-pre-cutover:curation/registers/scb/prisindex.toml:586\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
 caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
@@ -49,7 +49,7 @@ caveat = "The source documents a stored description/text component. Its attached
 
 [[statement]]
 kind = "set"
-subject = "ppi: beskrivnsv where release = 'r12978'"
+subject = "ppi-indata: beskrivnsv where release = 'r12978'"
 fields = { "coded" = false }
 evidence = "python-builder-pre-cutover:curation/registers/scb/prisindex.toml:586\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
 caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
@@ -63,7 +63,7 @@ caveat = "The source documents a stored description/text component. Its attached
 
 [[statement]]
 kind = "set"
-subject = "ppi: beskrivnsv where release = 'r13763'"
+subject = "ppi-indata: beskrivnsv where release = 'r13763'"
 fields = { "coded" = false }
 evidence = "python-builder-pre-cutover:curation/registers/scb/prisindex.toml:586\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
 caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
@@ -77,14 +77,14 @@ caveat = "The source documents a stored description/text component. Its attached
 
 [[statement]]
 kind = "set"
-subject = "ppi: beskrivnsv where release = 'r16115'"
+subject = "ppi-indata: beskrivnsv where release = 'r16115'"
 fields = { "coded" = false }
 evidence = "python-builder-pre-cutover:curation/registers/scb/prisindex.toml:586\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
 caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
 
 [[statement]]
 kind = "set"
-subject = "ppi: beskrivnsv where release = 'r18078'"
+subject = "ppi-indata: beskrivnsv where release = 'r18078'"
 fields = { "coded" = false }
 evidence = "python-builder-pre-cutover:curation/registers/scb/prisindex.toml:586\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
 caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
@@ -98,7 +98,7 @@ caveat = "The source documents a stored description/text component. Its attached
 
 [[statement]]
 kind = "set"
-subject = "ppi: beskrivnsv where release = 'r18104'"
+subject = "ppi-indata: beskrivnsv where release = 'r18104'"
 fields = { "coded" = false }
 evidence = "python-builder-pre-cutover:curation/registers/scb/prisindex.toml:586\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
 caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
@@ -126,14 +126,14 @@ caveat = "The source documents a stored description/text component. Its attached
 
 [[statement]]
 kind = "set"
-subject = "ppi: beskrivnsv where release = 'r19910'"
+subject = "ppi-indata: beskrivnsv where release = 'r19910'"
 fields = { "coded" = false }
 evidence = "python-builder-pre-cutover:curation/registers/scb/prisindex.toml:586\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
 caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
 
 [[statement]]
 kind = "set"
-subject = "ppi: beskrivnsv where release = 'r19952'"
+subject = "ppi-indata: beskrivnsv where release = 'r19952'"
 fields = { "coded" = false }
 evidence = "python-builder-pre-cutover:curation/registers/scb/prisindex.toml:586\n\nThe source explicitly describes this physical component as clear text or a description of the corresponding classification/product-group code. The attached numeric codebook describes the related code component and does not establish the stored text column’s literal response values. Treat only this finite documented clear-text component as uncoded, retaining every raw attached codebook, coding association, declared classification and original wording."
 caveat = "The source documents a stored description/text component. Its attached numeric codebook is retained as classification reference evidence; it does not establish the stored text responses or a finite text domain."
@@ -160,7 +160,7 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/prisindex.toml:431
 
 [[statement]]
 kind = "set"
-subject = "ppi: periodid where key = 'v35935'"
+subject = "ppi-indata: periodid where key = 'v35935'"
 fields = { "variable" = "none" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/prisindex.toml:431\n\nEvery exact variant/edition/literal coordinate for this quarterlyTPI source family simultaneously carries a monthlyPPI native source definition, with no physical table discriminator. The meanings and13-month vs5-quarter encodings are contradictory. Retain the complete family, dates, wording and ordered coding without an invented semantic owner."
 
@@ -1902,9 +1902,9 @@ evidence = "Maintainer 2026-11-14: where the claimants are variants of one conce
 
 [[statement]]
 kind = "set"
-subject = "ppi: var:cfar-nummer"
+subject = "ppi-indata: var:cfar-nummer"
 fields.row_key = true
-evidence = "Row key: foretagsidentitet and cfar-nummer and identitet-ftgid identify a row: the reporting firm id of each era (survey firm id, then CFAR, then the firm id of the new system) identifies the respondent; product, notation and lookup ids are attributes; rows are price quotes so the key does not make rows unique (maintainer ruling 2026-11-14)."
+evidence = "Row key: cfar-nummer (CfarNr, 2013-2014) and identitet-ftgid (FtgId, from 2023) are the reporting firm id of their era and identify the respondent; together with period-ppi-periodid they key a price quote. The Indata files of 2015-2022 deliver no firm id. Product and lookup ids are attributes; rows are price quotes, so the key does not make rows unique (maintainer ruling 2026-11-14)."
 
 [[statement]]
 kind = "set"
@@ -1914,13 +1914,13 @@ evidence = "Row key: foretagsidentitet and cfar-nummer and identitet-ftgid ident
 
 [[statement]]
 kind = "set"
-subject = "ppi: var:identitet-ftgid"
+subject = "ppi-indata: var:identitet-ftgid"
 fields.row_key = true
-evidence = "Row key: foretagsidentitet and cfar-nummer and identitet-ftgid identify a row: the reporting firm id of each era (survey firm id, then CFAR, then the firm id of the new system) identifies the respondent; product, notation and lookup ids are attributes; rows are price quotes so the key does not make rows unique (maintainer ruling 2026-11-14)."
+evidence = "Row key: cfar-nummer (CfarNr, 2013-2014) and identitet-ftgid (FtgId, from 2023) are the reporting firm id of their era and identify the respondent; together with period-ppi-periodid they key a price quote. The Indata files of 2015-2022 deliver no firm id. Product and lookup ids are attributes; rows are price quotes, so the key does not make rows unique (maintainer ruling 2026-11-14)."
 
 [[statement]]
 kind = "set"
-subject = "tjansteprisindex-tpi: var:person-orgnr"
+subject = "tjansteprisindex-tpi-indata: var:person-orgnr"
 fields.row_key = true
 evidence = "Row key: person-orgnr identify a row: the reporting firm organisation number identifies the respondent; CFAR, form and question ids are attributes (maintainer ruling 2026-11-14)."
 
@@ -1944,7 +1944,7 @@ evidence = "Row key: berakningsperiod-period (Period) is the period of a row; on
 
 [[statement]]
 kind = "set"
-subject = "tjansteprisindex-tpi: BeskrivnSv where key = 'v30830'"
+subject = "tjansteprisindex-tpi-indata: BeskrivnSv where key = 'v30830'"
 fields = { "variable" = "produktgruppsnamn" }
 evidence = "The default identity would merge source key v30830 across the Indata and Utdata releases of tjansteprisindex-tpi, which share years and spell it differently: BeskrivnSv (Indata 2014) and NamnSV (Utdata 2014). Indata and Utdata are parallel files with different content (class C, maintainer 2026-11-16: keep these keys split until the class C split gives Indata its own table), so each spelling stays its own variable."
 
@@ -1962,7 +1962,7 @@ evidence = "The default identity would merge source key v27318 across the Indata
 
 [[statement]]
 kind = "set"
-subject = "tjansteprisindex-tpi: PeriodId where key = 'v27318'"
+subject = "tjansteprisindex-tpi-indata: PeriodId where key = 'v27318'"
 fields = { "variable" = "berakningsperiod-periodid" }
 evidence = "The default identity would merge source key v27318 across the Indata and Utdata releases of tjansteprisindex-tpi, which share years and spell it differently: Period (2012, 2013, Utdata 2014), PeriodId (Indata 2014) and UndersokningsKvartal (2007-2011). Indata and Utdata are parallel files with different content (class C, maintainer 2026-11-16: keep these keys split until the class C split gives Indata its own table), so each spelling stays its own variable."
 
@@ -1980,6 +1980,114 @@ evidence = "The default identity would merge source key v29392 across the Indata
 
 [[statement]]
 kind = "set"
-subject = "ppi: PeriodId where key = 'v29392'"
+subject = "ppi-indata: PeriodId where key = 'v29392'"
 fields = { "variable" = "period-ppi-periodid" }
 evidence = "The default identity would merge source key v29392 across the Indata and Utdata releases of ppi, which share years and spell it differently: Period (Utdata 2017-2026) and PeriodId (Indata 2013-2025). Indata and Utdata are parallel files with different content (class C, maintainer 2026-11-16: keep these keys split until the class C split gives Indata its own table), so each spelling stays its own variable."
+
+[[statement]]
+kind = "assert"
+subject = "table:ppi-indata"
+fact = { "entity" = "table", "fields" = { "name" = "Prisindex i producent- och importled (PPI), indata", "description" = "Prisuppgifter avseende produkterbjudanden, inhämtade månadsvis eller kvartalsvis från ett urval av företag och produkter, från och med 2013. Från och med 2017 ingår även tjänsteprisindex (TPI). Prisindextalen för produktgrupper och branscher finns i tabellen Prisindex i producent- och importled (PPI)." } }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, class C): parallel files with different content in one table move to a table of their own. From 2013 SCB Registerinformation documents PPI as two files per year: \"Indata <år>\" (e.g. RegVerID 4618: \"Syftet är att månadsvis inhämta prisuppgifter avseende produkterbjudanden, från ett urval av företag och produkter under 2013\"; from 2017, e.g. 11106: \"månadsvis eller kvartalsvis … (produkter och tjänster) … Från och med denna registerversion så ingår både TPI:Tjänsteprisindex, och PPI:producentprisindex\") and \"Utdata <år>\" (e.g. 4620: \"Prisindextal för produktgrupper/branscher, aggregerade enligt SPIN 2007\"). The two files share at most 5 of their columns. The files of 2001-2012 share no column with either and stay in the PPI table. The Indata files are this table."
+
+[[statement]]
+kind = "set"
+subject = "release:ppi/r4618"
+fields = { "table" = "ppi-indata" }
+evidence = "SCB documents the Indata file (price observations) beside the Utdata file (index numbers) for the same year, with other content. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:ppi/r5206"
+fields = { "table" = "ppi-indata" }
+evidence = "SCB documents the Indata file (price observations) beside the Utdata file (index numbers) for the same year, with other content. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:ppi/r5790"
+fields = { "table" = "ppi-indata" }
+evidence = "SCB documents the Indata file (price observations) beside the Utdata file (index numbers) for the same year, with other content. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:ppi/r6244"
+fields = { "table" = "ppi-indata" }
+evidence = "SCB documents the Indata file (price observations) beside the Utdata file (index numbers) for the same year, with other content. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:ppi/r11106"
+fields = { "table" = "ppi-indata" }
+evidence = "SCB documents the Indata file (price observations) beside the Utdata file (index numbers) for the same year, with other content. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:ppi/r11707"
+fields = { "table" = "ppi-indata" }
+evidence = "SCB documents the Indata file (price observations) beside the Utdata file (index numbers) for the same year, with other content. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:ppi/r12978"
+fields = { "table" = "ppi-indata" }
+evidence = "SCB documents the Indata file (price observations) beside the Utdata file (index numbers) for the same year, with other content. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:ppi/r13763"
+fields = { "table" = "ppi-indata" }
+evidence = "SCB documents the Indata file (price observations) beside the Utdata file (index numbers) for the same year, with other content. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:ppi/r16115"
+fields = { "table" = "ppi-indata" }
+evidence = "SCB documents the Indata file (price observations) beside the Utdata file (index numbers) for the same year, with other content. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:ppi/r18078"
+fields = { "table" = "ppi-indata" }
+evidence = "SCB documents the Indata file (price observations) beside the Utdata file (index numbers) for the same year, with other content. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:ppi/r18104"
+fields = { "table" = "ppi-indata" }
+evidence = "SCB documents the Indata file (price observations) beside the Utdata file (index numbers) for the same year, with other content. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:ppi/r19910"
+fields = { "table" = "ppi-indata" }
+evidence = "SCB documents the Indata file (price observations) beside the Utdata file (index numbers) for the same year, with other content. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:ppi/r19952"
+fields = { "table" = "ppi-indata" }
+evidence = "SCB documents the Indata file (price observations) beside the Utdata file (index numbers) for the same year, with other content. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "assert"
+subject = "table:tjansteprisindex-tpi-indata"
+fact = { "entity" = "table", "fields" = { "name" = "Tjänsteprisindex (TPI), indata", "description" = "Prisuppgifter avseende produkterbjudanden (tjänster), inhämtade kvartalsvis från ett urval av företag, 2014. Prisindextalen finns i tabellen Tjänsteprisindex (TPI). Från och med 2017 ingår TPI:s indata i tabellen Prisindex i producent- och importled (PPI), indata." } }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, class C): parallel files with different content in one table move to a table of their own. For 2014 SCB Registerinformation documents TPI as two files: \"Indata 2014\" (RegVerID 5776: \"Syftet är att kvartalsvis inhämta prisuppgifter avseende produkterbjudanden (tjänster) från ett urval av företag under 2014\") and \"Utdata 2014\" (5792: \"Prisindextal för produktgrupper/branscher, aggregerade enligt SPIN 2007\"). They share 3 of their columns. PPI Indata 2017 (RegVerID 11106) states that from that version TPI and PPI are documented together. The Indata file is this table."
+
+[[statement]]
+kind = "set"
+subject = "release:tjansteprisindex-tpi/r5776"
+fields = { "table" = "tjansteprisindex-tpi-indata" }
+evidence = "SCB documents the Indata file (price observations) beside the Utdata file (index numbers) for 2014, with other content. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "ppi-indata: var:period-ppi-periodid"
+fields.row_key = true
+evidence = "Row key: period-ppi-periodid (PeriodId) is the period of a price quote, delivered in every Indata file 2013-2025; one file holds several periods, so the firm id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "tjansteprisindex-tpi-indata: var:berakningsperiod-periodid"
+fields.row_key = true
+evidence = "Row key: berakningsperiod-periodid (PeriodId) is the period of a price quote in the Indata 2014 file; one file holds several quarters, so the organisation number repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
