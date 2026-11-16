@@ -402,7 +402,8 @@ every order (`row_keys`), `show` lists them and `schema` lines flag them.
   counts as stated. A source-read occurrence's null stays null, and with no earlier run
   the label falls back to the column name. So an assertion that adds a release
   for an existing variable continues its text, and one that states a changed definition
-  keeps the label, operational definition and unit it does not restate.
+  keeps the label, operational definition and unit it does not restate. An occurrence
+  assertion may therefore state no field at all; a table assertion must state one.
 - `set variable = "<ledger slug>"` assigns identity during resolution, or `"none"`
   withholds the selected occurrences. An explicit `set variable` changes the variable of
   exactly the selected occurrences; every unselected occurrence resolves as if the
