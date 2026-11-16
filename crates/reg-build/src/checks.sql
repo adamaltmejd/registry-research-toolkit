@@ -86,9 +86,10 @@ WHERE g.variable_id IS NULL OR g.s <> v.start OR g.e <> v.end;
 -- (9) one primary per parsed (table, period, qualifier)
 SELECT table_id, start, end, qualifier FROM release WHERE parse_state <> 'unparsed'
 GROUP BY table_id, start, end, qualifier HAVING SUM(is_primary) <> 1;
--- (9c) releases of one table have distinct names: an order names a release by it
+-- (9c) primary releases of one table have distinct names: an order names a primary by
+-- it. An edition collision (F8) may repeat a name: only one of the pair is primary.
 SELECT r.table_id, n.body FROM release r JOIN text n ON n.id = r.name_text
-GROUP BY r.table_id, n.body HAVING COUNT(*) > 1;
+WHERE r.is_primary = 1 GROUP BY r.table_id, n.body HAVING COUNT(*) > 1;
 
 -- (10) value-set structure (the hash is re-verified by `catalog verify`, not SQL)
 SELECT valueset_id FROM vs_item GROUP BY valueset_id HAVING MAX(ord) + 1 <> COUNT(*);

@@ -3095,8 +3095,9 @@ period and qualifier), and the catalog keeps every release's own columns.
   release is a primary of its own table that covers it; only a table with concurrent
   releases has keyed segments, and there an occurrence of a release never sits in a
   segment of no release. (7) an occurrence and its segment name the same release, or
-  releases of one period and qualifier. (9c) release names are unique per table, since
-  orders will name releases by them.
+  releases of one period and qualifier. (9c) primary release names are unique per
+  table, since orders will name primaries by them; an edition collision (F8) may
+  repeat a name, because only one of the pair is primary.
 - **Identity.** `D-11` is tested per release (Identity, `set variable`): one variable
   may be `A` in one release and `B` in another over a shared day.
 - **Reading.** `segments` rows name their `release` in such a table, ordered by start,
