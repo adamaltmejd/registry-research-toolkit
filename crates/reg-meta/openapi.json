@@ -4435,7 +4435,7 @@
                 "items": {
                   "$ref": "#/components/schemas/ShowSharedDays"
                 },
-                "description": "Days two or more of the table's releases both deliver: an order over them names\nthe releases to use (`releases` on the project source). Absent when none, and on\na data holder's catalog."
+                "description": "Days two or more of the table's releases both deliver: an order over them names\nthe releases to use (`releases` on the project source). Absent when none. Served\non a data holder's catalog too: the order names these releases there as well."
               },
               "spans": {
                 "type": "array",
