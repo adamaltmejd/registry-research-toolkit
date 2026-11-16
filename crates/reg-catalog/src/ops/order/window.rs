@@ -372,6 +372,10 @@ fn materialize(
     // A shared day blocks the source (`release_ambiguous`); what the releases deliver
     // there is no entry and meets no per-window check.
     let pieces = unshared(scope, pieces)?;
+    if pieces.is_empty() {
+        outcome.findings.extend(replaced(&at)?);
+        return Ok(outcome);
+    }
     outcome.findings.extend(windows(&at, &pieces));
     outcome.findings.extend(editions(&at, &pieces)?);
     outcome.findings.extend(replaced(&at)?);
