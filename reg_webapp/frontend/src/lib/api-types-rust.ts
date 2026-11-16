@@ -1224,8 +1224,8 @@ export interface components {
             series_breaks?: components["schemas"]["ShowSeriesBreak"][];
             /**
              * @description Days two or more of the table's releases both deliver: an order over them names
-             *     the releases to use (`releases` on the project source). Absent when none, and on
-             *     a data holder's catalog.
+             *     the releases to use (`releases` on the project source). Absent when none. Served
+             *     on a data holder's catalog too: the order names these releases there as well.
              */
             shared_release_days?: components["schemas"]["ShowSharedDays"][];
             spans: components["schemas"]["Period"][];

@@ -289,7 +289,10 @@ states one only to override the catalog, by editing the file (#2071, G13).
 
 **Not shown at all:** role, coded, state, temporality, storage, unplaced releases,
 source and provenance, timeless, implicit, cadence, edition, primary, populations,
-releases, and a table's row keys (Operator Q2, #2252). A fact that is not stated has
+releases, and a table's row keys (Operator Q2, #2252). The one exception is a table
+whose releases share years (SCB's CIS waves): its project card offers the releases
+that share the source's years, by the name `show` gives them, since an order must name
+them (new rule, proposed by the implementer). A fact that is not stated has
 no row. A yes/no fact (identifier, sensitive) shows only when yes.
 
 ## Colors
@@ -948,7 +951,12 @@ Time is the axis every relation is drawn on.
   column pills on that row; only columns delivered side by side in one file (a slot's
   members, `ng2`–`ng5`) overlap, and each takes a row of its own; a later column joins
   a row only where exactly one row can take it, since sharing a slot member's row would
-  read as its rename (new rule, proposed by the implementer). A steward's yearly
+  read as its rename (new rule, proposed by the implementer). In a table whose releases
+  share years, one column name in two releases is two columns, each over its own
+  release's years: they overlap on the shared years, so each takes a row there, and a
+  later release continues the free row that last had its name, so a table of
+  overlapping releases keeps two rows rather than one per release (new rule, proposed by
+  the implementer). A steward's yearly
   files of one table are the same column delivered in several files, one box over their
   years with a gap where a year is not delivered (maintainer 2026-11-04). Spans are
   drawn at their real half-open dates, so school years abut instead of sharing a year
@@ -1167,7 +1175,8 @@ grow new visual language meanwhile.
 - **Select:** a labelled RAC `Select` with `Popover` and scrolling `ListBox`, on
   `surface` with a `border-strong` hairline and `sm` radius. Text uses `body-sm`; focus
   uses the shared ring. Options use plain names, and the overlay uses `--z-popover`.
-  Type and classification controls compose this shared primitive.
+  Type and classification controls compose this shared primitive; a choice of several
+  (a source's deliveries) is the same control with multiple selection.
 - **AddBar:** the shared sticky bottom bar for a staged change on the variable or group
   page. Its `primary` button reads "Add N variables to project", counting variables, not
   columns (Operator proposal, #2408, not yet confirmed); a staged removal adds the
@@ -1261,11 +1270,22 @@ grow new visual language meanwhile.
   table has or the steward has data for (a year without data is not listed as
   delivered, #2220), "Delivered as" for a table the catalog merged from several of the
   provider's tables (each provider table's name with its years, the name an order uses;
-  absent otherwise), and the "Row identifier" columns. There is no order-file download: the
+  absent otherwise), "Deliveries" where the project names releases for years they share
+  (each named release with the shared years it delivers, so a year delivered twice reads
+  so; new rule, proposed by the implementer), and the "Row identifier" columns. There is no order-file download: the
   steward's instructions say how to order. With no project the page is one `EmptyState`,
   "No project yet", with "Create a project" and "Open a project file…". Below
   `breakpoint-narrow` a column's row on a card stacks: its name and Remove, its spans,
-  then Type.
+  then Type. On a table whose releases share years within the card's years, the card
+  has a multiple `Select`, "Deliveries for <the shared years>", placeholder "Choose
+  deliveries", listing those releases by name in start order, with "Each delivery you
+  choose is ordered for these years." under it, and closing on each pick, since a pick can
+  clear the finding above it; the choice writes the source's `releases` and none removes it. A named release that
+  serves none of the shared years stays listed, "(not for these years)", so its finding
+  can be cleared on the card, and a name the project spells otherwise shows as the
+  catalog spells it (an order matches it under the identity fold). If the table's
+  deliveries do not load, the card says so in an `err` row with Retry in place of the
+  choice (new rule, proposed by the implementer).
 - **ColumnList:** a `label` header that names whose items they are ("Variables in
   Aktivitetsstöd", on a group page too, where the group's folded row is selected; one
   line, truncated with an ellipsis, the whole of it as hover text) (#1825). The header

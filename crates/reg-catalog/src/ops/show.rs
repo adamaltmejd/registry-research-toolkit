@@ -177,8 +177,8 @@ pub enum Show {
         #[serde(skip_serializing_if = "Vec::is_empty")]
         releases: Vec<Release>,
         /// Days two or more of the table's releases both deliver: an order over them names
-        /// the releases to use (`releases` on the project source). Absent when none, and on
-        /// a data holder's catalog.
+        /// the releases to use (`releases` on the project source). Absent when none. Served
+        /// on a data holder's catalog too: the order names these releases there as well.
         #[serde(skip_serializing_if = "Vec::is_empty")]
         shared_release_days: Vec<ShowSharedDays>,
         row_keys: Vec<ShowRowKey>,
@@ -959,17 +959,15 @@ fn table(server: &Server, conn: &Connection, entity: &Entity) -> Result<Show, Er
         } else {
             shape::releases(server, conn, entity.id)?
         },
-        shared_release_days: if server.catalog.steward().is_some() {
-            vec![]
-        } else {
-            super::order::releases::sharing(conn, entity.id)?
-                .into_iter()
-                .map(|((lo, hi), releases)| ShowSharedDays {
-                    period: server.period(lo, hi),
-                    releases,
-                })
-                .collect()
-        },
+        // The release names an order must give (`releases`), so a steward serves
+        // them too, unlike the releases themselves.
+        shared_release_days: super::order::releases::sharing(conn, entity.id)?
+            .into_iter()
+            .map(|((lo, hi), releases)| ShowSharedDays {
+                period: server.period(lo, hi),
+                releases,
+            })
+            .collect(),
         row_keys,
         variables,
         series_breaks: series_breaks(server, conn, "table", entity.id)?,

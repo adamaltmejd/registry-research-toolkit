@@ -6,7 +6,12 @@ import {
   errMessage,
   stewardConfig,
 } from "./api";
-import { registerRead, tableSegmentsReads } from "./catalog_names";
+import {
+  registerRead,
+  retryTableShowRead,
+  tableSegmentsReads,
+  tableShowReads,
+} from "./catalog_names";
 import { DeliverySummary } from "./DeliverySummary";
 import { stewardDatabases } from "./databases";
 import { IssueLink, LocatedIssue } from "./Finding";
@@ -435,6 +440,13 @@ function Sources({
     for (const row of read.value ?? [])
       segments.set(row.variable, [...(segments.get(row.variable) ?? []), row]);
   }
+  // Each source table is read whole for the years its releases share: only
+  // the table says so, since a source can bind only releaseless rows of a
+  // table whose releases share years.
+  const tableShows = useCatalogRead(
+    tableShowReads,
+    useDistinct(catalogSources.map((source) => source.table)),
+  );
   const columnRead = (table: string, variable: string) =>
     segmentReads[columnKey(table, variable)];
   const names = useCatalogNames([
@@ -519,6 +531,15 @@ function Sources({
               raw={raw}
               names={names}
               segments={segments}
+              sharedDays={
+                tableShows[source.table]?.value?.shared_release_days ?? []
+              }
+              sharedDaysError={
+                !!tableShows[source.table] &&
+                !tableShows[source.table].loading &&
+                !tableShows[source.table].value
+              }
+              onRetrySharedDays={() => retryTableShowRead(source.table)}
               table={tables.find((table) => table.fqid === source.table)}
               sharedHeading={catalogSources.some(
                 (other) =>
@@ -529,6 +550,7 @@ function Sources({
               bounds={bounds}
               loading={
                 !!register?.loading ||
+                !!tableShows[source.table]?.loading ||
                 catalogBindings(source).some(
                   (binding) =>
                     columnRead(source.table, binding.variable)?.loading,

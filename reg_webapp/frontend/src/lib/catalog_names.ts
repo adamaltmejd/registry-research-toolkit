@@ -293,6 +293,23 @@ export function tableShowRead(ref: string): Read<TableShow> {
   });
 }
 
+/** `tableShowRead` for each of `refs`, by ref: the argument of a `useCatalogRead`. */
+export function tableShowReads(
+  refs: readonly string[],
+): Record<string, Read<TableShow>> {
+  return Object.fromEntries(refs.map((ref) => [ref, tableShowRead(ref)]));
+}
+
+/** Forget a failed `tableShowRead`, so the next render reads it again (Retry). */
+export function retryTableShowRead(ref: string): void {
+  const key = `table:${ref}`;
+  const current = reads[key];
+  if (!current || current.loading || current.value) return;
+  const { [key]: _, ...rest } = reads;
+  reads = rest;
+  notify();
+}
+
 const graphKey = (ref: string) => `graph:${ref}`;
 
 /** A variable's one-hop succession, shared by its variable or group page. */

@@ -191,6 +191,15 @@ export function DeliverySummary({
               if (seen) seen.push(entry.period);
               else delivered.set(entry.delivered_table, [entry.period]);
             }
+          // Years two of the table's releases share come once per release the
+          // project names (crates/DESIGN.md, "Concurrent releases").
+          const releases = new Map<string, CatalogPeriod[]>();
+          for (const entry of group.entries) {
+            if (entry.release === null) continue;
+            const seen = releases.get(entry.release);
+            if (seen) seen.push(entry.period);
+            else releases.set(entry.release, [entry.period]);
+          }
           return (
             <section
               key={key}
@@ -269,6 +278,19 @@ export function DeliverySummary({
                   <span className="micro-label">Delivered as</span>
                   <ul className={styles.plainList}>
                     {[...delivered].map(([name, periods]) => (
+                      <li key={name}>
+                        {name}{" "}
+                        <span className={styles.years}>{yearsOf(periods)}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+              {releases.size > 0 && (
+                <div className={styles.fact}>
+                  <span className="micro-label">Deliveries</span>
+                  <ul className={styles.plainList}>
+                    {[...releases].map(([name, periods]) => (
                       <li key={name}>
                         {name}{" "}
                         <span className={styles.years}>{yearsOf(periods)}</span>
