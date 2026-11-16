@@ -1656,10 +1656,12 @@ fn latest(resolved: &[ResolvedOccurrence], set: &[usize]) -> Option<usize> {
         .max_by(|&a, &b| order(&resolved[a]).cmp(&order(&resolved[b])))
 }
 
-/// Whether curation asserted the occurrence: only an assertion's source key carries the
-/// `stmt:` prefix; a reader's is a provider id or a folded name.
+/// Whether curation asserted the occurrence. An assertion's record keeps its statement's
+/// locator, a register's `registers/<provider>/<dir>/curation.toml` under the curation
+/// root; a reader's names a path in the inputs repository, which has no `registers/`.
+/// The `stmt:` source key is no marker: a `key` guard replaces it.
 fn asserted(o: &Occurrence) -> bool {
-    o.source_key.starts_with("stmt:")
+    o.locator.input.starts_with("registers/") && o.locator.input.ends_with("/curation.toml")
 }
 
 /// The ordering that makes an occurrence "latest": later start, then later end, then
