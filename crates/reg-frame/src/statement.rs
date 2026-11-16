@@ -197,13 +197,14 @@ impl Statement {
                 fields.validate_subject(subject)?;
             }
             Self::Assert { fact, .. } => match fact {
-                AssertFact::Occurrence { fields } | AssertFact::Table { fields } => {
-                    validate_fields(fields)?;
-                    if matches!(fact, AssertFact::Occurrence { .. }) && fields.description.is_some()
-                    {
+                // An occurrence assertion may state no field: its address names the column, and
+                // its text continues the earlier run.
+                AssertFact::Occurrence { fields } => {
+                    if fields.description.is_some() {
                         return Err("description-subject: an occurrence cannot assert a description; use set description on var:<id>".into());
                     }
                 }
+                AssertFact::Table { fields } => validate_fields(fields)?,
                 AssertFact::Release { name, .. } if name.trim().is_empty() => {
                     return Err("asserted release name must not be blank".into());
                 }
