@@ -396,6 +396,13 @@ every order (`row_keys`), `show` lists them and `schema` lines flag them.
   fills an occurrence whose source states no set; replacement needs `set`. Existing
   facts remain assertion refusals. Versions of one classification family may overlap;
   two versions of a family cannot share a slug.
+- An asserted occurrence is silent on the text it does not state. Each of its null text
+  fields (label, definition, operational definition, unit) takes the value of the
+  variable's earlier text run; a field a `set` supplies, a variable-level one included,
+  counts as stated. A source-read occurrence's null stays null, and with no earlier run
+  the label falls back to the column name. So an assertion that adds a release
+  for an existing variable continues its text, and one that states a changed definition
+  keeps the label, operational definition and unit it does not restate.
 - `set variable = "<ledger slug>"` assigns identity during resolution, or `"none"`
   withholds the selected occurrences. An explicit `set variable` changes the variable of
   exactly the selected occurrences; every unselected occurrence resolves as if the
