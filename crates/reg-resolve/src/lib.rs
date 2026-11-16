@@ -1264,12 +1264,25 @@ fn resolve_pass(
                 continue;
             };
             let o = &resolved[top].occurrence;
+            // An asserted occurrence is silent where it states no text: each such field
+            // keeps the earlier run's value. A source's null stays null.
+            let earlier = texts.last().filter(|_| asserted(o));
+            let keep = |own: &Option<String>, prev: fn(&TextRun) -> &Option<String>| {
+                own.clone()
+                    .or_else(|| earlier.and_then(|t| prev(t).clone()))
+            };
             let run = TextRun {
                 period: piece,
-                label: o.label.clone().unwrap_or_else(|| o.column.clone()),
-                definition: o.definition.clone(),
-                operational_definition: o.operational_definition.clone(),
-                unit: o.unit.clone(),
+                label: o
+                    .label
+                    .clone()
+                    .or_else(|| earlier.map(|t| t.label.clone()))
+                    .unwrap_or_else(|| o.column.clone()),
+                definition: keep(&o.definition, |t| &t.definition),
+                operational_definition: keep(&o.operational_definition, |t| {
+                    &t.operational_definition
+                }),
+                unit: keep(&o.unit, |t| &t.unit),
             };
             match texts.last_mut() {
                 Some(prev)
@@ -1641,6 +1654,12 @@ fn latest(resolved: &[ResolvedOccurrence], set: &[usize]) -> Option<usize> {
     set.iter()
         .copied()
         .max_by(|&a, &b| order(&resolved[a]).cmp(&order(&resolved[b])))
+}
+
+/// Whether curation asserted the occurrence: only an assertion's source key carries the
+/// `stmt:` prefix; a reader's is a provider id or a folded name.
+fn asserted(o: &Occurrence) -> bool {
+    o.source_key.starts_with("stmt:")
 }
 
 /// The ordering that makes an occurrence "latest": later start, then later end, then
