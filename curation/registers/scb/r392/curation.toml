@@ -1400,3 +1400,235 @@ kind = "set"
 subject = "individuppgifter-agi: var:redovisningsperiod"
 fields.row_key = true
 evidence = "Row key: redovisningsperiod (period) is the period of a row; one delivered file holds several periods, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+# Social-benefit code and amount as SCB delivers them: four positions per row, reviewed 2026-11-16.
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: ERSATTNINGS_KOD1 @2019..2023"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ersättningskod, position 1", "definition" = "Kod på sociala kontrolluppgiften som anger vilken typ av ersättning som avses, i position 1 av fyra på raden.", "type" = "integer", "sensitive" = true, "identifier" = false } }
+evidence = "private:ev-3904"
+caveat = "SCB delivers the social-benefit code as four positions per person and month (ERSATTNINGS_KOD1 to ERSATTNINGS_KOD4). SCB's Registerinformation export documents the column once, as ERSATTNINGS_KOD for 2019-2020; label, definition and type follow that export's 2020 edition."
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: ERSATTNINGS_KOD1 @2019..2023"
+fields = { "value_set" = "a82b212087e4acdd4408f7dfdb391b38ba0af7222241226c34afc28abb2f335f" }
+evidence = "SCB's Registerinformation export codes ERSATTNINGS_KOD (key v6112) with this value set in its 2019 and 2020 editions; each delivered position carries the same code."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: ERSATTNINGS_BELOPP1 @2019..2023"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utbetalt ersättningsbelopp, position 1", "definition" = "Utbetald ersättning enligt social kontrolluppgift, för ersättningskoden i position 1 av fyra på raden.", "type" = "integer", "sensitive" = true, "identifier" = false } }
+evidence = "private:ev-3903"
+caveat = "SCB delivers the social-benefit amount as four positions per person and month (ERSATTNINGS_BELOPP1 to ERSATTNINGS_BELOPP4), each paired with the code in the same position. SCB's Registerinformation export documents the column once, as ERSATTNINGS_BELOPP for 2019-2020; label, definition and type follow that export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: ERSATTNINGS_KOD2 @2019..2023"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ersättningskod, position 2", "definition" = "Kod på sociala kontrolluppgiften som anger vilken typ av ersättning som avses, i position 2 av fyra på raden.", "type" = "integer", "sensitive" = true, "identifier" = false } }
+evidence = "private:ev-3904"
+caveat = "SCB delivers the social-benefit code as four positions per person and month (ERSATTNINGS_KOD1 to ERSATTNINGS_KOD4). SCB's Registerinformation export documents the column once, as ERSATTNINGS_KOD for 2019-2020; label, definition and type follow that export's 2020 edition."
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: ERSATTNINGS_KOD2 @2019..2023"
+fields = { "value_set" = "a82b212087e4acdd4408f7dfdb391b38ba0af7222241226c34afc28abb2f335f" }
+evidence = "SCB's Registerinformation export codes ERSATTNINGS_KOD (key v6112) with this value set in its 2019 and 2020 editions; each delivered position carries the same code."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: ERSATTNINGS_BELOPP2 @2019..2023"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utbetalt ersättningsbelopp, position 2", "definition" = "Utbetald ersättning enligt social kontrolluppgift, för ersättningskoden i position 2 av fyra på raden.", "type" = "integer", "sensitive" = true, "identifier" = false } }
+evidence = "private:ev-3903"
+caveat = "SCB delivers the social-benefit amount as four positions per person and month (ERSATTNINGS_BELOPP1 to ERSATTNINGS_BELOPP4), each paired with the code in the same position. SCB's Registerinformation export documents the column once, as ERSATTNINGS_BELOPP for 2019-2020; label, definition and type follow that export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: ERSATTNINGS_KOD3 @2019..2023"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ersättningskod, position 3", "definition" = "Kod på sociala kontrolluppgiften som anger vilken typ av ersättning som avses, i position 3 av fyra på raden.", "type" = "integer", "sensitive" = true, "identifier" = false } }
+evidence = "private:ev-3904"
+caveat = "SCB delivers the social-benefit code as four positions per person and month (ERSATTNINGS_KOD1 to ERSATTNINGS_KOD4). SCB's Registerinformation export documents the column once, as ERSATTNINGS_KOD for 2019-2020; label, definition and type follow that export's 2020 edition."
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: ERSATTNINGS_KOD3 @2019..2023"
+fields = { "value_set" = "a82b212087e4acdd4408f7dfdb391b38ba0af7222241226c34afc28abb2f335f" }
+evidence = "SCB's Registerinformation export codes ERSATTNINGS_KOD (key v6112) with this value set in its 2019 and 2020 editions; each delivered position carries the same code."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: ERSATTNINGS_BELOPP3 @2019..2023"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utbetalt ersättningsbelopp, position 3", "definition" = "Utbetald ersättning enligt social kontrolluppgift, för ersättningskoden i position 3 av fyra på raden.", "type" = "integer", "sensitive" = true, "identifier" = false } }
+evidence = "private:ev-3903"
+caveat = "SCB delivers the social-benefit amount as four positions per person and month (ERSATTNINGS_BELOPP1 to ERSATTNINGS_BELOPP4), each paired with the code in the same position. SCB's Registerinformation export documents the column once, as ERSATTNINGS_BELOPP for 2019-2020; label, definition and type follow that export's 2020 edition."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: ERSATTNINGS_KOD4 @2019..2023"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Ersättningskod, position 4", "definition" = "Kod på sociala kontrolluppgiften som anger vilken typ av ersättning som avses, i position 4 av fyra på raden.", "type" = "integer", "sensitive" = true, "identifier" = false } }
+evidence = "private:ev-3904"
+caveat = "SCB delivers the social-benefit code as four positions per person and month (ERSATTNINGS_KOD1 to ERSATTNINGS_KOD4). SCB's Registerinformation export documents the column once, as ERSATTNINGS_KOD for 2019-2020; label, definition and type follow that export's 2020 edition."
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi: ERSATTNINGS_KOD4 @2019..2023"
+fields = { "value_set" = "a82b212087e4acdd4408f7dfdb391b38ba0af7222241226c34afc28abb2f335f" }
+evidence = "SCB's Registerinformation export codes ERSATTNINGS_KOD (key v6112) with this value set in its 2019 and 2020 editions; each delivered position carries the same code."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi: ERSATTNINGS_BELOPP4 @2019..2023"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Utbetalt ersättningsbelopp, position 4", "definition" = "Utbetald ersättning enligt social kontrolluppgift, för ersättningskoden i position 4 av fyra på raden.", "type" = "integer", "sensitive" = true, "identifier" = false } }
+evidence = "private:ev-3903"
+caveat = "SCB delivers the social-benefit amount as four positions per person and month (ERSATTNINGS_BELOPP1 to ERSATTNINGS_BELOPP4), each paired with the code in the same position. SCB's Registerinformation export documents the column once, as ERSATTNINGS_BELOPP for 2019-2020; label, definition and type follow that export's 2020 edition."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningskod-1"
+fields = { "sets" = ["utbetald-ersattning"] }
+evidence = "Maintainer rulings 2026-11-10 and 2026-11-16: SCB delivers the social-benefit code and amount as four positions per row; global documents each position column as its own variable with a position label, in one set with a position axis."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningskod-1"
+fields = { "facets" = { "position" = { "value" = "1", "label" = "Position 1" } } }
+evidence = "Maintainer rulings 2026-11-10 and 2026-11-16: SCB delivers the social-benefit code and amount as four positions per row; global documents each position column as its own variable with a position label, in one set with a position axis."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningskod-1"
+fields = { "tags" = ["transfers"] }
+evidence = "Maintainer rulings 2026-11-10 and 2026-11-16: SCB delivers the social-benefit code and amount as four positions per row; global documents each position column as its own variable with a position label, in one set with a position axis."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningskod-2"
+fields = { "sets" = ["utbetald-ersattning"] }
+evidence = "Maintainer rulings 2026-11-10 and 2026-11-16: SCB delivers the social-benefit code and amount as four positions per row; global documents each position column as its own variable with a position label, in one set with a position axis."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningskod-2"
+fields = { "facets" = { "position" = { "value" = "2", "label" = "Position 2" } } }
+evidence = "Maintainer rulings 2026-11-10 and 2026-11-16: SCB delivers the social-benefit code and amount as four positions per row; global documents each position column as its own variable with a position label, in one set with a position axis."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningskod-2"
+fields = { "tags" = ["transfers"] }
+evidence = "Maintainer rulings 2026-11-10 and 2026-11-16: SCB delivers the social-benefit code and amount as four positions per row; global documents each position column as its own variable with a position label, in one set with a position axis."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningskod-3"
+fields = { "sets" = ["utbetald-ersattning"] }
+evidence = "Maintainer rulings 2026-11-10 and 2026-11-16: SCB delivers the social-benefit code and amount as four positions per row; global documents each position column as its own variable with a position label, in one set with a position axis."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningskod-3"
+fields = { "facets" = { "position" = { "value" = "3", "label" = "Position 3" } } }
+evidence = "Maintainer rulings 2026-11-10 and 2026-11-16: SCB delivers the social-benefit code and amount as four positions per row; global documents each position column as its own variable with a position label, in one set with a position axis."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningskod-3"
+fields = { "tags" = ["transfers"] }
+evidence = "Maintainer rulings 2026-11-10 and 2026-11-16: SCB delivers the social-benefit code and amount as four positions per row; global documents each position column as its own variable with a position label, in one set with a position axis."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningskod-4"
+fields = { "sets" = ["utbetald-ersattning"] }
+evidence = "Maintainer rulings 2026-11-10 and 2026-11-16: SCB delivers the social-benefit code and amount as four positions per row; global documents each position column as its own variable with a position label, in one set with a position axis."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningskod-4"
+fields = { "facets" = { "position" = { "value" = "4", "label" = "Position 4" } } }
+evidence = "Maintainer rulings 2026-11-10 and 2026-11-16: SCB delivers the social-benefit code and amount as four positions per row; global documents each position column as its own variable with a position label, in one set with a position axis."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningskod-4"
+fields = { "tags" = ["transfers"] }
+evidence = "Maintainer rulings 2026-11-10 and 2026-11-16: SCB delivers the social-benefit code and amount as four positions per row; global documents each position column as its own variable with a position label, in one set with a position axis."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningsbelopp-1"
+fields = { "sets" = ["utbetald-ersattning"] }
+evidence = "Maintainer rulings 2026-11-10 and 2026-11-16: SCB delivers the social-benefit code and amount as four positions per row; global documents each position column as its own variable with a position label, in one set with a position axis."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningsbelopp-1"
+fields = { "facets" = { "position" = { "value" = "1", "label" = "Position 1" } } }
+evidence = "Maintainer rulings 2026-11-10 and 2026-11-16: SCB delivers the social-benefit code and amount as four positions per row; global documents each position column as its own variable with a position label, in one set with a position axis."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningsbelopp-1"
+fields = { "tags" = ["transfers"] }
+evidence = "Maintainer rulings 2026-11-10 and 2026-11-16: SCB delivers the social-benefit code and amount as four positions per row; global documents each position column as its own variable with a position label, in one set with a position axis."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningsbelopp-2"
+fields = { "sets" = ["utbetald-ersattning"] }
+evidence = "Maintainer rulings 2026-11-10 and 2026-11-16: SCB delivers the social-benefit code and amount as four positions per row; global documents each position column as its own variable with a position label, in one set with a position axis."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningsbelopp-2"
+fields = { "facets" = { "position" = { "value" = "2", "label" = "Position 2" } } }
+evidence = "Maintainer rulings 2026-11-10 and 2026-11-16: SCB delivers the social-benefit code and amount as four positions per row; global documents each position column as its own variable with a position label, in one set with a position axis."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningsbelopp-2"
+fields = { "tags" = ["transfers"] }
+evidence = "Maintainer rulings 2026-11-10 and 2026-11-16: SCB delivers the social-benefit code and amount as four positions per row; global documents each position column as its own variable with a position label, in one set with a position axis."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningsbelopp-3"
+fields = { "sets" = ["utbetald-ersattning"] }
+evidence = "Maintainer rulings 2026-11-10 and 2026-11-16: SCB delivers the social-benefit code and amount as four positions per row; global documents each position column as its own variable with a position label, in one set with a position axis."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningsbelopp-3"
+fields = { "facets" = { "position" = { "value" = "3", "label" = "Position 3" } } }
+evidence = "Maintainer rulings 2026-11-10 and 2026-11-16: SCB delivers the social-benefit code and amount as four positions per row; global documents each position column as its own variable with a position label, in one set with a position axis."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningsbelopp-3"
+fields = { "tags" = ["transfers"] }
+evidence = "Maintainer rulings 2026-11-10 and 2026-11-16: SCB delivers the social-benefit code and amount as four positions per row; global documents each position column as its own variable with a position label, in one set with a position axis."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningsbelopp-4"
+fields = { "sets" = ["utbetald-ersattning"] }
+evidence = "Maintainer rulings 2026-11-10 and 2026-11-16: SCB delivers the social-benefit code and amount as four positions per row; global documents each position column as its own variable with a position label, in one set with a position axis."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningsbelopp-4"
+fields = { "facets" = { "position" = { "value" = "4", "label" = "Position 4" } } }
+evidence = "Maintainer rulings 2026-11-10 and 2026-11-16: SCB delivers the social-benefit code and amount as four positions per row; global documents each position column as its own variable with a position label, in one set with a position axis."
+
+[[statement]]
+kind = "set"
+subject = "var:ersattningsbelopp-4"
+fields = { "tags" = ["transfers"] }
+evidence = "Maintainer rulings 2026-11-10 and 2026-11-16: SCB delivers the social-benefit code and amount as four positions per row; global documents each position column as its own variable with a position label, in one set with a position axis."
+
+[[statement]]
+kind = "set"
+subject = "set:utbetald-ersattning"
+fields = { "axes" = [{ "id" = "position", "label" = "Position" }] }
+evidence = "Maintainer rulings 2026-11-10 and 2026-11-16: SCB delivers the social-benefit code and amount as four positions per row; global documents each position column as its own variable with a position label, in one set with a position axis. Each position value is shared by a code and an amount member."
