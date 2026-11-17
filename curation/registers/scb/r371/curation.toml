@@ -32353,3 +32353,141 @@ kind = "set"
 subject = "set:veckotimmar-i-forskola-eller-familjedaghem"
 fields = { "description" = "Antal timmar per vecka i kommunal förskola eller familjedaghem, för upp till fem barn (barn 1-5). Enkätuppgift från HEK." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är HEK-enkätuppgifter om veckotimmar i kommunal förskola eller familjedaghem, per barn.\ncatalog:variable_text:17411:14610:15706"
+
+[[statement]]
+kind = "set"
+subject = "set:barnomsorg-vid-arbetsloshet-eller-foraldraledighet"
+fields = { "axes" = [{ "id" = "matt", "label" = "Mått" }, { "id" = "barn", "label" = "Barn" }] }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nTio medlemmar: två mått (månader i kommunal förskola, omsorg) för barn 1–5, enligt etiketterna.\ncatalog:variable_text:16767:14975:15706\ncatalog:variable_text:16768:14975:15706\ncatalog:variable_text:16769:14975:15706\ncatalog:variable_text:16770:14975:15706\ncatalog:variable_text:16771:14975:15706\ncatalog:variable_text:16945:14975:15706\ncatalog:variable_text:16946:14975:15706\ncatalog:variable_text:16947:14975:15706\ncatalog:variable_text:16948:14975:15706\ncatalog:variable_text:16949:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:manader-kommunal-forskola-arbetslos-foraldraledig-barn-1"
+fields = { "facets" = { "matt" = { "value" = "kommunal-forskola", "label" = "Månader i kommunal förskola" }, "barn" = { "value" = "1", "label" = "Barn 1" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Månader kommunal förskola arbetslös föräldraledig barn 1\ncatalog:variable_text:16767:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:manader-kommunal-forskola-arbetslos-foraldraledig-barn-2"
+fields = { "facets" = { "matt" = { "value" = "kommunal-forskola", "label" = "Månader i kommunal förskola" }, "barn" = { "value" = "2", "label" = "Barn 2" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Månader kommunal förskola arbetslös föräldraledig barn 2\ncatalog:variable_text:16768:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:manader-kommunal-forskola-arbetslos-foraldraledig-barn-3"
+fields = { "facets" = { "matt" = { "value" = "kommunal-forskola", "label" = "Månader i kommunal förskola" }, "barn" = { "value" = "3", "label" = "Barn 3" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Månader kommunal förskola arbetslös föräldraledig barn 3\ncatalog:variable_text:16769:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:manader-kommunal-forskola-arbetslos-foraldraledig-barn-4"
+fields = { "facets" = { "matt" = { "value" = "kommunal-forskola", "label" = "Månader i kommunal förskola" }, "barn" = { "value" = "4", "label" = "Barn 4" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Månader kommunal förskola arbetslös föräldraledig barn 4\ncatalog:variable_text:16770:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:manader-kommunal-forskola-arbetslos-foraldraledig-barn-5"
+fields = { "facets" = { "matt" = { "value" = "kommunal-forskola", "label" = "Månader i kommunal förskola" }, "barn" = { "value" = "5", "label" = "Barn 5" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Månader kommunal förskola arbetslös föräldraledig barn 5\ncatalog:variable_text:16771:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:omsorg-till-arbetslos-foraldraledig-barn-1"
+fields = { "facets" = { "matt" = { "value" = "omsorg", "label" = "Omsorg" }, "barn" = { "value" = "1", "label" = "Barn 1" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Omsorg till arbetslös föräldraledig barn 1\ncatalog:variable_text:16945:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:omsorg-till-arbetslos-foraldraledig-barn-2"
+fields = { "facets" = { "matt" = { "value" = "omsorg", "label" = "Omsorg" }, "barn" = { "value" = "2", "label" = "Barn 2" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Omsorg till arbetslös föräldraledig barn 2\ncatalog:variable_text:16946:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:omsorg-till-arbetslos-foraldraledig-barn-3"
+fields = { "facets" = { "matt" = { "value" = "omsorg", "label" = "Omsorg" }, "barn" = { "value" = "3", "label" = "Barn 3" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Omsorg till arbetslös föräldraledig barn 3\ncatalog:variable_text:16947:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:omsorg-till-arbetslos-foraldraledig-barn-4"
+fields = { "facets" = { "matt" = { "value" = "omsorg", "label" = "Omsorg" }, "barn" = { "value" = "4", "label" = "Barn 4" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Omsorg till arbetslös föräldraledig barn 4\ncatalog:variable_text:16948:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "var:omsorg-till-arbetslos-foraldraledig-barn-5"
+fields = { "facets" = { "matt" = { "value" = "omsorg", "label" = "Omsorg" }, "barn" = { "value" = "5", "label" = "Barn 5" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Omsorg till arbetslös föräldraledig barn 5\ncatalog:variable_text:16949:14975:15706"
+
+[[statement]]
+kind = "set"
+subject = "set:kommuntyp-enligt-tillvaxtverket"
+fields = { "axes" = [{ "id" = "indelning", "label" = "Indelning" }, { "id" = "enhet", "label" = "Enhet" }] }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nSex medlemmar: grupperad kommuntyp med 3 respektive 6 grupper, för individ, familjehushåll och bostadshushåll, enligt etiketterna.\ncatalog:variable_text:16157:19358:19723\ncatalog:variable_text:16158:19358:19723\ncatalog:variable_text:17081:19358:19723\ncatalog:variable_text:17082:19358:19723\ncatalog:variable_text:17083:19358:19723\ncatalog:variable_text:17084:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bktyp3"
+fields = { "facets" = { "indelning" = { "value" = "3", "label" = "3 kommuntyper" }, "enhet" = { "value" = "individ", "label" = "Individ" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Regionindelning enl. Tillväxtverket, grupperad kommuntyp 2021, 3 st (individ)\ncatalog:variable_text:16157:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bktyp6"
+fields = { "facets" = { "indelning" = { "value" = "6", "label" = "6 kommuntyper" }, "enhet" = { "value" = "individ", "label" = "Individ" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Regionindelning enl. Tillväxtverket, grupperad kommuntyp 2021, 6 st (individ)\ncatalog:variable_text:16158:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:regionindelning-enl-tillvaxtverket-grupperad-bktyp3h"
+fields = { "facets" = { "indelning" = { "value" = "3", "label" = "3 kommuntyper" }, "enhet" = { "value" = "familjehushall", "label" = "Familjehushåll" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Regionindelning enl. Tillväxtverket, grupperad kommuntyp 2021, 3 st (familjehushåll)\ncatalog:variable_text:17081:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:regionindelning-enl-tillvaxtverket-grupperad-bktyp3hb"
+fields = { "facets" = { "indelning" = { "value" = "3", "label" = "3 kommuntyper" }, "enhet" = { "value" = "bostadshushall", "label" = "Bostadshushåll" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Regionindelning enl. Tillväxtverket, grupperad kommuntyp 2021, 3 st (bostadshushåll)\ncatalog:variable_text:17082:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:regionindelning-enl-tillvaxtverket-grupperad-bktyp6h"
+fields = { "facets" = { "indelning" = { "value" = "6", "label" = "6 kommuntyper" }, "enhet" = { "value" = "familjehushall", "label" = "Familjehushåll" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Regionindelning enl. Tillväxtverket, grupperad kommuntyp 2021, 6 st (familjehushåll)\ncatalog:variable_text:17083:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:regionindelning-enl-tillvaxtverket-grupperad-bktyp6hb"
+fields = { "facets" = { "indelning" = { "value" = "6", "label" = "6 kommuntyper" }, "enhet" = { "value" = "bostadshushall", "label" = "Bostadshushåll" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Regionindelning enl. Tillväxtverket, grupperad kommuntyp 2021, 6 st (bostadshushåll)\ncatalog:variable_text:17084:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:forekomst-funktionsnedsattningsrelaterat-stod"
+fields = { "axes" = [{ "id" = "enhet", "label" = "Enhet" }, { "id" = "statlig-assistans", "label" = "Statlig assistans" }] }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nFyra medlemmar som skiljer sig i enhet (individ, bostadshushåll, familjehushåll) och i om statlig assistans räknas, enligt etiketterna.\ncatalog:variable_text:16126:19358:19723\ncatalog:variable_text:16132:19358:19723\ncatalog:variable_text:16485:19358:19723\ncatalog:variable_text:16495:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bfunk"
+fields = { "facets" = { "enhet" = { "value" = "individ", "label" = "Individ" }, "statlig-assistans" = { "value" = "ingar", "label" = "Ingår" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Person som har insatser och ersättningar relaterade till funktionsnedsättning\ncatalog:variable_text:16126:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:bfunkovr"
+fields = { "facets" = { "enhet" = { "value" = "individ", "label" = "Individ" }, "statlig-assistans" = { "value" = "exkluderad", "label" = "Exkluderad" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Person som har insatser och ersättningar relaterade till funktionsnedsättning exkl. statlig assistans\ncatalog:variable_text:16132:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:hushall-insats-funktionsnedsattning"
+fields = { "facets" = { "enhet" = { "value" = "bostadshushall", "label" = "Bostadshushåll" }, "statlig-assistans" = { "value" = "exkluderad", "label" = "Exkluderad" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Hushåll som har insatser och ersättningar relaterade till funktionsnedsättning exkl. statlig assistans (bostadshushåll)\ncatalog:variable_text:16485:19358:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:hushall-som-har-insatser-och-ersattningar-relaterade-bfunkh"
+fields = { "facets" = { "enhet" = { "value" = "familjehushall", "label" = "Familjehushåll" }, "statlig-assistans" = { "value" = "exkluderad", "label" = "Exkluderad" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Hushåll som har insatser och ersättningar relaterade till funktionsnedsättning exkl. statlig assistans (familjehushåll)\ncatalog:variable_text:16495:19358:19723"

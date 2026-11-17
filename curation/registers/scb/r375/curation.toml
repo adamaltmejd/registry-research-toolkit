@@ -6137,3 +6137,123 @@ kind = "set"
 subject = "set:ravaru-och-fornodenhetskostnader"
 fields = { "description" = "Kostnader för råvaror och förnödenheter." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre medlemmar har texten Råvaror och förnödenheter; mängdens etikett anger att det är kostnader.\ncatalog:variable_text:20141:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "set:pagaende-arbete-annans-rakning"
+fields = { "axes" = [{ "id" = "post", "label" = "Post" }, { "id" = "varde", "label" = "Värde" }] }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nMedlemmarna korsar post (fakturerat belopp, nedlagda kostnader, debetnetto, kreditnetto) med ingående värde, enligt etiketterna; totalen har ingen facett.\ncatalog:variable_text:20108:9862:12053\ncatalog:variable_text:20109:9862:12053\ncatalog:variable_text:20110:9862:12053\ncatalog:variable_text:20111:9862:12053\ncatalog:variable_text:20112:9862:12053\ncatalog:variable_text:20113:9862:12053\ncatalog:variable_text:20114:9862:12053\ncatalog:variable_text:20115:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:pagaende-arbete-annans-rakning-fakturerat-belopp"
+fields = { "facets" = { "post" = { "value" = "fakturerat-belopp", "label" = "Fakturerat belopp" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Pågående arbete för annans räkning (fakturerat belopp)\ncatalog:variable_text:20108:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:pagaende-arbete-annans-rakning-fakturerat-belopp-ingaende"
+fields = { "facets" = { "post" = { "value" = "fakturerat-belopp", "label" = "Fakturerat belopp" }, "varde" = { "value" = "ingaende", "label" = "Ingående värde" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Pågående arbete för annans räkning (fakturerat belopp) (ingående värde)\ncatalog:variable_text:20109:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:pagaende-arbete-annans-rakning-nedlagda-kostnader"
+fields = { "facets" = { "post" = { "value" = "nedlagda-kostnader", "label" = "Nedlagda kostnader" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Pågående arbete för annans räkning (nedlagda kostnader)\ncatalog:variable_text:20110:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:pagaende-arbete-annans-rakning-nedlagda-kostnader-ingaende"
+fields = { "facets" = { "post" = { "value" = "nedlagda-kostnader", "label" = "Nedlagda kostnader" }, "varde" = { "value" = "ingaende", "label" = "Ingående värde" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Pågående arbete för annans räkning (nedlagda kostnader) (ingående värde)\ncatalog:variable_text:20111:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:pagaende-arbete-for-annans-rakning-debetnetto"
+fields = { "facets" = { "post" = { "value" = "debetnetto", "label" = "Debetnetto" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Pågående arbete för annans räkning (debetnetto)\ncatalog:variable_text:20112:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:pagaende-arbete-for-annans-rakning-debetnetto-ingaende-varde"
+fields = { "facets" = { "post" = { "value" = "debetnetto", "label" = "Debetnetto" }, "varde" = { "value" = "ingaende", "label" = "Ingående värde" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Pågående arbete för annans räkning (debetnetto) (ingående värde)\ncatalog:variable_text:20113:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:pagaende-arbete-for-annans-rakning-kreditnetto"
+fields = { "facets" = { "post" = { "value" = "kreditnetto", "label" = "Kreditnetto" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Pågående arbete för annans räkning (kreditnetto)\ncatalog:variable_text:20114:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:pagaende-arbete-for-annans-rakning-kreditnetto-ingaende"
+fields = { "facets" = { "post" = { "value" = "kreditnetto", "label" = "Kreditnetto" }, "varde" = { "value" = "ingaende", "label" = "Ingående värde" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Pågående arbete för annans räkning (kreditnetto) (ingående värde)\ncatalog:variable_text:20115:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "set:anskaffningar-byggnader-mark"
+fields = { "axes" = [{ "id" = "tillgang", "label" = "Tillgång" }, { "id" = "del", "label" = "Del" }] }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nMedlemmarna korsar tillgång (byggnader och markanläggningar, bostäder, mark) med del (totalt, därav egenproducerade, därav köp), enligt etiketterna; bruttoinvesteringen i ny-, till- och ombyggnad har bara tillgång.\ncatalog:variable_text:19811:9862:12053\ncatalog:variable_text:19812:9862:12053\ncatalog:variable_text:19815:9862:12053\ncatalog:variable_text:19816:9862:12053\ncatalog:variable_text:19852:9862:12053\ncatalog:variable_text:19858:9862:12053\ncatalog:variable_text:19859:9862:12053\ncatalog:variable_text:19869:9862:12053\ncatalog:variable_text:19880:9862:12053\ncatalog:variable_text:19963:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:arets-anskaffningar-av-byggnader-markanlaggningar-m-m"
+fields = { "facets" = { "tillgang" = { "value" = "byggnader", "label" = "Byggnader, markanläggningar m.m." }, "del" = { "value" = "totalt", "label" = "Totalt" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Årets anskaffningar av byggnader, markanläggningar m.m.\ncatalog:variable_text:19811:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:arets-anskaffningar-av-byggnader-markanlaggningar-m-m-fs"
+fields = { "facets" = { "tillgang" = { "value" = "byggnader", "label" = "Byggnader, markanläggningar m.m." }, "del" = { "value" = "totalt", "label" = "Totalt" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Årets anskaffningar av byggnader, markanläggningar m.m. FS\ncatalog:variable_text:19812:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:arets-anskaffningar-darav-egenproducerade-byggnader"
+fields = { "facets" = { "tillgang" = { "value" = "byggnader", "label" = "Byggnader, markanläggningar m.m." }, "del" = { "value" = "egenproducerade", "label" = "Därav egenproducerade" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Årets anskaffningar därav egenproducerade byggnader, markanläggningar m.m.\ncatalog:variable_text:19815:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:arets-anskaffningar-darav-kop-av-befintliga-byggnader"
+fields = { "facets" = { "tillgang" = { "value" = "byggnader", "label" = "Byggnader, markanläggningar m.m." }, "del" = { "value" = "kop", "label" = "Därav köp" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Årets anskaffningar därav köp av befintliga byggnader, markanläggningar m.m.\ncatalog:variable_text:19816:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:bl33"
+fields = { "facets" = { "tillgang" = { "value" = "bostader", "label" = "Bostäder" }, "del" = { "value" = "kop", "label" = "Därav köp" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Årets anskaffningar därav köp av bostäder (bl3342)\ncatalog:variable_text:19852:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:bl3332"
+fields = { "facets" = { "tillgang" = { "value" = "bostader", "label" = "Bostäder" }, "del" = { "value" = "totalt", "label" = "Totalt" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Årets anskaffningar av bostäder\ncatalog:variable_text:19858:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:bl3352"
+fields = { "facets" = { "tillgang" = { "value" = "bostader", "label" = "Bostäder" }, "del" = { "value" = "egenproducerade", "label" = "Därav egenproducerade" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Årets anskaffningar därav egenproducerade bostäder\ncatalog:variable_text:19859:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:bruttoinv-ny-ombygg-byggnader-mark"
+fields = { "facets" = { "tillgang" = { "value" = "byggnader", "label" = "Byggnader, markanläggningar m.m." } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Bruttoinvesteringar ny, till och ombyggnad av byggnader och markanläggningar\ncatalog:variable_text:19869:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:darav-kop-av-byggnader-markanlaggningar-m-m"
+fields = { "facets" = { "tillgang" = { "value" = "byggnader", "label" = "Byggnader, markanläggningar m.m." }, "del" = { "value" = "kop", "label" = "Därav köp" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Därav köp av byggnader, markanläggningar m.m.\ncatalog:variable_text:19880:9862:12053"
+
+[[statement]]
+kind = "set"
+subject = "var:gem3361"
+fields = { "facets" = { "tillgang" = { "value" = "mark", "label" = "Mark" }, "del" = { "value" = "totalt", "label" = "Totalt" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Årets anskaffningar av mark\ncatalog:variable_text:19963:9862:12053"

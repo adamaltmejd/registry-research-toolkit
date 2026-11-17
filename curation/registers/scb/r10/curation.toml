@@ -5667,3 +5667,165 @@ kind = "set"
 subject = "set:telefonnummer"
 fields = { "description" = "Företagets telefonnummer, som första respektive andra nummer." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensamt för alla fyra är telefonnummer 1 och 2 till företaget; kontaktpersonen nämns bara i några.\ncatalog:variable_text:43204:11688:20454\ncatalog:variable_text:43207:16436:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:groda"
+fields = { "axes" = [{ "id" = "undersokning", "label" = "Undersökning" }, { "id" = "uppgift", "label" = "Uppgift" }] }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nMedlemmarna anger gröda för arealer eller trädgårdsgrödor, som kod eller namn, enligt etiketterna.\ncatalog:variable_text:43055:6940:7305\ncatalog:variable_text:43056:6940:7305\ncatalog:variable_text:43057:6940:7305\ncatalog:variable_text:43058:6940:7305\ncatalog:variable_text:43059:6940:7305\ncatalog:variable_text:43060:6940:7305\ncatalog:variable_text:43061:6940:7305\ncatalog:variable_text:43062:6940:7305\ncatalog:variable_text:43063:6940:7305\ncatalog:variable_text:43064:6940:7305\ncatalog:variable_text:43065:6940:7305\ncatalog:variable_text:43066:6940:7305\ncatalog:variable_text:43067:6940:7305\ncatalog:variable_text:43068:6940:7305\ncatalog:variable_text:43069:6940:7305\ncatalog:variable_text:43070:6940:7305\ncatalog:variable_text:43071:6940:7305\ncatalog:variable_text:43072:6940:7305\ncatalog:variable_text:43073:6940:7305\ncatalog:variable_text:43074:6940:7305\ncatalog:variable_text:43075:10957:13149\ncatalog:variable_text:43076:14610:20454\ncatalog:variable_text:43078:12784:13149\ncatalog:variable_text:43079:16071:20454\ncatalog:variable_text:43208:10592:11323\ncatalog:variable_text:43231:12053:12418"
+
+[[statement]]
+kind = "set"
+subject = "var:groda"
+fields = { "facets" = { "undersokning" = { "value" = "arealer", "label" = "Arealer" }, "uppgift" = { "value" = "kod", "label" = "Kod" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Gröda (gröda 1)\ncatalog:variable_text:43055:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda10"
+fields = { "facets" = { "undersokning" = { "value" = "arealer", "label" = "Arealer" }, "uppgift" = { "value" = "kod", "label" = "Kod" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Gröda (gröda 10)\ncatalog:variable_text:43056:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda11"
+fields = { "facets" = { "undersokning" = { "value" = "arealer", "label" = "Arealer" }, "uppgift" = { "value" = "kod", "label" = "Kod" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Gröda (gröda 11)\ncatalog:variable_text:43057:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda12"
+fields = { "facets" = { "undersokning" = { "value" = "arealer", "label" = "Arealer" }, "uppgift" = { "value" = "kod", "label" = "Kod" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Gröda (gröda 12)\ncatalog:variable_text:43058:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda13"
+fields = { "facets" = { "undersokning" = { "value" = "arealer", "label" = "Arealer" }, "uppgift" = { "value" = "kod", "label" = "Kod" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Gröda (gröda 13)\ncatalog:variable_text:43059:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda14"
+fields = { "facets" = { "undersokning" = { "value" = "arealer", "label" = "Arealer" }, "uppgift" = { "value" = "kod", "label" = "Kod" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Gröda (gröda 14)\ncatalog:variable_text:43060:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda15"
+fields = { "facets" = { "undersokning" = { "value" = "arealer", "label" = "Arealer" }, "uppgift" = { "value" = "kod", "label" = "Kod" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Gröda (gröda 15)\ncatalog:variable_text:43061:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda16"
+fields = { "facets" = { "undersokning" = { "value" = "arealer", "label" = "Arealer" }, "uppgift" = { "value" = "kod", "label" = "Kod" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Gröda (gröda 16)\ncatalog:variable_text:43062:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda17"
+fields = { "facets" = { "undersokning" = { "value" = "arealer", "label" = "Arealer" }, "uppgift" = { "value" = "kod", "label" = "Kod" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Gröda (gröda 17)\ncatalog:variable_text:43063:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda18"
+fields = { "facets" = { "undersokning" = { "value" = "arealer", "label" = "Arealer" }, "uppgift" = { "value" = "kod", "label" = "Kod" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Gröda (gröda 18)\ncatalog:variable_text:43064:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda19"
+fields = { "facets" = { "undersokning" = { "value" = "arealer", "label" = "Arealer" }, "uppgift" = { "value" = "kod", "label" = "Kod" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Gröda (gröda 19)\ncatalog:variable_text:43065:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda2"
+fields = { "facets" = { "undersokning" = { "value" = "arealer", "label" = "Arealer" }, "uppgift" = { "value" = "kod", "label" = "Kod" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Gröda (gröda 2)\ncatalog:variable_text:43066:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda20"
+fields = { "facets" = { "undersokning" = { "value" = "arealer", "label" = "Arealer" }, "uppgift" = { "value" = "kod", "label" = "Kod" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Gröda (gröda 20)\ncatalog:variable_text:43067:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda3"
+fields = { "facets" = { "undersokning" = { "value" = "arealer", "label" = "Arealer" }, "uppgift" = { "value" = "kod", "label" = "Kod" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Gröda (gröda 3)\ncatalog:variable_text:43068:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda4"
+fields = { "facets" = { "undersokning" = { "value" = "arealer", "label" = "Arealer" }, "uppgift" = { "value" = "kod", "label" = "Kod" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Gröda (gröda 4)\ncatalog:variable_text:43069:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda5"
+fields = { "facets" = { "undersokning" = { "value" = "arealer", "label" = "Arealer" }, "uppgift" = { "value" = "kod", "label" = "Kod" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Gröda (gröda 5)\ncatalog:variable_text:43070:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda6"
+fields = { "facets" = { "undersokning" = { "value" = "arealer", "label" = "Arealer" }, "uppgift" = { "value" = "kod", "label" = "Kod" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Gröda (gröda 6)\ncatalog:variable_text:43071:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda7"
+fields = { "facets" = { "undersokning" = { "value" = "arealer", "label" = "Arealer" }, "uppgift" = { "value" = "kod", "label" = "Kod" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Gröda (gröda 7)\ncatalog:variable_text:43072:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda8"
+fields = { "facets" = { "undersokning" = { "value" = "arealer", "label" = "Arealer" }, "uppgift" = { "value" = "kod", "label" = "Kod" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Gröda (gröda 8)\ncatalog:variable_text:43073:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:groda9"
+fields = { "facets" = { "undersokning" = { "value" = "arealer", "label" = "Arealer" }, "uppgift" = { "value" = "kod", "label" = "Kod" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Gröda (gröda 9)\ncatalog:variable_text:43074:6940:7305"
+
+[[statement]]
+kind = "set"
+subject = "var:grodans-id-nummer"
+fields = { "facets" = { "undersokning" = { "value" = "arealer", "label" = "Arealer" }, "uppgift" = { "value" = "kod", "label" = "Kod" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Grödans Id-nummer\ncatalog:variable_text:43075:10957:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:grodans-namn"
+fields = { "facets" = { "undersokning" = { "value" = "arealer", "label" = "Arealer" }, "uppgift" = { "value" = "namn", "label" = "Namn" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Grödans namn\ncatalog:variable_text:43076:14610:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:grodid"
+fields = { "facets" = { "undersokning" = { "value" = "tradgard", "label" = "Trädgårdsgrödor" }, "uppgift" = { "value" = "kod", "label" = "Kod" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Gröda (trädgårdsgröda, grodid)\ncatalog:variable_text:43078:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "var:grodnamn"
+fields = { "facets" = { "undersokning" = { "value" = "tradgard", "label" = "Trädgårdsgrödor" }, "uppgift" = { "value" = "namn", "label" = "Namn" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Grödnamn\ncatalog:variable_text:43079:16071:20454"
+
+[[statement]]
+kind = "set"
+subject = "var:tfid"
+fields = { "facets" = { "undersokning" = { "value" = "tradgard", "label" = "Trädgårdsgrödor" }, "uppgift" = { "value" = "kod", "label" = "Kod" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Gröda (trädgårdsgröda, TFid)\ncatalog:variable_text:43208:10592:11323"
+
+[[statement]]
+kind = "set"
+subject = "var:tradid"
+fields = { "facets" = { "undersokning" = { "value" = "tradgard", "label" = "Trädgårdsgrödor" }, "uppgift" = { "value" = "kod", "label" = "Kod" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Gröda (trädgårdsgröda, TRADID)\ncatalog:variable_text:43231:12053:12418"
