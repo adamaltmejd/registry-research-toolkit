@@ -819,13 +819,13 @@ evidence = "SCB Registerinformation, Månatlig bränsle-, gas och lagerstatistik
 [[statement]]
 kind = "set"
 subject = "var:exportpris-cif"
-fields = { "label" = "Pris, CIF (kostnad, försäkring, frakt)", "description" = "Pris inklusive kostnad, försäkring och frakt (CIF), i 1000-tal kronor. På exportrader är det exportpriset och på importrader importpriset." }
+fields = { "label" = "Pris, CIF (kostnad, försäkring, frakt)" }
 evidence = "Maintainer ruling 2026-11-14: variants of one concept for different row kinds are merged and the variable carries a label and description covering both kinds.\nVarId 20487 (\"Exportpris, kostnad försäkring frakt\") and VarId 20488 (\"Importpris, kostnad försäkring frakt\") share the column CIF in 2008-2017."
 
 [[statement]]
 kind = "set"
 subject = "var:exportpris-fob"
-fields = { "label" = "Pris, FOB (fritt ombord)", "description" = "Pris fritt ombord (FOB), i 1000-tal kronor. På exportrader är det exportpriset och på importrader importpriset." }
+fields = { "label" = "Pris, FOB (fritt ombord)" }
 evidence = "Maintainer ruling 2026-11-14: variants of one concept for different row kinds are merged and the variable carries a label and description covering both kinds.\nVarId 20486 (\"Exportpris, FOB, fritt ombord\") and VarId 20490 (\"Importpris, FOB, fritt ombord\") share the column FOB in 2008-2017."
 
 [[statement]]
