@@ -701,32 +701,35 @@ subject = "var:andra-formaner-underlag-egenavgift"
 fields = { "description" = "Övriga skattepliktiga förmåner som är underlag för egenavgifter. Bilförmån och fritt drivmedel vid bilförmån ingår inte." }
 evidence = "private:ev-3646"
 
-# The last sentence: the social-benefit asserts for AVDR_SKATT_SINK below (SCB delivery
-# report and the delivered 2019-2023 files; Registerinformation documents the social-benefit table for 2019-2020 without the
-# column).
+# The last sentence: the social-benefit asserts for AVDR_SKATT_SINK below. SCB's delivery
+# report and the delivered files show the column in the social-benefit files for
+# 2019-2023 (delivered data wins over documentation, maintainer ruling 2026-11-14);
+# Registerinformation documents the social-benefit table for 2019-2020 without it.
 [[statement]]
 kind = "set"
 subject = "var:avdr-skatt-sink"
 fields = { "description" = "Avdragen skatt, SINK. Uppgiften avser utomlands bosatta som inte omfattas av artistskatten. Kolumnen levereras också i filerna med sociala ersättningar 2019–2023, men finns inte i den tabellens dokumentation." }
-evidence = "private:ev-3647; the delivered social-benefit files for 2019-2020 carry the column too (maintainer ruling 2026-11-14: delivered data wins over documentation)."
+evidence = "private:ev-3647"
 
-# The last sentence: the social-benefit asserts for AVDR_PREL_SKATT below (SCB delivery
-# report and the delivered 2019-2023 files; Registerinformation documents the social-benefit table for 2019-2020 without the
-# column).
+# The last sentence: the social-benefit asserts for AVDR_PREL_SKATT below. SCB's delivery
+# report and the delivered files show the column in the social-benefit files for
+# 2019-2023 (delivered data wins over documentation, maintainer ruling 2026-11-14);
+# Registerinformation documents the social-benefit table for 2019-2020 without it.
 [[statement]]
 kind = "set"
 subject = "var:avdragen-preliminar-a-skatt-arbetsgivare"
 fields = { "description" = "Avdragen preliminär skatt. Kolumnen levereras också i filerna med sociala ersättningar 2019–2023, men finns inte i den tabellens dokumentation." }
-evidence = "private:ev-3648; the delivered social-benefit files for 2019-2020 carry the column too (maintainer ruling 2026-11-14: delivered data wins over documentation)."
+evidence = "private:ev-3648"
 
-# The last sentence: the social-benefit asserts for AVRAKNING_AVGIFTSFRI_ERS below (SCB
-# delivery report and the delivered 2019-2023 files; Registerinformation documents the social-benefit table for 2019-2020
-# without the column).
+# The last sentence: the social-benefit asserts for AVRAKNING_AVGIFTSFRI_ERS below. SCB's delivery
+# report and the delivered files show the column in the social-benefit files for
+# 2019-2023 (delivered data wins over documentation, maintainer ruling 2026-11-14);
+# Registerinformation documents the social-benefit table for 2019-2020 without it.
 [[statement]]
 kind = "set"
 subject = "var:avrakning-avgiftsfri-ers"
 fields = { "description" = "Avräkning från avgiftsfri ersättning. Kolumnen levereras också i filerna med sociala ersättningar 2019–2023, men finns inte i den tabellens dokumentation." }
-evidence = "private:ev-3649; the delivered social-benefit files for 2019-2020 carry the column too (maintainer ruling 2026-11-14: delivered data wins over documentation)."
+evidence = "private:ev-3649"
 
 [[statement]]
 kind = "set"
