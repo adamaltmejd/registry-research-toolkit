@@ -2717,3 +2717,75 @@ kind = "set"
 subject = "set:investeringar-i-maskiner-och-inventarier"
 fields = { "description" = "Planerade investeringar per kvartal i maskiner, transportmedel och inventarier, i tusental kronor, samt verkställda investeringar i maskiner och inventarier för helåret. Uppräknat värde: i urvalsundersökta strata räknas primärdata upp med faktorn N/n, där N är populationen och n antalet svarande." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nDe sex planerade medlemmarna delar lagrad text som mängdbeskrivningen nu täcker helt; den verkställda medlemmen har egen text om vilka företag som lämnar uppgiften.\ncatalog:variable_text:37453:10957:13514\ncatalog:variable_text:37503:10957:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:bostadsinvesteringar"
+fields = { "description" = "Planerade investeringar per kvartal i bostäder samt verkställda investeringar i bostäder för helåret. Uppräknat värde: i urvalsundersökta strata räknas primärdata upp med faktorn N/n, där N är populationen och n antalet svarande." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är planerade investeringar per kvartal respektive verkställda investeringar för helåret, alla uppräknade enligt N/n.\ncatalog:variable_text:37447:10957:13514\ncatalog:variable_text:37499:10957:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:investeringar-i-bilar"
+fields = { "description" = "Planerade investeringar per kvartal i bilar samt verkställda investeringar för helåret i bilar och släpfordon. Uppräknat värde: i urvalsundersökta strata räknas primärdata upp med faktorn N/n, där N är populationen och n antalet svarande." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är planerade investeringar per kvartal respektive verkställda investeringar för helåret, alla uppräknade enligt N/n.\ncatalog:variable_text:37470:10957:13514\ncatalog:variable_text:37547:10957:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:investeringar-i-bussar"
+fields = { "description" = "Planerade investeringar per kvartal i bussar samt verkställda investeringar i bussar för helåret. Uppräknat värde: i urvalsundersökta strata räknas primärdata upp med faktorn N/n, där N är populationen och n antalet svarande." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är planerade investeringar per kvartal respektive verkställda investeringar för helåret, alla uppräknade enligt N/n.\ncatalog:variable_text:37475:10957:13514\ncatalog:variable_text:37548:10957:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:investeringar-i-fastighetsinkop"
+fields = { "description" = "Verkställda investeringar för helåret i form av inköp av fastigheter, som lämnas av bank- och försäkringsföretag. Uppräknat värde: i urvalsundersökta strata räknas primärdata upp med faktorn N/n, där N är populationen och n antalet svarande." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre medlemmar har samma text: helårsuppgift om inköp av fastighet från bank- och försäkringsföretag.\ncatalog:variable_text:37500:10957:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:investeringar-i-flygplan"
+fields = { "description" = "Planerade investeringar per kvartal i flygplan samt verkställda investeringar i flygplan för helåret. Uppräknat värde: i urvalsundersökta strata räknas primärdata upp med faktorn N/n, där N är populationen och n antalet svarande." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är planerade investeringar per kvartal respektive verkställda investeringar för helåret, alla uppräknade enligt N/n.\ncatalog:variable_text:37480:10957:13514\ncatalog:variable_text:37549:10957:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:investeringar-i-markinkop"
+fields = { "description" = "Verkställda investeringar för helåret i form av inköp av mark, i tusental kronor. Uppräknat värde: i urvalsundersökta strata räknas primärdata upp med faktorn N/n, där N är populationen och n antalet svarande." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre medlemmar har samma text: helårsuppgift om inköp av mark i tkr.\ncatalog:variable_text:37439:10957:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:investeringar-i-ny-till-och-ombyggnad"
+fields = { "description" = "Planerade investeringar per kvartal i ny-, till- och ombyggnader samt verkställda investeringar i ny-, till- och ombyggnader för helåret. Uppräknat värde: i urvalsundersökta strata räknas primärdata upp med faktorn N/n, där N är populationen och n antalet svarande." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är planerade investeringar per kvartal respektive verkställda investeringar för helåret, alla uppräknade enligt N/n.\ncatalog:variable_text:37459:10957:13514\ncatalog:variable_text:37504:10957:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:investeringar-i-ovriga-anlaggningar"
+fields = { "description" = "Planerade investeringar per kvartal i övriga anläggningar samt verkställda investeringar i övriga bygg- och anläggningar för helåret. Uppräknat värde: i urvalsundersökta strata räknas primärdata upp med faktorn N/n, där N är populationen och n antalet svarande." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är planerade investeringar per kvartal respektive verkställda investeringar för helåret, alla uppräknade enligt N/n.\ncatalog:variable_text:37446:10957:13514\ncatalog:variable_text:37498:10957:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:investeringar-i-ovriga-transportmedel"
+fields = { "description" = "Planerade investeringar per kvartal i övriga transportmedel samt verkställda investeringar i övriga transportmedel för helåret. Uppräknat värde: i urvalsundersökta strata räknas primärdata upp med faktorn N/n, där N är populationen och n antalet svarande." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är planerade investeringar per kvartal respektive verkställda investeringar för helåret, alla uppräknade enligt N/n.\ncatalog:variable_text:37485:10957:13514\ncatalog:variable_text:37550:10957:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:investeringar-i-rullande-sparbunden-materiel"
+fields = { "description" = "Planerade investeringar per kvartal i rullande spårbunden materiel samt verkställda investeringar i rullande spårbunden materiel för helåret. Uppräknat värde: i urvalsundersökta strata räknas primärdata upp med faktorn N/n, där N är populationen och n antalet svarande." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är planerade investeringar per kvartal respektive verkställda investeringar för helåret, alla uppräknade enligt N/n.\ncatalog:variable_text:37490:10957:13514\ncatalog:variable_text:37551:10957:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:ovriga-verkstallda-investeringar"
+fields = { "description" = "Verkställda investeringar i övrigt, utöver de som redovisas i undersökningens övriga investeringsvariabler. Uppräknat värde: i urvalsundersökta strata räknas primärdata upp med faktorn N/n, där N är populationen och n antalet svarande." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma text: verkställda investeringar i övriga variabler, uppräknade enligt N/n.\ncatalog:variable_text:37505:10957:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:underhallsutgifter"
+fields = { "description" = "Helårsuppgift om underhållsutgifter, dels för byggnader (lämnas av fastighetsförvaltande företag), dels för maskiner och transportmedel (lämnas av företag inom transport, magasinering och kommunikation). Uppräknat värde: i urvalsundersökta strata räknas primärdata upp med faktorn N/n, där N är populationen och n antalet svarande." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är helårsuppgifter om underhåll; byggnader och maskiner/transportmedel skiljer sig åt i vem som lämnar uppgiften.\ncatalog:variable_text:37495:10957:13514\ncatalog:variable_text:37496:10957:13514"

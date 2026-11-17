@@ -14436,3 +14436,207 @@ kind = "set"
 subject = "var:begart-uppskov-kapitalvinst-186-v7756"
 fields = { "label" = "Begärt uppskov: Kapitalvinst   (186) (Register för inkomstblanketter INK2)" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Register för inkomstblanketter INK2\"."
+
+[[statement]]
+kind = "set"
+subject = "set:aterforda-belopp-vid-restvardeavskrivning"
+fields = { "description" = "Belopp som återförs vid restvärdeavskrivning. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på olika blanketter.\ncatalog:variable_text:50463:13879:14610\ncatalog:variable_text:50464:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:aterforing-av-vardeminskningsavdrag-vid-fastighetsforsaljning"
+fields = { "description" = "Återföring av värdeminskningsavdrag med mera vid försäljning av näringsfastighet och så kallad avskattning. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på olika blanketter.\ncatalog:variable_text:50471:12418:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:aterforing-och-resultatkorrigering-enligt-n3b"
+fields = { "description" = "Återföring av värdeminskningsavdrag och korrigering av resultatet enligt blankett N3B med mera, som positivt eller negativt belopp." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTvå variabler med samma definition.\ncatalog:variable_text:50469:12418:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:bokfort-resultat-fran-handelsbolagsandelar"
+fields = { "description" = "Bokfört resultat från andel i handelsbolag, inklusive kapitalvinst eller kapitalförlust på andelen, redovisat som bokförd vinst respektive bokförd förlust. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nVinst- och förlustvariabler på olika blanketter.\ncatalog:variable_text:50423:13514:14610\ncatalog:variable_text:50424:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:ej-aterforda-vardeminskningsavdrag-for-byggnader"
+fields = { "description" = "Värdeminskningsavdrag på byggnader som vid beskattningsårets utgång inte har återförts. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på olika blanketter.\ncatalog:variable_text:50605:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:ej-aterforda-vardeminskningsavdrag-for-markanlaggningar"
+fields = { "description" = "Värdeminskningsavdrag på markanläggningar som inte har återförts. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på olika blanketter.\ncatalog:variable_text:50604:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:ersattning-for-avyttrade-eller-forlorade-inventarier"
+fields = { "description" = "Ersättning under beskattningsåret för avyttrade eller förlorade maskiner och inventarier som fanns vid årets början. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på olika blanketter; vissa varianter omfattar även ianspråktagna fonder, vilket varje medlem anger i sin egen text.\ncatalog:variable_text:50615:12418:14610\ncatalog:variable_text:50618:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:fordringar-pa-koncern-och-intresseforetag"
+fields = { "description" = "Fordringar på koncern- och intresseföretag. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på olika blanketter.\ncatalog:variable_text:50649:12418:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:forutbetalda-kostnader-och-upplupna-intakter"
+fields = { "description" = "Förutbetalda kostnader och upplupna intäkter. Uppgiften finns på olika blanketter och som ingående respektive utgående belopp." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på olika blanketter samt ingående och utgående belopp enligt etiketterna.\ncatalog:variable_text:50668:13514:14610\ncatalog:variable_text:50698:12418:13514\ncatalog:variable_text:51218:12418:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:immateriella-anlaggningstillgangar"
+fields = { "description" = "Immateriella anläggningstillgångar. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på olika blanketter.\ncatalog:variable_text:50692:13514:14610\ncatalog:variable_text:51166:12418:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:inbetalning-till-skogskonto-och-upphovsmannakonto"
+fields = { "description" = "Inbetalning till skogskonto, skogsskadekonto eller upphovsmannakonto. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på olika blanketter.\ncatalog:variable_text:50693:12418:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:kvarvarande-underskott"
+fields = { "description" = "Kvarvarande underskott som sparas till efterföljande år. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på olika blanketter; texterna nämner överföring till INK1 och sparande till efterföljande år.\ncatalog:variable_text:50781:12418:13514\ncatalog:variable_text:50782:12418:14610\ncatalog:variable_text:51192:12784:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:langfristiga-skulder"
+fields = { "description" = "Långfristiga skulder, som summa eller som basvariabel för olika kategorier av långfristiga skulder. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på olika blanketter.\ncatalog:variable_text:50793:12418:14610\ncatalog:variable_text:51172:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:maskiner-och-inventarier"
+fields = { "description" = "Materiella anläggningstillgångar i form av maskiner och inventarier. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på olika blanketter.\ncatalog:variable_text:50821:12418:14610\ncatalog:variable_text:50823:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:nedskrivning-av-finansiella-tillgangar"
+fields = { "description" = "Nedskrivning av finansiella tillgångar, och återföring av sådana nedskrivningar. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nNedskrivning och återföring av finansiella tillgångar på olika blanketter.\ncatalog:variable_text:50467:12418:14610\ncatalog:variable_text:50859:13514:14610\ncatalog:variable_text:50860:12418:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:okning-av-expansionsfond"
+fields = { "description" = "Ökning av expansionsfond. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på olika blanketter.\ncatalog:variable_text:50891:12418:14610\ncatalog:variable_text:50893:12418:13514\ncatalog:variable_text:50894:12418:13879"
+
+[[statement]]
+kind = "set"
+subject = "set:overgangspost-vid-1995-ars-taxering"
+fields = { "description" = "Övergångspost vid 1995 års taxering. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på olika blanketter; en variant är ständig övergångspost.\ncatalog:variable_text:50910:12418:13514\ncatalog:variable_text:51155:12418:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:overskott-och-underskott-av-naringsverksamhet"
+fields = { "description" = "Överskott respektive underskott av näringsverksamhet. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nÖverskotts- och underskottsvariabler på olika blanketter.\ncatalog:variable_text:50914:12418:14610\ncatalog:variable_text:50917:13514:14610\ncatalog:variable_text:51188:12418:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:ovriga-kostnader-i-andamalsenlig-verksamhet"
+fields = { "description" = "Övriga kostnader i ändamålsenlig verksamhet. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTvå variabler med samma definition.\ncatalog:variable_text:50958:13879:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:pensionskostnader"
+fields = { "description" = "Pensionskostnader. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på olika blanketter.\ncatalog:variable_text:50993:12418:14610\ncatalog:variable_text:50995:13514:14610\ncatalog:variable_text:50996:13879:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:reduktion-av-underskott"
+fields = { "description" = "Reduktion av underskott med hänsyn till exempelvis ackord. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på olika blanketter.\ncatalog:variable_text:51067:12418:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:reparation-och-underhall-av-fastigheter"
+fields = { "description" = "Kostnader för reparation och underhåll av fastigheter, markanläggningar och byggnader. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma kostnadspost på olika blanketter.\ncatalog:variable_text:50761:12418:14610\ncatalog:variable_text:51071:12418:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:resultat-fran-andelar-i-koncern-och-intresseforetag"
+fields = { "description" = "Resultat från andelar i koncern- och intresseföretag, som positivt eller negativt belopp. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på olika blanketter; tecknet anges i vissa variabelnamn.\ncatalog:variable_text:51076:13514:14610\ncatalog:variable_text:51086:13514:14610\ncatalog:variable_text:51087:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:resultat-vid-avyttring-av-anlaggningstillgangar"
+fields = { "description" = "Vinst, förlust eller resultat vid avyttring av anläggningstillgångar, antingen ej finansiella eller övriga finansiella anläggningstillgångar." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nVinst, förlust och resultat vid avyttring enligt variabelnamnen.\ncatalog:variable_text:50657:12418:14610\ncatalog:variable_text:51098:13514:14610\ncatalog:variable_text:51292:12418:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:resultatkorrigering-for-avskrivningar"
+fields = { "description" = "Korrigering av bokfört resultat för avskrivningar på byggnader och övrig fast egendom samt vid restvärdeavskrivning på maskiner och inventarier, som tillägg (+) eller avdrag (-). Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nPlus- och minusvariabler på olika blanketter.\ncatalog:variable_text:50741:13879:14610\ncatalog:variable_text:50742:13879:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:sarskild-loneskatt-pa-pensionsforsakringspremie"
+fields = { "description" = "Beräknad särskild löneskatt på pensionsförsäkringspremie." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTvå variabler med samma definition.\ncatalog:variable_text:50547:12418:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:schablonintakt-pa-periodiseringsfonder"
+fields = { "description" = "Beräknad schablonintäkt på de periodiseringsfonder som var kvarvarande vid beskattningsårets ingång. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på två blanketter.\ncatalog:variable_text:50548:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:skattemassigt-resultat-fran-handelsbolagsandelar"
+fields = { "description" = "Skattemässigt överskott eller underskott enligt blankett N3B från andel i handelsbolag, inklusive kapitalvinst eller kapitalförlust på andelen. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nÖverskotts- och underskottsvariabler på olika blanketter.\ncatalog:variable_text:50422:13514:14610\ncatalog:variable_text:50425:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:skattepliktiga-intakter-utanfor-redovisat-resultat"
+fields = { "description" = "Intäkter som ska tas upp till beskattning men som inte ingår i det redovisade resultatet. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på olika blanketter.\ncatalog:variable_text:50431:12418:14610\ncatalog:variable_text:50943:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:skogsavdrag-och-substansminskningsavdrag"
+fields = { "description" = "Beskattningsårets skogsavdrag och substansminskningsavdrag, var för sig eller sammanlagda. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSkogsavdrag och substansminskningsavdrag, separat och sammanlagt, på olika blanketter.\ncatalog:variable_text:50551:12418:13514\ncatalog:variable_text:50552:12418:13514\ncatalog:variable_text:51133:12418:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:sparat-rantefordelningsbelopp"
+fields = { "description" = "Räntefördelningsbelopp som sparas mellan taxeringsår: dels sparat fördelningsbelopp från föregående års taxering, dels kvarvarande positivt räntefördelningsbelopp som sparas till nästa års taxering. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSparat belopp in och ut ur taxeringsåret enligt texterna.\ncatalog:variable_text:50778:12418:13514\ncatalog:variable_text:51146:12418:14610\ncatalog:variable_text:51152:12418:14610\ncatalog:variable_text:51267:13514:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:uppskov-med-kapitalvinst-enligt-n4"
+fields = { "description" = "Uppskov med kapitalvinst enligt blankett N4. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på olika blanketter.\ncatalog:variable_text:50522:12418:13514\ncatalog:variable_text:51202:12418:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:uttag-av-varor-och-tjanster"
+fields = { "description" = "Värdet av uttag av varor och tjänster. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post under olika formuleringar; en variant anger bokfört värde.\ncatalog:variable_text:50577:12418:14610\ncatalog:variable_text:51230:12418:14610\ncatalog:variable_text:51274:12418:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:uttag-fran-skogskonto-och-upphovsmannakonto"
+fields = { "description" = "Uttag från skogskonto, skogsskadekonto eller upphovsmannakonto. Uppgiften finns på flera blanketter, vilket variabelnamnen anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma post på olika blanketter.\ncatalog:variable_text:51227:12418:13514"

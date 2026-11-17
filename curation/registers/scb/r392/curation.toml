@@ -1712,3 +1712,9 @@ kind = "set"
 subject = "var:bilforman-utom-drivmedel-underlag-arbetsgivaravgift"
 fields = { "description" = "Bilförmån som är underlag för arbetsgivaravgifter och SLF." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nKortat till det som skiljer medlemmen från mängdens beskrivning.\ncatalog:variable_text:9597:17897:19723"
+
+[[statement]]
+kind = "set"
+subject = "set:bostadsforman"
+fields = { "description" = "Bostadsförmåner som arbetsgivaren tillhandahåller de anställda (ej semesterbostad). Förmånerna är uppdelade efter om bostaden finns i en småhusfastighet eller inte och efter vilka avgifter förmånen är underlag för." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar delar definitionen av bostadsförmån och skiljer sig i småhus/ej småhus och avgiftsunderlag, vilket etiketterna redan visar.\ncatalog:variable_text:9599:17897:19723\ncatalog:variable_text:9600:17897:19723"

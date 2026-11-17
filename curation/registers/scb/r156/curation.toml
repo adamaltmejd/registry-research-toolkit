@@ -1884,3 +1884,15 @@ kind = "set"
 subject = "industrins-miljoskyddskostnader: var:identitet"
 fields.row_key = true
 evidence = "Row key: identitet identify a row: one row per surveyed enterprise and identitet is its informationless id (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:hushallsinvesteringar"
+fields = { "description" = "Hushållsinvesteringar, det vill säga åtgärder som helt eller delvis är inriktade på besparing av energi och/eller värme: totalt, för energibesparing och för värmeåtervinning." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar delar definitionen av en hushållsinvestering; etiketterna skiljer totalt, energibesparing och värmeåtervinning.\ncatalog:variable_text:35027:13149:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:lopande-miljoskyddskostnader"
+fields = { "description" = "Löpande kostnader för miljöskydd, det vill säga kostnader som inte är investeringar. Kostnaderna delas upp på interna kostnader (eget arbete) och externa kostnader (köpta tjänster), och på ändamål som drift och underhåll, generell miljöadministration, forskning och utveckling samt övrigt." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är löpande miljöskyddskostnader uppdelade på interna och externa kostnader och på ändamål.\ncatalog:variable_text:35072:13149:14975\ncatalog:variable_text:35078:13149:15340\ncatalog:variable_text:35084:13149:16071\ncatalog:variable_text:35097:13149:16071\ncatalog:variable_text:35099:13149:16071\ncatalog:variable_text:35100:13149:16071\ncatalog:variable_text:35101:13149:16071"
