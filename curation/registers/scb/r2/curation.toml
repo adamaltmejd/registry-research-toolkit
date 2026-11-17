@@ -104,7 +104,7 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/rtb.toml:1211\n\nC
 
 [[statement]]
 kind = "set"
-subject = "grund-bosattning-31-12: folkbdat @2005"
+subject = "grund-bosattning: folkbdat @2005"
 fields = { "unit" = "Datum" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/rtb.toml:1235\n\nComplete supplied native-family names and definitions explicitly establish the unit of this quantity. Correct the contradictory or generic supplied unit label for this exact source-local column only. This changes effective metadata, never observed values, scale, precision, source formula, identity, dates, representation or coding. Preserve every original field, raw coding association and complete-family witness; absent units remain unknown. Civil-status source quality warnings and event-role prose remain unchanged. Internet spending retains ordinal response bins labelled in kronor; no numeric amount is asserted. Blank software year-work projections remain unchanged support rather than physical deliveries."
 
@@ -116,7 +116,13 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/rtb.toml:139\n\nPN
 
 [[statement]]
 kind = "set"
-subject = "grund-bosattning-31-12: gfbgrupp_scb"
+subject = "grund-bosattning: gfbgrupp_scb"
+fields = { "variable" = "grund-for-bosattning-grupperad-senaste" }
+evidence = "python-builder-pre-cutover:curation/registers/scb/rtb.toml:778\n\nPrepared SCB operations explicitly distinguish grouping the prioritized residence-basis classification from grouping the latest residence-basis classification. Keep both owners distinct; retain Nordic US/blank/null-to-unknown wording, all literal codes and labels, widths, original years and source facts. The reused GrundForBosattning under native 2.8180 is an ungrouped classification and remains an independent native identity."
+
+[[statement]]
+kind = "set"
+subject = "grund-bosattning-folkbokforda-31-12: gfbgrupp_scb"
 fields = { "variable" = "grund-for-bosattning-grupperad-senaste" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/rtb.toml:778\n\nPrepared SCB operations explicitly distinguish grouping the prioritized residence-basis classification from grouping the latest residence-basis classification. Keep both owners distinct; retain Nordic US/blank/null-to-unknown wording, all literal codes and labels, widths, original years and source facts. The reused GrundForBosattning under native 2.8180 is an ungrouped classification and remains an independent native identity."
 
@@ -152,13 +158,25 @@ evidence = "private:ev-2180"
 
 [[statement]]
 kind = "set"
-subject = "grund-bosattning-31-12: sarlagstiftning @2009..2010"
+subject = "grund-bosattning: sarlagstiftning @2009..2010"
 fields = { "value_set" = "d5ac40c7527f629ab528e56ee7e586bfd866f20c08efa0eceba5711e9e5138cb" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/rtb.toml:1465\n\nThe complete same-native same-variant physical source column has explicit agreeing0/1 dictionaries before these years and on their exactyear-end witnesses. Use the user-approved explicit variable-to-codebook identity/validity policy for these finite annualmarker gaps. Preserve all sourceprose, including contradictorySärlag/NULL or1/NULL descriptions, allpositive0/1 labels, originalsourcevalidity and everyassociation. No inventedNULLliteral, missing-tokenencoding, statistical equivalence or observed-valueconversion."
 
 [[statement]]
 kind = "set"
-subject = "grund-bosattning-31-12: forlangning @2009..2010"
+subject = "grund-bosattning-folkbokforda-31-12: sarlagstiftning @2009..2010"
+fields = { "value_set" = "d5ac40c7527f629ab528e56ee7e586bfd866f20c08efa0eceba5711e9e5138cb" }
+evidence = "python-builder-pre-cutover:curation/registers/scb/rtb.toml:1465\n\nThe complete same-native same-variant physical source column has explicit agreeing0/1 dictionaries before these years and on their exactyear-end witnesses. Use the user-approved explicit variable-to-codebook identity/validity policy for these finite annualmarker gaps. Preserve all sourceprose, including contradictorySärlag/NULL or1/NULL descriptions, allpositive0/1 labels, originalsourcevalidity and everyassociation. No inventedNULLliteral, missing-tokenencoding, statistical equivalence or observed-valueconversion."
+
+[[statement]]
+kind = "set"
+subject = "grund-bosattning: forlangning @2009..2010"
+fields = { "value_set" = "e42e96c44af7fdadc558e1af8b0e530d5fd19be7ec092dbca7916b5022544c22" }
+evidence = "python-builder-pre-cutover:curation/registers/scb/rtb.toml:1476\n\nThe complete same-native same-variant physical source column has explicit agreeing0/1 dictionaries before these years and on their exactyear-end witnesses. Use the user-approved explicit variable-to-codebook identity/validity policy for these finite annualmarker gaps. Preserve all sourceprose, including contradictorySärlag/NULL or1/NULL descriptions, allpositive0/1 labels, originalsourcevalidity and everyassociation. No inventedNULLliteral, missing-tokenencoding, statistical equivalence or observed-valueconversion."
+
+[[statement]]
+kind = "set"
+subject = "grund-bosattning-folkbokforda-31-12: forlangning @2009..2010"
 fields = { "value_set" = "e42e96c44af7fdadc558e1af8b0e530d5fd19be7ec092dbca7916b5022544c22" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/rtb.toml:1476\n\nThe complete same-native same-variant physical source column has explicit agreeing0/1 dictionaries before these years and on their exactyear-end witnesses. Use the user-approved explicit variable-to-codebook identity/validity policy for these finite annualmarker gaps. Preserve all sourceprose, including contradictorySärlag/NULL or1/NULL descriptions, allpositive0/1 labels, originalsourcevalidity and everyassociation. No inventedNULLliteral, missing-tokenencoding, statistical equivalence or observed-valueconversion."
 
@@ -332,19 +350,19 @@ evidence = "python-builder-pre-cutover:curation/registers/scb/rtb.toml:202\n\nY-
 
 [[statement]]
 kind = "set"
-subject = "grund-bosattning-31-12: gfb_ffb_klassgrupp"
+subject = "grund-bosattning: gfb_ffb_klassgrupp"
 fields = { "variable" = "gfb-klassgruppering-ffb" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/rtb.toml:207\n\nY-317 2026-09-29: SCB VarId 24851 GFB FFB has two explicitly named delivered coding representations. GFB_FFB_Grupp carries the old text categories (2 annual originals 2009-2010, variant 66; 26 associations in 2009 including repeated NULL associations and 13 in 2010); GFB_FFB_KlassGrupp carries the current 19 two-digit text codes (15 annual originals 2011-2025). The original descriptors date the new grouping to 2011 and distinguish decisions before population registration (FFB); the old and current lists are never converted or crosswalked."
 
 [[statement]]
 kind = "set"
-subject = "grund-bosattning-31-12: gfb_efb_klassgrupp"
+subject = "grund-bosattning: gfb_efb_klassgrupp"
 fields = { "variable" = "gfb-klassgruppering-efb" }
 evidence = "python-builder-pre-cutover:curation/registers/scb/rtb.toml:212\n\nY-317 2026-09-29: SCB VarId 24852 GFB EFB has two explicitly named delivered coding representations. GFB_EFB_Grupp carries the old text categories (2 annual originals 2009-2010, variant 66; 26 associations in 2009 including repeated NULL associations and 13 in 2010); GFB_EFB_KlassGrupp carries the current 19 two-digit text codes (15 annual originals 2011-2025). The original descriptors date the new grouping to 2011 and distinguish decisions after population registration (EFB); the old and current lists are never converted or crosswalked."
 
 [[statement]]
 kind = "set"
-subject = "asylsokande-i-sverige-31-12: kommun @2017-12-31"
+subject = "asylsokande-inskrivna-31-12: kommun @2017-12-31"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
 
@@ -386,7 +404,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2018.toml:27\
 
 [[statement]]
 kind = "set"
-subject = "grund-bosattning-31-12: kommun @2018"
+subject = "grund-bosattning: kommun @2018"
 fields = { "classification" = "class/lkf/lkf2018" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2018.toml:27\n\nLegacy exact value-set label: 2018-01-01/ Län, kommuner och församlingar"
 
@@ -422,7 +440,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2018.toml:27\
 
 [[statement]]
 kind = "set"
-subject = "asylsokande-i-sverige-31-12: kommun @2018-12-31"
+subject = "asylsokande-inskrivna-31-12: kommun @2018-12-31"
 fields = { "classification" = "class/lkf/lkf2019" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
 
@@ -464,7 +482,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2019.toml:25\
 
 [[statement]]
 kind = "set"
-subject = "grund-bosattning-31-12: kommun @2019"
+subject = "grund-bosattning: kommun @2019"
 fields = { "classification" = "class/lkf/lkf2019" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2019.toml:25\n\nLegacy exact value-set label: 2019-01-01/ Län, kommuner och församlingar"
 
@@ -500,7 +518,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2019.toml:25\
 
 [[statement]]
 kind = "set"
-subject = "asylsokande-i-sverige-31-12: kommun @2019-12-31"
+subject = "asylsokande-inskrivna-31-12: kommun @2019-12-31"
 fields = { "classification" = "class/lkf/lkf2020" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
 
@@ -542,7 +560,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2020.toml:23\
 
 [[statement]]
 kind = "set"
-subject = "grund-bosattning-31-12: kommun @2020"
+subject = "grund-bosattning: kommun @2020"
 fields = { "classification" = "class/lkf/lkf2020" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2020.toml:23\n\nLegacy exact value-set label: 2020-01-01/ Län, kommuner och församlingar"
 
@@ -578,7 +596,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2020.toml:23\
 
 [[statement]]
 kind = "set"
-subject = "asylsokande-i-sverige-31-12: kommun @2020-12-31"
+subject = "asylsokande-inskrivna-31-12: kommun @2020-12-31"
 fields = { "classification" = "class/lkf/lkf2021" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
 
@@ -620,7 +638,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2021.toml:28\
 
 [[statement]]
 kind = "set"
-subject = "grund-bosattning-31-12: kommun @2021"
+subject = "grund-bosattning: kommun @2021"
 fields = { "classification" = "class/lkf/lkf2021" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2021.toml:28\n\nLegacy exact value-set label: 2021-01-01/ Län, kommuner och församlingar"
 
@@ -656,7 +674,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2021.toml:28\
 
 [[statement]]
 kind = "set"
-subject = "asylsokande-i-sverige-31-12: kommun @2021-12-31"
+subject = "asylsokande-inskrivna-31-12: kommun @2021-12-31"
 fields = { "classification" = "class/lkf/lkf2022" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
 
@@ -698,7 +716,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2022.toml:28\
 
 [[statement]]
 kind = "set"
-subject = "grund-bosattning-31-12: kommun @2022"
+subject = "grund-bosattning: kommun @2022"
 fields = { "classification" = "class/lkf/lkf2022" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2022.toml:28\n\nLegacy exact value-set label: 2022-01-01/ Län, kommuner och församlingar"
 
@@ -734,7 +752,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2022.toml:28\
 
 [[statement]]
 kind = "set"
-subject = "asylsokande-i-sverige-31-12: kommun @2022-12-31"
+subject = "asylsokande-inskrivna-31-12: kommun @2022-12-31"
 fields = { "classification" = "class/lkf/lkf2023" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
 
@@ -776,7 +794,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2023.toml:27\
 
 [[statement]]
 kind = "set"
-subject = "grund-bosattning-31-12: kommun @2023"
+subject = "grund-bosattning: kommun @2023"
 fields = { "classification" = "class/lkf/lkf2023" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2023.toml:27\n\nLegacy exact value-set label: 2023-01-01 /Län, kommuner och församlingar"
 
@@ -812,7 +830,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2023.toml:27\
 
 [[statement]]
 kind = "set"
-subject = "asylsokande-i-sverige-31-12: kommun @2023-12-31"
+subject = "asylsokande-inskrivna-31-12: kommun @2023-12-31"
 fields = { "classification" = "class/lkf/lkf2024" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
 
@@ -854,7 +872,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2024.toml:27\
 
 [[statement]]
 kind = "set"
-subject = "grund-bosattning-31-12: kommun @2024"
+subject = "grund-bosattning: kommun @2024"
 fields = { "classification" = "class/lkf/lkf2024" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2024.toml:27\n\nLegacy exact value-set label: 2024-01-01 /Län, kommuner och församlingar"
 
@@ -1940,7 +1958,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2008.toml:29\
 
 [[statement]]
 kind = "set"
-subject = "asylsokande-i-sverige-31-12: kommun @2008-12-31"
+subject = "asylsokande-inskrivna-31-12: kommun @2008-12-31"
 fields = { "classification" = "class/lkf/lkf2009" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
 
@@ -1982,7 +2000,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2009.toml:29\
 
 [[statement]]
 kind = "set"
-subject = "grund-bosattning-31-12: kommun @2009"
+subject = "grund-bosattning: kommun @2009"
 fields = { "classification" = "class/lkf/lkf2009" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2009.toml:29\n\nLegacy exact value-set label: LKF 2009-01-01/ Län, kommuner och församlingar"
 
@@ -2012,7 +2030,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2009.toml:29\
 
 [[statement]]
 kind = "set"
-subject = "asylsokande-i-sverige-31-12: kommun @2009-12-31"
+subject = "asylsokande-inskrivna-31-12: kommun @2009-12-31"
 fields = { "classification" = "class/lkf/lkf2010" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
 
@@ -2054,7 +2072,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2010.toml:28\
 
 [[statement]]
 kind = "set"
-subject = "grund-bosattning-31-12: kommun @2010"
+subject = "grund-bosattning: kommun @2010"
 fields = { "classification" = "class/lkf/lkf2010" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2010.toml:28\n\nLegacy exact value-set label: LKF 2010-01-01/ Län, kommuner och församlingar"
 
@@ -2084,7 +2102,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2010.toml:28\
 
 [[statement]]
 kind = "set"
-subject = "asylsokande-i-sverige-31-12: kommun @2010-12-31"
+subject = "asylsokande-inskrivna-31-12: kommun @2010-12-31"
 fields = { "classification" = "class/lkf/lkf2011" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
 
@@ -2126,7 +2144,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2011.toml:26\
 
 [[statement]]
 kind = "set"
-subject = "grund-bosattning-31-12: kommun @2011"
+subject = "grund-bosattning: kommun @2011"
 fields = { "classification" = "class/lkf/lkf2011" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2011.toml:26\n\nLegacy exact value-set label: LKF 2011-01-01/ Län, kommuner och församlingar"
 
@@ -2156,7 +2174,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2011.toml:26\
 
 [[statement]]
 kind = "set"
-subject = "asylsokande-i-sverige-31-12: kommun @2011-12-31"
+subject = "asylsokande-inskrivna-31-12: kommun @2011-12-31"
 fields = { "classification" = "class/lkf/lkf2012" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
 
@@ -2198,7 +2216,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2012.toml:26\
 
 [[statement]]
 kind = "set"
-subject = "grund-bosattning-31-12: kommun @2012"
+subject = "grund-bosattning: kommun @2012"
 fields = { "classification" = "class/lkf/lkf2012" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2012.toml:26\n\nLegacy exact value-set label: LKF 2012-01-01/ Län, kommuner och församlingar"
 
@@ -2234,7 +2252,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2012.toml:26\
 
 [[statement]]
 kind = "set"
-subject = "asylsokande-i-sverige-31-12: kommun @2012-12-31"
+subject = "asylsokande-inskrivna-31-12: kommun @2012-12-31"
 fields = { "classification" = "class/lkf/lkf2013" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
 
@@ -2276,7 +2294,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2013.toml:27\
 
 [[statement]]
 kind = "set"
-subject = "grund-bosattning-31-12: kommun @2013"
+subject = "grund-bosattning: kommun @2013"
 fields = { "classification" = "class/lkf/lkf2013" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2013.toml:27\n\nLegacy exact value-set label: LKF 2013-01-01/ Län, kommuner och församlingar"
 
@@ -2312,7 +2330,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2013.toml:27\
 
 [[statement]]
 kind = "set"
-subject = "asylsokande-i-sverige-31-12: kommun @2013-12-31"
+subject = "asylsokande-inskrivna-31-12: kommun @2013-12-31"
 fields = { "classification" = "class/lkf/lkf2014" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
 
@@ -2354,7 +2372,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2014.toml:26\
 
 [[statement]]
 kind = "set"
-subject = "grund-bosattning-31-12: kommun @2014"
+subject = "grund-bosattning: kommun @2014"
 fields = { "classification" = "class/lkf/lkf2014" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2014.toml:26\n\nLegacy exact value-set label: LKF 2014-01-01/ Län, kommuner och församlingar"
 
@@ -2390,7 +2408,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2014.toml:26\
 
 [[statement]]
 kind = "set"
-subject = "asylsokande-i-sverige-31-12: kommun @2014-12-31"
+subject = "asylsokande-inskrivna-31-12: kommun @2014-12-31"
 fields = { "classification" = "class/lkf/lkf2015" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
 
@@ -2432,7 +2450,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2015.toml:25\
 
 [[statement]]
 kind = "set"
-subject = "grund-bosattning-31-12: kommun @2015"
+subject = "grund-bosattning: kommun @2015"
 fields = { "classification" = "class/lkf/lkf2015" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2015.toml:25\n\nLegacy exact value-set label: LKF 2015-01-01/ Län, kommuner och församlingar"
 
@@ -2468,7 +2486,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2015.toml:25\
 
 [[statement]]
 kind = "set"
-subject = "asylsokande-i-sverige-31-12: kommun @2015-12-31"
+subject = "asylsokande-inskrivna-31-12: kommun @2015-12-31"
 fields = { "classification" = "class/lkf/lkf2016" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
 
@@ -2510,7 +2528,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2016.toml:31\
 
 [[statement]]
 kind = "set"
-subject = "grund-bosattning-31-12: kommun @2016"
+subject = "grund-bosattning: kommun @2016"
 fields = { "classification" = "class/lkf/lkf2016" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2016.toml:31\n\nLegacy exact value-set label: LKF 2016-01-01/ Län, kommuner och församlingar"
 
@@ -2546,7 +2564,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2016.toml:31\
 
 [[statement]]
 kind = "set"
-subject = "asylsokande-i-sverige-31-12: kommun @2016-12-31"
+subject = "asylsokande-inskrivna-31-12: kommun @2016-12-31"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
 
@@ -2588,7 +2606,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2017.toml:26\
 
 [[statement]]
 kind = "set"
-subject = "grund-bosattning-31-12: kommun @2017"
+subject = "grund-bosattning: kommun @2017"
 fields = { "classification" = "class/lkf/lkf2017" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2017.toml:26\n\nLegacy exact value-set label: LKF 2017-01-01/ Län, kommuner och församlingar"
 
@@ -2624,7 +2642,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2017.toml:26\
 
 [[statement]]
 kind = "set"
-subject = "asylsokande-i-sverige-31-12: kommun @2024-12-31"
+subject = "asylsokande-inskrivna-31-12: kommun @2024-12-31"
 fields = { "classification" = "class/lkf/lkf2025" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2025.toml:21\n\nLegacy exact value-set label: LKF 2025-01-01 /Län, kommuner och församlingar"
 
@@ -2666,7 +2684,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2025.toml:21\
 
 [[statement]]
 kind = "set"
-subject = "grund-bosattning-31-12: kommun @2025"
+subject = "grund-bosattning: kommun @2025"
 fields = { "classification" = "class/lkf/lkf2025" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2025.toml:21\n\nLegacy exact value-set label: LKF 2025-01-01 /Län, kommuner och församlingar"
 
@@ -2702,7 +2720,7 @@ evidence = "python-builder-pre-cutover:curation/classifications/LKF2025.toml:21\
 
 [[statement]]
 kind = "set"
-subject = "asylsokande-i-sverige-31-12: kommun @2025-12-31"
+subject = "asylsokande-inskrivna-31-12: kommun @2025-12-31"
 fields = { "classification" = "class/lkf/lkf2026" }
 evidence = "python-builder-pre-cutover:curation/classifications/LKF2026.toml:14\n\nLegacy exact value-set label: LKF 2026-01-01 /Län, kommuner och församlingar"
 
@@ -7918,7 +7936,13 @@ evidence = "Row key: personnr identify a row: the personnummer identifies the re
 
 [[statement]]
 kind = "set"
-subject = "grund-bosattning-31-12: var:personnr"
+subject = "grund-bosattning: var:personnr"
+fields.row_key = true
+evidence = "Row key: personnr identify a row: the personnummer identifies the immigrant; the person the residence is tied to is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "grund-bosattning-folkbokforda-31-12: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: the personnummer identifies the immigrant; the person the residence is tied to is an attribute (maintainer ruling 2026-11-14)."
 
@@ -8131,3 +8155,399 @@ kind = "set"
 subject = "familjer-1990-1997: ALD97"
 fields = { "variable" = "ald97" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v241), never delivered together in one table, so they are one variable renamed between releases: ALD90 1990-12-31..1990-12-31; ALD91 1991-12-31..1991-12-31; ALD92 1992-12-31..1992-12-31; ALD93 1993-12-31..1993-12-31; ALD94 1994-12-31..1994-12-31; ALD95 1995-12-31..1995-12-31; ALD96 1996-12-31..1996-12-31; ALD97 1997-12-31..1997-12-31."
+
+[[statement]]
+kind = "assert"
+subject = "table:grund-bosattning-folkbokforda-31-12"
+fact = { "entity" = "table", "fields" = { "name" = "Grund för bosättning för immigranter, folkbokförda 31/12", "description" = "Personer folkbokförda den 31 december som någon gång har beviljats uppehållstillstånd eller uppehållsrätt i Sverige, med grund för bosättning och beslutsuppgifter. Personer som invandrat och beviljats uppehållstillstånd eller uppehållsrätt under året finns i tabellen Grund för bosättning för immigranter." } }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, class C, and question 4 decided in this curation): parallel files with different content in one table move to a table of their own. SCB Registerinformation documents Grund för bosättning för immigranter as two files per year from 1990: a year file, e.g. \"1990\" (RegVerID 4914): \"Personer som invandrat och beviljats uppehållstillstånd eller uppehållsrätt i Sverige under 1990\", and a 31 December file, e.g. \"1990-12-31\" (4915): \"Folkbokförda invandrare 31/12 1990, som beviljats uppehållstillstånd i Sverige fram till och med 31/12 aktuellt år\"; \"2023-12-31\" (19109): \"Folkbokförda personer vid referenstidpunkten, som någon gångbeviljats uppehållstillstånd eller uppehållsrätt i Sverige\". The two files cover different populations (the year's new permits against the population registered at year end) with different columns. 1987-1989 have only the year file. The 31 December files are this table."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r4915"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r4913"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r4911"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r4909"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r4907"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r4905"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r4903"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r4901"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r4897"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r4895"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r4893"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r4891"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r4889"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r4862"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r4858"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r4856"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r4851"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r2549"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r2086"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r3614"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r3627"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r4043"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r4553"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r5266"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r5900"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r7453"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r10048"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r11806"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r13090"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r13948"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r16164"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r18098"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r18633"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r19109"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r19771"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:grund-bosattning/r20322"
+fields = { "table" = "grund-bosattning-folkbokforda-31-12" }
+evidence = "SCB documents the 31 December file (persons registered at year end who have ever been granted a permit) beside the year file (permits granted during the year) for the same year, with another population and other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "assert"
+subject = "table:asylsokande-inskrivna-31-12"
+fact = { "entity" = "table", "fields" = { "name" = "Asylsökande i Sverige, inskrivna 31/12", "description" = "Aggregerade uppgifter om personer som var inskrivna i Migrationsverkets mottagningssystem den 31 december: antal personer per grupp av egenskaper. Personer som sökt asyl under året finns i tabellen Asylsökande i Sverige." } }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, class C, and question 4 decided in this curation): parallel files with different content in one table move to a table of their own. SCB Registerinformation describes Asylsökande i Sverige as stored in two forms: \"Registret lagras i två former; ett register för alla asylsökande under året och ett register för asylsökande som är folkbokförda 31 december respektive år.\" Each year from 2002 has a year file, e.g. \"2023\" (RegVerID 19107): \"Registret summerar antal personer som sökt asyl i Sverige under 2023\", and a 31 December file, e.g. \"2002-12-31\" (5035): \"Registret summerar antal personer som var inskrivna som asylsökande hos Migrationsverket den 31 december 2002\"; \"2023-12-31\" (19108): \"personer som var inskrivna i Migrationsverkets mottagningssystem den 31 december 2023, oavsett handläggningsstatus\". The files have different columns (ABOEBO, Kommun and Tillstandstatus only in the 31 December file). The 31 December files are this table."
+
+[[statement]]
+kind = "set"
+subject = "release:asylsokande-i-sverige/r5035"
+fields = { "table" = "asylsokande-inskrivna-31-12" }
+evidence = "SCB documents the 31 December file (persons registered in the reception system at year end) beside the year file (persons who applied for asylum during the year) for the same year, with other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:asylsokande-i-sverige/r5032"
+fields = { "table" = "asylsokande-inskrivna-31-12" }
+evidence = "SCB documents the 31 December file (persons registered in the reception system at year end) beside the year file (persons who applied for asylum during the year) for the same year, with other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:asylsokande-i-sverige/r5030"
+fields = { "table" = "asylsokande-inskrivna-31-12" }
+evidence = "SCB documents the 31 December file (persons registered in the reception system at year end) beside the year file (persons who applied for asylum during the year) for the same year, with other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:asylsokande-i-sverige/r5028"
+fields = { "table" = "asylsokande-inskrivna-31-12" }
+evidence = "SCB documents the 31 December file (persons registered in the reception system at year end) beside the year file (persons who applied for asylum during the year) for the same year, with other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:asylsokande-i-sverige/r5027"
+fields = { "table" = "asylsokande-inskrivna-31-12" }
+evidence = "SCB documents the 31 December file (persons registered in the reception system at year end) beside the year file (persons who applied for asylum during the year) for the same year, with other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:asylsokande-i-sverige/r5024"
+fields = { "table" = "asylsokande-inskrivna-31-12" }
+evidence = "SCB documents the 31 December file (persons registered in the reception system at year end) beside the year file (persons who applied for asylum during the year) for the same year, with other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:asylsokande-i-sverige/r5010"
+fields = { "table" = "asylsokande-inskrivna-31-12" }
+evidence = "SCB documents the 31 December file (persons registered in the reception system at year end) beside the year file (persons who applied for asylum during the year) for the same year, with other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:asylsokande-i-sverige/r5008"
+fields = { "table" = "asylsokande-inskrivna-31-12" }
+evidence = "SCB documents the 31 December file (persons registered in the reception system at year end) beside the year file (persons who applied for asylum during the year) for the same year, with other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:asylsokande-i-sverige/r5006"
+fields = { "table" = "asylsokande-inskrivna-31-12" }
+evidence = "SCB documents the 31 December file (persons registered in the reception system at year end) beside the year file (persons who applied for asylum during the year) for the same year, with other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:asylsokande-i-sverige/r5004"
+fields = { "table" = "asylsokande-inskrivna-31-12" }
+evidence = "SCB documents the 31 December file (persons registered in the reception system at year end) beside the year file (persons who applied for asylum during the year) for the same year, with other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:asylsokande-i-sverige/r4628"
+fields = { "table" = "asylsokande-inskrivna-31-12" }
+evidence = "SCB documents the 31 December file (persons registered in the reception system at year end) beside the year file (persons who applied for asylum during the year) for the same year, with other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:asylsokande-i-sverige/r5271"
+fields = { "table" = "asylsokande-inskrivna-31-12" }
+evidence = "SCB documents the 31 December file (persons registered in the reception system at year end) beside the year file (persons who applied for asylum during the year) for the same year, with other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:asylsokande-i-sverige/r5903"
+fields = { "table" = "asylsokande-inskrivna-31-12" }
+evidence = "SCB documents the 31 December file (persons registered in the reception system at year end) beside the year file (persons who applied for asylum during the year) for the same year, with other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:asylsokande-i-sverige/r7477"
+fields = { "table" = "asylsokande-inskrivna-31-12" }
+evidence = "SCB documents the 31 December file (persons registered in the reception system at year end) beside the year file (persons who applied for asylum during the year) for the same year, with other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:asylsokande-i-sverige/r11211"
+fields = { "table" = "asylsokande-inskrivna-31-12" }
+evidence = "SCB documents the 31 December file (persons registered in the reception system at year end) beside the year file (persons who applied for asylum during the year) for the same year, with other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:asylsokande-i-sverige/r11818"
+fields = { "table" = "asylsokande-inskrivna-31-12" }
+evidence = "SCB documents the 31 December file (persons registered in the reception system at year end) beside the year file (persons who applied for asylum during the year) for the same year, with other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:asylsokande-i-sverige/r13094"
+fields = { "table" = "asylsokande-inskrivna-31-12" }
+evidence = "SCB documents the 31 December file (persons registered in the reception system at year end) beside the year file (persons who applied for asylum during the year) for the same year, with other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:asylsokande-i-sverige/r13963"
+fields = { "table" = "asylsokande-inskrivna-31-12" }
+evidence = "SCB documents the 31 December file (persons registered in the reception system at year end) beside the year file (persons who applied for asylum during the year) for the same year, with other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:asylsokande-i-sverige/r16166"
+fields = { "table" = "asylsokande-inskrivna-31-12" }
+evidence = "SCB documents the 31 December file (persons registered in the reception system at year end) beside the year file (persons who applied for asylum during the year) for the same year, with other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:asylsokande-i-sverige/r18095"
+fields = { "table" = "asylsokande-inskrivna-31-12" }
+evidence = "SCB documents the 31 December file (persons registered in the reception system at year end) beside the year file (persons who applied for asylum during the year) for the same year, with other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:asylsokande-i-sverige/r18665"
+fields = { "table" = "asylsokande-inskrivna-31-12" }
+evidence = "SCB documents the 31 December file (persons registered in the reception system at year end) beside the year file (persons who applied for asylum during the year) for the same year, with other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:asylsokande-i-sverige/r19108"
+fields = { "table" = "asylsokande-inskrivna-31-12" }
+evidence = "SCB documents the 31 December file (persons registered in the reception system at year end) beside the year file (persons who applied for asylum during the year) for the same year, with other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:asylsokande-i-sverige/r20325"
+fields = { "table" = "asylsokande-inskrivna-31-12" }
+evidence = "SCB documents the 31 December file (persons registered in the reception system at year end) beside the year file (persons who applied for asylum during the year) for the same year, with other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "release:asylsokande-i-sverige/r20326"
+fields = { "table" = "asylsokande-inskrivna-31-12" }
+evidence = "SCB documents the 31 December file (persons registered in the reception system at year end) beside the year file (persons who applied for asylum during the year) for the same year, with other columns. Moved whole to its own table (maintainer ruling 2026-11-16, class C)."
+
+[[statement]]
+kind = "set"
+subject = "grund-bosattning: GrundForBosattning where key = 'v8180'"
+fields = { "variable" = "grund-for-bosattning" }
+evidence = "SCB documents GFBKod (1987-2005) and GrundForBosattning (2006-2008) in the year files under one VarId 8180; the two spellings never share a release. One variable on main; after the 31 December files moved to their own table (class C, maintainer ruling 2026-11-16) the default pass no longer joins the GrundForBosattning spelling to it, so the identity is stated."
+
+[[statement]]
+kind = "set"
+subject = "grund-bosattning-folkbokforda-31-12: GrundForBosattning where key = 'v8180'"
+fields = { "variable" = "grund-for-bosattning" }
+evidence = "SCB documents GFBKod (1990-2006) and GrundForBosattning (2007-2010) in the 31 December files under one VarId 8180; the two spellings never share a release. One variable on main; after the 31 December files moved to their own table (class C, maintainer ruling 2026-11-16) the default pass no longer joins the GrundForBosattning spelling to it, so the identity is stated."
+
+[[statement]]
+kind = "set"
+subject = "grund-bosattning: GFBKod"
+fields = { "variable" = "grund-for-bosattning" }
+evidence = "SCB documents GFBKod (1987-2005) and GrundForBosattning (2006-2008) in the year files under one VarId 8180; the two spellings never share a release. One variable on main; after the 31 December files moved to their own table (class C, maintainer ruling 2026-11-16) the default pass no longer joins the GrundForBosattning spelling to it, so the identity is stated."
+
+[[statement]]
+kind = "set"
+subject = "grund-bosattning-folkbokforda-31-12: GFBKod"
+fields = { "variable" = "grund-for-bosattning" }
+evidence = "SCB documents GFBKod (1990-2006) and GrundForBosattning (2007-2010) in the 31 December files under one VarId 8180; the two spellings never share a release. One variable on main; after the 31 December files moved to their own table (class C, maintainer ruling 2026-11-16) the default pass no longer joins the GrundForBosattning spelling to it, so the identity is stated."

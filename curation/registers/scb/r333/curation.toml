@@ -1285,18 +1285,6 @@ evidence = "Bofaderns ålder är ett åldersmått.\ncatalog:occurrence-locators:
 
 [[statement]]
 kind = "set"
-subject = "var:alder-31-12-bofar-alderbofar"
-fields = { "sets" = ["alder"] }
-evidence = "Bofaderns ålder är ett åldersmått; källhistoriken bevaras.\ncatalog:occurrence-locators:variable:6395"
-
-[[statement]]
-kind = "set"
-subject = "var:alder-31-12-bofar-alderbofar"
-fields = { "tags" = ["demographics"] }
-evidence = "Bofaderns ålder är ett åldersmått; källhistoriken bevaras.\ncatalog:occurrence-locators:variable:6395"
-
-[[statement]]
-kind = "set"
 subject = "var:alder-31-12-bomor"
 fields = { "sets" = ["alder"] }
 evidence = "Bomoderns ålder är ett åldersmått.\ncatalog:occurrence-locators:variable:6396"
@@ -1306,18 +1294,6 @@ kind = "set"
 subject = "var:alder-31-12-bomor"
 fields = { "tags" = ["demographics"] }
 evidence = "Bomoderns ålder är ett åldersmått.\ncatalog:occurrence-locators:variable:6396"
-
-[[statement]]
-kind = "set"
-subject = "var:alder-31-12-bomor-alderbomor"
-fields = { "sets" = ["alder"] }
-evidence = "Bomoderns ålder är ett åldersmått.\ncatalog:occurrence-locators:variable:6397"
-
-[[statement]]
-kind = "set"
-subject = "var:alder-31-12-bomor-alderbomor"
-fields = { "tags" = ["demographics"] }
-evidence = "Bomoderns ålder är ett åldersmått.\ncatalog:occurrence-locators:variable:6397"
 
 [[statement]]
 kind = "set"
@@ -5381,3 +5357,63 @@ kind = "set"
 subject = "barn-uppfoljning: AvstandBarnFar"
 fields = { "variable" = "avstand-barn-och-far-avstandbarnfar" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v19548), never delivered together in one table, so they are one variable renamed between releases: AvstandBarnBioFar 1998-12-31..1999-12-31; AvstandBarnFar 1999-12-31..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "barn: AlderSlutBoFar"
+fields = { "variable" = "alder-31-12-bofar" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, section 4 item 7): groups held because their releases overlap merge where the sources show one concept; concurrent releases of one table may now spell one variable differently. SCB Registerinformation documents alderbofar (2001-12-31 to 2014-12-31) and AlderSlutBoFar (2014-12-31 enligt ny definition to 2024-12-31) under one source variable (v15162) with one definition: \"Beräknad ålder i år vid årets slut för bofar. Bofar är den \"far\" som är folkbokförd tillsammans med barnet och har en direkt eller en indirekt relation till barnet.\" The two spellings meet only on 2014-12-31, which SCB delivered twice, the second \"enligt ny definition\"; they are in different releases."
+
+[[statement]]
+kind = "set"
+subject = "barn: alderbofar"
+fields = { "variable" = "alder-31-12-bofar" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, section 4 item 7): groups held because their releases overlap merge where the sources show one concept; concurrent releases of one table may now spell one variable differently. SCB Registerinformation documents alderbofar (2001-12-31 to 2014-12-31) and AlderSlutBoFar (2014-12-31 enligt ny definition to 2024-12-31) under one source variable (v15162) with one definition: \"Beräknad ålder i år vid årets slut för bofar. Bofar är den \"far\" som är folkbokförd tillsammans med barnet och har en direkt eller en indirekt relation till barnet.\" The two spellings meet only on 2014-12-31, which SCB delivered twice, the second \"enligt ny definition\"; they are in different releases."
+
+[[statement]]
+kind = "set"
+subject = "barn-uppfoljning: alderbofar"
+fields = { "variable" = "alder-31-12-bofar" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, section 4 item 7): groups held because their releases overlap merge where the sources show one concept; concurrent releases of one table may now spell one variable differently. SCB Registerinformation documents alderbofar (2001-12-31 to 2014-12-31) and AlderSlutBoFar (2014-12-31 enligt ny definition to 2024-12-31) under one source variable (v15162) with one definition: \"Beräknad ålder i år vid årets slut för bofar. Bofar är den \"far\" som är folkbokförd tillsammans med barnet och har en direkt eller en indirekt relation till barnet.\" The two spellings meet only on 2014-12-31, which SCB delivered twice, the second \"enligt ny definition\"; they are in different releases."
+
+[[statement]]
+kind = "set"
+subject = "familjer: AlderSlutBoFar"
+fields = { "variable" = "alder-31-12-bofar" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, section 4 item 7): groups held because their releases overlap merge where the sources show one concept; concurrent releases of one table may now spell one variable differently. SCB Registerinformation documents alderbofar (2001-12-31 to 2014-12-31) and AlderSlutBoFar (2014-12-31 enligt ny definition to 2024-12-31) under one source variable (v15162) with one definition: \"Beräknad ålder i år vid årets slut för bofar. Bofar är den \"far\" som är folkbokförd tillsammans med barnet och har en direkt eller en indirekt relation till barnet.\" The two spellings meet only on 2014-12-31, which SCB delivered twice, the second \"enligt ny definition\"; they are in different releases."
+
+[[statement]]
+kind = "set"
+subject = "familjer: alderbofar"
+fields = { "variable" = "alder-31-12-bofar" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, section 4 item 7): groups held because their releases overlap merge where the sources show one concept; concurrent releases of one table may now spell one variable differently. SCB Registerinformation documents alderbofar (2001-12-31 to 2014-12-31) and AlderSlutBoFar (2014-12-31 enligt ny definition to 2024-12-31) under one source variable (v15162) with one definition: \"Beräknad ålder i år vid årets slut för bofar. Bofar är den \"far\" som är folkbokförd tillsammans med barnet och har en direkt eller en indirekt relation till barnet.\" The two spellings meet only on 2014-12-31, which SCB delivered twice, the second \"enligt ny definition\"; they are in different releases."
+
+[[statement]]
+kind = "set"
+subject = "barn: AlderSlutBoMor"
+fields = { "variable" = "alder-31-12-bomor" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, section 4 item 7): groups held because their releases overlap merge where the sources show one concept; concurrent releases of one table may now spell one variable differently. SCB Registerinformation documents alderbomor (2001-12-31 to 2014-12-31) and AlderSlutBoMor (2014-12-31 enligt ny definition to 2024-12-31) under one source variable (v15163) with one definition: \"Beräknad ålder i år vid årets slut för bomor. Bomor är den \"mor\" som är folkbokförd tillsammans med barnet och har en direkt eller en indirekt relation till barnet.\" The two spellings meet only on 2014-12-31, which SCB delivered twice, the second \"enligt ny definition\"; they are in different releases."
+
+[[statement]]
+kind = "set"
+subject = "barn: alderbomor"
+fields = { "variable" = "alder-31-12-bomor" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, section 4 item 7): groups held because their releases overlap merge where the sources show one concept; concurrent releases of one table may now spell one variable differently. SCB Registerinformation documents alderbomor (2001-12-31 to 2014-12-31) and AlderSlutBoMor (2014-12-31 enligt ny definition to 2024-12-31) under one source variable (v15163) with one definition: \"Beräknad ålder i år vid årets slut för bomor. Bomor är den \"mor\" som är folkbokförd tillsammans med barnet och har en direkt eller en indirekt relation till barnet.\" The two spellings meet only on 2014-12-31, which SCB delivered twice, the second \"enligt ny definition\"; they are in different releases."
+
+[[statement]]
+kind = "set"
+subject = "barn-uppfoljning: alderbomor"
+fields = { "variable" = "alder-31-12-bomor" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, section 4 item 7): groups held because their releases overlap merge where the sources show one concept; concurrent releases of one table may now spell one variable differently. SCB Registerinformation documents alderbomor (2001-12-31 to 2014-12-31) and AlderSlutBoMor (2014-12-31 enligt ny definition to 2024-12-31) under one source variable (v15163) with one definition: \"Beräknad ålder i år vid årets slut för bomor. Bomor är den \"mor\" som är folkbokförd tillsammans med barnet och har en direkt eller en indirekt relation till barnet.\" The two spellings meet only on 2014-12-31, which SCB delivered twice, the second \"enligt ny definition\"; they are in different releases."
+
+[[statement]]
+kind = "set"
+subject = "familjer: AlderSlutBoMor"
+fields = { "variable" = "alder-31-12-bomor" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, section 4 item 7): groups held because their releases overlap merge where the sources show one concept; concurrent releases of one table may now spell one variable differently. SCB Registerinformation documents alderbomor (2001-12-31 to 2014-12-31) and AlderSlutBoMor (2014-12-31 enligt ny definition to 2024-12-31) under one source variable (v15163) with one definition: \"Beräknad ålder i år vid årets slut för bomor. Bomor är den \"mor\" som är folkbokförd tillsammans med barnet och har en direkt eller en indirekt relation till barnet.\" The two spellings meet only on 2014-12-31, which SCB delivered twice, the second \"enligt ny definition\"; they are in different releases."
+
+[[statement]]
+kind = "set"
+subject = "familjer: alderbomor"
+fields = { "variable" = "alder-31-12-bomor" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator; overlapping-releases proposal, section 4 item 7): groups held because their releases overlap merge where the sources show one concept; concurrent releases of one table may now spell one variable differently. SCB Registerinformation documents alderbomor (2001-12-31 to 2014-12-31) and AlderSlutBoMor (2014-12-31 enligt ny definition to 2024-12-31) under one source variable (v15163) with one definition: \"Beräknad ålder i år vid årets slut för bomor. Bomor är den \"mor\" som är folkbokförd tillsammans med barnet och har en direkt eller en indirekt relation till barnet.\" The two spellings meet only on 2014-12-31, which SCB delivered twice, the second \"enligt ny definition\"; they are in different releases."
