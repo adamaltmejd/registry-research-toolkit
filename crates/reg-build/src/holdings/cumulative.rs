@@ -96,8 +96,12 @@ pub(super) fn resolve(
             .find(|(own, _)| *own == newest)
             .map(|(_, identity)| identity.clone())
             .expect("the newest member");
-        // Every extract's own date, superseded ones included, must fall after the start.
-        if let Some((_, identity)) = members.iter().find(|(own, _)| start >= *own) {
+        // Every extract's own date, superseded ones included, must fall after every routed
+        // table's start: an earlier start alone would leave a later route with nothing.
+        if let Some((_, identity)) = members
+            .iter()
+            .find(|(own, _)| routes.iter().any(|r| starts[r] >= *own))
+        {
             return Err(format!(
                 "locator={}: holdings_cumulative_invalid: the extract's own date is before its table's start",
                 authored[identity].locator
@@ -125,9 +129,9 @@ pub(super) fn resolve(
 }
 
 /// The artifact's own invariants for cumulative tables, independent of `resolve`: a
-/// dated table routed to one holds a single span from the routes' first start, at most
-/// one dated vintage per space, routes and release, and no other table places a column
-/// in one.
+/// dated table routed to one routes only to cumulative tables and holds a single span
+/// from their earliest start that reaches into every one of them, at most one dated
+/// vintage per space, routes and release, and no other table places a column in one.
 pub(super) fn check(db: &Connection, starts: &Starts) -> Result<()> {
     let routes = rows(
         db,
@@ -146,18 +150,35 @@ pub(super) fn check(db: &Connection, starts: &Starts) -> Result<()> {
     for (id, lane, route) in routes {
         tables.entry(id).or_insert((lane, vec![])).1.push(route);
     }
+    // Routes in one order, so the vintage key does not depend on the query's row order.
+    for (_, routes) in tables.values_mut() {
+        routes.sort();
+    }
     let mut vintages = BTreeMap::<_, BTreeSet<Vec<(i64, i64)>>>::new();
     for (id, (lane, routes)) in &tables {
-        let Some(start) = routes.iter().filter_map(|r| starts.get(r)).min() else {
+        let cumulative: Vec<i64> = routes
+            .iter()
+            .filter_map(|r| starts.get(r).copied())
+            .collect();
+        let Some(&start) = cumulative.iter().min() else {
             continue;
         };
+        if cumulative.len() != routes.len() {
+            return Err(format!(
+                "holdings:table={id}: holdings_cumulative_invalid: routes mix cumulative and other tables"
+            )
+            .into());
+        }
         let periods: Vec<(i64, i64)> = rows(
             db,
             "SELECT start,end FROM holding_period WHERE holding_id=? ORDER BY start",
             [id],
             |r| Ok((r.get(0)?, r.get(1)?)),
         )?;
-        if !matches!(&periods[..], [(first, _)] if first == start) {
+        // One span from the earliest start, ending after each routed table's own start.
+        if !matches!(&periods[..], [(first, end)]
+            if *first == start && cumulative.iter().all(|s| s < end))
+        {
             return Err(format!(
                 "holdings:table={id}: holdings_cumulative_partial: an extract of a cumulative table holds it from the table's start to its own date"
             )

@@ -1892,13 +1892,13 @@ and holding them all side by side would place one cell several times (maintainer
   kept. Every older extract becomes `superseded`, with `superseded_by` naming the kept
   table (holdings schema 11): no periods, no placements, like `excluded`. A table
   routed to both cumulative and other tables refuses `holdings_cumulative_invalid`, as
-  does an extract dated before its table starts; a steward cannot author `superseded`.
+  does any extract, superseded or kept, dated before any of its routed tables starts; a steward cannot author `superseded`.
 - **Orders** name the kept extract only, since nothing else places a cell. Ordering an
   older vintage is out of scope.
 - **Verify** re-derives the effective topology from the steward's sources and compares
   it as for any table. Independently of that derivation, and before it, it checks the
-  artifact: a dated table routed to a cumulative table holds one span from the table's
-  start, at most one vintage per space, routes and release is dated, and no table that
+  artifact: a dated table routed to a cumulative table routes only to cumulative tables
+  and holds one span from their earliest start that reaches into each, at most one vintage per space, routes and release is dated, and no table that
   does not route to a cumulative table places a column in it (a steward-derived table
   would date its own year again). Refusals: `holdings_cumulative_partial`, and
   `holdings_cumulative_unrouted`, which says to route the table with a delivery date or
