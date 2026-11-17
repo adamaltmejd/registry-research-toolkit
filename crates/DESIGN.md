@@ -2560,7 +2560,9 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
   file.
 - Keys are the holding's `key_requirements` (entity, then time, in declaration order)
   over the days the file extracts (the requested days widened to the encoding's grain,
-  or the whole delivery when unfiltered), scoped by a requirement's `period`; each
+  or the whole delivery when unfiltered) on which the file's tables deliver (their
+  `tbl_span`, read on each table's origin), scoped by a requirement's `period`: a
+  calendar-year file of a table delivered each autumn needs no key for the spring. Each
   source sharing the file gets key references over those days. A key column a binding
   orders stays `ordered`; else `carried` when the mapping says so, else `row_key`, with
   `binding: null` references. A source whose binding orders the key column keeps only
@@ -2580,7 +2582,8 @@ and "MONA mode"). An order is neither disclosure approval nor an export receipt.
   (`holdings_filename_invalid`), so `file_name_unsafe` guards only a foreign artifact.
 - Non-blocking infos: `rows_unfiltered` (no period column, and the file holds days the
   source did not request), `row_filter_widened` (the encoding's grain adds held days
-  around the source's own request that no source asked for), `row_filter_union` (a
+  around the source's own request that no source asked for), both counting only days
+  the file's tables deliver, `row_filter_union` (a
   source whose days are narrower than its shared file's union). Each is located at the
   source and names the extra days, or the union, in plain words at their grain
   (`July to December 2018`, `2017 to June 2018`, a school year as `2004/2005`, per the
