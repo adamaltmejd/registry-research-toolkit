@@ -5011,3 +5011,39 @@ kind = "set"
 subject = "halvarsvis: T9E1"
 fields = { "variable" = "t9e1" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17494) in one table, renamed between survey rounds and never delivered together, so they are one variable: t8e1 1995-01-01..2003-12-31; T9E1 2006-01-01..2010-06-30."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-svarande"
+fields = { "description" = "Härledda beräkningsvariabler till viktkomponenterna i tvåstegsurvalet: antal svarande per grupp (kombination av ny stratumindelning och sysselsatt eller icke sysselsatt), i urvalets första respektive andra fas." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna är samma härledda antal per grupp; endast urvalsfasen skiljer.\ncatalog:variable_text:46865:14610:14791\ncatalog:variable_text:46866:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "set:kurskunskapers-anvandbarhet-i-andra-branscher"
+fields = { "description" = "Om kunskaperna från en genomgången kurs eller utbildning är användbara inom andra branscher. Det finns en variabel per kurs, för kurs 1 till 5." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är identiska frågor för kurs 1–5.\ncatalog:variable_text:46910:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "set:kurskunskapers-anvandbarhet-i-samma-bransch"
+fields = { "description" = "Om kunskaperna från en genomgången kurs eller utbildning är användbara inom samma bransch. Det finns en variabel per kurs, för kurs 1 till 5." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är identiska frågor för kurs 1–5.\ncatalog:variable_text:46915:14610:14791"
+
+[[statement]]
+kind = "set"
+subject = "set:overnattning-vid-kurs"
+fields = { "description" = "Om deltagandet i en kurs medförde övernattning och hur många övernattningar kursen innehöll, för upp till fem kurser. Antalet övernattningar anges för de kurser som medförde övernattning." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nFem kurser, med både markering för övernattning och antal övernattningar.\ncatalog:variable_text:46860:10592:10957\ncatalog:variable_text:46956:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "set:resa-vid-kurs"
+fields = { "description" = "Om deltagandet i en kurs medförde resa. Det finns en variabel per kurs, för kurs 1 till 5." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är samma markering för kurs 1–5.\ncatalog:variable_text:46961:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "set:urvalstillhorighet"
+fields = { "description" = "Uppgift om vilket urvalstillfälle som personen är dragen vid. Variablerna avser urval 1, 2 och 3." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTexterna är identiska; etiketterna skiljer urval 1–3.\ncatalog:variable_text:47117:14610:14791"

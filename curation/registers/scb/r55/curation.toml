@@ -2976,3 +2976,39 @@ kind = "set"
 subject = "yrkesverksamma: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: the personnummer identifies the person; employer, workplace and property ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsstallets-kommun"
+fields = { "description" = "Kommunkod för det arbetsställe som är förknippat med personens huvudsakliga sysselsättning respektive största förvärvskälla under året. Variabeln bestäms för alla personer registrerade i riket den 31/12 som har en indikation på sysselsättning under året." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma kommunkod och population; de skiljer i vilken sysselsättning arbetsstället hör till.\ncatalog:variable_text:62760:11323:20089\ncatalog:variable_text:62761:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsstallets-lan"
+fields = { "description" = "Länskod för det arbetsställe som är förknippat med personens huvudsakliga sysselsättning respektive största förvärvskälla under året. Variabeln bestäms för alla personer registrerade i riket den 31/12 som har en indikation på sysselsättning under året." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma länskod och population; de skiljer i vilken sysselsättning arbetsstället hör till.\ncatalog:variable_text:62803:14245:20089\ncatalog:variable_text:62804:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:europeisk-socioekonomisk-gruppering"
+fields = { "description" = "Registerbaserad europeisk socioekonomisk indelning (ESeG) som härleds från yrkeskoden och bygger på ISCO-08, med viss hänsyn till yrkesvariabeln SSYK 2012. En av variablerna avser egna företagare." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma härledningstext; den ena avser egna företagare.\ncatalog:variable_text:62774:16071:20089\ncatalog:variable_text:62775:16071:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:tjanstgoringsomfattning"
+fields = { "description" = "Faktisk tjänstgöringstid i förhållande till heltid (0–100 procent) för olika yrkesuppgifter: huvudsaklig sysselsättning, jobb två i november, övrigt jobb, största och näst största förvärvskälla." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma definition; de skiljer i vilken yrkesuppgift som avses.\ncatalog:variable_text:62818:11323:20089\ncatalog:variable_text:62856:11323:20089\ncatalog:variable_text:62857:11323:20089\ncatalog:variable_text:62858:11323:20089\ncatalog:variable_text:62859:11323:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:yrkesbaserad-socioekonomisk-gruppering"
+fields = { "description" = "Registerbaserad socioekonomisk indelning som härleds från yrkeskoden enligt ISCO-88 (COM) på tresiffernivå, översatt till SSYK96, tillsammans med yrkesställning och antal anställda; utifrån det får individen en klassindelning. En av variablerna avser egna företagare." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma härledning; den ena avser egna företagare enligt etiketten.\ncatalog:variable_text:62871:11323:15340\ncatalog:variable_text:62879:14610:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:yrkeskodens-overensstammelse"
+fields = { "description" = "Kvalitetsvariabel som visar om personens yrke är kopplat till det organisationsnummer som personen är sysselsatt på. Värdet 1 betyder att yrket är kopplat till organisationsnumret, värdena 2–6 att det inte är det. Variablerna skiljer sig i om organisationsnumret avser yrkesverksamhet under året eller novembersysselsättning." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma värdeskala 1–6 i båda; organisationsnumrets bestämning skiljer.\ncatalog:variable_text:62827:11323:20089\ncatalog:variable_text:62828:11323:20089"

@@ -2984,3 +2984,27 @@ kind = "set"
 subject = "set:kursdeltagare"
 fields = { "description" = "Antal anställda i företaget som deltog i minst en kurs under referensåret, totalt och uppdelat på kvinnor och män. Koden 999998 betyder att företaget inte anordnade personalutbildning under referensåret." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre lagrade texter är samma mening med tillägget kvinnor eller män, vilket etiketterna redan anger; koden gäller alla.\ncatalog:variable_text:14610:14610:14975\ncatalog:variable_text:14612:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:formaner-och-bidrag"
+fields = { "description" = "Bidrag och förmåner som företaget erhöll för att genomföra personalutbildning under referensåret: dels erhållet bidragsbelopp, dels om företaget erhöll förmåner från olika källor (skattelättnader, intäkter från utbildningsmedel, EU-bidrag, statsbidrag eller andra källor) och om ingen av källorna utnyttjats." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar rör ekonomiskt stöd till företagets personalutbildning; beloppet och de olika källorna skiljer.\ncatalog:variable_text:14631:14610:14975\ncatalog:variable_text:14658:14610:14975\ncatalog:variable_text:14661:14610:14975\ncatalog:variable_text:14677:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:grundlaggande-yrkesutbildning"
+fields = { "description" = "Grundläggande yrkesutbildning (arbetsbaserad formell utbildning och lärlingsprogram) i företaget: skälen till att företaget erbjöd sådan utbildning, och om företaget brukar anställa personer som huvudsakligen studerar mot en erkänd yrkeskvalifikation, till exempel lärlingar." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar gäller företagets grundläggande yrkesutbildning och lärlingar; varje skäl är en egen variabel.\ncatalog:variable_text:14663:14610:14975\ncatalog:variable_text:14664:14610:14975\ncatalog:variable_text:14725:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:kompetensbehov"
+fields = { "description" = "Hur företaget agerar för att möta framtida kompetensbehov: fortsatt yrkesutbildning av personalen, intern omorganisation, rekrytering av personal med lämplig kompetens eller rekrytering av personal som utbildas. Varje variabel anger om företaget arbetar på det sättet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är fyra sätt att möta framtida kompetensbehov enligt gemensam definition.\ncatalog:variable_text:14678:14610:14975\ncatalog:variable_text:14679:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningstid"
+fields = { "description" = "Antal kurstimmar i personalutbildning som företagets anställda fick under referensåret, uppdelat på externa kurstimmar, interna kurstimmar och totalt. Värdet 9999999998 betyder att företaget inte anordnade någon personalutbildning under referensåret." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar mäter kurstimmar; skillnaden är extern, intern eller total, och koden gäller alla.\ncatalog:variable_text:14633:14610:14975"

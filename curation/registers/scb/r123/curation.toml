@@ -15826,3 +15826,99 @@ kind = "set"
 subject = "arbetsmiljoundersokningen-2015: HUOTERS"
 fields = { "variable" = "hsoters" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v6771), never delivered together in one table, so they are one variable renamed between releases: HUOTERS 2011-01-01..2019-12-31; hsoters 2021-01-01..2021-12-31."
+
+[[statement]]
+kind = "set"
+subject = "set:besvar-fran-tidigare-yrke"
+fields = { "description" = "Besvär som personen har haft i ett tidigare yrke till följd av arbetet, kroppsliga eller till exempel stress, dåliga relationer, hot eller våld, och om personen fortfarande har dessa besvär." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna gäller antingen om personen haft arbetsorsakade besvär i tidigare yrke eller om de kvarstår.\ncatalog:variable_text:11634:10592:10957\ncatalog:variable_text:11762:9862:10227"
+
+[[statement]]
+kind = "set"
+subject = "set:diskriminering-pa-arbetsplatsen"
+fields = { "description" = "Om personen upplever sig diskriminerad eller utsatt för trakasserier på arbetsplatsen på grund av ett visst skäl, till exempel kön, ålder, etnisk tillhörighet, funktionsnedsättning, könsidentitet, religion eller sexuell läggning. Variablerna skiljer sig åt i vilket skäl eller svarsalternativ de avser." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar gäller upplevd diskriminering eller könsgrundade trakasserier på arbetsplatsen, en variabel per skäl eller svarsalternativ.\ncatalog:variable_text:11591:16436:16801\ncatalog:variable_text:11714:19723:20089\ncatalog:variable_text:12069:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "set:fordonsanvandning-i-arbetet"
+fields = { "description" = "Om personen använder fordon i sitt arbete. Varje variabel avser ett fordonsslag (bil, buss, cykel, lastbil, motorcykel/moped eller annat fordon), och en variabel anger att inget fordon används." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar gäller fordonsanvändning i arbetet, per fordonsslag.\ncatalog:variable_text:11616:10592:10957\ncatalog:variable_text:11741:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:forutsattningar-att-klara-arbetsuppgifter"
+fields = { "description" = "Om personen har förutsättningar att klara sina arbetsuppgifter: om chefen har gett dem, och vilka förutsättningar personen saknar (befogenheter, ergonomiska förutsättningar, information, kunskaper, socialt stöd, tekniska hjälpmedel eller tid)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna gäller förutsättningar för arbetsuppgifterna, dels från chefen, dels vilka som saknas, en variabel per förutsättning.\ncatalog:variable_text:11702:19723:20089\ncatalog:variable_text:11963:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:konflikter-pa-arbetsplatsen"
+fields = { "description" = "Om personen är indragen i konflikt eller bråk på arbetsplatsen, uppdelat på med vem: chefer, arbetskamrater eller andra personer, till exempel kunder, patienter och elever. Sammanfattande variabler och ett nej-alternativ ingår." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna gäller konflikt eller bråk på arbetsplatsen per motpart, med en härledd sammanfattning och ett nej-alternativ.\ncatalog:variable_text:11593:14975:15340\ncatalog:variable_text:11597:10592:10957\ncatalog:variable_text:11828:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:misstrostan-i-arbetet"
+fields = { "description" = "Om personen känner sig illa till mods och misströstar som följd av svårigheter eller kritik i arbetet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar gäller misströstan på jobbet, med svårigheter respektive kritik som orsak.\ncatalog:variable_text:11889:12784:13149\ncatalog:variable_text:11890:10592:10957\ncatalog:variable_text:11892:9862:10227"
+
+[[statement]]
+kind = "set"
+subject = "set:orsaker-till-att-inte-arbeta-till-pension"
+fields = { "description" = "Av vilka anledningar personen troligtvis inte kommer att kunna arbeta fram till pensionsåldern för sitt yrke. Varje variabel avser en anledning: arbetsmiljö, arbetstider, arbetsuppgifter, hälsoskäl eller annan orsak." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är svarsalternativ i samma flervalsfråga.\ncatalog:variable_text:11805:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:sexuella-trakasserier-i-arbetet"
+fields = { "description" = "Om personen är utsatt för sexuella trakasserier på arbetsplatsen, uppdelat på vem som trakasserar: chefer, arbetskamrater eller andra personer, till exempel kunder, patienter och elever. En sammanfattande variabel över alla och ett nej-alternativ ingår." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna gäller sexuella trakasserier på arbetsplatsen per källa.\ncatalog:variable_text:11592:14975:15340\ncatalog:variable_text:11595:10592:10957\ncatalog:variable_text:11703:10592:10957\ncatalog:variable_text:11987:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:skyddsombud-pa-arbetsplatsen"
+fields = { "description" = "Om det finns skyddsombud på personens arbetsplats. Varje variabel avser ett svarsalternativ: lokalt, regionalt, nej eller vet inte, och flera jakande svar är möjliga." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är svarsalternativ i samma fråga.\ncatalog:variable_text:12006:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:stimulans-och-utveckling-i-arbetet"
+fields = { "description" = "Om personens arbete är intressant och stimulerande." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna har samma fråga.\ncatalog:variable_text:11810:19723:20089\ncatalog:variable_text:11816:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "set:tid-i-nuvarande-yrke"
+fields = { "description" = "Hur lång tid personen har arbetat i sitt nuvarande yrke, i år respektive i antal månader." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma fråga uttryckt i två enheter.\ncatalog:variable_text:11667:10592:10957\ncatalog:variable_text:11874:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "set:tillgang-till-foretagshalsovard"
+fields = { "description" = "Om personen har tillgång till företagshälsovård genom sitt arbete." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna har samma fråga.\ncatalog:variable_text:11748:9862:10227\ncatalog:variable_text:11752:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:tunga-lyft-i-arbetet"
+fields = { "description" = "Tunga lyft i arbetet, minst 15 kg respektive 25 kg åt gången flera gånger om dagen: om personen måste lyfta så, eller hur ofta personen gör det." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna gäller tunga lyft i arbetet med olika viktgränser.\ncatalog:variable_text:11869:9862:10227\ncatalog:variable_text:11870:9862:10227\ncatalog:variable_text:11871:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:undersokningsvikter"
+fields = { "description" = "Vikter som används för att skatta populationens värden utifrån Arbetsmiljöundersökningens svar. Variablerna skiljer sig åt i vilken vikt som avses och vilken del av skattningen den används för." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är vikter för skattning från undersökningen; ingen mer specifik gemensam konstruktion håller för alla.\ncatalog:variable_text:12124:11323:11688\ncatalog:variable_text:12133:11323:11688\ncatalog:variable_text:12125:19723:20089\ncatalog:variable_text:12132:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:vardering-av-arbetets-egenskaper"
+fields = { "description" = "Hur viktiga olika saker i arbetet är enligt personen (mycket, ganska eller inte så viktiga). Frågan ställs endast till ungdomar 16–29 år, och varje variabel avser en egenskap, till exempel lönen, arbetskamraterna eller utvecklingsmöjligheterna." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är alternativ i samma fråga till ungdomar 16–29 år.\ncatalog:variable_text:12118:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "set:yrkesbyte-pa-grund-av-besvar"
+fields = { "description" = "Om besvär var en viktig orsak till att personen bytte yrke." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna har samma fråga.\ncatalog:variable_text:11684:9862:10227\ncatalog:variable_text:11686:10592:10957"

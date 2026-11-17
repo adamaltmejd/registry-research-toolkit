@@ -6495,3 +6495,27 @@ kind = "set"
 subject = "arbetsorsakade-besvar: var:uenr"
 fields.row_key = true
 evidence = "Row key: personnr and uenr identify a row: one row per surveyed person: personnr in the early rounds, the individual sample number uenr in the later rounds when personnr is absent (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsolyckans-intraffandear"
+fields = { "description" = "Det år då en arbetsolycka inträffade som är orsak till besvär under de senaste 12 månaderna. Det finns en variabel per olycka, från den senaste till den nionde." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar anger inträffandeår för en arbetsolycka; de skiljer sig bara i vilken olycka (ordningsnummer) som avses.\ncatalog:variable_text:12342:18262:18628\ncatalog:variable_text:12345:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:besvar-av-andra-arbetsforhallanden"
+fields = { "description" = "Besvär som personen uppger beror på andra förhållanden i arbetet än en olyckshändelse. Variablerna skiljer sig i när händelsen inträffade och i vilket svarsalternativ eller vilken svarskombination (ja, nej, vet ej, vill ej svara) som avses." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar gäller besvär till följd av andra arbetsförhållanden än olycka; tidsavgränsning och svarsalternativ skiljer, vilket etiketterna visar.\ncatalog:variable_text:12205:11323:12784\ncatalog:variable_text:12208:17532:17897\ncatalog:variable_text:12225:16071:16436"
+
+[[statement]]
+kind = "set"
+subject = "set:orsak-till-arbetsolycka"
+fields = { "description" = "Typ av orsak till de arbetsolyckor som är orsak till besvär under de senaste 12 månaderna. Det finns en variabel per olycka, från den senaste till den nionde." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar anger orsak till en arbetsolycka; endast olyckans ordningsnummer skiljer.\ncatalog:variable_text:12362:18262:18628\ncatalog:variable_text:12364:18262:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:yrke-i-huvudsysslan"
+fields = { "description" = "Personens yrke i huvudsysslan enligt Standard för svensk yrkesklassificering (SSYK), på 1-, 2-, 3- respektive 4-siffernivå." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är samma yrkesklassificering på olika siffernivåer; SSYK anges uttryckligen för tre av fyra.\ncatalog:variable_text:12420:16071:16436\ncatalog:variable_text:12444:16071:16436\ncatalog:variable_text:12445:16071:16436\ncatalog:variable_text:12446:16071:16436"

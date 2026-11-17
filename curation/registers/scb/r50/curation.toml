@@ -970,3 +970,9 @@ kind = "set"
 subject = "lonestrukturstatistik-privat-sektor-slp: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: the personnummer identifies the employee; the employer organisation number is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-svarande-foretag"
+fields = { "description" = "Antal svarande företag i det stratum som den anställdes företag tillhör, uppdelat på företag med arbetare respektive med tjänstemän/övriga. Används tillsammans med motsvarande variabel för stratumets totala antal företag (Stora N) för rak uppräkning vid skattningar." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma mått för två personalgrupper.\ncatalog:variable_text:50086:9496:20089\ncatalog:variable_text:50087:9496:20089"

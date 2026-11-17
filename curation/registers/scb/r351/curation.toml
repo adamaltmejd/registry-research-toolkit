@@ -7145,3 +7145,9 @@ kind = "set"
 subject = "den-internationella-undersokningen-av-vuxnas-fardigheter-piaac: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: the survey respondent personnummer identifies the person a row is about; individnyckel is the survey record number, an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:vanlig-veckoarbetstid"
+fields = { "description" = "Hur många timmar personen vanligtvis arbetar (arbetade) per vecka, inklusive normal avlönad eller oavlönad övertid men exklusive lunchrast och andra raster. Variablerna avser nuvarande respektive senaste arbetsplats." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma fråga för nuvarande och senaste arbete.\ncatalog:variable_text:47396:15340:15706\ncatalog:variable_text:47543:15340:15706"

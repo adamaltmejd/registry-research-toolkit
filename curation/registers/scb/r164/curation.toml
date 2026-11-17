@@ -2712,3 +2712,15 @@ kind = "set"
 subject = "november: fr_euro_folkrost"
 fields = { "variable" = "fr-euro-folkrost" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v31253), never delivered together in one table, so they are one variable renamed between releases: fr30 2003-11-01..2004-05-31; fr_euro_folkrost 2004-11-01..2005-11-30."
+
+[[statement]]
+kind = "set"
+subject = "set:opinionsundersokningars-paverkan-pa-partival"
+fields = { "description" = "Om opinionsundersökningar om partiernas stöd påverkar partivalet: om man i allmänhet påverkas, om undersökningarna spelar roll för personen själv och om väljarna i allmänhet påverkas." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTre frågor om opinionsundersökningars påverkan vid val av parti.\ncatalog:variable_text:48160:13088:13118\ncatalog:variable_text:48161:13088:13118\ncatalog:variable_text:48162:13088:13118"
+
+[[statement]]
+kind = "set"
+subject = "set:yrke"
+fields = { "description" = "Yrke eller sysselsättning hos intervjupersonen och dennes make, maka eller sambo. Variablerna skiljer sig åt i vilket yrke som avses: yrket för anställda, yrket i den huvudsakliga sysselsättningen, yrket personen räknar sig till med tanke på yrkeserfarenhet och utbildning, samt partnerns yrke." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna gäller yrke, med olika grund och person.\ncatalog:variable_text:48263:11078:11109\ncatalog:variable_text:48264:11078:11109\ncatalog:variable_text:48265:18748:18779\ncatalog:variable_text:48266:11078:11109"

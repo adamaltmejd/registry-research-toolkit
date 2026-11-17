@@ -1788,3 +1788,21 @@ kind = "set"
 subject = "hogutbildade-utrikes-fodda: f24f where key = 'v25070'"
 fields = { "variable" = "svart-fa-arbete-utb-svar-bedoma" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v25070) in one table, renamed between survey rounds and never delivered together, so they are one variable: F24e 2015-01-01..2015-12-31; f24f 2018-01-01..2018-12-31."
+
+[[statement]]
+kind = "set"
+subject = "set:bosattningsgrund-och-invandringsskal"
+fields = { "description" = "Skäl till att personen flyttade till Sverige (grund för bosättning). Variablerna anger bland annat om skälet var behov av skydd (asyl), orsaken till flytten, grunden grupperad i sex grupper och möjligheten att få arbete som skäl." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar gäller skälet till flytt till Sverige men i olika uppdelning.\ncatalog:variable_text:33468:16436:16801\ncatalog:variable_text:33469:16436:16801\ncatalog:variable_text:33475:16436:16801\ncatalog:variable_text:33509:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:deltagande-i-svenskundervisning"
+fields = { "description" = "Om personen har deltagit i undervisning i svenska språket och på vilken nivå eller i vilken form: SFI, grundskolenivå, gymnasienivå, högskolenivå eller annat. En variabel anger även om personen har studerat på SFI i Sverige efter sin högskoleutbildning." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är markeringar för form eller nivå av svenskundervisning.\ncatalog:variable_text:33436:12418:12784\ncatalog:variable_text:33437:12418:12784\ncatalog:variable_text:33523:12418:12784"
+
+[[statement]]
+kind = "set"
+subject = "set:upprakningsvikt"
+fields = { "description" = "Kalibrerad vikt för uppräkning av urvalet till populationen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre medlemmar är kalibrerade vikter för uppräkning.\ncatalog:variable_text:33485:14245:14610\ncatalog:variable_text:33539:16436:16801"
