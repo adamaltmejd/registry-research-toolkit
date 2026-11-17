@@ -1778,13 +1778,13 @@ evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): the flerfil tables carry 
 kind = "set"
 subject = "par-sv-diagnoser: var:lopnr-oppenvardskontakt"
 fields.row_key = true
-evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-sv-diagnoser row is one diagnosis of one care contact. IDNR identifies the contact (PAR_SV row 109: link variable of the flerfil files) and SEKVENSNR_DIA numbers the diagnosiss within it (PAR_SV row 168: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 109, 168."
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-sv-diagnoser row is one diagnosis of one care contact. IDNR identifies the contact (PAR_SV row 109: link variable of the flerfil files) and SEKVENSNR_DIA numbers the diagnoses within it (PAR_SV row 168: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 109, 168."
 
 [[statement]]
 kind = "set"
 subject = "par-sv-diagnoser: var:sekvensnr-dia"
 fields.row_key = true
-evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-sv-diagnoser row is one diagnosis of one care contact. IDNR identifies the contact (PAR_SV row 109: link variable of the flerfil files) and SEKVENSNR_DIA numbers the diagnosiss within it (PAR_SV row 168: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 109, 168."
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-sv-diagnoser row is one diagnosis of one care contact. IDNR identifies the contact (PAR_SV row 109: link variable of the flerfil files) and SEKVENSNR_DIA numbers the diagnoses within it (PAR_SV row 168: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 109, 168."
 
 [[statement]]
 kind = "set"
@@ -1814,13 +1814,13 @@ evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-sv-lakemedel
 kind = "set"
 subject = "par-ov-diagnoser: var:lopnr-oppenvardskontakt"
 fields.row_key = true
-evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-ov-diagnoser row is one diagnosis of one care contact. IDNR identifies the contact (PAR_OV row 38: link variable of the flerfil files) and SEKVENSNR_DIA numbers the diagnosiss within it (PAR_OV row 65: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 38, 65."
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-ov-diagnoser row is one diagnosis of one care contact. IDNR identifies the contact (PAR_OV row 38: link variable of the flerfil files) and SEKVENSNR_DIA numbers the diagnoses within it (PAR_OV row 65: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 38, 65."
 
 [[statement]]
 kind = "set"
 subject = "par-ov-diagnoser: var:sekvensnr-dia"
 fields.row_key = true
-evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-ov-diagnoser row is one diagnosis of one care contact. IDNR identifies the contact (PAR_OV row 38: link variable of the flerfil files) and SEKVENSNR_DIA numbers the diagnosiss within it (PAR_OV row 65: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 38, 65."
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-ov-diagnoser row is one diagnosis of one care contact. IDNR identifies the contact (PAR_OV row 38: link variable of the flerfil files) and SEKVENSNR_DIA numbers the diagnoses within it (PAR_OV row 65: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 38, 65."
 
 [[statement]]
 kind = "set"
