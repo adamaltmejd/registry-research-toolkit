@@ -7,9 +7,19 @@ is the `reg_export_gate/` folder of the toolkit repository
 and the design in `DESIGN.md`. There is one copy of the check, there; a project holds a
 pinned copy of its bytes and never a variant.
 
-**Pinned version: `EXPORT_GATE_VERSION <- "0.2.0"`.** Copy `export_gate.R` from the
-toolkit revision that carries this line, and check the line in the copy. A newer gate
-version is a deliberate update of this pin, not something to pick up silently.
+**Pinned version: `EXPORT_GATE_VERSION <- "0.4.0"`.** Take `export_gate.R` from the
+`reg_meta` tag the project's `reg_meta_version` names (0.4.0 is in `reg_meta/v0.78.0` and
+later):
+`https://raw.githubusercontent.com/adamaltmejd/registry-research-toolkit/reg_meta/vX.Y.Z/reg_export_gate/export_gate.R`.
+Check the version line in the copy and record its SHA-256. Take the schema and policy from
+wherever the researcher chose the reviewed pair, possibly a later tag, and record their
+SHA-256 too. A newer gate version is a
+deliberate update of this pin, not something to pick up silently.
+
+The R file imitates the Rust gate (`crates/reg-export-gate`), which is the reference and
+can be ahead: Rust 0.5.0 adds check-only columns, `share` and `count_units_required`. A
+schema or policy that uses them is refused by R 0.4.0 as `setup` (`schema_invalid`,
+`policy_invalid`), so on MONA use only pairs the R version accepts.
 
 ## What the project holds
 
@@ -17,9 +27,9 @@ version is a deliberate update of this pin, not something to pick up silently.
   concatenate it into project code: every receipt names its version.
 - The chosen schema and its policy, `<name>.schema.json` and `<name>.policy.json`, also
   unchanged. The user chooses them; the agent never writes, edits or loosens a schema or
-  a policy, and never adds one to the project. If no shipped schema declares the
-  project's outputs, say so and keep real release disabled: a new schema is a toolkit
-  change a human reviews.
+  a policy, and never adds one to the project. If no reviewed schema declares the
+  project's outputs, say so and keep real release disabled: a new schema or policy is a
+  toolkit change a human reviews ([mona.md](mona.md), "The schema and policy").
 - In the project instructions: the gate version, the schema and policy names and
   versions, and the three files' SHA-256, so a changed copy is visible.
 
@@ -92,12 +102,16 @@ type the gate accepts for its schema type:
   | `date`      | `date32[day]`            | `DATE`                |
 
 Cast every output column explicitly in the final `SELECT` (`n::BIGINT`, `mean::DOUBLE`):
-`FLOAT`, `DECIMAL` and a dictionary (pandas `category`) column are refused as
-`structure` (`column_type`). A suppressed cell is SQL `NULL`, never `NaN` or `Infinity`:
+`FLOAT` and `DECIMAL` are refused as `structure` (`column_type`). A dictionary column (an
+R factor, a pandas `category`) is read as its value type. A staging file over 8 MiB or
+100,000 rows is refused as `structure` (`too_large`). A suppressed cell is SQL `NULL`, never `NaN` or `Infinity`:
 a `NaN` in any `double` column is refused as `disclosure` (`nan_value`). The gate writes
 `integer` columns as `int64`, `double` as `float64` and `date` as `date32`. It also
 refuses a value shaped like a personnummer in any string, integer, date or the
-whole-number part of a double (`backstop`, `identifier_pattern`).
+whole-number part of a double (`backstop`, `identifier_pattern`). Under a policy that
+sets them, a statistic resting on too small a support is `disclosure`
+(`statistic_support_too_small`), and a `double` statistic with more significant digits
+than allowed is `disclosure` (`statistic_not_rounded`): round it before writing.
 
 ## Preflight
 
@@ -124,10 +138,13 @@ shows integrity, not that the gate ran.
 
 ## Other servers
 
-A server that can run executables uses the `reg-export-gate` binary, released with each
-`reg_meta/v*` release: the pipeline's last step runs
-`reg-export-gate check --project NAME --staging DIR`, and the reviewer, after inspecting
-the checked output, runs `reg-export-gate export` to deliver it one way to the agent's
-side. There is no review UI. A server that cannot run it runs the same R file as the
+A Linux x86_64 server that can run executables uses the `reg-export-gate` binary, an
+asset of each `reg_meta/v*` release named by the gate's own version
+(`reg-export-gate-<version>-x86_64-unknown-linux-gnu`). The pipeline's last step runs
+`reg-export-gate check --project NAME --staging DIR`, with the schema, policy and folders
+in the server's project config, outside the project. The reviewer, after inspecting the
+checked output, runs `reg-export-gate export --project NAME --receipt <SHA-256 of the
+reviewed receipt.json>` to deliver it one way to the agent's side. There is no review
+UI; the setup is in `crates/reg-export-gate/DESIGN.md` in the toolkit repository. A server that cannot run it runs the same R file as the
 last step, the same way, and the human review of the export stays as described in
 [operator-review.md](operator-review.md).

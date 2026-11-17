@@ -19,8 +19,14 @@ the `register-metadata-search` skill.
 
 ## Drafting a project
 
-1. Set the document's `schema_version` to `"6.3.0"`. Set `reg_meta_version` (required)
-   to the serving catalog's release tag, `reg_meta/vX.Y.Z`. Read `meta.catalog_version`
+1. Set the document's `schema_version` to `"6.3.0"`. A steward's catalog can run an older
+   release that reads an older version: `validate` then returns
+   `unsupported_schema_version`, whose message names the version that server reads. Use
+   that version, and leave out fields newer than it (`releases`, below, is 6.3.0). Order
+   from the catalog the data comes from: a steward's catalog for the steward's holdings
+   (`register-metadata-search` skill, `references/data-stewards.md`). Set
+   `reg_meta_version` (required) to the serving catalog's release tag, `reg_meta/vX.Y.Z`.
+   Read `meta.catalog_version`
    from a catalog tool response and format its release version `X.Y.Z` as that tag. If
    it is not a release version (for example, `dev`), ask which catalog release to use.
    Never infer it from the local executable or from memory.
@@ -88,6 +94,11 @@ the `register-metadata-search` skill.
    versions, split the source by period and pin each. Ignore the warning when the column
    is only carried along, not used to join or recode across years.
 7. Save the file as `project_data.json`.
+8. On a steward's catalog, `order` with `operation: "materialize_order"` returns the MONA
+   order file the steward's extract runner reads: one file per table and delivery, its
+   columns and row filter. Show it to the user to confirm what the extract will hold. It
+   submits nothing; the steward writes the order it runs. It needs a non-blank `name`
+   (`project_unnamed`) and at least one catalog source (`order_manual_only`).
 
 Every ordered table also delivers its row-key columns, the ids that identify a row
 (the person key in a person table), without a binding: `order` lists them per source
@@ -100,14 +111,14 @@ ordinary variables: `scb/flergenreg/ateranvant-personnr` and the per-parent
 `aterpnrfar`, `aterpnrmor` and adoptive variants, code `1` for a reused personnummer and
 `0` for not. Bind them when needed. `SenPNr` is only in `sos/lova`.
 
-A minimal document, checked against catalog 0.84.1 (set `reg_meta_version` as in step
+A minimal document, checked against catalog 0.87.1 (set `reg_meta_version` as in step
 1). `sources` is a list, each source holds its own `bindings`, and `period` is a range in
 one source and a year list in the other:
 
 ```json
 {
   "schema_version": "6.3.0",
-  "reg_meta_version": "reg_meta/v0.84.1",
+  "reg_meta_version": "reg_meta/v0.87.1",
   "name": "example",
   "sources": [
     {
@@ -134,8 +145,8 @@ one source and a year list in the other:
 
 ## Questions about my project
 
-1. Read the user's `project_data.json`. If its `schema_version` is not `"6.3.0"`, say so
-   and stop: the server reads one version exactly.
+1. Read the user's `project_data.json`. Each server reads one `schema_version` exactly;
+   if `validate` returns `unsupported_schema_version`, say so and stop.
 2. Call `order` with `operation: "order"` and the document as `project`. It returns the
    logical order: per source, the table, the period and the entries, each with the
    spelling delivered, and the `manual` list of columns entered by hand. Ambiguous

@@ -3,15 +3,19 @@ name: register-metadata-search
 description: Query Swedish register metadata (SCB, Socialstyrelsen and other holders)
   through the catalog MCP tools. Use when answering questions about Swedish register
   data — variable definitions, value codes, register schemas, column names, or how data
-  is structured across registers and years.
+  is structured across registers and years, or when the user asks to use the plugin
+  with a data steward's catalog.
 ---
 
 # Register metadata queries
 
 The plugin's `catalog` MCP server answers questions about Swedish administrative
-registers. It serves the published global catalog (`https://reg-meta.vqv.uk/mcp`);
-`show` with no `ref` lists its providers. It holds structural metadata — registers,
-tables, variables, value codes, documentation — not microdata.
+registers. By default it serves the published global catalog
+(`https://reg-meta.vqv.uk/mcp`); the user can point it at a data steward's catalog
+instead, which also answers from the steward's holdings. To set that up, or to check
+which catalog is configured, read [data-stewards.md](references/data-stewards.md). `show` with no `ref` lists its providers. It holds
+structural metadata — registers, tables, variables, value codes, documentation — not
+microdata.
 
 ## Tools
 
@@ -28,7 +32,7 @@ Each tool's parameters are in its MCP schema; this is what each one is for.
   | `resolve`  | Delivered column names (data-file headers) to the variables that deliver them. Always pass `register`, found by `search` with `type: register`: without it `kon` or `FodAr` matches 20-100 variables.  |
   | `graph`    | A ref's relations, narrowed by `kind`: `continues`, `derived_from`, `equivalent` or `label_of`. Lineage is `kind=derived_from`.                                                                        |
   | `docs`     | `operation`: `docs_search`, `docs_get` (one documentation entry) or `docs_related` (the documents of a register, table or variable).                                                                   |
-  | `order`    | `operation`: `validate` or `order` a `project_data.json` document (`project` argument); see the `register-project` skill.                                                                              |
+  | `order`    | `operation`: `validate`, `order` or (steward catalogs only) `materialize_order` a `project_data.json` (`project` argument); see `register-project`.                                                    |
 
 ## Conventions
 
@@ -44,7 +48,8 @@ Each tool's parameters are in its MCP schema; this is what each one is for.
 ## Responses
 
 A successful call returns `{data, meta}`. `data` is the result; `meta` names the
-`contract_version`, the catalog `generation` and the `catalog_version`.
+`contract_version` (the API's, not the project schema version), the catalog `generation`
+and the `catalog_version`, the release the server runs.
 
 A failed call is an MCP tool error carrying `{error, meta}`, where `error` is
 `{code, class, message, remediation, fields}`. Act on `code` and follow `remediation`:
@@ -58,8 +63,13 @@ A failed call is an MCP tool error carrying `{error, meta}`, where `error` is
 - `invalid_parameter`, `invalid_ref`, `invalid_period`, `project_invalid`: fix the named
   argument or the project.
 - `invalid_cursor`, `stale_cursor`: restart the listing without `cursor`.
+- `holdings_unavailable`: `materialize_order` on a catalog without holdings (the global
+  one); use the steward's catalog.
+- `project_unnamed`, `order_manual_only`: `materialize_order` needs a project `name` and
+  at least one catalog source.
 - `docs_unavailable`: the catalog has no documents.
 - `rate_limited`: wait before retrying.
+- `catalog_unavailable`, `internal_error`: a server fault; retry later or file an issue.
 
 ## Workflow
 

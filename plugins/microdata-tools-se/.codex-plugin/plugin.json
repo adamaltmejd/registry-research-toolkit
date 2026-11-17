@@ -1,7 +1,7 @@
 {
   "name": "microdata-tools-se",
   "description": "Tooling for working with Swedish administrative register microdata — register metadata search through the hosted catalog MCP server, project_data.json order drafting, local mock data, and a research-project scaffold whose outputs leave MONA through the toolkit export gate.",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "author": {
     "name": "Adam Altmejd",
     "email": "adam@altmejd.se",
@@ -20,8 +20,8 @@
   },
   "interface": {
     "displayName": "Microdata Tools SE",
-    "shortDescription": "Register metadata search and research scaffold",
-    "longDescription": "Query Swedish register metadata (SCB, Socialstyrelsen and other holders) through the hosted catalog MCP server at reg-meta.vqv.uk, draft project_data.json register data orders, and scaffold a batch-based register research project whose results leave MONA only through the toolkit export gate.",
+    "shortDescription": "Register metadata, data orders, mock data and research scaffold",
+    "longDescription": "Query Swedish register metadata (SCB, Socialstyrelsen and other holders) through the hosted catalog MCP server at reg-meta.vqv.uk, draft project_data.json register data orders, generate local mock data with reg-mock, and scaffold a batch-based register research project whose results leave MONA only through the toolkit export gate.",
     "developerName": "Adam Altmejd",
     "category": "research",
     "capabilities": ["Interactive"],
