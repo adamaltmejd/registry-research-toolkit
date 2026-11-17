@@ -1991,25 +1991,7 @@ subject = "var:utbildningsanordnare-grund-gymnasie-universitet-hogskola"
 fields = { "sets" = ["utbildningsanordnare"] }
 evidence = "r35 and r57 identify schools and universities as external-course providers, matching provider types in r99.\ncatalog:08815422d710f377f3fd0d682b23bb643cf8cfe35f5636c8d278a04ab190b05e:variable:7017\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:53995\ncatalog:5be4d4001342c07e74206c478f8b6b81c67d1d25a33fae1c7864379da8b6f01a:occurrence:54146\nfile:group-candidates:d0dc048c8d3350cf8ad378ed6125d410b263df20a87e5378eb433435bfe5238c:scb/cvts/utbildningsanordnare"
 
-[[statement]]
-kind = "set"
-subject = "var:antal-anstallda-kursdeltagare"
-fields = { "description" = "Antal anställda i företaget som deltog i minst en kurs under referensåret. Koden 999998 betyder att företaget inte anordnade personalutbildning under referensåret." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger en individs deltagandestatus, medan variabeln mäter företagets antal deltagare.\ncatalog:variable_text:6974:16436:16801\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:53974:opdef_text. One variable, one description."
 
-
-[[statement]]
-kind = "set"
-subject = "var:antal-anstallda-kvinnor-kursdeltagare"
-fields = { "description" = "Antal anställda kvinnor i företaget som deltog i minst en kurs under referensåret. Koden 999998 betyder att företaget inte anordnade personalutbildning under referensåret." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger en individs deltagandestatus, medan variabeln mäter företagets antal kvinnliga deltagare.\ncatalog:variable_text:6975:16436:16801\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:53975:opdef_text. One variable, one description."
-
-
-[[statement]]
-kind = "set"
-subject = "var:antal-anstallda-man-kursdeltagare"
-fields = { "description" = "Antal anställda män i företaget som deltog i minst en kurs under referensåret. Koden 999998 betyder att företaget inte anordnade personalutbildning under referensåret." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description.\n\nBeskrivningen anger en individs deltagandestatus, medan variabeln mäter företagets antal manliga deltagare.\ncatalog:variable_text:6976:16436:16801\n\nDescription measurement review 2026-11-02: rel070-base/reg_meta.db:occurrence:53976:opdef_text. One variable, one description."
 
 
 [[statement]]
@@ -2996,3 +2978,9 @@ kind = "set"
 subject = "continuing-vocational-training-survey: var:scbid"
 fields.row_key = true
 evidence = "Row key: scbid identify a row: a firm survey keyed on the firm id (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:kursdeltagare"
+fields = { "description" = "Antal anställda i företaget som deltog i minst en kurs under referensåret, totalt och uppdelat på kvinnor och män. Koden 999998 betyder att företaget inte anordnade personalutbildning under referensåret." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre lagrade texter är samma mening med tillägget kvinnor eller män, vilket etiketterna redan anger; koden gäller alla.\ncatalog:variable_text:14610:14610:14975\ncatalog:variable_text:14612:14610:14975"

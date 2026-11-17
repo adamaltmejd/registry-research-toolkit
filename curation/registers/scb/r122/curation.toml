@@ -16237,12 +16237,6 @@ evidence = "private:ev-0039"
 
 [[statement]]
 kind = "set"
-subject = "var:arverks3"
-fields = { "description" = "Drevs det företaget av någon i ditt hushåll?" }
-evidence = "private:ev-0040"
-
-[[statement]]
-kind = "set"
 subject = "var:bi-anstalld-foretagare"
 fields = { "description" = "Är du anställd, egen företagare eller oavlönad medhjälpare (i bisysslan)?" }
 evidence = "private:ev-0041"
@@ -16255,18 +16249,6 @@ evidence = "private:ev-0042"
 
 [[statement]]
 kind = "set"
-subject = "var:drevs-det-foretaget-av-nagon-i-ditt-hushall-personer"
-fields = { "description" = "Drevs det företaget av någon i ditt hushåll?" }
-evidence = "private:ev-0043"
-
-[[statement]]
-kind = "set"
-subject = "var:drivs-det-foretaget-bisysslan-av-nagon-i-ditt-hushall"
-fields = { "description" = "Drivs det företaget av någon i ditt hushåll?" }
-evidence = "private:ev-0044"
-
-[[statement]]
-kind = "set"
 subject = "var:ersattningsform-af-inskrivna-eller-programdeltagare"
 fields = { "description" = "Hur personen får sin ersättning: lön, stöd via Försäkringskassan, A-kassa eller annat, eller ingen ersättning. Frågan ställs till inskrivna på Arbetsförmedlingen eller deltagare i arbetsmarknadspolitiskt program." }
 evidence = "private:ev-0045"
@@ -16276,12 +16258,6 @@ kind = "set"
 subject = "var:foredrar-fast-eller-tidsbegransad-anstallning"
 fields = { "description" = "Vilket föredrar du: fast eller tidsbegränsad anställning?" }
 evidence = "private:ev-0046"
-
-[[statement]]
-kind = "set"
-subject = "var:foretag-jordbruk-huvudsyssla-drivs-hushallsmedlem"
-fields = { "description" = "Drivs det företaget/jordbruket av någon i ditt hushåll?" }
-evidence = "private:ev-0047"
 
 [[statement]]
 kind = "set"
@@ -16372,12 +16348,6 @@ kind = "set"
 subject = "var:hufat7"
 fields = { "description" = "Hur många veckor har du varit frånvarande från arbetet?" }
 evidence = "private:ev-0062"
-
-[[statement]]
-kind = "set"
-subject = "var:hufat7b"
-fields = { "description" = "Hur många veckor i rad har du varit frånvarande del av arbetsveckan?" }
-evidence = "private:ev-0063"
 
 [[statement]]
 kind = "set"
@@ -16537,12 +16507,6 @@ evidence = "private:ev-0089"
 
 [[statement]]
 kind = "set"
-subject = "var:sysonsktim"
-fields = { "description" = "Hur många timmar per vecka skulle du vilja arbeta?" }
-evidence = "private:ev-0090"
-
-[[statement]]
-kind = "set"
 subject = "var:syssokskal"
 fields = { "description" = "Vilken är den främsta anledningen till att du söker annat arbete?" }
 evidence = "private:ev-0091"
@@ -16561,21 +16525,9 @@ evidence = "private:ev-0093"
 
 [[statement]]
 kind = "set"
-subject = "var:uarbonsktim"
-fields = { "description" = "Hur många timmar per vecka skulle du vilja arbeta?" }
-evidence = "private:ev-0094"
-
-[[statement]]
-kind = "set"
 subject = "var:uarbvillarb"
 fields = { "description" = "Skulle du velat ha arbete referensveckan?" }
 evidence = "private:ev-0095"
-
-[[statement]]
-kind = "set"
-subject = "var:veckor-deltidsfranvaro-huvudsyssla-sjukdom-anstallda"
-fields = { "description" = "Hur många veckor i rad har du varit frånvarande del av arbetsveckan?" }
-evidence = "private:ev-0096"
 
 [[statement]]
 kind = "set"
@@ -18409,13 +18361,20 @@ subject = "var:huyrke"
 fields = { "label" = "Yrke i huvudsysslan (AKU april 2005 - dec 2020)" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"AKU april 2005 - dec 2020\"."
 
+[[statement]]
+kind = "set"
+subject = "set:deltidsfranvaro-sjukdom-veckor"
+fields = { "description" = "Antal veckor som personen har varit frånvarande från arbetet (huvudsysslan) del av arbetsveckan på grund av sjukdom. Variablerna avser anställda, företagare respektive sysselsatta inklusive företagare." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma mått för olika personkategorier; de lagrade texterna är bara frågeformuleringen, som beskrivningen nu täcker.\ncatalog:variable_text:10264:14245:18628\ncatalog:variable_text:10281:14245:17167\ncatalog:variable_text:10933:14245:18628"
 
+[[statement]]
+kind = "set"
+subject = "set:hushallsdrivet-foretag"
+fields = { "description" = "Om företaget eller jordbruket drivs av någon i personens hushåll. Variablerna avser huvudsysslan, bisysslan, situationen för ett år sedan respektive personer utan arbete." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma fråga för olika arbeten och tidpunkter; de lagrade texterna är frågan i olika tempus, som beskrivningen täcker.\ncatalog:variable_text:9678:12874:18628\ncatalog:variable_text:9792:13879:15706\ncatalog:variable_text:9996:12874:18628\ncatalog:variable_text:9997:12874:18628\ncatalog:variable_text:10063:12874:18628"
 
-
-
-
-
-
-
-
-
+[[statement]]
+kind = "set"
+subject = "set:onskad-arbetstid"
+fields = { "description" = "Hur många timmar per vecka personen skulle vilja arbeta. Variablerna avser sysselsatta respektive arbetssökande eller personer utan arbete, och några är grupperade i intervall." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma fråga för olika grupper; de lagrade texterna är frågan, som beskrivningen täcker.\ncatalog:variable_text:9712:6209:12874\ncatalog:variable_text:10512:8035:12874\ncatalog:variable_text:10514:6209:12874\ncatalog:variable_text:10701:12874:18628\ncatalog:variable_text:10807:12874:18628\ncatalog:variable_text:10808:12874:18628"
