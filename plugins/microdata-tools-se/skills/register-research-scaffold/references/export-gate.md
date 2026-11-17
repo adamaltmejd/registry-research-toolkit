@@ -7,34 +7,72 @@ is the `reg_export_gate/` folder of the toolkit repository
 and the design in `DESIGN.md`. There is one copy of the check, there; a project holds a
 pinned copy of its bytes and never a variant.
 
-**Pinned version: `EXPORT_GATE_VERSION <- "0.4.0"`.** Take `export_gate.R` from the
-`reg_meta` tag the project's `reg_meta_version` names (0.4.0 is in `reg_meta/v0.78.0` and
+**Pinned version: `EXPORT_GATE_VERSION <- "0.6.0"`.** Take `export_gate.R` from the
+`reg_meta` tag the project's `reg_meta_version` names (0.6.0 is in `reg_meta/v0.87.3` and
 later):
 `https://raw.githubusercontent.com/adamaltmejd/registry-research-toolkit/reg_meta/vX.Y.Z/reg_export_gate/export_gate.R`.
-Check the version line in the copy and record its SHA-256. Take the schema and policy from
-wherever the researcher chose the reviewed pair, possibly a later tag, and record their
-SHA-256 too. A newer gate version is a
-deliberate update of this pin, not something to pick up silently.
+Check the version line in the copy and record its SHA-256. In `reg_meta/v0.87.3` the file
+is `51d6f810ef0c93faccb69f748382b6cdce93243af838788f9165e094a103869a`, the default
+`aggregates` schema `8160f4cb2250b5d22e609bf0a58935a221bd61ec407dd0403e2ccdd0537f1f93`
+and its `aggregates-min5` policy
+`e3c0835c7963efa39f035216087c08b7558ab5f3887c3ae7bbae2ed0f0098f5c`. A newer gate
+version is a deliberate update of this pin, not something to pick up silently.
 
 The R file imitates the Rust gate (`crates/reg-export-gate`), which is the reference and
-can be ahead: Rust 0.5.0 adds check-only columns, `share` and `count_units_required`. A
-schema or policy that uses them is refused by R 0.4.0 as `setup` (`schema_invalid`,
-`policy_invalid`), so on MONA use only pairs the R version accepts.
+can be ahead of it. A schema or policy that uses a field a gate predates is refused as
+`setup` (`schema_invalid`, `policy_invalid`), so on MONA use only pairs the R version
+accepts: 0.6.0 accepts everything the shipped schemas and policies use.
 
 ## What the project holds
 
 - `export_gate.R`, byte for byte as the toolkit ships it. Never edit, wrap or
   concatenate it into project code: every receipt names its version.
-- The chosen schema and its policy, `<name>.schema.json` and `<name>.policy.json`, also
-  unchanged. The user chooses them; the agent never writes, edits or loosens a schema or
-  a policy, and never adds one to the project. If no reviewed schema declares the
-  project's outputs, say so and keep real release disabled: a new schema or policy is a
-  toolkit change a human reviews ([mona.md](mona.md), "The schema and policy").
+- The schema and its policy, `<name>.schema.json` and `<name>.policy.json`. Default
+  `aggregates`: long-form counts, means, quantiles and regression coefficients by
+  groups, with the default policy `aggregates-min5`; both unchanged from the toolkit.
+  The toolkit's other pairs (`trial`, `mock-stats`) are for trials and local mock
+  statistics, not a project's outputs. If the project needs a different policy, see
+  "The disclosure policy" below.
 - In the project instructions: the gate version, the schema and policy names and
   versions, and the three files' SHA-256, so a changed copy is visible.
 
 Commit the three files with the project. Upload them to MONA unchanged (the toolkit
 README's step 1).
+
+## The disclosure policy
+
+The gate only checks. The pipeline does the protecting: it suppresses, rounds and
+perturbs before writing, and the gate refuses what still breaks the policy. The toolkit
+ships cited defaults, and every disclosure parameter is configurable per project. The
+default `aggregates-min5` policy sets:
+
+- a floor of 5, for every published count and every statistic's true support;
+- cell-key perturbation of counts (D 5, V 6.5, js 4), applied by the pipeline; the gate
+  is told it was done and cannot verify the noise, so it keeps the floor;
+- at most 4 significant digits for every statistic (coefficients and standard errors
+  included);
+- a regression small-group check: a term describes 0 or at least 5 true persons, and
+  leaves 0 or at least 5 beside it;
+- no dominance check: a magnitude statistic over firms is the reviewer's to judge.
+
+Each choice and its source is in `reg_export_gate/DESIGN.md`, "The shipped files".
+
+**Cell-key perturbation is not yet provided.** The toolkit has no helper for it (tracked
+in #2524): the pipeline applies the method itself, and the file's `n_true` and `k_true`
+columns are check-only true counts the gate tests and never exports. Do not invent an
+API in project code and present it as the toolkit's; write the perturbation as project
+code and record how it is done.
+
+**A project sets its own policy** as a `<name>.policy.json` (format
+`reg-export-gate/policy`, fields in `reg_export_gate/DESIGN.md`, "Policy format"),
+paired with a schema it names, and passes it as `policy =` in the `export_gate()` call.
+The policy must name the schema it is written for; a mismatch is refused
+(`policy_schema_mismatch`). The receipt records the policy's name, version and SHA-256,
+so the importing side sees which policy ran. The researcher decides the parameters,
+against the data holder's disclosure rules. The agent drafts or edits a policy only when
+the researcher asks, and never changes a parameter to make a failing run pass. A policy
+or schema outside the toolkit's shipped files is the researcher's to review before real
+release.
 
 ## The pipeline's last step
 
@@ -140,7 +178,11 @@ shows integrity, not that the gate ran.
 
 A Linux x86_64 server that can run executables uses the `reg-export-gate` binary, an
 asset of each `reg_meta/v*` release named by the gate's own version
-(`reg-export-gate-<version>-x86_64-unknown-linux-gnu`). The pipeline's last step runs
+(`reg-export-gate-<version>-x86_64-unknown-linux-gnu`; in `reg_meta/v0.87.3`,
+`reg-export-gate-0.6.0-x86_64-unknown-linux-gnu`, SHA-256
+`d1c4330b58d1bf99244ddf6c2abf1961a021f646dec45602cbec18e20233157f`). Its `export`
+step refuses a schema with check-only columns, which the default `aggregates` schema
+has, so that schema is delivered through MONA's own export. The pipeline's last step runs
 `reg-export-gate check --project NAME --staging DIR`, with the schema, policy and folders
 in the server's project config, outside the project. The reviewer, after inspecting the
 checked output, runs `reg-export-gate export --project NAME --receipt <SHA-256 of the
