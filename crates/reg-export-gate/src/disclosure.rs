@@ -9,7 +9,8 @@
 //! Check-only columns hold the true figures behind published ones. A count's
 //! `units` is the true number of units behind it, a statistic's truth is the
 //! units of its support (or the support itself when that is check-only), and a
-//! share's numerator and denominator are true counts. The rules test those
+//! share's numerator and denominator are true counts, and a statistic's
+//! group is the true units its value singles out. The rules test those
 //! truths beside the published figures, whose floors stay. Integer rules
 //! compare in `i128`, so no sum or difference of two `int64` values wraps.
 
@@ -145,9 +146,9 @@ fn statistic_support(
     let group = col.group.as_deref().map(|g| table.integers(g));
     let at = |v: &Option<Vec<Option<i64>>>, i: usize| v.as_ref().map(|t| t[i]);
     let rows = || (0..array.len()).filter(|&i| array.is_valid(i));
-    if rows().any(|i| {
-        support[i].is_none() || at(&truth, i) == Some(None) || at(&group, i) == Some(None)
-    }) {
+    if rows()
+        .any(|i| support[i].is_none() || at(&truth, i) == Some(None) || at(&group, i) == Some(None))
+    {
         findings.push(Finding::column("unsupported_statistic", file, &col.name));
     }
     // The schema check ensured a group's support has a truth.
