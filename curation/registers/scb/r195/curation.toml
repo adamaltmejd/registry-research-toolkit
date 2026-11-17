@@ -1576,19 +1576,7 @@ evidence = "private:ev-2168"
 [[statement]]
 kind = "set"
 subject = "set:naringsgren"
-fields = { "label" = "Näringsgren", "axes" = [{ "id" = "nivo", "label" = "Detaljnivå" }] }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/scb/ksju.toml:226; existing set membership and current id ledger determine the targets."
-
-[[statement]]
-kind = "set"
-subject = "var:naringsgren-2siffer"
-fields = { "facets" = { "nivo" = { "value" = "2-siffer", "label" = "2-siffrig SNI" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/scb/ksju.toml:226; existing set membership and current id ledger determine the targets."
-
-[[statement]]
-kind = "set"
-subject = "var:naringsgren-rams"
-fields = { "facets" = { "nivo" = { "value" = "5-siffer", "label" = "5-siffrig SNI (RAMS)" } } }
+fields = { "label" = "Näringsgren" }
 evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/scb/ksju.toml:226; existing set membership and current id ledger determine the targets."
 
 [[statement]]

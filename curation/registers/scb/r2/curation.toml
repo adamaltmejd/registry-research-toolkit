@@ -6472,37 +6472,13 @@ evidence = "rel070-base/reg_meta.db: v49 Lan table-specific operational definiti
 [[statement]]
 kind = "set"
 subject = "set:personnrvard"
-fields = { "label" = "Personnummer vårdnadshavare", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/scb/rtb.toml:118; existing set membership and current id ledger determine the targets."
-
-[[statement]]
-kind = "set"
-subject = "var:personnrvard1"
-fields = { "facets" = { "ordinal" = { "value" = "1", "label" = "1" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/scb/rtb.toml:118; existing set membership and current id ledger determine the targets."
-
-[[statement]]
-kind = "set"
-subject = "var:personnrvard2"
-fields = { "facets" = { "ordinal" = { "value" = "2", "label" = "2" } } }
+fields = { "label" = "Personnummer vårdnadshavare" }
 evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/scb/rtb.toml:118; existing set membership and current id ledger determine the targets."
 
 [[statement]]
 kind = "set"
 subject = "set:personnrap"
-fields = { "label" = "Personnummer annan person", "axes" = [{ "id" = "ordinal", "label" = "Ordning" }] }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/scb/rtb.toml:126; existing set membership and current id ledger determine the targets."
-
-[[statement]]
-kind = "set"
-subject = "var:personnrap1"
-fields = { "facets" = { "ordinal" = { "value" = "1", "label" = "1" } } }
-evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/scb/rtb.toml:126; existing set membership and current id ledger determine the targets."
-
-[[statement]]
-kind = "set"
-subject = "var:personnrap2"
-fields = { "facets" = { "ordinal" = { "value" = "2", "label" = "2" } } }
+fields = { "label" = "Personnummer annan person" }
 evidence = "W6 presentation port from 99de15a6a908c032972e5b32dea97c7b1808ab07: python-builder-pre-cutover:curation/registers/scb/rtb.toml:126; existing set membership and current id ledger determine the targets."
 
 [[statement]]
