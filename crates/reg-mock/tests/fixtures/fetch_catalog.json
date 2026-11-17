@@ -1,0 +1,85 @@
+{
+  "project": { "schema_version": "6.3.0", "name": "stub" },
+  "calls": [
+    {
+      "tool": "order",
+      "arguments": { "operation": "order", "project": { "schema_version": "6.3.0", "name": "stub" } },
+      "saved_as": "order.json",
+      "document": {
+        "data": {
+          "project": { "project_hash": "p1" },
+          "entries": [
+            { "source": "lisa", "binding": 0, "table": "scb/lisa/individer", "release": null,
+              "variable": "scb/lisa/sun2000inr", "period": { "start": "2018-01-01", "end": "2019-01-01" },
+              "spelling": "Sun2000Inr" }
+          ],
+          "row_keys": [
+            { "source": "lisa", "table": "scb/lisa/individer", "release": null,
+              "period": { "start": "2018-01-01", "end": "2019-01-01" },
+              "columns": [ { "variable": "scb/lisa/personnr", "spelling": "PersonNr" } ] }
+          ]
+        },
+        "meta": { "generation": "g1" }
+      }
+    },
+    {
+      "tool": "segments",
+      "arguments": { "ref": "scb/lisa/individer", "variable": ["scb/lisa/personnr", "scb/lisa/sun2000inr"], "limit": 200 },
+      "saved_as": "segments/0001-table-0001.json",
+      "document": {
+        "data": {
+          "items": [
+            { "variable": "scb/lisa/personnr", "table": "scb/lisa/individer",
+              "period": { "start": "2018-01-01", "end": "2019-01-01" }, "type": "text", "identifier": true },
+            { "variable": "scb/lisa/sun2000inr", "table": "scb/lisa/individer",
+              "period": { "start": "2018-01-01", "end": "2019-01-01" }, "type": "text",
+              "value_set": { "hash": "v1" } }
+          ],
+          "next_cursor": null
+        },
+        "meta": { "generation": "g1" }
+      }
+    },
+    {
+      "tool": "segments",
+      "arguments": { "ref": "scb/lisa/personnr", "limit": 200 },
+      "saved_as": "segments/0002-variable-0001.json",
+      "document": {
+        "data": {
+          "items": [
+            { "variable": "scb/lisa/personnr", "table": "scb/lisa/individer",
+              "period": { "start": "2018-01-01", "end": "2019-01-01" }, "type": "text", "identifier": true }
+          ],
+          "next_cursor": null
+        },
+        "meta": { "generation": "g1" }
+      }
+    },
+    {
+      "tool": "values",
+      "arguments": { "value_set": "v1", "limit": 200 },
+      "saved_as": "values/v1-0001.json",
+      "document": {
+        "data": {
+          "items": [ { "code": "010", "label": "Allmän utbildning", "sentinel": false } ],
+          "value_set": { "hash": "v1", "n_items": 2 },
+          "next_cursor": "c1"
+        },
+        "meta": { "generation": "g1" }
+      }
+    },
+    {
+      "tool": "values",
+      "arguments": { "value_set": "v1", "limit": 200, "cursor": "c1" },
+      "saved_as": "values/v1-0002.json",
+      "document": {
+        "data": {
+          "items": [ { "code": "999", "label": "Okänd", "sentinel": true } ],
+          "value_set": { "hash": "v1", "n_items": 2 },
+          "next_cursor": null
+        },
+        "meta": { "generation": "g1" }
+      }
+    }
+  ]
+}

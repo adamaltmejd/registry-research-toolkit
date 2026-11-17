@@ -1,6 +1,8 @@
-//! `reg-mock`: local mock data, offline (`DESIGN.md`).
+//! `reg-mock`: local mock data (`DESIGN.md`). `fetch` saves the catalog's answers;
+//! `compile` and `generate` run offline on them.
 //!
 //! ```text
+//! reg-mock fetch --catalog URL --project FILE --mode order|materialize --out DIR
 //! reg-mock compile --project FILE --rules FILE --answers DIR --out FILE
 //! reg-mock generate --spec FILE --out DIR [--seed N] [--persons N] [--allow-large]
 //! ```
@@ -16,17 +18,20 @@ use std::path::{Path, PathBuf};
 
 use reg_mock::Refusal;
 use reg_mock::compile::{compile, load_answers};
+use reg_mock::fetch::{Catalog, Mode, fetch};
 use reg_mock::rules::Rules;
 use reg_mock::spec::{SPEC_VERSION, Spec};
 use reg_mock::{generate, write};
 use serde_json::{Value, json};
 
-const USAGE: &str = "reg-mock compile --project FILE --rules FILE --answers DIR --out FILE\n       \
+const USAGE: &str = "reg-mock fetch --catalog URL --project FILE --mode order|materialize --out DIR\n       \
+                     reg-mock compile --project FILE --rules FILE --answers DIR --out FILE\n       \
                      reg-mock generate --spec FILE --out DIR [--seed N] [--persons N] [--allow-large]";
 
 fn main() {
     let mut args = std::env::args().skip(1);
     match args.next().as_deref() {
+        Some("fetch") => run_fetch(args),
         Some("compile") => run_compile(args),
         Some("generate") => run_generate(args),
         _ => usage("expected a subcommand"),
@@ -41,6 +46,37 @@ fn usage(message: &str) -> ! {
 fn refuse(refusals: &[Refusal]) -> ! {
     eprintln!("{}", json!({ "refusals": refusals }));
     std::process::exit(2);
+}
+
+fn run_fetch(mut args: impl Iterator<Item = String>) -> ! {
+    let (mut catalog, mut project, mut mode, mut out) = (None, None, None, None);
+    while let Some(flag) = args.next() {
+        let slot = match flag.as_str() {
+            "--catalog" => &mut catalog,
+            "--project" => &mut project,
+            "--mode" => &mut mode,
+            "--out" => &mut out,
+            _ => usage(&format!("fetch: unknown flag {flag}")),
+        };
+        *slot = Some(
+            args.next()
+                .unwrap_or_else(|| usage(&format!("{flag} needs a value"))),
+        );
+    }
+    let (Some(catalog), Some(project), Some(mode), Some(out)) = (catalog, project, mode, out)
+    else {
+        usage("fetch: --catalog, --project, --mode and --out are required");
+    };
+    let mode = match mode.as_str() {
+        "order" => Mode::Order,
+        "materialize" => Mode::Materialize,
+        _ => usage("--mode is order or materialize"),
+    };
+    let project = read_json(Path::new(&project));
+    let out = PathBuf::from(out);
+    let saved = fetch(&Catalog::new(&catalog), &project, mode, &out).unwrap_or_else(|r| refuse(&r));
+    eprintln!("saved {saved} answers into {}", out.display());
+    std::process::exit(0);
 }
 
 fn run_compile(mut args: impl Iterator<Item = String>) -> ! {

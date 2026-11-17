@@ -12,10 +12,9 @@ drives it lives in `plugins/microdata-tools-se`.
   synthetic, never real person numbers.
 - **Not a server capability.** The hosted MCP exposes metadata only. Mock generation
   runs in the `reg-mock` binary on the researcher's machine, offline.
-- **No network in the binary.** The skill saves the catalog's answers verbatim with
-  `curl` from the hosted MCP (`save-answers.sh`): each is a tool call's
-  `structuredContent`, the document the HTTP operation returns.
-  `compile` reads those files. Output then depends only on files in the project.
+- **Network in `fetch` only.** `reg-mock fetch` saves the catalog's answers verbatim
+  from its MCP tools into the project, where they are committed; `compile` and
+  `generate` read only files. Output then depends only on files in the project.
 
 ## Two contracts, one crate
 
@@ -81,6 +80,33 @@ What `compile` and `generate` hold to; each rule names its one place in the code
    municipality codes, never a column's, so files join and agree.
 8. **Same inputs, same bytes** (`rng.rs`, `write.rs`).
 
+## Fetch
+
+`reg-mock fetch --catalog URL --project FILE --mode order|materialize --out DIR` (#2446)
+saves into `DIR` every answer compile reads (below), each a `tools/call`'s
+`structuredContent` (the document the HTTP operation returns), written pretty-printed
+with sorted keys so a re-fetch of an unchanged catalog is byte-identical and its diff
+reviewable. `URL` is a catalog's MCP endpoint, the plugin's `catalog_url`: mode `order`
+works on any catalog, `materialize` on a steward's, which knows the delivery's names.
+It sends only the project document and reads metadata only.
+
+- **Calls** (`fetch.rs`): the order answer; `segments` once per table with up to 200 of
+  the variables the order reads there, and once per row-key (materialize: unbound)
+  variable, whose table may hold no segment of it; then `values` for each value set
+  those segments name. Every listing is followed to its last page, 200 items a page.
+  The hosted rate limit (60 calls, then one a second) answers 429 with `Retry-After`,
+  which fetch waits out, up to 30 times a call. #2448 would fold the values calls
+  into one.
+- **All or nothing**: the earlier answers (`order.json`, `manifest.json`, `segments/`,
+  `values/`) are replaced only once every answer has arrived, and the saved set is then
+  read as compile reads it, so a catalog redeployed during the fetch is refused there
+  (`mixed_generations`), not at compile.
+- **Refusals**: the catalog's error as `catalog_refused`, its code and message first,
+  then one per error-level item of its `issues` (`project_invalid`) or `findings`
+  (`order_blocked`), at its project path; `network` for a failed request;
+  `catalog_unreadable` for a reply that is not a tool result (a wrong URL, a proxy's
+  page).
+
 ## Compile
 
 `reg-mock compile --project --rules --answers DIR --out`. `DIR` holds exactly one order
@@ -88,7 +114,7 @@ answer, `order.json` (the `order` tool's `order`, any catalog) or `manifest.json
 `materialize_order`, a steward's), plus every page under `segments/` (`segments` with
 the table as `ref` and its variables as `variable`, and with the variable as `ref` where
 its table has none, for a row key from another register) and `values/` (`values` by `value_set`, each answer's
-pages named `<answer>-0001.json`, `-0002.json`, ..., as `save-answers.sh` writes them).
+pages named `<answer>-0001.json`, `-0002.json`, ..., as `fetch` writes them).
 A page left out (numbering with a gap, or a last page whose `next_cursor` is not null),
 answers from different catalog generations, an order answer for another version of the
 project (its `project_hash`), and a value set whose saved pages do not hold each of its

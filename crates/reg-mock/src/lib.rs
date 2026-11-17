@@ -1,9 +1,10 @@
 //! Local mock data from a `project_data.json` (#707, crates/reg-mock/DESIGN.md): the
-//! mock rules and spec contracts and `compile`, which the `reg-mock` binary runs
-//! offline on the researcher's machine. Reads no data rows: only catalog metadata
-//! and the rules.
+//! mock rules and spec contracts, `fetch`, which saves the catalog's answers, and
+//! `compile` and `generate`, which the `reg-mock` binary runs offline on the
+//! researcher's machine. Reads no data rows: only catalog metadata and the rules.
 
 pub mod compile;
+pub mod fetch;
 pub mod generate;
 pub mod input;
 pub mod population;
