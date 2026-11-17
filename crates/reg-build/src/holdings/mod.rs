@@ -1,6 +1,7 @@
 //! Steward compilation after the immutable reference catalog. The ordinary semantic
 //! pipeline emits the supplemental part; this stage adds possession facts only.
 mod compile;
+mod cumulative;
 mod input;
 mod keys;
 mod references;

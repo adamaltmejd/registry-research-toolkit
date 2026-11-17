@@ -105,6 +105,10 @@ pub struct SetFields {
     pub series_break: Option<SeriesBreak>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub long_format: Option<bool>,
+    /// A table's cumulative deliveries (crates/DESIGN.md, "Cumulative tables"); only
+    /// `true`.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub cumulative: Option<bool>,
 }
 
 /// A curated series break: the provider's text and, when the text states one, the break
@@ -195,6 +199,13 @@ impl Statement {
                 published_type(fields.dtype.as_deref())?;
                 fields.validate_references()?;
                 fields.validate_subject(subject)?;
+                if fields.cumulative.is_some()
+                    && (fields.cumulative == Some(false) || !matches!(subject, Address::Table(_)))
+                {
+                    return Err(
+                        "set-cumulative: cumulative = true requires a table: subject".into(),
+                    );
+                }
             }
             Self::Assert { fact, .. } => match fact {
                 // An occurrence assertion may state no field: its address names the column, and

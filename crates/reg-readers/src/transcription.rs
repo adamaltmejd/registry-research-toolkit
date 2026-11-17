@@ -61,6 +61,7 @@ impl Config {
 /// # Errors
 /// A missing or malformed file, an unknown table, a malformed date, flag or code
 /// list, each located at its file and row.
+#[allow(clippy::too_many_lines)]
 pub fn read(
     root: &Path,
     rel: &str,
@@ -86,6 +87,7 @@ pub fn read(
             .push(table.clone());
         records.push(Record::Table(Table {
             role: None,
+            cumulative: None,
             provider: provider.to_owned(),
             register,
             table,

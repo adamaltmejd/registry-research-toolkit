@@ -399,6 +399,9 @@ struct TableInfo {
     role: String,
     timeless: i64,
     cadence: Option<String>,
+    /// `tbl.cumulative` (crates/DESIGN.md, "Cumulative tables"): it decides which steward
+    /// extract a holdings build keeps. A schema without the column has none.
+    cumulative: bool,
     spans: Vec<(i64, i64)>,
     /// Deliveries whose edition disagrees with the primary (`release.edition_disagreement`,
     /// read by the order check's warning). A schema without the column has none.
@@ -408,19 +411,20 @@ struct TableInfo {
 impl TableInfo {
     fn json(&self) -> Value {
         json!({"name": self.name, "description": self.description,
-               "role": self.role, "timeless": self.timeless, "cadence": self.cadence,
+               "role": self.role, "timeless": self.timeless, "cadence": self.cadence, "cumulative": self.cumulative,
                "spans": self.spans.iter().map(|&(s, e)| json!([iso_day(s), iso_day(e)])).collect::<Vec<_>>(),
                "edition_disagreement": self.disagreeing})
     }
 
     fn text(&self) -> String {
         format!(
-            "name={:?} description={:?} role={} timeless={} cadence={} spans={} edition_disagreement={:?}",
+            "name={:?} description={:?} role={} timeless={} cadence={} cumulative={} spans={} edition_disagreement={:?}",
             self.name,
             self.description,
             self.role,
             self.timeless,
             self.cadence.as_deref().unwrap_or("-"),
+            self.cumulative,
             self.spans
                 .iter()
                 .map(|&(s, e)| span(s, e))
@@ -446,6 +450,7 @@ fn table_infos(conn: &Connection) -> Result<BTreeMap<String, TableInfo>> {
                     role: r.get(3)?,
                     timeless: r.get(4)?,
                     cadence: r.get(5)?,
+                    cumulative: false,
                     spans: Vec::new(),
                     disagreeing: Vec::new(),
                 },
@@ -469,6 +474,20 @@ fn table_infos(conn: &Connection) -> Result<BTreeMap<String, TableInfo>> {
     for (pid, start, end) in spans {
         if let Some(info) = infos.get_mut(&pid) {
             info.spans.push((start, end));
+        }
+    }
+    let has_cumulative: bool = conn.query_row(
+        "SELECT count(*) = 1 FROM pragma_table_info('tbl') WHERE name = 'cumulative'",
+        [],
+        |r| r.get(0),
+    )?;
+    if has_cumulative {
+        for pid in query(conn, "SELECT pid FROM tbl WHERE cumulative = 1", |r| {
+            r.get::<_, String>(0)
+        })? {
+            if let Some(info) = infos.get_mut(&pid) {
+                info.cumulative = true;
+            }
         }
     }
     let flagged: bool = conn.query_row(

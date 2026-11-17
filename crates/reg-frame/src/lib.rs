@@ -121,6 +121,10 @@ pub struct Table {
     /// Curated table kind; source readers leave it unset.
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub role: Option<String>,
+    /// Curated: each delivery holds the table from its start to the delivery's own
+    /// date (crates/DESIGN.md, "Cumulative tables"). Source readers leave it unset.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub cumulative: Option<bool>,
 }
 
 /// A population a release states, in the source's order.

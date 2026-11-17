@@ -515,6 +515,13 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                 &statement_id,
             )?;
             let (lo, hi) = hull(&table.spans);
+            if table.timeless && table.table.cumulative == Some(true) {
+                return Err(format!(
+                    "cumulative-timeless: {} is timeless, so it has no deliveries to accumulate",
+                    pid_of_table(r, t)
+                )
+                .into());
+            }
             rows.push(
                 "tbl",
                 vec![
@@ -539,6 +546,7 @@ fn stage(catalog: &Catalog, scratch: &Path, staged: &Path) -> Result<()> {
                     },
                     Cell::Int(lo),
                     Cell::Int(hi),
+                    Cell::Int(i64::from(table.table.cumulative == Some(true))),
                 ],
             );
             for span in &table.spans {
