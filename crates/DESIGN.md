@@ -2008,15 +2008,22 @@ build measures how far it is. Orderable is what `materialize_order` would put in
 for an order of everything the steward holds, derived from its own selection, not
 re-stated: `reg_core::placement` holds the placement query and the projection fold
 materialization selects with (`placements_sql`, `select`), and the count runs them for
-every (table, variable) over all days, every database and every lane. The builder and
+every (table, variable) over all days and every database, once with no release and once
+per release that files state, as materialization folds a concurrent table's shared days
+within one release's files. The builder and
 the reader share only `reg-core` (ARCHITECTURE.md), so the rule lives there rather than
-the builder calling the reader. A column a selected placement names is orderable. So is
+the builder calling the reader. A column a selected placement names is orderable. So is each column a table's unheld
+declared keys map to (`reg_core::placement::key_variables`) once any placement opens its
+file, a parent-covered `carried` key copy included, as materialization's keys add them.
+So is
 a table's period column when an unheld key reads its time from it
 (`period_key = "column"`, `reg_core::placement::key_reads_period_column`) over days the
 table places and the table has a selected placement: materialization adds it as a row
 key with no mapping (`period_column_offered`, shared with `reg-build verify`).
 `reg-build verify` has already cleared the other refusals that path can raise (keys,
-storage, file names).
+storage, file names). The count is at whole-delivery grain where materialization resolves
+keys and the period column over the days a file extracts, so it may overcount one where
+a parent covers part of a year (a `simplify:` note in `orderable.rs` names the trigger).
 
 A projection column whose every placement its parent also places (`select` keeps none
 of it) is `delivered_through_parent`: no order selects its file, the parent delivers the
@@ -2051,7 +2058,8 @@ gap}}`) and `tables`, one entry per table with a column that is not orderable
 `blocked`, null or `{reason, holds}`, and `through`, the parent table that delivers its
 `delivered_through_parent` columns). The steward report is the steward's, so it names
 its physical tables. One classifier (`reg-build/src/holdings/orderable.rs`) serves the
-build, the report and `reg-build diff --holdings`.
+build, the report and `reg-build diff --holdings`; when an older holdings schema cannot
+answer it, the diff says "orderability: not comparable" and compares the rest.
 
 #### Census reader renames and rewrites
 

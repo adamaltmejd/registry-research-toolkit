@@ -1087,11 +1087,7 @@ fn keys(
                 })
                 .collect::<Result<_, Error>>()?,
         };
-        let variables: Vec<&str> = ["entity", "time"]
-            .iter()
-            .flat_map(|k| requirement[*k].as_array().into_iter().flatten())
-            .filter_map(Value::as_str)
-            .collect();
+        let variables = reg_core::placement::key_variables(requirement);
         for s in &per_source {
             let days = overlap(&extracted, &scope);
             if days.is_empty() {

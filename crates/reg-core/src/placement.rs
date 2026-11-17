@@ -69,3 +69,15 @@ pub fn select(found: Vec<Placement>, days: Span) -> Vec<Placement> {
 pub fn key_reads_period_column(key: &serde_json::Value) -> bool {
     key["hold"].is_null() && key["period_key"].as_str() == Some("column")
 }
+
+/// The variables a declared row key (one entry of `key_requirements`) needs in an order's
+/// file: its entity components, then its time components. Each column of the file's table
+/// mapped to one of them joins the file.
+#[must_use]
+pub fn key_variables(key: &serde_json::Value) -> Vec<&str> {
+    ["entity", "time"]
+        .iter()
+        .flat_map(|k| key[*k].as_array().into_iter().flatten())
+        .filter_map(serde_json::Value::as_str)
+        .collect()
+}
