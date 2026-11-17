@@ -3,8 +3,9 @@ name: register-research-scaffold
 description: Scaffold a small batch-based Swedish register-data research project from a
   research brief and documented source contracts. Creates Git-tracked investigation
   tickets, separate local and restricted execution, mock validation, evidence
-  provenance, and local reporting. Supports MONA and other processing servers; does not
-  authorize microdata access, transfer, or server execution.
+  provenance, and local reporting. Supports MONA (a steward's extract in, the toolkit export
+  gate out) and other processing servers; does not authorize microdata access, transfer,
+  or server execution.
 ---
 
 # Register research scaffold
@@ -23,7 +24,24 @@ Read [contracts.md](references/contracts.md) before implementation. Read
 Read [operator-review.md](references/operator-review.md) when preparing human-operated
 transfer and model-access approval. Read [export-gate.md](references/export-gate.md)
 when wiring the final release stage: the toolkit's export gate, its pinned version and
-how a MONA project calls it.
+how a MONA project calls it. Read [mona.md](references/mona.md) for a project on MONA.
+
+## On MONA
+
+No agent runs on MONA, and row-level data never leaves it: only aggregates the export
+gate passed and a human reviewed. The agent works locally on code, catalog metadata and
+mock data. A project whose data a steward (SWECOV, say) delivers runs in this order
+([mona.md](references/mona.md) has who does what):
+
+1. Point the plugin at the steward's catalog (plugin README, "Steward catalogs").
+2. Draft and validate `project_data.json` with the `register-project` skill.
+3. Generate mock inputs from it with the `register-mock-data` skill (`reg-mock`).
+4. Build and run the pipeline locally on the mocks, ending with `export_gate.R`.
+5. The steward materializes the order and runs `extract.R` on MONA; the researcher runs
+   the same pipeline on the extract, reviews the gate's export and sends it out.
+
+Steps 2 to 4 need no MONA access, so a project can be complete and tested before its
+extract exists.
 
 ## Establish the research and execution boundary
 

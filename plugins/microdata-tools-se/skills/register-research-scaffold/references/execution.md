@@ -31,6 +31,10 @@ readers must not alter reference-project inputs or stores.
 
 ## MONA
 
+The order flow (catalog, `project_data.json`, mock inputs, the steward's extract, the
+gate, MONA's export) and who does each step is in [mona.md](mona.md). On MONA the real
+input directory is the folder the steward's extract lands in.
+
 Target one uploadable execution file and one result ZIP per batch. The execution file's
 last step calls the pinned `export_gate.R`, uploaded unchanged beside it with the chosen
 schema and policy, never folded into the project's own file: the receipt's gate version
