@@ -1,0 +1,47 @@
+{
+  "description": "The unsafe twin of pass-aggregates: a regression on 49 persons, one below the aggregates policy's statistic_min_support of 50, refuses on both its estimate and its standard error, though 49 passes min_cell_count. The other two files are empty, as a project that exports only a model writes them, and add no finding.",
+  "schema": "../../../schemas/aggregates.schema.json",
+  "policy": "../../../schemas/aggregates.policy.json",
+  "candidate": {
+    "counts.parquet": {
+      "columns": [
+        { "name": "table", "type": "string", "values": [] },
+        { "name": "year", "type": "int32", "values": [] },
+        { "name": "group_1", "type": "string", "values": [] },
+        { "name": "group_2", "type": "string", "values": [] },
+        { "name": "group_3", "type": "string", "values": [] },
+        { "name": "n_persons", "type": "int64", "values": [] }
+      ]
+    },
+    "statistics.parquet": {
+      "columns": [
+        { "name": "table", "type": "string", "values": [] },
+        { "name": "year", "type": "int32", "values": [] },
+        { "name": "group_1", "type": "string", "values": [] },
+        { "name": "group_2", "type": "string", "values": [] },
+        { "name": "group_3", "type": "string", "values": [] },
+        { "name": "statistic", "type": "string", "values": [] },
+        { "name": "n_persons", "type": "int64", "values": [] },
+        { "name": "value", "type": "double", "values": [] }
+      ]
+    },
+    "coefficients.parquet": {
+      "columns": [
+        { "name": "model", "type": "string", "values": ["earnings_ols"] },
+        { "name": "term", "type": "string", "values": ["female"] },
+        { "name": "n_persons", "type": "int64", "values": [49] },
+        { "name": "n_obs", "type": "int64", "values": [400] },
+        { "name": "estimate", "type": "double", "values": [-0.125] },
+        { "name": "std_error", "type": "double", "values": [0.0312] }
+      ]
+    }
+  },
+  "expect": {
+    "result": "refused",
+    "code": "disclosure",
+    "findings": [
+      { "file": "coefficients.parquet", "column": "estimate", "rule": "statistic_support_too_small" },
+      { "file": "coefficients.parquet", "column": "std_error", "rule": "statistic_support_too_small" }
+    ]
+  }
+}

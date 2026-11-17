@@ -1,0 +1,47 @@
+{
+  "format": "reg-export-gate/schema",
+  "format_version": 1,
+  "name": "aggregates",
+  "version": 1,
+  "description": "A register-research project's aggregate results, in long form: person counts by groups, statistics by groups, and regression coefficients. A file the project does not use is written with zero rows. A share is exported as counts per outcome category (both the numerator and its complement are cells), never as a ratio: the format-1 policy cannot check a ratio's numerator.",
+  "files": [
+    {
+      "name": "counts.parquet",
+      "description": "Persons per cell. table names the output (a table or figure in the paper); year and group_1 to group_3 are its keys, null where a table has fewer. A share is two or more rows here, one per outcome category.",
+      "columns": [
+        { "name": "table", "type": "string", "role": "dimension" },
+        { "name": "year", "type": "integer", "role": "dimension" },
+        { "name": "group_1", "type": "string", "role": "dimension" },
+        { "name": "group_2", "type": "string", "role": "dimension" },
+        { "name": "group_3", "type": "string", "role": "dimension" },
+        { "name": "n_persons", "type": "integer", "role": "person_count" }
+      ]
+    },
+    {
+      "name": "statistics.parquet",
+      "description": "One statistic per row (a mean or a quantile of a variable), on the distinct persons it is computed from. statistic names it, for example mean_income or p50_income; it is not a ratio of a binary variable.",
+      "columns": [
+        { "name": "table", "type": "string", "role": "dimension" },
+        { "name": "year", "type": "integer", "role": "dimension" },
+        { "name": "group_1", "type": "string", "role": "dimension" },
+        { "name": "group_2", "type": "string", "role": "dimension" },
+        { "name": "group_3", "type": "string", "role": "dimension" },
+        { "name": "statistic", "type": "string", "role": "dimension" },
+        { "name": "n_persons", "type": "integer", "role": "person_count" },
+        { "name": "value", "type": "double", "role": "statistic", "support": "n_persons" }
+      ]
+    },
+    {
+      "name": "coefficients.parquet",
+      "description": "One regression term per row. n_persons is the distinct persons in the estimation sample, n_obs its rows (person-years, say). A term identified by a small group (a dummy for few persons) reproduces that group's mean; the reviewer checks this.",
+      "columns": [
+        { "name": "model", "type": "string", "role": "dimension" },
+        { "name": "term", "type": "string", "role": "dimension" },
+        { "name": "n_persons", "type": "integer", "role": "person_count" },
+        { "name": "n_obs", "type": "integer", "role": "count" },
+        { "name": "estimate", "type": "double", "role": "statistic", "support": "n_persons" },
+        { "name": "std_error", "type": "double", "role": "statistic", "support": "n_persons" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "format": "reg-export-gate/policy",
+  "format_version": 1,
+  "name": "aggregates-min5",
+  "version": 1,
+  "description": "Draft for maintainer review. Every count and person count is at least 5 or null, so no cell singles out one to four persons. A statistic rests on at least 50 persons (5 per decile group, as the mock-stats policy), so no quantile is one person's value. A double statistic has at most 3 significant digits, so an unsuppressed value carries no hidden bits. No dominance, secondary suppression or count rounding: format 1 has none, and the reviewer covers them.",
+  "schema": { "name": "aggregates", "version": 1 },
+  "min_cell_count": 5,
+  "statistic_min_support": 50,
+  "statistic_significant_digits": 3
+}

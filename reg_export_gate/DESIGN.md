@@ -222,6 +222,22 @@ The shipped files:
   the sum of each unit's rows, δ = 0.1, maintainer, 2026-11-05), so it is not a whole
   number. Its protection is the 50 units it rests on and its 3 digits; a small value
   over 50 units is not a small cell.
+- `schemas/aggregates.schema.json` and `schemas/aggregates.policy.json`, a draft for
+  maintainer review: a register-research project's aggregate results in long form, for
+  any project rather than one. `counts.parquet` holds person counts by `table`, `year`
+  and up to three string groups; `statistics.parquet` one mean or quantile per row on its
+  distinct persons; `coefficients.parquet` one regression term per row on the estimation
+  sample's distinct persons, with its rows as an `n_obs` count. A file the project does
+  not use is written with zero rows. The policy is the mock-stats values: minimum 5,
+  statistics on at least 50 persons (so no quantile is one person's value) and 3
+  significant digits. It uses only gate 0.4.0 rules, so the R gate on MONA runs it. Two
+  limits follow from that. A share is exported as counts per outcome category, the
+  numerator and its complement each a cell under the minimum, never as a ratio: a ratio
+  is a `statistic`, and the 0.4.0 rules cannot see its numerator (the 0.5.0 `share`
+  role can). And every statistic's support is a person count, since without check-only
+  `units` the gate cannot tell persons from rows. The reviewer covers what format 1
+  does not check: dominance, secondary suppression, recovery across files, and a
+  regression term identified by a small group.
 
 ## The check
 

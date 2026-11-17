@@ -1,0 +1,40 @@
+{
+  "description": "The shipped aggregates schema and policy pass a typical project export. A person count of exactly the minimum 5, and a suppressed (null) one. A share carried as two outcome-category counts. A statistic resting on exactly the minimum support of 50, and a cell of 49 persons whose statistic is null. Rounded coefficients on 50 persons beside an n_obs count.",
+  "schema": "../../../schemas/aggregates.schema.json",
+  "policy": "../../../schemas/aggregates.policy.json",
+  "candidate": {
+    "counts.parquet": {
+      "columns": [
+        { "name": "table", "type": "string", "values": ["table_1", "table_1", "table_2", "table_2"] },
+        { "name": "year", "type": "int32", "values": [2020, 2020, null, null] },
+        { "name": "group_1", "type": "string", "values": ["men", "women", "employed", "not_employed"] },
+        { "name": "group_2", "type": "string", "values": [null, null, null, null] },
+        { "name": "group_3", "type": "string", "values": [null, null, null, null] },
+        { "name": "n_persons", "type": "int64", "values": [5, null, 912, 88] }
+      ]
+    },
+    "statistics.parquet": {
+      "columns": [
+        { "name": "table", "type": "string", "values": ["table_3", "table_3"] },
+        { "name": "year", "type": "int32", "values": [2020, 2020] },
+        { "name": "group_1", "type": "string", "values": ["men", "women"] },
+        { "name": "group_2", "type": "string", "values": [null, null] },
+        { "name": "group_3", "type": "string", "values": [null, null] },
+        { "name": "statistic", "type": "string", "values": ["mean_income", "mean_income"] },
+        { "name": "n_persons", "type": "int64", "values": [50, 49] },
+        { "name": "value", "type": "double", "values": [284000, null] }
+      ]
+    },
+    "coefficients.parquet": {
+      "columns": [
+        { "name": "model", "type": "string", "values": ["earnings_ols", "earnings_ols", "earnings_ols"] },
+        { "name": "term", "type": "string", "values": ["intercept", "female", "age"] },
+        { "name": "n_persons", "type": "int64", "values": [50, 50, 50] },
+        { "name": "n_obs", "type": "int64", "values": [400, 400, 400] },
+        { "name": "estimate", "type": "double", "values": [312000, -0.125, 1230] },
+        { "name": "std_error", "type": "double", "values": [4560, 0.0312, 98.7] }
+      ]
+    }
+  },
+  "expect": { "result": "pass" }
+}
