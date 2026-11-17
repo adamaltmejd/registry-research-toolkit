@@ -673,3 +673,21 @@ kind = "set"
 subject = "konjunkturstatistik-loner-for-privat-sektor: var:undersokningsmanad"
 fields.row_key = true
 evidence = "Row key: undersokningsmanad (Man, Manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:imputering"
+fields = { "description" = "Imputering vid objektsbortfall, det vill säga när en redovisningsenhet inte lämnat uppgifter. Variablerna anger antal imputerade företag per stratum för arbetare respektive tjänstemän och om en redovisningsenhet är helt imputerad eller inte." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar gäller imputering; antal per personalkategori respektive hel imputering.\ncatalog:variable_text:41300:17167:20089\ncatalog:variable_text:41310:17167:20454\ncatalog:variable_text:41300:10957:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:naringsgren"
+fields = { "description" = "Klassificering av produktionsenhetens näringsgren eller bransch, enligt SNI 2007 respektive SNI 92." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma klassificering i två SNI-versioner.\ncatalog:variable_text:41320:13879:20454\ncatalog:variable_text:41321:10957:15340"
+
+[[statement]]
+kind = "set"
+subject = "set:sjuklon"
+fields = { "description" = "Utbetald sjuklön för redovisningsperioden, avseende arbetsgivarperioden, för arbetare respektive tjänstemän. Arbetsgivarperioden omfattar dag 2 till 14, men dag 2 till 21 under 2003 och 2004." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är utbetald sjuklön under arbetsgivarperioden; periodens längd skiljer över tid och kategorin skiljer per medlem.\ncatalog:variable_text:41328:12784:20454\ncatalog:variable_text:41330:12053:12784"

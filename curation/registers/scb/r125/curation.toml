@@ -732,3 +732,9 @@ kind = "set"
 subject = "situationen-pa-arbetsmarknaden-for-personer-med-funktionsnedsattning: var:uenr"
 fields.row_key = true
 evidence = "Row key: uenr identify a row: survey of persons keys on the respondent id, its only identifier (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:sarskilt-personstod-pa-arbetsplatsen"
+fields = { "description" = "Stöd i form av en särskilt utsedd person som stöttar på arbetsplatsen, för personer med funktionsnedsättning: om personen har behov av det, har fått det eller (för ej sysselsatta) tror att det skulle hjälpa personen att utföra ett arbete." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTre frågor om samma stöd ur olika perspektiv; frågestammarna skiljer sig.\ncatalog:variable_text:28928:19358:19723\ncatalog:variable_text:28941:19358:19723"

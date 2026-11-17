@@ -5321,3 +5321,45 @@ kind = "set"
 subject = "jobbregistret: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr and person-orgnr identify a row: a job is one person at one employer, so the personnummer and the employer organisation number together identify a row; CFAR, arbetsstallenummer and property are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:agarkontroll"
+fields = { "description" = "Klassificering av vem som äger eller kontrollerar en institutionell enhet, enligt Standard för klassificering av institutionella enheter efter ägarkontroll." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma definition av ägarkontroll; kodvarianterna skiljer sig i vilket år företaget avser.\ncatalog:variable_text:48269:10592:18993\ncatalog:variable_text:48270:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-foretagskombinationer"
+fields = { "description" = "Antal kombinationer av företag mellan två år: hur många olika företag de personer som fanns på ett företag det ena året fanns på det andra året. Variablerna räknar från år 1 till år 2 respektive från år 2 till år 1." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nDe två medlemmarna är samma mått räknat i var sin riktning.\ncatalog:variable_text:48288:18262:19358\ncatalog:variable_text:48289:18262:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:arbetsstallets-fad-klassificering"
+fields = { "description" = "Klassificering av arbetsställen i FAD som kvarvarande, nybildade eller nedlagda, framtagen genom att följa individer och grupper av individer under ett årspar." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma definition av arbetsställets klassificering.\ncatalog:variable_text:48415:6209:15706"
+
+[[statement]]
+kind = "set"
+subject = "set:etableringsgrans"
+fields = { "description" = "Gränsvärde för individens etablering på arbetsmarknaden, angivet i tusentals kronor. En individ med lägre inkomst av förvärvsarbete än gränsen anses svagt etablerad. Gränsen är medianinkomsten för individer med högst 9 (10) års förgymnasial utbildning i varje åldersgrupp och kön, multiplicerad med 0,6." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma definition av etableringsgränsen.\ncatalog:variable_text:48356:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:juridisk-form"
+fields = { "description" = "Klassificering av juridiska enheter efter deras juridiska form, tilldelad av Skatteverket." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma definition av juridisk form.\ncatalog:variable_text:48411:18993:19358\ncatalog:variable_text:48412:10592:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsniva"
+fields = { "description" = "Nivån på personens utbildning enligt Svensk utbildningsnomenklatur (SUN), på olika detaljnivå, från hel tresiffrig nivåkod till aggregerade nivåer. Variablerna finns i versionerna SUN 2000 och SUN 2020." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är utbildningsnivå enligt SUN; de skiljer sig i detaljnivå och SUN-version.\ncatalog:variable_text:48541:7305:17897\ncatalog:variable_text:48542:7305:17897\ncatalog:variable_text:48543:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:yrkesstallning"
+fields = { "description" = "Personens yrkesställning, definierad utifrån om personen har inkomst från anställning eller av näringsverksamhet. Det finns varianter för yrkesställningen på en enskild uppgift (kontrolluppgift eller arbetsgivardeklaration) och för kombinatörer, personer med anknytning till mer än en yrkesställning under året." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är yrkesställning härledd ur anställnings- och näringsinkomst; varianterna skiljer sig i vilken uppgift de bygger på.\ncatalog:variable_text:48550:12053:16801\ncatalog:variable_text:48551:5479:17897\ncatalog:variable_text:48552:17897:18993\ncatalog:variable_text:48553:12418:18993"
