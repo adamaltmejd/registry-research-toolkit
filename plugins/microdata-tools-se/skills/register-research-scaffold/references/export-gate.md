@@ -7,11 +7,13 @@ is the `reg_export_gate/` folder of the toolkit repository
 and the design in `DESIGN.md`. There is one copy of the check, there; a project holds a
 pinned copy of its bytes and never a variant.
 
-**Pinned version: `EXPORT_GATE_VERSION <- "0.4.0"`.** Take `export_gate.R`, and the schema
-and policy, from the `reg_meta` tag the project's `reg_meta_version` names (0.4.0 is in
-`reg_meta/v0.79.0` and later):
+**Pinned version: `EXPORT_GATE_VERSION <- "0.4.0"`.** Take `export_gate.R` from the
+`reg_meta` tag the project's `reg_meta_version` names (0.4.0 is in `reg_meta/v0.78.0` and
+later):
 `https://raw.githubusercontent.com/adamaltmejd/registry-research-toolkit/reg_meta/vX.Y.Z/reg_export_gate/export_gate.R`.
-Check the version line in the copy and record its SHA-256. A newer gate version is a
+Check the version line in the copy and record its SHA-256. Take the schema and policy from
+wherever the researcher chose the reviewed pair, possibly a later tag, and record their
+SHA-256 too. A newer gate version is a
 deliberate update of this pin, not something to pick up silently.
 
 The R file imitates the Rust gate (`crates/reg-export-gate`), which is the reference and

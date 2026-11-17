@@ -88,10 +88,10 @@ only the category code (`setup`, `inventory`, `structure`, `disclosure`, `backst
 ## The schema and policy
 
 The gate checks the export against a schema (which files and columns may leave) and a
-policy (the disclosure thresholds). The toolkit's `reg_export_gate/schemas/` ships
-`trial` (person counts by year and group, and a per-year mean, counts at least 5) and
-`mock-stats` (the mock-data statistics scaffold's own outputs); neither declares a
-research project's outputs. A real project needs a schema that declares its outputs and
+policy (the disclosure thresholds). The toolkit ships its pairs in
+`reg_export_gate/schemas/`. `trial` (person counts by year and group, and a per-year mean,
+counts at least 5) is for trials; it does not declare a research project's outputs. A real
+project needs a schema that declares its outputs and
 a policy that a human has reviewed against the data holder's disclosure rules. Both are
 toolkit files, not project code: the agent may list the files and columns the analysis
 needs, but it never writes, edits or loosens a schema or a policy.
