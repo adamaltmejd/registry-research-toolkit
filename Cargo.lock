@@ -1364,7 +1364,7 @@ dependencies = [
 
 [[package]]
 name = "reg-meta"
-version = "0.87.3"
+version = "0.88.0"
 dependencies = [
  "axum",
  "reg-catalog",
