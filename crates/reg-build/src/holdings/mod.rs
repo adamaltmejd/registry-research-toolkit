@@ -4,6 +4,7 @@ mod compile;
 mod cumulative;
 mod input;
 mod keys;
+pub(crate) mod orderable;
 mod references;
 mod scope;
 mod spaces;
@@ -84,19 +85,30 @@ pub(crate) fn run(args: impl Iterator<Item = String>) -> Result<()> {
             findings.as_deref(),
         )?;
         verify::pair(&staged, &base, &root)?;
-        let summary = {
+        let (summary, orderable) = {
             let db = open(&staged)?;
-            format!(
-                "holdings: tables={} columns={} mapped={} unmatched={} storage_extras={}",
-                meta(&db, "census_tables")?,
-                meta(&db, "census_columns")?,
-                meta(&db, "mapped_columns")?,
-                meta(&db, "unmatched_columns")?,
-                meta(&db, "storage_extra_columns")?
+            let orderable = orderable::summary(&db)?;
+            if let Some(path) = &report {
+                amend_report(path, "orderability", orderable.clone())?;
+            }
+            (
+                format!(
+                    "holdings: tables={} columns={} mapped={} unmatched={} storage_extras={}",
+                    meta(&db, "census_tables")?,
+                    meta(&db, "census_columns")?,
+                    meta(&db, "mapped_columns")?,
+                    meta(&db, "unmatched_columns")?,
+                    meta(&db, "storage_extra_columns")?
+                ),
+                orderable,
             )
         };
         std::fs::rename(&staged, &out)?;
         eprintln!("{summary}");
+        // A warning, never a refusal: holds and unplaced columns are valid recorded states.
+        for line in orderable::warnings(&orderable) {
+            eprintln!("{line}");
+        }
         Ok(())
     })
 }
@@ -196,17 +208,16 @@ fn write(
     )?;
     // Input provenance is review evidence, not catalog content: it goes to the report.
     if let Some(path) = report {
-        let mut doc: serde_json::Value = serde_json::from_str(
-            &std::fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?,
+        amend_report(
+            path,
+            "steward",
+            serde_json::json!({
+                "repo": pin.repo,
+                "commit": pin.commit,
+                "config": pin.config,
+                "input_pins": config.pins,
+            }),
         )?;
-        doc["steward"] = serde_json::json!({
-            "repo": pin.repo,
-            "commit": pin.commit,
-            "config": pin.config,
-            "input_pins": config.pins,
-        });
-        let text = serde_json::to_string_pretty(&doc)?;
-        std::fs::write(path, text + "\n").map_err(|e| format!("{}: {e}", path.display()))?;
     }
     let semantic = open(scratch)?;
     let base_db = open(base)?;
@@ -318,6 +329,17 @@ fn write(
     tx.commit()?;
     db.execute_batch("ANALYZE;")?;
     db.execute("VACUUM INTO ?", [staged.to_string_lossy().as_ref()])?;
+    Ok(())
+}
+
+/// Set `key` of the build report at `path` to `value`.
+fn amend_report(path: &Path, key: &str, value: serde_json::Value) -> Result<()> {
+    let mut doc: serde_json::Value = serde_json::from_str(
+        &std::fs::read_to_string(path).map_err(|e| format!("{}: {e}", path.display()))?,
+    )?;
+    doc[key] = value;
+    let text = serde_json::to_string_pretty(&doc)?;
+    std::fs::write(path, text + "\n").map_err(|e| format!("{}: {e}", path.display()))?;
     Ok(())
 }
 

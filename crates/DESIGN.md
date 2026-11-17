@@ -1013,8 +1013,9 @@ release assets are left unchanged.
   `[start, end)` periods. Explicit table ids are compared by table name; implicit tables
   share their register's id and are excluded. `--holdings` compares two holdings
   catalogs instead (release step 8g), OLD on the same or an older holdings schema with
-  the same cross-schema report: census columns by (physical table, column), with placed,
-  held and unplaced counts, changed placements grouped by old and new `table_pid` and
+  the same cross-schema report: census columns by (physical table, column), with orderable
+  and per-reason counts and blocked tables as the holdings build reports them ("Orderable
+  columns"), changed placements grouped by old and new `table_pid` and
   classed newly placed, folded or renamed, variable or interval changed, or unmapped;
   reader-visible text by kind, keyed by pid and source key and listing keys, never
   bodies; and holdings-notice deltas by code, compared by (code, table and column,
@@ -1999,6 +2000,44 @@ the table header and numbered-column prefix, optionally a schema header, and per
 evidenced exact-name renames and literal prefix rewrites only. Identifiers remain exact
 after reader trimming; renames and rewrites affect matching, not emitted physical names.
 CSV errors identify input roles and row numbers without echoing private source values.
+
+#### Orderable columns
+
+The goal is every delivered column orderable (maintainer 2026-11-17), so every holdings
+build measures how far it is. An order reaches a delivered column only through its
+`holding_mapping` rows: the server's possession and `materialize_order`'s placements
+read nothing else, and `reg-build verify` has already cleared the other refusals that
+path can raise (keys, storage, file names). A census column is therefore orderable when
+it has a mapping row. Every other column gets exactly one reason, from what the compiler
+recorded, table-level first so that a held row key's stamped column holds count once,
+under the key:
+
+| Reason | Recorded as | Decided |
+| --- | --- | --- |
+| `table_excluded`, `table_superseded`, `table_lookup` | the table's disposition | yes |
+| `table_unknown` | disposition `unknown` | no |
+| `row_key_held` | a `hold` in the table's `key_requirements` | no |
+| `column_unmapped` | column disposition `unmap` | yes |
+| `column_held` | column disposition `hold`, or a `mapping_held` notice | no |
+| `ambiguous` | an `ambiguous_delivered_owners` or `ambiguous_catalog_segment` notice | no |
+| `unmatched` | an `unmatched` or `mapping_missing` notice | no |
+| `other` | none of these | no |
+
+A decided reason is a stated decision not to order the column, reported apart from the
+work still owed. A table with no orderable column and some undecided reason is blocked
+as a whole: by `row_key_held` (with each key's hold and follow-up), `table_unknown`, or
+else `no_orderable_column`.
+
+`reg-build holdings` prints this as warnings after its summary line (totals, columns and
+tables per reason, each blocked table) and never refuses on it: a hold is a valid
+recorded state. With `--report` the same numbers go to the report's `orderability`
+object: `columns`, `orderable`, `not_orderable`, `decided`, `gaps` (not orderable and not
+decided), `reasons` (`{reason: {columns, decided}}`) and `tables`, one entry per table
+with a column that is not orderable (`schema`, `table`, its `routes` table pids,
+`columns`, `orderable`, `reasons` by count and `blocked`, null or `{reason, holds}`).
+The steward report is the steward's, so it names its physical tables. One classifier
+(`reg-build/src/holdings/orderable.rs`) serves the build, the report and
+`reg-build diff --holdings`.
 
 #### Census reader renames and rewrites
 
