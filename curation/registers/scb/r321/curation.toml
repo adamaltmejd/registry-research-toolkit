@@ -10981,6 +10981,168 @@ evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of
 
 [[statement]]
 kind = "set"
+subject = "var:allmanhetens-fragestund"
+fields = { "label" = "Allmänhetens frågestund (Kommuner och regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one that occurs in both tables \"Kommuner\" and \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:allmanhetens-fragestund-fr20"
+fields = { "label" = "Allmänhetens frågestund (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:allmanhetens-fragestund-fr23"
+fields = { "label" = "Allmänhetens frågestund (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:fortroendevaldas-trygghet-ansvar"
+fields = { "label" = "Utökat ansvar för förtroendevaldas trygghet (Kommuner och regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one that occurs in both tables \"Kommuner\" and \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:hot-hat-vald-mot-fortroendevalda"
+fields = { "label" = "Utpekad funktion som handhar hot, hat och våld mot förtroendevalda (Kommuner och regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one that occurs in both tables \"Kommuner\" and \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:revisorer-vald-med-undantag-for-granskning-fr33"
+fields = { "label" = "Revisorer vald med undantag för granskning (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:revisorer-vald-med-undantag-for-granskning-fr36"
+fields = { "label" = "Revisorer vald med undantag för granskning (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:revisorer-vald-med-undantag-granskning"
+fields = { "label" = "Revisorer vald med undantag för granskning (Kommuner och regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one that occurs in both tables \"Kommuner\" and \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:stod-for-e-forslag"
+fields = { "label" = "Stöd för e-förslag (Kommuner och regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one that occurs in both tables \"Kommuner\" and \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:stod-for-e-forslag-fr15"
+fields = { "label" = "Stöd för e-förslag (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:stod-for-e-forslag-fr18"
+fields = { "label" = "Stöd för e-förslag (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:utokat-ansvar-for-fortroendevaldas-trygghet-fr30"
+fields = { "label" = "Utökat ansvar för förtroendevaldas trygghet (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:utokat-ansvar-for-fortroendevaldas-trygghet-fr33"
+fields = { "label" = "Utökat ansvar för förtroendevaldas trygghet (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:utpekad-funktion-som-handhar-hot-hat-och-vald-mot-fr31"
+fields = { "label" = "Utpekad funktion som handhar hot, hat och våld mot förtroendevalda (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:utpekad-funktion-som-handhar-hot-hat-och-vald-mot-fr34"
+fields = { "label" = "Utpekad funktion som handhar hot, hat och våld mot förtroendevalda (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:webb-kalendarium"
+fields = { "label" = "Webbplats med kalendarium för sammanträden (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:webb-moteshandlingar"
+fields = { "label" = "Webbplats med möteshandlingar för sammanträden (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:webb-protokoll-sammantraden"
+fields = { "label" = "Webbplats med protokoll från sammanträden (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-debattforum"
+fields = { "label" = "Webbplats med debattforum (Kommuner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Kommuner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-debattforum-fr30-6"
+fields = { "label" = "Webbplats med debattforum (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-debattforum-webbdebatt"
+fields = { "label" = "Webbplats med debattforum (Kommuner och regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one that occurs in both tables \"Kommuner\" and \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-kalendarium-for-sammantraden-fr30-1"
+fields = { "label" = "Webbplats med kalendarium för sammanträden (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-kalendarium-for-sammantraden-webbkal"
+fields = { "label" = "Webbplats med kalendarium för sammanträden (Kommuner och regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one that occurs in both tables \"Kommuner\" and \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-moteshandlingar-for-sammantraden-fr30-2"
+fields = { "label" = "Webbplats med möteshandlingar för sammanträden (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-moteshandlingar-for-sammantraden-webbhandl"
+fields = { "label" = "Webbplats med möteshandlingar för sammanträden (Kommuner och regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one that occurs in both tables \"Kommuner\" and \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-protokoll-fran-sammantraden-fr30-4"
+fields = { "label" = "Webbplats med protokoll från sammanträden (Regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one in table \"Regioner\"."
+
+[[statement]]
+kind = "set"
+subject = "var:webbplats-med-protokoll-fran-sammantraden-webbprot"
+fields = { "label" = "Webbplats med protokoll från sammanträden (Kommuner och regioner)" }
+evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Operator ruling 2026-11-17 (number-aware set member order): the three population variants of one question share a name, so each carries its population in the label instead of a single-value axis; this variable is the one that occurs in both tables \"Kommuner\" and \"Regioner\"."
+
+[[statement]]
+kind = "set"
 subject = "set:bolag-under-moderbolag"
 fields = { "description" = "Om kommunens eller landstingets (regionens) bolag har samlats under ett moderbolag." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma definition; kommuner, regioner eller båda skiljer dem åt, och det visar etiketten och facetten.\ncatalog:variable_text:45806:16801:17167"
