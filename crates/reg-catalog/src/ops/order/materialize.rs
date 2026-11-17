@@ -142,6 +142,10 @@ struct Draft {
     first: (usize, usize, usize),
     /// Per source index, the requested days the file serves.
     days: BTreeMap<usize, Vec<Days>>,
+    /// The catalog tables the file serves entries of.
+    tables: BTreeSet<String>,
+    /// The days those tables deliver ([`delivered`]), read before the file is checked.
+    delivered: Vec<Days>,
     /// Column id -> (ordering key, role, refs).
     columns: BTreeMap<i64, (ColumnKey, Role, Vec<Ref>)>,
     /// The first binding path a file refusal is located at.
@@ -215,6 +219,7 @@ fn build(
                 ..Draft::default()
             });
             draft.days.entry(s).or_default().push(piece);
+            draft.tables.insert(entry.table.clone());
             let stored = stored(held, p.column)?;
             let slot_index = stored
                 .slot
@@ -294,6 +299,7 @@ fn build(
         &mut findings,
     );
     let format = project.extract_format.unwrap_or(ExtractFormat::Dta);
+    let base = server.catalog.connect()?;
     let mut files = Vec::new();
     let mut names: BTreeMap<String, String> = BTreeMap::new();
     for (holding_id, mut draft) in drafts {
@@ -329,6 +335,7 @@ fn build(
         for days in draft.days.values_mut() {
             *days = merge(std::mem::take(days));
         }
+        draft.delivered = delivered(&base, held, &draft.tables)?;
         keys(
             server,
             held,
@@ -1095,8 +1102,9 @@ fn keys(
     )?;
     // Keys are resolved over the rows the file extracts, not only the requested days:
     // the row filter widens to the encoding's grain, and an unfiltered file extracts
-    // its whole delivery.
-    let extracted = extracted(holding, draft);
+    // its whole delivery. Only days its tables deliver hold rows: a calendar-year file
+    // of a table delivered each autumn needs no key for the spring.
+    let extracted = on_delivered(&extracted(holding, draft), &draft.delivered);
     let per_source: Vec<usize> = draft.days.keys().copied().collect();
     for (r, requirement) in requirements.iter().enumerate() {
         let scope: Vec<Days> = match requirement["period"].as_str() {
@@ -1291,6 +1299,38 @@ fn extracted(holding: &Holding, draft: &Draft) -> Vec<Days> {
     }
 }
 
+/// The days the catalog delivers any of `tables` (`tbl_span`, what coverage reads), each
+/// read on its origin as the logical check resolves it: the base catalog, else the
+/// holdings database for a table only it defines.
+fn delivered(
+    base: &Connection,
+    held: &Connection,
+    tables: &BTreeSet<String>,
+) -> Result<Vec<Days>, Error> {
+    const SPANS: &str = "SELECT s.start, s.end FROM tbl_span s JOIN tbl t ON t.id = s.table_id
+                         WHERE t.pid = ?";
+    let mut days = Vec::new();
+    for table in tables {
+        let found = rows(base, SPANS, [table], |r| Ok((r.get(0)?, r.get(1)?)))?;
+        if found.is_empty() {
+            days.extend(rows(held, SPANS, [table], |r| Ok((r.get(0)?, r.get(1)?)))?);
+        } else {
+            days.extend(found);
+        }
+    }
+    Ok(merge(days))
+}
+
+/// `days` on the delivered days. No delivered day read leaves `days` whole, so a
+/// missing span never switches a check off.
+fn on_delivered(days: &[Days], delivered: &[Days]) -> Vec<Days> {
+    if delivered.is_empty() {
+        days.to_vec()
+    } else {
+        overlap(days, delivered)
+    }
+}
+
 /// The first and last held day numbers rounded to an encoding's grain.
 fn widen(encoding: Encoding, (lo, hi): Days) -> Days {
     let start = |iso: &str| -> String {
@@ -1323,7 +1363,7 @@ fn widen(encoding: Encoding, (lo, hi): Days) -> Days {
 /// covers every held day. A table without a period column is extracted whole, which
 /// is reported when the request is narrower; sources sharing a filtered file are told
 /// that each of its columns is extracted over the union. The findings name the extra
-/// days, never the physical file or its delivery code (#2409).
+/// days the file's tables deliver, never the physical file or its delivery code (#2409).
 fn row_filter(
     server: &Server,
     holding: &Holding,
@@ -1346,7 +1386,7 @@ fn row_filter(
     };
     let Some((_, column, encoding)) = &holding.period_column else {
         for s in draft.days.keys() {
-            let extra = minus(&holding.held, &asked[s]);
+            let extra = on_delivered(&minus(&holding.held, &asked[s]), &draft.delivered);
             if !extra.is_empty() {
                 info(
                     *s,
@@ -1366,7 +1406,10 @@ fn row_filter(
     // source asked for; days another source asked for are `row_filter_union`'s.
     for (s, days) in &draft.days {
         let around = merge(days.iter().map(|&d| widen(encoding, d)).collect());
-        let extra = overlap(&minus(&minus(&around, &union), &asked[s]), &holding.held);
+        let extra = on_delivered(
+            &overlap(&minus(&minus(&around, &union), &asked[s]), &holding.held),
+            &draft.delivered,
+        );
         if !extra.is_empty() {
             let unit = match encoding {
                 Encoding::Year => "year",
