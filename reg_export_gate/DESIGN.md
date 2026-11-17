@@ -229,8 +229,9 @@ The shipped files:
   distinct persons; `coefficients.parquet` one regression term per row on the estimation
   sample's distinct persons, with its rows as an `n_obs` count. A file the project does
   not use is written with zero rows. The policy is the mock-stats values: minimum 5,
-  statistics on at least 50 persons (so no quantile is one person's value) and 3
-  significant digits. It uses only gate 0.4.0 rules, so the R gate on MONA runs it. Two
+  statistics on at least 50 persons (so no decile or coarser quantile is one person's
+  value; `statistic` is a free key, so a finer quantile or an extreme is the reviewer's
+  to refuse) and 3 significant digits. It uses only gate 0.4.0 rules, so the R gate on MONA runs it. Two
   limits follow from that. A share is exported as counts per outcome category, the
   numerator and its complement each a cell under the minimum, never as a ratio: a ratio
   is a `statistic`, and the 0.4.0 rules cannot see its numerator (the 0.5.0 `share`

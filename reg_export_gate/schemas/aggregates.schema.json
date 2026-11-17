@@ -19,7 +19,7 @@
     },
     {
       "name": "statistics.parquet",
-      "description": "One statistic per row (a mean or a quantile of a variable), on the distinct persons it is computed from. statistic names it, for example mean_income or p50_income; it is not a ratio of a binary variable.",
+      "description": "One statistic per row (a mean, or a decile or coarser quantile, of a variable), on the distinct persons it is computed from. statistic names it, for example mean_income or p50_income. It is not a ratio of a binary variable, a finer quantile (p1, p99) or an extreme (min, max): on 50 persons those are one person's value, and the gate cannot tell them from a median; the reviewer refuses them.",
       "columns": [
         { "name": "table", "type": "string", "role": "dimension" },
         { "name": "year", "type": "integer", "role": "dimension" },

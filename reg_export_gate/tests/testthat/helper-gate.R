@@ -30,8 +30,11 @@ json_values <- function(col) {
       v
     }
   }))
-  # A column of nulls only is logical NA in R, which Arrow will not convert to a
-  # number or a string: give it the declared type.
+  # A column of no values unlists to NULL; a column of nulls only is logical NA.
+  # Arrow converts neither to a number or a string: give it the declared type.
+  if (is.null(x)) {
+    x <- logical(0)
+  }
   if (is.logical(x) && col$type != "bool") {
     x <- switch(col$type, int32 = as.integer(x), string = as.character(x), as.double(x))
   }
