@@ -786,3 +786,15 @@ kind = "set"
 subject = "avgifter-hyror-for-nybyggda-lagenheter: var:id-nummer"
 fields.row_key = true
 evidence = "Row key: Idnr (id-nummer) keys 2006, which has no Fastbet column; #2477 placed the 2006 Idnr in id-nummer. A key is variable-wide, so 2007-2013 key Fastbet plus Idnr (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:regional-omradestillhorighet"
+fields = { "description" = "Regional områdestillhörighet i olika indelningar: kommun, län, NUTS nivå 1 till 3 (EU:s geografiska indelning för regionalstatistik) och en indelning i fem regioner (Stor-Stockholm, Stor-Göteborg, Stor-Malmö, kommuner utanför storstadsområdena med fler än 75 000 invånare och övriga kommuner)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSex medlemmar som alla anger geografisk tillhörighet i olika regionala indelningar.\ncatalog:variable_text:12907:13149:14610\ncatalog:variable_text:12909:13514:13879\ncatalog:variable_text:12910:18993:20089\ncatalog:variable_text:12917:13149:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:upplatelseform"
+fields = { "description" = "Det sätt på vilket en boende förfogar över sin bostad, till exempel med bostadsrätt, hyresrätt eller som kategoribostad." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar anger upplåtelseform; exemplen kommer från texterna för utvald lägenhet.\ncatalog:variable_text:12919:13514:14610\ncatalog:variable_text:12920:13149:13514"

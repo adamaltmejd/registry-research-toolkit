@@ -3534,3 +3534,57 @@ kind = "set"
 subject = "set:diagnoskod-barnet"
 fields = { "description" = "Barnets diagnoskoder enligt den svenska versionen av ICD. Varje variabel innehåller en kod (nr 1–20); en variabel samlar koderna 1–12 i en sträng." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nDen lagrade texten för nr 2–12 anger bara ICD och numret, vilket beskrivningen täcker; strängvariabeln skiljer sig och behålls.\ncatalog:variable_text:64224:-1826:2932897\ncatalog:variable_text:64225:10592:2932897\ncatalog:variable_text:64207:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:apgarpoang"
+fields = { "description" = "Apgarbedömning vid 1, 5 respektive 10 minuter. Poängen är en summa av poäng för bedömning av hjärtfrekvens, andning, hudfärg, muskeltonus och retbarhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma definition; tidpunkten skiljer.\ncatalog:variable_text:64162:1096:2932897\ncatalog:variable_text:64163:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:atgardskod-forlosta"
+fields = { "description" = "Den förlöstas åtgärdskoder under och efter förlossningen, enligt Socialstyrelsens klassifikation av vårdåtgärder (KVÅ). Varje variabel innehåller en kod (nr 1–12); en variabel samlar koderna 1–12 i en sträng." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nLagrad medlemstext anger KVÅ och strängvarianten; numrerade följer ordning.\ncatalog:variable_text:64182:1096:2932897\ncatalog:variable_text:64183:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:barnets-diagnoskod-bk"
+fields = { "description" = "Barnets diagnoskoder enligt professor Bengt Källéns klassificering (BK). Varje variabel innehåller en kod, numrerade 1–8." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma text och skiljer bara i ordningsnummer.\ncatalog:variable_text:64196:-1826:10592"
+
+[[statement]]
+kind = "set"
+subject = "set:bordordning"
+fields = { "description" = "Bördordning och antal i börd vid flerbörd. Uppgiften finns i både Fosterskador och kromosomavvikelser och Medicinska födelseregistret." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma text; etiketterna anger vilket register.\ncatalog:variable_text:64214:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:diagnoskod-forlosta"
+fields = { "description" = "Den förlöstas diagnoskoder under och efter förlossningen, enligt den svenska versionen av ICD. Varje variabel innehåller en kod (nr 1–12); en variabel samlar koderna 1–12 i en sträng." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nLagrad medlemstext anger ICD och strängvarianten; numrerade följer ordning.\ncatalog:variable_text:64223:1096:2932897\ncatalog:variable_text:64244:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:fodelsestorlek-for-graviditetslangd"
+fields = { "description" = "Barnets födelsestorlek i förhållande till graviditetslängden: lätt för tiden (small for gestational age, SGA) respektive tung för tiden (large for gestational age, LGA). Skattningen bygger på Marsal m.fl.:s metod och gäller endast enkelbörder." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma metod och begränsning; variablerna är motpoler.\ncatalog:variable_text:64317:1096:2932897\ncatalog:variable_text:64382:1096:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:forlossningsbristningar"
+fields = { "description" = "Bristning i samband med förlossningen, en variabel per kroppsdel (cervix, klitoris, perineum, rektum, sfinkter, vagina). Uppgiften anges i en kryssruta i journalen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma text för alla utom kroppsdelen.\ncatalog:variable_text:64218:10592:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:personnummerkvalitet"
+fields = { "description" = "Kvaliteten (pålitligheten) på ett personnummer enligt förutbestämda regler. Variablerna gäller personnumret för barnet, för barn i flerbörd respektive för den gravida eller förlösta personen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma kvalitetsmått; skiljer i vems personnummer.\ncatalog:variable_text:64342:1096:2932897\ncatalog:variable_text:64343:13514:2932897\ncatalog:variable_text:64344:15706:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:tidigare-kejsarsnitt"
+fields = { "description" = "Tidigare kejsarsnitt hos den förlösta: om hon har haft ett eller flera, och året för det senaste. Beräknas med hjälp av moderns tidigare förlossningar i MFR samt uppgift i förlossningsjournal 1 (FV1)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda beräknas på samma underlag.\ncatalog:variable_text:64289:1096:2932897\ncatalog:variable_text:64381:1096:2932897"

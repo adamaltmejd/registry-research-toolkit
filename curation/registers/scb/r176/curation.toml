@@ -1644,3 +1644,9 @@ kind = "set"
 subject = "livsmedelsforsaljning-fordelad-pa-varugrupper: Uppräkningsfaktor where key = 'v466'"
 fields = { "variable" = "upprakningstal-upprakningsfaktor" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v466), never delivered together in one table, so they are one variable renamed between releases: UpprfTot 2003-01-01..2003-12-31; upprf 2005-01-01..2010-12-31; Uppräkningsfaktor 2015-01-01..2020-12-31."
+
+[[statement]]
+kind = "set"
+subject = "set:upprakningsfaktor"
+fields = { "description" = "Uppräkningsfaktor (uppräkningstal), med vilken totaler skattas genom att summera uppräknade observationer (observerat värde gånger uppräkningstal). Synonymer är vägningstal och (uppräknings)vikt. Variablerna finns som en gemensam faktor och som separata uppräkningstal för butikskedjor och butikstyper, till exempel Hemköp, ICA butiker, Coop stormarknad och Willys." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam definition av uppräkningstal; skillnaden är butikskedja eller butikstyp.\ncatalog:variable_text:45534:12418:12784\ncatalog:variable_text:45542:11323:11688"

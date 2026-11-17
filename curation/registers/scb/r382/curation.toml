@@ -3243,3 +3243,63 @@ kind = "set"
 subject = "industrins-kapacitetsutnyttjande: var:referensmanad-pin"
 fields.row_key = true
 evidence = "Row key: referensmanad-pin (ReferencePeriodId) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:hanteringskod"
+fields = { "description" = "En hanteringskod per variabel som beskriver om värdet är inkommet, outlier, imputerat eller liknande. Variablerna avser graden av kapacitetsutnyttjande och orsaker som brist på insatsvaror eller personal, otillräcklig efterfrågan och produktionsstörningar." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma textrad för alla; vilken variabel koden gäller framgår av etiketten.\ncatalog:variable_text:47652:14245:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:imputeringsstatus"
+fields = { "description" = "Anger om ett värde är imputerat. Flaggorna gäller olika variabler (till exempel nettoomsättning, orderingång och omsättning inklusive moms), marknader (total, hemma och export) och källor (blankett eller momsregistret). Imputeringsstatus anger i stället om ett företag har blivit imputerat eller har lämnat egna värden." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nFlaggor per variabel delar texten ”är imputerat”; den företagsövergripande variabeln ingår.\ncatalog:variable_text:47628:18993:19358\ncatalog:variable_text:47660:18993:20089\ncatalog:variable_text:47686:17897:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:kontakttelefonnummer"
+fields = { "description" = "Telefonnummer för kontakt med företaget: företagets, uppgiftslämnarens eller kontaktpersonens (mobil) telefonnummer." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är olika telefonnummer enligt text och etikett.\ncatalog:variable_text:47710:15065:16526\ncatalog:variable_text:47784:13970:15065\ncatalog:variable_text:47785:13239:16526"
+
+[[statement]]
+kind = "set"
+subject = "set:marknadsindelning"
+fields = { "description" = "Den marknad (total, hemma eller export) till vilken försäljningen har skett, som benämning respektive som numerisk identifierande kod." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTre variabler är benämningen, en är koden.\ncatalog:variable_text:47692:18993:20089\ncatalog:variable_text:47717:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:omsattning-inklusive-moms"
+fields = { "description" = "Omsättning inklusive moms på hemmamarknaden. Variablerna skiljer sig i källa: direktinsamlad via blankett eller härledd från momsuppgifter." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTexterna skiljer sig bara i källa (direktinsamlad respektive härledd från moms).\ncatalog:variable_text:47735:18993:20089\ncatalog:variable_text:47737:18993:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:produktindelning"
+fields = { "description" = "Produktslag, som identifierande kod respektive benämning. Används i de fall produktionen i en bransch skattas med producerade volymer." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda texterna delar meningen om producerade volymer.\ncatalog:variable_text:47760:18993:20089\ncatalog:variable_text:47761:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:referensmanad"
+fields = { "description" = "Den månad (period) som uppgifterna avser." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTexterna anger månad eller period som uppgiften/produktionen avser; knapp men gemensam.\ncatalog:variable_text:47716:16436:18993\ncatalog:variable_text:47753:13239:16526\ncatalog:variable_text:47767:18993:19358\ncatalog:variable_text:47768:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:upprakningstal"
+fields = { "description" = "Uppräkningstal (vägningstal eller uppräkningsvikt) som observationer multipliceras med för att skatta totaler: totalen är summan av observerat värde gånger uppräkningstal. Variablerna gäller olika variabler, till exempel omsättning (preliminär och slutlig) och kapacitetsutnyttjande." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam definition av uppräkningstal; skillnaden framgår av etiketten.\ncatalog:variable_text:47801:14245:14975\ncatalog:variable_text:47819:19358:20089\ncatalog:variable_text:47820:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:variabelbeteckning"
+fields = { "description" = "Övergripande variabeltyp, som benämning respektive som identifierande kod." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTre variabler är benämning och tre är kod för samma variabeltyp.\ncatalog:variable_text:47698:18993:20089\ncatalog:variable_text:47751:18993:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:variabeldelmangd"
+fields = { "description" = "Variabeldelmängd som kan summeras med andra variabeldelmängder för att nå en total, som benämning respektive som identifierande kod." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nFyra variabler är benämning och en är kod.\ncatalog:variable_text:47694:18993:20089\ncatalog:variable_text:47782:18993:20089"

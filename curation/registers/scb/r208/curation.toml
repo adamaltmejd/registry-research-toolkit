@@ -8748,3 +8748,21 @@ kind = "set"
 subject = "skord-av-spannmal-trindsad-och-oljevaxter: po8"
 fields = { "variable" = "po8" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v2432), never delivered together in one table, so they are one variable renamed between releases: po 2016-01-01..2019-12-31; po8 2021-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "set:hektarskord-av-karna-och-fro"
+fields = { "description" = "Hektarskörd, det vill säga skörd per tröskad hektar, för respektive kärn- och fröslag. En del av variablerna avser den ekologiska hektarskörden, som är en delmängd av skörd per tröskad hektar." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma mått per gröda; vissa medlemmar är därav-ekologisk, vilket etiketterna visar.\ncatalog:variable_text:49659:16801:19358\ncatalog:variable_text:49677:16801:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:skordeomrade"
+fields = { "description" = "Skördeområde för uppgiften i undersökningen: brukningscentrums skördeområde, det skördeområde som arealen finns i och som används vid skattningarna, samt det stratum i urvalet som undersökningen stratifieras på (skördeområden)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna är olika uttryck för skördeområde; kodens uppbyggnad anges bara för skördeområdesvariablerna och utelämnas.\ncatalog:variable_text:49879:16801:19358\ncatalog:variable_text:49880:16801:19358\ncatalog:variable_text:49882:16801:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:troskad-areal"
+fields = { "description" = "Tröskad areal för respektive kärn- och fröslag. En del av variablerna avser den ekologiska tröskade arealen, som är en delmängd av tröskad areal." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma mått per gröda; vissa medlemmar är därav-ekologisk, vilket etiketterna visar.\ncatalog:variable_text:49758:16801:19358\ncatalog:variable_text:49776:16801:17167"

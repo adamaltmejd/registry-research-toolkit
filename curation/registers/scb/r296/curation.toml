@@ -2091,3 +2091,15 @@ kind = "set"
 subject = "tjansteprisindex-tpi-indata: var:berakningsperiod-periodid"
 fields.row_key = true
 evidence = "Row key: berakningsperiod-periodid (PeriodId) is the period of a price quote in the Indata 2014 file; one file holds several quarters, so the organisation number repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:ppi-marknad"
+fields = { "description" = "Den marknad ett index avser, angiven som kod, kortnamn eller id." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar anger marknad; skillnaden är kodformen.\ncatalog:variable_text:48054:15706:16801\ncatalog:variable_text:48057:11323:15706"
+
+[[statement]]
+kind = "set"
+subject = "set:produktgrupp-sjusifferniva-tpi"
+fields = { "description" = "Produktgruppering på sjusiffernivå inom vilken ett index beräknas (TPI). Variablerna anger produktgruppen som kod respektive namn." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma definition; kod eller namn skiljer.\ncatalog:variable_text:48083:18993:20819"

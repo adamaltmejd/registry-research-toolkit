@@ -6978,3 +6978,9 @@ kind = "set"
 subject = "ekb-manad: var:manad"
 fields.row_key = true
 evidence = "Row key: manad (MANAD) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:personnummerkvalitet"
+fields = { "description" = "Kvaliteten på ett personnummer, bedömd enligt vissa förutbestämda regler, för personen respektive för äldste och yngste sökande. Variablerna är skapade med standardmacrot checkpnr." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma kontrollmått på personnummer; medlemmarna skiljer sig åt i vems personnummer.\ncatalog:variable_text:63655:7305:2932897"

@@ -864,3 +864,9 @@ kind = "set"
 subject = "set:branslepriser-i-utrikeshandeln"
 fields = { "description" = "Pris på bränsle i utrikeshandeln, i 1000-tal kronor, antingen inklusive kostnad, försäkring och frakt (CIF) eller fritt ombord (FOB). På exportrader är det exportpriset och på importrader importpriset." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nDe lagrade texterna delar enhet och export/import-regel; CIF mot FOB framgår av etiketterna, så båda lagrade texterna täcks.\ncatalog:variable_text:46335:13879:17532\ncatalog:variable_text:46336:13879:17532"
+
+[[statement]]
+kind = "set"
+subject = "set:imputeringsstatus"
+fields = { "description" = "Anger om värdet på densitet, vikt respektive volym är imputerat, det vill säga beräknat. Värdet är 1 om variabeln har imputerats och 0 annars." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTre likadana indikatorer, en per variabel.\ncatalog:variable_text:46329:17532:19723\ncatalog:variable_text:46383:17532:19723\ncatalog:variable_text:46386:17532:19723"

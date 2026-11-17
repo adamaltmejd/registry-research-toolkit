@@ -1230,3 +1230,21 @@ kind = "set"
 subject = "insark: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:monstringsstatus"
+fields = { "description" = "Personens status efter mönstring: ej ianspråktagen, värnpliktig, civilpliktig, utbildningsreserv eller anställd/avtalspersonal." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma kodlista A till E och samma innebörd.\ncatalog:variable_text:8266:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:psykisk-funktionsformaga"
+fields = { "description" = "Bedömning av psykisk funktionsförmåga: dels ett sammanfattande värde på en skala från 1 till 9, dels psykologens skattning (1 till 5) av fyra personlighetsdimensioner: emotionell stabilitet, intensitet, psykisk energi och social mognad." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nHuvudvariabeln är skalan 1 till 9; de fyra SIPE-variablerna är psykologens delskattningar. Källhänvisningarna i texterna utelämnas.\ncatalog:variable_text:8270:9862:14975\ncatalog:variable_text:8281:9862:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:regionkontor"
+fields = { "description" = "Det regionkontor som är inskrivande respektive redovisande: huvudkontoret (0 och 9), Kristianstad (1), Göteborg (2), Stockholm (3), Karlstad (4), Norrland (5) eller Boden (6)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma kodlista; de skiljer sig i vilken roll kontoret har.\ncatalog:variable_text:8239:9862:14975\ncatalog:variable_text:8272:9862:14975"

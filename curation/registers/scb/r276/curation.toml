@@ -4022,3 +4022,38 @@ subject = "planinformation: var:uuid"
 fields.row_key = true
 evidence = "Row key: uuid identifies a row, as in the register's other change files (adressplats, byggnad, inskrivning); plans for areas may have no pfnr (maintainer ruling 2026-11-14; ambiguous-table review)."
 
+[[statement]]
+kind = "set"
+subject = "set:beloppsvaluta"
+fields = { "description" = "Den valuta som respektive belopp är angivet i: tomträttsavgäld och arrendeavgifter, framtida avgäld, köpeskilling för fast respektive lös egendom, preliminär köpeskilling och mellangift." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar anger valutan för ett visst belopp; skillnaden är vilket belopp valutan gäller.\ncatalog:variable_text:17862:17166:17167\ncatalog:variable_text:17927:17166:17167\ncatalog:variable_text:17964:17166:17167\ncatalog:variable_text:17966:17166:17167\ncatalog:variable_text:17991:17166:17167\ncatalog:variable_text:18039:17166:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:distrikt"
+fields = { "description" = "Distrikt enligt en indelning som baseras på en justerad version av den församlingsindelning som gällde den 31 december 1999. Finns som kod och som namn." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam distriktsindelning; koden och namnet är två uttryck för samma distrikt. Kodens uppbyggnad gäller bara kodvariabeln och utelämnas.\ncatalog:variable_text:17898:17166:17167\ncatalog:variable_text:17899:17166:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:fangestidpunkt"
+fields = { "description" = "Tidpunkten då fånget (förvärvet) skedde, som år, som år och månad eller som år, månad och dag. Fångesdatum kan vara ofullständigt, det vill säga saknas helt eller bara omfatta år eller år och månad." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTre detaljeringsgrader av samma tidpunkt; den ofullständighet som anges gäller alla.\ncatalog:variable_text:17908:17166:17167\ncatalog:variable_text:17909:17166:17167\ncatalog:variable_text:17910:17166:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:kopeskilling"
+fields = { "description" = "Belopp som erlagts vid förvärv av fastighet eller tomträtt, uppdelat på köpeskilling för fast egendom eller tomträtt, köpeskilling för lös egendom, preliminär köpeskilling för fast egendom och mellangift vid byte av fastigheter eller tomträtter." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar redovisar erlagda belopp vid förvärv; medlemmarna skiljer sig åt i vilket slags belopp.\ncatalog:variable_text:17963:17166:17167\ncatalog:variable_text:17965:17166:17167\ncatalog:variable_text:17990:17166:17167\ncatalog:variable_text:18038:17166:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:krav-pa-forvarvstillstand"
+fields = { "description" = "Anger om förvärvstillstånd krävs från länsstyrelsen vid förvärv av lantbruksegendom, dels inom glesbygdsområde, dels inom omarronderingsområde." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma fråga om förvärvstillstånd; områdestypen skiljer medlemmarna.\ncatalog:variable_text:17921:16800:16801\ncatalog:variable_text:17922:16800:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:lagfarts-och-tomtrattsandel"
+fields = { "description" = "Andel av en fastighet som en person har beviljad lagfart eller tomträtt på, angiven som ett bråk med täljare och nämnare. Uppdelat på den andel som har förvärvats och den andel som har beviljats." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBråkets täljare och nämnare för två slags andel (förvärvad, beviljad).\ncatalog:variable_text:17850:17166:17167\ncatalog:variable_text:17851:17166:17167\ncatalog:variable_text:17880:17166:17167\ncatalog:variable_text:17881:17166:17167"

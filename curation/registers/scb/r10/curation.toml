@@ -5625,3 +5625,45 @@ kind = "set"
 subject = "uppdragsregistret: totbete where key = 'v41873'"
 fields = { "variable" = "totala-betesareal-i-hektar-totbete" }
 evidence = "Both have the identical definition of the farm's total pasture area in hectares and selector key v41873. Their enterprise-table observations meet at day 15706 without overlap; other supplied gaps remain unfilled."
+
+[[statement]]
+kind = "set"
+subject = "set:co-adress"
+fields = { "description" = "C/o-adress för brukaren, under fältnamnen Adr1, Adr2, adress1 och adress2." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar anger c/o-adress; skillnaden är fältnamnet.\ncatalog:variable_text:43017:10227:10957\ncatalog:variable_text:43018:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "set:gatuadress"
+fields = { "description" = "Gatu- eller boxadress för brukaren eller jordbruksföretaget. Variablerna anger adressen under olika fältnamn (adress, Adr1, Adr2, adress1 och adress2), och vissa leveranser har två adressfält." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har texten Företagets gatuadress; skillnaden är fältnamnet.\ncatalog:variable_text:43049:10227:10957\ncatalog:variable_text:43050:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "set:groda"
+fields = { "description" = "Gröda enligt jordbruksstatistiken (till exempel vete, råg, korn och havre), angiven som kod, id-nummer eller namn. Grödor finns också som numrerade fält (gröda 1–20), och trädgårdsgrödor har egna id-variabler." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna anger en gröda på olika sätt: numrerade fält, id-nummer, namn och trädgårdsgrödans id.\ncatalog:variable_text:43055:6940:7305\ncatalog:variable_text:43075:10957:13149\ncatalog:variable_text:43076:14610:20454\ncatalog:variable_text:43079:16071:20454\ncatalog:variable_text:43078:12784:13149"
+
+[[statement]]
+kind = "set"
+subject = "set:postort"
+fields = { "description" = "Postadress och postort för företagsenheten. Postort är en svensk beteckning på ett område med en egen postadress och sammanfaller inte alltid helt med kommuner, församlingar eller tätorter." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nPostort definieras i två medlemmar; Postadress är företagsenhetens postadress.\ncatalog:variable_text:43159:11688:20454\ncatalog:variable_text:43162:10957:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:produktionsomrade"
+fields = { "description" = "Indelning av Sverige i produktionsområden. Variablerna skiljer sig åt i antalet områden: 8 respektive 18." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam text; antalet områden framgår av etikett och 2024 års text.\ncatalog:variable_text:43157:19723:20454\ncatalog:variable_text:43158:19723:20454"
+
+[[statement]]
+kind = "set"
+subject = "set:regional-tillhorighet"
+fields = { "description" = "Regional tillhörighet angiven som län, kommun och församling, i form av kod. Variablerna avser olika regionindelningar, bland annat indelningen 2000 och 2013." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar anger län, kommun och församling; indelningsår framgår av etikett.\ncatalog:variable_text:43131:13514:20454\ncatalog:variable_text:43169:6940:8035"
+
+[[statement]]
+kind = "set"
+subject = "set:telefonnummer"
+fields = { "description" = "Företagets telefonnummer, som första respektive andra nummer." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensamt för alla fyra är telefonnummer 1 och 2 till företaget; kontaktpersonen nämns bara i några.\ncatalog:variable_text:43204:11688:20454\ncatalog:variable_text:43207:16436:20454"

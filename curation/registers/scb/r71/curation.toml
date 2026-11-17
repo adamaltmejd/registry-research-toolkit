@@ -1942,3 +1942,33 @@ kind = "set"
 subject = "overlatare-av-fastighet: var:person-orgnr"
 fields.row_key = true
 evidence = "Row key: person-orgnr is the table's only identifier and names its unit (K1 exact-name list; maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:bebyggelsetyp"
+fields = { "description" = "Typ av bebyggelse på värderingsenheten respektive typ av småhusbebyggelse på taxeringsenheten." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna anger bebyggelsetyp; den allmänna varianten gäller värderingsenheten och de andra småhusbebyggelse på taxeringsenheten.\ncatalog:variable_text:17810:17532:20819\ncatalog:variable_text:17811:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "set:biutrymmesyta-i-smahus"
+fields = { "description" = "Total biutrymmesyta i småhus för taxeringsenheten. Variabeln finns för taxeringsenheter av typ 100 till 299." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har identisk definition.\ncatalog:variable_text:17739:10592:17532"
+
+[[statement]]
+kind = "set"
+subject = "set:byggnad-under-uppforande"
+fields = { "description" = "Anger om byggnaden är under uppförande eller inte." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre medlemmarna har identisk definition.\ncatalog:variable_text:17743:13879:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:produktionsomrade"
+fields = { "description" = "Produktionsområde enligt en indelning av Sverige i produktionsområden." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma definition; varianten för lantbruksfastigheter framgår av etiketten.\ncatalog:variable_text:17785:10592:20819"
+
+[[statement]]
+kind = "set"
+subject = "set:standardpoang"
+fields = { "description" = "Summa standardpoäng för värderingsenheten." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har identisk definition; småhusenheter framgår av etiketten.\ncatalog:variable_text:17791:10592:18628"

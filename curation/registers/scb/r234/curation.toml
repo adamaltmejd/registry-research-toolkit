@@ -900,3 +900,9 @@ kind = "set"
 subject = "labour-cost-survey: var:renr"
 fields.row_key = true
 evidence = "Row key: renr and cfar-nummer identify a row: one row per sampled reporting unit, keyed on its reporting number renr (CFAR number in 1997 to 1998); the organisation number is an attribute (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:naringsgren"
+fields = { "description" = "Klassificering av produktionsenhetens näringsgren (bransch) enligt SNI, på olika detaljeringsnivåer: SNI-avdelning (bokstav) samt 2, 3, 4 och 5 siffror." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma definition; nivån framgår av etiketterna.\ncatalog:variable_text:43288:9862:10227"

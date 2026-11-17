@@ -5610,3 +5610,45 @@ kind = "set"
 subject = "kostnadsenkaten: Tk_avlon"
 fields = { "variable" = "arbetskostnad-anstallda-ej-foretagare-period-17532-20089" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v16988), never delivered together in one table, so they are one variable renamed between releases: TK_av 2016-01-01..2016-12-31; Tk_avlon 2018-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "set:antal-odlingar"
+fields = { "description" = "Antal odlingar på företaget i respektive län (län 1–5). Länet anges i variabeln Län." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma text; ordningsnumret för länet skiljer.\ncatalog:variable_text:62285:17897:19723\ncatalog:variable_text:62288:19358:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:antal-sysselsatta"
+fields = { "description" = "Antal sysselsatta på företaget som avser den huvudsakliga sysselsättningen, totalt eller uppdelat efter kön, ålder, nationalitet, högsta avslutade utbildning, ställning (företagare, övriga, avlönade, oavlönade) och verksamhetsgren (matfisk, rom och yngel, sättfisk)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam första mening; delmängderna framgår av etiketterna.\ncatalog:variable_text:62090:17532:20089\ncatalog:variable_text:62123:16436:17532\ncatalog:variable_text:62389:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:forekomst-av-artvis-odling"
+fields = { "description" = "Anger om företaget bedriver odling av en viss art: alger i havet (salt eller bräckt vatten), alger i sötvatten och ostron." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma frågeform; art och miljö framgår av etikett och text.\ncatalog:variable_text:62282:17532:20089\ncatalog:variable_text:62283:17532:20089\ncatalog:variable_text:62284:16436:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:investeringar"
+fields = { "description" = "Företagets investeringar i vattenbruksverksamheten, exklusive moms och exklusive kostnader för reparation och underhåll. Variablerna avser totalt eller matfisk-, rom- och yngel- respektive sättfiskverksamhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma definition; verksamhetsgren skiljer.\ncatalog:variable_text:62205:16436:17532\ncatalog:variable_text:62395:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:produktion-under-referensaret"
+fields = { "description" = "Anger om det förekommit produktion på företaget under referensåret. Variablerna avser antingen matfisk, rom och yngel respektive sättfisk eller produktionen som helhet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma frågeform; verksamhetsgren skiljer.\ncatalog:variable_text:62228:16436:16801\ncatalog:variable_text:62335:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:produktionens-vattenmiljo"
+fields = { "description" = "Anger om produktionen har utförts i sötvatten eller i havet (salt eller bräckt vatten), för matfisk respektive sättfisk." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nFyra kombinationer av vattenmiljö och verksamhetsgren.\ncatalog:variable_text:62229:16436:17532\ncatalog:variable_text:62315:16436:17532"
+
+[[statement]]
+kind = "set"
+subject = "set:verksamhetens-lan"
+fields = { "description" = "Kod för regional indelning i län för den verksamhet företaget bedriver. Variablerna avser länet utan uppdelning, länet för en viss verksamhetsgren (matfisk, rom och yngel, sättfisk) eller län 1–5, eftersom ett företag kan ha produktion i flera län." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam text ”kod för regional indelning i län”; uppdelning framgår av texter och etiketter.\ncatalog:variable_text:62212:17167:17897\ncatalog:variable_text:62213:16436:17167\ncatalog:variable_text:62216:17897:20089"

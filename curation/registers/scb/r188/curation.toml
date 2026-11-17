@@ -557,3 +557,21 @@ kind = "set"
 subject = "varu-landfordelat-intrastat: var:manad-intrastat"
 fields.row_key = true
 evidence = "Row key: manad-intrastat (Manad) is the period of a row; one delivered file holds several months, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:handelsvolymindex"
+fields = { "description" = "Index för volymutveckling i utrikeshandeln med varor, med basåret satt till 100 (år 2000 respektive år 2015). Indexet beräknas per KN8-kod och flöde ur kvartalets värde i löpande priser uppräknat till årsnivå, samma värde deflaterat med export- eller importprisindex och föregående helårs värde i löpande priser. Index 110 betyder att handelns volym har ökat med 10 procent jämfört med basåret." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma beräkning; basåret skiljer.\ncatalog:variable_text:62088:10592:17167\ncatalog:variable_text:62089:17167:20819"
+
+[[statement]]
+kind = "set"
+subject = "set:produktgrupp-spin"
+fields = { "description" = "Varugruppsindelning enligt SPIN (Svensk ProduktIndelning efter Näringsgren), en klassifikation som härleds från Kombinerade nomenklaturen (KN) på 8-siffernivå. Variablerna avser olika versioner av SPIN: SPIN/SNI 97, SPIN 2002, SPIN 2007 och SPIN 2015." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma klassifikation i olika versioner.\ncatalog:variable_text:62069:9862:15340\ncatalog:variable_text:62070:11323:12418\ncatalog:variable_text:62075:14610:20819"
+
+[[statement]]
+kind = "set"
+subject = "set:varuklassificering-kn"
+fields = { "description" = "Varans kod enligt Kombinerade nomenklaturen (KN), EU:s varuklassificering för statistik över utrikeshandeln och tullsatsen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar är KN-kod.\ncatalog:variable_text:62081:7305:20089\ncatalog:variable_text:62082:17167:20819\ncatalog:variable_text:62085:12784:16071"

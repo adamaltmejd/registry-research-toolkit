@@ -839,3 +839,27 @@ kind = "set"
 subject = "energianvandningen-inom-fiskesektorn: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr and identitetsnummer-for-scb identify a row: one row per fishing business: personnr in 2005, identitetsnummer-for-scb from 2017; vessel signals are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:fartygslangd"
+fields = { "description" = "Fartygets totala längd, för fartyg 1 till 5." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam definition; fartygsnumret skiljer.\ncatalog:variable_text:15390:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "set:fartygsvikt"
+fields = { "description" = "Fartygets vikt i ton, för fartyg 1 till 5." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam definition; fartygsnumret skiljer.\ncatalog:variable_text:15373:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "set:motoreffektnorm"
+fields = { "description" = "Fartygets motoreffektnorm i kW, för fartyg 1 till 5." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam definition; fartygsnumret skiljer.\ncatalog:variable_text:15396:17167:17532"
+
+[[statement]]
+kind = "set"
+subject = "set:signal-ordinal"
+fields = { "description" = "Fartygets identitetsnummer enligt Sveriges skeppslista (signal), för fartyg 1 till 5." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam definition; fartygsnumret skiljer.\ncatalog:variable_text:15405:17167:17532\ncatalog:variable_text:15406:12784:13149"

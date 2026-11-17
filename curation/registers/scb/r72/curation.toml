@@ -1173,3 +1173,9 @@ kind = "set"
 subject = "rivning-av-flerbostadshus: Byggnadsperiod"
 fields = { "variable" = "ursprunglig-byggnadsperiod" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v2298), never delivered together in one table, so they are one variable renamed between releases: ByggAr 1999-01-01..2024-12-31; Byggnadsperiod 2012-01-01..2024-12-31."
+
+[[statement]]
+kind = "set"
+subject = "set:agarkategori"
+fields = { "description" = "Anger om ägaren är en fysisk eller juridisk person samt en finare indelning för juridiska personer." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma definition; indelningsvarianterna framgår av etiketterna.\ncatalog:variable_text:46773:10592:15340"

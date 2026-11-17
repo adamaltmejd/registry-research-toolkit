@@ -2367,3 +2367,45 @@ kind = "set"
 subject = "vaxtskyddsmedelsundersokningen: var:person-orgnr"
 fields.row_key = true
 evidence = "Row key: person-orgnr and addid identify a row: the farm register combines Addid with the organisation number to give a unique farm identity (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:markanpassat-skyddsavstand"
+fields = { "description" = "Hur markanpassat skyddsavstånd har bestämts. Varje variabel är ett svarsalternativ: fasta skyddsavstånd, enligt Naturvårdsverkets rekommendationer, inga skyddsobjekt, inga skyddsavstånd eller annat sätt." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma fråga; varje variabel är ett svarsalternativ.\ncatalog:variable_text:62497:13149:13514\ncatalog:variable_text:62499:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:personlig-skyddsutrustning"
+fields = { "description" = "Vilken personlig skyddsutrustning som användes vid tillredning av sprutvätskan. Varje variabel är ett svarsalternativ: andningsskydd, engångshandskar, flergångshandskar, förkläde eller overall av tätt material, annan skyddsutrustning eller ingen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma fråga; varje variabel är ett svarsalternativ.\ncatalog:variable_text:62507:13149:13514\ncatalog:variable_text:62513:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:radgivning-och-beslutsstod-for-vaxtskydd"
+fields = { "description" = "Vilka former av rådgivning och beslutsstöd som användes för att bestämma bekämpningsbehovet till årets grödor. Varje variabel är ett svarsalternativ, till exempel rådgivare, säljare, växtskyddsbrev, information via internet, datorstyrd modell eller inspektion i fält." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma fråga; varje variabel är ett svarsalternativ.\ncatalog:variable_text:62471:13149:13514\ncatalog:variable_text:62472:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:spill-och-lackage"
+fields = { "description" = "Om spill av preparat eller läckage av sprutvätska har inträffat under året, totalt och uppdelat på var spillet skedde: på påfyllnadsplats, på person, till annan mark eller till vatten." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma fråga; en samlad och fyra platsvarianter.\ncatalog:variable_text:62522:13149:13514\ncatalog:variable_text:62523:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:sprutningens-utforare"
+fields = { "description" = "Vem som utförde sprutningen. Variablerna är svarsalternativen brukare eller anställd på gården, granne eller annan, och maskinstation, samt svaret som helhet och i textform." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma fråga; svarsalternativ och sammanfattande/textsvar.\ncatalog:variable_text:62529:14610:14975\ncatalog:variable_text:62531:13149:13514\ncatalog:variable_text:62535:14610:14975"
+
+[[statement]]
+kind = "set"
+subject = "set:vaxtskyddsmedlens-anvandningsomrade"
+fields = { "description" = "Användningsområde för växtskyddsmedel: om medlet används mot ogräs, svamp, insekter eller sniglar, eller för tillväxtreglering eller betning. Finns som kod och i klartext." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma definition; kod och klartext enligt etiketter.\ncatalog:variable_text:62413:14610:14975\ncatalog:variable_text:62414:13149:13514\ncatalog:variable_text:62502:13149:13514"
+
+[[statement]]
+kind = "set"
+subject = "set:vindanpassat-skyddsavstand"
+fields = { "description" = "Hur vindanpassat skyddsavstånd till omgivningen har beräknats. Varje variabel är ett svarsalternativ: vindmätare, vindriktningsvisare, termometer, tabeller, annat sätt eller inte alls." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma fråga; varje variabel är ett svarsalternativ.\ncatalog:variable_text:62564:13149:13514\ncatalog:variable_text:62567:13149:13514"

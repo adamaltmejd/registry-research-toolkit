@@ -862,3 +862,27 @@ kind = "set"
 subject = "skyddad-natur: var:objectid"
 fields.row_key = true
 evidence = "Row key: objectid identify a row: the unique object number identifies the protected area; names, NVR ids and Natura 2000 site codes are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:beslutsdatum-for-skyddad-natur"
+fields = { "description" = "Datum för fattat beslut om skydd av ett område. I Naturvårdsregistret avser uppgiften ursprungligt beslutsdatum eller datum för senaste beslut. I Natura 2000-registret avser den beslutsdatum för SCI-områden och SPA-områden samt beslut på EU-nivå. Variablerna skiljer sig åt i vilket beslut datumet gäller." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma definitionstext; skillnaden mellan dem framgår av etikett.\ncatalog:variable_text:49893:18627:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:forvaltare"
+fields = { "description" = "Den som ansvarar för skötsel eller förvaltning av det skyddade området. I Naturvårdsregistret avser uppgiften förvaltarens namn, för Natura 2000 den ansvarige för skötseln av området." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma definition och samma operationella text.\ncatalog:variable_text:49888:18627:18628"
+
+[[statement]]
+kind = "set"
+subject = "set:skyddad-areal"
+fields = { "description" = "Areal för ett skyddat område, det vill säga dess rumsliga yta. Variablerna skiljer sig åt i om arealen är den som anges i registret eller är beräknad av SCB." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam definition av areal; registerareal respektive SCB:s beräkning framgår av etikett och text.\ncatalog:variable_text:49891:20088:20089\ncatalog:variable_text:49890:20088:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:syfte-for-skyddat-omrade"
+fields = { "description" = "Syftet med registerobjektet, det vill säga på vilka grunder det har tagits med i registret. Uppgiften avser syftet vid inrättande av det skyddade området och anges som primärt eller preciserat syfte. Uppgiften är inte obligatorisk, och flera objekt saknar den. Registeruttaget innehåller endast syften som avser ‘Tillgodose behov av område för friluftslivet’." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna delar definition och operationell text; primärt respektive preciserat syfte framgår av etikett.\ncatalog:variable_text:49912:20088:20089\ncatalog:variable_text:49923:20088:20089"

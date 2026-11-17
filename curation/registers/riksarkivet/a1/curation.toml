@@ -8981,3 +8981,15 @@ kind = "set"
 subject = "var:arskurs-merit-ak"
 fields = { "description" = "Årskurs för ämnesmeriten, angiven 1–3 till och med VT1987 och 1–4 från HT1987; HT1986–VT1987 förekommer även 4." }
 evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2513: the merge left wordings no default folds.\n\nAK (HT1977–VT1987) och MERIT_AK (HT1987–VT1992) är samma kolumn i tabellen Ämnesmeriter (SMPOST); kodintervallet byter HT1987. Hänvisningen till tjänsteanteckning tas inte med.\ncatalog:variable_text:8462:2738:6025\ncatalog:variable_text:8462:6025:6390\ncatalog:variable_text:8462:6390:7121\ncatalog:variable_text:8462:7121:7486\ncatalog:variable_text:8462:7486:7851\ncatalog:variable_text:8462:7851:8217"
+
+[[statement]]
+kind = "set"
+subject = "set:amnen-per-sokalternativ"
+fields = { "description" = "Kod för ämne per sökalternativ. Uppgiften består av tre delar (ämne 1, 2 och 3) och repeteras för 12 sökalternativ." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam struktur: tre ämnesdelar som repeteras 12 gånger; axlarna ger ämne och position.\ncatalog:variable_text:8625:4564:6390\ncatalog:variable_text:8625:6390:8217"
+
+[[statement]]
+kind = "set"
+subject = "set:studievagskoder"
+fields = { "description" = "Studievägskod enligt SÖ:s standard. Koden är uppdelad i två delar och repeteras tre gånger (studieväg 1–3). Variablerna skiljer sig åt i vilken studieväg och vilken del av koden de anger." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam struktur enligt fältet VAGA; delarna har olika innehåll och beskrivs i respektive variabel.\ncatalog:variable_text:8843:2922:5113\ncatalog:variable_text:8802:4564:5844"

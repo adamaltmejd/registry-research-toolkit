@@ -4110,3 +4110,15 @@ kind = "set"
 subject = "var:regnr"
 fields.identifier = true
 evidence = "REGNR is the vehicle registration number, the id of the vehicle each fordonsreg row describes; it identifies the unit like a personnummer or orgnr (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:fysisk-juridisk-agare"
+fields = { "description" = "Anger om fordonets ägare är en fysisk eller juridisk person. Finns för fordonets ägare, föregående ägare, nästföregående ägare och administrativ ägare." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma fråga för olika ägarled.\ncatalog:variable_text:19514:4017:4018\ncatalog:variable_text:19515:4017:4018\ncatalog:variable_text:19516:4017:4018\ncatalog:variable_text:19517:17166:17167"
+
+[[statement]]
+kind = "set"
+subject = "set:kopplingsanordning"
+fields = { "description" = "Fordonets kopplingsanordning för att kunna kopplas ihop med en släpvagn. Variablerna anger vilka kopplingsmöjligheter fordonet har, eller, när det finns två olika kopplingar, typen av den första respektive den andra kopplingen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar gäller koppling till släpvagn; skillnaden är samlad uppgift eller uppdelning på första och andra kopplingen.\ncatalog:variable_text:19546:4017:4018\ncatalog:variable_text:19547:10956:10957\ncatalog:variable_text:19548:10956:10957"

@@ -1483,3 +1483,51 @@ kind = "set"
 subject = "lmed: var:expeditionsdatum"
 fields.row_key = true
 evidence = "Row key: expeditionsdatum (EDATUM) is the date of the event a row records; one unit can have several events in the table, so the key is the unit id plus the event date; the delivered columns cannot always tell two events of one unit on that date apart, so rows are not guaranteed unique (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:apotekens-inkopspris"
+fields = { "description" = "Apotekens inköpspris (AIP) som beslutats av TLV för artiklar som ingår i förmånssystemet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma definition.\ncatalog:variable_text:63862:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:apotekens-utforsaljningspris"
+fields = { "description" = "Apotekens pris för en artikel. Variablerna anger apotekens utförsäljningspris (AUP) som beslutas av TLV för artiklar som ingår i förmånssystemet, respektive pris per förpackning inklusive moms enligt varuregistret." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensamt är utförsäljningspriset; moms och källa varierar.\ncatalog:variable_text:63863:12965:2932897\ncatalog:variable_text:63864:12965:14610"
+
+[[statement]]
+kind = "set"
+subject = "set:bestallningsstoppsrang"
+fields = { "description" = "Rangordning vid utbytbarhet från TLV för beställningsstopp, för en artikels medverkan i en utbytesperiod. Variablerna anger aktuell respektive historisk rang." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna är rangordning från TLV; aktuell eller historisk framgår av etikett.\ncatalog:variable_text:63887:12965:2932897\ncatalog:variable_text:63888:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:definierade-dygnsdoser"
+fields = { "description" = "Definierad dygnsdos (DDD), den genomsnittliga dygnsdosen då ett läkemedel används av en vuxen vid läkemedlets huvudindikation. Dosen sätts av WHO. Variablerna anger DDD-värdet och dess enhet, antalet DDD per förpackning och antalet uthämtade DDD." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar bygger på begreppet DDD; vad som mäts skiljer sig per variabel.\ncatalog:variable_text:63805:12965:2932897\ncatalog:variable_text:63786:12965:2932897\ncatalog:variable_text:63825:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:expeditionskostnad"
+fields = { "description" = "Kostnadsbelopp exklusive moms för varor som ingår i läkemedelsförmånen: det belopp regionen betalar, den merkostnad patienten betalar vid val av ett dyrare alternativ, samt totalkostnaden för patient och region. Negativa värden förekommer när uppgifter har korrigerats; den felaktiga raden krediteras då genom en ny rad med negativt värde." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre är belopp exklusive moms med samma korrigeringsregel.\ncatalog:variable_text:63847:12965:2932897\ncatalog:variable_text:63850:12965:2932897\ncatalog:variable_text:63898:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:lan-kommun-forsamling"
+fields = { "description" = "Patientens folkbokföringsort vid expedieringstillfället, angiven som län och kommun eller som län, kommun och församling." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna anger folkbokföringsort; församling togs bort från 2016.\ncatalog:variable_text:63845:12965:16801\ncatalog:variable_text:63846:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:periodens-vara-rang"
+fields = { "description" = "Rangordning vid utbytbarhet från TLV för periodens vara, för en artikels medverkan i en utbytesperiod. Variablerna anger aktuell respektive historisk rang." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna är rangordning från TLV; aktuell eller historisk framgår av etikett.\ncatalog:variable_text:63891:12965:2932897\ncatalog:variable_text:63892:12965:2932897"
+
+[[statement]]
+kind = "set"
+subject = "set:specialistutbildningskod"
+fields = { "description" = "Kod från registret över legitimerad hälso- och sjukvårdspersonal (HOSP) som anger förskrivarens specialistkompetens. Koderna 1, 2 och 3 anger förskrivarens senast, näst senast respektive tredje senast genomförda specialistutbildning." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam definition; ordningen avgör vilken utbildning koden avser.\ncatalog:variable_text:63877:12965:2932897\ncatalog:variable_text:63878:12965:2932897\ncatalog:variable_text:63879:12965:2932897"

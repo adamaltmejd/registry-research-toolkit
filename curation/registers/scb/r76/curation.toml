@@ -906,3 +906,9 @@ kind = "set"
 subject = "nybyggnad-av-bostader: var:fastighetsbeteckning"
 fields.row_key = true
 evidence = "Row key: fastighetsbeteckning identify a row: one row per new-build project on a property, identified only by the property designation (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:upplatelseform"
+fields = { "description" = "Det sätt på vilket en boende förfogar över sin bostad." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre medlemmar har identisk definition; namnvarianterna avser olika perioder.\ncatalog:variable_text:14527:12418:20089"

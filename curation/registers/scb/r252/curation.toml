@@ -1948,3 +1948,15 @@ kind = "set"
 subject = "set:hektarskord-av-potatis"
 fields = { "description" = "Skörd per skördad hektar av färskpotatis, höst-/vinterpotatis och stärkelsepotatis. För färskpotatis och höst-/vinterpotatis anges även den ekologiska delen av skörden, som används för att beräkna den konventionella skörden, samt skörden från certifierad ekologisk odling och från odling under omställning till ekologisk odling." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensamt är hektarskörd av potatis; potatistyp och ekologisk status framgår av etikett. De lagrade texterna för certifierad respektive omställning är därmed täckta.\ncatalog:variable_text:49229:16801:19358\ncatalog:variable_text:49245:16801:19358\ncatalog:variable_text:49303:16801:19358\ncatalog:variable_text:49323:16801:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:lilla-n"
+fields = { "description" = "Antal företag som är utvalda i det aktuella företagets stratum. Variablerna avser matpotatisurvalet, det ekologiska matpotatisurvalet respektive stärkelsepotatisurvalet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam definition; urvalet framgår av etikett och operationell text.\ncatalog:variable_text:49247:16801:19358\ncatalog:variable_text:49280:16801:19358\ncatalog:variable_text:49320:16801:19358"
+
+[[statement]]
+kind = "set"
+subject = "set:skordeomrade"
+fields = { "description" = "Skördeområde enligt indelningen i LBR (koderna 0111–2521). De två första siffrorna anger huvudsakligt län, den tredje hur många län som skär skördeområdet och den fjärde är ett löpnummer inom länet. Variablerna anger skördeområdet där odlingen finns för matpotatis, ekologisk matpotatis och stärkelsepotatis, samt det område där arealen finns och som används vid skattningarna." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam definition av skördeområdeskoden; skillnaden är gröda och användning.\ncatalog:variable_text:49251:16801:19358\ncatalog:variable_text:49317:16801:19358"
