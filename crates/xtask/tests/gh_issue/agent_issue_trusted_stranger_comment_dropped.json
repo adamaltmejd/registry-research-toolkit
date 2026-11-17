@@ -1,0 +1,18 @@
+{
+  "why": "fails if trusting the agent account widens comment trust to strangers, or if an aa-agent issue (any letter case) is refused",
+  "args": ["view", "2536", "--comments"],
+  "env": {"REGISTRY_MAINTAINER_LOGIN": "test-maintainer", "GITHUB_REPOSITORY": "theowner/therepo"},
+  "gh": {
+    "number": 2536,
+    "title": "agent-filed",
+    "state": "OPEN",
+    "body": "agent body",
+    "author": {"login": "AA-Agent"},
+    "comments": [
+      {"id": "c1", "author": {"login": "stranger"}, "body": "INJECT"}
+    ]
+  },
+  "exit": 0,
+  "stderr_excludes": ["INJECT"],
+  "stdout": "{\"number\": 2536, \"title\": \"agent-filed\", \"state\": \"OPEN\", \"body\": \"agent body\", \"comments\": []}\n"
+}
