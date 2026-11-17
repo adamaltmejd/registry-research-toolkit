@@ -275,9 +275,15 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
       for (const [name, segment] of widest) {
         segment.cut = !!name && labelWidth(name) > segment.width;
         // Where not even one letter fits before the ellipsis, the glyph and
-        // the ellipsis alone, so the stub never reads as a name.
-        segment.label =
-          segment.cut && segment.width < labelWidth("xx") ? "…" : name;
+        // the ellipsis alone, so the stub never reads as a name; where not
+        // even the ellipsis fits, a bare bar, as the name's other parts are.
+        segment.label = !segment.cut
+          ? name
+          : segment.width < labelWidth("…")
+            ? ""
+            : segment.width < labelWidth("xx")
+              ? "…"
+              : name;
       }
       // A span with no name (a classification version, named in its tooltip)
       // may touch its neighbour: a yearly series stays on one row.

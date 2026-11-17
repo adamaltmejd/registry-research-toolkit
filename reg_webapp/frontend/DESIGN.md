@@ -967,15 +967,16 @@ Time is the axis every relation is drawn on.
   drawn at their real half-open dates, so school years abut instead of sharing a year
   cell; a one-day period (a 31 December snapshot) takes its calendar year, as its text
   does (#2408, 2026-11-11). Where a row joins several spellings, each name sits in its
-  own widest part, and where one is cut its tooltip lists each column with its years
-  (new rule, proposed by the implementer). The spellings sharing the row say the
+  own widest part, its other parts bare bars, and where one is cut its tooltip lists
+  each column with its years (new rule, proposed by the implementer). The spellings sharing the row say the
   rename; it has no mark and no sentence (maintainer, relayed by the Operator
   2026-11-17). A span's column name sits inside its widest delivered part with its
   glyph, cut with an ellipsis where the part is too narrow, never set beside the span:
   a name outside the box lost its glyph and repeated beside the next lane (maintainer
   finding, IFAU, relayed by the Operator 2026-11-17; this overturns "never cut",
   2026-11-04). Where not even one letter fits before the ellipsis, the part shows the
-  glyph and the ellipsis alone (new rule, proposed by the implementer). No list of the
+  glyph and the ellipsis alone, and where not even those fit, a bare bar (new rule,
+  proposed by the implementer). No list of the
   files a column is delivered in: the lane already names the table (maintainer, dogfood
   2026-11-05, #2321). A span is the column pill stretched over its years: the pill's height,
   padding, font and column glyph, the column name only; the axis gives the years, which
@@ -1005,7 +1006,8 @@ Time is the axis every relation is drawn on.
   shows a RAC `Tooltip` with no delay only where the span's own text is cut off
   (maintainer, dogfood 2026-11-05, #2321; the strict reading, maintainer ruling,
   2026-11-10): on a column span where the pill cuts a name, with the whole name and its
-  years; never a whole name with only its
+  years. A span is one target, so a span joining several names opens it from any of
+  its parts once one name is cut (new rule, proposed by the implementer); never a whole name with only its
   years, which the axis already gives (maintainer finding, IFAU, relayed by the Operator
   2026-11-17). A classification version (a span with no column name, which carries its
   years where they fit) shows it only where they do not. The pill's own hover text is
