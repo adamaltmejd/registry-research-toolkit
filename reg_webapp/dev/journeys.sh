@@ -110,7 +110,7 @@ j_browse() {
 # (#2398), a register opened from them lists fewer than all its variables (the text
 # stayed behind as a filter: Andra registret's "Kod" rows do not match "andra"), the
 # palette stops finding a variable by name and opening its page, the variables
-# column's filter box stops narrowing its column (8 rows in Basregistret, 3 match
+# column's filter box stops narrowing its column (9 rows in Basregistret, 3 match
 # "in"), or the box keeps its text when another register opens.
 j_search() {
 	visit / && fill searchbox "Search registers, variables" andra &&
@@ -120,7 +120,7 @@ j_search() {
 		fill searchbox "Search registers, variables" kön &&
 		press menuitem "Kön Basregistret" &&
 		wait_url "**/catalog/demo/bas/kon" && see heading "Kön" &&
-		fill searchbox "Filter variables" in && wait_text "3 of 8" &&
+		fill searchbox "Filter variables" in && wait_text "3 of 9" &&
 		see option "Inkomstmått" && no_tree 'option "Kön"' &&
 		press row "Hushållsregistret" && wait_url "**/catalog/demo/hush" &&
 		see option "Antal personer" &&

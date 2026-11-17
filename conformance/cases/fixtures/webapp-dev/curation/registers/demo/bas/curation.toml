@@ -131,3 +131,48 @@ kind = "set"
 subject = "bas: var:lopnr"
 fields.row_key = true
 evidence = "Synthetic fixture: the column identifies the table's row."
+
+# An ordering axis (crates/DESIGN.md, "Sets and tags"): ranks in words, two members
+# sharing one, so both the rank and the name compare number-aware.
+[[statement]]
+kind = "set"
+subject = "set:yrke"
+fields.label = "Yrke"
+fields.axes = [{ id = "rank", label = "Förvärvskälla" }]
+evidence = "Synthetic ranked variants exercise number-aware member order."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-1"
+fields.sets = ["yrke"]
+evidence = "Synthetic ranked variants exercise number-aware member order."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-1"
+fields.facets = { rank = { value = "10", label = "tionde största" } }
+evidence = "Synthetic ranked variants exercise number-aware member order."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-2"
+fields.sets = ["yrke"]
+evidence = "Synthetic ranked variants exercise number-aware member order."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-2"
+fields.facets = { rank = { value = "2", label = "näst största" } }
+evidence = "Synthetic ranked variants exercise number-aware member order."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-10"
+fields.sets = ["yrke"]
+evidence = "Synthetic ranked variants exercise number-aware member order."
+
+[[statement]]
+kind = "set"
+subject = "var:yrke-10"
+fields.facets = { rank = { value = "2", label = "näst största" } }
+evidence = "Synthetic ranked variants exercise number-aware member order."
