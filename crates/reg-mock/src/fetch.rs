@@ -67,7 +67,8 @@ impl Catalog {
     }
 
     /// One `tools/call`: its `structuredContent`, the document the HTTP API returns.
-    /// Waits out a 429 or 503 for its `Retry-After` (one second without one).
+    /// Retries a 408, 429 or 5xx gateway reply, as `curl --retry` did, after its
+    /// `Retry-After` (one second without one).
     ///
     /// # Errors
     ///
@@ -90,7 +91,7 @@ impl Catalog {
                 .send(&body)
                 .map_err(network)?;
             let status = response.status().as_u16();
-            if matches!(status, 429 | 503) && attempt < ATTEMPTS {
+            if matches!(status, 408 | 429 | 500 | 502 | 503 | 504) && attempt < ATTEMPTS {
                 let wait = response
                     .headers()
                     .get("retry-after")
@@ -132,7 +133,10 @@ impl Catalog {
             _ => Err(vec![Refusal::new(
                 "catalog_unreadable",
                 &at,
-                format!("HTTP {status}, not a tool result: {reply}"),
+                format!(
+                    "HTTP {status}, not a tool result: {}",
+                    reply.to_string().chars().take(300).collect::<String>()
+                ),
             )]),
         }
     }

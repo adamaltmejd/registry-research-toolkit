@@ -248,6 +248,8 @@ This is the complete list of boundaries a test may assert at.
   | Artifact → HTTP and MCP                  | `openapi.json` snapshot + request → response goldens run against the Rust server over the fixture DB                 |
   | `project_data.json` → validation result  | `crates/reg-core/tests/project/corpus/` run by the Rust consumers                                                    |
   | Project + artifact → logical order       | the order cases in `conformance/cases/order/`: project + fixture → expected logical order or `order_blocked`         |
+  | Catalog MCP → saved mock answers         | `crates/reg-mock/tests/fixtures/fetch_catalog.json`: a stub catalog's calls and documents → the saved answer files   |
+  | Mock spec → mock files                   | `crates/reg-mock/tests/fixtures/*.spec.json` → repeated `generate` bytes                                             |
   | Candidate output → export gate result    | `reg_export_gate/tests/cases/`: schema, policy and candidate folder → pass and receipt, or refusal code and findings |
   | Curation TOML → load or located failure  | committed TOML must load; malformed cases name the locator                                                           |
   | FQID / period grammars, interval algebra | input → expected cases and round-trip snapshots in `crates/reg-core/tests/`                                          |
