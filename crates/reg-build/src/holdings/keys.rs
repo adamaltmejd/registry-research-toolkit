@@ -39,7 +39,7 @@ pub(super) fn validate_shapes(holding: i64, keys: &[input::RowKey]) -> Result<()
 
 /// Whether holding `holding`'s physical period column reaches an order with no mapping
 /// of its own: a stored key reads its time from it
-/// ([`reg_core::manifest::key_reads_period_column`]) over days the table places, so
+/// ([`reg_core::placement::key_reads_period_column`]) over days the table places, so
 /// materialization adds it as a row key there.
 pub(super) fn period_column_offered(db: &Connection, holding: i64) -> Result<bool> {
     let stored: String = db.query_row(
@@ -57,7 +57,7 @@ pub(super) fn period_column_offered(db: &Connection, holding: i64) -> Result<boo
     )?;
     for key in stored
         .iter()
-        .filter(|key| reg_core::manifest::key_reads_period_column(key))
+        .filter(|key| reg_core::placement::key_reads_period_column(key))
     {
         let scope = key["period"].as_str().map(compile::periods).transpose()?;
         if scope.as_ref().map_or(!spans.is_empty(), |scope| {

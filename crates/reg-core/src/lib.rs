@@ -28,6 +28,7 @@ mod interval;
 pub mod issue;
 pub mod manifest;
 mod natural;
+pub mod placement;
 pub mod project;
 mod structural;
 mod validation;

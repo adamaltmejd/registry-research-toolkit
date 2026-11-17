@@ -104,11 +104,12 @@ pub(crate) fn run(args: impl Iterator<Item = String>) -> Result<()> {
             )
         };
         std::fs::rename(&staged, &out)?;
-        eprintln!("{summary}");
         // A warning, never a refusal: holds and unplaced columns are valid recorded states.
         for line in orderable::warnings(&orderable) {
             eprintln!("{line}");
         }
+        // Last: steward workflows read the final line as the build summary.
+        eprintln!("{summary}");
         Ok(())
     })
 }

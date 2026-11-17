@@ -245,7 +245,12 @@ fn totals(p: &Pair, old: &Census, new: &Census) -> Result<Vec<Item>> {
         format!("blocked tables: {} → {}", bo.len(), bn.len()),
     );
     counts.push(if bo == bn { shown(item) } else { item });
-    for (name, a, b) in [("newly blocked", &bn, &bo), ("unblocked", &bo, &bn)] {
+    // A blocked table that left the census is a removed column set, listed below, not
+    // an unblocked table.
+    let census: BTreeSet<(Option<String>, String)> =
+        new.keys().map(|(s, t, _)| (s.clone(), t.clone())).collect();
+    let still: BTreeSet<_> = bo.intersection(&census).cloned().collect();
+    for (name, a, b) in [("newly blocked", &bn, &bo), ("unblocked", &still, &bn)] {
         let list: Vec<Value> = a
             .difference(b)
             .map(|(s, t)| json!({"schema": s, "table": t}))

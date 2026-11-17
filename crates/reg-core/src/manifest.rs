@@ -210,16 +210,6 @@ impl StorageFamily {
     }
 }
 
-/// Whether a declared row key (one entry of a holding table's `key_requirements`) takes
-/// its time from the table's physical period column. That column then joins an order's
-/// file as a row key with no mapping of its own, wherever the key's scope meets the
-/// file's days; a held key supplies nothing. Materialization and the holdings build's
-/// orderability count both read this (crates/DESIGN.md, "Orderable columns").
-#[must_use]
-pub fn key_reads_period_column(key: &serde_json::Value) -> bool {
-    key["hold"].is_null() && key["period_key"].as_str() == Some("column")
-}
-
 /// `ordered`: requested; `row_key`: a key the file needs; `carried`: the parent table's key copied into this one.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[cfg_attr(feature = "openapi", derive(utoipa::ToSchema), schema(as = ColumnRole))]

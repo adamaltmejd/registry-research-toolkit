@@ -2004,44 +2004,54 @@ CSV errors identify input roles and row numbers without echoing private source v
 #### Orderable columns
 
 The goal is every delivered column orderable (maintainer 2026-11-17), so every holdings
-build measures how far it is. An order reaches a delivered column only through its
-`holding_mapping` rows: the server's possession and `materialize_order`'s placements
-read nothing else, and `reg-build verify` has already cleared the other refusals that
-path can raise (keys, storage, file names). A census column is therefore orderable when
-it has a mapping row, or is the table's period column and an unheld key reads its time
-from it (`period_key = "column"`) over days the table places: materialization adds that
-column as a row key with no mapping. Materialization, `reg-build verify` and this count
-share that rule (`reg_core::manifest::key_reads_period_column`, and the holdings-side
-`period_column_offered`). Every other column gets exactly one reason, from what the compiler
-recorded, table-level first so that a held row key's stamped column holds count once,
-under the key:
+build measures how far it is. Orderable is what `materialize_order` would put in a file
+for an order of everything the steward holds, derived from its own selection, not
+re-stated: `reg_core::placement` holds the placement query and the projection fold
+materialization selects with (`placements_sql`, `select`), and the count runs them for
+every (table, variable) over all days, every database and every lane. The builder and
+the reader share only `reg-core` (ARCHITECTURE.md), so the rule lives there rather than
+the builder calling the reader. A column a selected placement names is orderable. So is
+a table's period column when an unheld key reads its time from it
+(`period_key = "column"`, `reg_core::placement::key_reads_period_column`) over days the
+table places and the table has a selected placement: materialization adds it as a row
+key with no mapping (`period_column_offered`, shared with `reg-build verify`).
+`reg-build verify` has already cleared the other refusals that path can raise (keys,
+storage, file names).
 
-| Reason | Recorded as | Decided |
+A projection column whose every placement its parent also places (`select` keeps none
+of it) is `delivered_through_parent`: no order selects its file, the parent delivers the
+data, and it counts neither as orderable nor as a gap. Every other column that is not
+orderable gets exactly one reason, from what the compiler recorded, table-level first so
+that a held row key's stamped column holds count once, under the key:
+
+| Reason | Recorded as | Gap |
 | --- | --- | --- |
-| `table_excluded`, `table_superseded`, `table_lookup` | the table's disposition | yes |
-| `table_unknown` | disposition `unknown` | no |
-| `row_key_held` | a `hold` in the table's `key_requirements` | no |
-| `column_unmapped` | column disposition `unmap` | yes |
-| `column_held` | column disposition `hold`, or a `mapping_held` notice | no |
-| `ambiguous` | an `ambiguous_delivered_owners` or `ambiguous_catalog_segment` notice | no |
-| `unmatched` | an `unmatched` or `mapping_missing` notice | no |
-| `other` | none of these | no |
+| `delivered_through_parent` | placements `select` drops for the parent's | no |
+| `table_excluded`, `table_superseded`, `table_lookup` | the table's disposition | no |
+| `table_unknown` | disposition `unknown` | yes |
+| `row_key_held` | a `hold` in the table's `key_requirements` | yes |
+| `column_unmapped` | column disposition `unmap` | no |
+| `column_held` | column disposition `hold`, or a `mapping_held` notice | yes |
+| `ambiguous` | an `ambiguous_delivered_owners` or `ambiguous_catalog_segment` notice | yes |
+| `unmatched` | an `unmatched` or `mapping_missing` notice | yes |
+| `other` | none of these | yes |
 
-A decided reason is a stated decision not to order the column, reported apart from the
-work still owed. A table with no orderable column and some undecided reason is blocked
-as a whole: by `row_key_held` (with each key's hold and follow-up), `table_unknown`, or
-else `no_orderable_column`.
+A gap is work still owed; the rest are accounted for (a parent delivers them, or a
+stated decision not to order them). A table with no orderable column and some gap is
+blocked as a whole: by `row_key_held` (with each key's hold and follow-up),
+`table_unknown`, or else `no_orderable_column`.
 
-`reg-build holdings` prints this as warnings after its summary line (totals, columns and
-tables per reason, each blocked table) and never refuses on it: a hold is a valid
-recorded state. With `--report` the same numbers go to the report's `orderability`
-object: `columns`, `orderable`, `not_orderable`, `decided`, `gaps` (not orderable and not
-decided), `reasons` (`{reason: {columns, decided}}`) and `tables`, one entry per table
-with a column that is not orderable (`schema`, `table`, its `routes` table pids,
-`columns`, `orderable`, `reasons` by count and `blocked`, null or `{reason, holds}`).
-The steward report is the steward's, so it names its physical tables. One classifier
-(`reg-build/src/holdings/orderable.rs`) serves the build, the report and
-`reg-build diff --holdings`.
+`reg-build holdings` prints this as warnings (totals, columns and tables per reason,
+each blocked table) before its summary line, which stays last since steward workflows
+read the final line, and never refuses on it: a hold is a valid recorded state. With
+`--report` the same numbers go to the report's `orderability` object: `columns`,
+`orderable`, `not_orderable`, `gaps`, `accounted`, `reasons` (`{reason: {columns,
+gap}}`) and `tables`, one entry per table with a column that is not orderable
+(`schema`, `table`, its `routes` table pids, `columns`, `orderable`, `reasons` by count,
+`blocked`, null or `{reason, holds}`, and `through`, the parent table that delivers its
+`delivered_through_parent` columns). The steward report is the steward's, so it names
+its physical tables. One classifier (`reg-build/src/holdings/orderable.rs`) serves the
+build, the report and `reg-build diff --holdings`.
 
 #### Census reader renames and rewrites
 

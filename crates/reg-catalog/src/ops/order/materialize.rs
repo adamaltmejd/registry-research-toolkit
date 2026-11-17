@@ -19,6 +19,7 @@ use reg_core::manifest::{
     Mode, ProjectIdentity, Provenance, Range, Ref, Role, RowFilter, Slot, Storage, StorageFamily,
     safe_file_name, stata_name,
 };
+use reg_core::placement::Placement;
 use reg_core::project::{ColumnType, ExtractFormat, ProjectData};
 use rusqlite::{Connection, named_params};
 use serde_json::Value;
@@ -99,16 +100,6 @@ pub(super) fn manifest(
         },
     };
     build(server, held, project, order, provenance)
-}
-
-/// One accepted placement of a logical (table, variable) in a physical column.
-#[derive(Clone)]
-struct Placement {
-    holding: i64,
-    projection_of: Option<i64>,
-    column: i64,
-    days: Days,
-    caveat: Option<String>,
 }
 
 /// A physical table with what a file needs of it.
@@ -653,11 +644,9 @@ fn not_in_database(
     Ok(())
 }
 
-/// The files an entry draws on, for every query over holding table `h` with
-/// `:release` bound to the entry's: an entry of one release (a shared day of a
-/// concurrent table) draws only on the files that state that release, for its
-/// placements and for the evidence of its gaps alike.
-const LANE: &str = "(:release IS NULL OR h.release = :release)";
+/// The files an entry draws on ([`reg_core::placement::LANE`]), for its placements and
+/// for the evidence of its gaps alike.
+const LANE: &str = reg_core::placement::LANE;
 
 /// The rows of `sql` for `entry` in database `space` (every database when `None`), with
 /// `:table`, `:variable`, `:space` and `:release` bound and `{LANE}` spelled out.
@@ -695,15 +684,7 @@ fn placements(
 ) -> Result<Vec<Placement>, Error> {
     let found: Vec<Placement> = rows(
         held,
-        &format!(
-            "SELECT h.id, h.projection_of, c.id, m.start, m.end, m.caveat
-             FROM holding_mapping m JOIN holding_column c ON c.id = m.column_id
-               JOIN holding_table h ON h.id = c.holding_id
-             WHERE m.table_pid = :table AND m.variable_pid = :variable
-               AND m.start < :hi AND m.end > :lo
-               AND (:space IS NULL OR h.space = :space) AND {LANE}
-             ORDER BY h.id, c.ordinal, m.start"
-        ),
+        &reg_core::placement::placements_sql(),
         named_params! {
             ":table": table,
             ":variable": variable,
@@ -722,22 +703,7 @@ fn placements(
             })
         },
     )?;
-    let mut covered: BTreeMap<i64, Vec<Days>> = BTreeMap::new();
-    for p in &found {
-        covered.entry(p.holding).or_default().push(p.days);
-    }
-    let mut out = Vec::new();
-    for p in found {
-        let Some(parent) = p.projection_of.and_then(|parent| covered.get(&parent)) else {
-            out.push(p);
-            continue;
-        };
-        // A remainder can lie wholly outside the request (a parent-covered request).
-        for days in overlap(&minus(&[p.days], &merge(parent.clone())), &[days]) {
-            out.push(Placement { days, ..p.clone() });
-        }
-    }
-    Ok(out)
+    Ok(reg_core::placement::select(found, days))
 }
 
 fn holding(held: &Connection, id: i64) -> Result<Holding, Error> {
@@ -1263,7 +1229,7 @@ fn keys(
             }
             // The physical period column is a held row key wherever an active
             // declaration supplies its time from it; it places no logical variable.
-            if reg_core::manifest::key_reads_period_column(requirement)
+            if reg_core::placement::key_reads_period_column(requirement)
                 && let Some((column, ..)) = &holding.period_column
             {
                 draft
