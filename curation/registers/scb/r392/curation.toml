@@ -824,6 +824,35 @@ subject = "var:ersattning-resa-utomlands-bosatta"
 fields = { "sets" = ["kostnadsersattningar"] }
 evidence = "Maintainer-approved Opus audit correction: Exclusion over-read. Inclusion names 'ersättning för resor till och från Sverige' and the variable is on the 4-item candidate list; the 'förmån' wording does not make it a förmånsvärde.\naudit:7f56375a3b6d4605f18b6d3b9d85ab59706553d4ab12c7aa5f057ead218bd5c9:row:30\ncatalog:03f53feccdf0c38a2a106feac7371fbb6e3e83261caa9d4a9640e7f796cbc3cd:variable:1380"
 
+# Wage-file columns SCB delivers in the social-benefit files without documenting them there (Operator plan 2026-11-17).
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi-sociala-ersattningar: ASTNR @2019..2023 where key = 'v17'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Arbetsställenummer", "definition" = "Identitetsbegrepp för arbetsställe. Arbetsställenumret ger tillsammans med organisationsnummer en identitet för arbetsställe.", "type" = "integer", "sensitive" = false, "identifier" = true } }
+evidence = "SCB delivers ASTNR in the final monthly social-benefit files for 2019-2023. SCB's Registerinformation export documents the social-benefit table for 2019-2020 only, without this column. Same column and key as in the wage table (private:ev-3855); label, definition and type follow the export's 2020 edition there. Maintainer rulings 2026-11-09 (provider-delivered content extends the global register) and 2026-11-14 (delivered data wins over documentation)."
+caveat = "Not in the social-benefit table's documentation: the column rests on the delivered files."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi-sociala-ersattningar: KONTROLLSTATUS @2019..2023"
+fact = { "entity" = "occurrence", "fields" = { "type" = "text", "label" = "Kontrollstatus", "definition" = "Status för SCB:s granskning av individuppgiften (koderna KONTROLLERAD, FARDIGBEARBETAD_MAN, FARDIGBEARBETAD_MASK, SKA_ATGARDAS). SCB dokumenterar inte kolumnen.", "sensitive" = false, "identifier" = false } }
+evidence = "SCB delivers KONTROLLSTATUS in the final monthly social-benefit files for 2019-2023, as in the wage files. SCB documents the column in neither table; label and definition follow the wage table's assertion (private:ev-3631). Maintainer rulings 2026-11-09 (provider-delivered content extends the global register) and 2026-11-14 (delivered data wins over documentation)."
+caveat = "Not in SCB's documentation: the column rests on the delivered files."
+
+[[statement]]
+kind = "set"
+subject = "individuppgifter-agi-sociala-ersattningar: KONTROLLSTATUS @2019..2023"
+fields = { "variable" = "kontrollstatus" }
+evidence = "The social-benefit files' KONTROLLSTATUS is the same delivered column as the wage files' (SCB's review status of the individual record, same codes); an assertion without a source key gets its own statement key, so it joins the variable explicitly. Maintainer rulings 2026-11-09 (provider-delivered content extends the global register) and 2026-11-14 (delivered data wins over documentation)."
+
+[[statement]]
+kind = "assert"
+subject = "individuppgifter-agi-sociala-ersattningar: PeOrgNr @2021..2023 where key = 'v56'"
+fact = { "entity" = "occurrence", "fields" = { "label" = "Person-/organisationsnummer", "definition" = "Identitetsbegrepp för juridiska enheter. För juridiska personer tilldelas organisationsnummer av Bolagsverket, Skatteverket, Kammarkollegiet, Lantmäteriet, Länsstyrelse eller SCB, beroende på bolagsform. För fysiska personer med näringsverksamhet används personnumret.", "type" = "text", "length" = 12, "sensitive" = true, "identifier" = true } }
+evidence = "SCB documents PeOrgNr in the social-benefit table for 2019-2020, and delivers it in the final monthly social-benefit files for 2021-2023, pseudonymised as a serial number. Same column and key as in the wage table (private:ev-3883); label, definition and type follow the export's 2020 edition. Maintainer rulings 2026-11-09 (provider-delivered content extends the global register) and 2026-11-14 (delivered data wins over documentation)."
+caveat = "SCB's Registerinformation export documents the social-benefit file for 2019-2020 only. The years 2021-2023 rest on the delivered files. The delivery carries it pseudonymised as a serial number."
+
 [[statement]]
 kind = "set"
 subject = "set:avdragen-inkomstskatt"
