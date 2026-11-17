@@ -52,23 +52,23 @@ const compare = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
  * column's identity: MONA's SQL Server reads column names without regard to
  * case, so `Persid` and `PersId` are one column. A steward's yearly files of
  * one table are the same column delivered in several files; one name in two
- * releases that share a year is two columns, each over its own years. A
- * column delivered under several casings shows its latest delivery's (the
- * latest end, then the latest start), the name a researcher meets in the
- * newest file; a tie takes the first in code-point order, so the API's order
- * never decides. */
+ * releases that share a year is two columns, each over its own years. Every
+ * column of one folded name in a table, across its releases (SCB's yearly
+ * releases spell `AntalBarn0` and `antalbarn0`), shows one spelling, that
+ * of its latest delivery (the latest end, then the latest start), the name a
+ * researcher meets in the newest file; a tie takes the first in code-point
+ * order, so the API's order never decides. */
 export function variableColumns(
   segments: readonly CatalogSegment[],
 ): VariableColumn[] {
   const columns = new Map<string, VariableColumn>();
-  const latest = new Map<string, [string, string]>();
+  // Per table and folded name: the latest delivery's end and start, and its
+  // spelling.
+  const latest = new Map<string, [string, string, string]>();
   for (const segment of segments) {
     const release = segment.release ?? null;
-    const id = JSON.stringify([
-      segment.table,
-      release,
-      foldIdentity(segment.column),
-    ]);
+    const folded = foldIdentity(segment.column);
+    const id = JSON.stringify([segment.table, release, folded]);
     let column = columns.get(id);
     if (!column) {
       column = {
@@ -81,16 +81,23 @@ export function variableColumns(
       columns.set(id, column);
     }
     column.segments.push(segment);
-    const at: [string, string] = [
+    const name = JSON.stringify([segment.table, folded]);
+    const at: [string, string, string] = [
       segment.period.end ?? "9999-12-31",
       segment.period.start ?? "0001-01-01",
+      segment.column,
     ];
-    const seen = latest.get(id);
-    const order = seen ? compare(at[0], seen[0]) || compare(at[1], seen[1]) : 1;
-    if (order > 0 || (order === 0 && segment.column < column.spelling)) {
-      latest.set(id, at);
-      column.spelling = segment.column;
-    }
+    const seen = latest.get(name);
+    const order = seen
+      ? compare(at[0], seen[0]) ||
+        compare(at[1], seen[1]) ||
+        compare(seen[2], at[2])
+      : 1;
+    if (order > 0) latest.set(name, at);
+  }
+  for (const column of columns.values()) {
+    const name = JSON.stringify([column.table, foldIdentity(column.spelling)]);
+    column.spelling = latest.get(name)?.[2] ?? column.spelling;
   }
   return [...columns.values()];
 }

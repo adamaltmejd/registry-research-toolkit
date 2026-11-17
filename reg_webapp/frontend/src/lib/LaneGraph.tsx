@@ -169,6 +169,31 @@ export interface LaneBreak {
   label: string;
 }
 
+/** A span whose abutting parts share a name, state and staging, as one part:
+ * a column delivered in a file a year (SCB's yearly releases) is one run, so
+ * its name sits once across the run, not cut in every year. */
+function joinParts(span: LaneSpanModel): LaneSpanModel {
+  if (!span.segments || span.segments.length < 2) return span;
+  const parts: LaneSpanSegment[] = [];
+  for (const segment of span.segments) {
+    const last = parts.at(-1);
+    if (
+      last &&
+      Math.abs(last.to - segment.from) < 1e-6 &&
+      (last.name ?? span.name) === (segment.name ?? span.name) &&
+      last.state === segment.state &&
+      last.staged === segment.staged
+    ) {
+      parts[parts.length - 1] = { ...last, to: segment.to };
+    } else {
+      parts.push(segment);
+    }
+  }
+  return parts.length < span.segments.length
+    ? { ...span, segments: parts }
+    : span;
+}
+
 /** A day on the axis's scale of years: 1 July 2018 is about 2018.5. */
 function dayYear(day: string): number {
   const year = Number(day.slice(0, 4));
@@ -230,7 +255,7 @@ function useHeights() {
 export function LaneGraph({
   label,
   lanes,
-  spans,
+  spans: given,
   edges,
   axis,
   window,
@@ -245,6 +270,7 @@ export function LaneGraph({
   single = false,
   breaks = [],
 }: Props) {
+  const spans = given.map(joinParts);
   const [width, setWidth] = useState(0);
   const [hovered, setHovered] = useState<string | null>(null);
   // The measured height of each lane's `below` block and of each name block
@@ -255,9 +281,7 @@ export function LaneGraph({
   const markerId = useId();
   // The one DOM measurement: the graph's width, which the layout needs to
   // place labels and pack rows.
-  const graphRef = useRef<HTMLDivElement | null>(null);
   const measure = useCallback((node: HTMLDivElement | null) => {
-    graphRef.current = node;
     if (!node) return;
     const observer = new ResizeObserver(([entry]) => {
       setWidth(Math.floor(entry.contentRect.width));
@@ -286,46 +310,7 @@ export function LaneGraph({
           actions: lanes.some((lane) => lane.action !== undefined),
         })
       : null;
-  // A single-pick graph that scrolls keeps its picked span in view (a classification's
-  // version, which opens on the latest), by its own scroll, never the page's.
   const picked = spans.filter((span) => span.isSelected);
-  const keep =
-    single && picked.length === 1
-      ? geometry?.spans.get(picked[0].id)
-      : undefined;
-  const keepFrom = keep?.x;
-  const keepTo = keep ? keep.x + keep.width : undefined;
-  useEffect(() => {
-    const node = graphRef.current;
-    if (!node || keepFrom === undefined || keepTo === undefined) return;
-    const margin = 16;
-    // The measured width, so a resize that keeps the scale still re-runs this.
-    const view = width;
-    // A span wider than the view keeps its leading edge, where its name sits.
-    const fits = keepTo - keepFrom + 2 * margin <= view;
-    if (
-      keepFrom < node.scrollLeft ||
-      (!fits && keepFrom > node.scrollLeft + view - margin)
-    )
-      node.scrollLeft = Math.max(keepFrom - margin, 0);
-    else if (fits && keepTo > node.scrollLeft + view)
-      node.scrollLeft = keepTo - view + margin;
-  }, [keepFrom, keepTo, width]);
-  // Unless it keeps a picked span in view, a graph that scrolls opens once on
-  // its latest span, so a lane whose only span is recent does not read as
-  // empty; the span, not the axis end, which study years may stretch past.
-  const latest =
-    geometry && geometry.contentWidth > width && keep === undefined
-      ? Math.max(...[...geometry.spans.values()].map((s) => s.x + s.width))
-      : undefined;
-  const opened = useRef(false);
-  useEffect(() => {
-    const node = graphRef.current;
-    if (!node || latest === undefined || opened.current) return;
-    opened.current = true;
-    node.scrollLeft = Math.max(latest - node.clientWidth + 16, 0);
-  }, [latest]);
-  const scrolls = !!geometry && geometry.contentWidth > width;
   const pickable = !!onToggle && spans.some((span) => span.selectable);
   const marked = breakMarks(breaks, axis);
   const spansByLane = new Map<string, LaneSpanModel[]>();
@@ -344,24 +329,11 @@ export function LaneGraph({
         ref={measure}
         className={styles.graph}
         data-stacked={geometry?.stacked || undefined}
-        // A name wider than the track, or a stacked track grown to its spans'
-        // least width, scrolls inside the graph, never the page.
-        data-scroll={scrolls || undefined}
-        // With no span to tab to, the scroll box itself takes focus, so a
-        // keyboard can scroll it (WCAG 2.1.1; axe scrollable-region-focusable).
-        {...(scrolls && !pickable
-          ? { tabIndex: 0, role: "region", "aria-label": label }
-          : {})}
       >
         {geometry && (
           <>
-            {/* Sizes the scroll box from inside, so a classic horizontal
-                scrollbar adds to the graph's height instead of covering the
-                last lane. */}
-            <div
-              aria-hidden="true"
-              style={{ width: geometry.contentWidth, height: geometry.height }}
-            />
+            {/* The lanes are placed absolutely: this holds their height. */}
+            <div aria-hidden="true" style={{ height: geometry.height }} />
             <Marks
               geometry={geometry}
               lanes={lanes}
@@ -369,7 +341,7 @@ export function LaneGraph({
               window={window}
               addWindow={addWindow}
               coverage={coverage}
-              width={geometry.contentWidth}
+              width={width}
               hovered={hovered}
               markerId={markerId}
               breaks={marked.map((mark) => mark.at)}
@@ -441,7 +413,7 @@ export function LaneGraph({
                         {
                           top: placed.y,
                           height: placed.height,
-                          width: geometry.contentWidth,
+                          width,
                           // A stacked table row's guide line runs its height.
                           "--lane-guide": `${placed.height}px`,
                         } as CSSProperties
@@ -490,7 +462,6 @@ export function LaneGraph({
                       {lane.below && (
                         <LaneBelow
                           id={lane.id}
-                          width={width}
                           top={placed.height - (below.get(lane.id) ?? 0)}
                           onHeight={onBelowHeight}
                         >
@@ -771,23 +742,18 @@ function BreakMark({
 function LaneBelow({
   id,
   top,
-  width,
   onHeight,
   children,
 }: {
   id: string;
   top: number;
-  /** The graph's own width: the block stays in view while the lane scrolls. */
-  width: number;
   onHeight: (id: string, height: number) => void;
   children: ReactNode;
 }) {
   const measure = useMeasuredHeight(id, onHeight);
   return (
     <div ref={measure} className={styles.below} style={{ top }}>
-      <div className={styles.pinned} style={{ width }}>
-        {children}
-      </div>
+      {children}
     </div>
   );
 }
@@ -1059,6 +1025,9 @@ function Span({
     [focusInput],
   );
   const [open, setOpen] = useState(false);
+  // The name of the part under the pointer, so hovering a part opens only
+  // its own name's tooltip; null under focus, which gives every cut name.
+  const [part, setPart] = useState<string | null>(null);
   // A span with no column name (a classification version) carries its years
   // where they fit, so the bar is not an empty box; a column span shows its
   // name only (#2399).
@@ -1101,6 +1070,8 @@ function Span({
           className={styles.segment}
           data-staged={marked[i] ? (span.staged ?? undefined) : undefined}
           style={{ left: segment.x, width: segment.width }}
+          onPointerEnter={() => setPart(segment.name ?? span.name)}
+          onPointerLeave={() => setPart(null)}
         >
           {faces[i]}
         </span>
@@ -1125,11 +1096,23 @@ function Span({
   // The tooltip opens only where the span's own text is cut off (maintainer,
   // 2026-11-10, #2321): a column name the pill cuts, with the years the span
   // never shows (#2399); a whole name with only its years adds nothing the
-  // axis lacks. A span with no column name (a classification version) opens
-  // where its years do not fit.
-  const tipped = span.name
-    ? at.segments.some((segment) => segment.cut)
+  // axis lacks. Under the pointer, only on a part whose own name is cut. A
+  // span with no column name (a classification version) opens where its
+  // years do not fit.
+  const cutNames = new Set(
+    at.segments.flatMap((segment) =>
+      segment.cut ? [segment.name ?? span.name] : [],
+    ),
+  );
+  const cuttable = span.name
+    ? cutNames.size > 0
     : (!!span.label || !!span.years) && !showYears;
+  const tipped = span.name && part !== null ? cutNames.has(part) : cuttable;
+  const lines = (
+    span.columns ?? [{ name: span.name, years: span.years }]
+  ).filter((column) =>
+    part !== null ? column.name === part : cutNames.has(column.name),
+  );
   const tip = tipped && (
     <Tooltip
       triggerRef={face}
@@ -1145,22 +1128,14 @@ function Span({
       {/* A span without a column name (a classification version) says its
           label, or else its years, in the UI face. */}
       <span>
-        {span.columns ? (
-          span.columns.map((column, i) => (
-            // oxlint-disable-next-line react/no-array-index-key
-            <span key={i} className={styles.tipLine}>
-              <code>{column.name}</code>
-              {column.years && `, ${column.years}`}
-            </span>
-          ))
-        ) : span.name ? (
-          <>
-            <code>{span.name}</code>
-            {span.years && `, ${span.years}`}
-          </>
-        ) : (
-          (span.label ?? span.years)
-        )}
+        {span.name
+          ? lines.map((column) => (
+              <span key={column.name} className={styles.tipLine}>
+                <code>{column.name}</code>
+                {column.years && `, ${column.years}`}
+              </span>
+            ))
+          : (span.label ?? span.years)}
       </span>
     </Tooltip>
   );
@@ -1171,16 +1146,17 @@ function Span({
   };
   if (!span.selectable || !onToggle) {
     return (
-      // A read-only span is no tab stop: Focusable hands it the trigger's
-      // hover, focus and Escape handling, and its role and name carry the
-      // column, so hovering opens the tooltip and Escape closes it.
+      // Focusable hands a read-only span the trigger's hover, focus and
+      // Escape handling, and its role and name carry the column. It is a tab
+      // stop only where it cuts a name, so a keyboard reaches that name's
+      // tooltip; a whole name has nothing to add.
       <TooltipTrigger
         isOpen={open}
         onOpenChange={setOpen}
         delay={0}
         closeDelay={0}
       >
-        <Focusable ref={face} excludeFromTabOrder>
+        <Focusable ref={face} excludeFromTabOrder={!cuttable}>
           <span
             // Focusable needs a named role; an <img> cannot hold the drawing.
             // oxlint-disable-next-line jsx-a11y/prefer-tag-over-role

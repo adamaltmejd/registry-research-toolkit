@@ -115,9 +115,6 @@ export interface LaneGeometry {
   coverageY: number | null;
   lanes: PlacedLane[];
   spans: Map<string, PlacedSpan>;
-  /** Where the drawing ends: past the graph's width when a stacked track
-   * grows to its spans' least width, and the graph then scrolls itself. */
-  contentWidth: number;
   /** `label` and `anchor` are set on the one label that stands for both
    * window bounds when they are too close to label apart. */
   ticks: {
@@ -178,9 +175,10 @@ const COLUMN_CHAR = 7.2;
 const LABEL_PAD = 14 + 12 + 4;
 const PACK_GAP = 6;
 const MIN_SPAN = 6;
-// Stacked (phones, or any graph under a finger whose spans would be smaller),
-// the shortest span is at least WCAG 2.2's 24 px target size, and the track
-// grows past the graph's width to make room (#2310).
+// Under a finger, a graph whose shortest span would be under WCAG 2.2's 24 px
+// target beside the names stacks, so its track takes the whole width (#2310).
+// The track never grows past the graph: a span too narrow for its name is a
+// bare bar.
 const MIN_TARGET = 24;
 
 /** The room a span's text needs: a column name with its glyph, or a
@@ -202,11 +200,9 @@ function tickYears(axis: [number, number], pxPerYear: number): number[] {
 export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
   const [first, last] = input.axis;
   const axisYears = Math.max(last + 1 - first, 1);
-  // Keyed on the dates alone, never on which spans are pickable, so the track
-  // keeps its scale while an add window moves. Spans are drawn at their dates
-  // (#2408), so a term is half a year. simplify: floored at a month, which
-  // caps the grown track at 288 px a year; lift it if a shorter pickable
-  // span turns up on a lane.
+  // Keyed on the dates alone, never on which spans are pickable, so the
+  // layout holds while an add window moves. Spans are drawn at their dates
+  // (#2408), so a term is half a year; floored at a month.
   const shortest = Math.min(
     ...input.spans.map((span) =>
       Math.max(
@@ -223,19 +219,14 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
   const nameGap = fluid(gapSpec);
   const besideTrack = input.width - fluid(nameSpec) - nameGap;
   // Under a finger, a graph whose shortest span would be under 24 px beside
-  // the names stacks, as on a phone, and grows its track there.
+  // the names stacks, as on a phone.
   const stacked =
     besideTrack < minTrack ||
     (!!input.touch && (besideTrack / axisYears) * shortest < MIN_TARGET);
   const nameWidth = stacked ? 0 : fluid(nameSpec);
   const trackX = stacked ? STACKED_INSET : nameWidth + nameGap;
-  const pxPerYear = Math.max(
-    Math.max(input.width - trackX, 1) / axisYears,
-    stacked && Number.isFinite(shortest) ? MIN_TARGET / shortest : 0,
-  );
+  const pxPerYear = Math.max(input.width - trackX, 1) / axisYears;
   const trackWidth = pxPerYear * axisYears;
-  // The drawing's width: the graph's, or the grown track's.
-  const drawWidth = Math.max(input.width, trackX + trackWidth);
   const x = (year: number) => trackX + (year - first) * pxPerYear;
 
   // Place each span on the track, then pack each lane's spans into rows.
@@ -274,16 +265,10 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
       }
       for (const [name, segment] of widest) {
         segment.cut = !!name && labelWidth(name) > segment.width;
-        // Where not even one letter fits before the ellipsis, the glyph and
-        // the ellipsis alone, so the stub never reads as a name; where not
-        // even the ellipsis fits, a bare bar, as the name's other parts are.
-        segment.label = !segment.cut
-          ? name
-          : segment.width < labelWidth("…")
-            ? ""
-            : segment.width < labelWidth("xx")
-              ? "…"
-              : name;
+        // Where not even three letters fit before the ellipsis, a bare bar,
+        // as the name's other parts are: a stub such as "a…" says nothing.
+        segment.label =
+          segment.cut && segment.width < labelWidth("xxx…") ? "" : name;
       }
       // A span with no name (a classification version, named in its tooltip)
       // may touch its neighbour: a yearly series stays on one row.
@@ -383,7 +368,7 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
       tick.anchor ??
       (tick.x - trackX < 16
         ? "start"
-        : drawWidth - tick.x < 16
+        : input.width - tick.x < 16
           ? "end"
           : "middle");
     return anchor === "start"
@@ -473,7 +458,6 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
     coverageY,
     lanes,
     spans: placed,
-    contentWidth: drawWidth,
     ticks,
     edges,
   };

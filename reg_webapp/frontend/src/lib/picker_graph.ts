@@ -173,7 +173,7 @@ export function variableSpans({
     const staged = isSelected ? (source ? "remove" : "add") : null;
     return columnRows(every.map((part) => part.drawn)).flatMap(
       (row, index): LaneSpanModel[] => {
-        // In date order, so a spelling that returns draws its changes.
+        // In date order, so abutting parts of one name join into one run.
         const segments = row
           .flatMap((column): LaneSpanSegment[] => {
             const part = parts.get(column.id);
@@ -212,11 +212,16 @@ export function variableSpans({
             to: Math.max(...segments.map((segment) => segment.to)),
             segments,
             years,
+            // One line per spelling, over all its columns' years.
             columns:
-              row.length > 1
-                ? row.map((column) => ({
-                    name: column.spelling,
-                    years: segmentYears(column.segments),
+              spellings.length > 1
+                ? spellings.map((name) => ({
+                    name,
+                    years: segmentYears(
+                      row
+                        .filter((column) => column.spelling === name)
+                        .flatMap((column) => column.segments),
+                    ),
                   }))
                 : undefined,
             state: segments.reduce<ColumnState>(

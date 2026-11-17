@@ -340,8 +340,7 @@ pure role remaps.
   raw hue (10 % and 35 %), the glyph its `-ink` stop; the text is always `text`, on
   every hued pill, and a pill link's underline is the text colour (maintainer, #2399, approved 2026-11-11).
 - **Graph marks:** `viz-edge-succession` (ink, solid) is a definition change. A
-  rename inside one lane has no mark: its spans sharing the lane say it (maintainer,
-  relayed by the Operator 2026-11-17). Spans are `viz-span` with a
+  rename inside one lane has no mark: its spans sharing the lane say it (→ Time). Spans are `viz-span` with a
   `border-strong` stroke; outside the study window they take `viz-span-out` and
   `text-muted`. `viz-edition` cuts edition ticks into a coverage bar.
 
@@ -960,30 +959,36 @@ Time is the axis every relation is drawn on.
   folds a column's identity, since MONA's SQL Server reads them so: `Persid` and
   `PersId` in one table are one column, never a rename, and the merged column shows its
   latest delivery's spelling (the latest end, then the latest start, a tie taking the
-  first in code-point order) (maintainer finding, IFAU, relayed by the Operator
-  2026-11-17; the spelling rule is proposed by the implementer). A steward's yearly
+  first in code-point order), across a table's releases too, so SCB's yearly releases
+  of `AntalBarn0` and `antalbarn0` are one run (maintainer finding on IFAU pages,
+  2026-11-17, in the Operator's brief: lanes split by spelling case; the spelling rule
+  is proposed by the implementer). A steward's yearly
   files of one table are the same column delivered in several files, one box over their
   years with a gap where a year is not delivered (maintainer 2026-11-04). Spans are
   drawn at their real half-open dates, so school years abut instead of sharing a year
   cell; a one-day period (a 31 December snapshot) takes its calendar year, as its text
-  does (#2408, 2026-11-11). Where a row joins several spellings, each name sits in its
-  own widest part, its other parts bare bars, and where one is cut its tooltip lists
-  each column with its years (new rule, proposed by the implementer). The spellings sharing the row say the
-  rename; it has no mark and no sentence (maintainer, relayed by the Operator
-  2026-11-17). A span's column name sits inside its widest delivered part with its
-  glyph, cut with an ellipsis where the part is too narrow, never set beside the span:
-  a name outside the box lost its glyph and repeated beside the next lane (maintainer
-  finding, IFAU, relayed by the Operator 2026-11-17; this overturns "never cut",
-  2026-11-04). Where not even one letter fits before the ellipsis, the part shows the
-  glyph and the ellipsis alone, and where not even those fit, a bare bar (new rule,
-  proposed by the implementer). No list of the
+  does (#2408, 2026-11-11). Abutting parts of one
+  name in one state join into one part before the name is placed, so a column
+  delivered in a file a year reads as one run. Where a row joins several spellings,
+  each name sits in its own widest part, its other parts bare bars (new rules, proposed
+  by the implementer). The spellings sharing the row say the rename; it has no mark and
+  no sentence: "No renames on the same row are just explained by them being on the same row. No need for dashed lines or additional explanations." (maintainer, 2026-11-17, to the Operator).
+  A span's column name sits inside the box: "icon and name inside the box, with
+  ellipsis and a tooltip" (maintainer, 2026-11-17, to the Operator, after seeing names
+  set outside the pill without their icon, clipped and repeated). This overturns the
+  "never cut" rule of 2026-11-04. That the name sits in its widest delivered part, and
+  that a part too narrow for three letters and the ellipsis is a bare bar, since a stub
+  such as "a…" names nothing, are proposed by the implementer. No list of the
   files a column is delivered in: the lane already names the table (maintainer, dogfood
   2026-11-05, #2321). A span is the column pill stretched over its years: the pill's height,
   padding, font and column glyph, the column name only; the axis gives the years, which
   stay in its accessible name (maintainer, #2399, approved 2026-11-11). Its 24 px slot
-  keeps the target size; the 21 px pill sits centred in it. Nothing is drawn outside a
-  span's box, so the graph is never wider than its column unless a stacked track grows
-  to its 24 px targets (below). Beside the track the names take a compact
+  keeps the target height; the 21 px pill sits centred in it. No text is drawn outside
+  a span's box; only a staged change's "+" or "−", or a blocked span's ✕, leads it, in
+  the gap before it. The graph is never wider than its column and never scrolls
+  sideways: a span too narrow for its name is a bare bar (new rule, proposed by the
+  implementer: the maintainer reported the graph's sideways scroll as a bug,
+  2026-11-17). Beside the track the names take a compact
   gutter that narrows with the graph: 27 % of its width between 120 and 230 px, then a
   gap of 2 % between 8 and 16 px, so the 493 px graph of a pane at 961 px keeps a 350 px
   track (#2407, maintainer decisions 2026-11-11). Under a 320 px track, a graph under
@@ -998,18 +1003,18 @@ Time is the axis every relation is drawn on.
   heading is set in `h3` with a rule above it, and each table is a block with a moss
   guide line (`cat-table` at 35 %, the table pill's border) down its left: the table pill and its delivered years
   on one line, the years at the right and wrapping between runs, and the spans on a
-  full-width track below, 16 px in, past the line; a track that scrolls passes under a
-  `surface` strip of that inset, so no span runs past the line. A lane's spans start just under its
-  name. A stacked graph that scrolls sideways with no span to tab to is itself a tab stop,
-  a region named by the drawing, so a keyboard can scroll it (WCAG 2.1.1; Operator
-  fold, #2408). Hovering or focusing a span
+  full-width track below, 16 px in, past the line. A lane's spans start just under its
+  name. Hovering or focusing a span
   shows a RAC `Tooltip` with no delay only where the span's own text is cut off
   (maintainer, dogfood 2026-11-05, #2321; the strict reading, maintainer ruling,
   2026-11-10): on a column span where the pill cuts a name, with the whole name and its
-  years. A span is one target, so a span joining several names opens it from any of
-  its parts once one name is cut (new rule, proposed by the implementer); never a whole name with only its
-  years, which the axis already gives (maintainer finding, IFAU, relayed by the Operator
-  2026-11-17). A classification version (a span with no column name, which carries its
+  years. The maintainer reported "the hover tooltip shows with no additional info" as
+  a bug (2026-11-17, to the Operator), so a whole name with only its years, which the
+  axis already gives, opens none. Under the pointer, only a part whose own name is cut
+  opens it, with that name and its years; focus opens it with every cut name of the
+  span. A read-only span is a tab stop only where it cuts a name, so a keyboard reaches
+  that tooltip; a whole name adds no tab stop (new rules, proposed by the
+  implementer). A classification version (a span with no column name, which carries its
   years where they fit) shows it only where they do not. The pill's own hover text is
   off in a span, so one tooltip shows. No table name and no study-window note in a
   tooltip, and no table name on a span. The
@@ -1065,7 +1070,7 @@ Time is the axis every relation is drawn on.
 
 - A **`LaneGraph`** draws a group or register as lanes (one per variable, in the group's
   member order), columns as spans, and successions between lanes as solid arrows; a
-  rename inside one lane has no mark (maintainer, relayed by the Operator 2026-11-17).
+  rename inside one lane has no mark (→ Time).
   A succession arrow between overlapping spans drops at the edge's effective
   year. On a group page each member is a 28 px heading row with no track, over its
   tables' 36 px rows, indented 16 px and headed by their table pills (as on the variable
@@ -1081,15 +1086,12 @@ Time is the axis every relation is drawn on.
   columns' "in project" state. A span is a checkbox for the add bar (adding or removing
   its lane's variable, above), and hovering it highlights its edges. Spans stay pressable (#2310, after the maintainer ruling "Graph
   everywhere", 2026-11-05; the mechanics are new rules, proposed by the implementer):
-  stacked below the breakpoint, and at any width where the primary pointer is a finger
-  (`pointer: coarse`) and its spans would be smaller beside the names (it then stacks
-  too), the track is widened until its shortest span is 24 px wide (WCAG 2.2 target
-  size) and the graph scrolls sideways inside itself, never the page, with the lane
-  names pinned at its left edge. A single-pick graph keeps its picked span in view, so a
-  classification opens on its latest version, and its tooltip sits under the span,
-  clear of the lane's name; any
-  other graph that scrolls opens once on its latest span, so a lane with only a recent
-  span does not read as empty. A ticked or picked span keeps its
+  where the primary pointer is a finger (`pointer: coarse`) and its shortest span
+  would be under 24 px beside the names, the graph stacks, so its track takes the whole
+  width. The track is never widened past the graph: a span under 24 px stays that
+  narrow, with its lane's 24 px slot height, rather than scroll the graph sideways (new
+  rule, proposed by the implementer, replacing the widened, scrolling track of #2310). A
+  single-pick graph's tooltip sits under the span, clear of the lane's name. A ticked or picked span keeps its
   neighbours' size and 1 px stroke, changing only its colours, and its focus ring is
   drawn inside it, so pressing it shifts nothing (maintainer, dogfood 2026-11-05,
   #2321). On `/project` a column's

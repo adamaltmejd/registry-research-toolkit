@@ -252,7 +252,7 @@ export function SourceCard({
           const inProject = drawnTaken.get(column.id) ?? [];
           return inProject.length ? [{ column, inProject }] : [];
         });
-        // In date order, so a spelling that returns draws its changes.
+        // In date order, so abutting parts of one name join into one run.
         const segments = drawn
           .flatMap(({ column, inProject }) =>
             columnDateRuns(inProject, bounds, axis[0]).map((run) => ({
@@ -284,11 +284,16 @@ export function SourceCard({
           to: Math.max(...segments.map((segment) => segment.to)),
           segments,
           years,
+          // One line per spelling, over all its columns' years.
           columns:
-            drawn.length > 1
-              ? drawn.map(({ column, inProject }) => ({
-                  name: column.spelling,
-                  years: yearsOf(inProject),
+            spellings.length > 1
+              ? spellings.map((spelling) => ({
+                  name: spelling,
+                  years: yearsOf(
+                    drawn
+                      .filter(({ column }) => column.spelling === spelling)
+                      .flatMap(({ inProject }) => inProject),
+                  ),
                 }))
               : undefined,
           state: "in",
