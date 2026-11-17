@@ -536,7 +536,9 @@ fn ambiguity(
     }
     let candidates = candidates.into_iter().collect::<Vec<_>>().join(", ");
     if ambiguous && guardable {
-        Err(format!("ambiguous: add a `where` guard; candidates: {candidates}"))
+        Err(format!(
+            "ambiguous: add a `where` guard; candidates: {candidates}"
+        ))
     } else if ambiguous {
         Err(format!(
             "ambiguous: this subject takes no `where` guard; make the occurrences agree on \
