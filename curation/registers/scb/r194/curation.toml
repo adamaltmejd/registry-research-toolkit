@@ -744,3 +744,9 @@ kind = "set"
 subject = "kostnader-for-skolvasendet: var:skolenhetskod"
 fields.row_key = true
 evidence = "Row key: skolenhetskod and gymnasieforbund-id identify a row: the school unit, or the upper-secondary federation for federation rows, identifies the organiser cost record (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:statsbidrag"
+fields = { "description" = "Statsbidrag som verksamheten finansieras eller delfinansieras med, uppdelat på bidrag för eleverna och bidrag för lokalerna." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensam inledande text om statsbidrag; skillnaden är vad bidraget avser.\ncatalog:variable_text:49172:15706:16801\ncatalog:variable_text:49202:15706:16801"

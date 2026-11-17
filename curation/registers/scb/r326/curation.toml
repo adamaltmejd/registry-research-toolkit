@@ -956,3 +956,15 @@ kind = "set"
 subject = "var:utbkat"
 fields = { "label" = "Inriktning för pågående utbildning (utbildningsgrupp, 1-ställig kod) (Deltagare, 2012-2015)" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. Q3 (same ruling): parallel population tables stay separate, with the population in the label; this variable is the one in table \"Deltagare, 2012-2015\"."
+
+[[statement]]
+kind = "set"
+subject = "set:kommun"
+fields = { "description" = "Kommun kopplad till personens kompletterande utbildning: den kommun där eleven är folkbokförd, studieortens kommun och den kommun där skolan eller skolenheten är belägen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre är regional indelning i kommuner; vilken kommun (folkbokförings-, studieorts- eller skolkommun) skiljer dem åt.\ncatalog:variable_text:41674:11323:11688\ncatalog:variable_text:41683:11323:15340\ncatalog:variable_text:41697:15340:16801"
+
+[[statement]]
+kind = "set"
+subject = "set:utbildningsinriktning"
+fields = { "description" = "Klassificering av inriktningen för personens utbildning enligt Skolverkets eller Myndigheten för yrkeshögskolans utbildningsgrupper eller enligt Svensk utbildningsnomenklatur (SUN). Variablerna anger inriktningen som kod eller i klartext, med olika detaljnivå." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla sex klassificerar utbildningens inriktning; klassifikation, detaljnivå och kod/namn skiljer dem åt.\ncatalog:variable_text:41679:13879:15340\ncatalog:variable_text:41681:14610:15340\ncatalog:variable_text:41706:15340:16801\ncatalog:variable_text:41711:15340:16801\ncatalog:variable_text:41717:15340:16801"

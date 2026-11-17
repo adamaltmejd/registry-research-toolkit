@@ -1969,3 +1969,21 @@ kind = "set"
 subject = "set:larlingsersattning"
 fields = { "description" = "Anger om eleven fått utbetald lärlingsersättning, ersättning för elever i gymnasial lärlingsutbildning, från Centrala studiestödsnämnden (CSN). En av variablerna avser utbetalning i december." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna delar definition och källa; december framgår av etiketten och setbeskrivningen, så de lagrade texterna täcks.\ncatalog:variable_text:30451:16723:16724\ncatalog:variable_text:30452:16358:16359"
+
+[[statement]]
+kind = "set"
+subject = "set:fristaende-skolas-inriktning"
+fields = { "description" = "Anger inriktningen hos en fristående skola eller skolenhet. Variablerna gäller fristående gymnasieskola respektive fristående grundskola, och en av dem skolan där eleven påbörjade sin gymnasieutbildning." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla fyra variablerna anger inriktning av fristående skola eller skolenhet; skolform och start framgår av etiketterna och en variants egen text.\ncatalog:variable_text:30432:9418:9419\ncatalog:variable_text:30442:17089:17090\ncatalog:variable_text:30444:17089:17090"
+
+[[statement]]
+kind = "set"
+subject = "set:gymnasiebehorighet"
+fields = { "description" = "Anger om eleven har behörighet till gymnasieskolan. Variablerna skiljer sig åt i vilket program eller vilken programgrupp behörigheten gäller, till exempel nationella yrkesprogram eller programinriktat individuellt val." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla variablerna börjar med samma mening om behörighet till gymnasieskolan och skiljer sig bara i program; kravversionen före 2011 gäller bara en variant och utelämnas.\ncatalog:variable_text:30411:17089:17090\ncatalog:variable_text:30412:17089:17090\ncatalog:variable_text:30416:17089:17090"
+
+[[statement]]
+kind = "set"
+subject = "set:meritvarde-ar9"
+fields = { "description" = "Meritvärdet är summan av elevens bästa betyg i slutbetyget, där bokstavsbetygen ersätts med poäng: A = 20, B = 17,5, C = 15, D = 12,5 och E = 10. Värdet 0,00 innebär att eleven inte har fått kunskapsrelaterade betyg eller att uppgift saknas. Variablerna skiljer sig åt i hur många betyg som räknas: de 16 bästa betygen (högst 320 poäng) respektive de 17 bästa betygen inklusive moderna språk som språkval (högst 340 poäng)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna delar poängskala och betydelsen av 0,00 i alla år; antalet betyg och maxpoäng skiljer.\ncatalog:variable_text:30454:17089:17090\ncatalog:variable_text:30455:17089:17090"

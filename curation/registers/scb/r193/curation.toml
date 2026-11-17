@@ -1554,3 +1554,15 @@ kind = "set"
 subject = "set:kommun"
 fields = { "description" = "Regional indelning i kommuner. Variablerna anger en kommun som eleven knyts till: folkbokföringskommunen, kommunen där grundskolan ligger (skolkommun) eller kommunen där fritidshemmet är beläget." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla fem variablerna anger en kommun; de skiljer i vilken koppling till eleven. De lagrade skolkommun-texterna täcks av setbeskrivningen plus etiketten.\ncatalog:variable_text:29321:14167:14168\ncatalog:variable_text:29330:14167:14168\ncatalog:variable_text:29331:19280:19281"
+
+[[statement]]
+kind = "set"
+subject = "set:aldersavvikelse-i-skolan"
+fields = { "description" = "Anger om eleven avviker i ålder från vad som är vanligt för årskursen. Elevens födelseår jämförs med det födelseår som elever vanligen har i årskursen, och variablerna anger om eleven är äldre (överårig) respektive yngre (underårig)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna bygger på samma jämförelse av födelseår mot årskursens vanliga födelseår; riktningen skiljer.\ncatalog:variable_text:29345:16723:16724\ncatalog:variable_text:29388:16723:16724"
+
+[[statement]]
+kind = "set"
+subject = "set:svensk-utlandsk-bakgrund"
+fields = { "description" = "Anger om eleven har utländsk eller svensk bakgrund, utifrån elevens eget och moderns och faderns födelseland enligt Befolkningsregistret. Variablerna skiljer sig åt i hur saknad uppgift om födelseland hanteras." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nGemensamt för alla fyra är definitionen och härledningen från tre födelseländer; hanteringen av saknad uppgift varierar och anges därför bara som skillnad.\ncatalog:variable_text:29389:14167:14168\ncatalog:variable_text:29392:18184:18185"

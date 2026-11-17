@@ -631,3 +631,15 @@ kind = "set"
 subject = "deltagare: var:kalenderar"
 fields.row_key = true
 evidence = "Row key: kalenderar (VerkAr) is the period of a row; one delivered file holds several years, so the unit id repeats per period and the key is id plus time (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:amnesomrade"
+fields = { "description" = "Ämnesområde: indelning av utbildningar i områden utifrån innehåll, inom folkbildningsverksamheten. Variablerna skiljer sig i detaljnivå, 4-siffernivå respektive 4- och 5-siffernivå." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda har samma indelningstext och skiljer sig i kodnivå, vilket etiketterna också visar.\ncatalog:variable_text:51898:16436:20089\ncatalog:variable_text:51899:15340:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:kon"
+fields = { "description" = "Personens kön, härlett från personnumret." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har identisk text.\ncatalog:variable_text:51921:15340:20089"

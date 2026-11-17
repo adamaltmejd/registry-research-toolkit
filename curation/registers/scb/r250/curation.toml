@@ -1449,3 +1449,27 @@ kind = "set"
 subject = "elever: Utim"
 fields = { "variable" = "ant-utim-tot" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v14688) in one table, renamed between survey rounds and never delivered together, so they are one variable: Utim 1999-10-15..2014-10-15; Ant_Utim_Tot 2015-10-15..2023-10-15."
+
+[[statement]]
+kind = "set"
+subject = "set:kommungrupp"
+fields = { "description" = "Kommungruppsindelning enligt Sveriges Kommuner och Regioner, där kommunerna delas in i nio grupper efter strukturella egenskaper som befolkningsstorlek, pendlingsmönster och näringslivsstruktur. Avser den kommungrupp där skolan eller skolenheten ligger. Variablerna skiljer sig i vilken års indelning som används och i om gruppen anges som kod eller klartext." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar har samma indelningstext; indelningsår och kod eller klartext framgår av etiketterna.\ncatalog:variable_text:41745:19645:19646\ncatalog:variable_text:41747:18550:18551"
+
+[[statement]]
+kind = "set"
+subject = "set:kursdeltagarens-lopnummer"
+fields = { "description" = "Löpnummer för kursdeltagaren, dvs. en individ på en viss kurs." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma definition; insamlingsnoten är provenienslinje och utelämnas.\ncatalog:variable_text:41744:19723:20089\ncatalog:variable_text:41751:19905:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:skolidentitet"
+fields = { "description" = "Identitet för en skola eller skolenhet, dvs. en administrativ enhet där lärare och/eller elever finns. Skolan avser en organisatorisk enhet på en adress, inte en byggnad eller fastighet." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar identifierar skola eller skolenhet med samma definition; kodens form gäller bara vissa år och utelämnas.\ncatalog:variable_text:41765:14167:14168\ncatalog:variable_text:41766:15993:15994\ncatalog:variable_text:41767:11610:11611"
+
+[[statement]]
+kind = "set"
+subject = "set:yrkespaket"
+fields = { "description" = "Yrkespaket, dvs. en specifik kombination av kurser på gymnasial nivå som Skolverket har utformat i samråd med branschkunniga. Kurserna ska motsvara kompetenskraven för olika yrkesområden. Variablerna anger paketet som kod respektive klartext." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna har samma definition av yrkespaket; kod eller klartext framgår av etiketterna.\ncatalog:variable_text:41786:19905:20089\ncatalog:variable_text:41787:19905:20089"

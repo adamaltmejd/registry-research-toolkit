@@ -1091,3 +1091,27 @@ kind = "set"
 subject = "grundskola: UtlBakGr2"
 fields = { "variable" = "utlbakgr2" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v67), never delivered together in one table, so they are one variable renamed between releases: Utl_BakG 2008-10-15..2008-10-15; UtlBakGr2 2009-10-15..2016-10-15."
+
+[[statement]]
+kind = "set"
+subject = "set:faderns-utbildningsniva"
+fields = { "description" = "Faderns utbildningsnivå enligt Svensk utbildningsnomenklatur (SUN), för den biologiska fadern. Variablerna skiljer sig i nomenklaturversion (SUN 2000 eller SUN 2020) och i detaljeringsgrad: fullständig nivåkod, första positionen i SUN 2000-koden eller grupperad nivå." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar anger faderns utbildningsnivå enligt SUN och avser biologisk far; versionen och grupperingen framgår av etiketterna.\ncatalog:variable_text:28590:14167:14168\ncatalog:variable_text:28590:15628:15629\ncatalog:variable_text:28591:14167:14168\ncatalog:variable_text:28592:16723:16724\ncatalog:variable_text:28596:18550:18551"
+
+[[statement]]
+kind = "set"
+subject = "set:foraldrarnas-utbildningsniva"
+fields = { "description" = "Föräldrarnas utbildningsnivå enligt Svensk utbildningsnomenklatur (SUN), dvs. utbildningsnivån hos den av den biologiska fadern och den biologiska modern som har högst nivå. Variablerna finns för SUN 2000 och SUN 2020, med fullständig eller grupperad nivå." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nTexterna är lika för alla medlemmar: den högsta nivån av de biologiska föräldrarnas utbildning; version och gruppering framgår av etiketterna.\ncatalog:variable_text:28593:16723:16724\ncatalog:variable_text:28594:16723:16724"
+
+[[statement]]
+kind = "set"
+subject = "set:moderns-utbildningsniva"
+fields = { "description" = "Moderns utbildningsnivå enligt Svensk utbildningsnomenklatur (SUN), för den biologiska modern. Variablerna skiljer sig i nomenklaturversion (SUN 2000 eller SUN 2020) och i detaljeringsgrad: fullständig nivåkod, första positionen i SUN 2000-koden eller grupperad nivå." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla medlemmar anger moderns utbildningsnivå enligt SUN och avser biologisk mor; versionen och grupperingen framgår av etiketterna.\ncatalog:variable_text:28570:14167:14168\ncatalog:variable_text:28570:15628:15629\ncatalog:variable_text:28585:14167:14168\ncatalog:variable_text:28587:16723:16724"
+
+[[statement]]
+kind = "set"
+subject = "set:utlandsk-svensk-bakgrund"
+fields = { "description" = "Anger om en person har utländsk eller svensk bakgrund, skapad utifrån personens eget samt moderns och faderns födelseland enligt Befolkningsregistret. Variablerna skiljer sig i hur saknad uppgift hanteras: i den ena är saknad uppgift en egen kod." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda medlemmarna delar definition och härledning; skillnaden bygger på etiketten, eftersom texterna inte beskriver den.\ncatalog:variable_text:28604:14532:14533\ncatalog:variable_text:28604:17454:17455\ncatalog:variable_text:28605:14167:14168"

@@ -1093,3 +1093,15 @@ kind = "set"
 subject = "personal-individ: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: one row per staff member; the provider person-orgnr and cfar-nummer are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:invandringsdatum"
+fields = { "description" = "Datum för barnets invandring till Sverige enligt Befolkningsregistret, dels det senaste och dels det tidigaste (första) invandringsdatumet. Värdet 0 innebär att barnet inte har invandrat." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna anger barnets invandringsdatum enligt Befolkningsregistret med samma kodning av 0; de skiljer sig bara i senaste respektive tidigaste datum.\ncatalog:variable_text:11283:16358:16359\ncatalog:variable_text:11305:16358:16359"
+
+[[statement]]
+kind = "set"
+subject = "set:tjanstgoringsomfattning"
+fields = { "description" = "Personens faktiska tjänstgöringstid i förhållande till heltidstjänst, i procent. Variablerna avser den totala tjänstgöringsomfattningen respektive tjänstgöringsomfattningen i chefsbefattning i arbete med barn." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda är tjänstgöringsomfattning som andel av heltid; avgränsningen (totalt eller chefsbefattning) skiljer dem åt.\ncatalog:variable_text:11259:16358:16359\ncatalog:variable_text:11276:16358:16359"

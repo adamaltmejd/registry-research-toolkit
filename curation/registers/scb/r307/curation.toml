@@ -1172,3 +1172,21 @@ kind = "set"
 subject = "personal-individ: RektorOmf"
 fields = { "variable" = "rektoromf" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v109), never delivered together in one table, so they are one variable renamed between releases: ChefOmf 2014-10-15..2018-10-15; RektorOmf 2019-10-15..2024-10-15."
+
+[[statement]]
+kind = "set"
+subject = "set:invandringsdatum"
+fields = { "description" = "Datum för barnets invandring till Sverige enligt Befolkningsregistret, dels det senaste och dels det tidigaste (första) invandringsdatumet. Värdet 0 innebär att barnet inte har invandrat." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna anger barnets invandringsdatum enligt Befolkningsregistret med samma kodning av 0; de skiljer sig bara i senaste respektive tidigaste datum.\ncatalog:variable_text:20560:16358:16359\ncatalog:variable_text:20583:16358:16359"
+
+[[statement]]
+kind = "set"
+subject = "set:tjanstgoringsomfattning"
+fields = { "description" = "Personens faktiska tjänstgöringstid i förhållande till heltidstjänst, i procent. Variablerna avser tjänstgöringen totalt, i chefs- eller rektorsbefattning i arbete med barn och förskolechefens arbete med barn." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre är tjänstgöringsomfattning som andel av heltid; avgränsningen av tjänstgöringen skiljer dem åt.\ncatalog:variable_text:20532:17089:17090\ncatalog:variable_text:20552:16358:16359\ncatalog:variable_text:20558:16358:16359"
+
+[[statement]]
+kind = "set"
+subject = "set:typ-av-tjanst"
+fields = { "description" = "Anger typ av tjänst som personen utför eller innehar. Varje variabel avser en tjänstetyp: förskollärare, förskolechef eller resurs/stödpersonal." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma definition (typ av tjänst) för alla tre; tjänstetypen framgår av etiketten.\ncatalog:variable_text:20542:16358:16359\ncatalog:variable_text:20557:16358:16359\ncatalog:variable_text:20559:16358:16359"

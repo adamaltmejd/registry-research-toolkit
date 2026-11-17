@@ -1201,3 +1201,9 @@ kind = "set"
 subject = "set:fou-anslag-ej-fordelade-pa-forskningsamne"
 fields = { "description" = "FoU-medel inom det socioekonomiska målet (syftet/ändamålet) allmän vetenskaplig utveckling som inte fördelats på forskningsämne." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nDet gemensamma är allmän vetenskaplig utveckling och att medlen inte är fördelade på forskningsämne; finansieringskälla och skattningsmetod gäller bara nabs-variablerna och behålls i deras lagrade texter.\ncatalog:variable_text:51737:18628:18993\ncatalog:variable_text:51768:13514:13879"
+
+[[statement]]
+kind = "set"
+subject = "set:anslagsbelopp"
+fields = { "description" = "Medel för ett anslag enligt budgetpropositionen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre har samma grundtext; propositionsår skiljer sig bara mellan åren och utelämnas.\ncatalog:variable_text:51698:18628:18993\ncatalog:variable_text:51699:17897:18628"

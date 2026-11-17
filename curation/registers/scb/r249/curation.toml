@@ -6165,3 +6165,33 @@ kind = "set"
 subject = "set:utbildningstermin"
 fields = { "description" = "Anger en termin. Variablerna anger dels den termin uppgifterna eller provresultatet hör till, dels vilken termin av kursens totala antal terminer som personen studerar." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nVariablerna delar bara att de anger en termin; två gäller kursens terminsnummer, en uppgiftens termin. Texterna i de lagrade beskrivningarna skiljer sig och behålls.\ncatalog:variable_text:41973:9678:9862\ncatalog:variable_text:41974:6574:8401"
+
+[[statement]]
+kind = "set"
+subject = "set:fodelseland"
+fields = { "description" = "Personens födelseland enligt definitionen i Registret över totalbefolkningen (RTB)." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna har identisk definition.\ncatalog:variable_text:41899:10043:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:hemkommun"
+fields = { "description" = "Den kommun där personen är folkbokförd (folkbokföringskommun), som regional indelning i kommuner." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre variablerna anger folkbokföringskommun.\ncatalog:variable_text:41901:10043:20089\ncatalog:variable_text:41905:17532:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:kommungrupp"
+fields = { "description" = "Kommungruppsindelning enligt Sveriges Kommuner och Regioner för den kommun där skolan eller skolenheten är belägen. Indelningen delar kommunerna i nio grupper efter strukturella egenskaper som befolkningsstorlek, pendlingsmönster och näringslivsstruktur. Variablerna anger kommungruppen som bokstavskod, numerisk kod eller klartext." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre har samma indelning och avser skolans kommun; kodform skiljer.\ncatalog:variable_text:41915:17532:18444\ncatalog:variable_text:41917:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:skolkommun"
+fields = { "description" = "Den kommun där skolan eller skolenheten är belägen, som regional indelning i kommuner. Variablerna anger kommunen som kod eller i klartext." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla fyra anger skolenhetens kommun; kod eller klartext skiljer.\ncatalog:variable_text:41957:17532:20089\ncatalog:variable_text:41962:10043:20089\ncatalog:variable_text:41963:18628:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:tidigaste-invandringsdatum"
+fields = { "description" = "Datum för personens tidigaste invandring till Sverige." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre variablerna har identisk definition.\ncatalog:variable_text:41979:14610:14791"

@@ -2522,3 +2522,9 @@ kind = "set"
 subject = "grundskolan-betyg-ak9: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:tillvalsamne"
+fields = { "description" = "Anger det ämne eller den kurs som eleven har som första respektive andra tillvalsämne. Variablerna skiljer sig åt i vilket tillvalsämne (första eller andra), vilken termin (hösttermin eller vårtermin) och vilken årskurs (7, 8 eller 9) de avser." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla 18 variablerna har samma grundtext om tillvalsämne; första/andra, termin och årskurs framgår av etiketterna.\ncatalog:variable_text:29149:7121:8582\ncatalog:variable_text:29220:8582:10043"

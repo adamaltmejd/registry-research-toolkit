@@ -3489,3 +3489,15 @@ kind = "set"
 subject = "grupper-varterminen: Omfattning"
 fields = { "variable" = "omfattning-folkhogskolan" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v8622), never delivered together in one table, so they are one variable renamed between releases: Omfattning 2005-01-01..2024-12-31; HelDel 2007-01-01..2014-12-31; Heldel 2005-01-01..2008-12-31; heldel 2005-01-01..2006-12-31."
+
+[[statement]]
+kind = "set"
+subject = "set:forstarkningsbidrag"
+fields = { "description" = "Förstärkningsbidrag för deltagare i folkhögskolan med funktionsnedsättning. Bidraget är till för pedagogiska insatser." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda texterna beskriver samma bidrag med samma syfte.\ncatalog:variable_text:19218:16071:17532\ncatalog:variable_text:19219:17897:20089"
+
+[[statement]]
+kind = "set"
+subject = "set:kurstyp"
+fields = { "description" = "Anger vilken kurs personen var registrerad på i folkhögskolan, och vilken kurstyp kursen tillhör." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nKurs och kurstyp hänger ihop; kurstyp finns i två kodningar med samma text.\ncatalog:variable_text:19266:17532:20089\ncatalog:variable_text:19275:12784:20089"

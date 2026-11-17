@@ -699,3 +699,15 @@ kind = "set"
 subject = "elever: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: one row per pupil; parents personnr, school unit, provider and federation ids are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:direktovergang"
+fields = { "description" = "Anger om eleven har gått från en viss aktivitet till en annan utpekad aktivitet utan uppehåll (direktövergång). Utgångspunkten är elever som den 15 oktober året innan fanns i årskurs 9, i anpassad grundskola eller grundskola." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna är direktövergång med samma definition och samma utgångspunkt (årskurs 9 den 15 oktober året innan); utgångsskolform skiljer dem åt.\ncatalog:variable_text:11370:18915:18916\ncatalog:variable_text:11371:18915:18916"
+
+[[statement]]
+kind = "set"
+subject = "set:integrerad-elev"
+fields = { "description" = "Eleven är mottagen i anpassad grundskola eller anpassad gymnasieskola (tidigare grund- eller gymnasiesärskola) men får större delen av sin utbildning i grund- eller gymnasieskola." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna beskriver samma elevgrupp; den ena använder den äldre termen särskola.\ncatalog:variable_text:11380:19645:19646\ncatalog:variable_text:11381:18184:18185"

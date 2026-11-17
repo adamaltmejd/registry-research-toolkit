@@ -1412,3 +1412,9 @@ kind = "set"
 subject = "grundskola-nationella-prov-ak-3: var:personnr"
 fields.row_key = true
 evidence = "Row key: personnr identify a row: the table is about one pupil; parents, school, school unit and principal (huvudman) org numbers are attributes (maintainer ruling 2026-11-14)."
+
+[[statement]]
+kind = "set"
+subject = "set:foraldrarnas-utbildningsniva"
+fields = { "description" = "Föräldrarnas utbildningsnivå enligt Svensk utbildningsnomenklatur (SUN): den högsta utbildningsnivån av biologisk far och mor, hämtad från befolkningsregistret och utbildningsregistret. Variablerna finns enligt SUN 2000 och SUN 2020, i detaljerad och i grupperad form." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla fyra har samma definition och härledning (högsta nivån av far och mor); SUN-version och detaljerad/grupperad form skiljer dem åt.\ncatalog:variable_text:29457:16436:16617\ncatalog:variable_text:29458:16436:16617"

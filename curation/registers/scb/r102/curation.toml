@@ -9004,3 +9004,21 @@ kind = "set"
 subject = "set:betygets-referensgrupp"
 fields = { "description" = "Anger vilken referensgrupp elevens betyg i ett visst ämne tillhör. Referensgruppen är de elever i hela riket som läser samma ämne och samma årskurs. Olika timplaner ger i regel olika referensgrupper utom när skillnaden i timplan bedöms vara ringa. Variablerna avser elevens 1:a till 28:e ämne, och ämnenas nummer innebär ingen rangordning." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla 28 variablerna har samma referensgruppsdefinition och skiljer bara i ämnesnummer, som framgår av etiketten; de fyra lagrade texterna säger samma sak och tas bort.\ncatalog:variable_text:30276:5295:9678"
+
+[[statement]]
+kind = "set"
+subject = "set:arskurs"
+fields = { "description" = "Anger en årskurs. Variablerna anger i vilken årskurs elevens olika betyg (betyg nr 1–28) sattes, vilken årskurs informationen för eleven avser och vilken årskurs eleven avslutade utbildningen i." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla 30 variablerna anger en årskurs; de 28 numrerade gäller årskursen för respektive betyg, de två övriga årskursen för informationen respektive avslutad utbildning.\ncatalog:variable_text:29857:5295:9678\ncatalog:variable_text:29943:15156:19905\ncatalog:variable_text:29946:912:9678"
+
+[[statement]]
+kind = "set"
+subject = "set:gymnasiebehorighet"
+fields = { "description" = "Anger om eleven har uppnått behörighet till ett program i gymnasieskolan: ekonomi-, humanistiska och samhällsvetenskapsprogrammen (EHS), estetiska programmet (EST), naturvetenskaps- och teknikprogrammen (NT), yrkesprogrammen (YRK) eller programinriktat individuellt val (IMPRO). Variablerna skiljer sig åt i vilket program eller vilken programgrupp behörigheten gäller och i vilket underlag den bygger på: elevens betyg, tidigare årskurs 9-betyg, årskurs 9 eller gymnasieintyg." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nVariantparen anger behörighet per programgrupp med olika underlag (betyg, tidigare årskurs 9-betyg, efter årskurs 9, efter gymnasieintyg); det gemensamma är behörighet till gymnasieskolan.\ncatalog:variable_text:29948:15156:16252\ncatalog:variable_text:29949:15156:16252\ncatalog:variable_text:29958:15156:19905\ncatalog:variable_text:29959:15156:19905\ncatalog:variable_text:29962:15156:19905"
+
+[[statement]]
+kind = "set"
+subject = "set:programbidrag"
+fields = { "description" = "Anger vilket nationellt program en utbildning vid en fristående skola hänförs till i bidragssammanhang. Variablerna avser programmet där eleven avslutade respektive påbörjade gymnasiestudierna." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre variablerna delar definitionen av programbidrag; start- respektive avslutsprogram skiljer. Bidragsgivare och Lpf94-begränsning gäller bara en variant och utelämnas.\ncatalog:variable_text:30269:10043:14791\ncatalog:variable_text:30271:15156:20270\ncatalog:variable_text:30336:12600:13695"

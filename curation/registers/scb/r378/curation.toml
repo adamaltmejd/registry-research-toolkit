@@ -1101,3 +1101,15 @@ kind = "set"
 subject = "specialskola: Skolkommun"
 fields = { "variable" = "skolkommun" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one source variable (v36), never delivered together in one table, so they are one variable renamed between releases: Kommun 2008-10-15..2008-10-15; SKom 2009-10-15..2016-10-15; Skolkommun 2017-10-15..2024-10-15."
+
+[[statement]]
+kind = "set"
+subject = "set:aldersavvikelse-i-skolgangen"
+fields = { "description" = "Anger om eleven är äldre (överårig) eller yngre (underårig) än vad elever vanligen är för årskursen. Elevens födelseår jämförs med det födelseår som elever vanligen har för årskursen." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna jämför elevens födelseår med vanligt födelseår för årskursen; riktningen (äldre/yngre) skiljer dem åt.\ncatalog:variable_text:20615:16723:16724\ncatalog:variable_text:20650:16723:16724"
+
+[[statement]]
+kind = "set"
+subject = "set:svensk-och-utlandsk-bakgrund"
+fields = { "description" = "Anger om en person har utländsk eller svensk bakgrund. Uppgiften skapas med hjälp av personens eget samt moderns och faderns födelseland enligt Befolkningsregistret." }
+evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nAlla tre delar definition och härledning från eget samt föräldrarnas födelseland enligt Befolkningsregistret.\ncatalog:variable_text:20652:14167:14168\ncatalog:variable_text:20653:17454:17455\ncatalog:variable_text:20654:14532:14533"
