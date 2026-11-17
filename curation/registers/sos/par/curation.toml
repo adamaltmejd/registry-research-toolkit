@@ -1105,7 +1105,7 @@ evidence = "The n:atc and n:atco source keys each conflate actual ATC code strin
 
 [[statement]]
 kind = "set"
-subject = "par-ov: atc where key = 'n:atc' and label = 'Tillhörande DIA- eller YO-kod är en ATC-kod'"
+subject = "par-ov-diagnoser: atc where key = 'n:atc' and label = 'Tillhörande DIA- eller YO-kod är en ATC-kod'"
 fields = { "variable" = "tillhorande-dia-eller-yo-kod-ar-en-atc-kod" }
 evidence = "The n:atc and n:atco source keys each conflate actual ATC code strings in plattfil with the 0/1 marker in flerfil. Exact source-label guards separate the two kinds in both PAR_OV and PAR_SV without rewriting source evidence. Ordinary curation assigns each kind to a separate public variable; source handles are deliberately not settable (crates/reg-frame/src/statement.rs SetFields). Literal source-key rewriting is unsupported and is not claimed.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx:Metadata - Variabelnivå!8"
 
@@ -1117,7 +1117,7 @@ evidence = "The n:atc and n:atco source keys each conflate actual ATC code strin
 
 [[statement]]
 kind = "set"
-subject = "par-ov: atco where key = 'n:atco' and label = 'Tillhörande ATG-kod är en ATC-kod'"
+subject = "par-ov-atgarder: atco where key = 'n:atco' and label = 'Tillhörande ATG-kod är en ATC-kod'"
 fields = { "variable" = "tillhorande-atg-kod-ar-en-atc-kod" }
 evidence = "The n:atc and n:atco source keys each conflate actual ATC code strings in plattfil with the 0/1 marker in flerfil. Exact source-label guards separate the two kinds in both PAR_OV and PAR_SV without rewriting source evidence. Ordinary curation assigns each kind to a separate public variable; source handles are deliberately not settable (crates/reg-frame/src/statement.rs SetFields). Literal source-key rewriting is unsupported and is not claimed.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx:Metadata - Variabelnivå!10"
 
@@ -1129,7 +1129,7 @@ evidence = "The n:atc and n:atco source keys each conflate actual ATC code strin
 
 [[statement]]
 kind = "set"
-subject = "par-sv: atc where key = 'n:atc' and label = 'Tillhörande DIA- eller YO-kod är en ATC-kod'"
+subject = "par-sv-diagnoser: atc where key = 'n:atc' and label = 'Tillhörande DIA- eller YO-kod är en ATC-kod'"
 fields = { "variable" = "tillhorande-dia-eller-yo-kod-ar-en-atc-kod" }
 evidence = "The n:atc and n:atco source keys each conflate actual ATC code strings in plattfil with the 0/1 marker in flerfil. Exact source-label guards separate the two kinds in both PAR_OV and PAR_SV without rewriting source evidence. Ordinary curation assigns each kind to a separate public variable; source handles are deliberately not settable (crates/reg-frame/src/statement.rs SetFields). Literal source-key rewriting is unsupported and is not claimed.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx:Metadata - Variabelnivå!80"
 
@@ -1141,7 +1141,7 @@ evidence = "The n:atc and n:atco source keys each conflate actual ATC code strin
 
 [[statement]]
 kind = "set"
-subject = "par-sv: atco where key = 'n:atco' and label = 'Tillhörande ATG-kod är en ATC-kod'"
+subject = "par-sv-atgarder: atco where key = 'n:atco' and label = 'Tillhörande ATG-kod är en ATC-kod'"
 fields = { "variable" = "tillhorande-atg-kod-ar-en-atc-kod" }
 evidence = "The n:atc and n:atco source keys each conflate actual ATC code strings in plattfil with the 0/1 marker in flerfil. Exact source-label guards separate the two kinds in both PAR_OV and PAR_SV without rewriting source evidence. Ordinary curation assigns each kind to a separate public variable; source handles are deliberately not settable (crates/reg-frame/src/statement.rs SetFields). Literal source-key rewriting is unsupported and is not claimed.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx:Metadata - Variabelnivå!83"
 
@@ -1399,13 +1399,13 @@ evidence = "The n:hdia source key conflates two different fields. In the flat fi
 
 [[statement]]
 kind = "set"
-subject = "par-sv: hdia where key = 'n:hdia' and label = 'Typ av diagnos'"
+subject = "par-sv-diagnoser: hdia where key = 'n:hdia' and label = 'Typ av diagnos'"
 fields = { "variable" = "typ-av-diagnos" }
 evidence = "The n:hdia source key conflates two different fields: in the flat files (plattfil) HDIA is the main diagnosis code ('Huvuddiagnoskod', PAR_SV row 107, PAR_OV row 36); in the multi-files (flerfil) from 2015 it is the 0/1 marker 'Typ av diagnos' (PAR_SV row 106, PAR_OV row 35; PAR_SV row 107: 'I flerfilen DI är HDIA endast en binär variabel'). The flerfil listing is assigned to its own variable beside the plattfil one, as for ATC, so the neighbouring-owner rule does not fold it into the main diagnosis code (COS 2026-11-14).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 35, 36, 106, 107."
 
 [[statement]]
 kind = "set"
-subject = "par-ov: hdia where key = 'n:hdia' and label = 'Typ av diagnos'"
+subject = "par-ov-diagnoser: hdia where key = 'n:hdia' and label = 'Typ av diagnos'"
 fields = { "variable" = "typ-av-diagnos" }
 evidence = "The n:hdia source key conflates two different fields: in the flat files (plattfil) HDIA is the main diagnosis code ('Huvuddiagnoskod', PAR_SV row 107, PAR_OV row 36); in the multi-files (flerfil) from 2015 it is the 0/1 marker 'Typ av diagnos' (PAR_SV row 106, PAR_OV row 35; PAR_SV row 107: 'I flerfilen DI är HDIA endast en binär variabel'). The flerfil listing is assigned to its own variable beside the plattfil one, as for ATC, so the neighbouring-owner rule does not fold it into the main diagnosis code (COS 2026-11-14).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 35, 36, 106, 107."
 
@@ -1430,8 +1430,8 @@ evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintai
 [[statement]]
 kind = "set"
 subject = "var:lopnr-oppenvardskontakt"
-fields = { "description" = "Unikt internt löpnummer för varje vårdkontakt (i tvångsvården för varje period med psykiatrisk vårdform). Externa beställare kan vid behov få variabeln pseudonymiserad med en ärendeunik nyckel." }
-evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording.\n\nSamma löpnummerkolumn IDNR; vad som numreras följer delregistret.\ncatalog:variable_text:64057:-2192:9862\ncatalog:variable_text:64057:19723:2932897"
+fields = { "description" = "Unikt internt löpnummer för varje öppenvårdskontakt. Det kopplar ihop raderna i öppenvårdens flerfiler med varandra och med öppenvårdens plattfil, men bara inom samma version av leveransen. Det går inte att koppla till slutenvårdens löpnummer. Externa beställare kan vid behov få variabeln pseudonymiserad med en ärendeunik nyckel." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. COS ruling 2026-11-17 (Codex P2 on #2545): IDNR in sluten and öppen vård are different variables, and the version limit belongs in the description.\n\nThe outpatient IDNR numbers visits; PAR_OV row 38 states that it links the flerfil files to each other and to the flat file only within the same version and not between SV and OV.\ncatalog:variable_text:64057:-2192:9862\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 38."
 
 [[statement]]
 kind = "set"
@@ -1551,3 +1551,337 @@ kind = "set"
 subject = "var:yttre-orsakskod-eller-atc"
 fields = { "description" = "Om tillståndet är orsakat av eller relaterat till läkemedel kan värdet vara en ATC-kod för läkemedlet i fråga." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nKortat till det som skiljer medlemmen från mängdens beskrivning.\ncatalog:variable_text:64523:16436:2932897"
+
+# Flerfil tables: the multi-row files of PAR_SV and PAR_OV are their own tables (COS 2026-11-17).
+
+[[statement]]
+kind = "assert"
+subject = "table:par-sv-diagnoser"
+fact = { entity = "table", fields = { name = "Sluten vård, diagnoser (flerfil)", coverage = "2015.." } }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nSocialstyrelsen documents for PAR_SV a multi-row file (flerfil) with one row per diagnosis code of a care contact: DIA, the 0/1 markers HDIA ('Typ av diagnos') and ATC ('Tillhörande DIA- eller YO-kod är en ATC-kod'), YO and SEKVENSNR_DIA ('Diagnosens sekvensnummer i flerfil'). These columns are not in the flat file: PAR_SV row 107 says HDIA is a single code in the flat files and 'I flerfilen DI är HDIA endast en binär variabel'. Listed under one table with the flat file, the flerfil markers HDIA, ATC and ATCO share their column with the flat-file codes, so the main diagnosis code is unorderable in every year (F2 ambiguous). The coverage is the documented start of these columns.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 88, 106, 80, 181, 168, 107."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: DIA"
+fields = { "table" = "par-sv-diagnoser" }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nDIA is a PAR_SV flerfil column; move it to the par-sv-diagnoser table (see the table:par-sv-diagnoser assertion).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 88."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: HDIA where key = 'n:hdia' and label = 'Typ av diagnos'"
+fields = { "table" = "par-sv-diagnoser" }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nHDIA ('Typ av diagnos') is a PAR_SV flerfil column; move it to the par-sv-diagnoser table (see the table:par-sv-diagnoser assertion).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 106."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: ATC where key = 'n:atc' and label = 'Tillhörande DIA- eller YO-kod är en ATC-kod'"
+fields = { "table" = "par-sv-diagnoser" }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nATC ('Tillhörande DIA- eller YO-kod är en ATC-kod') is a PAR_SV flerfil column; move it to the par-sv-diagnoser table (see the table:par-sv-diagnoser assertion).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 80."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: YO"
+fields = { "table" = "par-sv-diagnoser" }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nYO is a PAR_SV flerfil column; move it to the par-sv-diagnoser table (see the table:par-sv-diagnoser assertion).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 181."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: SEKVENSNR_DIA"
+fields = { "table" = "par-sv-diagnoser" }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nSEKVENSNR_DIA is a PAR_SV flerfil column; move it to the par-sv-diagnoser table (see the table:par-sv-diagnoser assertion).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 168."
+
+[[statement]]
+kind = "assert"
+subject = "table:par-sv-atgarder"
+fact = { entity = "table", fields = { name = "Sluten vård, åtgärder (flerfil)", coverage = "2015.." } }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nSocialstyrelsen documents for PAR_SV a multi-row file (flerfil) with one row per action code of a care contact: ATG, the 0/1 marker ATCO ('Tillhörande ATG-kod är en ATC-kod'), ATGDATUM ('i at-fil') and SEKVENSNR_ATG ('Åtgärdens sekvensnummer i flerfil'). These columns are not in the flat file: PAR_SV row 107 says HDIA is a single code in the flat files and 'I flerfilen DI är HDIA endast en binär variabel'. Listed under one table with the flat file, the flerfil markers HDIA, ATC and ATCO share their column with the flat-file codes, so the main diagnosis code is unorderable in every year (F2 ambiguous). The coverage is the documented start of these columns.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 84, 83, 85, 167, 107."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: ATG"
+fields = { "table" = "par-sv-atgarder" }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nATG is a PAR_SV flerfil column; move it to the par-sv-atgarder table (see the table:par-sv-atgarder assertion).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 84."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: ATCO where key = 'n:atco' and label = 'Tillhörande ATG-kod är en ATC-kod'"
+fields = { "table" = "par-sv-atgarder" }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nATCO ('Tillhörande ATG-kod är en ATC-kod') is a PAR_SV flerfil column; move it to the par-sv-atgarder table (see the table:par-sv-atgarder assertion).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 83."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: ATGDATUM"
+fields = { "table" = "par-sv-atgarder" }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nATGDATUM is a PAR_SV flerfil column; move it to the par-sv-atgarder table (see the table:par-sv-atgarder assertion).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 85."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: SEKVENSNR_ATG"
+fields = { "table" = "par-sv-atgarder" }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nSEKVENSNR_ATG is a PAR_SV flerfil column; move it to the par-sv-atgarder table (see the table:par-sv-atgarder assertion).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 167."
+
+[[statement]]
+kind = "assert"
+subject = "table:par-sv-lakemedel"
+fact = { entity = "table", fields = { name = "Sluten vård, läkemedelstillförsel (flerfil)", coverage = "2025.." } }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nSocialstyrelsen documents for PAR_SV a multi-row file (flerfil) with one row per drug administration of a care contact: LT_ATC, LTDATUM and SEKVENSNR_LT ('Läkemedelstillförsels sekvensnummer i flerfil'). These columns are not in the flat file: PAR_SV row 107 says HDIA is a single code in the flat files and 'I flerfilen DI är HDIA endast en binär variabel'. Listed under one table with the flat file, the flerfil markers HDIA, ATC and ATCO share their column with the flat-file codes, so the main diagnosis code is unorderable in every year (F2 ambiguous). The coverage is the documented start of these columns.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 122, 125, 169, 107."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: LT_ATC"
+fields = { "table" = "par-sv-lakemedel" }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nLT_ATC is a PAR_SV flerfil column; move it to the par-sv-lakemedel table (see the table:par-sv-lakemedel assertion).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 122."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: LTDATUM"
+fields = { "table" = "par-sv-lakemedel" }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nLTDATUM is a PAR_SV flerfil column; move it to the par-sv-lakemedel table (see the table:par-sv-lakemedel assertion).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 125."
+
+[[statement]]
+kind = "set"
+subject = "par-sv: SEKVENSNR_LT"
+fields = { "table" = "par-sv-lakemedel" }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nSEKVENSNR_LT is a PAR_SV flerfil column; move it to the par-sv-lakemedel table (see the table:par-sv-lakemedel assertion).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 169."
+
+[[statement]]
+kind = "assert"
+subject = "table:par-ov-diagnoser"
+fact = { entity = "table", fields = { name = "Öppen vård, diagnoser (flerfil)", coverage = "2015.." } }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nSocialstyrelsen documents for PAR_OV a multi-row file (flerfil) with one row per diagnosis code of a care contact: DIA, the 0/1 markers HDIA ('Typ av diagnos') and ATC ('Tillhörande DIA- eller YO-kod är en ATC-kod'), YO and SEKVENSNR_DIA ('Diagnosens sekvensnummer i flerfil'). These columns are not in the flat file: PAR_OV row 36 says HDIA is a single code in the flat files and 'I flerfilen DI är HDIA endast en binär variabel'. Listed under one table with the flat file, the flerfil markers HDIA, ATC and ATCO share their column with the flat-file codes, so the main diagnosis code is unorderable in every year (F2 ambiguous). The coverage is the documented start of these columns.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 15, 35, 8, 73, 65, 36."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: DIA"
+fields = { "table" = "par-ov-diagnoser" }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nDIA is a PAR_OV flerfil column; move it to the par-ov-diagnoser table (see the table:par-ov-diagnoser assertion).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 15."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: HDIA where key = 'n:hdia' and label = 'Typ av diagnos'"
+fields = { "table" = "par-ov-diagnoser" }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nHDIA ('Typ av diagnos') is a PAR_OV flerfil column; move it to the par-ov-diagnoser table (see the table:par-ov-diagnoser assertion).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 35."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: ATC where key = 'n:atc' and label = 'Tillhörande DIA- eller YO-kod är en ATC-kod'"
+fields = { "table" = "par-ov-diagnoser" }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nATC ('Tillhörande DIA- eller YO-kod är en ATC-kod') is a PAR_OV flerfil column; move it to the par-ov-diagnoser table (see the table:par-ov-diagnoser assertion).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 8."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: YO"
+fields = { "table" = "par-ov-diagnoser" }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nYO is a PAR_OV flerfil column; move it to the par-ov-diagnoser table (see the table:par-ov-diagnoser assertion).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 73."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: SEKVENSNR_DIA"
+fields = { "table" = "par-ov-diagnoser" }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nSEKVENSNR_DIA is a PAR_OV flerfil column; move it to the par-ov-diagnoser table (see the table:par-ov-diagnoser assertion).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 65."
+
+[[statement]]
+kind = "assert"
+subject = "table:par-ov-atgarder"
+fact = { entity = "table", fields = { name = "Öppen vård, åtgärder (flerfil)", coverage = "2015.." } }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nSocialstyrelsen documents for PAR_OV a multi-row file (flerfil) with one row per action code of a care contact: ATG, the 0/1 marker ATCO ('Tillhörande ATG-kod är en ATC-kod'), ATGDATUM ('i at-fil') and SEKVENSNR_ATG ('Åtgärdens sekvensnummer i flerfil'). These columns are not in the flat file: PAR_OV row 36 says HDIA is a single code in the flat files and 'I flerfilen DI är HDIA endast en binär variabel'. Listed under one table with the flat file, the flerfil markers HDIA, ATC and ATCO share their column with the flat-file codes, so the main diagnosis code is unorderable in every year (F2 ambiguous). The coverage is the documented start of these columns.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 11, 10, 12, 64, 36."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: ATG"
+fields = { "table" = "par-ov-atgarder" }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nATG is a PAR_OV flerfil column; move it to the par-ov-atgarder table (see the table:par-ov-atgarder assertion).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 11."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: ATCO where key = 'n:atco' and label = 'Tillhörande ATG-kod är en ATC-kod'"
+fields = { "table" = "par-ov-atgarder" }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nATCO ('Tillhörande ATG-kod är en ATC-kod') is a PAR_OV flerfil column; move it to the par-ov-atgarder table (see the table:par-ov-atgarder assertion).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 10."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: ATGDATUM"
+fields = { "table" = "par-ov-atgarder" }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nATGDATUM is a PAR_OV flerfil column; move it to the par-ov-atgarder table (see the table:par-ov-atgarder assertion).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 12."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: SEKVENSNR_ATG"
+fields = { "table" = "par-ov-atgarder" }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nSEKVENSNR_ATG is a PAR_OV flerfil column; move it to the par-ov-atgarder table (see the table:par-ov-atgarder assertion).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 64."
+
+[[statement]]
+kind = "assert"
+subject = "table:par-ov-lakemedel"
+fact = { entity = "table", fields = { name = "Öppen vård, läkemedelstillförsel (flerfil)", coverage = "2025.." } }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nSocialstyrelsen documents for PAR_OV a multi-row file (flerfil) with one row per drug administration of a care contact: LT_ATC, LTDATUM and SEKVENSNR_LT ('Läkemedelstillförsels sekvensnummer i flerfil'). These columns are not in the flat file: PAR_OV row 36 says HDIA is a single code in the flat files and 'I flerfilen DI är HDIA endast en binär variabel'. Listed under one table with the flat file, the flerfil markers HDIA, ATC and ATCO share their column with the flat-file codes, so the main diagnosis code is unorderable in every year (F2 ambiguous). The coverage is the documented start of these columns.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 49, 52, 66, 36."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: LT_ATC"
+fields = { "table" = "par-ov-lakemedel" }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nLT_ATC is a PAR_OV flerfil column; move it to the par-ov-lakemedel table (see the table:par-ov-lakemedel assertion).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 49."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: LTDATUM"
+fields = { "table" = "par-ov-lakemedel" }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nLTDATUM is a PAR_OV flerfil column; move it to the par-ov-lakemedel table (see the table:par-ov-lakemedel assertion).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 52."
+
+[[statement]]
+kind = "set"
+subject = "par-ov: SEKVENSNR_LT"
+fields = { "table" = "par-ov-lakemedel" }
+evidence = "COS ruling 2026-11-17 (PAR orderability): the flat file (plattfil) and the multi-row files (flerfil) are different file shapes, so they are different tables; this is not the era-merge case. Maintainer goal: get everything in both stewards orderable as soon as possible.\n\nSEKVENSNR_LT is a PAR_OV flerfil column; move it to the par-ov-lakemedel table (see the table:par-ov-lakemedel assertion).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 66."
+
+# IDNR links the flerfil rows to each other and to the flat file (Codex P2 on #2545, COS 2026-11-17).
+
+[[statement]]
+kind = "assert"
+subject = "par-sv-diagnoser: IDNR @2015.. where key = 'n:idnr'"
+fact = { entity = "occurrence", fields = { label = "Löpnummer för slutenvårdstillfälle", definition = "Ett unikt internt löpnummer för varje vårdkontakt. Externa beställare får vid behov variabeln men pseudonymiserad med en ärendeunik nyckel", type = "integer", identifier = true } }
+evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): the flerfil tables carry IDNR. PAR_SV row 109 documents IDNR as the link variable (Kopplingsvariabel = Ja) that 'Kopplar ihop flerfilerna med varandra. Kan också användas för att koppla flerfil till plattfil. Måste vara inom samma version!', so every PAR_SV flerfil row carries it. It is the same variable as the PAR_SV flat-file IDNR (lopnr-slutenvardstillfalle; split from the outpatient IDNR below). The period is the par-sv-diagnoser table coverage.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 109."
+
+[[statement]]
+kind = "assert"
+subject = "par-sv-atgarder: IDNR @2015.. where key = 'n:idnr'"
+fact = { entity = "occurrence", fields = { label = "Löpnummer för slutenvårdstillfälle", definition = "Ett unikt internt löpnummer för varje vårdkontakt. Externa beställare får vid behov variabeln men pseudonymiserad med en ärendeunik nyckel", type = "integer", identifier = true } }
+evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): the flerfil tables carry IDNR. PAR_SV row 109 documents IDNR as the link variable (Kopplingsvariabel = Ja) that 'Kopplar ihop flerfilerna med varandra. Kan också användas för att koppla flerfil till plattfil. Måste vara inom samma version!', so every PAR_SV flerfil row carries it. It is the same variable as the PAR_SV flat-file IDNR (lopnr-slutenvardstillfalle; split from the outpatient IDNR below). The period is the par-sv-atgarder table coverage.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 109."
+
+[[statement]]
+kind = "assert"
+subject = "par-sv-lakemedel: IDNR @2025.. where key = 'n:idnr'"
+fact = { entity = "occurrence", fields = { label = "Löpnummer för slutenvårdstillfälle", definition = "Ett unikt internt löpnummer för varje vårdkontakt. Externa beställare får vid behov variabeln men pseudonymiserad med en ärendeunik nyckel", type = "integer", identifier = true } }
+evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): the flerfil tables carry IDNR. PAR_SV row 109 documents IDNR as the link variable (Kopplingsvariabel = Ja) that 'Kopplar ihop flerfilerna med varandra. Kan också användas för att koppla flerfil till plattfil. Måste vara inom samma version!', so every PAR_SV flerfil row carries it. It is the same variable as the PAR_SV flat-file IDNR (lopnr-slutenvardstillfalle; split from the outpatient IDNR below). The period is the par-sv-lakemedel table coverage.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 109."
+
+[[statement]]
+kind = "assert"
+subject = "par-ov-diagnoser: IDNR @2015.. where key = 'n:idnr'"
+fact = { entity = "occurrence", fields = { label = "Löpnummer för öppenvårdskontakt", definition = "Ett unikt internt löpnummer för varje vårdkontakt. Externa beställare får vid behov variabeln men pseudonymiserad med en ärendeunik nyckel", type = "integer", identifier = true } }
+evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): the flerfil tables carry IDNR. PAR_OV row 38 documents IDNR as the link variable (Kopplingsvariabel = Ja) that 'Kopplar ihop flerfilerna med varandra. Kan också användas för att koppla flerfil till plattfil. Måste vara inom samma version!', so every PAR_OV flerfil row carries it. Same source key n:idnr as the flat-file listing, so it is the same variable (lopnr-oppenvardskontakt). The period is the par-ov-diagnoser table coverage.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 38."
+
+[[statement]]
+kind = "assert"
+subject = "par-ov-atgarder: IDNR @2015.. where key = 'n:idnr'"
+fact = { entity = "occurrence", fields = { label = "Löpnummer för öppenvårdskontakt", definition = "Ett unikt internt löpnummer för varje vårdkontakt. Externa beställare får vid behov variabeln men pseudonymiserad med en ärendeunik nyckel", type = "integer", identifier = true } }
+evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): the flerfil tables carry IDNR. PAR_OV row 38 documents IDNR as the link variable (Kopplingsvariabel = Ja) that 'Kopplar ihop flerfilerna med varandra. Kan också användas för att koppla flerfil till plattfil. Måste vara inom samma version!', so every PAR_OV flerfil row carries it. Same source key n:idnr as the flat-file listing, so it is the same variable (lopnr-oppenvardskontakt). The period is the par-ov-atgarder table coverage.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 38."
+
+[[statement]]
+kind = "assert"
+subject = "par-ov-lakemedel: IDNR @2025.. where key = 'n:idnr'"
+fact = { entity = "occurrence", fields = { label = "Löpnummer för öppenvårdskontakt", definition = "Ett unikt internt löpnummer för varje vårdkontakt. Externa beställare får vid behov variabeln men pseudonymiserad med en ärendeunik nyckel", type = "integer", identifier = true } }
+evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): the flerfil tables carry IDNR. PAR_OV row 38 documents IDNR as the link variable (Kopplingsvariabel = Ja) that 'Kopplar ihop flerfilerna med varandra. Kan också användas för att koppla flerfil till plattfil. Måste vara inom samma version!', so every PAR_OV flerfil row carries it. Same source key n:idnr as the flat-file listing, so it is the same variable (lopnr-oppenvardskontakt). The period is the par-ov-lakemedel table coverage.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 38."
+
+# IDNR numbers a different unit in each part of PAR: an inpatient episode (SV), an
+# outpatient visit (OV) and a psychiatric care-form period (TV). One variable each
+# (Codex P2 on #2545, COS 2026-11-17).
+
+[[statement]]
+kind = "set"
+subject = "par-sv: IDNR"
+fields = { "variable" = "lopnr-slutenvardstillfalle" }
+evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): split the inpatient IDNR from the outpatient one. PAR_SV IDNR is labelled 'Löpnummer för slutenvårdstillfälle' and numbers inpatient episodes; PAR_OV IDNR numbers outpatient visits, and the workbook states the two cannot be linked ('Kan ej koppla mellan SV och OV'). They shared a variable only through the common source key n:idnr.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 38, 109."
+
+[[statement]]
+kind = "set"
+subject = "par-tv: IDNR"
+fields = { "variable" = "lopnr-tvangsvardsform" }
+evidence = "COS ruling 2026-11-17 (Codex P2 on #2545), same class as the inpatient split: PAR_TV IDNR is labelled 'Löpnummer för tvångsvårdsform' and numbers psychiatric care-form periods ('Ett unikt löpnummer för varje psykiatrisk vårdformsperiod'), neither a visit nor an inpatient episode. It shared the outpatient variable only through the common source key n:idnr.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 200."
+
+[[statement]]
+kind = "set"
+subject = "par-sv-diagnoser: IDNR"
+fields = { "variable" = "lopnr-slutenvardstillfalle" }
+evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): the flerfil IDNR is the same variable as the PAR_SV flat-file IDNR (it links the two).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 109."
+
+[[statement]]
+kind = "set"
+subject = "par-sv-atgarder: IDNR"
+fields = { "variable" = "lopnr-slutenvardstillfalle" }
+evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): the flerfil IDNR is the same variable as the PAR_SV flat-file IDNR (it links the two).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 109."
+
+[[statement]]
+kind = "set"
+subject = "par-sv-lakemedel: IDNR"
+fields = { "variable" = "lopnr-slutenvardstillfalle" }
+evidence = "COS ruling 2026-11-17 (Codex P2 on #2545): the flerfil IDNR is the same variable as the PAR_SV flat-file IDNR (it links the two).\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 109."
+
+[[statement]]
+kind = "set"
+subject = "var:lopnr-slutenvardstillfalle"
+fields = { "description" = "Unikt internt löpnummer för varje slutenvårdstillfälle. Det kopplar ihop raderna i slutenvårdens flerfiler med varandra och med slutenvårdens plattfil, men bara inom samma version av leveransen. Det går inte att koppla till öppenvårdens löpnummer. Externa beställare kan vid behov få variabeln pseudonymiserad med en ärendeunik nyckel." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. COS ruling 2026-11-17 (Codex P2 on #2545): the version limit belongs in the description.\n\nThe inpatient IDNR numbers episodes (label 'Löpnummer för slutenvårdstillfälle'); PAR_SV row 109 states that it links the flerfil files to each other and to the flat file only within the same version and not between SV and OV.\ncatalog:variable_text:64057:-2192:9862\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' row 109."
+
+# Row keys of the flerfil tables: IDNR plus the file's sequence number (COS 2026-11-17).
+
+[[statement]]
+kind = "set"
+subject = "par-sv-diagnoser: var:lopnr-slutenvardstillfalle"
+fields.row_key = true
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-sv-diagnoser row is one diagnosis of one care contact. IDNR identifies the contact (PAR_SV row 109: link variable of the flerfil files) and SEKVENSNR_DIA numbers the diagnoses within it (PAR_SV row 168: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 109, 168."
+
+[[statement]]
+kind = "set"
+subject = "par-sv-diagnoser: var:sekvensnr-dia"
+fields.row_key = true
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-sv-diagnoser row is one diagnosis of one care contact. IDNR identifies the contact (PAR_SV row 109: link variable of the flerfil files) and SEKVENSNR_DIA numbers the diagnoses within it (PAR_SV row 168: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 109, 168."
+
+[[statement]]
+kind = "set"
+subject = "par-sv-atgarder: var:lopnr-slutenvardstillfalle"
+fields.row_key = true
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-sv-atgarder row is one action of one care contact. IDNR identifies the contact (PAR_SV row 109: link variable of the flerfil files) and SEKVENSNR_ATG numbers the actions within it (PAR_SV row 167: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 109, 167."
+
+[[statement]]
+kind = "set"
+subject = "par-sv-atgarder: var:sekvensnr-atg"
+fields.row_key = true
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-sv-atgarder row is one action of one care contact. IDNR identifies the contact (PAR_SV row 109: link variable of the flerfil files) and SEKVENSNR_ATG numbers the actions within it (PAR_SV row 167: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 109, 167."
+
+[[statement]]
+kind = "set"
+subject = "par-sv-lakemedel: var:lopnr-slutenvardstillfalle"
+fields.row_key = true
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-sv-lakemedel row is one drug administration of one care contact. IDNR identifies the contact (PAR_SV row 109: link variable of the flerfil files) and SEKVENSNR_LT numbers the drug administrations within it (PAR_SV row 169: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 109, 169."
+
+[[statement]]
+kind = "set"
+subject = "par-sv-lakemedel: var:sekvensnr-lt"
+fields.row_key = true
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-sv-lakemedel row is one drug administration of one care contact. IDNR identifies the contact (PAR_SV row 109: link variable of the flerfil files) and SEKVENSNR_LT numbers the drug administrations within it (PAR_SV row 169: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 109, 169."
+
+[[statement]]
+kind = "set"
+subject = "par-ov-diagnoser: var:lopnr-oppenvardskontakt"
+fields.row_key = true
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-ov-diagnoser row is one diagnosis of one care contact. IDNR identifies the contact (PAR_OV row 38: link variable of the flerfil files) and SEKVENSNR_DIA numbers the diagnoses within it (PAR_OV row 65: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 38, 65."
+
+[[statement]]
+kind = "set"
+subject = "par-ov-diagnoser: var:sekvensnr-dia"
+fields.row_key = true
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-ov-diagnoser row is one diagnosis of one care contact. IDNR identifies the contact (PAR_OV row 38: link variable of the flerfil files) and SEKVENSNR_DIA numbers the diagnoses within it (PAR_OV row 65: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 38, 65."
+
+[[statement]]
+kind = "set"
+subject = "par-ov-atgarder: var:lopnr-oppenvardskontakt"
+fields.row_key = true
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-ov-atgarder row is one action of one care contact. IDNR identifies the contact (PAR_OV row 38: link variable of the flerfil files) and SEKVENSNR_ATG numbers the actions within it (PAR_OV row 64: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 38, 64."
+
+[[statement]]
+kind = "set"
+subject = "par-ov-atgarder: var:sekvensnr-atg"
+fields.row_key = true
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-ov-atgarder row is one action of one care contact. IDNR identifies the contact (PAR_OV row 38: link variable of the flerfil files) and SEKVENSNR_ATG numbers the actions within it (PAR_OV row 64: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 38, 64."
+
+[[statement]]
+kind = "set"
+subject = "par-ov-lakemedel: var:lopnr-oppenvardskontakt"
+fields.row_key = true
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-ov-lakemedel row is one drug administration of one care contact. IDNR identifies the contact (PAR_OV row 38: link variable of the flerfil files) and SEKVENSNR_LT numbers the drug administrations within it (PAR_OV row 66: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 38, 66."
+
+[[statement]]
+kind = "set"
+subject = "par-ov-lakemedel: var:sekvensnr-lt"
+fields.row_key = true
+evidence = "Row key (COS ruling 2026-11-17, DESIGN Row keys): a par-ov-lakemedel row is one drug administration of one care contact. IDNR identifies the contact (PAR_OV row 38: link variable of the flerfil files) and SEKVENSNR_LT numbers the drug administrations within it (PAR_OV row 66: sekvensnummer i flerfil), so the two together identify a row.\ncatalog/source/Socialstyrelsen/Metadata_Patientregistret (PAR)_webb.xlsx: 'Metadata - Variabelnivå' rows 38, 66."
