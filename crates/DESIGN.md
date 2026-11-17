@@ -502,8 +502,11 @@ every order (`row_keys`), `show` lists them and `schema` lines flag them.
   different longer ones), get no default; the reader keeps splitting them by years and
   they are curated. Scope (maintainer 2026-11-11): only variables with several wordings,
   a single wording staying the reader's provider fallback; and no set members, since a
-  set page would show the default on some lanes and not others. Curated > rule: the
-  rule runs after curation and only where no curated description applied. The artifact
+  set page would show the default on some lanes and not others. A set is described
+  once instead (maintainer 2026-11-17, #2513): one curated set-level description covers
+  the members, and a member gets a short curated addition only where its name and axis
+  value do not carry the difference. Curated > rule: the rule runs after curation and
+  only where no curated description applied. The artifact
   records the value as a variable override on `description`, rule
   `description-default`; `show` serves it as the `description` without its origin (open
   question: whether a reader should mark it).

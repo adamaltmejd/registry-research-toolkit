@@ -96427,3 +96427,57 @@ kind = "set"
 subject = "bilaga-n3a: V6604"
 fields = { "variable" = "uppskov-med-kapitalvinst-enligt-blankett-n4-835-v6604" }
 evidence = "Maintainer ruling 2026-11-16 (relayed by the Operator): variables of one register that share a label get a context-complete label. These columns carry one SCB variable (v17832), never delivered together in one table, so they are one variable renamed between releases: V0835 2000-01-01..2011-12-31; V7904 2007-01-01..2023-12-31; V6604 2012-01-01..2023-12-31. The SRU field code changed with the new forms; the old and new codes denote the same item: SKV 285 utg. 8 (2005) for the old code, SKV 269 utg. 20 (inkomstår 2012) and SKV 294 utg. 11 (BAS table) for the new one."
+
+[[statement]]
+kind = "set"
+subject = "var:gasco2sksats"
+fields = { "description" = "Skattesats för koldioxidskatt för gasol, i ansökan om återbetalning för båt och skepp." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2513: the merge left wordings no default folds.\n\n2008 anges återbetalningar och från 2017 återbetalningsansökan, samma uppgift; 2014–2016 saknar operationalisering.\ncatalog:variable_text:24727:13879:14245\ncatalog:variable_text:24727:16436:17167\ncatalog:variable_text:24727:17167:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:skattesats-energiskatt-benensksats"
+fields = { "description" = "Skattesats för energiskatt för bensin, i ansökan om återbetalning för båt och skepp." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2513: the merge left wordings no default folds.\n\n2008 anges återbetalningar och från 2017 återbetalningsansökan, samma uppgift; 2014–2016 saknar operationalisering. Definitionen om värmeleverans och övrigt bränsle delas av många skattesatskolumner, motsäger operationaliseringen och tas inte med.\ncatalog:variable_text:26941:13879:14245\ncatalog:variable_text:26941:16071:17167\ncatalog:variable_text:26941:17167:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:skattesats-energiskatt-fotfgensksats"
+fields = { "description" = "Skattesats för energiskatt för flygfotogen för föregående år, i ansökan om återbetalning för yrkesmässig luftfart." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2513: the merge left wordings no default folds.\n\n2008 anges återbetalningar och från 2017 återbetalningsansökan, samma uppgift; 2014–2016 saknar operationalisering. Definitionen om värmeleverans och övrigt bränsle delas av många skattesatskolumner, motsäger operationaliseringen och tas inte med.\ncatalog:variable_text:26956:13879:14245\ncatalog:variable_text:26956:16071:17167\ncatalog:variable_text:26956:17167:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:skattesats-energiskatt-oljensksats"
+fields = { "description" = "Skattesats för energiskatt för olja, från 2017 eldningsolja, i ansökan om återbetalning för båt och skepp." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2513: the merge left wordings no default folds.\n\n2008 anges återbetalningar och från 2017 återbetalningsansökan, samma uppgift; 2014–2016 saknar operationalisering. Definitionen om värmeleverans och övrigt bränsle delas av många skattesatskolumner, motsäger operationaliseringen och tas inte med. Bränslet anges som olja 2008 och eldningsolja från 2017.\ncatalog:variable_text:26967:13879:14245\ncatalog:variable_text:26967:16436:17167\ncatalog:variable_text:26967:17167:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:skattesats-energiskatt-ovrensksats"
+fields = { "description" = "Skattesats för energiskatt för övrigt bränsle, i ansökan om återbetalning för båt och skepp." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2513: the merge left wordings no default folds.\n\n2008 anges återbetalningar och från 2017 återbetalningsansökan, samma uppgift; 2014–2016 saknar operationalisering. Definitionen om värmeleverans och övrigt bränsle delas av många skattesatskolumner, motsäger operationaliseringen och tas inte med.\ncatalog:variable_text:26973:13879:14245\ncatalog:variable_text:26973:16436:17167\ncatalog:variable_text:26973:17167:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:skattesats-koldioxidskatt-benco2sksats"
+fields = { "description" = "Skattesats för koldioxidskatt för bensin, i ansökan om återbetalning för båt och skepp." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2513: the merge left wordings no default folds.\n\n2008 anges återbetalningar och från 2017 återbetalningsansökan, samma uppgift; 2014–2016 saknar operationalisering.\ncatalog:variable_text:26986:13879:14245\ncatalog:variable_text:26986:16071:17167\ncatalog:variable_text:26986:17167:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:skattesats-koldioxidskatt-fotfgco2sksats"
+fields = { "description" = "Skattesats för koldioxidskatt för flygfotogen för föregående år, i ansökan om återbetalning för yrkesmässig luftfart." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2513: the merge left wordings no default folds.\n\n2008 anges återbetalningar och från 2017 återbetalningsansökan, samma uppgift; 2014–2016 saknar operationalisering.\ncatalog:variable_text:27000:13879:14245\ncatalog:variable_text:27000:16071:17167\ncatalog:variable_text:27000:17167:19358"
+
+[[statement]]
+kind = "set"
+subject = "var:skattesats-koldioxidskatt-oljco2sksats"
+fields = { "description" = "Skattesats för koldioxidskatt för olja, från 2017 eldningsolja, i ansökan om återbetalning för båt och skepp." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2513: the merge left wordings no default folds.\n\n2008 anges återbetalningar och från 2017 återbetalningsansökan, samma uppgift; 2014–2016 saknar operationalisering. Bränslet anges som olja 2008 och eldningsolja från 2017.\ncatalog:variable_text:27010:13879:14245\ncatalog:variable_text:27010:16436:17167\ncatalog:variable_text:27010:17167:19723"
+
+[[statement]]
+kind = "set"
+subject = "var:skattesats-koldioxidskatt-ovrco2sksats"
+fields = { "description" = "Skattesats för koldioxidskatt för övrigt bränsle, i ansökan om återbetalning för båt och skepp." }
+evidence = "Maintainer ruling 2026-11-02: one variable, one description. Maintainer ruling 2026-11-11: the description may be reformulated to fix errors, typos and wording. #2513: the merge left wordings no default folds.\n\n2008 anges återbetalningar och från 2017 återbetalningsansökan, samma uppgift; 2014–2016 saknar operationalisering.\ncatalog:variable_text:27017:13879:14245\ncatalog:variable_text:27017:16436:17167\ncatalog:variable_text:27017:17167:19723"
