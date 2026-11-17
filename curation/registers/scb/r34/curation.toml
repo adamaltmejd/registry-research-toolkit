@@ -27873,3 +27873,333 @@ kind = "set"
 subject = "var:yrkstallnkomb"
 fields = { "description" = "Yrkesställning för kombinatörer, det vill säga personer med anknytning till mer än en yrkesställning under året (anställd och företagare)." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nKortat till det som skiljer medlemmen från mängdens beskrivning.\ncatalog:variable_text:45428:12053:18993"
+
+[[statement]]
+kind = "set"
+subject = "set:lone-eller-foretagarinkomst"
+fields = { "axes" = [{ "id" = "manad", "label" = "Månad" }, { "id" = "forvarvskalla", "label" = "Förvärvskälla" }, { "id" = "kalla", "label" = "Källa" }] }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nMedlemmarna anger löne- eller företagarinkomst per månad, per förvärvskälla (största, näst största, tredje största) och, för årsbeloppen, från arbetsgivardeklaration eller kontrolluppgift, enligt etiketterna; summerad inkomst och den omärkta inkomsten har ingen facett.\ncatalog:variable_text:44550:17897:18993\ncatalog:variable_text:44552:17897:18993\ncatalog:variable_text:44563:17897:18993\ncatalog:variable_text:44565:17897:18993\ncatalog:variable_text:44576:17897:18993\ncatalog:variable_text:44578:17897:18993\ncatalog:variable_text:44973:7305:17167\ncatalog:variable_text:44984:7305:17897\ncatalog:variable_text:44995:7305:17167\ncatalog:variable_text:45020:17897:18993\ncatalog:variable_text:45021:17897:18993\ncatalog:variable_text:45022:17897:18993\ncatalog:variable_text:45023:17897:18993\ncatalog:variable_text:45024:17897:18993\ncatalog:variable_text:45025:17897:18993\ncatalog:variable_text:45026:17897:18993\ncatalog:variable_text:45027:17897:18993\ncatalog:variable_text:45028:17897:18993\ncatalog:variable_text:45029:17897:18993\ncatalog:variable_text:45030:17897:18993\ncatalog:variable_text:45031:17897:18993\ncatalog:variable_text:45032:17897:18993\ncatalog:variable_text:45033:17897:18993\ncatalog:variable_text:45034:17897:18993\ncatalog:variable_text:45035:17897:18993\ncatalog:variable_text:45036:17897:18993\ncatalog:variable_text:45037:17897:18993\ncatalog:variable_text:45038:17897:18993\ncatalog:variable_text:45039:17897:18993\ncatalog:variable_text:45040:17897:18993\ncatalog:variable_text:45041:17897:18993\ncatalog:variable_text:45042:17897:18993\ncatalog:variable_text:45043:17897:18993\ncatalog:variable_text:45044:17897:18993\ncatalog:variable_text:45045:17897:18993\ncatalog:variable_text:45046:17897:18993\ncatalog:variable_text:45047:17897:18993\ncatalog:variable_text:45048:17897:18993\ncatalog:variable_text:45049:17897:18993\ncatalog:variable_text:45050:17897:18993\ncatalog:variable_text:45051:17897:18993\ncatalog:variable_text:45052:17897:18993\ncatalog:variable_text:45053:17897:18993\ncatalog:variable_text:45054:17897:18993\ncatalog:variable_text:45055:17897:18993\ncatalog:variable_text:45056:17897:18993\ncatalog:variable_text:45057:17897:18993\ncatalog:variable_text:45058:17897:18993\ncatalog:variable_text:45059:17897:18993\ncatalog:variable_text:45060:17897:18993\ncatalog:variable_text:45061:17897:18993\ncatalog:variable_text:45062:17897:18993\ncatalog:variable_text:45063:17897:18993\ncatalog:variable_text:45064:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:agi1ink"
+fields = { "facets" = { "forvarvskalla" = { "value" = "storsta", "label" = "Största förvärvskällan" }, "kalla" = { "value" = "arbetsgivardeklaration", "label" = "Arbetsgivardeklaration" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Total bruttolön eller företagarinkomst, största förvärvskällan (arbetsgivardeklaration)\ncatalog:variable_text:44550:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:agi1lonfinkapril"
+fields = { "facets" = { "manad" = { "value" = "04", "label" = "April" }, "forvarvskalla" = { "value" = "storsta", "label" = "Största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i april, största förvärvskälla\ncatalog:variable_text:44552:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:agi2ink"
+fields = { "facets" = { "forvarvskalla" = { "value" = "nast-storsta", "label" = "Näst största förvärvskällan" }, "kalla" = { "value" = "arbetsgivardeklaration", "label" = "Arbetsgivardeklaration" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Total bruttolön eller företagarinkomst, näst största förvärvskällan (arbetsgivardeklaration)\ncatalog:variable_text:44563:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:agi2lonfinkapril"
+fields = { "facets" = { "manad" = { "value" = "04", "label" = "April" }, "forvarvskalla" = { "value" = "nast-storsta", "label" = "Näst största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i april, näst största förvärvskälla\ncatalog:variable_text:44565:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:agi3ink"
+fields = { "facets" = { "forvarvskalla" = { "value" = "tredje-storsta", "label" = "Tredje största förvärvskällan" }, "kalla" = { "value" = "arbetsgivardeklaration", "label" = "Arbetsgivardeklaration" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Total bruttolön eller företagarinkomst, tredje största förvärvskällan (arbetsgivardeklaration)\ncatalog:variable_text:44576:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:agi3lonfinkapril"
+fields = { "facets" = { "manad" = { "value" = "04", "label" = "April" }, "forvarvskalla" = { "value" = "tredje-storsta", "label" = "Tredje största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i april, tredje största förvärvskälla\ncatalog:variable_text:44578:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:ku1ink"
+fields = { "facets" = { "forvarvskalla" = { "value" = "storsta", "label" = "Största förvärvskällan" }, "kalla" = { "value" = "kontrolluppgift", "label" = "Kontrolluppgift" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Total bruttolön eller företagarinkomst, största förvärvskällan (kontrolluppgift)\ncatalog:variable_text:44973:7305:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:ku2ink"
+fields = { "facets" = { "forvarvskalla" = { "value" = "nast-storsta", "label" = "Näst största förvärvskällan" }, "kalla" = { "value" = "kontrolluppgift", "label" = "Kontrolluppgift" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Total bruttolön eller företagarinkomst, näst största förvärvskällan (kontrolluppgift)\ncatalog:variable_text:44984:7305:17897"
+
+[[statement]]
+kind = "set"
+subject = "var:ku3ink"
+fields = { "facets" = { "forvarvskalla" = { "value" = "tredje-storsta", "label" = "Tredje största förvärvskällan" }, "kalla" = { "value" = "kontrolluppgift", "label" = "Kontrolluppgift" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Total bruttolön eller företagarinkomst, tredje största förvärvskällan (kontrolluppgift)\ncatalog:variable_text:44995:7305:17167"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-april"
+fields = { "facets" = { "manad" = { "value" = "04", "label" = "April" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i april\ncatalog:variable_text:45020:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-augusti"
+fields = { "facets" = { "manad" = { "value" = "08", "label" = "Augusti" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i augusti\ncatalog:variable_text:45021:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-augusti-nast-storsta"
+fields = { "facets" = { "manad" = { "value" = "08", "label" = "Augusti" }, "forvarvskalla" = { "value" = "nast-storsta", "label" = "Näst största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i augusti, näst största förvärvskälla\ncatalog:variable_text:45022:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-augusti-storsta-forvarvskalla"
+fields = { "facets" = { "manad" = { "value" = "08", "label" = "Augusti" }, "forvarvskalla" = { "value" = "storsta", "label" = "Största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i augusti, största förvärvskälla\ncatalog:variable_text:45023:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-augusti-tredje-storsta"
+fields = { "facets" = { "manad" = { "value" = "08", "label" = "Augusti" }, "forvarvskalla" = { "value" = "tredje-storsta", "label" = "Tredje största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i augusti, tredje största förvärvskälla\ncatalog:variable_text:45024:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-december"
+fields = { "facets" = { "manad" = { "value" = "12", "label" = "December" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i december\ncatalog:variable_text:45025:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-december-nast-storsta"
+fields = { "facets" = { "manad" = { "value" = "12", "label" = "December" }, "forvarvskalla" = { "value" = "nast-storsta", "label" = "Näst största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i december, näst största förvärvskälla\ncatalog:variable_text:45026:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-december-storsta-forvarvskalla"
+fields = { "facets" = { "manad" = { "value" = "12", "label" = "December" }, "forvarvskalla" = { "value" = "storsta", "label" = "Största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i december, största förvärvskälla\ncatalog:variable_text:45027:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-december-tredje-storsta"
+fields = { "facets" = { "manad" = { "value" = "12", "label" = "December" }, "forvarvskalla" = { "value" = "tredje-storsta", "label" = "Tredje största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i december, tredje största förvärvskälla\ncatalog:variable_text:45028:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-februari"
+fields = { "facets" = { "manad" = { "value" = "02", "label" = "Februari" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i februari\ncatalog:variable_text:45029:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-februari-nast-storsta"
+fields = { "facets" = { "manad" = { "value" = "02", "label" = "Februari" }, "forvarvskalla" = { "value" = "nast-storsta", "label" = "Näst största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i februari, näst största förvärvskälla\ncatalog:variable_text:45030:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-februari-tredje-storsta"
+fields = { "facets" = { "manad" = { "value" = "02", "label" = "Februari" }, "forvarvskalla" = { "value" = "tredje-storsta", "label" = "Tredje största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i februari, tredje största förvärvskälla\ncatalog:variable_text:45031:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-febuari-storsta-forvarvskalla"
+fields = { "facets" = { "manad" = { "value" = "02", "label" = "Februari" }, "forvarvskalla" = { "value" = "storsta", "label" = "Största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i febuari, största förvärvskälla\ncatalog:variable_text:45032:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-januari"
+fields = { "facets" = { "manad" = { "value" = "01", "label" = "Januari" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i januari\ncatalog:variable_text:45033:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-januari-nast-storsta"
+fields = { "facets" = { "manad" = { "value" = "01", "label" = "Januari" }, "forvarvskalla" = { "value" = "nast-storsta", "label" = "Näst största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i januari, näst största förvärvskälla\ncatalog:variable_text:45034:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-januari-storsta-forvarvskallan"
+fields = { "facets" = { "manad" = { "value" = "01", "label" = "Januari" }, "forvarvskalla" = { "value" = "storsta", "label" = "Största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i januari, största förvärvskällan\ncatalog:variable_text:45035:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-januari-tredje-storsta"
+fields = { "facets" = { "manad" = { "value" = "01", "label" = "Januari" }, "forvarvskalla" = { "value" = "tredje-storsta", "label" = "Tredje största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i januari, tredje största förvärvskälla\ncatalog:variable_text:45036:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-juli"
+fields = { "facets" = { "manad" = { "value" = "07", "label" = "Juli" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i juli\ncatalog:variable_text:45037:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-juli-nast-storsta"
+fields = { "facets" = { "manad" = { "value" = "07", "label" = "Juli" }, "forvarvskalla" = { "value" = "nast-storsta", "label" = "Näst största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i juli, näst största förvärvskälla\ncatalog:variable_text:45038:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-juli-storsta-forvarvskalla"
+fields = { "facets" = { "manad" = { "value" = "07", "label" = "Juli" }, "forvarvskalla" = { "value" = "storsta", "label" = "Största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i juli, största förvärvskälla\ncatalog:variable_text:45039:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-juli-tredje-storsta"
+fields = { "facets" = { "manad" = { "value" = "07", "label" = "Juli" }, "forvarvskalla" = { "value" = "tredje-storsta", "label" = "Tredje största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i juli, tredje största förvärvskälla\ncatalog:variable_text:45040:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-juni"
+fields = { "facets" = { "manad" = { "value" = "06", "label" = "Juni" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i juni\ncatalog:variable_text:45041:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-juni-nast-storsta"
+fields = { "facets" = { "manad" = { "value" = "06", "label" = "Juni" }, "forvarvskalla" = { "value" = "nast-storsta", "label" = "Näst största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i juni, näst största förvärvskälla\ncatalog:variable_text:45042:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-juni-storsta-forvarvskalla"
+fields = { "facets" = { "manad" = { "value" = "06", "label" = "Juni" }, "forvarvskalla" = { "value" = "storsta", "label" = "Största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i juni, största förvärvskälla\ncatalog:variable_text:45043:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-juni-tredje-storsta"
+fields = { "facets" = { "manad" = { "value" = "06", "label" = "Juni" }, "forvarvskalla" = { "value" = "tredje-storsta", "label" = "Tredje största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i juni, tredje största förvärvskälla\ncatalog:variable_text:45044:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-maj"
+fields = { "facets" = { "manad" = { "value" = "05", "label" = "Maj" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i maj\ncatalog:variable_text:45045:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-maj-nast-storsta-forvarvskalla"
+fields = { "facets" = { "manad" = { "value" = "05", "label" = "Maj" }, "forvarvskalla" = { "value" = "nast-storsta", "label" = "Näst största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i maj, näst största förvärvskälla\ncatalog:variable_text:45046:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-maj-storsta-forvarvskalla"
+fields = { "facets" = { "manad" = { "value" = "05", "label" = "Maj" }, "forvarvskalla" = { "value" = "storsta", "label" = "Största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i maj, största förvärvskälla\ncatalog:variable_text:45047:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-maj-tredje-storsta"
+fields = { "facets" = { "manad" = { "value" = "05", "label" = "Maj" }, "forvarvskalla" = { "value" = "tredje-storsta", "label" = "Tredje största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i maj, tredje största förvärvskälla\ncatalog:variable_text:45048:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-mars"
+fields = { "facets" = { "manad" = { "value" = "03", "label" = "Mars" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i mars\ncatalog:variable_text:45049:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-mars-nast-storsta"
+fields = { "facets" = { "manad" = { "value" = "03", "label" = "Mars" }, "forvarvskalla" = { "value" = "nast-storsta", "label" = "Näst största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i mars, näst största förvärvskälla\ncatalog:variable_text:45050:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-mars-storsta-forvarvskalla"
+fields = { "facets" = { "manad" = { "value" = "03", "label" = "Mars" }, "forvarvskalla" = { "value" = "storsta", "label" = "Största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i mars, största förvärvskälla\ncatalog:variable_text:45051:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-mars-tredje-storsta"
+fields = { "facets" = { "manad" = { "value" = "03", "label" = "Mars" }, "forvarvskalla" = { "value" = "tredje-storsta", "label" = "Tredje största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i mars, tredje största förvärvskälla\ncatalog:variable_text:45052:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-november"
+fields = { "facets" = { "manad" = { "value" = "11", "label" = "November" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i november\ncatalog:variable_text:45053:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-november-nast-storsta"
+fields = { "facets" = { "manad" = { "value" = "11", "label" = "November" }, "forvarvskalla" = { "value" = "nast-storsta", "label" = "Näst största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i november, näst största förvärvskälla\ncatalog:variable_text:45054:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-november-storsta-forvarvskalla"
+fields = { "facets" = { "manad" = { "value" = "11", "label" = "November" }, "forvarvskalla" = { "value" = "storsta", "label" = "Största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i november, största förvärvskälla\ncatalog:variable_text:45055:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-november-tredje-storsta"
+fields = { "facets" = { "manad" = { "value" = "11", "label" = "November" }, "forvarvskalla" = { "value" = "tredje-storsta", "label" = "Tredje största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i november, tredje största förvärvskälla\ncatalog:variable_text:45056:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-oktober"
+fields = { "facets" = { "manad" = { "value" = "10", "label" = "Oktober" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i oktober\ncatalog:variable_text:45057:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-oktober-nast-storsta"
+fields = { "facets" = { "manad" = { "value" = "10", "label" = "Oktober" }, "forvarvskalla" = { "value" = "nast-storsta", "label" = "Näst största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i oktober, näst största förvärvskälla\ncatalog:variable_text:45058:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-oktober-storsta-forvarvskalla"
+fields = { "facets" = { "manad" = { "value" = "10", "label" = "Oktober" }, "forvarvskalla" = { "value" = "storsta", "label" = "Största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i oktober, största förvärvskälla\ncatalog:variable_text:45059:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-oktober-tredje-storsta"
+fields = { "facets" = { "manad" = { "value" = "10", "label" = "Oktober" }, "forvarvskalla" = { "value" = "tredje-storsta", "label" = "Tredje största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i oktober, tredje största förvärvskälla\ncatalog:variable_text:45060:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-september"
+fields = { "facets" = { "manad" = { "value" = "09", "label" = "September" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i september\ncatalog:variable_text:45061:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-september-nast-storsta"
+fields = { "facets" = { "manad" = { "value" = "09", "label" = "September" }, "forvarvskalla" = { "value" = "nast-storsta", "label" = "Näst största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i september, näst största förvärvskälla\ncatalog:variable_text:45062:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-september-storsta"
+fields = { "facets" = { "manad" = { "value" = "09", "label" = "September" }, "forvarvskalla" = { "value" = "storsta", "label" = "Största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i september, största förvärvskälla\ncatalog:variable_text:45063:17897:18993"
+
+[[statement]]
+kind = "set"
+subject = "var:lone-eller-foretagarinkomst-i-september-tredje-storsta"
+fields = { "facets" = { "manad" = { "value" = "09", "label" = "September" }, "forvarvskalla" = { "value" = "tredje-storsta", "label" = "Tredje största förvärvskällan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Löne- eller företagarinkomst i september, tredje största förvärvskälla\ncatalog:variable_text:45064:17897:18993"
