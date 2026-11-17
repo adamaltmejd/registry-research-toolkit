@@ -947,7 +947,7 @@ Time is the axis every relation is drawn on.
   #2343 and #2344).
   One row per variable and table ("Maybe they should always share a row?", maintainer,
   #2408, 2026-11-11): a variable's columns in one table are successive spellings that
-  never overlap in time (`avgar` to 1989, `AvgAr` from 1990), drawn as successive
+  never overlap in time (`kommun` to 1989, `kommunkod` from 1990), drawn as successive
   column pills on that row; only columns delivered side by side in one file (a slot's
   members, `ng2`–`ng5`) overlap, and each takes a row of its own; a later column joins
   a row only where exactly one row can take it, since sharing a slot member's row would
@@ -956,25 +956,32 @@ Time is the axis every relation is drawn on.
   release's years: they overlap on the shared years, so each takes a row there, and a
   later release continues the free row that last had its name, so a table of
   overlapping releases keeps two rows rather than one per release (new rule, proposed by
-  the implementer). A steward's yearly
+  the implementer). Column names compare without regard to case, folded as `reg_core`
+  folds a column's identity, since MONA's SQL Server reads them so: `Persid` and
+  `PersId` in one table are one column, never a rename, and the merged column shows its
+  latest delivery's spelling (the latest end, then the latest start, a tie taking the
+  first in code-point order) (maintainer finding, IFAU, relayed by the Operator
+  2026-11-17; the spelling rule is proposed by the implementer). A steward's yearly
   files of one table are the same column delivered in several files, one box over their
   years with a gap where a year is not delivered (maintainer 2026-11-04). Spans are
   drawn at their real half-open dates, so school years abut instead of sharing a year
   cell; a one-day period (a 31 December snapshot) takes its calendar year, as its text
   does (#2408, 2026-11-11). Where a row joins several spellings, each name sits in its
-  own widest part, or, too wide for it, beside the row (before it the names left of the
-  first that fits, after it the rest), never cut; its tooltip lists each column with
-  its years (new rule, proposed
-  by the implementer). A span's column name is never cut: it
-  sits inside the widest delivered part when it fits there, with no list of the files
-  it is delivered in: the lane already names the table (maintainer, dogfood 2026-11-05,
-  #2321). A span is the column pill stretched over its years: the pill's height,
+  own widest part; its tooltip lists each column with its years and says each rename
+  ("Renamed from X to Y."), as the lane's sentences do (new rule, proposed by the
+  implementer). A span's column name sits inside its widest delivered part with its
+  glyph, cut with an ellipsis where the part is too narrow, never set beside the span:
+  a name outside the box lost its glyph and repeated beside the next lane (maintainer
+  finding, IFAU, relayed by the Operator 2026-11-17; this overturns "never cut",
+  2026-11-04). Where not even one letter fits before the ellipsis, the part shows the
+  glyph and the ellipsis alone (new rule, proposed by the implementer). No list of the
+  files a column is delivered in: the lane already names the table (maintainer, dogfood
+  2026-11-05, #2321). A span is the column pill stretched over its years: the pill's height,
   padding, font and column glyph, the column name only; the axis gives the years, which
   stay in its accessible name (maintainer, #2399, approved 2026-11-11). Its 24 px slot
-  keeps the target size; the 21 px pill sits centred in it. A span too narrow for the
-  column name is a bare bar with the name beside it: to the right, to the left at the
-  axis end, else in a gap between its deliveries, and only where no room is free over
-  the bars at the track's end, never cut. Beside the track the names take a compact
+  keeps the target size; the 21 px pill sits centred in it. Nothing is drawn outside a
+  span's box, so the graph is never wider than its column unless a stacked track grows
+  to its 24 px targets (below). Beside the track the names take a compact
   gutter that narrows with the graph: 27 % of its width between 120 and 230 px, then a
   gap of 2 % between 8 and 16 px, so the 493 px graph of a pane at 961 px keeps a 350 px
   track (#2407, maintainer decisions 2026-11-11). Under a 320 px track, a graph under
@@ -994,12 +1001,15 @@ Time is the axis every relation is drawn on.
   name. A stacked graph that scrolls sideways with no span to tab to is itself a tab stop,
   a region named by the drawing, so a keyboard can scroll it (WCAG 2.1.1; Operator
   fold, #2408). Hovering or focusing a span
-  shows a RAC `Tooltip` with no delay only where the span's own text is cut off, which
-  is its years: always on a column span, on a classification version's (a span with no
-  column name, which carries its years where they fit) only where they do not
-  (maintainer, dogfood 2026-11-05, #2321; the strict reading,
-  maintainer ruling, 2026-11-10): no table name and no study-window note in a tooltip,
-  and no table name on a span. The
+  shows a RAC `Tooltip` with no delay only where the span's own text is cut off
+  (maintainer, dogfood 2026-11-05, #2321; the strict reading, maintainer ruling,
+  2026-11-10): on a column span where the pill cuts a name, with the whole name and its
+  years, or where the span holds a rename, to say it; never a whole name with only its
+  years, which the axis already gives (maintainer finding, IFAU, relayed by the Operator
+  2026-11-17). A classification version (a span with no column name, which carries its
+  years where they fit) shows it only where they do not. The pill's own hover text is
+  off in a span, so one tooltip shows. No table name and no study-window note in a
+  tooltip, and no table name on a span. The
   variables a succession reaches are further lanes in time order, with their arrows. A
   line under the drawing says "Click a column to add or remove its variable." while a
   project is open; with none there is no line and no button at any width, since the top
@@ -1082,9 +1092,10 @@ Time is the axis every relation is drawn on.
   findings sit across its lane, under its spans. It shares the page's axis with the
   `Timeline`. It draws the study years' shade and, over it, an add window that differs,
   as on the variable page, with the axis years on the add window's bounds when one is
-  drawn. It has no legend: a span names its column, a tooltip adds the years it cuts,
-  its accessible name carries its state, and each lane states its relations in words to
-  a screen reader (maintainer 2026-11-04). Its add bar shows only while a change is
+  drawn. It has no legend: a span names its column, a tooltip adds what it cuts and the
+  rename a dashed hop marks, its accessible name carries its state, and each lane states
+  its relations in words to a screen reader, each rename its dashed hops draw among them
+  (maintainer 2026-11-04). Its add bar shows only while a change is
   staged. On a variable page the `LaneGraph` is the `Timeline` (above). Don't draw
   free-form node graphs; the time axis is the information.
 

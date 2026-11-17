@@ -33,6 +33,7 @@ export function Pill({
   kind = false,
   state,
   className,
+  cutTitle = true,
   children,
 }: {
   tone: PillTone;
@@ -48,6 +49,9 @@ export function Pill({
   state?: ColumnState;
   /** Stretches the pill (a lane span); never restyles it. */
   className?: string;
+  /** A cut name shows the whole as hover text; off where the caller's own
+   * tooltip gives it (a lane span). */
+  cutTitle?: boolean;
   children: ReactNode;
 }) {
   const body = (
@@ -65,7 +69,10 @@ export function Pill({
         </svg>
       )}
       {children !== "" && (
-        <span className={styles.name} onPointerEnter={titleWhenCut}>
+        <span
+          className={styles.name}
+          onPointerEnter={cutTitle ? titleWhenCut : undefined}
+        >
           {children}
         </span>
       )}

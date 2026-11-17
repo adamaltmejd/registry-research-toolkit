@@ -45,17 +45,30 @@ export interface VariableColumn {
   segments: CatalogSegment[];
 }
 
+const compare = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
+
 /** A delivery column's identity is its table, its release where the table's
- * releases share years, and its exact column name. A steward's yearly files of
+ * releases share years, and its column name folded as `reg_core` folds a
+ * column's identity: MONA's SQL Server reads column names without regard to
+ * case, so `Persid` and `PersId` are one column. A steward's yearly files of
  * one table are the same column delivered in several files; one name in two
- * releases that share a year is two columns, each over its own years. */
+ * releases that share a year is two columns, each over its own years. A
+ * column delivered under several casings shows its latest delivery's (the
+ * latest end, then the latest start), the name a researcher meets in the
+ * newest file; a tie takes the first in code-point order, so the API's order
+ * never decides. */
 export function variableColumns(
   segments: readonly CatalogSegment[],
 ): VariableColumn[] {
   const columns = new Map<string, VariableColumn>();
+  const latest = new Map<string, [string, string]>();
   for (const segment of segments) {
     const release = segment.release ?? null;
-    const id = JSON.stringify([segment.table, release, segment.column]);
+    const id = JSON.stringify([
+      segment.table,
+      release,
+      foldIdentity(segment.column),
+    ]);
     let column = columns.get(id);
     if (!column) {
       column = {
@@ -68,6 +81,16 @@ export function variableColumns(
       columns.set(id, column);
     }
     column.segments.push(segment);
+    const at: [string, string] = [
+      segment.period.end ?? "9999-12-31",
+      segment.period.start ?? "0001-01-01",
+    ];
+    const seen = latest.get(id);
+    const order = seen ? compare(at[0], seen[0]) || compare(at[1], seen[1]) : 1;
+    if (order > 0 || (order === 0 && segment.column < column.spelling)) {
+      latest.set(id, at);
+      column.spelling = segment.column;
+    }
   }
   return [...columns.values()];
 }

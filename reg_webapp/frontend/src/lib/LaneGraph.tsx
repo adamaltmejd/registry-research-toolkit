@@ -197,6 +197,20 @@ function breakMarks(
   }));
 }
 
+/** What each dashed rename hop under a span says (`laneGeometry` draws one
+ * per change of name between its named parts), in date order. */
+function renames(span: LaneSpanModel): string[] {
+  const named = (span.segments ?? [])
+    .filter((segment) => segment.name !== null)
+    .toSorted((a, b) => a.from - b.from);
+  return named.slice(1).flatMap((after, i) => {
+    const before = named[i].name;
+    return before === after.name
+      ? []
+      : [`Renamed from ${before} to ${after.name}`];
+  });
+}
+
 /** Measured heights by lane id, and the callback a measured block reports
  * to; zero gives the room back. */
 function useHeights() {
@@ -432,8 +446,19 @@ export function LaneGraph({
                 aria-label={single ? undefined : label}
               >
                 {geometry.lanes.map((placed) => {
-                  const lane = lanes.find((l) => l.id === placed.id);
-                  if (!lane) return null;
+                  const model = lanes.find((l) => l.id === placed.id);
+                  if (!model) return null;
+                  const laneSpans = spansByLane.get(model.id) ?? [];
+                  // The lane's sentences: its own relations, then each rename
+                  // its dashed hops draw, so the marks need no legend
+                  // (maintainer 2026-11-04).
+                  const relations = [
+                    ...(model.relations ?? []),
+                    ...laneSpans.flatMap(renames),
+                  ];
+                  const lane = relations.length
+                    ? { ...model, relations }
+                    : model;
                   return (
                     <li
                       key={lane.id}
@@ -463,7 +488,7 @@ export function LaneGraph({
                         top={placed.y}
                       />
                       <ul className={styles.spans}>
-                        {(spansByLane.get(lane.id) ?? []).map((span) => {
+                        {laneSpans.map((span) => {
                           const at = geometry.spans.get(span.id);
                           return at ? (
                             <li
@@ -1085,6 +1110,8 @@ function Span({
         years={showYears ? span.years : undefined}
         state={span.segments?.[i]?.state ?? span.state}
         className={styles.face}
+        // The span's own tooltip gives a cut name; no second, native one.
+        cutTitle={false}
       />
     );
   });
@@ -1116,16 +1143,6 @@ function Span({
           ✕
         </span>
       )}
-      {at.label !== "inside" && (
-        <span className={styles.outside} style={{ left: at.labelX }}>
-          {span.name}
-        </span>
-      )}
-      {at.beside.map((name) => (
-        <span key={name.x} className={styles.outside} style={{ left: name.x }}>
-          {name.text}
-        </span>
-      ))}
     </>
   );
   const attributes = {
@@ -1134,9 +1151,15 @@ function Span({
     "data-blocked": span.blocked || undefined,
   };
   // The tooltip opens only where the span's own text is cut off (maintainer,
-  // 2026-11-10, #2321): its years, which a span no longer shows (#2399). The
-  // column name is never cut.
-  const tipped = (!!span.years || !!span.columns) && !showYears;
+  // 2026-11-10, #2321): a column name the pill cuts, with the years the span
+  // never shows (#2399); a whole name with only its years adds nothing the
+  // axis lacks. A span with no column name (a classification version) opens
+  // where its years do not fit.
+  // A span whose dashed hop marks a rename opens too, to say it in words.
+  const renamed = renames(span);
+  const tipped = span.name
+    ? renamed.length > 0 || at.segments.some((segment) => segment.cut)
+    : (!!span.label || !!span.years) && !showYears;
   const tip = tipped && (
     <Tooltip
       triggerRef={face}
@@ -1168,6 +1191,11 @@ function Span({
         ) : (
           (span.label ?? span.years)
         )}
+        {renamed.map((sentence) => (
+          <span key={sentence} className={styles.tipLine}>
+            {sentence}.
+          </span>
+        ))}
       </span>
     </Tooltip>
   );

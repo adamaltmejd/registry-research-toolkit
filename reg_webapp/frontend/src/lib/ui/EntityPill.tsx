@@ -28,6 +28,7 @@ export function EntityPill({
   years,
   state,
   className,
+  cutTitle,
 }: {
   entity: Entity;
   /** Empty for a lane span too narrow to hold it; a count's number with its
@@ -40,6 +41,8 @@ export function EntityPill({
   state?: ColumnState;
   /** Stretches the pill into a lane span (LaneGraph); never restyles it. */
   className?: string;
+  /** False where the caller's own tooltip gives a cut name (a lane span). */
+  cutTitle?: boolean;
 }) {
   const { tone, glyph } = ENTITIES[entity];
   return (
@@ -50,6 +53,7 @@ export function EntityPill({
       years={years}
       state={state}
       className={className}
+      cutTitle={cutTitle}
     >
       {name}
     </Pill>

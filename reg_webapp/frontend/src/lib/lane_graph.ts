@@ -4,10 +4,9 @@
  * the component measures its width and draws what this returns, so the same
  * input at the same width always lays out the same way.
  *
- * A span keeps its true years. When its name does not fit inside, the name is
- * set beside it, and packing reserves that room, so a label never covers
- * another span. Spans of one lane that would collide move to a further row of
- * that lane.
+ * A span keeps its true years. Its name sits inside it, cut with an ellipsis
+ * where the span is too narrow, so nothing is drawn outside a span's box.
+ * Spans of one lane that would collide move to a further row of that lane.
  */
 
 export interface LaneSegment {
@@ -82,6 +81,8 @@ interface PlacedSegment {
   /** The name set inside this part, or "" for none: each column name of a
    * span sits once, in its widest part. */
   label: string;
+  /** The label is wider than the part, so the pill cuts it. */
+  cut: boolean;
   /** Relative to the span's own left edge. */
   x: number;
   width: number;
@@ -93,13 +94,6 @@ export interface PlacedSpan {
   y: number;
   width: number;
   segments: PlacedSegment[];
-  /** Where the name sits: inside the span, or beside it. */
-  label: "inside" | "right" | "left";
-  /** Where a name set beside the span starts, from the span's left edge. */
-  labelX: number;
-  /** A span over several column names: those too wide for their parts, set
-   * beside it, each `x` from the span's left edge. */
-  beside: { text: string; x: number }[];
 }
 
 interface PlacedLane {
@@ -122,9 +116,8 @@ export interface LaneGeometry {
   coverageY: number | null;
   lanes: PlacedLane[];
   spans: Map<string, PlacedSpan>;
-  /** Where the widest drawing ends: past the graph's width when a column name
-   * is wider than the whole track or a stacked track grows to its spans'
-   * least width, and the graph then scrolls itself. */
+  /** Where the drawing ends: past the graph's width when a stacked track
+   * grows to its spans' least width, and the graph then scrolls itself. */
   contentWidth: number;
   /** `label` and `anchor` are set on the one label that stands for both
    * window bounds when they are too close to label apart. */
@@ -186,7 +179,6 @@ const COLUMN_CHAR = 7.2;
 // The column pill around the name: 6 px padding and a 1 px border each side,
 // then its 12 px glyph and the 4 px gap after it.
 const LABEL_PAD = 14 + 12 + 4;
-const LABEL_GAP = 4;
 const PACK_GAP = 6;
 const MIN_SPAN = 6;
 // Stacked (phones, or any graph under a finger whose spans would be smaller),
@@ -249,14 +241,10 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
   const drawWidth = Math.max(input.width, trackX + trackWidth);
   const x = (year: number) => trackX + (year - first) * pxPerYear;
 
-  // Place each span on the track, then pack each lane's spans into rows by the
-  // room their labels need.
+  // Place each span on the track, then pack each lane's spans into rows.
   const placed = new Map<string, PlacedSpan>();
   const rowsOf = new Map<string, number>();
   const rowOf = new Map<string, number>();
-  const trackEnd = trackX + trackWidth;
-  // Where each span's drawing ends, its name included when set to the right.
-  const ends = new Map<string, number>();
   for (const lane of input.lanes) {
     const spans = input.spans
       .filter((s) => s.lane === lane.id)
@@ -265,11 +253,6 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
     for (const span of spans) {
       const left = x(span.from);
       const width = Math.max(x(span.to) - left, MIN_SPAN);
-      // The column name is never cut (maintainer 2026-11-04): it sits inside
-      // when it fits, with no file list (#2321). A span too narrow for the name is
-      // a plain bar with the name beside it, right, or left at the axis end.
-      // The name is drawn in one delivered segment, the widest, so it must fit
-      // that segment, not the envelope across gaps.
       const segments: PlacedSegment[] = (
         span.segments ?? [{ name: null, from: span.from, to: span.to }]
       ).map((segment) => {
@@ -277,115 +260,40 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
         return {
           name: segment.name,
           label: "",
+          cut: false,
           x: segLeft,
           width: Math.max(x(segment.to) - left - segLeft, MIN_SPAN),
         };
       });
-      // Each name's widest part: where it is set when it fits.
+      // Each column name sits once, in its widest part, so a one-year first
+      // delivery does not cut it; the pill cuts a name too wide for that
+      // part with an ellipsis, and its tooltip gives the whole (maintainer
+      // finding, IFAU, 2026-11-17).
       const widest = new Map<string, PlacedSegment>();
       for (const segment of segments) {
         const name = segment.name ?? span.name;
         const best = widest.get(name);
         if (!best || segment.width > best.width) widest.set(name, segment);
       }
-      // Several column names (one variable's spellings in one table, #2408):
-      // each sits inside its widest part; one too wide for its parts is set
-      // beside the span, never cut (maintainer 2026-11-04): before it the names
-      // left of the first that fits, after it the rest, each side moving to
-      // the other where the track has no room.
-      const several = widest.size > 1;
-      const beside: PlacedSpan["beside"] = [];
-      if (several) {
-        const fitting = [...widest].filter(
-          ([name, segment]) => labelWidth(name) <= segment.width,
-        );
-        const firstFit = Math.min(...fitting.map(([, segment]) => segment.x));
-        let before: string[] = [];
-        let after: string[] = [];
-        for (const [name, segment] of widest) {
-          if (labelWidth(name) <= segment.width) continue;
-          (segment.x < firstFit ? before : after).push(name);
-        }
-        const text = (names: string[]) => names.join(", ");
-        if (
-          before.length &&
-          left - LABEL_GAP - labelWidth(text(before)) < trackX
-        ) {
-          after = [...before, ...after];
-          before = [];
-        }
-        if (
-          after.length &&
-          left + width + LABEL_GAP + labelWidth(text(after)) > trackEnd &&
-          left - LABEL_GAP - labelWidth(text([...before, ...after])) >= trackX
-        ) {
-          before = [...before, ...after];
-          after = [];
-        }
-        if (before.length)
-          beside.push({
-            text: text(before),
-            x: -LABEL_GAP - labelWidth(text(before)),
-          });
-        if (after.length)
-          beside.push({ text: text(after), x: width + LABEL_GAP });
+      for (const [name, segment] of widest) {
+        segment.cut = !!name && labelWidth(name) > segment.width;
+        // Where not even one letter fits before the ellipsis, the glyph and
+        // the ellipsis alone, so the stub never reads as a name.
+        segment.label =
+          segment.cut && segment.width < labelWidth("xx") ? "…" : name;
       }
-      const room = Math.max(...segments.map((segment) => segment.width));
       // A span with no name (a classification version, named in its tooltip)
-      // needs no label room and may touch its neighbour: a yearly series
-      // stays on one row.
-      const need = span.name && !several ? labelWidth(span.name) : 0;
+      // may touch its neighbour: a yearly series stays on one row.
       const packGap = span.name ? PACK_GAP : 0;
-      // Beside the span first, then in a gap between its deliveries; where no
-      // room is free the name sits over the bars at the track's end, uncut.
-      const gaps = segments.slice(0, -1).map((segment, i) => ({
-        from: segment.x + segment.width,
-        to: segments[i + 1].x,
-      }));
-      const gap = gaps.find((g) => g.to - g.from >= 2 * LABEL_GAP + need);
-      const [label, labelX]: [PlacedSpan["label"], number] =
-        several || need <= room
-          ? ["inside", 0]
-          : left + width + LABEL_GAP + need <= trackEnd
-            ? ["right", width + LABEL_GAP]
-            : left - LABEL_GAP - need >= trackX
-              ? ["left", -LABEL_GAP - need]
-              : gap
-                ? ["right", gap.from + LABEL_GAP]
-                : ["right", Math.max(trackX, trackEnd - need) - left];
-      const start = Math.min(
-        left,
-        left + labelX,
-        ...beside.map((name) => left + name.x),
-      );
-      const end = Math.max(
-        left + width,
-        label === "inside" ? left : left + labelX + need,
-        ...beside.map((name) => left + name.x + labelWidth(name.text)),
-      );
-      let row = rowEnds.findIndex((rowEnd) => rowEnd + packGap <= start);
+      let row = rowEnds.findIndex((rowEnd) => rowEnd + packGap <= left);
       if (row < 0) {
         row = rowEnds.length;
-        rowEnds.push(end);
+        rowEnds.push(left + width);
       } else {
-        rowEnds[row] = end;
+        rowEnds[row] = left + width;
       }
-      if (label === "inside")
-        for (const [name, segment] of widest)
-          if (!several || labelWidth(name) <= segment.width)
-            segment.label = name;
       rowOf.set(span.id, row);
-      ends.set(span.id, end);
-      placed.set(span.id, {
-        id: span.id,
-        x: left,
-        y: 0,
-        width,
-        segments,
-        label,
-        labelX,
-        beside,
-      });
+      placed.set(span.id, { id: span.id, x: left, y: 0, width, segments });
     }
     // A lane with no spans (a group member's heading row) keeps no span row.
     rowsOf.set(lane.id, rowEnds.length);
@@ -543,13 +451,8 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
     return [
       {
         ...edge,
-        // A name set right of the bar: the arrow leaves after it, not
-        // through it, when there is room before the successor.
         d: curve(
-          Math.max(
-            fromEnd,
-            Math.min(ends.get(edge.from) ?? fromEnd, to.x - LABEL_GAP),
-          ),
+          fromEnd,
           from.y + SPAN_HEIGHT / 2,
           to.x,
           to.y + SPAN_HEIGHT / 2,
@@ -588,7 +491,7 @@ export function laneGeometry(input: LaneGeometryInput): LaneGeometry {
     coverageY,
     lanes,
     spans: placed,
-    contentWidth: Math.max(drawWidth, ...ends.values()),
+    contentWidth: drawWidth,
     ticks,
     edges,
   };

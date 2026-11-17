@@ -359,21 +359,6 @@ a.nameText {
   color: var(--err);
 }
 
-.outside {
-  position: absolute;
-  top: 50%;
-  color: var(--text);
-  font-family: var(--font-mono);
-  font-size: var(--text-column);
-  font-weight: var(--column-weight);
-  white-space: nowrap;
-  transform: translateY(-50%);
-}
-
-.span[data-state="out"] .outside {
-  color: var(--text-muted);
-}
-
 @media (prefers-reduced-motion: reduce) {
   .edge,
   .face {
