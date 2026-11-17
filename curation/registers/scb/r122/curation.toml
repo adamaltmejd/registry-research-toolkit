@@ -18534,3 +18534,105 @@ kind = "set"
 subject = "set:ytterligare-franvaroorsaker"
 fields = { "description" = "Om personen hade fler än en frånvaroorsak, eller fler än en anledning att arbeta mindre än vanligt, under veckan. De flesta variabler är följdfrågan om personen även hade någon annan typ av ledighet eller frånvaro, en per angiven frånvaroorsak, för huvudsysslan respektive för helt frånvarande." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nSamma följdfråga för varje frånvaroorsak; en äldre variabel ställer motsvarande fråga om fler än en anledning.\ncatalog:variable_text:9986:18628:20819\ncatalog:variable_text:10118:18628:20819\ncatalog:variable_text:10364:8401:12874"
+
+[[statement]]
+kind = "set"
+subject = "set:ytterligare-franvaroorsaker"
+fields = { "axes" = [{ "id" = "franvaro", "label" = "Frånvaro" }] }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nSamma följdfråga om ytterligare frånvaroorsak ställs åtta gånger för frånvarodagar i huvudsysslan och åtta gånger för helt frånvarande, enligt etiketterna; frånvaroskäl 1993–2005 har ingen facett.\ncatalog:variable_text:9986:18628:20819\ncatalog:variable_text:9987:18628:20819\ncatalog:variable_text:9988:18628:20819\ncatalog:variable_text:9989:18628:20819\ncatalog:variable_text:9990:18628:20819\ncatalog:variable_text:9991:18628:20819\ncatalog:variable_text:9992:18628:20819\ncatalog:variable_text:9993:18628:20819\ncatalog:variable_text:10118:18628:20819\ncatalog:variable_text:10119:18628:20819\ncatalog:variable_text:10120:18628:20819\ncatalog:variable_text:10121:18628:20819\ncatalog:variable_text:10122:18628:20819\ncatalog:variable_text:10123:18628:20819\ncatalog:variable_text:10124:18628:20819\ncatalog:variable_text:10125:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:dfran51"
+fields = { "facets" = { "franvaro" = { "value" = "franvarodagar", "label" = "Frånvarodagar i huvudsysslan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Huvudsyssla, frånvaroorsak, Om fler frånvaroorsaker\ncatalog:variable_text:9986:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:dfran52"
+fields = { "facets" = { "franvaro" = { "value" = "franvarodagar", "label" = "Frånvarodagar i huvudsysslan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Huvudsyssla, frånvaroorsak 1, Om fler frånvaroorsaker\ncatalog:variable_text:9987:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:dfran53"
+fields = { "facets" = { "franvaro" = { "value" = "franvarodagar", "label" = "Frånvarodagar i huvudsysslan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Huvudsyssla, frånvaroorsak 2, Om fler frånvaroorsaker\ncatalog:variable_text:9988:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:dfran54"
+fields = { "facets" = { "franvaro" = { "value" = "franvarodagar", "label" = "Frånvarodagar i huvudsysslan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Huvudsyssla, frånvaroorsak 3, Om fler frånvaroorsaker\ncatalog:variable_text:9989:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:dfran55"
+fields = { "facets" = { "franvaro" = { "value" = "franvarodagar", "label" = "Frånvarodagar i huvudsysslan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Huvudsyssla, frånvaroorsak 4, Om fler frånvaroorsaker\ncatalog:variable_text:9990:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:dfran56"
+fields = { "facets" = { "franvaro" = { "value" = "franvarodagar", "label" = "Frånvarodagar i huvudsysslan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Huvudsyssla, frånvaroorsak 5, Om fler frånvaroorsaker\ncatalog:variable_text:9991:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:dfran57"
+fields = { "facets" = { "franvaro" = { "value" = "franvarodagar", "label" = "Frånvarodagar i huvudsysslan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Huvudsyssla, frånvaroorsak 6, Om fler frånvaroorsaker\ncatalog:variable_text:9992:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:dfran58"
+fields = { "facets" = { "franvaro" = { "value" = "franvarodagar", "label" = "Frånvarodagar i huvudsysslan" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Huvudsyssla, frånvaroorsak 7, Om fler frånvaroorsaker\ncatalog:variable_text:9993:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:hfran21"
+fields = { "facets" = { "franvaro" = { "value" = "helt-franvarande", "label" = "Helt frånvarande" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Övrig frånvaroorsak 1, helt frånvarande, Hade du även någon annan typ av ledighet eller frånvaro under veckan?\ncatalog:variable_text:10118:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:hfran22"
+fields = { "facets" = { "franvaro" = { "value" = "helt-franvarande", "label" = "Helt frånvarande" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Övrig frånvaroorsak 2, helt frånvarande, Hade du även någon annan typ av ledighet eller frånvaro under veckan?\ncatalog:variable_text:10119:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:hfran23"
+fields = { "facets" = { "franvaro" = { "value" = "helt-franvarande", "label" = "Helt frånvarande" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Övrig frånvaroorsak 3, helt frånvarande, Hade du även någon annan typ av ledighet eller frånvaro under veckan?\ncatalog:variable_text:10120:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:hfran24"
+fields = { "facets" = { "franvaro" = { "value" = "helt-franvarande", "label" = "Helt frånvarande" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Övrig frånvaroorsak 4, helt frånvarande, Hade du även någon annan typ av ledighet eller frånvaro under veckan?\ncatalog:variable_text:10121:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:hfran25"
+fields = { "facets" = { "franvaro" = { "value" = "helt-franvarande", "label" = "Helt frånvarande" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Övrig frånvaroorsak 5, helt frånvarande, Hade du även någon annan typ av ledighet eller frånvaro under veckan?\ncatalog:variable_text:10122:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:hfran26"
+fields = { "facets" = { "franvaro" = { "value" = "helt-franvarande", "label" = "Helt frånvarande" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Övrig frånvaroorsak 6, helt frånvarande, Hade du även någon annan typ av ledighet eller frånvaro under veckan?\ncatalog:variable_text:10123:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:hfran27"
+fields = { "facets" = { "franvaro" = { "value" = "helt-franvarande", "label" = "Helt frånvarande" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Övrig frånvaroorsak 7, helt frånvarande, Hade du även någon annan typ av ledighet eller frånvaro under veckan?\ncatalog:variable_text:10124:18628:20819"
+
+[[statement]]
+kind = "set"
+subject = "var:hfran28"
+fields = { "facets" = { "franvaro" = { "value" = "helt-franvarande", "label" = "Helt frånvarande" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Övrig frånvaroorsak 8, helt frånvarande, Hade du även någon annan typ av ledighet eller frånvaro under veckan?\ncatalog:variable_text:10125:18628:20819"

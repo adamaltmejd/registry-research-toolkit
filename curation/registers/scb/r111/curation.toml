@@ -13818,3 +13818,45 @@ kind = "set"
 subject = "set:tid-till-forsta-arbete"
 fields = { "description" = "Hur lång tid efter avslutad utbildning (gymnasium, högskola eller yrkeshögskola) personen fick sitt första arbete." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nMedlemmarna mäter tid till första arbete efter olika utbildningar i olika undersökningar; månadsangivelsen gäller inte alla, så den utelämnas.\ncatalog:variable_text:36655:17167:17348\ncatalog:variable_text:36659:13208:13239\ncatalog:variable_text:36967:18078:18262"
+
+[[statement]]
+kind = "set"
+subject = "set:sysselsattningsstatus"
+fields = { "axes" = [{ "id" = "person", "label" = "Person" }] }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nSex medlemmar som avser personen själv, fadern eller modern, två var, enligt etiketterna.\ncatalog:variable_text:37353:13208:13239\ncatalog:variable_text:37354:13939:13970\ncatalog:variable_text:37355:13208:13239\ncatalog:variable_text:37356:13208:13239\ncatalog:variable_text:37357:13939:13970\ncatalog:variable_text:37358:13939:13970"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus"
+fields = { "facets" = { "person" = { "value" = "egen", "label" = "Personen själv" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Sysselsättningsstatus\ncatalog:variable_text:37353:13208:13239"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus-november"
+fields = { "facets" = { "person" = { "value" = "egen", "label" = "Personen själv" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Sysselsättningsstatus, november (SyssSt_K)\ncatalog:variable_text:37354:13939:13970"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus-november-2"
+fields = { "facets" = { "person" = { "value" = "far", "label" = "Fadern" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Sysselsättningsstatus, november (faderns)\ncatalog:variable_text:37355:13208:13239"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus-november-3"
+fields = { "facets" = { "person" = { "value" = "mor", "label" = "Modern" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Sysselsättningsstatus, november (moderns)\ncatalog:variable_text:37356:13208:13239"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus-november-far"
+fields = { "facets" = { "person" = { "value" = "far", "label" = "Fadern" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Sysselsättningsstatus november, far\ncatalog:variable_text:37357:13939:13970"
+
+[[statement]]
+kind = "set"
+subject = "var:sysselsattningsstatus-november-mor"
+fields = { "facets" = { "person" = { "value" = "mor", "label" = "Modern" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Sysselsättningsstatus november, mor\ncatalog:variable_text:37358:13939:13970"

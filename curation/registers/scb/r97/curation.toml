@@ -5335,12 +5335,6 @@ evidence = "Antal ägarmånader ingår i kandidatgruppen för husets ägandetid.
 [[statement]]
 kind = "set"
 subject = "var:bhustxj"
-fields = { "sets" = ["klassning-jordbruksfastighet"] }
-evidence = "Uppgiften klassificerar huset efter lantbruksenhet.\ncatalog:variable_text:24035:9496:10957"
-
-[[statement]]
-kind = "set"
-subject = "var:bhustxj"
 fields = { "tags" = ["agriculture", "property"] }
 evidence = "Uppgiften klassificerar huset efter lantbruksenhet.\ncatalog:variable_text:24035:9496:10957"
 

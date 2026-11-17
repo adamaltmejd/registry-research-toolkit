@@ -71,6 +71,12 @@ ask.
   `catalog:variable_text:<variable>:<start>:<end>` line per run that carries a wording.
 - A set description says what ties the members together, and names axes only when the
   set has them. It restates no member's text.
+- A writer has three outcomes per item: a description, `open` (texts too thin or
+  contradictory), or a **set fault**: a member that does not belong, a set that is really
+  two or more sets, an obvious missing member, axes wrong or missing against the axis bar,
+  or a set that should not exist. Report a set fault with the class, the members and a
+  located reason; never write a description that papers over it, and never file it as
+  `open`.
 
 ## Identity
 
@@ -108,7 +114,9 @@ Run all of it before the PR is ready.
 2. Fresh-agent audit. A subagent that did not write the text gets only the provider
    wordings per year (every raw row) and the written description, not your reasons.
    Per item: which claims the wordings do not support; what important content is
-   missing; whether the wordings describe one thing or several (a missed split).
+   missing; whether the wordings describe one thing or several (a missed split). For a
+   set, the auditor reports set faults (the classes above) as their own outcome, separate
+   from description defects, with members, a located reason and confirmed or suspect.
    - Coverage: every identity change, occurrence correction and item that differed, and
      a random 20% of the rest.
    - If more than 20% of audited items have a defect in the first round, audit every
@@ -134,8 +142,13 @@ Never run a real-seed `build` as a check inside a lane, and never `pkill` or `ki
 - PR body: scope; rulings cited; counts (written, split, identity fix, occurrence
   correction, open, set-skipped); identity-change table (register, change, new ids);
   open list with located reasons; operator calls (each judgment call with its reason);
-  findings left for review (export errors not corrected); steward impact; checks run and
-  not run; audit rates before fixes.
+  findings left for review (export errors not corrected, and set faults not fixed in the
+  pass, with their count and where the list lives); steward impact; checks run and not
+  run; audit rates before fixes.
+- Set faults from writers and auditors are collected into one list (register, set, class,
+  members, located reason, confirmed or suspect). Membership and axis fixes are identity
+  changes: fix them in the pass's identity commits or in a follow-up curation PR, never
+  silently in a description.
 - Keep a running rulings log during the pass. A rule found mid-pass is written down at
   once in the pass's issue. A durable product rule about the catalog model goes into
   `crates/DESIGN.md` through a reviewed PR, not into the skill or the lane's TOML.

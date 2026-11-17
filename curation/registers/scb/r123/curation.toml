@@ -15922,3 +15922,45 @@ kind = "set"
 subject = "set:yrkesbyte-pa-grund-av-besvar"
 fields = { "description" = "Om besvär var en viktig orsak till att personen bytte yrke." }
 evidence = "Maintainer ruling 2026-11-17 (#2513, relayed by the Operator): one curated set-level description covers a set; a member gets a short addition only where it really differs; set members get no generated default description.\n\nBåda variablerna har samma fråga.\ncatalog:variable_text:11684:9862:10227\ncatalog:variable_text:11686:10592:10957"
+
+[[statement]]
+kind = "set"
+subject = "set:konflikter-pa-arbetsplatsen"
+fields = { "axes" = [{ "id" = "motpart", "label" = "Motpart" }] }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nKonflikt eller bråk med chefer, arbetskamrater och andra personer finns i två frågeversioner var, enligt etiketterna; sammanfattningen och nej-rutan har ingen facett.\ncatalog:variable_text:11597:9862:10227\ncatalog:variable_text:11700:9862:10227\ncatalog:variable_text:11819:9862:10227\ncatalog:variable_text:11828:19723:20089\ncatalog:variable_text:11829:19723:20089\ncatalog:variable_text:11830:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:andrbrak"
+fields = { "facets" = { "motpart" = { "value" = "andra", "label" = "Andra personer" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Konflikt eller bråk på sin arbetsplats med andra personer\ncatalog:variable_text:11597:9862:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:chefbrak"
+fields = { "facets" = { "motpart" = { "value" = "chefer", "label" = "Chefer" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Konflikt eller bråk på sin arbetsplats med chefer\ncatalog:variable_text:11700:9862:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:kamrbrak"
+fields = { "facets" = { "motpart" = { "value" = "kollegor", "label" = "Arbetskamrater eller kollegor" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Konflikt eller bråk med arbetskamrater\ncatalog:variable_text:11819:9862:10227"
+
+[[statement]]
+kind = "set"
+subject = "var:konfliktandra"
+fields = { "facets" = { "motpart" = { "value" = "andra", "label" = "Andra personer" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Konflikt/bråk på arbetsplatsen (varit i): med andra personer\ncatalog:variable_text:11828:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:konfliktchef"
+fields = { "facets" = { "motpart" = { "value" = "chefer", "label" = "Chefer" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Konflikt/bråk på arbetsplatsen (varit i): med chefer\ncatalog:variable_text:11829:19723:20089"
+
+[[statement]]
+kind = "set"
+subject = "var:konfliktkollegor"
+fields = { "facets" = { "motpart" = { "value" = "kollegor", "label" = "Arbetskamrater eller kollegor" } } }
+evidence = "Set fault from the #2513 set-description sweep (set-faults list, fixes requested by the Operator 2026-11-17). Axis rule: crates/DESIGN.md \"Sets and tags\" (maintainer 2026-11-13): axes only for a set of more than two members in which some axis value is shared by several members.\n\nEtiketten anger medlemmens värde: Konflikt/bråk på arbetsplatsen (varit i): med kollegor\ncatalog:variable_text:11830:19723:20089"
